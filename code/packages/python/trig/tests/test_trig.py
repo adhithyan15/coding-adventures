@@ -6,10 +6,12 @@ cos against known mathematical identities and special values.  We use
 pytest.approx with an absolute tolerance of 1e-10 throughout.
 """
 
+import math
+import sys
+
 import pytest
 
-from trig import PI, sin, cos, tan, atan, atan2, sqrt, radians, degrees
-
+from trig import PI, atan, atan2, cos, degrees, radians, sin, sqrt, tan
 
 # ---------------------------------------------------------------------------
 # Tolerance used for all approximate comparisons
@@ -263,6 +265,19 @@ class TestSqrt:
         """sqrt(1e10) ≈ 1e5."""
         assert sqrt(1e10) == pytest.approx(1e5, rel=1e-9)
 
+    def test_sqrt_full_binary64_range(self) -> None:
+        """Shared PHY00 boundary cases use relative precision."""
+        assert sqrt(1e-100) == pytest.approx(1e-50, rel=1e-12)
+        assert sqrt(float.fromhex("0x0.0000000000001p-1022")) == pytest.approx(
+            2.2227587494850775e-162, rel=1e-12
+        )
+        assert sqrt(sys.float_info.max) == pytest.approx(
+            1.3407807929942596e154, rel=1e-12
+        )
+        assert math.copysign(1.0, sqrt(-0.0)) == -1.0
+        assert sqrt(float("inf")) == float("inf")
+        assert math.isnan(sqrt(float("nan")))
+
     def test_sqrt_roundtrip(self) -> None:
         """sqrt(2) * sqrt(2) ≈ 2.0."""
         assert sqrt(2) * sqrt(2) == pytest.approx(2.0, abs=TOL)
@@ -307,6 +322,15 @@ class TestAtan:
     def test_atan_zero(self) -> None:
         """atan(0) = 0."""
         assert atan(0) == 0.0
+        assert isinstance(atan(0), float)
+
+    def test_atan_preserves_tiny_inputs_and_negative_zero(self) -> None:
+        """The exact binary64 identity path runs before half-angle reduction."""
+        minimum = float.fromhex("0x0.0000000000001p-1022")
+        assert math.copysign(1.0, atan(-0.0)) == -1.0
+        assert atan(float.fromhex("0x1p-30")) == float.fromhex("0x1p-30")
+        assert atan(minimum) == minimum
+        assert atan(-minimum) == -minimum
 
     def test_atan_one(self) -> None:
         """atan(1) = pi/4."""

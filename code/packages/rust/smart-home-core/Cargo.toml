@@ -6,3 +6,4 @@ description = "Repository-owned normalized smart-home model shared by integratio
 license = "MIT"
 
 [dependencies]
+serde = { version = "1", features = ["derive"] }

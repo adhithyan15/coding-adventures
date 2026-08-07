@@ -1,0 +1,19 @@
+% ============================================================================
+% shapes.query.adj — a worked recall over the geometry shapes library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many sides does a
+% hexagon have?": it states no geometry fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `polygon_sides` rows and returns the count + the table's source/locator/trust.
+% A shape not in the table abstains honestly — the engine never invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli shapes.query.adj
+% ============================================================================
+
+import "shapes.adj"
+
+? polygon_sides(triangle, $Sides)      % expect 3
+? polygon_sides(hexagon, $Sides)       % expect 6
+? polygon_sides(octagon, $Sides)       % expect 8
+? polygon_sides(circle, $Sides)        % expect abstain — a circle is not a polygon

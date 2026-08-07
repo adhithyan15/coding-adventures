@@ -28,7 +28,7 @@ use crate::effects::EffectSet;
 use crate::manifest::FeatureManifest;
 use crate::metadata::Metadata;
 use crate::span::Span;
-use crate::types::SirType;
+use crate::types::{IntSpec, SirType};
 
 // ---------------------------------------------------------------------------
 // Module-level structure
@@ -355,6 +355,11 @@ pub struct RescueClause {
 /// SIR16 (Python/JS interop) extends this with mutation (`Assign`),
 /// loops (`While`, `ForRange`, `ForEach`), and indexed assignment on
 /// sequences and maps (`SeqSet`, `MapSet`).
+// Variants differ in size because some statement kinds carry several boxed
+// `Expr`s while others carry one. This is a core AST node matched exhaustively
+// throughout the crate; boxing a variant to equalize sizes would churn every
+// construction and pattern for no meaningful gain.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
     /// Parallel-let semantics.  Multiple consecutive `LetBinding`
@@ -894,6 +899,244 @@ pub enum Expr {
         indices: Vec<IndexArg>,
         span: Span,
     },
+
+    // ── SIR22 addendum: APL primitive operators ─────────────────────
+    //
+    // The six node kinds below extend SIR22 to cover the array-family
+    // primitive *operators* that MATLAB has no first-class syntax for
+    // (it would call `sum(x)`/`reshape(x, ...)` etc. as ordinary function
+    // calls, which this repo's MATLAB frontend subset doesn't yet support
+    // at all) but that APL (`apl-runtime`/`apl-parser`, already shipped)
+    // exposes as bare glyphs: `+/A` (reduce), `+\A` (scan), `A∘.×B` (outer
+    // product), `⍴`/`⍳`/`,` (shape-reshape / index-generator-index-of /
+    // ravel-catenate). Each is mapped 1:1 onto an existing op shape —
+    // `array_runtime::ops::{reduce,scan,outer}` for the three that take an
+    // `ElementwiseOpKind`, and `apl-runtime::builtins`'s own bespoke
+    // (non-`BinOp`-shaped) logic for the rest — mirroring the discipline
+    // the base SIR22 spec states for its own MATLAB-oriented cut. All are
+    // `Pure`, same as every other SIR22 node. No frontend crate consumes
+    // these yet; `apl-to-semantic-ir` is a follow-up task.
+    /// `+/A` (APL reduce) — folds `target` with `op` along its one axis.
+    /// Maps 1:1 onto `array_runtime::ops::reduce(op, a)`. `op` reuses
+    /// `ElementwiseOpKind` even though not every variant is meaningful here
+    /// (e.g. `Pow` has no APL reduce-adverb precedent) — the IR does not
+    /// restrict which `op` a frontend may pick, mirroring how `ElementwiseOp`
+    /// itself places no restriction on which arithmetic op appears there.
+    Reduce {
+        op: ElementwiseOpKind,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// `+\A` (APL scan) — a running fold of `target` with `op`, emitting one
+    /// result per prefix. Maps 1:1 onto `array_runtime::ops::scan(op, a)`.
+    Scan {
+        op: ElementwiseOpKind,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// `A∘.×B` (APL outer product) — every pairwise `op` application between
+    /// `lhs`'s and `rhs`'s elements, producing a result of combined rank.
+    /// Maps 1:1 onto `array_runtime::ops::outer(op, a, b)`.
+    OuterProduct {
+        op: ElementwiseOpKind,
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `⍴A` (APL shape) — the dimensions of `target` as a vector.
+    /// Mirrors `apl-runtime::builtins::shape`, which is not itself an
+    /// `array_runtime::ops`/`execute()` primitive (it reads `Array::shape()`
+    /// directly) — the same "bespoke, not `BinOp`-shaped" situation
+    /// `apl-runtime`'s own `NonScalarAtom::Rho` already documents.
+    Shape {
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A⍴B` (APL reshape) — reinterpret `target`'s data under the new
+    /// dimensions given by `shape`. Mirrors `apl-runtime::builtins::reshape(a,
+    /// b)`, where `a` is the shape vector and `b` is the data being reshaped
+    /// — field names here spell out that role instead of reusing `lhs`/`rhs`,
+    /// since (unlike `MatMul`/`ElementwiseOp`) the two operands are not
+    /// interchangeable in kind.
+    Reshape {
+        shape: Box<Expr>,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `⍳N` (APL iota / index generator) — the vector `0, 1, ..., N-1`
+    /// (this repo's APL implementation; note this is 0-based at the `Array`
+    /// level even though APL's own surface syntax is 1-indexed — see
+    /// `apl-runtime::builtins::index_generator`, which this mirrors 1:1).
+    IndexGenerator {
+        count: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A⍳B` (APL index-of / search) — for each element of `needle`,
+    /// its position in `haystack` (or `haystack`'s length if not found).
+    /// Mirrors `apl-runtime::builtins::index_of(a, b)`, where `a` is the
+    /// haystack and `b` is the needle.
+    IndexOf {
+        haystack: Box<Expr>,
+        needle: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `,A` (APL ravel) — flatten `target` to a rank-1 vector.
+    /// Mirrors `apl-runtime::builtins::ravel`.
+    Ravel {
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A,B` (APL catenate) — concatenate `lhs` and `rhs` along their
+    /// ravel order. Mirrors `apl-runtime::builtins::catenate`.
+    Catenate {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    // ── SIR26 (integer conversions) ──────────────────────────────────
+    /// Convert an integer `value` to the target integer type `to` by
+    /// two's-complement reinterpretation: reduce modulo `2^width` (mask to
+    /// the low `width` bits), then sign-extend when `to.signed` and the top
+    /// bit is set.  A target width of `Arbitrary` is the identity (a widen
+    /// into the unbounded integer — no bits lost).
+    ///
+    /// This is exactly a C integer cast / implicit conversion under
+    /// two's-complement (`-fwrapv`): `(uint8_t)300 == 44`,
+    /// `(int32_t)4_000_000_000 == −294_967_296`.  A frontend inserts a
+    /// `Convert` after each width-bounded operation and at each cast /
+    /// assignment; arithmetic stays exact, so the width enforcement here
+    /// reproduces the source's overflow behaviour at every step.  See
+    /// [SIR26](../../../specs/SIR26-integer-conversions.md).  Gated by
+    /// [`Feature::Conversions`](crate::Feature::Conversions).
+    Convert {
+        value: Box<Expr>,
+        to: IntSpec,
+        span: Span,
+    },
+
+    // ── SIR23: symbolic expression + pattern/rewrite nodes ─────────
+    //
+    // Every node kind below is mapped 1:1 onto `symbolic_ir::IRNode`'s
+    // existing five-variant shape (`Symbol`/`Integer`/`Rational`/`Float`/
+    // `Str`/`Apply`) — see the SIR23 spec's "Motivation" and "New `Expr`
+    // variants" sections.  `IntLit`/`FloatLit`/`StrLit` above already
+    // cover `IRNode::Integer`/`Float`/`Str`; the seven variants below
+    // cover `Symbol`/`Rational`/`Apply` plus the pattern-matching and
+    // rewrite-rule vocabulary a Wolfram-family CAS frontend needs.  All
+    // are `Pure` (see `effects.rs`'s SIR23 doc note) — building,
+    // matching, and substituting a symbolic term has no observable side
+    // effect distinct from the value it computes; SIR23 adds no new
+    // `Stmt` variant at all (unlike SIR22's `IndexSet`).
+    /// A bare symbolic-expression symbol — Wolfram `x`, `Plus`, `f` used
+    /// as *data* rather than evaluated as a variable reference.
+    /// Distinct from [`Expr::VarRef`] (a host-language variable lookup)
+    /// and [`Expr::SymLit`] (a Ruby-style interned `:symbol` literal) —
+    /// `SymSymbol` is a leaf of a *symbolic-expression tree*, mirroring
+    /// `symbolic_ir::IRNode::Symbol`.
+    SymSymbol {
+        name: String,
+        span: Span,
+    },
+
+    /// An exact rational scalar in **reduced form** (numerator and
+    /// denominator share no common factor; denominator positive) —
+    /// Wolfram `1/3`, `Rational[1, 3]`.  The frontend normalizes exactly
+    /// as `symbolic_ir::IRNode::rational` does; the IR itself does not
+    /// reduce or validate the fraction (SIR10 "types carry, don't
+    /// verify").  Mirrors `symbolic_ir::IRNode::Rational`.
+    SymRational {
+        numer: i64,
+        denom: i64,
+        span: Span,
+    },
+
+    /// `head[args…]` / `head(args…)` as **data** — the same expression
+    /// may appear as a value, a pattern target, or a rewrite-rule
+    /// left-hand side (the SIR23 spec's "fidelity decision": patterns
+    /// and rules are first-class data, not a frontend-side
+    /// evaluate-then-lower shortcut).  `head` is a full `Expr`, not a
+    /// bare name, because a *computed* head is legal Wolfram (`f[x][y]`
+    /// applies the result of `f[x]` to `y`) — usually it is a
+    /// `SymSymbol`, but the IR does not narrow the type.  Mirrors
+    /// `symbolic_ir::IRNode::Apply`.
+    SymApply {
+        head: Box<Expr>,
+        args: Vec<Expr>,
+        span: Span,
+    },
+
+    /// A pattern blank — Wolfram `_` (`head: None`) or `_h` (`head:
+    /// Some(SymSymbol("h"))`, a head-constrained blank that matches only
+    /// a subtree whose own "head" — per Wolfram's `Head[]` convention —
+    /// is structurally `h`).  Only meaningful inside a [`SymRule`]'s
+    /// `lhs` (directly, or nested inside a [`SymPatternNamed`]); the
+    /// validator does not itself enforce that placement restriction
+    /// (mirrors how [`Expr::KeywordArg`] restricts its own placement via
+    /// a runtime flag rather than a type-level rule) — a "wild" blank
+    /// appearing outside a pattern position is a frontend bug, not a
+    /// distinct IR shape.
+    ///
+    /// [`SymRule`]: Expr::SymRule
+    /// [`SymPatternNamed`]: Expr::SymPatternNamed
+    SymPatternBlank {
+        head: Option<Box<Expr>>,
+        span: Span,
+    },
+
+    /// A **named** pattern variable — Wolfram `x_` (desugars to
+    /// `SymPatternNamed { name: "x", pattern: SymPatternBlank { head:
+    /// None } }`) or `x_h` (`pattern: SymPatternBlank { head: Some(h) }`).
+    /// Binds `name` to whatever subtree `pattern` matches, for the rest
+    /// of that match attempt — the SIR23 spec's matcher contract: a
+    /// repeated occurrence of the same `name` elsewhere in a rule's
+    /// `lhs` requires structural equality with the first binding, not
+    /// just any match.
+    SymPatternNamed {
+        name: String,
+        pattern: Box<Expr>,
+        span: Span,
+    },
+
+    /// A rewrite rule — Wolfram `lhs -> rhs` (`delayed: false`, `Rule`:
+    /// the rhs is built once, at rule-construction time) or `lhs :> rhs`
+    /// (`delayed: true`, `RuleDelayed`: the rhs is re-evaluated fresh
+    /// per match).  Only the flag distinguishes the two; both share the
+    /// same `lhs`/`rhs` shape.
+    SymRule {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        delayed: bool,
+        span: Span,
+    },
+
+    /// Apply a set of rewrite rules to `expr` — Wolfram `expr /. rules`
+    /// (`repeated: false`, `ReplaceAll`: one top-down, left-to-right
+    /// pass) or `expr //. rules` (`repeated: true`, `ReplaceRepeated`:
+    /// reruns to a fixed point).  `rules` is typically a `Vec` of
+    /// [`SymRule`](Expr::SymRule)s, though the spec allows an element
+    /// that is itself a `SymApply` evaluating to a list of rules at
+    /// runtime (a backend concern, not an IR shape).  See the SIR23
+    /// spec's "Matcher semantics" for the full binding contract —
+    /// notably that every backend implementing `repeated: true` **must**
+    /// enforce an iteration cap: an unbounded `//.` is a guaranteed
+    /// non-terminating program for some inputs, matching the DoS-cap
+    /// convention every other unbounded SIR construct in this repo
+    /// already follows.
+    SymReplaceAll {
+        expr: Box<Expr>,
+        rules: Vec<Expr>,
+        repeated: bool,
+        span: Span,
+    },
 }
 
 /// The five elementwise (broadcast) binary arithmetic operators
@@ -902,6 +1145,13 @@ pub enum Expr {
 /// so a backend's `match` has one arm to open and a `match op` inside
 /// it, mirroring how `Scope`/`ParamKind` are small closed enums rather
 /// than a variant explosion on their parent node.
+/// SIR22 shipped `Add, Sub, Mul, Div, Pow` (MATLAB's five dotted
+/// operators). This addendum adds `Max, Min, Eq, Ne, Lt, Le, Ge, Gt`,
+/// mirroring `array_runtime::BinOp`'s own identical extension (added
+/// alongside `apl-runtime` for APL's `⌈`/`⌊` max/min glyphs and its six
+/// comparison glyphs `= ≠ < ≤ ≥ >`, none of which MATLAB's frontend uses
+/// today but which every `ElementwiseOp`/`Reduce`/`Scan`/`OuterProduct`
+/// consumer can already carry without any shape change).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ElementwiseOpKind {
     Add,
@@ -909,6 +1159,14 @@ pub enum ElementwiseOpKind {
     Mul,
     Div,
     Pow,
+    Max,
+    Min,
+    Eq,
+    Ne,
+    Lt,
+    Le,
+    Ge,
+    Gt,
 }
 
 impl ElementwiseOpKind {
@@ -921,6 +1179,14 @@ impl ElementwiseOpKind {
             ElementwiseOpKind::Mul => "mul",
             ElementwiseOpKind::Div => "div",
             ElementwiseOpKind::Pow => "pow",
+            ElementwiseOpKind::Max => "max",
+            ElementwiseOpKind::Min => "min",
+            ElementwiseOpKind::Eq => "eq",
+            ElementwiseOpKind::Ne => "ne",
+            ElementwiseOpKind::Lt => "lt",
+            ElementwiseOpKind::Le => "le",
+            ElementwiseOpKind::Ge => "ge",
+            ElementwiseOpKind::Gt => "gt",
         }
     }
 
@@ -932,6 +1198,14 @@ impl ElementwiseOpKind {
             "mul" => ElementwiseOpKind::Mul,
             "div" => ElementwiseOpKind::Div,
             "pow" => ElementwiseOpKind::Pow,
+            "max" => ElementwiseOpKind::Max,
+            "min" => ElementwiseOpKind::Min,
+            "eq" => ElementwiseOpKind::Eq,
+            "ne" => ElementwiseOpKind::Ne,
+            "lt" => ElementwiseOpKind::Lt,
+            "le" => ElementwiseOpKind::Le,
+            "ge" => ElementwiseOpKind::Ge,
+            "gt" => ElementwiseOpKind::Gt,
             _ => return None,
         })
     }
@@ -1010,6 +1284,23 @@ impl Expr {
             Expr::ElementwiseOp { span, .. } => span,
             Expr::Transpose { span, .. } => span,
             Expr::IndexGet { span, .. } => span,
+            Expr::Reduce { span, .. } => span,
+            Expr::Scan { span, .. } => span,
+            Expr::OuterProduct { span, .. } => span,
+            Expr::Shape { span, .. } => span,
+            Expr::Reshape { span, .. } => span,
+            Expr::IndexGenerator { span, .. } => span,
+            Expr::IndexOf { span, .. } => span,
+            Expr::Ravel { span, .. } => span,
+            Expr::Catenate { span, .. } => span,
+            Expr::Convert { span, .. } => span,
+            Expr::SymSymbol { span, .. } => span,
+            Expr::SymRational { span, .. } => span,
+            Expr::SymApply { span, .. } => span,
+            Expr::SymPatternBlank { span, .. } => span,
+            Expr::SymPatternNamed { span, .. } => span,
+            Expr::SymRule { span, .. } => span,
+            Expr::SymReplaceAll { span, .. } => span,
         }
     }
 
@@ -1046,6 +1337,23 @@ impl Expr {
             Expr::ElementwiseOp { .. } => "elementwise-op",
             Expr::Transpose { .. } => "transpose",
             Expr::IndexGet { .. } => "index-get",
+            Expr::Reduce { .. } => "reduce",
+            Expr::Scan { .. } => "scan",
+            Expr::OuterProduct { .. } => "outer-product",
+            Expr::Shape { .. } => "shape",
+            Expr::Reshape { .. } => "reshape",
+            Expr::IndexGenerator { .. } => "index-generator",
+            Expr::IndexOf { .. } => "index-of",
+            Expr::Ravel { .. } => "ravel",
+            Expr::Catenate { .. } => "catenate",
+            Expr::Convert { .. } => "convert",
+            Expr::SymSymbol { .. } => "sym-symbol",
+            Expr::SymRational { .. } => "sym-rational",
+            Expr::SymApply { .. } => "sym-apply",
+            Expr::SymPatternBlank { .. } => "sym-pattern-blank",
+            Expr::SymPatternNamed { .. } => "sym-pattern-named",
+            Expr::SymRule { .. } => "sym-rule",
+            Expr::SymReplaceAll { .. } => "sym-replace-all",
         }
     }
 }
@@ -1190,6 +1498,8 @@ mod tests {
         }
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn sir16_expr_kind_names() {
         let span = s();
@@ -1292,6 +1602,8 @@ mod tests {
         }
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_lit_partial_eq_handles_nan() {
         // f64::NAN is never equal to itself — Expr only impls
@@ -1614,6 +1926,94 @@ mod tests {
     }
 
     #[test]
+    fn sir22_addendum_apl_primitive_expr_kind_names_and_spans() {
+        // One case per new APL-primitive Expr variant, mirroring
+        // `sir22_expr_kind_names_and_spans` above: confirm `.span()` and
+        // `.kind_name()` are correct for every one of the nine additions.
+        let span = s();
+        let leaf = |v: i64| Expr::IntLit {
+            value: v,
+            span: span.clone(),
+        };
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (
+                Expr::Reduce {
+                    op: ElementwiseOpKind::Add,
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "reduce",
+            ),
+            (
+                Expr::Scan {
+                    op: ElementwiseOpKind::Add,
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "scan",
+            ),
+            (
+                Expr::OuterProduct {
+                    op: ElementwiseOpKind::Mul,
+                    lhs: Box::new(leaf(1)),
+                    rhs: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "outer-product",
+            ),
+            (
+                Expr::Shape {
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "shape",
+            ),
+            (
+                Expr::Reshape {
+                    shape: Box::new(leaf(1)),
+                    target: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "reshape",
+            ),
+            (
+                Expr::IndexGenerator {
+                    count: Box::new(leaf(5)),
+                    span: span.clone(),
+                },
+                "index-generator",
+            ),
+            (
+                Expr::IndexOf {
+                    haystack: Box::new(leaf(1)),
+                    needle: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "index-of",
+            ),
+            (
+                Expr::Ravel {
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "ravel",
+            ),
+            (
+                Expr::Catenate {
+                    lhs: Box::new(leaf(1)),
+                    rhs: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "catenate",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
     fn range_with_explicit_step() {
         // 0:2:10 — step is `Some`, distinct from the default-step form.
         let r = Expr::Range {
@@ -1681,6 +2081,14 @@ mod tests {
             ElementwiseOpKind::Mul,
             ElementwiseOpKind::Div,
             ElementwiseOpKind::Pow,
+            ElementwiseOpKind::Max,
+            ElementwiseOpKind::Min,
+            ElementwiseOpKind::Eq,
+            ElementwiseOpKind::Ne,
+            ElementwiseOpKind::Lt,
+            ElementwiseOpKind::Le,
+            ElementwiseOpKind::Ge,
+            ElementwiseOpKind::Gt,
         ] {
             assert_eq!(ElementwiseOpKind::from_name(op.name()), Some(op));
         }
@@ -1747,6 +2155,255 @@ mod tests {
             assert_eq!(indices.len(), 3);
         } else {
             panic!("expected IndexGet");
+        }
+    }
+
+    // ── SIR23: symbolic expression + pattern/rewrite nodes ───────────
+
+    #[test]
+    fn sir23_expr_kind_names_and_spans() {
+        let span = s();
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (
+                Expr::SymSymbol {
+                    name: "x".into(),
+                    span: span.clone(),
+                },
+                "sym-symbol",
+            ),
+            (
+                Expr::SymRational {
+                    numer: 1,
+                    denom: 3,
+                    span: span.clone(),
+                },
+                "sym-rational",
+            ),
+            (
+                Expr::SymApply {
+                    head: Box::new(Expr::SymSymbol {
+                        name: "Plus".into(),
+                        span: span.clone(),
+                    }),
+                    args: vec![
+                        Expr::IntLit {
+                            value: 1,
+                            span: span.clone(),
+                        },
+                        Expr::IntLit {
+                            value: 2,
+                            span: span.clone(),
+                        },
+                    ],
+                    span: span.clone(),
+                },
+                "sym-apply",
+            ),
+            (
+                Expr::SymPatternBlank {
+                    head: None,
+                    span: span.clone(),
+                },
+                "sym-pattern-blank",
+            ),
+            (
+                Expr::SymPatternNamed {
+                    name: "x".into(),
+                    pattern: Box::new(Expr::SymPatternBlank {
+                        head: None,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                },
+                "sym-pattern-named",
+            ),
+            (
+                Expr::SymRule {
+                    lhs: Box::new(Expr::SymSymbol {
+                        name: "x".into(),
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    }),
+                    delayed: false,
+                    span: span.clone(),
+                },
+                "sym-rule",
+            ),
+            (
+                Expr::SymReplaceAll {
+                    expr: Box::new(Expr::SymSymbol {
+                        name: "x".into(),
+                        span: span.clone(),
+                    }),
+                    rules: vec![],
+                    repeated: false,
+                    span: span.clone(),
+                },
+                "sym-replace-all",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
+    fn sym_apply_head_is_an_expr_not_a_bare_string() {
+        // The SIR23 spec's explicit callout: `head` is a full `Expr` (not
+        // a bare `String`) because a *computed* head is legal Wolfram
+        // (`f[x][y]` applies the result of `f[x]` to `y`).  Pin that a
+        // SymApply's own head may itself be a SymApply.
+        let inner = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "f".into(),
+                span: s(),
+            }),
+            args: vec![Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }],
+            span: s(),
+        };
+        let outer = Expr::SymApply {
+            head: Box::new(inner),
+            args: vec![Expr::SymSymbol {
+                name: "y".into(),
+                span: s(),
+            }],
+            span: s(),
+        };
+        match outer {
+            Expr::SymApply { head, .. } => {
+                assert!(matches!(*head, Expr::SymApply { .. }));
+            }
+            _ => panic!("expected SymApply"),
+        }
+    }
+
+    #[test]
+    fn sym_pattern_blank_head_constrained_vs_bare() {
+        // Wolfram `_` (head: None) vs `_h` (head: Some(SymSymbol("h"))).
+        let bare = Expr::SymPatternBlank {
+            head: None,
+            span: s(),
+        };
+        let constrained = Expr::SymPatternBlank {
+            head: Some(Box::new(Expr::SymSymbol {
+                name: "Integer".into(),
+                span: s(),
+            })),
+            span: s(),
+        };
+        assert_ne!(bare, constrained);
+        match constrained {
+            Expr::SymPatternBlank { head: Some(h), .. } => {
+                assert_eq!(
+                    *h,
+                    Expr::SymSymbol {
+                        name: "Integer".into(),
+                        span: s()
+                    }
+                );
+            }
+            _ => panic!("expected head-constrained SymPatternBlank"),
+        }
+    }
+
+    #[test]
+    fn sym_pattern_named_desugars_x_underscore() {
+        // Wolfram `x_` desugars to SymPatternNamed { name: "x", pattern:
+        // SymPatternBlank { head: None } } per the SIR23 spec.
+        let e = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank {
+                head: None,
+                span: s(),
+            }),
+            span: s(),
+        };
+        match e {
+            Expr::SymPatternNamed { name, pattern, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(*pattern, Expr::SymPatternBlank { head: None, .. }));
+            }
+            _ => panic!("expected SymPatternNamed"),
+        }
+    }
+
+    #[test]
+    fn sym_rule_delayed_flag_distinguishes_rule_from_rule_delayed() {
+        // `->` (Rule, delayed: false) vs `:>` (RuleDelayed, delayed: true).
+        let rule = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let rule_delayed = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: true,
+            span: s(),
+        };
+        assert_ne!(rule, rule_delayed);
+    }
+
+    #[test]
+    fn sym_replace_all_repeated_flag_distinguishes_replace_all_from_repeated() {
+        // `/.` (ReplaceAll, repeated: false) vs `//.` (ReplaceRepeated,
+        // repeated: true).
+        let once = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![],
+            repeated: false,
+            span: s(),
+        };
+        let fixed_point = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![],
+            repeated: true,
+            span: s(),
+        };
+        assert_ne!(once, fixed_point);
+    }
+
+    #[test]
+    fn sym_rational_carries_numer_denom_without_reducing() {
+        // The IR is a carrier, not a verifier (SIR10): it does not itself
+        // reduce 2/4 to 1/2 — that's the frontend's job, mirroring
+        // `symbolic_ir::IRNode::rational`'s own contract.
+        let unreduced = Expr::SymRational {
+            numer: 2,
+            denom: 4,
+            span: s(),
+        };
+        match unreduced {
+            Expr::SymRational { numer, denom, .. } => {
+                assert_eq!((numer, denom), (2, 4));
+            }
+            _ => panic!("expected SymRational"),
         }
     }
 

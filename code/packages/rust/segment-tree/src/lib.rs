@@ -68,6 +68,10 @@ impl_segment_value_float!(f32, f64);
 pub struct SegmentTree<T> {
     tree: Vec<T>,
     n: usize,
+    // The combiner is a boxed closure so a SegmentTree works over any
+    // associative operation chosen at runtime; the Arc<dyn Fn ..> shape is
+    // intentional (clippy::type_complexity).
+    #[allow(clippy::type_complexity)]
     combine: Arc<dyn Fn(&T, &T) -> T + Send + Sync>,
     identity: T,
 }
@@ -202,6 +206,10 @@ fn build<T: Clone>(
     tree[node] = combine(&tree[node * 2], &tree[node * 2 + 1]);
 }
 
+// Internal recursive helper: the argument list mirrors the segment-tree
+// recursion (node + its [left,right] span + the query [ql,qr] + combiner);
+// bundling them into a struct would obscure the algorithm.
+#[allow(clippy::too_many_arguments)]
 fn query<T: Clone>(
     tree: &[T],
     node: usize,

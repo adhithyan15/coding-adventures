@@ -61,17 +61,17 @@ pub fn pkcs7_pad(data: &[u8]) -> Vec<u8> {
     let pad_len = BLOCK_SIZE - (data.len() % BLOCK_SIZE);
     let mut result = Vec::with_capacity(data.len() + pad_len);
     result.extend_from_slice(data);
-    result.extend(std::iter::repeat(pad_len as u8).take(pad_len));
+    result.extend(std::iter::repeat_n(pad_len as u8, pad_len));
     result
 }
 
 /// Remove PKCS#7 padding. Returns an error if the padding is invalid.
 pub fn pkcs7_unpad(data: &[u8]) -> Result<Vec<u8>, String> {
-    if data.is_empty() || data.len() % BLOCK_SIZE != 0 {
+    if data.is_empty() || !data.len().is_multiple_of(BLOCK_SIZE) {
         return Err("Invalid padded data: length must be a positive multiple of 16".into());
     }
     let pad_len = *data.last().unwrap() as usize;
-    if pad_len < 1 || pad_len > BLOCK_SIZE {
+    if !(1..=BLOCK_SIZE).contains(&pad_len) {
         return Err("Invalid PKCS#7 padding".into());
     }
     // Constant-time padding validation: accumulate differences with OR
@@ -126,7 +126,7 @@ pub fn ecb_encrypt(plaintext: &[u8], key: &[u8]) -> Result<Vec<u8>, String> {
 
 /// Decrypt with AES in ECB mode (INSECURE — educational only).
 pub fn ecb_decrypt(ciphertext: &[u8], key: &[u8]) -> Result<Vec<u8>, String> {
-    if ciphertext.is_empty() || ciphertext.len() % BLOCK_SIZE != 0 {
+    if ciphertext.is_empty() || !ciphertext.len().is_multiple_of(BLOCK_SIZE) {
         return Err("ECB ciphertext must be a non-empty multiple of 16 bytes".into());
     }
     let mut result = Vec::with_capacity(ciphertext.len());
@@ -174,7 +174,7 @@ pub fn cbc_decrypt(ciphertext: &[u8], key: &[u8], iv: &[u8]) -> Result<Vec<u8>, 
     if iv.len() != BLOCK_SIZE {
         return Err(format!("CBC IV must be 16 bytes, got {}", iv.len()));
     }
-    if ciphertext.is_empty() || ciphertext.len() % BLOCK_SIZE != 0 {
+    if ciphertext.is_empty() || !ciphertext.len().is_multiple_of(BLOCK_SIZE) {
         return Err("CBC ciphertext must be a non-empty multiple of 16 bytes".into());
     }
     let mut result = Vec::with_capacity(ciphertext.len());

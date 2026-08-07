@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Started sqlite-file reader cutover for Anki V11 imports
+
+`parse_v11_collection_bytes` now reads the `col`, `notes`, `cards`, `revlog`,
+and `graves` tables directly from raw SQLite bytes through the repo
+`sqlite-file` reader instead of deserializing the collection into an in-memory
+`rusqlite` connection. This removes the unsafe serialized-rusqlite import path
+(`sqlite3_malloc64` + `OwnedData::from_raw_nonnull`) while keeping the existing
+owned Anki V11 representation and APKG round-trip tests unchanged.
+
+`rusqlite` remains in this crate for the SQLite writer and test fixtures until
+Phase F of the zero-dependency roadmap replaces collection export as well.
+
 ### Removed third-party `prost` — Anki `meta`/`media` protobuf is now zero-dep
 
 The Anki `.apkg` `meta` (package version) and `media` (filename/size/sha1 map)

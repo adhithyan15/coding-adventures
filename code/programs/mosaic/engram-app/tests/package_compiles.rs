@@ -133,13 +133,30 @@ fn app_sources_compile_without_owning_review_card_component() {
     let mll =
         moslayout_compiler::compile(&read_source("EngramApp.mll"), Some(&mil.descriptor_json))
             .expect("EngramApp.mll should compile against EngramApp.mil");
-    let msl =
+    let touch_mll = moslayout_compiler::compile(
+        &read_source("EngramApp.touch.mll"),
+        Some(&mil.descriptor_json),
+    )
+    .expect("EngramApp.touch.mll should compile against EngramApp.mil");
+    let dark_msl =
         mosstyle_compiler::compile(&read_source("EngramApp.dark.msl"), Some(&mll.part_map_json))
             .expect("EngramApp.dark.msl should compile against EngramApp.mll parts");
+    let light_msl = mosstyle_compiler::compile(
+        &read_source("EngramApp.light.msl"),
+        Some(&mll.part_map_json),
+    )
+    .expect("EngramApp.light.msl should compile against EngramApp.mll parts");
+    mosstyle_compiler::compile(
+        &read_source("EngramApp.light.msl"),
+        Some(&touch_mll.part_map_json),
+    )
+    .expect("EngramApp.light.msl should compile against EngramApp.touch.mll parts");
 
     assert_eq!(mil.component.component, "EngramApp");
     assert_eq!(mll.def.component_name, "EngramApp");
-    assert_eq!(msl.def.component_name, "EngramApp");
+    assert_eq!(touch_mll.def.component_name, "EngramApp");
+    assert_eq!(dark_msl.def.component_name, "EngramApp");
+    assert_eq!(light_msl.def.component_name, "EngramApp");
 
     let source = read_source("EngramApp.mll");
     assert!(source.contains("pkg::mosaic-pkg-card-browser::CardBrowser"));
@@ -376,18 +393,50 @@ fn app_manifest_resolves_session_progress_dependency() {
 fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     let backends = [
-        (Backend::Html, "html/EngramApp.html"),
-        (Backend::WebComponent, "webcomponent/EngramApp.js"),
-        (Backend::React, "react/EngramApp.tsx"),
-        (Backend::Electron, "electron/EngramApp.tsx"),
-        (Backend::SwiftUI, "swiftui/EngramApp.swift"),
-        (Backend::Qt, "qt/EngramApp.qml"),
-        (Backend::Xaml, "xaml/EngramApp.xaml"),
-        (Backend::Flutter, "flutter/EngramApp.dart"),
-        (Backend::Compose, "compose/EngramApp.kt"),
+        (
+            Backend::Html,
+            "html/EngramApp.html",
+            "html/EngramApp.touch.html",
+        ),
+        (
+            Backend::WebComponent,
+            "webcomponent/EngramApp.js",
+            "webcomponent/EngramApp.touch.js",
+        ),
+        (
+            Backend::React,
+            "react/EngramApp.tsx",
+            "react/EngramApp.touch.tsx",
+        ),
+        (
+            Backend::Electron,
+            "electron/EngramApp.tsx",
+            "electron/EngramApp.touch.tsx",
+        ),
+        (
+            Backend::SwiftUI,
+            "swiftui/EngramApp.swift",
+            "swiftui/EngramApp.touch.swift",
+        ),
+        (Backend::Qt, "qt/EngramApp.qml", "qt/EngramApp.touch.qml"),
+        (
+            Backend::Xaml,
+            "xaml/EngramApp.xaml",
+            "xaml/EngramApp.touch.xaml",
+        ),
+        (
+            Backend::Flutter,
+            "flutter/EngramApp.dart",
+            "flutter/EngramApp.touch.dart",
+        ),
+        (
+            Backend::Compose,
+            "compose/EngramApp.kt",
+            "compose/EngramApp.touch.kt",
+        ),
     ];
 
-    for (backend, expected_artifact) in backends {
+    for (backend, expected_artifact, expected_touch_artifact) in backends {
         let result = build_package(&BuildOptions {
             package_root: package_root(),
             output_root: tmp.path().to_path_buf(),
@@ -401,6 +450,10 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         assert!(
             tmp.path().join(expected_artifact).exists(),
             "{backend:?} did not write {expected_artifact}"
+        );
+        assert!(
+            tmp.path().join(expected_touch_artifact).exists(),
+            "{backend:?} did not write {expected_touch_artifact}"
         );
     }
 
@@ -457,6 +510,28 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorDeleteNoteType\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorCancel\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
+}
+
+#[test]
+fn app_package_light_theme_selects_light_app_shell_styles() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    let result = build_package(&BuildOptions {
+        package_root: package_root(),
+        output_root: tmp.path().to_path_buf(),
+        backend: Backend::React,
+        emit_project: false,
+        theme: Some("light".to_string()),
+    })
+    .expect("React light-theme package build should compile EngramApp");
+
+    assert_eq!(result.components_built, vec!["EngramApp"]);
+    let react = read_artifact(tmp.path(), "react/EngramApp.tsx");
+    assert_contains(&react, "#ffffff");
+    assert_contains(&react, "#1e40af");
+    assert!(
+        !react.contains("#101827"),
+        "light-theme build should not select the dark app-shell background"
+    );
 }
 
 #[test]
@@ -2499,7 +2574,13 @@ fn read_artifact(output_root: &Path, relative: &str) -> String {
 
 #[test]
 fn source_tree_has_expected_shape() {
-    let expected = ["EngramApp.mil", "EngramApp.mll", "EngramApp.dark.msl"];
+    let expected = [
+        "EngramApp.mil",
+        "EngramApp.mll",
+        "EngramApp.touch.mll",
+        "EngramApp.dark.msl",
+        "EngramApp.light.msl",
+    ];
     for name in expected {
         let path = src_path(name);
         assert!(
@@ -2667,7 +2748,10 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "eg_load_snapshot");
     assert_contains(&qt_host, "withHostStatusProps");
     assert_contains(&qt_host, "QStringLiteral(\"hostStatusVisible\")");
-    assert_contains(&qt_host, "hostResult.insert(QStringLiteral(\"error\"), error)");
+    assert_contains(
+        &qt_host,
+        "hostResult.insert(QStringLiteral(\"error\"), error)",
+    );
     assert_contains(&qt_host, "Could not import %1: %2");
     assert_contains(&qt_host, "Could not export Anki package: %1");
 

@@ -214,7 +214,7 @@ fn divisors(n: u64) -> Vec<u64> {
     let mut divs = Vec::new();
     let mut i = 1;
     while i * i <= n {
-        if n % i == 0 {
+        if n.is_multiple_of(i) {
             divs.push(i);
             if i != n / i {
                 divs.push(n / i);
@@ -269,12 +269,7 @@ fn try_exact_cbrt(value: Frac) -> Option<Frac> {
 
 fn isqrt(n: u64) -> Option<u64> {
     let r = (n as f64).sqrt() as u64;
-    for candidate in r.saturating_sub(1)..=r + 1 {
-        if candidate * candidate == n {
-            return Some(candidate);
-        }
-    }
-    None
+    (r.saturating_sub(1)..=r + 1).find(|&candidate| candidate * candidate == n)
 }
 
 fn icbrt(n: u64) -> Option<u64> {
@@ -282,12 +277,7 @@ fn icbrt(n: u64) -> Option<u64> {
         return Some(0);
     }
     let r = (n as f64).cbrt() as u64;
-    for candidate in r.saturating_sub(1)..=r + 1 {
-        if candidate * candidate * candidate == n {
-            return Some(candidate);
-        }
-    }
-    None
+    (r.saturating_sub(1)..=r + 1).find(|&candidate| candidate * candidate * candidate == n)
 }
 
 fn sqrt_ir(value: Frac) -> IRNode {

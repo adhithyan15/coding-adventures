@@ -1,5 +1,539 @@
 # Changelog
 
+## 0.39.3 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "Python/JS/Rust/Ruby backends: implement shift-operator runtime
+dispatch". `ruby-to-semantic-ir` lowers `<<` to a top-level
+`BuiltinCall("<<", [lhs, rhs, ...])` — a separate protocol from the
+`__method__("<<", recv, arg)` Collections dispatch. The operator form
+reached `call_builtin_by_name`'s floor and panicked `unknown builtin:
+<<` — every Ruby program using `<<` as an operator (`a << 1`, `arr << x`,
+`"a" << "b"`) failed at runtime.
+
+New `shift_left`, polymorphic like the existing `plus`: Array pushes each
+RHS operand in place (chains left-to-right, since the frontend lowers a
+`<<` chain to one variadic call); Integer bitwise-shifts via
+`shift_left_i64`, PORTED from the C/Go backends' helper of the same name
+for identical overflow/negative-amount/saturation semantics; String
+concatenates to a new string, raising the SAME rescuable `TypeError`
+`plus` raises for a non-string operand.
+
+Simpler than the C/Go ports needed: Rust's `i64::unsigned_abs()` already
+handles `i64::MIN` correctly (no manual wraparound trick needed), and
+`f as i64` has been a SATURATING, NaN-safe conversion by language
+guarantee since Rust 1.45 (no manual float-to-int saturation helper
+needed either) — only the shift-count-must-be-checked-before-native-`<<`
+guard (Rust panics/masks on an out-of-range shift count, same hazard as
+Go) needed porting.
+
+Ruby backend (`semantic-ir-to-ruby`) already had `<<` support from
+earlier work; Python and JS/TS backends still lack the top-level
+operator, tracked as separate follow-ups.
+
+`semantic-ir-to-rust` 0.39.2 -> 0.39.3.
+
+## 0.39.2 — fix: `Array#[]=` (bracket-index write) was unimplemented
+
+Part of "Python/JS/Go/Rust backends: implement `[]`/`[]=` bracket-index
+runtime dispatch" — `arr[i] = v` lowers through the same
+`__method__("[]=", recv, i, v)` envelope every Collections method uses
+(PR #9686), not the SIR-native `SeqSet` statement. `Array#[]` (read) and
+`Hash#[]`/`Hash#[]=` already worked on this backend; only `Array#[]=`'s
+name was missing from `array_method`'s catalog, so a bracket-index write
+on an Array reached the `unknown_method` `NoMethodError` floor at
+runtime.
+
+Fixed by delegating to the pre-existing `seq_set` primitive — the SAME
+one the native `SeqSet` statement already lowers to — so the two paths
+share one strictness rule (`0 <= i < len`, panics outside; no
+auto-grow, matching the Go/C/Rust `SeqSet` reference) rather than
+risking two independently-maintained implementations drifting apart.
+`"[]="` also added to the `Value::Seq` arm of the `respond_to?`
+membership check.
+
+Python, JavaScript, TypeScript, and Go still have NO `[]`/`[]=` runtime
+dispatch entries at all (a larger gap than Rust's single missing name) —
+tracked as separate follow-ups per backend.
+
+`semantic-ir-to-rust` 0.39.1 -> 0.39.2.
+
+## 0.39.1 — `is_rust_keyword` missing `crate`/`extern`/`self`/`Self`/`super` (task #116 audit)
+
+Follow-up to task #110/#112 (`semantic-ir-to-javascript`/`-typescript`'s
+`eval`/`arguments` gap): a broader audit of every `semantic-ir-to-*`
+backend's reserved-word check for the same class of bug.
+
+`is_rust_keyword` (`emit.rs`) already carried a comment explaining that
+`crate`/`self`/`super`/`extern` can't be wrapped in `r#` raw-identifier
+syntax and need to fall back to the underscore-encoded form instead —
+but the mechanism it used (having `is_rust_keyword` return `false` for
+these words) didn't work: `sanitize_ident`'s first branch,
+`is_valid_rust_ident(s) && !is_rust_keyword(s)`, was then *true* for all
+of them (they're valid identifier shapes and, per `is_rust_keyword`,
+apparently not keywords), so they were passed straight through
+unmodified — the exact bug class this audit targets. Verified against
+rustc 1.97: a bare `let self = 5;` / `let crate = 5;` / `let super = 5;`
+/ `let extern = 5;` is a compile error in every case, so all four (plus
+`Self`, which was also entirely absent from the list) are genuine
+reserved words.
+
+`Self`/`self`/`super`/`crate` additionally cannot be raw identifiers at
+all — `r#self`, `r#Self`, `r#super`, and `r#crate` are each rejected by
+rustc with "cannot be a raw identifier" (they carry path-resolution
+meaning `r#` can't override), unlike ordinary keywords such as `extern`
+where `r#extern` compiles fine (verified empirically).
+
+Fixed in two parts, keeping `is_rust_keyword`'s shape unchanged:
+- Added `crate`, `extern`, `self`, `Self`, `super` to `is_rust_keyword`'s
+  `matches!` list, so all five are now correctly recognized as keywords.
+- Added a small `is_raw_incompatible_keyword` helper (`self`, `Self`,
+  `super`, `crate`) that `sanitize_ident` checks before choosing between
+  the `r#` path and the underscore-encoded fallback, so those four route
+  to the fallback (`self` → `__self`, etc.) instead of generating
+  invalid `r#self`-style output; `extern` takes the normal `r#extern`
+  path like any other keyword.
+
+New unit test
+`is_rust_keyword_flags_path_keywords_missing_from_the_original_list`
+pins all five as reserved, confirms `extern` raw-encodes while the other
+four fall back to underscore-encoding, and confirms ordinary look-alike
+identifiers (`crate_name`, `myself`, `superclass`) are untouched. The
+existing `compile_and_run_*` integration tests (which shell out to
+`rustc`) continue to pass, confirming the fallback path still produces
+compilable Rust.
+
+## 0.39.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to operator-spelling builtins
+(`==`/`!=`/`<=`/`>=`), but the emitter only mapped `=`/`<`/`>` — so `a == b`
+emitted a call to a nonexistent function and `puts(1 == 1)` failed to compile.
+
+- Runtime gains `ne`/`le`/`ge`, each defined from the existing `num_lt`/
+  `value_eq` primitives: `a != b ⟺ not (a == b)`, `a <= b ⟺ a < b or a == b`,
+  `a >= b ⟺ b < a or a == b`. `value_eq` equates cross-representation numbers,
+  so `1 <= 1.0` is true; both primitives answer `false` for uncomparable
+  operands, so `le`/`ge` stay panic-free there. Matches the C backend's
+  `_sir_le`/`_sir_ge`/`_sir_ne`.
+- Emitter maps `==`→`eq`, `!=`→`ne`, `<=`→`le`, `>=`→`ge`. The by-name builtin
+  dispatch gains the same four (so a first-class `:==` symbol dispatches).
+
+The `value_eq` `Exception` arm from 0.38.0 means `e == e` for a rescued
+exception is now reachable from Ruby source and true on this backend too.
+
+## 0.38.0 — a rescued exception is now an exception VALUE, not its message string
+
+`rescue Foo => e` bound `e` to the message STRING. The rescued value was
+therefore not an exception at all: `e.class` reported `String`,
+`e.is_a?(StandardError)` was **false**, and `e.message` raised
+`NoMethodError: undefined method 'message' for String`. A guard like
+`rescue => e; handle if e.is_a?(Recoverable)` silently skipped its handler.
+
+`Value` gains an `Exception(Rc<SirError>)` variant, and `exc_value` returns it.
+A dedicated variant (rather than reusing a `SirInstance`) is deliberate:
+
+- the message stays a plain `String`, so the display path **cannot recurse**
+  through it and needs no cycle guard;
+- exceptions stay OUT of the never-freed instance table, so
+  `loop { begin … rescue => e … end }` remains O(1) in memory rather than
+  retaining one instance — and its input-derived message — per iteration.
+
+`class`, `is_a?`/`kind_of?` (via the ancestry walk, which already knows
+`ArgumentError → StandardError → Exception`) and the new `message` method all
+answer correctly. **Display is unchanged**: an exception renders as its
+MESSAGE, matching Ruby's `Exception#to_s`, so `rescue => e; puts e` still
+prints `boom`. `respond_to?(:message)` answers true on an exception and false
+on anything else.
+
+`value_eq` gains an `Exception` arm (`Rc::ptr_eq`). The equality match is
+wildcard-terminated, so introducing the variant would otherwise have made
+`e == e` **false** — and every equality path routes through it (`==`/`!=`,
+`when`, `include?`/`index`/`uniq`, Hash keys), so `retry if e == @last_error`
+would never fire and `seen.include?(e)` would never dedupe. Identity is what
+the Go, JavaScript and Python backends give for free, so the four agree.
+This is not yet pinned by a conformance case, because `==` cannot be reached
+from Ruby source on this backend at all: the frontend lowers `a == b` to
+`BuiltinCall("==")`, which only the Go, C and Ruby backends lower — Python,
+JavaScript and Rust reject it as an unknown builtin even for `puts(1 == 1)`.
+That general operator-coverage gap is fixed separately; the arm is added here
+because the variant is introduced here and would be silently wrong without it.
+
+A security review found one more consequence of `e` becoming a real value:
+`"prefix " + e` used to concatenate (the operand was a `Str`), but now reaches
+`plus`\'s String arm reject path — which `panic!`d. A `panic!` payload is a
+`&str`, not a `SirError`, so `exc_from_payload` `resume_unwind`s it and NO
+`rescue`, not even a bare one, can catch it: the program died with a host
+backtrace where Ruby raises a rescuable `TypeError`. Both the `Str` and `Seq`
+reject paths in `plus` now `raise("TypeError", …)`
+(`"no implicit conversion of X into String"`/`Array`), which a `rescue`
+catches. Pinned by a new exec-proof: an outer `rescue` catches the TypeError
+from `"got: " + e` and the process exits 0.
+
+## 0.37.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
+
+`.class` **crashed the program**. The backend already had the full class-name
+mapping (`ruby_class_name`: `NilClass`, `TrueClass`/`FalseClass`, `Integer`,
+`Float`, `String`, `Symbol`, `Array`, `Hash`, `Pair`, `Proc`, a user instance's
+own tag, `Object`) — but it was documented as being "for a `NoMethodError`
+message and nothing else" and was never dispatched. So `7.class` resolved no
+method, raised `NoMethodError`, and — unrescued — surfaced as a panic that
+killed the process (exit 101). Measured: Python and Go answered `.class`; Rust
+aborted.
+
+- `object_method` gains `class`, `is_a?`, `kind_of?` and `instance_of?`, so
+  every receiver answers, reusing the existing `ruby_class_name`.
+- `is_a?`/`kind_of?` honour ancestry — the built-in surface (`Integer` and
+  `Float` are `Numeric` and `Comparable`, `String` is `Comparable`,
+  `Object`/`BasicObject` match everything) plus, for a user instance, its
+  superclass chain (the same cycle-guarded `is_ancestor_or_self` walk `rescue`
+  matching uses) and any module mixed in along it. `instance_of?` is an exact
+  class match.
+- Transitive module matching (Ruby's MRO: `C` includes `M`, `M` includes `N` ⇒
+  `c.is_a?(N)`) uses an ITERATIVE worklist rather than recursion, because
+  include-graph depth is shaped by the source — the same design the JavaScript
+  backend uses. Cyclic and self-including graphs terminate.
+- The class argument arrives as a NAME string (the frontend lowers a class
+  pattern to its name), so no constant-reference support is needed.
+- `responds_to` reports all four universally, matching the Go and JavaScript
+  backends, keeping `respond_to?` honest.
+
+This closes the Rust arm of the cross-backend reflection frontier — the
+`sir-conformance` guard is now a live all-backend assertion rather than
+per-backend.
+
+## 0.36.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
+
+The inline `__sir` runtime's `divide` truncated integer division toward zero
+(`acc /= d`), so `-7 / 2` gave `-3` instead of Ruby's floored `-4`. The integer
+path now floors toward −∞ — the truncated quotient minus one exactly when the
+remainder is non-zero and its sign differs from the divisor's — matching the
+SIR21 §E3 oracle `DivOp::Floor` on every sign combination. The float path
+(`any_float`) is unchanged and already true-divides (Ruby `Float#/`); typed
+division-by-zero is unchanged.
+
+### Fixed — unary minus (`neg`) was unimplemented (any negative literal crashed)
+
+Closing the division frontier surfaced a second, unrelated gap: the Ruby
+frontend lowers unary minus (`-x`) to `BuiltinCall("neg", [x])`, but
+`call_builtin_by_name` had **no `neg` arm**, so *every* negative literal
+(`-7`, not just division) panicked at runtime with `unknown builtin: neg`. The
+JavaScript and Python runtimes already implemented it; the Rust backend now
+does too — tag-preservingly (a `Float` stays a `Float`, otherwise negate as
+`Int`). This is what lets the division frontier's negative cases run at all.
+
+Together these close the **Rust arm** of the division frontier
+(`sir-conformance/tests/division.rs`), now a live non-ignored assertion.
+
+## 0.35.0 — Array `cycle(n)`
+
+Mirrors the Python reference (PR #8117) and the Go backend (PR #8123) into the
+Rust backend's inline `__sir` runtime (`array_method` beside the existing
+`chunk_while`/`slice_when` block arms; the array-method `responds_to` set gains
+`cycle`), continuing the `cycle` cross-backend cascade.
+
+- `cycle(n) { |x| … }` (block) → iterate the array `n` full passes in order,
+  yielding each element on every pass; always returns `Value::Nil`.
+  `[1,2,3].cycle(2)` yields `1,2,3,1,2,3`. `n <= 0`, a negative count, an empty
+  receiver, or a nil / non-integer count (Ruby's block-less Enumerator and
+  infinite no-`n` forms) yields nothing rather than hanging. As with
+  `each_slice`, the count is validated in the `usize` domain (`usize::try_from`)
+  so a huge positive `n` that truncates to 0 on a 32-bit target is rejected; the
+  items are snapshotted before iterating so a block that mutates the receiver
+  sees a stable sequence.
+- The `compile_and_run_array_aggregates` suite gains `array_cycle_compile_and_run`:
+  the block `print`s each yielded element, proving the two passes
+  (`1,2,3,1,2,3`) and the `nil` returns for `cycle(2)`, `cycle(0)`, and
+  `[].cycle(5)` under a real `rustc` compile-and-run.
+
+## 0.34.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092) and the Go backend (PR #8098) into the
+Rust backend's inline `__sir` runtime (`array_method` beside the existing
+`min`/`max` arms; the array-method `responds_to` set gains `minmax`), continuing
+the `minmax` cross-backend cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` computed in one pass
+  via `num_lt`. `[3,1,2].minmax` → `[1, 3]`; `["b","a","c"].minmax` →
+  `["a", "c"]`. An empty array yields `[nil, nil]` (no smallest/largest element),
+  matching the Python reference's `[None, None]`.
+- The entries are snapshotted into an owned `Vec` before the scan so a block-free
+  reentrant call cannot double-borrow-panic (never-panic floor), consistent with
+  the `min`/`max` arms.
+- The `array_aggregates_compile_and_run` exec-proof test gains `minmax` (non-empty
+  and empty) — the emitted Rust compiles with `rustc`, runs, and asserts
+  `[1, 3]` / `[nil, nil]`.
+
+## 0.33.0 — Array `slice_when`
+
+Mirrors the Python reference (PR #8070) and the Go backend (PR #8073) into the
+Rust backend's inline `__sir` runtime (`array_method` gains the arm; the
+array-method `responds_to` set gains `slice_when`), continuing the `slice_when`
+cross-backend cascade.
+
+- `slice_when { |prev, cur| pred }` is the INVERSE of `chunk_while`: it splits
+  into runs of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+  exactly WHERE the block is truthy (whereas `chunk_while` starts a new run where
+  the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → `[[1,2],[4],[9,10,11,12]]`;
+  an empty array yields `[]`, a single element `[[x]]`.
+- Entries are snapshotted into an owned `Vec` before iterating so a block that
+  reentrantly mutates the receiver cannot double-borrow-panic (never-panic
+  floor), and the closure gets `cur.clone()` so the element can still be pushed.
+- `tests/compile_and_run_array_aggregates.rs::array_slice_when_compile_and_run`
+  emits a program with a `b - a > 1` predicate, compiles it with `rustc`, runs
+  it, and asserts the printed runs.
+
+## 0.32.0 — Array `each_slice` / `each_cons` / `chunk_while`
+
+Mirrors the Python reference (PR #8031) and the Go backend (PR #8036) into the
+Rust backend's inline `__sir` runtime (`array_method` gains the arms; the
+`Value::Seq` `respond_to?` arm gains the names), adding the Array
+consecutive-grouping family.
+
+- `each_slice(n)` → consecutive sub-arrays of at most `n` elements, the last
+  possibly shorter (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+- `each_cons(n)` → every consecutive `n`-element sliding window
+  (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+  array yields `[]`.
+- Both read `n` via a checked `Value::Int` match (never `as_i64`, which panics on
+  a non-Int arg) and treat `n <= 0` as `[]` (Ruby raises `ArgumentError`; the
+  never-panic floor yields empty).
+- `chunk_while { |prev, cur| pred }` → runs of consecutive elements; the block is
+  called on each ADJACENT pair, a truthy result extends the run and a falsy one
+  starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+  `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.  The entries are
+  snapshotted before iterating so a reentrant block mutation cannot
+  double-borrow-panic.
+
+Exec-proof: `tests/compile_and_run_array_aggregates.rs` gains
+`array_each_slice_each_cons_chunk_while_compile_and_run`, running each_slice/
+each_cons (incl. `n<=0` and oversized-window → `[]`) and chunk_while (adjacent
+`b-a==1` predicate; empty → `[]`) under real `rustc`, diffed against the
+Python/Go reference semantics.
+
+
+## 0.31.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009) and the Go backend (PR #8015) into the
+Rust backend's inline `__sir` runtime (`map_method` gains the arms; the
+`Value::Map` `respond_to?` arm gains the names), rounding out Hash's Enumerable
+iteration surface.
+
+- `to_h` **without** a block → a shallow copy of the hash (a fresh `Map`, so
+  mutating it never aliases the receiver's entries).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW hash from the block-returned `[k, v]`
+  pairs; the block is yielded the two args `(k, v)`; a non-pair result is skipped
+  (never-panic floor — Ruby's TypeError is deferred to the typed-error cascade),
+  and a later pair with a duplicate key wins (Ruby's rule, `map_set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the (mutated) memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` pair (the second block param is the
+index/memo), matching Ruby's Enumerable convention.  Every block-invoking arm
+SNAPSHOTS the entries into an owned `Vec` before iterating, so no `RefCell`
+borrow is held across `apply_closure` — the never-panic floor holds against a
+reentrant hash mutation.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_to_h_and_indexed_iteration_compile_and_run`, running to_h (copy + re-map),
+each_with_index (observed pair+index yield, returns self), and each_with_object
+(observed pair+memo yield, returns memo, and no-memo passthrough) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
+## 0.30.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` reference (PR #7978) and the Go backend
+(PR #7983) into the Rust backend's inline `__sir` runtime (`map_method` block
+arms + the `Value::Map` `respond_to?` arm), completing the Hash Enumerable
+reshape/fold surface.  Ruby's `Hash` mixes in `Enumerable`, so every method
+here iterates the hash as a sequence of `[key, value]` pairs.  All yield the
+two-arg `(key, value)` EXCEPT `reduce`/`inject`, which follow Ruby's memo
+convention and yield `(memo, [k, v])` — the pair as ONE argument.
+
+- `group_by { |k, v| key }` — a Hash mapping each block key to the Array of the
+  `[k, v]` pairs that produced it, in first-seen key order and insertion order.
+- `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`, each a fresh
+  Array of `[k, v]` pairs preserving order.
+- `flat_map`/`collect_concat { |k, v| … }` — map each pair then concatenate one
+  level: an Array result splices its elements, a scalar is appended as-is.
+- `reduce`/`inject` — Ruby's memo fold over the `[k, v]` pairs; with an explicit
+  seed the fold starts there, without one it seeds from the first pair (an empty
+  seedless reduce is `nil`).
+- `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the explicit
+  seed arg) over the block results, reusing the polymorphic `plus` helper so
+  integer-only inputs stay `Int` while any float promotes.
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by`/`partition`
+(even-value predicate), `flat_map` (pair projection), `sum` (value projection),
+and `reduce(100)` (memo `acc + pair[1]`, indexed via `SeqIndex`) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
+## 0.29.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Rust
+backend's inline `__sir` runtime (`map_method` block arms + the `Value::Map`
+`respond_to?` arm).  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+hash as a sequence of `[key, value]` pairs: the block is yielded `(key, value)`
+(two arguments, matching `each`), and the "element" an aggregate returns is the
+two-element `[key, value]` Array (`seq_lit(vec![k, v])`).
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)` (block form; the block-less
+  forms degrade to the emptiness checks Ruby uses).
+- `count { |k, v| … }` — number of pairs with a truthy block result.
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key using the
+  runtime's numeric ordering (`num_lt`), stable on ties (Schwartzian).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_aggregates_compile_and_run`, running `sort_by`/`min_by`/
+`max_by` (by value), `find`/`count`/`any?`/`all?`/`none?` (even-value predicate)
+under real `rustc`, diffed against the Python reference semantics.
+
+## 0.28.0 — Hash catalog catch-up: `empty?` / `to_a` / `merge` / `dig` / `invert` / `store` / `delete` / `clear` / `reject` / `each_key` / `each_value`
+
+Brings the Rust backend's `map_method` Hash catalog to parity with the
+Go/JS/TS/Python `sir-runtime-oop` reference, which already shipped these.  All
+dispatch through the same EXPLICIT method-name `match` (never reflection) and
+route key comparison through `value_eq`:
+
+- **`empty?`** — `true` iff the hash has no pairs.
+- **`to_a`** — an Array of two-element `[key, value]` Arrays, in insertion order.
+- **`merge(other)`** — a NEW hash with `other` overlaid on a copy of the receiver;
+  on a collision `other` wins while the key holds its first-seen position. A
+  non-`Map` argument is ignored.
+- **`dig(k, …)`** — a NESTED lookup walking one key per argument, returning `nil`
+  the moment a level is missing (never raising). Recurses into a nested `Map`
+  (by key) or `Seq` (by integer index, negative-from-end), matching the Go/JS
+  backends' nested `dig` (a superset of the single-level Python/TS `dig`).
+- **`invert`** — a NEW hash mapping each value back to its key; equal values
+  collapse onto one key with the last pair's key at the first-seen position.
+- **`store(k, v)` / `[]=`** — MUTATES the receiver (overwrite-in-place or append)
+  and returns the value.
+- **`delete(k)`** — MUTATES: removes the first entry with a matching key and
+  returns its value; a missing key yields `nil`.
+- **`clear`** — MUTATES, emptying the receiver, and returns it.
+- **`reject { |k, v| … }`** — a NEW hash of the pairs for which the block is
+  falsy (the complement of `select`).
+- **`each_key { |k| … }` / `each_value { |v| … }`** — yield ONE argument per
+  entry and return the receiver.
+
+`responds_to?` now advertises all of the above.
+
+Exec-proof: new `tests/compile_and_run_hash_catalog.rs` compiles and runs (under
+real `rustc`) a module exercising every new arm — including a nested `dig`
+hit/miss, a `merge` collision, an `invert`, a mutating `delete`/`store`/`clear`,
+and `reject`/`each_key`/`each_value` — diffing stdout against the Python
+reference semantics.
+
+## 0.27.0 — Hash transforming block methods: `transform_values` / `transform_keys`
+
+Mirrors the Python `sir-runtime-oop` v0.1.18 reference (PR #7909) into the
+Rust backend's inline `__sir` runtime (`map_method` + the `Value::Map`
+`responds_to?` arm), adding two non-mutating Ruby `Hash` block methods:
+
+- `transform_values { |v| … }` — builds a **new** hash whose keys are copied
+  verbatim (so they stay unique and no collision is possible) and whose values
+  are the block results.  Yields ONE block argument (the value); insertion order
+  is preserved by rebuilding in place.
+- `transform_keys { |k| … }` — builds a **new** hash whose values are untouched
+  and whose keys are the block results (yields ONE argument, the key).  Two
+  source keys can collapse onto one new key; Ruby keeps the **last** colliding
+  entry's value while holding the new key at its **first-seen** position, so we
+  overwrite an existing slot in place (via `value_eq`) and otherwise append.
+
+Both leave the receiver unmodified.
+
+Exec-proof: new `tests/compile_and_run_hash_transform.rs` compiles and runs
+(under real `rustc`) a module exercising `transform_values` ({a:1,b:2} → {a: 99,
+b: 99}), an identity `transform_keys` ({a:1,b:2} → {a: 1, b: 2}), and a
+**collision** `transform_keys` (constant `:z` key ⇒ {z: 2}), diffing stdout
+against the Python/TS reference semantics.
+
+## 0.26.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Mirrors the Python `sir-runtime-oop` v0.1.17 reference (and the Go backend
+v0.25.0) into the Rust backend's emitted runtime (`numeric_method` +
+`responds_to`), adding five Ruby numeric methods:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds a Float to that many decimals (half **away from zero**, via
+  `ruby_round`); `ndigits <= 0` rounds to a power of ten. Rust's `i64`/`f64` are
+  FIXED width, so the Python bignum→float `OverflowError` pitfall does not apply
+  — the only guards are a place count past i64's ~18 decimal digits (dwarfs the
+  value ⇒ `0`, Ruby parity), a positive `ndigits` past Float precision / an
+  overflowing scale-up (returns the value unchanged), and an `i64::MAX`/`MIN`
+  overflow-degrade in `round_int_to_multiple` (returns the un-rounded value
+  rather than a sign-flipped wrap).
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient (`floor_div_i64`)
+  and the divisor-signed remainder (a `Seq`, so it prints `[3, 1]`); a zero
+  divisor raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that never panics: a zero divisor yields
+  `±Inf`/`NaN` (f64 division already produces these).
+- `clamp(min, max)` / `between?(min, max)` — compared numerically.
+
+Dispatch stays an explicit `match` on the interned method name (never
+reflection). Exec-proven end-to-end via `rustc` (the numeric exec-proof test now
+covers `round(2)`/`round(-2)`, `divmod` incl. the divisor-signed remainder,
+`fdiv` incl. the divide-by-zero `Infinity`, `clamp`/`between?`, and the
+`i64::MAX.round(-1)` overflow-degrade). Completes the numeric breadth on the Rust
+backend.
+
+## 0.25.0 — String justify methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Closes the last String parity gap with the Python/Go/JS/TS runtimes (which
+already carry these) by adding four more non-block Ruby String methods to the
+emitted runtime's `string_method` `match` and the `responds_to` catalog. All are
+**char-based** (`chars().count()` / a rune-cyclic `str_pad`), so a multibyte
+receiver and a multibyte pad are never split mid-codepoint:
+
+- `ljust(width, pad = " ")` / `rjust(width, pad = " ")` / `center(width, pad = " ")`
+  — pad to `width` **characters** using `pad` cyclically. `width <= the current
+  char length` returns the string unchanged; `center` puts any odd extra pad
+  char on the **RIGHT** (Ruby's rule). An empty `pad` degrades to a single space
+  rather than raising, and the fill count is clamped to a DoS bound
+  (`100_000_000`) so a hostile `width` cannot drive an unbounded allocation —
+  holding the never-raise floor.
+- `swapcase` — flip the case of each ASCII letter, leaving non-letters and
+  non-ASCII characters untouched (byte-for-byte identical to the other four
+  runtimes).
+
+Dispatch stays an **explicit** `match` on the interned method name (never
+reflection over a host method table). Exec-proven end-to-end via `rustc`
+(emitted Rust compiled and run; stdout diffed against the Ruby/Python/Go
+reference, including the odd-extra-pad-on-the-right `center` case). Completes the
+String justify group across all five backends.
+
+## 0.24.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Adds four non-block Ruby String methods to the emitted runtime's `string_method`
+`match` and the `responds_to` catalog, mirroring the Python/Go reference
+semantics (char-based, so a multibyte receiver is never sliced mid-codepoint):
+
+- `tr(from, to)` — position-wise char translation; a shorter `to` repeats its
+  last char, an empty `to` deletes matching chars, and a repeated char in `from`
+  keeps the last mapping.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies chars of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set chars, or of *all* chars when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the range (`"a-z"`)
+and negation (`"^abc"`) forms are a follow-up, matching the literal-only
+`sub`/`gsub` precedent. Exec-proven end-to-end via `rustc`. Third backend of the
+String char-set sweep (Python `sir-runtime-oop` v0.1.16, Go v0.24.0).
+
 ## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
 
 Extends the emitted Rust runtime's `array_method` catalog (and the `Value::Seq`

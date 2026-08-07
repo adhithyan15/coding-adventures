@@ -4,6 +4,16 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.1.1] — 2026-07-12
+
+### Fixed
+
+- `moderate_nesting_still_evaluates` used 40 levels of `(...)` grouping, which
+  now exceeds the macsyma-parser recursion-depth guard (wired in upstream by
+  the security fix in #7928 — the guard trips at ~14 real grouping levels).
+  Lowered the test to 10 levels so it stays comfortably under the cap while
+  still proving that modestly nested input evaluates normally.
+
 ## [0.1.0] — 2026-06-16
 
 ### Added

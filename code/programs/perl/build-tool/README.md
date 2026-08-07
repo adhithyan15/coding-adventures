@@ -80,6 +80,14 @@ perl bin/build-tool --root /path/to/repo --force --jobs 8
 | `1` | One or more builds failed |
 | `2` | Configuration error |
 
+## Metadata Safety
+
+Lua `.rockspec` package metadata is decoded as strict UTF-8 before dependency
+resolution. Invalid bytes fail closed with `METADATA_INVALID_UTF8`, identify
+the package and repository-relative manifest, and make the CLI exit with code
+2. Diagnostics never expose the checkout path or silently replace invalid
+input bytes; a well-formed literal Unicode replacement character remains valid.
+
 ## Architecture
 
 | Module | Responsibility |
@@ -134,6 +142,7 @@ my $content = <$fh>;
 | Dependency | Source | Purpose |
 |-----------|--------|---------|
 | `Digest::SHA` | Core (5.9.3+) | SHA256 hashing |
+| `Encode` | Core | Strict UTF-8 package metadata decoding |
 | `JSON::PP` | Core (5.14+) | Cache/plan serialisation |
 | `File::Find` | Core | Directory walking |
 | `Getopt::Long` | Core | CLI argument parsing |
@@ -154,6 +163,9 @@ t/07-starlark.t      8 cases — Starlark detection, command generation
 t/08-glob-match.t    8 cases — glob pattern matching
 t/09-plan.t          3 cases — build plan serialisation
 t/10-integration.t   2 cases — end-to-end pipeline
+t/11-validator.t       BUILD and CI metadata contract validation
+t/12-ci-workflow.t     canonical CI workflow validation
+t/13-resolution-utf8.t shared fixtures — strict Lua rockspec UTF-8 and CLI diagnostics
 ```
 
 Run all tests:

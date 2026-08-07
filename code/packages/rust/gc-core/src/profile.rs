@@ -243,6 +243,8 @@ impl GcProfile {
     /// Average stop-the-world pause duration in nanoseconds.
     ///
     /// Returns `0` if no collections have run yet.
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn avg_pause_ns(&self) -> u64 {
         if self.total_collections == 0 {
             0

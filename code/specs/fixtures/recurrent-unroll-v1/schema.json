@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/recurrent-unroll-v1.json",
+  "title": "Recurrent unroll lab v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "concepts",
+    "operation",
+    "initial_state",
+    "inputs",
+    "parameters",
+    "expected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "steps", "state_size", "activation", "parameter_sharing"],
+      "properties": {
+        "kind": { "const": "scalar-elman-rnn-forward" },
+        "steps": { "const": 3 },
+        "state_size": { "const": 1 },
+        "activation": { "const": "relu" },
+        "parameter_sharing": { "const": "all-steps" }
+      }
+    },
+    "initial_state": { "type": "number" },
+    "inputs": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["steps", "states", "final_state", "memory_ablation"],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/step" }
+        },
+        "states": { "$ref": "#/$defs/three_numbers" },
+        "final_state": { "type": "number" },
+        "memory_ablation": { "$ref": "#/$defs/memory_ablation" }
+      }
+    }
+  },
+  "$defs": {
+    "three_numbers": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_weight", "recurrent_weight", "bias"],
+      "properties": {
+        "input_weight": { "type": "number" },
+        "recurrent_weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "input",
+        "previous_state",
+        "input_product",
+        "recurrent_product",
+        "bias",
+        "preactivation",
+        "state"
+      ],
+      "properties": {
+        "time": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "input": { "type": "number" },
+        "previous_state": { "type": "number" },
+        "input_product": { "type": "number" },
+        "recurrent_product": { "type": "number" },
+        "bias": { "type": "number" },
+        "preactivation": { "type": "number" },
+        "state": { "type": "number" }
+      }
+    },
+    "memory_ablation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preactivations", "states", "state_differences"],
+      "properties": {
+        "preactivations": { "$ref": "#/$defs/three_numbers" },
+        "states": { "$ref": "#/$defs/three_numbers" },
+        "state_differences": { "$ref": "#/$defs/three_numbers" }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[package]
+name = "chief-of-staff-skill-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Provider-neutral Level 1 SKILL.md runtime over Chief channels"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-skill-parser = { path = "../chief-of-staff-skill-parser" }
+chief-of-staff-skill-package = { path = "../chief-of-staff-skill-package" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+llm-gateway = { path = "../llm-gateway" }
+
+[dev-dependencies]
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+coding_adventures_ed25519 = { path = "../ed25519" }

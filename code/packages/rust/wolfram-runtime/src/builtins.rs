@@ -249,13 +249,32 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
 
     // W-22 cas-* algorithm surface under Wolfram names (MA04 §2 "Future" item,
-    // now in progress). `Simplify` was the first entry; `Expand` is the
-    // second — both ordinary eager `Head[args]` forms reusing `cas-simplify`
-    // verbatim. Further heads (`Factor`, `Solve`, `D`, `Integrate`, ...) are
-    // added one at a time, each its own PR, per HML00's one-item-per-PR
-    // discipline.
+    // now in progress). `Simplify` was the first entry, `Expand` the second —
+    // both ordinary eager `Head[args]` forms reusing `cas-simplify` verbatim.
+    // `Factor` is the third, reusing `symbolic-vm`'s own `factor_handler`
+    // (the exact function Macsyma's `factor` surface function already calls)
+    // rather than `cas-simplify`, since factoring lives directly in the
+    // shared VM crate, not a separate `cas-*` crate. `D` is the fourth,
+    // reusing `symbolic-vm`'s own `differentiate` (same idea as `Factor`,
+    // but this wrapper does its own arity/shape check first, since `D`'s
+    // fail-soft "leave it unevaluated" contract differs from
+    // `derivative_handler`'s panic-on-bad-arity one). `Integrate` is the
+    // fifth, reusing `symbolic-vm`'s own `integrate_expr` (same
+    // extract-then-wrap idea as `D`/`differentiate`) — indefinite
+    // (2-argument) form only; the 4-argument definite-integral shape
+    // `integrate_handler` also supports internally is deliberately not
+    // exposed here yet (real Wolfram spells that `Integrate[f, {x, a, b}]`
+    // with a `List` bound, a different shape from this repo's flat 4-arg
+    // convention, so it needs its own follow-on rather than a same-shape
+    // passthrough). `Solve` remains a separate future item, no grammar
+    // change required (an ordinary `Head[args]` form the existing grammar
+    // already parses) — added one at a time, each its own PR, per HML00's
+    // one-item-per-PR discipline.
     m.insert("Simplify".to_string(), handler_fn(simplify_handler));
     m.insert("Expand".to_string(), handler_fn(expand_handler));
+    m.insert("Factor".to_string(), handler_fn(factor_handler));
+    m.insert("D".to_string(), handler_fn(d_handler));
+    m.insert("Integrate".to_string(), handler_fn(integrate_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -1173,6 +1192,8 @@ fn transpose_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 ///
 /// Reads structure only; allocates a list at most as long as the nesting depth
 /// (bounded by the token-capped input), so there is no DoS surface.
+// Explicit loop with an internal break condition reads clearer than while-let (allow 1.97 while_let_loop).
+#[allow(clippy::while_let_loop)]
 fn dimensions_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.len() != 1 {
         return unevaluated(expr);
@@ -1528,11 +1549,18 @@ fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
 //   * `DeleteDuplicates`/`Tally` — outputs are **order-preserving**, fixing each
 //     distinct element's position at its first occurrence.
 //
-// Cost note: membership is a linear `canonical_cmp` scan (no hashing — `IRNode`
-// carries an `f64` and is not value-`Hash`-keyable), so the heads are worst-case
-// quadratic. Every input is already bounded by `MAX_LIST_LENGTH`, so this is a
-// deliberate, documented trade (simplicity over a canonical-key index), never an
-// unbounded surface.
+// Cost note: `IRNode` carries an `f64` and so is not value-`Hash`-keyable, but
+// it *is* totally ordered (`canonical_cmp`, built on `f64::total_cmp`) — every
+// head below is built on a single O(n log n) sort (via
+// `group_by_first_occurrence`/`sorted_dedup`/the sorted two-pointer merges) plus
+// O(n) linear passes, rather than an O(n) `contains_element` scan repeated once
+// per input element. `member_q_handler` is the one exception: it makes a single
+// membership query (not one per element of a growing accumulator), so its own
+// O(n) `contains_element` scan was never the quadratic-blowup source and is left
+// as the simplest correct thing — a full sort to answer one query would cost
+// more, not less. Every input is already bounded by `MAX_LIST_LENGTH` regardless,
+// so none of this is an unbounded surface even before considering the algorithmic
+// complexity.
 
 /// Two `IRNode`s are the **same element** iff the W-9 canonical comparator ranks
 /// them `Equal`. This is the single notion of element-equality every W-13 head
@@ -1546,10 +1574,101 @@ fn same_element(a: &IRNode, b: &IRNode) -> bool {
 }
 
 /// True if `set` already contains an element equal (under [`same_element`]) to
-/// `candidate`. The linear membership scan shared by every W-13 head — the source
-/// of the documented worst-case quadratic cost, bounded by `MAX_LIST_LENGTH`.
+/// `candidate`. An O(n) linear scan — correct (and the cheapest option) for a
+/// single membership query, but never reused as the *repeated* per-element check
+/// inside another head's accumulation loop (that shape is what
+/// `group_by_first_occurrence`/`sorted_dedup`/the sorted merges below replace).
 fn contains_element(set: &[IRNode], candidate: &IRNode) -> bool {
     set.iter().any(|e| same_element(e, candidate))
+}
+
+/// Sort `elems` by [`canonical_cmp`] and drop adjacent duplicates (elements
+/// equal under [`same_element`]), keeping one representative of each
+/// equality-class. O(n log n): a `Union`/`Intersection`/`Complement` result is
+/// re-sorted by canonical order regardless, so sorting up front (once) rather
+/// than dedup-while-scanning-unsorted (an O(n) `contains_element` check per
+/// input element) costs nothing extra and removes the quadratic term.
+fn sorted_dedup(mut elems: Vec<IRNode>) -> Vec<IRNode> {
+    elems.sort_by(canonical_cmp);
+    elems.dedup_by(|a, b| same_element(a, b));
+    elems
+}
+
+/// The sorted intersection of two already [`sorted_dedup`]-ed slices — the
+/// classic two-pointer merge, O(len(a) + len(b)) given both inputs are sorted.
+fn sorted_intersect(a: &[IRNode], b: &[IRNode]) -> Vec<IRNode> {
+    use std::cmp::Ordering;
+    let mut out = Vec::new();
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() && j < b.len() {
+        match canonical_cmp(&a[i], &b[j]) {
+            Ordering::Less => i += 1,
+            Ordering::Greater => j += 1,
+            Ordering::Equal => {
+                out.push(a[i].clone());
+                i += 1;
+                j += 1;
+            }
+        }
+    }
+    out
+}
+
+/// The sorted set-difference `a \ b` of two already [`sorted_dedup`]-ed slices
+/// (elements of `a` not present in `b`) — the same two-pointer merge shape as
+/// [`sorted_intersect`], O(len(a) + len(b)).
+fn sorted_difference(a: &[IRNode], b: &[IRNode]) -> Vec<IRNode> {
+    use std::cmp::Ordering;
+    let mut out = Vec::with_capacity(a.len());
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() {
+        if j >= b.len() {
+            out.push(a[i].clone());
+            i += 1;
+            continue;
+        }
+        match canonical_cmp(&a[i], &b[j]) {
+            Ordering::Less => {
+                out.push(a[i].clone());
+                i += 1;
+            }
+            Ordering::Greater => j += 1,
+            Ordering::Equal => {
+                i += 1;
+                j += 1;
+            }
+        }
+    }
+    out
+}
+
+/// Group `elems` by [`same_element`]-equality, returning each distinct group's
+/// `(first_occurrence_original_index, count)` in first-occurrence order — the
+/// shared engine behind `DeleteDuplicates` (which only needs the index) and
+/// `Tally` (which needs both). A single O(n log n) sort of `(original index,
+/// element)` pairs, then one O(n) linear pass to find each equality-class's
+/// minimum original index and size, replaces an O(n) `contains_element` scan
+/// repeated once per input element.
+fn group_by_first_occurrence(elems: &[IRNode]) -> Vec<(usize, usize)> {
+    let mut order: Vec<usize> = (0..elems.len()).collect();
+    order.sort_by(|&i, &j| canonical_cmp(&elems[i], &elems[j]));
+    let mut groups: Vec<(usize, usize)> = Vec::new();
+    let mut i = 0;
+    while i < order.len() {
+        let mut j = i + 1;
+        while j < order.len() && same_element(&elems[order[i]], &elems[order[j]]) {
+            j += 1;
+        }
+        let min_idx = order[i..j]
+            .iter()
+            .copied()
+            .min()
+            .expect("non-empty equality group");
+        groups.push((min_idx, j - i));
+        i = j;
+    }
+    groups.sort_by_key(|(idx, _)| *idx);
+    groups
 }
 
 /// `Union[a, b, …]` → the **sorted**, duplicate-free union of the element lists.
@@ -1558,31 +1677,29 @@ fn contains_element(set: &[IRNode], candidate: &IRNode) -> bool {
 /// (a single argument doubles as "sort-and-unique"). Every argument must be a
 /// `List`; a non-list argument (or zero arguments) leaves the form unevaluated.
 ///
-/// **DoS-capped**: the deduped accumulator is refused (form left unevaluated) the
-/// moment it would exceed [`MAX_LIST_LENGTH`] — symmetric with `Join`/`Flatten`.
-/// The final result is sorted with the W-9 `canonical_cmp` (a *stable* `sort_by`),
-/// so the order is deterministic.
+/// **DoS-capped**: refused (form left unevaluated) if the deduped result would
+/// exceed [`MAX_LIST_LENGTH`] — symmetric with `Join`/`Flatten`. The result is
+/// sorted with the W-9 `canonical_cmp`, so the order is deterministic.
 fn union_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
-    // Accumulate the deduped union across all argument lists, capping the
-    // accumulator length before each insert.
-    let mut out: Vec<IRNode> = Vec::new();
+    // Every argument list is itself already bounded by `MAX_LIST_LENGTH`
+    // (an invariant every producer of a `List` value upholds), so collecting
+    // all of them before sorting is bounded too -- and cheap: `sorted_dedup`
+    // is one O(n log n) sort, not an O(n) `contains_element` scan repeated
+    // once per element (which made this quadratic in the element count).
+    let mut all: Vec<IRNode> = Vec::new();
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        for elem in elems {
-            if !contains_element(&out, &elem) {
-                if out.len() >= MAX_LIST_LENGTH {
-                    return unevaluated(expr);
-                }
-                out.push(elem);
-            }
-        }
+        all.extend(elems);
     }
-    out.sort_by(canonical_cmp);
+    let out = sorted_dedup(all);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1598,32 +1715,28 @@ fn intersection_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
-    // Materialise every argument up front so a non-list anywhere rejects the whole
-    // form before we start filtering.
+    // Sort+dedup every argument once up front (`sorted_dedup`), then fold a
+    // sorted two-pointer merge (`sorted_intersect`) across them -- O(n log n)
+    // total, replacing an O(n) `contains_element` scan *per rest-list* that
+    // ran once per element of the first list.
     let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        lists.push(elems);
+        lists.push(sorted_dedup(elems));
     }
-    // Keep each distinct element of the first list that also appears in *all* the
-    // rest. Dedup against `out` so a repeated element in the first list is emitted
-    // once.
     let (first, rest) = lists.split_first().expect("non-empty: checked above");
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in first {
-        if contains_element(&out, elem) {
-            continue;
+    let mut out = first.clone();
+    for other in rest {
+        if out.is_empty() {
+            break;
         }
-        if rest.iter().all(|other| contains_element(other, elem)) {
-            if out.len() >= MAX_LIST_LENGTH {
-                return unevaluated(expr);
-            }
-            out.push(elem.clone());
-        }
+        out = sorted_intersect(&out, other);
     }
-    out.sort_by(canonical_cmp);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1640,27 +1753,27 @@ fn complement_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
+    // Same shape as `intersection_handler`: sort+dedup every argument once,
+    // then fold a sorted two-pointer set-difference (`sorted_difference`)
+    // across the `subtract` lists -- O(n log n) total.
     let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        lists.push(elems);
+        lists.push(sorted_dedup(elems));
     }
     let (all, subtract) = lists.split_first().expect("non-empty: checked above");
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in all {
-        if contains_element(&out, elem) {
-            continue;
+    let mut out = all.clone();
+    for other in subtract {
+        if out.is_empty() {
+            break;
         }
-        if subtract.iter().all(|other| !contains_element(other, elem)) {
-            if out.len() >= MAX_LIST_LENGTH {
-                return unevaluated(expr);
-            }
-            out.push(elem.clone());
-        }
+        out = sorted_difference(&out, other);
     }
-    out.sort_by(canonical_cmp);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1678,12 +1791,10 @@ fn delete_duplicates_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     let Some(elems) = list_elements(&expr.args[0]) else {
         return unevaluated(expr);
     };
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in elems {
-        if !contains_element(&out, &elem) {
-            out.push(elem);
-        }
-    }
+    // `group_by_first_occurrence` is one O(n log n) sort, replacing an O(n)
+    // `contains_element` scan repeated once per input element.
+    let groups = group_by_first_occurrence(&elems);
+    let out: Vec<IRNode> = groups.into_iter().map(|(idx, _)| elems[idx].clone()).collect();
     apply(sym(LIST), out)
 }
 
@@ -1723,28 +1834,16 @@ fn tally_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     let Some(elems) = list_elements(&expr.args[0]) else {
         return unevaluated(expr);
     };
-    // Parallel vectors: the distinct elements in first-occurrence order, and their
-    // running counts. A linear scan per element keeps the order without hashing
-    // (the documented quadratic cost, bounded by MAX_LIST_LENGTH).
-    let mut keys: Vec<IRNode> = Vec::new();
-    let mut counts: Vec<i64> = Vec::new();
-    for elem in elems {
-        match keys.iter().position(|k| same_element(k, &elem)) {
-            Some(i) => counts[i] += 1,
-            None => {
-                if keys.len() >= MAX_LIST_LENGTH {
-                    return unevaluated(expr);
-                }
-                keys.push(elem);
-                counts.push(1);
-            }
-        }
+    // `group_by_first_occurrence` is one O(n log n) sort, replacing an O(n)
+    // linear scan (`keys.iter().position(...)`) repeated once per input
+    // element.
+    let groups = group_by_first_occurrence(&elems);
+    if groups.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
     }
-    // Build the {element, count} pairs in the recorded first-occurrence order.
-    let pairs: Vec<IRNode> = keys
+    let pairs: Vec<IRNode> = groups
         .into_iter()
-        .zip(counts)
-        .map(|(k, c)| apply(sym(LIST), vec![k, int(c)]))
+        .map(|(idx, count)| apply(sym(LIST), vec![elems[idx].clone(), int(count as i64)]))
         .collect();
     apply(sym(LIST), pairs)
 }
@@ -3255,11 +3354,10 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 
 /// `Expand[expr]` → the fully distributed polynomial form: every
 /// `(a + b) * c`-shaped product is multiplied out into a flat sum of terms,
-/// then the result is fixed-pointed through the same simplifier `Simplify`
-/// uses so constants fold and identities collapse. Does **not** collect like
-/// terms (e.g. `Expand[x + x]` stays `x + x`, it does not become `2 x`) —
-/// that is a separate, not-yet-implemented `cas_simplify::expand` capability
-/// (see MA04 §24.2), not a Wolfram-wiring limitation.
+/// like terms are collected (`Expand[x + x]` → `2 x`, repeated factors fold
+/// into a power — see `cas_simplify::collect_terms`), then the result is
+/// fixed-pointed through the same simplifier `Simplify` uses so constants
+/// fold and identities collapse.
 ///
 /// A thin call into [`cas_simplify::expand`] — the exact function Macsyma's
 /// `expand_handler` calls (`macsyma-runtime/src/lib.rs`), reused verbatim so
@@ -3273,6 +3371,108 @@ fn expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
         return unevaluated(expr);
     }
     expand(expr.args[0].clone())
+}
+
+/// `Factor[expr]` → factor a univariate integer polynomial, or recognise one
+/// of a handful of common multivariate patterns (perfect square/cube,
+/// difference of squares, cubic identities, a common symbolic/integer term to
+/// pull out, bivariate/n-variate Hensel lifting) — unevaluated if none apply.
+///
+/// Unlike `Simplify`/`Expand` (thin calls into the standalone `cas-simplify`
+/// crate), `Factor`'s implementation lives directly in `symbolic-vm` itself
+/// (`symbolic_vm::handlers::factor_handler`, made `pub` specifically so this
+/// wiring can reuse it) — so this is a direct call into the exact same
+/// function Macsyma's own `factor` surface function already calls, no
+/// algorithm reimplemented or duplicated. That function already performs its
+/// own arity check (any arity other than one leaves the form unevaluated, the
+/// same fail-soft contract every other W-22/W-15 built-in follows), so this
+/// wrapper needs no arity check of its own — unlike `simplify_handler`/
+/// `expand_handler`, which must unwrap `expr.args[0]` themselves before
+/// calling a single-expression-argument function.
+fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    symbolic_vm::handlers::factor_handler(vm, expr)
+}
+
+/// `D[expr, x]` → the symbolic derivative of `expr` with respect to the
+/// symbol `x`: the standard sum/product/quotient/power/chain rules, plus
+/// the elementary transcendental functions (`Sin`, `Cos`, `Exp`, `Log`,
+/// `Sqrt`, the inverse and hyperbolic trig functions, …), fully recursed
+/// and then run back through the VM's evaluator so constant folding and any
+/// nested rule output collapse into one final form (e.g. `D[x^3, x]` →
+/// `3 * x^2`, not a half-reduced intermediate).
+///
+/// Like `Factor` (and unlike `Simplify`/`Expand`), the actual
+/// differentiation logic lives directly in `symbolic-vm` itself: this is a
+/// thin call into `symbolic_vm::handlers::differentiate` — the exact
+/// pipeline Macsyma's own `derivative_handler` already runs, extracted into
+/// a `pub` free function specifically so this wiring can reuse it (see
+/// that crate's own changelog). No algorithm is reimplemented or
+/// duplicated. Unlike `factor_handler`, `differentiate` cannot do its own
+/// arity check — `derivative_handler`'s existing contract *panics* on the
+/// wrong number of arguments, which is right for a genuine internal
+/// invariant violation but wrong for Wolfram's fail-soft "leave it
+/// unevaluated" contract every other W-22/W-15 built-in follows — so this
+/// wrapper validates the shape itself before calling through: exactly two
+/// arguments, and the second must be a bare symbol (`D[expr, 2]` or
+/// `D[expr]` stay unevaluated, matching `derivative_handler`'s own
+/// non-symbol case).
+fn d_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let x = match &expr.args[1] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return unevaluated(expr),
+    };
+    let f = expr.args[0].clone();
+    symbolic_vm::handlers::differentiate(vm, f, &x)
+}
+
+/// `Integrate[expr, x]` → the indefinite integral of `expr` with respect to
+/// the symbol `x`: shape-specific closed forms (polynomial power rule,
+/// elementary transcendentals, the Weierstrass trig-rational substitution,
+/// incomplete-elliptic recognition, …) tried in sequence, falling back to a
+/// generic tabular integration-by-parts sweep, exactly the same pipeline
+/// Macsyma's own `integrate` surface function already runs.
+///
+/// Like `D` (and unlike `Factor`), the actual integration logic lives
+/// directly in `symbolic-vm` itself but cannot be reused via a single
+/// no-arity-check call the way `factor_handler` can: this is a thin call
+/// into `symbolic_vm::handlers::integrate_expr` — the exact indefinite-
+/// integral pipeline `integrate_handler`'s own 2-argument branch runs,
+/// extracted into a `pub` free function specifically so this wiring can
+/// reuse it (see that crate's own changelog). No algorithm is reimplemented
+/// or duplicated. `integrate_handler`'s existing contract *panics* on an
+/// argument count other than 2 or 4 — right for a genuine internal
+/// invariant violation but wrong for Wolfram's fail-soft "leave it
+/// unevaluated" contract every other W-22/W-15 built-in follows — so this
+/// wrapper validates the shape itself before calling through: exactly two
+/// arguments, and the second must be a bare symbol (`Integrate[expr, 2]` or
+/// `Integrate[expr]` stay unevaluated).
+///
+/// The 4-argument definite-integral shape `integrate_handler` also supports
+/// (`Integrate[f, x, a, b]`, this repo's flat convention for the complete-
+/// elliptic-integral recognisers) is deliberately **not** exposed under the
+/// Wolfram name yet — real Wolfram spells a definite integral
+/// `Integrate[f, {x, a, b}]`, bounds wrapped in a `List`, a different shape
+/// from the flat 4-arg convention `integrate_handler` uses internally, so
+/// building that surface needs its own `List`-destructuring wrapper as a
+/// follow-up rather than a same-shape passthrough.
+///
+/// ```text
+/// Integrate[x^2, x]      (* x^3 / 3 *)
+/// Integrate[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+/// ```
+fn integrate_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let x = match &expr.args[1] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return unevaluated(expr),
+    };
+    let f = expr.args[0].clone();
+    symbolic_vm::handlers::integrate_expr(vm, f, x)
 }
 
 // ---------------------------------------------------------------------------
@@ -5454,6 +5654,85 @@ mod tests {
         assert_eq!(result, apply(sym("Tally"), vec![arg]));
     }
 
+    // ── security regression: O(n) `contains_element` scan repeated once per ──
+    // element made every W-13 head worst-case quadratic ─────────────────────
+    //
+    // `union_over_cap_stays_unevaluated`/`tally_over_cap_stays_unevaluated`
+    // above are the historical repro: each builds MAX_LIST_LENGTH + 1
+    // genuinely *distinct* integers (the true worst case for a linear
+    // membership scan against a growing accumulator — a list of mostly
+    // duplicates never grows the accumulator large enough to matter). Before
+    // this fix, each of those two tests alone took 30-40+ minutes and 100-200%
+    // CPU to reach the cap (confirmed by direct measurement in an earlier
+    // session). `Intersection`/`Complement`/`DeleteDuplicates` share the exact
+    // same `contains_element`-in-a-loop shape and so shared the same
+    // vulnerability, but had no large-input test proving it either way. These
+    // tests close that gap: a large, genuinely-distinct input, with the
+    // wall-clock actually measured (not just "completes without hanging" —
+    // the whole point of a quadratic bug is that it "completes", just far too
+    // slowly), asserting a generous but decisive bound. All of `mod tests`
+    // (329 cases) runs in well under a second after this fix; anything
+    // approaching even a few seconds here would indicate a regression back
+    // toward the quadratic shape.
+
+    #[test]
+    fn intersection_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let a: Vec<IRNode> = (0..n).map(int).collect();
+        let b: Vec<IRNode> = (0..n).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("Intersection", vec![list(a), list(b)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "Intersection over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-rest-list scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => assert_eq!(a.args.len(), n as usize),
+            other => panic!("expected a full-length List result, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn complement_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let all: Vec<IRNode> = (0..n).map(int).collect();
+        let subtract: Vec<IRNode> = (0..n / 2).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("Complement", vec![list(all), list(subtract)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "Complement over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-subtrahend scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => {
+                assert_eq!(a.args.len(), (n - n / 2) as usize)
+            }
+            other => panic!("expected a List result, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn delete_duplicates_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let elems: Vec<IRNode> = (0..n).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("DeleteDuplicates", vec![list(elems)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "DeleteDuplicates over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-element scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => assert_eq!(a.args.len(), n as usize),
+            other => panic!("expected a full-length List result, got {other:?}"),
+        }
+    }
+
     #[test]
     fn set_ops_resolve_end_to_end_through_the_backend() {
         // Over a real WolframBackend the heads are reachable by name and compose
@@ -6004,10 +6283,10 @@ mod tests {
 
     #[test]
     fn expand_distributes_products_over_sums() {
-        // Expand[(x+1)^2] -> 1 + x + x + x*x (no like-term collection -- the
-        // same honest, documented scope as Macsyma's `expand()`, see
-        // `expand_distributes_polynomial_multiplication` in
-        // `macsyma-runtime/tests/test_runtime.rs`).
+        // Expand[(x+1)^2] -> 1 + 2*x + x^2, fully collected -- the same
+        // like-term-collecting `cas_simplify::expand` Macsyma's `expand()`
+        // now also uses, see `expand_distributes_polynomial_multiplication`
+        // in `macsyma-runtime/tests/test_runtime.rs`.
         let x = sym("x");
         let squared = apply(
             sym(symbolic_ir::POW),
@@ -6019,9 +6298,8 @@ mod tests {
                 sym(ADD),
                 vec![
                     int(1),
-                    x.clone(),
-                    x.clone(),
-                    apply(sym(MUL), vec![x.clone(), x])
+                    apply(sym(MUL), vec![int(2), x.clone()]),
+                    apply(sym(symbolic_ir::POW), vec![x, int(2)]),
                 ],
             )
         );
@@ -6064,6 +6342,239 @@ mod tests {
         assert_eq!(
             eval_full(apply(sym("Expand"), vec![product.clone()])),
             cas_simplify::expand(product)
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-22 cas-* algorithm surface — Factor
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn factor_factors_a_univariate_integer_polynomial() {
+        // Factor[x^2 - 1] -> (1 + x) * (-1 + x), the exact same difference-of-
+        // squares factorisation `factor(x^2 - 1)` produces in Macsyma (see
+        // `factors_univariate_integer_polynomials_through_runtime` in
+        // `macsyma-runtime/tests/test_runtime.rs`).
+        let x_squared_minus_one = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        assert_eq!(
+            run("Factor", vec![x_squared_minus_one]),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(ADD), vec![int(1), sym("x")]),
+                    apply(sym(ADD), vec![int(-1), sym("x")]),
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn factor_leaves_an_unrecognised_multivariate_form_unevaluated() {
+        // Factor[x + y] has no common factor and matches none of the
+        // recognised multivariate patterns, so it echoes back unevaluated —
+        // mirrors `keeps_multivariate_factor_calls_unevaluated` in
+        // `macsyma-runtime/tests/test_runtime.rs`.
+        let x_plus_y = apply(sym(ADD), vec![sym("x"), sym("y")]);
+        assert_eq!(
+            run("Factor", vec![x_plus_y.clone()]),
+            apply(sym("Factor"), vec![x_plus_y])
+        );
+    }
+
+    #[test]
+    fn factor_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Factor and Macsyma's factor() dispatch to the exact
+        // same symbolic_vm::handlers::factor_handler -- this pins that the
+        // Wolfram wiring doesn't diverge from the reference call. Needs a
+        // fresh VM on each side since factor_handler takes `&mut VM` (unlike
+        // Simplify/Expand's parity tests, which call a plain free function).
+        let expr = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        let via_wolfram = run("Factor", vec![expr.clone()]);
+        let ir_apply = IRApply {
+            head: sym("Factor"),
+            args: vec![expr],
+        };
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path = symbolic_vm::handlers::factor_handler(&mut vm, ir_apply);
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn factor_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Factor", vec![]), apply(sym("Factor"), vec![]));
+        assert_eq!(
+            run("Factor", vec![int(1), int(2)]),
+            apply(sym("Factor"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn factor_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^2 - 1 fully factors through the full parser -> lower -> backend
+        // path, exactly mirroring `expand_dispatches_end_to_end_through_the_
+        // wolfram_backend` above.
+        let x_squared_minus_one = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        assert_eq!(
+            eval_full(apply(sym("Factor"), vec![x_squared_minus_one])),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(ADD), vec![int(1), sym("x")]),
+                    apply(sym(ADD), vec![int(-1), sym("x")]),
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn d_computes_the_symbolic_derivative_of_a_power() {
+        // D[x^3, x] -> 3 * x^2, the exact same power-rule result `d(x^3)`
+        // produces in `symbolic-vm`'s own `derivative_power_rules` test
+        // (`symbolic-vm/tests/test_vm.rs`).
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        assert_eq!(
+            run("D", vec![x_cubed, sym("x")]),
+            apply(
+                sym(MUL),
+                vec![int(3), apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)])],
+            )
+        );
+    }
+
+    #[test]
+    fn d_leaves_a_non_symbol_second_argument_unevaluated() {
+        // D[x^2, 2] -- the second argument isn't a symbol, so this stays
+        // unevaluated exactly like `derivative_handler`'s own non-symbol
+        // case (`symbolic-vm/src/handlers.rs`).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("D", vec![x_squared.clone(), int(2)]),
+            apply(sym("D"), vec![x_squared, int(2)])
+        );
+    }
+
+    #[test]
+    fn d_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's D and Macsyma's D dispatch to the exact same
+        // symbolic_vm::handlers::differentiate -- this pins that the
+        // Wolfram wiring doesn't diverge from the reference call. Needs a
+        // fresh VM on each side since `differentiate` takes `&mut VM`
+        // (unlike Simplify/Expand's parity tests, which call a plain free
+        // function).
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        let via_wolfram = run("D", vec![x_cubed.clone(), sym("x")]);
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path = symbolic_vm::handlers::differentiate(&mut vm, x_cubed, "x");
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn d_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("D", vec![]), apply(sym("D"), vec![]));
+        assert_eq!(run("D", vec![sym("x")]), apply(sym("D"), vec![sym("x")]));
+        assert_eq!(
+            run("D", vec![sym("x"), sym("y"), sym("z")]),
+            apply(sym("D"), vec![sym("x"), sym("y"), sym("z")])
+        );
+    }
+
+    #[test]
+    fn d_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^3 differentiates through the full VM eval dispatch on a real
+        // WolframBackend, exactly mirroring
+        // `factor_dispatches_end_to_end_through_the_wolfram_backend` above.
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        assert_eq!(
+            eval_full(apply(sym("D"), vec![x_cubed, sym("x")])),
+            apply(
+                sym(MUL),
+                vec![int(3), apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)])],
+            )
+        );
+    }
+
+    #[test]
+    fn integrate_computes_the_indefinite_integral_of_a_power() {
+        // Integrate[x^2, x] -> (1/3) * x^3, the exact same power-rule result
+        // `integrate(x^2)` produces in `symbolic-vm`'s own
+        // `integrate_power_rules` test (`symbolic-vm/tests/test_vm.rs`).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("Integrate", vec![x_squared, sym("x")]),
+            apply(
+                sym(MUL),
+                vec![
+                    IRNode::Rational(1, 3),
+                    apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]),
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn integrate_leaves_a_non_symbol_second_argument_unevaluated() {
+        // Integrate[x^2, 2] -- the second argument isn't a symbol, so this
+        // stays unevaluated exactly like `D`'s own non-symbol case above.
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("Integrate", vec![x_squared.clone(), int(2)]),
+            apply(sym("Integrate"), vec![x_squared, int(2)])
+        );
+    }
+
+    #[test]
+    fn integrate_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Integrate and Macsyma's integrate dispatch to the
+        // exact same symbolic_vm::handlers::integrate_expr -- this pins
+        // that the Wolfram wiring doesn't diverge from the reference call.
+        // Needs a fresh VM on each side since `integrate_expr` takes
+        // `&mut VM` (unlike Simplify/Expand's parity tests, which call a
+        // plain free function).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        let via_wolfram = run("Integrate", vec![x_squared.clone(), sym("x")]);
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path =
+            symbolic_vm::handlers::integrate_expr(&mut vm, x_squared, "x".to_string());
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn integrate_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Integrate", vec![]), apply(sym("Integrate"), vec![]));
+        assert_eq!(
+            run("Integrate", vec![sym("x")]),
+            apply(sym("Integrate"), vec![sym("x")])
+        );
+        assert_eq!(
+            run("Integrate", vec![sym("x"), sym("y"), sym("z")]),
+            apply(sym("Integrate"), vec![sym("x"), sym("y"), sym("z")])
+        );
+    }
+
+    #[test]
+    fn integrate_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^2 integrates through the full VM eval dispatch on a real
+        // WolframBackend, exactly mirroring
+        // `d_dispatches_end_to_end_through_the_wolfram_backend` above.
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            eval_full(apply(sym("Integrate"), vec![x_squared, sym("x")])),
+            apply(
+                sym(MUL),
+                vec![
+                    IRNode::Rational(1, 3),
+                    apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]),
+                ],
+            )
         );
     }
 

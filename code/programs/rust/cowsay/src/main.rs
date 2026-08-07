@@ -1,21 +1,30 @@
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
+// These layout/text imports are only used by the Apple-only PNG rendering path
+// below (`#[cfg(target_vendor = "apple")]`). Gate them the same way so non-Apple
+// targets (e.g. Linux CI) don't flag them as unused.
+#[cfg(target_vendor = "apple")]
 use layout_ir::{
     color_black, color_white, font_spec, Content, PositionedNode, TextAlign, TextContent,
     TextMeasurer,
 };
+#[cfg(target_vendor = "apple")]
 use layout_text_measure_native::NativeMeasurer;
+#[cfg(target_vendor = "apple")]
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
+#[cfg(target_vendor = "apple")]
+use std::collections::HashMap;
+#[cfg(target_vendor = "apple")]
+use text_native::text_interfaces::{FontMetrics, FontResolver, TextShaper};
+#[cfg(target_vendor = "apple")]
+use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use regex::Regex;
 use serde_json::Value;
-use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
-use text_native::text_interfaces::{FontMetrics, FontResolver, TextShaper};
-use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 
 #[derive(Debug, Default)]
 struct PaintRenderOptions {
@@ -44,7 +53,7 @@ fn wrap_text(text: &str, width: usize) -> Vec<String> {
 
     let mut current_line = String::new();
     for word in words {
-        if current_line.len() + word.len() + 1 <= width {
+        if current_line.len() + word.len() < width {
             if current_line.is_empty() {
                 current_line = word.to_string();
             } else {

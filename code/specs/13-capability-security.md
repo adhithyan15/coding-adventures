@@ -254,10 +254,13 @@ If any install-time executable code is found, the publish fails.
 
 ### The Core Idea
 
-Every package declares exactly what OS capabilities it needs in a file called
-`required_capabilities.json`. Most packages in this monorepo declare **zero capabilities**
-— they are pure computation that takes values in and returns values out, with no
-interaction with the filesystem, network, processes, or environment.
+Every package has an effective OS-capability profile. New scaffolded packages
+and packages whose metadata is repaired declare that profile explicitly in
+`required_capabilities.json`. Legacy packages may omit the file; absence is the
+equivalent zero-capability profile. Most packages in this monorepo require
+**zero capabilities** — they are pure computation that takes values in and
+returns values out, with no interaction with the filesystem, network,
+processes, or environment.
 
 This is inspired by OpenBSD's `unveil()` system call, which allows a process to declare
 exactly which filesystem paths it will access. After the declaration, all other paths
@@ -288,6 +291,44 @@ category:action:target
 | `stdin` | `read` | `*` | `stdin:read:*` |
 | `stdout` | `write` | `*` | `stdout:write:*` |
 
+`stdout` is the taxonomy's unified process-output category: it covers writes
+to both standard output and standard error. Both streams therefore use
+`stdout:write:*`.
+
+#### Closed category/action contract
+
+Category and action are a pair, not two independent vocabularies. A manifest
+MUST use one of the 19 pairs in the table above. An action that is valid for a
+different category is still invalid; for example, `fs:connect`, `net:read`,
+and `stdout:read` MUST be rejected.
+
+The language-neutral fixture
+`code/specs/fixtures/capability-security-v1/taxonomy.json` is the executable
+form of this table. It lists the eight categories, the 14-action union, the 19
+allowed pairs, and the expected 93 invalid cross-pairs. Its schema is
+`code/specs/schemas/capability_taxonomy.schema.json`.
+
+Every manifest schema and every ingestion or enforcement boundary MUST:
+
+1. recognize all 19 declared category/action pairs, with both manifest schemas
+   accepting all 19;
+2. reject all 93 other combinations drawn from the known category and action
+   vocabularies;
+3. reject unknown categories and unknown actions;
+4. reject the whole manifest before generation, analysis, or cage construction
+   rather than dropping, weakening, or converting an invalid declaration; and
+5. test its local pair table exhaustively against the shared fixture.
+
+An enforcement backend that cannot safely implement one of the 19 recognized
+pairs MUST return an explicit unsupported-capability error before replacing or
+emitting output. It MUST NOT emit an empty namespace, a TODO, or an unguarded
+operation. This permits capability-aware runtimes and analyzers to accept the
+whole taxonomy while allowing narrower code generators to fail closed.
+
+The shared fixture is a conformance oracle, not a runtime dependency. Published
+packages embed the closed pair table so validation remains available without a
+repository checkout.
+
 ### Why This Granularity Matters
 
 Consider the difference between these two declarations:
@@ -309,15 +350,20 @@ should operate using the least set of privileges necessary to complete the job.
 The manifest file `required_capabilities.json` lives at the root of the package directory,
 alongside `BUILD` and `pyproject.toml`/`.gemspec`/`go.mod`.
 
-**Default deny: no manifest = zero capabilities.** A package without a
-`required_capabilities.json` file is treated as pure computation with zero OS access. This
-is the common case — most packages in this repo do not have a manifest because they do not
-need one. The absence of the file IS the declaration: "this package needs nothing."
+**Default deny: no manifest = zero capabilities.** A legacy package without a
+`required_capabilities.json` file is treated as pure computation with zero OS access. The
+absence of the file IS the effective declaration: "this package needs nothing."
 
-Only packages that actually need OS capabilities have a manifest file. This means:
-- Adding a manifest to a previously pure package is itself a capability escalation
-- The presence of a new `required_capabilities.json` in a PR is a security-relevant signal
-- Reviewers and CI can flag any PR that adds a manifest file
+Scaffold generators emit explicit schema-v1 profiles so new packages can be
+validated before they enter the repository. Backfilling an explicit empty
+profile onto a legacy pure package is metadata hardening, not a capability
+escalation. Adding a nonempty capability, or changing an existing nonempty
+profile, is security-relevant and requires the Layer 5 approval:
+- The presence of a new nonempty `required_capabilities.json` in a PR is a
+  security-relevant signal.
+- Reviewers and CI flag any new or changed capability object.
+- Empty explicit profiles and absent legacy profiles both enforce zero OS
+  access.
 
 **A package that reads grammar files (the uncommon case):**
 
@@ -960,7 +1006,7 @@ kernel cannot be bypassed by application code.
 
 | Step | Attacker Action | Layer Hit | Result |
 |------|----------------|-----------|--------|
-| 1 | Create package, no manifest | Layer 4 (CI Gate) | Publish refuses — no `required_capabilities.json` |
+| 1 | Create package with undeclared network access | Layer 4 (CI Gate) | Static analysis detects `net:connect` outside the effective zero-capability profile |
 | 2 | Add manifest with `net:connect` | Layer 5 (Hardware Key) | **Blocked** — no signed approval |
 | 3 | Even if bypassed, trigger publish | Registry gate | PyPI Trusted Publisher not registered for this name |
 
@@ -1105,7 +1151,9 @@ All security packages use the `ca_` prefix:
 ### Phase 1: Specification and Manifests
 - This specification document
 - JSON Schema for `required_capabilities.json`
-- Add `required_capabilities.json` to all existing packages
+- Emit schema-v1 manifests for new scaffolds and backfill explicit metadata
+  where maintained; absent legacy manifests remain effective zero-capability
+  profiles
 - No enforcement — just the data
 
 ### Phase 2: Static Analyzers

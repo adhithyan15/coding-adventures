@@ -1,0 +1,20 @@
+% ============================================================================
+% rainbow-colors.query.adj — a worked recall over the optics rainbow library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which color is fourth in
+% the rainbow?" — it states no optics fact, only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `rainbow_color_order` rows and returns the position (or the color, on a reverse
+% query) + the NASA source/locator/trust. A hue that is not one of the seven
+% spectral colors abstains honestly — the engine never invents an order.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli rainbow-colors.query.adj
+% ============================================================================
+
+import "rainbow-colors.adj"
+
+? rainbow_color_order(green, $N)       % expect 4  (which position is green?)
+? rainbow_color_order(violet, $N)      % expect 7  (the last/shortest-wavelength)
+? rainbow_color_order($Color, 1)       % expect red (reverse: which is first?)
+? rainbow_color_order(brown, $N)       % expect abstain — not a spectral color

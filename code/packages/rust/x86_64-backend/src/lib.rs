@@ -55,6 +55,7 @@
 
 use std::collections::HashMap;
 
+use gc_core::{StackMapBuilder, StackMapRecord};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
@@ -63,6 +64,45 @@ use x86_64_encoder::{
 };
 
 pub use x86_64_encoder::ExternalReloc as Reloc;
+
+// ===========================================================================
+// GC precise-roots: reference-typed slots (AOT00-T1)
+// ===========================================================================
+
+/// The machine scalar types whose slots can **never** hold a GC reference. A slot of
+/// any other type — notably `any`, `str`, `ref<…>`, `array<…>` — is treated as a
+/// potential root (see [`is_gc_root_ty`]).
+///
+/// This is a **deny-list**, not an allow-list, and deliberately so: `aot_core`'s
+/// specialiser erases every reference type to `"any"` before it reaches a backend, so
+/// a rule keyed on `ref<…>` would never fire and would emit records naming *nothing* —
+/// and an empty record authoritatively suppresses a frame's conservative scan, a
+/// use-after-free. The deny-list is immune to that erasure. Mirrors the aarch64 backend
+/// exactly so both native targets agree on which slots are roots.
+fn is_definitely_not_ref(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8"
+            | "u16"
+            | "u32"
+            | "u64"
+            | "i8"
+            | "i16"
+            | "i32"
+            | "i64"
+            | "f32"
+            | "f64"
+            | "bool"
+            | "void"
+    )
+}
+
+/// Could a value of this CIR type be a GC reference (and so need naming as a root)?
+/// True for everything except the machine scalars in [`is_definitely_not_ref`] —
+/// including, critically, `any`, the normal type of every dynamic heap value.
+fn is_gc_root_ty(ty: &str) -> bool {
+    !is_definitely_not_ref(ty)
+}
 
 // ===========================================================================
 // ABI selection
@@ -172,7 +212,7 @@ pub fn compile_function(
     abi: X86_64Abi,
 ) -> Result<Vec<u8>, String> {
     compile_inner(ctx, ir, abi, &HashMap::new())
-        .map(|(bytes, _relocs)| bytes)
+        .map(|(bytes, _relocs, _stack_map)| bytes)
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
@@ -189,6 +229,7 @@ pub fn compile_function_with_relocs(
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, Vec<Reloc>), String> {
     compile_inner(ctx, ir, abi, &HashMap::new())
+        .map(|(bytes, relocs, _stack_map)| (bytes, relocs))
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
@@ -213,7 +254,24 @@ pub fn compile_function_with_globals(
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<Reloc>), String> {
     compile_inner(ctx, ir, abi, global_slots)
+        .map(|(bytes, relocs, _stack_map)| (bytes, relocs))
         .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function_with_globals`] but also returns the function's **GC
+/// precise-roots stack map** — one [`StackMapRecord`] per call-return safepoint, naming
+/// the reference-typed frame slots live there — for `__gc_collect_precise` to resolve a
+/// return address to its exact roots. The x86-64 analogue of the aarch64 backend's
+/// `compile_with_globals_and_stackmap`; the emitted machine code is byte-for-byte
+/// identical to [`compile_function_with_globals`] (the map is derived, not injected).
+#[allow(clippy::type_complexity)]
+pub fn compile_function_with_globals_and_stackmap(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<Reloc>, Vec<StackMapRecord>), String> {
+    compile_inner(ctx, ir, abi, global_slots).map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
 // ===========================================================================
@@ -268,6 +326,7 @@ impl RegAlloc {
 // | `input_str`   | `int64_t __twig_input_str(void)` (E4-dyn str handle) | yes |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
 // | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
+// | `str_cmp`     | `int64_t __twig_str_cmp(int64_t, int64_t)`   | yes     |
 
 #[derive(Debug, Clone, Copy)]
 struct BuiltinSig {
@@ -300,29 +359,37 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
     // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`,
     // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
     // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
     // logic — the generic `call_builtin` path marshals args + emits the CALL.
-    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
-    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
-    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "dyn_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_cdr",    n_args: 1, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
-    // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
-    BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
+    // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
+    BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
+    // E6d-2b — box a raw machine word back into a tagged `DynValue` at runtime
+    // (`n << 3`), for a *dynamic* value that is not a compile-time constant —
+    // e.g. the result of dynamic arithmetic re-entering the lisp value world.
+    // `uint64_t __dyn_box_int(int64_t)`.
+    BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
-    BuiltinSig { name: "lispy_pair_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
-    BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
-    BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
+    BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
     // LANG77 W13b — the universal program-exit coercion for a polymorphic
     // (lambda / `any`) result: dispatch on the runtime tag.
-    // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
-    BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
+    // `int64_t __dyn_to_exit_code(uint64_t)`.
+    BuiltinSig { name: "dyn_to_exit_code", n_args: 1, returns: true },
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // Lexicographic byte comparison normalized to -1/0/1 by `__twig_str_cmp`.
+    BuiltinSig { name: "str_cmp", n_args: 2, returns: true },
     // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
     // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
     // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (operand handles
@@ -332,6 +399,31 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
+    // AOT00-T1 increment C / x86_64 PR-x3 — GC collection + observability entry points
+    // a native program uses to drive and measure a collection (→ `__twig_gc_*` aliases
+    // in gc-core-capi). `gc_collect` = forced conservative full collect; `gc_collect_precise`
+    // = precise-roots stack walk (returns objects freed); `gc_collect_compacting` =
+    // precise-roots *moving* collect (relocates movable survivors, rewriting the caller's
+    // root slots — spec AOT00-T3 §5; degrades to `gc_collect_precise` when nothing is
+    // movable); `gc_live_bytes` = live payload bytes; `gc_stackmap_count` = registered-
+    // function count. Mirrors the aarch64 backend.
+    BuiltinSig { name: "gc_collect",            n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise",    n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_collect_compacting", n_args: 0, returns: true  },
+    // Incremental (bounded-pause) cycle (spec AOT00-T4 §6): start → step(budget)→done? →
+    // finish. Auto-emits `__twig_gc_collect_incremental_*` via the generic `__twig_<name>`
+    // dispatch. Mirrors the aarch64 backend.
+    BuiltinSig { name: "gc_collect_incremental_start",  n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_incremental_step",   n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
+    // AOT00-T5 — declare a variable-length reference-array layout so the collector traces (and
+    // under compaction relocates) the array + its elements precisely. `(fixed, fixed_count,
+    // tail_from) -> kind_id`: the seam a language frontend's array type calls; auto-emits
+    // `__twig_gc_register_ref_array_kind` via the generic `__twig_<name>` dispatch. Pass
+    // `fixed = 0, fixed_count = 0, tail_from = 0` for a pure reference array (every word a ref).
+    BuiltinSig { name: "gc_register_ref_array_kind", n_args: 3, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -367,12 +459,13 @@ impl From<EncodeError> for BackendError {
 // Top-level compile
 // ===========================================================================
 
+#[allow(clippy::type_complexity)]
 fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
-) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
+) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<StackMapRecord>), BackendError> {
     if ctx.params.len() > abi.max_args() {
         return Err(BackendError::TooManyParams {
             abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
@@ -464,17 +557,97 @@ fn compile_inner(
     }
 
     // ---- Body --------------------------------------------------------------
+    // Return addresses of self-recursive `call <fn_name>` sites. These use an internal
+    // label fixup (no `PltRel32` reloc), so — unlike cross-function/builtin calls —
+    // `build_stack_map` can't recover them from the relocation list; `emit_instr`
+    // appends each one here as it emits the call (see AOT00-T1 §5, PR-x4).
+    let mut recursive_safepoints: Vec<u32> = Vec::new();
     for instr in ir {
         emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi,
-                   global_slots)?;
+                   global_slots, &mut recursive_safepoints)?;
     }
 
     // ---- Defensive epilogue (in case CIR falls off the end) ----------------
     emit_epilogue(&mut asm, frame);
 
     let external_relocs = std::mem::take(&mut asm.external_relocs);
+    // Build this function's GC stack map before finishing (it needs the final slot
+    // assignment + the call relocations, both available here).
+    let stack_map = build_stack_map(ctx, ir, &alloc, frame, &external_relocs,
+                                    &recursive_safepoints)?;
     let bytes = asm.finish().map_err(BackendError::from)?;
-    Ok((bytes, external_relocs))
+    Ok((bytes, external_relocs, stack_map))
+}
+
+/// Build this function's GC stack map: every reference-typed slot, and a safepoint
+/// record at every **call return address**.
+///
+/// **Slot offsets are RBP-relative and negative.** Locals live at `[rbp − 8 − 8·slot]`
+/// (see [`RegAlloc::rbp_offset`]), so the value stored in [`StackMapRecord::slots`] is
+/// that signed offset directly — the precise walker reads `rbp + offset` to recover the
+/// slot, exactly as [`gc_core`] expects (offsets "may be negative for slots below FP").
+///
+/// **Safepoints come from two sources.** x86-64 is variable-width, so — unlike the
+/// fixed-width aarch64 backend, which post-scans finished code for every `BL` — return
+/// addresses can't be recovered by a byte scan. Instead:
+///
+/// 1. **Cross-function / builtin / libm calls** patch a 4-byte displacement through a
+///    `PltRel32` relocation, so their return address is `patch_offset + 4` (the byte just
+///    after the call). This captures every call that leaves the module — the usual GC
+///    trigger.
+/// 2. **Self-recursive calls** (`call <fn_name>`) resolve through an internal label fixup
+///    and emit *no* reloc, so `compile_one_with_globals` records each one's return address
+///    (`asm.len()` right after the 5-byte `call rel32`) in `recursive_safepoints` and
+///    passes it here (AOT00-T1 §5, PR-x4). A recursive frame that allocates can trigger a
+///    collection just like any other call, so its live references must be mapped too;
+///    before this, recursive frames fell back to a conservative scan (safe but imprecise —
+///    they could pin integer look-alikes). Duplicate PCs across the two sources collapse in
+///    [`StackMapBuilder::safepoint`], so order and overlap are harmless.
+fn build_stack_map(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    alloc: &RegAlloc,
+    frame: u32,
+    relocs: &[ExternalReloc],
+    recursive_safepoints: &[u32],
+) -> Result<Vec<StackMapRecord>, BackendError> {
+    let mut b = StackMapBuilder::new(frame);
+
+    // Declare every reference-typed slot. A ref-typed name with no assigned slot is a
+    // compiler bug — silently dropping a root is a use-after-free, so error rather than
+    // skip. (Unreachable today: the pre-pass mints a slot for every param/dest/src.)
+    let mut declare = |name: &str| -> Result<(), BackendError> {
+        let slot = *alloc.slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("stack map: no frame slot for '{name}'"))
+        })?;
+        b.define_ref_slot(RegAlloc::rbp_offset(slot));
+        Ok(())
+    };
+    for (name, ty) in ctx.params {
+        if is_gc_root_ty(ty) {
+            declare(name)?;
+        }
+    }
+    for instr in ir {
+        if let Some(dest) = &instr.dest {
+            if is_gc_root_ty(&instr.ty) {
+                declare(dest)?;
+            }
+        }
+    }
+
+    // A safepoint at every external call's return address (`patch_offset + 4`)...
+    for r in relocs {
+        if r.kind == ExternalRelocKind::PltRel32 {
+            b.safepoint((r.patch_offset + 4) as u32);
+        }
+    }
+    // ...and at every self-recursive call's return address (no reloc; recovered at emit
+    // time). `safepoint` dedups + keeps ascending, so overlaps/ordering are harmless.
+    for &pc in recursive_safepoints {
+        b.safepoint(pc);
+    }
+    Ok(b.into_records())
 }
 
 fn emit_epilogue(asm: &mut Assembler, _frame: u32) {
@@ -501,6 +674,9 @@ fn emit_instr(
     fn_name: &str,
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
+    // Self-recursive `call <fn_name>` return addresses, appended as emitted, so
+    // `build_stack_map` can add them as safepoints (they carry no reloc). AOT00-T1 §5.
+    recursive_safepoints: &mut Vec<u32>,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -749,6 +925,13 @@ fn emit_instr(
                 BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
             })?;
             asm.call_label(target_id);
+            // `call_label` emits a 5-byte `call rel32` (no reloc), so `asm.len()` is now
+            // the return address the GC walker will observe at `[rbp + 8]` if a collection
+            // fires inside this recursive call. Record it as a safepoint (AOT00-T1 §5) —
+            // the recursive frame's live references must be mapped, not conservatively
+            // scanned. (Cross-function calls below carry a `PltRel32` reloc instead, which
+            // `build_stack_map` recovers separately.)
+            recursive_safepoints.push(asm.len() as u32);
         } else {
             asm.call_rel32(callee_name, ExternalRelocKind::PltRel32);
         }
@@ -913,10 +1096,19 @@ fn emit_instr(
             load_operand(asm, alloc, arg_regs[i], src);
         }
 
-        // Emit `call rel32` to the `__twig_<name>` symbol.  Both Linux
-        // (PLT32 → relaxed to PC32 by the linker for local resolution)
-        // and Windows (REL32) treat this the same way.
-        let symbol = format!("__twig_{name}");
+        // Emit `call rel32` to the runtime symbol.  Both Linux (PLT32 → relaxed
+        // to PC32 by the linker for local resolution) and Windows (REL32) treat
+        // this the same way.  Two runtime families share this dispatch: the
+        // **twig** runtime exports `__twig_<name>` (`print_i64`, `getchar`, …),
+        // while the **dyn** value runtime (`dynval_runtime.c`) exports
+        // `__dyn_<name>` for the tagged-value builtins, whose IIR names already
+        // carry the `dyn_` namespace (`dyn_cons` → `__dyn_cons`).  So a `dyn_*`
+        // builtin is `__` + name; everything else is `__twig_` + name.
+        let symbol = if name.starts_with("dyn_") {
+            format!("__{name}")
+        } else {
+            format!("__twig_{name}")
+        };
         asm.call_rel32(&symbol, ExternalRelocKind::PltRel32);
 
         // If the helper returns, store RAX into the dest slot.
@@ -1065,7 +1257,7 @@ fn emit_instr(
         let i_src = instr.srcs.get(1).ok_or_else(|| {
             BackendError::MalformedInstr("array_get: needs srcs[1]=idx".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        native_array_elem_size(&instr.ty)?; // validate a supported fixed-width element
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1096,7 +1288,7 @@ fn emit_instr(
         let v_src = instr.srcs.get(2).ok_or_else(|| {
             BackendError::MalformedInstr("array_set: needs srcs[2]=val".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        native_array_elem_size(&instr.ty)?; // validate a supported fixed-width element
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1122,11 +1314,35 @@ fn emit_instr(
     // byte displacement `idx*8`.  Values are raw 64-bit words — no NaN-boxing
     // — so `(CAR (CONS 7 9))` round-trips to a raw `7`.  (V1 leaks; no GC.)
 
-    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell (the record/union
+    // constructor cell), always a pair of **boxed `any` fields** (§ emit_record_def
+    // types its params `any`). Allocate it under the MOVABLE `{0,8}` pair kind via
+    // `__twig_gc_alloc_pair` so the compacting collector traces both reference
+    // fields precisely and relocates the record.
+    //
+    // This also **fixes a latent x86_64 soundness bug**: the cell used to be
+    // allocated via `__twig_alloc_bytes`, which (since twig-aot 0.48.0 routed it
+    // through gc-core as a *no-reference* blob kind for strings) scans **none** of
+    // its bytes — so a child object referenced only through a record field was
+    // untraced and could be reclaimed out from under a live record. A precise
+    // `{0,8}` kind traces exactly the two fields, matching aarch64's behaviour.
+    // An explicit non-pair size (currently unused on this path) falls back to the
+    // conservative kind-0 `__twig_gc_alloc`, which traces its bytes as maybe-refs.
     if op == "alloc" {
         let dest = require_dest(instr)?;
-        asm.mov_r64_imm32(abi.arg_regs()[0], 16); // 2 fields × 8 bytes
-        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        let explicit_size: Option<i64> = match instr.srcs.first() {
+            Some(CIROperand::Int(n)) if *n > 0 => Some(*n),
+            _ => None,
+        };
+        match explicit_size {
+            None | Some(16) => {
+                asm.call_rel32("__twig_gc_alloc_pair", ExternalRelocKind::PltRel32);
+            }
+            Some(size_bytes) => {
+                asm.mov_r64_imm32(abi.arg_regs()[0], size_bytes as i32);
+                asm.call_rel32("__twig_gc_alloc", ExternalRelocKind::PltRel32);
+            }
+        }
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
@@ -1654,14 +1870,18 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
 /// The byte size of an E5 array element type on the native backend. 64-bit
 /// integer and `f64` elements share the same 8-byte memory representation here:
 /// the backend copies raw bits between stack slots and array storage, while f64
-/// arithmetic/comparisons load those bits through SSE when needed. Smaller
-/// element widths still produce a clear error rather than a silently wrong
-/// stride.
+/// arithmetic/comparisons load those bits through SSE when needed. Boolean
+/// elements use the same word cells, matching the backend's scalar boolean
+/// representation and keeping the fixed allocation stride sound.
 fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
     match elem {
-        "i64" | "u64" | "f64" => Ok(8),
+        // E4d-BA-arr: a `str` element (BASIC `DIM A$(n)`) is an 8-byte runtime
+        // string handle — the address of a `[i64 len][bytes]` block — stored and
+        // loaded as a plain word exactly like an i64, so no separate str load/store
+        // path is needed (twig-aot already materialises the handle into the slot).
+        "i64" | "u64" | "f64" | "bool" | "str" => Ok(8),
         other => Err(BackendError::MalformedInstr(format!(
-            "array element {other:?} not supported on the native backend (8-byte elements only so far)"
+            "array element {other:?} not supported on the native backend (i64/u64/f64/bool/str only)"
         ))),
     }
 }
@@ -1766,6 +1986,23 @@ mod tests {
             "f64 array element should lower as an 8-byte native load");
     }
 
+    #[test]
+    fn array_get_accepts_boolean_element() {
+        let ctx = fn_ctx("arr", &[], "u64");
+        let mut get = instr("array_get", Some("r"),
+            vec![Op::Var("a".into()), Op::Var("i".into())]);
+        get.ty = "bool".to_string();
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(1)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            get,
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_ok(),
+            "boolean array element should lower as an 8-byte native load");
+    }
+
     // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----
 
     #[test]
@@ -1794,15 +2031,217 @@ mod tests {
         instr("call_builtin", dest, srcs)
     }
 
+    // ---- AOT00-T1: GC precise-roots stack-map emission ----
+
+    /// Set an instruction's result type (for marking a dest as a GC reference).
+    fn typed(mut i: CIRInstr, ty: &str) -> CIRInstr {
+        i.ty = ty.to_string();
+        i
+    }
+
+    /// A function that produces an `any` value and then makes a call gets a stack map
+    /// whose call-return record names the `any` slot as a root — at the RBP-relative
+    /// (negative) offset the register allocator assigned it.
     #[test]
-    fn lispy_runtime_cons_car_emit_external_calls() {
+    fn stackmap_names_ref_slot_at_call_site() {
+        // b = dyn_cons(h, t)  [any]  ; then a second call (dyn_car) as a safepoint.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
+            call_builtin(Some("r"), "dyn_car", &["b"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (_bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("cons", &[], "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // Two external calls → two safepoint records.
+        assert_eq!(sm.len(), 2, "one record per call return address");
+        // Each record names exactly the one `any` slot (`b`); the `u64` slots (h/t/r)
+        // are excluded. `b` is the third slot minted (h=0, t=1, b=2) → rbp offset −24.
+        for rec in &sm {
+            assert_eq!(rec.slots, vec![RegAlloc::rbp_offset(2)], "names only the `any` slot");
+        }
+        // Each record's pc_offset is a real call-return address = a PltRel32 reloc's
+        // patch_offset + 4.
+        let call_rets: Vec<u32> = relocs
+            .iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32)
+            .map(|r| (r.patch_offset + 4) as u32)
+            .collect();
+        for rec in &sm {
+            assert!(call_rets.contains(&rec.pc_offset), "pc_offset is a call return address");
+        }
+    }
+
+    /// An `any`-typed parameter is a root at every safepoint (it is spilled to its slot
+    /// by the prologue and lives across calls).
+    #[test]
+    fn stackmap_names_ref_param() {
+        let params = [("obj".to_string(), "any".to_string())];
+        let ir = vec![
+            call_builtin(Some("r"), "dyn_car", &["obj"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("head", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(sm.len(), 1);
+        // `obj` is param slot 0 → rbp offset −8.
+        assert_eq!(sm[0].slots, vec![RegAlloc::rbp_offset(0)]);
+    }
+
+    /// A function whose slots are all machine scalars produces records with **empty**
+    /// slot lists at its call sites — nothing to root, but the safepoint still exists.
+    /// (`cell` is a `dyn_cons` result but typed `u64` here, so it is a non-reference
+    /// look-alike — excluded from the map exactly as a real integer slot would be.)
+    #[test]
+    fn stackmap_empty_for_ref_free_function() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]), // dest defaults to u64
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("nore", &[], "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(sm.len(), 1, "one call → one record");
+        assert!(sm[0].slots.is_empty(), "no reference slots to root");
+    }
+
+    /// AOT00-T1 §5 (PR-x4) — a **self-recursive** call is a safepoint too.
+    ///
+    /// A purely self-recursive function makes *no* external call, so it carries zero
+    /// `PltRel32` relocations — before this fix its stack map was therefore empty and a
+    /// collection fired inside the recursion fell back to a conservative frame scan. The
+    /// recursive call's return address is now recovered at emit time (`call_label` carries
+    /// no reloc), so the map gains exactly one record naming the live `any` reference.
+    #[test]
+    fn stackmap_records_self_recursive_call_safepoint() {
+        // rec(acc: any) -> u64  { r = rec(acc); ret r }  — `acc` is live across the call.
+        let params = [("acc".to_string(), "any".to_string())];
+        let ir = vec![
+            instr("call", Some("r"), vec![Op::Var("rec".into()), Op::Var("acc".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("rec", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // No external call ⇒ no PltRel32 reloc: the safepoint cannot have come from a
+        // relocation — it can only be the recursive one this PR adds.
+        assert!(
+            relocs.iter().all(|r| r.kind != ExternalRelocKind::PltRel32),
+            "a self-recursive-only function makes no external call",
+        );
+        assert_eq!(sm.len(), 1, "the recursive call is now the one safepoint");
+        // `acc` is param slot 0 → rbp offset −8; live across the recursive call.
+        assert_eq!(sm[0].slots, vec![RegAlloc::rbp_offset(0)], "names the live `any` ref");
+
+        // The safepoint PC is the return address: the byte just after the 5-byte
+        // `call rel32` (opcode 0xE8). This minimal function emits exactly one 0xE8 (the
+        // call disp is negative — 0xFFFF_FFxx — so no stray 0xE8 in the operand bytes).
+        let e8_positions: Vec<usize> =
+            bytes.iter().enumerate().filter(|(_, &b)| b == 0xE8).map(|(i, _)| i).collect();
+        assert_eq!(e8_positions.len(), 1, "one `call rel32` in a purely recursive body");
+        assert_eq!(
+            sm[0].pc_offset as usize,
+            e8_positions[0] + 5,
+            "safepoint PC is the return address (byte after the 5-byte call)",
+        );
+    }
+
+    /// A function with **both** a self-recursive call and an external (builtin) call gets a
+    /// safepoint record for *each* — the two safepoint sources (relocations + recorded
+    /// recursive return addresses) compose, and both records name the live reference.
+    #[test]
+    fn stackmap_records_both_recursive_and_external_safepoints() {
+        // rec(acc: any) -> u64 { r1 = dyn_car(acc); r2 = rec(acc); ret r2 }
+        let params = [("acc".to_string(), "any".to_string())];
+        let ir = vec![
+            call_builtin(Some("r1"), "dyn_car", &["acc"]), // external → PltRel32 safepoint
+            instr("call", Some("r2"), vec![Op::Var("rec".into()), Op::Var("acc".into())]),
+            instr("ret_u64", None, vec![Op::Var("r2".into())]),
+        ];
+        let (_bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("rec", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // Exactly one external call → one PltRel32 return address.
+        let plt_rets: Vec<u32> = relocs
+            .iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32)
+            .map(|r| (r.patch_offset + 4) as u32)
+            .collect();
+        assert_eq!(plt_rets.len(), 1, "one builtin call");
+
+        // Two distinct safepoints, ascending, both naming the live `any` slot.
+        assert_eq!(sm.len(), 2, "recursive + external = two safepoints");
+        assert!(sm[0].pc_offset < sm[1].pc_offset, "records are ascending by PC");
+        for rec in &sm {
+            assert_eq!(rec.slots, vec![RegAlloc::rbp_offset(0)], "acc rooted at both");
+        }
+        // One record is the builtin's return address; the other is the recursive one.
+        let pcs: Vec<u32> = sm.iter().map(|r| r.pc_offset).collect();
+        assert!(pcs.contains(&plt_rets[0]), "one safepoint is the builtin return address");
+        assert!(
+            pcs.iter().any(|&p| p != plt_rets[0]),
+            "the other safepoint is the recursive call (no reloc)",
+        );
+    }
+
+    /// Deriving the stack map must not change the emitted machine code — the map is
+    /// read off the same compilation, not injected into it.
+    #[test]
+    fn stackmap_does_not_change_emitted_code() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
+            instr("ret_u64", None, vec![Op::Var("b".into())]),
+        ];
+        let plain = compile_function_with_globals(
+            &fn_ctx("cons", &[], "u64"), &ir, X86_64Abi::SysV, &HashMap::new(),
+        )
+        .expect("compiles");
+        let (bytes, _r, _sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("cons", &[], "u64"), &ir, X86_64Abi::SysV, &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(plain.0, bytes, "stack-map derivation is byte-for-byte transparent");
+    }
+
+    #[test]
+    fn dynval_runtime_cons_car_emit_external_calls() {
         // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
         // lisp runtime, surfaced as external relocations.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
             instr("const_u64", Some("t"), vec![Op::Int(9)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
-            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
+            call_builtin(Some("r"), "dyn_car", &["cell"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -1810,31 +2249,121 @@ mod tests {
                 .expect("lispy runtime calls must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
-        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
     }
 
     #[test]
-    fn lispy_cons_wrong_arity_is_rejected() {
-        // lispy_cons takes exactly 2 args; one arg is a soft refusal.
+    fn str_cmp_emits_external_twig_call() {
+        let ir = vec![
+            instr("const_u64", Some("left"), vec![Op::Int(1)]),
+            instr("const_u64", Some("right"), vec![Op::Int(2)]),
+            call_builtin(Some("ord"), "str_cmp", &["left", "right"]),
+            instr("ret_u64", None, vec![Op::Var("ord".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("str_cmp", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("str_cmp must lower through the native runtime");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|reloc| reloc.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_str_cmp"),
+            "missing runtime ordering call: {symbols:?}"
+        );
+    }
+
+    /// `call_builtin "gc_collect_compacting" -> freed` lowers to a `call` to the linker
+    /// symbol `__twig_gc_collect_compacting` (the moving-collector C-ABI entry, spec
+    /// AOT00-T3 §5), via the generic `__twig_<name>` builtin dispatch — the same path
+    /// `gc_collect_precise` uses. Proves a native frontend can trigger a compaction.
+    #[test]
+    fn gc_collect_compacting_emits_external_twig_call() {
+        let ir = vec![
+            call_builtin(Some("freed"), "gc_collect_compacting", &[]),
+            instr("ret_u64", None, vec![Op::Var("freed".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_compact", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_collect_compacting must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_collect_compacting"),
+            "missing compacting-collect call: {symbols:?}",
+        );
+    }
+
+    /// The incremental-collector builtin trio (`gc_collect_incremental_{start,step,finish}`,
+    /// spec AOT00-T4 §6) lowers each to a `call` to its `__twig_gc_collect_incremental_*`
+    /// linker symbol via the generic `__twig_<name>` dispatch — `step` takes a budget arg.
+    #[test]
+    fn gc_collect_incremental_emits_external_twig_calls() {
+        let ir = vec![
+            call_builtin(None, "gc_collect_incremental_start", &[]),
+            instr("const_u64", Some("budget"), vec![Op::Int(1_000_000)]),
+            call_builtin(Some("done"), "gc_collect_incremental_step", &["budget"]),
+            call_builtin(Some("freed"), "gc_collect_incremental_finish", &[]),
+            instr("ret_u64", None, vec![Op::Var("freed".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_incr", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_collect_incremental_* must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_gc_collect_incremental_start",
+            "__twig_gc_collect_incremental_step",
+            "__twig_gc_collect_incremental_finish",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    /// `call_builtin "gc_register_ref_array_kind" (fixed, fixed_count, tail_from) -> kind`
+    /// lowers to a `call` to `__twig_gc_register_ref_array_kind` (the C-ABI seam a language
+    /// frontend's array type calls, spec AOT00-T5) via the generic `__twig_<name>` dispatch —
+    /// three args in rdi/rsi/rdx. `(0, 0, 0)` declares a pure reference array.
+    #[test]
+    fn gc_register_ref_array_kind_emits_external_twig_call() {
+        let ir = vec![
+            instr("const_u64", Some("fixed"), vec![Op::Int(0)]), // null fixed-offsets pointer
+            instr("const_u64", Some("fcount"), vec![Op::Int(0)]), // no fixed ref fields
+            instr("const_u64", Some("tail"), vec![Op::Int(0)]), // tail from offset 0 (all refs)
+            call_builtin(Some("kind"), "gc_register_ref_array_kind", &["fixed", "fcount", "tail"]),
+            instr("ret_u64", None, vec![Op::Var("kind".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("gc_refarray", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("gc_register_ref_array_kind must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_gc_register_ref_array_kind"),
+            "missing ref-array-kind registration call: {symbols:?}",
+        );
+    }
+
+    #[test]
+    fn dyn_cons_wrong_arity_is_rejected() {
+        // dyn_cons takes exactly 2 args; one arg is a soft refusal.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h"]),
             instr("ret_u64", None, vec![Op::Var("cell".into())]),
         ];
         assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
     }
 
     #[test]
-    fn lispy_full_boxed_cons_car_unbox_lowers() {
+    fn dyn_full_boxed_cons_car_unbox_lowers() {
         // The complete L3b-2c-1 CIR for `(CAR (CONS 7 9))`: boxed atoms,
         // cons, car, then unbox the result for the exit code.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7 << 3)]),
             instr("const_u64", Some("t"), vec![Op::Int(9 << 3)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
-            call_builtin(Some("boxed"), "lispy_car", &["cell"]),
-            call_builtin(Some("r"), "lispy_unbox_int", &["boxed"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
+            call_builtin(Some("boxed"), "dyn_car", &["cell"]),
+            call_builtin(Some("r"), "dyn_unbox_int", &["boxed"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -1842,20 +2371,42 @@ mod tests {
                 .expect("boxed cons/car/unbox must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+        for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
 
+    /// A default (2-word pair) `alloc` — the record/union constructor cell — lowers
+    /// to a `CALL __twig_gc_alloc_pair` (the MOVABLE `{0,8}` allocator), NOT the old
+    /// `__twig_alloc_bytes` (a no-reference blob kind since twig-aot 0.48.0, which
+    /// would leave the record's reference fields untraced — a use-after-free for a
+    /// child held only via a record field).
     #[test]
-    fn lispy_atom_eq_predicates_and_truthy_lower() {
-        // L3b-2c-2: ATOM = not(pair?), normalised via lispy_truthy; plus EQ.
+    fn pair_alloc_uses_movable_pair_allocator() {
+        let ir = vec![
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Int(0)]),
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        let (_bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("rec", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("record alloc must lower");
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_gc_alloc_pair"),
+                "default-pair alloc must use the movable pair allocator, got {symbols:?}");
+        assert!(!symbols.contains(&"__twig_alloc_bytes"),
+                "must NOT use the no-ref blob allocator for a record pair: {symbols:?}");
+    }
+
+    #[test]
+    fn dyn_atom_eq_predicates_and_truthy_lower() {
+        // L3b-2c-2: ATOM = not(pair?), normalised via dyn_truthy; plus EQ.
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("p"), "lispy_pair_p", &["x"]),
-            call_builtin(Some("a"), "lispy_not", &["p"]),
-            call_builtin(Some("t"), "lispy_truthy", &["a"]),
-            call_builtin(Some("e"), "lispy_equal", &["x", "x"]),
+            call_builtin(Some("p"), "dyn_pair_p", &["x"]),
+            call_builtin(Some("a"), "dyn_not", &["p"]),
+            call_builtin(Some("t"), "dyn_truthy", &["a"]),
+            call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
             instr("ret_u64", None, vec![Op::Var("e".into())]),
         ];
         let (bytes, relocs) =
@@ -1864,20 +2415,20 @@ mod tests {
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         for want in [
-            "__twig_lispy_pair_p", "__twig_lispy_not",
-            "__twig_lispy_truthy", "__twig_lispy_equal",
+            "__dyn_pair_p", "__dyn_not",
+            "__dyn_truthy", "__dyn_equal",
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
 
-    /// W14b (F7): the universal exit coercion `lispy_to_exit_code` — the program
+    /// W14b (F7): the universal exit coercion `dyn_to_exit_code` — the program
     /// boundary for a polymorphic lambda result — lowers to a call into the runtime.
     #[test]
-    fn lispy_to_exit_code_lowers() {
+    fn dyn_to_exit_code_lowers() {
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("r"), "lispy_to_exit_code", &["x"]),
+            call_builtin(Some("r"), "dyn_to_exit_code", &["x"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -1886,8 +2437,8 @@ mod tests {
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         assert!(
-            symbols.contains(&"__twig_lispy_to_exit_code"),
-            "missing __twig_lispy_to_exit_code: {symbols:?}",
+            symbols.contains(&"__dyn_to_exit_code"),
+            "missing __dyn_to_exit_code: {symbols:?}",
         );
     }
 

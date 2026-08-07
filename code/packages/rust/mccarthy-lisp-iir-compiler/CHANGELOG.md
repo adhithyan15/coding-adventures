@@ -1,5 +1,13 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.7.1 — 2026-07-11 — DVAL01-1c: dependency renamed `lispy-runtime` → `dynval-runtime`
+
+The shared value-model crate `lispy-runtime` is renamed to `dynval-runtime`
+(spec DVAL01 §3.2). The `Cargo.toml` dependency and the `use dynval_runtime::…`
+imports in the `run_e2e` integration tests move to the new name. Pure rename —
+no behaviour change; the compiler still emits IIR over the same tagged-value
+model that `mccarthy-lisp-vm` and every IIR backend consume.
+
 ## v0.7.0 — 2026-06-04 — LABEL capture + LABEL-as-value: recursive closures (L2c-3c)
 
 Completes closures: `LABEL` now captures free variables and can be used as

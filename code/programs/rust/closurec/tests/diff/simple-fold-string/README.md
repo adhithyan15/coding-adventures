@@ -18,12 +18,14 @@ is a string or **integer** number literal (ECMAScript §22.1.3.1 → §7.1.17
 - `String("x")` → `"x"` — a string literal is the identity;
 - `String(-3)` → `"-3"` — negative integer;
 - `String(255)` → `"255"` — integer;
-- `String(0.5)` → left intact — a **fractional** number is declined.
+- `String(0.5)` → left intact (call not folded) — a **fractional** number is
+  declined; the surviving `0.5` argument then emits as the minified `.5` (the
+  emitter drops a leading fractional zero in value position).
 
 So the folded `expected.stdout` is:
 
 ```js
-var a="42";var b="x";var c="-3";var d="255";var e=String(0.5);report(a,b,c,d,e);
+var a="42";var b="x";var c="-3";var d="255";var e=String(.5);report(a,b,c,d,e);
 ```
 
 Fractional numbers are deliberately **not** folded: Rust's `f64::to_string` and

@@ -1,0 +1,13 @@
+% ADJ-ARGUMENT-REBUTTAL AR-3 — the SAME undercut paper as undercut.adj, but the undercut now lives
+% IN the `argument` block. The support `infer` carries `unless warrant_undercut` (AR-3 surface
+% sugar → a `not warrant_undercut` body literal), and a second `infer` derives that defeater from
+% the contamination premise. When the sample is contaminated the warrant is undercut, so the fatigue
+% thesis ABSTAINS — no rival mechanism is asserted, the licence is simply removed. Desugars to the
+% proven negation-as-failure machinery.
+argument bridge_undercut {
+    premise beach  : extracted shows(surface, beach_marks) quote "exhibited beach marks" at 21 snapshot "1baf6c66bb4db1f3ce48c03cdd93e8cf1c8d1c3a7e955e67c7693b65638fdf17" source "pA-support" trust authoritative
+    premise contam : extracted contaminated(sample) quote "contaminated during handling" at 51 snapshot "efbe3aa4966754c5860376306c96d0220baa3e0f3fde4a0643e1582a6d0cdcbb" source "pC-limitation" trust authoritative
+    infer support          : because conclude failed_by(axle, fatigue) from beach unless warrant_undercut source "beach marks are diagnostic of fatigue" trust authoritative
+    infer undercut_warrant : because conclude warrant_undercut from contam source "a contaminated sample invalidates the beach-mark reading" trust authoritative
+}
+? failed_by(axle, $Mechanism)

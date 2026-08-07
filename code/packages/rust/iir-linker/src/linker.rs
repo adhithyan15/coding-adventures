@@ -132,7 +132,7 @@ impl Default for IIRLinker {
 mod tests {
     use super::*;
     use interpreter_ir::function::IIRFunction;
-    use interpreter_ir::instr::{IIRInstr, Operand};
+    use interpreter_ir::instr::IIRInstr;
     use interpreter_ir::module_exports::{IIRExport, IIRImport};
 
     fn make_ret_void_fn(name: &str, params: Vec<(&str, &str)>) -> IIRFunction {
@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn linker_default_is_same_as_new() {
         // Ensure Default impl is available.
-        let l = IIRLinker::default();
+        let l = IIRLinker;
         let mut m = IIRModule::new("t", "x");
         m.entry_point = None;
         let merged = l.link(&[m]).unwrap();

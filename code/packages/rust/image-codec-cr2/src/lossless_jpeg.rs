@@ -211,8 +211,8 @@ impl<'a> BitStream<'a> {
         let b = self.data[self.pos];
         self.pos += 1;
         // JPEG byte stuffing: 0xFF 0x00 → 0xFF
-        if b == 0xFF {
-            if self.pos < self.data.len() {
+        if b == 0xFF
+            && self.pos < self.data.len() {
                 let next = self.data[self.pos];
                 if next == 0x00 {
                     // stuffed byte: skip the 0x00
@@ -221,7 +221,6 @@ impl<'a> BitStream<'a> {
                 // If next != 0x00 it's a real marker — stop reading (end of scan)
                 // We'll detect this in the marker loop.
             }
-        }
         self.current = b;
         self.bit = 7;
     }
@@ -396,7 +395,7 @@ pub fn decode_sof3(data: &[u8]) -> Result<(Vec<u16>, u32, u32), String> {
                 // Validate precision before use. Lossless JPEG allows 2..=16 bits.
                 // Precision 0 would cause underflow in `1u16 << (precision - 1)` later;
                 // precision > 16 would overflow the 16-bit output pixels.
-                if precision < 2 || precision > 16 {
+                if !(2..=16).contains(&precision) {
                     return Err(format!(
                         "CR2 SOF3: unsupported precision {} (must be 2..=16)",
                         precision
@@ -631,8 +630,8 @@ pub fn decode_sof3(data: &[u8]) -> Result<(Vec<u16>, u32, u32), String> {
             }
 
             // Reset predictors for the new interval.
-            for c in 0..nc {
-                prev[c] = initial_predictor;
+            for slot in prev.iter_mut().take(nc) {
+                *slot = initial_predictor;
             }
             mcu_in_interval = 0;
         }
@@ -695,9 +694,7 @@ mod tests {
     fn hufftable_all_lengths() {
         // A table with one code per length from 1 to 8.
         let mut bits16 = [0u8; 16];
-        for i in 0..8 {
-            bits16[i] = 1;
-        }
+        bits16[..8].fill(1);
         let huffval: Vec<u8> = (0u8..8).collect();
         let table = HuffTable::build(&bits16, huffval).unwrap();
         // Length 1: code = 0b0

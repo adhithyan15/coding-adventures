@@ -63,6 +63,28 @@ The TypeScript backend accepts these SIR features:
   `const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };`. On the
   call side every `KeywordArg` collapses into one trailing object literal:
   `f(1, y: 2)` emits `f(1, { y: 2 })`. Direct lowering, no runtime helper.
+- `SymbolicExpr` / `PatternMatching` (SIR23) — a compiled Wolfram/Macsyma/
+  Maxima program's symbolic-expression and pattern/rewrite nodes
+  (`SymSymbol`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+  `SymReplaceAll`) construct/consume a real term-tree value at runtime via
+  the imported `@coding-adventures/sir-runtime-symbolic` package, bound as
+  `__SirSym` (gated by either feature, so a purely-numeric module never
+  gains the dependency). `x /. a -> b` emits
+  `__SirSym.unwrap(__SirSym.replaceAll(__SirSym.sym("x"), [__SirSym.rule(__SirSym.sym("a"), __SirSym.sym("b"))]))`.
+- `Rationals` (shared with SIR22) — accepted only for `SymRational`
+  (`__SirSym.rational(numer, denom)`); no other construct in this backend
+  triggers it yet.
+- `NDArrays` / `MatrixOps` / `ArrayColumnMajor` (SIR22) — a compiled
+  MATLAB/Octave/APL program's array/matrix nodes — the base cut
+  (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
+  `IndexSet`) AND the "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/
+  `Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) — both
+  construct/consume a real `NDArray` value at runtime via the imported
+  `@coding-adventures/sir-runtime-array` package, bound as `__SirArray`
+  (gated by any of the three features, so a purely-symbolic or purely-OOP
+  module never gains the dependency). `A * A` (matrix product) emits
+  `__SirArray.matmul(A, A)`; APL's `+/A` (reduce) emits
+  `__SirArray.reduce("Add", A)`.
 
 It **rejects**:
 

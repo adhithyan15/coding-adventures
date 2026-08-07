@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "7172bbb4e73ef6a662729516fe10b48f917bc956",
+  "body_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+  "body_size": 129,
+  "captured_at": "2026-08-02T21:45:54Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt"
+}

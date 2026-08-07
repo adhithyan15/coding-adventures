@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Enforce finite construction, angular-frequency overflow, and finite-time
+  validation across the mutable public `Wave` fields.
+- Reduce time and phase before local trig evaluation and handle positive
+  subnormal frequencies whose represented period is infinite.
+- Add maximum-finite, zero-amplitude, and amplitude-bound regression tests.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed

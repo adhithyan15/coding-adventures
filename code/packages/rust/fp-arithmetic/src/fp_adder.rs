@@ -141,17 +141,17 @@ pub fn fp_add(a: &FloatBits, b: &FloatBits) -> FloatBits {
 
     let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
     let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-    let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-    let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+    let mut mant_a = bits_msb_to_int(&a.mantissa);
+    let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     // Add implicit leading 1 for normal numbers (exponent != 0)
     if exp_a != 0 {
-        mant_a = (1u64 << fmt.mantissa_bits) | mant_a;
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1; // Denormal true exponent = 1 - bias, stored as 1 for alignment
     }
     if exp_b != 0 {
-        mant_b = (1u64 << fmt.mantissa_bits) | mant_b;
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }
@@ -165,8 +165,7 @@ pub fn fp_add(a: &FloatBits, b: &FloatBits) -> FloatBits {
     // Step 2: Align mantissas by shifting the smaller one right
     // ===================================================================
 
-    let result_exp: i32;
-    if exp_a >= exp_b {
+    let result_exp = if exp_a >= exp_b {
         let exp_diff = (exp_a - exp_b) as u32;
         if exp_diff > 0 && exp_diff < (fmt.mantissa_bits + 1 + guard_bits) {
             let shifted_out = mant_b & ((1u64 << exp_diff) - 1);
@@ -182,7 +181,7 @@ pub fn fp_add(a: &FloatBits, b: &FloatBits) -> FloatBits {
                 mant_b |= 1;
             }
         }
-        result_exp = exp_a;
+        exp_a
     } else {
         let exp_diff = (exp_b - exp_a) as u32;
         if exp_diff > 0 && exp_diff < (fmt.mantissa_bits + 1 + guard_bits) {
@@ -199,7 +198,7 @@ pub fn fp_add(a: &FloatBits, b: &FloatBits) -> FloatBits {
                 mant_a |= 1;
             }
         }
-        result_exp = exp_b;
+        exp_b
     };
     let mut result_exp = result_exp;
 

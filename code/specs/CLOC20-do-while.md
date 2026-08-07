@@ -96,11 +96,12 @@ current scope (a do-while introduces no new scope, same as `while`).
 
 ## End-to-end oracle (`closurec` diff fixture)
 
-* **`simple-do-while`** — at SIMPLE: a single-use function inlines, arithmetic
-  inside the do-while body folds, the loop survives verbatim, and the statement
-  after the loop stays reachable. A companion assertion proves the output is NOT
-  the whitespace fallback (the `log` ⇒ `report` inline can only come from the
-  typed pipeline).
+* **`simple-do-while`** — at SIMPLE: arithmetic inside the do-while body folds,
+  the loop survives verbatim, and the statement after the loop stays reachable.
+  `function log` is KEPT — SIMPLE is open-world and never inlines or removes a
+  top-level name (that inline is ADVANCED-only). A companion assertion proves
+  the output is NOT the whitespace fallback (the `1 + 2` ⇒ `3` fold in the loop
+  body can only come from the typed pipeline).
 
 ## Out of scope (future Phase-2 work)
 

@@ -187,6 +187,20 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    the emitted wasm. Deferred (like E4d-2b): runtime `str_len`/`str_concat`/
    `str_slice`/`str_index`/`str_cmp` over promoted operands (E4d-3b — not needed by
    the foothold, which only *observes* a runtime string via `print_str`). *(needs 1, 1a)*
+   **E4d-3b progress:** runtime `str_len`/`print_str`/`str_concat` (header read /
+   bump-alloc + `memory.copy`) and runtime `str_eq` (in-module `$__str_eq` helper)
+   landed with the E4d-AL / BA payoffs below; **runtime `str_cmp`** landed
+   `iir-to-wasm` 0.39.0 (sibling `$__str_cmp` helper: min-length prefix scan +
+   length tiebreak → `-1`/`0`/`1`, byte-identical to the folded
+   `bytes.cmp` fold, sign-extended to `i64`); **runtime `str_slice`** landed
+   `iir-to-wasm` 0.40.0 (bump-alloc a fresh `[i32 len][bytes]` block +
+   `memory.copy` the source's `[start, end)` run — the runtime `str_concat` shape
+   — with a bounds trap `unreachable` unless `0 ≤ start ≤ end ≤ len` via unsigned
+   compares, and `i32.wrap`ped index slots); and **runtime `str_index`** landed
+   `iir-to-wasm` 0.41.0 (header-length bounds trap `idx >=u len` + `i32.load8_u(
+   handle + 4 + idx)`, read-only so no bump-alloc; also fixes a latent
+   promoted-literal source-dispatch bug). **E4d-3b runtime string surface is now
+   complete** — every `str_*` op has a runtime path over promoted operands.
 4. **E4d-4 — native runtime strings.** ✅ **Landed** (`twig-aot` 0.27.0 /
    `lang-aot` 0.174.0). Key finding: the native path *already* had everything —
    `lower_string_literals_for_aot` builds each `str_const`'s `[i64 len][bytes]`
@@ -227,10 +241,31 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
      runtime string. Bringing E4d-AL up also fixed a **latent native miscompile**
      (`strip_dead_aot_string_allocs` dropped all but the last buffer of a
      multi-block string alias → the not-last branch printed `""`; twig-aot 0.28.0).
-   - **E4d-BA-input — BASIC string `INPUT`.** `INPUT A$` reads a runtime string
-     from the host input queue; `PRINT A$` echoes it. Matrix cell.
-   - **E4d-BA-arr — BASIC string arrays.** `DIM A$(n)` + `A$(i)` over runtime
-     string elements (reuses E5 array-of-handles + E4-dyn strings).
+   - **E4d-BA-input — BASIC string `INPUT`.** ✅ **Landed on all 7 backends**
+     (`dartmouth-basic-iir-compiler` 0.36.0). `INPUT A$` reads a whole stdin line
+     as a runtime string via `call_builtin "input_str"` (the `str` sibling of
+     numeric `input_i64`); `PRINT A$` echoes it. Two matrix cells: `INPUT A$` →
+     `"OK"`, and runtime concat `INPUT A$ / INPUT B$ / PRINT A$ + B$` → `"OK!"`.
+     Per-backend `input_str`: native `__twig_input_str` C helper, WASM
+     `env.__input_str` linear-memory writer, LLVM `@__twig_input_str`, JVM
+     `BasicRuntime.readLine()`, CLR `Console.ReadLine()`, VM/JIT `input_str`
+     closures returning a tagged `Value::Str`.
+   - **E4d-BA-arr — BASIC string arrays.** ✅ **COMPLETE — all 7 backends**
+     (`dartmouth-basic-iir-compiler` 0.37.0 / `iir-to-wasm` 0.36.0 /
+     `iir-to-llvm` 0.36.0 / `iir-to-jvm-class-file` 0.30.0 /
+     `iir-to-cil-bytecode` 0.39.0 / `x86_64-backend` 0.24.0 /
+     `aarch64-backend` 0.23.0 / `lang-aot` 0.194.0). `DIM A$(n)` allocates an
+     `array<str>` (the E5 aggregate substrate carrying an E4-dyn string handle per
+     element); `A$(i) = s` → a `str`-typed `array_set`, `A$(i)` read → a `str`-typed
+     `array_get` feeding PRINT / `+` concat. Matrix cell
+     `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)` → `OK` on all 7 backends.
+     Per backend: **VM/JIT** tagged `Value::Str` element; **WASM** a 4-byte i32
+     handle per element (`wasm_array_elem` `str` branch + a folded-literal-into-
+     `array_set` promotion); **LLVM** an i64 handle (`str`→`i64`) with an `array_set`
+     `ptrtoint` guard for folded literals; **NativeAot** an 8-byte handle
+     (`native_array_elem_size` accepts `str`); **JVM** a `java.lang.String[]`
+     reference array (`anewarray` + `aaload`/`aastore`); **CLR** a
+     `System.String[]` (`newarr …System.String` + `ldelem.ref`/`stelem.ref`).
 
 Managed backends (JVM/CLR) already run runtime strings, so each frontend cell can
 tag `Jvm`/`Clr` from the start and add the static backends as E4d-2…4 land.

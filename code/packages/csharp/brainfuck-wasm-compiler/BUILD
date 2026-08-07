@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.BrainfuckWasmCompiler.Tests/CodingAdventures.BrainfuckWasmCompiler.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.BrainfuckWasmCompiler]*"

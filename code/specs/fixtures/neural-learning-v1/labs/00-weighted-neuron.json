@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "weighted-neuron-forward",
+  "title": "One weighted neuron",
+  "stage": "forward",
+  "question": "Where does one prediction number come from?",
+  "concepts": ["weighted contribution", "bias", "identity activation"],
+  "model": {
+    "kind": "single-neuron",
+    "input_count": 2,
+    "layers": [
+      {
+        "name": "output",
+        "weights": [[0.5], [-0.25]],
+        "biases": [0.1],
+        "activation": "identity"
+      }
+    ]
+  },
+  "dataset": {
+    "input_labels": ["x1", "x2"],
+    "target_labels": ["prediction"],
+    "rows": [
+      { "label": "worked example", "input": [2, -1], "target": [1.35] }
+    ]
+  },
+  "training": null,
+  "expected": {
+    "absolute_tolerance": 0.000001,
+    "forward": [
+      { "row": "worked example", "prediction": [1.35] }
+    ],
+    "first_step": null
+  }
+}

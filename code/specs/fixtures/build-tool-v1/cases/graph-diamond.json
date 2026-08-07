@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "graph/diamond",
+  "domain": "graph",
+  "summary": "The canonical diamond produces deterministic dependency levels.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "graph"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": [
+        "python/pkg-a",
+        "python/pkg-b",
+        "python/pkg-c",
+        "python/pkg-d"
+      ],
+      "edges": [
+        [
+          "python/pkg-b",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-c",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-b"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-c"
+        ]
+      ]
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/diamond",
+    "domain": "graph",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "python/pkg-b",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-c",
+          "python/pkg-a"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-b"
+        ],
+        [
+          "python/pkg-d",
+          "python/pkg-c"
+        ]
+      ],
+      "levels": [
+        [
+          "python/pkg-d"
+        ],
+        [
+          "python/pkg-b",
+          "python/pkg-c"
+        ],
+        [
+          "python/pkg-a"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

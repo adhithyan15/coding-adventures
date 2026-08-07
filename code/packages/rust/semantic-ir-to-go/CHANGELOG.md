@@ -1,5 +1,346 @@
 # Changelog
 
+## 0.37.1 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "Python/JS/Go/Rust/Ruby backends: implement `<<` runtime
+dispatch". `ruby-to-semantic-ir` lowers `<<` to a top-level
+`BuiltinCall("<<", [lhs, rhs, ...])` — a SEPARATE protocol from the
+`__method__("<<", recv, arg)` Collections dispatch Array#push already
+used on this backend (the pre-existing `_sir_array_responds`/`case
+"<<":` entries in the method catalog). The operator form reached
+`_sir_call_builtin_by_name`'s floor and panicked `unknown builtin: <<`
+— every Ruby program using `<<` as an operator failed at runtime on Go.
+
+New `_sir_shift_left(args []Value) Value`, polymorphic like `_sir_plus`:
+Array pushes each RHS operand in place (chains left-to-right, since the
+frontend lowers a `<<` chain to one variadic call); Integer bitwise-shifts
+via `_sir_shift_left_i64`, PORTED from the C backend's helper of the same
+name for identical overflow/negative-amount semantics (negative amount
+reverses direction; left shift saturates at MaxInt64/MinInt64 rather than
+wrapping, since this runtime has no bignum growth); String concatenates
+to a new string via the existing `_sir_as_string` (matching this
+backend's own `+` String-receiver convention, not C's looser
+silently-drop-a-non-string one).
+
+New supporting helpers `_sir_shift_amount_arg`, `_sir_f64_to_i64_saturating`
+(a non-finite/out-of-range float64->int64 conversion is
+implementation-specific in Go, same UB-avoidance discipline as C), and
+`_sir_i64_abs_u` (MinInt64-safe magnitude via uint64 wraparound).
+
+`semantic-ir-to-go` 0.37.0 -> 0.37.1.
+
+## 0.37.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
+which the Go backend did not lower — so even `puts(1 == 1)` panicked
+`unknown builtin: ==`.
+
+- Runtime gains `_sir_ne` (the exact negation of `_sir_eq`), `_sir_le` and
+  `_sir_ge`. A new shared `_sir_cmp` orders two strings LEXICOGRAPHICALLY and
+  numbers by float64 value (`1 <= 1.0` holds), and `<`/`>`/`<=`/`>=` all route
+  through it.
+- Emitter and the `_sir_call_builtin_by_name` dispatch gain `==`/`!=`/`<=`/`>=`.
+
+This also **fixes a pre-existing panic**: `_sir_lt`/`_sir_gt` coerced their
+operands through `_sir_as_float`, which panics on a string — so `"a" < "b"`
+crashed the program instead of comparing. Both now order strings via
+`_sir_cmp`, so Go agrees with the C, Rust, Ruby and Python backends on string
+ordering (a deep-uncomparable operand — nil/pair vs number — still panics in
+`_sir_as_float`, exactly as before; a total order there is a separate
+refinement).
+
+## 0.36.0 — `Exception#message`
+
+`rescue => e; puts e.message` — everyday Ruby — raised `NoMethodError`: the
+method simply did not exist. `_sir_object_method` gains a `message` arm
+returning the text a `raise Foo, "msg"` carried (`SirError.Msg`), answered by
+an exception receiver only so any other receiver still falls through to its own
+catalog. `_sir_responds_to` reports it on exceptions and NOT on anything else,
+reporting it for an exception receiver while still falling through to the user
+method table — so a class that defines its own `message` is not DENIED by
+`respond_to?` (the same dishonest-`respond_to?` shape this fixes elsewhere).
+
+Also: a bare `raise Foo` carries no message, and `e.message` returned `nil`
+where Ruby (and the Python/Rust/JS backends) return the CLASS NAME. It now
+matches.
+
+## 0.35.0 — implement `is_a?` / `kind_of?` / `instance_of?`
+
+These were listed in `_sir_responds_to` but **never implemented**, so
+`respond_to?(:is_a?)` answered `true` while an actual call fell through to
+`NoMethodError` and killed the program. (`class` was already implemented; the
+predicates were not.)
+
+`_sir_object_method` gains the three arms, reusing the existing
+`_sir_ruby_class_name`. `is_a?`/`kind_of?` honour ancestry — the built-in
+surface (`Integer`/`Float` are `Numeric` and `Comparable`, `String` is
+`Comparable`, `Object`/`BasicObject` match everything) plus, for a user
+instance, its superclass chain (`_sir_is_ancestor_or_self`) and any module
+mixed in along it. `instance_of?` is an exact class match.
+
+Transitive module matching (Ruby MRO: `C` includes `M`, `M` includes `N` ⇒
+`c.is_a?(N)`) uses an ITERATIVE worklist rather than recursion, because
+include-graph depth is shaped by the source — the same design the JavaScript
+and Rust backends use. Cyclic and self-including graphs terminate.
+
+The class argument arrives as a NAME (ruby-to-semantic-ir 0.7.0 lifts a
+`Const` to a `StrLit`), so no constant-reference support is needed.
+
+Two adjacent fixes found while reviewing the above:
+- `_sir_ruby_class_name` now recognises `*SirError`. A raised/caught exception
+  is not a `*SirInstance`, so it fell to the `Object` default — `rescue => e;
+  e.class` said `Object` and `e.is_a?(StandardError)` was FALSE for every
+  exception, silently skipping a handler guarded that way, even though
+  `_sir_ancestry` holds the whole exception hierarchy. `_sir_value_is_a` walks
+  ancestry for `*SirError` too.
+- The `==` / `!=` object arms indexed `args[0]` with no length check, so a
+  zero-argument `x.==()` PANICKED and killed the program. Both are guarded.
+
+## 0.34.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
+
+The inline `__sir` runtime's `_sir_divide` truncated integer division toward
+zero (`acc /= d`), so `-7 / 2` gave `-3` instead of Ruby's floored `-4`. The
+integer path now floors toward −∞ — the truncated quotient minus one exactly
+when the remainder is non-zero and its sign differs from the divisor's —
+matching the SIR21 §E3 oracle `DivOp::Floor` on every sign combination. The float
+path (`_sir_any_float`) is unchanged and already true-divides (Ruby `Float#/`);
+typed division-by-zero is unchanged.
+
+### Fixed — unary minus (`neg`) was unimplemented (any negative literal crashed)
+
+Closing the division frontier surfaced a second, unrelated gap: the Ruby
+frontend lowers unary minus (`-x`) to `BuiltinCall("neg", [x])`, but
+`_sir_call_builtin_by_name` had **no `neg` case**, so *every* negative literal
+(`-7`, not just division) panicked at runtime with `unknown builtin: neg`. The
+JavaScript and Python runtimes already implemented it; the Go backend now does
+too (`_sir_neg`), tag-preservingly (a `float64` stays a `float64`, otherwise
+negate as `int64`). This is what lets the division frontier's negative cases run
+at all.
+
+Together these close the **Go arm** of the division frontier
+(`sir-conformance/tests/division.rs`).
+
+## 0.33.0 — Array `cycle(n)`
+
+Mirrors the Python reference (PR #8117) into the Go backend's inline `__sir`
+runtime (`_sir_array_block_method` beside the existing `chunk_while`/`slice_when`
+arms + the `_sir_array_responds` `respond_to?` arm), continuing the `cycle`
+cross-backend cascade.
+
+- `cycle(n) { |x| … }` (block) → iterate the array `n` full passes in order,
+  yielding each element on every pass; always returns nil. `[1,2,3].cycle(2)`
+  yields `1,2,3,1,2,3`. `n <= 0`, a negative count, an empty receiver, or a nil
+  / non-integer count (Ruby's block-less Enumerator and infinite no-`n` forms)
+  yields nothing rather than hanging — a boolean count is not an `int64`/`int`
+  in Go, so it falls through to the no-yield path.
+- The `array_methods_compile_and_run` suite gains `array_cycle_compile_and_run`:
+  the block `puts`es each yielded element, so the two passes (`1,2,3,1,2,3`) and
+  the `nil` returns for `cycle(2)`, `cycle(0)`, and `[].cycle(5)` are proven
+  under a real `go run`.
+
+## 0.32.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092) into the Go backend's inline `__sir`
+runtime (`_sir_array_method` beside the existing `min`/`max` arm + the
+`_sir_array_responds` `respond_to?` arm), continuing the `minmax` cross-backend
+cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` in one pass, via `<`
+  (`_sir_value_lt`). `[3,1,2].minmax` → `[1, 3]`; `["b","a","c"].minmax` →
+  `["a", "c"]`. An empty array yields `[nil, nil]` (no smallest/largest element),
+  matching the Python reference's `[None, None]`.
+- The `array_methods_compile_and_run` exec-proof test gains `minmax` (non-empty
+  and empty) — the emitted Go compiles + runs with the toolchain and asserts
+  `[1, 3]` / `[nil, nil]`.
+
+## 0.31.0 — Array `slice_when`
+
+Mirrors the Python reference (PR #8070) into the Go backend's inline `__sir`
+runtime (`_sir_array_block_method` + the `_sir_array_responds` `respond_to?`
+arm), continuing the `slice_when` cross-backend cascade.
+
+- `slice_when { |prev, cur| pred }` is the INVERSE of `chunk_while`: it splits
+  into runs of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+  exactly WHERE the block is truthy (whereas `chunk_while` starts a new run where
+  the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → `[[1,2],[4],[9,10,11,12]]`;
+  an empty array yields `[]`, a single element `[[x]]`.
+- `tests/compile_and_run_array_methods.rs::array_slice_when_compile_and_run`
+  emits a program with a `b - a > 1` predicate, compiles + runs it with the Go
+  toolchain, and asserts the printed runs.
+
+## 0.30.0 — Array `each_slice` / `each_cons` / `chunk_while`
+
+Mirrors the Python reference (PR #8031) into the Go backend's inline `__sir`
+runtime, adding the Array consecutive-grouping family (`_sir_array_method` for the
+non-block `each_slice`/`each_cons`, `_sir_array_block_method` for `chunk_while`,
+plus the `_sir_array_responds` `respond_to?` arm).
+
+- `each_slice(n)` → consecutive sub-arrays of at most `n` elements, the last
+  possibly shorter (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+- `each_cons(n)` → every consecutive `n`-element sliding window
+  (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+  array yields `[]`.
+- Both treat `n <= 0` as `[]` (Ruby raises `ArgumentError`; the never-panic floor
+  yields empty instead).
+- `chunk_while { |prev, cur| pred }` → runs of consecutive elements; the block is
+  called on each ADJACENT pair, a truthy result extends the run and a falsy one
+  starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+  `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.
+
+Exec-proof: `tests/compile_and_run_array_methods.rs` gains
+`array_each_slice_each_cons_chunk_while_compile_and_run`, running each_slice/
+each_cons (incl. `n<=0` and oversized-window → `[]`) and chunk_while (adjacent
+`b-a==1` predicate; empty → `[]`) under real `go run`, diffed against the Python
+reference semantics.
+
+## 0.29.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009) into the Go backend's inline `__sir`
+runtime, rounding out Hash's Enumerable iteration surface (`_sir_hash_method` for
+the no-block `to_h`, `_sir_hash_block_method` for the block forms, plus the
+`_sir_hash_responds` `respond_to?` arm).
+
+- `to_h` **without** a block → a shallow copy of the hash (a fresh `*Map`, so
+  mutating it does not alias the receiver's entries).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW hash from the block-returned `[k, v]`
+  pairs; the block is yielded the two args `(k, v)`; a non-pair result is skipped
+  (never-raise floor — Ruby's TypeError is deferred to the typed-error cascade),
+  and a later pair with a duplicate key wins (Ruby's rule, `_sir_map_set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the (mutated) memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` `*Seq` (the second block param is the
+index/memo), matching Ruby's Enumerable convention.
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_to_h_and_indexed_iteration_compile_and_run`, running to_h (copy + re-map),
+each_with_index (observed pair+index yield, returns self), and each_with_object
+(observed pair+memo yield, returns memo, and no-memo passthrough) under real
+`go run`, diffed against the Python reference semantics.
+
+## 0.28.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` v0.1.20 reference (PR #7978) into the Go
+backend's emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`).
+The block is yielded `(key, value)` (two arguments) — except `reduce`/`inject`,
+which follow Ruby's memo convention and yield `(memo, [key, value])` (the pair
+as one second argument).  Every "element" a result carries is the two-element
+`[key, value]` Array (`&Seq{key, value}`).
+
+- `group_by { |k, v| … }` — a Hash of block key → Array of `[k, v]` pairs, in
+  first-seen key order.
+- `partition { |k, v| … }` — `[[matching pairs], [non-matching pairs]]`.
+- `flat_map`/`collect_concat { |k, v| … }` — one-level splice of block results.
+- `reduce`/`inject(init) { |memo, (k, v)| … }` — fold; a seedless `reduce`
+  starts from the first pair, and an empty seedless `reduce` returns `nil`.
+- `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` (`_sir_plus`)
+  sum of the block results.
+
+`_sir_hash_responds` now advertises all of the above (the hash block dispatch
+already forwards the positional args before the block, so `reduce`/`sum` read
+their seed).
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by` (even-value
+predicate ⇒ bool-keyed Hash of pairs), `partition`, `flat_map`, `reduce(0)`, and
+`sum(100)` under real `go run`, diffed against the Python reference semantics.
+
+## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Go
+backend's emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`).
+Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as a sequence of
+`[key, value]` pairs: the block is yielded `(key, value)` (two arguments,
+matching `each`), and the "element" an aggregate returns is the two-element
+`[key, value]` Array (`&Seq{key, value}`).
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)`.
+- `count { |k, v| … }` — number of pairs with a truthy block result.
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key (stable on
+  ties, Schwartzian; the never-panic `_sir_value_lt` comparator).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+`_sir_hash_responds` now advertises all of the above.
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_enumerable_aggregates_compile_and_run`, running `sort_by`/`min_by`/
+`max_by` (by value), `find`/`count`/`any?`/`all?`/`none?` (even-value
+predicate) under real `go run`, diffed against the Python reference semantics.
+
+## 0.26.0 — Hash transforming block methods: `transform_values` / `transform_keys`
+
+Mirrors the Python `sir-runtime-oop` v0.1.18 reference into the Go backend's
+emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`), adding two
+non-mutating Ruby `Hash` block methods:
+
+- `transform_values { |v| … }` — builds a **new** hash whose keys are copied
+  verbatim (so no collision is possible) and whose values are the block results.
+  Original insertion order is preserved via a straight append.
+- `transform_keys { |k| … }` — builds a **new** hash whose values are untouched
+  and whose keys are the block results.  Two source keys can map to the SAME new
+  key; Ruby keeps the **last** colliding entry's value, so every write is routed
+  through `_sir_map_put`, which overwrites an existing key in place.
+
+Both yield exactly ONE block argument (the value / the key) and leave the
+receiver unmodified.  `_sir_hash_responds` now also advertises the pre-existing
+`each_key` / `each_value` block methods (previously reachable but not reported by
+`respond_to?`).
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains a `transform_values`
+case ({a:1,b:2} → {a: 99, b: 99}) and a `transform_keys` **collision** case
+({a:1,b:2} with a constant `:z` key → {z: 2}), compiled and run under real
+`go run` with stdout diffed against the Python/TS reference semantics.
+
+## 0.25.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Mirrors the Python `sir-runtime-oop` v0.1.17 reference into the Go backend's
+emitted runtime (`_sir_numeric_method` + `_sir_numeric_responds`), adding five
+Ruby numeric methods:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds a Float to that many decimals (half **away from zero**, via
+  `_sir_ruby_round`); `ndigits <= 0` rounds to a power of ten.  Go's `int64`/
+  `float64` are FIXED width, so the Python bignum→float `OverflowError` pitfall
+  does not apply — the only guards are a place count past int64's ~18 decimal
+  digits (dwarfs the value ⇒ `0`, Ruby parity) and a positive `ndigits` past
+  Float precision / an overflowing scale-up (returns the value unchanged).
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient (`_sir_floor_div`)
+  and the divisor-signed remainder; a zero divisor raises a typed
+  `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that never panics: a zero divisor yields
+  `±Inf`/`NaN` (Go float division already produces these).
+- `clamp(min, max)` / `between?(min, max)` — compared numerically.
+
+Dispatch stays an explicit `switch` on the interned method name (never
+reflection).  Exec-proven end-to-end via `go run` (the numeric exec-proof test
+now covers `round(2)`/`round(-2)`, `divmod` incl. the divisor-signed remainder,
+`fdiv` incl. the divide-by-zero `Infinity`, and `clamp`/`between?`).
+
+## 0.24.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Adds four non-block Ruby String methods to the emitted runtime's
+`_sir_string_method` switch and the `_sir_string_responds` catalog, mirroring
+the Python `sir-runtime-oop` reference semantics (rune-based, so multibyte
+strings are never split mid-codepoint):
+
+- `tr(from, to)` — position-wise rune translation; a shorter `to` repeats its
+  last rune, an empty `to` deletes matching runes, and a repeated rune in `from`
+  keeps the last mapping.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies runes of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set runes, or of *all* runes when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the range (`"a-z"`)
+and negation (`"^abc"`) forms are a follow-up, matching the literal-only
+`sub`/`gsub` precedent. Exec-proven end-to-end via `go run`. Second backend of
+the String char-set sweep (Python landed in `sir-runtime-oop` v0.1.16).
+
 ## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
 
 Extends the emitted Go runtime's non-block `Array` catalog (and the

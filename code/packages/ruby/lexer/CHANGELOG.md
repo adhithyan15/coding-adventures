@@ -2,6 +2,11 @@
 
 ## [Unreleased] — F10 declarative lexer mode transitions
 
+### Fixed
+- Indentation-sensitive token streams now emit the final logical `NEWLINE`
+  before any remaining `DEDENT` tokens and the terminal `EOF`, matching the
+  grammar contract for canonical multiline Starlark blocks.
+
 ### Added
 - `GrammarLexer` now interprets the declarative mode-transition table on a
   `TokenGrammar` (F10), the Ruby port of the Rust `grammar_lexer.rs` and

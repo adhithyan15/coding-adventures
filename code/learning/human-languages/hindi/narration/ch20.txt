@@ -1,0 +1,36 @@
+Hindi, chapter 20: Weather.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+मौसम — another Perso-Arabic loan, and a false-friend trap.
+
+Warm-up.
+[pause 2 seconds]
+You've already seen Hindi borrow umr from Arabic. Here's another one — and this time, English borrowed the SAME root too.
+
+You'll want to know — मौसम — the same root as "monsoon".
+मौसम (mausam) = "weather" — borrowed from Classical Persian موسم (mawsim), itself from Arabic مَوْسِم (mawsim, "season, time of year, occasion"; likely originally used by Arab sailors for seasonal winds). This is the exact same root that gave English monsoon — carried into English in the 1580s, well before the British Raj, via Portuguese and Dutch traders in the Indian Ocean spice trade (Portuguese monção, Dutch monssoen, both from this same Arabic mawsim). So "monsoon" and Hindi's everyday word for "weather" are, quite directly, the same word.
+
+You'll want to know — गर्मी है, ठंड है — heat and cold, native words.
+गर्मी है। — "It's hot." — literally "there is heat." (garmī hai.) ठंड है। — "It's cold." — literally "there is cold." (ṭhanḍ hai.)
+Both use ordinary Hindi nouns (गर्मी, "heat"; ठंड, "cold") plus है (hai, "is/there is") — simpler in shape than Arabic's fully verbless pattern, since Hindi still needs hai here.
+
+You'll want to know — बारिश vs. वर्षा — a genuine false-friend trap.
+Hindi has two words for "rain" that sound similar enough to assume they're related — don't make that assumption:
+बारिश (baarish) — from Persian بارش (bāriš) — the everyday, colloquial word: बारिश हो रही है ("it's raining," literally "rain is happening").
+वर्षा (varṣā) — fully native Sanskrit, from वर्ष (varṣá, "rain"), tracing to Proto-Indo-European h₁wers- ("to rain") — cousin of Greek hérsē ("dew") and Old Irish frass ("rain-shower"). This is the more formal/literary word.
+Despite the similar sound, dictionaries flag baarish and varṣā as probably not related — one's a Persian loan, the other a native Sanskrit inheritance from deep in the Indo-European family. A likely false-friend trap, not a confirmed doublet.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "mausam" — weather, same root as English "monsoon"]
+[pause 8 seconds for the answer]
+[your turn — say: "garmī hai. ṭhanḍ hai." — it's hot / it's cold]
+[pause 8 seconds for the answer]
+[your turn — say: "baarish hai" (everyday) vs. "varṣā" (formal) — probably NOT related despite sounding alike]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What English word shares मौसम's exact root, and how did it reach English? (Monsoon — from Arabic mawsim via Persian, carried into English in the 1580s by Portuguese/Dutch traders, well before the British Raj.) Are बारिश and वर्षा related words? (Probably not — despite sounding similar, baarish is a Persian loan and varṣā is native Sanskrit; dictionaries flag them as likely unrelated.) What PIE root does वर्षा trace to, and what's its Greek cousin? (h₁wers-, "to rain" — cousin of Greek hérsē, "dew.")

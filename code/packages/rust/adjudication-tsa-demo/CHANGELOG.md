@@ -128,7 +128,7 @@ the explicit ESCALATE option.
 
 ### Harness changes
 
-`scripts/adj18_bench.py`'s `VERDICT_RE` extended to recognise
+`code/scripts/adj18_bench.py`'s `VERDICT_RE` extended to recognise
 `ESCALATE` as a third matched verdict (was binary
 COMPLIANT/NON-COMPLIANT). Existing bench data continues to parse
 correctly; future bench runs against v0.13 prompts will record

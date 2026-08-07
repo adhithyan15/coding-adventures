@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "cli/validation-failure",
+  "domain": "cli",
+  "summary": "A completed validation failure maps to exit code one rather than an invalid-input exit.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "cli"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "cli",
+    "options": {
+      "action": "validate",
+      "condition": "validation_failure",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/validation-failure",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {
+      "exit_code": 1
+    },
+    "diagnostics": [
+      {
+        "code": "CLI_VALIDATION_FAILED",
+        "severity": "error"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

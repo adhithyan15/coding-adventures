@@ -1,0 +1,119 @@
+German, chapter 15: Chapter 15.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+ich habe gesagt — the past built from "have".
+
+Warm-up.
+[pause 2 seconds]
+German's everyday past tense, and it works exactly like the English perfect — except for two things German does that English doesn't.
+
+The recipe.
+haben (conjugated) + past participle, and the participle goes last.
+[a table of 4 rows, read aloud]
+infinitive: sagen. participle: gesagt.
+infinitive: machen. participle: gemacht.
+infinitive: lernen. participle: gelernt.
+infinitive: wohnen. participle: gewohnt.
+Regular (weak) verbs take ge- in front and -t behind. The participle is wrapped, not just suffixed — a circumfix.
+[a table of 3 rows, read aloud]
+ich habe gesagt, I said.
+du hast gesagt, you said.
+wir haben gesagt, we said.
+
+Two things German does that English doesn't.
+1. The participle goes to the end. Not next to the verb — the end of the clause:
+Ich habe gestern Deutsch gelernt. (I have yesterday German learned.)
+Everything else piles up in the middle, and the participle waits at the back. English cannot do this: "I have yesterday German learned" is not a sentence.
+2. It means the plain past. Ich habe gesagt translates as "I said," not only "I have said." Where English keeps I said and I have said apart, spoken German mostly uses the Perfekt for both.
+
+The ge- that English lost.
+ge- from Germanic ga-, a prefix meaning "together, completely." It marked an action as finished — perfective — which is exactly what a past participle is for.
+English had it too, as y-, and then dropped it. Two fossils survive:
+[a table of 2 rows, read aloud]
+word: enough. hiding inside: Old English genōg.
+word: yclept (archaic, "named"). hiding inside: gecleopod.
+So English once wrapped its participles the same way, and German simply never stopped.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich habe gesagt, du hast gesagt, wir haben gesagt"]
+[pause 8 seconds for the answer]
+[your turn — say: the wrap — "ge-sag-t"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ich habe Deutsch gelernt" — participle at the end]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "en-ough from genōg"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces make the Perfekt? (Haben + the past participle.) How is a weak participle built? (ge- in front, -t behind — a wrap.) Where does it go in the sentence? (The end of the clause.) What did ge- originally mean? ("Completely" — it marked an action finished.) Which English word still hides it? (Enough from genōg.) Next: the tense the Perfekt pushed aside.
+
+
+Lesson 2 of 3.
+Ich sagte — the simple past.
+
+Warm-up.
+[pause 2 seconds]
+German has a second past tense. It usually expresses the same event as the Perfekt; register and region decide which form sounds natural.
+[a table of 3 rows, read aloud]
+meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.
+meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.
+meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt.
+Weak verbs add -te. That ending is the Germanic dental preterite, the same historical machinery as English walk-ed and Dutch werk-te:
+sag-te, walk-ed.
+Latin had no matching dental-past construction; Romance past endings came by a different route.
+
+Where you meet it.
+The Präteritum is standard in narrative writing. Everyday speech usually prefers the Perfekt, especially in southern Germany, Austria, and Switzerland. It survives more in northern speech.
+A few frequent verbs remain common in spoken Präteritum everywhere:
+war — was;
+hatte — had;
+modal verbs such as konnte — could.
+So produce ich habe gesagt in ordinary conversation, recognise ich sagte in books, and actively use high-frequency war / hatte / konnte when needed.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “ich sagte; ich habe gesagt”]
+[pause 8 seconds for the answer]
+[your turn — say: “sagte — walked: dental past”]
+[pause 8 seconds for the answer]
+[your turn — say: “war, hatte, konnte”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do weak verbs form the Präteritum? (Add -te.) What English ending is related? (-ed.) Where is the tense standard? (Narrative writing.) Which forms remain normal in speech? (War, hatte, modals.) Next: map why the simple past retreated differently across regions and languages.
+
+
+Lesson 3 of 3.
+The simple past’s regional retreat — the regional and cross-language retreat of the simple past.
+
+Warm-up.
+[pause 2 seconds]
+In speech, German’s Perfekt often replaced the Präteritum. The geography lines up with neighbouring French and Italian changes.
+[a table of 3 rows, read aloud]
+language: German. inherited simple past: Präteritum. compound replacement in speech: Perfekt.
+language: French. inherited simple past: passé simple. compound replacement in speech: passé composé.
+language: Italian. inherited simple past: passato remoto. compound replacement in speech: passato prossimo.
+These are not one inherited rule: Germanic and Romance built their tenses from different material. The similar retreat spread through a connected region as speakers interacted across language boundaries. Linguists call such a shared regional development an areal change.
+The internal German map supports that story:
+strongest compound preference in the south, nearest France and northern Italy;
+better survival of the simple past in the north;
+standard Präteritum throughout narrative writing.
+Spanish and Portuguese, farther west, kept their simple pasts more fully in speech. Geography did not dictate every sentence, but it helps explain why a Germanic language and two Romance neighbours moved in parallel.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “south — more Perfekt; north — more Präteritum”]
+[pause 8 seconds for the answer]
+[your turn — say: “German, French, Italian: parallel retreat”]
+[pause 8 seconds for the answer]
+[your turn — say: “areal change — spread by contact”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where is spoken Präteritum weakest? (The German-speaking south.) Which neighbouring languages show a similar retreat? (French and Italian.) Did German inherit that from Latin? (No.) What kind of change is it? (An areal change spreading through contact.)

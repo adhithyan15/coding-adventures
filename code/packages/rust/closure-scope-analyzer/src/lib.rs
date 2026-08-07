@@ -68,8 +68,8 @@
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
-    AssignmentTarget, BindingTarget, BlockStatement, ClassMember, CvId, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionExpression, FunctionParam, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
+    AssignmentTarget, BindingTarget, BlockStatement, ClassDeclaration, ClassMember, CvId, Declaration, Expression, ForInit,
+    FunctionDeclaration, FunctionExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
 use serde::{Deserialize, Serialize};
@@ -237,6 +237,49 @@ pub struct ScopeAnalysis {
     pub scopes: Vec<Scope>,
     pub bindings: Vec<Binding>,
     pub references: Vec<Reference>,
+    /// `true` if the program contains at least one `with (obj) …`
+    /// statement anywhere (including nested inside a function/arrow body).
+    ///
+    /// `with` injects `obj` onto the scope chain, so a bare name in the
+    /// `with` body may resolve at runtime to a property of `obj` rather
+    /// than to the lexical binding the analyzer sees. That makes *any*
+    /// renaming of bindings in the program unsound — the renamed reference
+    /// could silently start (or stop) resolving to an `obj` property. The
+    /// rename passes read this flag and decline to rename when it is set.
+    /// See [`program_contains_with_statement`].
+    pub has_with: bool,
+    /// `true` if the program contains at least one ES-module `import`
+    /// declaration anywhere.
+    ///
+    /// An `import` binds module-local names (`import x from "y"`,
+    /// `import {a as c} from "y"`, `import * as ns from "y"`) that are aliases
+    /// for a *foreign module's* exports. Two soundness hazards follow, and both
+    /// make whole-program renaming unsafe:
+    ///
+    /// 1. Renaming an import binding (or a reference to it) would rewrite the
+    ///    name on one side of a cross-module contract the analyzer cannot see.
+    /// 2. The analyzer registers no binding for an import (its names live in a
+    ///    foreign scope), so the fresh-short-name allocator does not know those
+    ///    names are taken — it could rename an unrelated local *into* an import
+    ///    name and collide with it.
+    ///
+    /// Mirroring [`has_with`], the rename passes read this flag and decline to
+    /// rename the whole program when it is set. See
+    /// [`program_contains_import_declaration`].
+    pub has_import: bool,
+    /// `true` if the program contains at least one ES-module `export`
+    /// declaration anywhere.
+    ///
+    /// An `export` publishes names to *other modules* — a named export
+    /// (`export { foo }`), a re-export (`export { a } from "y"`), or an inline
+    /// declaration export (`export const x = …`) all make a binding part of this
+    /// module's public surface. Renaming an exported binding (or the exported
+    /// name of a specifier) would break importers that reference it by that
+    /// exact name — the analyzer cannot see the other side of that contract.
+    /// Mirroring [`has_import`], the rename passes read this flag and decline to
+    /// rename the whole program when it is set. See
+    /// [`program_contains_export_declaration`].
+    pub has_export: bool,
 }
 
 impl ScopeAnalysis {
@@ -415,6 +458,9 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         }],
         bindings: Vec::new(),
         references: Vec::new(),
+        has_with: false,
+        has_import: false,
+        has_export: false,
     };
 
     let mut pending: Vec<PendingReference> = Vec::new();
@@ -441,6 +487,63 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
     }
 
     analysis
+}
+
+/// Does `program` contain a `with (obj) …` statement anywhere?
+///
+/// This is the soundness gate for every renaming pass. A `with` splices its
+/// object onto the scope chain, so a bare identifier inside the `with` body
+/// can resolve at runtime to a *property* of that object rather than to the
+/// lexical binding the compiler sees. Renaming that binding (or the reference)
+/// would then silently change which value the name reads. Because a `with`
+/// nested anywhere — even deep inside a function expression — can shadow a
+/// binding declared anywhere else, the only sound response is to disable
+/// renaming for the whole program. The rename / rename-globals /
+/// rename-properties passes call this and return their input unchanged when it
+/// is `true`.
+///
+/// It rides the full [`analyze`] walk, so it is guaranteed to see a `with`
+/// however deeply it is nested (no separate, drift-prone traversal to keep in
+/// sync with the AST shape). A program with no `with` returns `false`; one with
+/// a `with` anywhere returns `true`. See the crate tests for worked examples.
+pub fn program_contains_with_statement(program: &Program) -> bool {
+    analyze(program).has_with
+}
+
+/// Does `program` contain an ES-module `import` declaration anywhere?
+///
+/// This is a soundness gate for the renaming passes, a sibling of
+/// [`program_contains_with_statement`]. An `import` introduces module-local
+/// names that alias a foreign module's exports; renaming them would break the
+/// cross-module contract, and because the analyzer registers no binding for
+/// them the fresh-short-name allocator could also collide an unrelated local
+/// with an import name. The only sound response with the current
+/// module-unaware analysis is to disable renaming for the whole program. The
+/// rename / rename-globals / rename-properties passes call this and return
+/// their input unchanged when it is `true`.
+///
+/// Like the `with` flag it rides the full [`analyze`] walk, so it sees an
+/// `import` however it is nested (imports are only legal at the top level
+/// today, but riding the walk keeps the check drift-proof if that changes).
+pub fn program_contains_import_declaration(program: &Program) -> bool {
+    analyze(program).has_import
+}
+
+/// Does `program` contain an ES-module `export` declaration anywhere?
+///
+/// A soundness gate for the renaming passes, a sibling of
+/// [`program_contains_import_declaration`]. An `export` publishes a binding to
+/// other modules by an exact name (`export { foo }`, `export const x = …`,
+/// `export { a } from "y"`); renaming that binding — or the exported name of a
+/// specifier — would break importers the analyzer cannot see. The only sound
+/// response with the current module-unaware analysis is to disable renaming for
+/// the whole program. The rename / rename-globals / rename-properties passes
+/// call this and return their input unchanged when it is `true`.
+///
+/// Like the sibling flags it rides the full [`analyze`] walk, so it sees an
+/// `export` however it is nested.
+pub fn program_contains_export_declaration(program: &Program) -> bool {
+    analyze(program).has_export
 }
 
 /// Emit a binding into the given scope and update both the
@@ -495,6 +598,80 @@ fn walk_declaration(
     match decl {
         Declaration::VariableDeclaration(vd) => walk_variable_declaration(vd, ctx, analysis, pending),
         Declaration::FunctionDeclaration(fd) => walk_function_declaration(fd, ctx, analysis, pending),
+        Declaration::ClassDeclaration(cd) => walk_class_declaration(cd, ctx, analysis, pending),
+        // An import declaration binds module-local names, but those names link
+        // to a *foreign module's* exports — renaming them would break the
+        // cross-module contract, and the fresh-name allocator does not know the
+        // import names are taken (no binding is registered for them). We record
+        // that on the analysis (`has_import`) so the rename passes can bail for
+        // the whole program — mirroring the `with` gate (CLOC12.188 PR2). We
+        // register no scope binding, so import references stay un-renameable.
+        Declaration::ImportDeclaration(_) => {
+            analysis.has_import = true;
+        }
+        // Export declarations (CLOC12.189 PR2). An `export` publishes names to
+        // other modules — its bindings are this module's public surface and must
+        // not be renamed. We record that on the analysis (`has_export`) so the
+        // rename passes bail for the whole program, mirroring the `import` gate.
+        // We do not descend into an inline declaration export's inner
+        // declaration to register bindings: the whole-program bail makes any such
+        // bindings moot (nothing will be renamed), and not registering them keeps
+        // the conservative "leave exports alone" contract simple. (A future,
+        // finer gate could rename non-exported locals while reserving the
+        // exported names.)
+        Declaration::ExportNamedDeclaration(_)
+        | Declaration::ExportDefaultDeclaration(_)
+        | Declaration::ExportAllDeclaration(_) => {
+            analysis.has_export = true;
+        }
+    }
+}
+
+/// Walk a class *declaration* (`class C [extends S] { … }`). Two jobs, mirroring
+/// the split between [`walk_function_declaration`] (the name binding) and the
+/// `Expression::ClassExpression` arm of [`walk_expression`] (the body):
+///
+/// 1. **Bind the class name.** A class declaration introduces a
+///    [`BindingKind::Class`] binding for `cd.id` in the current scope — the
+///    lexical analogue of the `Function`-kind binding a function declaration
+///    hoists. This is what lets a later reference to `C` resolve (and a renaming
+///    pass rename the class consistently).
+/// 2. **Resolve inside the body.** The `extends` heritage is an ordinary
+///    expression evaluated in the enclosing scope; each method `value` is a
+///    function expression walked as its own function scope — identical to the
+///    class-expression handling.
+fn walk_class_declaration(
+    cd: &ClassDeclaration,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    emit_binding(
+        cd.id.name.clone(),
+        BindingKind::Class,
+        ctx.current,
+        cd.id.cv.clone(),
+        analysis,
+    );
+    if let Some(sup) = &cd.super_class {
+        walk_expression(sup, ctx, analysis, pending);
+    }
+    for member in &cd.body {
+        match member {
+            ClassMember::Method(m) => walk_function_expression(&m.value, ctx, analysis, pending),
+            // A field initializer runs at construction in the class scope —
+            // resolve references in it. The field *key* introduces no binding.
+            ClassMember::Field(f) => {
+                if let Some(v) = &f.value {
+                    walk_expression(v, ctx, analysis, pending);
+                }
+            }
+            // A static-init block runs at class-definition time and is its own
+            // block scope — walk it as a free-standing block statement so its
+            // local `let`/`const`/`var` land in a block scope and references
+            // resolve. It introduces no member key or binding name.
+            ClassMember::StaticBlock(b) => walk_block_statement(b, ctx, analysis, pending),
+        }
     }
 }
 
@@ -541,7 +718,12 @@ fn walk_function_declaration(
 
     // Params become Param-kind bindings in the function scope.
     for param in &fd.params {
-        let FunctionParam::Identifier(id) = param;
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -560,6 +742,15 @@ fn walk_function_declaration(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // A default parameter's `right` (`function f(a, b = a + 1) {}`) is live code
+    // evaluated in the function scope — its references resolve against the
+    // params and enclosing scopes, so collect them under `inner_ctx` for rename
+    // soundness. Plain and rest params carry no such expression.
+    for param in &fd.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     for stmt in &fd.body.body {
         walk_statement(stmt, inner_ctx, analysis, pending);
     }
@@ -600,7 +791,12 @@ fn walk_function_expression(
     }
 
     for param in &fe.params {
-        let FunctionParam::Identifier(id) = param;
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -614,6 +810,12 @@ fn walk_function_expression(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // Default-param `right` expressions — see `walk_function_declaration`.
+    for param in &fe.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     for stmt in &fe.body.body {
         walk_statement(stmt, inner_ctx, analysis, pending);
     }
@@ -641,7 +843,12 @@ fn walk_arrow_function_expression(
     let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
 
     for param in &ae.params {
-        let FunctionParam::Identifier(id) = param;
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -655,6 +862,12 @@ fn walk_arrow_function_expression(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // Default-param `right` expressions — see `walk_function_declaration`.
+    for param in &ae.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     match &ae.body {
         ArrowBody::Block(b) => {
             for stmt in &b.body {
@@ -827,6 +1040,19 @@ fn walk_tagged_statement(
         TaggedStatement::EmptyStatement(_) => {}
         // `debugger;` has no children and binds nothing — nothing to analyze.
         TaggedStatement::DebuggerStatement(_) => {}
+        // `with (object) body` (CLOC12.187). The `object` is an ordinary
+        // expression evaluated in the current scope; the `body` is a statement.
+        // `with` injects `object` onto the scope chain, so a bare name in the
+        // body may resolve to a property of `object` rather than a lexical
+        // binding — which makes renaming *any* binding in the program unsound.
+        // We record that on the analysis (`has_with`) so the rename passes can
+        // decline; see [`program_contains_with_statement`]. We still walk the
+        // object and body so references outside/inside are resolved as usual.
+        TaggedStatement::WithStatement(ws) => {
+            analysis.has_with = true;
+            walk_expression(&ws.object, ctx, analysis, pending);
+            walk_statement(&ws.body, ctx, analysis, pending);
+        }
     }
 }
 
@@ -934,10 +1160,8 @@ fn walk_expression(
             walk_expression(&c.expression, ctx, analysis, pending);
         }
         Expression::ArrayExpression(ae) => {
-            for el in &ae.elements {
-                if let Some(e) = el {
-                    walk_expression(e, ctx, analysis, pending);
-                }
+            for e in ae.elements.iter().flatten() {
+                walk_expression(e, ctx, analysis, pending);
             }
         }
         Expression::ObjectExpression(oe) => {
@@ -971,6 +1195,18 @@ fn walk_expression(
                 match member {
                     ClassMember::Method(m) => {
                         walk_function_expression(&m.value, ctx, analysis, pending)
+                    }
+                    // A field initializer runs at construction in the class
+                    // scope — resolve references in it; the key binds nothing.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            walk_expression(v, ctx, analysis, pending);
+                        }
+                    }
+                    // A static-init block is its own block scope — walk it as a
+                    // free-standing block statement (mirrors the declaration form).
+                    ClassMember::StaticBlock(b) => {
+                        walk_block_statement(b, ctx, analysis, pending)
                     }
                 }
             }
@@ -1032,6 +1268,10 @@ fn walk_property(
                 });
             }
             PropertyKey::StringLiteral(_) | PropertyKey::NumericLiteral(_) => {}
+            // A private name (`#x`) is not an identifier *reference* — it names a
+            // slot in the class's private brand, resolved lexically at parse
+            // time, never through scope. It binds and references nothing here.
+            PropertyKey::PrivateName(_) => {}
             PropertyKey::Expression(e) => walk_expression(e, ctx, analysis, pending),
         }
     }
@@ -1042,7 +1282,7 @@ fn walk_property(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use coding_adventures_javascript_ast::SourceType;
+    use coding_adventures_javascript_ast::{FunctionParam, SourceType};
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn empty_program() -> Program {
@@ -1101,6 +1341,9 @@ mod tests {
                 declared_at: None,
             }],
             references: Vec::new(),
+            has_with: false,
+            has_import: false,
+            has_export: false,
         };
         let inner = ScopeId(1);
         let resolved = analysis.resolve("x", inner);
@@ -1139,6 +1382,9 @@ mod tests {
                 },
             ],
             references: Vec::new(),
+            has_with: false,
+            has_import: false,
+            has_export: false,
         };
         let inner = ScopeId(1);
         assert_eq!(analysis.resolve("x", inner), Some(BindingId(1)));
@@ -1568,6 +1814,9 @@ mod tests {
                 binding: Some(BindingId(0)),
                 cv: Some("cv.2".to_string()),
             }],
+            has_with: false,
+            has_import: false,
+            has_export: false,
         };
         let json = serde_json::to_string(&analysis).expect("serialize");
         let back: ScopeAnalysis = serde_json::from_str(&json).expect("deserialize");
@@ -1806,5 +2055,148 @@ mod tests {
         assert_eq!(analysis.scopes.len(), 1);
         assert!(analysis.bindings.is_empty());
         assert!(analysis.references.is_empty());
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate.
+    //
+    // `program_contains_with_statement` is the flag the rename passes
+    // read to disable renaming. These tests pin its two contracts: it
+    // is `false` for `with`-free programs (renaming stays on) and
+    // `true` whenever a `with` appears anywhere, including buried in a
+    // function body (which is why one program-wide flag is sound).
+    // ---------------------------------------------------------------
+
+    /// `with (<obj>) ;` as a single top-level program item.
+    fn with_stmt(obj: &str) -> Statement {
+        Statement::with_statement(coding_adventures_javascript_ast::WithStatement {
+            cv: None,
+            object: id_expr(obj),
+            body: Box::new(Statement::empty_statement(
+                coding_adventures_javascript_ast::EmptyStatement { cv: None },
+            )),
+        })
+    }
+
+    #[test]
+    fn program_contains_with_is_false_for_with_free_program() {
+        // `function f(a) {}` — no `with`, so the gate stays open and
+        // renaming remains enabled.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_with_statement(&prog));
+        assert!(!analyze(&prog).has_with);
+    }
+
+    #[test]
+    fn program_contains_with_detects_top_level_with() {
+        // `with (o) ;` — a top-level `with`. The gate must fire.
+        let prog = program_with(vec![ProgramItem::Statement(with_stmt("o"))]);
+        assert!(program_contains_with_statement(&prog));
+        assert!(analyze(&prog).has_with);
+    }
+
+    #[test]
+    fn program_contains_with_detects_with_nested_in_function() {
+        // `function f() { with (o) ; }` — the `with` is buried inside a
+        // function body. Because the gate rides the full `analyze` walk,
+        // it still fires; this is the case that makes a single
+        // program-wide flag (rather than a per-scope one) sound.
+        let prog = program_with(vec![fn_decl_with_body("f", &[], vec![with_stmt("o")])]);
+        assert!(program_contains_with_statement(&prog));
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.188 PR2 — `import` soundness gate (sibling of the `with`
+    // gate). `program_contains_import_declaration` is the flag the
+    // rename passes read to disable renaming when a module `import` is
+    // present.
+    // ---------------------------------------------------------------
+
+    /// `import x from "y";` as a top-level declaration item.
+    fn import_item() -> ProgramItem {
+        use coding_adventures_javascript_ast::{
+            ImportDeclaration, ImportSpecifier, StringLiteral,
+        };
+        ProgramItem::Declaration(Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers: vec![ImportSpecifier::Default(Identifier {
+                cv: None,
+                name: "x".into(),
+            })],
+            source: StringLiteral {
+                cv: None,
+                value: "y".into(),
+                raw: "\"y\"".into(),
+            },
+        }))
+    }
+
+    #[test]
+    fn program_contains_import_is_false_for_import_free_program() {
+        // `function f(a) {}` — no import, so the gate stays open and
+        // renaming remains enabled.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_import_declaration(&prog));
+        assert!(!analyze(&prog).has_import);
+    }
+
+    #[test]
+    fn program_contains_import_detects_top_level_import() {
+        // `import x from "y";` — the gate must fire, disabling renaming.
+        let prog = program_with(vec![import_item()]);
+        assert!(program_contains_import_declaration(&prog));
+        assert!(analyze(&prog).has_import);
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.189 PR2 — `export` soundness gate (sibling of the import
+    // gate). `program_contains_export_declaration` is the flag the
+    // rename passes read to disable renaming when an `export` is present.
+    // ---------------------------------------------------------------
+
+    /// `export const x = 1;` as a top-level declaration export item.
+    fn export_item() -> ProgramItem {
+        use coding_adventures_javascript_ast::{
+            ExportNamedDeclaration, NumericLiteral, VarKind, VariableDeclaration,
+            VariableDeclarator,
+        };
+        let inner = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".into(),
+                }),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".into(),
+                })),
+            }],
+        });
+        ProgramItem::Declaration(Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: Some(Box::new(inner)),
+            specifiers: vec![],
+            source: None,
+        }))
+    }
+
+    #[test]
+    fn program_contains_export_is_false_for_export_free_program() {
+        // `function f(a) {}` — no export, so the gate stays open.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_export_declaration(&prog));
+        assert!(!analyze(&prog).has_export);
+    }
+
+    #[test]
+    fn program_contains_export_detects_top_level_export() {
+        // `export const x = 1;` — the gate must fire, disabling renaming.
+        let prog = program_with(vec![export_item()]);
+        assert!(program_contains_export_declaration(&prog));
+        assert!(analyze(&prog).has_export);
     }
 }

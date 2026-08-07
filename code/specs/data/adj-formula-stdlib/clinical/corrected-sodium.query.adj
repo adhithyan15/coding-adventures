@@ -1,0 +1,27 @@
+% ============================================================================
+% corrected-sodium.query.adj — worked applications of the hyperglycemia-corrected-sodium correction.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hyperglycemic-crisis vignette into a measured
+% serum sodium and a glucose: it `import`s the grounded formulabook, `observe`s the two values, and
+% asks the engine to APPLY the cited correction. No arithmetic is stated by the consumer; the engine
+% computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (measured sodium = 126 mEq/L, glucose = 600 mg/dL): corrected = 126 + 1.6 × (600 − 100) /
+% 100 = 134 mEq/L. Each query fixes two of the three quantities and asks the engine to recover the
+% third; every answer is exact and the three COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli corrected-sodium.query.adj
+% ============================================================================
+
+import "corrected-sodium.adj"
+
+% --- Correction: the corrected sodium the measured value and glucose imply (expect 134). ------------
+observe measured_sodium(126)
+observe glucose(600)
+? corrected_sodium(measured_sodium, glucose)   % expect 134
+
+% --- Inverse: the measured sodium a corrected 134 implies at glucose 600 (expect 126). --------------
+observe corrected_sodium(134)
+? measured_sodium(corrected_sodium, glucose)   % expect 126

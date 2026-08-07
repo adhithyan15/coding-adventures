@@ -502,7 +502,7 @@ fn test_square_regression() {
 
     // Code section: local.get 0; local.get 0; i32.mul; end
     let body = vec![0x00, 0x20, 0x00, 0x20, 0x00, 0x6C, 0x0B];
-    let mut code_section = vec![0x01u8, (body.len() as u8) + 0];
+    let mut code_section = vec![0x01u8, (body.len() as u8)];
     // body_with_size
     code_section.push(body.len() as u8);
     code_section.extend_from_slice(&body);

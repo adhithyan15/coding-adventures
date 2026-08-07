@@ -82,6 +82,7 @@ interface GpuDeviceLike {
     readonly entries: readonly GpuBindGroupEntryLike[];
   }): unknown;
   createCommandEncoder(descriptor?: { readonly label?: string }): GpuCommandEncoderLike;
+  destroy?(): void;
 }
 
 interface GpuBindGroupLayoutEntryLike {
@@ -162,7 +163,7 @@ export class WebGpuMatrixBackend implements AsyncNeuralMatrixBackend<WebGpuMatri
     if (adapter === null) {
       throw new Error("WebGPU is available, but no adapter was returned");
     }
-    return new WebGpuMatrixBackend(await adapter.requestDevice());
+    return WebGpuMatrixBackend.createFromAdapter(adapter);
   }
 
   static async createFromNavigator(
@@ -172,11 +173,25 @@ export class WebGpuMatrixBackend implements AsyncNeuralMatrixBackend<WebGpuMatri
     if (gpu === undefined) {
       return null;
     }
-    return WebGpuMatrixBackend.create(gpu, options);
+    const adapter = await gpu.requestAdapter(options);
+    if (adapter === null) {
+      return null;
+    }
+    return WebGpuMatrixBackend.createFromAdapter(adapter);
   }
 
   static isNavigatorAvailable(): boolean {
     return getNavigatorGpu() !== undefined;
+  }
+
+  private static async createFromAdapter(adapter: GpuAdapterLike): Promise<WebGpuMatrixBackend> {
+    const device = await adapter.requestDevice();
+    try {
+      return new WebGpuMatrixBackend(device);
+    } catch (error) {
+      device.destroy?.();
+      throw error;
+    }
   }
 
   async fromRows(rows: readonly (readonly number[])[]): Promise<WebGpuMatrix> {
@@ -266,6 +281,10 @@ export class WebGpuMatrixBackend implements AsyncNeuralMatrixBackend<WebGpuMatri
   dispose(matrix: WebGpuMatrix): void {
     matrix.buffer.destroy?.();
     matrix.scratch?.forEach((buffer) => buffer.destroy?.());
+  }
+
+  destroy(): void {
+    this.device.destroy?.();
   }
 
   private createPipeline(label: string, code: string, layout: unknown): unknown {

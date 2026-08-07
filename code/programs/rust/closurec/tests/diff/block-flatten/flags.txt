@@ -1,0 +1,4 @@
+--js
+tests/diff/block-flatten/input/a.js
+--compilation_level
+SIMPLE

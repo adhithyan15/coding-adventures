@@ -456,13 +456,13 @@ pub fn split_levels(
 /// `target_level = 0` or `band = Approximation` with `target_level < J`
 /// are invalid (those approximations were recursively decomposed
 /// and are not in the flattened output).
-pub fn slice_level<'a>(
-    coeffs: &'a [f32],
+pub fn slice_level(
+    coeffs: &[f32],
     signal_len: usize,
     levels: u32,
     target_level: u32,
     band: Band,
-) -> Result<&'a [f32], WaveletError> {
+) -> Result<&[f32], WaveletError> {
     if target_level == 0 {
         return Err(WaveletError::InvalidParam(
             "target_level must be ≥ 1 (the original signal is not in the DWT output)".into(),
@@ -668,7 +668,7 @@ fn synthesize_one_level(
     debug_assert_eq!(h.len(), g.len());
     let filter_len = h.len();
     let mut out = vec![0.0_f32; target_len];
-    for n in 0..target_len {
+    for (n, out_n) in out.iter_mut().enumerate() {
         let mut acc = 0.0_f32;
         for i in 0..filter_len {
             // We want `i = 2m + 1 − n` for some integer m.
@@ -683,7 +683,7 @@ fn synthesize_one_level(
                 acc += h[i] * ca_val + g[i] * cd_val;
             }
         }
-        out[n] = acc;
+        *out_n = acc;
     }
     out
 }
@@ -692,7 +692,10 @@ fn synthesize_one_level(
 /// `#[cfg(test)]` cross-check below to verify Phase 3's generic
 /// [`synthesize_one_level`] reduces to the same closed form for
 /// length-2 Haar.
+// Reference implementation retained as a test cross-check oracle; not every test
+// build references it, so allow it to sit unused.
 #[cfg(test)]
+#[allow(dead_code)]
 fn haar_synthesis_closed_form(
     ca: &[f32],
     cd: &[f32],
@@ -739,7 +742,7 @@ fn upsample_and_filter(
     // We loop over output positions and accumulate.  For each `n`,
     // iterate over filter taps and figure out which upsampled
     // index (and therefore which `ca[k]` / `cd[k]`) contributes.
-    for n in 0..target_len {
+    for (n, out_n) in out.iter_mut().enumerate() {
         let mut acc = 0.0_f32;
         for i in 0..filter_len {
             // The upsampled stream has non-zeros at positions
@@ -751,13 +754,13 @@ fn upsample_and_filter(
             // odd positions.
             let src_pos = n as i64 + i as i64;
             if src_pos % 2 == 1 {
-                let k = ((src_pos - 1) / 2) as i64;
+                let k = (src_pos - 1) / 2;
                 let ca_val = sample_with_boundary(ca, k, boundary);
                 let cd_val = sample_with_boundary(cd, k, boundary);
                 acc += h_syn[i] * ca_val + g_syn[i] * cd_val;
             }
         }
-        out[n] = acc;
+        *out_n = acc;
     }
     out
 }
@@ -1162,6 +1165,9 @@ mod tests {
         assert_close(&coeffs[2..4], &[inv_sqrt2, inv_sqrt2], 1e-5, "cD_1");
     }
 
+    // The 3.14 literal is an arbitrary constant signal amplitude used as test
+    // data, not an approximation of PI to be replaced.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn dwt_of_constant_signal_has_zero_detail() {
         // A constant signal has identical adjacent samples, so the
@@ -1199,8 +1205,8 @@ mod tests {
         //   cD[0] = g[0] * x[1] + g[1] * x[0] = 0 + (-1/√2) · 1 = -1/√2
         //   cD[k>0] = 0
         assert!(approx_eq(coeffs[0], inv_sqrt2, 1e-5), "cA[0] = {}", coeffs[0]);
-        for k in 1..8 {
-            assert!(coeffs[k].abs() <= 1e-6, "cA[{}] = {}", k, coeffs[k]);
+        for (k, ck) in coeffs.iter().enumerate().take(8).skip(1) {
+            assert!(ck.abs() <= 1e-6, "cA[{}] = {}", k, ck);
         }
         assert!(
             approx_eq(coeffs[8], -inv_sqrt2, 1e-5),
@@ -1417,6 +1423,9 @@ mod tests {
     // verify only Periodic round-trips (mathematically exact for
     // orthogonal wavelets).
 
+    // The 3.14 literal is an arbitrary constant signal amplitude used as test
+    // data, not an approximation of PI to be replaced.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn db2_dwt_of_constant_signal_has_small_detail() {
         // Constant signal under Daubechies-2: detail coefficients

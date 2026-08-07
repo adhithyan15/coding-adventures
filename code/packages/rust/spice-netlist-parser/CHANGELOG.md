@@ -2,6 +2,112 @@
 
 ## Unreleased
 
+- Validate Level-1 MOS model-card `NSS` and `TPG` values, then lower `N_SUB` /
+  `TOX` electrostatic defaults through the shared engine model-card semantics.
+- Reject non-finite and non-Level-1 MOS model-card `LEVEL` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `T_NOM` / `TNOM`
+  values before lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `N_SUB` / `NSUB`
+  / `N` values before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `AF` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `KF` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `RSH` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `RS` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `RD` values before
+  lowering netlist elements into the engine.
+- Reject invalid Level-1 MOS model-card `LD` values that are negative,
+  non-finite, or leave a non-positive effective channel length.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `L` values
+  before lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `W` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `JS` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `IS` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CGBO` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CGDO` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CGSO` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CBD` / `CJD` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CBS` / `CJS` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CJSW` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `CJ` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `MJSW` values before
+  lowering netlist elements into the engine.
+- Reject non-finite Level-1 MOS model-card `FC` values outside `[0, 1)` before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `MJ` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `PB` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `GAMMA` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `PHI` values
+  before lowering netlist elements into the engine.
+- Reject non-finite Level-1 MOS model-card `LAMBDA` / `LAM` values before
+  lowering netlist elements into the engine.
+- Reject non-finite Level-1 MOS model-card `VT0` / `VTO` / `VTH` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `KP` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `U0` / `UO` values
+  before lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS model-card `TOX` values
+  before lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `PS` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `PD` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `AS` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `AD` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `NRS` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS instance `NRD` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS instance `L` values before
+  lowering netlist elements into the engine.
+- Reject zero, negative, and non-finite Level-1 MOS instance `W` values before
+  lowering netlist elements into the engine.
+- Reject unsupported Level-1 MOS instance parameters instead of silently
+  ignoring misspelled geometry or diffusion fields.
+- Preserve Level-1 MOS model-card `U0` / `UO` and derive `KP` from surface
+  mobility and explicit `TOX` when the card omits `KP`.
+- Preserve Level-1 MOS model-card `JS` independently from scalar `IS` so
+  Berkeley netlists can drive diffusion-area-scaled bulk-junction leakage.
+- Preserve the remaining supported Level-1 MOS model-card fields `LD`, `TOX`,
+  `RD`, `RS`, `KF`, and `AF`, plus `VTH`, `LAM`, `CJS`, and `CJD` aliases,
+  when lowering Berkeley netlists into engine parameters.
+- Preserve Level-1 MOS model-card `PB`, `MJ`, and `FC` values when lowering
+  Berkeley netlists into the engine parameter bundle.
+- Accept Level-1 MOS model-card `MJSW=<grading>` through the normalized engine
+  model-card contract for independent sidewall depletion shaping.
+- Parse Level-1 MOS instance `PS=<perimeter>` into the engine parameter bundle
+  for source-body sidewall capacitance.
+- Parse Level-1 MOS instance `PD=<perimeter>` and model-card
+  `CJSW=<capacitance/length>` into the engine parameter bundle for drain-body
+  sidewall capacitance.
+- Parse Level-1 MOS instance `AS=<area>` into the engine parameter bundle for
+  source-body junction capacitance.
+- Parse Level-1 MOS instance `AD=<area>` and model-card `CJ=<capacitance/area>`
+  into the engine parameter bundle for drain-body junction capacitance.
+- Parse Level-1 MOS instance `NRS=<squares>` into the engine parameter bundle
+  so netlist-driven source resistance uses `RSH * NRS`.
+- Parse Level-1 MOS model `RSH` and instance `NRD=<squares>` into the engine
+  parameter bundle so netlist-driven drain resistance uses `RSH * NRD`.
 - Add Berkeley SPICE app-deck shell dashboard dispatch queue lane tab panel
   card action menu group shortcut command palette search invocation receipt
   notification stack summary product handoff delivery package embed runtime

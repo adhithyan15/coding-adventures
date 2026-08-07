@@ -1,0 +1,103 @@
+---
+schema_version: 2
+id: LA-C16-undecim-viginti
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 370
+chapter: 16
+type: word
+headword: ūndecim — vīgintī
+gloss: 11-20, the source numbers themselves — including Latin's own genuine oddity, SUBTRACTIVE 18 and 19, which Spanish quietly regularized away
+concept_tag: LA-NUM-11-20
+prerequisites: [LA-C15-weather-verbs]
+sounds: [macron-long-vowel, prefix-un-duo]
+roots: [latin-decim-ten, latin-viginti-twenty]
+etymology_hook: "ūndecim through quīndecim (11-15) are simple 'X-ten' compounds, the direct source of Spanish's fused once-quince; but 18 and 19 are the genuinely odd ones — duodēvīgintī ('two FROM twenty') and ūndēvīgintī ('one FROM twenty'), SUBTRACTIVE counting that Spanish did NOT inherit, replacing it with plain addition instead"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
+introduces:
+  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+practises:
+  knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C15-weather-verbs, LA-C15-tempestas-pluit]
+---
+
+# ūndecim, vīgintī — the source numbers, including a genuine oddity
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02] -->
+
+[PAUSE 2s] You've seen Spanish's *once* through *quince* as fused, worn-down
+compounds. Here are the whole, un-fused Latin originals — plus a real quirk
+in Latin's own counting system that Spanish quietly dropped.
+
+## You'll want to know: ūndecim–quīndecim — plain "X-ten" compounds
+<!-- hl-knowledge: introduces=[LA-LEX-UNDECIM-VIGINTI-01]; assesses=[] -->
+
+| Latin | literally |
+|---|---|
+| **ūndecim** | *ūnus* + *decim*, "one-ten" |
+| **duodecim** | *duo* + *decim*, "two-ten" |
+| **tredecim** | *trēs* + *decim*, "three-ten" |
+| **quattuordecim** | *quattuor* + *decim*, "four-ten" |
+| **quīndecim** | *quīnque* + *decim*, "five-ten" |
+
+Straightforward additive compounds — number, then *decim* ("ten," from
+**decem**). These are the direct, whole ancestors of Spanish's *once,
+doce, trece, catorce, quince* — fused down over the centuries into single
+words.
+
+## You'll want to know: sēdecim, septendecim — still additive
+<!-- hl-knowledge: introduces=[LA-LEX-UNDECIM-VIGINTI-02]; assesses=[] -->
+
+**sēdecim** (16, "six-ten") and **septendecim** (17, "seven-ten") keep the
+same additive pattern.
+
+## Why it's said this way: Be honest: 18 and 19 are genuinely SUBTRACTIVE
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-UNDECIM-VIGINTI-03]; assesses=[] -->
+
+Here's the real oddity. Latin didn't say "eight-ten" or "nine-ten" for 18 and
+19 — it counted **backward from twenty** instead:
+
+> **duodēvīgintī** — "**two FROM twenty**" (18)
+> **ūndēvīgintī** — "**one FROM twenty**" (19)
+
+This is genuinely **subtractive** counting, not additive — the same logic
+behind how Latin also names the day before the Kalends. It's a real
+irregularity sitting right in the middle of an otherwise perfectly additive
+system. **Spanish did not inherit this quirk**: *dieciocho* and *diecinueve*
+are built fresh on the simple "ten-and-X" template, quietly regularizing away
+something genuinely odd in Latin's own counting.
+
+## You'll want to know: vīgintī
+<!-- hl-knowledge: introduces=[LA-LEX-UNDECIM-VIGINTI-04]; assesses=[] -->
+
+**vīgintī** ("twenty") — the direct, unchanged source of Spanish's *veinte*.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: "ūndecim, duodecim, tredecim, quattuordecim, quīndecim" — the
+  plain "X-ten" compounds]
+- [YOU SAY: "duodēvīgintī, ūndēvīgintī" — 18 and 19, counted BACKWARD from
+  twenty]
+- [YOU SAY: "vīgintī" — twenty]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
+
+[PAUSE 3s]
+- What pattern do *ūndecim* through *quīndecim* follow? (**Additive** — number
+  + *decim*, "ten.")
+- What's genuinely odd about Latin's 18 and 19? (They're **subtractive** —
+  *duodēvīgintī*/*ūndēvīgintī*, literally "two/one FROM twenty," not
+  "eight/nine-ten.")
+- Did Spanish keep this pattern? (**No** — *dieciocho*/*diecinueve* use plain
+  addition, regularizing away Latin's quirk.)

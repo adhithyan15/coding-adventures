@@ -1,0 +1,80 @@
+% ============================================================================
+% energy-work.adj — foundational physics laws in the ADJ standard library.
+% ============================================================================
+% The FIRST entry of the *physics* track of the compute standard library: two of
+% the laws a first mechanics course opens with — the definition of WORK and the
+% KINETIC ENERGY of a moving mass — each an importable, byte-provenanced,
+% PARAMETERIZED `formula`. Like `mathematics/geometry-formulas.adj` and
+% `clinical/bmi.adj`, a consumer states NO arithmetic: it `import`s this file,
+% binds the physical quantities from its own byte-provenance decomposition, and
+% asks the engine to APPLY the cited law on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the law's citation.
+%
+%     import "energy-work.adj"
+%     observe force(10)     % "…a 10 N push…"      (span cited by the model)
+%     observe distance(3)   % "…over 3 m…"         (span cited by the model)
+%     ? work(force, distance)          % engine → 30, carrying NASA's W = F·d
+%
+% Both laws are EXACT over their parameters — work is a product of two quantities,
+% kinetic energy the product of the (exact, dimensionless) constant ½ with a mass
+% and the square of a speed. There is no *separately grounded* physical constant
+% here (no G, no c), so every value the engine returns is exact; laws that need a
+% measured constant belong in a different, constant-carrying library.
+%
+%   work(force, distance)          = force · distance          %  W = F d
+%   kinetic_energy(mass, velocity) = ½ · mass · velocity²       %  KE = ½ m v²
+%
+% The definitions are quoted from primary references — NASA Glenn Research Center
+% (a .gov primary source) for work, and Georgia State University's HyperPhysics (a
+% university .edu physics reference) for kinetic energy — so each `formula` carries
+% the same provenance envelope every shipped grounded clause carries; the linter
+% rejects an unsourced one.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the laws range
+% over, and each result is the derived quantity. Rung-0's grammar types an
+% observable slot as `finding` (dimensional typing of parameters is a later rung —
+% the engine already infers + checks dimensions when a law is APPLIED: force·
+% distance reports an energy, ½·mass·speed² reports an energy too, which is exactly
+% why the two answers share a unit). The `surface` lists are the everyday names a
+% decomposer maps onto the canonical term; the trailing comment records the
+% intended SI dimension.
+% ----------------------------------------------------------------------------
+dictionary physics_vocab {
+    define force          : finding  surface "force", "applied force", "F"          % force, e.g. N
+    define distance       : finding  surface "distance", "displacement", "d", "s"   % length, e.g. m
+    define mass           : finding  surface "mass", "m"                            % mass, e.g. kg
+    define velocity       : finding  surface "velocity", "speed", "v"              % length/time, e.g. m/s
+
+    define work           : finding  surface "work", "work done", "W"              % energy, e.g. J
+    define kinetic_energy : finding  surface "kinetic energy", "KE"                % energy, e.g. J
+}
+
+% ----------------------------------------------------------------------------
+% The laws. Each is a named, importable, reusable `let` over its formal parameters,
+% bound at apply time, and each carries a definitional quote from a primary source
+% (required on a shipped formula). Kinetic energy is written with the ½ folded to
+% its decimal literal `0.5` and the square spelled `velocity * velocity` — the
+% surface expression grammar supports + - * / and parentheses, and a parameter may
+% recur, so v² is exactly `velocity * velocity`.
+% ----------------------------------------------------------------------------
+formulabook physics_energy {
+    use physics_vocab
+
+    % Work — the product of a force and the distance through which it acts.
+    % NASA Glenn Research Center (Beginner's Guide to Aeronautics) defines work
+    % this way and gives the formula W = F * s.
+    formula work(force, distance) = force * distance
+        source "For scientists, work is the product of a force acting through a distance."
+        locator "https://www.grc.nasa.gov/www/k-12/airplane/work.html"
+        trust authoritative
+
+    % Kinetic energy — one half the mass times the square of the speed. Georgia
+    % State University's HyperPhysics states "The kinetic energy of a point mass m
+    % is given by" the equation KE = (1/2) m v².
+    formula kinetic_energy(mass, velocity) = 0.5 * mass * velocity * velocity
+        source "The kinetic energy of a point mass m is given by"
+        locator "https://hyperphysics.gsu.edu/hbase/ke.html"
+        trust authoritative
+}

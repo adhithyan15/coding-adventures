@@ -7,14 +7,17 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use smart_home_core::{
     tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
     AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
-    DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId, Health,
+    DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, Entity,
+    EntityId, EventId, Health,
     IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
-    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
+    MediaCommandType, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError,
@@ -219,7 +222,7 @@ impl fmt::Display for RuntimeSubscriptionId {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct RuntimePairingSessionId(String);
 
 impl RuntimePairingSessionId {
@@ -267,7 +270,7 @@ pub enum RuntimeEventFilter {
     Supervision,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum RuntimeEvent {
     Device(DeviceEvent),
     CommandResult(CommandResult),
@@ -671,6 +674,8 @@ impl RuntimeEventBusSnapshot {
         }
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_pending_deliveries_per_subscription(&self) -> usize {
         if self.subscription_count == 0 {
             0
@@ -804,16 +809,13 @@ impl RuntimeEventDeliverySummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeEventSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
 }
 
-impl Default for RuntimeEventSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Borrowed view of one runtime event and its replay cursor position.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -911,17 +913,14 @@ impl RuntimeEventLogSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCommandResultSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
     StatusThenSequenceDesc,
 }
 
-impl Default for RuntimeCommandResultSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Read-side query for command results already captured in the runtime event log.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1251,6 +1250,8 @@ impl RuntimeSubscriptionInventorySummary {
         self.supervision_subscriptions > 0
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_queued_events_per_subscription(&self) -> usize {
         if self.total_subscriptions == 0 {
             0
@@ -1311,16 +1312,13 @@ impl RuntimeEventBusHealthSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeSubscriptionSort {
+    #[default]
     SubscriptionId,
     QueuedEventsDesc,
 }
 
-impl Default for RuntimeSubscriptionSort {
-    fn default() -> Self {
-        Self::SubscriptionId
-    }
-}
 
 /// Read-side query for active event-bus subscriptions.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -1501,18 +1499,15 @@ impl WorkerRestartPlan {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum SupervisedWorkerSort {
+    #[default]
     BridgeId,
     HeartbeatDueAt,
     RestartCountDesc,
     StatusThenBridgeId,
 }
 
-impl Default for SupervisedWorkerSort {
-    fn default() -> Self {
-        Self::BridgeId
-    }
-}
 
 /// Read-side query for supervised integration workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2384,18 +2379,15 @@ impl DiscoverySupervisorRunReport {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DiscoveryWorkerSort {
+    #[default]
     WorkerId,
     NextDueAt,
     StatusThenWorkerId,
     ConsecutiveFailuresDesc,
 }
 
-impl Default for DiscoveryWorkerSort {
-    fn default() -> Self {
-        Self::WorkerId
-    }
-}
 
 /// Read-side query for scheduled discovery workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2623,14 +2615,14 @@ impl RuntimeDiscoveryScheduler {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ReconciliationReason {
     MissingState,
     StaleState,
     Drifted,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DesiredEntityState {
     pub entity_id: EntityId,
     pub desired: Vec<StateDelta>,
@@ -2660,17 +2652,14 @@ impl DesiredEntityState {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DesiredStateSort {
+    #[default]
     EntityId,
     RequestedByThenEntityId,
     CommandTimeoutDesc,
 }
 
-impl Default for DesiredStateSort {
-    fn default() -> Self {
-        Self::EntityId
-    }
-}
 
 /// Read-side query for desired-state supervision targets.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2803,7 +2792,7 @@ pub struct BridgeHealthReport {
     pub metadata: Vec<Metadata>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PairingSessionStatus {
     PendingUserPresence,
     Completed,
@@ -2822,7 +2811,7 @@ impl PairingSessionStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RuntimePairingSession {
     pub session_id: RuntimePairingSessionId,
     pub bridge_id: BridgeId,
@@ -2863,18 +2852,15 @@ impl RuntimePairingSession {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimePairingSessionSort {
+    #[default]
     SessionId,
     ExpiresAt,
     StartedAtDesc,
     StatusThenExpiresAt,
 }
 
-impl Default for RuntimePairingSessionSort {
-    fn default() -> Self {
-        Self::SessionId
-    }
-}
 
 /// Read-side query for bridge pairing ceremonies.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -3466,16 +3452,13 @@ impl RuntimeDiscoverToolOutput {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeAuthorizationDecisionSort {
     DecidedAtAsc,
+    #[default]
     DecidedAtDesc,
 }
 
-impl Default for RuntimeAuthorizationDecisionSort {
-    fn default() -> Self {
-        Self::DecidedAtDesc
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeAuthorizationDecisionQuery {
@@ -3531,7 +3514,9 @@ pub enum RuntimeCapabilityGrantScopeKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCapabilityGrantSort {
+    #[default]
     GrantId,
     PrincipalId,
     GrantedAtAsc,
@@ -3540,11 +3525,6 @@ pub enum RuntimeCapabilityGrantSort {
     ExpiresAtDesc,
 }
 
-impl Default for RuntimeCapabilityGrantSort {
-    fn default() -> Self {
-        Self::GrantId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeCapabilityGrantQuery {
@@ -3599,18 +3579,15 @@ impl RuntimeCapabilityGrantQuery {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeRoomSort {
+    #[default]
     RoomId,
     AttentionDesc,
     EntityCountDesc,
     SceneCountDesc,
 }
 
-impl Default for RuntimeRoomSort {
-    fn default() -> Self {
-        Self::RoomId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeRoomQuery {
@@ -4303,6 +4280,28 @@ pub struct SmartHomeRuntime {
     desired_states: BTreeMap<EntityId, DesiredEntityState>,
 }
 
+/// Durable, transport-neutral runtime state.
+///
+/// Discovery scheduling and live subscriptions are intentionally omitted:
+/// they are process-local workers and consumers. Everything needed to rebuild
+/// normalized topology, state, history, pending pairing work, and desired
+/// state is retained.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RuntimeDurableSnapshot {
+    pub bridges: Vec<Bridge>,
+    pub devices: Vec<Device>,
+    pub entities: Vec<Entity>,
+    pub scenes: Vec<Scene>,
+    pub states: Vec<StateSnapshot>,
+    pub registry_events: Vec<DeviceEvent>,
+    pub capability_grants: Vec<CapabilityGrant>,
+    pub authorization_decisions: Vec<AuthorizationDecision>,
+    pub runtime_events: Vec<RuntimeEvent>,
+    pub pairing_sessions: Vec<RuntimePairingSession>,
+    pub optimistic_states: Vec<StateSnapshot>,
+    pub desired_states: Vec<DesiredEntityState>,
+}
+
 impl SmartHomeRuntime {
     pub fn new() -> Self {
         Self {
@@ -4323,6 +4322,86 @@ impl SmartHomeRuntime {
 
     pub fn registry_mut(&mut self) -> &mut InMemorySmartHomeRegistry {
         &mut self.registry
+    }
+
+    pub fn durable_snapshot(&self) -> RuntimeDurableSnapshot {
+        RuntimeDurableSnapshot {
+            bridges: self.registry.bridges().cloned().collect(),
+            devices: self.registry.devices().cloned().collect(),
+            entities: self.registry.entities().cloned().collect(),
+            scenes: self.registry.scenes().cloned().collect(),
+            states: self.registry.states().cloned().collect(),
+            registry_events: self.registry.events().cloned().collect(),
+            capability_grants: self.registry.capability_grants().cloned().collect(),
+            authorization_decisions: self.registry.authorization_decisions().cloned().collect(),
+            runtime_events: self.event_bus.published().to_vec(),
+            pairing_sessions: self.pairing_sessions.values().cloned().collect(),
+            optimistic_states: self.optimistic_states.values().cloned().collect(),
+            desired_states: self.desired_states.values().cloned().collect(),
+        }
+    }
+
+    pub fn restore_durable_snapshot(
+        snapshot: RuntimeDurableSnapshot,
+    ) -> Result<Self, RuntimeError> {
+        let RuntimeDurableSnapshot {
+            bridges,
+            devices,
+            entities,
+            scenes,
+            states,
+            registry_events,
+            capability_grants,
+            authorization_decisions,
+            runtime_events,
+            pairing_sessions,
+            optimistic_states,
+            desired_states,
+        } = snapshot;
+        let mut runtime = Self::new();
+
+        for bridge in bridges {
+            runtime.upsert_bridge(bridge)?;
+        }
+        for device in devices {
+            runtime.upsert_device(device)?;
+        }
+        for entity in entities {
+            runtime.upsert_entity(entity)?;
+        }
+        for scene in scenes {
+            runtime.upsert_scene(scene)?;
+        }
+        for event in registry_events {
+            runtime.registry.record_event(event)?;
+        }
+        for state in states {
+            runtime.registry.apply_state_snapshot(state)?;
+        }
+        for grant in capability_grants {
+            runtime.registry.upsert_capability_grant(grant);
+        }
+        for decision in authorization_decisions {
+            runtime.registry.record_authorization_decision(decision);
+        }
+        for event in runtime_events {
+            runtime.event_bus.publish(event);
+        }
+        for session in pairing_sessions {
+            runtime
+                .pairing_sessions
+                .insert(session.session_id.clone(), session);
+        }
+        for state in optimistic_states {
+            runtime
+                .optimistic_states
+                .insert(state.entity_id.clone(), state);
+        }
+        for desired_state in desired_states {
+            runtime.upsert_desired_state(desired_state)?;
+        }
+
+        Ok(runtime)
     }
 
     pub fn discovery(&self) -> &DiscoveryCatalog {
@@ -4529,6 +4608,8 @@ impl SmartHomeRuntime {
         self.event_bus.health_summary()
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_command_results(
         &self,
         query: &RuntimeCommandResultQuery,
@@ -4552,7 +4633,7 @@ impl SmartHomeRuntime {
             .collect::<Vec<_>>();
         match query.sort {
             RuntimeCommandResultSort::SequenceAsc => {
-                results.sort_by(|left, right| left.sequence.cmp(&right.sequence));
+                results.sort_by_key(|left| left.sequence);
             }
             RuntimeCommandResultSort::SequenceDesc => {
                 results.sort_by(|left, right| right.sequence.cmp(&left.sequence));
@@ -4633,6 +4714,8 @@ impl SmartHomeRuntime {
         )
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_authorization_decisions(
         &self,
         query: &RuntimeAuthorizationDecisionQuery,
@@ -4645,7 +4728,7 @@ impl SmartHomeRuntime {
         let mut decisions = self.registry.query_authorization_decisions(&selector);
         match query.sort {
             RuntimeAuthorizationDecisionSort::DecidedAtAsc => {
-                decisions.sort_by(|left, right| left.decided_at_ms.cmp(&right.decided_at_ms));
+                decisions.sort_by_key(|left| left.decided_at_ms);
             }
             RuntimeAuthorizationDecisionSort::DecidedAtDesc => {
                 decisions.sort_by(|left, right| right.decided_at_ms.cmp(&left.decided_at_ms));
@@ -5745,6 +5828,16 @@ impl SmartHomeRuntime {
         request: RuntimeCommandToolRequest,
         now_ms: u64,
     ) -> Result<CommandResult, RuntimeError> {
+        let command = self.authorize_command_tool(principal_id, request, now_ms)?;
+        self.submit_command(command, now_ms)
+    }
+
+    pub fn authorize_command_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<DeviceCommand, RuntimeError> {
         let tool = SmartHomeTool::Command;
         let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
         if !decision.missing_capabilities.is_empty() {
@@ -5774,8 +5867,24 @@ impl SmartHomeRuntime {
             .collect();
         let command = request.into_command(command_id, principal_id.as_str(), correlation_id)?;
         let authorization = CommandAuthorization::new(principal_id, grants);
-
-        self.submit_authorized_command(&authorization, command, now_ms)
+        let decision = AuthorizationDecision::for_command(
+            authorization.principal_id.clone(),
+            &command,
+            authorization.grants.iter(),
+            now_ms,
+        );
+        let missing_capabilities = decision.missing_capabilities.clone();
+        self.registry.record_authorization_decision(decision);
+        if !missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedCommand {
+                command_id: command.command_id.clone(),
+                principal_id: authorization.principal_id,
+                required_tier: command.required_tier,
+                missing_capabilities,
+            });
+        }
+        self.command_bridge_id(&command)?;
+        Ok(command)
     }
 
     pub fn submit_command(
@@ -5783,6 +5892,27 @@ impl SmartHomeRuntime {
         command: DeviceCommand,
         now_ms: u64,
     ) -> Result<CommandResult, RuntimeError> {
+        let bridge_id = self.command_bridge_id(&command)?;
+
+        if let Some(snapshot) = optimistic_snapshot_for_command(&command, now_ms) {
+            self.registry.apply_state_snapshot(snapshot.clone())?;
+            self.optimistic_states
+                .insert(command.entity_id.clone(), snapshot);
+        }
+
+        let result = CommandResult {
+            command_id: command.command_id,
+            status: CommandStatus::Accepted,
+            bridge_id,
+            correlation_id: command.correlation_id,
+            message: Some("accepted for integration dispatch".to_string()),
+        };
+        self.event_bus
+            .publish(RuntimeEvent::CommandResult(result.clone()));
+        Ok(result)
+    }
+
+    fn command_bridge_id(&self, command: &DeviceCommand) -> Result<BridgeId, RuntimeError> {
         let entity = self
             .registry
             .entity(&command.entity_id)
@@ -5794,24 +5924,8 @@ impl SmartHomeRuntime {
             .cloned()
             .ok_or_else(|| RuntimeError::UnknownDevice(entity.device_id.clone()))?;
 
-        validate_command_capabilities(&entity, &command)?;
-
-        if let Some(snapshot) = optimistic_snapshot_for_command(&command, now_ms) {
-            self.registry.apply_state_snapshot(snapshot.clone())?;
-            self.optimistic_states
-                .insert(command.entity_id.clone(), snapshot);
-        }
-
-        let result = CommandResult {
-            command_id: command.command_id,
-            status: CommandStatus::Accepted,
-            bridge_id: device.bridge_id,
-            correlation_id: command.correlation_id,
-            message: Some("accepted for integration dispatch".to_string()),
-        };
-        self.event_bus
-            .publish(RuntimeEvent::CommandResult(result.clone()));
-        Ok(result)
+        validate_command_capabilities(&entity, command)?;
+        Ok(device.bridge_id)
     }
 
     pub fn submit_authorized_command(
@@ -6260,7 +6374,9 @@ fn command_for_desired_state(
         | CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => desired.value.clone(),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => desired.value.clone(),
         CommandType::RecallScene => Value::Null,
     };
     let command_id = CommandId::trusted(format!(
@@ -6341,8 +6457,31 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
         | CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => command.arguments.clone(),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(MediaCommandType::SetPlaybackState)
+        | CommandType::Media(MediaCommandType::SetVolume)
+        | CommandType::Media(MediaCommandType::SetMute)
+        | CommandType::Media(MediaCommandType::SetGroup)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            command.arguments.clone()
+        }
         CommandType::RecallScene => return None,
+        CommandType::Media(_) => return None,
+        CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor
+            | DeviceControlCommandType::SetTemperatureUnit
+            | DeviceControlCommandType::SetParticulateDisplayStandard
+            | DeviceControlCommandType::SetAutomaticCo2BaselineDays
+            | DeviceControlCommandType::SetGasLearningOffsets
+            | DeviceControlCommandType::SetCompensatedDisplay
+            | DeviceControlCommandType::TestIndicator
+            | DeviceControlCommandType::SetCorrectionProfile
+            | DeviceControlCommandType::SetCameraRecording
+            | DeviceControlCommandType::RecallCameraPtzPreset
+            | DeviceControlCommandType::MoveCameraPtz,
+        ) => return None,
     };
 
     Some(StateSnapshot {

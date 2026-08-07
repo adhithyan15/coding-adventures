@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 154 \u2014 net coverage from FIVE stated quantities (a MIXED-OP numerator over a two-term PRODUCT). Rung-153 divided a three-term SUM by a two-term product (a+b+c)/(d*e); rung-154 keeps the two-term product denominator but makes the numerator MIXED-OP \u2014 two credits pooled and a deduction taken off, a net part total (credit_one + credit_two - deduction) divided by an AREA (grid_rows * grid_cols): a mixed-op three-term numerator over a two-term product (a+b-c)/(d*e). From a net part (credit_one + credit_two - deduction) divided by a grid area (grid_rows * grid_cols), compute the net coverage ((credit_one+credit_two-deduction)/(grid_rows*grid_cols)), the net part (credit_one+credit_two-deduction), or the grid area (grid_rows*grid_cols). Each item is a compute_dimensioned program (observe the five quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a MIXED-OP THREE-TERM NUMERATOR OVER A TWO-TERM PRODUCT (a+b-c)/(d*e) (pool the two credits, subtract the deduction, multiply the two dimensions into an area FIRST, then divide the net part by the area). As on the over-a-product rungs, dividing by two factors in turn equals dividing by their product (x/d/e = x/(d*e)), so that is not a wrong distractor; the two slips on the panel are the WRONG DENOMINATOR OPERATION \u2014 adding the two dimensions instead of multiplying ((a+b-c)/(d+e), a perimeter-style total where an area belongs) \u2014 and the NUMERATOR SIGN ERROR \u2014 adding the deduction instead of subtracting it ((a+b+c)/(d*e)). The rung sits at the crossing of its two questions: 'did you MULTIPLY the grid dimensions, or add them?' and 'did you SUBTRACT the deduction, or add it?'. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the five observed quantities via +, -, *, and / \u2014 no constant leaks, and neither the net part, the grid area, nor the net coverage ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The numerator carries a subtraction, so the net numerator is guarded >= 2 (keeping the net part and the net coverage strictly positive); the denominator uses only * over positives. The five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r154nca-01",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 8 and 6 with a deduction of 2 spread across a grid of 2 rows by 5 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(8)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r154nca-02",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 8 and 6 with a deduction of 2 spread across a grid of 2 rows by 5 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(8)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r154nca-03",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 8 and 6 with a deduction of 2 spread across a grid of 2 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(8)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r154nca-04",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 11 and 9 with a deduction of 2 spread across a grid of 2 rows by 3 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(11)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r154nca-05",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 11 and 9 with a deduction of 2 spread across a grid of 2 rows by 3 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(11)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r154nca-06",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 11 and 9 with a deduction of 2 spread across a grid of 2 rows by 3 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(11)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r154nca-07",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 14 and 8 with a deduction of 2 spread across a grid of 2 rows by 4 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(14)\nobserve credit_two(8)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r154nca-08",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 14 and 8 with a deduction of 2 spread across a grid of 2 rows by 4 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(14)\nobserve credit_two(8)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r154nca-09",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 14 and 8 with a deduction of 2 spread across a grid of 2 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(14)\nobserve credit_two(8)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r154nca-10",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 12 and 6 with a deduction of 2 spread across a grid of 3 rows by 5 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(12)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r154nca-11",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 12 and 6 with a deduction of 2 spread across a grid of 3 rows by 5 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(12)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.0666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r154nca-12",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 12 and 6 with a deduction of 2 spread across a grid of 3 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(12)\nobserve credit_two(6)\nobserve deduction(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.0666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r154nca-13",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 9 with a deduction of 2 spread across a grid of 4 rows by 5 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(15)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4444444444444446,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r154nca-14",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 9 with a deduction of 2 spread across a grid of 4 rows by 5 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(15)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4444444444444446,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r154nca-15",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 9 with a deduction of 2 spread across a grid of 4 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(15)\nobserve credit_two(9)\nobserve deduction(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4444444444444446,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r154nca-16",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 18 and 10 with a deduction of 4 spread across a grid of 3 rows by 4 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(18)\nobserve credit_two(10)\nobserve deduction(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r154nca-17",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 18 and 10 with a deduction of 4 spread across a grid of 3 rows by 4 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(18)\nobserve credit_two(10)\nobserve deduction(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r154nca-18",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 18 and 10 with a deduction of 4 spread across a grid of 3 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(18)\nobserve credit_two(10)\nobserve deduction(4)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r154nca-19",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 13 with a deduction of 2 spread across a grid of 2 rows by 7 cols. What is the net coverage (the net part divided by the grid area)?",
+      "program": "observe credit_one(15)\nobserve credit_two(13)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = (credit_one + credit_two - deduction) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.888888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r154nca-20",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 13 with a deduction of 2 spread across a grid of 2 rows by 7 cols. What is the the net part (the two credits pooled minus the deduction, the numerator that is divided by the grid area)?",
+      "program": "observe credit_one(15)\nobserve credit_two(13)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = credit_one + credit_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.888888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r154nca-21",
+      "qtype": "net_coverage",
+      "stem": "A coverage study records two credits of 15 and 13 with a deduction of 2 spread across a grid of 2 rows by 7 cols. What is the the grid area (the grid rows times the grid cols, the denominator the net part is divided by)?",
+      "program": "observe credit_one(15)\nobserve credit_two(13)\nobserve deduction(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.888888888888889,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

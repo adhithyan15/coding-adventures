@@ -1,0 +1,16 @@
+{
+  "kind": "text_transform",
+  "operations": [
+    {
+      "operation": "html_entity_decode",
+      "result_end": 71,
+      "result_start": 0,
+      "source_end": 364,
+      "source_start": 283
+    }
+  ],
+  "result_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+  "result_size": 71,
+  "source_sha256": "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac",
+  "source_size": 57820
+}

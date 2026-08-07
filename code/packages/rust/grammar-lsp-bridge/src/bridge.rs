@@ -47,6 +47,56 @@ use crate::spec::LanguageSpec;
 // GrammarLanguageBridge
 // ===========================================================================
 
+/// Recursion-depth cap for every `GrammarParser` this bridge builds — see
+/// `GrammarParser::with_max_depth` and
+/// `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before `parse`
+/// ever gets a chance to turn a parse failure into a `Diagnostic`).
+/// `basic-lsp-bridge`/`nib-lsp-bridge`/`oct-lsp-bridge`/`twig-lsp-bridge` all
+/// compile whatever file is open in the editor being debugged/edited through
+/// this ONE shared code path, so this is a real, not theoretical, attack
+/// surface for all four.
+///
+/// # One cap, four different grammars — calibrated against the tightest
+///
+/// Unlike a dedicated parser crate (`nib-parser`, `oct-parser`, …), this
+/// bridge builds a `GrammarParser` from *whichever* `LanguageSpec` its
+/// caller supplies, so a single constant here must be safe for every
+/// grammar any current or future `LanguageSpec` might carry — not just one.
+/// Measured directly (binary search, parsing nested parenthesised
+/// expressions at increasing depth with an *uncapped* parser on a
+/// `std::thread::spawn` worker with the default ~2 MiB stack, in a
+/// **debug** build) against all four grammars this bridge currently serves:
+///
+/// - `nib`/`oct` (via their own dedicated parser crates, which lower
+///   through the *same* compiled grammar this bridge parses at runtime from
+///   `LanguageSpec::grammar_source`): native-stack floor at **27**/**30**
+///   real nesting levels respectively — see `nib-parser`'s/`oct-parser`'s
+///   own `MAX_RULE_DEPTH` doc comments for the full measurement.
+/// - `twig`: parses safely to at least 94 real levels (crashes at 95) —
+///   comfortably higher.
+/// - `basic` (Dartmouth BASIC): parses safely past 400 real levels with no
+///   crash observed — its grammar costs far fewer rule-frames per nesting
+///   level than the other three.
+///
+/// `nib`/`oct` bind the constraint (285 safe / 290 crashing, in rule-frame
+/// terms, re-measured against candidate `with_max_depth` values on the same
+/// 5000-level adversarial input). `MAX_RULE_DEPTH` is set to **200** — about
+/// 30% below that 285-rule-frame floor (matching the margin convention
+/// `apl-parser`/`j-parser`/`r-parser`/`s-parser`/`nib-parser`/`oct-parser`
+/// all use) — independently confirmed safe against `twig` and `basic` too
+/// (comfortable margin, given their much higher floors) and against this
+/// crate's own `toy` test grammar (safe past 800 real levels with no crash
+/// observed, since its `form -> list -> {form}` shape costs far fewer
+/// rule-frames per level still).
+///
+/// A future `LanguageSpec` with an even lower native-stack floor than
+/// `nib`/`oct`'s would need this constant re-measured, exactly as adding
+/// any new consumer to a shared abstraction does — this is not a
+/// self-adjusting cap.
+const MAX_RULE_DEPTH: usize = 200;
+
 /// Generic LSP bridge parameterised by a [`LanguageSpec`].
 ///
 /// Construct with [`GrammarLanguageBridge::new`] and pass to
@@ -232,7 +282,8 @@ impl LanguageBridge for GrammarLanguageBridge {
         };
 
         // Step 2: parse with the grammar-driven parser.
-        let mut gp = GrammarParser::new(raw_tokens, self.parser_grammar.clone());
+        let mut gp = GrammarParser::new(raw_tokens, self.parser_grammar.clone())
+            .with_max_depth(MAX_RULE_DEPTH);
         match gp.parse() {
             Ok(ast) => Ok((Box::new(ast) as Box<dyn Any + Send + Sync>, vec![])),
             Err(e) => {
@@ -806,5 +857,76 @@ mod tests {
         assert_eq!(Type.as_str(),      "type");
         assert_eq!(Property.as_str(),  "property");
         assert_eq!(Operator.as_str(),  "operator");
+    }
+
+    // -----------------------------------------------------------------------
+    // MAX_RULE_DEPTH recursion-depth guard
+    // -----------------------------------------------------------------------
+
+    fn nested_list_source(n: usize) -> String {
+        "(".repeat(n) + "1" + &")".repeat(n)
+    }
+
+    /// Deeply-nested input must produce a `Diagnostic`, not overflow the
+    /// native stack. We parse 5000 levels — far past `MAX_RULE_DEPTH` — on a
+    /// worker thread with a generous 32 MiB stack, so the *guard* is what
+    /// stops the recursion, not the stack running out.
+    #[test]
+    fn test_deeply_nested_input_returns_diagnostic_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("grammar-lsp-bridge-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(|| {
+                let b = bridge();
+                let (_, diags) = b.parse(&nested_list_source(5000)).expect("parse ok");
+                assert!(
+                    !diags.is_empty(),
+                    "deeply-nested input must produce a diagnostic, not parse cleanly or crash"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
+    /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still parses
+    /// cleanly (against this crate's own `toy` test grammar — a `form ->
+    /// list -> {form}` shape), and one layer deeper cleanly trips the
+    /// guard. These exact boundary counts (98 legitimate levels) were found
+    /// empirically by binary-searching against increasing nesting counts at
+    /// the production cap — see `MAX_RULE_DEPTH`'s doc comment.
+    #[test]
+    fn test_nesting_up_to_cap_still_parses() {
+        let b = bridge();
+        let (_, diags) = b.parse(&nested_list_source(98)).expect("parse ok");
+        assert!(diags.is_empty(), "98 levels must stay under the cap: {diags:?}");
+
+        let (_, diags) = b.parse(&nested_list_source(99)).expect("parse ok");
+        assert!(
+            !diags.is_empty(),
+            "one nesting level past the cap's measured limit must produce a diagnostic"
+        );
+    }
+
+    /// A caller relying on `MAX_RULE_DEPTH` must have the guard trip
+    /// *before* the native stack overflows on a default-stack thread —
+    /// otherwise a production caller (any of the four LSP servers built on
+    /// this bridge, or `cargo test`'s own per-test thread) would still
+    /// crash. We parse far-too-deep input on a worker thread with **no**
+    /// `stack_size` override (the same ~2 MiB a default thread gets). A
+    /// clean, diagnostic-carrying result (not a `join()` failure from a
+    /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below the native
+    /// overflow point on the default stack.
+    #[test]
+    fn test_cap_trips_before_overflow_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let b = bridge();
+            let (_, diags) = b.parse(&nested_list_source(5000)).expect("parse ok");
+            assert!(!diags.is_empty(), "deeply-nested input must produce a diagnostic, not crash");
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
     }
 }

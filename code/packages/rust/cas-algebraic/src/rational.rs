@@ -110,12 +110,8 @@ fn integer_square_root(value: i64) -> Option<i64> {
         return None;
     }
     let root = (value as f64).sqrt() as i64;
-    for candidate in root.saturating_sub(1)..=root + 1 {
-        if candidate >= 0 && candidate.saturating_mul(candidate) == value {
-            return Some(candidate);
-        }
-    }
-    None
+    (root.saturating_sub(1)..=root + 1)
+        .find(|&candidate| candidate >= 0 && candidate.saturating_mul(candidate) == value)
 }
 
 fn gcd(mut a: u64, mut b: u64) -> u64 {

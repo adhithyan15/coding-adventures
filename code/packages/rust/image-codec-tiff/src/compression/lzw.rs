@@ -158,9 +158,7 @@ pub fn decompress(compressed: &[u8], expected_bytes: usize) -> Result<Vec<u8>, S
     // Compute the output cap.
     let output_cap = expected_bytes.max(
         compressed
-            .len()
-            .checked_mul(MAX_OUTPUT_MULTIPLIER)
-            .unwrap_or(usize::MAX),
+            .len().saturating_mul(MAX_OUTPUT_MULTIPLIER),
     );
 
     let mut output: Vec<u8> = Vec::with_capacity(expected_bytes.min(64 * 1024));

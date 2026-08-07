@@ -2,6 +2,99 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.19.0] - 2026-07-14
+
+### Changed — classify and rewrite property accesses inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `classify_param_defaults` / `rewrite_param_defaults` helpers walk each
+`FunctionParam::AssignmentPattern` default `right` in both phases, kept in lockstep across the function
+declaration/expression, class-method, and arrow arms — so a quoted access in a default still disables
+renaming of that property, and a renamed property is rewritten where a default reads it.
+
+## [0.18.0] - 2026-07-12
+
+### Changed — CLOC12.189 PR2: bail on module `export`
+
+The property-renaming soundness gate now also declines when
+`program_contains_export_declaration` is true — an exported name is public
+surface other modules reference.
+
+## [0.17.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the classify and rewrite walks skip exports (no properties to rename)
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the classify and rewrite walks skip exports (no properties to rename). Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.16.0] - 2026-07-12
+
+### Changed — CLOC12.188 PR2: bail on module `import`
+
+The property-renaming soundness gate now also declines when
+`program_contains_import_declaration` is true, mirroring the `with` gate: an
+imported name aliases a foreign export, and property renaming cannot tell a bare
+alias apart from a normal reference, so renaming would risk desynchronizing from
+the cross-module contract.
+
+## [0.15.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match no-op arms for the new `Declaration::ImportDeclaration` variant
+in the class-member classify and rewrite walks — an import has no properties to
+classify or rename.
+
+## [0.14.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: decline to rename properties in the presence of `with`
+
+`run` now bails at the top when `program_contains_with_statement`
+(closure-scope-analyzer 0.14.0, added as a new dependency) is `true`, returning
+the program unchanged. Inside `with (obj) …` a bare `foo` may be the property
+access `obj.foo` in disguise; the pass cannot see that, so renaming the property
+`foo` elsewhere would desynchronize from the hidden access. `with` is rare (a
+strict-mode syntax error), so the program-wide bail costs little. New
+`with_statement_disables_property_renaming` test.
+
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in `classify_stmt` and `rewrite_stmt`
+descend into the `with` object and body. Picks up javascript-ast 0.38.0.
+
+## [0.12.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (classify + rewrite): a static block has no key to rename, but its statements may hold property accesses, so each statement is classified / rewritten.
+
+## [0.12.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: rename class-field property keys
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms
+(classify + rewrite) that treat the field's key as a renameable property name
+(like a method key, with no constructor guard) and recurse into the computed key
+and initializer. Reachable once the CLOC12.175 PR2 bridge produces the node.
+
+## [0.12.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms to `classify_decl` and `rewrite_decl` that treat a class declaration's
+members exactly like a class expression's — each non-computed method key is a
+renameable property name (with `constructor` pinned as never-renameable). The
+shared member logic was factored into `classify_class_members` /
+`rewrite_class_members` helpers used by both the expression and declaration arms,
+so classification and rewrite stay in lockstep. The class's own name is a
+variable, not a property, so it is untouched. Reachable once the CLOC12.174 PR2
+bridge produces the node.
+
 ## [0.12.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

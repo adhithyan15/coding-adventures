@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/residual-receptive-v1.json",
+  "title": "Residual and receptive-field lab v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "concepts",
+    "operation",
+    "input",
+    "kernels",
+    "expected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "padding", "stride", "layers", "skip", "activation"],
+      "properties": {
+        "kind": { "const": "residual-correlation-1d" },
+        "padding": { "const": "same-zero" },
+        "stride": { "const": 1 },
+        "layers": { "const": 2 },
+        "skip": { "const": "identity" },
+        "activation": { "const": "relu" }
+      }
+    },
+    "input": { "$ref": "#/$defs/numbers" },
+    "kernels": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/numbers" }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hidden", "main", "skip", "residual_sum", "output", "traces"],
+      "properties": {
+        "hidden": { "$ref": "#/$defs/numbers" },
+        "main": { "$ref": "#/$defs/numbers" },
+        "skip": { "$ref": "#/$defs/numbers" },
+        "residual_sum": { "$ref": "#/$defs/numbers" },
+        "output": { "$ref": "#/$defs/numbers" },
+        "traces": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/trace" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "numbers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "number" }
+    },
+    "indices": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hidden_index", "input_indices", "input_values", "subtotal"],
+      "properties": {
+        "hidden_index": { "type": "integer", "minimum": 0 },
+        "input_indices": { "$ref": "#/$defs/indices" },
+        "input_values": { "$ref": "#/$defs/numbers" },
+        "subtotal": { "type": "number" }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_index",
+        "hidden_indices",
+        "hidden_values",
+        "hidden_paths",
+        "input_path_counts",
+        "input_contributions",
+        "receptive_field_indices",
+        "main_output",
+        "skip_contribution",
+        "residual_sum",
+        "output"
+      ],
+      "properties": {
+        "output_index": { "type": "integer", "minimum": 0 },
+        "hidden_indices": { "$ref": "#/$defs/indices" },
+        "hidden_values": { "$ref": "#/$defs/numbers" },
+        "hidden_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/path" }
+        },
+        "input_path_counts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "input_contributions": { "$ref": "#/$defs/numbers" },
+        "receptive_field_indices": { "$ref": "#/$defs/indices" },
+        "main_output": { "type": "number" },
+        "skip_contribution": { "type": "number" },
+        "residual_sum": { "type": "number" },
+        "output": { "type": "number" }
+      }
+    }
+  }
+}

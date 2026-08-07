@@ -1,0 +1,78 @@
+% ============================================================================
+% kinematics.adj — foundational kinematics laws in the ADJ standard library.
+% ============================================================================
+% Two more worked entries of the *compute* standard library, alongside
+% physics/mechanics-laws.adj and physics/energy-work.adj: importable,
+% byte-provenanced, PARAMETERIZED formulas for one-dimensional motion. Where the
+% recall libraries ship grounded `relate` edges (facts a model recalls), this
+% ships grounded `formula`s (arithmetic a model recalls) — the same contract, the
+% other half of the stdlib. The engine computes each law EXACTLY on the CPU, and
+% the answer carries the law's own citation, so the chain is auditable end to end.
+%
+% A consumer states NO arithmetic. It `import`s this file, binds the quantities it
+% decomposed from the input (each `observe` is a byte-provenance span the model
+% cited), and asks the engine to APPLY the recalled law:
+%
+%     import "kinematics.adj"
+%     observe initial_velocity(5)  % "…starting at 5 m/s…"          (span cited)
+%     observe acceleration(2)      % "…accelerating at 2 m/s²…"     (span cited)
+%     observe time(3)              % "…for 3 seconds…"              (span cited)
+%     ? final_velocity(initial_velocity, acceleration, time)  % engine → 11 (v = u + at)
+%
+% The laws (and their sources) live HERE; the numbers (and their spans) come from
+% the input. Zero math is performed by the model.
+%
+% Run the worked consumer (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli kinematics.query.adj
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is an observable quantity the laws range over. Rung-0's
+% grammar types an observable slot as `finding`, so we register each quantity as a
+% finding and record its intended physical dimension in the surface synonyms +
+% comments. (Dimensional typing of formula parameters is a later rung — but the
+% engine already INFERS and CHECKS dimensions when a formula is APPLIED, so
+% 5 m/s + 2 m/s² · 3 s reports m/s and mismatched units are caught regardless.)
+% ----------------------------------------------------------------------------
+dictionary kinematics_vocab {
+    % --- final velocity under constant acceleration: v = u + a·t ---
+    define initial_velocity : finding  surface "initial velocity", "starting velocity", "u", "v0"   % length / time (e.g. m/s)
+    define acceleration     : finding  surface "acceleration", "a", "rate of change of velocity"     % length / time² (e.g. m/s²)
+    define time             : finding  surface "time", "elapsed time", "duration", "t"               % time (e.g. s)
+    define final_velocity   : finding  surface "final velocity", "velocity", "v"                     % length / time (e.g. m/s)
+
+    % --- linear momentum: p = m·v ---
+    define mass             : finding  surface "mass", "m"                                            % mass (e.g. kg)
+    define velocity         : finding  surface "velocity", "speed", "v"                               % length / time (e.g. m/s)
+    define momentum         : finding  surface "momentum", "linear momentum", "p"                     % mass · length / time (e.g. kg·m/s)
+}
+
+% ----------------------------------------------------------------------------
+% The laws. Each `formula` is a named, importable, reusable `let` over its formal
+% parameters — the SAME expression grammar `let` uses, with the parameter leaves
+% bound at apply time. Every one carries the provenance envelope a grounded clause
+% requires: a verbatim definitional span from a citable reference, a resolvable
+% locator, and a trust tier. These are CLAIMS ABOUT THE WORLD ("final velocity is
+% the initial velocity plus acceleration times time"), grounded exactly like a
+% `relate` edge — not asserted by fiat.
+% ----------------------------------------------------------------------------
+formulabook physics_kinematics {
+    use kinematics_vocab
+
+    % Final velocity under constant acceleration — a body's velocity after time t
+    % is its initial velocity plus the velocity its acceleration has added.
+    % v = u + a·t.  Source: OpenStax College Physics 2e (a peer-reviewed, primary
+    % physics textbook reference) → authoritative.
+    formula final_velocity(initial_velocity, acceleration, time) = initial_velocity + (acceleration * time)
+        source "Solving for v yields v = v0 + at (constant a)."
+        locator "https://openstax.org/books/college-physics-2e/pages/2-5-motion-equations-for-constant-acceleration-in-one-dimension"
+        trust authoritative
+
+    % Linear momentum — the quantity of motion of a body is its mass times its
+    % velocity.  p = m·v.  Source: NASA Glenn Research Center, Beginners' Guide to
+    % Aeronautics (a primary .gov physics reference) → authoritative.
+    formula momentum(mass, velocity) = mass * velocity
+        source "Momentum is defined to be the mass of an object multiplied by the velocity of the object."
+        locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/conservation-of-momentum-2/"
+        trust authoritative
+}

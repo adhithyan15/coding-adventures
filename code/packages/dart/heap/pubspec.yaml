@@ -1,0 +1,14 @@
+name: coding_adventures_heap
+version: 0.1.0
+description: >
+  Array-backed binary heaps (MinHeap, MaxHeap) and companion algorithms
+  (heapify, heapSort, nLargest, nSmallest) in pure Dart. Pure-Dart port of the
+  heap reference package.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0

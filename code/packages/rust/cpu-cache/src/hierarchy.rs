@@ -248,8 +248,7 @@ impl CacheHierarchy {
         let mut served_by = "memory".to_string();
         let mut hit_level = level_order.len();
 
-        for level_idx in 1..level_order.len() {
-            let level_id = level_order[level_idx];
+        for (level_idx, &level_id) in level_order.iter().enumerate().skip(1) {
             let (name, cache) = self.get_level_mut(level_id);
             let name = name.to_string();
             let latency = cache.config.access_latency;

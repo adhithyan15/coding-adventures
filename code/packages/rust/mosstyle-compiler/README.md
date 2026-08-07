@@ -21,6 +21,7 @@ style Grid {
   part root {
     background-color: $color-surface ;
     border-radius: 6px ;
+    transition background-color $duration-fast $easing-out ;
   }
 
   part cell-grid {
@@ -39,6 +40,26 @@ Design tokens such as `$token-name` resolve to literal values using the UI15
 dark-mode palette baked into the compiler. Full Lattice token file support is
 planned for a later pass.
 
+Transitions may be declared at the part level, where they apply to every state
+change, or inside a `state` block, where they apply when entering that state:
+
+```msl
+part root {
+  opacity: 1 ;
+  transition opacity $duration-normal ; // easing defaults to ease-out
+
+  state disabled {
+    opacity: $opacity-disabled ;
+    transition opacity $duration-slow linear ;
+  }
+}
+```
+
+The transitioned property must have a base declaration in the same part. The
+compiler resolves duration and easing tokens, validates the property reference,
+emits a Lattice `transition` declaration, and preserves structured transition
+entries in the backend-neutral style map JSON for native emitters.
+
 ## Lattice Output
 
 Class names follow the `.mos-{ComponentName}-{part-name}` convention:
@@ -47,6 +68,7 @@ Class names follow the `.mos-{ComponentName}-{part-name}` convention:
 .mos-Grid-root {
   background-color: #1e1e1e;
   border-radius: 6px;
+  transition: background-color 80ms ease-out;
 }
 .mos-Grid-cell-grid {
   width: 100%;

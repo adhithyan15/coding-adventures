@@ -1,0 +1,69 @@
+Latin, chapter 8: Head and Hand.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+caput — the head, still working two thousand years later.
+
+Warm-up.
+[pause 2 seconds]
+Few Latin words stayed as busy in English as this one. And yet — one of Latin's own descendants abandoned it for the actual body part.
+
+The word, taken apart: The word.
+caput, capitis — "head." A perfectly ordinary noun, and one of Latin's most productive exports:
+[a table of 4 rows, read aloud]
+English: captain. literally: the "head" of a ship or unit.
+English: capital. literally: the "head" city, or the "head" sum of money.
+English: decapitate. literally: to remove the head.
+English: capitulate. literally: to arrange terms under "little-head" headings — hence, to yield.
+Spanish kept caput as its everyday word too: cabeza descends from it (by way of Vulgar Latin capitia).
+
+Why it's said this way: Be honest about what happened in French.
+French had caput available — and dropped it for the body part entirely. Instead French says tête, from Latin testa, "an earthenware pot, a shell." Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul, that joke eventually replaced caput as the everyday word. Caput didn't disappear from French, though — it survives there too, just not for the actual head: chef ("chief"), chapitre, capital, capitaine.
+So three languages took three different paths with the very same word: Spanish kept caput as the plain, everyday "head"; French demoted it to "chief/chapter/capital" and reached for a pot-joke instead; English never used it for the body part at all, only for these borrowed "head of something" senses.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "caput, capitis" — head]
+[pause 8 seconds for the answer]
+[your turn — say: the English family — "captain, capital, decapitate, capitulate"]
+[pause 8 seconds for the answer]
+[your turn — say: the twist — French swapped caput out for testa, "pot"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does caput mean, and what English words come from it? ("Head" — captain, capital, decapitate, capitulate.) Did every Romance language keep it as the everyday word for "head"? (No — Spanish did (cabeza); French replaced it with testa, "pot," soldiers' slang for the skull.) Where does caput survive in French, if not as "head"? (Chef, chapitre, capital, capitaine.)
+
+
+Lesson 2 of 2.
+manus — the hand, and a famous grammatical exception.
+
+Warm-up.
+[pause 2 seconds]
+Here's a word that's productive in English and grammatically odd in Latin itself — an oddity that then rode straight through into Spanish.
+
+The word, taken apart: The word.
+manus, manūs — "hand." It belongs to Latin's 4th declension — a group of nouns ending in -us that runs overwhelmingly masculine: frūctus ("fruit"), exercitus ("army"), senātus ("senate"), portus ("port") are all masculine. Manus is one of only a handful of exceptions in that declension — feminine, alongside anus ("old woman") and domus ("house," though domus is even messier: it mixes 4th- and 2nd-declension endings throughout its own paradigm) — for reasons tied to each noun's own ancient history, not a rule you could predict from the -us ending alone.
+That oddity didn't stay buried in Latin grammar books: Spanish's word for hand, mano, inherited manus's feminine gender directly — which is exactly why mano is famously feminine despite ending in -o, the ending that signals masculine in nearly every other Spanish noun. One small Latin exception, carried whole into a completely different pattern in a daughter language, centuries later.
+
+The word, taken apart: manus — one of the most productive roots in English.
+[a table of 5 rows, read aloud]
+English: manual. literally: done by hand.
+English: manufacture. literally: made by hand (manus + facere, "to make").
+English: manuscript. literally: written by hand (manus + scrībere).
+English: maintain. literally: hold in the hand (manū tenēre).
+English: manage. literally: to handle.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "manus, manūs" — hand]
+[pause 8 seconds for the answer]
+[your turn — say: the exception — "feminine, unlike frūctus, exercitus, senātus"]
+[pause 8 seconds for the answer]
+[your turn — say: the English family — "manual, manufacture, maintain, manage"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What gender is manus, and is that typical for its declension? (Feminine — unusual, since the 4th declension runs mostly masculine; manus is one of a few exceptions, alongside domus and anus.) What Spanish word inherited this exact oddity? (Mano — feminine despite ending in -o.) Give an English word from manus. (Manual, manufacture, manuscript, maintain, manage.)

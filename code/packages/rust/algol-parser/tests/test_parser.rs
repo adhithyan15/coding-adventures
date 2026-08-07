@@ -168,6 +168,15 @@ fn test_boolean_declaration() {
     assert!(find_rule(&ast, "type_decl"), "Expected 'type_decl' for boolean");
 }
 
+/// `own` may qualify an array declaration as well as a scalar declaration.
+#[test]
+fn test_own_array_declaration() {
+    let ast = parse_algol("begin own integer array memo[4:5]; memo[4] := 1 end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "own_array_decl"), "Expected 'own_array_decl'");
+    assert!(find_rule(&ast, "array_segment"), "Expected array bounds");
+}
+
 /// Multiple declarations in one block.
 #[test]
 fn test_multiple_declarations() {

@@ -98,9 +98,7 @@ pub fn xnor_32(a: &[u8], b: &[u8]) -> Vec<u8> {
 pub fn sll_32(bits: &[u8], shamt: u32) -> Vec<u8> {
     let shamt = (shamt & 0x1f) as usize;
     let mut out = vec![0u8; 32];
-    for i in shamt..32 {
-        out[i] = bits[i - shamt];
-    }
+    out[shamt..32].copy_from_slice(&bits[..32 - shamt]);
     out
 }
 
@@ -108,9 +106,7 @@ pub fn sll_32(bits: &[u8], shamt: u32) -> Vec<u8> {
 pub fn srl_32(bits: &[u8], shamt: u32) -> Vec<u8> {
     let shamt = (shamt & 0x1f) as usize;
     let mut out = vec![0u8; 32];
-    for i in 0..(32 - shamt) {
-        out[i] = bits[i + shamt];
-    }
+    out[..32 - shamt].copy_from_slice(&bits[shamt..32]);
     out
 }
 
@@ -119,9 +115,7 @@ pub fn sra_32(bits: &[u8], shamt: u32) -> Vec<u8> {
     let shamt = (shamt & 0x1f) as usize;
     let sign = bits[31];
     let mut out = vec![sign; 32];
-    for i in 0..(32 - shamt) {
-        out[i] = bits[i + shamt];
-    }
+    out[..32 - shamt].copy_from_slice(&bits[shamt..32]);
     out
 }
 

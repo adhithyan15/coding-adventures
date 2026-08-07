@@ -93,3 +93,9 @@ dart test
 - No content checksum validation.
 - No custom dictionary support.
 - Inputs larger than 256 MB will be rejected on decompression (bomb guard).
+- **Repeat offsets (R1/R2/R3):** the decoder fully implements RFC 8878
+  §3.1.1.3.2.1.1's Repeated-Offset mechanism, so it can decode real-world
+  `.zst` files produced by the actual `zstd` CLI (which uses repeat offsets
+  constantly). The encoder, however, never *emits* repeat-offset codes —
+  every offset it writes is explicit — since this package's own
+  compress/decompress round trip does not need them for correctness.

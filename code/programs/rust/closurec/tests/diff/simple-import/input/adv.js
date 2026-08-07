@@ -1,0 +1,1 @@
+import {a} from "y"; function longFn(longParam){return longParam+longParam+g(longParam);} longFn(1); longFn(2); longFn(3);

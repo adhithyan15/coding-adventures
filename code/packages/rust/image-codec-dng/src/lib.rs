@@ -273,15 +273,15 @@ mod tests {
         use crate::color::invert_3x3;
         let id = [[1.0f64, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
         let inv = invert_3x3(&id).unwrap();
-        for i in 0..3 {
-            for j in 0..3 {
+        for (i, row) in inv.iter().enumerate() {
+            for (j, &value) in row.iter().enumerate() {
                 let expected = if i == j { 1.0 } else { 0.0 };
                 assert!(
-                    (inv[i][j] - expected).abs() < 1e-9,
+                    (value - expected).abs() < 1e-9,
                     "inv[{}][{}] = {} ≠ {}",
                     i,
                     j,
-                    inv[i][j],
+                    value,
                     expected
                 );
             }
@@ -309,15 +309,15 @@ mod tests {
         let m = [[2.0f64, 0.0, 0.0], [0.0, 3.0, 0.0], [0.0, 0.0, 4.0]];
         let inv = invert_3x3(&m).unwrap();
         let product = matrix_multiply(&m, &inv);
-        for i in 0..3 {
-            for j in 0..3 {
+        for (i, row) in product.iter().enumerate() {
+            for (j, &value) in row.iter().enumerate() {
                 let expected = if i == j { 1.0 } else { 0.0 };
                 assert!(
-                    (product[i][j] - expected).abs() < 1e-9,
+                    (value - expected).abs() < 1e-9,
                     "M×inv(M)[{}][{}] = {} ≠ {}",
                     i,
                     j,
-                    product[i][j],
+                    value,
                     expected
                 );
             }

@@ -1,0 +1,93 @@
+% ============================================================================
+% animal-diets — the three basic animal diet categories and the food each
+% kind of animal eats (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first sorting rules of elementary biology, and a rung an
+% ecology or MEDICINE agent reasons UP from: every animal can be sorted by WHAT
+% it eats into one of three basic diet categories. "A herbivore eats only
+% plants; a carnivore eats other animals; an omnivore eats anything." Before you
+% can reason about a food chain, a food web, or a predator/prey balance you must
+% first know WHICH diet category an animal belongs to. Recall is a binding
+% query:
+%
+%     ? diet_food(herbivore, $Food)      % plants
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `diet_food(category, food)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the food
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these three diet categories (it never invents a food).
+%
+% Each of the three basic diet categories and the food the source states that
+% kind of animal eats, as a little truth table:
+%
+%     diet category   food it eats   a beginner's cue
+%     -------------   ------------   ------------------------------------------
+%     herbivore       plants         a plant-eater: eats only plants
+%     carnivore       animals        a meat-eater: eats (almost exclusively)
+%                                     other animals
+%     omnivore        anything       a generalist: eats anything (plants AND
+%                                     animals)
+%
+% The query also runs BACKWARD — bind the food and recall its diet category:
+%
+%     ? diet_food($Category, plants)     % herbivore
+%
+% A word that is NOT one of these three basic diet categories — `detritivore`,
+% `frugivore`, `rock` — is deliberately NOT a row, so a diet recall ABSTAINS on
+% it rather than inventing a food. That honest-abstention property is what makes
+% the table safe to build a reasoner on: it answers exactly the category→food
+% pairs it can ground, and only those.
+%
+% The `food` value of every row is a SINGLE lowercase atom, chosen to be the
+% food the source EXPLICITLY states that kind of animal eats — never one the
+% source does not support. (Where the everyday word differs from the source's
+% word — a carnivore is a "meat-eater", but the source's own noun for what it
+% eats is "animals", not "meat" — the atom uses the source's own word, so every
+% value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every category→food pair
+% below was read out of a single fetched U.S. National Park Service teacher
+% lesson-plan page, and any pair whose food could not be verified there would
+% have been dropped). All three definitions are three parallel sentences on the
+% SAME page ("Explain that X refers to living things that ..."). Each pair, with
+% the primary source it was copied from and the verbatim span that states it:
+%
+%   herbivore → plants
+%     https://www.nps.gov/teachers/classrooms/carnivores-herbivores-omnivores.htm
+%     (U.S. National Park Service — Teachers / Lesson Plans)
+%     "Explain that herbivore refers to living things that eat only plants."
+%
+%   carnivore → animals
+%     https://www.nps.gov/teachers/classrooms/carnivores-herbivores-omnivores.htm
+%     (U.S. National Park Service — Teachers / Lesson Plans)
+%     "Explain that carnivore refers to living things that eat almost
+%      exclusively other animals."
+%
+%   omnivore → anything
+%     https://www.nps.gov/teachers/classrooms/carnivores-herbivores-omnivores.htm
+%     (U.S. National Park Service — Teachers / Lesson Plans)
+%     "Explain that omnivore refers to living things that eats anything."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NPS statement that fixes the
+% first row (herbivore → plants). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each food remains independently checkable. The source
+% is the U.S. National Park Service, a primary U.S. government teaching resource,
+% so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table diet_food {
+    columns category, food
+
+    row (herbivore, plants)
+    row (carnivore, animals)
+    row (omnivore, anything)
+
+    source "Explain that herbivore refers to living things that eat only plants."
+    locator "https://www.nps.gov/teachers/classrooms/carnivores-herbivores-omnivores.htm"
+    trust authoritative
+}

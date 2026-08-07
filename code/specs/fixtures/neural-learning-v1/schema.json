@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/neural-learning-v1.json",
+  "title": "Neural learning lab v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "stage",
+    "question",
+    "concepts",
+    "model",
+    "dataset",
+    "training",
+    "expected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "stage": { "enum": ["forward", "single-neuron", "hidden-layer"] },
+    "question": { "type": "string", "minLength": 1 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "model": { "$ref": "#/$defs/model" },
+    "dataset": { "$ref": "#/$defs/dataset" },
+    "training": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/training" }
+      ]
+    },
+    "expected": { "$ref": "#/$defs/expected" }
+  },
+  "$defs": {
+    "number_vector": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "number" }
+    },
+    "number_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/number_vector" }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "weights", "biases", "activation"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "weights": { "$ref": "#/$defs/number_matrix" },
+        "biases": { "$ref": "#/$defs/number_vector" },
+        "activation": { "enum": ["identity", "sigmoid", "tanh", "relu"] }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "input_count", "layers"],
+      "properties": {
+        "kind": { "enum": ["single-neuron", "dense-network"] },
+        "input_count": { "type": "integer", "minimum": 1 },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/layer" }
+        }
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "input", "target"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "input": { "$ref": "#/$defs/number_vector" },
+        "target": { "$ref": "#/$defs/number_vector" }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_labels", "target_labels", "rows"],
+      "properties": {
+        "input_labels": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "target_labels": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/row" }
+        }
+      }
+    },
+    "training": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loss", "optimizer", "batch"],
+      "properties": {
+        "loss": { "const": "mean-squared-error" },
+        "optimizer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "learning_rate"],
+          "properties": {
+            "kind": { "const": "sgd" },
+            "learning_rate": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "batch": { "const": "full" }
+      }
+    },
+    "forward_expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row", "prediction"],
+      "properties": {
+        "row": { "type": "string", "minLength": 1 },
+        "prediction": { "$ref": "#/$defs/number_vector" }
+      }
+    },
+    "layer_gradients": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "weights", "biases"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "weights": { "$ref": "#/$defs/number_matrix" },
+        "biases": { "$ref": "#/$defs/number_vector" }
+      }
+    },
+    "first_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loss_before", "gradients", "parameters_after", "loss_after"],
+      "properties": {
+        "loss_before": { "type": "number", "minimum": 0 },
+        "gradients": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/layer_gradients" }
+        },
+        "parameters_after": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/layer" }
+        },
+        "loss_after": { "type": "number", "minimum": 0 }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["absolute_tolerance", "forward", "first_step"],
+      "properties": {
+        "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+        "forward": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/forward_expectation" }
+        },
+        "first_step": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/first_step" }
+          ]
+        }
+      }
+    }
+  }
+}

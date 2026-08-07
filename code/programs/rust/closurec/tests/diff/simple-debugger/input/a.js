@@ -7,12 +7,16 @@
 // statement representable; CLOC24 now STRIPS it at SIMPLE/ADVANCED, matching
 // the upstream Closure Compiler. This fixture is the end-to-end oracle:
 //
-//   * `log` is single-use, so the inliner folds `log(1)` into its body
-//     `report(1)` and deletes the now-unused declaration.
-//   * `1 + 2` is constant-folded to `3`.
+//   * `1 + 2` is constant-folded to `3` (a scope-local, sound fold that runs
+//     at SIMPLE).
 //   * `debugger;` is REMOVED — a development-only breakpoint has no effect on
 //     a shipped program, so the dce pass strips it at SIMPLE/ADVANCED.
 //     (WHITESPACE_ONLY, which never runs that pass, would keep it.)
+//   * `function log` is KEPT verbatim. SIMPLE is open-world: it never deletes
+//     or inlines observable top-level names (another script sharing the page
+//     could call `log`). The single-use inline + treeshake that would fold
+//     `log(1)` into `report(1)` runs only at ADVANCED (closed-world). See the
+//     sibling ADVANCED behavior: `report(1);var x=3;use(x);`.
 function log(p) {
   report(p);
 }

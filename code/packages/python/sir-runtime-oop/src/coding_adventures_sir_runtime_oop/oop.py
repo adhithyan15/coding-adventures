@@ -50,7 +50,12 @@ from coding_adventures_sir_runtime_core import Closure, Symbol, apply, eq, inter
 # the matcher only sees as an over-broad ``StandardError``).  ``raise_error`` is
 # the same explicit-string raise the frontend already emits for ``raise Klass`` —
 # no reflection on the source-derived method name (the C3 RCE lesson).
-from coding_adventures_sir_runtime_exceptions import raise_error
+from coding_adventures_sir_runtime_exceptions import (
+    ancestry_chain,
+    class_of_thrown,
+    raise_error,
+    rescue_matches,
+)
 
 # The SIR universal value type at this package's boundary.
 Val = Any
@@ -164,6 +169,20 @@ def class_of(value: Val) -> str:
     """
     if isinstance(value, SirInstance):
         return value.sir_class
+    # A raised/caught exception is an exception object, not a ``SirInstance``,
+    # but it carries its Ruby class tag the same way.  Without this it fell
+    # through to the ``Object`` default, so ``rescue => e; e.class`` said
+    # ``Object`` and ``e.is_a?(StandardError)`` was FALSE for every exception —
+    # silently skipping a handler guarded that way.
+    #
+    # ``BaseException``, not ``SirError``: the emitted ``except Exception as
+    # __exc`` binds the RAW caught value, so ``e`` may be a NATIVE Python error
+    # (a ``RecursionError`` from an emitted recursive call).  ``class_of_thrown``
+    # is the SAME bucketing ``rescue`` matching uses — it reports a ``SirError``'s
+    # own tag and buckets a native error as ``StandardError`` — so reflection and
+    # rescue can never disagree about a value ``rescue`` just caught.
+    if isinstance(value, BaseException):
+        return class_of_thrown(value)
     if value is None:
         return "NilClass"
     if isinstance(value, bool):
@@ -191,6 +210,26 @@ def is_a(value: Val, class_name: str) -> bool:
     """
     if class_name in ("Object", "BasicObject"):
         return True
+    # An exception matches by the SAME ancestry ``rescue`` dispatches on — that
+    # table (``ArgumentError → StandardError → Exception``, plus any registered
+    # user edge) lives in the exceptions package, not in this module's class
+    # registry, so consult it directly rather than walking ``superclass_of``.
+    #
+    # ``BaseException`` so a caught NATIVE Python error answers as the
+    # ``StandardError`` ``rescue`` bucketed it as (see :func:`class_of`).
+    if isinstance(value, BaseException):
+        if rescue_matches(value, [class_name]):
+            return True
+        # ...and a MODULE mixed into the exception's class or any ancestor.
+        # ``rescue_matches`` is a pure ancestry-name walk, so it cannot see an
+        # ``include``.  The Rust, Go and JavaScript backends all consult their
+        # module tables here, and this guard is the one the frontier exists to
+        # protect — ``retry unless e.is_a?(Recoverable)`` takes the OPPOSITE
+        # branch if one backend says false where the others say true.
+        return any(
+            class_name in _module_closure(cls)
+            for cls in ancestry_chain(class_of_thrown(value))
+        )
     actual = class_of(value)
     if class_name == "Numeric":
         return actual in ("Integer", "Float")
@@ -317,6 +356,29 @@ def include_module(owner: str, module_name: str) -> None:
     de-dups by first occurrence, so the earliest position stands).
     """
     _included_modules.setdefault(owner, []).append(module_name)
+
+
+def _module_closure(class_name: str) -> set[str]:
+    """Every module included into ``class_name``, TRANSITIVELY.
+
+    A module may itself ``include`` other modules, so ``include Enumerable``
+    where ``module Enumerable; include Comparable; end`` makes the owner an
+    ``is_a?(Comparable)`` too.  This answers the membership question only, so
+    it returns a set — order is :func:`_owner_mro`'s job, and only method
+    *lookup* cares about order.
+
+    Iterative with a ``seen`` set, so a cyclic registration (``M`` includes
+    ``N`` includes ``M``) terminates instead of recursing forever.
+    """
+    out: set[str] = set()
+    stack = list(_included_modules.get(class_name, []))
+    while stack:
+        mod = stack.pop()
+        if mod in out:
+            continue
+        out.add(mod)
+        stack.extend(_included_modules.get(mod, []))
+    return out
 
 
 def extend_module(owner: str, module_name: str) -> None:
@@ -563,6 +625,7 @@ _ARRAY_METHODS = frozenset(
         "sort",
         "min",
         "max",
+        "minmax",
         "sum",
         "uniq",
         "flatten",
@@ -574,6 +637,11 @@ _ARRAY_METHODS = frozenset(
         "take",
         "drop",
         "values_at",
+        "rotate",
+        "zip",
+        "each_slice",
+        "each_cons",
+        "tally",
     }
 )
 
@@ -607,6 +675,9 @@ _ARRAY_BLOCK_METHODS = frozenset(
         "drop_while",
         "count",
         "each_with_object",
+        "chunk_while",
+        "slice_when",
+        "cycle",
     }
 )
 
@@ -626,6 +697,7 @@ _HASH_METHODS = frozenset(
         "length",
         "empty?",
         "to_a",
+        "to_h",
         "dig",
         "store",
         "[]=",
@@ -647,6 +719,27 @@ _HASH_BLOCK_METHODS = frozenset(
         "reject",
         "each_key",
         "each_value",
+        "transform_values",
+        "transform_keys",
+        "find",
+        "detect",
+        "any?",
+        "all?",
+        "none?",
+        "count",
+        "sort_by",
+        "min_by",
+        "max_by",
+        "group_by",
+        "partition",
+        "flat_map",
+        "collect_concat",
+        "reduce",
+        "inject",
+        "sum",
+        "to_h",
+        "each_with_index",
+        "each_with_object",
     }
 )
 
@@ -688,6 +781,10 @@ _STRING_METHODS = frozenset(
         "rjust",
         "center",
         "swapcase",
+        "tr",
+        "count",
+        "delete",
+        "squeeze",
     }
 )
 
@@ -714,6 +811,10 @@ _NUMERIC_METHODS = frozenset(
         "floor",
         "ceil",
         "round",
+        "divmod",
+        "fdiv",
+        "clamp",
+        "between?",
         "gcd",
         "pow",
         "**",
@@ -752,10 +853,28 @@ def _responds_to(recv: Val, name: str) -> bool:
     built-ins, the ``define_method`` table, and the type-specific catalog."""
     if name in ("is_a?", "kind_of?", "instance_of?", "class"):
         return True
+    # ``message`` resolves on an EXCEPTION (``BaseException``, so a caught
+    # native Python error answers too — see :func:`class_of`).  Do NOT return
+    # ``False`` for a non-exception here: a user class may define its OWN
+    # ``message``, which :func:`call_method` dispatches from the per-class
+    # table, and an early ``False`` would DENY a method that actually works —
+    # the same dishonest-``respond_to?`` shape this change fixes elsewhere.
+    if name == "message" and isinstance(recv, BaseException):
+        return True
     if name in _methods:
         return True
     if name in _OBJECT_METHODS:
         return True
+    # A user instance resolves any method its class — or an ancestor, or an
+    # included module — defines, via the SAME MRO walk :func:`call_method`
+    # dispatches with.  Without this a ``SirInstance`` fell through EVERY
+    # branch to the closing ``return False``, so ``respond_to?`` answered false
+    # for a method that then dispatched fine (``class Failure; def message;
+    # "custom"; end; end`` — ``f.respond_to?(:message)`` false, ``f.message``
+    # → ``"custom"``).  Rust, Go and JavaScript all consult their instance
+    # tables here.
+    if isinstance(recv, SirInstance):
+        return _resolve_instance_method(recv.sir_class, name) is not None
     # ``str`` is checked before ``list``/``dict`` (a str is neither).  ``bool`` is
     # a subclass of ``int`` so it is excluded from the numeric check — bools only
     # resolve the universal ``Object`` methods (handled above).
@@ -928,6 +1047,11 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
         return min(recv) if recv else None
     if name == "max":
         return max(recv) if recv else None
+    if name == "minmax":
+        # ``minmax`` — the two-element array ``[min, max]`` in one pass.
+        # ``[3,1,2].minmax`` → ``[1, 3]``.  Ruby returns ``[nil, nil]`` for an
+        # empty array (there is no smallest/largest element).
+        return [min(recv), max(recv)] if recv else [None, None]
     if name == "sum":
         total: Val = args[0] if args else 0
         for item in recv:
@@ -986,6 +1110,63 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
                 idx += length
             out.append(recv[idx] if 0 <= idx < length else None)
         return out
+    if name == "rotate":
+        # Ruby ``Array#rotate(n=1)``: rotate left by ``n`` (a negative ``n`` rotates
+        # right).  The modulo wraps so any ``n`` terminates; an empty array is ``[]``.
+        # No arg defaults to 1; a non-numeric arg degrades to 0 (never raises),
+        # matching the Go/Rust runtimes.
+        length = len(recv)
+        if length == 0:
+            return []
+        if not args:
+            n = 1
+        elif isinstance(args[0], (int, float)):
+            n = int(args[0])
+        else:
+            n = 0
+        shift = n % length  # Python ``%`` folds negatives into ``[0, length)``
+        return recv[shift:] + recv[:shift]
+    if name == "zip":
+        # Ruby ``Array#zip(*others)``: an Array of tuples ``[self[i], others..[i]]``
+        # of length ``len(self)``.  A shorter operand pads with ``nil`` (``None``);
+        # a non-array operand is treated as empty (pad-only), never raising.
+        others = [o if isinstance(o, list) else [] for o in args]
+        zipped: list[Val] = []
+        for i, x in enumerate(recv):
+            row: list[Val] = [x]
+            for o in others:
+                row.append(o[i] if i < len(o) else None)
+            zipped.append(row)
+        return zipped
+    if name == "each_slice":
+        # ``each_slice(n)`` — split into consecutive sub-arrays of at most ``n``
+        # elements (the last slice may be shorter).  ``[1,2,3,4,5].each_slice(2)``
+        # → ``[[1,2],[3,4],[5]]``.  Ruby raises ``ArgumentError`` for ``n <= 0``;
+        # the never-raise floor yields ``[]`` (no valid slice size) instead.
+        n = args[0] if args and isinstance(args[0], int) else 0
+        if n <= 0:
+            return []
+        return [recv[i : i + n] for i in range(0, len(recv), n)]
+    if name == "each_cons":
+        # ``each_cons(n)`` — every consecutive ``n``-element window (sliding by
+        # one).  ``[1,2,3,4].each_cons(2)`` → ``[[1,2],[2,3],[3,4]]``.  A window
+        # size larger than the array (or ``n <= 0``) yields ``[]``; Ruby raises
+        # for ``n <= 0`` but the never-raise floor returns empty.
+        n = args[0] if args and isinstance(args[0], int) else 0
+        if n <= 0:
+            return []
+        return [recv[i : i + n] for i in range(0, len(recv) - n + 1)]
+    if name == "tally":
+        # ``tally`` — a Hash mapping each element to its occurrence count, in
+        # first-seen key order.  ``[a, b, a, c, a].tally`` → ``{a: 3, b: 1, c: 1}``
+        # (a ``dict`` preserves insertion order, matching Ruby).  Brings the
+        # Python reference level with the Go/Rust runtimes, which already ship
+        # ``tally``.  As with the rest of the Python ``Hash`` surface (a ``dict``),
+        # elements are counted by hash/equality, so hashable elements only.
+        counts: dict[Val, Val] = {}
+        for item in recv:
+            counts[item] = counts.get(item, 0) + 1
+        return counts
     return _MISS
 
 
@@ -1093,6 +1274,59 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
         for item in recv:
             apply(block, [item, memo])
         return memo
+    if name == "chunk_while":
+        # ``chunk_while { |prev, cur| pred }`` — split into runs of consecutive
+        # elements: the block is called on each ADJACENT pair; while it is truthy
+        # the run continues, and a falsy result starts a new run.
+        # ``[1,2,4,5,7].chunk_while { |a,b| b - a == 1 }`` → ``[[1,2],[4,5],[7]]``.
+        # An empty array yields ``[]``; a single element yields ``[[x]]``.
+        if not recv:
+            return []
+        chunks: list[Val] = [[recv[0]]]
+        for prev, cur in zip(recv, recv[1:], strict=False):
+            if truthy(apply(block, [prev, cur])):
+                chunks[-1].append(cur)
+            else:
+                chunks.append([cur])
+        return chunks
+    if name == "slice_when":
+        # ``slice_when { |prev, cur| pred }`` — the INVERSE of ``chunk_while``:
+        # split into runs of consecutive elements, starting a NEW run BETWEEN an
+        # adjacent pair exactly WHERE the block is truthy (chunk_while starts a
+        # new run where the block is FALSY).
+        # ``[1,2,4,9,10,11,12].slice_when { |a,b| b - a > 1 }``
+        #   → ``[[1,2],[4],[9,10,11,12]]`` (splits on each upward gap > 1).
+        # An empty array yields ``[]``; a single element yields ``[[x]]``.
+        if not recv:
+            return []
+        slices: list[Val] = [[recv[0]]]
+        for prev, cur in zip(recv, recv[1:], strict=False):
+            if truthy(apply(block, [prev, cur])):
+                slices.append([cur])
+            else:
+                slices[-1].append(cur)
+        return slices
+    if name == "cycle":
+        # ``cycle(n) { |x| … }`` — iterate the array ``n`` full passes in order,
+        # yielding each element on every pass.  ``n <= 0`` (or a nil / non-integer
+        # count) yields nothing.  Always returns nil.
+        #
+        #   ``[1, 2, 3].cycle(2) { |x| out << x }``  →  out == [1, 2, 3, 1, 2, 3]
+        #   ``[1, 2, 3].cycle(0) { … }``             →  no yields, returns nil
+        #   ``[].cycle(5) { … }``                    →  no yields (empty run body)
+        #
+        # Ruby's block-less ``cycle`` (an Enumerator) and its infinite no-``n``
+        # form (which never returns) are documented v0 boundaries: we require a
+        # block and a finite non-negative count, so emitted programs can never
+        # hang.  A truthy/``bool`` count is rejected too — ``True`` is an ``int``
+        # in Python, and a boolean cycle count is a type error in Ruby.
+        n = args[0] if args else None
+        if isinstance(n, bool) or not isinstance(n, int) or n <= 0:
+            return None
+        for _ in range(n):
+            for item in recv:
+                apply(block, [item])
+        return None
     return _MISS
 
 
@@ -1123,6 +1357,12 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
         return len(recv) == 0
     if name == "to_a":
         return [[key, value] for key, value in recv.items()]
+    if name == "to_h":
+        # ``Hash#to_h`` with NO block returns a shallow copy of the hash (Ruby
+        # returns ``self`` re-wrapped; a fresh ``dict`` matches the value
+        # semantics without aliasing the receiver).  The block form lives in
+        # ``_hash_block_method`` (it re-maps each pair to a new ``[k, v]``).
+        return dict(recv)
     if name == "dig":
         # v0: single-level dig; nested dig is a documented follow-up.
         return recv.get(args[0])
@@ -1141,10 +1381,12 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
     return _MISS
 
 
-def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
+def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: Closure) -> Val:
     """Block-taking ``Hash`` methods; the block receives ``[key, value]`` (or a
-    single key/value for ``each_key``/``each_value``).  Returns :data:`_MISS` if
-    ``name`` is not a hash block method."""
+    single key/value for ``each_key``/``each_value``).  ``args`` holds the
+    positional arguments preceding the block (e.g. the seed for
+    ``reduce``/``inject`` or the initial value for ``sum``).  Returns
+    :data:`_MISS` if ``name`` is not a hash block method."""
     if name in ("each", "each_pair"):
         for key, value in list(recv.items()):
             apply(block, [key, value])
@@ -1163,6 +1405,144 @@ def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
         return {k: v for k, v in recv.items() if truthy(apply(block, [k, v]))}
     if name == "reject":
         return {k: v for k, v in recv.items() if not truthy(apply(block, [k, v]))}
+    if name == "transform_values":
+        # ``transform_values { |v| … }`` — a NEW hash with each value replaced by
+        # the block's result; keys are untouched.  Non-mutating (Ruby's bang
+        # variant is a follow-up).
+        return {key: apply(block, [value]) for key, value in recv.items()}
+    if name == "transform_keys":
+        # ``transform_keys { |k| … }`` — a NEW hash with each key replaced by the
+        # block's result; values are untouched.  On a collision the LAST pair
+        # wins (Ruby's rule, matching dict-comprehension insertion order).
+        return {apply(block, [key]): value for key, value in recv.items()}
+    # ── Enumerable aggregates (Hash includes Enumerable) ───────────────────
+    #
+    # Ruby's ``Hash`` mixes in ``Enumerable``, so these iterate the hash as a
+    # sequence of ``[key, value]`` pairs: the block is yielded ``[key, value]``
+    # (two arguments, matching ``each``), and the "element" an aggregate returns
+    # is the two-element ``[key, value]`` list — e.g.
+    # ``{a: 1, b: 2}.min_by { |k, v| v }`` is ``[:a, 1]``.
+    if name in ("find", "detect"):
+        # First ``[k, v]`` pair whose block result is truthy; ``nil`` if none.
+        for key, value in recv.items():
+            if truthy(apply(block, [key, value])):
+                return [key, value]
+        return None
+    if name == "any?":
+        return any(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "all?":
+        return all(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "none?":
+        return not any(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "count":
+        # ``count { |k, v| pred }`` — number of pairs with a truthy block result.
+        return sum(1 for k, v in recv.items() if truthy(apply(block, [k, v])))
+    if name == "sort_by":
+        # A NEW Array of ``[k, v]`` pairs sorted by the block key.  Python's sort
+        # is stable, matching Ruby; a non-comparable key raises ``TypeError``.
+        return sorted(
+            ([k, v] for k, v in recv.items()),
+            key=lambda pair: apply(block, [pair[0], pair[1]]),
+        )
+    if name in ("min_by", "max_by"):
+        # The ``[k, v]`` pair minimising / maximising the block key; ``nil`` on an
+        # empty hash.
+        if not recv:
+            return None
+        chooser = min if name == "min_by" else max
+        return chooser(
+            ([k, v] for k, v in recv.items()),
+            key=lambda pair: apply(block, [pair[0], pair[1]]),
+        )
+    # ── Enumerable breadth (grouping / folding / flattening) ───────────────
+    #
+    # A second batch of ``Enumerable`` block methods on ``Hash``.  Like the
+    # aggregates above, the block is yielded ``[key, value]`` (two arguments)
+    # and every "element" a result contains is a two-element ``[key, value]``
+    # list — except ``reduce``/``inject``, which follow Ruby's memo convention
+    # and yield ``[memo, [key, value]]`` (the pair as a single second argument,
+    # matching ``h.inject(0) { |sum, (k, v)| … }``).
+    if name == "group_by":
+        # A Hash of block key -> list of ``[k, v]`` pairs, in first-seen key
+        # order.  Keys must be hashable (dict-based Hash model).
+        groups: dict[Val, list[Val]] = {}
+        for key, value in recv.items():
+            groups.setdefault(apply(block, [key, value]), []).append([key, value])
+        return groups
+    if name == "partition":
+        # ``[[matching pairs], [non-matching pairs]]``.
+        yes: list[Val] = []
+        no: list[Val] = []
+        for key, value in recv.items():
+            (yes if truthy(apply(block, [key, value])) else no).append([key, value])
+        return [yes, no]
+    if name in ("flat_map", "collect_concat"):
+        # Map each pair through the block, flattening one level of any list
+        # result (a non-list result is appended as-is).
+        out: list[Val] = []
+        for key, value in recv.items():
+            mapped = apply(block, [key, value])
+            if isinstance(mapped, list):
+                out.extend(mapped)
+            else:
+                out.append(mapped)
+        return out
+    if name in ("reduce", "inject"):
+        # ``reduce(init) { |memo, (k, v)| … }`` folds the pairs; a seedless
+        # ``reduce`` starts from the first pair (Ruby's rule).  Yields the pair
+        # as ONE argument (the memo convention), so an empty seedless reduce is
+        # ``nil``.
+        pairs = [[key, value] for key, value in recv.items()]
+        if args:
+            acc: Val = args[0]
+            rest = pairs
+        elif pairs:
+            acc = pairs[0]
+            rest = pairs[1:]
+        else:
+            return None
+        for pair in rest:
+            acc = apply(block, [acc, pair])
+        return acc
+    if name == "sum":
+        # ``sum(init = 0) { |k, v| … }`` — ``init`` plus the sum of the block
+        # results (Hash#sum requires a block, since raw pairs are not addable).
+        total: Val = args[0] if args else 0
+        for key, value in recv.items():
+            total = total + apply(block, [key, value])
+        return total
+    if name == "to_h":
+        # ``Hash#to_h { |k, v| [new_k, new_v] }`` — a NEW hash whose entries are
+        # the ``[k, v]`` pairs the block returns.  The block is yielded the two
+        # arguments ``(key, value)`` (matching ``each``) and MUST return a
+        # two-element ``[k, v]`` pair; a later pair with a duplicate key wins
+        # (Ruby's rule, and how ``dict`` assignment already behaves).
+        result: dict[Val, Val] = {}
+        for key, value in recv.items():
+            pair = apply(block, [key, value])
+            result[pair[0]] = pair[1]
+        return result
+    if name == "each_with_index":
+        # ``each_with_index { |(k, v), i| … }`` — yields each ``[k, v]`` pair
+        # together with its 0-based position and returns the receiver.  Unlike
+        # the two-arg ``(k, v)`` yield of ``each``, the element here arrives as a
+        # single ``[k, v]`` pair (the second block param is the index), matching
+        # Ruby's Enumerable convention.
+        for index, (key, value) in enumerate(recv.items()):
+            apply(block, [[key, value], index])
+        return recv
+    if name == "each_with_object":
+        # ``each_with_object(memo) { |(k, v), memo| … }`` — yields each ``[k, v]``
+        # pair with the memo object and returns the (mutated) memo.  Like
+        # ``each_with_index``, the element is the single ``[k, v]`` pair (the
+        # second block param is the memo).  With no memo argument the receiver is
+        # returned unchanged.
+        if not args:
+            return recv
+        memo = args[0]
+        for key, value in recv.items():
+            apply(block, [[key, value], memo])
+        return memo
     return _MISS
 
 
@@ -1322,6 +1702,47 @@ def _string_method(recv: str, name: str, args: list[Val]) -> Val:
             else:
                 out.append(ch)
         return "".join(out)
+    if name == "tr":
+        # Ruby ``String#tr(from, to)``: translate each char that appears in
+        # ``from`` to the char at the same position in ``to``.  A shorter ``to``
+        # repeats its LAST char; an empty ``to`` deletes matching chars; when
+        # ``from`` repeats a char the last mapping wins.
+        # NOTE: the char-RANGE (``"a-z"``) and NEGATION (``"^abc"``) forms are a
+        # follow-up, matching the literal-only ``sub``/``gsub`` precedent here.
+        if len(args) < 2 or not isinstance(args[0], str) or not isinstance(args[1], str):
+            return recv
+        frm, to = args[0], args[1]
+        table: dict[str, str] = {}
+        for i, ch in enumerate(frm):
+            table[ch] = (to[i] if i < len(to) else to[-1]) if to else ""
+        return "".join(table.get(ch, ch) for ch in recv)
+    if name in ("count", "delete", "squeeze"):
+        # Char-set methods.  Each ``set`` argument is treated LITERALLY — the set
+        # of characters it contains (ranges/negation are a follow-up).  ``count``
+        # returns how many chars of ``recv`` lie in the set; ``delete`` removes
+        # them; ``squeeze`` collapses consecutive runs (of set chars, or of ALL
+        # chars when no set is given).  Multiple set args intersect (Ruby's rule).
+        str_sets = [set(a) for a in args if isinstance(a, str)]
+        if name == "squeeze" and not str_sets:
+            squeezed: list[str] = []
+            for ch in recv:
+                if not squeezed or squeezed[-1] != ch:
+                    squeezed.append(ch)
+            return "".join(squeezed)
+
+        def in_all(ch: str) -> bool:
+            return bool(str_sets) and all(ch in s for s in str_sets)
+
+        if name == "count":
+            return sum(1 for ch in recv if in_all(ch))
+        if name == "delete":
+            return "".join(ch for ch in recv if not in_all(ch))
+        out = []
+        for ch in recv:
+            if out and out[-1] == ch and in_all(ch):
+                continue
+            out.append(ch)
+        return "".join(out)
     return _MISS
 
 
@@ -1427,6 +1848,17 @@ _MAX_POW_BITS = 1 << 20
 _MAX_DISPLAY_DEPTH = 100
 
 
+def _sat_float(x: Val) -> float:
+    """Coerce ``x`` to ``float``, **saturating** to ``±inf`` when it is a bignum
+    ``int`` past ``float`` range.  Plain ``float(2**5000)`` raises an untyped
+    ``OverflowError``; Ruby instead treats such a value as ``Infinity`` in
+    floating-point contexts, so saturating holds the never-raise floor."""
+    try:
+        return float(x)
+    except OverflowError:
+        return math.inf if x > 0 else -math.inf
+
+
 def _ruby_round(x: float) -> int:
     """Ruby ``Float#round`` (no digits): round half **away from zero** — unlike
     Python's banker's rounding, ``2.5.round == 3`` and ``-2.5.round == -3``."""
@@ -1502,9 +1934,114 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
     if name == "ceil":
         return recv if isinstance(recv, float) and not math.isfinite(recv) else math.ceil(recv)
     if name == "round":
-        if isinstance(recv, int) or (isinstance(recv, float) and not math.isfinite(recv)):
+        # Ruby ``round`` / ``round(ndigits)``.  With no argument (or ``ndigits <=
+        # 0`` on an Integer) the result is an Integer rounded half-away-from-zero;
+        # a positive ``ndigits`` on a Float rounds to that many decimal places
+        # (still half-away-from-zero, unlike Python's banker's rounding).  A
+        # non-finite Float is returned unchanged (never-raise floor).
+        #
+        # DoS guard: ``ndigits`` is caller-controlled, so ``10 ** (-ndigits)``
+        # could build a multi-gigabyte bignum for a hostile magnitude.  Rounding
+        # to a place value that dwarfs the receiver is exactly ``0`` in Ruby
+        # (``1234.round(-10) == 0``), so we short-circuit to ``0`` once the place
+        # count clearly exceeds the receiver's decimal width instead of
+        # allocating the factor — and cap positive ``ndigits`` past a Float's
+        # precision (the value is already at full precision) to dodge the
+        # ``10.0 ** ndigits`` ``OverflowError``.
+        # ``isfinite`` also rejects an ``inf``/``nan`` ``ndigits`` argument, whose
+        # ``int(...)`` would otherwise raise an untyped ``OverflowError``/``ValueError``.
+        ndigits = (
+            int(args[0])
+            if args and isinstance(args[0], (int, float)) and math.isfinite(args[0])
+            else 0
+        )
+        if isinstance(recv, float) and not math.isfinite(recv):
             return recv
-        return _ruby_round(recv)
+        # Decimal width of the integer magnitude — cheap and bounded.  ``recv`` is
+        # now an int or a *finite* float (non-finite floats returned above), so we
+        # avoid ``math.isfinite(recv)``: that coerces a huge int to a float and
+        # would itself raise ``OverflowError`` (e.g. ``10**309``).
+        int_width = len(str(abs(recv if isinstance(recv, int) else int(recv))))
+        if isinstance(recv, int):
+            if ndigits >= 0:
+                return recv
+            if -ndigits > int_width + 1:
+                return 0  # rounding place dwarfs the value ⇒ 0 (Ruby parity)
+            factor = 10 ** (-ndigits)
+            # Round to the nearest multiple of ``factor`` half-away-from-zero
+            # with ALL-INTEGER arithmetic.  ``recv / factor`` would be Python
+            # true division (a float) and raises ``OverflowError`` for a receiver
+            # past ~1.8e308 (e.g. ``(10**309).round(-1)``) — an untyped error;
+            # integer ``divmod`` never overflows.
+            quotient, rem = divmod(abs(recv), factor)
+            if rem * 2 >= factor:
+                quotient += 1
+            magnitude = quotient * factor
+            return -magnitude if recv < 0 else magnitude
+        if ndigits <= 0:
+            if -ndigits > int_width + 1:
+                return 0
+            factor = 10 ** (-ndigits)
+            return int(_ruby_round(recv / factor) * factor)
+        # A binary64 Float carries ~15–17 significant digits; rounding to more
+        # decimals than that returns the value unchanged (and avoids overflow).
+        if ndigits > 17:
+            return recv
+        factor = 10.0**ndigits
+        scaled = recv * factor
+        # A large ``recv`` can overflow the scale-up to ``inf``; ``_ruby_round``
+        # (``math.floor(inf + 0.5)``) would then raise an untyped ``OverflowError``.
+        # A value that large has no fractional part left to round, so return it
+        # unchanged — holding the never-raise floor.
+        if not math.isfinite(scaled):
+            return recv
+        return _ruby_round(scaled) / factor
+    if name == "divmod":
+        # Ruby ``Integer#divmod`` / ``Float#divmod``: ``[quotient, remainder]``
+        # where the quotient is floored and the remainder takes the divisor's
+        # sign (Python's ``divmod`` matches this).  Division by zero raises a
+        # typed ``ZeroDivisionError`` so a translated ``rescue`` catches it.  A
+        # non-numeric divisor degrades to ``0`` → the same typed error (rather
+        # than an untyped ``TypeError`` from Python's ``divmod``).
+        divisor = args[0] if args and isinstance(args[0], (int, float)) else 0
+        if divisor == 0:
+            raise_error("ZeroDivisionError", "divided by 0")
+        # ``divmod(int, int)`` is exact, but a mixed ``int``-receiver / ``float``-
+        # divisor coerces the (possibly bignum) receiver to ``float`` and raises
+        # an untyped ``OverflowError`` past ``float`` range.  Route any
+        # float-involving pair through saturating floats so the surface never
+        # raises (matching Ruby's floating-point ``Infinity``/``NaN`` result).
+        if isinstance(recv, float) or isinstance(divisor, float):
+            quotient, remainder = divmod(_sat_float(recv), _sat_float(divisor))
+        else:
+            quotient, remainder = divmod(recv, divisor)
+        return [quotient, remainder]
+    if name == "fdiv":
+        # Ruby ``fdiv``: floating-point division.  Unlike ``/``, dividing by zero
+        # yields ``Infinity``/``NaN`` rather than raising (Ruby never raises on
+        # ``Float`` division), honouring the never-raise floor.  A non-numeric
+        # argument degrades to a ``0`` divisor (→ ``Infinity``/``NaN``); a bignum
+        # receiver/arg saturates to ``±inf`` via ``_sat_float`` rather than
+        # raising an untyped ``OverflowError`` from ``float()``.
+        divisor = _sat_float(args[0]) if args and isinstance(args[0], (int, float)) else 0.0
+        numer = _sat_float(recv)
+        if divisor == 0.0:
+            if numer == 0.0:
+                return math.nan
+            return math.inf if numer > 0 else -math.inf
+        return numer / divisor
+    if name == "clamp":
+        # Ruby ``Comparable#clamp(min, max)``: return ``min`` if ``recv < min``,
+        # ``max`` if ``recv > max``, else ``recv``.  (The Range form is deferred.)
+        low, high = args[0], args[1]
+        if recv < low:
+            return low
+        if recv > high:
+            return high
+        return recv
+    if name == "between?":
+        # Ruby ``Comparable#between?(min, max)``: ``min <= recv <= max``.
+        return args[0] <= recv <= args[1]
     if name == "gcd":
         return math.gcd(int(recv), int(args[0]))
     if name in ("pow", "**"):
@@ -1612,6 +2149,13 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
         return class_of(recv) == _class_name_arg(args[0])
     if name == "class":
         return class_of(recv)
+    # ``Exception#message`` — the text a ``raise Foo, "msg"`` carried, which a
+    # ``SirError`` keeps as its standard ``args[0]``.  Answered by an exception
+    # ONLY, so a non-exception still falls through to its own catalog (and the
+    # ``nil`` floor).  Without this, ``rescue => e; puts e.message`` — everyday
+    # Ruby — died with an ``AttributeError``.
+    if name == "message" and isinstance(recv, BaseException):
+        return str(recv)
 
     # ``send``/``__send__``/``public_send`` re-enter dispatch with a *dynamic*
     # method name taken from the first argument (a Symbol or string), forwarding
@@ -1669,7 +2213,7 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
             return result
     elif isinstance(recv, dict):
         if name in _HASH_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
-            result = _hash_block_method(recv, name, arg_list[-1])
+            result = _hash_block_method(recv, name, arg_list[:-1], arg_list[-1])
             if result is not _MISS:
                 return result
         result = _hash_method(recv, name, arg_list)

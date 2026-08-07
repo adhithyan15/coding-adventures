@@ -113,7 +113,7 @@ fn collect_edge_labels(graph: &LabeledDirectedGraph) -> BTreeMap<(String, String
     for (from, to, label) in graph.edges() {
         grouped
             .entry((from, to))
-            .or_insert_with(BTreeSet::new)
+            .or_default()
             .insert(label);
     }
 
@@ -417,7 +417,7 @@ pub fn labeled_to_ascii_table(graph: &LabeledDirectedGraph) -> String {
     for (from, to, label) in &edges {
         transitions
             .entry((from.clone(), label.clone()))
-            .or_insert_with(BTreeSet::new)
+            .or_default()
             .insert(to.clone());
     }
 

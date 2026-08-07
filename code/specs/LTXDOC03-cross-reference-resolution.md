@@ -2007,3 +2007,863 @@ check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 31. S25 — per-kind census (counts) of the winning label definitions (`label_kind_counts`)
+
+### 31.1 Motivation
+
+S23 (`label_definitions_by_kind`) groups the **winning** `\label` definitions by their `LabelKind` and
+renders one **line per definition** (`[kind] \label{key}`). But a reader often wants not the enumeration
+but the **tally** — "how many sections do I define? how many equations? how many bare inline labels?" —
+a per-kind *count* answered at a glance, without scanning the individual keys. S14 (`list_summary`)
+already provides exactly this shape (`"Sections: 1"`) over S4's numbered-node census; S25 brings the same
+numeric-summary discipline to the **label-definitions** family. It is to S23 what a count is to a full
+list: the *same* winning `definitions` list, collapsed to one line per kind.
+
+### 31.2 Why a new method — additive by construction
+
+S25 adds a **new public method** `Document::label_kind_counts(&self) -> String`. It is a pure, read-only
+render of `resolve_references().definitions` — a *third view* of the exact list S22 renders flat and S23
+groups by kind. It reuses that list verbatim (never re-walking the body or re-resolving), so the report
+can never drift from the S1 resolution it summarises, and counting never adds, drops, or reorders
+definitions relative to what `resolve_references` produced. It mutates nothing and changes no S1–S24
+output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S24 it is a method the
+caller invokes directly.
+
+### 31.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the **same** `const KIND_ORDER` slice S23/S24
+use). S25 iterates that order as an explicit slice (**not** a hash map keyed by kind), so the line order
+is deterministic and never depends on document content or hash iteration order — the same `Vec`-scan
+discipline S17/S18/S23/S24 use to avoid hash-order nondeterminism. A kind with a **zero** count produces
+**no** line (there is never a bare `table: 0` for a doc with no table labels).
+
+### 31.4 The exact rendering contract — `Document::label_kind_counts(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, count
+  the `resolve_references().definitions` whose `kind` is that kind and — only if the count is **at least
+  one** — emit one line `format!("{}: {}", kind.as_str(), count)` → the kind tag + `": "` + the decimal
+  count. The kind tag comes from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/`"equation"`/
+  `"inline"`) — the **same** kind string S23 renders — and there is **no** source slicing at all (only the
+  `kind` field is read; keys/spans are unused), so the render needs no source borrow and can never index
+  out of bounds.
+- Only the **winning** definitions are counted. `definitions` holds one row per distinct key (the first
+  `\label` of each key); a `\label{dup}` written twice contributes **one** to its kind's count, because
+  its later re-definition is a `Duplicate` (S20's domain), never a second row in `definitions`.
+- A kind with a zero count contributes no line and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S24 renderer).
+- If there are **no** winning label definitions at all, the fixed marker `(no label definitions)` is
+  returned — the **same** marker S22/S23 use (S25 counts the identical list), so the output is never the
+  empty string.
+
+Example (body defining a section label `sec:intro`, two equation labels `eq:a`/`eq:b`, and a bare inline
+label `note`):
+
+```text
+section: 1
+equation: 2
+inline: 1
+```
+
+The `section` count leads, then `equation`, then `inline`, in the fixed kind order; the `table` and
+`figure` kinds have zero definitions and so contribute no lines. This is the count companion of S23's
+per-definition grouping — a third view of the one winning `definitions` list.
+
+### 31.5 Public API (added in S25)
+
+One new method: `Document::label_kind_counts(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_references` and every S1–S24 method are unchanged; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 31.6 Verification (S25)
+
+`cargo test -p latex` green (6 new S25 tests: a section + two-equation + inline case rendering the
+per-kind counts in the fixed kind order with the zero-count kinds omitted; a single-kind case
+(`inline: 2`); a no-labels case returning the `(no label definitions)` marker; a duplicate-`\label` case
+proving only the WINNING definition is counted (the loser routed to S20's `duplicate_label_definitions`);
+a section + figure + inline case pinning the `\n`-join with no trailing newline; and an additivity check
+that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`,
+`citations_by_source`, `duplicate_bibliography_entries`, `unresolved_citations_by_source`,
+`unresolved_references_by_source`, `bibliography_entries`, `duplicate_label_definitions`,
+`resolved_references_by_source`, `label_definitions`, S23's `label_definitions_by_kind`, and S24's
+`resolved_references_by_kind` all still produce their exact prior strings). All prior S1–S24 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.
+
+## 32. S26 — per-kind census (counts) of the resolved references (`resolved_reference_kind_counts`)
+
+### 32.1 Motivation
+
+S24 (`resolved_references_by_kind`) groups the **resolved** `\ref`/`\eqref`/`\pageref` references by the
+`LabelKind` they resolved TO and renders one **line per resolved reference** (`[kind] \<command>{key}`).
+But a reader often wants not the enumeration but the **tally** — "how many of my references land on
+sections? how many on equations? how many on bare inline labels?" — a per-kind *count* answered at a
+glance, without scanning the individual keys. S25 (`label_kind_counts`) already brought exactly this
+numeric-summary discipline to the **label-definitions** family (a `<kind>: <n>` tally over the winning
+`definitions` list); S26 brings the same shape to the **resolved-references** family. It is to S24 what
+S25 is to S23: the *same* `resolved` list, collapsed to one line per kind.
+
+### 32.2 Why a new method — additive by construction
+
+S26 adds a **new public method** `Document::resolved_reference_kind_counts(&self) -> String`. It is a
+pure, read-only render of `resolve_references().resolved` — a *third view* of the exact list S21 renders
+flat and S24 groups by kind. It reuses that list verbatim (never re-walking the body or re-resolving), so
+the report can never drift from the S1 resolution it summarises, and counting never adds, drops, or
+reorders references relative to what `resolve_references` produced. It mutates nothing and changes no
+S1–S25 output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S25 it is a
+method the caller invokes directly.
+
+### 32.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the **same** `const KIND_ORDER` slice
+S23/S24/S25 use). S26 iterates that order as an explicit slice (**not** a hash map keyed by kind), so the
+line order is deterministic and never depends on document content or hash iteration order — the same
+`Vec`-scan discipline S17/S18/S23/S24/S25 use to avoid hash-order nondeterminism. A kind with a **zero**
+count produces **no** line (there is never a bare `table: 0` for a doc that references no tables).
+
+### 32.4 The exact rendering contract — `Document::resolved_reference_kind_counts(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, count
+  the `resolve_references().resolved` refs whose `target_kind` is that kind and — only if the count is
+  **at least one** — emit one line `format!("{}: {}", kind.as_str(), count)` → the kind tag + `": "` + the
+  decimal count. The kind tag comes from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/
+  `"equation"`/`"inline"`) — the **same** kind string S24 renders — and there is **no** source slicing at
+  all (only the `target_kind` field is read; keys/commands/spans are unused for the count), so the render
+  needs no source borrow and can never index out of bounds.
+- Only the **resolved** references are counted. A dangling `\ref{nope}` lives in
+  `resolve_references().unresolved` (S18's domain), never in `resolved`, so it is excluded by construction
+  and never contributes a spurious `<kind>: 0` line.
+- A kind with a zero count contributes no line and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S25 renderer).
+- If there are **no** resolved references at all (every reference dangles, or there are none), the fixed
+  marker `(no resolved references)` is returned — the **same** marker S21/S24 use (S26 counts the
+  identical list), so the output is never the empty string.
+
+Example (body defining two section labels `sec:a`/`sec:b` and one equation label `eq:e`, then writing
+`\ref{sec:a}`, `\ref{sec:b}`, and `\eqref{eq:e}`, all of which resolve):
+
+```text
+section: 2
+equation: 1
+```
+
+The `section` count leads, then `equation`, in the fixed kind order; the `table`, `figure`, and `inline`
+kinds have zero resolved refs and so contribute no lines. This is the count companion of S24's per-ref
+grouping — a third view of the one `resolved` list.
+
+### 32.5 Public API (added in S26)
+
+One new method: `Document::resolved_reference_kind_counts(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S25 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 32.6 Verification (S26)
+
+`cargo test -p latex` green (6 new S26 tests: a section + two-equation + inline case rendering the
+per-kind counts in the fixed kind order with the zero-count kinds omitted; a single-kind case
+(`section: 2`, two refs to one section); a two-section-labels case proving multiple resolved refs to the
+same kind aggregate (`section: 2`); an all-dangling / no-references case returning the
+`(no resolved references)` marker (cross-checked against S18's `unresolved_references_by_source`); a
+section + equation + dangling-ref case pinning the `\n`-join with no trailing newline and the dangling
+ref's exclusion; and an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`,
+`resolve_namerefs`, `list_summary`, `citations_by_source`, `duplicate_bibliography_entries`,
+`unresolved_citations_by_source`, `unresolved_references_by_source`, `bibliography_entries`,
+`duplicate_label_definitions`, `resolved_references_by_source`, `label_definitions`, S23's
+`label_definitions_by_kind`, S24's `resolved_references_by_kind`, and S25's `label_kind_counts` all still
+produce their exact prior strings). All prior S1–S25 tests pass unchanged. `cargo clippy -p latex
+--all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
+build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 33. S27 — single-integer total of the unresolved (dangling) references (`unresolved_reference_count`)
+
+### 33.1 Motivation
+
+S18 (`unresolved_references_by_source`) enumerates the **unresolved** (dangling) `\ref`/`\eqref`/`\pageref`
+references — the ones no `\label` defines (LaTeX's *"Reference `key' undefined"*, the `??`) — one **line
+per dangling reference** (`\<command>{key}`, in body pre-order). But a reader often wants not the
+enumeration but the **total** — "how many of my references dangle?" — a single number answered at a
+glance, without scanning the individual keys. S25 (`label_kind_counts`) and S26
+(`resolved_reference_kind_counts`) already brought a numeric-summary discipline to the label-definitions
+and resolved-references families, respectively, as *per-kind* censuses. But the unresolved refs carry
+**no** `target_kind` — a dangling ref bound to no definition, so there is nothing to group by; a per-kind
+census is not viable. The clean move is a **single total**: S27 collapses the whole `unresolved` list to
+its decimal `.len()`. It is the count-total sibling of the census family, but for the UNRESOLVED refs.
+
+### 33.2 Why a new method — additive by construction
+
+S27 adds a **new public method** `Document::unresolved_reference_count(&self) -> String`. It is a pure,
+read-only render of `resolve_references().unresolved.len()` — a *second view* of the exact list S18
+renders per-source. It reuses that list verbatim (never re-walking the body or re-resolving), so the
+report can never drift from the S1 resolution it summarises, and counting never adds, drops, or reorders
+references relative to what `resolve_references` produced. It mutates nothing and changes no S1–S26 output
+— including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S26 it is a method the caller
+invokes directly.
+
+### 33.3 The rendering rule
+
+The output is the decimal `.len()` of the `unresolved` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order)
+and no per-kind grouping (a dangling ref carries no `target_kind` to group by) — only `.len()` is read,
+with **no** source slicing at all. Being a **count** renderer, its empty case is the honest number `"0"`
+— **not** a `(no …)` marker. The `(no …)` marker discipline belongs to the *list* renderers
+S18/S21/S24, whose empty case has no lines to show; a total count of zero *is* a number, so `"0"` is its
+truthful value.
+
+### 33.4 The exact rendering contract — `Document::unresolved_reference_count(&self) -> String`
+
+- Read `resolve_references().unresolved.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing and **no** `target_kind` read at all (a
+  dangling ref never carries one), so the render needs no source borrow and can never index out of bounds.
+- Only the **unresolved** references are counted. A resolved `\ref{sec:i}` lives in
+  `resolve_references().resolved` (S21's domain), never in `unresolved`, so it is excluded by construction.
+- The empty case (every ref resolves, or there are none at all) returns the honest number `"0"` — **not**
+  a `(no …)` marker, because S27 is a count renderer.
+
+Example (body defining `\label{sec:i}`, then writing `\ref{sec:i}` (resolves), `\ref{nope}` (dangles), and
+`\ref{gone}` (dangles)):
+
+```text
+2
+```
+
+Two references dangle; the one resolved `\ref{sec:i}` is excluded. This is the count-total companion of
+S18's per-source list — a second view of the one `unresolved` list; the count equals the number of lines
+S18 would enumerate.
+
+### 33.5 Public API (added in S27)
+
+One new method: `Document::unresolved_reference_count(&self) -> String`. No existing type, field, counter,
+or signature changes; `resolve_references` and every S1–S26 method are unchanged; no AST or grammar
+change; no new dependency, no `unsafe`, no I/O.
+
+### 33.6 Verification (S27)
+
+`cargo test -p latex` green (6 new S27 tests: two-danglers-plus-one-resolved returning `"2"`
+(cross-checked against S18's `unresolved_references_by_source`); an all-refs-resolve case returning `"0"`
+(cross-checked against S18's `(no unresolved references)` marker); a no-references-at-all case returning
+`"0"`; a mixed-kinds-of-danglers case (`\ref`/`\eqref`/`\pageref`, none defined) returning the integer
+`"3"`; a cross-check that the count equals the number of lines S18 enumerates (`"4"`); and an additivity
+check that a handful of prior renderers — `list_summary`, `bibliography_entries`, `label_definitions`,
+`unresolved_references_by_source`, S25's `label_kind_counts`, and S26's `resolved_reference_kind_counts` —
+all still produce their exact prior strings, with S27 returning `"1"` (agreeing with the single line S18
+enumerates)). All prior S1–S26 tests pass unchanged. No `cargo fmt`, no grammar regen, no new
+dependencies.
+
+## 34. S28 — single-integer total of the resolved references (`resolved_reference_count`)
+
+### 34.1 Motivation
+
+S21 (`resolved_references_by_source`) and S24 (`resolved_references_by_kind`) enumerate the **resolved**
+`\ref`/`\eqref`/`\pageref` references — the ones some `\label` defines — one **line per resolved
+reference** (`\<command>{key}`, flat in body pre-order or grouped by the target kind each ref bound to).
+But a reader often wants not the enumeration but the **total** — "how many of my references resolve?" — a
+single number answered at a glance, without scanning the individual keys. S27
+(`unresolved_reference_count`) just gave that single-total discipline to the *unresolved* (dangling) side;
+S28 is its exact resolved-side **twin**: it collapses the whole `resolved` list to its decimal `.len()`.
+Together S28 + S27 split every reference into the pair (resolved, dangling), so their two totals sum to the
+total reference count. Unlike S26 (`resolved_reference_kind_counts`, which *can* census the resolved refs
+by the `target_kind` each bound to), S28 takes no per-kind view: section, table, and equation references
+all fold into one total — a single number is the clean move.
+
+### 34.2 Why a new method — additive by construction
+
+S28 adds a **new public method** `Document::resolved_reference_count(&self) -> String`. It is a pure,
+read-only render of `resolve_references().resolved.len()` — a *second view* of the exact list S21/S24
+render per-source and per-kind. It reuses that list verbatim (never re-walking the body or re-resolving),
+so the report can never drift from the S1 resolution it summarises, and counting never adds, drops, or
+reorders references relative to what `resolve_references` produced. It mutates nothing and changes no
+S1–S27 output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S27 it is a
+method the caller invokes directly.
+
+### 34.3 The rendering rule
+
+The output is the decimal `.len()` of the `resolved` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order)
+and no per-kind grouping (S28 reads only the length, never a `target_kind`) — only `.len()` is read, with
+**no** source slicing at all. Being a **count** renderer, its empty case is the honest number `"0"` —
+**not** a `(no resolved references)` marker, mirroring S27 exactly. The `(no …)` marker discipline belongs
+to the *list* renderers S21/S24, whose empty case has no lines to show; a total count of zero *is* a
+number, so `"0"` is its truthful value.
+
+### 34.4 The exact rendering contract — `Document::resolved_reference_count(&self) -> String`
+
+- Read `resolve_references().resolved.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing and **no** `target_kind` read at all, so the
+  render needs no source borrow and can never index out of bounds.
+- Only the **resolved** references are counted. A dangling `\ref{nope}` lives in
+  `resolve_references().unresolved` (S18/S27's domain), never in `resolved`, so it is excluded by
+  construction.
+- The empty case (every ref dangles, or there are none at all) returns the honest number `"0"` — **not**
+  a `(no resolved references)` marker, because S28 is a count renderer (mirroring S27).
+
+Example (body defining `\label{sec:i}`, then writing `\ref{sec:i}` (resolves), `\pageref{sec:i}`
+(resolves), and `\ref{nope}` (dangles)):
+
+```text
+2
+```
+
+Two references resolve; the one dangling `\ref{nope}` is excluded. This is the count-total companion of
+S21's per-source list and S24's per-kind grouping — a second view of the one `resolved` list; the count
+equals the number of lines S21 would enumerate.
+
+### 34.5 Public API (added in S28)
+
+One new method: `Document::resolved_reference_count(&self) -> String`. No existing type, field, counter,
+or signature changes; `resolve_references` and every S1–S27 method are unchanged; no AST or grammar
+change; no new dependency, no `unsafe`, no I/O.
+
+### 34.6 Verification (S28)
+
+`cargo test -p latex` green (6 new S28 tests: two-resolved-plus-one-dangling returning `"2"`
+(cross-checked against S21's `resolved_references_by_source`, and against S27 returning `"1"` on the same
+doc — the two totals split the references); a no-resolvable-refs case returning `"0"` (cross-checked
+against S21's `(no resolved references)` marker); a no-references-at-all case returning `"0"`; a
+mixed-target-kinds case (section/table/equation) returning the integer `"3"`; a cross-check that the count
+equals the number of lines S21 enumerates (`"3"`); and an additivity check that a handful of prior
+renderers — `list_summary`, `label_definitions`, `resolved_references_by_source`, S25's `label_kind_counts`,
+S26's `resolved_reference_kind_counts`, and S27's `unresolved_reference_count` — all still produce their
+exact prior strings, with S28 returning `"2"` (agreeing with the two lines S21 enumerates)). All prior
+S1–S27 tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 35. S29 — single-integer total of the label definitions (`label_definition_count`)
+
+### 35.1 Motivation
+
+S22 (`label_definitions`) and S23 (`label_definitions_by_kind`) enumerate the **winning** label
+definitions — the distinct `\label` keys the document defines, the table `\ref`/`\eqref`/`\pageref`
+resolve against — one **line per winning definition** (`\label{key}`, flat in body pre-order or grouped by
+the `LabelKind` each label defines). But a reader often wants not the enumeration but the **total** — "how
+many labels does this document define?" — a single number answered at a glance, without scanning the
+individual keys. S27 (`unresolved_reference_count`) and S28 (`resolved_reference_count`) gave that
+single-total discipline to the two *reference* tables; S29 is their label-definition-side **analogue**: it
+collapses the whole winning `definitions` list to its decimal `.len()`. Unlike S25 (`label_kind_counts`,
+which *can* census the definitions by the `LabelKind` each defines), S29 takes no per-kind view: section,
+figure, equation, and inline labels all fold into one total — a single number is the clean move.
+
+### 35.2 Why a new method — additive by construction
+
+S29 adds a **new public method** `Document::label_definition_count(&self) -> String`. It is a pure,
+read-only render of `resolve_references().definitions.len()` — a *second view* of the exact list S22/S23
+render flat and per-kind. It reuses that list verbatim (never re-walking the body or re-resolving), so the
+report can never drift from the S1 resolution it summarises, and counting never adds, drops, or reorders
+definitions relative to what `resolve_references` produced. It mutates nothing and changes no S1–S28
+output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S28 it is a method the
+caller invokes directly.
+
+### 35.3 The rendering rule
+
+The output is the decimal `.len()` of the winning `definitions` list, rendered as its `String`, **always**
+on a single line with **no** trailing newline. There is no ordering question (a single integer has no
+order) and no per-kind grouping (S29 reads only the length, never a `kind`) — only `.len()` is read, with
+**no** source slicing at all. Being a **count** renderer, its empty case is the honest number `"0"` —
+**not** a `(no label definitions)` marker, mirroring S27/S28 exactly. The `(no …)` marker discipline
+belongs to the *list* renderers S22/S23, whose empty case has no lines to show; a total count of zero *is*
+a number, so `"0"` is its truthful value.
+
+### 35.4 The exact rendering contract — `Document::label_definition_count(&self) -> String`
+
+- Read `resolve_references().definitions.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing and **no** `kind` read at all, so the render
+  needs no source borrow and can never index out of bounds.
+- Only the **winning** definitions are counted. A later re-definition `\label{dup}` of an already-defined
+  key lives in `resolve_references().duplicates` (S20's domain), never in `definitions`, so it is excluded
+  by construction — the count is exactly the number of lines S22 lists.
+- The empty case (no `\label` at all) returns the honest number `"0"` — **not** a `(no label definitions)`
+  marker, because S29 is a count renderer (mirroring S27/S28).
+
+Example (body defining `\label{sec:intro}` (a section), `\label{eq:main}` (an equation), and then re-using
+`\label{sec:intro}` on a later subsection (a duplicate)):
+
+```text
+2
+```
+
+Two distinct keys are defined; the later duplicate `\label{sec:intro}` is excluded. This is the
+count-total companion of S22's flat list and S23's per-kind grouping — a second view of the one winning
+`definitions` list; the count equals the number of lines S22 would enumerate.
+
+### 35.5 Public API (added in S29)
+
+One new method: `Document::label_definition_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_references` and every S1–S28 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 35.6 Verification (S29)
+
+`cargo test -p latex` green (6 new S29 tests: a multiple-definitions case returning `"3"` (cross-checked
+against S22's `label_definitions`); a duplicate-label case where the later `\label{dup}` is a duplicate
+(S20's domain), not a second definition, so the count is the number of distinct keys `"2"` (cross-checked
+against S20's `duplicate_label_definitions` and against the number of lines S22 lists); a no-labels case
+returning `"0"` (cross-checked against S22's `(no label definitions)` marker); a mixed-document case
+(labels + refs + citations) where the count `"3"` counts only the label definitions, unaffected by the
+refs/citations; a cross-check that the count equals the number of lines S22 enumerates (`"3"`); and an
+additivity check that a handful of prior renderers — S22's `label_definitions`, S25's `label_kind_counts`,
+S27's `unresolved_reference_count`, and S28's `resolved_reference_count` — all still produce their exact
+prior strings, with S29 returning `"4"` (agreeing with the four lines S22 enumerates)). All prior S1–S28
+tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 36. S30 — single-integer total of the bibliography entries (`bibliography_entry_count`)
+
+### 36.1 Motivation
+
+S19 (`bibliography_entries`) enumerates the **winning** bibliography entries — the distinct `\bibitem` keys
+the document defines inside a `thebibliography` environment, the table `\cite` resolves against — one
+**line per winning entry** (`[n] key`, 1-based in body pre-order). But a reader often wants not the
+enumeration but the **total** — "how many bibliography entries does this document define?" — a single
+number answered at a glance, without scanning the individual keys. S27 (`unresolved_reference_count`) and
+S28 (`resolved_reference_count`) gave that single-total discipline to the two *reference* tables, and S29
+(`label_definition_count`) gave it to the label-definition table; S30 is the **citation-side analogue** of
+S29, completing the *totals family*: it collapses the whole winning `entries` list to its decimal `.len()`.
+Where S29 counts the label definitions, S30 counts the bibliography entries — the last of the four total
+renderers (S27/S28 references, S29 labels, S30 bibliography).
+
+### 36.2 Why a new method — additive by construction
+
+S30 adds a **new public method** `Document::bibliography_entry_count(&self) -> String`. It is a pure,
+read-only render of `resolve_citations().entries.len()` — a *second view* of the exact list S19 renders
+flat. It reuses that list verbatim (never re-walking the body or re-resolving), so the report can never
+drift from the S2 resolution it summarises, and counting never adds, drops, or reorders entries relative to
+what `resolve_citations` produced. It mutates nothing and changes no S1–S29 output — including
+`to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S29 it is a method the caller invokes
+directly.
+
+### 36.3 The rendering rule
+
+The output is the decimal `.len()` of the winning `entries` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order) —
+only `.len()` is read, with **no** source slicing at all. Being a **count** renderer, its empty case is the
+honest number `"0"` — **not** a `(no bibliography entries)` marker, mirroring S27/S28/S29 exactly. The
+`(no …)` marker discipline belongs to the *list* renderer S19, whose empty case has no lines to show; a
+total count of zero *is* a number, so `"0"` is its truthful value.
+
+### 36.4 The exact rendering contract — `Document::bibliography_entry_count(&self) -> String`
+
+- Read `resolve_citations().entries.len()` and render it with `.to_string()` → the decimal count, one line,
+  no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can
+  never index out of bounds.
+- Only the **winning** entries are counted. A later re-definition `\bibitem{dup}` of an already-defined key
+  lives in `resolve_citations().duplicate_entries` (S16's domain), never in `entries`, so it is excluded by
+  construction — the count is exactly the number of lines S19 lists.
+- The empty case (no `\bibitem` at all) returns the honest number `"0"` — **not** a
+  `(no bibliography entries)` marker, because S30 is a count renderer (mirroring S27/S28/S29).
+
+Example (a `thebibliography` with `\bibitem{a}`, `\bibitem{b}`, `\bibitem{c}`, and then a re-used
+`\bibitem{a}` (a duplicate)):
+
+```text
+3
+```
+
+Three distinct keys are defined; the later duplicate `\bibitem{a}` is excluded. This is the count-total
+companion of S19's flat list — a second view of the one winning `entries` list; the count equals the number
+of lines S19 would enumerate.
+
+### 36.5 Public API (added in S30)
+
+One new method: `Document::bibliography_entry_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_citations` and every S1–S29 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 36.6 Verification (S30)
+
+`cargo test -p latex` green (5 new S30 tests: a multiple-entries case returning `"3"` (cross-checked against
+S19's `bibliography_entries`); a single-entry case returning `"1"`; a duplicate-bibitem case where the later
+`\bibitem{dup}` is a duplicate (S16's domain), not a second entry, so the count is the number of distinct
+keys `"2"` (cross-checked against S16's `duplicate_bibliography_entries` and against the number of lines S19
+lists); a no-entries case returning `"0"` (cross-checked against S19's `(no bibliography entries)` marker);
+and an additivity check that a handful of prior renderers — S19's `bibliography_entries`, S22's
+`label_definitions`, S27's `unresolved_reference_count`, S28's `resolved_reference_count`, and S29's
+`label_definition_count` — all still produce their exact prior strings, with S30 returning `"3"` (agreeing
+with the three lines S19 enumerates)). All prior S1–S29 tests pass unchanged. No `cargo fmt`, no grammar
+regen, no new dependencies.
+
+## 37. S31 — single-integer total of the resolved citations (`citation_count`)
+
+### 37.1 Motivation
+
+S15 (`citations_by_source`) enumerates the **resolved** citations — the `\cite` keys some `\bibitem` defines
+— grouped by their source `\cite`. But a reader often wants not the enumeration but the **total** — "how many
+citations resolve in this document?" — a single number answered at a glance, without scanning the individual
+keys. S27 (`unresolved_reference_count`) and S28 (`resolved_reference_count`) gave that single-total
+discipline to the two *reference* tables, S29 (`label_definition_count`) to the label-definition table, and
+S30 (`bibliography_entry_count`) to the bibliography table; S31 is the exact resolved-**citation-side twin**
+of S28, extending the *totals family* onto the resolved-citation table: it collapses the whole `resolved`
+list to its decimal `.len()`. Where S28 counts the resolved references, S31 counts the resolved citations —
+the citation-side analogue that pairs with S30 (bibliography entries) to summarise the two citation tables.
+
+### 37.2 Why a new method — additive by construction
+
+S31 adds a **new public method** `Document::citation_count(&self) -> String`. It is a pure, read-only render
+of `resolve_citations().resolved.len()` — a *second view* of the exact list S15 renders per-source. It
+reuses that list verbatim (never re-walking the body or re-resolving), so the report can never drift from the
+S2 resolution it summarises, and counting never adds, drops, or reorders citations relative to what
+`resolve_citations` produced. It mutates nothing and changes no S1–S30 output — including `to_latex()`'s
+round-trip fixed point — byte-for-byte. Like S11–S30 it is a method the caller invokes directly.
+
+### 37.3 The rendering rule
+
+The output is the decimal `.len()` of the `resolved` list, rendered as its `String`, **always** on a single
+line with **no** trailing newline. There is no ordering question (a single integer has no order) — only
+`.len()` is read, with **no** source slicing at all. Being a **count** renderer, its empty case is the honest
+number `"0"` — **not** a `(no resolved citations)` marker, mirroring S27/S28/S29/S30 exactly. The `(no …)`
+marker discipline belongs to the *list* renderer S15, whose empty case has no lines to show; a total count of
+zero *is* a number, so `"0"` is its truthful value.
+
+### 37.4 The exact rendering contract — `Document::citation_count(&self) -> String`
+
+- Read `resolve_citations().resolved.len()` and render it with `.to_string()` → the decimal count, one line,
+  no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can
+  never index out of bounds.
+- Only the **resolved** keys are counted. A dangling `\cite{ghost}` (no matching `\bibitem`) lives in
+  `resolve_citations().unresolved` (S17's domain), never in `resolved`, so it is excluded by construction. A
+  multi-key `\cite{a,b}` contributes one record per resolved key; `cite_span`/`entry_span` are never read.
+- The empty case (every cited key dangling, or no `\cite` at all) returns the honest number `"0"` — **not** a
+  `(no resolved citations)` marker, because S31 is a count renderer (mirroring S27/S28/S29/S30).
+
+Example (a body `\cite{a,b}` (both defined) then `\cite{c,ghost}` (only `c` defined), against a bibliography
+defining `a`, `b`, `c`):
+
+```text
+3
+```
+
+Three keys resolve (`a`, `b`, `c`); the one dangling `ghost` is excluded. This is the count-total companion
+of S15's per-source list — a second view of the one `resolved` list.
+
+### 37.5 Public API (added in S31)
+
+One new method: `Document::citation_count(&self) -> String`. No existing type, field, counter, or signature
+changes; `resolve_citations` and every S1–S30 method are unchanged; no AST or grammar change; no new
+dependency, no `unsafe`, no I/O.
+
+### 37.6 Verification (S31)
+
+`cargo test -p latex` green (6 new S31 tests: a multiple-resolved case returning `"3"`; a single-resolved
+case returning `"1"`; a dangling-key case where `\cite{a, ghost}` counts only the one resolved key `"1"` (the
+`ghost` excluded, S17's domain); a no-citations case returning `"0"` (cross-checked against S15's
+`(no resolved citations)` marker); an every-key-dangling case returning `"0"`; and an additivity check that
+the prior totals-family renderers — S27's `unresolved_reference_count`, S28's `resolved_reference_count`,
+S29's `label_definition_count`, and S30's `bibliography_entry_count` — all still produce their exact prior
+strings, with S31 returning `"3"` for `\cite{a,b}` plus `\cite{c,ghost}`). All prior S1–S30 tests pass
+unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 38. S32 — single-integer total of the unresolved (dangling) citations (`unresolved_citation_count`)
+
+### 38.1 Motivation
+
+S17 (`unresolved_citations_by_source`) enumerates the **unresolved** (dangling) citations — the `\cite` keys
+**no** `\bibitem` defines — grouped by their source `\cite`. But a reader often wants not the enumeration but
+the **total** — "how many citations dangle in this document?" — a single number answered at a glance, without
+scanning the individual keys. S27 (`unresolved_reference_count`) gave that single-total discipline to the
+*dangling* side of the reference family, and S31 (`citation_count`) gave it to the *resolved* side of the
+citation family; S32 is the exact unresolved-**citation-side twin** of S27, and the **dangling sibling** of
+S31, closing the totals family over the citation family: it collapses the whole `unresolved` list to its
+decimal `.len()`. Where S27 counts the dangling references, S32 counts the dangling citations. Together S31
+and S32 **partition** every per-key `\cite` record — the resolved count plus the dangling count equals the
+total number of cited keys, because S2's `resolve_citations` routes each key into exactly one of
+`resolved`/`unresolved`.
+
+### 38.2 Why a new method — additive by construction
+
+S32 adds a **new public method** `Document::unresolved_citation_count(&self) -> String`. It is a pure,
+read-only render of `resolve_citations().unresolved.len()` — a *second view* of the exact list S17 renders
+per-source. It reuses that list verbatim (never re-walking the body or re-resolving), so the report can never
+drift from the S2 resolution it summarises, and counting never adds, drops, or reorders citations relative to
+what `resolve_citations` produced. It mutates nothing and changes no S1–S31 output — including `to_latex()`'s
+round-trip fixed point — byte-for-byte. Like S11–S31 it is a method the caller invokes directly.
+
+### 38.3 The rendering rule
+
+The output is the decimal `.len()` of the `unresolved` list, rendered as its `String`, **always** on a single
+line with **no** trailing newline. There is no ordering question (a single integer has no order) — only
+`.len()` is read, with **no** source slicing at all. Being a **count** renderer, its empty case is the honest
+number `"0"` — **not** a `(no unresolved citations)` marker, mirroring S27/S28/S29/S30/S31 exactly. The
+`(no …)` marker discipline belongs to the *list* renderer S17, whose empty case has no lines to show; a total
+count of zero *is* a number, so `"0"` is its truthful value.
+
+### 38.4 The exact rendering contract — `Document::unresolved_citation_count(&self) -> String`
+
+- Read `resolve_citations().unresolved.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and
+  can never index out of bounds.
+- Only the **dangling** keys are counted. A resolved `\cite{a}` (a matching `\bibitem` defines it) lives in
+  `resolve_citations().resolved` (S15/S31's domain), never in `unresolved`, so it is excluded by
+  construction. A multi-key `\cite{a,b}` contributes one record per dangling key; the `cite_span` and the
+  dangling `key` are never read.
+- The empty case (every cited key resolving, or no `\cite` at all) returns the honest number `"0"` — **not** a
+  `(no unresolved citations)` marker, because S32 is a count renderer (mirroring S27/S28/S29/S30/S31).
+
+Example (a body `\cite{a,b}` (both defined) then `\cite{c,ghost}` (only `c` defined), against a bibliography
+defining `a`, `b`, `c`):
+
+```text
+1
+```
+
+One key dangles (`ghost`); the three resolved keys `a`, `b`, `c` are excluded (they are the `3` S31 reports).
+This is the count-total companion of S17's per-source list — a second view of the one `unresolved` list.
+
+### 38.5 Public API (added in S32)
+
+One new method: `Document::unresolved_citation_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_citations` and every S1–S31 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 38.6 Verification (S32)
+
+`cargo test -p latex` green (7 new S32 tests: a multiple-dangling case returning `"3"`; a single-dangling
+case returning `"1"`; a mixed-key case where `\cite{a, ghost}` counts only the one dangling key `"1"` (the
+resolved `a` excluded, S15/S31's domain); a no-citations case returning `"0"` (cross-checked against S17's
+`(no unresolved citations)` marker); an every-key-resolving case returning `"0"`; a partition check that S31
++ S32 sum to the total cited keys; and an additivity check that the prior totals-family renderers — S27's
+`unresolved_reference_count`, S28's `resolved_reference_count`, S29's `label_definition_count`, S30's
+`bibliography_entry_count`, and S31's `citation_count` — together with two representative earlier *list*
+renderers (S19's `bibliography_entries` and S22's `label_definitions`) all still produce their exact prior
+strings, with S32 returning `"1"` for `\cite{a,b}` plus `\cite{c,ghost}`). All prior S1–S31 tests pass
+unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 39. S33 — single-integer total of the duplicate ("multiply defined") `\bibitem`s (`duplicate_bibliography_count`)
+
+### 39.1 Motivation
+
+S16 (`duplicate_bibliography_entries`) enumerates the **duplicate** (later, losing) `\bibitem`s — the
+`\bibitem`s of already-defined keys, which LaTeX flags with *"Citation `key' multiply defined"* — rendering
+one `\bibitem{key}` warning line each. But a reader often wants not the enumeration but the **total** — "how
+many `\bibitem`s are multiply defined in this document?" — a single number answered at a glance, without
+scanning the individual warning lines. S30 (`bibliography_entry_count`) gave that single-total discipline to
+the *winning* bibliography entries, S31 (`citation_count`) to the *resolved* citations, and S32
+(`unresolved_citation_count`) to the *dangling* citations; S33 is the **warning-side companion** of those
+totals, closing the totals family over the last citation-family table it had not summarized: it collapses the
+whole `duplicate_entries` list to its decimal `.len()`. Where S30 counts the winning `\bibitem`s, S33 counts
+the losing ones. Together S30 and S33 **partition** every `\bibitem` inside a `thebibliography` — the winner
+count plus the duplicate count equals the total number of `\bibitem`s, because S2's `resolve_citations`
+routes each `\bibitem` into exactly one of `entries`/`duplicate_entries`.
+
+### 39.2 Why a new method — additive by construction
+
+S33 adds a **new public method** `Document::duplicate_bibliography_count(&self) -> String`. It is a pure,
+read-only render of `resolve_citations().duplicate_entries.len()` — a *second view* of the exact list S16
+renders per-source. It reuses that list verbatim (never re-walking the body or re-collecting the
+bibliography), so the report can never drift from the S2 resolution it summarises, and counting never adds,
+drops, or reorders duplicates relative to what `resolve_citations` produced. It mutates nothing and changes
+no S1–S32 output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S32 it is a
+method the caller invokes directly.
+
+### 39.3 The rendering rule
+
+The output is the decimal `.len()` of the `duplicate_entries` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order) —
+only `.len()` is read, with **no** source slicing at all. We do **not** de-duplicate: a key defined *three*
+times contributes *two* losing duplicates, exactly the two warning lines S16 emits. Being a **count**
+renderer, its empty case is the honest number `"0"` — **not** a `(no duplicate bibliography entries)` marker,
+mirroring S27/S28/S29/S30/S31/S32 exactly. The `(no …)` marker discipline belongs to the *list* renderer
+S16, whose empty case has no lines to show; a total count of zero *is* a number, so `"0"` is its truthful
+value.
+
+### 39.4 The exact rendering contract — `Document::duplicate_bibliography_count(&self) -> String`
+
+- Read `resolve_citations().duplicate_entries.len()` and render it with `.to_string()` → the decimal count,
+  one line, no trailing newline. There is **no** source slicing at all, so the render needs no source borrow
+  and can never index out of bounds.
+- Only the **losing** duplicates are counted. The winning first `\bibitem` of a key lives in
+  `resolve_citations().entries` (S19/S30's domain), never in `duplicate_entries`, so it is excluded by
+  construction. Every later `\bibitem` of an already-defined key contributes one record; the `key` and the
+  `span` are never read.
+- The empty case (no bibliography, or every key defined exactly once) returns the honest number `"0"` —
+  **not** a `(no duplicate bibliography entries)` marker, because S33 is a count renderer (mirroring
+  S27/S28/S29/S30/S31/S32).
+
+Example (a `thebibliography` defining `smith` twice and `jones` once):
+
+```text
+1
+```
+
+Only the *second* `\bibitem{smith}` loses (`1`); the winning first `\bibitem{smith}` and the lone
+`\bibitem{jones}` are in `entries` (the `2` S30 reports). This is the count-total companion of S16's
+per-source warning list — a second view of the one `duplicate_entries` list.
+
+### 39.5 Public API (added in S33)
+
+One new method: `Document::duplicate_bibliography_count(&self) -> String`. No existing type, field, counter,
+or signature changes; `resolve_citations` and every S1–S32 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 39.6 Verification (S33)
+
+`cargo test -p latex` green (6 new S33 tests: a multiple-duplicate case (`a` thrice + `b` twice) returning
+`"3"`; a no-duplicates all-distinct case returning `"0"` (cross-checked against S16's `(no duplicate
+bibliography entries)` marker); a no-`\bibitem` case returning `"0"`; a single-duplicate case returning `"1"`
+(cross-checked against the number of S16 warning lines and the literal `\bibitem{smith}` line); a partition
+check that S30 winners + S33 losers sum to the total `\bibitem`s (also cross-checked against S16's line
+count); and an additivity check that S16's `duplicate_bibliography_entries`, S19's `bibliography_entries`,
+S22's `label_definitions`, and the totals-family renderers S27's `unresolved_reference_count`, S28's
+`resolved_reference_count`, S29's `label_definition_count`, S30's `bibliography_entry_count`, S31's
+`citation_count`, and S32's `unresolved_citation_count` all still produce their exact prior strings, with S33
+returning `"1"` for a bibliography defining `a`, `b`, `c` once each and `a` a second time). All prior S1–S32
+tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 40. S34 — single-integer total of the duplicate ("multiply defined") `\label`s (`duplicate_label_count`)
+
+### 40.1 Motivation
+
+S20 (`duplicate_label_definitions`) enumerates the **duplicate** (later, losing) `\label`s — the `\label`s of
+already-defined keys, which LaTeX flags with *"Label `key' multiply defined"* — rendering one `\label{key}`
+warning line each. But a reader often wants not the enumeration but the **total** — "how many labels are
+multiply defined in this document?" — a single number answered at a glance, without scanning the individual
+warning lines. S29 (`label_definition_count`) gave that single-total discipline to the *winning* label
+definitions; S34 is the **warning-side companion** of that total, and the **label-side twin** of S33's
+`duplicate_bibliography_count` — where S33 counts the losing `\bibitem`s, S34 counts the losing `\label`s,
+collapsing the whole `duplicates` list to its decimal `.len()`. Together S29 and S34 **partition** every
+`\label` in the document — the winner count plus the duplicate count equals the total number of `\label`s,
+because S1's `resolve_references` routes each `\label` into exactly one of `definitions`/`duplicates`.
+
+### 40.2 Why a new method — additive by construction
+
+S34 adds a **new public method** `Document::duplicate_label_count(&self) -> String`. It is a pure, read-only
+render of `resolve_references().duplicates.len()` — a *second view* of the exact list S20 renders per-source.
+It reuses that list verbatim (never re-walking the body or re-collecting labels), so the report can never
+drift from the S1 resolution it summarises, and counting never adds, drops, or reorders duplicates relative to
+what `resolve_references` produced. It mutates nothing and changes no S1–S33 output — including `to_latex()`'s
+round-trip fixed point — byte-for-byte. Like S11–S33 it is a method the caller invokes directly.
+
+### 40.3 The rendering rule
+
+The output is the decimal `.len()` of the `duplicates` list, rendered as its `String`, **always** on a single
+line with **no** trailing newline. There is no ordering question (a single integer has no order) — only
+`.len()` is read, with **no** source slicing at all, and never a `key`/`kind`/`span`. We do **not**
+de-duplicate: a key defined *three* times contributes *two* losing duplicates, exactly the two warning lines
+S20 emits. Being a **count** renderer, its empty case is the honest number `"0"` — **not** a `(no duplicate
+label definitions)` marker, mirroring S27/S28/S29/S30/S31/S32/S33 exactly. The `(no …)` marker discipline
+belongs to the *list* renderer S20, whose empty case has no lines to show; a total count of zero *is* a
+number, so `"0"` is its truthful value.
+
+### 40.4 The exact rendering contract — `Document::duplicate_label_count(&self) -> String`
+
+- Read `resolve_references().duplicates.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and
+  can never index out of bounds.
+- Only the **losing** duplicates are counted. The winning first `\label` of a key lives in
+  `resolve_references().definitions` (S22/S29's domain), never in `duplicates`, so it is excluded by
+  construction. Every later `\label` of an already-defined key contributes one record — section, figure,
+  equation, or inline, regardless of `LabelKind` — and the `key`/`kind`/`span` are never read.
+- The empty case (no labels, or every key defined exactly once) returns the honest number `"0"` — **not** a
+  `(no duplicate label definitions)` marker, because S34 is a count renderer (mirroring
+  S27/S28/S29/S30/S31/S32/S33).
+
+Example (a body defining `\label{x}` twice and `\label{y}` once):
+
+```text
+1
+```
+
+Only the *second* `\label{x}` loses (`1`); the winning first `\label{x}` and the lone `\label{y}` are in
+`definitions` (the `2` S29 reports). This is the count-total companion of S20's per-source warning list — a
+second view of the one `duplicates` list — and the label-side twin of S33.
+
+### 40.5 Public API (added in S34)
+
+One new method: `Document::duplicate_label_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_references` and every S1–S33 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 40.6 Verification (S34)
+
+`cargo test -p latex` green (6 new S34 tests: a multiple-duplicate case (`a` thrice + `b` twice) returning
+`"3"`; a no-duplicates all-distinct case returning `"0"` (cross-checked against S20's `(no duplicate label
+definitions)` marker); a no-`\label` case returning `"0"`; a single-duplicate case returning `"1"`
+(cross-checked against the number of S20 warning lines and the literal `\label{dup}` line); a partition check
+that S29 winners + S34 losers sum to the total `\label`s (also cross-checked against S20's line count); and an
+additivity check that S20's `duplicate_label_definitions`, S22's `label_definitions`, S19's
+`bibliography_entries`, and the totals-family renderers S27's `unresolved_reference_count`, S28's
+`resolved_reference_count`, S29's `label_definition_count`, S30's `bibliography_entry_count`, S31's
+`citation_count`, S32's `unresolved_citation_count`, and S33's `duplicate_bibliography_count` all still
+produce their exact prior strings, with S34 returning `"1"` for a body defining `dup` twice). All prior
+S1–S33 tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 41. S35 — single-integer total of the numbered labels (`numbered_label_count`)
+
+### 41.1 Motivation
+
+S29 (`label_definition_count`) counts every **winning** label definition — the `.len()` of
+`resolve_references().definitions`, one per distinct `\label` key. But not every defined label receives a
+**printed cross-reference number**. S4 (`number_labels`) walks the document assigning counters, and it numbers
+only the labels attached to a **numbered section**, a **figure**, a **table**, or (since S8) a **labelled
+non-starred display equation**. A `\label` sitting in running text — a `LabelKind::Inline` label — and a
+`\label` on a starred `\section*` receive **no** counter and are **omitted** from the numbering table
+entirely. So a reader often wants the *other* total: not "how many labels are defined?" (S29) but "how many
+labels actually get a number a `\ref` can print?" — the size of the S4 numbering table, answered at a glance.
+
+S35 is the **numbering-side companion** of S29's definition total. Where S29 counts the winning `definitions`,
+S35 counts the subset of those that S4 numbers — collapsing the whole `number_labels().labels` table to its
+decimal `.len()`. The two totals are ordered by construction: **`numbered_label_count` ≤ `label_definition_count`**,
+because every numbered label is a winning definition (the numbering pass records only first-wins keys, exactly
+as S1 does) but not every winning definition is numbered (the inline / starred-section labels are the gap). The
+difference `label_definition_count − numbered_label_count` is precisely the count of defined-but-unnumbered
+labels — the inline labels S4 leaves out.
+
+### 41.2 Why a new method — additive by construction
+
+S35 adds a **new public method** `Document::numbered_label_count(&self) -> String`. It is a pure, read-only
+render of `number_labels().labels.len()` — a *second view* of the exact table S4's `number_labels` builds. It
+reuses that table verbatim (never re-walking the body itself — it calls `number_labels`, which does the one
+walk), so the report can never drift from the S4 numbering it summarises, and counting never adds, drops, or
+reorders rows relative to what `number_labels` produced. It mutates nothing and changes no S1–S34 output —
+including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S34 it is a method the caller invokes
+directly.
+
+### 41.3 The rendering rule
+
+The output is the decimal `.len()` of the `number_labels().labels` table, rendered as its `String`, **always**
+on a single line with **no** trailing newline. There is no ordering question (a single integer has no order) —
+only `.len()` is read, with **no** source slicing at all, and never a `key`/`kind`/`number`. Because the
+numbering pass already records each key at most once (first-definition-wins), a key defined *twice* contributes
+**one** numbered row, not two — S35 counts distinct numbered keys, exactly as S29 counts distinct defined keys.
+Being a **count** renderer, its empty case (no numberable labels — e.g. a document whose only `\label`s are
+inline, or no `\label`s at all) is the honest number `"0"` — **not** a `(no numbered labels)` marker, mirroring
+S27/S28/S29/S30/S31/S32/S33/S34 exactly.
+
+### 41.4 The exact rendering contract — `Document::numbered_label_count(&self) -> String`
+
+- Read `number_labels().labels.len()` and render it with `.to_string()` → the decimal count, one line, no
+  trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can never
+  index out of bounds.
+- Only the **numbered** labels are counted — sections (numbered, non-starred), figures, tables, and labelled
+  non-starred display equations. An **inline** `\label` (in running text) and a `\label` on a starred
+  `\section*` receive no counter and are absent from `number_labels().labels`, so they are excluded by
+  construction; their keys are still counted by S29 (they are winning definitions), which is exactly why
+  `numbered_label_count ≤ label_definition_count`.
+- A key defined more than once contributes a single numbered row (first-definition-wins, matching S1/S29), so
+  S35 never double-counts a duplicated key. The `key`/`kind`/`number` are never read.
+- The empty case (no numberable labels) returns the honest number `"0"` — **not** a `(no numbered labels)`
+  marker, because S35 is a count renderer (mirroring S27–S34).
+
+Example (a body with `\section{Intro}\label{sec:i}` and an inline `\label{note}` in a paragraph):
+
+```text
+1
+```
+
+Only `sec:i` is numbered (`1`); the inline `note` is a winning definition (part of the `2` S29 reports) but
+carries no counter, so it is absent from the numbering table. The gap `2 − 1 = 1` is exactly the inline label.
+
+### 41.5 Public API (added in S35)
+
+One new method: `Document::numbered_label_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `number_labels` and every S1–S34 method are unchanged; no AST or grammar change; no new
+dependency, no `unsafe`, no I/O.
+
+### 41.6 Verification (S35)
+
+`cargo test -p latex` green (6 new S35 tests: a mixed document (numbered section + figure + table + inline
+label) returning the count of the numbered subset and cross-checked to be strictly below S29's definition
+total by the inline count; an all-numbered document where `numbered_label_count == label_definition_count`; an
+inline-only document returning `"0"` (with S29 non-zero, proving the ≤ gap); a no-`\label` document returning
+`"0"`; a duplicated-key document proving first-wins gives one numbered row (not two); and an additivity check
+that S4's numbering table, S22's `label_definitions`, and the totals-family renderers S27–S34 all still produce
+their exact prior strings, with S35 reporting the numbered subset). All prior S1–S34 tests pass unchanged. No
+`cargo fmt`, no grammar regen, no new dependencies.

@@ -32,9 +32,12 @@ use math_frontend::{BigOp, BinOp, Func, MathExpr, Number, RelOp as MathRelOp, Un
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
-    OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExitDef, ExprAst,
+    FormulaDef, NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, SmAction, SmGuard, StateDef,
+    Statement, SymbolicDef, Term, TransitionDef, TrustTierName,
 };
+use bignum_core::BigDecimal;
+use std::str::FromStr;
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -102,6 +105,10 @@ pub enum AdapterError {
     /// LaTeX parsed successfully, but used math outside the ADJ arithmetic /
     /// constraint subset this surface can lower faithfully.
     UnsupportedLatexMath { source: String, detail: String },
+    /// A native arithmetic expression exceeded the construction-depth budget.
+    /// The adapter enforces this while folding operator spines so rejecting an
+    /// adversarial input never leaves a recursively dropped, unbounded AST.
+    ExpressionTooDeep { limit: usize },
 }
 
 /// Adapt the root `program` node.
@@ -155,6 +162,10 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "dictionary_decl" => adapt_dictionary(child),
         "define_decl" => adapt_define(child).map(Statement::Define),
         "rulebook_decl" => adapt_rulebook(child),
+        "formulabook_decl" => adapt_formulabook(child),
+        "table_decl" => adapt_table(child),
+        "statemachine_decl" => adapt_statemachine(child),
+        "argument_decl" => adapt_argument(child),
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
@@ -232,12 +243,15 @@ fn adapt_evidence(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
 }
 
 fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
-    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr
+    // predicate = ( apply | IDENT ) ( GE | LE | GT | LT | EQEQ ) expr
     //
-    // The slot IDENT and the operator are both lexed as TokenType::Name
-    // (the operator carries a custom type_name like "GE"), so we
-    // distinguish by *value*: the operator's value is one of the five
-    // comparison symbols; everything else Name-typed is the slot.
+    // The LHS is either a bare slot IDENT or (RS-1) a FORMULA APPLICATION.
+    //   - A bare slot appears as a direct `Name` token that is NOT one of the five
+    //     comparison operators (operators are also lexed as Name, distinguished by
+    //     value).
+    //   - A formula application appears as an `apply` CHILD NODE (its own IDENT is
+    //     nested inside, so it is never mistaken for the bare slot).
+    // The RHS is the (single) direct `expr` child node.
     let mut slot: Option<String> = None;
     let mut op: Option<CmpOp> = None;
     for c in &node.children {
@@ -255,10 +269,17 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
             }
         }
     }
-    let slot = slot.ok_or(AdapterError::MissingChild {
-        rule: "predicate".into(),
-        position: "slot identifier",
-    })?;
+    // The LHS: a formula application if an `apply` node is present, else the bare
+    // slot reference. (An application has no bare slot Name at this level, so the
+    // two are mutually exclusive.)
+    let lhs = if let Some(app) = first_named_child(node, "apply") {
+        adapt_apply(app)?
+    } else {
+        ExprAst::Ref(slot.ok_or(AdapterError::MissingChild {
+            rule: "predicate".into(),
+            position: "slot identifier or formula application",
+        })?)
+    };
     let op = op.ok_or(AdapterError::MissingChild {
         rule: "predicate".into(),
         position: "comparison operator",
@@ -272,7 +293,7 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
             .iter()
             .find_map(|c| match c {
                 ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
-                    Some(parse_finite(&t.value, t.type_, "predicate").map(ExprAst::Lit))
+                    Some(parse_expr_numlit(&t.value, t.type_, "predicate").map(ExprAst::ExactLit))
                 }
                 _ => None,
             })
@@ -282,7 +303,7 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
                 position: "right-hand expression",
             })?
     };
-    Ok(Evidence::Predicate { slot, op, rhs })
+    Ok(Evidence::Predicate { lhs, op, rhs })
 }
 
 fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -331,9 +352,10 @@ fn adapt_uncertain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_observe(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // observe_decl = "observe" term
+    // observe_decl = "observe" term { annotation }
     let term = expect_term_child(node, "observe_decl")?;
-    Ok(Statement::Observe { term })
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Observe { term, annotations })
 }
 
 fn adapt_relate(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -419,7 +441,7 @@ fn adapt_context_order(node: &GrammarASTNode) -> Result<Statement, AdapterError>
             _ => None,
         })
         .collect();
-    if idents.is_empty() || idents.len() % 2 != 0 {
+    if idents.is_empty() || !idents.len().is_multiple_of(2) {
         return Err(AdapterError::MissingChild {
             rule: "context_order_decl".into(),
             position: "higher > lower context pairs",
@@ -450,9 +472,88 @@ fn adapt_functional(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // query_decl = QUESTION term
+    // query_decl = QUESTION ( lookup_expr | term )
+    //
+    // A `lookup_expr` child is the RANGE / BRACKET lookup form (ADJ-TABLES RS-5c);
+    // otherwise the query is the ordinary exact term goal (`? relation(k, $V)`).
+    if let Some(lookup) = first_named_child(node, "lookup_expr") {
+        return adapt_lookup(lookup);
+    }
     let conclusion = expect_term_child(node, "query_decl")?;
     Ok(Statement::Query { conclusion })
+}
+
+fn adapt_lookup(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // lookup_expr   = "lookup" IDENT IDENT EQUALS signed_number "mode" IDENT "give" IDENT
+    // signed_number = [ MINUS ] NUMBER
+    //
+    // The `lookup`/`mode`/`give` literals are IDENT-matched keywords, so they
+    // surface as Name tokens interleaved with the table/column/mode identifiers.
+    // The EQUALS token and the `signed_number` node sit BETWEEN key_col and the
+    // `mode` literal, so the seven direct Name tokens are exactly, in order:
+    //   [ "lookup", <table>, <key_col>, "mode", <mode>, "give", <value_col> ]
+    // We bind by POSITION (not by value) so a column legitimately named "mode" or
+    // "give" is never mistaken for a keyword.
+    let names: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    if names.len() != 7 {
+        return Err(AdapterError::MissingChild {
+            rule: "lookup_expr".into(),
+            position: "lookup <table> <key_col> = <n> mode <mode> give <value_col>",
+        });
+    }
+    let table = names[1].to_string();
+    let key_col = names[2].to_string();
+    let mode = names[4].to_string();
+    let value_col = names[6].to_string();
+    let key_value = adapt_signed_number(
+        first_named_child(node, "signed_number").ok_or(AdapterError::MissingChild {
+            rule: "lookup_expr".into(),
+            position: "signed_number (the query value)",
+        })?,
+    )?;
+    Ok(Statement::RangeLookup {
+        table,
+        key_col,
+        key_value,
+        mode,
+        value_col,
+    })
+}
+
+fn adapt_signed_number(node: &GrammarASTNode) -> Result<NumLit, AdapterError> {
+    // signed_number = [ MINUS ] NUMBER — an optional leading MINUS then a NUMBER.
+    // A leading MINUS folds into the parsed literal by prefixing the raw text, so
+    // the exact value is negated with no digit loss (parse handles "-").
+    let mut negative = false;
+    let mut raw: Option<&str> = None;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.type_ {
+                TokenType::Minus => negative = true,
+                TokenType::Number => raw = Some(t.value.as_str()),
+                _ => {}
+            }
+        }
+    }
+    let raw = raw.ok_or(AdapterError::MissingChild {
+        rule: "signed_number".into(),
+        position: "NUMBER",
+    })?;
+    let owned;
+    let text = if negative {
+        owned = format!("-{raw}");
+        owned.as_str()
+    } else {
+        raw
+    };
+    parse_numlit(text, TokenType::Number, "signed_number")
 }
 
 fn adapt_let(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -528,6 +629,40 @@ fn adapt_constrain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     })?;
     let op = rel_op_from_node(relop_node)?;
     Ok(Statement::Constrain { lhs, op, rhs })
+}
+
+/// `formula_relation = expr [ relop expr ]` (FL-8) — a formula's final body.
+/// One `expr` child ⇒ plain arithmetic, returned as-is. Two `expr` children
+/// (with a `relop` between them) ⇒ `ExprAst::Compare`. Mirrors
+/// [`adapt_constrain`]'s child-collection shape exactly, since both rules
+/// have the identical `expr relop expr` structure — only the destination
+/// (a statement there, an expression here) differs.
+fn adapt_formula_relation(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "formula_relation".into(),
+        position: "left-hand expr",
+    })?)?;
+    match exprs.get(1) {
+        None => Ok(lhs),
+        Some(rhs_node) => {
+            let rhs = adapt_expr(rhs_node)?;
+            let relop_node =
+                first_named_child(node, "relop").ok_or(AdapterError::MissingChild {
+                    rule: "formula_relation".into(),
+                    position: "relop",
+                })?;
+            let op = rel_op_from_node(relop_node)?;
+            Ok(ExprAst::Compare(op, Box::new(lhs), Box::new(rhs)))
+        }
+    }
 }
 
 fn adapt_constrain_latex(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -786,6 +921,798 @@ fn adapt_rulebook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     Ok(Statement::Rulebook { name, statements })
 }
 
+fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE
+    // The name is the first Name token that isn't the `formulabook` keyword; each
+    // `formulabook_item` wraps a `use_decl` (a vocabulary binding), a `formula_decl`
+    // (a definition), or (FL-10) a `symbolic_decl` (a solved equation).
+    let name = first_name_not(node, "formulabook")
+        .ok_or(AdapterError::MissingChild {
+            rule: "formulabook_decl".into(),
+            position: "formulabook name",
+        })?
+        .to_string();
+    let mut uses = Vec::new();
+    let mut formulas = Vec::new();
+    let mut symbolics = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "formulabook_item" {
+                let inner = first_child_node(
+                    item,
+                    "formulabook_item",
+                    "use_decl, formula_decl, or symbolic_decl",
+                )?;
+                match inner.rule_name.as_str() {
+                    "use_decl" => {
+                        if let Statement::Use(u) = adapt_use(inner)? {
+                            uses.push(u);
+                        }
+                    }
+                    "formula_decl" => formulas.push(adapt_formula(inner)?),
+                    "symbolic_decl" => symbolics.push(adapt_symbolic(inner)?),
+                    other => {
+                        return Err(AdapterError::UnexpectedRule {
+                            expected: "use_decl, formula_decl, or symbolic_decl",
+                            actual: other.to_string(),
+                        })
+                    }
+                }
+            }
+        }
+    }
+    Ok(Statement::Formulabook {
+        name,
+        symbolics,
+        uses,
+        formulas,
+    })
+}
+
+fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
+    // formula_decl = "formula" IDENT LPAREN [ formula_params ] RPAREN
+    //                formula_body [ formula_requires ] { annotation }
+    //
+    // The name is the first Name token that isn't the `formula` keyword (the
+    // parameter Name tokens live INSIDE the nested `formula_params` node, so they
+    // are not direct children and cannot be mistaken for the name).
+    let name = first_name_not(node, "formula")
+        .ok_or(AdapterError::MissingChild {
+            rule: "formula_decl".into(),
+            position: "formula name",
+        })?
+        .to_string();
+    // formula_params = IDENT { COMMA IDENT } — the parameter names are the Name
+    // tokens of the `formula_params` child (COMMA is a punctuation token). Absent
+    // (a zero-parameter formula) yields an empty vector.
+    let params = first_named_child(node, "formula_params")
+        .map(|p| {
+            p.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    // formula_body = EQUALS formula_relation | LBRACE { formula_step } formula_relation RBRACE
+    // Both forms wrap the body in a `formula_body` node. The single-expression
+    // sugar leaves `steps` empty and `body` = the sole formula_relation; the
+    // block form collects each `let`-step (in source order) and takes the
+    // FINAL formula_relation (the direct `formula_relation` child of
+    // `formula_body` — a step's own expr is nested one level deeper, inside
+    // its `formula_step` node, so it is not mistaken for the body). RS-2.
+    let body_node = first_named_child(node, "formula_body").ok_or(AdapterError::MissingChild {
+        rule: "formula_decl".into(),
+        position: "formula_body",
+    })?;
+    let mut steps = Vec::new();
+    for child in &body_node.children {
+        if let ASTNodeOrToken::Node(step_node) = child {
+            if step_node.rule_name == "formula_step" {
+                // formula_step = "let" IDENT EQUALS expr
+                let step_name = first_name_not(step_node, "let")
+                    .ok_or(AdapterError::MissingChild {
+                        rule: "formula_step".into(),
+                        position: "step name",
+                    })?
+                    .to_string();
+                let step_expr_node =
+                    first_named_child(step_node, "expr").ok_or(AdapterError::MissingChild {
+                        rule: "formula_step".into(),
+                        position: "step expr",
+                    })?;
+                steps.push(crate::ast::FormulaStep {
+                    name: step_name,
+                    expr: adapt_expr(step_expr_node)?,
+                });
+            }
+        }
+    }
+    // The FINAL body node — `formula_relation = expr [ relop expr ]` (FL-8).
+    // ONE `expr` child ⇒ the existing plain-arithmetic body, unchanged. TWO
+    // `expr` children (with a `relop` between them) ⇒ a comparison formula;
+    // built the exact same way `adapt_constrain` builds `Statement::Constrain`
+    // (collect the `expr` children in source order, resolve the `relop`
+    // child), just yielding an `ExprAst::Compare` instead of a statement.
+    let relation_node =
+        first_named_child(body_node, "formula_relation").ok_or(AdapterError::MissingChild {
+            rule: "formula_decl".into(),
+            position: "formula_relation",
+        })?;
+    let body = adapt_formula_relation(relation_node)?;
+    // Preserve precondition and argument order exactly. Predicate semantics and
+    // arity are deliberately a lowering concern.
+    let mut preconditions = Vec::new();
+    if let Some(requires) = first_named_child(node, "formula_requires") {
+        for child in &requires.children {
+            let ASTNodeOrToken::Node(precondition) = child else {
+                continue;
+            };
+            if precondition.rule_name != "formula_precondition" {
+                continue;
+            }
+            let predicate = precondition
+                .children
+                .iter()
+                .find_map(|child| match child {
+                    ASTNodeOrToken::Token(token) if token.type_ == TokenType::Name => {
+                        Some(token.value.clone())
+                    }
+                    _ => None,
+                })
+                .ok_or(AdapterError::MissingChild {
+                    rule: "formula_precondition".into(),
+                    position: "predicate name",
+                })?;
+            let arguments = precondition
+                .children
+                .iter()
+                .filter_map(|child| match child {
+                    ASTNodeOrToken::Node(expr) if expr.rule_name == "expr" => Some(expr),
+                    _ => None,
+                })
+                .map(adapt_expr)
+                .collect::<Result<Vec<_>, _>>()?;
+            preconditions.push(crate::ast::FormulaPrecondition {
+                predicate,
+                arguments,
+            });
+        }
+    }
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(FormulaDef {
+        name,
+        params,
+        steps,
+        body,
+        preconditions,
+        annotations,
+    })
+}
+
+/// `symbolic_decl = "symbolic" IDENT LPAREN [ formula_params ] RPAREN
+///                   LBRACE expr EQEQ expr RBRACE
+///                   "for" IDENT
+///                   { annotation }` (ADJ-FORMULA-LIBRARIES FL-10).
+///
+/// `for` is a lexer keyword (see `adj_lang.tokens`), so — unlike `symbolic`,
+/// which is an IDENT-matched literal — it never surfaces as a `Name` token.
+/// [`direct_name_tokens`] therefore yields exactly `["symbolic", <name>,
+/// <solve_for>]` in source order (parameter names live inside the nested
+/// `formula_params` node, exactly as in [`adapt_formula`], so they never
+/// pollute this list). The name is the first entry that isn't `symbolic`;
+/// the solve-for target is the last entry overall, since it is the only Name
+/// token that follows the `{ expr == expr }` block.
+fn adapt_symbolic(node: &GrammarASTNode) -> Result<SymbolicDef, AdapterError> {
+    let name = first_name_not(node, "symbolic")
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbolic_decl".into(),
+            position: "symbolic name",
+        })?
+        .to_string();
+    let solve_for = direct_name_tokens(node)
+        .last()
+        .cloned()
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbolic_decl".into(),
+            position: "solve-for target",
+        })?;
+    // formula_params = IDENT { COMMA IDENT } — identical extraction to
+    // adapt_formula's own params handling; absent (zero-parameter) yields [].
+    let params = first_named_child(node, "formula_params")
+        .map(|p| {
+            p.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    // The `{ expr == expr }` block has the same `expr relop expr` child shape
+    // as `constrain_decl`/`formula_relation` (relop is always EQEQ here, so
+    // it isn't re-extracted) — collect the two direct `expr` children in
+    // source order, mirroring `adapt_constrain` exactly.
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "symbolic_decl".into(),
+        position: "left-hand expr",
+    })?)?;
+    let rhs = adapt_expr(exprs.get(1).ok_or(AdapterError::MissingChild {
+        rule: "symbolic_decl".into(),
+        position: "right-hand expr",
+    })?)?;
+    let annotations = collect_annotations(node)?;
+    Ok(SymbolicDef {
+        name,
+        params,
+        lhs,
+        rhs,
+        solve_for,
+        annotations,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Argument graph (ADJ-ARGUMENT-IR ADR-2). Modelled on `table`/`statemachine`:
+// `argument`/`premise`/`infer`/`conclude`/`from` are IDENT-matched literals that
+// surface as `Name` tokens; premises, inferences, and `from` references are nested
+// nodes (`arg_premise`/`arg_infer`/`arg_ref`). The adapter faithfully carries the
+// STRUCTURE; the well-formedness checks (known premise kind, resolvable `from`
+// references, unique names) are the lowerer's job (§2.3).
+// ---------------------------------------------------------------------------
+
+/// The direct `Name`-token values of a node, in source order. The IDENT-matched
+/// keyword literals surface here alongside the user's identifiers, so a caller reads
+/// them off by position against the fixed grammar shape.
+fn direct_name_tokens(node: &GrammarASTNode) -> Vec<String> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .collect()
+}
+
+fn adapt_argument(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // argument_decl = "argument" IDENT LBRACE { arg_premise } { arg_infer } RBRACE
+    // The name is the only direct Name token that isn't the `argument` keyword (every
+    // premise/inference identifier lives inside a nested node).
+    let name = first_name_not(node, "argument")
+        .ok_or(AdapterError::MissingChild {
+            rule: "argument_decl".into(),
+            position: "argument name",
+        })?
+        .to_string();
+    let mut premises = Vec::new();
+    let mut inferences = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            match item.rule_name.as_str() {
+                "arg_premise" => premises.push(adapt_arg_premise(item)?),
+                "arg_infer" => inferences.push(adapt_arg_inference(item)?),
+                _ => {}
+            }
+        }
+    }
+    Ok(Statement::Argument {
+        name,
+        premises,
+        inferences,
+    })
+}
+
+fn adapt_arg_premise(node: &GrammarASTNode) -> Result<crate::ast::ArgPremise, AdapterError> {
+    // arg_premise = "premise" IDENT COLON IDENT term { annotation }
+    // Direct Name tokens are exactly [premise, <name>, <kind>] (the claim's functor is
+    // nested in the `term` node, so it is never a direct token here).
+    let names = direct_name_tokens(node);
+    let name = names.get(1).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_premise".into(),
+        position: "premise name",
+    })?;
+    let kind = names.get(2).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_premise".into(),
+        position: "premise kind",
+    })?;
+    let claim = expect_term_child(node, "arg_premise")?;
+    let annotations = collect_annotations(node)?;
+    Ok(crate::ast::ArgPremise {
+        name,
+        kind,
+        claim,
+        annotations,
+    })
+}
+
+fn adapt_arg_inference(node: &GrammarASTNode) -> Result<crate::ast::ArgInference, AdapterError> {
+    // arg_infer = "infer" IDENT COLON IDENT "conclude" term "from" arg_ref {COMMA arg_ref} {ann}
+    // Direct Name tokens are [infer, <name>, <connective>, conclude, from] — the `from`
+    // references are `arg_ref` NODES (not direct tokens), so name/connective sit at the
+    // fixed positions 1 and 2 regardless of what the author named them.
+    let names = direct_name_tokens(node);
+    let name = names.get(1).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_infer".into(),
+        position: "inference name",
+    })?;
+    let connective = names.get(2).cloned().ok_or(AdapterError::MissingChild {
+        rule: "arg_infer".into(),
+        position: "inference connective",
+    })?;
+    // `conclude <term>` is the only `term` child; the references are `arg_ref` nodes.
+    let conclusion = expect_term_child(node, "arg_infer")?;
+    let mut from = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(r) = c {
+            if r.rule_name == "arg_ref" {
+                let refname = direct_name_tokens(r).into_iter().next().ok_or({
+                    AdapterError::MissingChild {
+                        rule: "arg_ref".into(),
+                        position: "reference name",
+                    }
+                })?;
+                from.push(refname);
+            }
+        }
+    }
+    // AR-3 UNDERCUT — the optional `unless <defeater> { , <defeater> }` wraps its
+    // defeater terms in an `arg_unless` node, so they are cleanly separable from the
+    // single `conclude` term (which `expect_term_child` already picked above).
+    let mut unless = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(u) = c {
+            if u.rule_name == "arg_unless" {
+                for gc in &u.children {
+                    if let ASTNodeOrToken::Node(t) = gc {
+                        if t.rule_name == "term" {
+                            unless.push(adapt_term(t)?);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // AR-3 REBUT — the optional trailing `context: <name>`, the first Name token after
+    // the `context` keyword literal (same extraction as `rule_decl`'s `context:`).
+    let context = ident_after_keyword(node, "context");
+    let annotations = collect_annotations(node)?;
+    Ok(crate::ast::ArgInference {
+        name,
+        connective,
+        conclusion,
+        from,
+        unless,
+        context,
+        annotations,
+    })
+}
+
+fn adapt_table(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // table_decl = "table" IDENT LBRACE { use_decl } columns_decl { table_row } { annotation } RBRACE
+    //
+    // The name is the first Name token that isn't the `table` keyword (the
+    // `columns`/`row` structural literals and every column/cell identifier live
+    // INSIDE nested nodes, so they cannot be mistaken for the table name).
+    let name = first_name_not(node, "table")
+        .ok_or(AdapterError::MissingChild {
+            rule: "table_decl".into(),
+            position: "table name",
+        })?
+        .to_string();
+    // `{ use_decl }` — the vocabulary bindings appear as direct `use_decl`
+    // children (not wrapped, unlike a formulabook's `formulabook_item`).
+    let mut uses = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "use_decl" {
+                if let Statement::Use(u) = adapt_use(item)? {
+                    uses.push(u);
+                }
+            }
+        }
+    }
+    // columns_decl = "columns" IDENT { COMMA IDENT } — the column names are the
+    // Name tokens of the `columns_decl` child other than the `columns` literal
+    // itself (which is an IDENT-matched keyword, so it surfaces as a Name token
+    // with value "columns"). COMMA is punctuation and is skipped.
+    let columns_node =
+        first_named_child(node, "columns_decl").ok_or(AdapterError::MissingChild {
+            rule: "table_decl".into(),
+            position: "columns_decl",
+        })?;
+    let columns: Vec<String> = columns_node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "columns" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .collect();
+    // { table_row } — each `table_row` node holds the `row` literal plus one
+    // `row_item` node per cell (in source order). A row's arity is NOT checked
+    // here (that is the lowerer's job, against `columns`); the adapter only
+    // faithfully carries the cells.
+    let mut rows = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(row_node) = c {
+            if row_node.rule_name == "table_row" {
+                let mut cells = Vec::new();
+                for rc in &row_node.children {
+                    if let ASTNodeOrToken::Node(item) = rc {
+                        if item.rule_name == "row_item" {
+                            cells.push(adapt_row_item(item)?);
+                        }
+                    }
+                }
+                // ADJ-TABLES RS-5e: the row's OWN `{ … }` provenance block, if it
+                // wrote one. `collect_annotations` walks this row node's direct
+                // `annotation` children — the braces keep them scoped to the row,
+                // so the table's trailing envelope is never absorbed here.
+                let annotations = collect_annotations(row_node)?;
+                rows.push(crate::ast::TableRow { cells, annotations });
+            }
+        }
+    }
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Table {
+        name,
+        uses,
+        columns,
+        rows,
+        annotations,
+    })
+}
+
+fn adapt_row_item(node: &GrammarASTNode) -> Result<crate::ast::TableCell, AdapterError> {
+    // row_item = NUMBER | IDENT | STRING — a single-token alternation that
+    // surfaces as a `row_item` node wrapping exactly one token. Map that token
+    // to the matching ground cell kind.
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.type_ {
+                TokenType::Number => {
+                    return Ok(crate::ast::TableCell::Number(parse_numlit(
+                        &t.value, t.type_, "row_item",
+                    )?));
+                }
+                TokenType::String => {
+                    return Ok(crate::ast::TableCell::Text(unquote_string(&t.value)));
+                }
+                TokenType::Name => {
+                    return Ok(crate::ast::TableCell::Atom(t.value.clone()));
+                }
+                _ => {}
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: "row_item".into(),
+        position: "cell token (NUMBER | IDENT | STRING)",
+    })
+}
+
+// ---------------------------------------------------------------------------
+// State machine (ADJ-STATEMACHINE RS-3b). A `statemachine` is a sibling top-level
+// declaration modelled on `table`: its keywords are IDENT-matched literals, so
+// they surface as `Name` tokens (value `"statemachine"`/`"initial"`/`"state"`/…)
+// and its structural pieces (states, transitions, exits) are nested nodes. The
+// adapter faithfully carries the STRUCTURE; every well-formedness check (initial
+// present, ≥ 1 exit, budget ≥ 1, declared targets, non-empty source) is the
+// lowerer's job.
+// ---------------------------------------------------------------------------
+
+fn adapt_statemachine(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // statemachine_decl = "statemachine" IDENT LBRACE { use_decl } "initial" IDENT
+    //                     { sm_state } { sm_exit } "budget" NUMBER "steps" { annotation } RBRACE
+    //
+    // The machine name is the first `Name` token that isn't the `statemachine`
+    // keyword — every other identifier (the initial-state name, the `budget`/
+    // `steps` literals) is preceded by its own keyword or lives inside a nested
+    // node, so it cannot be mistaken for the name here.
+    let name = first_name_not(node, "statemachine")
+        .ok_or(AdapterError::MissingChild {
+            rule: "statemachine_decl".into(),
+            position: "machine name",
+        })?
+        .to_string();
+    // `{ use_decl }` — the vocabulary bindings appear as direct `use_decl` children
+    // (identical to a `table`'s `use` handling).
+    let mut uses = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "use_decl" {
+                if let Statement::Use(u) = adapt_use(item)? {
+                    uses.push(u);
+                }
+            }
+        }
+    }
+    // `initial IDENT` — the state name is the `Name` token immediately following
+    // the `initial` literal token (the only place a bare state IDENT sits directly
+    // under `statemachine_decl` before the states themselves nest).
+    let initial = name_after_keyword(node, "initial").ok_or(AdapterError::MissingChild {
+        rule: "statemachine_decl".into(),
+        position: "initial state name (after `initial`)",
+    })?;
+    // `budget NUMBER steps` — the single direct NUMBER token (guard/exit numbers
+    // live inside nested `sm_*` nodes, so it is unambiguous). Parsed to `u64`; a
+    // non-positive budget is a `LowerError::SmBudgetNotPositive`, checked later.
+    let budget_raw = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "statemachine_decl".into(),
+            position: "budget NUMBER",
+        })?;
+    let budget = parse_budget_u64(&budget_raw);
+    // `{ sm_state }` and `{ sm_exit }` — each a nested node, in source order.
+    let mut states = Vec::new();
+    let mut exits = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            match n.rule_name.as_str() {
+                "sm_state" => states.push(adapt_sm_state(n)?),
+                "sm_exit" => exits.push(adapt_sm_exit(n)?),
+                _ => {}
+            }
+        }
+    }
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::StateMachine {
+        name,
+        uses,
+        initial,
+        states,
+        exits,
+        budget,
+        annotations,
+    })
+}
+
+/// A `budget N steps` count → `u64`. A plain integer parses directly; a
+/// fractional or negative literal (a modeller error the grammar's `NUMBER` still
+/// admits) folds to `0`, which the lowerer rejects as
+/// [`crate::LowerError::SmBudgetNotPositive`] — never a silent default budget.
+fn parse_budget_u64(raw: &str) -> u64 {
+    raw.parse::<u64>().unwrap_or_else(|_| {
+        raw.parse::<f64>()
+            .ok()
+            .filter(|v| v.is_finite() && *v >= 0.0)
+            .map(|v| v as u64)
+            .unwrap_or(0)
+    })
+}
+
+fn adapt_sm_state(node: &GrammarASTNode) -> Result<StateDef, AdapterError> {
+    // sm_state = "state" IDENT LBRACE { sm_transition } RBRACE
+    let name = first_name_not(node, "state")
+        .ok_or(AdapterError::MissingChild {
+            rule: "sm_state".into(),
+            position: "state name",
+        })?
+        .to_string();
+    let mut transitions = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "sm_transition" {
+                transitions.push(adapt_sm_transition(n)?);
+            }
+        }
+    }
+    Ok(StateDef { name, transitions })
+}
+
+fn adapt_sm_transition(node: &GrammarASTNode) -> Result<TransitionDef, AdapterError> {
+    // sm_transition = "transition" "on" sm_guard "to" IDENT [ "do" sm_action { COMMA sm_action } ]
+    let guard_node = first_named_child(node, "sm_guard").ok_or(AdapterError::MissingChild {
+        rule: "sm_transition".into(),
+        position: "guard",
+    })?;
+    let guard = adapt_sm_guard(guard_node)?;
+    // The target is the `Name` token after the `to` literal (the guard's own IDENT
+    // is nested inside the `sm_guard` node, so it is not a direct child here).
+    let target = name_after_keyword(node, "to").ok_or(AdapterError::MissingChild {
+        rule: "sm_transition".into(),
+        position: "target state (after `to`)",
+    })?;
+    let mut actions = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "sm_action" {
+                actions.push(adapt_sm_action(n)?);
+            }
+        }
+    }
+    Ok(TransitionDef {
+        guard,
+        target,
+        actions,
+    })
+}
+
+fn adapt_sm_exit(node: &GrammarASTNode) -> Result<ExitDef, AdapterError> {
+    // sm_exit = "exit" "when" sm_guard "yield" expr
+    let guard_node = first_named_child(node, "sm_guard").ok_or(AdapterError::MissingChild {
+        rule: "sm_exit".into(),
+        position: "guard",
+    })?;
+    let guard = adapt_sm_guard(guard_node)?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "sm_exit".into(),
+        position: "yield expression",
+    })?;
+    let yield_expr = adapt_expr(expr_node)?;
+    Ok(ExitDef { guard, yield_expr })
+}
+
+fn adapt_sm_guard(node: &GrammarASTNode) -> Result<SmGuard, AdapterError> {
+    // sm_guard = ( apply | IDENT ) [ ( GE | LE | GT | LT | EQEQ ) expr ]
+    //
+    // The subject is a formula APPLICATION if an `apply` child node is present,
+    // else the bare slot/finding IDENT (the first `Name` token that is not a
+    // comparison operator). The optional comparison mirrors `adapt_predicate`'s
+    // operator mapping exactly.
+    let subject = if let Some(app) = first_named_child(node, "apply") {
+        apply_node_to_term(app)?
+    } else {
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if t.type_ == TokenType::Name && sm_relop_from_value(&t.value).is_none() =>
+                {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            })
+            .ok_or(AdapterError::MissingChild {
+                rule: "sm_guard".into(),
+                position: "subject identifier or application",
+            })?;
+        Term::Atom(name)
+    };
+    // The optional comparison: a relop token + an `expr` child. Absent ⇒ a bare
+    // presence guard (`None`).
+    let op = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => sm_relop_from_value(&t.value),
+            _ => None,
+        });
+    let comparison = match op {
+        Some(op) => {
+            let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+                rule: "sm_guard".into(),
+                position: "comparison right-hand expression",
+            })?;
+            Some((op, adapt_expr(expr_node)?))
+        }
+        None => None,
+    };
+    Ok(SmGuard {
+        subject,
+        comparison,
+    })
+}
+
+/// Map a guard's comparison operator token value to a [`CmpOp`] — the same five
+/// operators `adapt_predicate` recognises (`>=`, `<=`, `>`, `<`, `==`). Returns
+/// `None` for any non-operator token (so a bare subject IDENT is never mistaken
+/// for an operator).
+fn sm_relop_from_value(v: &str) -> Option<CmpOp> {
+    match v {
+        ">=" => Some(CmpOp::Ge),
+        "<=" => Some(CmpOp::Le),
+        ">" => Some(CmpOp::Gt),
+        "<" => Some(CmpOp::Lt),
+        "==" => Some(CmpOp::Eq),
+        _ => None,
+    }
+}
+
+fn adapt_sm_action(node: &GrammarASTNode) -> Result<SmAction, AdapterError> {
+    // sm_action = "assert" term — the single `term` child is the fact to assert.
+    let term_node = first_named_child(node, "term").ok_or(AdapterError::MissingChild {
+        rule: "sm_action".into(),
+        position: "asserted term",
+    })?;
+    Ok(SmAction::Assert(adapt_term(term_node)?))
+}
+
+/// Convert an `apply` grammar node (`IDENT LPAREN [ expr { COMMA expr } ] RPAREN`)
+/// into a [`Term`] for use as a guard subject — a [`Term::Atom`] when it has no
+/// arguments, a [`Term::Compound`] otherwise. Its argument `expr`s are lowered to
+/// terms via [`expr_ast_to_term`]. (This is the deferred *formula-valued guard*
+/// shape; the RS-3b minimal subset uses a bare IDENT subject.)
+fn apply_node_to_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
+    let functor = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "apply".into(),
+            position: "formula name",
+        })?;
+    let mut args = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "expr" {
+                args.push(expr_ast_to_term(&adapt_expr(n)?));
+            }
+        }
+    }
+    if args.is_empty() {
+        Ok(Term::Atom(functor))
+    } else {
+        Ok(Term::Compound { functor, args })
+    }
+}
+
+/// Best-effort conversion of a (guard-application argument) [`ExprAst`] to a
+/// [`Term`]. A slot reference becomes an atom, a nested application a compound,
+/// and a numeric literal a `Num` (integral part; a fractional literal argument is
+/// outside the RS-3b minimal subset). Any richer arithmetic argument — which the
+/// minimal subset does not use — degrades to an atom of its debug form rather
+/// than failing, so no shape is ever silently discarded.
+fn expr_ast_to_term(e: &ExprAst) -> Term {
+    match e {
+        ExprAst::Ref(s) => Term::Atom(s.clone()),
+        ExprAst::Apply(f, args) => Term::Compound {
+            functor: f.clone(),
+            args: args.iter().map(expr_ast_to_term).collect(),
+        },
+        ExprAst::Lit(x) => Term::Num(NumLit::Int(*x as i64)),
+        ExprAst::ExactLit(x) => Term::Num(x.clone()),
+        other => Term::Atom(format!("{other:?}")),
+    }
+}
+
+/// Return the first `Name` token that appears *after* the first `Name` token
+/// whose value equals `keyword`. Used to read the IDENT that follows an
+/// IDENT-matched literal keyword (`initial <state>`, `to <target>`) — robust to
+/// the keyword literals surfacing as ordinary `Name` tokens.
+fn name_after_keyword(node: &GrammarASTNode, keyword: &str) -> Option<String> {
+    let mut seen_keyword = false;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Name {
+                if seen_keyword {
+                    return Some(t.value.clone());
+                }
+                if t.value == keyword {
+                    seen_keyword = true;
+                }
+            }
+        }
+    }
+    None
+}
+
 fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // use_decl = "use" IDENT
     let name = first_name_not(node, "use")
@@ -850,6 +1777,46 @@ fn adapt_term_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     fold_binary(node, "term_expr", "factor", adapt_factor)
 }
 
+const MAX_ADAPTED_EXPR_DEPTH: usize = 96;
+
+fn adapted_expr_depth(expr: &ExprAst) -> Result<usize, AdapterError> {
+    let mut maximum = 0;
+    let mut pending = vec![(expr, 1_usize)];
+    while let Some((node, depth)) = pending.pop() {
+        if depth > MAX_ADAPTED_EXPR_DEPTH {
+            return Err(AdapterError::ExpressionTooDeep {
+                limit: MAX_ADAPTED_EXPR_DEPTH,
+            });
+        }
+        maximum = maximum.max(depth);
+        let next = depth + 1;
+        match node {
+            ExprAst::Bin(_, left, right)
+            | ExprAst::Call2(_, left, right)
+            | ExprAst::Compare(_, left, right) => {
+                pending.push((right, next));
+                pending.push((left, next));
+            }
+            ExprAst::Abs(inner)
+            | ExprAst::Floor(inner)
+            | ExprAst::Ceil(inner)
+            | ExprAst::Round(inner)
+            | ExprAst::RoundTo(inner, _)
+            | ExprAst::ToScientific(inner, _)
+            | ExprAst::ToPercent(inner, _)
+            | ExprAst::ToCurrency(inner, _, _)
+            | ExprAst::Trunc(inner)
+            | ExprAst::Sign(inner)
+            | ExprAst::Call(_, inner) => pending.push((inner, next)),
+            ExprAst::Apply(_, arguments) => {
+                pending.extend(arguments.iter().rev().map(|argument| (argument, next)));
+            }
+            ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {}
+        }
+    }
+    Ok(maximum)
+}
+
 /// Shared left-fold for the two binary-precedence levels: walk the
 /// node's children in source order, building `Bin(op, acc, rhs)` as each
 /// `(operator-token, operand)` pair appears. The operands are child
@@ -861,14 +1828,28 @@ fn fold_binary(
     adapt_operand: fn(&GrammarASTNode) -> Result<ExprAst, AdapterError>,
 ) -> Result<ExprAst, AdapterError> {
     let mut acc: Option<ExprAst> = None;
+    let mut acc_depth = 0_usize;
     let mut pending_op: Option<ArithOp> = None;
     for c in &node.children {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == operand_rule => {
                 let operand = adapt_operand(n)?;
+                let operand_depth = adapted_expr_depth(&operand)?;
                 acc = Some(match (acc.take(), pending_op.take()) {
-                    (None, _) => operand,
-                    (Some(lhs), Some(op)) => ExprAst::Bin(op, Box::new(lhs), Box::new(operand)),
+                    (None, _) => {
+                        acc_depth = operand_depth;
+                        operand
+                    }
+                    (Some(lhs), Some(op)) => {
+                        let combined_depth = 1 + acc_depth.max(operand_depth);
+                        if combined_depth > MAX_ADAPTED_EXPR_DEPTH {
+                            return Err(AdapterError::ExpressionTooDeep {
+                                limit: MAX_ADAPTED_EXPR_DEPTH,
+                            });
+                        }
+                        acc_depth = combined_depth;
+                        ExprAst::Bin(op, Box::new(lhs), Box::new(operand))
+                    }
                     (Some(lhs), None) => lhs, // defensive: two operands, no op
                 });
             }
@@ -923,13 +1904,23 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
     }
+    // ADJ-RULE-SUBSTRATE RS-1: a FORMULA APPLICATION as a sub-expression,
+    // `name(arg, …)`. Checked after `agg` (so `sum(slot)` stays an aggregation)
+    // and before the bare-IDENT / parenthesised-`expr` fallbacks. The application's
+    // argument `expr` nodes live INSIDE the `apply` node, so they are not mistaken
+    // for a parenthesised `expr` factor here.
+    if let Some(app) = first_named_child(node, "apply") {
+        return adapt_apply(app);
+    }
     if let Some(inner) = first_named_child(node, "expr") {
         return adapt_expr(inner);
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
             if t.type_ == TokenType::Number {
-                return Ok(ExprAst::Lit(parse_finite(&t.value, t.type_, "factor")?));
+                return Ok(ExprAst::ExactLit(parse_expr_numlit(
+                    &t.value, t.type_, "factor",
+                )?));
             }
             if t.type_ == TokenType::Name {
                 return Ok(ExprAst::Ref(t.value.clone()));
@@ -1035,6 +2026,10 @@ fn parse_unicodemath_math(source: &str) -> Result<MathExpr, AdapterError> {
         })
 }
 
+// The `\(…\)`, `\[…\]` and `$$…$$` branches intentionally share the same body
+// (`&s[2..len-2]`): they are distinct delimiter pairs of equal width, kept
+// separate for readability rather than merged into one `||` condition.
+#[allow(clippy::if_same_then_else)]
 fn strip_math_delimiters(source: &str) -> &str {
     let mut s = source.trim();
     loop {
@@ -1545,6 +2540,9 @@ fn inverse_hyperbolic_kind(expr: &MathExpr) -> Option<InverseHyperbolic> {
 }
 
 /// The three inverse hyperbolic functions the adapter lowers via logarithm identities.
+// The shared `Ar` prefix is the standard mathematical spelling
+// (arsinh/arcosh/artanh), not an accidental naming collision.
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone, Copy)]
 enum InverseHyperbolic {
     /// `arsinh(x) = ln(x + (x^2 + 1)^0.5)`.
@@ -2137,6 +3135,34 @@ fn adapt_agg(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     Ok(ExprAst::Agg(op, slot))
 }
 
+/// `apply = IDENT LPAREN [ expr { COMMA expr } ] RPAREN` — a FORMULA APPLICATION
+/// as a sub-expression (ADJ-RULE-SUBSTRATE RS-1). The callee name is the single
+/// direct `Name` token (the parentheses/commas are punctuation tokens; the
+/// argument `expr` nodes are the direct child rule nodes). A zero-argument
+/// application (`f()`) yields an empty argument vector.
+fn adapt_apply(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let name = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "apply".into(),
+            position: "formula name",
+        })?;
+    let args = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(adapt_expr(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(ExprAst::Apply(name, args))
+}
+
 fn arith_op_from_value(v: &str) -> Option<ArithOp> {
     match v {
         "+" => Some(ArithOp::Add),
@@ -2147,7 +3173,10 @@ fn arith_op_from_value(v: &str) -> Option<ArithOp> {
     }
 }
 
-fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
+/// The aggregation keywords, and the single place they are named. `lower`'s
+/// reserved-name gate reads this too, so the set the grammar aggregates over and
+/// the set a formula may not shadow cannot drift apart.
+pub(crate) fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
     match kw {
         "sum" => Some(AggOp::Sum),
         "count" => Some(AggOp::Count),
@@ -2196,7 +3225,7 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
             ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
-                args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+                args.push(Term::Num(parse_numlit(&t.value, t.type_, "term")?));
             }
             // A `$Enzyme` VAR surfaces as a Name token whose value begins with
             // `$` (unknown token names fall back to TokenType::Name). The functor
@@ -2269,8 +3298,54 @@ fn adapt_annotation(node: &GrammarASTNode) -> Result<Annotation, AdapterError> {
             })?;
             Ok(Annotation::Cites { source, locator })
         }
+        "quote_annotation" => {
+            // quote_annotation = "quote" STRING "at" NUMBER "snapshot" STRING
+            // Two STRING tokens in source order: [text, snapshot-hex]; one NUMBER
+            // token: the byte offset. (RS-4 PR-D4, §E.3.1.)
+            let mut strings = child.children.iter().filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                    Some(unquote_string(&t.value))
+                }
+                _ => None,
+            });
+            let text = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "quote_annotation".into(),
+                position: "quote text STRING",
+            })?;
+            let snapshot_hex = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "quote_annotation".into(),
+                position: "snapshot hex STRING",
+            })?;
+            // The offset is a NUMBER token; the grammar guarantees a non-negative
+            // integer literal here, but a fractional or negative value is a clean
+            // adapter error rather than a silent truncation.
+            let raw = child
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
+                        Some(t.value.clone())
+                    }
+                    _ => None,
+                })
+                .ok_or(AdapterError::MissingChild {
+                    rule: "quote_annotation".into(),
+                    position: "byte-offset NUMBER",
+                })?;
+            let byte_offset = raw.parse::<usize>().map_err(|_| AdapterError::BadToken {
+                rule: "quote_annotation".into(),
+                kind: TokenType::Number,
+                value: raw,
+                reason: "byte offset must be a non-negative integer",
+            })?;
+            Ok(Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            })
+        }
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of source_annotation / locator_annotation / trust_annotation / cites_annotation",
+            expected: "one of source_annotation / locator_annotation / trust_annotation / cites_annotation / quote_annotation",
             actual: other.to_string(),
         }),
     }
@@ -2311,19 +3386,101 @@ fn trust_tier_from_node(node: &GrammarASTNode) -> Result<TrustTierName, AdapterE
 // Helpers
 // ---------------------------------------------------------------------------
 
-/// Parse a NUMBER lexeme to `f64`, rejecting non-finite values. Rust's
-/// `f64::from_str` accepts overflowing literals like `1e400` (→ `inf`);
-/// an infinite or NaN threshold is meaningless in a rulebook, so we
-/// reject it here with an accurate diagnostic rather than letting it
-/// silently flow downstream.
-fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterError> {
-    match raw.parse::<f64>() {
-        Ok(x) if x.is_finite() => Ok(x),
-        _ => Err(AdapterError::BadToken {
+/// Parse a native arithmetic literal without discarding its decimal identity,
+/// while retaining the compute surface's historical finite-`f64` range gate.
+/// Underflow is allowed so a guarded application can diagnose the narrowing.
+fn parse_expr_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
+    let value = parse_numlit(raw, kind, rule)?;
+    if value.to_f64_lossy().is_finite() {
+        Ok(value)
+    } else {
+        Err(AdapterError::BadToken {
             rule: rule.to_string(),
             kind,
             value: raw.to_string(),
             reason: "not a finite f64",
+        })
+    }
+}
+
+/// The maximum **length in bytes** of an exact decimal NUMBER token accepted from `.adj` source.
+///
+/// This is a **DoS budget** at the untrusted-input boundary, not a precision limit. Base-10
+/// `BigDecimal` conversion is schoolbook-quadratic in the mantissa's digit count — `from_str`
+/// (parse), [`BigDecimal::significant_digits`], `Display`, and `to_f64` are each `O(L²)` for an
+/// `L`-digit literal. The old `parse_finite` path scanned a token in `O(L)` and saturated an
+/// out-of-range magnitude to `±∞`; routing tokens through `BigDecimal` instead removes that
+/// implicit bound, so a hostile `.adj` file could pack multi-megabyte number literals to force
+/// quadratic work. Capping the token length bounds every such materialization to a few million
+/// ops — trivial and one-time. `4096` bytes is ~100× the longest literal any real rulebook needs
+/// (π to 39 places is 41 bytes; Planck's constant is 15), so no legitimate high-precision constant
+/// is rejected.
+const MAX_NUMBER_TOKEN_LEN: usize = 4096;
+
+/// The maximum **scale magnitude** (`|scale|`, i.e. decimal places on either side of the point) of
+/// an accepted exact literal. `BigDecimal`'s own `MAX_SCALE` budget already caps this at
+/// `1_000_000`, but that still permits a *tiny* token — `1e-1000000` is 11 bytes — to force a
+/// ~1 MB decimal string every time the value is rendered or narrowed to `f64` (which happens
+/// several times per term during lowering/evaluation, uncached). A `.adj` literal never needs a
+/// scale past a few thousand, so this tighter cap keeps every render/`to_f64` string small while
+/// still accepting every real scientific-notation constant (Avogadro's scale is 15, Planck's 42).
+const MAX_NUMBER_TOKEN_SCALE: i64 = 4096;
+
+/// Parse a NUMBER token into a [`NumLit`] that loses no digit (ADJ-EXACT-NUMBERS NX-2).
+///
+/// The precedence is chosen so small whole numbers keep the engine's `Int` fast paths while
+/// everything else is preserved exactly:
+///
+/// 1. If the literal is a whole number that fits `i64` (`18000`), it becomes [`NumLit::Int`].
+/// 2. Otherwise — a fractional or out-of-`i64` decimal, scientific or not (`2.54`, `6.022e23`,
+///    π to 39 places) — it is parsed with [`BigDecimal::from_str`] into [`NumLit::Exact`], keeping
+///    every written digit.
+/// 3. If neither parse succeeds, it is a malformed token — an [`AdapterError::BadToken`].
+///
+/// **DoS boundary.** Because `.adj` source is untrusted and `BigDecimal` base-10 conversion is
+/// `O(digits²)`, this is where the exact-number path is throttled: a token longer than
+/// [`MAX_NUMBER_TOKEN_LEN`] is rejected *before* the quadratic parse runs, and a parsed value whose
+/// scale magnitude exceeds [`MAX_NUMBER_TOKEN_SCALE`] is rejected *after* (bounding the
+/// render/`to_f64` string). Both budgets sit ~100× above any legitimate literal, so they only ever
+/// reject a hostile payload, never a real constant. (`BigDecimal::from_str` also enforces its own
+/// `MAX_SCALE`; these caps are the tighter, adj-lang-specific layer.)
+///
+/// This replaces the old `f64` parse at ground-term sites and native arithmetic
+/// leaves. An [`ExprAst::ExactLit`] retains the source value until lowering; the
+/// compute layer still carries `f64`, so guarded calls reject value-changing
+/// narrowing before evaluation.
+fn parse_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
+    // Reject an over-long token FIRST — before either the `i64` scan or the O(digits²) BigDecimal
+    // parse — so no oversized mantissa can force superlinear work on any path. (A legitimate small
+    // integer is far under the cap, so its `Int` fast path below is unaffected.)
+    if raw.len() > MAX_NUMBER_TOKEN_LEN {
+        return Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: format!("<{}-byte numeric literal>", raw.len()),
+            reason: "numeric literal exceeds the exact-decimal length budget",
+        });
+    }
+    if let Ok(i) = raw.parse::<i64>() {
+        return Ok(NumLit::Int(i));
+    }
+    match BigDecimal::from_str(raw) {
+        // A tiny token can still name a huge scale (`1e-1000000`); reject it so a later render /
+        // `to_f64` cannot be forced to materialize a megabyte-long decimal string.
+        Ok(d) if d.scale().unsigned_abs() > MAX_NUMBER_TOKEN_SCALE as u64 => {
+            Err(AdapterError::BadToken {
+                rule: rule.to_string(),
+                kind,
+                value: raw.to_string(),
+                reason: "numeric literal exceeds the exact-decimal scale budget",
+            })
+        }
+        Ok(d) => Ok(NumLit::Exact(d)),
+        Err(_) => Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: raw.to_string(),
+            reason: "not an integer or exact decimal literal",
         }),
     }
 }
@@ -2427,6 +3584,89 @@ fn expect_term_child(
     adapt_term(term_node)
 }
 
+/// Strip surrounding double quotes and process backslash escapes.
+///
+/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
+/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
+/// translate the recognized escape sequences:
+///
+/// | in source | becomes  | why it matters                                   |
+/// |-----------|----------|--------------------------------------------------|
+/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
+/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
+/// | `\\`      | `\`      | a literal backslash                              |
+/// | `\n`      | newline  | multi-line provenance text                       |
+/// | `\t`      | tab      | tabular provenance text                          |
+///
+/// This is load-bearing for byte-provenance: a `source "..."` annotation must
+/// reproduce the cited page's text *character-for-character* after unescaping,
+/// so a span that contains a `"` is carried as `\"` and restored here. An
+/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
+/// dropping the backslash — we never want to mutate a citation we don't
+/// understand. See the `unquote_string_*` unit tests, which pin every row.
+fn unquote_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(esc) = chars.next() {
+                match esc {
+                    '"' => out.push('"'),
+                    '\\' => out.push('\\'),
+                    'n' => out.push('\n'),
+                    't' => out.push('\t'),
+                    other => {
+                        // Unknown escape — keep verbatim.
+                        out.push('\\');
+                        out.push(other);
+                    }
+                }
+            } else {
+                // Dangling backslash at end of string — keep it verbatim.
+                out.push('\\');
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
+/// Strip surrounding double quotes for `latex "..."` strings.
+///
+/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
+/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
+/// backslash escaping are interpreted here; every other backslash sequence is
+/// passed through to the LaTeX parser verbatim.
+fn unquote_latex_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match chars.next() {
+                Some('"') => out.push('"'),
+                Some('\\') => out.push('\\'),
+                Some(other) => {
+                    out.push('\\');
+                    out.push(other);
+                }
+                None => out.push('\\'),
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -2443,6 +3683,14 @@ mod tests {
             .into_iter()
             .next()
             .expect("at least one statement")
+    }
+
+    /// Parse `src` expecting it to fail in the ADAPTER stage, returning that [`AdapterError`].
+    fn adapt_one(src: &str) -> AdapterError {
+        match parse(src) {
+            Err(crate::CompileError::Adapt(e)) => e,
+            other => panic!("expected an adapter error, got {other:?}"),
+        }
     }
 
     #[test]
@@ -2503,10 +3751,10 @@ mod tests {
             } => {
                 assert_eq!(lr, 1_000_000.0);
                 match evidence {
-                    Evidence::Predicate { slot, op, rhs } => {
-                        assert_eq!(slot, "gross_income");
+                    Evidence::Predicate { lhs, op, rhs } => {
+                        assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "gross_income"));
                         assert_eq!(op, CmpOp::Ge);
-                        assert!(matches!(rhs, ExprAst::Lit(v) if v == 14600.0));
+                        assert!(matches!(rhs, ExprAst::ExactLit(NumLit::Int(14600))));
                     }
                     other => panic!("expected predicate evidence, got {other:?}"),
                 }
@@ -2528,12 +3776,12 @@ mod tests {
             let src = format!("contributes 2.0 from age {sym} 18 to adult");
             match parse_one(&src) {
                 Statement::Contributes {
-                    evidence: Evidence::Predicate { op, rhs, slot },
+                    evidence: Evidence::Predicate { op, rhs, lhs },
                     ..
                 } => {
                     assert_eq!(op, *expected, "operator {sym}");
-                    assert!(matches!(rhs, ExprAst::Lit(v) if v == 18.0));
-                    assert_eq!(slot, "age");
+                    assert!(matches!(rhs, ExprAst::ExactLit(NumLit::Int(18))));
+                    assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "age"));
                 }
                 other => panic!("expected predicate Contributes for {sym}, got {other:?}"),
             }
@@ -2545,10 +3793,10 @@ mod tests {
         let src = "contributes 1000000 from answer == 3 / 10 to opt_a";
         match parse_one(src) {
             Statement::Contributes {
-                evidence: Evidence::Predicate { slot, op, rhs },
+                evidence: Evidence::Predicate { lhs, op, rhs },
                 ..
             } => {
-                assert_eq!(slot, "answer");
+                assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "answer"));
                 assert_eq!(op, CmpOp::Eq);
                 assert!(matches!(rhs, ExprAst::Bin(ArithOp::Div, _, _)));
             }
@@ -2560,16 +3808,80 @@ mod tests {
     fn round_trips_valued_observation() {
         // observe <slot>(<number>) — a valued fact the predicate reads.
         match parse_one("observe gross_income(18000)") {
-            Statement::Observe { term } => match term {
+            Statement::Observe { term, .. } => match term {
                 Term::Compound { functor, args } => {
                     assert_eq!(functor, "gross_income");
                     assert_eq!(args.len(), 1);
-                    assert!(matches!(args[0], Term::Num(x) if x == 18000.0));
+                    // A whole number that fits `i64` parses to `NumLit::Int` (NX-2), keeping the
+                    // engine's small-integer fast path — not a lossy `f64`.
+                    assert!(matches!(args[0], Term::Num(NumLit::Int(18000))));
                 }
                 other => panic!("expected compound, got {other:?}"),
             },
             other => panic!("expected Observe, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn observation_accepts_a_byte_provenance_envelope() {
+        let digest = "a".repeat(64);
+        let source = format!(
+            "observe gross_income(18000)\n  quote \"income is 18000\" at 4 snapshot \"{digest}\"\n  source \"case bytes\"\n  locator \"cas://input\"\n  trust authoritative"
+        );
+        match parse_one(&source) {
+            Statement::Observe { annotations, .. } => {
+                assert_eq!(annotations.len(), 4);
+                assert!(matches!(
+                    &annotations[0],
+                    Annotation::Quote { text, byte_offset: 4, snapshot_hex }
+                        if text == "income is 18000" && snapshot_hex == &digest
+                ));
+            }
+            other => panic!("expected annotated Observe, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn exact_high_precision_literal_parses_to_numlit_exact() {
+        // A >17-digit fractional literal (π to 39 places) is preserved exactly as a NumLit::Exact
+        // — the NX-2 win — while staying comfortably within the size budgets.
+        let pi = "3.141592653589793238462643383279502884197";
+        match parse_one(&format!("observe c({pi})")) {
+            Statement::Observe { term, .. } => match term {
+                Term::Compound { args, .. } => match &args[0] {
+                    Term::Num(NumLit::Exact(d)) => assert_eq!(d.to_string(), pi),
+                    other => panic!("expected NumLit::Exact, got {other:?}"),
+                },
+                other => panic!("expected compound, got {other:?}"),
+            },
+            other => panic!("expected Observe, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn oversized_numeric_literal_is_rejected_before_quadratic_parse() {
+        // DoS guard (security review, NX-2): a multi-kilobyte number literal — which would force
+        // O(digits²) BigDecimal work — is rejected at the untrusted `.adj` boundary, cleanly, not
+        // parsed. This is the length budget the old f64 parse gave implicitly (it saturated).
+        let giant = "9".repeat(super::MAX_NUMBER_TOKEN_LEN + 1);
+        let err = adapt_one(&format!("observe c({giant})"));
+        assert!(
+            matches!(err, AdapterError::BadToken { reason, .. } if reason.contains("length budget")),
+            "an over-long literal is a clean BadToken, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn huge_scale_literal_is_rejected_to_bound_render_materialization() {
+        // DoS guard (security review, NX-2): a *tiny* token can still name an enormous scale
+        // (`1e-1000000`, 11 bytes) that a later render / `to_f64` would blow up into a ~1 MB decimal
+        // string. It is rejected by the scale budget even though it is short and within
+        // BigDecimal's own MAX_SCALE.
+        let err = adapt_one("observe c(1e-1000000)");
+        assert!(
+            matches!(err, AdapterError::BadToken { reason, .. } if reason.contains("scale budget")),
+            "a huge-scale literal is a clean BadToken, got {err:?}"
+        );
     }
 
     #[test]
@@ -2725,87 +4037,32 @@ mod tests {
             other => panic!("expected Contributes, got {other:?}"),
         }
     }
-}
 
-/// Strip surrounding double quotes and process backslash escapes.
-///
-/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
-/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
-/// translate the recognized escape sequences:
-///
-/// | in source | becomes  | why it matters                                   |
-/// |-----------|----------|--------------------------------------------------|
-/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
-/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
-/// | `\\`      | `\`      | a literal backslash                              |
-/// | `\n`      | newline  | multi-line provenance text                       |
-/// | `\t`      | tab      | tabular provenance text                          |
-///
-/// This is load-bearing for byte-provenance: a `source "..."` annotation must
-/// reproduce the cited page's text *character-for-character* after unescaping,
-/// so a span that contains a `"` is carried as `\"` and restored here. An
-/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
-/// dropping the backslash — we never want to mutate a citation we don't
-/// understand. See the `unquote_string_*` unit tests, which pin every row.
-fn unquote_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            if let Some(esc) = chars.next() {
-                match esc {
-                    '"' => out.push('"'),
-                    '\\' => out.push('\\'),
-                    'n' => out.push('\n'),
-                    't' => out.push('\t'),
-                    other => {
-                        // Unknown escape — keep verbatim.
-                        out.push('\\');
-                        out.push(other);
-                    }
-                }
-            } else {
-                // Dangling backslash at end of string — keep it verbatim.
-                out.push('\\');
+    #[test]
+    fn quote_annotation_parses_text_offset_and_snapshot() {
+        // RS-4 PR-D4a: `quote "…" at <offset> snapshot "<hex>"` → Annotation::Quote.
+        let src = r#"relate inhibits(aspirin, cyclooxygenase)
+            quote "Aspirin inhibits cyclooxygenase" at 7 snapshot "abc123"
+            source "Pharmacology reference"
+            trust authoritative"#;
+        match parse_one(src) {
+            Statement::Relate { annotations, .. } => {
+                let q = annotations
+                    .iter()
+                    .find_map(|a| match a {
+                        Annotation::Quote {
+                            text,
+                            byte_offset,
+                            snapshot_hex,
+                        } => Some((text.clone(), *byte_offset, snapshot_hex.clone())),
+                        _ => None,
+                    })
+                    .expect("a Quote annotation");
+                assert_eq!(q.0, "Aspirin inhibits cyclooxygenase");
+                assert_eq!(q.1, 7);
+                assert_eq!(q.2, "abc123");
             }
-        } else {
-            out.push(c);
+            other => panic!("expected Relate, got {other:?}"),
         }
     }
-    out
-}
-
-/// Strip surrounding double quotes for `latex "..."` strings.
-///
-/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
-/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
-/// backslash escaping are interpreted here; every other backslash sequence is
-/// passed through to the LaTeX parser verbatim.
-fn unquote_latex_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            match chars.next() {
-                Some('"') => out.push('"'),
-                Some('\\') => out.push('\\'),
-                Some(other) => {
-                    out.push('\\');
-                    out.push(other);
-                }
-                None => out.push('\\'),
-            }
-        } else {
-            out.push(c);
-        }
-    }
-    out
 }

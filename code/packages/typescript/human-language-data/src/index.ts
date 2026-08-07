@@ -1,0 +1,197 @@
+// @coding-adventures/human-language-data
+//
+// The machine-readable bridge from the Human Languages curriculum (Markdown
+// lessons + concept taxonomy) to the cross-language dataset the Engram deck
+// generator and companion app consume. See code/specs/HL01-*.
+
+export * from "./types.js";
+export * from "./constants.js";
+export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
+export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
+export {
+  parseLessonActivityValue,
+  normalizeActivityResponse,
+  activityContractErrors,
+  compileLessonActivity,
+  compileLessonActivities,
+  activityAnswerIsCorrect,
+  type ParsedActivityValue,
+} from "./activity.js";
+export {
+  fnv1a64,
+  canonicalLessonSource,
+  canonicalLessonHash,
+  combineLessonHashes,
+  canonicalChapterHash,
+  type LessonHashEntry,
+} from "./hash.js";
+export {
+  renderInlineMarkdown,
+  renderBookChapter,
+  bookVoice,
+  bookBlockTitle,
+  type BookGenerationTarget,
+  type GeneratedBookChapter,
+} from "./book.js";
+export {
+  allConcepts,
+  conceptsByLanguage,
+  languagesForConcept,
+  coverageByLanguage,
+} from "./queries.js";
+export { validate, hasErrors, summarize, type ValidateInput } from "./validate.js";
+export {
+  validateCurriculum,
+  type CurriculumValidationInput,
+} from "./curriculum.js";
+export {
+  orderedCurriculumLessonIds,
+  extensionsForSegment,
+  nextCurriculumLesson,
+  mixedCurriculumFrontier,
+  type ExtensionRelation,
+  type AttachedExtension,
+  type CurriculumFrontierStep,
+  type MixedCurriculumFrontier,
+} from "./plans.js";
+export {
+  defaultCurriculumRoot,
+  trackScript,
+  loadTaxonomy,
+  loadLanguageRegistry,
+  loadCurriculumSpine,
+  loadLanguageCurricula,
+  loadTrackChapters,
+  loadChapterPolicy,
+  loadBookCorpus,
+  loadLessons,
+  loadModalityManifest,
+  modalityManifestById,
+  loadScripts,
+  loadEverything,
+} from "./loader.js";
+export {
+  MODALITIES,
+  MODALITY_SIGNS,
+  SIGHT_CUES,
+  DEFAULT_LINEARISABLE_TABLE_COLUMNS,
+  modalityRank,
+  requiredChannels,
+  unionModalities,
+  lessonText,
+  tableRowColumns,
+  widestTableColumns,
+  matchedSightCues,
+  deriveLessonModality,
+  modalityFindings,
+  lessonModalities,
+  orderChapterLessons,
+  drivablePrefix,
+  summarizeModality,
+  type Modality,
+  type ModalityOptions,
+  type ModalityReasonCode,
+  type ModalityFinding,
+  type LessonModality,
+  type ChapterModality,
+  type TrackModality,
+  type ModalitySummary,
+} from "./modality.js";
+export {
+  TABLE_REFUSAL_MESSAGES,
+  splitTableRow,
+  isTableRowLine,
+  isDelimiterCell,
+  findMarkdownTables,
+  speakableInline,
+  collapseSpaces,
+  endSentence,
+  linariseTable,
+  linariseTables,
+  hasUnspeakableTable,
+  type MarkdownTable,
+  type TableRefusalReason,
+  type LinearisedTable,
+  type RefusedTable,
+  type TableSpeech,
+  type TableSpeechOptions,
+} from "./speech.js";
+export {
+  PROMPT_RESPONSE_SECONDS,
+  MANUAL_CUE_ACTIONS,
+  parseNarrationCue,
+  splitNarrationCues,
+  pairRomanization,
+  narrationTitle,
+  narrateLesson,
+  narrateChapter,
+  narrationChapters,
+  renderLessonNarrationText,
+  renderChapterNarrationText,
+  type NarrationSegment,
+  type NarrationCue,
+  type NarrationPause,
+  type NarrationRepeat,
+  type NarrationPrompt,
+  type NarrationSpeech,
+  type NarrationTable,
+  type NarrationTableSkipped,
+  type NarrationActivity,
+  type NarrationBlock,
+  type NarrationNotice,
+  type NarrationFinding,
+  type NarrationOptions,
+  type RomanizationPair,
+  type LessonNarration,
+  type ChapterNarration,
+} from "./narration.js";
+export {
+  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_VERSION,
+  modalityCorpusHash,
+  buildModalityManifest,
+  serializeModalityManifest,
+  type ModalityManifest,
+  type ModalityManifestFeatures,
+  type ModalityManifestPolicy,
+  type ModalityManifestLesson,
+  type ModalityManifestChapter,
+  type ModalityManifestTrack,
+  type ModalityManifestSummary,
+} from "./modality-manifest.js";
+export {
+  DURATION_THRESHOLD_SECONDS,
+  estimateLessonDuration,
+  buildCurriculumGapReport,
+  renderCurriculumGapReport,
+  type DurationEstimate,
+  type CurriculumGapReport,
+  type CurriculumGapReportInput,
+} from "./report.js";
+export {
+  CHAPTER_GATE_CODES,
+  runChapterGates,
+  runPatternGates,
+  type ChapterGateCode,
+  type ChapterFinding,
+  type ChapterGateInput,
+  type ChapterGateReport,
+  type TrackChapterCoverage,
+} from "./chapters.js";
+export {
+  CEFR_LEVELS,
+  levelRank,
+  levelsUpTo,
+  lessonSpineNodes,
+  deriveLessonLevel,
+  summarizeLevels,
+  lessonsUpToLevel,
+  type CefrLevel,
+  type LessonLevel,
+  type LevelSummary,
+  type TrackLevelCoverage,
+} from "./levels.js";
+export { runValidate } from "./cli.js";
+export { runCurriculumGapReport } from "./report-cli.js";
+export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
+export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";

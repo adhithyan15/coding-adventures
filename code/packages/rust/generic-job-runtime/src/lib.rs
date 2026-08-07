@@ -573,7 +573,9 @@ impl Default for StdioProcessPoolOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub enum StdioWorkerRestartPolicy {
+    #[default]
     Never,
     Always,
     Bounded {
@@ -582,11 +584,6 @@ pub enum StdioWorkerRestartPolicy {
     },
 }
 
-impl Default for StdioWorkerRestartPolicy {
-    fn default() -> Self {
-        Self::Never
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SubmitError {
@@ -1200,9 +1197,7 @@ fn complete_thread_pool_job<Request, Response>(
             .expect("thread pool queue mutex poisoned");
         queue.pending.remove(&id)
     };
-    let Some(pending) = pending else {
-        return None;
-    };
+    let pending = pending?;
     decrement_in_flight(&inner.in_flight);
 
     match pending.state {
@@ -1783,7 +1778,7 @@ fn fail_pending_jobs_for_worker<Response>(
         let mut pending = pending.lock().expect("pending job table mutex poisoned");
         let failed_ids = pending
             .iter()
-            .filter_map(|(id, job)| (job.worker_index == worker_index).then(|| id.clone()))
+            .filter(|&(_id, job)| job.worker_index == worker_index).map(|(id, _job)| id.clone())
             .collect::<Vec<_>>();
         let mut failed = Vec::with_capacity(failed_ids.len());
         for id in failed_ids {

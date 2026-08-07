@@ -51,6 +51,10 @@ fn slit(v: &str) -> Expr {
     Expr::StrLit { value: v.into(), span: s() }
 }
 
+fn ilit(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: s() }
+}
+
 /// `recv.meth(args…)` — the `__method__` dispatch envelope.
 fn method(recv: Expr, name: &str, mut args: Vec<Expr>) -> Expr {
     let mut all = vec![recv, slit(name)];
@@ -132,6 +136,34 @@ fn full_demo() -> Module {
         print_stmt(method(slit("foo"), "replace", vec![slit("bar")])),
         // "".empty?  → #t
         print_stmt(method(slit(""), "empty?", vec![])),
+        // ── char-set methods (v0.24.0): tr / count / delete / squeeze ──
+        // "hello".tr("el", "ip")  → "hippo"
+        print_stmt(method(slit("hello"), "tr", vec![slit("el"), slit("ip")])),
+        // "hello".tr("l", "")  → "heo"  (empty `to` deletes)
+        print_stmt(method(slit("hello"), "tr", vec![slit("l"), slit("")])),
+        // "hello".count("lo")  → 3
+        print_stmt(method(slit("hello"), "count", vec![slit("lo")])),
+        // "hello".delete("aeiou")  → "hll"
+        print_stmt(method(slit("hello"), "delete", vec![slit("aeiou")])),
+        // "mississippi".squeeze  → "misisipi"
+        print_stmt(method(slit("mississippi"), "squeeze", vec![])),
+        // "aaabbbccc".squeeze("a")  → "abbbccc"
+        print_stmt(method(slit("aaabbbccc"), "squeeze", vec![slit("a")])),
+        // ── justify group (v0.25.0): ljust / rjust / center / swapcase ──
+        // "hi".ljust(5, "*")  → "hi***"
+        print_stmt(method(slit("hi"), "ljust", vec![ilit(5), slit("*")])),
+        // "hi".rjust(5, "*")  → "***hi"
+        print_stmt(method(slit("hi"), "rjust", vec![ilit(5), slit("*")])),
+        // "hi".center(6, "*")  → "**hi**"  (even split)
+        print_stmt(method(slit("hi"), "center", vec![ilit(6), slit("*")])),
+        // "hi".center(5, "*")  → "*hi**"  (odd extra pad on the RIGHT)
+        print_stmt(method(slit("hi"), "center", vec![ilit(5), slit("*")])),
+        // "abc".ljust(1)  → "abc"  (width <= length: unchanged)
+        print_stmt(method(slit("abc"), "ljust", vec![ilit(1)])),
+        // "hi".ljust(5)  → "hi   "  (default pad is a space)
+        print_stmt(method(slit("hi"), "ljust", vec![ilit(5)])),
+        // "Hello World".swapcase  → "hELLO wORLD"
+        print_stmt(method(slit("Hello World"), "swapcase", vec![])),
     ];
 
     demo_module(main_stmts)
@@ -218,6 +250,19 @@ fn string_methods_compile_and_run() {
             "x  ",           // lstrip
             "bar",           // replace
             "#t",            // "".empty?
+            "hippo",         // tr("el", "ip")
+            "heo",           // tr("l", "") — empty `to` deletes
+            "3",             // count("lo")
+            "hll",           // delete("aeiou")
+            "misisipi",      // squeeze (no arg)
+            "abbbccc",       // squeeze("a")
+            "hi***",         // ljust(5, "*")
+            "***hi",         // rjust(5, "*")
+            "**hi**",        // center(6, "*") — even split
+            "*hi**",         // center(5, "*") — odd extra pad on the RIGHT
+            "abc",           // ljust(1) — width <= length, unchanged
+            "hi   ",         // ljust(5) — default space pad
+            "hELLO wORLD",   // swapcase
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );

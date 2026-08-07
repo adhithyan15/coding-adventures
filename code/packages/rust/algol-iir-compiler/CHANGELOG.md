@@ -1,5 +1,293 @@
 # Changelog
 
+## 0.62.0 — 2026-08-02 — dynamic `own string` reassignment
+
+Regression coverage now proves that an `own string` can retain its typed global
+identity while repeated calls replace its runtime handle and forward the newest
+value through a string formal.
+
+## 0.61.0 — 2026-08-02 — dynamic captured-string reassignment
+
+Fixes bare-variable detection so a one-argument procedure call is not mistaken
+for its actual. Regression coverage now proves that a captured string can be
+overwritten by branch-selected string procedure results and passed onward as a
+typed string formal.
+
+## 0.60.0 — 2026-08-02 — composed integer procedure calls
+
+Regression coverage now proves that two integer procedure results remain typed
+`i64` values when passed to another integer procedure before reaching the block result.
+
+## 0.59.0 — 2026-08-02 — composed real procedure calls
+
+Regression coverage now proves that two real procedure results remain typed
+`f64` values when passed to another real procedure before `entier` observes its result.
+
+## 0.58.0 — 2026-08-02 — composed string procedure calls
+
+Regression coverage now proves that a branch-selected `string procedure` result
+remains a typed value while crossing another procedure's string value formal.
+
+## 0.57.0 — 2026-08-02 — composed boolean procedure calls
+
+Regression coverage now proves that boolean procedure results remain typed when
+they become value actuals for another boolean procedure before branching.
+
+## 0.56.0 — 2026-08-02 — boolean procedure control-flow results
+
+Boolean procedure values now keep a `bool` comparison type through negation,
+conjunction, and a conditional branch; regression coverage proves the path.
+
+## 0.55.0 — 2026-08-02 — runtime string procedure results in string arrays
+
+Regression coverage now proves that a runtime `string procedure` result can
+populate `array<str>` storage, be read back for lexical ordering, and be printed
+through the shared string runtime path.
+
+## 0.54.0 — 2026-08-02 — right-associative exponentiation
+
+ALGOL exponentiation chains now lower from the right, so `2 ^ 3 ^ 2` evaluates
+as `2 ^ (3 ^ 2)` = 512 rather than `(2 ^ 3) ^ 2` = 64. Literal-only chains still
+use the bounded typed multiplication fast path.
+
+## 0.53.0 — 2026-08-01 — forwarding captured four-dimensional boolean arrays
+
+Regression coverage now proves that a nested procedure can forward a captured
+four-dimensional `boolean array` value formal to a sibling array formal. The forwarding
+call reloads the `array<bool>` handle, four non-unit lower bounds, and all three row-major
+strides before the callee writes caller-visible checkerboard cells.
+
+## 0.52.0 — 2026-08-01 — runtime integer exponents
+
+ALGOL exponentiation now lowers every numeric pair that is not a nonnegative
+integer-literal fast path through `f64_pow`. Integer bases therefore support runtime and
+negative integer exponents by widening to scalar `f64` results, preserving reciprocal
+powers without compile-time multiplication expansion.
+
+## 0.51.0 — 2026-08-01 — forwarding captured four-dimensional real arrays
+
+Regression coverage now proves that a nested procedure can forward a captured
+four-dimensional `real array` value formal to a sibling array formal. The forwarding
+call reloads the `array<f64>` handle, four non-unit lower bounds, and all three row-major
+strides before the callee writes caller-visible floating-point cells.
+
+## 0.50.0 — 2026-08-01 — forwarding captured four-dimensional string arrays
+
+Regression coverage now proves that a nested procedure can forward a captured
+four-dimensional `string array` value formal to a sibling array formal. The forwarding
+call reloads the `array<str>` handle, four non-unit lower bounds, and all three row-major
+strides before the callee writes the caller-visible dynamic string cells.
+
+## 0.49.0 — 2026-08-01 — captured four-dimensional string-array formals
+
+Regression coverage now proves that a nested procedure can write a four-dimensional
+`string array` value formal. The captured descriptor retains its `array<str>` handle,
+four non-unit lower bounds, and all three row-major strides, while lexical ordering and
+equality checks confirm the intended dynamic string cells survive.
+
+## 0.48.0 — 2026-08-01 — captured four-dimensional integer-array formals
+
+Regression coverage now proves that a nested procedure can write a four-dimensional
+`integer array` value formal. The captured descriptor retains its `array<i64>` handle,
+four non-unit lower bounds, and all three row-major strides, while the caller sums four
+dynamic corner cells to confirm that the intended values survive.
+
+## 0.47.0 — 2026-08-01 — captured three-dimensional real-array formals
+
+Regression coverage now proves that a nested procedure can write a three-dimensional
+`real array` value formal. The captured descriptor retains its `array<f64>` handle,
+three non-unit lower bounds, and both row-major strides, while the caller sums four
+distinct dynamic cells through `entier` to confirm the intended values survive.
+
+## 0.46.0 — 2026-08-01 — captured three-dimensional boolean-array formals
+
+Regression coverage now proves that a nested procedure can write a three-dimensional
+`boolean array` value formal. The captured descriptor retains its `array<bool>` handle,
+three non-unit lower bounds, and both row-major strides, while checkerboard reads confirm
+the caller observes the intended boolean cells.
+
+## 0.45.0 — 2026-08-01 — captured three-dimensional string-array formals
+
+Regression coverage now proves that a nested procedure can write a three-dimensional
+`string array` value formal. The captured descriptor retains its `array<str>` handle,
+three non-unit lower bounds, and both row-major strides, while lexical and equality
+checks confirm the caller observes the correct dynamic string cells.
+
+## 0.44.0 — 2026-08-01 — captured multidimensional string-array formals
+
+Regression coverage now proves that a nested procedure can write a two-dimensional
+`string array` value formal. The captured descriptor retains its `array<str>`
+handle, two non-unit lower bounds, and row-major stride, while lexical and equality
+checks confirm the caller observes the correct dynamic string cells.
+
+## 0.43.0 — 2026-08-01 — multidimensional boolean array formals
+
+Rank-aware boolean array value formals now have direct regression coverage:
+the descriptor preserves two non-unit lower bounds and the outer row-major
+stride, so writes in the procedure select the same cells as the caller.
+
+## 0.42.0 — 2026-07-31 — boolean arrays
+
+`boolean array` declarations and boolean array `value` formals now lower to
+the shared bounds-checked `array<bool>` descriptor path. Reads retain their
+boolean element type for `not` and boolean operations, and
+formal writes continue to alias the caller's storage across declared bounds.
+
+## 0.41.0 — 2026-07-31 — nested scalar-formal capture
+
+A nested procedure may now read and assign an enclosing scalar `value`
+parameter. The outer procedure copies the incoming typed value into a
+compiler-owned global before entering the nested sibling function, which then
+reloads and updates that same value. Shadowing formals remain local rather than
+capturing an enclosing block scalar.
+
+## 0.40.0 — 2026-07-31 — conditional and nested switch designators
+
+Switch-list elements now retain their complete designational expression until
+the corresponding `goto s[index]` runs. An element may choose a label with
+`if` or dispatch through another switch, so conditions observe their current
+values and nested indices resolve at the computed-goto site. Cyclic switch
+elements receive a deterministic compiler error instead of recursively growing
+the generated dispatch chain.
+
+## 0.39.0 — 2026-07-31 — nested array-formal capture
+
+A procedure nested inside another procedure may now read and write an outer
+`integer`, `real`, or `string` array `value` parameter. The outer frame copies
+the incoming typed handle, every lower bound, and each non-final row-major
+stride into compiler-owned globals; the nested sibling IIR function reloads the
+same descriptor before each access. This preserves multidimensional declared
+index spaces and aliases the caller's storage.
+
+## 0.38.0 — 2026-07-31 — explicit zero-argument procedure calls
+
+Typed and proper procedures with no formal parameters may now be called with
+explicit empty parentheses. `answer()` works in an expression and `reset()` in
+statement position, each lowering to an ordinary zero-argument IIR `call`.
+Bare names retain their existing parsing: a statement may use a report-style
+bare procedure name, while an expression bare name remains a variable read.
+
+## 0.37.0 — 2026-07-31 — rank-aware array value parameters
+
+`integer`, `real`, and `string` array `value` parameters now accept
+multidimensional actuals. The compiler infers a formal's rank from its indexed
+uses in the procedure body, then lowers the call ABI to the typed array handle
+plus every lower bound and each non-final row-major stride. This keeps the
+callee's `a[i,j,...]` accesses in the caller's declared index space, including
+nonzero and negative lower bounds; writes still alias the actual storage.
+
+One-dimensional descriptors retain their existing handle-plus-lower-bound ABI.
+The compiler rejects rank-mismatched actuals and formals used with inconsistent
+subscript counts. Regressions cover 2-D descriptor layout, 3-D VM execution,
+and the diagnostics.
+
+## 0.36.0 — 2026-07-31 — AL1 integer-to-real promotion
+
+`integer` values now widen through the shared `int_to_real` IIR conversion
+when a `real` is required. This covers mixed integer/real arithmetic and
+comparisons, real division, real scalar and array-element assignments, real
+value parameters, real standard-function arguments, and a real exponent for
+`^`. `div` and `mod` remain integer-only; nonnumeric mismatches remain type
+errors.
+
+The compiler regressions cover each conversion site, and the LANG matrix runs
+an ALGOL program through Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.35.0 — 2026-07-31 — AL8 array value parameters
+
+One-dimensional `integer`, `real`, and `string` array `value` parameters now
+cross a procedure call as a typed IIR descriptor pair: the backing-storage
+handle and the actual array's declared lower bound. The callee rebinds that
+descriptor in its fresh scope, so ordinary subscript lowering preserves the
+actual array's index space and writes remain visible to the caller. Captured
+and `own` array actuals reload both descriptor fields from typed globals.
+
+Array actuals must be bare, element-type-compatible, one-dimensional variables;
+multidimensional and by-name array parameters remain unsupported. The frontend
+regressions cover integer, real, string, and captured integer descriptors plus
+the multi-dimensional rejection case.
+
+## 0.34.0 — 2026-07-30 — AL7 static scalar strings
+
+Procedures can now assign and read scalar `string` variables declared by their
+enclosing ALGOL block. These captures lower to typed module globals, allowing
+the shared LANG backends to use their native string-handle representation.
+`own string` has ALGOL static lifetime: a module-global initialization flag
+installs its empty-string value on the first procedure call, then subsequent
+calls reuse the same stored string.
+
+The regression invokes a procedure that assigns an enclosing string and a
+second procedure that writes and rereads an `own string` across calls. It
+executes to 3 on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.33.0 — 2026-07-30 — AL6 own arrays
+
+`own [type] array` declarations now have real ALGOL static lifetime. The
+compiler guards their first allocation with a scalar module-global flag, then
+stores the typed array handle and declared lower-bound/stride metadata in
+module globals. Later procedure invocations skip allocation and recover that
+same state, so an `own integer array memo[4:5]` retains element values and its
+nonzero index space across calls.
+
+The parser's checked-in Rust grammar artifact now recognizes `own_array_decl`.
+The execution regression calls a procedure three times and observes `memo[4]`
+as 1, 2, and 3 on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.32.0 — 2026-07-30 — ALGOL captured arrays
+
+Procedures can now read and write arrays declared by their enclosing ALGOL
+block. The frontend globalizes the array handle together with each declared
+lower bound and row-major stride, so a procedure uses the declaration's real
+subscript space rather than assuming a zero-based one. This covers integer,
+real, and string arrays; array value parameters remain a separate call-ABI
+follow-up.
+
+The regression declares `integer array values[4:5]`, has a proper procedure
+write both elements, and reads them in the enclosing block. It executes to 42
+across Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.31.0 — 2026-07-30 — E4d-AL: string arrays
+
+ALGOL `string array` declarations now reuse the shared E5 `array<str>`
+substrate already exercised by Dartmouth BASIC. Literal and initialized-scalar
+string writes lower to `str_const`/`array_set`; subscript reads yield `str` and
+can feed lexical ordering or `print_str`. The regression program stores `HI`
+and `LO`, compares the elements, and prints the selected element across native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+`own`/captured string storage and array parameters remain separate follow-ups.
+
+## 0.30.0 — 2026-07-30 — E4d-AL: runtime scalar string ordering
+
+Initialized scalar strings carrying a branch-selected `string procedure`
+result now participate in lexical ordering. `s := pick(1); if s < 'LO' then ...`
+lowers through the shared `str_cmp` operation and its signed comparison against
+zero, instead of rejecting the string because its contents are not known at
+compile time. The direct backend, generic JIT, AOT snapshot, WASM runtime, real
+BEAM runtime, and seven-standard-backend matrix all execute `HI < LO`.
+
+The old literal-provenance set is gone: definite source-order initialization is
+the relevant safety invariant for scalar string reads, regardless of how the
+value was produced.
+
+## 0.29.0 — 2026-07-30 — E4d-AL: runtime scalar string locals
+
+Initialized local scalar strings now carry runtime procedure results instead of
+being restricted to direct literals. For example, `s := pick(1); if s = 'HI'
+then ...; print(s)` lowers through the portable `str_concat`, `str_eq`, and
+`print_str` operations.
+
+- Local string reads require definite source-order initialization. Assigning a
+  string procedure result copies it with `str_concat(result, "")`, preserving
+  immutable snapshot semantics.
+- Equality and output accept initialized runtime values; lexical ordering stays
+  literal-backed because it still needs the broader runtime comparison slice.
+- The cross-backend regression lowers the program through WASM, JVM, textual
+  CIL/CLR, BEAM, and LLVM; AOT and generic-JIT tests cover the shared VM chain.
+
+Captured/`own` strings, string arrays, and Unicode-aware BEAM string operations
+remain outside this slice.
+
 ## 0.28.0 — 2026-07-03 — E4d-AL: string procedures (E4-dyn frontend payoff)
 
 The first E4-dyn *frontend* payoff, now that all seven backends carry a runtime

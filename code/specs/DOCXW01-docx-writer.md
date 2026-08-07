@@ -136,9 +136,35 @@ impl Document {
     pub fn add_paragraph(&mut self, text: &str);         // single-run paragraph
     pub fn add_paragraph_runs(&mut self, runs: &[&str]); // multi-run paragraph
     pub fn add_table(&mut self, rows: &[Vec<String>]);   // rows of cell text
+    // v0.2 — styled paragraphs of formatted runs (see "Formatting" below):
+    pub fn add_styled_paragraph(&mut self, style: ParagraphStyle, runs: Vec<Run>);
 }
 pub fn write_docx(doc: &Document) -> Vec<u8>;
 ```
+
+## Formatting (v0.2 addition)
+
+The original milestone kept only run *text*. v0.2 adds the minimum formatting a
+rich document (notably one produced from Markdown via
+[MD02](MD02-markdown-to-docx.md)) implies, **without breaking the text-only API**:
+
+- **`Run { text, bold, italic, mono }`** — a run's optional *direct* formatting.
+  `bold` → `<w:b/>`, `italic` → `<w:i/>`, `mono` → a Consolas `<w:rFonts>` (inline
+  code). Direct formatting renders in Word with no styles part; a flag-free run
+  emits no `<w:rPr>`, so unformatted output is byte-for-byte the v0.1 bytes.
+- **`ParagraphStyle { Normal, Heading(1..=6), Code, Quote, List }`** — a
+  paragraph's optional style. A non-`Normal` style emits
+  `<w:pPr><w:pStyle w:val="…"/></w:pPr>` and causes `write_docx` to add a minimal
+  **`word/styles.xml`** (linked via `word/_rels/document.xml.rels`) defining
+  `Heading1`…`Heading6` (bold, sized, with an `<w:outlineLvl>` so the outline /
+  navigation pane works), `Code`, `Quote`, and `ListParagraph`. Since a
+  `<w:pStyle>` reference only renders as its style when the package *defines* it,
+  emitting `styles.xml` is what makes headings look like headings. **A document
+  that uses no styles has no `styles.xml`** — the minimal case is unchanged.
+
+The read-side [`wordprocessingml`](WML01-wordprocessingml.md) reader keeps only
+text (it ignores `<w:rPr>`/`<w:pStyle>`), so the round-trip proof still holds:
+every visible character survives, formatting is additive on top.
 
 ## The round-trip proof
 

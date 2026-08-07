@@ -1,0 +1,103 @@
+% ============================================================================
+% minute-ventilation.adj — the definition of minute ventilation
+% (minute volume MV = tidal volume × respiratory frequency) in the ADJ standard
+% library.
+% ============================================================================
+% The minute-ventilation entry of the *clinical* track, a respiratory-physiology
+% sibling of `cardiac-output.adj` and `mean-arterial-pressure.adj`: the foundational
+% pulmonary definition a first course states as THE MINUTE VOLUME IS THE TIDAL VOLUME
+% MULTIPLIED BY THE RESPIRATORY FREQUENCY — the total volume of air moved in and out of
+% the lungs per minute — as an importable, byte-provenanced, PARAMETERIZED `formula`,
+% together with its two exact rearrangements (the tidal volume a minute volume implies
+% for a respiratory frequency, and the respiratory frequency it implies for a tidal
+% volume). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured quantities from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero
+% math is performed by the model; the engine computes each value EXACTLY, carrying the
+% definition's citation.
+%
+%     import "minute-ventilation.adj"
+%     observe tidal_volume(500)             % "…500 mL per breath…"  (span cited by the model)
+%     observe respiratory_frequency(12)     % "…12 breaths/min…"     (span cited by the model)
+%     ? minute_volume(tidal_volume, respiratory_frequency)
+%                                          % engine → 6000, carrying MV = TV·Rf
+%
+% All three formulas are EXACT over their parameters — one a product, two quotients of
+% measured quantities. There is no *separately grounded* physiological constant here,
+% so every value the engine returns is exact. The three COMPOSE and invert cleanly
+% around the worked case TV = 500 mL, Rf = 12 breaths/min (MV = 500·12 = 6000 mL/min
+% = 6 L/min, the average resting value): the `minute_volume` a consumer computes from a
+% tidal volume and respiratory frequency is exactly the `minute_volume` the
+% `tidal_volume` formula divides by that respiratory frequency to recover the tidal
+% volume, and exactly the `minute_volume` the `respiratory_frequency` formula divides by
+% that tidal volume to recover the respiratory frequency.
+%
+%   minute_volume(tidal_volume, respiratory_frequency)         = tidal_volume * respiratory_frequency  % MV = TV·Rf  (definition)
+%   tidal_volume(minute_volume, respiratory_frequency)         = minute_volume / respiratory_frequency  % TV = MV/Rf  (same def, solved for TV)
+%   respiratory_frequency(minute_volume, tidal_volume)         = minute_volume / tidal_volume           % Rf = MV/TV  (same def, solved for Rf)
+%
+% NOTE: the units must be consistent — a tidal volume in millilitres per breath and a
+% respiratory frequency in breaths per minute give a minute volume in millilitres per
+% minute (divide by 1000 for L/min); this library computes the exact value over
+% whatever consistent units it is given.
+%
+% All three formulas are defended by the SAME definitional sentence — "To calculate the
+% minute volume: MV=TV*Rf, or, the minute volume is equal to tidal volume multiplied by
+% the respiratory frequency (number of breaths per minute)." — because that one
+% definition (minute volume IS tidal volume times respiratory frequency) sanctions the
+% relation read every way (MV from TV and Rf, TV from MV and Rf, or Rf from MV and TV).
+% The quote is transcribed verbatim from a university-hosted open human-physiology lab
+% text on Medicine LibreTexts (the same primary reference family the other clinical
+% libraries draw on), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the definitional sentence is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable respiratory quantity the definition
+% ranges over, and each result is the derived quantity. `tidal_volume`,
+% `respiratory_frequency` and `minute_volume` each appear BOTH as a derived result and
+% as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary minute_ventilation_vocab {
+    define tidal_volume          : finding  surface "tidal volume", "TV"                                 % millilitres per breath (mL)
+    define respiratory_frequency : finding  surface "respiratory frequency", "respiratory rate", "Rf", "RR"  % breaths per minute
+    define minute_volume         : finding  surface "minute volume", "minute ventilation", "MV"          % millilitres per minute (mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% the LibreTexts human-physiology text (a quote is required on a shipped formula). One
+% is a product and two are quotients, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook minute_ventilation_laws {
+    use minute_ventilation_vocab
+
+    % Minute volume — the product of tidal volume and respiratory frequency. The text
+    % defines the minute volume as the tidal volume multiplied by the respiratory
+    % frequency, i.e. MV = TV·Rf.
+    formula minute_volume(tidal_volume, respiratory_frequency) = tidal_volume * respiratory_frequency
+        source "To calculate the minute volume: MV=TV*Rf, or, the minute volume is equal to tidal volume multiplied by the respiratory frequency (number of breaths per minute)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/A_Mixed_Course_Based_Research_Approach_to_Human_Physiology_(Whitmer)/02:_Labs/2.12:_Assessment_of_Pulmonary_Function"
+        trust authoritative
+
+    % Tidal volume — the same definition solved for the tidal volume a minute volume
+    % implies for a respiratory frequency (TV = MV/Rf). Defended by the SAME definitional
+    % sentence, read the other way.
+    formula tidal_volume(minute_volume, respiratory_frequency) = minute_volume / respiratory_frequency
+        source "To calculate the minute volume: MV=TV*Rf, or, the minute volume is equal to tidal volume multiplied by the respiratory frequency (number of breaths per minute)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/A_Mixed_Course_Based_Research_Approach_to_Human_Physiology_(Whitmer)/02:_Labs/2.12:_Assessment_of_Pulmonary_Function"
+        trust authoritative
+
+    % Respiratory frequency — the same definition solved for the respiratory frequency a
+    % minute volume implies for a tidal volume (Rf = MV/TV). Again the SAME definitional
+    % sentence, read the third way.
+    formula respiratory_frequency(minute_volume, tidal_volume) = minute_volume / tidal_volume
+        source "To calculate the minute volume: MV=TV*Rf, or, the minute volume is equal to tidal volume multiplied by the respiratory frequency (number of breaths per minute)."
+        locator "https://med.libretexts.org/Bookshelves/Anatomy_and_Physiology/A_Mixed_Course_Based_Research_Approach_to_Human_Physiology_(Whitmer)/02:_Labs/2.12:_Assessment_of_Pulmonary_Function"
+        trust authoritative
+}

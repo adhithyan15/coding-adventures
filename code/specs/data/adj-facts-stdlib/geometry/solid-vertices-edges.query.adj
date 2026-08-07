@@ -1,0 +1,22 @@
+% ============================================================================
+% solid-vertices-edges.query.adj — a worked recall over the geometry
+% vertices/edges libraries.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many vertices does a
+% cube have?": it states no geometry fact — it only `import`s the grounded
+% tables and asks binding queries. The engine resolves each `?` against the
+% `solid_vertices` / `solid_edges` rows and returns the count + the table's
+% source/locator/trust. A solid not in the table abstains honestly — the engine
+% never invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli solid-vertices-edges.query.adj
+% ============================================================================
+
+import "solid-vertices-edges.adj"
+
+? solid_vertices(cube, $V)             % expect 8
+? solid_edges(cube, $E)                % expect 12
+? solid_vertices(dodecahedron, $V)     % expect 20
+? solid_edges(icosahedron, $E)         % expect 30
+? solid_vertices(sphere, $V)           % expect abstain — a sphere is not a Platonic solid

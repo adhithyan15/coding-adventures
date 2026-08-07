@@ -1,2 +1,2 @@
-cpanm --with-test --installdeps --quiet .
-prove -l -v t/
+cpanm --notest --quiet Test2::V0
+set "PERL5LIB=..\md5\lib;..\sha1\lib;..\sha256\lib;..\sha512\lib;%PERL5LIB%" && prove -l -v t\

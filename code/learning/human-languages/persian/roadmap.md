@@ -1,0 +1,62 @@
+# Persian Roadmap — Absolute Beginner toward B1
+
+Persian follows the shared communicative spine while extending it only where the
+language needs additional script, grammar, register, or variety work. The unit is
+one expression per lesson, designed for less than five minutes. Script is learned
+inside useful words, never as a prerequisite alphabet course.
+
+## Chapter 1 — Greetings and responses *(authored)*
+
+**سلام** *salâm* → **ممنون** *mamnun* → **بله** *bale* → **نه** *na*.
+The sequence establishes right-to-left reading, joining, a non-joining letter,
+omitted short vowels, and one written long vowel. It also distinguishes inherited
+Iranian **na** from the Arabic loans **salâm** and **mamnun**.
+
+## Chapter 2 — Give your name *(authored)*
+
+**اسم من ... است** *esm-e man ... ast*. The first Persian-specific extension is
+the spoken ezafe linker **-e**. The lesson keeps the careful written copula
+**ast** visible before later introducing its conversational reductions.
+
+## Chapter 3 — Ask and answer names *(authored)*
+
+**شما / تو** *shomâ / to* → **چیست** *chist* → **اسم شما چیست؟**
+*esm-e shomâ chist?* → **خوشوقتم** *khoshvaghtam* → one cumulative exchange.
+The schema-v2 chain adds respectful/familiar register, Persian **چ**, the
+*chi + ast* fusion, the right-to-left question mark, and a layered
+*khosh + vaqt + -am* etymology only when each expression needs it. Objective
+focused retrieval comes before the exchange enters mixed-language review.
+
+## Chapter 4 — Ask about wellbeing *(authored)*
+
+**حال** *hâl* → **چطور** *chetor* → **حال شما چطور است؟**
+*hâl-e shomâ chetor ast?* → **خوب** *khub* → **خوبم، ممنون**
+*khubam, mamnun* → one cumulative exchange. The sequence reuses ezafe before
+adding a careful respectful question, contrasts inherited and borrowed lexical
+layers, and introduces only the first-person copula **-am** needed for the
+answer. Colloquial contraction is labelled for recognition but not required for
+production yet.
+
+## Chapter 5 — Take leave *(authored)*
+
+**خدا** *khodâ* → **حافظ** *hâfez* → **خداحافظ** *khodâ hâfez* → one
+start-versus-end interaction. The sequence keeps inherited Persian *xwadây*
+history separate from the Arabic **ḥ-f-ẓ** “guard, preserve” root until each
+word is readable, then teaches Persian's joined spelling as one reliable,
+broadly polite close. Casual, time-of-day, and “see you” farewells stay later
+rather than hiding untaught time language in the first parting lesson.
+
+## Chapter 6 — People and simple identity *(planned)*
+
+- **man hastam** and the next present-copula forms one at a time;
+- careful written forms versus colloquial Iranian Persian;
+- one noun at a time with ezafe reuse;
+- Persian additions **پ چ ژ گ** introduced only when a word needs them.
+
+## Part II onward *(sketch)*
+
+Build through everyday location, possession, food, time, family, and routine.
+Introduce present stems and past stems through high-frequency verbs, then add
+object marking with **râ**, comparatives, modals, and subordinate clauses toward
+B1. Dari and Tajik remain future related varieties with explicit labels rather
+than silent synonyms for Iranian Persian.

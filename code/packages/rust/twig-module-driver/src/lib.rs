@@ -3763,7 +3763,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "12",
             "make-span should have 12 instructions; got {}",
-            v.to_string()
+            v
         );
     }
 
@@ -3804,7 +3804,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "4",
             "dummy-span should have 4 instructions; got {}",
-            v.to_string()
+            v
         );
     }
 
@@ -3840,7 +3840,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "#t",
             "summary length should be >1000 chars; result was {}",
-            v.to_string()
+            v
         );
     }
 
@@ -4032,11 +4032,9 @@ mod tw05q_tests {
         // and a non-TypeErrors failure.  The key invariant is that Phase 3.5
         // never returns TypeErrors for a lenient module.
         let result = crate::compile_module_tree(&root, &[]);
-        match result {
-            Err(crate::ModuleDriverError::TypeErrors { .. }) => {
-                panic!("lenient module must never return TypeErrors from Phase 3.5");
-            }
-            _ => {} // Ok(_) or any other Err variant is acceptable
+        // Ok(_) or any non-TypeErrors Err variant is acceptable.
+        if let Err(crate::ModuleDriverError::TypeErrors { .. }) = result {
+            panic!("lenient module must never return TypeErrors from Phase 3.5");
         }
     }
 

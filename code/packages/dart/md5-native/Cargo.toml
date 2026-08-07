@@ -1,0 +1,20 @@
+# Standalone workspace so this cdylib stays out of the main Rust workspace
+# (mirrors dart/sha256-native). Depends on the pure md5 crate by path.
+[workspace]
+
+[package]
+name = "md5-native"
+version = "0.1.0"
+edition = "2021"
+description = "C-ABI cdylib wrapping the Rust coding_adventures_md5 crate, called from Dart via dart:ffi (zero third-party deps)"
+
+[lib]
+# Produces libmd5_native.{so,dylib}/md5_native.dll.
+name = "md5_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+coding_adventures_md5 = { path = "../../rust/md5" }
+
+[profile.release]
+opt-level = 3

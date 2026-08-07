@@ -1,0 +1,27 @@
+% ============================================================================
+% ideal-body-weight.query.adj — worked applications of the Devine ideal body weight.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a dosing vignette into a height (and a sex): it
+% `import`s the grounded formulabook, `observe`s the height, and asks the engine to APPLY the cited
+% Devine formula. No arithmetic is stated by the consumer; the engine computes each value EXACTLY (over
+% exact rationals) and carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (height = 70 inches): male IBW = 50 + 2.3 × (70 − 60) = 50 + 23 = 73 kg; female IBW =
+% 45.5 + 23 = 68.5 kg. The male inverse recovers the height exactly: (73 − 50) / 2.3 + 60 = 10 + 60 = 70.
+% The ideal body weight computed here is exactly what a consumer feeds to the adjusted-body-weight
+% library as its `ideal_body_weight` input (write-once-use-many).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ideal-body-weight.query.adj
+% ============================================================================
+
+import "ideal-body-weight.adj"
+
+% --- Forward: the male and female ideal body weights a height of 70 inches implies (expect 73, 68.5). -
+observe height(70)
+? ideal_body_weight_male(height)     % expect 73
+? ideal_body_weight_female(height)   % expect 68.5
+
+% --- Inverse: the height a male ideal body weight of 73 implies (expect 70). ------------------------
+observe ideal_body_weight_male(73)
+? height(ideal_body_weight_male)     % expect 70

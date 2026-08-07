@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-maple-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `maple` binary for Maple (a subset)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-maple-runtime = { path = "../maple-runtime" }
+
+[[bin]]
+name = "maple"
+path = "src/main.rs"

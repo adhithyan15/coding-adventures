@@ -1,5 +1,65 @@
 # Changelog — regex-engine
 
+## 0.6.0 — Unreleased
+
+Adds **`replace_all`** and the match **iterators** — the last engine capability
+before engram-core can point its media-tag `replace_all` at this engine and drop
+the third-party `regex` crate entirely (Phase D4).
+
+### Added
+
+- `Regex::replace_all(text, rep) -> Cow<str>` (borrows unchanged when there is no
+  match). `rep` is a [`Replacer`]: a closure `FnMut(&Captures) -> String` (the form
+  engram's media replacement uses), or a replacement **string** with `$N`/`${N}`
+  numbered-group references and `$$` for a literal `$`.
+- `Regex::find_iter` / `Regex::captures_iter` — iterators over the leftmost,
+  **non-overlapping** matches. Iteration matches the `regex` crate: resume at the
+  previous match's end, and skip an empty match sitting exactly at that end (so an
+  empty-capable pattern inserts between characters without doubling at the seams).
+
+### Verified
+
+- Cross-checked vs the live `regex` crate: **84k** iteration checks (the sequence
+  of match byte ranges agrees, incl. the empty-match non-overlap rule) and **84k**
+  `replace_all` output comparisons — wherever the two engines iterate identically,
+  the replaced output (with a `$0`/`$1`/`$$` replacement string) is byte-identical.
+  5 new unit tests cover the closure and string replacers, empty-match semantics,
+  and both iterators. Full `cargo test -p regex-engine` green; clippy + fmt clean.
+
+## 0.5.0 — Unreleased
+
+Adds **capture groups** — `Regex::captures` — the second half of Phase D3, on the
+way to `replace_all` and dropping the `regex` crate from engram-core (D4).
+
+### Added
+
+- `Regex::captures(text) -> Option<Captures>` and the `Captures` type
+  (`get(i)` → the `i`-th group's `Match` (0 = overall), `len`, `is_empty`).
+  Group boundaries use the same leftmost-first Pike-VM priority as `find`;
+  non-participating groups report `None`. Byte offsets throughout.
+- Capturing groups now compile to `Save` instructions bracketing the body
+  (slots `2g`/`2g+1`; slots `0`/`1` are the overall match). Threads on the
+  `captures` run carry a **copy-on-write** (`Rc`) slot vector — branches share one
+  allocation until a `Save` writes — so the common case stays cheap. `Save` is an
+  epsilon no-op for `is_match`/`find`, so those paths are unchanged.
+
+### Changed / guarded
+
+- A pattern with more than **1000 capturing groups** is now rejected at build time
+  (`MAX_GROUPS`) — a DoS guard on per-thread slot state, analogous to the existing
+  nesting/repeat/program-size caps. Engram's media-tag regex has 3 groups.
+
+### Verified
+
+- Cross-checked against the live `regex` crate: **72k** existence checks (a match
+  is reported iff `regex` matches) and **39k** full-group comparisons — wherever
+  the two engines agree on the overall span, *every* capturing group's byte range
+  agrees, across greedy/lazy quantifiers, alternation, nested groups, and multibyte
+  input. (Group comparison is skipped only where `regex`'s own unanchored search
+  reports a non-leftmost overall match — the corner already characterized for
+  `find`.) 8 unit tests incl. non-participating branches, quantified-group
+  last-iteration capture, the media-pattern shape, and the group-count reject.
+
 ## 0.4.0 — Unreleased
 
 Adds the overall **match extent** — `Regex::find` — the first half of Phase D3

@@ -45,8 +45,10 @@ The package exposes a single `Wave` class/struct:
 `Wave(amplitude, frequency, phase=0.0)` creates a new wave.
 
 **Validation:**
-- `amplitude` must be $\geq 0$ (negative amplitude is meaningless; use phase to flip)
-- `frequency` must be $> 0$ (zero frequency is a constant, not a wave)
+- `amplitude` must be finite and $\geq 0$ (negative amplitude is meaningless; use phase to flip)
+- `frequency` must be finite and $> 0$ (zero frequency is a constant, not a wave)
+- $2\pi f$ must remain finite in the implementation's floating-point type
+- `phase` must be finite
 
 ### 3.2 Properties
 
@@ -71,17 +73,76 @@ The package exposes a single `Wave` class/struct:
 
 Where $t$ is time in seconds. This is the heart of the package — given a moment in time, what is the wave's value?
 
+`evaluate(t)` rejects non-finite time. It returns zero immediately for a
+zero-amplitude wave, reduces finite time to one period before multiplying by
+frequency, and clamps the first-principles sine approximation to the unit
+interval before amplitude scaling. These rules prevent otherwise finite inputs
+from producing an overflow or a `NaN` through avoidable intermediate values.
+
+The required evaluation order is:
+
+```text
+if time is not finite: reject invalid argument
+if amplitude == 0: return 0
+reduced_time = time modulo period()
+reduced_phase = phase modulo (2 * PI)
+angle = 2 * PI * (frequency * reduced_time) + reduced_phase
+unit_value = sin(angle)
+if unit_value >= 1: return amplitude
+if unit_value <= -1: return -amplitude
+return amplitude * unit_value
+```
+
+Implementations must perform the angular-frequency finiteness check during
+construction and must not form `frequency * time` before period reduction.
+Clamping the unit value before the final product is part of the contract, not a
+test-only tolerance: it keeps every accepted finite wave amplitude-bounded.
+Positive subnormal frequencies remain valid even when `period()` rounds to
+positive infinity. In that case the time remainder is defined as the original
+finite time, so evaluation still forms only the bounded product
+`frequency * time`. `reject` means a lane-native exception, result/error value,
+or error tuple; returning NaN or a sentinel is not rejection.
+
+The Dart implementation uses lower-camel `angularFrequency()` for the
+language-neutral `angular_frequency()` operation. The remaining constructor,
+properties, `period()`, and `evaluate(t)` names are unchanged.
+
+Swift preserves its original precondition-based initializer and
+`evaluate(at:)` surface for source compatibility, and exposes catchable PHY01
+rejections through `init(validatingAmplitude:frequency:phase:)` and
+`evaluateChecked(at:)`. Lua and Perl preserve their older sampled-wave helper
+APIs and add the continuous model as `wave.Wave` and
+`CodingAdventures::Wave->new(...)`, respectively. These lane-native spellings
+must implement the same construction, derived-value, evaluation, and rejection
+semantics. Runtimes that cannot construct NaN or infinity still validate all
+representable inputs and document that fixture limitation; they may not weaken
+the finite-input contract for values the runtime can represent. Elixir maps the
+positive-infinite period of a valid subnormal frequency to the explicit atom
+`:positive_infinity` because BEAM has no infinite float term.
+
 ## 4. Dependency
 
 The `wave` package depends on the `trig` package (PHY00) for:
 - `PI` constant (used in $2\pi f$)
 - `sin()` function (the core of the wave equation)
 
-No standard-library math functions are used. The entire computation chain is built from first principles.
+No host trigonometric or square-root functions are used. Implementations may
+use the language's scalar finiteness predicate and signed floating-point
+remainder operation for validation and period reduction; sine and PI still come
+from the local first-principles PHY00 package.
 
 ## 5. Cross-Language Parity
 
-Implemented identically across all 6 host languages (Python, Go, Ruby, TypeScript, Rust, Elixir). Each implementation passes the same test cases:
+Implemented across all 15 established implementation lanes: C#, Dart, Elixir,
+F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and
+TypeScript. The normative machine-readable oracle is
+`fixtures/phy00-phy01-v1/cases/wave.json`, validated by the closed Draft
+2020-12 `fixtures/phy00-phy01-v1/schema.json`. Tagged decimal strings and
+symbols preserve signed zero, extreme finite values, NaN, and infinity across
+JSON implementations. Package-native tests may add cases but may not weaken
+or reinterpret the shared outcomes, tolerances, or bounded-output predicates.
+
+The shared cases validate:
 
 1. **Zero crossing:** A wave with phase 0 evaluates to 0 at $t = 0$
 2. **Peak:** A 1 Hz wave with phase 0 reaches amplitude $A$ at $t = 0.25$ (quarter period)
@@ -89,3 +150,14 @@ Implemented identically across all 6 host languages (Python, Go, Ruby, TypeScrip
 4. **Phase shift:** A wave with phase $\pi/2$ starts at its peak
 5. **Derived properties:** Period and angular frequency computed correctly
 6. **Validation:** Negative amplitude and zero frequency are rejected
+7. **Finite construction:** Non-finite parameters and angular-frequency overflow are rejected
+8. **Finite evaluation:** Non-finite time is rejected, zero amplitude short-circuits, and extreme finite evaluation remains amplitude-bounded
+9. **Subnormal frequency:** The minimum positive binary64 frequency is valid,
+   its represented period is positive infinity, and evaluation remains finite
+   and amplitude-bounded
+
+The Dart lane consumes the v1 corpus directly. The merged
+`phy00-small-sqrt-cross-lane-audit` repaired the foundational trig dependency;
+`phy01-nonfinite-validation-backfill` wires the same oracle semantics into every
+established wave lane while repairing discrepancies it exposes. Corpus
+publication alone does not claim that implementation audit complete.

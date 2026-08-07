@@ -1,0 +1,104 @@
+% ============================================================================
+% leaf-parts — the parts of a leaf and the defining token / function the
+% source states for each one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A leaf is not one undifferentiated green flap: it is an assembly of named
+% parts, and a botany key names each part by the ONE thing it is or does. "The
+% blade is the flattened part; the petiole is the leaf stalk; the veins are the
+% xylem-and-phloem tissue; the stomata are the openings for gas exchange; the
+% cuticle prevents water loss; the epidermis is the outer layer." Before you can
+% reason about a leaf — identify it, diagnose it, or teach it — you must first
+% know WHICH part you are looking at and what that part is FOR. Recall is a
+% binding query:
+%
+%     ? leaf_part_role(stomata, $Role)      % gas_exchange
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `leaf_part_role(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these leaf parts (it never invents a role).
+%
+% Each leaf part and the defining token / function the source states for it, as
+% a little truth table:
+%
+%     leaf part   defining token / function      a beginner's cue
+%     ---------   -------------------------      -----------------------------
+%     blade       flattened                      the flat green sheet of the leaf
+%     petiole     stalk                          the little stem that holds the leaf
+%     veins       xylem_and_phloem               the plumbing that runs through it
+%     stomata     gas_exchange                   pores that breathe in/out
+%     cuticle     prevents_water_loss            the waxy skin that seals it
+%     epidermis   outer                          the outermost layer of cells
+%
+% The query also runs BACKWARD — bind a role and recall the leaf part:
+%
+%     ? leaf_part_role($Part, stalk)   % petiole
+%
+% A word that is NOT one of these leaf parts — `root`, `flower`, `seed` — is
+% deliberately NOT a row, so a leaf-part recall ABSTAINS on it rather than
+% inventing a role. (The root is a plant part, but not a part of the LEAF.) That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the part→role pairs it can ground, and only those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to be a word
+% the source EXPLICITLY uses for that part — never one the source does not
+% support. Where the source's phrase is more than one word (the cuticle
+% "prevents water loss"; the veins are "xylem and phloem" tissue), the atom
+% joins the source's own words with underscores, so every value stays literally
+% checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of a single fetched Colorado State University Extension page, and
+% any pair whose role could not be verified there was dropped). Each pair, with
+% the verbatim span that states it, from CMG GardenNotes #134, "Plant
+% Structures: Leaves" (Colorado State University Extension, a land-grant .edu
+% cooperating with the U.S. Department of Agriculture):
+%   https://cmg.extension.colostate.edu/Gardennotes/134.pdf
+%
+%   blade → flattened
+%     "Leaf Blade – Flattened part of the leaf."
+%
+%   petiole → stalk
+%     "Petiole – Leaf stalk."
+%
+%   veins → xylem_and_phloem
+%     "Vascular bundle – Xylem and phloem tissues comprising the leaf veins."
+%
+%   stomata → gas_exchange
+%     "Stomates (Stomata) – Natural openings in leaves and herbaceous stems
+%      that allow for gas exchange (water vapor, carbon dioxide and oxygen) and
+%      plant cooling."
+%
+%   cuticle → prevents_water_loss
+%     "Cuticle – Waxy protective outer layer of epidermis that prevents water
+%      loss from leaves, green stems, and fruits."
+%
+%   epidermis → outer
+%     "Epidermis – Outer layer of cells"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the CSU Extension statement that
+% fixes the first row (blade → flattened). Every OTHER row's verbatim span is
+% listed above, so each role remains independently checkable. The source is a
+% Colorado State University Extension botany teaching page (a .edu-primary
+% extension resource), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table leaf_part_role {
+    columns part, role
+
+    row (blade, flattened)
+    row (petiole, stalk)
+    row (veins, xylem_and_phloem)
+    row (stomata, gas_exchange)
+    row (cuticle, prevents_water_loss)
+    row (epidermis, outer)
+
+    source "Leaf Blade – Flattened part of the leaf."
+    locator "https://cmg.extension.colostate.edu/Gardennotes/134.pdf"
+    trust authoritative
+}

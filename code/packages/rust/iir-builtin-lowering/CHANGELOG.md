@@ -1,5 +1,207 @@
 # Changelog — iir-builtin-lowering
 
+## 0.31.0 - 2026-07-20 — null? runtime lowering + list-ref/assoc index boxing + predicate exit-coercion (native/LLVM lisp fixes)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
+## 0.30.0 - 2026-07-14 (E6d-7a: closures -> cons-heap + synthesized dispatcher)
+
+New pass `lower_closures_to_heap` (closure_heap.rs): lowers `alloc_closure`/`call_closure` entirely at the IIR level for the backends that lack a native closure model (WASM + NativeAot; LLVM is a follow-up). A closure becomes a cons-chain `(box(dispatch_index) . (caps...))`; `call_closure` boxes its args into a second chain and calls a synthesized `__dyn_call_closure` dispatcher — a chain of dynamic `=` index tests (the proven E6d-6 match/union tag pattern) over statically-known lambda bodies, each a direct `call` threading captures ++ args. Reuses only `cons`/`car`/`cdr`/`=`/`call`/`jmp_if_false` (no new backend codegen; no `call_indirect`/funcref). Dispatch indices are assigned alphabetically (deterministic). Unit-tested; run-verified on WASM + native (exit 42).
+
+## 0.29.0 - 2026-07-13 (E6d-6: boxed-bool `jmp_if_false` branches on the raw bool)
+
+Both dynamic-representation passes now recognise a `jmp_if_false` whose guard is a
+**boxed machine bool** — a boxed comparison result (`= tag …` in a Twig `match`,
+or any `(if (= a b) …)` forced onto the dynamic path) — and branch on its RAW
+pre-box `bool`, instead of applying McCarthy nil-truthiness.
+
+Why: `lower_dynamic_arith` boxes every comparison result (`cmp_eq → bool` then
+`box → ref<any>`). Both passes then saw a `ref<any>`/tagged condition and wrapped
+it — the structural pass (WASM/JVM/CLR/BEAM) as `not(is_null(cond))`, the native
+pass (NativeAot/LLVM) as `dyn_truthy(cond)`. But a boxed `#f` is a **non-nil**
+value (`ref.i31(0)` on the structural side; `dyn_box_int(0)` = tagged integer 0 on
+the native side), and nil-truthiness / McCarthy-truthiness both read it as **true**
+— so every `match` arm's tag test passed and dispatch was wrong (E6d-6).
+
+Fix: in `lower_dyn_repr_structural` (new `boxed_bool_source`/`boxed_bool_conditions`
+helpers) and in `lower_dyn_repr`'s `wrap_tagged_conditions`, a guard that is a
+`box` of a `"bool"`-typed value is repointed to the raw source and the jump is
+emitted unwrapped. General fix — helps any comparison-as-branch-condition on the
+dynamic path, not only `match`. One new unit test; 149 lib tests pass.
+
+## 0.28.0 - 2026-07-13 (E6d-3b COMPLETE: `assoc` via a synthesized alist-search helper)
+
+`lower_list_ops` gains its fifth and final list operation, `assoc` — completing
+the E6d-3b list-operation set (`length`, `list-ref`, `append`, `reverse`,
+`assoc`). It rewrites `call_builtin "assoc" key alist` to a call to a synthesized
+recursive helper `__dyn_list_assoc` (injected once) that searches an association
+list (a list of `(k . v)` cons pairs):
+
+```
+__dyn_list_assoc(key, alist) = if null?(alist) then nil
+    else if key == car(car(alist)) then car(alist)
+    else __dyn_list_assoc(key, cdr(alist))
+```
+
+The key comparison must yield a raw machine bool for `jmp_if_false`. Since the
+`equal?` builtin lowers unevenly across the managed (`equal?`) and native
+(`dyn_equal`) paths and its result is not a plain branch bool, V1 `assoc`
+**unboxes both keys to `i64` and compares with a typed `cmp_eq`** — the exact
+technique `list-ref` uses for its index. That scopes V1 `assoc` to **integer
+keys** (every E6d-3b proof uses integer atoms); symbol keys arrive with E6d-4
+(interned symbols → `eq?` bit-equality). The alist cells, the returned pair, and
+`nil` are all references, so no boxing on the value path. Five new unit tests
+(rewrite, single injection, pair-search shape with 2 unboxes / 2 branches / 2
+cars / 3 rets, all-five-ops coexistence).
+
+## 0.27.0 - 2026-07-13 (E6d-3b: `reverse` via a tail-recursive accumulator helper)
+
+`lower_list_ops` gains a fourth list operation, `reverse`. It rewrites
+`call_builtin "reverse" a` to a **nil-seeded** call to a synthesized
+tail-recursive accumulator helper `__dyn_list_reverse` (injected once):
+
+```
+reverse(a)          = __dyn_list_reverse(a, nil)      # nil seed at the call site
+__dyn_list_reverse(a, acc) = if null?(a) then acc
+                             else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+```
+
+Consing each element of `a` onto the *front* of the accumulator reverses the
+order; the base case returns the accumulator. The call-site rewrite emits the
+empty accumulator as a `const 0 : ref<LispyPair>` (the exact nil sentinel the
+`list` desugar / `make_nil` emit), named `{dest}.rev_nil` (unique per SSA dest so
+two `reverse` sites never collide). Like `append` there is no index → no
+unbox/box; the recursion reuses `null?`/`car`/`cdr`/`cons` (E6d-1). Recursion is
+in tail position but the backends do not yet TCO, so depth is bounded by the list
+length. Five new unit tests (nil-seed + acc-call rewrite, single injection,
+tail-recursive-accumulator shape, all-four-ops coexistence). `assoc` follows.
+
+## 0.26.0 - 2026-07-12 (E6d-3b: `append` via a synthesized list-rebuild helper)
+
+`lower_list_ops` gains a third list operation, `append`. It rewrites
+`call_builtin "append" a b` to a call to a synthesized recursive helper
+`__dyn_list_append` (injected once, idempotently) that *rebuilds* the first list
+in front of the second:
+
+```
+__dyn_list_append(a: ref<any>, b: ref<any>) -> ref<any>:
+    if !null?(a)  goto recurse       # → is_null (E6d-1)
+    ret b                            # append(nil, b) = b
+  recurse:
+    ret cons(car(a), __dyn_list_append(cdr(a), b))
+```
+
+Unlike `list-ref` there is **no index**, so no unbox/box: `a`/`b`, `car(a)`, and
+the recursive result are all lisp `ref<any>` references. Its only new op versus
+`length`/`list-ref` is the `cons` in the recursive arm — the same E6d-1 heap
+builtin, rewritten to `alloc`/`field_store` for the injected helper by the same
+head-of-heap-lowering pass. Both arms return `ref<any>` (the second list, or a
+fresh cons). Five new unit tests (rewrite, single injection, cons-rebuild shape,
+all-three-ops coexistence). `reverse`/`assoc` follow the same pattern.
+
+## 0.25.0 - 2026-07-12 (E6d-3b: `list-ref` via a synthesized index-walk helper)
+
+`lower_list_ops` gains a second list operation, `list-ref`. Like `length` it
+rewrites `call_builtin "list-ref" lst n` to a call to a synthesized recursive
+helper `__dyn_list_ref` (injected once, idempotently) and reuses `car`/`cdr`
+(E6d-1):
+
+```
+__dyn_list_ref(lst: ref<any>, n: ref<any>) -> ref<any>:
+    ni = unbox n                       # boxed index → machine i64
+    if !(ni == 0) goto recurse         # typed cmp_eq → raw bool
+    ret car(lst)                       # base: the n-th element
+  recurse:
+    ret __dyn_list_ref(cdr(lst), box(ni - 1))   # typed sub, re-boxed
+```
+
+Design note — **the index is a boxed lisp value, not a raw `i64` param.** The
+lisp boundary is uniform-anyref: `dyn_repr_structural` (managed) / `lower_dyn_repr`
+(native) box *every* argument to a lisp function, so a raw-`i64` index param
+faults at the call (`expected i64, got I32(2)`). The helper therefore takes
+`n : ref<any>` and unboxes it once; the index test/decrement are then plain typed
+`cmp_eq`/`sub` (the raw bool feeds `jmp_if_false` directly — hint `"bool"`, so it
+is not treated as a lisp-truthiness condition), and the decremented index is
+re-boxed before the recursive call (the same explicit-`box` shape the `length`
+helper's base case uses). `length` and `list-ref` share the module entry and
+each inject their helper independently. Five new unit tests (rewrite, single
+injection, index-walk shape, coexistence with `length`). `append`/`reverse`/
+`assoc` follow the same pattern.
+
+## 0.24.0 - 2026-07-12 (E6d-3b: `length` via a synthesized cons-walk helper)
+
+New `list_ops` module (`lower_list_ops`): a list *operation* like `length` walks
+the cons chain, so it can't be a straight-line desugar (unlike E6d-3a's `list`
+constructor). `lower_list_ops` rewrites `call_builtin "length" lst -> dest` into a
+`call __dyn_list_length, lst -> dest : ref<any>` and injects (once per module) the
+recursive helper
+
+    __dyn_list_length(lst : ref<any>) -> ref<any>:
+        if null?(lst) then (box 0) else (+ 1 (__dyn_list_length (cdr lst)))
+
+The helper is a **proper lisp function** — both branches return a boxed
+`ref<any>`, and the `+ 1 …` is the E6d-2 **dynamic** add (raw `i64` `1` + boxed
+recursive result). This matters: a mixed i64/ref helper confused `dyn_repr`'s
+lisp/machine partition (it classifies a function calling lisp builtins as lisp and
+coerced the i64 return, giving `type mismatch: expected i64, got I32(0)`). As a
+proper lisp function it rides `null?`/`cdr` (E6d-1) + dynamic arithmetic (E6d-2) —
+nothing new lowers, so it reaches all five code-gen backends. Runs at the head of
+both `lower_heap_builtins` and `lower_heap_builtins_runtime` (like the E6d-3a
+desugar), so the helper's `null?`/`cdr` lower on both the managed and native
+paths with no lang-aot pipeline change. 4 unit tests. (Depends on the WASM nil
+`ref.null` fix, iir-to-wasm 0.38.0.) `list-ref`/`append`/`reverse` follow the same
+helper pattern.
+
+## 0.23.0 - 2026-07-12 (E6d-3a: `list` constructor desugars to a cons chain)
+
+`list` is pure sugar over `cons` — `(list a b c)` = `(cons a (cons b (cons c
+nil)))`. Rather than a new backend op, a new `desugar_list_in_function` pass
+expands `call_builtin "list" …` into a nil `const` + a right-to-left `cons`
+chain, and it runs at the **head of both** `lower_heap_builtins` (managed:
+cons → `alloc`/`field_store`) **and** `lower_heap_builtins_runtime` (native/LLVM:
+cons → `dyn_cons`), so `list` reaches all five code-gen backends via the E6d-1
+cons path with **no lang-aot pipeline change and no `call_builtin` allowlist
+entry** (the `list` builtin is gone before any backend sees it). `(list)` with no
+args lowers directly to the nil sentinel. 5 unit tests (desugar shape, element
+order + dest preservation, empty list, end-to-end alloc/field_store, and the
+`dyn_cons` runtime path). List *operations* (`length`/`list-ref`/`append`/
+`reverse`) are E6d-3b (they need a cons-walk helper, not a desugar).
+
+## 0.22.0 - 2026-07-11 (E6d-2b: tagged-i64 box/unbox runtime calls + producer-agnostic ref<any>)
+
+E6d-2b: new pass `lower_box_unbox_to_runtime_calls` rewrites the generic `box`/`unbox` ops (which `lower_dynamic_arith` emits) into `dyn_box_int`/`dyn_unbox_int` `call_builtin`s — the tagged-i64 (native/LLVM) representation of boxing, which the backends dispatch to `__dyn_box_int`/`__dyn_unbox_int`. The structural backends keep the generic ops. Also refines the DVAL01-3 `dyn_repr` seed: `ref<any>` (always a genuine tagged heap value) is now seeded **ungated**, so a **Twig** dynamic-arith result is exit-unboxed on the tagged-i64 backends, not just McCarthy Lisp; bare `any` stays gated on `is_lisp` (Twig placeholder). New tests: box/unbox -> runtime calls.
+
+## 0.21.0 - 2026-07-11 (DVAL01-3: producer-agnostic DynValue classification)
+
+DVAL01-3 (spec DVAL01 §3.3): `dyn_repr` now seeds its "boxed register" set from
+**any op whose result type is a `DynValue`** (`any` / `ref<any>`) — not from a
+hard-coded lisp-builtin allow-list. A register holds a tagged word because of
+*what it is*, so a boxed **arithmetic** result (`dyn_box_int`, typed `ref<any>`)
+is exit-unboxed exactly like a `dyn_car` result — the concrete generalisation
+that unblocks dynamic arithmetic on native/LLVM (E6d-2b). The seed is gated on
+`is_lisp` (Twig/Nib use `any` as a pre-resolution placeholder on ordinary
+machine values, so seeding on the hint outside a dynamic module would mis-box
+them). Strict superset of the old seeds, so existing lisp programs are
+unaffected. New tests: a boxed non-cons DynValue is exit-unboxed; a Twig `any`
+module is a no-op.
+
+
+
+## 0.20.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_* + passes)
+
+DVAL01-2 (spec DVAL01 sections 3.1-3.3): the IIR builtin *names* are de-lisped. The RUNTIME_RENAMES second column (`cons`->`dyn_cons`, `car`->`dyn_car`, `cdr`->`dyn_cdr`, `pair?`->`dyn_pair_p`, `equal?`->`dyn_equal`) and every `lispy_*` IIR name (`box_int`/`unbox_int`/`truthy`/`to_exit_code`/`nil`/`make_symbol`) become `dyn_*`. The boxing passes `lisp_repr`/`lisp_repr_structural` (files + `lower_lisp_repr`/`lower_lisp_repr_structural` fns) are renamed `dyn_repr`/`dyn_repr_structural`/`lower_dyn_repr`. Prefix-preserving (`dyn_pair_p`, not `dyn_is_pair`) so the IIR name maps cleanly to the already-shipped `__dyn_*` runtime symbol. Pure rename -- no lowering behaviour change; all backends stay in agreement.
+
+## 0.19.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
+
+DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.
+
+## 0.18.0 - 2026-07-11 (DVAL01-1a: dynamic-value runtime ABI __twig_lispy_* -> __dyn_*)
+
+De-lisp the tagged dynamic-value runtime ABI: every `__twig_lispy_*` C symbol (box_int/unbox_int/cons/car/cdr/pair_p/equal/not/nil/make_symbol/truthy/to_exit_code/tag_*) is renamed to the language-neutral `__dyn_*` (per spec DVAL01). Pure rename -- the 3-bit tag layout, encodings, and runtime behaviour are byte-for-byte unchanged, so any dynamic frontend (not just lisp) can target the same primitives. The GC ABI (`__twig_gc_*`) is untouched.
+
+## 0.17.0 — 2026-07-11 (LANG-FULL E6d-2a: dynamic integer arithmetic over `any`)
+
+New `dynamic_arith` pass (`lower_dynamic_arith`): a dynamic (lisp) frontends `call_builtin "+"/"-"/"*"/"/"/quotient/remainder/modulo` and comparisons `=/<//>/<=/>=` over **boxed** `ref<any>` operands are expanded structurally to `unbox → typed op → box` — the same `unbox`/`add`/`box` ops the code-gen backends already run for `cons`. A raw (already-`i64`) operand is used directly. Integer contract (layer 2); i64 machine width. Proof: `(+ (car (cons 41 0)) 1)` → 42. 5 unit tests.
+
 All notable changes to this crate are documented here.
 
 ---

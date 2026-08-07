@@ -1,0 +1,23 @@
+% ============================================================================
+% tooth-types.query.adj — a worked recall over the anatomy tooth-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what job does an incisor
+% do?": it states no anatomy fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `tooth_function` rows and returns the job + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD (bind the job `grinding`, recall
+% every tooth that does it — both premolars and molars). The gums are not a
+% tooth type, so a recall on them abstains honestly — the engine never invents
+% a job.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli tooth-types.query.adj
+% ============================================================================
+
+import "tooth-types.adj"
+
+? tooth_function(incisors, $Job)       % expect cutting
+? tooth_function(canines, $Job)        % expect tearing
+? tooth_function(molars, $Job)         % expect grinding
+? tooth_function($T, grinding)         % expect premolars ; molars — reverse recall
+? tooth_function(gums, $Job)           % expect abstain — gums are not a tooth

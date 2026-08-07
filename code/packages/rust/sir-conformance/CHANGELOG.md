@@ -2,6 +2,171 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.22.0] - `puts`-on-Array gap closed
+
+Adds `puts_array_unpack`, proving `puts [1, 2, 3]` / `puts [4, [5, 6], 7]`
+now agree across ALL SIX backends (including `ruby`, since `puts` is a
+core builtin, not a Collections method) — real Ruby's `Kernel#puts` rule:
+unpack one element per line, recursively flattening nested arrays. This
+closes the gap the 0.21.0 corpus batch discovered and documented (the C
+backend bracket-displayed an Array argument instead); fixing it also
+surfaced the IDENTICAL bug independently in the Ruby backend's own
+`sir_puts` reimplementation, fixed alongside (`semantic-ir-to-c` 0.33.0,
+`semantic-ir-to-ruby` 0.20.0).
+
+## [0.21.0] - Collections cascade corpus + Linux link fix
+
+Adds six new corpus programs proving the C-backend Collections slices
+(3-10: Array/Hash/String/Numeric/Symbol methods) agree across Python,
+JavaScript, Go, Rust, and C — `array_reduce` (a block method, proving
+closures round-trip identically through every backend's calling
+convention), `array_count_sum`, `hash_length_fetch`, `string_gsub_sub`,
+`numeric_abs_gcd`, `symbol_upcase_length`. All six print scalars only
+(never a bare Array/Hash) to sidestep a separate, real bug this batch
+surfaced: `puts` on an Array bracket-displays it on the C backend
+(`[1, 2, 3]`) but correctly unpacks one element per line on
+Python/JS/Go/Rust, matching real Ruby — tracked as its own follow-up, not
+fixed here. The Ruby target (as expected) skips every one of them: it has
+no Collections method dispatch at all yet, also tracked as its own
+follow-up.
+
+Also updates the `array_length` doc comment: the frontend bugs that used
+to block bracket-index (`a[1]`) from this corpus are now fixed (PR
+#9686), but bracket-index still isn't added here — Python/JS/Go/Rust's
+runtime catalogs have no `[]`/`[]=` dispatch yet, so it would fail (not
+skip) on four of six targets. Tracked as its own follow-up.
+
+### Fixed (CI — Linux link failure)
+
+- `run_c`'s compile command didn't link `-lm`. Harmless until
+  `semantic-ir-to-c`'s Numeric Collections slice (0.31.0) made
+  `floor`/`ceil`/`round`/`abs` the first `<math.h>` calls the embedded
+  runtime template makes — pasted into every generated `.c` file
+  regardless of source content, so every C-target conformance run failed
+  to link on Linux (`undefined reference to 'floor'`) without it. Fixed
+  alongside the same gap in `c-to-semantic-ir` and `sir-bench`.
+
+## [0.20.0] - Comparison-operator frontier
+
+Adds `comparison_operators_match_ruby_on_every_backend`: `==`, `!=`, `<=`, `>=`
+(plus `<`/`>` regression guards) over integers, a cross int/float pair, string
+equality, AND string ordering, across every backend. Even `puts(1 == 1)` failed
+on Python (`NameError`), JavaScript (`unknown builtin`), Go (`panic`) and Rust
+(missing function) — only C and Ruby lowered the operator spellings. String
+ordering is included because Go's comparisons gained a lexicographic string
+path in this same change (they previously panicked on a string operand), so all
+six backends now agree on `"a" < "b"`. Also covers COMPOSITE equality
+(`[1,2] == [1,2]` structural, not reference) on the four backends that accept
+the `sequences` feature (Python/JavaScript/Go/Rust) — the end-to-end proof that
+the JavaScript `eq`→`valEq` fix agrees cross-backend; C and Ruby skip (no
+`sequences` feature in their v0 backends).
+
+## [0.19.0] - Exception-reflection frontier
+
+Adds `exception_reflection_matches_ruby_on_every_backend`: `e.class`,
+`e.is_a?` (self, ancestor, and a NEGATIVE case), `e.message`, and `puts e`
+on a rescued exception, across every backend.
+
+Each was wrong somewhere: **Rust** bound `e` to the message string (so
+`e.class` was `String` and `is_a?` false), **Python** had no `SirError` case in
+`class_of` (so `e.class` was `Object`), **`e.message` failed on ALL FOUR
+backends**, and **JavaScript** printed `ArgumentError: boom` for `puts e` where
+Ruby prints `boom` — that last one caught by this test as it was written.
+
+Also pins a **bare** `raise ArgumentError` (no message): Ruby's default
+`#message` is then the class name, which all four backends already produce —
+but via four different mechanisms (Rust bakes it into `SirError.msg`,
+JavaScript into the `SirError` constructor, Python into `args[0]`, Go decides
+it at the `message` call site). Four independent spellings of one rule is
+exactly what drifts, so the agreement is now guarded.
+
+## [0.18.0] - `is_a?` / `case-when` frontier across the backends
+
+Adds `is_a_and_case_when_match_ruby_on_every_backend` — the `is_a?` family and
+`case x when SomeClass`, whose class argument is a bare CONSTANT in the source.
+
+This previously compiled on Python alone: Go and Rust rejected the constant
+reference at emit, and JavaScript blew up at run time. With the frontend now
+lifting the constant to its name (ruby-to-semantic-ir 0.7.0) and Go implementing
+the predicates (semantic-ir-to-go 0.35.0), all four running backends agree —
+so it is a live cross-backend assertion, not a per-backend guard.
+
+## [0.17.0] - Reflection frontier goes cross-backend (Rust arm closed)
+
+`tests/reflection.rs` grows from a per-backend guard into a live **all-backend**
+assertion, `class_reflection_matches_ruby_on_every_backend`: every backend that
+runs a case must produce the same Ruby class-name string, failing by name the
+day one diverges.
+
+That was gated on the Rust arm, which previously **panicked at runtime**
+(exit 101) because `.class` was undispatched; `semantic-ir-to-rust` 0.37.0
+implements it. Adds `rust_class_reflection_is_ruby_faithful` alongside the
+existing JavaScript and Go granular guards. Python, Go, JavaScript and Rust all
+answer; C does not yet emit reflection and skips.
+
+## [0.16.0] - Type-reflection conformance: `.class` across the backends
+
+Adds `tests/reflection.rs` — every backend must reproduce Ruby's class-NAME
+strings (`7.class == Integer`, `7.0.class == Float`, `nil.class == NilClass`,
+…). A **per-backend** guard (the `division.rs` `python_division_is_ruby_floor_faithful`
+style) rather than an all-backend frontier, because the arms are not yet all
+closed:
+
+- JavaScript — **closed by this change** (previously raised `NoMethodError`;
+  its `Integer`/`Float` split is representable only via its tagged floats).
+- Go — already closed (`_sir_ruby_class_name`); pinned against regression.
+- Rust — **`.class` panics at runtime (exit 101)**, tracked separately.
+- C — not yet emitted (skips).
+
+Grows into a cross-backend assertion once the Rust arm is implemented.
+
+## [0.15.0] - Float-division frontier: `Float#/` true-divides on every backend
+
+Adds `float_division_true_divides_on_every_backend` — the float half of the
+polymorphic-`/` frontier. `Float#/` TRUE-divides (`7.0 / 2 == 3.5`) and an
+integral float result still prints its `.0` (`6.0 / 2 == 3.0`), and every
+backend must reproduce Ruby's `Float#to_s`. The JS backend gained this via its
+tagged-float substrate (semantic-ir-to-javascript 0.39.0 — its numbers are all
+f64, so integral floats were previously indistinguishable from integers and
+wrongly floored); the tagged-value backends (Rust/Go/C) and Python/Ruby already
+carried the distinction. Complements the existing integer-floor frontier.
+
+## [0.14.0] - Division frontier: C arm fully closed (SIR21 §E3)
+
+The C backend now lowers the unary-minus `neg` builtin (semantic-ir-to-c 0.3.0),
+so `division_matches_ruby_floor_on_every_backend` now **asserts** C's negative
+cases instead of skipping them — the C emitter previously reported `neg` as an
+unsupported builtin, so `run_c` returned `Skipped` for every negative literal.
+All six backends (Python, JavaScript, Go, Rust, Ruby, C) now floor every sign
+combination end-to-end. Module docs and the test doc-comment updated to record
+the C arm as closed rather than tracked.
+
+## [0.13.0] - Division frontier CLOSED on every backend (SIR21 §E3)
+
+With Rust, Go and JavaScript now flooring integer division (their runtime
+`divide` helpers, this release's sibling backend bumps) alongside Python — and
+Ruby flooring natively (it transpiles to Ruby) and C already flooring
+(`_sir_ifloordiv`) — `division_matches_ruby_floor_on_every_backend` is **no
+longer `#[ignore]`d**. It is a live conformance assertion that emits
+`puts(lhs / rhs)`, runs it through every backend's real toolchain, and asserts
+the output equals the oracle's `DivOp::Floor` on all sign combinations. It fails
+(naming the backend) if any backend regresses to truncation or true-division on
+integer operands. `Skipped` outcomes are not asserted: the C *emitter* does not
+yet lower unary `neg`, so its negative cases skip (positive division is
+asserted), and Ruby skips without a `ruby` toolchain. Verified locally: Python,
+JavaScript, Go, Rust and Ruby all floor every sign combination; C floors the
+positive cases.
+`python_division_is_ruby_floor_faithful` remains as a granular per-backend guard;
+module docs updated to record all four arms closed.
+
+Un-ignoring the frontier also surfaced (and this release's Go/Rust bumps fixed)
+a second bug: the negative test cases (`-7 / 2`) crashed Go and Rust with
+`unknown builtin: neg` — unary minus (`-x`) lowers to a `neg` builtin those two
+runtimes never implemented. That is the "Go/Rust crash on negatives" the
+frontier doc long recorded; it was never a division bug at all. The frontier is
+what forced it to the surface, since floor and truncation only *differ* on
+negative operands.
+
 ## [0.11.0] - Division frontier: Python arm closed (SIR21 §E3)
 
 ### Added — `python_division_is_ruby_floor_faithful` (non-ignored)

@@ -787,7 +787,7 @@ mod tests {
         let traces = sim.run(10);
         let found_push10 = traces
             .iter()
-            .any(|trc| trc.stack_after.iter().any(|v| *v == Some(Value::Int(10))));
+            .any(|trc| trc.stack_after.contains(&Some(Value::Int(10))));
         assert!(found_push10, "Should have pushed 10 after branching");
     }
 

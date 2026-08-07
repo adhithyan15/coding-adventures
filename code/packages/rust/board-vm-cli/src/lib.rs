@@ -210,6 +210,12 @@ impl BootloaderRebootOptions {
     }
 }
 
+// The size gap comes from each variant embedding a transport with a
+// compile-time frame buffer (up to 4096 B for Bluetooth). Exactly one
+// `SessionTransport` exists per CLI session and it lives for the whole run, so
+// boxing a variant would only add a heap indirection without saving anything
+// meaningful.
+#[allow(clippy::large_enum_variant)]
 enum SessionTransport {
     Serial(BoardSerialTransport<Box<dyn SerialPort>, 1024>),
     Tcp(BoardTcpTransport<TcpStream, 1024>),

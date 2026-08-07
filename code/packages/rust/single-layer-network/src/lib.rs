@@ -141,8 +141,8 @@ pub fn train_one_epoch_with_matrices(
     let mut bias_gradients = vec![0.0; output_count];
     let mut next_biases = vec![0.0; output_count];
     for output in 0..output_count {
-        for row in 0..samples {
-            bias_gradients[output] += deltas[row][output];
+        for delta_row in deltas.iter().take(samples) {
+            bias_gradients[output] += delta_row[output];
         }
         next_biases[output] = biases[output] - learning_rate * bias_gradients[output];
     }

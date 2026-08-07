@@ -1,0 +1,55 @@
+% ============================================================================
+% bmi.adj — the body-mass-index formula library (ADJ-FORMULA-LIBRARIES rung-0).
+% ============================================================================
+% The FIRST worked entry of the *compute* standard library: an importable,
+% byte-provenanced, PARAMETERIZED formula. Where the recall libraries ship
+% grounded `relate` edges (facts a model recalls), this ships a grounded
+% `formula` (arithmetic a model recalls) — the same contract, the other half of
+% the stdlib.
+%
+% A consumer states NO arithmetic. It `import`s this file, binds the variables
+% from its own byte-provenance decomposition, and asks the engine to apply the
+% cited formula on the CPU:
+%
+%     import "bmi.adj"
+%     observe body_mass(70)     % "…weighs 70 kg…"     (span cited by the model)
+%     observe height(1.75)      % "…height of 1.75 m…" (span cited by the model)
+%     ? bmi(body_mass, height)  % engine → 22.857 kg/m², carrying WHO's definition
+%
+% The formula (and its source) live HERE; the numbers (and their spans) come
+% from the input. Zero math is performed by the model.
+%
+% Run a worked consumer (from a directory it can resolve this import from):
+%     adj-lang-cli <consumer>.adj
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is an observable quantity the formula ranges over. The
+% spec's dimensional sketch is `body_mass : quantity(mass)`, `height :
+% quantity(length)`, `bmi : quantity`; rung-0's grammar types an observable slot
+% as `finding`, so we register them as findings and record the intended
+% dimension in the surface synonyms + comments. (Dimensional typing of formula
+% parameters is a later rung; the engine already infers + checks dimensions when
+% the formula is APPLIED — 70 kg / (1.75 m)² reports kg/m² — so the audit is
+% dimensional regardless.)
+% ----------------------------------------------------------------------------
+dictionary bmi_vocab {
+    define body_mass : finding  surface "weight", "body weight", "mass"      % mass, e.g. kg
+    define height    : finding  surface "height", "stature", "body height"   % length, e.g. m
+    define bmi       : finding  surface "body mass index", "BMI"             % mass / length²
+}
+
+% ----------------------------------------------------------------------------
+% The formula. A named, importable, reusable `let`: `body_mass / (height *
+% height)` is the SAME expression a `let` binds, and `body_mass` / `height` are
+% FORMAL PARAMETERS bound at apply time. The provenance clause is the same
+% envelope every grounded clause carries — required on a shipped formula.
+% ----------------------------------------------------------------------------
+formulabook body_metrics {
+    use bmi_vocab
+
+    formula bmi(body_mass, height) = body_mass / (height * height)
+        source "BMI is a person's weight in kilograms divided by the square of height in metres. A high BMI can indicate high body fatness."
+        locator "https://www.who.int/health-topics/obesity"
+        trust authoritative
+}

@@ -458,11 +458,21 @@ on first render when the property is its default.
 
 ## 9. Style application (mosstyle)
 
-Unchanged from the pre-UI29 draft. The `.msl` source's `part` blocks lower to
-a `<ResourceDictionary>` in `<UserControl.Resources>`. State blocks
-(`state hover { ... }`, `state selected { ... }`) lower to
-`<VisualState>`s inside a `<VisualStateGroup>`. The CSS-property → XAML
-setter table is unchanged from the previous draft.
+The `.msl` source's base `part` properties lower to native attributes and
+scoped text styles. On native Host controls, a `state-when-*` layout
+predicate plus its matching MSL state block lowers to a WinUI
+`StateTrigger` and `VisualState` setter.
+
+Transitions use one `VisualStateGroup` per property. This preserves MSL's
+property-scoped durations and curves even though WinUI's generated transition
+duration applies to every property changed by one group. A part-level
+transition supplies the default entry/exit curve; a state-local transition
+with the same property overrides entry into that state. Named easing curves
+lower to native quadratic easing functions. Arbitrary `cubic-bezier(...)`
+currently uses WinUI `CubicEase`; exact control points require a future
+Composition-API lowering. The groups attach to a transparent `Grid` that is
+the generated root's first visual child, which WinUI requires for automatic
+declarative trigger evaluation.
 
 UI29 §8 open question 6 (theming across packages) is resolved here as:
 when a host's `.msl` overlays a package's `.msl`, the host's
@@ -652,8 +662,12 @@ Windows-only build.
   DependencyProperty registration differences. New spec: `mosaic-emit-wpf.md`.
 - **Avalonia / Uno backends.** Same XAML surface, different namespace,
   Linux/macOS reach.
-- **Animation / transition lowering.** The IR doesn't model motion yet; when
-  it does (UI30?), `<Storyboard>` mapping lands here.
+- **Exact cubic-bezier easing.** WinUI XAML does not expose arbitrary cubic
+  control points through `EasingFunctionBase`; exact curves require a
+  Composition-API lowering.
+- **Template-local visual states.** Host controls inside `For` live in a
+  DataTemplate namescope and need per-template VisualState placement rather
+  than the root-level groups used for top-level controls.
 - **Localization.** `x:Uid` resource binding is not generated.
 - **Multi-theme switching.** UI29 §8 open question 6 — the
   `ResourceDictionary.ThemeDictionaries` mechanism is supported, but the

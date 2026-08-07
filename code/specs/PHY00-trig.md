@@ -65,7 +65,7 @@ $$\tan(x) = \frac{\sin(x)}{\cos(x)}$$
 
 **Geometric interpretation:** On the unit circle, if you draw a vertical line tangent to the circle at $(1, 0)$, then $\tan(x)$ is the $y$-coordinate where the ray at angle $x$ meets that line. This is the literal origin of the name "tangent."
 
-**Undefined points (poles):** $\tan(x)$ is undefined wherever $\cos(x) = 0$, at $x = \pi/2 + k\pi$ for any integer $k$. At these points the function approaches $\pm\infty$. Implementations guard with a threshold ($|\cos(x)| < 10^{-15}$) and return the largest representable float.
+**Undefined points (poles):** $\tan(x)$ is undefined wherever $\cos(x) = 0$, at $x = \pi/2 + k\pi$ for any integer $k$. At these points the function approaches $\pm\infty$. Implementations guard with a threshold ($|\cos(x)| < 10^{-15}$) and return the exact signed finite sentinel $\pm 10^{308}$.
 
 **Worked example:**
 
@@ -96,16 +96,30 @@ $$\text{next} = \frac{\text{guess} + x / \text{guess}}{2}$$
 ```
 function sqrt(x):
   if x < 0: raise error
-  if x == 0: return 0.0
-  guess = x if x >= 1.0 else 1.0
+  if x == 0: return x  # preserve signed zero
+  if x == infinity: return infinity
+  scaled = x
+  result_scale = 1.0
+  while scaled < 0.25:
+    scaled = scaled * 4.0
+    result_scale = result_scale * 0.5
+  while scaled >= 4.0:
+    scaled = scaled * 0.25
+    result_scale = result_scale * 2.0
+  guess = scaled if scaled >= 1.0 else 1.0
   repeat up to 60 times:
-    next = (guess + x / guess) / 2.0
-    if |next - guess| < 1e-15 * guess + 1e-300: return next
+    next = (guess + scaled / guess) / 2.0
+    if |next - guess| < 1e-15 * guess + 1e-300:
+      return next * result_scale
     guess = next
-  return guess
+  return guess * result_scale
 ```
 
-The convergence criterion `1e-15 * guess + 1e-300` handles both relative precision (for large values) and subnormal inputs safely.
+The power-of-four normalization keeps Newton iteration in a compact range and
+rescales the result by matching powers of two. This is required for accurate
+small-normal and subnormal inputs under the fixed 60-iteration budget. The
+convergence criterion `1e-15 * guess + 1e-300` then provides relative precision
+within that normalized interval.
 
 `sqrt` is also used internally by `atan_core` for the half-angle reduction — which is why it must be implemented from scratch and not delegated to any standard library.
 
@@ -131,6 +145,13 @@ $$\text{atan}(x) = -\frac{\pi}{2} - \text{atan}\!\left(\frac{1}{x}\right) \quad 
 $$\text{atan}(x) = 2 \cdot \text{atan}\!\left(\frac{x}{1 + \sqrt{1 + x^2}}\right)$$
 
 After one application, $|x| \leq 1$ shrinks to $|y| \leq \tan(\pi/8) \approx 0.414$, where the Taylor series converges in ~15 terms. We use our own `sqrt` here.
+
+**Binary64 small-argument identity** (before either reduction): for
+$|x| \leq 2^{-27}$, return `x` unchanged. The first omitted correction is
+$|x|^3/3$, which is smaller than half a binary64 ulp throughout this interval,
+so the correctly rounded result is exactly the input. Performing this check
+before the half-angle division also preserves negative zero and prevents the
+minimum positive or negative subnormal from underflowing to zero.
 
 **Iterative term computation:**
 
@@ -192,13 +213,47 @@ All functions are module-level (not attached to an object). The package exposes:
 | `atan` | `Atan` | `atan_approx` | `trig.atan` |
 | `atan2` | `Atan2` | `atan2_approx` | `trig.atan2` |
 
+Dart exposes the `PI` contract constant as the idiomatic lower-camel `pi`,
+alongside `twoPi` and `halfPi`. Its functions retain the contract's lowercase
+names and `atan2(y, x)` argument order.
+
 ## 5. Precision Target
 
-All implementations must agree with IEEE 754 double-precision standard-library results to within $1 \times 10^{-10}$ (10 decimal places) for any input in the range $[-10^6, 10^6]$.
+At ordinary finite points, implementations must agree with IEEE 754
+double-precision standard-library results to within $1 \times 10^{-10}$ (10
+decimal places) for inputs in the range $[-10^6, 10^6]$. The documented
+tangent pole sentinel and `atan2` branch-cut convention are explicit contract
+cases, not standard-library-agreement points.
+
+### 5.1 Language-neutral conformance corpus
+
+The versioned machine-readable oracle lives at
+`fixtures/phy00-phy01-v1/cases/trig.json` and is validated by the closed Draft
+2020-12 `fixtures/phy00-phy01-v1/schema.json`. It is normative for shared case
+identity, binary64 input values, expected outcomes, and tolerances. Package-
+native tests may add coverage but may not weaken or reinterpret a shared case.
+
+The corpus represents finite values as tagged decimal strings and represents
+NaN and infinities as tagged symbols. This preserves minimum subnormal input,
+maximum finite input, and the sign of zero across JSON implementations. Exact
+comparison of NaN means `isNaN`; exact zero comparison includes the zero sign.
+The included `atan2(-0, -1)` case returns positive $\pi$, consistent with the
+contract range $(-\pi, \pi]$. The `atan` boundary cases require exact identity
+for negative zero, a representative tiny finite value, and both signed minimum
+subnormals.
 
 ## 6. Cross-Language Parity
 
-The package is implemented identically across all 9 host languages: **Python, Go, TypeScript, Rust, Ruby, Elixir, Perl, Lua, and Swift**. Each implementation uses the same algorithm (iterative term computation, range reduction) and passes the same test cases validating:
+The package is implemented across all 15 established implementation lanes:
+**C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript**. The emerging C and C++ lanes also carry native
+implementations but do not enter the established-lane denominator. Every
+implementation uses the same first-principles algorithm (iterative term
+computation and range reduction) and consumes or is being reconciled against
+the versioned shared cases. The v1 corpus carries constants, representative
+finite points, tangent poles, quadrant and signed-zero `atan2`, conversions,
+and square-root boundaries. Together with package-native extensions, the full
+parity suites validate:
 
 1. Known exact values: $\sin(0) = 0$, $\cos(0) = 1$, $\sin(\pi/2) = 1$, $\cos(\pi) = -1$
 2. Symmetry: $\sin(-x) = -\sin(x)$, $\cos(-x) = \cos(x)$
@@ -207,7 +262,7 @@ The package is implemented identically across all 9 host languages: **Python, Go
 5. Degree conversion round-trips: `degrees(radians(45.0)) == 45.0`
 6. `sqrt(4) == 2`, `sqrt(2) * sqrt(2) ≈ 2.0`
 7. `tan(π/4) ≈ 1.0`, `tan(-π/4) ≈ -1.0`
-8. `atan(1) ≈ π/4`, `atan(-1) ≈ -π/4`, `atan(√3) ≈ π/3`
+8. `atan(1) ≈ π/4`, `atan(-1) ≈ -π/4`, `atan(√3) ≈ π/3`, and tiny inputs preserve their exact binary64 value and zero sign
 9. `atan2(0, 1) == 0`, `atan2(1, 0) == π/2`, `atan2(0, -1) == π`, `atan2(-1, 0) == -π/2`
 10. All four atan2 quadrant cases (Q1–Q4)
 

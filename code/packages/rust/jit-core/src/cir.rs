@@ -392,14 +392,14 @@ mod tests {
     }
 
     #[test]
+    // 3.14 below is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn operand_from_iir_operand() {
         use interpreter_ir::instr::Operand;
-        let ir_ops = vec![
-            Operand::Var("x".into()),
+        let ir_ops = [Operand::Var("x".into()),
             Operand::Int(42),
             Operand::Float(3.14),
-            Operand::Bool(true),
-        ];
+            Operand::Bool(true)];
         let cir_ops: Vec<CIROperand> = ir_ops.iter().map(CIROperand::from).collect();
         assert_eq!(cir_ops[0], CIROperand::Var("x".into()));
         assert_eq!(cir_ops[1], CIROperand::Int(42));

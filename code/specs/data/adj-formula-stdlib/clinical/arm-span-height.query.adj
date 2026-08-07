@@ -1,0 +1,26 @@
+% ============================================================================
+% arm-span-height.query.adj — worked applications of the arm-span height estimate.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a bedside assessment down to a measured arm span (used
+% when a standing height cannot be obtained): it `import`s the grounded formulabook, `observe`s the span, and
+% asks the engine to APPLY the cited height-estimation formula. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (arm span = 159 cm): estimated height = 159 / 1.06 = 150 cm. Each query fixes one input and
+% asks the engine to recover the other quantity; every answer is exact and the inversion COMPOSES (it recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli arm-span-height.query.adj
+% ============================================================================
+
+import "arm-span-height.adj"
+
+% --- Estimated height: the standing height a 159 cm arm span implies (expect 150). -------------------
+observe arm_span(159)
+? estimated_height(arm_span)   % expect 150
+
+% --- Inverse: the arm span a height of 150 implies (expect 159). -------------------------------------
+observe estimated_height(150)
+? arm_span(estimated_height)   % expect 159

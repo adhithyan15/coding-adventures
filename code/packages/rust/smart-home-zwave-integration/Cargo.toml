@@ -1,0 +1,13 @@
+[package]
+name = "smart-home-zwave-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Z-Wave Serial API adapter for the normalized smart-home runtime"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+zwave-command-classes = { path = "../zwave-command-classes" }
+zwave-core = { path = "../zwave-core" }
+zwave-serial-api = { path = "../zwave-serial-api" }

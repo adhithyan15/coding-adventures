@@ -239,7 +239,7 @@ impl RegisterFile8086 {
         let if_ = or_gate(self.flag_if, 0);
         let df = or_gate(self.flag_df, 0);
         let of = or_gate(self.flag_of, 0);
-        ((cf as u16) << 0)
+        (cf as u16)
             | (1u16 << 1)
             | ((pf as u16) << 2)
             | ((af as u16) << 4)
@@ -256,7 +256,7 @@ impl RegisterFile8086 {
     /// Used by POPF and IRET. Each bit is latched through an AND gate with 1
     /// to model the register input path.
     pub fn unpack_flags(&mut self, flags: u16) {
-        self.flag_cf = and_gate(((flags >> 0) & 1) as u8, 1);
+        self.flag_cf = and_gate((flags & 1) as u8, 1);
         self.flag_pf = and_gate(((flags >> 2) & 1) as u8, 1);
         self.flag_af = and_gate(((flags >> 4) & 1) as u8, 1);
         self.flag_zf = and_gate(((flags >> 6) & 1) as u8, 1);

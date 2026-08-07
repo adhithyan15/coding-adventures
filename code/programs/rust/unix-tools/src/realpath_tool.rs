@@ -80,7 +80,7 @@ fn make_absolute(path: &Path) -> Result<PathBuf, String> {
 
 /// Clean a path by resolving `.` and `..` components without touching
 /// the filesystem. This is a logical (not physical) path cleanup.
-fn clean_path(path: &PathBuf) -> String {
+fn clean_path(path: &Path) -> String {
     let mut components: Vec<String> = Vec::new();
 
     for component in path.components() {

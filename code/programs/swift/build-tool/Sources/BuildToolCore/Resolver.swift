@@ -1,7 +1,7 @@
 import Foundation
 
 public enum Resolver {
-    public static func resolveDependencies(packages: [BuildPackage]) -> DirectedGraph {
+    public static func resolveDependencies(packages: [BuildPackage]) throws -> DirectedGraph {
         let graph = DirectedGraph()
         for package in packages {
             graph.addNode(package.name)
@@ -32,7 +32,7 @@ public enum Resolver {
             case "elixir":
                 deps = parseElixirDeps(package: package, knownNames: knownNames)
             case "lua":
-                deps = parseLuaDeps(package: package, knownNames: knownNames)
+                deps = try parseLuaDeps(package: package, knownNames: knownNames)
             case "perl":
                 deps = parsePerlDeps(package: package, knownNames: knownNames)
             case "swift":
@@ -322,10 +322,18 @@ public enum Resolver {
             .compactMap { knownNames[$0.lowercased()] }
     }
 
-    private static func parseLuaDeps(package: BuildPackage, knownNames: [String: String]) -> [String] {
+    private static func parseLuaDeps(package: BuildPackage, knownNames: [String: String]) throws -> [String] {
         guard let rockspecPath = firstFile(in: package.path, suffix: ".rockspec"),
-              let content = try? String(contentsOfFile: rockspecPath, encoding: .utf8) else {
+              let data = try? Data(contentsOf: URL(fileURLWithPath: rockspecPath)) else {
             return []
+        }
+        guard let content = String(data: data, encoding: .utf8) else {
+            throw MetadataEncodingError(
+                code: "METADATA_INVALID_UTF8",
+                package: package.name,
+                manifest: repositoryManifestPath(rockspecPath),
+                encoding: "UTF-8"
+            )
         }
 
         var dependencies: [String] = []
@@ -443,6 +451,22 @@ public enum Resolver {
 
     private static func normalizePath(_ path: String) -> String {
         path.replacingOccurrences(of: "\\", with: "/").lowercased()
+    }
+
+    private static func repositoryManifestPath(_ path: String) -> String {
+        let normalized = path.replacingOccurrences(of: "\\", with: "/")
+        let parts = normalized.split(separator: "/")
+        var canonicalStart: Int?
+        if parts.count >= 2 {
+            for index in 0 ..< (parts.count - 1) where
+                parts[index] == "code" && (parts[index + 1] == "packages" || parts[index + 1] == "programs") {
+                canonicalStart = index
+            }
+        }
+        if let canonicalStart {
+            return parts[canonicalStart...].joined(separator: "/")
+        }
+        return URL(fileURLWithPath: path).lastPathComponent
     }
 
     private static func firstFile(in directory: String, suffix: String) -> String? {

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/capability_taxonomy.schema.json",
+  "version": 1,
+  "categories": {
+    "fs": ["read", "write", "create", "delete", "list"],
+    "net": ["connect", "listen", "dns"],
+    "proc": ["exec", "fork", "signal"],
+    "env": ["read", "write"],
+    "ffi": ["call", "load"],
+    "time": ["read", "sleep"],
+    "stdin": ["read"],
+    "stdout": ["write"]
+  },
+  "all_actions": [
+    "read",
+    "write",
+    "create",
+    "delete",
+    "list",
+    "connect",
+    "listen",
+    "dns",
+    "exec",
+    "fork",
+    "signal",
+    "call",
+    "load",
+    "sleep"
+  ],
+  "expected_valid_pair_count": 19,
+  "expected_invalid_cross_pair_count": 93
+}

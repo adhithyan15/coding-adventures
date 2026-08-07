@@ -127,6 +127,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
+    writeln!(out, "import androidx.compose.ui.platform.testTag").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
@@ -847,13 +848,12 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
-            "text-align" => {
-                if layer_idx.is_none() {
+            "text-align"
+                if layer_idx.is_none() => {
                     if let Some(a) = content_alignment(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, width:100% — skipped.
             _ => {}
         }
@@ -1068,6 +1068,9 @@ fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>) -> String {
     }
 }
 
+// Threads the full lowering context (styles, table/for scopes, inherited text
+// styling) through the recursive tree walk; splitting would obscure the flow.
+#[allow(clippy::too_many_arguments)]
 fn emit_compose_tree(
     node: &LayoutNode,
     depth: usize,
@@ -1088,6 +1091,7 @@ fn emit_compose_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
+        "HostSurface" => emit_host_surface_compose(node, depth),
         "Box" => emit_container(
             node,
             "Box",
@@ -1103,6 +1107,22 @@ fn emit_compose_tree(
         "Row" => emit_container(
             node,
             "Row",
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+            injected_width,
+        ),
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a plain vertical container: the content still renders, it
+        // just isn't draggable here. Erroring instead would mean a layout using drag
+        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
+        "HostDraggable" | "HostDropTarget" => emit_container(
+            node,
+            "Column",
             depth,
             component_name,
             emits,
@@ -1959,10 +1979,8 @@ fn emit_host_input(
         .unwrap();
     }
 
-    if let Some(style) = &style {
-        if !style.modifier.is_empty() {
-            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
-        }
+    if let Some(modifier) = host_control_modifier_expr(node, style.as_ref()) {
+        writeln!(out, "{inner}modifier = {modifier},").unwrap();
     }
     if let Some(text_style) = input_text.text_style_expr() {
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
@@ -2031,17 +2049,19 @@ fn emit_host_button(
         Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
         _ => "\"\"".to_string(),
     };
+    let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let modifier_expr = host_control_modifier_expr(node, style.as_ref());
 
     let mut out = String::new();
-    if style
-        .as_ref()
-        .map(|s| !s.modifier.is_empty())
-        .unwrap_or(false)
-    {
-        let style = style.as_ref().unwrap();
+    if enabled_expr.is_some() || modifier_expr.is_some() {
         writeln!(out, "{pad}Button(").unwrap();
         writeln!(out, "{inner}onClick = {{ {on_click} }},").unwrap();
-        writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        if let Some(enabled) = enabled_expr {
+            writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        if let Some(modifier) = modifier_expr {
+            writeln!(out, "{inner}modifier = {modifier},").unwrap();
+        }
         writeln!(out, "{pad}) {{").unwrap();
     } else {
         writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
@@ -2049,6 +2069,17 @@ fn emit_host_button(
     writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_control_modifier_expr(node: &LayoutNode, style: Option<&ComposeStyle>) -> Option<String> {
+    let mut modifier = String::from("Modifier");
+    if let Some(style) = style {
+        modifier.push_str(&style.modifier);
+    }
+    if let Some(part) = &node.part_name {
+        write!(modifier, ".testTag(\"{}\")", escape_kotlin_string(part)).unwrap();
+    }
+    (modifier != "Modifier").then_some(modifier)
 }
 
 fn host_button_single_payload_expr(
@@ -2336,7 +2367,7 @@ fn slot_type_to_kotlin(t: &SlotType) -> String {
         SlotType::Bool => "Boolean".to_string(),
         SlotType::Image => "String".to_string(),
         SlotType::Color => "String".to_string(),
-        SlotType::Node => "Any".to_string(),
+        SlotType::Node => "@Composable () -> Unit".to_string(),
         SlotType::List(inner) => format!("List<{}>", list_inner_to_kotlin(inner)),
         SlotType::Component(name) => {
             // Same defence in depth as in `from_pipeline` — the
@@ -2352,6 +2383,17 @@ fn slot_type_to_kotlin(t: &SlotType) -> String {
                 "/*UNSAFE_COMPONENT_NAME*/Any".to_string()
             }
         }
+    }
+}
+
+fn emit_host_surface_compose(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    if let Some(LayoutPropValue::SlotRef(slot)) = find_prop_value(node, "content") {
+        let field = to_camel_case_first_lower(slot);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        Ok(format!("{pad}{field}()\n"))
+    } else {
+        Ok(format!("{pad}Box {{ }}\n"))
     }
 }
 
@@ -2591,6 +2633,7 @@ mod tests {
         PartStyle {
             name: name.to_string(),
             base,
+            transitions: vec![],
             states,
         }
     }
@@ -2598,6 +2641,7 @@ mod tests {
     fn state(name: &str, props: Vec<StyleProp>) -> StateStyle {
         StateStyle {
             state: name.to_string(),
+            transitions: vec![],
             props,
         }
     }
@@ -3207,6 +3251,63 @@ mod tests {
     }
 
     #[test]
+    fn host_button_projects_disabled_slot_and_part_to_native_control() {
+        let m = component(
+            "Bar",
+            vec![slot("navigation-disabled", SlotType::Bool, true)],
+            vec![emit_decl("onClick", vec![])],
+        );
+        let l = layout(
+            "Bar",
+            styled_node(
+                "HostButton",
+                "go-button",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Go".into()),
+                    },
+                    slot_prop("disabled", "navigation-disabled"),
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("enabled = navigationDisabled != true,"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains("modifier = Modifier.testTag(\"go-button\"),"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("import androidx.compose.ui.platform.testTag"));
+    }
+
+    #[test]
+    fn host_input_projects_part_to_native_control_test_tag() {
+        let m = component("Bar", vec![slot("address", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "Bar",
+            styled_node(
+                "HostInput",
+                "address-input",
+                vec![slot_prop("value", "address")],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("modifier = Modifier.testTag(\"address-input\"),"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
     fn host_button_part_style_reaches_modifier_and_label_text() {
         let m = component(
             "RatingControls",
@@ -3624,6 +3725,8 @@ mod tests {
     /// re-bound from `Int` to `Double` so verbatim Expr text like
     /// `( r == editRow )` compiles against `number`-typed slots.
     #[test]
+    // Name mirrors the Kotlin `forEachIndexed` API it exercises.
+    #[allow(non_snake_case)]
     fn for_with_index_emits_forEachIndexed_with_double_cast() {
         let for_node = node(
             "For",
@@ -3666,6 +3769,8 @@ mod tests {
     /// `For` without `index:` falls back to `.forEach { item -> ... }`
     /// — no rename needed because there's no shadowed parameter.
     #[test]
+    // Name mirrors the Kotlin `forEach` API it exercises.
+    #[allow(non_snake_case)]
     fn for_without_index_uses_simple_forEach() {
         let for_node = node(
             "For",

@@ -1,0 +1,102 @@
+% ============================================================================
+% blood-vessels — the three main types of blood vessel and the defining
+% function each one performs in the circulatory system (adj-facts-stdlib,
+% BIOLOGY).
+% ============================================================================
+% One of the very first facts of the circulatory system, and a rung a MEDICINE
+% agent reasons UP from: blood travels in a closed loop of vessels, and there
+% are just THREE main kinds. "Arteries carry blood AWAY from the heart; veins
+% carry blood TOWARD the heart; capillaries are the tiny connecting vessels
+% where the actual EXCHANGE of materials between blood and tissue happens."
+% Before you can reason about circulation, blood pressure, or a blockage you
+% must first know WHICH kind of vessel you are looking at and which direction it
+% moves blood. Recall is a binding query:
+%
+%     ? vessel_function(artery, $Function)     % away_from_heart
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `vessel_function(vessel, function)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% function WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these three vessel types (it never invents a
+% function).
+%
+% Each of the three main blood-vessel types and the defining function the
+% source states for it, as a little truth table:
+%
+%     vessel type   defining function        a beginner's cue
+%     -----------   ----------------------   ---------------------------------
+%     artery        away_from_heart          arteries carry blood away
+%     vein          toward_heart             veins carry blood back
+%     capillary     exchange_of_materials    tiny walls where trade happens
+%
+% The query also runs BACKWARD — bind a function and recall its vessel type:
+%
+%     ? vessel_function($Vessel, toward_heart)   % vein
+%
+% A word that is NOT one of these three main blood-vessel types — `lymphatic`
+% (a lymph vessel, not a blood vessel), `nerve`, `rock` — is deliberately NOT a
+% row, so a vessel recall ABSTAINS on it rather than inventing a function. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the vessel→function pairs it can ground, and only
+% those.
+%
+% The `function` value of every row is a SINGLE lowercase phrase, chosen to be a
+% span the source EXPLICITLY states for that vessel — never one the source does
+% not support. Where the everyday phrasing differs from the source's words, the
+% atom uses the source's OWN words ("away from the heart", "toward the heart",
+% "exchange of materials"), so every value stays literally checkable against the
+% quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every vessel→function pair
+% below was read out of a fetched NCI SEER Training Modules page, and any pair
+% whose function could not be verified there would have been dropped). Each
+% pair, with the primary source it was copied from and the verbatim span that
+% states it:
+%
+%   artery → away_from_heart
+%     https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Arteries carry blood away from the heart."
+%
+%   vein → toward_heart
+%     https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Veins carry blood toward the heart."
+%
+%   capillary → exchange_of_materials
+%     https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The primary function of capillaries is the exchange of materials between
+%      the blood and tissue cells." (capillaries are also described there as
+%      forming "the connection between the vessels that carry blood away from
+%      the heart (arteries) and the vessels that return blood to the heart
+%      (veins)".)
+%
+% (The three-vessel framing itself is stated on the same primary U.S.
+% government teaching resource — "a closed system of vessels called arteries,
+% veins, and capillaries" — another span of the same page's parent module.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (artery → away_from_heart). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each function remains independently
+% checkable. All sources are the NCI SEER Training Modules, a primary U.S.
+% government (National Cancer Institute) teaching resource, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vessel_function {
+    columns vessel, function
+
+    row (artery, away_from_heart)
+    row (vein, toward_heart)
+    row (capillary, exchange_of_materials)
+
+    source "Arteries carry blood away from the heart."
+    locator "https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html"
+    trust authoritative
+}

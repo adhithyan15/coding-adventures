@@ -1,0 +1,120 @@
+% ============================================================================
+% alveolar-ventilation.adj — the definition of alveolar ventilation
+% (VA = (tidal volume − dead space) × respiratory rate) in the ADJ standard library.
+% ============================================================================
+% The alveolar-ventilation entry of the *clinical* track, a respiratory sibling of
+% `minute-ventilation.adj` and `alveolar-arterial-gradient.adj`. Where `minute-ventilation.adj`
+% grounds the TOTAL air moved per minute (respiratory rate × tidal volume), this grounds the
+% part of that air that actually reaches the alveoli for gas exchange: ALVEOLAR VENTILATION IS
+% THE DEAD-SPACE-SUBTRACTED TIDAL VOLUME, TIMES THE RESPIRATORY RATE — only the tidal volume
+% left after the anatomic/physiologic dead space is removed participates in gas exchange, and
+% that effective per-breath volume is multiplied by the breathing frequency to give the
+% per-minute alveolar ventilation. It is the bedside quantity that governs CO2 clearance (a
+% rise in dead space, or a fall in effective tidal volume, drops alveolar ventilation even at an
+% unchanged minute ventilation). It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its three exact rearrangements (the respiratory rate an alveolar
+% ventilation implies, the tidal volume it implies, and the dead space it implies). This is the
+% first clinical inverter of the PRODUCT-OF-A-DIFFERENCE shape (a − subtraction inside, a ×
+% multiplication outside): where the Glasgow Coma Scale is a pure sum and the cerebral perfusion
+% pressure a pure difference, this composes a difference and a product, and the engine inverts
+% it every way exactly. As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured respiratory quantities from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the definition's citation.
+%
+%     import "alveolar-ventilation.adj"
+%     observe tidal_volume(500)         % "…tidal volume 500 mL…"       (span cited by the model)
+%     observe dead_space(150)           % "…dead space 150 mL…"         (span cited by the model)
+%     observe respiratory_rate(12)      % "…respiratory rate 12 /min…"  (span cited by the model)
+%     ? alveolar_ventilation(tidal_volume, dead_space, respiratory_rate)
+%                                          % engine → 4200, carrying VA = (VT − VD) × RR
+%
+% All four formulas are EXACT over their parameters, so every value the engine returns is exact.
+% The four COMPOSE and invert cleanly around the worked case tidal volume = 500 mL, dead space =
+% 150 mL, respiratory rate = 12 /min (VA = (500 − 150) × 12 = 350 × 12 = 4200 mL/min): the
+% `alveolar_ventilation` a consumer computes from the three quantities is exactly the
+% `alveolar_ventilation` the `respiratory_rate` formula divides by the effective tidal volume to
+% recover 12, exactly the value the `tidal_volume` formula divides by the rate and adds the dead
+% space back to (recovering 500), and exactly the value the `dead_space` formula subtracts the
+% per-breath alveolar volume from the tidal volume to recover (150).
+%
+%   alveolar_ventilation(tidal_volume, dead_space, respiratory_rate)
+%       = (tidal_volume - dead_space) * respiratory_rate      % VA = (VT − VD) × RR   (definition)
+%   respiratory_rate(alveolar_ventilation, tidal_volume, dead_space)
+%       = alveolar_ventilation / (tidal_volume - dead_space)  % RR = VA / (VT − VD)   (solved for RR)
+%   tidal_volume(alveolar_ventilation, respiratory_rate, dead_space)
+%       = alveolar_ventilation / respiratory_rate + dead_space% VT = VA/RR + VD       (solved for VT)
+%   dead_space(tidal_volume, alveolar_ventilation, respiratory_rate)
+%       = tidal_volume - alveolar_ventilation / respiratory_rate % VD = VT − VA/RR    (solved for VD)
+%
+% NOTE ON UNITS: the two volumes (tidal volume and dead space) must be in the SAME unit
+% (millilitres, as in the worked case), the respiratory rate is per minute, and the alveolar
+% ventilation comes out in volume-per-minute (mL/min); this library computes the exact value
+% over whatever consistent units it is given. (The minute ventilation — the total, dead space
+% included — is grounded separately in `minute-ventilation.adj`; this library grounds only the
+% ALVEOLAR part that subtracts the dead space first.)
+%
+% All four formulas are defended by the SAME equation — "VA = (VT − VD) × RR" — because that one
+% definition (alveolar ventilation IS the dead-space-subtracted tidal volume times the rate)
+% sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% "Physiology, Lung Dead Space" article on the NCBI Bookshelf, so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the equation is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable respiratory quantity the definition ranges over,
+% and each result is a derived quantity. `alveolar_ventilation`, `tidal_volume`, `dead_space`
+% and `respiratory_rate` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary alveolar_ventilation_vocab {
+    define tidal_volume         : finding  surface "tidal volume", "VT"                          % millilitres (mL)
+    define dead_space           : finding  surface "dead space", "VD", "physiologic dead space"  % millilitres (mL)
+    define respiratory_rate     : finding  surface "respiratory rate", "RR", "breathing rate"    % breaths per minute (/min)
+    define alveolar_ventilation : finding  surface "alveolar ventilation", "VA"                  % millilitres per minute (mL/min)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all four ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the equation from StatPearls on the NCBI
+% Bookshelf (a quote is required on a shipped formula). Each is an exact composition of a
+% difference and a product/quotient of measured quantities, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook alveolar_ventilation_laws {
+    use alveolar_ventilation_vocab
+
+    % Alveolar ventilation — the dead-space-subtracted tidal volume, times the respiratory rate,
+    % i.e. VA = (VT − VD) × RR.
+    formula alveolar_ventilation(tidal_volume, dead_space, respiratory_rate) = (tidal_volume - dead_space) * respiratory_rate
+        source "VA = (VT − VD) × RR"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482501/"
+        trust authoritative
+
+    % Respiratory rate — the same definition solved for the rate an alveolar ventilation implies
+    % for a given effective tidal volume (RR = VA / (VT − VD)). Defended by the SAME equation.
+    formula respiratory_rate(alveolar_ventilation, tidal_volume, dead_space) = alveolar_ventilation / (tidal_volume - dead_space)
+        source "VA = (VT − VD) × RR"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482501/"
+        trust authoritative
+
+    % Tidal volume — the same definition solved for the tidal volume (VT = VA/RR + VD): the
+    % per-breath alveolar volume plus the dead space that must be re-added. The SAME equation,
+    % read the third way.
+    formula tidal_volume(alveolar_ventilation, respiratory_rate, dead_space) = alveolar_ventilation / respiratory_rate + dead_space
+        source "VA = (VT − VD) × RR"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482501/"
+        trust authoritative
+
+    % Dead space — the same definition solved for the dead space (VD = VT − VA/RR): the tidal
+    % volume less the per-breath alveolar volume. The SAME equation, read the fourth way.
+    formula dead_space(tidal_volume, alveolar_ventilation, respiratory_rate) = tidal_volume - alveolar_ventilation / respiratory_rate
+        source "VA = (VT − VD) × RR"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482501/"
+        trust authoritative
+}

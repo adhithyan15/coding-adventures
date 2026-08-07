@@ -222,6 +222,122 @@ def test_array_values_at_selects_and_folds_negatives() -> None:
     assert oop.call_method([10, 20, 30], "values_at") == []
 
 
+def test_array_rotate_wraps_left_and_right() -> None:
+    # ``rotate(n=1)`` rotates left by ``n``; a negative ``n`` rotates right and the
+    # modulo wraps any magnitude.  Empty array stays empty.
+    assert oop.call_method([1, 2, 3, 4], "rotate") == [2, 3, 4, 1]
+    assert oop.call_method([1, 2, 3, 4], "rotate", 2) == [3, 4, 1, 2]
+    assert oop.call_method([1, 2, 3, 4], "rotate", -1) == [4, 1, 2, 3]
+    assert oop.call_method([1, 2, 3, 4], "rotate", 6) == [3, 4, 1, 2]
+    assert oop.call_method([1, 2, 3], "rotate", 0) == [1, 2, 3]
+    assert oop.call_method([], "rotate", 3) == []
+
+
+def test_array_zip_pads_and_truncates_to_receiver_length() -> None:
+    # ``zip(*others)`` yields one tuple per receiver element; a shorter operand pads
+    # with ``None`` and a longer one is truncated to the receiver length.
+    assert oop.call_method([1, 2, 3], "zip", [4, 5, 6]) == [[1, 4], [2, 5], [3, 6]]
+    assert oop.call_method([1, 2, 3], "zip", [4, 5]) == [[1, 4], [2, 5], [3, None]]
+    assert oop.call_method([1, 2], "zip", [3, 4, 5]) == [[1, 3], [2, 4]]
+    assert oop.call_method([1, 2], "zip", [3, 4], [5, 6]) == [[1, 3, 5], [2, 4, 6]]
+    assert oop.call_method([1, 2], "zip", 99) == [[1, None], [2, None]]
+    assert oop.call_method([1, 2], "zip") == [[1], [2]]
+
+
+def test_array_each_slice_each_cons_chunk_while() -> None:
+    # `each_slice(n)` splits into consecutive <=n-size chunks (last may be short).
+    assert oop.call_method([1, 2, 3, 4, 5], "each_slice", 2) == [[1, 2], [3, 4], [5]]
+    assert oop.call_method([1, 2, 3, 4], "each_slice", 2) == [[1, 2], [3, 4]]
+    assert oop.call_method([1, 2, 3], "each_slice", 5) == [[1, 2, 3]]
+    assert oop.call_method([], "each_slice", 2) == []
+    # n <= 0 → [] (Ruby raises ArgumentError; never-raise floor yields empty).
+    assert oop.call_method([1, 2], "each_slice", 0) == []
+    # `each_cons(n)` yields every consecutive n-element sliding window.
+    assert oop.call_method([1, 2, 3, 4], "each_cons", 2) == [[1, 2], [2, 3], [3, 4]]
+    assert oop.call_method([1, 2, 3], "each_cons", 3) == [[1, 2, 3]]
+    # window larger than the array (or n <= 0) → [].
+    assert oop.call_method([1, 2], "each_cons", 3) == []
+    assert oop.call_method([1, 2], "each_cons", 0) == []
+    # `chunk_while { |a, b| pred }` splits into runs while the adjacent-pair
+    # predicate holds; a falsy result starts a new run.
+    assert oop.call_method(
+        [1, 2, 4, 5, 7], "chunk_while", Closure(lambda a, b: b - a == 1)
+    ) == [[1, 2], [4, 5], [7]]
+    # all-truthy → one run; all-falsy → singletons.
+    assert oop.call_method([1, 2, 3], "chunk_while", Closure(lambda a, b: True)) == [[1, 2, 3]]
+    assert oop.call_method([1, 2, 3], "chunk_while", Closure(lambda a, b: False)) == [[1], [2], [3]]
+    # empty → []; single element → [[x]].
+    assert oop.call_method([], "chunk_while", Closure(lambda a, b: True)) == []
+    assert oop.call_method([9], "chunk_while", Closure(lambda a, b: True)) == [[9]]
+    # respond_to? advertises the new methods.
+    assert oop.call_method([1], "respond_to?", "each_slice") is True
+    assert oop.call_method([1], "respond_to?", "each_cons") is True
+    assert oop.call_method([1], "respond_to?", "chunk_while") is True
+
+
+def test_array_tally() -> None:
+    # `tally` → a Hash of element → occurrence count, in first-seen key order
+    # (a dict preserves insertion order, matching Ruby).  Brings Python level
+    # with the Go/Rust runtimes, which already ship `tally`.
+    assert oop.call_method(["a", "b", "a", "c", "a"], "tally") == {"a": 3, "b": 1, "c": 1}
+    assert oop.call_method([1, 1, 2, 3, 3, 3], "tally") == {1: 2, 2: 1, 3: 3}
+    # empty array → empty hash.
+    assert oop.call_method([], "tally") == {}
+    # respond_to? advertises it.
+    assert oop.call_method([1], "respond_to?", "tally") is True
+
+
+def test_array_slice_when() -> None:
+    # `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a
+    # NEW run BETWEEN an adjacent pair exactly WHERE the block is truthy.
+    # `b - a > 1` splits only on an UPWARD gap; (12, 0) has b - a == -12, so 0
+    # stays in the preceding run.
+    assert oop.call_method(
+        [1, 2, 4, 9, 10, 11, 12, 0], "slice_when", Closure(lambda a, b: b - a > 1)
+    ) == [[1, 2], [4], [9, 10, 11, 12, 0]]
+    # A non-monotonic split predicate (`b < a`) breaks each descent.
+    assert oop.call_method(
+        [1, 4, 2, 3, 1], "slice_when", Closure(lambda a, b: b < a)
+    ) == [[1, 4], [2, 3], [1]]
+    # all-truthy → every element its own singleton run; all-falsy → one run.
+    assert oop.call_method([1, 2, 3], "slice_when", Closure(lambda a, b: True)) == [[1], [2], [3]]
+    assert oop.call_method([1, 2, 3], "slice_when", Closure(lambda a, b: False)) == [[1, 2, 3]]
+    # empty → []; single element → [[x]].
+    assert oop.call_method([], "slice_when", Closure(lambda a, b: True)) == []
+    assert oop.call_method([9], "slice_when", Closure(lambda a, b: True)) == [[9]]
+    # respond_to? advertises it.
+    assert oop.call_method([1], "respond_to?", "slice_when") is True
+
+
+def test_array_cycle() -> None:
+    # `cycle(n) { |x| … }` iterates the array n full passes in order, yielding
+    # each element on every pass; it always returns nil.
+    seen: list[int] = []
+    assert (
+        oop.call_method([1, 2, 3], "cycle", 2, Closure(lambda x: seen.append(x)))
+        is None
+    )
+    assert seen == [1, 2, 3, 1, 2, 3]
+    # A single pass is just the array in order.
+    once: list[int] = []
+    oop.call_method([7, 8], "cycle", 1, Closure(lambda x: once.append(x)))
+    assert once == [7, 8]
+    # n <= 0 yields nothing (and still returns nil).
+    zero: list[int] = []
+    assert oop.call_method([1, 2], "cycle", 0, Closure(lambda x: zero.append(x))) is None
+    assert zero == []
+    neg: list[int] = []
+    oop.call_method([1, 2], "cycle", -3, Closure(lambda x: neg.append(x)))
+    assert neg == []
+    # An empty receiver yields nothing no matter how many passes are requested.
+    empty: list[int] = []
+    oop.call_method([], "cycle", 5, Closure(lambda x: empty.append(x)))
+    assert empty == []
+    # respond_to? advertises it; a still-uncatalogued method reports False.
+    assert oop.call_method([1], "respond_to?", "cycle") is True
+    assert oop.call_method([1], "respond_to?", "combination") is False
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]
@@ -242,6 +358,11 @@ def test_array_reverse_sort_minmax_sum() -> None:
     assert oop.call_method([1, 2, 3], "sum") == 6
     assert oop.call_method([1, 2, 3], "sum", 10) == 16
     assert oop.call_method([], "min") is None
+    # `minmax` → [min, max] in one call; empty → [nil, nil].
+    assert oop.call_method([3, 1, 2], "minmax") == [1, 3]
+    assert oop.call_method(["b", "a", "c"], "minmax") == ["a", "c"]
+    assert oop.call_method([], "minmax") == [None, None]
+    assert oop.call_method([1], "respond_to?", "minmax") is True
 
 
 def test_array_reverse_is_nonmutating() -> None:
@@ -297,8 +418,8 @@ def test_respond_to_reports_catalog_membership() -> None:
     assert oop.call_method([1], "respond_to?", "nil?") is True
     assert oop.call_method([1], "respond_to?", "is_a?") is True
     assert oop.call_method([1], "respond_to?", "map") is True  # block method (M1b)
-    # An out-of-catalog method:
-    assert oop.call_method([1], "respond_to?", "each_slice") is False
+    # An out-of-catalog method (`chunk` is the non-`_while` variant, uncatalogued):
+    assert oop.call_method([1], "respond_to?", "chunk") is False
 
 
 def test_known_block_method_without_block_still_returns_nil() -> None:
@@ -483,15 +604,142 @@ def test_hash_each_key_each_value() -> None:
     assert vs == [1, 2]
 
 
+def test_hash_transform_values_and_keys() -> None:
+    h = {"a": 1, "b": 2}
+    # transform_values: new hash, values mapped, keys unchanged, non-mutating.
+    assert oop.call_method(h, "transform_values", Closure(lambda v: v * 10)) == {"a": 10, "b": 20}
+    assert h == {"a": 1, "b": 2}
+    # transform_keys: new hash, keys mapped, values unchanged.
+    assert oop.call_method(h, "transform_keys", Closure(lambda k: k.upper())) == {"A": 1, "B": 2}
+    # transform_keys collision: the LAST pair wins.
+    assert oop.call_method({"a": 1, "b": 2}, "transform_keys", Closure(lambda _k: "x")) == {"x": 2}
+
+
+def test_hash_enumerable_aggregates() -> None:
+    # Hash mixes in Enumerable: the block is yielded [key, value] and the
+    # "element" an aggregate returns is the two-element [key, value] pair.
+    h = {"a": 1, "b": 2, "c": 3}
+    # find/detect → first matching [k, v] pair (or nil).
+    assert oop.call_method(h, "find", Closure(lambda k, v: v > 1)) == ["b", 2]
+    assert oop.call_method(h, "detect", Closure(lambda k, v: v > 9)) is None
+    # any?/all?/none? over block([k, v]).
+    assert oop.call_method(h, "any?", Closure(lambda k, v: v == 2)) is True
+    assert oop.call_method(h, "all?", Closure(lambda k, v: v > 0)) is True
+    assert oop.call_method(h, "none?", Closure(lambda k, v: v > 9)) is True
+    # count { |k, v| pred } → number of truthy pairs.
+    assert oop.call_method(h, "count", Closure(lambda k, v: v % 2 == 1)) == 2
+    # sort_by → NEW array of [k, v] pairs ordered by the block key.
+    assert oop.call_method(h, "sort_by", Closure(lambda k, v: -v)) == [
+        ["c", 3],
+        ["b", 2],
+        ["a", 1],
+    ]
+    # min_by / max_by → the extremal [k, v] pair.
+    assert oop.call_method(h, "min_by", Closure(lambda k, v: v)) == ["a", 1]
+    assert oop.call_method(h, "max_by", Closure(lambda k, v: v)) == ["c", 3]
+    # min_by / max_by on an empty hash → nil.
+    assert oop.call_method({}, "min_by", Closure(lambda k, v: v)) is None
+    # respond_to? advertises the new aggregates.
+    assert oop.call_method(h, "respond_to?", "min_by") is True
+    assert oop.call_method(h, "respond_to?", "sort_by") is True
+
+
+def test_hash_enumerable_grouping_folding() -> None:
+    # Enumerable breadth part 2: group_by/partition/flat_map/reduce/sum. The
+    # block is yielded [key, value] and results carry [key, value] pairs;
+    # reduce follows Ruby's memo convention (memo, pair).
+    h = {"a": 1, "b": 2, "c": 3, "d": 4}
+    # group_by { |k, v| v.even? } → {False: [[a,1],[c,3]], True: [[b,2],[d,4]]}
+    assert oop.call_method(h, "group_by", Closure(lambda k, v: v % 2 == 0)) == {
+        False: [["a", 1], ["c", 3]],
+        True: [["b", 2], ["d", 4]],
+    }
+    # partition { |k, v| v > 2 } → [[[c,3],[d,4]], [[a,1],[b,2]]]
+    assert oop.call_method(h, "partition", Closure(lambda k, v: v > 2)) == [
+        [["c", 3], ["d", 4]],
+        [["a", 1], ["b", 2]],
+    ]
+    # flat_map { |k, v| [k, v] } → [a, 1, b, 2, c, 3, d, 4]  (one-level flatten)
+    assert oop.call_method(h, "flat_map", Closure(lambda k, v: [k, v])) == [
+        "a", 1, "b", 2, "c", 3, "d", 4,
+    ]
+    # collect_concat alias behaves identically.
+    assert oop.call_method({"a": 1}, "collect_concat", Closure(lambda k, v: [v])) == [1]
+    # reduce(0) { |sum, (k, v)| sum + v } → 10
+    assert oop.call_method(h, "reduce", 0, Closure(lambda acc, pair: acc + pair[1])) == 10
+    # inject (seedless) starts the memo from the first [k, v] pair, then folds
+    # later pairs; here it appends each later value → [a, 1, 2].
+    assert (
+        oop.call_method({"a": 1, "b": 2}, "inject", Closure(lambda acc, pair: acc + [pair[1]]))
+        == ["a", 1, 2]
+    )
+    # empty seedless reduce → nil
+    assert oop.call_method({}, "reduce", Closure(lambda acc, pair: acc)) is None
+    # sum(0) { |k, v| v } → 10 ; sum(100) { |k, v| v } → 110
+    assert oop.call_method(h, "sum", 0, Closure(lambda k, v: v)) == 10
+    assert oop.call_method(h, "sum", 100, Closure(lambda k, v: v)) == 110
+    # respond_to? advertises the new methods; receiver unchanged throughout.
+    assert oop.call_method(h, "respond_to?", "group_by") is True
+    assert oop.call_method(h, "respond_to?", "reduce") is True
+    assert list(h.items()) == [("a", 1), ("b", 2), ("c", 3), ("d", 4)]
+
+
+def test_hash_to_h_and_indexed_iteration() -> None:
+    # `to_h` (no block) returns a shallow copy; mutating it leaves the source
+    # untouched.  `to_h { |k, v| [nk, nv] }` re-maps each pair.  Indexed/object
+    # iteration (`each_with_index`, `each_with_object`) yields the [k, v] pair
+    # as ONE argument alongside the index/memo (the second block param), matching
+    # Ruby's Enumerable convention (contrast `each`'s two-arg (k, v) yield).
+    h = {"a": 1, "b": 2, "c": 3}
+    # to_h, no block → a fresh equal dict that does not alias the receiver.
+    copy = oop.call_method(h, "to_h")
+    assert copy == {"a": 1, "b": 2, "c": 3}
+    copy["z"] = 99
+    assert "z" not in h
+    # to_h with a block re-maps each [k, v] → [new_k, new_v]; here upcase the key
+    # and double the value.
+    assert oop.call_method(h, "to_h", Closure(lambda k, v: [k.upper(), v * 2])) == {
+        "A": 2,
+        "B": 4,
+        "C": 6,
+    }
+    # to_h block whose new keys collide → the LAST pair wins (Ruby's rule).
+    assert oop.call_method(h, "to_h", Closure(lambda k, v: ["k", v])) == {"k": 3}
+    # each_with_index yields ([k, v], i) and returns the receiver.
+    seen: list[Val] = []
+    result = oop.call_method(
+        h, "each_with_index", Closure(lambda pair, i: seen.append([pair, i]))
+    )
+    assert seen == [[["a", 1], 0], [["b", 2], 1], [["c", 3], 2]]
+    assert result is h
+    # each_with_object(memo) yields ([k, v], memo) and returns the memo; here we
+    # accumulate the values into a running total wrapped in a list.
+    total = oop.call_method(
+        h,
+        "each_with_object",
+        [0],
+        Closure(lambda pair, memo: memo.__setitem__(0, memo[0] + pair[1])),
+    )
+    assert total == [6]
+    # each_with_object with NO memo argument returns the receiver unchanged.
+    assert oop.call_method(h, "each_with_object", Closure(lambda pair, memo: None)) is h
+    # respond_to? advertises the new methods; source hash unchanged throughout.
+    assert oop.call_method(h, "respond_to?", "to_h") is True
+    assert oop.call_method(h, "respond_to?", "each_with_index") is True
+    assert oop.call_method(h, "respond_to?", "each_with_object") is True
+    assert h == {"a": 1, "b": 2, "c": 3}
+
+
 def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True
-    assert oop.call_method({"a": 1}, "respond_to?", "transform_keys") is False
+    # `transform_keys!` (the in-place bang variant) is still out of catalog.
+    assert oop.call_method({"a": 1}, "respond_to?", "transform_keys!") is False
     # An out-of-catalog Hash method is genuinely unknown → NoMethodError (T1).
     with pytest.raises(SirError) as excinfo:
-        oop.call_method({"a": 1}, "transform_keys")
+        oop.call_method({"a": 1}, "transform_keys!")
     assert excinfo.value.sir_class == "NoMethodError"
-    assert excinfo.value.args[0] == "undefined method 'transform_keys' for Hash"
+    assert excinfo.value.args[0] == "undefined method 'transform_keys!' for Hash"
     # Universal Object methods still resolve on a Hash receiver.
     assert oop.call_method({"a": 1}, "nil?") is False
 
@@ -577,6 +825,26 @@ def test_string_repeat_and_concat() -> None:
     assert len(oop.call_method("ab", "*", 10**9)) <= 100_000_000
 
 
+def test_string_tr_translates_and_deletes() -> None:
+    # `tr(from, to)`: position-wise char map; a shorter `to` repeats its last
+    # char; an empty `to` deletes matching chars; last mapping wins on a repeat.
+    assert oop.call_method("hello", "tr", "el", "ip") == "hippo"
+    assert oop.call_method("hello", "tr", "aeiou", "*") == "h*ll*"
+    assert oop.call_method("hello", "tr", "l", "") == "heo"
+    assert oop.call_method("hello", "tr", "xyz", "abc") == "hello"
+
+
+def test_string_count_delete_squeeze_char_sets() -> None:
+    assert oop.call_method("hello", "count", "l") == 2
+    assert oop.call_method("hello", "count", "lo") == 3
+    assert oop.call_method("hello", "count", "xyz") == 0
+    assert oop.call_method("hello", "delete", "l") == "heo"
+    assert oop.call_method("hello", "delete", "aeiou") == "hll"
+    # squeeze: no arg collapses every run; with a set, only those chars
+    assert oop.call_method("mississippi", "squeeze") == "misisipi"
+    assert oop.call_method("aaabbbccc", "squeeze", "a") == "abbbccc"
+
+
 def test_string_each_char_block() -> None:
     seen: list[Val] = []
     result = oop.call_method("abc", "each_char", Closure(seen.append))
@@ -634,6 +902,78 @@ def test_numeric_gcd_pow_digits() -> None:
     assert oop.call_method(2, "pow", 5) == 32
     assert oop.call_method(123, "digits") == [3, 2, 1]
     assert oop.call_method(0, "digits") == [0]
+
+
+def test_numeric_round_ndigits() -> None:
+    # A positive ndigits rounds a Float to that many decimals, half away from zero.
+    assert oop.call_method(3.14159, "round", 2) == 3.14
+    assert oop.call_method(2.675, "round", 2) == 2.68
+    assert oop.call_method(-2.5, "round", 0) == -3
+    # ndigits <= 0 rounds to an Integer power of ten.
+    assert oop.call_method(1234, "round", -2) == 1200
+    assert oop.call_method(1250, "round", -2) == 1300  # half away from zero
+    assert oop.call_method(1234.5, "round", -1) == 1230
+    # A rounding place that dwarfs the value is 0 (Ruby parity).
+    assert oop.call_method(1234, "round", -10) == 0
+    assert oop.call_method(1234.5, "round", -10) == 0
+    # DoS guard: a hostile magnitude must short-circuit, not build a bignum.
+    assert oop.call_method(1234, "round", -1_000_000_000) == 0
+    assert oop.call_method(1234.5, "round", -1_000_000_000) == 0
+    # Positive ndigits past Float precision returns the value unchanged (no
+    # 10.0 ** ndigits OverflowError).
+    assert oop.call_method(3.14, "round", 1_000_000) == 3.14
+    # A non-finite ndigits argument degrades to 0 rather than raising an untyped
+    # int(inf)/int(nan) error.
+    assert oop.call_method(5, "round", float("inf")) == 5
+    assert oop.call_method(5, "round", float("nan")) == 5
+    # A huge integer receiver must round via integer arithmetic (no float
+    # OverflowError from `recv / factor`).
+    assert oop.call_method(10**309, "round", -1) == 10**309
+    assert oop.call_method(5 * 10**400, "round", -3) == 5 * 10**400
+    # A near-max Float with a positive ndigits must not overflow the scale-up
+    # (recv * 10**ndigits → inf → _ruby_round(inf) OverflowError); return as-is.
+    assert oop.call_method(1.7e308, "round", 5) == 1.7e308
+    assert oop.call_method(1e300, "round", 17) == 1e300
+
+
+def test_numeric_divmod_fdiv() -> None:
+    assert oop.call_method(13, "divmod", 4) == [3, 1]
+    # Remainder takes the divisor's sign (Ruby/Python floored division).
+    assert oop.call_method(13, "divmod", -4) == [-4, -3]
+    assert oop.call_method(7, "fdiv", 2) == 3.5
+    # fdiv never raises: dividing by zero yields Infinity / NaN.
+    assert oop.call_method(1, "fdiv", 0) == float("inf")
+    assert oop.call_method(-1, "fdiv", 0) == float("-inf")
+    import math as _math
+
+    assert _math.isnan(oop.call_method(0, "fdiv", 0))
+    # divmod by zero raises a typed ZeroDivisionError.
+    with pytest.raises(SirError):
+        oop.call_method(1, "divmod", 0)
+    # A non-numeric divisor degrades rather than raising an untyped error:
+    # divmod → typed ZeroDivisionError, fdiv → Infinity (0 divisor).
+    with pytest.raises(SirError):
+        oop.call_method(1, "divmod", "x")
+    assert oop.call_method(1, "fdiv", "x") == float("inf")
+    # A bignum receiver/arg must saturate to ±inf, not raise an untyped
+    # OverflowError from float(bignum).
+    big = 2**5000
+    assert oop.call_method(big, "fdiv", 2) == float("inf")
+    assert oop.call_method(3, "fdiv", big) == 0.0
+    # Mixed int-receiver / float-divisor divmod on a bignum must not raise an
+    # untyped OverflowError; the receiver saturates to inf, so divmod degrades
+    # to NaN (never-raise floor) rather than crashing.
+    q, r = oop.call_method(big, "divmod", 0.5)
+    assert _math.isnan(q) and _math.isnan(r)
+
+
+def test_numeric_clamp_between() -> None:
+    assert oop.call_method(5, "clamp", 1, 10) == 5
+    assert oop.call_method(-3, "clamp", 1, 10) == 1
+    assert oop.call_method(99, "clamp", 1, 10) == 10
+    assert oop.call_method(5, "between?", 1, 10) is True
+    assert oop.call_method(0, "between?", 1, 10) is False
+    assert oop.call_method(10, "between?", 1, 10) is True
 
 
 def test_numeric_to_s() -> None:
@@ -1245,3 +1585,138 @@ def test_include_unknown_method_still_raises_no_method_error() -> None:
     with pytest.raises(SirError) as excinfo:
         oop.call_method(robot, "nope")
     assert excinfo.value.sir_class == "NoMethodError"
+
+
+# ── Reflection on a rescued EXCEPTION ────────────────────────────────────────
+#
+# A `SirError` is not a `SirInstance`, but it carries its Ruby class tag the
+# same way.  Before these, `class_of` fell through to the "Object" default, so
+# `rescue => e; e.class` said "Object" and `e.is_a?(StandardError)` was FALSE
+# for every exception — silently skipping a handler guarded that way — and
+# `e.message` (everyday Ruby) raised.
+
+
+def test_class_of_an_exception_is_its_ruby_class() -> None:
+    assert oop.class_of(SirError("ArgumentError", "boom")) == "ArgumentError"
+
+
+def test_exception_is_a_matches_itself_and_its_ancestors() -> None:
+    err = SirError("ArgumentError", "boom")
+    assert oop.is_a(err, "ArgumentError") is True
+    assert oop.is_a(err, "StandardError") is True  # via the exception ancestry
+    assert oop.is_a(err, "Object") is True
+    assert oop.is_a(err, "TypeError") is False
+
+
+def test_exception_message_is_the_raised_text() -> None:
+    assert oop.call_method(SirError("ArgumentError", "boom"), "message") == "boom"
+
+
+def test_exception_message_defaults_to_the_class_name() -> None:
+    # Ruby's default `exception.message` is the class name when none is given.
+    assert oop.call_method(SirError("ArgumentError"), "message") == "ArgumentError"
+
+
+def test_respond_to_message_is_honest_in_both_directions() -> None:
+    err = SirError("ArgumentError", "boom")
+    assert oop.call_method(err, "respond_to?", "message") is True
+    # A non-exception must NOT claim to respond to `message`.
+    assert oop.call_method(7, "respond_to?", "message") is False
+    assert oop.call_method("hi", "respond_to?", "message") is False
+
+
+def test_exception_class_reflection_round_trips_through_call_method() -> None:
+    err = SirError("KeyError", "missing")
+    assert oop.call_method(err, "class") == "KeyError"
+    assert oop.call_method(err, "is_a?", "IndexError") is True  # KeyError < IndexError
+    assert oop.call_method(err, "instance_of?", "IndexError") is False
+    assert oop.call_method(err, "instance_of?", "KeyError") is True
+
+
+def test_respond_to_message_does_not_deny_a_user_defined_message() -> None:
+    # A user `message` method is dispatched by `call_method`, so `respond_to?`
+    # must NOT deny it just because the receiver is not an exception — that is
+    # the same dishonest-`respond_to?` shape this change fixes for exceptions.
+    from coding_adventures_sir_runtime_oop import oop as oop_mod
+
+    oop.define_method("message", lambda recv, args: "custom")
+    try:
+        assert oop.call_method(7, "respond_to?", "message") is True
+        assert oop.call_method(7, "message") == "custom"
+    finally:
+        oop_mod._methods.pop("message", None)
+
+
+# ── Security-review regressions (exception reflection, F2/F3/F4) ──────────────
+#
+# The reviewer compiled and ran all four backends and found three Python-side
+# holes.  Each is pinned below.  The emitted `except Exception as __exc` binds
+# the RAW caught value, so `e` can be a NATIVE Python error, not a `SirError`.
+
+
+def test_class_of_a_native_python_error_matches_the_rescue_bucket() -> None:
+    # F2: a caught native error must reflect as the class `rescue` caught it
+    # as (`StandardError`), not fall through to the "Object" default — else
+    # `retry unless e.is_a?(StandardError)` inverts.
+    try:
+        [].pop()
+    except BaseException as e:  # noqa: BLE001 — modelling Ruby `rescue => e`
+        assert oop.class_of(e) == "StandardError"
+        assert oop.is_a(e, "StandardError") is True
+        assert oop.is_a(e, "Object") is True
+        assert oop.call_method(e, "message")  # non-empty, does not raise
+        assert oop.call_method(e, "respond_to?", "message") is True
+
+
+def test_exception_is_a_honours_an_included_module() -> None:
+    # F3: the other three backends report `true` for a module mixed into the
+    # exception's class (or an ancestor).  This is the exact guard the frontier
+    # protects: `retry unless e.is_a?(Recoverable)`.
+    oop.reset_oop()
+    from coding_adventures_sir_runtime_exceptions import register_ancestry
+
+    register_ancestry({"MyErr": "StandardError"})
+    oop.include_module("MyErr", "Recoverable")
+    err = SirError("MyErr", "x")
+    assert oop.is_a(err, "Recoverable") is True
+    assert oop.is_a(err, "StandardError") is True  # still the ancestry path
+    assert oop.is_a(err, "Nope") is False
+
+
+def test_exception_is_a_honours_a_module_on_an_ancestor() -> None:
+    # The module can sit on an ANCESTOR of the exception's class, not just the
+    # class itself — `_module_closure` is consulted for every link in the chain.
+    oop.reset_oop()
+    from coding_adventures_sir_runtime_exceptions import register_ancestry
+
+    register_ancestry({"Sub": "Mid", "Mid": "StandardError"})
+    oop.include_module("Mid", "Traceable")
+    assert oop.is_a(SirError("Sub", "x"), "Traceable") is True
+
+
+def test_respond_to_finds_a_user_defined_instance_method() -> None:
+    # F4: `respond_to?` must consult the per-class method table, the same one
+    # `call_method` dispatches from.  A `SirInstance` used to fall through every
+    # branch to `False`, so `respond_to?(:message)` lied about a method that
+    # then dispatched fine.
+    oop.reset_oop()
+    oop.def_method("Failure", "message", Closure(lambda: "custom"))
+    obj = oop.new_instance("Failure")
+    assert oop.call_method(obj, "respond_to?", "message") is True
+    assert oop.call_method(obj, "message") == "custom"
+    assert oop.call_method(obj, "respond_to?", "absent") is False
+
+
+def test_respond_to_finds_an_inherited_or_mixed_in_method() -> None:
+    # The resolved method may live on a superclass or an included module —
+    # `_resolve_instance_method` walks the full MRO, and `respond_to?` must
+    # agree with it.
+    oop.reset_oop()
+    oop.def_method("Base", "greet", Closure(lambda: "hi"))
+    oop.define_class("Derived", "Base")
+    oop.include_module("Derived", "Greppable")
+    oop.def_method("Greppable", "grep", Closure(lambda: 1))
+    obj = oop.new_instance("Derived")
+    assert oop.call_method(obj, "respond_to?", "greet") is True  # inherited
+    assert oop.call_method(obj, "respond_to?", "grep") is True  # via module
+    assert oop.call_method(obj, "respond_to?", "absent") is False

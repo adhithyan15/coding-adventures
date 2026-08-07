@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.percent_of",
+          "end": 27,
+          "quote": "n% of x items is (n/100)*x.",
+          "quote_sha256": "ac765615e8da33fba525925ae28f392d3c9343ac7539ea54fd0a103ca18fc718",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 27,
+      "start": 0
+    }
+  ],
+  "source_sha256": "ac765615e8da33fba525925ae28f392d3c9343ac7539ea54fd0a103ca18fc718",
+  "source_size": 27
+}

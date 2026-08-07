@@ -50,6 +50,32 @@ from build_tool.discovery import Package
 # inline for the build tool.
 
 
+class MetadataEncodingError(ValueError):
+    """A dependency manifest is not valid UTF-8 metadata."""
+
+    code = "METADATA_INVALID_UTF8"
+
+    def __init__(self, package: str, manifest: Path) -> None:
+        self.package = package
+        self.manifest = manifest.name
+        code_index = next(
+            (
+                index
+                for index in range(len(manifest.parts) - 2, -1, -1)
+                if manifest.parts[index] == "code"
+                and manifest.parts[index + 1] in {"packages", "programs"}
+            ),
+            None,
+        )
+        if code_index is None:
+            self.path = f"{package}/{manifest.name}"
+        else:
+            self.path = "/".join(manifest.parts[code_index:])
+        super().__init__(
+            f"{self.code}: {self.path} for {package} must be encoded as UTF-8"
+        )
+
+
 class DirectedGraph:
     """A minimal directed graph for dependency resolution.
 
@@ -340,7 +366,11 @@ def _parse_lua_deps(package: Package, known_names: dict[str, str]) -> list[str]:
     if not rockspec_files:
         return []
 
-    text = rockspec_files[0].read_text(encoding="utf-8")
+    rockspec = rockspec_files[0]
+    try:
+        text = rockspec.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise MetadataEncodingError(package.name, rockspec) from exc
     internal_deps: list[str] = []
 
     # Find the dependencies = { ... } block and extract quoted strings.

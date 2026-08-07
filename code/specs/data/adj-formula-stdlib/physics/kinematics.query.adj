@@ -1,0 +1,31 @@
+% ============================================================================
+% kinematics.query.adj — worked applications of the foundational kinematics laws.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a motion word
+% problem: it states NO arithmetic. It `import`s the grounded law library, binds
+% each quantity it decomposed from the input (each `observe` is a byte-provenance
+% span the model cited), and asks the engine to APPLY the recalled law. The native
+% adj-lang engine substitutes the law's body, computes exactly on the CPU, and
+% returns the value carrying the law's source/locator/trust — the auditable chain.
+%
+% "A car starting at 5 m/s accelerates at 2 m/s² for 3 s. What is its velocity?"
+%   → recall v = u + at, bind u = 5, a = 2, t = 3, apply → 11 m/s (OpenStax).
+% "A 4 kg cart moves at 5 m/s. What is its momentum?"
+%   → recall p = mv, bind mass = 4, velocity = 5, apply → 20 kg·m/s (NASA Glenn).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli kinematics.query.adj
+% ============================================================================
+
+import "kinematics.adj"
+
+% --- Final velocity: 5 m/s + 2 m/s² · 3 s = 11 m/s. ---
+observe initial_velocity(5)                          % "…starting at 5 m/s…"       (span cited by the model)
+observe acceleration(2)                              % "…accelerates at 2 m/s²…"   (span cited by the model)
+observe time(3)                                      % "…for 3 seconds…"           (span cited by the model)
+? final_velocity(initial_velocity, acceleration, time)  % engine → 11 (v = u + a·t, OpenStax, authoritative)
+
+% --- Linear momentum: 4 kg · 5 m/s = 20 kg·m/s. ---
+observe mass(4)                                      % "…a 4 kg cart…"             (span cited)
+observe velocity(5)                                  % "…moving at 5 m/s…"         (span cited)
+? momentum(mass, velocity)                           % engine → 20 (p = m·v, NASA Glenn, authoritative)

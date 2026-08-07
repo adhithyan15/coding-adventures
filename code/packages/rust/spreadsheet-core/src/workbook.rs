@@ -1280,9 +1280,7 @@ impl Workbook {
     ) -> Option<Vec<u32>> {
         // Guards: unknown sheet, oversized range (DoS), key column outside the
         // range, or nothing to reorder (empty/inverted/single row).
-        if self.sheets.get(sheet.0 as usize).is_none() {
-            return None;
-        }
+        self.sheets.get(sheet.0 as usize)?;
         if range.cell_count() > MAX_RANGE_CELLS {
             return None;
         }
@@ -1522,7 +1520,7 @@ impl Workbook {
             .collect();
         // Stable, predictable order for callers (and tests): top-to-bottom,
         // left-to-right.
-        hits.sort_by(|a, b| (a.row, a.col).cmp(&(b.row, b.col)));
+        hits.sort_by_key(|a| (a.row, a.col));
         hits
     }
 

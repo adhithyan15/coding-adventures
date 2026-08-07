@@ -1,0 +1,57 @@
+% ============================================================================
+% seasons — each meteorological season's start month, Northern Hemisphere
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% A plain earth-science fact a young student meets with the calendar: forecasters
+% do not wait for the exact tilt of the Earth to call a season — they group the
+% year into four tidy three-month blocks that line up with the temperature cycle,
+% so each block starts on the first of a month. Spring is March–April–May, so it
+% STARTS in March; summer is June–July–August, so it starts in June; fall is
+% September–October–November, starting in September; and winter is
+% December–January–February, starting in December. Recall is a binding query:
+%
+%     ? season_start_month(spring, $Month)   % march  (spring begins in March)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `season_start_month(season, start_month)` carrying the NOAA citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% start month WITH its source, on the CPU, with zero model calls. The relation
+% binds BOTH ways: forward `? season_start_month(summer, $M)` gives june, and
+% reverse `? season_start_month($S, december)` gives winter. It abstains on any
+% word the page does not name as a meteorological season — an equinox, a solstice,
+% or a made-up "monsoon" is not a row, so the engine stays silent rather than
+% invent a month. Both atoms — season and month — are lowercase, and the
+% `start_month` value is a month ATOM (a name, not a number): to turn it into a
+% number for arithmetic, compose it with the calendar library
+% (`? month_number(march, $N)` → 3), the concrete bridge from RECALL to COMPUTE.
+%
+% IMPORTANT — this is the METEOROLOGICAL definition, and Northern-Hemisphere only.
+% NOAA distinguishes meteorological seasons (fixed calendar months, used here)
+% from astronomical seasons (which begin at the equinoxes and solstices and shift
+% by a day or two each year). The Southern Hemisphere's seasons are offset by six
+% months. This table encodes exactly the one span quoted below and nothing more.
+%
+% Provenance: the four season → months groupings are copied from NOAA's National
+% Centers for Environmental Information (NCEI) explainer, whose single sentence at
+% the `locator` lists every meteorological season with its months in order:
+% "Meteorological spring in the Northern Hemisphere includes March, April, and
+% May; ... summer includes June, July, and August; ... fall includes September,
+% October, and November; and ... winter includes December, January, and
+% February." Each season's START month is the first month of its listed block.
+% `trust authoritative` — NOAA/NCEI is a U.S. government (.gov) primary source.
+% Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table season_start_month {
+    columns season, start_month
+
+    row (spring, march)
+    row (summer, june)
+    row (fall, september)
+    row (winter, december)
+
+    source "Meteorological spring in the Northern Hemisphere includes March, April, and May; meteorological summer includes June, July, and August; meteorological fall includes September, October, and November; and meteorological winter includes December, January, and February."
+    locator "https://www.ncei.noaa.gov/news/meteorological-versus-astronomical-seasons"
+    trust authoritative
+}

@@ -438,9 +438,11 @@ input `{3, 1, 2, 1}`, `Union` gives `{1, 2, 3}` but `DeleteDuplicates` gives
 panic-free for `NaN` (via `f64::total_cmp`), and keeps distinct numeric subtypes of
 equal magnitude separate — `2` and `2.0` are distinct elements (`Union[{2, 2.}]`
 keeps both), matching Wolfram. Outputs never exceed the sum of the (already-bounded)
-input lengths and each head re-asserts the `MAX_LIST_LENGTH` cap; membership is a
-linear scan (no hashing — `IRNode` carries an `f64`), so the heads are worst-case
-quadratic in the bounded input. Every malformed form (non-list arg, wrong arity) is
+input lengths and each head re-asserts the `MAX_LIST_LENGTH` cap. `IRNode` carries
+an `f64` and so isn't `Hash`-keyable, but it *is* totally ordered (`canonical_cmp`),
+so every head sorts once (O(n log n)) rather than scanning membership per element —
+an earlier version of this file did the latter and was worst-case quadratic (fixed
+in 0.19.1, see `CHANGELOG.md`). Every malformed form (non-list arg, wrong arity) is
 left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
 
 **W-14** adds the **conditionals** and **type predicates**. `Which` and `Switch`
@@ -624,14 +626,18 @@ the existing shared `cas-*` crate, not a reimplementation:
 | `Simplify` | `Simplify[x + 0]` | `x` |
 | `Simplify` | `Simplify[2 + 3]` | `5` |
 | `Expand` | `Expand[(x + 1)^2]` | `1 + x + x + x*x` |
+| `Factor` | `Factor[x^2 - 1]` | `(1 + x) * (-1 + x)` |
 
 `Simplify` calls `cas-simplify`'s existing `simplify()`; `Expand` calls its
 existing `expand()` (distributes `Mul` over `Add`/`Sub`, expands bounded
 non-negative integer `Pow`, does **not** collect like terms — see
-`cas-simplify`'s own docs). Both are the exact functions Macsyma's own
-`simplify()`/`expand()` surface functions call — so Wolfram and Macsyma
-agree on every result this crate can produce. Further heads (`Factor`,
-`Solve`, `D`, `Integrate`, …) land one at a time, each its own item.
+`cas-simplify`'s own docs). `Factor` calls `symbolic-vm`'s own
+`handlers::factor_handler` directly (made `pub` for this reuse) rather than
+a separate `cas-*` crate, since factoring lives in the shared VM crate
+itself. All three are the exact functions Macsyma's own
+`simplify()`/`expand()`/`factor()` surface functions call — so Wolfram and
+Macsyma agree on every result this crate can produce. Further heads
+(`Solve`, `D`, `Integrate`, …) land one at a time, each its own item.
 
 ## Robustness
 
@@ -641,6 +647,20 @@ agree on every result this crate can produce. Further heads (`Factor`,
 the real lexer token stream) that bounds parse-tree depth so deep nesting cannot
 overflow the stack, and a bounded worker thread with `catch_unwind` plus
 session-rebuild so a panic becomes a clean `Err` rather than a crash.
+
+A security audit found and directly reproduced a further, independent
+vector neither cap above closes: `a = a * a` / `a = a + a` (`Set`),
+repeated even a handful of times, doubles the bound value's node count
+and/or nesting depth every step — `MAX_INPUT_LEN`/`MAX_STATEMENT_TOKENS`
+bound *source-text* size, not the size of a value already sitting bound in
+the environment before it gets combined with itself again. This is closed
+in the shared `symbolic-vm` crate itself (`handlers::assign_handler`'s
+`MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH` checks, run before every
+`Assign` durably binds) — `WolframBackend::handler_for` checks the W-5
+builtin table first but has no entry for `Assign`, so `Set`/`SetDelayed`
+always fall through to that same shared handler with no bypass, and are
+protected automatically. See `symbolic-vm`'s own README/changelog for the
+full mechanism.
 
 ## Where it fits
 
@@ -709,7 +729,7 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   conditions / `PatternTest` / sequences / `Repeated` / `Replace` level specs /
   `ReplaceRepeated` (`//.`) deferred to W-20. No grammar change.
 - **Future** — the rest of the `cas-*` function surface under Wolfram names
-  (`Factor`, `Solve`, `D`, `Integrate`, …) — `Simplify` and `Expand` are
+  (`Solve`, `D`, `Integrate`, …) — `Simplify`, `Expand`, and `Factor` are
   delivered, see the W-22 section above.
 
 ## Testing

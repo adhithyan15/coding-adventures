@@ -1,1 +1,1 @@
-function classify(n){if(n<0){return negative(n)}record(n);return positive(n)};report(classify(5));
+function classify(n){if(n<0){return negative(n)}record(n);return positive(n)}report(classify(5));

@@ -1,0 +1,22 @@
+% ============================================================================
+% ph-scale.query.adj — a worked recall over the chemistry ph-scale library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how acidic is lemon
+% juice?": it states no chemistry fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `substance_ph`
+% rows and returns the pH + the table's source/locator/trust. The fourth query
+% runs the relation BACKWARD (bind the pH 7.0, recall the substance that has it —
+% pure water, the neutral point). Dish soap is not in the table, so a recall on
+% it abstains honestly — the engine never invents a pH.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ph-scale.query.adj
+% ============================================================================
+
+import "ph-scale.adj"
+
+? substance_ph(lemon_juice, $P)   % expect 2.2   — acidic
+? substance_ph(milk, $P)          % expect 6.9   — just below neutral
+? substance_ph(ammonia, $P)       % expect 12.5  — strongly basic
+? substance_ph($S, 7.0)           % expect pure_water — reverse recall to the neutral point
+? substance_ph(dish_soap, $P)     % expect abstain — dish soap is not in the table

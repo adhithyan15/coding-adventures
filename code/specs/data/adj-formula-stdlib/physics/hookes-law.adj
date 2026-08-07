@@ -1,0 +1,99 @@
+% ============================================================================
+% hookes-law.adj — Hooke's law (spring force F = k·x) in the ADJ standard library.
+% ============================================================================
+% The Hooke's-law entry of the *physics* track, a sibling of `wave-speed.adj`,
+% `momentum.adj` and `energy-work.adj`: the foundational elasticity relation a first
+% course states as THE RESTORING FORCE OF A SPRING IS PROPORTIONAL TO ITS
+% DISPLACEMENT, with the force (spring) constant k as the proportionality constant —
+% i.e. the MAGNITUDE relation F = k·x — as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the force
+% constant a force implies for a displacement, and the displacement a force implies
+% for a force constant). As with every compute library, a consumer states NO
+% arithmetic: it `import`s this file, binds the physical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited relation on
+% the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the relation's citation.
+%
+%     import "hookes-law.adj"
+%     observe spring_constant(3)       % "…k = 3 N/m…"  (span cited by the model)
+%     observe displacement(2)          % "…stretched 2 m…" (span cited by the model)
+%     ? spring_force(spring_constant, displacement)   % engine → 6, carrying F = k·x
+%
+% NOTE ON SIGN: the library computes the MAGNITUDE of the restoring force, F = k·x.
+% Hooke's law is often written F = -k·x, where the minus sign records only that the
+% restoring force points OPPOSITE to the displacement (back toward equilibrium); it is
+% a direction, not part of the magnitude a consumer computes. So the exact numeric
+% relation the engine applies is F = k·x over the measured magnitudes.
+%
+% All three formulas are EXACT over their parameters — one a product, two quotients of
+% measured quantities. There is no *separately grounded* physical constant here (the
+% spring's force constant k is itself one of the measured quantities), so every value
+% the engine returns is exact. The three COMPOSE and invert cleanly: the
+% `spring_force` a consumer computes from a force constant and a displacement is
+% exactly the `spring_force` the `spring_constant` formula divides by that displacement
+% to recover the force constant, and exactly the `spring_force` the `displacement`
+% formula divides by that force constant to recover the displacement.
+%
+%   spring_force(spring_constant, displacement) = spring_constant * displacement  % F = k·x
+%   spring_constant(spring_force, displacement) = spring_force / displacement       % k = F/x
+%   displacement(spring_force, spring_constant) = spring_force / spring_constant    % x = F/k
+%
+% All three formulas are defended by the SAME sentence — "The simplest oscillations
+% occur when the restoring force is directly proportional to displacement." — because
+% that statement of DIRECT PROPORTIONALITY between the restoring force and the
+% displacement IS Hooke's law: a directly-proportional relation is exactly F = k·x for
+% the proportionality (force) constant k the page names, and so sanctions the relation
+% read every way (F from k and x, k from F and x, or x from F and k). The quote is
+% transcribed verbatim from Physics LibreTexts (OpenStax College Physics — a primary
+% educational reference, the same publisher `wave-speed.adj`, `molarity.adj` and
+% `dilution.adj` cite), so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the sentence is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the relation ranges
+% over, and each result is the derived quantity. `spring_force`, `spring_constant` and
+% `displacement` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the trailing
+% comment records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary hookes_law_vocab {
+    define spring_constant : finding  surface "spring constant", "force constant", "k"      % stiffness, e.g. N/m
+    define displacement    : finding  surface "displacement", "extension", "stretch", "x"   % displacement, e.g. m
+    define spring_force    : finding  surface "spring force", "restoring force", "force", "F" % force magnitude, e.g. N
+}
+
+% ----------------------------------------------------------------------------
+% Hooke's law, all three ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote from
+% Physics LibreTexts (a quote is required on a shipped formula). One is a product and
+% two are quotients, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook hookes_law {
+    use hookes_law_vocab
+
+    % Spring force — the product of the force constant and the displacement. LibreTexts
+    % gives the restoring force as directly proportional to the displacement, i.e.
+    % F = k·x (magnitude).
+    formula spring_force(spring_constant, displacement) = spring_constant * displacement
+        source "The simplest oscillations occur when the restoring force is directly proportional to displacement."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/16:_Oscillatory_Motion_and_Waves/16.01:_Hookes_Law_-_Stress_and_Strain_Revisited"
+        trust authoritative
+
+    % Force constant — the same relation solved for the stiffness a force implies for a
+    % displacement (k = F/x). Defended by the SAME sentence, read the other way.
+    formula spring_constant(spring_force, displacement) = spring_force / displacement
+        source "The simplest oscillations occur when the restoring force is directly proportional to displacement."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/16:_Oscillatory_Motion_and_Waves/16.01:_Hookes_Law_-_Stress_and_Strain_Revisited"
+        trust authoritative
+
+    % Displacement — the same relation solved for the displacement a force implies for a
+    % force constant (x = F/k). Again the SAME sentence, read the third way.
+    formula displacement(spring_force, spring_constant) = spring_force / spring_constant
+        source "The simplest oscillations occur when the restoring force is directly proportional to displacement."
+        locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/16:_Oscillatory_Motion_and_Waves/16.01:_Hookes_Law_-_Stress_and_Strain_Revisited"
+        trust authoritative
+}

@@ -1,0 +1,33 @@
+% ============================================================================
+% alveolar-arterial-gradient.query.adj — worked examples over the clinical A–a gradient library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER an A–a gradient question: it
+% states NO arithmetic and NO relation — it only `import`s the grounded library, `observe`s the
+% quantities it decomposed from the prompt (each a byte-provenanced span, elided here), and
+% asks the engine to APPLY the cited definition. The native adj-lang engine binds the
+% parameters, computes each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: an alveolar oxygen partial pressure of 100 mmHg less an arterial
+% oxygen partial pressure of 90 mmHg gives an A–a gradient of 100 − 90 = 10 mmHg; that 10 mmHg
+% gradient added back to the same 90 mmHg arterial PO2 is exactly what the alveolar-PO2 formula
+% recovers the 100 mmHg from, and that 10 mmHg gradient subtracted from the same 100 mmHg
+% alveolar PO2 is exactly what the arterial-PO2 formula recovers the 90 mmHg from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli alveolar-arterial-gradient.query.adj
+% ============================================================================
+
+import "alveolar-arterial-gradient.adj"
+
+% PAO2 100 mmHg, PaO2 90 mmHg: A–a gradient = 100 − 90.
+observe alveolar_partial_pressure_o2(100)
+observe arterial_partial_pressure_o2(90)
+? aa_gradient(alveolar_partial_pressure_o2, arterial_partial_pressure_o2)          % expect 10   (A–a = PAO2 − PaO2)
+
+% That 10 mmHg gradient with the same 90 mmHg arterial PO2: PAO2 = 10 + 90.
+observe aa_gradient(10)
+? alveolar_partial_pressure_o2(aa_gradient, arterial_partial_pressure_o2)          % expect 100  (same def, solved for PAO2 = A–a + PaO2)
+
+% That 10 mmHg gradient with the same 100 mmHg alveolar PO2: PaO2 = 100 − 10.
+? arterial_partial_pressure_o2(alveolar_partial_pressure_o2, aa_gradient)          % expect 90   (same def, solved for PaO2 = PAO2 − A–a)

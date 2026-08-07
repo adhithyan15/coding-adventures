@@ -1,0 +1,73 @@
+% ============================================================================
+% solfege — each movable-do solfège syllable's scale degree
+% (adj-facts-stdlib, MUSIC).
+% ============================================================================
+% "Do, a deer, a female deer…" — solfège gives the seven notes of the major scale
+% singable NAMES: do comes first (scale degree 1), re next (2), … all the way to
+% ti, the seventh. In the MOVABLE-DO system these syllables track the note's
+% FUNCTION in the scale (do is always the tonic, wherever the key sits), so the
+% degree number is what a musician means when they say "the fifth is sol" or
+% "resolve ti up to do". This tiny library records that syllable → degree mapping
+% so an ADJ program can ASK where a syllable sits in the scale, and get a cited
+% answer. Recall is a binding query:
+%
+%     ? solfege_degree(do, $N)       % 1  (do is the tonic, the first degree)
+%     ? solfege_degree(sol, $N)      % 5  (sol is the fifth — the dominant)
+%     ? solfege_degree(ti, $N)       % 7  (ti is the leading tone, the seventh)
+%
+% Because the value is a NUMBER, the answer composes into arithmetic — how many
+% steps from mi up to la? 6 − 3 = 3. A reverse query binds the other column,
+% turning a degree back into its syllable:
+%
+%     ? solfege_degree($S, 3)        % mi  (which syllable is the third degree?)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `solfege_degree(syllable, degree)` carrying the table's citation, so
+% every lookup above is the ordinary SLD binding query — the engine returns the
+% degree (or the syllable, on a reverse query) WITH its source, on the CPU, with
+% zero model calls, and ABSTAINS on anything that is not one of the seven
+% syllables (a random word, a number) rather than guessing.
+%
+% The seven syllables, as an ordered truth table:
+%
+%     syllable   degree      name of the degree
+%     --------   ------      ------------------
+%     do         1           tonic
+%     re         2           supertonic
+%     mi         3           mediant
+%     fa         4           subdominant
+%     sol        5           dominant
+%     la         6           submediant
+%     ti         7           leading tone
+%
+% Only the seven diatonic-scale rows are shipped — nothing else. A chromatic
+% syllable (the raised `di`/`ri`, the lowered `te`/`le`) has NO row, and neither
+% does a non-syllable, so a query like `? solfege_degree(di, $N)` ABSTAINS rather
+% than inventing a degree: the table only ever asserts the mapping it can cite.
+%
+% Provenance — nothing here is from memory. The seven modern syllables and their
+% ascending major-scale order are recorded in the Wikipedia "Solfège" article,
+% which states verbatim (see `source`) the seven syllables "commonly used in
+% English-speaking countries: do …, re, mi, fa, so(l), la, and ti", and whose
+% movable-do degree table pairs them 1..7 (do = 1st degree … ti = 7th). Each row
+% below assigns a syllable its 1-based degree in that stated ascending order (the
+% canonical `sol` spelling is used for the atom). `trust consensus` — an
+% encyclopedia is a secondary reference. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table solfege_degree {
+    columns syllable, degree
+
+    row (do, 1)
+    row (re, 2)
+    row (mi, 3)
+    row (fa, 4)
+    row (sol, 5)
+    row (la, 6)
+    row (ti, 7)
+
+    source "The tonic sol-fa method popularised the seven syllables commonly used in English-speaking countries: do (spelt doh in tonic sol-fa), re, mi, fa, so(l), la, and ti (or si)"
+    locator "https://en.wikipedia.org/wiki/Solf%C3%A8ge"
+    trust consensus
+}

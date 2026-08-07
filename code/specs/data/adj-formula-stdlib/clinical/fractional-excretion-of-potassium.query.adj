@@ -1,0 +1,31 @@
+% ============================================================================
+% fractional-excretion-of-potassium.query.adj — worked applications of the FEK.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hypokalaemia workup into a paired urine and serum
+% potassium and creatinine: it `import`s the grounded formulabook, `observe`s the four values, and asks the
+% engine to APPLY the cited FEK formula. No arithmetic is stated by the consumer; the engine computes each
+% value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with
+% zero model calls.
+%
+% Worked case (urine K = 60 mEq/L, serum K = 5 mEq/L, urine Cr = 120 mg/dL, serum Cr = 1 mg/dL):
+% FEK = (60 / 5) / (120 / 1) × 100 = 12 / 120 × 100 = 10% — an elevated value pointing to renal potassium
+% wasting rather than an extrarenal loss. Each query fixes all but one quantity and asks the engine to
+% recover the missing one; every answer is exact and the inversions COMPOSE (each recovers exactly the
+% worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-potassium.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-potassium.adj"
+
+% --- FEK: the fractional excretion of potassium the four labs imply (expect 10). --------------------
+observe urine_k(60)
+observe serum_k(5)
+observe urine_creatinine(120)
+observe serum_creatinine(1)
+? fek(urine_k, serum_k, urine_creatinine, serum_creatinine)   % expect 10
+
+% --- Inverse: the urine potassium an FEK of 10 implies at the same serum K and creatinines (expect 60). -
+observe fek(10)
+? urine_k(fek, serum_k, urine_creatinine, serum_creatinine)   % expect 60

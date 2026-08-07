@@ -1,0 +1,100 @@
+% ============================================================================
+% muscle-types — the three types of muscle tissue and the ONE distinctive
+% characteristic the source assigns each one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A rung a MEDICINE agent reasons UP from: below the four basic tissue types
+% (see tissue-types.adj) the MUSCLE tissue splits into exactly THREE kinds —
+% skeletal, smooth, and cardiac — and the source separates them by a single
+% telling trait. "Skeletal muscle is under voluntary control; smooth muscle is
+% involuntary; cardiac muscle is the one with intercalated disks." Before you
+% can reason about a muscle biopsy, a heart, or a gut wall you must first know
+% WHICH of the three muscle-tissue types you are looking at. Recall is a binding
+% query:
+%
+%     ? muscle_trait(cardiac, $Trait)      % intercalated_disks
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `muscle_trait(muscle, trait)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the trait
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these three muscle-tissue types (it never invents a trait).
+%
+% Each of the three muscle-tissue types and the ONE distinctive characteristic
+% the source states for it, as a little truth table:
+%
+%     muscle type   distinctive characteristic   a beginner's cue
+%     -----------   --------------------------   ------------------------------
+%     skeletal      voluntary                    the muscle you move on purpose
+%     smooth        involuntary                  gut & vessel walls, not willed
+%     cardiac       intercalated_disks           the disks unique to heart muscle
+%
+% The query also runs BACKWARD — bind a trait and recall its muscle type:
+%
+%     ? muscle_trait($Muscle, involuntary)   % smooth
+%
+% A word that is NOT one of these three muscle-tissue types — `bone`, `tendon`,
+% `rock` — is deliberately NOT a row, so a muscle recall ABSTAINS on it rather
+% than inventing a trait. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the muscle→trait pairs
+% it can ground, and only those.
+%
+% The `trait` value of every row is a SINGLE lowercase atom, chosen to be a
+% distinctive characteristic the source EXPLICITLY states for that muscle type,
+% and the three values are kept DISTINCT. The source calls both smooth and
+% cardiac muscle involuntary, so `involuntary` could not tell those two apart;
+% cardiac's row therefore uses `intercalated_disks`, the trait the source names
+% as UNIQUE to cardiac muscle ("The presence of intercalated disks distinguishes
+% cardiac muscle as unique among the three types" — the source's own summary),
+% so every value stays literally checkable against its own quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every muscle→trait pair
+% below was read out of a fetched NCI SEER Training Modules page, and any pair
+% whose trait could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   skeletal → voluntary
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Skeletal muscle fibers are cylindrical, multinucleated, striated, and
+%      under voluntary control."
+%
+%   smooth → involuntary
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Smooth muscle cells are spindle shaped, have a single, centrally located
+%      nucleus, and lack striations. They are called involuntary muscles."
+%
+%   cardiac → intercalated_disks
+%     https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Cardiac muscle has branching fibers, one nucleus per cell, striations,
+%      and intercalated disks."
+%
+% (The three-type framing itself is stated on the same SEER page —
+% "There are three types of muscle tissue: Skeletal muscle ... Smooth muscle ...
+% Cardiac muscle ..." — another span of the same primary U.S. government
+% teaching resource.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (skeletal → voluntary). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each trait remains independently checkable.
+% All sources are the NCI SEER Training Modules, a primary U.S. government
+% (National Cancer Institute) teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table muscle_trait {
+    columns muscle, trait
+
+    row (skeletal, voluntary)
+    row (smooth, involuntary)
+    row (cardiac, intercalated_disks)
+
+    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+    trust authoritative
+}

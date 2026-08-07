@@ -1,1 +1,1 @@
-function distance(a,b){return a*a+b*b};distance(3,4);distance(5,12);
+function distance(a,b){return a*a+b*b}distance(3,4);distance(5,12);

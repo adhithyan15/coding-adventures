@@ -214,8 +214,8 @@ impl Url {
                 Some(bracket_pos) => {
                     let host = &host_port[..bracket_pos + 1];
                     let after_bracket = &host_port[bracket_pos + 1..];
-                    let port = if after_bracket.starts_with(':') {
-                        Some(parse_port(&after_bracket[1..])?)
+                    let port = if let Some(port_str) = after_bracket.strip_prefix(':') {
+                        Some(parse_port(port_str)?)
                     } else {
                         None
                     };
@@ -301,9 +301,9 @@ impl Url {
         }
 
         // Fragment-only: "#section"
-        if relative.starts_with('#') {
+        if let Some(fragment) = relative.strip_prefix('#') {
             let mut result = self.clone();
-            result.fragment = Some(relative[1..].to_string());
+            result.fragment = Some(fragment.to_string());
             result.raw = result.to_url_string();
             return Ok(result);
         }

@@ -1,1 +1,1 @@
-var a="HI";var b="\ud83d\udca9";var c="\ud83d\udca9A";report(a,b,c);
+var a="HI",b="\ud83d\udca9",c="\ud83d\udca9A";report(a,b,c);

@@ -1,0 +1,95 @@
+% ============================================================================
+% apri.adj — the AST-to-platelet ratio index
+% (APRI = (AST / upper-limit-of-normal AST / platelet count) × 100) in the ADJ standard library.
+% ============================================================================
+% The APRI entry of the *clinical* track — a simple, non-invasive index that estimates the degree of
+% liver FIBROSIS from two routine blood tests, so a clinician can gauge how scarred a liver is without a
+% biopsy. Two things move together as a liver scars: the aspartate transaminase (AST) leaks up as
+% hepatocytes are injured, and the platelet count falls as portal hypertension and reduced thrombopoietin
+% take hold. APRI captures both in one number by normalising the AST to its laboratory upper limit of
+% normal (so different assays are comparable) and dividing by the platelet count. It was validated first in
+% hepatitis C and is widely used in hepatitis B and C: APRI < 0.5 argues against significant fibrosis,
+% > 1.5 suggests probable cirrhosis. THE APRI IS THE AST DIVIDED BY ITS UPPER LIMIT OF NORMAL, DIVIDED BY
+% THE PLATELET COUNT, TIMES 100 — i.e. (AST / ULN / platelet count) × 100. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the AST a given
+% APRI implies, and the platelet count a given APRI implies). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the AST, its upper limit of normal, and the platelet
+% count from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the
+% CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the formula's citation.
+%
+%     import "apri.adj"
+%     observe ast(80)             % "…AST 80…"          (span cited by the model)
+%     observe ast_uln(40)          % "…AST ULN 40…"      (span cited by the model)
+%     observe platelet_count(100)  % "…platelets 100…"   (span cited by the model)
+%     ? apri(ast, ast_uln, platelet_count)   % engine → 2
+%
+% Structurally this is a CHAINED DIVISION scaled by a constant — the AST divided by two successive
+% quantities (its upper limit of normal, then the platelet count), times 100 — a shape distinct from the
+% single-ratio, ratio-of-ratios, percentage-sum, and product-over-constant forms of the other clinical
+% libraries. The only constant is the 100 that scales the index; the formula is otherwise an exact
+% expression over the three measured quantities, so every value the engine returns is exact. The three
+% formulas COMPOSE and invert cleanly around the worked case AST = 80, ULN = 40, platelet count = 100
+% (×10⁹/L) (APRI = 80 / 40 / 100 × 100 = 2 / 100 × 100 = 2 — well above the 1.5 cirrhosis threshold): the
+% `apri` a consumer computes is exactly the value each inverse formula back-solves to recover its own
+% measured input (80, 100).
+%
+%   apri(ast, ast_uln, platelet_count) = ast / ast_uln / platelet_count * 100   % (index)
+%   ast(apri, ast_uln, platelet_count) = apri * ast_uln * platelet_count / 100   % (solved for AST)
+%   platelet_count(apri, ast, ast_uln) = ast / ast_uln * 100 / apri             % (solved for platelet count)
+%
+% NOTE ON UNITS AND MODELLING: the AST and its upper limit of normal share a unit (IU/L), so that ratio is
+% dimensionless, and the platelet count is in units of 10⁹/L as the cited page prints. Because APRI
+% normalises the AST to its OWN laboratory upper limit of normal, the index is comparable across assays.
+% APRI is a plain dimensionless index. This library only COMPUTES the index; the interpretation
+% (< 0.5 fibrosis-free, > 1.5 probable cirrhosis) is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted APRI equation — because that one equation
+% ((AST / upper-limit-of-normal AST / platelet count) × 100) sanctions the relation read every way. The
+% quote is transcribed verbatim from the article "Noninvasive assessment of liver fibrosis with the
+% aspartate transaminase to platelet ratio index (APRI)" on PubMed Central (a current, freely available
+% NCBI-hosted article), so each `formula` carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `ast`, `ast_uln`, `platelet_count` and `apri` each appear BOTH as a derived result and as an
+% input (of the other formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary apri_vocab {
+    define ast             : finding  surface "AST", "aspartate transaminase", "aspartate aminotransferase"   % IU/L
+    define ast_uln          : finding  surface "AST ULN", "upper limit of normal AST", "AST upper normal limit"  % IU/L
+    define platelet_count   : finding  surface "platelet count", "platelets", "PLT"                             % 10^9/L
+    define apri             : finding  surface "APRI", "AST to platelet ratio index", "AST-platelet ratio index"  % index
+}
+
+% ----------------------------------------------------------------------------
+% APRI, three ways. Each is a named, importable, reusable formula over its formal parameters, bound at apply
+% time, and each carries the APRI equation from the cited PubMed Central article (a quote is required on a
+% shipped formula). Each is an exact expression in the measured values and the cited 100 constant, so the
+% engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook apri_laws {
+    use apri_vocab
+
+    % APRI — the AST over its upper limit of normal, over the platelet count, times 100.
+    formula apri(ast, ast_uln, platelet_count) = ast / ast_uln / platelet_count * 100
+        source "APRI = (AST level/Upper normal limit for AST / Platelet count (10⁹/L)) × 100"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3206675/"
+        trust authoritative
+
+    % AST — the same equation solved for the AST. Defended by the SAME equation.
+    formula ast(apri, ast_uln, platelet_count) = apri * ast_uln * platelet_count / 100
+        source "APRI = (AST level/Upper normal limit for AST / Platelet count (10⁹/L)) × 100"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3206675/"
+        trust authoritative
+
+    % Platelet count — the same equation solved for the platelet count, the third reading of the one index.
+    formula platelet_count(apri, ast, ast_uln) = ast / ast_uln * 100 / apri
+        source "APRI = (AST level/Upper normal limit for AST / Platelet count (10⁹/L)) × 100"
+        locator "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3206675/"
+        trust authoritative
+}

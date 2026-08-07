@@ -26,7 +26,7 @@
 //! ## Why not runtime `make_symbol` + string literals?
 //!
 //! That path (emit the name bytes into a data section, call
-//! `__twig_lispy_make_symbol(ptr, len)`) is what you need to *print* a symbol's
+//! `__dyn_make_symbol(ptr, len)`) is what you need to *print* a symbol's
 //! name or create symbols dynamically (`read`/`gensym`/`eval`). The native
 //! backend has no data-section string-constant machinery yet, and static
 //! programs don't need it — so it is deferred. Compile-time interning delivers
@@ -70,7 +70,7 @@ pub const SYMBOL_ID_BASE: i64 = 1 << 29;
 /// and `EQ` compares the payloads with `i32.eq` — so `(EQ 'A 'A)` is true,
 /// `(EQ 'A 'B)` is false, with no new value type or polymorphic `EQ`.
 ///
-/// Run it **before** `lower_lisp_repr_structural` (so the pass sees a plain
+/// Run it **before** `lower_dyn_repr_structural` (so the pass sees a plain
 /// integer atom). Idempotent: a `const : symbol` that is already an `Int`
 /// (re-run) is left untouched; non-symbol consts are never touched.
 pub fn intern_symbols_structural(module: &mut IIRModule) {
@@ -103,7 +103,7 @@ pub fn intern_symbols_structural(module: &mut IIRModule) {
 ///
 /// Assigns ids in first-seen order across the **whole module** (so a name used
 /// in two functions gets one id). Runs in `twig-aot::prepare_module_for_aot`
-/// before `lower_lisp_repr` (so the representation pass sees finished symbol
+/// before `lower_dyn_repr` (so the representation pass sees finished symbol
 /// immediates). A `const : symbol` that is already an `Int` (re-run, or some
 /// other producer) is left untouched; a non-symbol const is never touched.
 pub fn intern_symbols(module: &mut IIRModule) {

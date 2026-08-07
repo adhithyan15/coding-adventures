@@ -1,0 +1,92 @@
+% ============================================================================
+% reticulocyte-production-index.adj — the reticulocyte production index
+% (RPI = reticulocyte% × hematocrit / 45) in the ADJ standard library.
+% ============================================================================
+% The reticulocyte-production-index entry of the *clinical* track — the anaemia-adjusted reticulocyte
+% measure. A raw reticulocyte PERCENTAGE overstates marrow output in anaemia, because the percentage is
+% taken against a reduced red-cell mass; scaling by the ratio of the patient's hematocrit to a normal
+% hematocrit of 45 corrects the percentage to what it would be at a normal red-cell mass. THE
+% RETICULOCYTE PRODUCTION INDEX IS THE RETICULOCYTE PERCENTAGE TIMES THE PATIENT'S HEMATOCRIT DIVIDED BY
+% THE NORMAL HEMATOCRIT OF 45 — i.e. reticulocyte% × hematocrit / 45. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the
+% reticulocyte percentage an index implies at a given hematocrit, and the hematocrit an index/percentage
+% pair implies). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the reticulocyte percentage and hematocrit from its own byte-provenance decomposition, and asks
+% the engine to APPLY the cited formula on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "reticulocyte-production-index.adj"
+%     observe reticulocyte_percent(6)   % "…reticulocytes 6%…"       (span cited by the model)
+%     observe hematocrit(15)             % "…hematocrit 15%…"         (span cited by the model)
+%     ? reticulocyte_production_index(reticulocyte_percent, hematocrit)
+%                                         % engine → 2, the reticulocyte production index
+%
+% The 45 normal-hematocrit reference is the EXACT constant of the cited formula (not a measurement);
+% the formulas are otherwise exact expressions over the parameters, so every value the engine returns is
+% exact. They COMPOSE and invert cleanly around the worked case reticulocyte% = 6, hematocrit = 15 (RPI
+% = 6 × 15 / 45 = 90 / 45 = 2): the `reticulocyte_production_index` a consumer computes is exactly the
+% value the `reticulocyte_percent` formula back-solves to recover 6, and exactly the value the
+% `hematocrit` formula back-solves to recover 15.
+%
+%   reticulocyte_production_index(reticulocyte_percent, hematocrit) = reticulocyte_percent * hematocrit / 45   % (index)
+%   reticulocyte_percent(reticulocyte_production_index, hematocrit) = reticulocyte_production_index * 45 / hematocrit  % (solved for retic%)
+%   hematocrit(reticulocyte_production_index, reticulocyte_percent) = reticulocyte_production_index * 45 / reticulocyte_percent  % (solved for hematocrit)
+%
+% NOTE ON UNITS AND MODELLING: reticulocyte percentage and hematocrit both as percentages, reference
+% hematocrit 45. This is the index EXACTLY as the cited article writes it — reticulocyte% × Hct / 45; a
+% fuller reticulocyte production index sometimes also divides by a maturation factor, but the cited
+% page's stated equation is the single expression grounded here, and that is what this library computes.
+% The index only ADJUSTS the interpretation of the reticulocyte percentage for the degree of anaemia; it
+% does not itself diagnose the anaemia.
+%
+% All three formulas are defended by the SAME clause — the quoted index equation — because that one
+% statement (the RPI IS the reticulocyte percentage times the hematocrit over 45) sanctions the relation
+% read every way. The quote is transcribed verbatim from the StatPearls "Histology, Reticulocytes"
+% article on the NCBI Bookshelf (a current, non-archived article), so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula, including its 45 constant, is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `reticulocyte_percent`, `hematocrit` and `reticulocyte_production_index` each appear BOTH
+% as a derived result and as an input (of the other formulas), so each is a single dictionary term used
+% in both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term;
+% the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary reticulocyte_production_index_vocab {
+    define reticulocyte_percent           : finding  surface "reticulocyte percent", "reticulocyte percentage", "reticulocytes", "retic count"  % percent
+    define hematocrit                     : finding  surface "hematocrit", "haematocrit", "Hct"                                                  % percent
+    define reticulocyte_production_index   : finding  surface "reticulocyte production index", "RPI", "corrected reticulocyte count"             % index (dimensionless)
+}
+
+% ----------------------------------------------------------------------------
+% The reticulocyte production index, all three ways. Each is a named, importable, reusable formula over
+% its formal parameters, bound at apply time, and each carries the index equation from the StatPearls
+% "Histology, Reticulocytes" article on the NCBI Bookshelf (a quote is required on a shipped formula).
+% Each is an exact expression in the measured quantities and the cited 45 constant, so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook reticulocyte_production_index_laws {
+    use reticulocyte_production_index_vocab
+
+    % Reticulocyte production index — the reticulocyte percentage times the hematocrit over the 45
+    % normal-hematocrit reference.
+    formula reticulocyte_production_index(reticulocyte_percent, hematocrit) = reticulocyte_percent * hematocrit / 45
+        source "Reticulocyte production index (RPI) = [%reticulocyte count x Patient Hct]/45(normal Hct)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542172/"
+        trust authoritative
+
+    % Reticulocyte percentage — the same equation solved for the reticulocyte percentage. Defended by
+    % the SAME sentence.
+    formula reticulocyte_percent(reticulocyte_production_index, hematocrit) = reticulocyte_production_index * 45 / hematocrit
+        source "Reticulocyte production index (RPI) = [%reticulocyte count x Patient Hct]/45(normal Hct)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542172/"
+        trust authoritative
+
+    % Hematocrit — the same equation solved for the hematocrit. The SAME sentence, read the third way.
+    formula hematocrit(reticulocyte_production_index, reticulocyte_percent) = reticulocyte_production_index * 45 / reticulocyte_percent
+        source "Reticulocyte production index (RPI) = [%reticulocyte count x Patient Hct]/45(normal Hct)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542172/"
+        trust authoritative
+}

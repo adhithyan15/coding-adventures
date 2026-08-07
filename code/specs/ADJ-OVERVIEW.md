@@ -264,7 +264,7 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   rulebook-injection flip pattern generalises beyond the matches
   case and whether the v0.12 priming dispatch reduces gemma4
   truncation in practice. Harness at
-  [`scripts/adj18_bench.py`](../../scripts/adj18_bench.py).
+  [`code/scripts/adj18_bench.py`](../../code/scripts/adj18_bench.py).
 - [ADJ21](ADJ21-typed-quantity-decomposition.md) — `decompose_text`
   prompt update (v4 → v5) that explicitly teaches typed-quantity
   extraction. Every numerical value-with-unit in the source

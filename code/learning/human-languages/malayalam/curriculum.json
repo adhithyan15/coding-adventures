@@ -1,0 +1,692 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "path": [
+    {
+      "id": "ML-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ML-C01-namaskaram"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-002",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ML-C01-athe",
+        "ML-C01-illa"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-003",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ML-C01-nandi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ML-C01-sari"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C02-peru",
+        "ML-C02-aanu",
+        "ML-C02-enre",
+        "ML-C02-enre-peru-aanu",
+        "ML-C02-nii-ningal",
+        "ML-C02-entu",
+        "ML-C02-ninre-peru-entaanu",
+        "ML-C02-santosham"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C03-engane"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C03-njaan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-008",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ML-C03-saaramilla"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-009",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C03-sukhamaano",
+        "ML-C03-sukham"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-010",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ML-C04-pokuka",
+        "ML-C04-poyi-varaam",
+        "ML-C04-naale-kaanaam",
+        "ML-C04-veendum-kaanaam"
+      ],
+      "before": [
+        "ML-EXT-010-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C05-samsaarikkuka",
+        "ML-C05-joli-ceyyuka",
+        "ML-C05-njaan-malayalam-samsaarikkunnu",
+        "ML-C05-taamasikkuka",
+        "ML-C05-practice",
+        "ML-C06-dative-ikku",
+        "ML-C06-dative-subject"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-011-LANGUAGE-SPECIFIC",
+        "ML-EXT-011-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-012",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ML-C07-numbers-1-5",
+        "ML-C07-numbers-6-10"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-012-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C08-dayavayi",
+        "ML-C09-kshamikkanam"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-014",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ML-C10-azhcha"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-015",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ML-C11-nirangal"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-016",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C12-kudumbam"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-017",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C13-shareera-bhaagangal"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-018",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ML-C14-kaalangal"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-019",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C15-vellam-ari"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-020",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ML-C16-kollavarsham-maasangal",
+        "ML-C17-ucha-paathira",
+        "ML-C17-paathira",
+        "ML-C18-mani"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-021",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C19-vayassu"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-022",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ML-C20-pathinonnu-irupathu"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-023",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ML-C20-kalavastha"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-024",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ML-C21-naaya-poocha",
+        "ML-C22-paccha-manja"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-025",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ML-C23-divasam",
+        "ML-C23-naal",
+        "ML-C24-rathri",
+        "ML-C24-native-night-words",
+        "ML-C25-shubha-rathri",
+        "ML-C26-raavile",
+        "ML-C27-vaikunneram",
+        "ML-C28-uchakazhinju",
+        "ML-C29-suprabhaatham",
+        "ML-C30-shubha-sayaahnam",
+        "ML-C31-shubha-madhyaahnam",
+        "ML-C31-afternoon-convergence"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-025-ETYMOLOGY",
+        "ML-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "ML-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "ML-PATH-003",
+        "ML-PATH-008"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "ML-PATH-002",
+        "ML-PATH-004"
+      ],
+      "omits": [
+        "RESPONSE-YESNO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "ML-PATH-005",
+        "ML-PATH-007",
+        "ML-PATH-011",
+        "ML-PATH-016",
+        "ML-PATH-021"
+      ],
+      "omits": [
+        "PRONOUN-ME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "ML-PATH-006",
+        "ML-PATH-009",
+        "ML-PATH-017"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "ML-PATH-013",
+        "ML-PATH-019"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "ML-PATH-010"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON"
+      ],
+      "relocates": {
+        "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+      }
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "ML-PATH-014",
+        "ML-PATH-018",
+        "ML-PATH-020",
+        "ML-PATH-023",
+        "ML-PATH-025"
+      ],
+      "omits": [
+        "GREETING-DAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "ML-PATH-015",
+        "ML-PATH-024"
+      ],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "ML-PATH-012",
+        "ML-PATH-022"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "ML-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C04-pokuka"
+      ]
+    },
+    {
+      "id": "ML-EXT-011-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C05-samsaarikkuka",
+        "ML-C05-joli-ceyyuka",
+        "ML-C05-njaan-malayalam-samsaarikkunnu",
+        "ML-C05-taamasikkuka",
+        "ML-C06-dative-ikku",
+        "ML-C06-dative-subject"
+      ]
+    },
+    {
+      "id": "ML-EXT-011-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Malayalam material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C05-practice"
+      ]
+    },
+    {
+      "id": "ML-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C07-numbers-1-5",
+        "ML-C07-numbers-6-10"
+      ]
+    },
+    {
+      "id": "ML-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C10-azhcha"
+      ]
+    },
+    {
+      "id": "ML-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C11-nirangal"
+      ]
+    },
+    {
+      "id": "ML-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C12-kudumbam"
+      ]
+    },
+    {
+      "id": "ML-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C13-shareera-bhaagangal"
+      ]
+    },
+    {
+      "id": "ML-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C14-kaalangal"
+      ]
+    },
+    {
+      "id": "ML-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C15-vellam-ari"
+      ]
+    },
+    {
+      "id": "ML-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C16-kollavarsham-maasangal",
+        "ML-C17-ucha-paathira",
+        "ML-C17-paathira",
+        "ML-C18-mani"
+      ]
+    },
+    {
+      "id": "ML-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C19-vayassu"
+      ]
+    },
+    {
+      "id": "ML-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C20-pathinonnu-irupathu"
+      ]
+    },
+    {
+      "id": "ML-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C20-kalavastha"
+      ]
+    },
+    {
+      "id": "ML-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C21-naaya-poocha",
+        "ML-C22-paccha-manja"
+      ]
+    },
+    {
+      "id": "ML-EXT-025-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Malayalam word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C23-naal",
+        "ML-C24-native-night-words",
+        "ML-C31-afternoon-convergence"
+      ]
+    },
+    {
+      "id": "ML-EXT-025-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Malayalam material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C25-shubha-rathri"
+      ]
+    },
+    {
+      "id": "ML-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Malayalam script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C01-namaskaram"
+      ]
+    }
+  ]
+}

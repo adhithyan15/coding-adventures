@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-daemon-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Fail-closed reconciliation scheduler and WebSocket serving runtime for D18 Chief"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+transport-platform = { path = "../transport-platform" }
+websocket-runtime = { path = "../websocket-runtime" }
+
+[dev-dependencies]
+chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }

@@ -84,7 +84,7 @@ mod business_logic {
         let path_str = path.to_string_lossy().into_owned();
         let result = touch_file(&path_str, true);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), false);
+        assert!(!result.unwrap());
         assert!(!Path::new(&path_str).exists());
     }
 }

@@ -1,0 +1,723 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 17,
+  "title": "Chapter 17",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:f2cd4347daa28b7a",
+  "lessons": [
+    {
+      "id": "ES-C17-condicional",
+      "sequence": null,
+      "title": "hablaría — the same weld, one tense over",
+      "headword": "hablaría",
+      "romanization": "hablaría",
+      "gloss": "the conditional — the same weld, using the imperfect of haber instead",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42b4d39476b7e46c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "If you understood the last lesson, this one is nearly free. Same machine, one part swapped."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Whole infinitive again, new endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "yo, hablaría.",
+                "tú, hablarías.",
+                "él/ella/usted, hablaría.",
+                "nosotros, hablaríamos.",
+                "ellos/ustedes, hablarían."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look hard at those endings. You already know them. They are exactly the -er/-ir imperfect endings from Chapter 16: comía, comías, comíamos, comían."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Why they're the same",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because they are the same. The future welded the infinitive to the present of haber; the conditional welds it to the imperfect of haber:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "infinitive +",
+                "result"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "tense: future. infinitive +: haber present (he, has, ha…) result: hablaré.",
+                "tense: conditional. infinitive +: haber imperfect (había, habías…) result: hablaría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "(Strictly, what fused was the older, shorter avía — which is why you get hablaría and not hablarhabía. The modern había is the same word, un-worn.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One trick, two tenses of the same auxiliary. That is the whole chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "And the accent does the job Chapter 16 taught: it breaks the diphthong, so hablar-í-a is separate syllables."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "What it's for",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "use",
+                "example"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "use: would — hypothetical. example: Hablaría con él. \"I would speak with him.\"",
+                "use: politeness — softening. example: ¿Podrías ayudarme? \"Could you help me?\"",
+                "use: future-in-the-past. example: Dijo que hablaría. \"He said he would speak.\""
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is neat: from a point in the past, the conditional is the future. Which makes sense if you remember the imperfect is inside it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablaría, hablarías, hablaría, hablaríamos, hablarían\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablaría, hablarías, hablaría, hablaríamos, hablarían\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the echo — \"comía … hablaría\" — same endings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the echo — \"com**ía** … hablar**ía**\" — same endings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Me gustaría…\" (\"I would like…\") — the politest thing in Spanish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Me gustaría…\" (\"I would like…\") — the politest thing in Spanish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"hablar + he … hablar + ía\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"hablar + he … hablar + ía\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do the conditional endings attach to? (The whole infinitive, as in the future.) Where have you seen -ía/-ías/-íamos before? (The Ch.16 imperfect of -er/-ir verbs.) Why are they identical? (Because the conditional is the infinitive + the imperfect of haber.) So what's the one-line summary of this chapter? (Infinitive + haber — present gives the future, imperfect gives the conditional.) Next: the nine verbs that bend the infinitive first."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-future-guessing",
+      "sequence": null,
+      "title": "serán las tres — future form, present guess",
+      "headword": "serán las tres",
+      "romanization": "serán las tres",
+      "gloss": "the future can express a present guess, and the conditional can express a past guess",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ad1c9c2cc752b7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "Guessing now",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish uses the future to express a present conjecture:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "natural meaning"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Spanish: ¿Dónde estará Juan? natural meaning: Where can Juan be? (now).",
+                "Spanish: Serán las tres. natural meaning: It must be three o'clock.",
+                "Spanish: ¿Quién será? natural meaning: Who could that be?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The verb's form is future, but the uncertain situation is present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Guessing about the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The conditional moves the same conjecture backward:"
+            },
+            {
+              "kind": "speech",
+              "text": "Serían las tres cuando llegó. — It must have been three when he arrived."
+            },
+            {
+              "kind": "speech",
+              "text": "These tenses grew from constructions with haber, \"have.\" The semantic path from \"have to\" toward obligation and likelihood helps the guessing use feel less arbitrary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Dónde estará?\" — where can he be?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Dónde estará?\" — where can he be?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Serán las tres\" — it must be three",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Serán las tres\" — it must be three]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Serían las tres\" — it must have been three",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Serían las tres\" — it must have been three]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does serán las tres necessarily refer to later? (No — it can guess the time now.) Which form guesses about the past? (Conditional: serían.) What older meaning helps connect future form to likelihood? (The construction with haber, \"have to.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-futuro",
+      "sequence": null,
+      "title": "hablaré — the future, welded shut",
+      "headword": "hablaré",
+      "romanization": "hablaré",
+      "gloss": "the future — a compound tense that welded itself shut",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c666ac55ceac5ba0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 10 gave you one future (voy a hablar). Here is the other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the whole infinitive and add the endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "yo, hablaré.",
+                "tú, hablarás.",
+                "él/ella/usted, hablará.",
+                "nosotros, hablaremos.",
+                "ellos/ustedes, hablarán."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice something odd: you don't drop -ar first. Every other tense you've learned strips the ending off. The future keeps the infinitive whole and builds on top of it — comer becomes comeré, vivir becomes viviré. One set of endings for all three conjugations."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Why the infinitive survives",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's own future — amābō, \"I will love\" — died out. Speakers replaced it with a phrase:"
+            },
+            {
+              "kind": "speech",
+              "text": "amāre habeō — \"I have to love\" becomes \"I will love\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Infinitive + the verb habēre, \"to have.\" Exactly the English \"I have to go,\" which also slides toward the future."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the phrase fused. Say hablar he fast enough, often enough, for enough centuries, and it becomes one word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stage",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "stage: two words. form: hablar + he.",
+                "stage: squeezed. form: hablar-he.",
+                "stage: welded. form: hablaré."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the endings aren't endings at all, historically. They are the present tense of haber worn down to a suffix:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "haber (present)",
+                "future ending"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "haber (present): he. future ending: -é.",
+                "haber (present): has. future ending: -ás.",
+                "haber (present): ha. future ending: -á.",
+                "haber (present): hemos. future ending: -emos.",
+                "haber (present): han. future ending: -án."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Line them up and they're the same list. A compound tense that closed up into a simple one — the exact reverse of what French and Italian did with their compound past, which stayed open as two words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The seam is still visible in Portuguese",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Portuguese welded its future too (falarei is one word). But in formal European Portuguese a pronoun can still be lodged inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "falá-lo-ei — \"I will speak it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That -lo- is sitting in the join, between falar and ei. A leftover, not the normal pattern — Brazilian Portuguese doesn't do it, and neither does speech. But it shows the seam Spanish sealed over completely is still faintly open next door."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablaré, hablarás, hablará, hablaremos, hablarán\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablaré, hablarás, hablará, hablaremos, hablarán\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comeré, viviré\" — the infinitive stays whole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comeré, viviré\" — the infinitive stays whole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the weld — \"hablar + he becomes hablaré\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the weld — \"hablar + he → hablaré\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two futures — \"voy a hablar … hablaré\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two futures — \"voy a hablar … hablaré\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you add the future endings to? (The whole infinitive — you don't strip it.) What happened to Latin's own future? (It died; Romance replaced it with a phrase.) What was that phrase? (Infinitive + habēre, \"I have to speak.\") So what are the endings really? (The present of haber, fused on.) Which language still shows the seam? (Portuguese — falá-lo-ei.) Next: the same trick, with a different tense of haber."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-practice",
+      "sequence": null,
+      "title": "Practice — ten stems, two tenses",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the ten irregular stems that serve both future and conditional",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:4dd06dd0cdb60b2a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for 2 tables that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The ten, in three families"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the section called The ten, in three families until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A handful of verbs bend the infinitive before welding. The good news: the same bent stem serves both tenses, so you learn ten shapes once and get twenty conjugations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The ten, in three families",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. Drop the vowel. The infinitive's last vowel just goes:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 4,
+              "headers": [
+                "verb",
+                "stem",
+                "future",
+                "conditional"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, stem, future, conditional. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "2. Drop the vowel, then wedge in a d. Dropping alone would leave -n'r- or -l'r- right here, and Old Spanish refused to leave it that way — so a d slid in to prop the cluster apart:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 4,
+              "headers": [
+                "verb",
+                "would be",
+                "becomes",
+                "future"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, would be, becomes, future. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "(Not that modern Spanish can't say those clusters — honra, sonrisa, alrededor are fine. It's that when this particular squeeze happened, the language fixed it. It even tried a second solution first: medieval Spanish also said terné, porné, verné, swapping the consonants around instead. The d-forms won.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Recognise those four? Every one is a member of the -go club from Chapters 12–13. The club had six — and the other two, hacer and decir, are sitting in family 3 below. So all six of the -go verbs are irregular here too; they just split into two shapes. The oldest, most-used verbs misbehave in the same places over and over."
+            },
+            {
+              "kind": "speech",
+              "text": "3. Chop hard. Two verbs shorten drastically:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "verb: decir. future: diré. conditional: diría.",
+                "verb: hacer. future: haré. conditional: haría."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The test",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every irregular here is irregular in the stem only. The endings never change:"
+            },
+            {
+              "kind": "speech",
+              "text": "irregular stem + the same -é/-ás/-á… or -ía/-ías…"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the d-group — \"tendré, pondré, vendré, saldré\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the d-group — \"tendré, pondré, vendré, saldré\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the choppers — \"diré, haré\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the choppers — \"diré, haré\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one verb, both tenses — \"tendré … tendría\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one verb, both tenses — \"tendré … tendría\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do the irregulars change the endings or the stem? (The stem only.) Why does tener become tendr-? (Dropping the vowel squeezed -n'r- together, and a d wedged in to fix it — medieval Spanish also tried terné.) How do the -go club verbs fare here? (All six are irregular — four take the -dr-, and hacer/decir chop instead.) Which two verbs chop hardest? (Decir becomes diré, hacer becomes haré.) Do irregular stems change the endings? (No.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

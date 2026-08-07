@@ -217,20 +217,12 @@ impl std::error::Error for PipelineEmitError {}
 ///
 /// Default: emits only the component `.js`; no project shell.
 /// `from_pipeline(...)` is unchanged.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct EmitOptions {
     /// Also emit `index.html` (loads the `.js` module + instantiates
     /// the custom element) and `README.md` alongside the component
     /// `.js` file. Default `false`.
     pub emit_project: bool,
-}
-
-impl Default for EmitOptions {
-    fn default() -> Self {
-        Self {
-            emit_project: false,
-        }
-    }
 }
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
@@ -401,6 +393,7 @@ const root = document.querySelector(customTag);
 if (root === null) {
   throw new Error(`Mosaic WebComponent root not found for ${customTag}`);
 }
+const mountedHostNodes = new Map();
 
 let props = {};
 for (const slot of slots) {
@@ -476,11 +469,29 @@ function applyProps(nextProps) {
     const fallback = cloneSlotFallback(slot.fallback);
     const value = readSlotValue(nextProps, slot, fallback);
     root[slot.prop] = value;
+    if (slot.type === "node" || slot.type === "component") {
+      applyNodeSlot(slot, value);
+      continue;
+    }
     root.setAttribute(slot.name, serializeSlotValue(value, slot.type));
   }
   if (typeof root._render === "function") {
     root._render();
   }
+}
+
+function applyNodeSlot(slot, value) {
+  const previous = mountedHostNodes.get(slot.name);
+  if (previous?.parentNode === root) {
+    previous.remove();
+  }
+  mountedHostNodes.delete(slot.name);
+  if (!(value instanceof Element)) {
+    return;
+  }
+  value.setAttribute("slot", slot.name);
+  root.appendChild(value);
+  mountedHostNodes.set(slot.name, value);
 }
 
 function readSlotValue(source, slot, fallback) {
@@ -645,6 +656,35 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out).unwrap();
+
+    // Runtime slot values are host-controlled. Every value interpolated
+    // into the shadow-root template must be encoded for its HTML context
+    // before the template is assigned to `innerHTML`.
+    out.push_str(
+        r##"function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function escapeHtmlAttribute(value) {
+  return escapeHtml(value)
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function safeHref(value) {
+  const href = String(value ?? "").trim();
+  const normalizedScheme = href.replace(/[\u0000-\u0020\u007f]+/g, "");
+  if (/^(?:javascript|data|vbscript):/i.test(normalizedScheme)) {
+    return "#";
+  }
+  return escapeHtmlAttribute(href);
+}
+
+"##,
+    );
 
     // 3. Class opener.
     writeln!(out, "class {class_name} extends HTMLElement {{").unwrap();
@@ -950,6 +990,7 @@ fn emit_html_tree(
     // generic open/close walker below.
     // -----------------------------------------------------------------
     match node.tag.as_str() {
+        "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
         "HostInput" => return Ok(emit_host_input(node, part_styles)),
         "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
@@ -1084,6 +1125,15 @@ fn emit_html_tree(
         i += 1;
     }
     Ok(format!("{open_with_attrs}{inner}{close}"))
+}
+
+/// Mount host-owned light-DOM content through the platform's native named-slot
+/// mechanism. The wrapper remains inside Mosaic's shadow tree so shared MSL
+/// layout and colour still apply around the supplied browser viewport.
+fn emit_host_surface(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+    let slot = find_slot_ref(node, "content").unwrap_or("");
+    let style = build_style_attr(node, "", part_styles);
+    format!("<div data-mosaic-host-surface=\"{slot}\"{style}><slot name=\"{slot}\"></slot></div>")
 }
 
 // =====================================================================
@@ -1456,7 +1506,7 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     if let Some(slot) = find_slot_ref(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" value="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" value="${{escapeHtmlAttribute({camel})}}""#));
         }
     }
 
@@ -1626,7 +1676,7 @@ fn host_button_label_body(node: &LayoutNode) -> String {
             if trimmed.is_empty() {
                 String::new()
             } else {
-                format!("${{{trimmed}}}")
+                format!("${{escapeHtml({trimmed})}}")
             }
         }
         _ => String::new(),
@@ -1636,7 +1686,7 @@ fn host_button_label_body(node: &LayoutNode) -> String {
 fn template_identifier_body(name: &str) -> String {
     let camel = to_camel_case_first_lower(name);
     if is_safe_identifier(&camel) {
-        format!("${{{camel}}}")
+        format!("${{escapeHtml({camel})}}")
     } else {
         String::new()
     }
@@ -1735,7 +1785,7 @@ fn emit_host_checkbox(node: &LayoutNode, part_styles: &HashMap<String, String>) 
     } else if let Some(slot) = find_slot_ref(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            format!("<label>{attrs} ${{{camel}}}</label>")
+            format!("<label>{attrs} ${{escapeHtml({camel})}}</label>")
         } else {
             attrs
         }
@@ -1765,7 +1815,7 @@ fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     } else if let Some(slot) = find_slot_ref(node, "group") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" name="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" name="${{escapeHtmlAttribute({camel})}}""#));
         }
     }
 
@@ -1775,7 +1825,7 @@ fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     } else if let Some(slot) = find_slot_ref(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" value="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" value="${{escapeHtmlAttribute({camel})}}""#));
         }
     }
 
@@ -1822,7 +1872,7 @@ fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     } else if let Some(slot) = find_slot_ref(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            format!("<label>{attrs} ${{{camel}}}</label>")
+            format!("<label>{attrs} ${{escapeHtml({camel})}}</label>")
         } else {
             attrs
         }
@@ -1871,7 +1921,7 @@ fn emit_host_link(
     } else if let Some(slot) = find_slot_ref(node, "href") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" href="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" href="${{safeHref({camel})}}""#));
         } else {
             attrs.push_str(" href=\"#\"");
         }
@@ -1913,7 +1963,7 @@ fn emit_host_link(
     } else if let Some(slot) = find_slot_ref(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            format!("${{{camel}}}")
+            format!("${{escapeHtml({camel})}}")
         } else {
             String::new()
         }
@@ -1994,7 +2044,7 @@ fn emit_host_tooltip(
     } else if let Some(slot) = find_slot_ref(node, "text") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" title="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" title="${{escapeHtmlAttribute({camel})}}""#));
         }
     }
 
@@ -2022,7 +2072,7 @@ fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, Strin
     if let Some(slot) = find_slot_ref(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" value="${{{camel}}}""#));
+            attrs.push_str(&format!(r#" value="${{escapeHtmlAttribute({camel})}}""#));
         }
     } else if let Some(n) = find_number(node, "value") {
         attrs.push_str(&format!(r#" value="{n}""#));
@@ -2041,7 +2091,9 @@ fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, Strin
     } else if let Some(slot) = find_slot_ref(node, "placeholder") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#" placeholder="${{{camel}}}""#));
+            attrs.push_str(&format!(
+                r#" placeholder="${{escapeHtmlAttribute({camel})}}""#
+            ));
         }
     }
 
@@ -2160,7 +2212,7 @@ fn emit_host_dialog(
     let title_html = if let Some(slot) = find_slot_ref(node, "title") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            format!("<h2>${{{camel}}}</h2>")
+            format!("<h2>${{escapeHtml({camel})}}</h2>")
         } else {
             String::new()
         }
@@ -2404,6 +2456,16 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             false,
             "display: flex; flex-direction: column;",
         ),
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a plain vertical container: the content still renders, it
+        // just isn't draggable here. Erroring instead would mean a layout using drag
+        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
+        "HostDraggable" | "HostDropTarget" => mk(
+            "<div>",
+            "</div>",
+            false,
+            "display: flex; flex-direction: column;",
+        ),
         "Text" => mk("<span>", "</span>", false, ""),
         "Image" => {
             // Image is a void element. Future PRs can wire in `src` /
@@ -2478,7 +2540,7 @@ fn build_text_content(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::SlotRef(name) => {
             let camel = to_camel_case_first_lower(name);
             if is_safe_identifier(&camel) {
-                format!("${{{camel}}}")
+                format!("${{escapeHtml({camel})}}")
             } else {
                 String::new()
             }
@@ -2499,20 +2561,15 @@ fn build_text_content(node: &LayoutNode) -> Option<String> {
         // One outer layer of parens is stripped via
         // `strip_outer_parens` so `( v )` reduces to `v` in the
         // interpolation; a complex expression like `( row.cells )`
-        // survives the strip and becomes `${row.cells}` so the V8
-        // JS engine evaluates the member access against the current
-        // loop scope.  The interpolated text is *not* re-escaped
-        // here because the surrounding template literal places the
-        // result directly into `shadowRoot.innerHTML` — the same
-        // surface the legitimate `SlotRef` content path already
-        // uses (`${displayName}`).  Host code is responsible for
-        // sanitising attribute values before setting them.
+        // survives the strip and is evaluated against the current loop
+        // scope. The resulting value is HTML-encoded before it reaches
+        // `shadowRoot.innerHTML`.
         LayoutPropValue::Expr(e) => {
             let trimmed = strip_outer_parens(e.trim());
             if trimmed.is_empty() {
                 String::new()
             } else {
-                format!("${{{trimmed}}}")
+                format!("${{escapeHtml({trimmed})}}")
             }
         }
     })
@@ -2586,7 +2643,7 @@ fn build_host_table_dir_attribute(node: &LayoutNode) -> String {
     if let Some(slot) = find_slot_ref(node, "dir") {
         let camel = to_camel_case_first_lower(slot);
         if is_safe_identifier(&camel) {
-            return format!(r#" dir="${{{camel}}}""#);
+            return format!(r#" dir="${{escapeHtmlAttribute({camel})}}""#);
         }
         return String::new();
     }
@@ -2916,7 +2973,9 @@ fn build_col_width_css(node: &LayoutNode) -> Option<String> {
         }
         _ => return None,
     };
-    Some(format!("width: ${{{expr}}}px"))
+    Some(format!(
+        "width: ${{Number.isFinite(Number({expr})) ? Number({expr}) : 0}}px"
+    ))
 }
 
 /// Build the per-state CSS ternaries for a node's `state-when-*` props.
@@ -3198,6 +3257,9 @@ fn _slot_type_keepalive(_t: &SlotType, _l: &ListInnerType) {}
 
 #[cfg(test)]
 mod tests {
+    // Tests build a `*::default()` then set one field; the sequential form
+    // reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, SlotDecl};
@@ -3217,6 +3279,7 @@ mod tests {
         PartStyle {
             name: name.to_string(),
             base,
+            transitions: vec![],
             states,
         }
     }
@@ -3360,7 +3423,7 @@ mod tests {
     // -------- Test 3: text slot interpolates via getAttribute in _render --------
 
     /// A slot of type `text` referenced as the content of a Text
-    /// primitive lowers to `${displayName}` inside the template literal
+    /// primitive lowers to `${escapeHtml(displayName)}` inside the template literal
     /// — and a matching `const displayName = this.getAttribute(...)`
     /// line in `_render()`.
     #[test]
@@ -3391,7 +3454,9 @@ mod tests {
             result.output
         );
         assert!(
-            result.output.contains("<span>${displayName}</span>"),
+            result
+                .output
+                .contains("<span>${escapeHtml(displayName)}</span>"),
             "missing slot interpolation in shadow DOM:\n{}",
             result.output
         );
@@ -3769,6 +3834,68 @@ mod tests {
         );
     }
 
+    /// Host-provided slot and loop values are untrusted at the point where
+    /// the generated component assigns its template to `shadowRoot.innerHTML`.
+    /// Text, quoted attributes, URLs, and numeric CSS values therefore use
+    /// distinct runtime guards instead of raw template interpolation.
+    #[test]
+    fn runtime_values_are_guarded_for_their_html_context() {
+        let m = component(
+            "Safe",
+            vec![
+                slot("content", SlotType::Text, true),
+                slot("value", SlotType::Text, true),
+                slot("href", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = root_layout(
+            "Safe",
+            container(
+                "Box",
+                vec![
+                    leaf_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::SlotRef("content".to_string()),
+                        }],
+                    ),
+                    leaf_with_props(
+                        "HostInput",
+                        vec![LayoutProp {
+                            name: "value".to_string(),
+                            value: LayoutPropValue::SlotRef("value".to_string()),
+                        }],
+                    ),
+                    leaf_with_props(
+                        "HostLink",
+                        vec![
+                            LayoutProp {
+                                name: "href".to_string(),
+                                value: LayoutPropValue::SlotRef("href".to_string()),
+                            },
+                            LayoutProp {
+                                name: "label".to_string(),
+                                value: LayoutPropValue::SlotRef("content".to_string()),
+                            },
+                        ],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Safe")).unwrap().output;
+
+        assert!(out.contains("function escapeHtml(value)"));
+        assert!(out.contains("function escapeHtmlAttribute(value)"));
+        assert!(out.contains("function safeHref(value)"));
+        assert!(out.contains("<span>${escapeHtml(content)}</span>"));
+        assert!(out.contains(r#"value="${escapeHtmlAttribute(value)}""#));
+        assert!(out.contains(r#"href="${safeHref(href)}""#));
+        assert!(!out.contains("<span>${content}</span>"));
+        assert!(!out.contains(r#"href="${href}""#));
+    }
+
     // -------- Test 15: ill-formed slot name is rejected --------
 
     /// A directly-constructed `SlotDecl` whose name is not a
@@ -3903,7 +4030,8 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains(r#"value="${value}""#),
+            r.output
+                .contains(r#"value="${escapeHtmlAttribute(value)}""#),
             "missing value interpolation, got:\n{}",
             r.output
         );
@@ -4052,7 +4180,8 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("Btn")).unwrap();
         assert!(
-            r.output.contains("<button>${displayName}</button>"),
+            r.output
+                .contains("<button>${escapeHtml(displayName)}</button>"),
             "slot-label HostButton missing camelCase interpolation, got:\n{}",
             r.output
         );
@@ -4117,7 +4246,7 @@ mod tests {
         );
         assert!(
             r.output.contains(
-                r#"<button data-mosaic-index="${i}" onclick="this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${item}</button>"#
+                r#"<button data-mosaic-index="${i}" onclick="this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${escapeHtml(item)}</button>"#
             ),
             "expected HostButton to dispatch index payload and render row label, got:\n{}",
             r.output
@@ -4174,7 +4303,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("SelectMenu")).unwrap();
         assert!(
             r.output.contains(
-                r#"<button data-mosaic-payload="${encodeURIComponent(String(option ?? ""))}" onclick="this.getRootNode().host.dispatch({type:'change',value:decodeURIComponent(this.dataset.mosaicPayload||'')})">${option}</button>"#
+                r#"<button data-mosaic-payload="${encodeURIComponent(String(option ?? ""))}" onclick="this.getRootNode().host.dispatch({type:'change',value:decodeURIComponent(this.dataset.mosaicPayload||'')})">${escapeHtml(option)}</button>"#
             ),
             "expected HostButton to dispatch item payload and render row label, got:\n{}",
             r.output
@@ -4405,7 +4534,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("List")).unwrap();
         assert!(
             r.output
-                .contains("${rows.map((row, idx) => `<span>${row}</span>`).join('')}"),
+                .contains("${rows.map((row, idx) => `<span>${escapeHtml(row)}</span>`).join('')}"),
             "For did not lower to Array.map().join(''), got:\n{}",
             r.output
         );
@@ -4586,7 +4715,7 @@ mod tests {
     /// `dir: slot: layout-direction` interpolates the bound slot into
     /// the `<table>`'s `dir` attribute via the shadow-DOM template
     /// literal — slot names round-trip through `to_camel_case_first_lower`
-    /// so the source `layout-direction` lands as `${layoutDirection}`.
+    /// so the source `layout-direction` lands as an encoded interpolation.
     #[test]
     fn ui31_rtl_host_table_dir_slot_ref_emits_template_interpolation() {
         let m = component(
@@ -4606,8 +4735,9 @@ mod tests {
         let l = root_layout("T", table);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
-            r.output.contains(r#"<table dir="${layoutDirection}">"#),
-            "Expected <table dir=\"${{layoutDirection}}\">, got:\n{}",
+            r.output
+                .contains(r#"<table dir="${escapeHtmlAttribute(layoutDirection)}">"#),
+            "Expected encoded layoutDirection interpolation, got:\n{}",
             r.output
         );
     }
@@ -4912,7 +5042,7 @@ mod tests {
     // -------- D6: title slot injects an <h2> first child --------
 
     /// `title: slot: heading` lifts the title slot's value into an
-    /// `<h2>${heading}</h2>` element that's the first child of the
+    /// `<h2>${escapeHtml(heading)}</h2>` element that's the first child of the
     /// `<dialog>` — so the dialog has a screen-reader-announced
     /// heading without the author having to wire one manually.
     #[test]
@@ -4928,8 +5058,9 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("Confirm")).unwrap();
         assert!(
-            r.output
-                .contains(r#"<dialog id="mos-dlg-0"><h2>${heading}</h2><div></div></dialog>"#),
+            r.output.contains(
+                r#"<dialog id="mos-dlg-0"><h2>${escapeHtml(heading)}</h2><div></div></dialog>"#
+            ),
             "title slot must emit <h2> as first child, got:\n{}",
             r.output
         );
@@ -5441,7 +5572,7 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("Nav")).unwrap();
         assert!(
-            r.output.contains(r##"<a href="#" data-mosaic-index="${i}" onclick="event.preventDefault();this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${item}</a>"##),
+            r.output.contains(r##"<a href="#" data-mosaic-index="${i}" onclick="event.preventDefault();this.getRootNode().host.dispatch({type:'select',index:Number(this.dataset.mosaicIndex)})">${escapeHtml(item)}</a>"##),
             "expected HostLink to dispatch the For index and render item label, got:\n{}",
             r.output
         );
@@ -5897,7 +6028,7 @@ mod tests {
     }
 
     /// `Text ( content: ( v ) )` — where `v` is a `For`-loop binding —
-    /// interpolates as `${v}` inside the surrounding template literal.
+    /// interpolates as `${escapeHtml(v)}` inside the surrounding template literal.
     /// Before this fix the cell rendered an empty `<span></span>` and
     /// the visicalc-style grid demo would show empty cells.
     #[test]
@@ -5916,8 +6047,8 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("${v}"),
-            "expected `${{v}}` interpolation, got:\n{out}"
+            out.contains("${escapeHtml(v)}"),
+            "expected encoded `${{v}}` interpolation, got:\n{out}"
         );
         // Empty-span regression — fail loudly if it ever returns.
         assert!(
@@ -6122,8 +6253,8 @@ mod tests {
     }
 
     /// A `Col [col] ( width: ( w ) )` inside a `For (as: w)` must emit
-    /// `<col style="width: ${w}px">` so columns get their runtime
-    /// per-column widths.
+    /// a finite-number guard around the runtime width so columns get their
+    /// runtime pixel widths without allowing style-attribute injection.
     #[test]
     fn col_emits_runtime_width_px() {
         let m = component(
@@ -6164,8 +6295,8 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains(r#"<col style="width: ${w}px">"#),
-            "Col must emit a runtime px width:\n{out}"
+            out.contains(r#"<col style="width: ${Number.isFinite(Number(w)) ? Number(w) : 0}px">"#),
+            "Col must emit a guarded runtime px width:\n{out}"
         );
     }
 
@@ -6207,10 +6338,12 @@ mod tests {
                 vec![
                     StateStyle {
                         state: "selected".to_string(),
+                        transitions: vec![],
                         props: vec![prop("background", "#264f78"), prop("color", "#ffffff")],
                     },
                     StateStyle {
                         state: "editing".to_string(),
+                        transitions: vec![],
                         props: vec![prop("background", "#1f4f3f")],
                     },
                 ],
@@ -6286,6 +6419,7 @@ mod tests {
                 vec![prop("padding", "2px")],
                 vec![StateStyle {
                     state: "selected".to_string(),
+                    transitions: vec![],
                     props: vec![prop("background", "blue")],
                 }],
             )],
@@ -6315,6 +6449,7 @@ mod tests {
                 ],
                 vec![StateStyle {
                     state: "selected".to_string(),
+                    transitions: vec![],
                     props: vec![prop("border-width", "1")],
                 }],
             )],

@@ -150,6 +150,7 @@ pub fn add_8bit(a: u8, b: u8, carry_in: u8) -> (u8, u8, u8) {
 /// Returns `(result, carries)` — `carries[i]` is carry out of stage i.
 /// - `carries[6]` = carry into bit 7
 /// - `carries[7]` = carry out of bit 7
+///
 /// Overflow = XOR(carries[6], carries[7]).
 pub fn add_8bit_full(a: u8, b: u8, carry_in: u8) -> (u8, Vec<u8>) {
     let a_bits = int_to_bits8(a);

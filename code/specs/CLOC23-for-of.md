@@ -68,10 +68,12 @@ never a declaration.
 
 ## End-to-end oracle
 
-* **`simple-for-of`** — at SIMPLE: a single-use function inlines, arithmetic
-  inside the for-of body folds, the loop survives verbatim, and the statement
-  after the loop stays reachable. A companion assertion proves the output is NOT
-  the whitespace fallback.
+* **`simple-for-of`** — at SIMPLE: arithmetic inside the for-of body folds, the
+  loop survives verbatim, and the statement after the loop stays reachable.
+  `function log` is KEPT — SIMPLE is open-world and never inlines or removes a
+  top-level name (that inline is ADVANCED-only). A companion assertion proves
+  the output is NOT the whitespace fallback (the `1 + 2` ⇒ `3` fold in the loop
+  body can only come from the typed pipeline).
 
 ## Phase-2 statement campaign status
 

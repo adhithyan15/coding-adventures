@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 5,
+  "title": "Chapter 5",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:6e46aaef34f9ba78",
+  "lessons": [
+    {
+      "id": "TA-C05-naan-tamizh-pesugiren",
+      "sequence": null,
+      "title": "நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) — \"I speak Tamil\"",
+      "headword": "நான் தமிழ் பேசுகிறேன்",
+      "romanization": "",
+      "gloss": "I speak Tamil",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:42a739df1441cc91",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first full, moving sentence — and it names the language itself, with a sound almost no other language has."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தமிழ் (tamiḻ): த (ta) + மி (mi) + ழ் (ḻ) — that last letter, ழ, is the famous Tamil ḻ, a curled retroflex sound between \"r,\" \"l,\" and \"zh,\" found in almost no other language on earth. It is so identified with the language that Tamil is sometimes called \"the ḻ language.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் தமிழ் பேசுகிறேன் = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native, of debated but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender on \"I speak\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice pēsugiṟēṉ is the same whether a man or a woman says it — Tamil marks no gender in the first or second person (only the third: pēsugiṟāṉ he / pēsugiṟāḷ she). This is unlike Hindi, where even \"I speak\" changes for a male or female speaker (boltā/boltī). Tamil saves gender for \"he/she/it.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāṉ tamiḻ pēsugiṟēṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāṉ tamiḻ pēsugiṟēṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the special Tamil sound in tamiḻ (the retroflex ḻ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the special Tamil sound in *tamiḻ* (the retroflex *ḻ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "does \"I speak\" change for a man vs. a woman? (No — Tamil marks no gender in the 1st person)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: does \"I speak\" change for a man vs. a woman? (No — Tamil marks no gender in the 1st person)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Tamil,\" and name the rare sound in the word tamiḻ. (Nāṉ tamiḻ pēsugiṟēṉ; the retroflex ḻ — ழ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C05-pesu",
+      "sequence": null,
+      "title": "பேசு (pēsu) — \"to speak,\" your first full verb",
+      "headword": "பேசு",
+      "romanization": "",
+      "gloss": "to speak",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5667a5594c84050d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Tamil builds \"I do X.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ப (pa) + ே (the long-ē sign) + சு (su) becomes பேசு (pēsu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேசு (pēsu, \"to speak\") is native Dravidian. The bare stem pēsu is also the command \"speak!\" To say \"I speak,\" Tamil adds a two-part ending to the stem: tense + person:"
+            },
+            {
+              "kind": "speech",
+              "text": "pēsu- (speak) + -giṟ- (present) + -ēṉ (\"I\") becomes பேசுகிறேன் (pēsugiṟēṉ), \"I speak.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ஏன் (-ēṉ) ending is \"I\" — so, as with irukkiṟēṉ, you rarely need the word nāṉ. Change the ending, change the person: pēsugiṟāṉ (\"he speaks\"), pēsugiṟāḷ (\"she speaks\"), pēsugiṟārgaḷ (\"they/you-respectful speak\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + tense + person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Tamil verb is built this way — a stem, a tense-marker, a person-ending, stacked in that order and glued together. Learn the pattern once and every verb follows it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pēsu\" (speak!)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pēsu\" (speak!)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — pēsugiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak\" — *pēsugiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three stacked pieces (stem pēsu + present -giṟ- + \"I\" -ēṉ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three stacked pieces (stem *pēsu* + present *-giṟ-* + \"I\" *-ēṉ*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak\" from pēsu, and name the three pieces of a Tamil verb. (Pēsugiṟēṉ; stem + tense + person.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C05-practice",
+      "sequence": null,
+      "title": "Chapter 5 — The first verbs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 5 recap — the first verbs",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13bb1c850f393572",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Three verbs, one engine — build real sentences about yourself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Build the sentences",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak Tamil\" — nāṉ tamiḻ pēsugiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak Tamil\" — *nāṉ tamiḻ pēsugiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Chennai\" — nāṉ Cheṉṉaiyil vāḻgiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Chennai\" — *nāṉ Cheṉṉaiyil vāḻgiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — nāṉ vēlai seygiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *nāṉ vēlai seygiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"he speaks\" vs. \"she speaks\" — pēsugiṟāṉ / pēsugiṟāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"he speaks\" vs. \"she speaks\" — *pēsugiṟāṉ* / *pēsugiṟāḷ*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The engine",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three stacked pieces of every Tamil verb (stem + tense + person)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three stacked pieces of every Tamil verb (stem + tense + person)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that means \"I\" (-ēṉ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that means \"I\" (*-ēṉ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where Tamil marks gender — and where it doesn't (3rd person only)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where Tamil marks gender — and where it doesn't (3rd person only)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "pēsu \"to speak\" (native Dravidian)."
+            },
+            {
+              "kind": "speech",
+              "text": "vāḻ \"to live/flourish\" becomes vāḻkkai \"life,\" vāḻga \"long live\"."
+            },
+            {
+              "kind": "speech",
+              "text": "sey \"to do\" becomes vēlai sey \"to work\" (the twin of Hindi's karnā)."
+            },
+            {
+              "kind": "speech",
+              "text": "tamiḻ — the language, and its signature retroflex ḻ."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In one breath, say your language and your work in Tamil, then bless someone with the vāḻ verb. (Nāṉ tamiḻ pēsugiṟēṉ. Nāṉ vēlai seygiṟēṉ. Vāḻga!)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C05-vaazh",
+      "sequence": null,
+      "title": "வாழ் (vāḻ) — \"to live, to flourish\"",
+      "headword": "வாழ்",
+      "romanization": "",
+      "gloss": "to live, to flourish",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9853bbbff15ebc67",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A second verb — and one of the most beloved words in the language, the one Tamils use to bless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வா (vā) + ழ் (ḻ, the retroflex you just met in tamiḻ) becomes வாழ் (vāḻ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாழ் (vāḻ, \"to live, to flourish, to thrive\") is native Dravidian, and carries more warmth than a plain \"to reside.\" From it grow வாழ்க்கை (vāḻkkai, \"life\") and the blessing வாழ்க (vāḻga, \"may you live / long live\"), heard in vāḻga tamiḻ (\"long live Tamil\"). To say \"I live,\" add the familiar ending: நான் … வாழ்கிறேன் (nāṉ … vāḻgiṟēṉ), stem + present -giṟ-."
+            },
+            {
+              "kind": "speech",
+              "text": "\"I\" -ēṉ, exactly like pēsugiṟēṉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: same engine, new verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already know the machine: vāḻ- (stem) + -giṟ- (present) + -ēṉ (\"I\") becomes vāḻgiṟēṉ (\"I live\"). Every verb you learn slots into the same three-part frame — that is the reward for learning pēsu carefully."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vāḻ\" — feel the retroflex ḻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vāḻ\" — feel the retroflex *ḻ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live\" — nāṉ vāḻgiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live\" — *nāṉ vāḻgiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the blessing — vāḻga! (\"long live / may you flourish\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the blessing — *vāḻga!* (\"long live / may you flourish\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I live\" from vāḻ, and give the blessing made from it. (Vāḻgiṟēṉ; vāḻga!, \"may you live / long live.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C05-velai-sey",
+      "sequence": null,
+      "title": "வேலை செய் (vēlai sey) — \"to work\"",
+      "headword": "வேலை செய்",
+      "romanization": "",
+      "gloss": "to work (lit. \"work-do\")",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ca5c5c9223f2aab4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last verb of the chapter — and, like Hindi's karnā, it is a \"do\" verb that builds a hundred others."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேலை (vēlai, \"work\"): வே (vē) + லை (lai). செய் (sey, \"do\"): செ (se) + ய் (y)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செய் (sey, \"to do, to make\") is a core native Dravidian verb, and Tamil — like Hindi with karnā — builds compound verbs by putting a noun in front of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "வேலை செய் (vēlai sey) = \"work-do\" = \"to work\" (vēlai, \"work\")."
+            },
+            {
+              "kind": "speech",
+              "text": "சமையல் செய் (samaiyal sey) = \"to cook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உதவி செய் (udavi sey) = \"to help\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So \"I work\" is நான் வேலை செய்கிறேன் (nāṉ vēlai seygiṟēṉ) — sey- + -giṟ-."
+            },
+            {
+              "kind": "speech",
+              "text": "-ēṉ, \"I do work.\" Master sey and a whole grammar of \"do-verbs\" opens up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: noun + செய் = a new verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This \"noun + sey\" pattern is the exact twin of Hindi's \"noun + karnā\" (kām karnā, \"to work\"). Two unrelated language families — Dravidian and Indo-Aryan — landed on the same clever trick: make an all-purpose \"do\" verb, then bolt nouns onto it. Living side by side for millennia, Tamil and Hindi have quietly traded habits like this."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vēlai sey\" (to work)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vēlai sey\" (to work)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — nāṉ vēlai seygiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *nāṉ vēlai seygiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Hindi twin of this trick (noun + karnā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Hindi twin of this trick (noun + *karnā*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Tamil turn \"work\" into \"to work,\" and what Hindi verb works the same way? (Vēlai + sey = \"work-do\"; Hindi's karnā, as in kām karnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

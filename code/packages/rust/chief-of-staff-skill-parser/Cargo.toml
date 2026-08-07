@@ -1,0 +1,11 @@
+[package]
+name = "chief-of-staff-skill-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Fail-closed Level 1 SKILL.md parser and agent manifest generator"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-agent-manifest = { path = "../chief-of-staff-agent-manifest" }
+commonmark-parser = { path = "../commonmark-parser" }
+document-ast = { path = "../document-ast" }

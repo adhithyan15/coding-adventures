@@ -49,7 +49,7 @@ pub fn encrypt(text: &str, key: usize) -> Result<String, String> {
     }
 
     // Calculate grid dimensions and pad with spaces
-    let num_rows = (n + key - 1) / key;
+    let num_rows = n.div_ceil(key);
     let padded_len = num_rows * key;
 
     let mut padded = chars.clone();
@@ -85,10 +85,10 @@ pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
         return Err(format!("Key must be <= text length ({}), got {}", n, key));
     }
 
-    let num_rows = (n + key - 1) / key;
+    let num_rows = n.div_ceil(key);
 
     // Handle uneven grids (when n % key != 0, e.g. during brute-force)
-    let full_cols = if n % key == 0 { key } else { n % key };
+    let full_cols = if n.is_multiple_of(key) { key } else { n % key };
 
     // Compute column start indices and lengths
     let mut col_starts = Vec::with_capacity(key);
@@ -96,7 +96,7 @@ pub fn decrypt(text: &str, key: usize) -> Result<String, String> {
     let mut offset = 0;
     for c in 0..key {
         col_starts.push(offset);
-        let len = if n % key == 0 || c < full_cols { num_rows } else { num_rows - 1 };
+        let len = if n.is_multiple_of(key) || c < full_cols { num_rows } else { num_rows - 1 };
         col_lens.push(len);
         offset += len;
     }

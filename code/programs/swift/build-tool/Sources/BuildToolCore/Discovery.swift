@@ -1,6 +1,32 @@
 import Foundation
 
 public enum Discovery {
+    public static let languages: Set<String> = [
+        "csharp",
+        "dart",
+        "elixir",
+        "fsharp",
+        "go",
+        "haskell",
+        "java",
+        "kotlin",
+        "lua",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "swift",
+        "typescript",
+        "c",
+        "cpp",
+        "ocaml",
+        "wasm",
+        "mosaic",
+        "twig",
+        "starlark",
+        "dotnet",
+    ]
+
     public static let skipDirectories: Set<String> = [
         ".git",
         ".hg",
@@ -17,14 +43,41 @@ public enum Discovery {
         "build",
         "target",
         ".claude",
+        "specs",
         "Pods",
+        ".dart_tool",
         ".build",
+        ".gradle",
+        "gradle-build",
     ]
 
-    public static func discoverPackages(root: String) -> [BuildPackage] {
+    public static func discoverPackages(root: String) throws -> [BuildPackage] {
         var packages: [BuildPackage] = []
         walk(directory: root, packages: &packages)
-        return packages.sorted { $0.name < $1.name }
+        packages.sort {
+            $0.name == $1.name ? $0.path < $1.path : $0.name < $1.name
+        }
+
+        var index = 0
+        while index < packages.count {
+            var end = index + 1
+            while end < packages.count,
+                  packages[end].name == packages[index].name {
+                end += 1
+            }
+            if end - index > 1 {
+                throw DuplicatePackageIdentityError(
+                    code: "DUPLICATE_PACKAGE_IDENTITY",
+                    package: packages[index].name,
+                    paths: packages[index ..< end].map {
+                        repositoryPackagePath(root: root, path: $0.path)
+                    }
+                )
+            }
+            index = end
+        }
+
+        return packages
     }
 
     public static func inferLanguage(path: String) -> String {
@@ -32,14 +85,24 @@ public enum Discovery {
             .replacingOccurrences(of: "\\", with: "/")
             .split(separator: "/")
             .map(String.init)
-        for language in allPackageLanguages where parts.contains(language) {
-            return language
+        for index in parts.indices
+            where parts[index] == "packages" || parts[index] == "programs" {
+            guard parts.indices.contains(index + 1) else {
+                return "unknown"
+            }
+            let language = parts[index + 1]
+            return languages.contains(language) ? language : "unknown"
         }
         return "unknown"
     }
 
     public static func inferPackageName(path: String, language: String) -> String {
-        "\(language)/\((path as NSString).lastPathComponent)"
+        let parts = path
+            .replacingOccurrences(of: "\\", with: "/")
+            .split(separator: "/")
+            .map(String.init)
+        let kind = parts.contains("programs") ? "/programs" : ""
+        return "\(language)\(kind)/\((path as NSString).lastPathComponent)"
     }
 
     public static func getBuildFile(directory: String, platformOverride: String? = nil) -> String? {
@@ -78,6 +141,28 @@ public enum Discovery {
             .split(whereSeparator: \.isNewline)
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty && !$0.hasPrefix("#") }
+    }
+
+    private static func repositoryPackagePath(root: String, path: String) -> String {
+        let normalizedPath = path.replacingOccurrences(of: "\\", with: "/")
+        let parts = normalizedPath.split(separator: "/").map(String.init)
+        var canonicalStart: Int?
+        if parts.count >= 2 {
+            for index in 0 ..< parts.count - 1
+                where parts[index] == "code"
+                    && (parts[index + 1] == "packages" || parts[index + 1] == "programs") {
+                canonicalStart = index
+            }
+        }
+        if let canonicalStart {
+            return parts[canonicalStart...].joined(separator: "/")
+        }
+
+        let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/")
+        if normalizedPath.hasPrefix(normalizedRoot + "/") {
+            return String(normalizedPath.dropFirst(normalizedRoot.count + 1))
+        }
+        return (path as NSString).lastPathComponent
     }
 
     private static func walk(directory: String, packages: inout [BuildPackage]) {

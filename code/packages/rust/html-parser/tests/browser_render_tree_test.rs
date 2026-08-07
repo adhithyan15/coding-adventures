@@ -1,5 +1,6 @@
 use coding_adventures_html_parser::{
-    parse_browser_render_tree, BrowserRenderNode, BrowserRenderTree,
+    parse_browser_render_tree, parse_browser_render_tree_with_document_url, BrowserRenderNode,
+    BrowserRenderTree,
 };
 use serde::Deserialize;
 
@@ -393,6 +394,55 @@ fn browser_render_tree_cases_extract_default_display_structure() {
             case.id
         );
     }
+}
+
+#[test]
+fn navigation_document_url_resolves_relative_links_and_images() {
+    let tree = parse_browser_render_tree_with_document_url(
+        "<body><p><a href=next.html>Next</a><img src=../images/logo.gif alt=Logo>",
+        "http://example.test/docs/current.html",
+    )
+    .expect("navigation HTML should parse");
+
+    let link = find_render_node(&tree.children, "link").expect("link should be projected");
+    assert_eq!(
+        link.resolved_href.as_deref(),
+        Some("http://example.test/docs/next.html")
+    );
+
+    let image = find_render_node(&tree.children, "image").expect("image should be projected");
+    assert_eq!(
+        image.resolved_src.as_deref(),
+        Some("http://example.test/images/logo.gif")
+    );
+}
+
+#[test]
+fn relative_authored_base_resolves_against_navigation_document_url() {
+    let tree = parse_browser_render_tree_with_document_url(
+        "<head><base href=../assets/ ></head><body><a href=guide.html>Guide</a>",
+        "http://example.test/docs/current.html",
+    )
+    .expect("navigation HTML should parse");
+
+    let link = find_render_node(&tree.children, "link").expect("link should be projected");
+    assert_eq!(
+        link.resolved_href.as_deref(),
+        Some("http://example.test/assets/guide.html")
+    );
+}
+
+fn find_render_node<'a>(
+    nodes: &'a [BrowserRenderNode],
+    role: &str,
+) -> Option<&'a BrowserRenderNode> {
+    nodes.iter().find_map(|node| {
+        if node.role == role {
+            Some(node)
+        } else {
+            find_render_node(&node.children, role)
+        }
+    })
 }
 
 impl ExpectedRenderTree {

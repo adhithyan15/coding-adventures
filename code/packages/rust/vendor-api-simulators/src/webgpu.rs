@@ -168,7 +168,9 @@ pub struct GpuCommandBuffer {
     cb_commands: Vec<GpuRecordedCommand>,
 }
 
-pub(crate) enum GpuRecordedCommand {
+/// A single recorded GPU command. Returned publicly by
+/// [`GpuComputePassEncoder::end`], so the type is `pub` to match that surface.
+pub enum GpuRecordedCommand {
     BindPipeline(usize),
     BindDescriptorSet(usize),
     Dispatch(usize, usize, usize),

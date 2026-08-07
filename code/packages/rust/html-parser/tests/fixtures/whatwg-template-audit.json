@@ -1,5 +1,5 @@
 {
-  "case_count": 115,
+  "case_count": 117,
   "cases": [
     {
       "axis": "head-body-template",
@@ -690,13 +690,25 @@
       "id": "template-dat-109",
       "reason": "fragment parsing with template as the context element",
       "source": "template.dat:109"
+    },
+    {
+      "axis": "head-body-template",
+      "id": "processing-instructions-dat-120",
+      "reason": "template placement around html, head, body, and late shell tags",
+      "source": "processing-instructions.dat:120"
+    },
+    {
+      "axis": "eof-template",
+      "id": "processing-instructions-dat-124",
+      "reason": "unclosed template EOF recovery across insertion modes",
+      "source": "processing-instructions.dat:124"
     }
   ],
   "counts_by_axis": {
-    "eof-template": 18,
+    "eof-template": 19,
     "foreign-content-template": 2,
     "frameset-template": 5,
-    "head-body-template": 10,
+    "head-body-template": 11,
     "nested-template": 22,
     "rawtext-template": 4,
     "select-template": 6,

@@ -1,0 +1,19 @@
+% ============================================================================
+% animal-homes.query.adj — a worked recall over the animal-homes library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what home does a bee live
+% in?": it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `animal_home`
+% rows and returns the home + the table's source/locator/trust. An animal (or a
+% non-animal) not in the table abstains honestly — the engine never invents a
+% home.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-homes.query.adj
+% ============================================================================
+
+import "animal-homes.adj"
+
+? animal_home(bee, $Home)         % expect hive
+? animal_home(spider, $Home)      % expect web
+? animal_home(rock, $Home)        % expect abstain — a rock is not an animal

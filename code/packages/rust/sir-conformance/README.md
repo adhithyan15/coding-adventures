@@ -62,6 +62,7 @@ across backends, a separate formatting concern). Current programs:
 | `oop_method` | `class` / `.new` / instance method | `woof` |
 | `while_loop` | `while` + mutable accumulator | `10` |
 | `array_length` | array literal + `.length` | `3` |
+| `puts_array_unpack` | `puts` UNPACKS an Array one element per line, recursively flattening | `1\n2\n3\n4\n5\n6\n7` |
 | `string_length` | `String#length` | `5` |
 | `counter_state` | `@ivar` state across method calls | `2` |
 | `mixin_include` | `module` mixed into a class via `include` | `hi` |
@@ -69,6 +70,12 @@ across backends, a separate formatting concern). Current programs:
 | `multi_when` | multi-value `when 1, 2, 3` (folds through `or`) | `small\nbig` |
 | `string_case` | `String#upcase`/`#downcase`/`#strip` (Ruby→JS renames) | `HELLO\nworld\nhi` |
 | `seq_assign` | sequential assignment reading an earlier local (`b = a + 1`) | `5\n6\n11` |
+| `array_reduce` | Array block method (`reduce`) — closures across every backend | `10` |
+| `array_count_sum` | Array 0-arg query methods (`count`/`sum`) | `5\n6` |
+| `hash_length_fetch` | Hash non-block methods (`length`/`fetch`) | `2\n1` |
+| `string_gsub_sub` | remaining String methods (`gsub`/`sub`) | `bbb\nbaa` |
+| `numeric_abs_gcd` | Numeric methods (`abs`/`gcd`) | `5\n6` |
+| `symbol_upcase_length` | Symbol methods widened from String helpers | `HELLO\n5` |
 
 Adding a program is one `Program { name, ruby, expected }` entry in
 `tests/conformance.rs`.
@@ -80,11 +87,19 @@ backends" bug. Programs that hit an **unfixed** gap are kept *out* of the corpus
 (with a pointer to `lessons.md`) so the suite stays green while the gap stays
 visible. Currently tracked:
 
-- **Array/hash index reads** (`a[i]`, `h[k]`) — a frontend PARSER-precedence
-  gap: `a[1]` mis-parses as `a` followed by a bare `[1]` array literal
-  (`puts a[1]` → `(puts a)[1]`; `puts(a[1])` fails to parse). Needs a grammar
-  fix. (The *scoping* half — `x = a[1]` failing SIR validation — turned out to
-  be the general sequential-assignment bug and is now fixed; see `seq_assign`.)
+- **Array/hash index writes AND reads** (`a[i]`, `a[i] = v`, `h[k]`) — the
+  frontend parses and lowers both correctly now (PR #9686 fixed the
+  PARSER-precedence gap this section used to describe), but only the C
+  backend has a runtime `[]`/`[]=` dispatch implementation. Python/JS/Go/
+  Rust fail (not skip) at runtime. Needs a `[]`/`[]=` catalog entry on each
+  of those four runtimes.
+- **Collections methods on the Ruby backend** — `semantic-ir-to-ruby`
+  rejects EVERY `__method__` dispatch to a built-in Collections method
+  across all ten slices; Python/JS/Go/Rust/C all handle the catalog
+  uniformly, Ruby has none of it yet. Every Collections-flavored corpus
+  program above (and several pre-existing ones) skips on the `ruby` target
+  for this reason — visible in the test's `--nocapture` output, not a
+  silent gap.
 
 Fixed since (now IN the suite):
 - The `or`/`and` builtin gap — `||`/`&&` and multi-value `when` threw
@@ -93,6 +108,14 @@ Fixed since (now IN the suite):
 - The JS `String#upcase`/`#downcase` rename gap — the JS runtime now aliases
   Ruby method names to their native equivalents before the allowlist check.
   Covered by `string_case`.
+- **The `puts`-on-an-Array display convention** — the C AND Ruby backends
+  each bracket-displayed an Array argument to `puts` (`"[1, 2, 3]\n"`)
+  instead of unpacking it one element per line (real Ruby's rule, which
+  Python/JS/Go/Rust already implemented correctly). Both had their own
+  separate `puts`/`sir_fmt` reimplementation rather than delegating to a
+  native array-aware `puts`, so both needed the identical fix independently
+  (`_sir_puts_one` in the C runtime, `sir_puts_one` in the Ruby runtime).
+  Covered by `puts_array_unpack`.
 
 ## Usage
 

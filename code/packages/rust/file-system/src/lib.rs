@@ -753,7 +753,7 @@ impl VFS {
         let total_inodes = total_inodes.unwrap_or(MAX_INODES);
 
         // Calculate metadata blocks
-        let inode_table_blocks = (total_inodes + (BLOCK_SIZE / 64) - 1) / (BLOCK_SIZE / 64);
+        let inode_table_blocks = total_inodes.div_ceil(BLOCK_SIZE / 64);
         let metadata_blocks = 1 + inode_table_blocks + 1;
         let data_block_count = total_blocks - metadata_blocks;
 
@@ -809,9 +809,7 @@ impl VFS {
         if inode_number.is_none() {
             if (flags & O_CREAT) != 0 {
                 inode_number = self.create_file(path, FILE_TYPE_REGULAR);
-                if inode_number.is_none() {
-                    return None;
-                }
+                inode_number?;
             } else {
                 return None;
             }
@@ -1465,10 +1463,8 @@ impl VFS {
         let bitmap = self.block_bitmap.as_mut().unwrap();
 
         // Free direct blocks
-        for block_opt in &direct_blocks {
-            if let Some(block_num) = block_opt {
-                bitmap.free(*block_num);
-            }
+        for block_num in direct_blocks.iter().flatten() {
+            bitmap.free(*block_num);
         }
 
         // Free indirect block and its pointers

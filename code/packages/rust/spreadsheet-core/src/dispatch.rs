@@ -449,6 +449,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14159 / 3.14 here are arbitrary numeric test data, not approximations of PI.
+    #[allow(clippy::approx_constant)]
     fn round_to_zero_digits() {
         let r = dispatch("ROUND", &[n(3.7), n(0.0)]).unwrap();
         assert_eq!(r, n(4.0));

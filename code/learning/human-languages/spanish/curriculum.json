@@ -1,0 +1,980 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "path": [
+    {
+      "id": "ES-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C01-hola"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-002",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C01-bien"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C01-el-la",
+        "ES-C01-genero-gramatical"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "ES-EXT-003-GRAMMAR"
+      ]
+    },
+    {
+      "id": "ES-PATH-004",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C01-dia",
+        "ES-C01-buenos-dias"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-005",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-005-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C02-tarde",
+        "ES-C02-buenas-tardes",
+        "ES-C02-noche",
+        "ES-C02-buenas-noches",
+        "ES-C02-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "ES-EXT-006-LANGUAGE-SPECIFIC",
+        "ES-EXT-006-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "ES-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C03-me",
+        "ES-C03-llamar",
+        "ES-C03-me-llamo",
+        "ES-C03-tu-usted",
+        "ES-C03-tu-usted-register",
+        "ES-C03-usted-origin"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-007-LANGUAGE-SPECIFIC",
+        "ES-EXT-007-REGISTER"
+      ],
+      "after": [
+        "ES-EXT-007-ETYMOLOGY"
+      ]
+    },
+    {
+      "id": "ES-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C03-como",
+        "ES-C03-como-acento",
+        "ES-C03-familia-qu"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-008-SCRIPT"
+      ],
+      "after": [
+        "ES-EXT-008-ETYMOLOGY"
+      ]
+    },
+    {
+      "id": "ES-PATH-009",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C03-se-llama",
+        "ES-C03-como-se-llama",
+        "ES-C03-mucho",
+        "ES-C03-gusto",
+        "ES-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "after": [
+        "ES-EXT-009-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "ES-PATH-010",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C04-gracias",
+        "ES-C04-de-nada"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-011",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C04-estar",
+        "ES-C04-estar-estado",
+        "ES-C04-como-esta",
+        "ES-C04-como-estas-register",
+        "ES-C04-regular",
+        "ES-C04-y",
+        "ES-W01-acento",
+        "ES-W01-tilde-diacritica",
+        "ES-W02-enye",
+        "ES-W02-enye-formas",
+        "ES-W03-inverted",
+        "ES-W03-question-span",
+        "ES-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-011-LANGUAGE-SPECIFIC",
+        "ES-EXT-011-REGISTER",
+        "ES-EXT-011-GRAMMAR"
+      ],
+      "after": [
+        "ES-EXT-011-SCRIPT",
+        "ES-EXT-011-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "ES-PATH-012",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C05-adios",
+        "ES-C05-hasta",
+        "ES-C05-hasta-limits",
+        "ES-C05-hasta-luego",
+        "ES-C05-hasta-manana",
+        "ES-C05-hasta-pronto",
+        "ES-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-012-LANGUAGE-SPECIFIC",
+        "ES-EXT-012-GRAMMAR"
+      ],
+      "after": [
+        "ES-EXT-012-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "ES-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C06-cafe",
+        "ES-C06-por-favor",
+        "ES-C06-hablar",
+        "ES-C06-ar-presente",
+        "ES-C06-trabajar",
+        "ES-C06-estudiar",
+        "ES-C06-espanol",
+        "ES-C06-hablo-espanol",
+        "ES-C06-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": [
+        "ES-EXT-013-CONSOLIDATION"
+      ]
+    },
+    {
+      "id": "ES-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C07-comer",
+        "ES-C07-que"
+      ],
+      "before": [
+        "ES-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C07-vivir",
+        "ES-C07-donde"
+      ],
+      "before": [
+        "ES-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-016",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C08-numeros-1-5",
+        "ES-C08-numeros-6-10",
+        "ES-C08-tener",
+        "ES-C12-hacer"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-017",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C19-si",
+        "ES-C19-no"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-018",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C20-lo-siento",
+        "ES-C20-perdon"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-019",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C21-lunes-viernes",
+        "ES-C21-sabado-domingo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-020",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C22-negro-blanco",
+        "ES-C22-blanco-germanico",
+        "ES-C22-rojo",
+        "ES-C22-azul"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-021",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C23-padre-madre",
+        "ES-C23-hermano-hermana",
+        "ES-C23-hermano-hache"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-022",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C24-cabeza",
+        "ES-C24-mano"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-023",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C25-las-estaciones"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-024",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C26-agua",
+        "ES-C26-vino",
+        "ES-C26-pan"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-025",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C27-los-meses",
+        "ES-C28-mediodia-medianoche",
+        "ES-C29-la-hora",
+        "ES-C30-el-tiempo",
+        "ES-C30-hace-calor",
+        "ES-C30-llueve"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-026",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C31-once-quince",
+        "ES-C31-dieciseis-diecinueve",
+        "ES-C31-teens-latinos",
+        "ES-C31-veinte"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-027",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C32-gato",
+        "ES-C32-perro",
+        "ES-C33-verde",
+        "ES-C33-amarillo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "ES-PATH-001",
+        "ES-PATH-005"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "ES-PATH-010"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "ES-PATH-017"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "ES-PATH-007",
+        "ES-PATH-009",
+        "ES-PATH-014",
+        "ES-PATH-021"
+      ],
+      "omits": [
+        "PRONOUN-I",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "ES-PATH-002",
+        "ES-PATH-008",
+        "ES-PATH-011",
+        "ES-PATH-022"
+      ],
+      "omits": [
+        "WORD-GOOD"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "ES-PATH-013",
+        "ES-PATH-018",
+        "ES-PATH-024"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "ES-PATH-012"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL"
+      ],
+      "relocates": {
+        "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+      }
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "ES-PATH-004",
+        "ES-PATH-006",
+        "ES-PATH-016",
+        "ES-PATH-019",
+        "ES-PATH-023",
+        "ES-PATH-025"
+      ],
+      "omits": [
+        "TIME-MORNING",
+        "TIME-EVENING",
+        "GREETING-DAY",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [
+        "ES-PATH-015"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "ES-PATH-003",
+        "ES-PATH-020",
+        "ES-PATH-027"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "ES-PATH-026"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "ES-EXT-003-GRAMMAR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Spanish-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C01-genero-gramatical"
+      ]
+    },
+    {
+      "id": "ES-EXT-005-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C01-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-006-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C02-buenas-noches"
+      ]
+    },
+    {
+      "id": "ES-EXT-006-CONSOLIDATION",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C02-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-llamar"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Spanish word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-usted-origin"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Spanish form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-tu-usted-register"
+      ]
+    },
+    {
+      "id": "ES-EXT-008-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Spanish word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-familia-qu"
+      ]
+    },
+    {
+      "id": "ES-EXT-008-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Spanish script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-como-acento"
+      ]
+    },
+    {
+      "id": "ES-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-se-llama",
+        "ES-C03-mucho"
+      ]
+    },
+    {
+      "id": "ES-EXT-009-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-estar",
+        "ES-C04-y"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Spanish form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-como-estas-register"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Spanish script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W01-acento",
+        "ES-W01-tilde-diacritica",
+        "ES-W02-enye",
+        "ES-W02-enye-formas",
+        "ES-W03-inverted",
+        "ES-W03-question-span"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Spanish-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-estar-estado"
+      ]
+    },
+    {
+      "id": "ES-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C05-hasta"
+      ]
+    },
+    {
+      "id": "ES-EXT-012-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Spanish-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C05-hasta-limits"
+      ]
+    },
+    {
+      "id": "ES-EXT-012-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C05-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C06-cafe",
+        "ES-C06-hablar",
+        "ES-C06-ar-presente",
+        "ES-C06-trabajar",
+        "ES-C06-estudiar",
+        "ES-C06-espanol",
+        "ES-C06-hablo-espanol"
+      ]
+    },
+    {
+      "id": "ES-EXT-013-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C06-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C07-comer"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C07-vivir"
+      ]
+    },
+    {
+      "id": "ES-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C08-numeros-1-5",
+        "ES-C08-numeros-6-10",
+        "ES-C08-tener",
+        "ES-C12-hacer"
+      ]
+    },
+    {
+      "id": "ES-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C20-perdon"
+      ]
+    },
+    {
+      "id": "ES-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C21-lunes-viernes",
+        "ES-C21-sabado-domingo"
+      ]
+    },
+    {
+      "id": "ES-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C22-negro-blanco",
+        "ES-C22-blanco-germanico",
+        "ES-C22-rojo",
+        "ES-C22-azul"
+      ]
+    },
+    {
+      "id": "ES-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C23-padre-madre",
+        "ES-C23-hermano-hermana",
+        "ES-C23-hermano-hache"
+      ]
+    },
+    {
+      "id": "ES-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C24-cabeza",
+        "ES-C24-mano"
+      ]
+    },
+    {
+      "id": "ES-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C25-las-estaciones"
+      ]
+    },
+    {
+      "id": "ES-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C26-agua",
+        "ES-C26-vino",
+        "ES-C26-pan"
+      ]
+    },
+    {
+      "id": "ES-EXT-025-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C27-los-meses",
+        "ES-C28-mediodia-medianoche",
+        "ES-C29-la-hora",
+        "ES-C30-el-tiempo",
+        "ES-C30-hace-calor",
+        "ES-C30-llueve"
+      ]
+    },
+    {
+      "id": "ES-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C31-once-quince",
+        "ES-C31-dieciseis-diecinueve",
+        "ES-C31-teens-latinos",
+        "ES-C31-veinte"
+      ]
+    },
+    {
+      "id": "ES-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C32-gato",
+        "ES-C32-perro",
+        "ES-C33-verde",
+        "ES-C33-amarillo"
+      ]
+    }
+  ]
+}

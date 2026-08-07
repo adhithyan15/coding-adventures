@@ -1,0 +1,94 @@
+% ============================================================================
+% alphabet — each English letter's position in the alphabet
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% One of the very first ordering facts a child learns: the alphabet is not just
+% a SET of letters, it is a SEQUENCE — a comes first (1), b comes next (2), … all
+% the way to z, the twenty-sixth and last (26). Knowing a letter's NUMBER is the
+% seed of three bigger skills: SPELLING (letters in order), SORTING (which word
+% comes first in a list — compare letter positions), and simple CIPHERS (shift
+% every letter by a number: the Caesar cipher is just "add 3 to each position").
+% This tiny library records that letter → position mapping so an ADJ program can
+% ASK where a letter sits, and get a cited answer. Recall is a binding query:
+%
+%     ? alphabet_position(a, $N)     % 1  (a is the first letter)
+%     ? alphabet_position(z, $N)     % 26 (z is the last letter)
+%
+% Because the value is a NUMBER, the answer composes into arithmetic — how many
+% letters lie between c and g? 7 − 3 − 1 = 3 (d, e, f). A reverse query binds the
+% other column, turning a number back into its letter:
+%
+%     ? alphabet_position($L, 3)     % c  (which letter is third?)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `alphabet_position(letter, position)` carrying the table's citation, so
+% every lookup above is the ordinary SLD binding query — the engine returns the
+% position (or the letter, on a reverse query) WITH its source, on the CPU, with
+% zero model calls, and ABSTAINS on anything that is not one of the 26 letters
+% (a digit, a symbol) rather than guessing.
+%
+% The 26 letters, as an ordered truth table:
+%
+%     letter   position    letter   position    letter   position
+%     ------   --------    ------   --------    ------   --------
+%     a        1           j        10          s        19
+%     b        2           k        11          t        20
+%     c        3           l        12          u        21
+%     d        4           m        13          v        22
+%     e        5           n        14          w        23
+%     f        6           o        15          x        24
+%     g        7           p        16          y        25
+%     h        8           q        17          z        26
+%     i        9           r        18
+%
+% Only the 26 letter rows are shipped — nothing else. A digit such as `3` has NO
+% row (it is a number, not a letter), so a query like `? alphabet_position(3, $N)`
+% ABSTAINS rather than inventing a position: the table's honest-abstention
+% property means it only ever asserts the ordering it can cite, and stays silent
+% on everything else.
+%
+% Provenance — nothing here is from memory. The 26-letter A–Z ordering is copied
+% from the Simple English Wikipedia "English alphabet" article, which states
+% verbatim (see `source`) that the English alphabet now has 26 letters and lists
+% them A B C D E F G H I J K L M N O P Q R S T U V W X Y Z — in that order. Each
+% row below assigns a letter its 1-based position IN that stated A–Z sequence. The
+% citable artifact is that article at the `locator`. `trust consensus` — an
+% encyclopedia is a secondary reference, not a .gov/.edu-primary literacy standard.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table alphabet_position {
+    columns letter, position
+
+    row (a, 1)
+    row (b, 2)
+    row (c, 3)
+    row (d, 4)
+    row (e, 5)
+    row (f, 6)
+    row (g, 7)
+    row (h, 8)
+    row (i, 9)
+    row (j, 10)
+    row (k, 11)
+    row (l, 12)
+    row (m, 13)
+    row (n, 14)
+    row (o, 15)
+    row (p, 16)
+    row (q, 17)
+    row (r, 18)
+    row (s, 19)
+    row (t, 20)
+    row (u, 21)
+    row (v, 22)
+    row (w, 23)
+    row (x, 24)
+    row (y, 25)
+    row (z, 26)
+
+    source "With these changes, the English alphabet now has 26 letters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+    locator "https://simple.wikipedia.org/wiki/English_alphabet"
+    trust consensus
+}

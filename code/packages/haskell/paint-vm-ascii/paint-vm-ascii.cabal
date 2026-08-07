@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          paint-vm-ascii
+version:       0.1.0
+synopsis:      Terminal renderer for backend-neutral paint scenes
+description:   Pure terminal rendering of PaintInstructions scenes with configurable character-cell scaling.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.PaintVmAscii
+    build-depends:    base >=4.14 && <5
+                    , paint-instructions >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    PaintVmAsciiSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , hspec == 2.*
+                    , paint-instructions >=0.1 && <0.2
+                    , paint-vm-ascii
+    ghc-options:      -Wall
+    default-language: Haskell2010

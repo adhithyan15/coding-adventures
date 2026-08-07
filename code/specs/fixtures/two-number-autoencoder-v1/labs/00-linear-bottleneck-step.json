@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "id": "linear-bottleneck-step",
+  "title": "Compress two numbers into one and reconstruct both",
+  "question": "How do two reconstruction errors meet at one bottleneck and train both sides of an autoencoder?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "autoencoder",
+    "undercomplete bottleneck",
+    "representation learning",
+    "reconstruction loss",
+    "gradient accumulation",
+    "stochastic gradient descent"
+  ],
+  "operation": {
+    "kind": "two-to-one-to-two-autoencoder-step",
+    "input_width": 2,
+    "bottleneck_width": 1,
+    "output_width": 2,
+    "encoder_activation": "identity",
+    "decoder_activation": "identity",
+    "loss": "mean-squared-reconstruction-error",
+    "reduction": "mean-over-output-coordinates",
+    "trainable_parameters": ["encoder.weights", "encoder.bias", "decoder.weights", "decoder.bias"],
+    "update": "sgd"
+  },
+  "input": [2, -1],
+  "encoder": {
+    "weights": [0.5, -0.25],
+    "bias": 0
+  },
+  "decoder": {
+    "weights": [1.2, -0.8],
+    "bias": [0.1, -0.2]
+  },
+  "optimizer": {
+    "learning_rate": 0.1
+  },
+  "expected": {
+    "forward": {
+      "encoder_products": [1, 0.25],
+      "bottleneck": 1.25,
+      "decoder_products": [1.5, -1],
+      "reconstruction": [1.6, -1.2],
+      "errors": [-0.4, -0.2],
+      "squared_errors": [0.16, 0.04],
+      "loss": 0.1
+    },
+    "backward": {
+      "reconstruction_gradients": [-0.4, -0.2],
+      "decoder_weight_gradients": [-0.5, -0.25],
+      "decoder_bias_gradients": [-0.4, -0.2],
+      "bottleneck_gradient_contributions": [-0.48, 0.16],
+      "bottleneck_gradient": -0.32,
+      "encoder_weight_gradients": [-0.64, 0.32],
+      "encoder_bias_gradient": -0.32
+    },
+    "gradient_check": {
+      "epsilon": 1e-6,
+      "parameter_order": ["encoder.weights[0]", "encoder.weights[1]", "encoder.bias", "decoder.weights[0]", "decoder.weights[1]", "decoder.bias[0]", "decoder.bias[1]"],
+      "analytical": [-0.64, 0.32, -0.32, -0.5, -0.25, -0.4, -0.2],
+      "numerical": [-0.6399999999961992, 0.3199999999842218, -0.3199999999842218, -0.49999999997968336, -0.2500000000141278, -0.40000000001150227, -0.20000000000575113],
+      "max_absolute_error": 2.0316526239128052e-11
+    },
+    "updated_parameters": {
+      "encoder": {
+        "weights": [0.564, -0.282],
+        "bias": 0.032
+      },
+      "decoder": {
+        "weights": [1.25, -0.775],
+        "bias": [0.14, -0.18]
+      }
+    },
+    "post_update": {
+      "encoder_products": [1.128, 0.282],
+      "bottleneck": 1.442,
+      "decoder_products": [1.8025, -1.11755],
+      "reconstruction": [1.9425, -1.29755],
+      "errors": [-0.0575, -0.29755],
+      "squared_errors": [0.00330625, 0.0885360025],
+      "loss": 0.04592112625
+    }
+  }
+}

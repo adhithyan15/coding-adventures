@@ -756,7 +756,7 @@ Rload out 0 500
 def test_parse_diode_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n RS=3)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -776,6 +776,7 @@ Rload out 0 1k
                 "IBV": 1.0e-6,
                 "CJO": 2.0e-12,
                 "TT": 4.0e-9,
+                "RS": 3.0,
             },
         )
     }
@@ -790,10 +791,308 @@ Rload out 0 1k
     assert diode.IBV == 1.0e-6
     assert diode.Cjo == 2.0e-12
     assert diode.Tt == 4.0e-9
+    assert diode.Rs == 3.0
 
     result = dc_op(parsed.circuit)
     assert result.converged
     assert 0.0 < result.node_voltages["out"] < 0.7
+
+
+def test_parse_diode_saturation_current_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(JS=2p)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Is == 2.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["IS", "JS"])
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_diode_saturation_current(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode IS must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+def test_parse_diode_thermal_voltage_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(V_T=27m)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert isclose(diode.Vt, 27.0e-3)
+
+
+@pytest.mark.parametrize("parameter", ["VT", "V_T"])
+@pytest.mark.parametrize("value", ["0", "-1m", "1e999"])
+def test_rejects_invalid_diode_thermal_voltage(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode VT must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("2", 2.0)])
+def test_accepts_valid_diode_emission_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(N={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.N
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_emission_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode N must be finite and positive"):
+        parse_netlist(f".model clamp D(N={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("5.5", 5.5)])
+def test_accepts_valid_diode_breakdown_voltage(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(BV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.BV
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_breakdown_voltage(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode BV must be finite and positive"):
+        parse_netlist(f".model clamp D(BV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1u", 1.0e-6), ("2m", 2.0e-3)])
+def test_accepts_valid_diode_breakdown_current(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(IBV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.IBV
+
+
+@pytest.mark.parametrize("value", ["0", "-1u", "1e999"])
+def test_rejects_invalid_diode_breakdown_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode IBV must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(IBV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_accepts_valid_diode_series_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(RS={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.Rs
+
+
+@pytest.mark.parametrize("value", ["-1", "1e999"])
+def test_rejects_invalid_diode_series_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode RS must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(RS={value})")
+
+
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+def test_lowers_diode_junction_potential_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.8)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.8
+
+
+def test_diode_junction_potential_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(PB=0.8 VJ=0.7)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.7
+
+
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_junction_potential(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="diode VJ must be finite and positive"):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+def test_lowers_diode_grading_coefficient_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.4)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.4
+
+
+def test_diode_grading_coefficient_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(MJ=0.4 M=0.3)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.3
+
+
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_diode_grading_coefficient(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode M must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.6", 0.6)])
+def test_lowers_valid_diode_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(FC={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Fc == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_diode_depletion_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match=r"diode FC must be finite and in \[0, 1\)"
+    ):
+        parse_netlist(f".model clamp D(FC={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("-1", -1.0), ("4", 4.0)])
+def test_lowers_finite_diode_temperature_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(XTI={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Xti == expected
+
+
+def test_rejects_non_finite_diode_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="diode XTI must be finite"):
+        parse_netlist(".model clamp D(XTI=1e999)")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("1.2", 1.2)])
+def test_lowers_positive_diode_energy_gap(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(EG={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Eg == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_energy_gap(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode EG must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(EG={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2e-18", 2e-18)])
+def test_lowers_valid_diode_flicker_noise_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(KF={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Kf == expected
+
+
+@pytest.mark.parametrize("value", ["-1e-18", "1e999"])
+def test_rejects_invalid_diode_flicker_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode KF must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(KF={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_lowers_valid_diode_flicker_noise_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(AF={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Af == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_diode_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(AF={value})")
+
+
+def test_parse_diode_junction_capacitance_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(CJ=3p)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Cjo == 3.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["CJO", "CJ", "CJ0"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_diode_junction_capacitance(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode CJO must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize("value", ["0", "4n"])
+def test_accepts_valid_diode_transit_time(value: str) -> None:
+    parsed = parse_netlist(f".model clamp D(TT={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Tt == parse_value(value)
+
+
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_diode_transit_time(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode TT must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(TT={value})")
 
 
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
@@ -842,6 +1141,14 @@ Q1 col base 0 fast
     assert 0.0 < result.node_voltages["col"] < 5.0
 
 
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_bjt_saturation_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT IS must be finite and positive"
+    ):
+        parse_netlist(f".model fast NPN(IS={value})")
+
+
 def test_parse_pnp_bjt_model_aliases_beta_f() -> None:
     parsed = parse_netlist(
         """
@@ -856,6 +1163,138 @@ Qp col base emit slow
     assert bjt.Is == 2.0e-14
     assert bjt.beta_f == 80.0
     assert isclose(bjt.Vt, 26.0e-3)
+
+
+def test_parse_bjt_forward_beta_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(BF=120 BETA=90 BETA_F=80 HFE=70)
+Q1 col base emit fast
+.model slow PNP(BETA=75)
+Q2 col base emit slow
+.model legacy NPN(HFE=65)
+Q3 col base emit legacy
+"""
+    )
+
+    first, second, third = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert isinstance(third, BJT)
+    assert first.beta_f == 120.0
+    assert second.beta_f == 75.0
+    assert third.beta_f == 65.0
+
+
+@pytest.mark.parametrize("parameter", ["BF", "BETA", "BETA_F", "HFE"])
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_bjt_forward_beta(parameter: str, value: str) -> None:
+    with pytest.raises(NetlistParseError, match="BJT BF must be finite and positive"):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_parse_bjt_thermal_voltage_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(VT=25m V_T=27m)
+Q1 col base emit fast
+.model slow PNP(V_T=28m)
+Q2 col base emit slow
+"""
+    )
+
+    first, second = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert first.Vt == 25.0e-3
+    assert second.Vt == 28.0e-3
+
+
+@pytest.mark.parametrize("parameter", ["VT", "V_T"])
+@pytest.mark.parametrize("value", ["0", "-1m", "1e999"])
+def test_rejects_invalid_bjt_thermal_voltage(parameter: str, value: str) -> None:
+    with pytest.raises(NetlistParseError, match="BJT VT must be finite and positive"):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_parse_bjt_base_emitter_capacitance_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(CJE=2p CJE0=3p CBE=4p)
+Q1 col base emit fast
+.model slow PNP(CJE0=5p)
+Q2 col base emit slow
+"""
+    )
+
+    first, second = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert first.Cje == 2.0e-12
+    assert second.Cje == 5.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["CJE", "CJE0", "CBE"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_bjt_base_emitter_capacitance(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT CJE must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_parse_bjt_base_collector_capacitance_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(CJC=2p CJC0=3p CBC=4p)
+Q1 col base emit fast
+.model slow PNP(CJC0=5p)
+Q2 col base emit slow
+"""
+    )
+
+    first, second = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert first.Cjc == 2.0e-12
+    assert second.Cjc == 5.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["CJC", "CJC0", "CBC"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_bjt_base_collector_capacitance(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT CJC must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+@pytest.mark.parametrize("parameter", ["TF", "TR"])
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_bjt_transit_time(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"BJT {parameter} must be finite and non-negative",
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_preserves_valid_bjt_transit_times() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(TF=4n TR=5n)
+Q1 col base emit fast
+"""
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Tf == 4.0e-9
+    assert transistor.Tr == 5.0e-9
 
 
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
@@ -882,6 +1321,274 @@ J1 drain gate source fast
     assert jfet.beta == 2.0e-3
     assert jfet.vto == -3.0
     assert jfet.lambda_ == 0.02
+
+
+@pytest.mark.parametrize("parameter", ["CGS", "CGS0"])
+def test_parse_jfet_gate_source_capacitance_aliases(parameter: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({parameter}=3p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Cgs, 3.0e-12)
+
+
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_source_capacitance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET CGS must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(CGS={value})")
+
+
+@pytest.mark.parametrize("parameter", ["CGD", "CGD0"])
+def test_parse_jfet_gate_drain_capacitance_aliases(parameter: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({parameter}=4p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Cgd, 4.0e-12)
+
+
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_drain_capacitance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET CGD must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(CGD={value})")
+
+
+def test_parse_jfet_flicker_noise_coefficient() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(KF=2e-18)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Kf, 2.0e-18)
+
+
+@pytest.mark.parametrize("value", ["-1e-18", "1e999"])
+def test_rejects_invalid_jfet_flicker_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET KF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(KF={value})")
+
+
+def test_parse_jfet_flicker_noise_exponent() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(AF=1.4)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Af, 1.4)
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(AF={value})")
+
+
+@pytest.mark.parametrize("parameter", ["PB", "VJ"])
+def test_parse_jfet_junction_potential_aliases(parameter: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({parameter}=0.8)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Pb, 0.8)
+
+
+def test_jfet_junction_potential_prefers_canonical_name() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(PB=0.9 VJ=0.8)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Pb, 0.9)
+
+
+@pytest.mark.parametrize("parameter", ["PB", "VJ"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_jfet_junction_potential(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="JFET PB must be finite and positive"):
+        parse_netlist(f".model fast NJF({parameter}={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.6", 0.6)])
+def test_parse_jfet_forward_bias_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(FC={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Fc, expected)
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_jfet_forward_bias_depletion_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match=r"JFET FC must be finite and in \[0, 1\)"):
+        parse_netlist(f".model fast NJF(FC={value})")
+
+
+def test_parse_jfet_gate_saturation_current() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(IS=2p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Is, 2.0e-12)
+
+
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_saturation_current(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET IS must be finite and positive"):
+        parse_netlist(f".model fast NJF(IS={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_parse_jfet_temperature_exponent(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(XTI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Xti, expected)
+
+
+def test_rejects_non_finite_jfet_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="JFET XTI must be finite"):
+        parse_netlist(".model fast NJF(XTI=1e999)")
+
+
+def test_parse_jfet_energy_gap() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(EG=1.05)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Eg, 1.05)
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_jfet_energy_gap(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET EG must be finite and positive"):
+        parse_netlist(f".model fast NJF(EG={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("3", 3.0)])
+def test_parse_jfet_noise_equation_level(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(NLEV={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Nlev == expected
+
+
+@pytest.mark.parametrize("value", ["0", "1.5", "1e999"])
+def test_rejects_invalid_jfet_noise_equation_level(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="JFET NLEV must be a finite integer greater than or equal to 1",
+    ):
+        parse_netlist(f".model fast NJF(NLEV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_parse_jfet_channel_noise_coefficient(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(GDSNOI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Gdsnoi == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_channel_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET GDSNOI must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(GDSNOI={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("12.5", 12.5)])
+def test_parse_jfet_drain_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(RD={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Rd == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_drain_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET RD must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(RD={value})")
 
 
 def test_parse_pjf_model_aliases_beta() -> None:
@@ -957,6 +1664,138 @@ Mp out gate vdd vdd pfast W=3u L=250n
     assert mosfet.model.model.params.N_SUB == 1.2
     assert isclose(mosfet.model.model.params.W, 3.0e-6)
     assert isclose(mosfet.model.model.params.L, 250.0e-9)
+
+
+@pytest.mark.parametrize("drain_squares", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_instance_drain_squares(drain_squares: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET NRD must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast NRD={drain_squares}\n"
+        )
+
+
+@pytest.mark.parametrize(("drain_squares", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_lowers_valid_mosfet_instance_drain_squares(
+    drain_squares: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast NRD={drain_squares}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert expected == mosfet.model.model.params.NRD
+
+
+@pytest.mark.parametrize("source_squares", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_instance_source_squares(source_squares: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET NRS must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast NRS={source_squares}\n"
+        )
+
+
+@pytest.mark.parametrize(("source_squares", "expected"), [("0", 0.0), ("3.5", 3.5)])
+def test_lowers_valid_mosfet_instance_source_squares(
+    source_squares: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast NRS={source_squares}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert expected == mosfet.model.model.params.NRS
+
+
+@pytest.mark.parametrize("drain_area", ["-1n", "1e999"])
+def test_rejects_invalid_mosfet_instance_drain_area(drain_area: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET AD must be finite and non-negative"
+    ):
+        parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AD={drain_area}\n")
+
+
+@pytest.mark.parametrize(("drain_area", "expected"), [("0", 0.0), ("3n", 3.0e-9)])
+def test_lowers_valid_mosfet_instance_drain_area(
+    drain_area: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AD={drain_area}\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.AD, expected)
+
+
+@pytest.mark.parametrize("source_area", ["-1n", "1e999"])
+def test_rejects_invalid_mosfet_instance_source_area(source_area: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET AS must be finite and non-negative"
+    ):
+        parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AS={source_area}\n")
+
+
+@pytest.mark.parametrize(("source_area", "expected"), [("0", 0.0), ("4n", 4.0e-9)])
+def test_lowers_valid_mosfet_instance_source_area(
+    source_area: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AS={source_area}\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.AS, expected)
+
+
+@pytest.mark.parametrize("drain_perimeter", ["-1u", "1e999"])
+def test_rejects_invalid_mosfet_instance_drain_perimeter(
+    drain_perimeter: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET PD must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast PD={drain_perimeter}\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("drain_perimeter", "expected"), [("0", 0.0), ("6u", 6.0e-6)]
+)
+def test_lowers_valid_mosfet_instance_drain_perimeter(
+    drain_perimeter: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast PD={drain_perimeter}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.PD, expected)
+
+
+@pytest.mark.parametrize("source_perimeter", ["-1u", "1e999"])
+def test_rejects_invalid_mosfet_instance_source_perimeter(
+    source_perimeter: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET PS must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast PS={source_perimeter}\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("source_perimeter", "expected"), [("0", 0.0), ("7u", 7.0e-6)]
+)
+def test_lowers_valid_mosfet_instance_source_perimeter(
+    source_perimeter: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast PS={source_perimeter}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.PS, expected)
 
 
 def test_parse_pwl_and_sin_source_waveforms() -> None:
@@ -1374,6 +2213,590 @@ def test_rejects_mosfet_parameter_without_assignment() -> None:
 M1 d g s b nfast W
 """
         )
+
+
+@pytest.mark.parametrize("level", ["0", "2", "1.000000000002", "1e999"])
+def test_rejects_unsupported_mosfet_model_levels(level: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="only MOS LEVEL=1 model cards are supported",
+    ):
+        parse_netlist(f".model nfast NMOS(LEVEL={level})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("parameters", ["LEVEL=1", "LEVEL=1.0000000000005", ""])
+def test_preserves_supported_and_implicit_mosfet_model_level_one(parameters: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({parameters})\nM1 d g s b nfast\n")
+
+    assert isinstance(parsed.circuit.elements[0], Mosfet)
+
+
+@pytest.mark.parametrize("oxide_thickness", ["0", "-1n", "1e999"])
+def test_rejects_invalid_mosfet_model_oxide_thickness(oxide_thickness: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET TOX must be finite and positive",
+    ):
+        parse_netlist(f".model nfast NMOS(TOX={oxide_thickness})\nM1 d g s b nfast\n")
+
+
+def test_lowers_mosfet_model_oxide_thickness() -> None:
+    parsed = parse_netlist(".model nfast NMOS(TOX=7n)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.TOX, 7.0e-9)
+
+
+@pytest.mark.parametrize("surface_mobility", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_surface_mobility(surface_mobility: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET U0 must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(U0={surface_mobility})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["U0", "UO"])
+def test_lowers_mosfet_model_surface_mobility_and_derives_kp(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=450 TOX=12n)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.U0 == 450.0
+    assert isclose(mosfet.model.model.params.KP, 1.294924875e-4)
+
+
+def test_explicit_mosfet_model_kp_overrides_mobility_derivation() -> None:
+    parsed = parse_netlist(".model nfast NMOS(U0=450 TOX=12n KP=123u)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.KP, 123.0e-6)
+
+
+@pytest.mark.parametrize("transconductance", ["0", "-1u", "1e999"])
+def test_rejects_invalid_explicit_mosfet_model_transconductance(
+    transconductance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET KP must be finite and positive",
+    ):
+        parse_netlist(f".model nfast NMOS(KP={transconductance})\nM1 d g s b nfast\n")
+
+
+def test_preserves_positive_explicit_mosfet_model_transconductance() -> None:
+    parsed = parse_netlist(".model nfast NMOS(KP=175u)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.KP, 175.0e-6)
+
+
+@pytest.mark.parametrize("alias", ["VT0", "VTO", "VTH"])
+def test_rejects_non_finite_mosfet_model_threshold_voltage(alias: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET VT0 must be finite"):
+        parse_netlist(f".model nfast NMOS({alias}=1e999)\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["VT0", "VTO", "VTH"])
+def test_lowers_finite_mosfet_model_threshold_voltage_aliases(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=-0.38)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.VT0 == -0.38
+
+
+@pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
+def test_rejects_non_finite_mosfet_model_channel_modulation(alias: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET LAMBDA must be finite"):
+        parse_netlist(f".model nfast NMOS({alias}=1e999)\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
+def test_lowers_finite_mosfet_model_channel_modulation_aliases(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=-0.02)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.LAMBDA == -0.02
+
+
+@pytest.mark.parametrize("body_effect", ["-0.01", "1e999"])
+def test_rejects_invalid_mosfet_model_body_effect(body_effect: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET GAMMA must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(GAMMA={body_effect})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("body_effect", ["0", "0.45"])
+def test_lowers_valid_mosfet_model_body_effect(body_effect: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS(GAMMA={body_effect})\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(body_effect) == mosfet.model.model.params.GAMMA
+
+
+@pytest.mark.parametrize("surface_potential", ["0", "-0.01", "1e999"])
+def test_rejects_invalid_mosfet_model_surface_potential(
+    surface_potential: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET PHI must be finite and positive",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(PHI={surface_potential})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_surface_potential() -> None:
+    parsed = parse_netlist(".model nfast NMOS(PHI=0.65)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.PHI == 0.65
+
+
+@pytest.mark.parametrize("width", ["0", "-1u", "1e999"])
+def test_rejects_invalid_mosfet_model_width(width: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET W must be finite and positive",
+    ):
+        parse_netlist(f".model nfast NMOS(W={width})\nM1 d g s b nfast\n")
+
+
+def test_lowers_positive_mosfet_model_width() -> None:
+    parsed = parse_netlist(".model nfast NMOS(W=4u)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.W, 4.0e-6)
+
+
+@pytest.mark.parametrize("length", ["0", "-1u", "1e999"])
+def test_rejects_invalid_mosfet_model_length(length: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET L must be finite and positive"):
+        parse_netlist(f".model nfast NMOS(L={length})\nM1 d g s b nfast\n")
+
+
+def test_lowers_positive_mosfet_model_length() -> None:
+    parsed = parse_netlist(".model nfast NMOS(L=2u)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.L, 2.0e-6)
+
+
+@pytest.mark.parametrize("parameters", ["LD=-1n", "LD=1e999", "L=100n LD=50n"])
+def test_rejects_invalid_mosfet_model_lateral_diffusion(parameters: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        parse_netlist(f".model nfast NMOS({parameters})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("lateral_diffusion", ["0", "10n"])
+def test_lowers_valid_mosfet_model_lateral_diffusion(
+    lateral_diffusion: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(L=180n LD={lateral_diffusion})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.LD, parse_value(lateral_diffusion))
+
+
+@pytest.mark.parametrize("saturation_current", ["0", "-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_saturation_current(
+    saturation_current: str,
+) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET IS must be finite and positive"):
+        parse_netlist(
+            f".model nfast NMOS(IS={saturation_current})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_saturation_current() -> None:
+    parsed = parse_netlist(".model nfast NMOS(IS=2f)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.IS, 2.0e-15)
+
+
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+@pytest.mark.parametrize("temperature", ["0", "-1", "1e999"])
+def test_rejects_invalid_mosfet_model_nominal_temperature(
+    alias: str, temperature: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET TNOM must be finite and positive"):
+        parse_netlist(f".model nfast NMOS({alias}={temperature})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+def test_lowers_positive_mosfet_model_nominal_temperature(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=325)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.T_NOM == 325.0
+
+
+@pytest.mark.parametrize("drain_resistance", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_drain_resistance(
+    drain_resistance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET RD must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(RD={drain_resistance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("drain_resistance", ["0", "12.5"])
+def test_lowers_valid_mosfet_model_drain_resistance(
+    drain_resistance: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(RD={drain_resistance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(drain_resistance) == mosfet.model.model.params.RD
+
+
+@pytest.mark.parametrize("source_resistance", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_source_resistance(
+    source_resistance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET RS must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(RS={source_resistance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("source_resistance", ["0", "9.75"])
+def test_lowers_valid_mosfet_model_source_resistance(
+    source_resistance: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(RS={source_resistance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(source_resistance) == mosfet.model.model.params.RS
+
+
+@pytest.mark.parametrize("sheet_resistance", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_sheet_resistance(
+    sheet_resistance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET RSH must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(RSH={sheet_resistance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("sheet_resistance", ["0", "42.5"])
+def test_lowers_valid_mosfet_model_sheet_resistance(
+    sheet_resistance: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(RSH={sheet_resistance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(sheet_resistance) == mosfet.model.model.params.RSH
+
+
+@pytest.mark.parametrize("junction_capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_junction_capacitance(
+    junction_capacitance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CJ must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CJ={junction_capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("junction_capacitance", "expected"), [("0", 0.0), ("2p", 2.0e-12)]
+)
+def test_lowers_valid_mosfet_model_junction_capacitance(
+    junction_capacitance: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CJ={junction_capacitance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CJ, expected)
+
+
+@pytest.mark.parametrize("sidewall_capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_sidewall_capacitance(
+    sidewall_capacitance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CJSW must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CJSW={sidewall_capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("sidewall_capacitance", "expected"), [("0", 0.0), ("3p", 3.0e-12)]
+)
+def test_lowers_valid_mosfet_model_sidewall_capacitance(
+    sidewall_capacitance: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CJSW={sidewall_capacitance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CJSW, expected)
+
+
+@pytest.mark.parametrize("junction_current", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_junction_current(
+    junction_current: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET JS must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(JS={junction_current})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("junction_current", "expected"), [("0", 0.0), ("4p", 4.0e-12)]
+)
+def test_lowers_valid_mosfet_model_junction_current(
+    junction_current: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(JS={junction_current})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.JS, expected)
+
+
+@pytest.mark.parametrize("bulk_potential", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_mosfet_model_bulk_potential(
+    bulk_potential: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET PB must be finite and positive",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(PB={bulk_potential})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_bulk_potential() -> None:
+    parsed = parse_netlist(".model nfast NMOS(PB=0.72)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.PB, 0.72)
+
+
+@pytest.mark.parametrize("grading_coefficient", ["-0.1", "1e999"])
+def test_rejects_invalid_mosfet_model_junction_grading(
+    grading_coefficient: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET MJ must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(MJ={grading_coefficient})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("grading_coefficient", ["0", "0.45"])
+def test_lowers_valid_mosfet_model_junction_grading(
+    grading_coefficient: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(MJ={grading_coefficient})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.MJ, float(grading_coefficient))
+
+
+@pytest.mark.parametrize("grading_coefficient", ["-0.1", "1e999"])
+def test_rejects_invalid_mosfet_model_sidewall_grading(
+    grading_coefficient: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET MJSW must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(MJSW={grading_coefficient})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("grading_coefficient", ["0", "0.33"])
+def test_lowers_valid_mosfet_model_sidewall_grading(
+    grading_coefficient: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(MJSW={grading_coefficient})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.MJSW, float(grading_coefficient))
+
+
+@pytest.mark.parametrize("coefficient", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_mosfet_model_forward_bias_coefficient(
+    coefficient: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=r"MOSFET FC must be finite and in \[0, 1\)",
+    ):
+        parse_netlist(f".model nfast NMOS(FC={coefficient})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("coefficient", ["0", "0.5"])
+def test_lowers_valid_mosfet_model_forward_bias_coefficient(
+    coefficient: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(FC={coefficient})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.FC, float(coefficient))
+
+
+@pytest.mark.parametrize("coefficient", ["-1e-18", "1e999"])
+def test_rejects_invalid_mosfet_model_flicker_noise_coefficient(
+    coefficient: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET KF must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(KF={coefficient})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("coefficient", ["0", "2e-18"])
+def test_lowers_valid_mosfet_model_flicker_noise_coefficient(
+    coefficient: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(KF={coefficient})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.KF, float(coefficient))
+
+
+@pytest.mark.parametrize("exponent", ["-0.1", "1e999"])
+def test_rejects_invalid_mosfet_model_flicker_noise_exponent(exponent: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET AF must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(AF={exponent})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("exponent", ["0", "1.5"])
+def test_lowers_valid_mosfet_model_flicker_noise_exponent(exponent: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS(AF={exponent})\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.AF, float(exponent))
+
+
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [("CJS", "CBS"), ("CJD", "CBD")],
+)
+@pytest.mark.parametrize("capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_junction_capacitance_aliases(
+    alias: str, canonical: str, capacitance: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"MOSFET {canonical} must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS({alias}={capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [("CJS", "CBS"), ("CJD", "CBD")],
+)
+def test_lowers_mosfet_junction_capacitance_aliases(
+    alias: str, canonical: str
+) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=2p)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(getattr(mosfet.model.model.params, canonical), 2.0e-12)
+
+
+@pytest.mark.parametrize("parameter", ["NSS=-1", "NSS=1e999", "TPG=0.5"])
+def test_rejects_invalid_mosfet_electrostatic_process_parameters(
+    parameter: str,
+) -> None:
+    message = (
+        "MOSFET NSS must be finite and non-negative"
+        if parameter.startswith("NSS")
+        else "MOSFET TPG must be -1, 0, or 1"
+    )
+    with pytest.raises(NetlistParseError, match=message):
+        parse_netlist(f".model nfast NMOS({parameter})\nM1 d g s b nfast\n")
+
+
+def test_derives_mosfet_electrostatic_defaults_with_explicit_precedence() -> None:
+    derived = parse_netlist(
+        ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1)\n"
+        "M1 d g s b nfast\n"
+    ).circuit.elements[0]
+    explicit = parse_netlist(
+        ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1 "
+        "VT0=0.61 GAMMA=0.42 PHI=0.73)\nM1 d g s b nfast\n"
+    ).circuit.elements[0]
+    assert isinstance(derived, Mosfet)
+    assert derived.model.model.params.GAMMA > 0.0
+    assert derived.model.model.params.PHI > 0.0
+    assert not isclose(derived.model.model.params.VT0, 0.7)
+    assert isinstance(explicit, Mosfet)
+    assert isclose(explicit.model.model.params.VT0, 0.61)
+    assert isclose(explicit.model.model.params.GAMMA, 0.42)
+    assert isclose(explicit.model.model.params.PHI, 0.73)
 
 
 def test_rejects_unbalanced_waveform_parenthesis() -> None:

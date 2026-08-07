@@ -395,7 +395,7 @@ mod tests {
     fn section_with_inherit_child_resolves_via_contains() {
         // Section (Denied) → Contains → Fact (Inherit polarity).
         let s = section("S1", 0, 5, Polarity::Denied, Modality::Present);
-        let mut f = fact("F1", 5, 10, Polarity::Inherit, Modality::Present);
+        let f = fact("F1", 5, 10, Polarity::Inherit, Modality::Present);
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![s, f],

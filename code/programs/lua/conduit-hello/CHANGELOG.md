@@ -1,5 +1,13 @@
 # Changelog — conduit-hello (Lua)
 
+## Unreleased
+
+### Fixed
+- Run the E2E server in a dedicated Lua child process using the production
+  foreground `serve()` path. The previous in-process `serve_background()` test
+  allowed the Busted runner and native request threads to access one
+  `lua_State` concurrently, causing a segmentation fault on Linux CI.
+
 ## 1.0.0 — 2026-06-15
 
 Standardise the Lua demo to match every other Conduit `conduit-hello` program

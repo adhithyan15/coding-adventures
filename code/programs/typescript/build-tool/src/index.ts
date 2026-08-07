@@ -34,13 +34,16 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { parseArgs } from "node:util";
-import { discoverPackages } from "./discovery.js";
+import {
+  DuplicatePackageIdentityError,
+  discoverPackages,
+} from "./discovery.js";
 import {
   CI_WORKFLOW_PATH,
   analyzeCIWorkflowChanges,
   sortedToolchains,
 } from "./ci-workflow.js";
-import { resolveDependencies } from "./resolver.js";
+import { MetadataEncodingError, resolveDependencies } from "./resolver.js";
 import { getChangedFiles, mapFilesToPackages } from "./gitdiff.js";
 import { hashPackage, hashDeps } from "./hasher.js";
 import { BuildCache } from "./cache.js";
@@ -313,7 +316,7 @@ Options:
     // Build the list of package entries for the plan.
     const planPackages: PackageEntry[] = packages.map((pkg) => ({
       name: pkg.name,
-      rel_path: path.relative(root, pkg.path),
+      rel_path: path.relative(root, pkg.path).replaceAll("\\", "/"),
       language: pkg.language,
       build_commands: pkg.buildCommands,
     }));
@@ -404,4 +407,15 @@ Options:
 // Run the CLI.
 main().then((code) => {
   process.exit(code);
+}).catch((error: unknown) => {
+  if (
+    error instanceof MetadataEncodingError ||
+    error instanceof DuplicatePackageIdentityError
+  ) {
+    console.error(error.message);
+    process.exit(2);
+  }
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Error: ${message}`);
+  process.exit(1);
 });

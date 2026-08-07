@@ -184,7 +184,7 @@ impl GateLevelCpu {
     /// Compute flags from a raw result byte using the gate-level parity tree.
     fn flags_from_result(&self, result: u8, carry: bool, preserve_carry: bool) -> Flags {
         let bits = int_to_bits(result, 8);
-        let any_set = bits.iter().any(|&b| b == 1);
+        let any_set = bits.contains(&1);
         Flags {
             carry: if preserve_carry { self.flags.carry } else { carry },
             zero: !any_set,
@@ -321,7 +321,7 @@ impl GateLevelCpu {
                 mnemonic = "RET".to_string();
             } else {
                 let sense = sss == 7; // sss=7 → T=1 (return if true)
-                let ccc = ddd as u8 & 0x03;
+                let ccc = ddd & 0x03;
                 let prefix = if sense { "T" } else { "F" };
                 let flag_name = ["C", "Z", "S", "P"][ccc as usize];
                 mnemonic = format!("R{}{}", prefix, flag_name);
@@ -340,7 +340,7 @@ impl GateLevelCpu {
                 mnemonic = format!("JMP 0x{:04X}", target);
             } else {
                 let sense = sss == 4;
-                let ccc = ddd as u8 & 0x03;
+                let ccc = ddd & 0x03;
                 let prefix = if sense { "T" } else { "F" };
                 let flag_name = ["C", "Z", "S", "P"][ccc as usize];
                 mnemonic = format!("J{}{} 0x{:04X}", prefix, flag_name, target);
@@ -359,7 +359,7 @@ impl GateLevelCpu {
                 mnemonic = format!("CAL 0x{:04X}", target);
             } else {
                 let sense = sss == 6;
-                let ccc = ddd as u8 & 0x03;
+                let ccc = ddd & 0x03;
                 let prefix = if sense { "T" } else { "F" };
                 let flag_name = ["C", "Z", "S", "P"][ccc as usize];
                 mnemonic = format!("C{}{} 0x{:04X}", prefix, flag_name, target);

@@ -538,16 +538,13 @@ fn eval_predicate_concrete(predicate: &Predicate, value: i128) -> Option<bool> {
                     let term = c.checked_mul(value)?;
                     acc.checked_add(term)
                 });
-                match lhs_opt {
-                    None => None, // arithmetic overflow → fall through to solver
-                    Some(lhs) => Some(match op {
+                lhs_opt.map(|lhs| match op {
                         lang_refined_types::CmpOp::Lt => lhs < *rhs,
                         lang_refined_types::CmpOp::Le => lhs <= *rhs,
                         lang_refined_types::CmpOp::Eq => lhs == *rhs,
                         lang_refined_types::CmpOp::Ge => lhs >= *rhs,
                         lang_refined_types::CmpOp::Gt => lhs > *rhs,
-                    }),
-                }
+                    })
             } else {
                 None // multi-variable: defer to solver
             }

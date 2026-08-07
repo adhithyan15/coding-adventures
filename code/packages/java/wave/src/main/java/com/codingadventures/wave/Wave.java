@@ -13,6 +13,8 @@
 
 package com.codingadventures.wave;
 
+import com.codingadventures.trig.Trig;
+
 /**
  * An immutable sinusoidal wave: y(t) = A · sin(2π·f·t + φ).
  */
@@ -30,8 +32,16 @@ public final class Wave {
      * @param phase starting offset in radians
      */
     public Wave(double amplitude, double frequency, double phase) {
-        if (amplitude < 0) throw new IllegalArgumentException("Amplitude must be non-negative");
-        if (frequency <= 0) throw new IllegalArgumentException("Frequency must be positive");
+        if (!Double.isFinite(amplitude) || amplitude < 0) {
+            throw new IllegalArgumentException("Amplitude must be finite and non-negative");
+        }
+        if (!Double.isFinite(frequency) || frequency <= 0) {
+            throw new IllegalArgumentException("Frequency must be finite and positive");
+        }
+        if (frequency > Double.MAX_VALUE / (2.0 * Trig.PI)) {
+            throw new IllegalArgumentException("Angular frequency must remain finite");
+        }
+        if (!Double.isFinite(phase)) throw new IllegalArgumentException("Phase must be finite");
         this.amplitude = amplitude;
         this.frequency = frequency;
         this.phase = phase;
@@ -50,7 +60,7 @@ public final class Wave {
     public double period() { return 1.0 / frequency; }
 
     /** Angular frequency in radians per second. ω = 2π·f */
-    public double angularFrequency() { return 2.0 * Math.PI * frequency; }
+    public double angularFrequency() { return 2.0 * Trig.PI * frequency; }
 
     /**
      * Evaluate the wave at time t (seconds).
@@ -59,6 +69,14 @@ public final class Wave {
      * @return displacement y(t) = A · sin(2π·f·t + φ)
      */
     public double evaluate(double t) {
-        return amplitude * Math.sin(2.0 * Math.PI * frequency * t + phase);
+        if (!Double.isFinite(t)) throw new IllegalArgumentException("Time must be finite");
+        if (amplitude == 0.0) return 0.0;
+        double reducedTime = t % period();
+        double reducedPhase = phase % (2.0 * Trig.PI);
+        double angle = 2.0 * Trig.PI * (frequency * reducedTime) + reducedPhase;
+        double unitValue = Trig.sin(angle);
+        if (unitValue >= 1.0) return amplitude;
+        if (unitValue <= -1.0) return -amplitude;
+        return amplitude * unitValue;
     }
 }

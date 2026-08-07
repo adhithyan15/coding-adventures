@@ -1,0 +1,21 @@
+% ============================================================================
+% mass-conversions.query.adj — a worked lookup over the mass-conversions table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many
+% kilograms in a pound?" question: it states no conversion fact — it only
+% `import`s the grounded table and asks binding queries. The native adj-lang
+% engine resolves each `?` against the table's rows (lowered to
+% `mass_to_kilograms` relations) and returns the binding + the table's
+% source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mass-conversions.query.adj
+% ============================================================================
+
+import "mass-conversions.adj"
+
+? mass_to_kilograms(pound, $Kg)        % expect 0.4535924
+? mass_to_kilograms(short_ton, $Kg)    % expect 907.1847
+? mass_to_kilograms(grain, $Kg)        % expect 0.00006479891
+? mass_to_kilograms(stone, $Kg)        % expect abstain — not in the table

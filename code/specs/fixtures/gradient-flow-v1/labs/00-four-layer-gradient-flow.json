@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "id": "nn24-four-layer-gradient-flow",
+  "title": "Four-layer vanishing and exploding gradient comparison",
+  "question": "How do weights and activation derivatives change a loss gradient as it crosses four layers?",
+  "absolute_tolerance": 1e-9,
+  "concepts": ["reverse mode", "chain rule", "local Jacobian", "vanishing gradient", "exploding gradient", "tanh saturation", "finite difference"],
+  "operation": {
+    "kind": "scalar-gradient-flow",
+    "loss": "half-squared-error",
+    "activation_derivative": "saved-output",
+    "finite_difference_epsilon": 1e-6,
+    "vanishing_threshold": 0.1,
+    "exploding_threshold": 10
+  },
+  "scenarios": [
+    {"id": "small-tanh", "label": "Small tanh", "input": 1, "weights": [0.5, 0.5, 0.5, 0.5], "activation": "tanh", "target": 0},
+    {"id": "saturated-tanh", "label": "Saturated tanh", "input": 1, "weights": [3, 3, 3, 3], "activation": "tanh", "target": 0},
+    {"id": "unit-relu", "label": "Unit ReLU", "input": 1, "weights": [1, 1, 1, 1], "activation": "relu", "target": 0},
+    {"id": "large-relu", "label": "Large ReLU", "input": 1, "weights": [2, 2, 2, 2], "activation": "relu", "target": 0}
+  ],
+  "expected": {
+    "traces": [
+      {
+        "id": "small-tanh",
+        "output": 0.05645551423322024,
+        "output_error": 0.05645551423322024,
+        "loss": 0.0015936125436686666,
+        "chain_jacobian": 0.045877150455727246,
+        "input_gradient": 0.0025900181205328957,
+        "finite_difference_input_gradient": 0.002590018120546961,
+        "finite_difference_error": 1.4065137943219952e-14,
+        "classification": "vanishing",
+        "layers": [
+          {
+            "layer": 1,
+            "input": 1,
+            "weight": 0.5,
+            "preactivation": 0.5,
+            "activation": 0.46211715726000974,
+            "activation_derivative": 0.7864477329659274,
+            "local_jacobian": 0.3932238664829637,
+            "upstream_gradient": 0.006586624926147781,
+            "preactivation_gradient": 0.005180036241065791,
+            "weight_gradient": 0.005180036241065791,
+            "input_gradient": 0.0025900181205328957
+          },
+          {
+            "layer": 2,
+            "input": 0.46211715726000974,
+            "weight": 0.5,
+            "preactivation": 0.23105857863000487,
+            "activation": 0.2270326087174543,
+            "activation_derivative": 0.9484561945789473,
+            "local_jacobian": 0.4742280972894736,
+            "upstream_gradient": 0.013889149470043397,
+            "preactivation_gradient": 0.013173249852295562,
+            "weight_gradient": 0.006087584773618668,
+            "input_gradient": 0.006586624926147781
+          },
+          {
+            "layer": 3,
+            "input": 0.2270326087174543,
+            "weight": 0.5,
+            "preactivation": 0.11351630435872714,
+            "activation": 0.11303121601000445,
+            "activation_derivative": 0.9872239442072998,
+            "local_jacobian": 0.4936119721036499,
+            "upstream_gradient": 0.028137788900968793,
+            "preactivation_gradient": 0.027778298940086793,
+            "weight_gradient": 0.0063065796741012,
+            "input_gradient": 0.013889149470043397
+          },
+          {
+            "layer": 4,
+            "input": 0.11303121601000445,
+            "weight": 0.5,
+            "preactivation": 0.05651560800500222,
+            "activation": 0.05645551423322024,
+            "activation_derivative": 0.9968127749126626,
+            "local_jacobian": 0.4984063874563313,
+            "upstream_gradient": 0.05645551423322024,
+            "preactivation_gradient": 0.056275577801937586,
+            "weight_gradient": 0.006360896990618619,
+            "input_gradient": 0.028137788900968793
+          }
+        ]
+      },
+      {
+        "id": "saturated-tanh",
+        "output": 0.9949015328034738,
+        "output_error": 0.9949015328034738,
+        "loss": 0.49491452998735086,
+        "chain_jacobian": 8.400447769691746e-7,
+        "input_gradient": 8.357618362301841e-7,
+        "finite_difference_input_gradient": 8.357758929378178e-7,
+        "finite_difference_error": 1.4056707633724826e-11,
+        "classification": "vanishing",
+        "layers": [
+          {
+            "layer": 1,
+            "input": 1,
+            "weight": 3,
+            "preactivation": 3,
+            "activation": 0.9950547536867305,
+            "activation_derivative": 0.009866037165440211,
+            "local_jacobian": 0.029598111496320634,
+            "upstream_gradient": 2.8236998713045537e-5,
+            "preactivation_gradient": 2.785872787433947e-7,
+            "weight_gradient": 2.785872787433947e-7,
+            "input_gradient": 8.357618362301841e-7
+          },
+          {
+            "layer": 2,
+            "input": 0.9950547536867305,
+            "weight": 3,
+            "preactivation": 2.9851642610601914,
+            "activation": 0.9949062016530742,
+            "activation_derivative": 0.010161649912252435,
+            "local_jacobian": 0.030484949736757305,
+            "upstream_gradient": 0.0009262603008001258,
+            "preactivation_gradient": 9.412332904348513e-6,
+            "weight_gradient": 9.365786599754017e-6,
+            "input_gradient": 2.8236998713045537e-5
+          },
+          {
+            "layer": 3,
+            "input": 0.9949062016530742,
+            "weight": 3,
+            "preactivation": 2.9847186049592227,
+            "activation": 0.9949016710432858,
+            "activation_derivative": 0.01017066495527763,
+            "local_jacobian": 0.030511994865832892,
+            "upstream_gradient": 0.030357251463664386,
+            "preactivation_gradient": 0.00030875343360004193,
+            "weight_gradient": 0.0003071807058703624,
+            "input_gradient": 0.0009262603008001258
+          },
+          {
+            "layer": 4,
+            "input": 0.9949016710432858,
+            "weight": 3,
+            "preactivation": 2.984705013129857,
+            "activation": 0.9949015328034738,
+            "activation_derivative": 0.01017094002529828,
+            "local_jacobian": 0.030512820075894842,
+            "upstream_gradient": 0.9949015328034738,
+            "preactivation_gradient": 0.010119083821221462,
+            "weight_gradient": 0.01006749340316031,
+            "input_gradient": 0.030357251463664386
+          }
+        ]
+      },
+      {
+        "id": "unit-relu",
+        "output": 1,
+        "output_error": 1,
+        "loss": 0.5,
+        "chain_jacobian": 1,
+        "input_gradient": 1,
+        "finite_difference_input_gradient": 1.000000000001,
+        "finite_difference_error": 1.000088900582341e-12,
+        "classification": "stable",
+        "layers": [
+          {"layer": 1, "input": 1, "weight": 1, "preactivation": 1, "activation": 1, "activation_derivative": 1, "local_jacobian": 1, "upstream_gradient": 1, "preactivation_gradient": 1, "weight_gradient": 1, "input_gradient": 1},
+          {"layer": 2, "input": 1, "weight": 1, "preactivation": 1, "activation": 1, "activation_derivative": 1, "local_jacobian": 1, "upstream_gradient": 1, "preactivation_gradient": 1, "weight_gradient": 1, "input_gradient": 1},
+          {"layer": 3, "input": 1, "weight": 1, "preactivation": 1, "activation": 1, "activation_derivative": 1, "local_jacobian": 1, "upstream_gradient": 1, "preactivation_gradient": 1, "weight_gradient": 1, "input_gradient": 1},
+          {"layer": 4, "input": 1, "weight": 1, "preactivation": 1, "activation": 1, "activation_derivative": 1, "local_jacobian": 1, "upstream_gradient": 1, "preactivation_gradient": 1, "weight_gradient": 1, "input_gradient": 1}
+        ]
+      },
+      {
+        "id": "large-relu",
+        "output": 16,
+        "output_error": 16,
+        "loss": 128,
+        "chain_jacobian": 16,
+        "input_gradient": 256,
+        "finite_difference_input_gradient": 256.000000000256,
+        "finite_difference_error": 2.560227585490793e-10,
+        "classification": "exploding",
+        "layers": [
+          {"layer": 1, "input": 1, "weight": 2, "preactivation": 2, "activation": 2, "activation_derivative": 1, "local_jacobian": 2, "upstream_gradient": 128, "preactivation_gradient": 128, "weight_gradient": 128, "input_gradient": 256},
+          {"layer": 2, "input": 2, "weight": 2, "preactivation": 4, "activation": 4, "activation_derivative": 1, "local_jacobian": 2, "upstream_gradient": 64, "preactivation_gradient": 64, "weight_gradient": 128, "input_gradient": 128},
+          {"layer": 3, "input": 4, "weight": 2, "preactivation": 8, "activation": 8, "activation_derivative": 1, "local_jacobian": 2, "upstream_gradient": 32, "preactivation_gradient": 32, "weight_gradient": 128, "input_gradient": 64},
+          {"layer": 4, "input": 8, "weight": 2, "preactivation": 16, "activation": 16, "activation_derivative": 1, "local_jacobian": 2, "upstream_gradient": 16, "preactivation_gradient": 16, "weight_gradient": 128, "input_gradient": 32}
+        ]
+      }
+    ]
+  }
+}

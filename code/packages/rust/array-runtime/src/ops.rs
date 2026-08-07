@@ -9,21 +9,54 @@
 use crate::value::Array;
 
 /// A binary elementwise operator (`+ - * /`, etc.).
+///
+/// `Max`/`Min`/the six comparisons were added for MA-4e (`apl-runtime`): APL's
+/// `⌈`/`⌊` (dyadic ceiling/floor mean "max"/"min", not the monadic rounding
+/// meaning) and `= ≠ < ≤ ≥ >` are, like `+ - × ÷`, ordinary scalar dyadic
+/// functions — so they plug into [`elementwise`]/[`reduce`]/[`scan`]/[`outer`]
+/// for free, exactly as this enum's own doc history anticipated (see MA05 §2:
+/// "`BinOp` ... extendable to `Max`/`Min`/comparison ops as APL requires
+/// them"). Comparisons follow APL's boolean convention: `1.0` for true, `0.0`
+/// for false (never a native `bool`, since the result must stay a plain `f64`
+/// array element like every other value in this crate).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BinOp {
     Add,
     Sub,
     Mul,
     Div,
+    Max,
+    Min,
+    Eq,
+    Ne,
+    Lt,
+    Le,
+    Ge,
+    Gt,
 }
 
 impl BinOp {
     fn apply(self, a: f64, b: f64) -> f64 {
+        fn b2f(cond: bool) -> f64 {
+            if cond {
+                1.0
+            } else {
+                0.0
+            }
+        }
         match self {
             BinOp::Add => a + b,
             BinOp::Sub => a - b,
             BinOp::Mul => a * b,
             BinOp::Div => a / b,
+            BinOp::Max => a.max(b),
+            BinOp::Min => a.min(b),
+            BinOp::Eq => b2f(a == b),
+            BinOp::Ne => b2f(a != b),
+            BinOp::Lt => b2f(a < b),
+            BinOp::Le => b2f(a <= b),
+            BinOp::Ge => b2f(a >= b),
+            BinOp::Gt => b2f(a > b),
         }
     }
 }
@@ -554,5 +587,40 @@ mod tests {
         let r = outer(BinOp::Mul, &empty, &v).unwrap();
         assert_eq!(r.shape(), &[0, 3]);
         assert!(r.is_empty());
+    }
+
+    // --- Max/Min/comparisons (added for MA-4e) ----------------------------
+
+    #[test]
+    fn max_and_min_are_elementwise() {
+        let a = Array::from_vec(vec![1.0, 5.0, 3.0]);
+        let b = Array::from_vec(vec![4.0, 2.0, 3.0]);
+        assert_eq!(elementwise(BinOp::Max, &a, &b).unwrap().data(), &[4.0, 5.0, 3.0]);
+        assert_eq!(elementwise(BinOp::Min, &a, &b).unwrap().data(), &[1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn comparisons_produce_apl_style_boolean_1_and_0() {
+        let a = Array::from_vec(vec![1.0, 2.0, 3.0]);
+        let b = Array::from_vec(vec![3.0, 2.0, 1.0]);
+        assert_eq!(elementwise(BinOp::Eq, &a, &b).unwrap().data(), &[0.0, 1.0, 0.0]);
+        assert_eq!(elementwise(BinOp::Ne, &a, &b).unwrap().data(), &[1.0, 0.0, 1.0]);
+        assert_eq!(elementwise(BinOp::Lt, &a, &b).unwrap().data(), &[1.0, 0.0, 0.0]);
+        assert_eq!(elementwise(BinOp::Le, &a, &b).unwrap().data(), &[1.0, 1.0, 0.0]);
+        assert_eq!(elementwise(BinOp::Ge, &a, &b).unwrap().data(), &[0.0, 1.0, 1.0]);
+        assert_eq!(elementwise(BinOp::Gt, &a, &b).unwrap().data(), &[0.0, 0.0, 1.0]);
+    }
+
+    #[test]
+    fn reduce_and_scan_and_outer_work_with_max() {
+        let v = Array::from_vec(vec![3.0, 7.0, 2.0, 9.0, 4.0]);
+        assert_eq!(reduce(BinOp::Max, &v).unwrap().data(), &[9.0]);
+        assert_eq!(scan(BinOp::Max, &v).unwrap().data(), &[3.0, 7.0, 7.0, 9.0, 9.0]);
+        let r = outer(BinOp::Max, &Array::from_vec(vec![1.0, 5.0]), &Array::from_vec(vec![3.0, 2.0])).unwrap();
+        assert_eq!(r.shape(), &[2, 2]);
+        assert_eq!(r.get(0, 0), Some(3.0)); // max(1,3)
+        assert_eq!(r.get(0, 1), Some(2.0)); // max(1,2)
+        assert_eq!(r.get(1, 0), Some(5.0)); // max(5,3)
+        assert_eq!(r.get(1, 1), Some(5.0)); // max(5,2)
     }
 }

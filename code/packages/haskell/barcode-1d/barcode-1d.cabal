@@ -1,0 +1,43 @@
+cabal-version: 3.0
+name:          barcode-1d
+version:       0.1.0
+synopsis:      Pure Haskell coordinator for one-dimensional barcodes
+description:   Routes six native barcode encoders through shared paint scenes and the pure ASCII Paint VM.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.Barcode1D
+    build-depends:    base >=4.14 && <5
+                    , barcode-layout-1d >=0.1 && <0.2
+                    , codabar >=0.1 && <0.2
+                    , code128 >=0.1 && <0.2
+                    , code39 >=0.1 && <0.2
+                    , ean13 >=0.1 && <0.2
+                    , itf >=0.1 && <0.2
+                    , paint-instructions >=0.1 && <0.2
+                    , paint-vm-ascii >=0.1 && <0.2
+                    , upc-a >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Barcode1DSpec
+    hs-source-dirs:   test
+    build-depends:    aeson >=2.0 && <3
+                    , barcode-1d
+                    , base >=4.14 && <5
+                    , containers >=0.6 && <0.8
+                    , hspec ==2.*
+                    , paint-instructions >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

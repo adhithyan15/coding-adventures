@@ -1,0 +1,104 @@
+% ============================================================================
+% elimination-half-life.adj — a drug's elimination half-life from its volume of distribution and clearance
+% (t1/2 = 0.693 × Vd / CL) in the ADJ standard library.
+% ============================================================================
+% The elimination-half-life entry of the *clinical* track — the time it takes for the plasma concentration of a
+% drug to fall by half during the elimination phase. Half-life sets the dosing interval, the time to steady
+% state (~4-5 half-lives), and the washout time after stopping a drug, so it is one of the most-used bedside
+% pharmacokinetic numbers. It is fixed by two physiological quantities: the VOLUME OF DISTRIBUTION (Vd, how
+% widely the drug spreads into tissues) and the CLEARANCE (CL, how fast the body removes it). A larger Vd
+% lengthens the half-life (more drug hidden in tissue to clear), while a larger CL shortens it (faster
+% removal). The cited page folds this into one relation with the constant 0.693 — the natural log of 2, the
+% factor that turns a rate constant into a halving time. A DRUG'S ELIMINATION HALF-LIFE IS 0.693 TIMES ITS
+% VOLUME OF DISTRIBUTION DIVIDED BY ITS CLEARANCE — i.e. t1/2 = 0.693 × Vd / CL.
+%
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact rearrangements
+% (the volume of distribution and the clearance a given half-life implies). As with every compute library, a
+% consumer states NO arithmetic: it `import`s this file, binds Vd and CL from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's citation.
+%
+%     import "elimination-half-life.adj"
+%     observe volume_of_distribution(2000)   % "…Vd 2000 mL…"       (span cited by the model)
+%     observe clearance(693)                  % "…clearance 693 mL/h…" (span cited by the model)
+%     ? half_life(volume_of_distribution, clearance)   % engine → 2 (h)
+%
+% Structurally this is a CONSTANT-SCALED PRODUCT OVER A VALUE — a fixed factor times one measured quantity,
+% divided by another — a shape distinct from the single-value-over-a-constant (arm-span-height), the
+% sum-with-a-constant-over-a-constant (mid-parental-height, expected-aa-gradient), the ratio and the
+% product-times-constant forms of the other clinical libraries. The one embedded constant — the halving factor
+% 0.693 — is an exact terminating decimal AS THE CITED EXPRESSION PRINTS IT (0.693 = 693/1000; it is the
+% textbook truncation of ln 2, and this library grounds exactly the printed three-digit form, not the
+% irrational). Vd and CL are the two formal parameters bound at apply time, so every value the engine returns
+% is exact.
+%
+%   half_life(volume_of_distribution, clearance)     = 0.693 * volume_of_distribution / clearance % (time)
+%   volume_of_distribution(half_life, clearance)     = half_life * clearance * 1000 / 693         % (solved for Vd)
+%   clearance(half_life, volume_of_distribution)     = 0.693 * volume_of_distribution / half_life % (solved for CL)
+%
+% NOTE on the Vd inversion's form: solving t1/2 = 0.693 × Vd / CL for Vd gives Vd = t1/2 × CL / 0.693. Because
+% the cited constant 0.693 is EXACTLY 693/1000, dividing by 0.693 is identically MULTIPLYING by 1000/693; the
+% inversion is written in that integer-reciprocal form (× 1000 / 693) so the engine keeps the whole computation
+% in exact integer arithmetic. The forward and clearance formulas MULTIPLY by 0.693 (never divide by it), so
+% they carry the literal 0.693 exactly as the source prints it. All three are the same cited relation.
+%
+% The three formulas COMPOSE and invert cleanly around the worked case Vd = 2000, CL = 693 (half-life =
+% 0.693 × 2000 / 693 = 1386 / 693 = 2): the `half_life` a consumer computes is exactly the value each inverse
+% formula back-solves to recover its own measured input (2000, 693).
+%
+% NOTE ON UNITS AND MODELLING: Vd and CL must be in COMPATIBLE units so the volume cancels (e.g. Vd in mL and
+% CL in mL per unit time gives a half-life in that time unit); the 0.693 factor is dimensionless. This is the
+% ONE-COMPARTMENT elimination half-life; multi-compartment drugs have several phases (a different model not
+% grounded here). The half-life feeds dosing-interval and steady-state reasoning; applying it in context is the
+% clinician's task, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted half-life expression — because that one
+% expression (0.693 × Vd / CL) sanctions the relation read every way. The quote is transcribed verbatim from
+% the StatPearls article "Elimination Half-Life of Drugs", where it is printed as the typed, operand-complete
+% expression "t1/2=0.693×Vd/CL" (multiplication then division read left to right, which is the intended
+% (0.693 × Vd) / CL). Each `formula` therefore carries the provenance envelope every shipped grounded clause
+% carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored — the formula is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `volume_of_distribution`, `clearance` and `half_life` each appear BOTH as a derived result and as
+% an input (of the other formulas), so each is a single dictionary term used in both roles. The `surface` lists
+% are the everyday names a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary elimination_half_life_vocab {
+    define volume_of_distribution : finding  surface "volume of distribution", "Vd", "apparent volume of distribution" % volume (e.g. mL)
+    define clearance              : finding  surface "clearance", "CL", "drug clearance", "total clearance"            % volume/time (e.g. mL/h)
+    define half_life              : finding  surface "half-life", "elimination half-life", "t1/2", "t half"            % time (e.g. h)
+}
+
+% ----------------------------------------------------------------------------
+% The elimination half-life, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the half-life expression from the StatPearls article (a
+% quote is required on a shipped formula). Each is an exact expression in the measured values and the exact
+% factor 0.693, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook elimination_half_life_laws {
+    use elimination_half_life_vocab
+
+    % Elimination half-life — 0.693 times the volume of distribution, divided by the clearance.
+    formula half_life(volume_of_distribution, clearance) = 0.693 * volume_of_distribution / clearance
+        source "t1/2=0.693×Vd/CL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554498/"
+        trust authoritative
+
+    % Volume of distribution — the same expression solved for Vd. Dividing by the cited 0.693 is identically
+    % multiplying by its exact reciprocal 1000/693 (0.693 = 693/1000), written that way so the engine stays in
+    % exact integer arithmetic. Defended by the SAME clause.
+    formula volume_of_distribution(half_life, clearance) = half_life * clearance * 1000 / 693
+        source "t1/2=0.693×Vd/CL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554498/"
+        trust authoritative
+
+    % Clearance — the same expression solved for CL, the third reading of the one law.
+    formula clearance(half_life, volume_of_distribution) = 0.693 * volume_of_distribution / half_life
+        source "t1/2=0.693×Vd/CL"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554498/"
+        trust authoritative
+}

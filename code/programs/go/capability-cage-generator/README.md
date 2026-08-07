@@ -20,6 +20,13 @@ capability-cage-generator --manifest=... --dry-run
 capability-cage-generator --all --dry-run
 ```
 
+`--all` preflights and renders every discovered Go manifest before writing any
+package. If one manifest is malformed or uses a recognized pair whose enforcing
+wrapper is not implemented, the batch returns an aggregate error and leaves
+every existing generated file intact. This makes `--all` a repository-wide
+validation command as well as a generator; it will fail until every discovered
+Go manifest is both valid and supported.
+
 ## What It Generates
 
 Given `required_capabilities.json`:
@@ -60,6 +67,22 @@ For pure-computation packages (empty capabilities):
 ```go
 var Manifest = cage.EmptyManifest
 ```
+
+## Taxonomy Enforcement
+
+Category and action form one closed identity. The generator accepts only the
+19 pairs defined by Spec 13 and exercised by
+`code/specs/fixtures/capability-security-v1/taxonomy.json`. It validates the
+whole manifest before writing output.
+
+The generator currently emits enforcing methods for filesystem read, write,
+create, delete, and list; network connect, listen, and DNS; process exec;
+environment read; time read and sleep; stdin read; and stdout write. Other
+valid Spec 13 pairs fail with an explicit unsupported-pair error. They never
+produce a TODO or a weaker unguarded method, and an existing generated file is
+left intact. Batch generation applies the same rule atomically across the
+preflight phase, including currently valid but unsupported pairs such as
+`ffi:call`.
 
 ## Package Name Derivation
 

@@ -1,0 +1,97 @@
+% ============================================================================
+% temperature-scales — named temperature REFERENCE POINTS and the numeric value
+% the source fixes each at (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% An elementary/middle-school physics fact on the way to thermodynamics: a
+% temperature SCALE is pinned down by a few agreed reference points, and each
+% one has a definite number. Water freezes at 0 °C and boils at about 100 °C on
+% the Celsius scale; the bottom of the Kelvin scale, 0 K, is "absolute zero";
+% and the zero of the Celsius scale sits at 273.15 K. Recall is a binding query:
+%
+%     ? temperature_reference_point(water_boils_celsius, $V)   % 100
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `temperature_reference_point(point, value)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the number WITH its source, on the CPU, with zero model calls, and
+% abstains on any reference point the source does not fix (it never invents a
+% temperature).
+%
+% The reference points, as a little truth table (each key bakes in the SCALE
+% its value is measured on, so the value column is just the bare number NIST
+% states):
+%
+%     reference point           value   what NIST fixes it at
+%     -----------------------   -----   -------------------------------------
+%     water_freezes_celsius       0     water freezes at 0 °C
+%     water_boils_celsius       100     water boils at about 100 °C
+%     absolute_zero_kelvin        0     0 K is "absolute zero"
+%     zero_celsius_in_kelvin    273.15  zero degrees Celsius is 273.15 K
+%
+% Because each `value` is a NUMBER (not a label), a recalled reference point
+% composes straight into arithmetic: the Celsius→Kelvin offset is exactly the
+% `zero_celsius_in_kelvin` row (273.15), and the 0→100 span of the two water
+% points is the 100-degree interval that DEFINES the Celsius degree. That is the
+% concrete bridge from RECALL to COMPUTE, and the rung a physics learner reasons
+% UP from before reasoning about heat, phase changes, or the ideal-gas law. The
+% query also runs BACKWARD — bind a value and recall the point that has it:
+%
+%     ? temperature_reference_point($P, 100)   % water_boils_celsius — reverse
+%
+% Note that the value 0 is shared by TWO points (water_freezes_celsius and
+% absolute_zero_kelvin), which is exactly right: a bare "0" is meaningless until
+% you name the scale, so a reverse recall on 0 honestly returns BOTH points.
+%
+% Something the source does NOT fix — the Fahrenheit freezing point of water,
+% human body temperature — has no row, so a recall on it ABSTAINS rather than
+% inventing a number. That honest-abstention property is what makes the table
+% safe to reason from.
+%
+% Each `value` is copied character-for-character from the NIST sentence that
+% states it — never a number the source does not print for that point.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every point→value pair was
+% read out of a fetched U.S. government NIST page this session, and any value
+% that could not be grounded there would have been dropped). All four numbers
+% come from the SAME primary U.S. government source, NIST's Office of Weights
+% and Measures "SI Units – Temperature"
+% (nist.gov/pml/owm/si-units-temperature), each quoted here character-for-
+% character so any reader can re-check it. One NIST sentence fixes the two
+% Celsius water points at once —
+%
+%   water_freezes_celsius → 0  and  water_boils_celsius → 100
+%     "On the widely used Celsius temperature scale, water freezes at 0 °C and
+%      boils at about 100 °C."
+%
+% — and two more fix the Kelvin points:
+%
+%   absolute_zero_kelvin → 0
+%     "The temperature 0 K is commonly referred to as 'absolute zero.'"
+%
+%   zero_celsius_in_kelvin → 273.15
+%     "One Celsius degree is an interval of 1 K, and zero degrees Celsius is
+%      273.15 K."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NIST sentence that fixes the
+% first two rows (the Celsius water points). Every OTHER row's per-fact source
+% and verbatim span is listed above, so each value remains independently
+% checkable. The source is a primary U.S. government NIST page (nist.gov), so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table temperature_reference_point {
+    columns point, value
+
+    row (water_freezes_celsius, 0)
+    row (water_boils_celsius, 100)
+    row (absolute_zero_kelvin, 0)
+    row (zero_celsius_in_kelvin, 273.15)
+
+    source "On the widely used Celsius temperature scale, water freezes at 0 °C and boils at about 100 °C."
+    locator "https://www.nist.gov/pml/owm/si-units-temperature"
+    trust authoritative
+}

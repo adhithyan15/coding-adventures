@@ -1,0 +1,30 @@
+% ============================================================================
+% fractional-excretion-of-urea.query.adj — worked applications of the fractional excretion of urea.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an AKI work-up into a urine urea, a serum urea, a
+% urine creatinine, and a serum creatinine: it `import`s the grounded formulabook, `observe`s the four
+% values, and asks the engine to APPLY the cited FEUrea formula. No arithmetic is stated by the consumer;
+% the engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (urine urea = 300, serum urea = 30, urine creatinine = 100, serum creatinine = 2):
+% FEUrea = 300 × 2 × 100 / (30 × 100) = 60000 / 3000 = 20 %. Each query fixes the other inputs and asks the
+% engine to recover another quantity; every answer is exact and the inversions COMPOSE (each recovers
+% exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fractional-excretion-of-urea.query.adj
+% ============================================================================
+
+import "fractional-excretion-of-urea.adj"
+
+% --- FEUrea: the percentage the four concentrations imply (expect 20). -------------------------------
+observe urine_urea(300)
+observe serum_urea(30)
+observe urine_creatinine(100)
+observe serum_creatinine(2)
+? fractional_excretion_of_urea(urine_urea, serum_creatinine, serum_urea, urine_creatinine)   % expect 20
+
+% --- Inverse: the urine urea a FEUrea of 20 implies at the same other values (expect 300). -----------
+observe fractional_excretion_of_urea(20)
+? urine_urea(fractional_excretion_of_urea, serum_urea, urine_creatinine, serum_creatinine)   % expect 300

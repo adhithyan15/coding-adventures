@@ -476,6 +476,48 @@ impl Assembler {
         });
     }
 
+    /// `LEA r64, [RIP + <label>]` — load the RIP-relative address of a **label** bound
+    /// later in this same function; resolved at [`finish`](Self::finish) like a `jmp`.
+    /// Unlike [`lea_rip_rel`](Self::lea_rip_rel) this needs no relocation — the target is
+    /// intra-function, so the displacement is known once the label is bound. Used to
+    /// point a register at a constant table embedded in the instruction stream (see
+    /// [`emit_data_u32`](Self::emit_data_u32)). `0x8D /r`, RIP-relative form (7 bytes).
+    pub fn lea_rip_label(&mut self, dst: Reg, target: LabelId) {
+        self.emit_u8(rex(true, dst.high1(), false, false));
+        self.emit_u8(0x8D);
+        self.emit_u8(modrm(0b00, dst.low3(), 0b101));
+        let slot_offset = self.code.len();
+        self.emit_u32_le(0); // placeholder disp32
+        let instr_end_offset = self.code.len();
+        self.fixups.push(Fixup { slot_offset, instr_end_offset, target });
+    }
+
+    /// `LEA r64, [RIP + #0]` as a **placeholder**, returning the byte offset of its
+    /// `disp32` slot for a caller that patches it once a target offset is known — the
+    /// RIP-relative analogue of a cross-function reference. The caller writes
+    /// `disp32 = target_off − (slot + 4)` (the `+4` is the distance from the slot to the
+    /// end of the instruction = the RIP value). Base-independent: `RIP` and the target
+    /// both carry the load base, so it cancels — no relocation needed. `0x8D /r` (7
+    /// bytes). No fix-up is queued; `finish()` leaves the placeholder for the caller.
+    pub fn lea_rip_placeholder(&mut self, dst: Reg) -> usize {
+        self.emit_u8(rex(true, dst.high1(), false, false));
+        self.emit_u8(0x8D);
+        self.emit_u8(modrm(0b00, dst.low3(), 0b101));
+        let slot = self.code.len();
+        self.emit_u32_le(0); // placeholder disp32 — patched by the caller
+        slot
+    }
+
+    /// Append a raw little-endian `u32` **data word** to the stream and return its byte
+    /// offset. This is constant data (a `u32`/`i32` table element), not an instruction;
+    /// it is only safe where control flow cannot reach it (after a `ret`, or a region
+    /// referenced solely by [`lea_rip_label`](Self::lea_rip_label)).
+    pub fn emit_data_u32(&mut self, w: u32) -> usize {
+        let off = self.code.len();
+        self.emit_u32_le(w);
+        off
+    }
+
     // -----------------------------------------------------------------------
     // Arithmetic
     // -----------------------------------------------------------------------
@@ -1464,6 +1506,55 @@ mod tests {
             0x48, 0x01, 0xD0,
             0xC3,
         ]);
+    }
+
+    // ---- RIP-relative lea (GC stack-map registration) ----
+
+    #[test]
+    fn lea_rip_label_resolves_to_embedded_data() {
+        // lea rcx, [rip + <data>]  =  48 8D 0D <disp32>
+        // ret ; then a data word the lea points at.
+        let mut a = Assembler::new();
+        let lbl = a.create_label();
+        a.lea_rip_label(Reg::Rcx, lbl);
+        a.ret();
+        a.bind(lbl).unwrap();
+        a.emit_data_u32(0xDEAD_BEEF);
+        let bytes = finish(a);
+        assert_eq!(&bytes[0..3], &[0x48, 0x8D, 0x0D], "REX.W lea rcx, [rip+...]");
+        // The lea is 7 bytes; instr_end = 7; the data label is bound at offset 8 (after
+        // the 1-byte ret). disp32 = 8 - 7 = 1.
+        assert_eq!(&bytes[3..7], &1i32.to_le_bytes(), "disp32 = data_off - instr_end");
+        assert_eq!(&bytes[7..8], &[0xC3], "ret");
+        assert_eq!(&bytes[8..12], &0xDEAD_BEEFu32.to_le_bytes(), "data word verbatim");
+    }
+
+    #[test]
+    fn lea_rip_placeholder_returns_disp_slot() {
+        // lea rdi, [rip + #0]  =  48 8D 3D 00 00 00 00 ; slot at offset 3.
+        let mut a = Assembler::new();
+        let slot = a.lea_rip_placeholder(Reg::Rdi);
+        assert_eq!(slot, 3, "disp32 slot is 3 bytes into the instruction");
+        let bytes = finish(a);
+        assert_eq!(bytes, vec![0x48, 0x8D, 0x3D, 0x00, 0x00, 0x00, 0x00]);
+    }
+
+    #[test]
+    fn iced_roundtrip_rip_lea() {
+        use iced_x86::{Decoder, DecoderOptions, Formatter, IntelFormatter};
+        let mut a = Assembler::new();
+        let lbl = a.create_label();
+        a.lea_rip_label(Reg::Rsi, lbl);
+        a.ret();
+        a.bind(lbl).unwrap();
+        a.emit_data_u32(0);
+        let bytes = finish(a);
+        let mut decoder = Decoder::with_ip(64, &bytes, 0, DecoderOptions::NONE);
+        let mut f = IntelFormatter::new();
+        let mut s = String::new();
+        f.format(&decoder.decode(), &mut s);
+        assert!(s.starts_with("lea "), "decodes as lea, got {s}");
+        assert!(s.contains("rsi"), "targets rsi, got {s}");
     }
 
     // ---- Round-trip decode via iced-x86 ----

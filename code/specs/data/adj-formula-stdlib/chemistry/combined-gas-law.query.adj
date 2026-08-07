@@ -1,0 +1,45 @@
+% ============================================================================
+% combined-gas-law.query.adj — worked examples over the chemistry combined-gas-law library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a combined-gas-law
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded
+% library, `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited relation.
+% The native adj-lang engine binds the parameters, computes each value EXACTLY on the
+% CPU, and returns it with the relation's source/locator/trust.
+%
+% The six questions INVERT around the conserved quantity P₁V₁/T₁ = P₂V₂/T₂ (worked case
+% P₁ = 2, V₁ = 3, T₁ = 6, P₂ = 4, V₂ = 3, T₂ = 12; note 2·3/6 = 1 = 4·3/12, i.e. the
+% cross-product P₁V₁T₂ = 2·3·12 = 72 = 4·3·6 = P₂V₂T₁): a gas at 2 atm, 3 L, 6 K taken to
+% 3 L and 12 K reaches 4 atm; and each other reading recovers one state variable from the
+% remaining five.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli combined-gas-law.query.adj
+% ============================================================================
+
+import "combined-gas-law.adj"
+
+% 2 atm, 3 L, 6 K → 3 L, 12 K: final pressure = 2*3*12 / (6*3).
+observe initial_pressure(2)
+observe initial_volume(3)
+observe initial_temperature(6)
+observe final_volume(3)
+observe final_temperature(12)
+? final_pressure(initial_pressure, initial_volume, initial_temperature, final_volume, final_temperature)   % expect 4   (P₂ = P₁V₁T₂/(T₁V₂))
+
+% Same state, solve for the final volume instead: final volume = 2*3*12 / (6*4).
+observe final_pressure(4)
+? final_volume(initial_pressure, initial_volume, initial_temperature, final_pressure, final_temperature)    % expect 3   (V₂ = P₁V₁T₂/(T₁P₂))
+
+% Final temperature from the two states' P and V: final temperature = 4*3*6 / (2*3).
+? final_temperature(final_pressure, final_volume, initial_pressure, initial_volume, initial_temperature)    % expect 12  (T₂ = P₂V₂T₁/(P₁V₁))
+
+% Recover the initial pressure: initial pressure = 4*3*6 / (12*3).
+? initial_pressure(final_pressure, final_volume, initial_temperature, final_temperature, initial_volume)    % expect 2   (P₁ = P₂V₂T₁/(T₂V₁))
+
+% Recover the initial volume: initial volume = 4*3*6 / (12*2).
+? initial_volume(final_pressure, final_volume, initial_temperature, final_temperature, initial_pressure)    % expect 3   (V₁ = P₂V₂T₁/(T₂P₁))
+
+% Recover the initial temperature: initial temperature = 2*3*12 / (4*3).
+? initial_temperature(initial_pressure, initial_volume, final_pressure, final_volume, final_temperature)    % expect 6   (T₁ = P₁V₁T₂/(P₂V₂))

@@ -173,7 +173,10 @@ an `int32[]`/`float64[]` handle local; `array_get` → `ldelem.i4`/`.r8`; `array
 `stelem.i4`/`.r8`; `array_len` → `ldlen; conv.i4`. CoreCLR bounds-checks every
 `ldelem`/`stelem` natively, so an out-of-range index throws
 `System.IndexOutOfRangeException` (E5's trap) with no explicit guard. `i64` elements
-collapse to `int32[]` (CIL stack ints are 32-bit here, like scalar `i64`). The binary
+collapse to `int32[]` (CIL stack ints are 32-bit here, like scalar `i64`). A **`str`
+element** (E4d-BA-arr, BASIC `DIM A$(n)`) is a `System.String[]` reference array —
+`newarr [System.Runtime]System.String` + `ldelem.ref`/`stelem.ref` — reusing the same
+reference element machinery the McCarthy `object[]` cons cells use. The binary
 `CILProgramArtifact` (`clr-simulator`) emitter doesn't lower the array ops yet.
 
 **Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2, backend 5/6, v0.20.0).

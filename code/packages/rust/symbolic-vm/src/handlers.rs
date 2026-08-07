@@ -550,7 +550,7 @@ fn inv_handler(simplify: bool) -> Handler {
 fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
     // Int^Int (small positive exponent) — stay exact.
     if let (Numeric::Int(b), Numeric::Int(e)) = (base, exp) {
-        if e >= 0 && e <= 62 {
+        if (0..=62).contains(&e) {
             // b^e fits in i64 when |b| <= 1 or e <= ~19 for b==2
             // Use checked_pow to avoid overflow.
             if let Some(result) = (b as i128).checked_pow(e as u32) {
@@ -570,7 +570,7 @@ fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
     }
     // Rat^Int — exact when exponent is a non-negative integer.
     if let (Numeric::Rat(n, d), Numeric::Int(e)) = (base, exp) {
-        if e >= 0 && e <= 30 {
+        if (0..=30).contains(&e) {
             let eu = e as u32;
             if let (Some(nn), Some(dd)) = ((n as i128).checked_pow(eu), (d as i128).checked_pow(eu))
             {
@@ -841,11 +841,10 @@ fn abs_handler(simplify: bool) -> Handler {
                 return vm.eval(apply_node("Abs", vec![inner_apply.args[0].clone()]));
             }
             // Rule 4c: abs(Mul(-1, x)) = abs(x)
-            if inner_apply.head == IRNode::Symbol(MUL.to_string()) && inner_apply.args.len() == 2 {
-                if inner_apply.args[0] == IRNode::Integer(-1) {
+            if inner_apply.head == IRNode::Symbol(MUL.to_string()) && inner_apply.args.len() == 2
+                && inner_apply.args[0] == IRNode::Integer(-1) {
                     return vm.eval(apply_node("Abs", vec![inner_apply.args[1].clone()]));
                 }
-            }
             // Rule 4d: abs(x^{2k}) = x^{2k}  (even power ≥ 0 always)
             if inner_apply.head == IRNode::Symbol(POW.to_string()) && inner_apply.args.len() == 2 {
                 if let IRNode::Integer(n) = &inner_apply.args[1] {
@@ -1443,6 +1442,177 @@ fn if_handler(_simplify: bool) -> Handler {
 // Assign / Define — binding forms
 // ---------------------------------------------------------------------------
 
+/// Maximum total `IRNode` count a value may have before `assign_handler`
+/// will durably bind it into the environment via `:=`/`=`.
+///
+/// # Why this exists — self-referential reassignment doubles a value's size
+///
+/// A self-referential reassignment like `a := a * a` or `a := a + a`,
+/// repeated even a handful of times, clones the *entire current value* of
+/// `a` into **both** operand positions of the new node. When the value
+/// can't be numerically collapsed (e.g. it started from free symbols, as in
+/// `a := x + y`), the clone survives structurally and the total node count
+/// roughly **doubles on every step**. Measured directly against this crate
+/// (`a := x + y;` seed, then `a := a * a;` repeated — the `SymbolicBackend`,
+/// same as every reference backend below):
+///
+/// ```text
+/// step:   1   2   3   4   5    6    7    8    9     10    11    12     13     14
+/// nodes: 10  22  46  94  190  382  766  1534  3070  6142  12286  24574  49150  98302
+/// ```
+///
+/// This is architecturally different from — and NOT caught by — either of
+/// this repo's other two DoS guards:
+///
+/// - **Deep *nesting*** (`((((…))))`) is bounded by each frontend's parser
+///   `MAX_RULE_DEPTH`.
+/// - **Long flat *chains*** (`1+1+1+…`) are bounded by source-size guards
+///   like `MAX_STATEMENT_TOKENS`/`MAX_INPUT_LEN`.
+///
+/// Both of those bound the *source text*. This attack needs only a
+/// constant, tiny amount of *additional* source per step (one more
+/// `a := a * a;`, ~15 bytes) to *double* the bound *value*'s size — so a
+/// few hundred bytes of source reaches millions of nodes within a couple
+/// dozen more steps. Neither guard above ever inspects the size of an
+/// already-bound value before it is combined with itself again, which is
+/// exactly the gap this cap closes.
+///
+/// # Why 100,000
+///
+/// 100,000 sits just above the measured series above: an attacker trips
+/// this cap on the 15th self-multiplication step (98,302 nodes at step 14,
+/// the next doubling clears 100,000) — long before a session's memory is
+/// meaningfully impacted — while comfortably clearing any legitimate CAS
+/// value a user would construct in a single assignment by hand: an
+/// expanded polynomial with a few hundred terms, or an explicit literal
+/// list/matrix with a few thousand elements, tops out at a few thousand
+/// nodes — an order of magnitude or more below this cap.
+pub const MAX_BOUND_VALUE_NODES: usize = 100_000;
+
+/// Count the total number of [`IRNode`]s in `node`, stopping as soon as the
+/// running count exceeds `cap`.
+///
+/// Returns `Some(count)` (the exact total) when the tree's node count is at
+/// or under `cap`; returns `None` as soon as the count is certain to exceed
+/// it, without walking the remainder of the (potentially still-large) tree.
+///
+/// Uses an explicit heap-allocated work stack rather than native recursion,
+/// so counting can never itself overflow the stack no matter how deep
+/// `node` already is — mirrors `axiom-to-semantic-ir`'s
+/// `measure_depth_iterative`/`drop_iterative` iterative-walk idiom, applied
+/// here to total node count rather than depth. `cap` is always far below
+/// `usize::MAX` (see [`MAX_BOUND_VALUE_NODES`]), so the running count can
+/// never itself overflow — the early `return None` fires long before that
+/// could matter.
+///
+/// `pub` (not just crate-private) so that a consuming runtime with its own
+/// bypass of `assign_handler` — see `axiom-runtime::eval::eval_assignment`,
+/// which binds directly through `Backend::bind` rather than routing
+/// `Assign` through this handler — can apply the *identical* budget check
+/// at its own bind call site, rather than hand-rolling a second, possibly
+/// divergent, node-counting walk.
+pub fn count_nodes_within_cap(node: &IRNode, cap: usize) -> Option<usize> {
+    let mut stack: Vec<&IRNode> = vec![node];
+    let mut count: usize = 0;
+    while let Some(current) = stack.pop() {
+        count += 1;
+        if count > cap {
+            return None;
+        }
+        if let IRNode::Apply(apply) = current {
+            stack.push(&apply.head);
+            for arg in &apply.args {
+                stack.push(arg);
+            }
+        }
+    }
+    Some(count)
+}
+
+/// Maximum nesting depth a value may have before `assign_handler` will
+/// durably bind it into the environment via `:=`/`=`.
+///
+/// # Why this exists — a SEPARATE growth axis from `MAX_BOUND_VALUE_NODES`
+///
+/// `a := a * a` grows a value's *node count* exponentially while its
+/// *depth* only grows linearly (each step clones the whole prior value
+/// whole into one more `Mul` wrapper) — `MAX_BOUND_VALUE_NODES` alone
+/// catches that shape fine. But `a := a + a` hits this crate's own `Add`
+/// handler's flatten-then-left-associate canonicalization (Phase 47,
+/// `flatten_add_leaves` below): every step gathers the operands' leaves
+/// into one flat list and rebuilds a *left-associated chain whose depth
+/// equals its leaf count*. Because leaf count doubles every step (same
+/// mechanism as the node-count case), **depth doubles too** — and unlike
+/// node count, a too-deep value is dangerous *before* `MAX_BOUND_VALUE_
+/// NODES` ever gets a chance to reject it: `VM::eval_symbol` natively
+/// re-walks (via a recursive `self.eval` call) a symbol's *entire* bound
+/// value on every lookup (this is intentional — see its own "self-loop
+/// guard" comment — a bound value can itself reference other symbols that
+/// may have been updated since). Looking up a sufficiently deep bound
+/// value therefore recurses natively to a depth proportional to the
+/// value's own depth, and can overflow the native call stack — an
+/// uncatchable process abort, not a catchable `panic!`, and critically
+/// this happens *inside* the recursive `vm.eval(rhs)` call for the *next*
+/// statement that looks the name up, i.e. **before** this handler's own
+/// node-count check on the *current* statement's result ever runs.
+/// Confirmed by direct reproduction against this crate: `a := x + y;`
+/// then `a := a + a;` repeated aborts the process with a genuine native
+/// stack overflow well before `MAX_BOUND_VALUE_NODES` alone would trip.
+///
+/// Capping *depth* at bind time (in addition to node count) closes this:
+/// a value deep enough to be dangerous on a later lookup is rejected
+/// before it can ever become durably reachable, so no subsequent lookup
+/// can ever walk it.
+///
+/// # Why 128
+///
+/// Reuses this repo's own already-established, empirically-derived
+/// native-recursion safety threshold (`parser::DEFAULT_MAX_RULE_DEPTH`,
+/// documented there as sitting safely below the ~192–224-frame point at
+/// which *fat* recursive frames have been observed to overflow a 2 MiB
+/// stack in this repo's own CI history) rather than inventing a new,
+/// unvetted number. 128 is comfortably deep enough for any legitimately
+/// *parsed* expression to begin with (parser-level `MAX_RULE_DEPTH` caps
+/// already bound source-level nesting to the same figure), and small
+/// enough that re-walking a value at exactly this depth — via
+/// `eval_symbol`'s recursive re-evaluation, plus whatever additional
+/// native frames a consuming runtime's own AST-walking interpreter (e.g.
+/// `axiom-runtime`) layers on top of that — stays safely within bounds
+/// even on a default-sized thread stack, well before reaching a dedicated
+/// large worker-thread stack's much larger headroom.
+pub const MAX_BOUND_VALUE_DEPTH: usize = 128;
+
+/// Measure `node`'s nesting depth iteratively, stopping as soon as it's
+/// certain to exceed `cap`.
+///
+/// Returns `Some(depth)` (the exact maximum depth, root = depth 0) when
+/// `node`'s depth is at or under `cap`; returns `None` as soon as the
+/// depth is certain to exceed it.
+///
+/// Uses an explicit heap-allocated work stack rather than native
+/// recursion, for the same reason as [`count_nodes_within_cap`] — mirrors
+/// `axiom-to-semantic-ir::measure_depth_iterative`'s idiom exactly, just
+/// applied as a pre-bind check here. `pub` for the same reason as
+/// [`count_nodes_within_cap`]: `axiom-runtime`'s own `assign_handler`
+/// bypass needs the identical check.
+pub fn depth_within_cap(node: &IRNode, cap: usize) -> Option<usize> {
+    let mut stack: Vec<(&IRNode, usize)> = vec![(node, 0)];
+    let mut max_depth: usize = 0;
+    while let Some((current, depth)) = stack.pop() {
+        if depth > cap {
+            return None;
+        }
+        max_depth = max_depth.max(depth);
+        if let IRNode::Apply(apply) = current {
+            stack.push((&apply.head, depth + 1));
+            for arg in &apply.args {
+                stack.push((arg, depth + 1));
+            }
+        }
+    }
+    Some(max_depth)
+}
+
 fn assign_handler(_simplify: bool) -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         let (lhs, rhs) = match binary_args(&expr) {
@@ -1454,6 +1624,28 @@ fn assign_handler(_simplify: bool) -> Handler {
             _ => panic!("Assign lhs must be a symbol, got {lhs}"),
         };
         let value = vm.eval(rhs);
+        // See `MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH` doc comments:
+        // self-referential reassignment (`a := a * a` / `a := a + a`,
+        // repeated) doubles the bound value's node count AND/OR nesting
+        // depth on every step, along two independent axes. Reject BEFORE
+        // binding — once bound, the oversized value is durably reachable
+        // and can feed into further self-combination (node-count growth)
+        // or be natively re-walked on the next lookup (depth-driven native
+        // stack overflow).
+        if count_nodes_within_cap(&value, MAX_BOUND_VALUE_NODES).is_none() {
+            panic!(
+                "Assign target '{name}' would bind a value exceeding \
+                 {MAX_BOUND_VALUE_NODES} nodes — rejecting to prevent unbounded growth \
+                 from self-referential reassignment (e.g. repeated '{name} := {name} * {name}')"
+            );
+        }
+        if depth_within_cap(&value, MAX_BOUND_VALUE_DEPTH).is_none() {
+            panic!(
+                "Assign target '{name}' would bind a value nested deeper than \
+                 {MAX_BOUND_VALUE_DEPTH} levels — rejecting to prevent unbounded growth \
+                 from self-referential reassignment (e.g. repeated '{name} := {name} + {name}')"
+            );
+        }
         vm.backend.bind(&name, value.clone());
         value
     })
@@ -1490,6 +1682,32 @@ fn list_handler(_simplify: bool) -> Handler {
 // Symbolic differentiation
 // ---------------------------------------------------------------------------
 
+/// Differentiate `f` with respect to `x`, then — unless the result is just
+/// the unevaluated `D(f, x)` form `diff` couldn't reduce further — run it
+/// back through the VM's own `eval` so constant folding and nested `D`
+/// calls the recursive rules produced (e.g. inside a chain rule) resolve
+/// all the way down, not just one layer of differentiation rules.
+///
+/// This is `derivative_handler`'s own logic, pulled out into a `pub` free
+/// function so other language runtimes sharing this crate's `VM`/`IRNode`
+/// types (e.g. `wolfram-runtime`'s `D[expr, x]`) can reuse the exact same
+/// differentiation-plus-simplification pipeline Macsyma's `D` already uses,
+/// rather than reimplementing or duplicating it — mirrors why
+/// `factor_handler` was made `pub` for the same crate's `Factor[...]`
+/// wiring. Unlike `factor_handler`, this takes `f`/`x` already unpacked
+/// rather than a whole `IRApply`, since callers with a different arity
+/// contract (Wolfram's fail-soft "leave it unevaluated" instead of this
+/// crate's panic) need to do their own argument validation first.
+pub fn differentiate(vm: &mut VM, f: IRNode, x: &str) -> IRNode {
+    let result = diff(&f, x);
+    let original = apply_node(D, vec![f, IRNode::Symbol(x.to_string())]);
+    if result == original {
+        result
+    } else {
+        vm.eval(result)
+    }
+}
+
 fn derivative_handler() -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         if expr.args.len() != 2 {
@@ -1502,13 +1720,7 @@ fn derivative_handler() -> Handler {
             _ => return IRNode::Apply(Box::new(expr)),
         };
 
-        let result = diff(&f, &x);
-        let original = apply_node(D, vec![f, IRNode::Symbol(x)]);
-        if result == original {
-            result
-        } else {
-            vm.eval(result)
-        }
+        differentiate(vm, f, &x)
     })
 }
 
@@ -2404,21 +2616,42 @@ fn integrate_handler() -> Handler {
             return IRNode::Apply(Box::new(expr));
         }
 
-        let result = integrate(&f, &x);
-        let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
-        if result == original {
-            // Track E2: generic tabular IBP fallback.  Fires after every
-            // shape-specific handler in `integrate` returned the original
-            // unevaluated `Integrate(...)` form.  Mirrors the Python
-            // ``try_ibp_tabular`` hook in ``integrate.py``.
-            if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
-                return vm.eval(ibp_result);
-            }
-            result
-        } else {
-            vm.eval(result)
-        }
+        integrate_expr(vm, f, x)
     })
+}
+
+/// The indefinite-integral pipeline: `∫ f dx`, published as a reusable `pub`
+/// entry point so other languages' surface functions (Wolfram's
+/// `Integrate[expr, x]`) can call the exact same logic
+/// `integrate_handler`'s 2-argument branch runs, rather than duplicating or
+/// reimplementing it — mirrors [`differentiate`]'s identical extraction for
+/// `D`/`DIF`/`df`.
+///
+/// Installs its own [`AssumptionGuard`] snapshot of `vm.assumptions` so this
+/// function is correct standalone, regardless of whether a caller already
+/// installed one of its own (`integrate_handler`'s remaining 4-argument
+/// branch does, ahead of a call here from its own 2-argument branch) — a
+/// nested install is exactly what `AssumptionGuard` is designed to support
+/// safely (its own doc comment: "an RAII guard restores the previous value
+/// on Drop so nested integrals ... cannot strand it"), so this is a cheap
+/// redundant snapshot in the already-installed case, not a correctness
+/// hazard.
+pub fn integrate_expr(vm: &mut VM, f: IRNode, x: String) -> IRNode {
+    let _assumption_guard = AssumptionGuard::install(vm.assumptions.clone());
+    let result = integrate(&f, &x);
+    let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
+    if result == original {
+        // Track E2: generic tabular IBP fallback.  Fires after every
+        // shape-specific handler in `integrate` returned the original
+        // unevaluated `Integrate(...)` form.  Mirrors the Python
+        // ``try_ibp_tabular`` hook in ``integrate.py``.
+        if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
+            return vm.eval(ibp_result);
+        }
+        result
+    } else {
+        vm.eval(result)
+    }
 }
 
 fn integrate(f: &IRNode, x: &str) -> IRNode {
@@ -4160,8 +4393,8 @@ fn is_linear_in(expr: &IRNode, x: &str) -> bool {
 ///
 /// - **Case A**: R = c·D′  →  c·log(D)
 /// - **Case B**: R is linear, D = a₂x²+a₁x+a₀, and √(4a₂a₀-a₁²)
-///              is rational. Split off the D′ log term, then close the
-///              remaining constant-over-quadratic term with atan.
+///   is rational. Split off the D′ log term, then close the
+///   remaining constant-over-quadratic term with atan.
 ///
 /// Returns `None` if neither case applies (signals that Phase 28 falls through).
 fn close_remainder_over_d(
@@ -4598,12 +4831,12 @@ fn try_sinh_cosh_poly_product(
         let scale = rc_div(sign, a_power)?;
         let scaled = rp_mul_scalar(&derivative, scale)?;
         if head.as_str() == SINH {
-            if degree % 2 == 0 {
+            if degree.is_multiple_of(2) {
                 cosh_poly = rp_add(&cosh_poly, &scaled)?;
             } else {
                 sinh_poly = rp_add(&sinh_poly, &scaled)?;
             }
-        } else if degree % 2 == 0 {
+        } else if degree.is_multiple_of(2) {
             sinh_poly = rp_add(&sinh_poly, &scaled)?;
         } else {
             cosh_poly = rp_add(&cosh_poly, &scaled)?;
@@ -5006,6 +5239,9 @@ fn sqrt_t_minus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
     decompose_by_monomial(q_tilde, monomial)
 }
 
+// The `monomial` parameter is a recursion callback carrying the memo table; its
+// fn-pointer signature is intentionally explicit here rather than aliased.
+#[allow(clippy::type_complexity)]
 fn decompose_by_monomial(
     q_tilde: &[RatC],
     monomial: fn(usize, &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)>,
@@ -5351,7 +5587,18 @@ fn apply_node(head: &str, args: Vec<IRNode>) -> IRNode {
 // Factor
 // ---------------------------------------------------------------------------
 
-fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+/// `Factor(expr)` — factor a univariate integer polynomial (via
+/// [`cas_factor::factor_integer_polynomial`]) or recognise a handful of
+/// common multivariate patterns (perfect square/cube, difference of
+/// squares, cubic identities, a common symbolic/integer term to pull out,
+/// bivariate and n-variate Hensel lifting) — falling back to the
+/// unevaluated form when nothing applies. This is `pub` (unlike its
+/// sibling handlers in this module) so other language runtimes sharing
+/// this crate's `VM`/`IRApply` types (e.g. `wolfram-runtime`'s `Factor`
+/// wiring) can call the exact same factoring pipeline Macsyma's own
+/// `factor` surface function uses, rather than reimplementing or
+/// duplicating it.
+pub fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     let fallback = IRNode::Apply(Box::new(expr.clone()));
     if expr.args.len() != 1 {
         return fallback;
@@ -5440,7 +5687,7 @@ fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
     // recognise the pattern.
     let parsed: Vec<(i64, HashMap<IRNode, usize>)> = terms
         .iter()
-        .map(|term| term_integer_coefficient_and_powers(term))
+        .map(term_integer_coefficient_and_powers)
         .collect::<Option<Vec<_>>>()?;
 
     // --- Integer GCD ---
@@ -6232,8 +6479,8 @@ fn multiply_nodes(nodes: Vec<IRNode>) -> IRNode {
 fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
     let len = a.len().max(b.len());
     let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
+    for (i, out_i) in out.iter_mut().enumerate() {
+        *out_i = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
     }
     trim_poly(out)
 }
@@ -6241,8 +6488,8 @@ fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
 fn poly_sub(a: &[i64], b: &[i64]) -> Vec<i64> {
     let len = a.len().max(b.len());
     let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
+    for (i, out_i) in out.iter_mut().enumerate() {
+        *out_i = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
     }
     trim_poly(out)
 }
@@ -6828,7 +7075,7 @@ const APART: &str = "Apart";
 /// Strip trailing zero coefficients in place.
 fn rp_normalize(p: &[RatC]) -> RatPoly {
     let mut out: RatPoly = p.to_vec();
-    while out.last().map_or(false, |c| rc_is_zero(*c)) {
+    while out.last().is_some_and(|c| rc_is_zero(*c)) {
         out.pop();
     }
     out
@@ -6886,8 +7133,8 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
         // Keep ascending order.
         tail_roots.sort_by(|a, b| {
             // a = (an, ad), b = (bn, bd) — compare an*bd vs bn*ad.
-            let lhs = a.0 as i128 * b.1 as i128;
-            let rhs = b.0 as i128 * a.1 as i128;
+            let lhs = a.0 * b.1;
+            let rhs = b.0 * a.1;
             lhs.cmp(&rhs)
         });
         return Some(tail_roots);
@@ -6898,7 +7145,7 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
         let mut out = Vec::new();
         let mut d: u128 = 1;
         while d <= abs {
-            if abs % d == 0 {
+            if abs.is_multiple_of(d) {
                 out.push(d as i128);
             }
             d += 1;
@@ -6927,7 +7174,7 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
     let mut roots: Vec<RatC> = Vec::new();
     for cand in candidates {
         if let Some(v) = rp_evaluate(&int_poly, cand) {
-            if rc_is_zero(v) && !roots.iter().any(|r| *r == cand) {
+            if rc_is_zero(v) && !roots.contains(&cand) {
                 roots.push(cand);
             }
         }

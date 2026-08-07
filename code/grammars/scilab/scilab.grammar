@@ -1,0 +1,354 @@
+# Scilab Language Grammar
+# ============================================================================
+#
+# Parses the token stream from `scilab-lexer` into a tree the (future)
+# `scilab-runtime` walks by rule name. See code/specs/MA10-scilab-language.md.
+#
+# THIS FILE IS FORKED FROM `code/grammars/matlab/matlab.grammar` at the
+# grammar-SOURCE level (copied, then diverged) — not a Rust-crate dependency;
+# `scilab-parser` does not depend on `matlab-parser` (MA10 §5). MA10 §1's
+# closing paragraph is the justification: matrix literals, ranges, and the
+# operator-precedence cascade are a legitimate MATLAB-family inheritance even
+# though the *language* (string `+`, its own `select`/`case`, the `then`/`do`
+# linker keywords, `$` vs. `end`, `endfunction`) genuinely is not MATLAB.
+#
+# PRECEDENCE (loosest → tightest) — MA10 §3's own 12-tier table, confirmed
+# tier-for-tier identical in relative order to matlab.grammar's own cascade
+# above (the concrete evidence for MA10 §1's "grammar shape transfers, the
+# language doesn't" claim):
+#   assignment  =
+#   ||                       (short-circuit or)
+#   &&                       (short-circuit and)
+#   |                        (elementwise or)
+#   &                        (elementwise and)
+#   == ~= <> < > <= >=       (comparison — BOTH not-equal spellings)
+#   :                        (colon — ranges a:b, a:b:c)
+#   + -                      (additive)
+#   * / \ .* ./ .\           (multiplicative, matrix AND elementwise — same level)
+#   + - ~                    (unary prefix)
+#   ^ .^                     (power, right-associative, binds tighter than unary minus)
+#   ' .' ( ) { } .           (postfix: transpose, call/index, cell-index, field)
+#   primary                  (literals, names, $ last-index, %const, [ ] matrices, { } cells)
+#
+# Left-associativity is encoded with `{ ... }` (repetition); right-associativity
+# (assignment, power) with `[ ... self ]` (optional self-recursion), exactly as
+# in matlab.grammar/r.grammar.
+#
+# THREE DIVERGENCES FROM matlab.grammar'S SHAPE (MA10 §3 "Parser differences")
+# ----------------------------------------------------------------------------
+# 1. `stmt_sep` — ONE new production, reused at SIX header sites (see its own
+#    comment below): if/elseif/select/case take an optional `then` linker;
+#    while/for take an optional `do` linker; every one of the six can instead
+#    be a bare comma or newline. No MATLAB equivalent exists at any of these
+#    six positions.
+# 2. `endfunction` is func_def's OWN closing keyword, textually distinct from
+#    the generic `end` production if_stmt/while_stmt/for_stmt/select_stmt all
+#    close with (MA10 §1 finding 7) — NOT unified into one production the way
+#    matlab.grammar's single "end" literal closes every block including
+#    functions.
+# 3. `$` (DOLLAR) replaces MATLAB's context-sensitive `end`-as-last-index
+#    trick entirely (see `primary`'s own comment below) — Scilab's lexer
+#    already resolved `$` to one unambiguous token (scilab-lexer has NO
+#    pre-parse "retag every bracket-interior `end`" hook at all, unlike
+#    matlab-parser), so this grammar needs no context-sensitive handling
+#    whatsoever: `$` is an ordinary `primary` alternative, ready to use.
+#
+# NO `switch`/`otherwise` (Scilab has neither spelling — its own multi-way
+# conditional is `select`/`case`/`else`, MA10 §1 finding 4), no `try`/`catch`/
+# `return`/`global`/`persistent` (none of those tokens exist in
+# `scilab.tokens` — MA10 §4 scopes them out), and no `lambda`/`@` production
+# (no AT token exists in `scilab.tokens` either — MA10 §4 never lists function
+# handles in scope).
+#
+# A KNOWN, EXPECTED `grammar-tools validate` (cross-check) FALSE POSITIVE:
+# ----------------------------------------------------------------------------
+# `primary`'s `STRING` reference below will be reported as "Grammar
+# references token 'STRING' which is not defined in the tokens file" by the
+# cross-validator — this is expected and does not indicate a bug. Unlike
+# `matlab.tokens` (whose `DQ_STRING = ... -> STRING` alias registers "STRING"
+# as a statically-known name the validator can see), `scilab.tokens`
+# *deliberately* leaves `DQ_STRING` un-aliased (see that file's own SECTION 2
+# header comment) so `scilab-lexer`'s own `collapse_dq_string_escapes`
+# post-tokenize hook can tell "still needs its `""` collapsed" apart from
+# "already a fully-decoded STRING." Both `STRING_PLACEHOLDER`- and
+# `DQ_STRING`-derived tokens are relabelled to `type_name = "STRING"` by
+# `scilab-lexer`'s own post-tokenize hooks (`restore_placeholders`,
+# `collapse_dq_string_escapes`) *before* any token ever reaches this grammar
+# — a purely runtime relabelling `grammar-tools`' static cross-validator has
+# no way to see, since it only reads the `.tokens` FILE TEXT, not
+# `scilab-lexer`'s Rust hook code. `parser::grammar_parser::GrammarParser`'s
+# own `match_token_reference` matches purely on a token's live `type_name`
+# field (confirmed directly in `parser/src/grammar_parser.rs`), so `STRING`
+# here is functionally correct at parse time regardless of what the static
+# validator can prove — referencing `STRING_PLACEHOLDER`/`DQ_STRING` instead
+# would be the one genuinely WRONG choice, since no token still carries
+# either of those type names by the time parsing begins (except a
+# deliberately-unresolved placeholder, scilab-lexer's own honest-failure
+# case for a corrupted index, which should fail to parse anyway). Fixing the
+# false positive at the source would require modifying `scilab.tokens`,
+# which MA-10c does not touch (MA-10b is already merged).
+
+# ============================================================================
+# Program and statements
+# ============================================================================
+
+program = { statement_line } ;
+
+# A statement plus its terminator. A bare terminator is a blank/separator line.
+# The terminator token (`;` vs newline/comma) is kept in the tree so a future
+# runtime can honour `;`-suppressed display — identical to matlab.grammar.
+statement_line = statement stmt_term
+               | statement
+               | stmt_term ;
+
+stmt_term = NEWLINE | SEMICOLON | COMMA ;
+
+statement = func_def
+          | if_stmt
+          | select_stmt
+          | for_stmt
+          | while_stmt
+          | break_stmt
+          | continue_stmt
+          | expr ;
+
+# A block body is a run of statement lines; it stops at the keyword that closes
+# its construct (`end`/`else`/`elseif`/`case`/`endfunction`), none of which can
+# begin a statement. Identical shape to matlab.grammar's own `block_body`.
+block_body = { statement_line } ;
+
+# ============================================================================
+# `stmt_sep` — the one new production this grammar adds relative to
+# matlab.grammar, reused at exactly SIX header sites below.
+#
+# MA10 §1 finding 4 / §3: `if`/`elseif` and `select`/`case` take an optional
+# `then` linker; `while`/`for` take an optional `do` linker; every one of the
+# six positions is individually replaceable by a bare comma or a newline —
+# help.scilab.org states the identical rule on each of the `then`/`do` pages
+# in near-identical wording: the linker "must be on the same line as" its
+# header, and "can be replaced by a carriage return or a comma."
+#
+# The load-bearing reading: `then`/`do`, when present, are ALTERNATIVES to
+# the punctuation, not an ADDITION on top of it — real Scilab accepts
+# `if x > 0 then y = 1, end` with NOTHING at all between `then` and `y`, the
+# same way `if x > 0, y = 1, end` needs nothing between the comma and `y`.
+# So this is a single REQUIRED (not optional) separator token that happens to
+# have four acceptable spellings, not two optional pieces stacked (an earlier,
+# rejected reading of help.scilab.org's wording would have modeled this as
+# `[ THEN | DO ] ( COMMA | NEWLINE )`, requiring punctuation even after an
+# explicit linker keyword — contradicted by the worked examples on those same
+# pages, none of which double up a keyword AND a comma before the body).
+#
+# `"then"`/`"do"` are quoted string LITERALS (matched by token VALUE), not
+# bare UPPERCASE TokenReferences — `scilab.tokens` has no dedicated THEN/DO
+# token TYPE at all; both are just two of the fourteen VALUES a shared
+# KEYWORD-typed token can carry (see `scilab.tokens`'s own `keywords:` block),
+# exactly the same convention every keyword literal elsewhere in this file
+# already uses (`"if"`, `"end"`, `"function"`, …) and matlab.grammar uses for
+# its own keywords.
+stmt_sep = "then" | "do" | COMMA | NEWLINE ;
+
+# Deliberate simplification, flagged for a reviewer: `stmt_sep` accepts BOTH
+# `THEN` and `DO` uniformly at all six sites below, rather than restricting
+# `if`/`elseif`/`select`/`case` to `THEN` only and `while`/`for` to `DO` only.
+# MA10 §3 states which linker is *idiomatic* at which site, not that the
+# other spelling is a *syntax error* there — and enforcing that narrower
+# cross-check would require six distinct nonterminals (or a parameterized
+# one) in place of the "one new rule, reused at multiple sites" shape §3
+# explicitly calls for (mirroring J's `verb_train` / APL's reduce-scan
+# productions — see MA06 §3). A future `scilab-runtime`/style-linter can
+# reject the idiomatically-wrong spelling at a later stage if desired; this
+# grammar's job is only to recognize where a header ends and a body begins.
+
+# ============================================================================
+# Control flow
+# ============================================================================
+
+# `if cond THEN|DO|,|<newline> body [elseif cond ...] [else body] end`
+if_stmt = "if" expr stmt_sep block_body { elseif_clause } [ else_clause ] "end" ;
+elseif_clause = "elseif" expr stmt_sep block_body ;
+
+# `else` takes NO linker keyword of its own (MA10 §3 never lists it among the
+# six `stmt_sep` sites) — shared unchanged between `if_stmt` and
+# `select_stmt` below, exactly like matlab.grammar's single `else_clause`.
+else_clause = "else" block_body ;
+
+# Scilab's OWN multi-way conditional (MA10 §1 finding 4) — replaces MATLAB's
+# `switch`/`otherwise` entirely; neither spelling exists in `scilab.tokens`.
+# `select` itself is one of the six `stmt_sep` sites (its own header, before
+# the first `case`, per MA10 §3's literal "if/elseif and select/case take
+# THEN" wording — four sites named there, not three, the fourth being
+# `select`'s own header) — there is no bare-statement `block_body` directly
+# under `select` the way `if`/`while`/`for` have one: a `select` body is
+# nothing but a run of `case_clause`s plus an optional trailing `else_clause`.
+select_stmt = "select" expr stmt_sep { case_clause } [ else_clause ] "end" ;
+case_clause = "case" expr stmt_sep block_body ;
+
+while_stmt = "while" expr stmt_sep block_body "end" ;
+
+for_stmt = "for" NAME EQ expr stmt_sep block_body "end" ;
+
+break_stmt = "break" ;
+continue_stmt = "continue" ;
+
+# ============================================================================
+# Function definitions
+#
+#   function out = name(a, b) … endfunction
+#   function [o1, o2] = name(a) … endfunction
+#   function name(a) … endfunction          (no return)
+#
+# `endfunction` is Scilab's OWN historically-mandated, still-preferred
+# function terminator (MA10 §1 finding 7) — kept as its OWN literal here,
+# textually separate from the generic `"end"` literal every other block
+# construct above closes with. Unlike matlab.grammar, where a single `"end"`
+# literal closes `if`/`for`/`while`/`switch`/`try`/`function` alike, this
+# grammar's `func_def` is the ONLY production that ever matches the
+# `endfunction` token, and no production anywhere in this file lets a bare
+# generic `"end"` close a function — so `function ... end` (using the
+# generic closer instead of `endfunction`) is a syntax error by construction,
+# not merely a style discouraged elsewhere.
+# ============================================================================
+
+func_def = "function" [ func_returns ] NAME [ LPAREN [ name_list ] RPAREN ] block_body "endfunction" ;
+func_returns = NAME EQ
+             | LBRACKET [ name_list ] RBRACKET EQ ;
+name_list = NAME { COMMA NAME } ;
+
+# ============================================================================
+# Expression precedence cascade (loosest → tightest)
+# ============================================================================
+
+expr = assignment ;
+
+# `=` is assignment (comparison is `==`); right-associative — unchanged from
+# matlab.grammar.
+assignment = logical_or [ EQ assignment ] ;
+
+logical_or  = logical_and { OR_OR logical_and } ;
+logical_and = bit_or { AND_AND bit_or } ;
+bit_or  = bit_and { PIPE bit_and } ;
+bit_and = comparison { AMP comparison } ;
+
+# Relational tier: BOTH not-equal spellings accepted here (MA10 §1 finding 6,
+# §3) — `NE` (`~=`, inherited from MATLAB) and `NE_ALT` (`<>`, Scilab's own,
+# real syntax with no MATLAB counterpart). scilab-lexer already lexes them as
+# two distinct token types (deliberately not aliased — see that crate's own
+# `scilab.tokens` header comment), so this is the one place they collapse
+# onto a single relational-operator production, exactly as that comment
+# promises ("the parser, not this lexer, is where the two spellings
+# collapse").
+comparison = colon_expr { ( EQ_EQ | NE | NE_ALT | LE | GE | LT | GT ) colon_expr } ;
+
+# The colon: `a:b` (range) or `a:b:c` (range with step). Binds looser than `+ -`
+# (so `1:n+1` is `1:(n+1)`) and tighter than comparison — unchanged from
+# matlab.grammar.
+colon_expr = additive [ COLON additive [ COLON additive ] ] ;
+
+additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+
+# Matrix and elementwise multiply/divide share one precedence level, same as
+# MATLAB. The Kronecker trigraphs (`.*.`/`./.`/`.\.`) are deliberately absent
+# (MA10 §4) — they are not tokens in `scilab.tokens` at all, so there is
+# nothing for this production to reference.
+multiplicative = unary { ( STAR | SLASH | BACKSLASH | ELEM_MUL | ELEM_RDIV | ELEM_LDIV ) unary } ;
+
+# Unary prefix. Looser than power, so `-2^2` is `-(2^2)` — unchanged from
+# matlab.grammar. (Scilab's own deprecated legacy `@`-for-`~` spelling, MA10
+# §1 finding 6, is out of scope — `@`/AT is not a token in `scilab.tokens`.)
+unary = ( PLUS | MINUS | TILDE ) unary
+      | power ;
+
+# Power, right-associative; the right operand is `unary` so `2^-3` parses —
+# unchanged from matlab.grammar. (Scilab's own deprecated legacy `**`
+# spelling for `^`, MA10 §1 finding 6, is out of scope — `a ** b` lexes as
+# two bare STAR tokens per scilab-lexer's own documented non-treatment, so
+# there is no `**` spelling for this production to reference either.)
+power = postfix [ ( CARET | ELEM_POW ) unary ] ;
+
+# Postfix (tightest): transpose, calls/indexing, cell indexing, field access —
+# unchanged from matlab.grammar. `A($)`/`A($-1)` reach this production the
+# same way `A(i)`/`A(i-1)` do: `$` is just an ordinary `primary` (see below),
+# so no special handling is needed at this tier at all.
+postfix = primary { transpose_suffix | call_suffix | cell_suffix | field_suffix } ;
+
+transpose_suffix = TRANSPOSE | ELEM_TRANSPOSE ;
+call_suffix  = LPAREN [ arg_list ] RPAREN ;
+cell_suffix  = LBRACE [ arg_list ] RBRACE ;
+field_suffix = DOT NAME ;
+
+# Index/call arguments: a lone `:` means "the whole dimension" (`A(:,k)`) —
+# unchanged from matlab.grammar. `arg`'s `expr` alternative already covers
+# `$`/`$-1` for free, since `$` is a `primary` (see below) and every tier
+# between `expr` and `primary` falls through unchanged when there is nothing
+# to the right of it to combine with.
+arg_list = arg { COMMA arg } ;
+arg = COLON | expr ;
+
+# ============================================================================
+# Primary expressions
+# ============================================================================
+
+# `$` (DOLLAR) sits here, as an ORDINARY primary alternative — the single
+# substitution MA10 §3 calls out relative to matlab.grammar's own `primary`.
+# MATLAB's `end`-as-last-index is context-SENSITIVE (matlab-parser's own
+# pre-parse hook must retag every bracket-interior `end` to a NAME before
+# this grammar ever runs, matlab.grammar's own header comment); Scilab's `$`
+# needs NONE of that, because scilab-lexer already lexes `$` as its own
+# always-unambiguous DOLLAR token in every position (confirmed directly by
+# scilab-lexer's own `last_index_dollar_is_a_value_before_transpose` test,
+# which treats `$` as an ordinary value on par with a closing bracket, and by
+# `dollar_last_index`, which shows `A($)`/`A($-1)` lexing with a plain
+# DOLLAR token, no retagging pass involved at all). Placing `$` at `primary`
+# — the SAME tier as `NUMBER`/`NAME` — rather than as some dedicated
+# indexing-only production is what makes `A($-1)` parse at all: `$` must be
+# able to serve as an ordinary operand to `additive`'s `MINUS` the same way
+# `NUMBER`/`NAME` can, and `primary` is the one tier every other tier in this
+# cascade already falls through to for an ordinary atom. A bare `$` (with no
+# enclosing indexing expression at all) is therefore also a legal `expr` by
+# the same construction — not excluded, since nothing about `primary`
+# requires being inside a `call_suffix`'s `arg_list` to be reachable, mirroring
+# how a bare `NUMBER` is equally reachable as a top-level statement.
+#
+# `PERCENT_CONST` is likewise a new `primary` alternative with no MATLAB
+# analogue (MA10 §3) — scilab-lexer's own `percent_constant_used_in_an_expression`
+# test (`r = %pi * 2`) confirms it composes with ordinary arithmetic the same
+# way `$` does, so it belongs at the identical tier for the identical reason.
+primary = NUMBER
+        | STRING
+        | PERCENT_CONST
+        | DOLLAR
+        | matrix_literal
+        | cell_literal
+        | group
+        | NAME ;
+
+group = LPAREN expr RPAREN ;
+
+# ============================================================================
+# Matrix and cell literals
+#
+#   [1 2 3]        a row (elements juxtaposed; whitespace was stripped by the
+#                  lexer, so adjacent expressions — with an optional comma —
+#                  are the columns)
+#   [1, 2, 3]      a row (explicit commas)
+#   [1 2; 3 4]     two rows (`;` or a newline separates rows; the lexer keeps
+#                  bracket-interior newlines for exactly this)
+#   { … }          a cell array, same shape
+#
+# Inherited near-verbatim from matlab.grammar (MA10 §3: "matrix literals,
+# ranges, and indexing are inherited almost unchanged") — the identical rule
+# MA10 §1's closing paragraph confirms Scilab keeps
+# (help.scilab.org/docs/2026.1.0/en_US/matrices.html states the same
+# space/comma-separates-columns, semicolon/newline-separates-rows rule
+# verbatim). No substitution is needed here at all; the ONE substitution
+# this grammar makes anywhere in the matrix/range/indexing surface is `$`
+# replacing `end`, already handled at `primary` above, not here.
+# ============================================================================
+
+matrix_literal = LBRACKET [ matrix_rows ] RBRACKET ;
+cell_literal = LBRACE [ matrix_rows ] RBRACE ;
+
+matrix_rows = matrix_row { row_sep matrix_row } [ row_sep ] ;
+row_sep = SEMICOLON | NEWLINE ;
+matrix_row = expr { [ COMMA ] expr } ;

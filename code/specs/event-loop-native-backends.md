@@ -705,6 +705,10 @@ For `websocket-runtime`:
 - dependence on the generic event substrate and stream layer rather than on a
   bespoke WebSocket-specific loop
 
+The byte-level handshake, frame, fragmentation, and control semantics are
+owned by [`websocket-core.md`](websocket-core.md). The runtime composes that
+pure state machine with stream I/O, deadlines, and random client mask keys.
+
 For `ui-event-core`:
 
 - keyboard, mouse, touch, focus, resize, and close event vocabulary

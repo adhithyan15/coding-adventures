@@ -10,11 +10,17 @@ serde = ["dep:serde"]
 
 [dependencies]
 fsrs = { path = "../fsrs" }
-regex = "1"
 regex-engine = { path = "../regex-engine" }
 serde = { version = "1", features = ["derive"], optional = true }
 serde_json = "1"
 unicode-normalize = { path = "../unicode-normalize" }
+
+# `regex` is a DEV-dependency only — it is the independent oracle the
+# `html_scan` cross-check test measures the zero-dep `strip_tags` scanner
+# against. No runtime code path depends on it: search + media-tag replacement
+# both run on `regex-engine` (Phase D4 removed the last runtime use).
+[dev-dependencies]
+regex = "1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.4.2", features = ["wasm_js"] }

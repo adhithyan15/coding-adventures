@@ -114,6 +114,8 @@ fn channel_at(row: usize, col: usize, pattern: &[u8; 4]) -> u8 {
 /// For missing channels, we search a 3×3 neighbourhood (cardinal + diagonal)
 /// for all pixels of `target_ch`, clamp out-of-bounds coordinates to the
 /// nearest valid position (edge replication), and return the integer average.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 fn average_channel(
     raw: &[u16],
     width: usize,

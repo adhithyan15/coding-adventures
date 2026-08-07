@@ -1,32 +1,31 @@
 //! Polynomial expansion: distribute `Mul` over `Add`/`Sub`, and expand
 //! non-negative integer powers of a sum via square-and-multiply.
 //!
-//! ## What this is — and, honestly, what it is not
+//! ## What this is
 //!
 //! `expand(x)` is the operation MACSYMA calls `expand()` and Wolfram
 //! calls `Expand[...]`. It **distributes** — `(x+1)*(x+2)` becomes
-//! `2 + x + 2*x + x*x` — but it does **not collect like terms**: the
-//! two `x` terms above stay separate rather than merging into `3*x`,
-//! and `x*x` is never folded into `x^2`. The result is always
-//! mathematically correct (it evaluates identically to the input for
-//! any assignment) but is not always the compact form a human would
-//! write by hand. Full like-term collection is a separate, more
-//! involved pass — tracked as an explicit follow-up, not silently
-//! dropped (see the crate's `spice-macsyma-pending-work.md` entry).
+//! `2 + 3*x + x^2` — and **does collect like terms**: repeated monomials
+//! are combined and their coefficients summed by [`crate::collect_terms`],
+//! which runs on the raw distributed tree before the final `simplify`
+//! pass (see that module's own docs for the four-step algorithm). This
+//! *was* a known, explicitly-tracked gap (the raw distributor alone
+//! leaves `2 + x + 2*x + x*x` uncollected — see the crate's
+//! `spice-macsyma-pending-work.md` entry for the history) — closed by
+//! `collect_terms`, not silently left in place.
 //!
-//! This is a **faithful recursive-distributor port** of the Python
-//! reference (`symbolic_vm.cas_handlers._sym_expand` /
+//! This distributor is a **faithful recursive-distributor port** of the
+//! Python reference (`symbolic_vm.cas_handlers._sym_expand` /
 //! `_sym_expand_mul` / `_sym_expand_pow`), generalized to the n-ary
 //! `Add`/`Mul` shape this Rust IR actually produces (Python's reference
 //! assumes strictly-binary `Add`/`Sub`/`Mul`, since its frontends never
 //! flatten more than two operands into one node). The Python reference
 //! also has a *second*, faster path for single-variable
 //! rational-coefficient polynomials, built on a `to_rational`/
-//! `from_polynomial` bridge, that *does* collect like terms (that is
-//! what its docstring's "clean" example actually demonstrates — not
-//! the general path this module ports). This port always takes the
-//! general path, so it does not reproduce that fast-path's cleaner
-//! output even for single-variable input.
+//! `from_polynomial` bridge, that reaches the same collected form via
+//! polynomial arithmetic rather than a general monomial-grouping pass —
+//! this port takes the general path (any number of variables, not just
+//! one) and collects afterward, rather than reproducing that fast path.
 //!
 //! ## Truth table (the four expansion rules)
 //!
@@ -125,23 +124,71 @@ pub const EXPAND_MAX_TERMS: usize = 10_000;
 ///   reports its true (potentially huge) size on every subsequent
 ///   check, so the guard keeps seeing accurate numbers instead of a
 ///   stale "1" and correctly keeps refusing to distribute further.
+///
+/// - **The same blindness recurs for every other head `expand_apply`
+///   leaves in place** — `Div`, `Neg`, `Pow` left un-distributed (a
+///   non-integer or out-of-range exponent), and every transcendental
+///   (`Sin`, `Log`, ...). `expand_apply`'s fallthrough recursively
+///   expands *their children* but never touches the wrapper head
+///   itself (see `expand_recurses_into_div_operands`), so
+///   `Div(huge_expanded_numerator, y)` is a completely ordinary,
+///   frequently-produced shape — not a contrived edge case. Treating it
+///   as size `1` (the pre-fix `_ => 1` catch-all) is safe *mathematically*
+///   (as a polynomial term, `x/y` genuinely is one term, hidden internal
+///   size notwithstanding) but wrong as a *cost estimate*: if this node
+///   later becomes an operand under a further `Add`-distribution (e.g.
+///   `expand_mul` folding it against another sum), [`expand_mul`] clones
+///   it once per term of the other side — real cost proportional to its
+///   *true* size, not `1`. A chain of several such wrapped huge
+///   subtrees, each hidden from the cap check the same way, reproduces
+///   exactly the "cap → go dark → distribute past the cap" cycle the
+///   `Mul` fix above already closed for refused multiplications — just
+///   via `Div`/`Neg`/transcendental wrappers instead of a refused `Mul`.
+///   Any `Apply` node whose head is not itself distributed (i.e.,
+///   anything but `Mul`, which multiplies) now falls through to summing
+///   its children's term counts — the same conservative "total
+///   underlying size" measure `Add`/`Sub` already used, generalized to
+///   every wrapper shape `expand_apply` can leave behind, not just
+///   `Add`/`Sub` specifically.
 fn term_count(node: &IRNode) -> usize {
     match node {
-        IRNode::Apply(app) if is_head(&app.head, ADD) || is_head(&app.head, SUB) => {
-            app.args.iter().map(term_count).sum::<usize>().max(1)
-        }
         IRNode::Apply(app) if is_head(&app.head, MUL) => app
             .args
             .iter()
             .map(term_count)
             .fold(1usize, |acc, c| acc.saturating_mul(c)),
+        // Every other `Apply` head (`Add`/`Sub`, `Div`, `Neg`, `Pow` left
+        // un-distributed, every transcendental, ...) is not itself
+        // distributed by `expand_apply` — only its children are
+        // recursively expanded, the wrapper head stays. Summing the
+        // children's term counts is the right measure for both cases:
+        // for `Add`/`Sub` it *is* the true would-be term count; for
+        // everything else it is a conservative (over-, never under-)
+        // estimate of how much real cloning cost this subtree carries
+        // if it is later multiplied against something else — the
+        // direction a DoS guard must err toward.
+        //
+        // `saturating_add`, not plain `Iterator::sum` — a sibling `Mul`
+        // subtree can legitimately saturate to `usize::MAX` on its own
+        // (see the `Mul` arm above), and an un-saturated sum here would
+        // overflow adding anything else to it: panicking under
+        // `overflow-checks` (debug/test builds), or silently wrapping to
+        // a small value in release builds — which would let this exact
+        // guard go blind again, just via arithmetic overflow instead of
+        // a missing match arm.
+        IRNode::Apply(app) => app
+            .args
+            .iter()
+            .map(term_count)
+            .fold(0usize, |acc, c| acc.saturating_add(c))
+            .max(1),
         _ => 1,
     }
 }
 
 /// Whether `node` is the symbol `name` (e.g. `is_head(&app.head, ADD)`
 /// checks whether an application's head is literally `Add`).
-fn is_head(node: &IRNode, name: &str) -> bool {
+pub(crate) fn is_head(node: &IRNode, name: &str) -> bool {
     matches!(node, IRNode::Symbol(s) if s == name)
 }
 
@@ -194,14 +241,11 @@ fn expand_pow(base: &IRNode, n: i64) -> IRNode {
 }
 
 /// Recursively distribute `Mul` over `Add`/`Sub` and expand bounded
-/// non-negative integer `Pow`s throughout `node`, then run the result
-/// through [`simplify`] (canonical form, numeric-literal folding, and
-/// identity rules — `x*1 -> x`, `1*1 -> 1`, etc.) to clean up the raw
-/// distribution.
-///
-/// See the module-level docs for what "does not collect like terms"
-/// means in practice — the output below has two separate `x` terms,
-/// not one `2*x` term, and `x*x` rather than `x^2`.
+/// non-negative integer `Pow`s throughout `node`, [`collect_terms`] the
+/// raw distribution (see that module for the four-step grouping
+/// algorithm), then run the result through [`simplify`] (canonical form,
+/// numeric-literal folding, and identity rules — `x*1 -> x`, `1*1 -> 1`,
+/// etc.) to clean up.
 ///
 /// Non-polynomial subexpressions (trig, transcendentals, symbolic
 /// powers, `Div`) are returned with their children recursively expanded
@@ -212,16 +256,18 @@ fn expand_pow(base: &IRNode, n: i64) -> IRNode {
 /// use symbolic_ir::{apply, int, sym, ADD, POW};
 /// use cas_simplify::expand;
 ///
-/// // (x + 1)^2 -> 1 + x + x + x*x  (mathematically x^2 + 2x + 1;
-/// // see the module docs for why the two `x` terms and `x*x` are
-/// // not collected/folded further).
+/// // (x + 1)^2 -> 1 + 2*x + x^2 -- the raw distributor alone would leave
+/// // 1 + x + x + x*x; collect_terms folds it into this clean form.
 /// let x_plus_1 = apply(sym(ADD), vec![sym("x"), int(1)]);
 /// let expr = apply(sym(POW), vec![x_plus_1, int(2)]);
 /// let expanded = expand(expr);
-/// assert_eq!(format!("{expanded}"), "Add(1, x, x, Mul(x, x))");
+/// assert_eq!(format!("{expanded}"), "Add(1, Mul(2, x), Pow(x, 2))");
 /// ```
 pub fn expand(node: IRNode) -> IRNode {
-    simplify(expand_recursive(node), EXPAND_SIMPLIFY_MAX_ITERATIONS)
+    simplify(
+        crate::collect_terms::collect_terms(expand_recursive(node)),
+        EXPAND_SIMPLIFY_MAX_ITERATIONS,
+    )
 }
 
 fn expand_recursive(node: IRNode) -> IRNode {
@@ -258,7 +304,7 @@ fn expand_apply(node: IRApply) -> IRNode {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use symbolic_ir::{apply, flt, int, sym, DIV, SIN};
+    use symbolic_ir::{apply, flt, int, sym, DIV, NEG, SIN};
 
     fn add(args: Vec<IRNode>) -> IRNode {
         apply(sym(ADD), args)
@@ -275,81 +321,71 @@ mod tests {
 
     #[test]
     fn expand_distributes_mul_over_add() {
-        // (x + 1) * (x + 2) -> 2 + x + 2*x + x*x (see module docs:
-        // the `x` term from 1*x and the `2*x` term from 2*x are not
-        // collected into 3*x; x*x is not folded into x^2).
+        // (x + 1) * (x + 2) -> 2 + 3*x + x^2, fully collected: the `x`
+        // term from 1*x and the `2*x` term from x*2 combine into `3*x`,
+        // and `x*x` folds into `x^2` (see collect_terms's own docs).
         let lhs = add(vec![sym("x"), int(1)]);
         let rhs = add(vec![sym("x"), int(2)]);
         let result = expand(mul(vec![lhs, rhs]));
         assert_eq!(
             result,
-            add(vec![
-                int(2),
-                sym("x"),
-                mul(vec![int(2), sym("x")]),
-                mul(vec![sym("x"), sym("x")]),
-            ])
+            add(vec![int(2), mul(vec![int(3), sym("x")]), pow(sym("x"), int(2))])
         );
     }
 
     #[test]
     fn expand_distributes_mul_over_sub() {
-        // (a + b) * (a - b) -> (a*a - a*b) + (a*b - b*b) — evaluates
-        // to a^2 - b^2 (the two `a*b` terms cancel numerically for any
-        // assignment) but Sub is not flattened into a single Add of
-        // signed terms, so the middle terms are never actually
-        // cancelled structurally. See module docs.
+        // (a + b) * (a - b) -> a^2 - b^2: the two cross `a*b` terms
+        // (+a*b from a*a - ... and -a*b from ... - b*b, see the raw
+        // distribution collect_terms::tests::difference_of_squares_collects_cleanly
+        // spells out) cancel exactly, collect_terms drops the resulting
+        // zero-coefficient group entirely, and the two surviving terms
+        // fold their repeated factors into powers. The final term/arg
+        // order below is `simplify`'s own `canonical` pass's
+        // (type-rank, debug-string) sort, not collect_terms's — see
+        // that module's `rebuild_term` doc comment.
         let lhs = add(vec![sym("a"), sym("b")]);
         let rhs = sub(sym("a"), sym("b"));
         let result = expand(mul(vec![lhs, rhs]));
         assert_eq!(
             result,
             add(vec![
-                sub(mul(vec![sym("a"), sym("a")]), mul(vec![sym("a"), sym("b")]),),
-                sub(mul(vec![sym("a"), sym("b")]), mul(vec![sym("b"), sym("b")]),),
+                mul(vec![int(-1), pow(sym("b"), int(2))]),
+                pow(sym("a"), int(2)),
             ])
         );
     }
 
     #[test]
     fn expand_pow_of_binomial_distributes_correctly() {
-        // (x + 1)^2 -> 1 + x + x + x*x (mathematically x^2 + 2x + 1;
-        // see module docs for why it isn't collected into that form).
+        // (x + 1)^2 -> 1 + 2*x + x^2 -- the classic clean binomial
+        // expansion, not the raw 1 + x + x + x*x collect_terms folds it
+        // from.
         let result = expand(pow(add(vec![sym("x"), int(1)]), int(2)));
         assert_eq!(
             result,
-            add(vec![
-                int(1),
-                sym("x"),
-                sym("x"),
-                mul(vec![sym("x"), sym("x")])
-            ])
+            add(vec![int(1), mul(vec![int(2), sym("x")]), pow(sym("x"), int(2))])
         );
     }
 
     #[test]
     fn expand_pow_of_trinomial_multivariate() {
-        // (a + b)^3 -> 8 raw monomials (a^3 has only one arrangement;
-        // a^2*b and a*b^2 each have 3 arrangements from square-and-
-        // multiply, matching the binomial coefficients C(3,1)=3, but
-        // emitted as repeated separate terms rather than one term with
-        // coefficient 3 — see module docs).
+        // (a + b)^3 -> a^3 + 3*a^2*b + 3*a*b^2 + b^3 -- the textbook
+        // binomial-theorem coefficients. Square-and-multiply's raw
+        // distribution produces 8 monomials (a^2*b and a*b^2 each
+        // appearing 3 times, matching C(3,1)=3), which collect_terms
+        // combines into one term per distinct monomial with the repeated
+        // count folded into a coefficient. The final arg/factor order
+        // below is `simplify`'s own `canonical` pass's sort, not
+        // collect_terms's (see that module's `rebuild_term` doc comment).
         let result = expand(pow(add(vec![sym("a"), sym("b")]), int(3)));
-        let aaa = mul(vec![sym("a"), sym("a"), sym("a")]);
-        let aab = mul(vec![sym("a"), sym("a"), sym("b")]);
-        let abb = mul(vec![sym("a"), sym("b"), sym("b")]);
-        let bbb = mul(vec![sym("b"), sym("b"), sym("b")]);
         assert_eq!(
             result,
             add(vec![
-                aaa,
-                aab.clone(),
-                aab.clone(),
-                aab,
-                abb.clone(),
-                abb.clone(),
-                abb,
-                bbb,
+                mul(vec![int(3), sym("a"), pow(sym("b"), int(2))]),
+                mul(vec![int(3), sym("b"), pow(sym("a"), int(2))]),
+                pow(sym("a"), int(3)),
+                pow(sym("b"), int(3)),
             ])
         );
     }
@@ -389,8 +425,8 @@ mod tests {
 
     #[test]
     fn expand_recurses_into_div_operands() {
-        // (x+1)^2 / y -> (1 + x + x + x*x) / y — Div itself is not
-        // distributed, but its numerator is still expanded.
+        // (x+1)^2 / y -> (1 + 2*x + x^2) / y — Div itself is not
+        // distributed, but its numerator is still expanded and collected.
         let numerator = pow(add(vec![sym("x"), int(1)]), int(2));
         let result = expand(apply(sym(DIV), vec![numerator, sym("y")]));
         assert_eq!(
@@ -398,12 +434,7 @@ mod tests {
             apply(
                 sym(DIV),
                 vec![
-                    add(vec![
-                        int(1),
-                        sym("x"),
-                        sym("x"),
-                        mul(vec![sym("x"), sym("x")])
-                    ]),
+                    add(vec![int(1), mul(vec![int(2), sym("x")]), pow(sym("x"), int(2))]),
                     sym("y"),
                 ]
             )
@@ -498,6 +529,102 @@ mod tests {
              the term_count guard is not seeing through a refused Mul \
              the way it should",
             total_node_count(&result)
+        );
+    }
+
+    #[test]
+    fn term_count_sees_through_a_div_wrapped_subtree_instead_of_going_blind() {
+        // Regression test for the Div/Neg/transcendental generalization
+        // of the fix above. expand_apply never distributes Div itself —
+        // it recurses into the numerator/denominator and leaves the Div
+        // head in place (see expand_recurses_into_div_operands) — so
+        // Div(huge_add_tree, y) is an entirely ordinary shape a real
+        // expansion can leave behind, not a contrived one. Build one
+        // directly (standing in for whatever a prior expand() call
+        // would already have produced) and multiply it by a modest
+        // second Add factor.
+        let huge_numerator = add((0..9000).map(|i| sym(format!("x{i}"))).collect());
+        let big_div = apply(sym(DIV), vec![huge_numerator, sym("y")]);
+        let second_factor = add((0..20).map(|i| sym(format!("z{i}"))).collect());
+
+        let result = expand(mul(vec![big_div, second_factor]));
+
+        // Under the pre-fix logic, term_count(big_div) == 1 (Div is
+        // neither Add/Sub nor Mul), so the cap check saw "1 * 20 = 20"
+        // and happily distributed — cloning the ~9000-node numerator
+        // once per term of the second factor (20 clones, ~180,000+
+        // nodes). With the fix, term_count sees big_div's true size
+        // (~9000), the cap check correctly refuses
+        // (9000 * 20 = 180,000 > EXPAND_MAX_TERMS), and the result
+        // stays a single unexpanded Mul — no cloning at all.
+        assert!(
+            total_node_count(&result) < 20_000,
+            "expand() of a Div-wrapped 9000-term subtree times a 20-term \
+             second factor produced {} nodes -- term_count is not seeing \
+             through the Div wrapper the way it should",
+            total_node_count(&result)
+        );
+    }
+
+    #[test]
+    fn term_count_treats_neg_and_transcendental_wrappers_the_same_way() {
+        // Not adversarial-scale (the Div test above already proves the
+        // guard holds under real pressure) -- this just confirms the
+        // generalized fix actually applies uniformly to every other
+        // non-Mul Apply head, not only Div specifically. Neg(20-term
+        // sum) and Sin(20-term sum) must each report the same term
+        // count as the bare sum (20), not 1.
+        let twenty_terms = add((0..20).map(|i| sym(format!("t{i}"))).collect());
+        let neg_wrapped = apply(sym(NEG), vec![twenty_terms.clone()]);
+        let sin_wrapped = apply(sym(SIN), vec![twenty_terms.clone()]);
+
+        // term_count is private to this module; drive it indirectly the
+        // same way every other test in this file does, by checking that
+        // multiplying each wrapped form against another sizeable sum
+        // gets correctly refused (mirroring the Div test's structure).
+        let other_factor = add((0..600).map(|i| sym(format!("o{i}"))).collect());
+        // 20 * 600 = 12,000 > EXPAND_MAX_TERMS (10,000): must refuse.
+        for wrapped in [neg_wrapped, sin_wrapped] {
+            let result = expand_mul(&wrapped, &other_factor);
+            assert_eq!(
+                result,
+                mul(vec![wrapped, other_factor.clone()]),
+                "a Neg/Sin-wrapped 20-term sum must be sized as 20 terms, \
+                 not 1, when checked against a 600-term second factor"
+            );
+        }
+    }
+
+    #[test]
+    fn term_count_saturates_instead_of_overflowing_when_summing() {
+        // A Mul's own term_count can legitimately saturate to usize::MAX
+        // from a modest, entirely ordinary tree -- a flat Mul of 70
+        // two-term Add factors is 2^70, which saturates any real
+        // platform's usize::MAX (2^32-1 or 2^64-1) well before 70
+        // factors. If that saturated value is then summed with a
+        // sibling (the fallback arm's job, used by Add/Sub/Div/Neg/...),
+        // a plain `Iterator::sum` would either panic (overflow-checked
+        // debug/test builds) or silently wrap around to a small value
+        // (release builds) -- either of which would defeat the very cap
+        // check this guard exists to enforce. `saturating_add` must not.
+        let two_term_factors: Vec<IRNode> = (0..70)
+            .map(|i| add(vec![sym(format!("p{i}")), sym(format!("q{i}"))]))
+            .collect();
+        let saturated_mul = mul(two_term_factors);
+        let wrapped = add(vec![saturated_mul, sym("small")]);
+
+        // Drive term_count indirectly via expand_mul, the same way every
+        // other test in this file does: `wrapped`'s true size is
+        // astronomically over EXPAND_MAX_TERMS, so multiplying it by
+        // anything must be refused outright, never distributed.
+        let other = sym("y");
+        let result = expand_mul(&wrapped, &other);
+        assert_eq!(
+            result,
+            mul(vec![wrapped, other]),
+            "a subtree containing a saturated Mul term-count must still \
+             be recognized as astronomically large when summed with a \
+             sibling, not silently wrapped around to something small"
         );
     }
 }

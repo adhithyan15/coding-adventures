@@ -1,0 +1,855 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "path": [
+    {
+      "id": "TA-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-C01-vanakkam"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-002",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C01-vanakkam-family-register"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-002-REGISTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-003",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-W01-curves-va-ka",
+        "TA-W01-abugida-va-ka",
+        "TA-W02-ma-retroflex-na",
+        "TA-W02-three-ns",
+        "TA-W03-pulli-vanakkam",
+        "TA-W03-write-vanakkam",
+        "TA-W04-vowel-signs-nandri",
+        "TA-W04-i-sign-write-nandri"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-003-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C01-aam",
+        "TA-C01-illai"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-005",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TA-C01-nandri",
+        "TA-C01-nandri-family-register"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "TA-EXT-005-REGISTER"
+      ]
+    },
+    {
+      "id": "TA-PATH-006",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C01-sari"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C02-peyar",
+        "TA-C02-en",
+        "TA-C02-en-peyar",
+        "TA-C02-magizhcci",
+        "TA-C02-nii-niingal",
+        "TA-C02-enna",
+        "TA-C02-ungal-peyar-enna"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C03-eppadi",
+        "TA-C03-eppadi-irukkirirgal"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-009",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C03-naan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-010",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C03-nalam"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-011",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TA-C03-paravayillai"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-012",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TA-C04-po",
+        "TA-C04-poy-varugiren",
+        "TA-C04-mindum-sandippom",
+        "TA-C04-naalai"
+      ],
+      "before": [
+        "TA-EXT-012-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-013",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C05-pesu",
+        "TA-C05-naan-tamizh-pesugiren",
+        "TA-C05-vaazh",
+        "TA-C05-velai-sey",
+        "TA-C05-practice",
+        "TA-C06-dative-ukku",
+        "TA-C06-dative-stacking",
+        "TA-C06-dative-subject",
+        "TA-C06-dative-subject-family"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-013-LANGUAGE-SPECIFIC",
+        "TA-EXT-013-CONSOLIDATION",
+        "TA-EXT-013-GRAMMAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-014",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "TA-C07-numbers-1-5",
+        "TA-C07-numbers-1-5-family",
+        "TA-C07-numbers-6-10",
+        "TA-C07-numbers-6-10-family"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-014-LANGUAGE-SPECIFIC",
+        "TA-EXT-014-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-015",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C08-tayavuseytu",
+        "TA-C08-please-register",
+        "TA-C09-mannikkavum",
+        "TA-C09-sorry-register"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-015-REGISTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-016",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TA-C10-vaara-kizhamai"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-017",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TA-C11-nirangal"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-018",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C12-kudumbam"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-019",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C13-udal-uruppugal"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-020",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TA-C14-kaalangal"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-021",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C15-thanneer-arisi"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-022",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TA-C16-thamizh-maadangal",
+        "TA-C17-nanpakal-nalliravu",
+        "TA-C17-transparent-middle-synonyms",
+        "TA-C18-mani",
+        "TA-C18-mani-homophone-time"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-022-LANGUAGE-SPECIFIC",
+        "TA-EXT-022-ETYMOLOGY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-023",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C19-vayathu",
+        "TA-C19-age-register-grammar"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-023-LANGUAGE-SPECIFIC",
+        "TA-EXT-023-REGISTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-024",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "TA-C20-pathinondru-irupathu"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-025",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TA-C20-vaanilai"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-026",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TA-C21-naay-poonai",
+        "TA-C22-paccai-manjal"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-027",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TA-C23-naal",
+        "TA-C23-day-family-register",
+        "TA-C24-iravu",
+        "TA-C24-night-register-darkness",
+        "TA-C25-iniya-iravu",
+        "TA-C25-goodnight-alternatives",
+        "TA-C26-kaalai",
+        "TA-C27-maalai",
+        "TA-C28-pirpakal",
+        "TA-C28-afternoon-boundary",
+        "TA-C29-kaalai-vanakkam",
+        "TA-C30-maalai-vanakkam",
+        "TA-C31-matiya-vanakkam",
+        "TA-C31-afternoon-greeting-root"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-027-REGISTER",
+        "TA-EXT-027-LANGUAGE-SPECIFIC",
+        "TA-EXT-027-ETYMOLOGY"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "TA-PATH-001",
+        "TA-PATH-003"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "TA-PATH-005",
+        "TA-PATH-011"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "TA-PATH-002",
+        "TA-PATH-004",
+        "TA-PATH-006"
+      ],
+      "omits": [
+        "RESPONSE-YESNO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "TA-PATH-007",
+        "TA-PATH-009",
+        "TA-PATH-013",
+        "TA-PATH-018",
+        "TA-PATH-023"
+      ],
+      "omits": [
+        "PRONOUN-ME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "TA-PATH-008",
+        "TA-PATH-010",
+        "TA-PATH-019"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "TA-PATH-015",
+        "TA-PATH-021"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "TA-PATH-012"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON"
+      ],
+      "relocates": {
+        "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+      }
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "TA-PATH-016",
+        "TA-PATH-020",
+        "TA-PATH-022",
+        "TA-PATH-025",
+        "TA-PATH-027"
+      ],
+      "omits": [
+        "GREETING-DAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "TA-PATH-017",
+        "TA-PATH-026"
+      ],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "TA-PATH-014",
+        "TA-PATH-024"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "TA-EXT-002-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C01-vanakkam-family-register"
+      ]
+    },
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize and use the Tamil script features introduced inside these words.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-W01-curves-va-ka",
+        "TA-W01-abugida-va-ka",
+        "TA-W02-ma-retroflex-na",
+        "TA-W02-three-ns",
+        "TA-W03-pulli-vanakkam",
+        "TA-W03-write-vanakkam",
+        "TA-W04-vowel-signs-nandri",
+        "TA-W04-i-sign-write-nandri"
+      ]
+    },
+    {
+      "id": "TA-EXT-005-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C01-nandri-family-register"
+      ]
+    },
+    {
+      "id": "TA-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C04-po"
+      ]
+    },
+    {
+      "id": "TA-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C05-pesu",
+        "TA-C05-naan-tamizh-pesugiren",
+        "TA-C05-vaazh",
+        "TA-C05-velai-sey",
+        "TA-C06-dative-ukku",
+        "TA-C06-dative-subject"
+      ]
+    },
+    {
+      "id": "TA-EXT-013-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Tamil material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C05-practice"
+      ]
+    },
+    {
+      "id": "TA-EXT-013-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the Tamil-specific grammar needed for this part of the shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C06-dative-stacking",
+        "TA-C06-dative-subject-family"
+      ]
+    },
+    {
+      "id": "TA-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C07-numbers-1-5",
+        "TA-C07-numbers-6-10"
+      ]
+    },
+    {
+      "id": "TA-EXT-014-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C07-numbers-1-5-family",
+        "TA-C07-numbers-6-10-family"
+      ]
+    },
+    {
+      "id": "TA-EXT-015-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C08-please-register",
+        "TA-C09-sorry-register"
+      ]
+    },
+    {
+      "id": "TA-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C10-vaara-kizhamai"
+      ]
+    },
+    {
+      "id": "TA-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C11-nirangal"
+      ]
+    },
+    {
+      "id": "TA-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C12-kudumbam"
+      ]
+    },
+    {
+      "id": "TA-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C13-udal-uruppugal"
+      ]
+    },
+    {
+      "id": "TA-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C14-kaalangal"
+      ]
+    },
+    {
+      "id": "TA-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C15-thanneer-arisi"
+      ]
+    },
+    {
+      "id": "TA-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C16-thamizh-maadangal",
+        "TA-C17-nanpakal-nalliravu",
+        "TA-C18-mani"
+      ]
+    },
+    {
+      "id": "TA-EXT-022-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C17-transparent-middle-synonyms",
+        "TA-C18-mani-homophone-time"
+      ]
+    },
+    {
+      "id": "TA-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C19-vayathu"
+      ]
+    },
+    {
+      "id": "TA-EXT-023-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C19-age-register-grammar"
+      ]
+    },
+    {
+      "id": "TA-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C20-pathinondru-irupathu"
+      ]
+    },
+    {
+      "id": "TA-EXT-025-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C20-vaanilai"
+      ]
+    },
+    {
+      "id": "TA-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C21-naay-poonai",
+        "TA-C22-paccai-manjal"
+      ]
+    },
+    {
+      "id": "TA-EXT-027-REGISTER",
+      "stage": "A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C23-day-family-register",
+        "TA-C24-night-register-darkness"
+      ]
+    },
+    {
+      "id": "TA-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Tamil material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C25-iniya-iravu"
+      ]
+    },
+    {
+      "id": "TA-EXT-027-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C25-goodnight-alternatives",
+        "TA-C28-afternoon-boundary",
+        "TA-C31-afternoon-greeting-root"
+      ]
+    },
+    {
+      "id": "TA-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Tamil script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C01-vanakkam"
+      ]
+    }
+  ]
+}

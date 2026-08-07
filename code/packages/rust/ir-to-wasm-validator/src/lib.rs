@@ -16,7 +16,7 @@ impl WasmIrValidator {
         program: &IrProgram,
         function_signatures: &[FunctionSignature],
     ) -> Vec<ValidationError> {
-        match IrToWasmCompiler::default().compile(program, function_signatures) {
+        match IrToWasmCompiler.compile(program, function_signatures) {
             Ok(_) => Vec::new(),
             Err(err) => vec![ValidationError {
                 rule: "lowering".to_string(),
@@ -30,7 +30,7 @@ pub fn validate(
     program: &IrProgram,
     function_signatures: &[FunctionSignature],
 ) -> Vec<ValidationError> {
-    WasmIrValidator::default().validate(program, function_signatures)
+    WasmIrValidator.validate(program, function_signatures)
 }
 
 #[cfg(test)]

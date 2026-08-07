@@ -223,6 +223,17 @@ describe("Trigonometric Functions", () => {
       expect(sqrt(1e10)).toBeCloseTo(1e5, 5);
     });
 
+    it("covers the full binary64 range and special values", () => {
+      const relative = (actual: number, expected: number): boolean =>
+        Math.abs(actual - expected) / Math.abs(expected) <= 1e-12;
+      expect(relative(sqrt(1e-100), 1e-50)).toBe(true);
+      expect(relative(sqrt(Number.MIN_VALUE), 2.2227587494850775e-162)).toBe(true);
+      expect(relative(sqrt(Number.MAX_VALUE), 1.3407807929942596e154)).toBe(true);
+      expect(Object.is(sqrt(-0.0), -0.0)).toBe(true);
+      expect(sqrt(Infinity)).toBe(Infinity);
+      expect(Number.isNaN(sqrt(NaN))).toBe(true);
+    });
+
     it("sqrt(x)^2 ≈ x (roundtrip)", () => {
       const s = sqrt(2);
       expect(s * s).toBeCloseTo(2.0, 10);
@@ -262,6 +273,13 @@ describe("Trigonometric Functions", () => {
   describe("atan(x)", () => {
     it("atan(0) === 0", () => {
       expect(atan(0)).toBeCloseTo(0.0, 10);
+    });
+
+    it("preserves tiny inputs and negative zero exactly", () => {
+      expect(Object.is(atan(-0.0), -0.0)).toBe(true);
+      expect(atan(2 ** -30)).toBe(2 ** -30);
+      expect(atan(Number.MIN_VALUE)).toBe(Number.MIN_VALUE);
+      expect(atan(-Number.MIN_VALUE)).toBe(-Number.MIN_VALUE);
     });
 
     it("atan(1) ≈ PI/4", () => {

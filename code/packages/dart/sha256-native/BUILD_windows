@@ -1,0 +1,1 @@
+echo "sha256-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for sha256_native.dll)"

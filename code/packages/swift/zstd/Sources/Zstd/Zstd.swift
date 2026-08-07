@@ -231,8 +231,19 @@ private struct FseEe {
 /// Phase 2 — remaining symbols are spread using the deterministic step
 ///           function `step = (sz >> 1) + (sz >> 3) + 3`.  This value is
 ///           always co-prime to `sz` (a power of two), so the walk visits
-///           every free slot exactly once.  Symbols with count > 1 are spread
-///           first, then count == 1 symbols, to match the reference order.
+///           every free slot exactly once.  A SINGLE pass over symbols in
+///           ascending order 0..<norm.count places each symbol's full count
+///           immediately when encountered — this is the real algorithm
+///           (`FSE_buildDTable_internal`'s low-probability branch, verified
+///           against the reference C source in github.com/facebook/zstd).
+///           An earlier revision of this codec used a two-pass split (all
+///           count>1 symbols first, then all count==1 symbols) — a
+///           plausible-looking but entirely invented convention with no
+///           basis in the reference algorithm.  It produced a different (but
+///           internally self-consistent) table layout: our own decoder
+///           mirrored our own encoder, so every round-trip test passed, but
+///           the real `zstd` CLI rejected our output with "Data corruption
+///           detected" (RFC 8878 conformance bug; see lessons.md Lesson 96).
 ///
 /// Phase 3 — for each slot, assign `nb` (state bits to read) and `base`
 ///           (next-state base).  The j-th slot (in index order) for symbol
@@ -267,23 +278,19 @@ private func buildDecodeTable(norm: [Int16], accLog: UInt8) -> [FseDe] {
     }
 
     // ── Phase 2: spread remaining symbols ────────────────────────────────
-    // The two-pass approach (count > 1 first, then count == 1) mirrors the
-    // ZStd reference implementation, producing a deterministic, reproducible
-    // table layout.
+    // A SINGLE pass over symbols in ascending order, placing each symbol's
+    // full count immediately when encountered.  There is no correctness
+    // reason to special-case cnt>1 vs cnt==1 — see the doc comment above.
     var pos = 0
-    for pass in 0..<2 {
-        for (s, c) in norm.enumerated() {
-            guard c > 0 else { continue }
-            let cnt = Int(c)
-            // pass 0 handles cnt > 1 first; pass 1 handles cnt == 1.
-            if (pass == 0) != (cnt > 1) { continue }
-            symNext[s] = UInt16(cnt)
-            for _ in 0..<cnt {
-                tbl[pos].sym = UInt8(s)
+    for (s, c) in norm.enumerated() {
+        guard c > 0 else { continue }
+        let cnt = Int(c)
+        symNext[s] = UInt16(cnt)
+        for _ in 0..<cnt {
+            tbl[pos].sym = UInt8(s)
+            pos = (pos + step) & (sz - 1)
+            while pos > high {
                 pos = (pos + step) & (sz - 1)
-                while pos > high {
-                    pos = (pos + step) & (sz - 1)
-                }
             }
         }
     }
@@ -357,18 +364,18 @@ private func buildEncodeTable(norm: [Int16], accLog: UInt8) -> ([FseEe], [UInt16
     }
     let idxLimit = idxHigh
 
+    // Single pass over symbols in ascending order — must mirror
+    // buildDecodeTable()'s Phase 2 exactly (see its doc comment: the real
+    // algorithm has no count>1-vs-count==1 split).
     var pos2 = 0
-    for pass in 0..<2 {
-        for (s, c) in norm.enumerated() {
-            guard c > 0 else { continue }
-            let cnt = Int(c)
-            if (pass == 0) != (cnt > 1) { continue }
-            for _ in 0..<cnt {
-                spread[pos2] = UInt8(s)
+    for (s, c) in norm.enumerated() {
+        guard c > 0 else { continue }
+        let cnt = Int(c)
+        for _ in 0..<cnt {
+            spread[pos2] = UInt8(s)
+            pos2 = (pos2 + Int(step)) & (Int(sz) - 1)
+            while pos2 > idxLimit {
                 pos2 = (pos2 + Int(step)) & (Int(sz) - 1)
-                while pos2 > idxLimit {
-                    pos2 = (pos2 + Int(step)) & (Int(sz) - 1)
-                }
             }
         }
     }
@@ -566,16 +573,30 @@ private func fseEncodeSym(
     state = UInt32(st[slotIdx])
 }
 
-/// Decode one symbol from the backward bitstream, advancing the FSE state.
+/// Initialise an FSE encoder state directly from a symbol, WITHOUT flushing
+/// any bits — the reverse-encoding-loop analogue of real zstd's
+/// `FSE_initCState2`.
 ///
-/// Decode step:
-///   1. Look up de[state] → (sym, nb, base).
-///   2. newState = base + readBits(nb).
-private func fseDecodeSym(state: inout UInt16, de: [FseDe], br: RevBitReader) -> UInt8 {
-    let e = de[Int(state)]
-    let sym = e.sym
-    state = e.base &+ UInt16(br.readBits(Int(e.nb)))
-    return sym
+/// RFC 8878's decoder never performs a state-update read after the LAST
+/// sequence in a block (there is no "next" sequence whose peek needs a
+/// fresh state) — see `decompressBlock`.  Symmetrically, the ENCODER'S first
+/// symbol processed in its reverse loop (which corresponds to that same last
+/// sequence) cannot derive its starting state via a normal `fseEncodeSym`
+/// flush (there is no bit-consuming "update" on the decode side to produce
+/// it) — it must be computed directly.
+///
+/// Formula (mirrors `FSE_initCState2` in the reference C implementation):
+///   nbBitsOut = (deltaNb + (1 << 15)) >> 16
+///   value     = (nbBitsOut << 16) - deltaNb
+///   then a table lookup exactly like `fseEncodeSym`, but starting from that
+///   computed `value` instead of a live running state.
+private func fseInitState(sym: UInt8, ee: [FseEe], st: [UInt16]) -> UInt32 {
+    let e = ee[Int(sym)]
+    let deltaNb64 = UInt64(e.deltaNb)
+    let nbBitsOut = (deltaNb64 &+ (1 << 15)) >> 16
+    let value = (nbBitsOut << 16) &- deltaNb64
+    let slotIdx = Int(value >> nbBitsOut) + Int(e.deltaFs)
+    return UInt32(st[slotIdx])
 }
 
 // ============================================================================
@@ -755,29 +776,48 @@ private func decodeLiteralsSection(_ data: [UInt8]) throws -> ([UInt8], Int) {
 //   bits [1:0] = reserved (0)
 // We always emit 0x00 (all Predefined), so no per-frame table is sent.
 //
-// FSE bitstream is a BACKWARD bit-stream:
-//   Sequences are encoded in REVERSE ORDER (last sequence first).
-//   For each sequence (in reverse):
-//       OF extra bits, ML extra bits, LL extra bits  (in this order)
-//       FSE symbol for OF, then ML, then LL
-//   After all sequences, flush final FSE states:
-//       (state_of - sz_of) as OF_ACC_LOG bits
-//       (state_ml - sz_ml) as ML_ACC_LOG bits
-//       (state_ll - sz_ll) as LL_ACC_LOG bits
-//   Then flush the sentinel byte.
+// FSE bitstream is a BACKWARD bit-stream.  RFC 8878 §3.1.1.3.2.1.2, verified
+// against the real `zstd` CLI (TC-9 interop) and the reference C source
+// (ZSTD_decodeSequence / FSE_encodeSymbol / FSE_initCState2 in
+// github.com/facebook/zstd — see lessons.md Lesson 96):
 //
-// Decoder reverses this:
-//   1. Read LL_ACC_LOG bits → initial state_ll
-//   2. Read ML_ACC_LOG bits → initial state_ml
-//   3. Read OF_ACC_LOG bits → initial state_of
-//   4. For each sequence (in forward order):
-//       decode LL symbol (state transition: updates state, returns symbol)
-//       decode OF symbol
-//       decode ML symbol
-//       read LL extra bits
-//       read ML extra bits
-//       read OF extra bits
-//   5. Apply sequence to output.
+//   A forward-reading decoder, for each sequence, does the following in
+//   order:
+//     1. PEEK all three symbols from the CURRENT states (table lookup only —
+//        this consumes NO bits; the FSE state itself already IS the decode
+//        table index).
+//     2. Read VALUE extra bits, in order OF, ML, LL.
+//     3. Update the three FSE states (consumes bits), in order LL, ML, OF —
+//        preparing the states the NEXT sequence's peek (step 1) will use.
+//        This update is skipped ENTIRELY for the LAST sequence in the block:
+//        there is no "next" sequence to prepare a state for.
+//   Before the first sequence, the decoder reads the three initial states,
+//   in order LL, OF, ML (note: this initial-state order is DIFFERENT from
+//   the per-sequence state-update order above — the RFC is asymmetric here).
+//
+// The encoder must produce exactly the bits this decoder consumes, in
+// reverse (since RevBitWriter's last-written bits are read first).  It
+// processes sequences in reverse order (last real sequence first) so the
+// decoder sees them forward; within each iteration it writes, in order:
+// the extra bits (LL, ML, OF — reverse of the decoder's OF, ML, LL read
+// order), then the state transition FROM this iteration's states TO the
+// next sequence's states (OF, ML, LL — reverse of the decoder's LL, ML, OF
+// update order).  The very first iteration (the last real sequence) has no
+// incoming transition to write — there is no decode-side bit-consuming
+// update that produces it — so its state must be computed directly via
+// `fseInitState` (mirroring real zstd's `FSE_initCState2`), which touches no
+// bits at all.  After the loop, the states used to peek the FIRST real
+// sequence are flushed as raw bits, written ML, OF, LL (so a forward reader,
+// which sees these bits FIRST since they were written LAST, gets LL, OF, ML
+// — matching the initial-state read order above).
+//
+// An earlier revision of this codec (a) combined peek and update into one
+// step and got the extras/updates relative order AND the OF/ML sub-order
+// wrong, and (b) always performed a state update for every sequence
+// (including the last) instead of skipping it — internally self-consistent
+// (our own decoder mirrored our own encoder, so every self-round-trip test
+// passed) but not the real wire format: our output was rejected by the real
+// `zstd` CLI with "Data corruption detected".  See lessons.md Lesson 96.
 
 /// Encode the sequence count field (1-3 bytes).
 ///
@@ -838,6 +878,9 @@ private func decodeSeqCount(_ data: [UInt8]) throws -> (Int, Int) {
 }
 
 /// Encode the sequences section (count + modes byte + FSE bitstream).
+///
+/// See the "Sequences section" MARK comment above for the full derivation of
+/// the field/state ordering implemented here.
 private func encodeSequencesSection(_ seqs: [Seq]) -> [UInt8] {
     // Build encode tables from the predefined distributions.
     let (eeLl, stLl) = buildEncodeTable(norm: llNorm, accLog: llAccLog)
@@ -848,14 +891,14 @@ private func encodeSequencesSection(_ seqs: [Seq]) -> [UInt8] {
     let szMl = UInt32(1) << mlAccLog
     let szOf = UInt32(1) << ofAccLog
 
-    // FSE encoder states start at sz (the midpoint of the valid range [sz, 2*sz)).
-    var stateLl = szLl
-    var stateMl = szMl
-    var stateOf = szOf
-
     let bw = RevBitWriter()
+    var stateLl: UInt32 = 0
+    var stateMl: UInt32 = 0
+    var stateOf: UInt32 = 0
 
-    // Encode sequences in REVERSE ORDER so the decoder sees them forward.
+    // Encode sequences in REVERSE ORDER (last real sequence first) so a
+    // forward-reading decoder sees them in original order.
+    var first = true
     for seq in seqs.reversed() {
         let llCode = llToCode(seq.ll)
         let mlCode = mlToCode(seq.ml)
@@ -865,26 +908,41 @@ private func encodeSequencesSection(_ seqs: [Seq]) -> [UInt8] {
         let rawOff = seq.off + 3
         let ofCode: UInt8 = rawOff <= 1 ? 0 : UInt8(31 - rawOff.leadingZeroBitCount)
         let ofExtra = rawOff - (UInt32(1) << Int(ofCode))
-
-        // Write extra bits in OF, ML, LL order (backwards stream).
-        bw.addBits(UInt64(ofExtra), Int(ofCode))
         let mlExtra = seq.ml - mlCodes[mlCode].0
-        bw.addBits(UInt64(mlExtra), Int(mlCodes[mlCode].1))
         let llExtra = seq.ll - llCodes[llCode].0
-        bw.addBits(UInt64(llExtra), Int(llCodes[llCode].1))
 
-        // FSE encode symbols.
-        // Decode order: LL, OF, ML.
-        // Since the bitstream is reversed, we WRITE in the opposite order: ML → OF → LL.
-        // That way when the decoder reads forward, it sees LL first.
-        fseEncodeSym(state: &stateMl, sym: UInt8(mlCode), ee: eeMl, st: stMl, bw: bw)
-        fseEncodeSym(state: &stateOf, sym: ofCode,          ee: eeOf, st: stOf, bw: bw)
-        fseEncodeSym(state: &stateLl, sym: UInt8(llCode),   ee: eeLl, st: stLl, bw: bw)
+        if !first {
+            // Transition state FROM "state used to peek the sequence
+            // processed in the PREVIOUS iteration" TO "state used to peek
+            // THIS sequence" — write order OF, ML, LL (a forward decoder
+            // will consume this, in order LL, ML, OF, as the update AFTER
+            // decoding this sequence).
+            fseEncodeSym(state: &stateOf, sym: ofCode, ee: eeOf, st: stOf, bw: bw)
+            fseEncodeSym(state: &stateMl, sym: UInt8(mlCode), ee: eeMl, st: stMl, bw: bw)
+            fseEncodeSym(state: &stateLl, sym: UInt8(llCode), ee: eeLl, st: stLl, bw: bw)
+        } else {
+            // Last real sequence: no incoming transition to flush.
+            // Initialise state directly from the symbol (no bits written).
+            stateOf = fseInitState(sym: ofCode, ee: eeOf, st: stOf)
+            stateMl = fseInitState(sym: UInt8(mlCode), ee: eeMl, st: stMl)
+            stateLl = fseInitState(sym: UInt8(llCode), ee: eeLl, st: stLl)
+            first = false
+        }
+
+        // Extra bits, write order LL, ML, OF (a forward decoder reads these
+        // in order OF, ML, LL immediately after peeking symbols).
+        bw.addBits(UInt64(llExtra), Int(llCodes[llCode].1))
+        bw.addBits(UInt64(mlExtra), Int(mlCodes[mlCode].1))
+        bw.addBits(UInt64(ofExtra), Int(ofCode))
     }
 
-    // Flush final FSE states as raw bits (OF first, then ML, then LL).
-    bw.addBits(UInt64(stateOf - szOf), Int(ofAccLog))
+    // Flush initial states (the states used to peek the FIRST real
+    // sequence). A forward-reading decoder reads these FIRST, in order LL,
+    // OF, ML. Since these are the very LAST bits written overall, they
+    // become the FIRST bits a forward reader sees; to get decode order
+    // [LL, OF, ML] we write the reverse: [ML, OF, LL].
     bw.addBits(UInt64(stateMl - szMl), Int(mlAccLog))
+    bw.addBits(UInt64(stateOf - szOf), Int(ofAccLog))
     bw.addBits(UInt64(stateLl - szLl), Int(llAccLog))
     bw.flush()
 
@@ -932,8 +990,35 @@ private func compressBlock(_ block: [UInt8]) -> [UInt8]? {
 /// - Parameters:
 ///   - data: The block payload (after the 3-byte block header).
 ///   - out:  Output buffer; decoded bytes are appended here.
-/// - Throws: `ZstdError` on malformed input.
-private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
+///   - rep1, rep2, rep3: The three Repeated_Offset registers (RFC 8878
+///     §3.1.1.3.2.1.1) — IN/OUT, because they are FRAME-scoped, not
+///     block-scoped. "For the first block, the starting offset history is
+///     populated with Repeated_Offset1=1, Repeated_Offset2=4,
+///     Repeated_Offset3=8" (RFC 8878), and every later Compressed block in
+///     the same frame continues from wherever the previous one left them.
+///     The caller (`decompress`) owns the registers and threads them
+///     through every Compressed block in the frame; Raw/RLE blocks don't
+///     touch them.
+///
+/// WHY THIS DECODER NEEDS THIS EVEN THOUGH THIS PACKAGE'S OWN ENCODER NEVER
+/// EMITS REPEAT-OFFSET SEQUENCES: `encodeSequencesSection`'s minimum
+/// possible LZ77 match offset is 1, so `rawOff = offset + 3 >= 4` always —
+/// `ofCode` is always >= 2, an explicit offset. That means this package's
+/// own `compress()`/`decompress()` round trip never touches the
+/// repeat-offset path. But the real `zstd` CLI's encoder uses repeat
+/// offsets constantly — reusing the previous match's distance is one of the
+/// format's principal entropy wins, especially for periodic/repetitive data
+/// — so a decoder that only understands explicit offset codes will
+/// systematically fail to decode a meaningful fraction of real-world `.zst`
+/// files. Algorithm cross-checked against both the RFC 8878 prose and the
+/// literal reference C source (`ZSTD_decodeSequence` in
+/// `zstd_decompress_block.c`, github.com/facebook/zstd) and against the
+/// already-verified fix in `code/packages/c/zstd` (PR #9941) — see
+/// lessons.md Lesson 98.
+private func decompressBlock(
+    _ data: [UInt8], out: inout [UInt8],
+    rep1: inout UInt32, rep2: inout UInt32, rep3: inout UInt32
+) throws {
     // ── Literals section ─────────────────────────────────────────────────
     let (lits, litConsumed) = try decodeLiteralsSection(data)
     var pos = litConsumed
@@ -977,20 +1062,28 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
     let dtMl = buildDecodeTable(norm: mlNorm, accLog: mlAccLog)
     let dtOf = buildDecodeTable(norm: ofNorm, accLog: ofAccLog)
 
-    // Initialise FSE states.
-    // The encoder wrote (in this order): stateLl, stateMl, stateOf.
-    // The decoder reads them in the same order (because flush() reversed the bits).
+    // Initialise FSE states. RFC 8878 §3.1.1.3.2.1.2: the initial states are
+    // read in order LL, OF, ML (note: this is a DIFFERENT order from the
+    // per-sequence state-update order below, which is LL, ML, OF — the RFC
+    // is asymmetric here; see the "Sequences section" MARK comment above,
+    // and lessons.md Lesson 96).
     var stateLl = UInt16(br.readBits(Int(llAccLog)))
-    var stateMl = UInt16(br.readBits(Int(mlAccLog)))
     var stateOf = UInt16(br.readBits(Int(ofAccLog)))
+    var stateMl = UInt16(br.readBits(Int(mlAccLog)))
 
     var litPos = 0
 
-    for _ in 0..<nSeqs {
-        // Decode symbols (state transitions).  Order: LL, OF, ML.
-        let llCode = fseDecodeSym(state: &stateLl, de: dtLl, br: br)
-        let ofCode = fseDecodeSym(state: &stateOf, de: dtOf, br: br)
-        let mlCode = fseDecodeSym(state: &stateMl, de: dtMl, br: br)
+    for i in 0..<nSeqs {
+        // Step 1 — PEEK symbols from the current states. This is a bare
+        // table lookup (table[state].sym) and consumes NO bits — the FSE
+        // state itself already IS the decode-table index. Only the
+        // subsequent state UPDATE (step 3 below) reads bits.
+        let llEntry = dtLl[Int(stateLl)]
+        let mlEntry = dtMl[Int(stateMl)]
+        let ofEntry = dtOf[Int(stateOf)]
+        let llCode = llEntry.sym
+        let mlCode = mlEntry.sym
+        let ofCode = ofEntry.sym
 
         // Validate code indices.
         guard Int(llCode) < llCodes.count else {
@@ -1003,17 +1096,86 @@ private func decompressBlock(_ data: [UInt8], out: inout [UInt8]) throws {
         let llInfo = llCodes[Int(llCode)]
         let mlInfo = mlCodes[Int(mlCode)]
 
-        // Read extra bits.
-        let ll = llInfo.0 + UInt32(br.readBits(Int(llInfo.1)))
-        let ml = mlInfo.0 + UInt32(br.readBits(Int(mlInfo.1)))
+        // `llIsZero` feeds the Repeated_Offset "shifted by 1" rule below
+        // (RFC 8878 §3.1.1.3.2.1.1) and is knowable right now, from the
+        // PEEKED `llCode` alone — LL code 0 is the only code with baseline 0
+        // and 0 extra bits, so `llCode == 0` iff the eventual decoded `ll`
+        // value is 0. No extra bits need to be read yet to know this.
+        let llIsZero = (llCode == 0)
 
-        // Offset: raw = (1 << ofCode) | extra; offset = raw - 3.
+        // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
+        // §3.1.1.3.2.1.2 — decoding starts by reading the bits needed for
+        // offset, then match length, then literals length). The NUMBER of
+        // bits read for the offset field is always exactly `ofCode`
+        // regardless of the Repeated_Offset interpretation below — the
+        // reference decoder never varies bit-consumption on `llIsZero`, only
+        // how the resulting value maps to an actual offset changes.
         let ofExtra = br.readBits(Int(ofCode))
         let ofRaw = (UInt32(1) << Int(ofCode)) | UInt32(ofExtra)
-        guard ofRaw >= 3 else {
-            throw ZstdError.decodingError("decoded offset underflow: ofRaw=\(ofRaw)")
+        let ml = mlInfo.0 + UInt32(br.readBits(Int(mlInfo.1)))
+        let ll = llInfo.0 + UInt32(br.readBits(Int(llInfo.1)))
+
+        // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        // the Repeated_Offset (R1/R2/R3) mechanism this decoder must
+        // understand even though its own encoder never emits it — see the
+        // doc comment on `decompressBlock`.
+        //
+        // `ofCode >= 2` guarantees `ofRaw = (1 << ofCode) + extra >= 4`,
+        // i.e. Offset_Value > 3: an ordinary explicit offset. `ofCode <= 1`
+        // guarantees `ofRaw` in {1, 2, 3}: a repeat-offset reference.
+        //
+        // The repeat case collapses to one selector in [0, 3] (derived from,
+        // and verified against, the reference decoder's
+        // `ofBase + ll0 + extra_bit`, and against the PR #9941 `c/zstd` fix):
+        //   0 -> reuse rep1 unchanged (no rotation)
+        //   1 -> use rep2 (rep1, rep2 swap; rep3 untouched)
+        //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        let offset: UInt32
+        if ofCode >= 2 {
+            offset = ofRaw - 3
+            rep3 = rep2
+            rep2 = rep1
+            rep1 = offset
+        } else {
+            let selector = (llIsZero ? 1 : 0) + Int(ofRaw) - 1
+            switch selector {
+            case 0:
+                offset = rep1
+            case 1:
+                offset = rep2
+                rep2 = rep1
+                rep1 = offset
+            case 2:
+                offset = rep3
+                rep3 = rep2
+                rep2 = rep1
+                rep1 = offset
+            default:  // 3
+                offset = rep1 > 0 ? rep1 - 1 : 0
+                rep3 = rep2
+                rep2 = rep1
+                rep1 = offset
+            }
         }
-        let offset = ofRaw - 3
+
+        // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
+        // 8878 §3.1.1.3.2.1.2), preparing the states the NEXT sequence's
+        // peek (step 1) will use.
+        //
+        // Per the reference decoder (ZSTD_decodeSequence): this update is
+        // skipped entirely for the LAST sequence — there is no "next"
+        // sequence to prepare a state for, and (symmetrically) the encoder
+        // never flushed any bits for that non-existent transition (see
+        // `fseInitState` in `encodeSequencesSection`). Performing this read
+        // unconditionally, as an earlier revision of this codec did,
+        // consumes bits that were never written, corrupting the position of
+        // every stream that follows.
+        if i != nSeqs - 1 {
+            stateLl = llEntry.base &+ UInt16(br.readBits(Int(llEntry.nb)))
+            stateMl = mlEntry.base &+ UInt16(br.readBits(Int(mlEntry.nb)))
+            stateOf = ofEntry.base &+ UInt16(br.readBits(Int(ofEntry.nb)))
+        }
 
         // Emit `ll` literal bytes from the literals buffer.
         let litEnd = litPos + Int(ll)
@@ -1108,13 +1270,22 @@ public func compress(_ data: [UInt8]) -> [UInt8] {
     out.append(UInt8((m >> 16) & 0xFF))
     out.append(UInt8((m >> 24) & 0xFF))
 
-    // Frame Header Descriptor (FHD):
+    // Frame Header Descriptor (FHD), per RFC 8878 §3.1.1.1:
     //   bits [7:6] = FCS_Field_Size = 11 → 8-byte FCS
     //   bit  [5]   = Single_Segment_Flag = 1 (no Window_Descriptor)
-    //   bit  [4]   = Content_Checksum_Flag = 0
-    //   bits [3:2] = reserved = 0
+    //   bit  [4]   = Unused_bit = 0
+    //   bit  [3]   = Reserved_bit = 0
+    //   bit  [2]   = Content_Checksum_Flag = 0 (Educational Simplification:
+    //                we never compute/emit a trailing xxHash64 checksum)
     //   bits [1:0] = Dict_ID_Flag = 0
     // = 0b1110_0000 = 0xE0
+    //
+    // NOTE (lessons.md Lesson 95): Content_Checksum_Flag is bit 2, not bit
+    // 4 — an earlier revision of this comment (and the spec doc + the Go
+    // and Rust ports) mislabelled it as bit 4, which is actually
+    // Unused_bit. It happens not to matter for the byte VALUE emitted here
+    // (0xE0 has both bit 2 and bit 4 clear either way), but the mislabel
+    // would bite the moment any code tried to actually parse/set that flag.
     out.append(0xE0)
 
     // Frame_Content_Size (8 bytes, little-endian) — the uncompressed size.
@@ -1245,6 +1416,15 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
     // ── Blocks ────────────────────────────────────────────────────────────
     var out: [UInt8] = []
 
+    // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    // default 1/4/8 "for the first block", then threaded unmodified through
+    // every Compressed block's sequences for the rest of the frame (Raw/RLE
+    // blocks don't touch them). See `decompressBlock`'s doc comment and
+    // lessons.md Lesson 98.
+    var rep1: UInt32 = 1
+    var rep2: UInt32 = 4
+    var rep3: UInt32 = 8
+
     while true {
         guard pos + 3 <= data.count else { throw ZstdError.blockTruncated }
 
@@ -1279,7 +1459,7 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
             guard pos + bsize <= data.count else { throw ZstdError.blockTruncated }
             let blockData = Array(data[pos..<(pos + bsize)])
             pos += bsize
-            try decompressBlock(blockData, out: &out)
+            try decompressBlock(blockData, out: &out, rep1: &rep1, rep2: &rep2, rep3: &rep3)
             guard out.count <= maxOutput else { throw ZstdError.outputLimitExceeded }
 
         default:  // 3 = Reserved

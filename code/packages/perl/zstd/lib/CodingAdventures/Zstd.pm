@@ -3,7 +3,7 @@ package CodingAdventures::Zstd;
 use strict;
 use warnings;
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.3';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(compress decompress);
@@ -216,23 +216,30 @@ sub _build_decode_table {
     }
 
     # ── Phase 2: spread remaining symbols ────────────────────────────────
-    # Two-pass: first symbols with count > 1, then count == 1.
-    # This deterministic ordering matches the reference decoder.
+    # A SINGLE pass over symbols in ascending order 0..$#norm, placing each
+    # symbol's full count immediately when encountered. This is the real
+    # algorithm (FSE_buildDTable_internal's low-probability branch, verified
+    # against the reference C source in github.com/facebook/zstd).
+    #
+    # An earlier revision of this codec used a fabricated two-pass split
+    # (all count>1 symbols first, then all count==1 symbols) that produced a
+    # DIFFERENT but internally self-consistent table layout — our own
+    # decoder mirrored our own encoder, so round-trip tests passed, but the
+    # real `zstd` CLI rejected our compressed blocks with "Data corruption
+    # detected". See lessons.md Lesson 96. There is no correctness reason
+    # to special-case cnt>1 vs cnt==1 — that split had no basis in the
+    # reference algorithm.
     my $pos = 0;
-    for my $pass (0, 1) {
-        for my $s (0 .. $#norm) {
-            next if $norm[$s] <= 0;
-            my $cnt = $norm[$s];
-            # pass 0 handles multi-slot symbols; pass 1 handles single-slot
-            next if ($pass == 0) != ($cnt > 1);
-            $sym_next[$s] = $cnt;
-            for my $i (1 .. $cnt) {
-                $tbl[$pos]{sym} = $s;
+    for my $s (0 .. $#norm) {
+        next if $norm[$s] <= 0;
+        my $cnt = $norm[$s];
+        $sym_next[$s] = $cnt;
+        for my $i (1 .. $cnt) {
+            $tbl[$pos]{sym} = $s;
+            $pos = ($pos + $step) & ($sz - 1);
+            # Skip slots reserved for probability -1 symbols (above $high).
+            while ($pos > $high) {
                 $pos = ($pos + $step) & ($sz - 1);
-                # Skip slots reserved for probability -1 symbols (above $high).
-                while ($pos > $high) {
-                    $pos = ($pos + $step) & ($sz - 1);
-                }
             }
         }
     }
@@ -310,18 +317,17 @@ sub _build_encode_sym {
     }
     my $idx_limit = $idx_high;
 
+    # Single pass over symbols in ascending order — MUST mirror
+    # _build_decode_table's Phase 2 exactly (see comment there; Lesson 96).
     my $pos = 0;
-    for my $pass (0, 1) {
-        for my $s (0 .. $#norm) {
-            next if $norm[$s] <= 0;
-            my $cnt = $norm[$s];
-            next if ($pass == 0) != ($cnt > 1);
-            for my $i (1 .. $cnt) {
-                $spread[$pos] = $s;
+    for my $s (0 .. $#norm) {
+        next if $norm[$s] <= 0;
+        my $cnt = $norm[$s];
+        for my $i (1 .. $cnt) {
+            $spread[$pos] = $s;
+            $pos = ($pos + $step) & ($sz - 1);
+            while ($pos > $idx_limit) {
                 $pos = ($pos + $step) & ($sz - 1);
-                while ($pos > $idx_limit) {
-                    $pos = ($pos + $step) & ($sz - 1);
-                }
             }
         }
     }
@@ -545,24 +551,46 @@ sub _fse_encode_sym {
     my $nb      = ($$state_ref + $e->{delta_nb}) >> 16;
     $bw->add_bits($$state_ref, $nb);
     my $slot    = ($$state_ref >> $nb) + $e->{delta_fs};
+    $slot       = 0 if $slot < 0;
     $$state_ref = $st_ref->[$slot];
 }
 
-# _fse_decode_sym decodes one symbol from the backward bitstream.
+# _fse_init_state computes an FSE encoder's STARTING state directly from a
+# symbol, without flushing any bits — the reverse-encoding-loop analogue of
+# real zstd's FSE_initCState2.
 #
-# Decode step:
-#   sym   = tbl[state]{sym}
-#   nb    = tbl[state]{nb}
-#   base  = tbl[state]{base}
-#   new_state = base + read(nb bits)
-sub _fse_decode_sym {
-    my ($state_ref, $tbl_ref, $br) = @_;
-    my $e       = $tbl_ref->[$$state_ref];
-    my $sym     = $e->{sym};
-    my $next    = $e->{base} + $br->read_bits($e->{nb});
-    $$state_ref = $next;
-    return $sym;
+# Why this is needed: RFC 8878's decoder never performs a state-update read
+# after the LAST sequence in a block (there is no "next" sequence whose peek
+# needs a fresh state — see _decompress_block). Symmetrically, the ENCODER'S
+# first symbol processed in its reverse loop (which corresponds to that same
+# last sequence) cannot derive its starting state via a normal
+# _fse_encode_sym() flush (there is no bit-consuming "update" on the decode
+# side to produce it) — it must be computed directly.
+#
+# Formula (mirrors FSE_initCState2 in the reference C implementation):
+#   nb_bits_out = (delta_nb + (1<<15)) >> 16
+#   value       = (nb_bits_out << 16) - delta_nb
+# then the same table lookup as _fse_encode_sym, starting from $value instead
+# of a live running state, and writing NO bits.
+sub _fse_init_state {
+    my ($sym, $ee_ref, $st_ref) = @_;
+    my $e           = $ee_ref->[$sym];
+    my $nb_bits_out = ($e->{delta_nb} + (1 << 15)) >> 16;
+    my $value       = ($nb_bits_out << 16) - $e->{delta_nb};
+    my $slot        = ($value >> $nb_bits_out) + $e->{delta_fs};
+    $slot           = 0 if $slot < 0;
+    return $st_ref->[$slot];
 }
+
+# NOTE: there is no single "_fse_decode_sym" combining peek+update, unlike a
+# textbook from-scratch FSE stream. ZStd's sequence codec requires the two
+# steps to happen at DIFFERENT points relative to the other two fields' peeks
+# and reads (see the Sequences Section Encoding comment above and Lesson 96)
+# — peeking is a bare `$tbl_ref->[$state]{sym}` table lookup with no bits
+# consumed, and updating (`$state = $tbl_ref->[$state]{base} +
+# $br->read_bits($tbl_ref->[$state]{nb})`) happens later, conditionally
+# skipped for the last sequence. See _decompress_block for the inlined
+# per-field peek/read/update sequence.
 
 # ============================================================================
 # LL / ML Code Number Computation
@@ -734,28 +762,58 @@ sub _decode_literals_section {
 # Mode 0 = Predefined (tables built from fixed distributions above).
 # We always write 0x00 (all Predefined).
 #
-# FSE bitstream (backward bit-stream):
-#   Sequences are encoded in REVERSE ORDER (last first).
-#   For each sequence:
-#     OF extra bits, ML extra bits, LL extra bits  (in this order)
-#     then FSE symbol for OF, ML, LL              (in this order)
-#   After all sequences, flush final FSE states:
-#     (state_of - sz_of) as OF_ACC_LOG bits
-#     (state_ml - sz_ml) as ML_ACC_LOG bits
-#     (state_ll - sz_ll) as LL_ACC_LOG bits
+# FSE bitstream (backward bit-stream) — RFC 8878 §3.1.1.3.2.1.2, cross-checked
+# against the real `zstd` CLI (TC-9) and the reference C source
+# (ZSTD_decodeSequence / FSE_encodeSymbol / FSE_initCState2):
+#
+#   A forward-reading decoder, for each sequence:
+#     1. PEEKS all three symbols (LL, ML, OF) from the CURRENT states. This
+#        is a bare table lookup — the state itself IS the decode-table
+#        index — and consumes NO bits.
+#     2. Reads extra bits in order OF, ML, LL.
+#     3. Unless this is the LAST sequence, UPDATES the three states (this is
+#        the only bit-consuming step) in order LL, ML, OF, preparing the
+#        states the NEXT sequence's peek will use. There is no update after
+#        the last sequence — there is no "next" sequence to prepare a state
+#        for.
+#
+#   The encoder mirrors this in reverse (it walks sequences last-to-first
+#   because the bitstream itself is written backward):
+#     - The FIRST symbol the reverse loop processes is the LAST real
+#       sequence. It has no incoming transition to flush (see point 3
+#       above), so its starting state is computed directly via
+#       _fse_init_state (no bits written at all — mirrors FSE_initCState2).
+#     - Every subsequent iteration flushes a normal state transition (write
+#       order OF, ML, LL — a forward decoder will consume this AFTER
+#       decoding the sequence from the PREVIOUS iteration, in order LL, ML,
+#       OF, per point 3 above).
+#     - Every iteration writes that sequence's extra bits, write order LL,
+#       ML, OF (a forward decoder reads these in order OF, ML, LL
+#       immediately after peeking symbols, per point 2 above).
+#   After all sequences, flush the initial states (the states used to peek
+#   the FIRST real sequence). A forward decoder reads these FIRST, in order
+#   LL, OF, ML (note: OF before ML here — different from the per-sequence
+#   update order above; the RFC is asymmetric). Since these are the very
+#   LAST bits written overall, we write them in reverse: ML, OF, LL.
 #   Then add sentinel and flush.
+#
+# An earlier revision of this codec (a) combined peek-and-update into one
+# step and got the extras/updates relative order wrong, (b) got the OF/ML
+# sub-order wrong, and (c) always flushed a transition for every sequence
+# instead of special-casing the last one — internally self-consistent (our
+# own decoder mirrored our own encoder) but not the real wire format, so our
+# output was rejected by `zstd -d` with "Data corruption detected" even
+# though our own round-trip tests passed. See lessons.md Lesson 96.
 #
 # The decoder mirrors this:
 #   1. Read LL_ACC_LOG bits → initial state_ll
-#   2. Read ML_ACC_LOG bits → initial state_ml
-#   3. Read OF_ACC_LOG bits → initial state_of
+#   2. Read OF_ACC_LOG bits → initial state_of
+#   3. Read ML_ACC_LOG bits → initial state_ml
 #   4. For each sequence:
-#       decode LL symbol (state transition)
-#       decode OF symbol
-#       decode ML symbol
-#       read LL extra bits
-#       read ML extra bits
-#       read OF extra bits
+#       peek LL, ML, OF symbols from current states (no bits consumed)
+#       read OF extra bits, then ML extra bits, then LL extra bits
+#       unless this is the last sequence: update states LL, ML, OF (bits
+#         consumed) to prepare for the next sequence's peek
 #   5. Apply sequences to output.
 
 # _encode_seq_count encodes the number of sequences per RFC 8878 §3.1.1.3.1.
@@ -821,15 +879,20 @@ sub _encode_sequences_section {
     my $sz_ml = 1 << ML_ACC_LOG;   # 64
     my $sz_of = 1 << OF_ACC_LOG;   # 32
 
-    # FSE encoder states start at table_size (= sz). Valid range: [sz, 2*sz).
-    my $state_ll = $sz_ll;
-    my $state_ml = $sz_ml;
-    my $state_of = $sz_of;
+    # FSE encoder states live in [sz, 2*sz). Unlike a from-scratch FSE stream,
+    # ZStd sequences never flush a transition for the (semantically) last
+    # sequence — its state is computed directly by _fse_init_state() inside
+    # the loop below (first iteration), not seeded here.
+    my $state_ll;
+    my $state_ml;
+    my $state_of;
 
     my $bw = RevBitWriter->new();
 
     # Encode sequences in REVERSE order (so the decoder, reading a backward
-    # stream forward, reconstructs them in the original order).
+    # stream forward, reconstructs them in the original order). The FIRST
+    # iteration below is therefore the LAST real sequence.
+    my $first = 1;
     for my $seq (reverse @seqs) {
         my $ll_code = _ll_to_code($seq->{ll});
         my $ml_code = _ml_to_code($seq->{ml});
@@ -843,24 +906,40 @@ sub _encode_sequences_section {
         my $of_code = 0;
         { my $tmp = $raw_off; while ($tmp > 1) { $of_code++; $tmp >>= 1; } }
         my $of_extra = $raw_off - (1 << $of_code);
+        my $ml_extra = $seq->{ml} - $ML_CODES[$ml_code][0];
+        my $ll_extra = $seq->{ll} - $LL_CODES[$ll_code][0];
 
-        # Write extra bits (OF, ML, LL — in this order for backward stream).
+        if (!$first) {
+            # Transition state FROM "state used to peek the sequence
+            # processed in the PREVIOUS iteration" TO "state used to peek
+            # THIS sequence" — write order OF, ML, LL (a forward decoder
+            # will consume this, in order LL, ML, OF, as the update AFTER
+            # decoding the previous-iteration's sequence).
+            _fse_encode_sym(\$state_of, $of_code, $ee_of, $st_of, $bw);
+            _fse_encode_sym(\$state_ml, $ml_code, $ee_ml, $st_ml, $bw);
+            _fse_encode_sym(\$state_ll, $ll_code, $ee_ll, $st_ll, $bw);
+        } else {
+            # Last real sequence: no incoming transition to flush. Initialise
+            # the state directly from the symbol (no bits written at all).
+            $state_of = _fse_init_state($of_code, $ee_of, $st_of);
+            $state_ml = _fse_init_state($ml_code, $ee_ml, $st_ml);
+            $state_ll = _fse_init_state($ll_code, $ee_ll, $st_ll);
+            $first    = 0;
+        }
+
+        # Extra bits, write order LL, ML, OF (a forward decoder reads these
+        # in order OF, ML, LL immediately after peeking symbols).
+        $bw->add_bits($ll_extra, $LL_CODES[$ll_code][1]);
+        $bw->add_bits($ml_extra, $ML_CODES[$ml_code][1]);
         $bw->add_bits($of_extra, $of_code);
-        $bw->add_bits($seq->{ml} - $ML_CODES[$ml_code][0], $ML_CODES[$ml_code][1]);
-        $bw->add_bits($seq->{ll} - $LL_CODES[$ll_code][0], $LL_CODES[$ll_code][1]);
-
-        # FSE encode symbols.
-        # Decode order: LL first, then OF, then ML.
-        # Backward write order (reversed): ML → OF → LL.
-        _fse_encode_sym(\$state_ml, $ml_code, $ee_ml, $st_ml, $bw);
-        _fse_encode_sym(\$state_of, $of_code, $ee_of, $st_of, $bw);
-        _fse_encode_sym(\$state_ll, $ll_code, $ee_ll, $st_ll, $bw);
     }
 
-    # Flush final states (initial states for the decoder).
-    # Written in order: OF, ML, LL → decoder reads LL first, then ML, then OF.
-    $bw->add_bits($state_of - $sz_of, OF_ACC_LOG);
+    # Flush the initial states (the states used to peek the FIRST real
+    # sequence). RFC 8878 §3.1.1.3.2.1.2: a forward-reading decoder reads
+    # these FIRST, in order LL, OF, ML. Since these are the very LAST bits
+    # written overall, we write them in reverse: ML, OF, LL.
     $bw->add_bits($state_ml - $sz_ml, ML_ACC_LOG);
+    $bw->add_bits($state_of - $sz_of, OF_ACC_LOG);
     $bw->add_bits($state_ll - $sz_ll, LL_ACC_LOG);
     $bw->flush();
 
@@ -913,8 +992,19 @@ sub _compress_block {
 
 # _decompress_block decompresses one ZStd compressed block.
 # Appends decoded bytes to $out_ref (arrayref of bytes).
+#
+# $rep_ref is an arrayref [rep1, rep2, rep3] holding the three Repeated_Offset
+# registers (RFC 8878 §3.1.1.3.2.1.1) — IN/OUT, mutated in place. These are
+# FRAME-scoped, not block-scoped: the caller (decompress()) owns the array,
+# initialises it to [1, 4, 8] once per frame ("For the first block, the
+# starting offset history is populated with Repeated_Offset1=1,
+# Repeated_Offset2=4, Repeated_Offset3=8" — RFC 8878), and threads the same
+# arrayref through every Compressed block in the frame unmodified by Raw/RLE
+# blocks. See the Offset_Value -> offset comment below for why this decoder
+# needs them even though this port's own encoder never emits repeat-offset
+# codes.
 sub _decompress_block {
-    my ($data_ref, $out_ref) = @_;
+    my ($data_ref, $out_ref, $rep_ref) = @_;
     my @data = @$data_ref;
 
     # ── Literals section ─────────────────────────────────────────────────
@@ -959,20 +1049,27 @@ sub _decompress_block {
     my $dt_of = _build_decode_table(\@OF_NORM, OF_ACC_LOG);
 
     # Initialise FSE states from the bitstream.
-    # Encoder wrote: state_ll, state_ml, state_of.
-    # Decoder reads: LL first, then ML, then OF.
+    # RFC 8878 §3.1.1.3.2.1.2: the initial states are read in order LL, OF,
+    # ML — note this is a DIFFERENT order from the per-sequence state UPDATE
+    # below (LL, ML, OF); the RFC is asymmetric here. Verified against the
+    # RFC text and cross-checked against the real `zstd` CLI (Lesson 96).
     my $state_ll = $br->read_bits(LL_ACC_LOG);
-    my $state_ml = $br->read_bits(ML_ACC_LOG);
     my $state_of = $br->read_bits(OF_ACC_LOG);
+    my $state_ml = $br->read_bits(ML_ACC_LOG);
 
     my $lit_pos = 0;
 
-    for my $seq_i (1 .. $n_seqs) {
-        # Decode symbols (one each per state machine), then read extra bits.
-        # Decode order: LL, OF, ML.
-        my $ll_code = _fse_decode_sym(\$state_ll, $dt_ll, $br);
-        my $of_code = _fse_decode_sym(\$state_of, $dt_of, $br);
-        my $ml_code = _fse_decode_sym(\$state_ml, $dt_ml, $br);
+    for my $seq_i (0 .. $n_seqs - 1) {
+        # Step 1 — PEEK symbols from the current states. This is a bare
+        # table lookup (table[state]{sym}) and consumes NO bits — the FSE
+        # state itself already IS the decode-table index. Only the
+        # subsequent state UPDATE (step 3 below) reads bits.
+        my $ll_entry = $dt_ll->[$state_ll];
+        my $ml_entry = $dt_ml->[$state_ml];
+        my $of_entry = $dt_of->[$state_of];
+        my $ll_code  = $ll_entry->{sym};
+        my $ml_code  = $ml_entry->{sym};
+        my $of_code  = $of_entry->{sym};
 
         die "decompress_block: invalid LL code $ll_code\n"
             if $ll_code >= scalar @LL_CODES;
@@ -983,15 +1080,98 @@ sub _decompress_block {
         # and would cause a gigantic bit-read or integer overflow.
         die "zstd: of_code out of range ($of_code)\n" if $of_code > 28;
 
-        # Read extra bits for each field.
-        my $ll = $LL_CODES[$ll_code][0] + $br->read_bits($LL_CODES[$ll_code][1]);
-        my $ml = $ML_CODES[$ml_code][0] + $br->read_bits($ML_CODES[$ml_code][1]);
-        # Offset decode: of_raw = (1 << of_code) | read(of_code bits)
-        #   offset = of_raw - 3
-        my $of_raw = (1 << $of_code) | $br->read_bits($of_code);
-        my $offset = $of_raw - 3;
+        # ll_is_zero is needed for the repeat-offset interpretation below
+        # (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        # shifted by 1" rule) and is knowable right now, from the PEEKED
+        # ll_code alone: LL code 0 is the only code with baseline 0 and 0
+        # extra bits (see @LL_CODES), so ll_code == 0 iff the eventual
+        # decoded $ll value is 0. No extra bits need to be read yet.
+        my $ll_is_zero = ($ll_code == 0) ? 1 : 0;
 
-        die "decompress_block: offset underflow (of_raw=$of_raw)\n" if $offset < 0;
+        # Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
+        # §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
+        # required to decode offset. It does the same for Match_Length and
+        # then for Literals_Length.").
+        # Offset decode: of_raw = (1 << of_code) | read(of_code bits). The
+        # NUMBER of bits read here is always exactly $of_code regardless of
+        # the repeat-offset interpretation below — only how the resulting
+        # value maps to an actual offset changes.
+        my $of_raw = (1 << $of_code) | $br->read_bits($of_code);
+        my $ml     = $ML_CODES[$ml_code][0] + $br->read_bits($ML_CODES[$ml_code][1]);
+        my $ll     = $LL_CODES[$ll_code][0] + $br->read_bits($LL_CODES[$ll_code][1]);
+
+        # Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        # the Repeated_Offset (R1/R2/R3) mechanism. Real `zstd` encoders use
+        # repeat offsets constantly (one of their main entropy wins,
+        # especially for periodic/repetitive data) even though this port's
+        # OWN encoder never emits them (see _encode_sequences_section's
+        # comment: raw_offset = offset + 3 always, so of_code >= 2 always,
+        # i.e. our own compress()/decompress() round trip never exercises
+        # this path) — a decoder that only understands explicit offset codes
+        # will systematically fail to decode real-world .zst data. Algorithm
+        # cross-checked against both the RFC 8878 prose and the reference C
+        # source (`ZSTD_decodeSequence` in zstd_decompress_block.c), mirroring
+        # the fix in code/packages/c/zstd (lessons.md Lesson 98).
+        #
+        # of_code >= 2 guarantees of_raw = (1<<of_code)+extra >= 4, i.e.
+        # Offset_Value > 3: an ordinary explicit offset. of_code <= 1
+        # guarantees of_raw in {1, 2, 3}: a repeat-offset reference.
+        #
+        # The repeat case collapses to one selector in [0, 3]:
+        #     selector = ll_is_zero + of_raw - 1
+        #   0 -> reuse rep1 unchanged (no rotation)
+        #   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+        #   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        #   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        #
+        # Every path — explicit or repeat — ends by rotating the new offset
+        # into rep1, since the registers track the most recently used
+        # offsets regardless of how each one was derived.
+        my $offset;
+        if ($of_code >= 2) {
+            $offset = $of_raw - 3;
+            $rep_ref->[2] = $rep_ref->[1];
+            $rep_ref->[1] = $rep_ref->[0];
+            $rep_ref->[0] = $offset;
+        } else {
+            my $selector = $ll_is_zero + $of_raw - 1;
+            if ($selector == 0) {
+                $offset = $rep_ref->[0];
+            } elsif ($selector == 1) {
+                $offset = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            } elsif ($selector == 2) {
+                $offset = $rep_ref->[2];
+                $rep_ref->[2] = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            } else { # selector == 3
+                $offset = ($rep_ref->[0] > 0) ? ($rep_ref->[0] - 1) : 0;
+                $rep_ref->[2] = $rep_ref->[1];
+                $rep_ref->[1] = $rep_ref->[0];
+                $rep_ref->[0] = $offset;
+            }
+        }
+
+        # Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
+        # 8878 §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
+        # Match_Length_State, and then Offset_State"), preparing the states
+        # the NEXT sequence's peek (step 1) will use.
+        #
+        # Per the reference decoder (ZSTD_decodeSequence): this update is
+        # skipped entirely for the LAST sequence — there is no "next"
+        # sequence to prepare a state for, and (symmetrically) the encoder
+        # never flushed any bits for that non-existent transition (see
+        # _fse_init_state() in _encode_sequences_section()). Performing this
+        # read unconditionally, as an earlier revision of this codec did,
+        # consumes bits that were never written, corrupting the position of
+        # every stream that follows. See lessons.md Lesson 96.
+        if ($seq_i != $n_seqs - 1) {
+            $state_ll = $ll_entry->{base} + $br->read_bits($ll_entry->{nb});
+            $state_ml = $ml_entry->{base} + $br->read_bits($ml_entry->{nb});
+            $state_of = $of_entry->{base} + $br->read_bits($of_entry->{nb});
+        }
 
         # Emit $ll literal bytes from the literals buffer.
         my $lit_end = $lit_pos + $ll;
@@ -1059,13 +1239,24 @@ sub compress {
     # Magic number (4 bytes LE): 0xFD2FB528
     push @out, 0x28, 0xB5, 0x2F, 0xFD;
 
-    # Frame Header Descriptor (FHD):
+    # Frame Header Descriptor (FHD), per RFC 8878 §3.1.1.1:
     #   bits [7:6]: FCS_Field_Size = 11 → 8-byte Frame_Content_Size
     #   bit  [5]:   Single_Segment_Flag = 1 → no Window_Descriptor
-    #   bit  [4]:   Content_Checksum_Flag = 0
-    #   bits [3:2]: reserved = 0
+    #   bit  [4]:   Unused_bit = 0
+    #   bit  [3]:   Reserved_bit = 0
+    #   bit  [2]:   Content_Checksum_Flag = 0 (Educational Simplification: omit)
     #   bits [1:0]: Dict_ID_Flag = 0
     # = 0b1110_0000 = 0xE0
+    #
+    # NOTE: Content_Checksum_Flag is bit 2, NOT bit 4 — verified empirically
+    # (`zstd -c file` emits FHD 0x64; `zstd -c --no-check file` emits FHD
+    # 0x60, a 4-byte-shorter output; the differing bit is bit 2) and against
+    # RFC 8878 §3.1.1.1 (bit 4 is actually Unused_bit). An earlier revision
+    # of this comment (and the repo-wide spec/Go/Rust ports) documented bit
+    # 4. Since this encoder always writes checksum=off, 0xE0 is correct
+    # either way (both bit 2 and bit 4 are 0 in 0xE0) — this was a
+    # documentation-only inaccuracy here, not a functional bug. See
+    # lessons.md Lesson 95.
     push @out, 0xE0;
 
     # Frame_Content_Size: uncompressed length as 8-byte LE integer.
@@ -1213,6 +1404,12 @@ sub decompress {
     # ── Blocks ───────────────────────────────────────────────────────────
     my @out;
 
+    # Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    # default 1/4/8 "for the first block", then threaded unmodified through
+    # every Compressed block's sequences for the rest of the frame (Raw/RLE
+    # blocks don't touch them). See _decompress_block's doc comment.
+    my @rep = (1, 4, 8);
+
     while (1) {
         die "zstd: truncated block header at pos $pos\n"
             if $pos + 3 > scalar @bytes;
@@ -1246,7 +1443,7 @@ sub decompress {
                 if $pos + $bsize > scalar @bytes;
             my @block_data = @bytes[$pos .. $pos + $bsize - 1];
             $pos += $bsize;
-            _decompress_block(\@block_data, \@out);
+            _decompress_block(\@block_data, \@out, \@rep);
             die "zstd: decompressed size exceeds limit\n"
                 if @out > MAX_OUTPUT;
 

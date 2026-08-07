@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "title": "Required Capabilities Manifest",
-  "description": "Declares the OS-level capabilities a package requires. This file is OPTIONAL — packages without it are treated as pure computation with zero OS access (default deny). Only packages that need OS capabilities should have this file. Any non-empty capability requires hardware-key-signed approval.",
+  "description": "Declares the OS-level capabilities a package requires. This file is OPTIONAL for legacy packages — packages without it are treated as pure computation with zero OS access (default deny). Scaffolded packages emit explicit schema-v1 profiles, including empty pure-computation profiles. Any non-empty capability requires hardware-key-signed approval.",
   "type": "object",
   "required": ["version", "package", "capabilities", "justification"],
   "additionalProperties": false,
@@ -18,7 +18,7 @@
     },
     "package": {
       "type": "string",
-      "pattern": "^(csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
+      "pattern": "^(csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|ocaml|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
       "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache, rust/json-value, elixir/json_value, lua/grammar_tools."
     },
     "capabilities": {
@@ -73,7 +73,61 @@
           "minLength": 10,
           "description": "Human-readable explanation of WHY this specific capability is needed. Should be specific enough that a reviewer can evaluate whether the access is legitimate."
         }
-      }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "category": { "const": "fs" },
+                "action": { "enum": ["read", "write", "create", "delete", "list"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "net" },
+                "action": { "enum": ["connect", "listen", "dns"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "proc" },
+                "action": { "enum": ["exec", "fork", "signal"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "env" },
+                "action": { "enum": ["read", "write"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "ffi" },
+                "action": { "enum": ["call", "load"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "time" },
+                "action": { "enum": ["read", "sleep"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "stdin" },
+                "action": { "const": "read" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "stdout" },
+                "action": { "const": "write" }
+              }
+            }
+          ]
+        }
+      ]
     },
     "banned_construct_exception": {
       "type": "object",

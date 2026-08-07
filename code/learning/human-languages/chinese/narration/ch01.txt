@@ -1,0 +1,248 @@
+Mandarin Chinese, chapter 1: Nǐ Hǎo — Hello, Character by Character.
+7 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 7.
+mā má mǎ mà — one syllable, four words.
+
+Warm-up.
+[pause 2 seconds]
+Nothing to recall yet. Before the first Chinese word arrives, one thing your voice is about to be asked to do that English never asks of it.
+
+Sounds you'll need.
+In English, pitch carries mood. Really. and Really? are the same word, said two ways.
+In Mandarin, pitch is part of the word, exactly the way a consonant is. Take the syllable ma and give it four different pitches and you get four unrelated words:
+mā — held high and flat, one steady note. Mother.
+má — rising, like the pitch on a surprised English "huh?". Hemp.
+mǎ — dipping low, a little creaky. Horse.
+mà — falling sharply, like a clipped "No!". To scold.
+There is a fifth, the neutral tone: short, light, no mark written at all.
+The accent over the vowel is how the romanization writes the tone: a flat bar in ā, a rising stroke in á, a hook in ǎ, a falling stroke in à. The Chinese characters themselves record no tone anywhere, so the accent is a teaching aid, not part of the writing.
+Say all four in order now, slowly: mā, má, mǎ, mà.
+[repeat that twice]
+
+Guided Practice.
+[your turn — say: mā high and flat, then mà falling — hear how far apart they are]
+[pause 8 seconds for the answer]
+[your turn — answer: if you change the pitch of a Mandarin syllable, what changes?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which accent tells you to dip low? (The hook, as in ǎ.) Does changing a Mandarin tone change how you feel about a word, or which word it is? (Which word it is.)
+Source: the tone inventory this track keeps.
+[question — say your answer, then pause 8 seconds]
+How many marked tones does Mandarin have, not counting the neutral one? Type the number as a word.
+
+
+Lesson 2 of 7.
+你 (nǐ) — "you", and the first character.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — 你, and the person hiding on its left until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say the four tones on ma once, in order. Hold the third one — low and dipping. The first Chinese word carries exactly that pitch.
+
+Sounds you'll need.
+nǐ. The n is the English n; the i is the ee of "see". The hook over it is the third tone: start low, stay low, let it creak.
+[repeat that twice]
+
+Script — 你, and the person hiding on its left.
+Chinese is not written with letters. It is written with characters, each an evenly sized square block, and each block built from smaller recurring pieces called components.
+你 (nǐ) has two of them, left and right:
+亻 + 尔 becomes 你 (nǐ).
+亻 is the "person" component. On its own the character for a person is 人 — two legs walking. Push it to the left edge of a block and it is squashed upright into 亻: one short slant over one vertical. Same piece, standing sideways to make room.
+尔 on the right is there for its sound, not its meaning. Chinese builds most of its characters this way — one component pointing at the meaning, another at the pronunciation.
+Stroke order is a real, taught system here: top before bottom, left before right. So 亻 first, then 尔.
+
+The word, taken apart.
+你 nǐ — you, addressing one person.
+Here this track has to be honest with you. Everywhere else in this curriculum, a new word is anchored to English words you already own through a shared ancestor: Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none.
+What replaces it is what you just read: the character is itself decomposable, and its pieces mean things. 你 (nǐ) carries a person on its left because it is about a person. That is the hook — not history you share with English, but structure you can see.
+
+Guided Practice.
+[your turn — say: nǐ — low and dipping, not flat]
+[pause 8 seconds for the answer]
+[your turn — read: 你 (nǐ) — name its left piece, then its right piece]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which component of 你 (nǐ) tells you the word is about a person? (亻.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 8 seconds]
+Type the Mandarin word, in pinyin with its tone mark, that means 'you' (one person).
+
+
+Lesson 3 of 7.
+好 (hǎo) (hào) — "good", and what replaces etymology here.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — 好, a woman beside a child until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say the word for "you" without looking. Which of its two components is the person? Now hold that low, dipping pitch — the next word wants the same one.
+
+Sounds you'll need.
+hǎo. The h is a little rougher than English h, scraped at the back of the mouth. The ao is one gliding vowel, the ow of "how". The hook accent is the same third tone you already met: low, dipping, creaky.
+[repeat that twice]
+
+Script — 好, a woman beside a child.
+Two components again, side by side:
+女 + 子 becomes 好 (hǎo) (hào).
+女 on the left is the character for "woman": a crossing stroke, a curved leg, a horizontal through the middle. 子 on the right is "child": a hooked top, a hooked vertical, a horizontal arm. Left before right, as always.
+Notice what just happened. 女 and 子 are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks.
+
+The word, taken apart.
+好 (hào) hǎo — good, and also well.
+A woman beside a child, and the character means "good". That picture is the hook — and it is the device this track uses in place of the cousin web every other volume in this curriculum runs on, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word.
+Two cautions, because a memory aid that pretends to be history rots:
+"Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read 子 as a phonetic element instead. A picture that helps, not a proven derivation.
+Component glosses are hooks, not translations. 好 (hǎo) (hào) does not "mean" woman-child. It means good.
+
+Guided Practice.
+[your turn — say: hǎo — low and dipping, the ow of "how"]
+[pause 8 seconds for the answer]
+[your turn — read: 好 (hǎo) (hào) — name its left component, then its right one]
+[pause 8 seconds for the answer]
+[your turn — answer: why does this track use component pictures instead of English cousins?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+What does 好 (hǎo) (hào) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)
+Source: Unicode Han database, character 好 (hǎo) (hào).
+[question — say your answer, then pause 9 seconds]
+好 (hǎo) (hào) is built from two components. Type the meaning of the one on the left.
+
+
+Lesson 4 of 7.
+你好 (ní hǎo) (nǐ hǎo) — the greeting, assembled from two things you already have.
+
+Warm-up.
+[pause 2 seconds]
+Two characters, both already yours. Say the one that means "you". Say the one that means "good". Now put them in that order and you have said hello — but say it slowly for one more moment, because the tones are about to do something.
+
+The exchange.
+你好 (ní hǎo) nǐ hǎo! Hello.
+你好 (ní hǎo) nǐ hǎo! Hello.
+The greeting and its answer are the same word. Say it to one person you have just met, at any hour of the day.
+
+Grammar Lens — a word can be more than one character.
+English counts a word in letters. Chinese does not have letters, so the tempting guess is that it counts a word in characters — one character, one word. That guess is wrong, and correcting it early saves a great deal of confusion.
+A character writes one syllable and usually one meaningful piece. A word is one or more of those pieces:
+你 (nǐ) — one character, one word: you.
+好 (hǎo) (hào) — one character, one word: good.
+你好 (ní hǎo) (nǐ hǎo) — two characters, still one word: hello.
+Nobody hearing 你好 (ní hǎo) (nǐ hǎo) parses it as "you good", any more than an English speaker hears "good" and "bye" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means.
+
+Why it's said this way.
+你好 (ní hǎo) (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English "hello". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (ní hǎo) (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right.
+
+Guided Practice.
+[your turn — say: nǐ hǎo — greeting someone you have just met]
+[pause 8 seconds for the answer]
+[your turn — say: nǐ hǎo — answering that same greeting]
+[pause 8 seconds for the answer]
+[your turn — answer: how many characters is this word, and how many words is it?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which character comes first, and what does it mean on its own? (你, "you".) Is 你好 (ní hǎo) (nǐ hǎo) one word or two? (One.)
+Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
+[question — say your answer, then pause 9 seconds]
+You have just been introduced to someone. Type the Mandarin greeting in characters.
+
+
+Lesson 5 of 7.
+ní hǎo — why the greeting is not said the way it is written.
+
+Warm-up.
+[pause 2 seconds]
+Say the greeting once, slowly, giving both syllables the low dipping third tone you were taught. It should feel awkward in the mouth. That awkwardness is the whole lesson.
+
+Grammar Lens — one rule, and it is not optional.
+When two third tones come one after the other, the first is spoken as a second (rising) tone.
+So the greeting, written nǐ hǎo, is actually said ní hǎo — the first syllable climbs instead of dipping.
+[repeat that twice]
+Nothing about this shows in the writing. Dictionaries print nǐ hǎo, because that is the citation tone each word carries on its own, and the characters 你好 (ní hǎo) never change at all. A learner who trusts only what is written will say the commonest greeting in the language wrong every time.
+Why does it happen? Two dipping tones in a row would need the voice to sink, climb, sink and climb again inside a fifth of a second. Speakers do not do that; the first one gives way. This is a real rule of the sound system, not a sloppy shortcut, and every native speaker applies it without thinking.
+Compare it to what English does with "the": written one way, said thuh before a consonant and thee before a vowel, and no English speaker thinks of that as two words. The difference is that here the change lands on pitch — the same property that distinguishes one word from another.
+
+Guided Practice.
+[your turn — say: ní hǎo — first syllable rising, second dipping]
+[pause 8 seconds for the answer]
+[your turn — say: it again, at speaking speed, without the pause between them]
+[pause 8 seconds for the answer]
+[your turn — answer: which spelling changes when the rule applies — pinyin, characters, or neither?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Two third tones meet. What happens to the first? (It rises.) What happens to the characters? (Nothing.)
+Source: Chinese Text Project, on tone in Mandarin.
+[question — say your answer, then pause 10 seconds]
+A dictionary prints the greeting as nǐ hǎo. Type it in pinyin the way it is actually spoken.
+
+
+Lesson 6 of 7.
+好 (hǎo) (hào) again — proof, on a character you own, that tone is the word.
+
+Warm-up.
+[pause 2 seconds]
+Name the character built from a woman and a child, and say what it means. Hold its tone: low and dipping.
+
+The word, taken apart.
+The very same character, 好 (hǎo) (hào), has a second reading — and the only thing that separates the two is the tone:
+好 (hào) hǎo, dipping third tone — good.
+好 (hǎo) hào, sharply falling fourth tone — to be fond of, to like.
+Same strokes. Same components. Same shape on the page. Two words.
+This is the cleanest proof available of what the first lesson claimed. Tone is not decoration on a word; it is inside the word, doing the job a consonant does in English. Change hǎo to hào and you have not said "good" with feeling — you have said a different word, the way bat and pat are different words.
+The two readings are related in meaning, and the relation is a good hook: what is good is what one is fond of. That is a link inside Chinese, between two readings of one character. It is not a link to English. There is none.
+You are not asked to produce hào yet. Recognising it is the point: when a familiar character turns up wearing an unfamiliar tone, the tone is telling you this is a different word.
+
+Guided Practice.
+[your turn — answer: hǎo or hào — which one means "good"?]
+[pause 8 seconds for the answer]
+[your turn — answer: what changed between them, and what stayed the same?]
+[pause 8 seconds for the answer]
+[your turn — answer: which two components is this character built from?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+One character carried two words today. What told them apart? (Only the tone.)
+Source: Unicode Han database, character 好 (hǎo) (hào).
+[question — say your answer, then pause 10 seconds]
+Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Type its meaning with that tone, in English.
+
+
+Lesson 7 of 7.
+Practice — greet someone, and be greeted back.
+
+Warm-up.
+[pause 2 seconds]
+Retrieve the two words separately first: the one meaning "you", then the one meaning "good". Do not run them together yet.
+
+The exchange.
+A: 你好 (nǐ hǎo) ní hǎo! B: 你好 (nǐ hǎo) ní hǎo!
+Two lines, one word, both voices. Every piece is already yours: the characters from their own lessons, the meaning from the greeting lesson, the rising first syllable from the sandhi rule. Nothing new is hiding here.
+Say A's line, pause, then answer as B.
+[repeat that twice]
+
+What you've built this chapter.
+Four things, and only one of them is vocabulary:
+你 (nǐ) is 亻 plus 尔; 好 (hǎo) (hào) is 女 beside 子. Characters are built from parts.
+Those parts are the memory hook this track uses, because Chinese and English share no ancestor and therefore no cousin web.
+你好 (ní hǎo) (nǐ hǎo) is two characters and one word. Characters are not letters.
+Pitch is part of the word, and a neighbouring word can change it without changing a stroke.
+
+Guided Practice.
+[your turn — say: greet someone you have just met]
+[pause 8 seconds for the answer]
+[your turn — say: answer that greeting]
+[pause 8 seconds for the answer]
+[your turn — read: 你好 (ní hǎo) (nǐ hǎo) aloud from the characters alone, with no pinyin]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Run both lines once more. If the first syllable dips instead of rising, go back to the sandhi lesson only — not to the whole chapter.
+Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
+[question — say your answer, then pause 9 seconds]
+Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.

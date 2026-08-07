@@ -1,0 +1,22 @@
+% ============================================================================
+% brain-parts.query.adj — a worked recall over the anatomy brain-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the cerebellum
+% do?": it states no anatomy fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `brain_part_function` rows and returns the function + the table's
+% source/locator/trust. The third query runs the relation BACKWARD (bind the
+% function `breathing`, recall the part that controls it — the brainstem). A
+% neuron is a cell, not one of these gross brain parts, so a recall on it
+% abstains honestly — the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli brain-parts.query.adj
+% ============================================================================
+
+import "brain-parts.adj"
+
+? brain_part_function(cerebellum, $Job)   % expect coordination_of_voluntary_movement
+? brain_part_function(hippocampus, $Job)  % expect memory
+? brain_part_function($Part, breathing)   % reverse bind — expect brainstem
+? brain_part_function(neuron, $Job)       % expect abstain — a neuron is not one of these parts

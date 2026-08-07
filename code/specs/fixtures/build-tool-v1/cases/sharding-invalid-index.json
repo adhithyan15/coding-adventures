@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "sharding/invalid-index",
+  "domain": "sharding",
+  "summary": "A shard index outside the produced matrix is a stable input error.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "sharding"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "sharding",
+    "options": {
+      "packages": [
+        {
+          "name": "python/demo",
+          "language": "python",
+          "build_command_count": 0
+        }
+      ],
+      "edges": [],
+      "scheduled_packages": [
+        "python/demo"
+      ],
+      "shard_count": 1,
+      "shard_index": 1
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "sharding/invalid-index",
+    "domain": "sharding",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {
+        "code": "SHARD_INDEX_INVALID",
+        "severity": "error"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

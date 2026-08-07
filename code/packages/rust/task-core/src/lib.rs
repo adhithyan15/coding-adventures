@@ -1,0 +1,356 @@
+#![forbid(unsafe_code)]
+//! # task-core
+//!
+//! The headless engine behind **task-app**: a general task- and project-management
+//! model, designed for the *hardest* case (Microsoft Project-class scheduling) so
+//! that every simpler tool — a checklist, a todo list, a kanban board, a Gantt
+//! chart, a flowchart — is a *restriction* of one rich `Task` entity rather than a
+//! separate data model.
+//!
+//! ## What lives here
+//!
+//! This crate is **pure**: no I/O, no system clock (the current time is always
+//! passed in as `now: u64`), and no id generation (ids are minted by the facade and
+//! passed in — see the note on [`ids`]). `serde` is behind a feature flag, so the
+//! model has zero external dependencies by default. This mirrors the house style of
+//! `engram-core` and `spreadsheet-core`.
+//!
+//! Everything a scheduler *derives* (early/late dates, slack, the critical flag,
+//! rollups, formula values) is **computed, never stored as source of truth** — the
+//! stored state is the minimal set of inputs, and the schedule is reproducible from
+//! it. See `code/specs/task-app-data-model.md` for the full design.
+//!
+//! ## Module map
+//!
+//! - [`ids`] — typed, string-backed entity identifiers.
+//! - [`primitives`] — `Date`, `Duration`, `Work`, `Money`: the units the model
+//!   measures in, with civil-date arithmetic delegated to `datetime-core`.
+//! - [`model`] — the entities: `Task`, links, resources, calendars, fields,
+//!   workflow, baselines, views, the `ProjectState` root, and the `Workspace` that
+//!   holds every project and how they nest.
+//! - [`calendar`] — the working-time engine: resolve calendars, snap into working
+//!   time, add working durations, and count working minutes. The unit the scheduler
+//!   measures in.
+//! - [`view`] — the view/query layer's shared field accessor (`cell`) and display
+//!   formatter (`format_cell`): the one place filter/sort/group/display read a task's
+//!   field values, so they agree by construction.
+//!
+//! The CPM scheduler (a forward/backward pass over `directed-graph`, built on
+//! [`calendar`]) and the command/reducer surface land in follow-up modules; the
+//! types here define the *shape* of the world they operate on.
+
+pub mod calendar;
+pub mod formula;
+mod ids;
+mod model;
+pub mod ops;
+mod primitives;
+pub mod projections;
+pub mod scheduler;
+pub mod view;
+
+pub use ids::*;
+pub use model::*;
+pub use primitives::*;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn build_a_minimal_project() {
+        // A project with one task — the smallest meaningful state.
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let task = Task::new(TaskId::from_raw("t1"), "Write the spec");
+        project.tasks.insert(task.id.clone(), task);
+
+        assert_eq!(project.tasks.len(), 1);
+        let t = project.tasks.get(&TaskId::from_raw("t1")).unwrap();
+        assert_eq!(t.name, "Write the spec");
+        assert!(!t.completed);
+        assert_eq!(t.kind, TaskKind::Leaf);
+        assert!(t.schedule.is_none(), "a bare task carries no scheduling");
+    }
+
+    #[test]
+    fn empty_project_seeds_a_standard_calendar() {
+        let project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let cal = project
+            .calendars
+            .get(&project.project_calendar)
+            .expect("project calendar exists");
+        // Monday (index 0) is a working day; Sunday (index 6) is not.
+        assert!(cal.work_week[0].working);
+        assert!(!cal.work_week[6].working);
+        assert_eq!(cal.work_week[0].intervals[0].start_min, 9 * 60);
+        assert_eq!(cal.work_week[0].intervals[0].end_min, 17 * 60);
+    }
+
+    #[test]
+    fn date_arithmetic_delegates_to_datetime_core() {
+        // 2026-07-10 is a Friday (ISO weekday 5).
+        let d = Date::from_ymd(2026, 7, 10).unwrap();
+        assert_eq!(d.weekday(), 5);
+        assert_eq!(d.to_ymd(), (2026, 7, 10));
+        // Adding one day lands on Saturday.
+        assert_eq!(d.add_days(1).weekday(), 6);
+        assert_eq!(d.days_until(d.add_days(7)), 7);
+        assert!(
+            Date::from_ymd(2026, 13, 1).is_none(),
+            "invalid month rejected"
+        );
+    }
+
+    #[test]
+    fn primitive_helpers() {
+        assert!(Duration::zero().is_zero());
+        assert_eq!(Duration::minutes(480).working_minutes, 480);
+        assert!(!Duration::minutes(1).elapsed);
+        assert_eq!(Work::minutes(960).minutes, 960);
+        assert_eq!(Work::zero().minutes, 0);
+        let m = Money::zero("USD");
+        assert_eq!(m.minor_units, 0);
+        assert_eq!(m.currency, "USD");
+    }
+
+    #[test]
+    fn a_fully_scheduled_task_carries_the_whole_model() {
+        // Exercise the scheduling block, a decision, a dependency, and an assignment
+        // together — the shapes a Gantt/flowchart projection reads.
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+
+        let mut design = Task::new(TaskId::from_raw("t1"), "Design");
+        design.schedule = Some(TaskSchedule {
+            duration: Duration::minutes(3 * 8 * 60),
+            work: Work::minutes(3 * 8 * 60),
+            constraint: Constraint::StartNoEarlierThan(Date::from_ymd(2026, 7, 13).unwrap()),
+            deadline: Some(Date::from_ymd(2026, 7, 20).unwrap()),
+            ..TaskSchedule::default()
+        });
+        let build = Task::new(TaskId::from_raw("t2"), "Build");
+
+        project.tasks.insert(design.id.clone(), design);
+        project.tasks.insert(build.id.clone(), build);
+        project.dependencies.push(DependencyLink {
+            id: LinkId::from_raw("l1"),
+            predecessor: TaskId::from_raw("t1"),
+            successor: TaskId::from_raw("t2"),
+            kind: DependencyKind::FinishToStart,
+            lag: Duration::zero(),
+        });
+
+        let dev = Resource {
+            id: ResourceId::from_raw("r1"),
+            name: "Dev".into(),
+            kind: ResourceKind::Work,
+            calendar: None,
+            max_units: 1.0,
+            std_rate: Money::zero("USD"),
+            cost_per_use: Money::zero("USD"),
+        };
+        project.resources.insert(dev.id.clone(), dev);
+        project.assignments.push(Assignment {
+            task: TaskId::from_raw("t1"),
+            resource: ResourceId::from_raw("r1"),
+            units: 1.0,
+            work: Work::minutes(3 * 8 * 60),
+            contour: WorkContour::Flat,
+        });
+
+        assert_eq!(project.tasks.len(), 2);
+        assert_eq!(project.dependencies[0].kind, DependencyKind::FinishToStart);
+        let sched = project.tasks[&TaskId::from_raw("t1")]
+            .schedule
+            .as_ref()
+            .unwrap();
+        assert!(matches!(
+            sched.constraint,
+            Constraint::StartNoEarlierThan(_)
+        ));
+        assert_eq!(project.assignments[0].units, 1.0);
+    }
+
+    // ── Workspace: projects are first-class, plural, and nestable ───────────────
+
+    /// Build the three-level forest used by the nesting tests:
+    ///   apollo ─ lander ─ avionics
+    fn nested_workspace() -> Workspace {
+        let mut ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("apollo"));
+        for (id, parent) in [("lander", "apollo"), ("avionics", "lander")] {
+            let mut p = ProjectState::empty(ProjectId::from_raw(id));
+            p.parent = Some(ProjectId::from_raw(parent));
+            ws.projects.insert(p.id.clone(), p);
+        }
+        ws
+    }
+
+    #[test]
+    fn an_empty_workspace_holds_one_root_project() {
+        // The "new document" state: one project, un-nested — i.e. exactly today's
+        // single-project world, which is what keeps the simple case simple.
+        let ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("p1"));
+        assert_eq!(ws.projects.len(), 1);
+        assert_eq!(ws.roots, vec![ProjectId::from_raw("p1")]);
+        assert!(ws.projects[&ProjectId::from_raw("p1")].parent.is_none());
+        assert!(ws.cross_project_dependencies.is_empty());
+        // Scheduling stays per-project until you opt in.
+        assert!(!ws.settings.schedule_as_one_network);
+    }
+
+    #[test]
+    fn projects_nest_and_expose_their_forest() {
+        let ws = nested_workspace();
+
+        // Direct children only — apollo owns lander, not avionics.
+        let kids: Vec<_> = ws
+            .children_of(&ProjectId::from_raw("apollo"))
+            .iter()
+            .map(|p| p.id.clone())
+            .collect();
+        assert_eq!(kids, vec![ProjectId::from_raw("lander")]);
+        assert!(ws.children_of(&ProjectId::from_raw("avionics")).is_empty());
+
+        // Ancestors walk nearest-parent-first, all the way to the root.
+        assert_eq!(
+            ws.ancestors_of(&ProjectId::from_raw("avionics")),
+            vec![ProjectId::from_raw("lander"), ProjectId::from_raw("apollo")]
+        );
+        assert!(ws.ancestors_of(&ProjectId::from_raw("apollo")).is_empty());
+    }
+
+    #[test]
+    fn ancestors_of_a_corrupt_parent_cycle_terminates() {
+        // Ops reject cycles, but a snapshot arrives from outside the engine — so the
+        // walk must not hang on hostile data. It truncates rather than looping.
+        let mut ws = nested_workspace();
+        ws.projects
+            .get_mut(&ProjectId::from_raw("apollo"))
+            .unwrap()
+            .parent = Some(ProjectId::from_raw("avionics"));
+
+        let chain = ws.ancestors_of(&ProjectId::from_raw("avionics"));
+        assert!(
+            chain.len() <= ws.projects.len(),
+            "cycle guard bounds the walk"
+        );
+    }
+
+    #[test]
+    fn task_ids_are_workspace_global_so_ownership_is_resolvable() {
+        // This index is what lets the scheduler tell an intra-project edge from a
+        // cross-project one without compound (ProjectId, TaskId) keys.
+        let mut ws = nested_workspace();
+        let t = Task::new(TaskId::from_raw("wiring"), "Wiring");
+        ws.projects
+            .get_mut(&ProjectId::from_raw("avionics"))
+            .unwrap()
+            .tasks
+            .insert(t.id.clone(), t);
+
+        assert_eq!(
+            ws.project_of_task(&TaskId::from_raw("wiring")),
+            Some(&ProjectId::from_raw("avionics"))
+        );
+        assert_eq!(ws.project_of_task(&TaskId::from_raw("nope")), None);
+    }
+
+    #[test]
+    fn a_single_project_wraps_into_an_equivalent_workspace() {
+        // The migration path for pre-workspace snapshots: the project must survive
+        // the wrap untouched, and land as the sole root.
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let t = Task::new(TaskId::from_raw("t1"), "Ship it");
+        project.tasks.insert(t.id.clone(), t);
+
+        let ws = Workspace::from_project(WorkspaceId::from_raw("w1"), project.clone());
+        assert_eq!(ws.roots, vec![ProjectId::from_raw("p1")]);
+        assert_eq!(ws.projects[&ProjectId::from_raw("p1")], project);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn workspace_json_round_trips_and_omits_parent_for_root_projects() {
+        let ws = nested_workspace();
+        let json = serde_json::to_string(&ws).unwrap();
+
+        // Wire contract: camelCase, bare-string ids, nesting by id.
+        assert!(json.contains("\"crossProjectDependencies\":[]"));
+        assert!(json.contains("\"parent\":\"apollo\""));
+        // A root project omits `parent` entirely rather than emitting null — the
+        // JSON stays clean and old single-project snapshots remain valid input.
+        assert!(!json.contains("\"parent\":null"));
+
+        let back: Workspace = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, ws);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn a_pre_workspace_project_snapshot_still_deserialises() {
+        // Backward compatibility: JSON written before `parent` existed must still
+        // load (serde default), so Phase-1 persisted data keeps working.
+        let json = serde_json::to_string(&ProjectState::empty(ProjectId::from_raw("p1")))
+            .unwrap()
+            .replace(",\"parent\":null", ""); // simulate the older shape
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert!(back.parent.is_none());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn project_json_round_trips_with_camelcase_and_string_ids() {
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let mut t = Task::new(TaskId::from_raw("t1"), "Ship it");
+        t.percent_complete = 40;
+        t.schedule = Some(TaskSchedule {
+            task_type: TaskType::FixedWork,
+            ..TaskSchedule::default()
+        });
+        project.tasks.insert(t.id.clone(), t);
+
+        let json = serde_json::to_string(&project).unwrap();
+        // Wire contract: camelCase field names …
+        assert!(json.contains("\"percentComplete\":40"));
+        assert!(json.contains("\"taskType\":\"fixedWork\""));
+        // … and ids serialise as bare strings (serde transparent), so the tasks map
+        // is keyed by the plain id string.
+        assert!(json.contains("\"t1\":{"));
+
+        // And it deserialises back to an equal value.
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, project);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn a_pre_notes_project_snapshot_still_deserialises() {
+        // Backward compatibility: JSON written before `notes` existed must still
+        // load (serde default), so every already-persisted workspace keeps working.
+        let json = serde_json::to_string(&ProjectState::empty(ProjectId::from_raw("p1")))
+            .unwrap()
+            .replace(",\"notes\":{}", ""); // simulate the older shape
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert!(back.notes.is_empty());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn note_json_round_trips_with_camelcase_and_attached_task() {
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let note = Note {
+            id: NoteId::from_raw("n1"),
+            title: "Kickoff".into(),
+            body: "Agenda: scope, owners, dates.".into(),
+            attached_task: Some(TaskId::from_raw("t1")),
+        };
+        project.notes.insert(note.id.clone(), note);
+
+        let json = serde_json::to_string(&project).unwrap();
+        // Wire contract: camelCase field names, bare-string ids (serde transparent).
+        assert!(json.contains("\"attachedTask\":\"t1\""));
+        assert!(json.contains("\"n1\":{"));
+
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, project);
+    }
+}

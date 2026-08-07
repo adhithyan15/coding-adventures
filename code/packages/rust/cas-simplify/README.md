@@ -75,24 +75,24 @@ let folded = numeric_fold(apply(sym(ADD), vec![int(2), int(3), sym("x")]));
 use symbolic_ir::{apply, int, sym, ADD, POW};
 use cas_simplify::expand;
 
-// (x + 1)^2 -> 1 + x + x + x*x  (mathematically x^2 + 2x + 1 — see below)
+// (x + 1)^2 -> 1 + 2*x + x^2
 let x_plus_1 = apply(sym(ADD), vec![sym("x"), int(1)]);
 let expr = apply(sym(POW), vec![x_plus_1, int(2)]);
-assert_eq!(format!("{}", expand(expr)), "Add(1, x, x, Mul(x, x))");
+assert_eq!(format!("{}", expand(expr)), "Add(1, Mul(2, x), Pow(x, 2))");
 ```
 
-`expand` distributes `Mul` over `Add`/`Sub` and expands bounded non-negative
+`expand` distributes `Mul` over `Add`/`Sub`, expands bounded non-negative
 integer `Pow`s via square-and-multiply (`O(log n)` multiplications, not
-`O(n)`), guarded against the doubly-exponential term-count blowup repeated
-squaring can hit on a multi-term base.
-
-**Honestly scoped**: `expand` does **not** collect like terms — the two `x`
-terms above stay separate rather than combining into `2*x`, and `x*x` is not
-folded into `x^2`. The result is always mathematically correct; it is not
-always the most compact form. See the module docs (`src/expand.rs`) for the
-full story, including why this differs from the "clean" example in the
-Python reference's docstring (that example demonstrates a different,
-single-variable-only fast path this port does not include).
+`O(n)`, guarded against the doubly-exponential term-count blowup repeated
+squaring can hit on a multi-term base), and **collects like terms**
+(`collect_terms`): repeated monomials combine and their coefficients sum
+(`x + x` → `2*x`), and repeated multiplication folds into a power (`x*x` →
+`x^2`). See the module docs (`src/collect_terms.rs`) for the full four-step
+algorithm, and `src/expand.rs` for why this differs from the "clean" example
+in the Python reference's docstring (that example demonstrates a different,
+single-variable-only fast path this port does not include, reaching the
+same collected form via polynomial arithmetic rather than monomial
+grouping).
 
 ## Stack position
 

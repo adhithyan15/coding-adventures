@@ -1,11 +1,28 @@
 # Changelog
 
+- Keep camera PTZ preset and bounded-movement commands non-optimistic until a
+  native integration completes the physical operation.
+
+- Support explicit device-control commands in runtime policy and optimistic
+  state handling while keeping sensor calibration non-optimistic.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Keep camera recording changes non-optimistic until a native integration
+  confirms device readback.
+- Keep typed device-configuration and self-test commands non-optimistic until
+  integrations return native confirmation.
+
+- Split command-tool authorization from submission so integrations can perform
+  authorized conflict checks before publishing accepted optimistic state.
+
 ### Added
 
+- Authorization and optimistic-state routing for typed D23 media commands.
+- `RuntimeDurableSnapshot` plus snapshot and restore helpers for normalized
+  registry, state, history, pairing, optimistic, and desired-state data.
 - `RuntimeEventDeliverySummary` plus delivery-batch `summary()` helpers for
   compact delivered-event and remaining-backlog counts after subscription polls.
 - `RuntimePollEventsToolRequest` / `RuntimePollEventsToolOutput` and

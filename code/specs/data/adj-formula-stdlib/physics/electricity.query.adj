@@ -1,0 +1,36 @@
+% ============================================================================
+% electricity.query.adj — worked examples over the physics electricity library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a circuits
+% question: it states NO arithmetic and NO law — it only `import`s the grounded
+% library, `observe`s the electrical quantities it decomposed from the prompt
+% (each a byte-provenanced span, elided here), and asks the engine to APPLY the
+% cited law. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the law's source/locator/trust.
+%
+% The two questions COMPOSE: Ohm's law gives the voltage across the resistor,
+% which is exactly the voltage the power law then multiplies by the current.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electricity.query.adj
+% ============================================================================
+
+import "electricity.adj"
+
+% Ohm's law, SOLVED FOR RESISTANCE (rung-0 of the CAS-wiring rung,
+% ADJ-FORMULA-LIBRARIES FL-10): given a 6 V / 2 A pairing, recover the
+% resistance directly — the engine rearranges the SAME cited law, it does not
+% look resistance up in a second, separately-written formula. The target of a
+% `symbolic` solve may not already be observed (it is the unknown being solved
+% for), so this runs BEFORE `resistance` is ever `observe`d below.
+observe voltage(6)
+observe current(2)
+? resistance_from_ohms_law(voltage, current)   % expect 3   (R = V / I = 6 / 2)
+
+% Ohm's law, the FORWARD direction: that same 2 A current through the 3 Ω
+% resistor just recovered gives back the 6 V we started from — a round trip.
+observe resistance(3)
+? voltage(current, resistance)     % expect 6   (Ohm's law: V = I·R)
+
+% Electric power at that same current: power = 6 * 2.
+? power(voltage, current)          % expect 12  (electric power: P = V·I)

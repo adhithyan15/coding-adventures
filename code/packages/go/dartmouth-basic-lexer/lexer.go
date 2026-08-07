@@ -23,7 +23,8 @@
 // # Grammar-Driven Approach
 //
 // This package is a thin wrapper around the generic grammar-driven lexer. It:
-//  1. Loads the dartmouth_basic.tokens grammar file from code/grammars/
+//  1. Uses the dartmouth_basic token grammar embedded at compile time as native
+//     Go in grammar_data.go (TokenGrammarData) — nothing is read from disk
 //  2. Passes it to GrammarLexer, which compiles the regex patterns into a DFA
 //  3. Registers two post-tokenize hooks for BASIC-specific disambiguation:
 //     - relabelLineNumbers: reclassifies NUMBER tokens at line-start as LINE_NUM
@@ -67,36 +68,8 @@
 package dartmouthlexer
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
-
-// getGrammarPath computes the absolute path to the dartmouth_basic.tokens
-// grammar file at runtime.
-//
-// We use runtime.Caller(0) to find the directory containing this source file,
-// then navigate up three directory levels to reach the repo's grammars/ folder.
-// Using the source-file location rather than the working directory means tests
-// and the build tool — which may run from any directory — always find the grammar.
-//
-// Directory structure (three levels from lexer.go to code/):
-//
-//	code/
-//	  grammars/
-//	    dartmouth_basic.tokens    <-- this is what we want
-//	  packages/
-//	    go/
-//	      dartmouth-basic-lexer/
-//	        lexer.go              <-- we are here
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "dartmouth_basic", "dartmouth_basic.tokens")
-}
 
 // relabelLineNumbers is a post-tokenize hook that reclassifies NUMBER tokens
 // in line-number position as LINE_NUM tokens.
@@ -240,32 +213,21 @@ func suppressRemContent(tokens []lexer.Token) []lexer.Token {
 //  1. relabelLineNumbers — reclassifies the first NUMBER on each line as LINE_NUM
 //  2. suppressRemContent — discards comment text after REM until end of line
 //
-// The grammar is loaded from code/grammars/dartmouth_basic.tokens, which
-// declares @case_insensitive true. This means the source text is normalized to
-// uppercase before matching, so "print", "Print", and "PRINT" all produce
-// KEYWORD("PRINT").
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time. It declares
+// @case_insensitive true, so the source text is normalized to uppercase before
+// matching, and "print", "Print", and "PRINT" all produce KEYWORD("PRINT").
 //
 // The returned lexer's Tokenize() method produces the full token stream
 // including NEWLINE tokens (which are significant in BASIC — they terminate
 // statements) and a final EOF token.
 //
-// Returns an error if the grammar file cannot be read or parsed.
+// The error result is retained for API compatibility and is always nil.
 func CreateDartmouthBasicLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("dartmouthlexer.CreateDartmouthBasicLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			lex := lexer.NewGrammarLexer(source, grammar)
-			lex.AddPostTokenize(relabelLineNumbers)
-			lex.AddPostTokenize(suppressRemContent)
-			return rf.Generate(true, false, lex)
-		}).GetResult()
+	lex := lexer.NewGrammarLexer(source, TokenGrammarData)
+	lex.AddPostTokenize(relabelLineNumbers)
+	lex.AddPostTokenize(suppressRemContent)
+	return lex, nil
 }
 
 // TokenizeDartmouthBasic is a convenience function that tokenizes Dartmouth
@@ -286,7 +248,8 @@ func CreateDartmouthBasicLexer(source string) (*lexer.GrammarLexer, error) {
 //	LINE_NUM("30") KEYWORD("END") NEWLINE
 //	EOF("")
 //
-// Returns an error if the grammar file cannot be loaded.
+// The error result is retained for API compatibility; CreateDartmouthBasicLexer
+// never fails, so this returns a nil error in practice.
 func TokenizeDartmouthBasic(source string) ([]lexer.Token, error) {
 	lex, err := CreateDartmouthBasicLexer(source)
 	if err != nil {

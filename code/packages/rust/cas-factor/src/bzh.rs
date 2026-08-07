@@ -241,6 +241,10 @@ fn poly_powmod(mut exp: i64, mod_poly: &[i64], p: i64) -> Vec<i64> {
     result
 }
 
+// Gaussian elimination over GF(p): the inner row-reduction loop indexes two rows
+// of the same matrix (`a[r][j]` and `a[row][j]`) by column `j`, so an index loop
+// is both the clearest form and the one that avoids simultaneous-borrow conflicts.
+#[allow(clippy::needless_range_loop)]
 fn null_space_mod_p(matrix: &[Vec<i64>], n: usize, p: i64) -> Vec<Vec<i64>> {
     let mut a = matrix.to_vec();
     let mut pivot_cols = Vec::new();

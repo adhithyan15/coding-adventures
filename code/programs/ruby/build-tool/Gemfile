@@ -2,12 +2,13 @@
 
 source "https://rubygems.org"
 
-# We keep dependencies minimal. The build tool itself uses only the Ruby
-# standard library (json, digest, open3, pathname, optparse, set).
-# These gems are for development and testing only.
+# Keep third-party dependencies minimal. Starlark evaluation and progress
+# reporting use repository-local gems so a source-tree build never resolves
+# runtime code from the network.
 
-# Optional runtime dependency: progress bar for build output.
+# Repository-local runtime dependencies.
 gem "coding_adventures_progress_bar", path: "../../../packages/ruby/progress_bar"
+eval_gemfile "../../../packages/ruby/starlark_interpreter/Gemfile"
 
 group :test do
   gem "minitest", "~> 5.0"

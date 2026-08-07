@@ -10,7 +10,7 @@
 //! 4. Edge cases: empty graphs, missing buffers, large tensors.
 
 use compute_ir::{
-    BufferId, ComputeGraph, ExecutorId, OpTiming as PlanOpTiming, PlacedConstant, PlacedOp,
+    BufferId, ComputeGraph, OpTiming as PlanOpTiming, PlacedConstant, PlacedOp,
     PlacedTensor, Residency, CPU_EXECUTOR,
 };
 use executor_protocol::{block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport};

@@ -42,7 +42,7 @@ use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp, StyleTransition};
 
 // =====================================================================
 // Public API
@@ -92,8 +92,8 @@ pub struct XamlEmitResult {
     /// PR-2.
     pub for_view_models: Vec<EmittedFile>,
 
-    /// One entry per `If` whose expression is not `{x:Bind}`-able â€” the
-    /// computed-property helper C# source.
+    /// Generated C# helper sources used by component resources, including
+    /// visibility and native-focus value converters.
     ///
     /// PR-1 always returns an empty `Vec`; `If` lowering lands with
     /// PR-2.
@@ -456,6 +456,12 @@ pub fn from_pipeline(
             source: emit_bool_to_vis_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_focus_state_converter {
+        if_helpers.push(EmittedFile {
+            filename: "FocusStateToBoolConverter.cs".to_string(),
+            source: emit_focus_state_to_bool_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -617,6 +623,10 @@ struct EmitContext<'a> {
     /// emitter writes a `BoolToVisibilityConverter` resource into the
     /// `<UserControl.Resources>` block.
     needs_bool_to_vis: bool,
+    /// Tracks whether a focus-capable Host control consumes UI15's built-in
+    /// `state focused`. The emitter writes a `FocusStateToBoolConverter`
+    /// resource and ships its C# helper alongside the component triple.
+    needs_focus_state_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -650,6 +660,20 @@ struct EmitContext<'a> {
     /// handler, etc.) for `emit_xaml` to splice into the open tag.
     /// `None` for the standard UserControl root.
     root_extra_attrs: Option<String>,
+    /// Property-scoped WinUI visual-state groups collected from native
+    /// Host* controls that opt into MSL states through `state-when-*`.
+    ///
+    /// The groups are emitted on the generated root after the layout walk,
+    /// where they can target each control's deterministic `x:Name`.
+    visual_state_groups: Vec<XamlVisualStateGroup>,
+    /// Visual-state groups collected for each active `For` DataTemplate,
+    /// innermost template last. DataTemplate namescopes are isolated from the
+    /// component root and from enclosing templates, so each template needs
+    /// its own VisualStateManager attachment point.
+    template_visual_state_groups: Vec<Vec<XamlVisualStateGroup>>,
+    /// Monotonic suffix used to keep generated VisualState names unique in
+    /// the generated XAML.
+    visual_state_counter: u32,
 }
 
 impl<'a> EmitContext<'a> {
@@ -675,6 +699,7 @@ impl<'a> EmitContext<'a> {
             for_scope: Vec::new(),
             helpers: Vec::new(),
             needs_bool_to_vis: false,
+            needs_focus_state_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -683,6 +708,9 @@ impl<'a> EmitContext<'a> {
             used_xmlns: std::collections::BTreeMap::new(),
             slot_aliases: std::collections::HashMap::new(),
             root_extra_attrs: None,
+            visual_state_groups: Vec::new(),
+            template_visual_state_groups: Vec::new(),
+            visual_state_counter: 0,
         }
     }
 
@@ -735,16 +763,68 @@ impl<'a> EmitContext<'a> {
             self.helpers.push(helper);
         }
     }
+
+    fn next_visual_state_id(&mut self) -> u32 {
+        self.visual_state_counter += 1;
+        self.visual_state_counter
+    }
+
+    fn add_visual_state_group(&mut self, group: XamlVisualStateGroup) {
+        if let Some(template_groups) = self.template_visual_state_groups.last_mut() {
+            template_groups.push(group);
+        } else {
+            self.visual_state_groups.push(group);
+        }
+    }
 }
 
 // =====================================================================
 // Part-style map (mosstyle â†’ flat property fragments)
 // =====================================================================
 
-/// A part-style entry: the joined CSS fragment for one `part` block's
-/// base properties. State blocks are deferred to a later PR; today only
-/// the base goes into the map.
-type PartStyleMap = std::collections::HashMap<String, String>;
+#[derive(Debug, Clone)]
+struct PartStateStyle {
+    props: Vec<StyleProp>,
+    transitions: Vec<StyleTransition>,
+}
+
+/// A part-style entry keeps the already-lowered base attribute fragment
+/// together with the structured MSL state and transition data. Base-only
+/// consumers remain a cheap string lookup; native controls can additionally
+/// lower `state-when-*` predicates and ButtonBase pointer hover to WinUI
+/// VisualStates.
+#[derive(Debug, Clone)]
+struct PartStyleEntry {
+    base_fragment: String,
+    transitions: Vec<StyleTransition>,
+    states: std::collections::HashMap<String, PartStateStyle>,
+}
+
+type PartStyleMap = std::collections::HashMap<String, PartStyleEntry>;
+
+#[derive(Debug, Clone)]
+struct XamlVisualState {
+    name: String,
+    trigger_value: String,
+    value: String,
+    transition: Option<StyleTransition>,
+}
+
+#[derive(Debug, Clone)]
+struct PendingXamlVisualState {
+    trigger_value: String,
+    value: String,
+    transition: Option<StyleTransition>,
+}
+
+#[derive(Debug, Clone)]
+struct XamlVisualStateGroup {
+    normal_name: String,
+    target_name: String,
+    property: String,
+    base_transition: Option<StyleTransition>,
+    states: Vec<XamlVisualState>,
+}
 
 /// Walk the `StyleDef` and produce a flat `part_name -> css_fragment`
 /// map. The fragment is a comma-separated `key: "value"` list ready to
@@ -752,13 +832,428 @@ type PartStyleMap = std::collections::HashMap<String, String>;
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let frag = build_style_fragment(&part.base);
-        if !frag.is_empty() {
-            out.insert(part.name.clone(), frag);
+        let base_fragment = build_style_fragment(&part.base);
+        let states = part
+            .states
+            .iter()
+            .map(|state| {
+                (
+                    state.state.clone(),
+                    PartStateStyle {
+                        props: state.props.clone(),
+                        transitions: state.transitions.clone(),
+                    },
+                )
+            })
+            .collect();
+        if !base_fragment.is_empty() || !part.transitions.is_empty() || !part.states.is_empty() {
+            out.insert(
+                part.name.clone(),
+                PartStyleEntry {
+                    base_fragment,
+                    transitions: part.transitions.clone(),
+                    states,
+                },
+            );
         }
-        // State blocks not yet wired â€” see CHANGELOG known-limitations.
     }
     out
+}
+
+fn has_explicit_state_when(node: &LayoutNode, state_name: &str) -> bool {
+    let prop_name = format!("state-when-{state_name}");
+    node.props.iter().any(|prop| prop.name == prop_name)
+}
+
+fn button_base_supports_automatic_hover(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
+fn button_base_supports_automatic_press(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
+fn control_supports_automatic_focus(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "TextBox" | "NumberBox" | "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
+/// Register MSL state overrides for one native WinUI control.
+///
+/// Each property gets its own VisualStateGroup. This is deliberate:
+/// `VisualTransition.GeneratedDuration` applies to every changed property in
+/// a group, while MSL transitions are property-scoped. Isolating properties
+/// preserves that contract and lets a background fade and opacity change use
+/// different durations or easing curves.
+///
+fn register_host_visual_states(
+    node: &LayoutNode,
+    xaml_tag: &str,
+    target_name: &str,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) {
+    let Some(part_name) = node.part_name.as_deref() else {
+        return;
+    };
+    let Some(part) = part_styles.get(part_name) else {
+        return;
+    };
+
+    // XAML gives the first active trigger precedence. React and SwiftUI give
+    // the last declared `state-when-*` layer precedence, so reverse declaration
+    // order before materialising the VisualStates.
+    let mut state_layers = Vec::new();
+    for prop in node.props.iter().rev() {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let Some(state_style) = part.states.get(state_name) else {
+            continue;
+        };
+        let Some(trigger_value) = lower_state_trigger_value(&prop.value, ctx) else {
+            continue;
+        };
+        state_layers.push((state_name, trigger_value, state_style));
+    }
+    if button_base_supports_automatic_press(xaml_tag) && !has_explicit_state_when(node, "pressed") {
+        if let Some(press_style) = part.states.get("pressed") {
+            state_layers.push((
+                "pressed",
+                format!("{{Binding IsPressed, ElementName={target_name}}}"),
+                press_style,
+            ));
+        }
+    }
+    if control_supports_automatic_focus(xaml_tag) && !has_explicit_state_when(node, "focused") {
+        if let Some(focus_style) = part.states.get("focused") {
+            ctx.needs_focus_state_converter = true;
+            state_layers.push((
+                "focused",
+                format!(
+                    "{{Binding FocusState, ElementName={target_name}, Converter={{StaticResource FocusStateToBoolConverter}}}}"
+                ),
+                focus_style,
+            ));
+        }
+    }
+    if button_base_supports_automatic_hover(xaml_tag) && !has_explicit_state_when(node, "hover") {
+        if let Some(hover_style) = part.states.get("hover") {
+            state_layers.push((
+                "hover",
+                format!("{{Binding IsPointerOver, ElementName={target_name}}}"),
+                hover_style,
+            ));
+        }
+    }
+
+    let mut by_property: std::collections::BTreeMap<String, Vec<PendingXamlVisualState>> =
+        std::collections::BTreeMap::new();
+    for (_state_name, trigger_value, state_style) in state_layers {
+        for prop in &state_style.props {
+            let Some(property) = css_property_to_xaml_setter(&prop.name) else {
+                continue;
+            };
+            if !host_control_supports_state_property(xaml_tag, &property) {
+                continue;
+            }
+            let Some(value) = translate_xaml_value(&property, &prop.value) else {
+                continue;
+            };
+            let transition = transition_for_xaml_property(&state_style.transitions, &property);
+            by_property
+                .entry(property)
+                .or_default()
+                .push(PendingXamlVisualState {
+                    trigger_value: trigger_value.clone(),
+                    value,
+                    transition: transition.cloned(),
+                });
+        }
+    }
+
+    for (property, states) in by_property {
+        let group_id = ctx.next_visual_state_id();
+        let normal_name = format!("MosaicState{group_id}Normal");
+        let states = states
+            .into_iter()
+            .enumerate()
+            .map(|(state_index, pending)| XamlVisualState {
+                name: format!("MosaicState{group_id}State{state_index}"),
+                trigger_value: pending.trigger_value,
+                value: pending.value,
+                transition: pending.transition,
+            })
+            .collect();
+        ctx.add_visual_state_group(XamlVisualStateGroup {
+            normal_name,
+            target_name: target_name.to_string(),
+            property: property.clone(),
+            base_transition: transition_for_xaml_property(&part.transitions, &property).cloned(),
+            states,
+        });
+    }
+}
+
+fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>) -> Option<String> {
+    if !ctx.for_scope.is_empty() {
+        return match value {
+            LayoutPropValue::Keyword(k) if k == "true" => Some("True".to_string()),
+            LayoutPropValue::Keyword(k) if k == "false" => Some("False".to_string()),
+            LayoutPropValue::Expr(src) => {
+                let path = if let Some(path) = try_lower_for_template_predicate(src, ctx) {
+                    path
+                } else {
+                    let binding = ctx.for_scope.last()?;
+                    let element_root = kebab_to_pascal_case(&binding.as_name);
+                    let index_root = binding.index_name.as_deref().map(kebab_to_pascal_case);
+                    let tokens = tokenise_expr(src).ok()?;
+                    if tokens.iter().any(|token| {
+                        matches!(
+                            token,
+                            ExprTok::EqEq
+                                | ExprTok::NotEq
+                                | ExprTok::Lt
+                                | ExprTok::Le
+                                | ExprTok::Gt
+                                | ExprTok::Ge
+                                | ExprTok::AndAnd
+                                | ExprTok::OrOr
+                                | ExprTok::Not
+                                | ExprTok::LBracket
+                                | ExprTok::RBracket
+                        )
+                    }) {
+                        // Page-level expression helpers are not in a
+                        // DataTemplate's typed x:Bind scope. Reject shapes
+                        // that would require one instead of generating markup
+                        // that compiles against the wrong namescope.
+                        return None;
+                    }
+                    match lower_expr_for_xbind(src, ctx) {
+                        ExprLowering::Bindable(path)
+                            if path == element_root
+                                || path.starts_with(&format!("{element_root}.")) =>
+                        {
+                            path
+                        }
+                        ExprLowering::Bindable(path)
+                            if index_root.as_deref() == Some(path.as_str()) =>
+                        {
+                            "Index".to_string()
+                        }
+                        ExprLowering::Bindable(path)
+                            if matches!(path.as_str(), "True" | "False") =>
+                        {
+                            path
+                        }
+                        ExprLowering::Bindable(_)
+                        | ExprLowering::Helper(_)
+                        | ExprLowering::Unsupported(_) => return None,
+                    }
+                };
+                Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            // Component slots live on the generated page, not on the row VM
+            // that is the DataTemplate's x:DataType. Cross-scope slot
+            // predicates therefore stay omitted unless they are projected by
+            // `try_lower_for_template_predicate` (for example
+            // `index == selectedIndex`).
+            LayoutPropValue::SlotRef(_) | LayoutPropValue::String(_) => None,
+            _ => None,
+        };
+    }
+
+    match value {
+        LayoutPropValue::SlotRef(slot) => Some(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        )),
+        LayoutPropValue::Keyword(k) if k == "true" => Some("True".to_string()),
+        LayoutPropValue::Keyword(k) if k == "false" => Some("False".to_string()),
+        LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            ExprLowering::Unsupported(_) => None,
+        },
+        _ => None,
+    }
+}
+
+fn transition_for_xaml_property<'a>(
+    transitions: &'a [StyleTransition],
+    property: &str,
+) -> Option<&'a StyleTransition> {
+    transitions.iter().rev().find(|transition| {
+        css_property_to_xaml_setter(&transition.property).as_deref() == Some(property)
+    })
+}
+
+/// Conservative intersection shared by WinUI Control subclasses emitted for
+/// Mosaic Host primitives. Properties outside this set are skipped instead of
+/// generating a Setter that XamlCompiler rejects for one control type.
+fn host_control_supports_state_property(xaml_tag: &str, property: &str) -> bool {
+    matches!(
+        property,
+        "Background"
+            | "Foreground"
+            | "FontFamily"
+            | "FontSize"
+            | "FontWeight"
+            | "Padding"
+            | "Margin"
+            | "Width"
+            | "Height"
+            | "MaxWidth"
+            | "MaxHeight"
+            | "MinWidth"
+            | "MinHeight"
+            | "BorderThickness"
+            | "BorderBrush"
+            | "CornerRadius"
+            | "Opacity"
+            | "HorizontalAlignment"
+            | "VerticalAlignment"
+    ) || (property == "TextAlignment" && matches!(xaml_tag, "TextBox" | "NumberBox"))
+}
+
+fn xaml_transition_duration(duration: &str) -> Option<String> {
+    let duration = duration.trim();
+    let seconds = if let Some(milliseconds) = duration.strip_suffix("ms") {
+        milliseconds.trim().parse::<f64>().ok()? / 1000.0
+    } else {
+        duration.strip_suffix('s')?.trim().parse::<f64>().ok()?
+    };
+    if !seconds.is_finite() || seconds < 0.0 {
+        return None;
+    }
+    let mut rendered = format!("{seconds:.6}");
+    while rendered.contains('.') && rendered.ends_with('0') {
+        rendered.pop();
+    }
+    if rendered.ends_with('.') {
+        rendered.pop();
+    }
+    Some(format!("0:0:{rendered}"))
+}
+
+fn emit_xaml_easing(transition: &StyleTransition, indent: usize) -> String {
+    let easing = transition.easing.trim();
+    if easing == "linear" {
+        return String::new();
+    }
+    let (element, mode) = match easing {
+        "ease-in" => ("QuadraticEase", "EaseIn"),
+        "ease-out" => ("QuadraticEase", "EaseOut"),
+        "ease" | "ease-in-out" => ("QuadraticEase", "EaseInOut"),
+        // WinUI's XAML EasingFunctionBase has no arbitrary cubic-bezier
+        // implementation. CubicEase is the closest native generated-
+        // transition curve; exact control points require the Composition API.
+        value if value.starts_with("cubic-bezier(") => ("CubicEase", "EaseInOut"),
+        _ => return String::new(),
+    };
+    let pad = " ".repeat(indent);
+    format!(
+        "{pad}<VisualTransition.GeneratedEasingFunction>\n\
+         {pad}    <{element} EasingMode=\"{mode}\"/>\n\
+         {pad}</VisualTransition.GeneratedEasingFunction>\n"
+    )
+}
+
+fn emit_visual_transition(transition: &StyleTransition, to: Option<&str>, indent: usize) -> String {
+    let Some(duration) = xaml_transition_duration(&transition.duration) else {
+        return String::new();
+    };
+    let pad = " ".repeat(indent);
+    let to_attr = to.map(|name| format!(" To=\"{name}\"")).unwrap_or_default();
+    let easing = emit_xaml_easing(transition, indent + 4);
+    if easing.is_empty() {
+        return format!("{pad}<VisualTransition{to_attr} GeneratedDuration=\"{duration}\"/>\n");
+    }
+    format!(
+        "{pad}<VisualTransition{to_attr} GeneratedDuration=\"{duration}\">\n\
+         {easing}\
+         {pad}</VisualTransition>\n"
+    )
+}
+
+fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> String {
+    if groups.is_empty() {
+        return String::new();
+    }
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let pad3 = " ".repeat(indent + 8);
+    let pad4 = " ".repeat(indent + 12);
+    let mut out = String::new();
+    writeln!(out, "{pad}<VisualStateManager.VisualStateGroups>").unwrap();
+    for group in groups {
+        writeln!(out, "{pad2}<VisualStateGroup>").unwrap();
+        let has_transitions =
+            group.base_transition.is_some() || group.states.iter().any(|s| s.transition.is_some());
+        if has_transitions {
+            writeln!(out, "{pad3}<VisualStateGroup.Transitions>").unwrap();
+            if let Some(base_transition) = &group.base_transition {
+                out.push_str(&emit_visual_transition(base_transition, None, indent + 12));
+            }
+            for state in &group.states {
+                if let Some(transition) = &state.transition {
+                    out.push_str(&emit_visual_transition(
+                        transition,
+                        Some(&state.name),
+                        indent + 12,
+                    ));
+                }
+            }
+            writeln!(out, "{pad3}</VisualStateGroup.Transitions>").unwrap();
+        }
+        writeln!(out, "{pad3}<VisualState x:Name=\"{}\"/>", group.normal_name).unwrap();
+        for state in &group.states {
+            writeln!(out, "{pad3}<VisualState x:Name=\"{}\">", state.name).unwrap();
+            writeln!(out, "{pad4}<VisualState.StateTriggers>").unwrap();
+            writeln!(
+                out,
+                "{pad4}    <StateTrigger IsActive=\"{}\"/>",
+                escape_xaml_attr(&state.trigger_value)
+            )
+            .unwrap();
+            writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
+            writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
+            let target = xaml_visual_state_target(&group.target_name, &group.property);
+            writeln!(
+                out,
+                "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
+                target,
+                escape_xaml_attr(&state.value)
+            )
+            .unwrap();
+            writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
+            writeln!(out, "{pad3}</VisualState>").unwrap();
+        }
+        writeln!(out, "{pad2}</VisualStateGroup>").unwrap();
+    }
+    writeln!(out, "{pad}</VisualStateManager.VisualStateGroups>").unwrap();
+    out
+}
+
+/// Brush-valued control properties must target the brush's Color dependency
+/// property for WinUI to generate an interpolating color animation. Replacing
+/// the whole Brush object would make the state change correctly but discretely.
+fn xaml_visual_state_target(target_name: &str, property: &str) -> String {
+    if matches!(property, "Background" | "Foreground" | "BorderBrush") {
+        format!("{target_name}.(Control.{property}).(SolidColorBrush.Color)")
+    } else {
+        format!("{target_name}.{property}")
+    }
 }
 
 fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
@@ -1087,6 +1582,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // no diagnostic). Caught by the toolkit Button + Alert + Badge
         // demo (#4548).
         "border-radius" => Some("CornerRadius".to_string()),
+        "opacity" => Some("Opacity".to_string()),
         // X5: `text-align` maps to WinUI's `TextAlignment` (a
         // `TextBlock` enum property), NOT `TextAlign`. The value side
         // is PascalCased by `translate_xaml_value`
@@ -1153,6 +1649,7 @@ fn is_container_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "Opacity"
     )
 }
 
@@ -1169,6 +1666,7 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "Opacity"
     )
 }
 
@@ -1381,7 +1879,18 @@ fn emit_xaml(
     } else {
         emit_xaml_node(root, 4, part_styles, ctx)?
     };
-    out.push_str(&body);
+    if ctx.visual_state_groups.is_empty() {
+        out.push_str(&body);
+    } else {
+        // WinUI only evaluates declarative StateTriggers automatically when
+        // VisualStateGroups are attached to the root's first visual child.
+        // A transparent Grid provides that stable attachment point without
+        // changing the layout contract.
+        writeln!(out, "    <Grid>").unwrap();
+        out.push_str(&emit_visual_state_groups(&ctx.visual_state_groups, 8));
+        out.push_str(&indent_xaml_fragment(&body, 4));
+        writeln!(out, "    </Grid>").unwrap();
+    }
 
     // ---- Locate the root open tag for splicing ----
     //
@@ -1396,14 +1905,19 @@ fn emit_xaml(
             .and_then(|p| s[p..].find(">\n").map(|q| p + q))
     };
 
-    // After walking, if any `If` was emitted we must declare the
-    // converter resource. We splice it in after the open root tag.
-    if ctx.needs_bool_to_vis {
+    // After walking, declare any generated converter resources exactly once.
+    // We splice them in after the open root tag.
+    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
             RootShape::ContentDialog => "ContentDialog.Resources",
         };
-        let resources = emit_bool_to_vis_resource_block(4, resources_tag);
+        let resources = emit_converter_resource_block(
+            4,
+            resources_tag,
+            ctx.needs_bool_to_vis,
+            ctx.needs_focus_state_converter,
+        );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
             .unwrap_or(out.len());
@@ -1441,6 +1955,20 @@ fn emit_xaml(
     writeln!(out).unwrap();
     writeln!(out, "</{root_tag}>").unwrap();
     Ok(out)
+}
+
+fn indent_xaml_fragment(fragment: &str, extra_spaces: usize) -> String {
+    let pad = " ".repeat(extra_spaces);
+    let mut out = String::with_capacity(fragment.len() + extra_spaces * 4);
+    for line in fragment.split_inclusive('\n') {
+        if line.trim().is_empty() {
+            out.push_str(line);
+        } else {
+            out.push_str(&pad);
+            out.push_str(line);
+        }
+    }
+    out
 }
 
 /// Lower one moslayout node and its descendants to XAML, indented by
@@ -1489,6 +2017,7 @@ fn emit_xaml_node(
         // PR-3: Host* primitives (single-element host-native controls).
         "HostInput" => emit_host_input(node, indent, part_styles, ctx),
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
+        "HostSurface" => emit_host_surface(node, indent, part_styles, ctx),
 
         // UI29-2 â€” `HostCheckbox` lowers to WinUI/WPF `<CheckBox>` and
         // `HostRadio` lowers to `<RadioButton>`. Both controls share
@@ -1503,6 +2032,17 @@ fn emit_xaml_node(
         // attached property on the wrapped child. HostNumberInput
         // uses `<NumberBox>` (WinUI 3 numeric input with built-in Â±
         // stepper).
+        // UI35 — the drag family. This backend does not implement dragging yet, so
+        // both lower to a vertical StackPanel: the card and the column still render,
+        // they just aren't draggable here.
+        //
+        // Erroring instead would mean a layout using drag cannot be emitted to this
+        // backend at all, which took down the task-app cross-backend tests the moment
+        // the app grew a board. Degrading to the content is what UI35 asks for.
+        "HostDraggable" | "HostDropTarget" => {
+            emit_stack_panel(node, indent, part_styles, "Vertical", ctx)
+        }
+
         "HostLink" => emit_host_link(node, indent, part_styles, ctx),
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, ctx),
         "HostNumberInput" => emit_host_number_input(node, indent, part_styles, ctx),
@@ -1613,10 +2153,12 @@ fn emit_xaml_single_content_children(
 /// or an empty string when no style applies.
 fn part_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
     if let Some(part) = node.part_name.as_deref() {
-        if let Some(frag) = part_styles.get(part) {
+        if let Some(entry) = part_styles.get(part) {
             // Each fragment is space-separated `Key="Value"` pairs ready
             // to splice straight into the opening tag.
-            return format!(" {frag}");
+            if !entry.base_fragment.is_empty() {
+                return format!(" {}", entry.base_fragment);
+            }
         }
     }
     String::new()
@@ -1698,7 +2240,7 @@ fn partition_box_style(
     part_styles: &PartStyleMap,
 ) -> (String, Vec<(String, String)>) {
     let frag = match part.and_then(|p| part_styles.get(p)) {
-        Some(f) => f.as_str(),
+        Some(entry) => entry.base_fragment.as_str(),
         None => return (String::new(), Vec::new()),
     };
     let mut container = String::new();
@@ -1722,7 +2264,7 @@ fn partition_stack_panel_style(
     part_styles: &PartStyleMap,
 ) -> (String, String, Vec<(String, String)>) {
     let frag = match part.and_then(|p| part_styles.get(p)) {
-        Some(f) => f.as_str(),
+        Some(entry) => entry.base_fragment.as_str(),
         None => return (String::new(), String::new(), Vec::new()),
     };
     let mut wrapper = String::new();
@@ -1771,6 +2313,32 @@ fn emit_box(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     emit_container(node, indent, part_styles, "Border", ctx)
+}
+
+/// Mount a host-supplied `UIElement` node slot inside a styled native
+/// composition boundary. The Border preserves shared MSL sizing/background
+/// while ContentPresenter owns the actual WinUI child supplied by the host.
+fn emit_host_surface(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 4);
+    let (container_attrs, _) = partition_box_style(node.part_name.as_deref(), part_styles);
+    let content = match find_prop_value(node, "content") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            format!(
+                " Content=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            )
+        }
+        _ => String::new(),
+    };
+    Ok(format!(
+        "{pad}<Border{container_attrs}>\n{inner_pad}<ContentPresenter{content}/>\n{pad}</Border>\n"
+    ))
 }
 
 fn emit_stack_panel(
@@ -2058,7 +2626,7 @@ fn emit_icon(
     if let Some(LayoutPropValue::String(s)) =
         find_prop_value(node, "glyph").or_else(|| find_prop_value(node, "name"))
     {
-        if let Some(replacement) = semantic_glyph_xaml_element(&s) {
+        if let Some(replacement) = semantic_glyph_xaml_element(s) {
             return Ok(format!("{pad}<{replacement}{style}/>\n"));
         }
     }
@@ -2118,11 +2686,23 @@ fn emit_code_behind(
     writeln!(out, "using Microsoft.UI.Xaml.Controls;").unwrap();
     writeln!(out, "using System;").unwrap();
     writeln!(out, "using System.Collections.Generic;").unwrap();
+    if !ctx.row_projections.is_empty() {
+        writeln!(out, "using System.ComponentModel;").unwrap();
+    }
     writeln!(out).unwrap();
     writeln!(out, "namespace {ns};").unwrap();
     writeln!(out).unwrap();
 
-    writeln!(out, "public sealed partial class {name} : {base_class}").unwrap();
+    let property_change_interface = if ctx.row_projections.is_empty() {
+        ""
+    } else {
+        ", INotifyPropertyChanged"
+    };
+    writeln!(
+        out,
+        "public sealed partial class {name} : {base_class}{property_change_interface}"
+    )
+    .unwrap();
     writeln!(out, "{{").unwrap();
 
     // Constructor: `InitializeComponent()`. The XAML compiler generates
@@ -2133,6 +2713,28 @@ fn emit_code_behind(
     writeln!(out, "        this.InitializeComponent();").unwrap();
     writeln!(out, "    }}").unwrap();
     writeln!(out).unwrap();
+
+    if !ctx.row_projections.is_empty() {
+        writeln!(
+            out,
+            "    public event PropertyChangedEventHandler? PropertyChanged;"
+        )
+        .unwrap();
+        writeln!(out).unwrap();
+        writeln!(
+            out,
+            "    private void NotifyRowProjectionChanged(string propertyName)"
+        )
+        .unwrap();
+        writeln!(out, "    {{").unwrap();
+        writeln!(
+            out,
+            "        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));"
+        )
+        .unwrap();
+        writeln!(out, "    }}").unwrap();
+        writeln!(out).unwrap();
+    }
 
     // One DependencyProperty per declared slot (spec Â§8). Slots whose
     // PascalCased name collides with a property on the chosen base
@@ -2215,6 +2817,8 @@ fn emit_dependency_property(
         return Err(PipelineEmitError::UnsafeSlotName(pascal));
     }
     let csharp_type = slot_type_to_csharp(&slot.r#type)?;
+    let dependent_projections = row_projections_depending_on(ctx, &pascal);
+    let changed_callback = format!("OnMosaic{pascal}RowProjectionInputChanged");
 
     let mut out = String::new();
     writeln!(out, "    public {csharp_type} {pascal}").unwrap();
@@ -2233,10 +2837,49 @@ fn emit_dependency_property(
     .unwrap();
     writeln!(
         out,
-        "        DependencyProperty.Register(nameof({pascal}), typeof({csharp_type}), typeof({component}), new PropertyMetadata(default({csharp_type})));"
+        "        DependencyProperty.Register(nameof({pascal}), typeof({csharp_type}), typeof({component}), new PropertyMetadata(default({csharp_type}){}));",
+        if dependent_projections.is_empty() {
+            String::new()
+        } else {
+            format!(", {changed_callback}")
+        }
     )
     .unwrap();
+    if !dependent_projections.is_empty() {
+        writeln!(out).unwrap();
+        writeln!(
+            out,
+            "    private static void {changed_callback}(DependencyObject d, DependencyPropertyChangedEventArgs _)"
+        )
+        .unwrap();
+        writeln!(out, "    {{").unwrap();
+        writeln!(out, "        var control = ({component})d;").unwrap();
+        for property_name in dependent_projections {
+            writeln!(
+                out,
+                "        control.NotifyRowProjectionChanged(nameof({property_name}));"
+            )
+            .unwrap();
+        }
+        writeln!(out, "    }}").unwrap();
+    }
     Ok(out)
+}
+
+fn row_projections_depending_on<'a>(ctx: &'a EmitContext<'_>, slot_path: &str) -> Vec<&'a str> {
+    let mut properties = Vec::new();
+    for projection in &ctx.row_projections {
+        let depends_on_slot = projection.source_path == slot_path
+            || projection.selected_index_path.as_deref() == Some(slot_path);
+        if depends_on_slot
+            && !properties
+                .iter()
+                .any(|property| *property == projection.property_name)
+        {
+            properties.push(projection.property_name.as_str());
+        }
+    }
+    properties
 }
 
 /// Translate a mosmodel slot type to its C# property type per spec Â§8.
@@ -2627,7 +3270,8 @@ fn emit_for(
         prop
     });
 
-    // -- 4. Push the binding into scope, walk the body, pop. --
+    // -- 4. Push the binding and a namescope-local visual-state collector,
+    //       walk the body, then pop both. --
     ctx.for_scope.push(ForBinding {
         as_name: as_name.to_string(),
         index_name: index_name.map(String::from),
@@ -2635,9 +3279,15 @@ fn emit_for(
         vm_class: vm_class.clone(),
         projection_property: projection_property.clone(),
     });
-    let mut body =
-        emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx)?;
+    ctx.template_visual_state_groups.push(Vec::new());
+    let body_result =
+        emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
+    let template_visual_state_groups = ctx
+        .template_visual_state_groups
+        .pop()
+        .expect("For template visual-state collector");
     ctx.for_scope.pop();
+    let mut body = body_result?;
 
     // GROUP C: bind the fixed per-column width onto the rendered cell.
     // The cell element is the first opening tag of this loop's body â€”
@@ -2650,16 +3300,34 @@ fn emit_for(
         body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width}\"");
     }
 
+    if !template_visual_state_groups.is_empty() {
+        let pad = " ".repeat(indent + 12);
+        let mut wrapped = String::new();
+        writeln!(wrapped, "{pad}<Grid>").unwrap();
+        wrapped.push_str(&emit_visual_state_groups(
+            &template_visual_state_groups,
+            indent + 16,
+        ));
+        wrapped.push_str(&indent_xaml_fragment(&body, 4));
+        writeln!(wrapped, "{pad}</Grid>").unwrap();
+        body = wrapped;
+    }
+
     // -- 5. Assemble the XAML --
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
     let pad3 = " ".repeat(indent + 8);
     let style = part_style_attr(node, part_styles);
     let items_source = projection_property.as_deref().unwrap_or(&items_path);
+    let binding_mode = if projection_property.is_some() {
+        ", Mode=OneWay"
+    } else {
+        ""
+    };
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}{binding_mode}}}\"{style}>"
     )
     .unwrap();
     writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
@@ -2814,19 +3482,32 @@ fn emit_if(
     Ok(out)
 }
 
-/// The `<UserControl.Resources>` block carrying the
-/// `BoolToVisibilityConverter` resource. Added exactly once per
-/// UserControl when any `If` is emitted.
-fn emit_bool_to_vis_resource_block(indent: usize, resources_tag: &str) -> String {
+/// The generated converter resources required by this component. Added
+/// exactly once beneath the root resources tag.
+fn emit_converter_resource_block(
+    indent: usize,
+    resources_tag: &str,
+    needs_bool_to_vis: bool,
+    needs_focus_state: bool,
+) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
     let mut out = String::new();
     writeln!(out, "{pad}<{resources_tag}>").unwrap();
-    writeln!(
-        out,
-        "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
-    )
-    .unwrap();
+    if needs_bool_to_vis {
+        writeln!(
+            out,
+            "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_focus_state {
+        writeln!(
+            out,
+            "{pad2}<local:FocusStateToBoolConverter x:Key=\"FocusStateToBoolConverter\"/>"
+        )
+        .unwrap();
+    }
     writeln!(out, "{pad}</{resources_tag}>").unwrap();
     out
 }
@@ -2860,6 +3541,34 @@ fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
                  var b = value is bool x && x;\n        \
                  if (parameter is string p && p == \"invert\") b = !b;\n        \
                  return b ? Visibility.Visible : Visibility.Collapsed;\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for the converter that activates UI15's built-in `focused`
+/// state from WinUI's native `Control.FocusState` enum.
+fn emit_focus_state_to_bool_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         //\n\
+         // Native WinUI focus state → Mosaic focused-state activation.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class FocusStateToBoolConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 if (value is FocusState state) return state != FocusState.Unfocused;\n        \
+                 return DependencyProperty.UnsetValue;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -3255,7 +3964,8 @@ fn emit_main_window_cs(
                              hostStatus = \"Status: sample props loaded\";\n        \
                          }}\n        \
                          this.StatusText.Text = hostStatus;\n        \
-                         this.Component.Dispatch += OnComponentDispatch;\n    \
+                         this.Component.Dispatch += OnComponentDispatch;\n        \
+                         TryRunMosaicHostInteractionAcceptance(this.Component);\n    \
                      }}\n\
                  \n    \
                      /// <summary>\n    \
@@ -3297,6 +4007,24 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              catch (System.Exception ex)\n        \
              {{\n            \
                  return $\"Mosaic host failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
+             }}\n    \
+         }}\n\
+         \n    \
+         private void TryRunMosaicHostInteractionAcceptance({name} component)\n    \
+         {{\n        \
+             var method = FindMosaicHostMethod(\n            \
+                 \"RunInteractionAcceptance\",\n            \
+                 typeof(Window),\n            \
+                 typeof({name}));\n        \
+             if (method is null) {{ return; }}\n        \
+             try\n        \
+             {{\n            \
+                 method.Invoke(null, new object[] {{ this, component }});\n        \
+             }}\n        \
+             catch (System.Exception ex)\n        \
+             {{\n            \
+                 System.Diagnostics.Debug.WriteLine(\n                \
+                     $\"Mosaic host interaction acceptance failed: {{ex}}\");\n        \
              }}\n    \
          }}\n\
          \n    \
@@ -4384,9 +5112,16 @@ fn emit_host_input(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostInput", ctx);
+    register_host_visual_states(node, "TextBox", &x_name, part_styles, ctx);
 
     // -- Build the attribute set --
     let mut attrs = String::new();
+    if let Some(part_name) = &node.part_name {
+        attrs.push_str(&format!(
+            " AutomationProperties.AutomationId=\"{}\"",
+            escape_xaml_attr(part_name)
+        ));
+    }
 
     // value: slot/string/expr â†’ Text binding
     match find_prop_value(node, "value") {
@@ -4515,8 +5250,15 @@ fn emit_host_button(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostButton", ctx);
+    register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
+    if let Some(part_name) = &node.part_name {
+        attrs.push_str(&format!(
+            " AutomationProperties.AutomationId=\"{}\"",
+            escape_xaml_attr(part_name)
+        ));
+    }
 
     // label: slot/string
     match find_prop_value(node, "label") {
@@ -4552,7 +5294,9 @@ fn emit_host_button(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -4629,7 +5373,7 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
 /// |---|---|
 /// | `checked: slot: c`      | `IsChecked="{x:Bind C, Mode=OneWay}"`                       |
 /// | `checked: true/false`   | `IsChecked="True"` / `IsChecked="False"`                    |
-/// | `disabled: slot: d`     | `IsEnabled="{x:Bind Not(D)}"` (shared Not(bool) helper)     |
+/// | `disabled: slot: d`     | `IsEnabled="{x:Bind Not(D), Mode=OneWay}"` (shared helper)  |
 /// | `disabled: true/false`  | `IsEnabled="False"` / `IsEnabled="True"`                    |
 /// | `indeterminate: slot:i` | `IsThreeState="True"` + binding via code-behind             |
 /// | `label: str / slot`     | `Content="..."` / `Content="{x:Bind Label}"`                |
@@ -4697,6 +5441,7 @@ fn emit_host_checkbox(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostCheckbox", ctx);
+    register_host_visual_states(node, "CheckBox", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -4741,7 +5486,9 @@ fn emit_host_checkbox(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -4847,6 +5594,7 @@ fn emit_host_radio(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostRadio", ctx);
+    register_host_visual_states(node, "RadioButton", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -4902,7 +5650,9 @@ fn emit_host_radio(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5014,6 +5764,12 @@ fn emit_host_link(
     let x_name = host_x_name(node, "HostLink", ctx);
 
     let external_false = matches!(find_prop_value(node, "external"), Some(LayoutPropValue::Keyword(k)) if k == "false");
+    let xaml_tag = if external_false {
+        "Button"
+    } else {
+        "HyperlinkButton"
+    };
+    register_host_visual_states(node, xaml_tag, &x_name, part_styles, ctx);
     let on_activate = match find_prop_value(node, "onActivate") {
         Some(LayoutPropValue::EmitRef(s)) => Some(s.as_str()),
         _ => None,
@@ -5157,7 +5913,7 @@ fn emit_host_tooltip(
 /// | `max: <n>`      | `Maximum="<n>"`                                            |
 /// | `step: <n>`     | `SmallChange="<n>"`                                        |
 /// | `placeholder`   | `PlaceholderText="..."` / bound                            |
-/// | `disabled`      | `IsEnabled="{x:Bind Not(D)}"` (polarity flip via Not helper) |
+/// | `disabled`      | `IsEnabled="{x:Bind Not(D), Mode=OneWay}"` (via Not helper)  |
 /// | `onChange: emit`| `ValueChanged="X_ValueChanged"` (only fires on commit, not per-keystroke) |
 fn emit_host_number_input(
     node: &LayoutNode,
@@ -5168,6 +5924,7 @@ fn emit_host_number_input(
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostNumberInput", ctx);
+    register_host_visual_states(node, "NumberBox", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
 
@@ -5216,7 +5973,9 @@ fn emit_host_number_input(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5899,7 +6658,7 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, ListInnerType, MosmodelComponent, SlotDecl, SlotType};
-    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
     // â”€â”€ helpers â”€â”€
 
@@ -6074,6 +6833,10 @@ mod tests {
         assert!(r
             .code_behind
             .contains("public event EventHandler<FooEvent>? Dispatch;"));
+        assert!(
+            !r.code_behind.contains("INotifyPropertyChanged"),
+            "components without generated row projections should keep the lean code-behind shape"
+        );
     }
 
     #[test]
@@ -6955,7 +7718,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Grid"));
         assert!(r
             .xaml
-            .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""));
+            .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows, Mode=OneWay}\""));
         assert!(r.code_behind.contains("var source = Rows;"));
         // The For-generated RowVm should be in for_view_models.
         assert!(!r.for_view_models.is_empty());
@@ -6995,6 +7758,7 @@ mod tests {
                     name: "background".to_string(),
                     value: "#1e1e1e".to_string(),
                 }],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -7597,6 +8361,12 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"formula-field\""),
+            "got:\n{}",
+            r.xaml
+        );
     }
 
     #[test]
@@ -7784,6 +8554,12 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"submit\""),
+            "got:\n{}",
+            r.xaml
+        );
     }
 
     #[test]
@@ -7943,7 +8719,8 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("IsEnabled=\"{x:Bind Not(IsBusy)}\""),
+            r.xaml
+                .contains("IsEnabled=\"{x:Bind Not(IsBusy), Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -8231,7 +9008,7 @@ mod tests {
         // ItemsRepeater bound to the generated row-VM projection.
         assert!(
             r.xaml
-                .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""),
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -8705,6 +9482,7 @@ mod tests {
                         value: "8".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -8756,6 +9534,10 @@ mod tests {
         // MainWindow.xaml.cs can optionally delegate props/events to an
         // app-provided MosaicHost without requiring one to compile.
         assert!(p.main_window_cs.contains("TryApplyMosaicHostProps"));
+        assert!(p
+            .main_window_cs
+            .contains("TryRunMosaicHostInteractionAcceptance(this.Component)"));
+        assert!(p.main_window_cs.contains("\"RunInteractionAcceptance\""));
         assert!(p.main_window_cs.contains("CoerceMosaicHostResult"));
         assert!(p.main_window_cs.contains("FindMosaicHostMethod"));
         assert!(p
@@ -9325,7 +10107,7 @@ mod tests {
     /// `IsChecked="{x:Bind C, Mode=OneWay}"` (PascalCased slot, OneWay
     /// binding mirroring HostInput/HostButton's slot-binding form).
     #[test]
-    fn host_checkbox_checked_slot_emits_xbind_isChecked() {
+    fn host_checkbox_checked_slot_emits_xbind_is_checked() {
         let c = component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]);
         let l = checkbox_in_box(vec![LayoutProp {
             name: "checked".to_string(),
@@ -9370,8 +10152,9 @@ mod tests {
         }]);
         let r = compile(&c, &l, &empty_style("X"));
         assert!(
-            r.xaml.contains("IsEnabled=\"{x:Bind Not(Locked)}\""),
-            "expected `IsEnabled=\"{{x:Bind Not(Locked)}}\"`, got:\n{}",
+            r.xaml
+                .contains("IsEnabled=\"{x:Bind Not(Locked), Mode=OneWay}\""),
+            "expected a one-way IsEnabled binding for Locked, got:\n{}",
             r.xaml
         );
     }
@@ -9898,6 +10681,7 @@ mod tests {
                         value: v.to_string(),
                     })
                     .collect(),
+                transitions: vec![],
                 states: Vec::new(),
             }],
         }
@@ -9926,7 +10710,7 @@ mod tests {
 
     /// X2: when the pascal-cased part name collides with the
     /// enclosing component class name (e.g. component `Button`
-    /// + part `button`), the x:Name gets an `Element` suffix to
+    /// and part `button`), the x:Name gets an `Element` suffix to
     /// avoid C# CS0542 ("member names cannot be the same as
     /// their enclosing type").
     #[test]
@@ -10313,7 +11097,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml
-                .contains("<ItemsRepeater ItemsSource=\"{x:Bind FooItemVmRows}\""),
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind FooItemVmRows, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -10345,6 +11129,35 @@ mod tests {
                 .contains("rows.Add(new Foo_ItemVm(source[i], i, i == SelectedIndex));"),
             "got:\n{}",
             r.code_behind
+        );
+        assert!(
+            r.code_behind
+                .contains("public sealed partial class Foo : UserControl, INotifyPropertyChanged"),
+            "projected row properties must publish invalidation, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.code_behind.contains(
+                "new PropertyMetadata(default(IReadOnlyList<string>), \
+                 OnMosaicItemsRowProjectionInputChanged)"
+            ),
+            "source-list replacement must invalidate the projection, got:\n{}",
+            r.code_behind
+        );
+        assert!(
+            r.code_behind.contains(
+                "new PropertyMetadata(default(double), \
+                 OnMosaicSelectedIndexRowProjectionInputChanged)"
+            ),
+            "selection changes must invalidate row-local state, got:\n{}",
+            r.code_behind
+        );
+        assert_eq!(
+            r.code_behind
+                .matches("NotifyRowProjectionChanged(nameof(FooItemVmRows));")
+                .count(),
+            2,
+            "both projection inputs must notify the one-way ItemsSource binding"
         );
     }
 
@@ -10894,6 +11707,7 @@ mod tests {
                         value: "right".to_string(),
                     },
                 ],
+                transitions: vec![],
                 states: Vec::new(),
             }],
         };
@@ -10911,6 +11725,942 @@ mod tests {
             !r.xaml.contains("px\""),
             "no px should survive, got:\n{}",
             r.xaml
+        );
+    }
+
+    fn transition(property: &str, duration: &str, easing: &str) -> StyleTransition {
+        StyleTransition {
+            property: property.to_string(),
+            duration: duration.to_string(),
+            easing: easing.to_string(),
+        }
+    }
+
+    fn styled_host_button(state_props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: Some("button".to_string()),
+            props: state_props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn transition_values_lower_to_winui_duration_and_easing() {
+        assert_eq!(
+            xaml_transition_duration("80ms").as_deref(),
+            Some("0:0:0.08")
+        );
+        assert_eq!(xaml_transition_duration("1s").as_deref(), Some("0:0:1"));
+        assert_eq!(
+            xaml_transition_duration("150ms").as_deref(),
+            Some("0:0:0.15")
+        );
+        assert!(xaml_transition_duration("fast").is_none());
+
+        let ease_out = emit_xaml_easing(&transition("opacity", "150ms", "ease-out"), 0);
+        assert!(ease_out.contains("<QuadraticEase EasingMode=\"EaseOut\"/>"));
+        let linear = emit_xaml_easing(&transition("opacity", "150ms", "linear"), 0);
+        assert!(linear.is_empty());
+        let cubic = emit_xaml_easing(
+            &transition("opacity", "150ms", "cubic-bezier(0.34, 1.56, 0.64, 1)"),
+            0,
+        );
+        assert!(cubic.contains("<CubicEase EasingMode=\"EaseInOut\"/>"));
+    }
+
+    #[test]
+    fn literal_state_predicate_lowers_to_literal_trigger() {
+        let c = component("AlwaysSelected", vec![], vec![]);
+        let l = layout_with_root(
+            "AlwaysSelected",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "AlwaysSelected".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<StateTrigger IsActive=\"True\"/>"),
+            "literal predicates must not become x:Bind paths:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("x:Bind True"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn button_base_hover_state_uses_native_pointer_binding() {
+        let c = component("HoverButton", vec![], vec![]);
+        let l = layout_with_root("HoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "HoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#202020".to_string(),
+                }],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#264f78".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding IsPointerOver, ElementName=Button}\"/>"
+            ),
+            "built-in hover must bind directly to native ButtonBase pointer state:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Button.(Control.Background).(SolidColorBrush.Color)\" Value=\"#264f78\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.08\">"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn button_base_hover_is_local_to_each_for_template_instance() {
+        let c = component(
+            "HoverRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "HoverRows",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![styled_host_button(vec![])],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "HoverRows".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.8".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "1".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "hover groups must live in the repeated row namescope:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding IsPointerOver, ElementName=Button}\"/>"
+            ),
+            "each template instance must bind to its own Button:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_hover_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualHover",
+            vec![slot("force-hover", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualHover",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-hover".to_string(),
+                value: LayoutPropValue::SlotRef("force-hover".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "ManualHover".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForceHover, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Binding IsPointerOver"),
+            "explicit hover state must not install native pointer tracking:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn native_pressed_state_uses_button_base_is_pressed() {
+        let c = component("PressedButton", vec![], vec![]);
+        let l = layout_with_root("PressedButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "PressedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.7".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{Binding IsPressed, ElementName=Button}\"/>"),
+            "pressed state must bind directly to ButtonBase.IsPressed:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.7\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_pressed_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualPress",
+            vec![slot("force-press", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualPress",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-pressed".to_string(),
+                value: LayoutPropValue::SlotRef("force-press".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "ManualPress".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "pressed".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.7".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForcePress, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Binding IsPressed"),
+            "explicit press state must not install native tracking:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn native_focused_state_uses_focus_state_converter() {
+        let c = component("FocusField", vec![], vec![]);
+        let l = layout_with_root(
+            "FocusField",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "FocusField".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![StyleProp {
+                    name: "border-color".to_string(),
+                    value: "#d0d0d0".to_string(),
+                }],
+                transitions: vec![transition("border-color", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "border-color".to_string(),
+                        value: "#e0942a".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<local:FocusStateToBoolConverter x:Key=\"FocusStateToBoolConverter\"/>"),
+            "native focus requires one generated converter resource:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}}\"/>"
+            ),
+            "focused state must bind to the control's native FocusState:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Field.(Control.BorderBrush).(SolidColorBrush.Color)\" Value=\"#e0942a\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        let helper = r
+            .if_helpers
+            .iter()
+            .find(|file| file.filename == "FocusStateToBoolConverter.cs")
+            .expect("focus converter helper");
+        assert!(
+            helper.source.contains("state != FocusState.Unfocused"),
+            "converter must include pointer, keyboard, and programmatic focus:\n{}",
+            helper.source
+        );
+        assert!(
+            helper.source.contains("DependencyProperty.UnsetValue"),
+            "invalid converter inputs must not throw:\n{}",
+            helper.source
+        );
+    }
+
+    #[test]
+    fn native_focused_state_is_local_to_each_for_template_instance() {
+        let c = component(
+            "FocusRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "FocusRows",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostInput".to_string(),
+                    part_name: Some("field".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FocusRows".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.8".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "1".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "focus groups must live in the repeated row namescope:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}}\"/>"
+            ),
+            "each template instance must bind to its own TextBox:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_focused_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualFocus",
+            vec![slot("force-focus", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualFocus",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![LayoutProp {
+                    name: "state-when-focused".to_string(),
+                    value: LayoutPropValue::SlotRef("force-focus".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "ManualFocus".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForceFocus, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("FocusStateToBoolConverter"),
+            "explicit focus state must not install native focus tracking:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.if_helpers
+                .iter()
+                .any(|file| file.filename == "FocusStateToBoolConverter.cs"),
+            "explicit focus state must not ship an unused converter"
+        );
+    }
+
+    #[test]
+    fn native_focus_precedes_hover_when_both_are_active() {
+        let c = component("FocusHoverButton", vec![], vec![]);
+        let l = layout_with_root("FocusHoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "FocusHoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.7".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "hover".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.9".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "focused".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "1".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let focus = r.xaml.find("Binding FocusState").expect("focus trigger");
+        let hover = r.xaml.find("Binding IsPointerOver").expect("hover trigger");
+        assert!(
+            focus < hover,
+            "WinUI's first-active trigger precedence must match SwiftUI's focused-over-hover layering:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn native_pressed_precedes_focus_and_hover_when_all_are_active() {
+        let c = component("PressFocusHoverButton", vec![], vec![]);
+        let l = layout_with_root("PressFocusHoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "PressFocusHoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.6".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "hover".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.8".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "focused".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.9".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "pressed".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "1".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let pressed = r.xaml.find("Binding IsPressed").expect("pressed trigger");
+        let focus = r.xaml.find("Binding FocusState").expect("focus trigger");
+        let hover = r.xaml.find("Binding IsPointerOver").expect("hover trigger");
+        assert!(
+            pressed < focus && focus < hover,
+            "WinUI first-active precedence must be pressed, focused, hover:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_control_state_and_base_transition_lower_end_to_end() {
+        let c = component(
+            "AnimatedButton",
+            vec![slot("selected", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedButton",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::SlotRef("selected".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "AnimatedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#202020".to_string(),
+                }],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#264f78".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<Button x:Name=\"Button\" AutomationProperties.AutomationId=\"button\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Background=\"#202020\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("    <Grid>\n        <VisualStateManager.VisualStateGroups>"),
+            "WinUI StateTriggers must live on the root's first visual child:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind Selected, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Button.(Control.Background).(SolidColorBrush.Color)\" Value=\"#264f78\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.08\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<QuadraticEase EasingMode=\"EaseOut\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn state_local_transition_overrides_entry_and_base_handles_exit() {
+        let c = component(
+            "FadeButton",
+            vec![slot("disabled", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "FadeButton",
+            styled_host_button(vec![LayoutProp {
+                name: "state-when-disabled".to_string(),
+                value: LayoutPropValue::SlotRef("disabled".to_string()),
+            }]),
+        );
+        let s = StyleDef {
+            component_name: "FadeButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "150ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "disabled".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.4".to_string(),
+                    }],
+                    transitions: vec![transition("opacity", "300ms", "linear")],
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("Opacity=\"1\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.15\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("GeneratedDuration=\"0:0:0.3\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.4\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn last_declared_state_keeps_cross_backend_precedence() {
+        let c = component(
+            "PriorityButton",
+            vec![
+                slot("selected", SlotType::Bool, true),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "PriorityButton",
+            styled_host_button(vec![
+                LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::SlotRef("selected".to_string()),
+                },
+                LayoutProp {
+                    name: "state-when-disabled".to_string(),
+                    value: LayoutPropValue::SlotRef("disabled".to_string()),
+                },
+            ]),
+        );
+        let s = StyleDef {
+            component_name: "PriorityButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "selected".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.8".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "disabled".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.4".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let disabled = r
+            .xaml
+            .find("IsActive=\"{x:Bind Disabled")
+            .expect("disabled trigger");
+        let selected = r
+            .xaml
+            .find("IsActive=\"{x:Bind Selected")
+            .expect("selected trigger");
+        assert!(
+            disabled < selected,
+            "last state-when declaration must be first for WinUI trigger precedence:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn template_local_host_state_lowers_into_datatemplate_namescope() {
+        let c = component(
+            "AnimatedRow",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("selected-index", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedRow",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![styled_host_button(vec![LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::Expr("r == selectedIndex".to_string()),
+                }])],
+            ),
+        );
+        let style = StyleDef {
+            component_name: "AnimatedRow".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "120ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &style);
+        assert_eq!(
+            r.xaml
+                .matches("<VisualStateManager.VisualStateGroups>")
+                .count(),
+            1,
+            "template state groups must not leak onto the component root:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "WinUI StateTriggers must live on the DataTemplate's first visual child:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind IsSelected, Mode=OneWay}\"/>"),
+            "template predicate must bind row-local projected state:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.8\"/>"),
+            "the template-local group must target the row control:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.12\">"),
+            "template-local transitions must preserve MSL timing:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind
+                .contains("rows.Add(new AnimatedRow_RowVm(source[i], i, i == SelectedIndex));"),
+            "the selected predicate must be projected onto each row VM:\n{}",
+            r.code_behind
+        );
+    }
+
+    #[test]
+    fn template_state_never_binds_page_helper_from_row_namescope() {
+        let c = component(
+            "AnimatedRow",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedRow",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![styled_host_button(vec![LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::Expr("r == 0".to_string()),
+                }])],
+            ),
+        );
+        let style = StyleDef {
+            component_name: "AnimatedRow".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &style);
+        assert!(
+            !r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
+            "unsupported template predicates must be omitted instead of targeting the root:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.code_behind.contains("private bool Expr_"),
+            "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
+            r.code_behind
         );
     }
 }

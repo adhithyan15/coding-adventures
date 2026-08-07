@@ -7,6 +7,11 @@ packages without requiring one CI runner to hold every build artifact at once.
 A single monorepo build plan is still the source of truth, but that plan can be
 split into multiple independently executable shards.
 
+This document defines target behavior. Sharding is currently implemented most
+completely by the Go build tool; final cross-language requirements and
+deterministic fixtures are defined by
+[`build-tool-conformance.md`](build-tool-conformance.md).
+
 ## Model
 
 The detect job computes the normal build plan:
@@ -107,3 +112,10 @@ Each sharded main job downloads the same `build-plan.json` and passes
   fix.
 - Future versions can use historical durations and artifact exchange to reduce
   duplicate prerequisite work.
+
+## Conformance
+
+The shared fixtures require deterministic assignment, exactly one direct
+assignment per scheduled package, prerequisite closure, shard-local toolchain
+calculation, stable indexes, and explicit invalid-count/index errors. A port
+that can read a plan but ignores its `shards` field is not conforming.

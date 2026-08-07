@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-private-method/input/a.js
+--compilation_level
+SIMPLE

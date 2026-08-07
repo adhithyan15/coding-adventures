@@ -46,6 +46,32 @@ let bytes = write_docx(&doc);
 std::fs::write("example.docx", bytes).unwrap();
 ```
 
+### Formatting (v0.2)
+
+Beyond plain text, a paragraph can carry a **style** and its runs can carry
+**direct formatting** — the minimum a rich document (e.g. one produced from
+Markdown) needs:
+
+```rust
+use coding_adventures_docx_writer::{Document, ParagraphStyle, Run, write_docx};
+
+let mut doc = Document::new();
+doc.add_styled_paragraph(ParagraphStyle::Heading(1), vec![Run::plain("Title")]);
+doc.add_styled_paragraph(
+    ParagraphStyle::Normal,
+    vec![Run::plain("A "), Run::plain("bold").bold(), Run::plain(" word, and "),
+         Run::plain("code").mono(), Run::plain(".")],
+);
+let _bytes = write_docx(&doc);
+```
+
+`Run::plain(..).bold()/.italic()/.mono()` emit `<w:b/>` / `<w:i/>` / a monospace
+`<w:rFonts>` (all *direct* formatting, no styles part needed).
+`ParagraphStyle::{Heading(1..=6), Code, Quote, List}` emit a `<w:pStyle>` and pull
+in a minimal `word/styles.xml` that defines those styles (headings carry an
+outline level, so Word's navigation pane works). **An all-`Normal`, unformatted
+document has no `styles.xml` and serializes byte-for-byte as it did in v0.1.**
+
 `write_docx` returns the complete `.docx` as a `Vec<u8>` — open it in Word, or
 reopen it with the sibling `wordprocessingml` reader.
 

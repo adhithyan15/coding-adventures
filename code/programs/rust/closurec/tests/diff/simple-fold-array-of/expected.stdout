@@ -1,1 +1,1 @@
-var a=[];var b=[7];var c=[1,2,3];var d=[x,y];var e=q.of(1);report(a,b,c,d,e);
+var a=[],b=[7],c=[1,2,3],d=[x,y],e=q.of(1);report(a,b,c,d,e);

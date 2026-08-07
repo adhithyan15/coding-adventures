@@ -219,6 +219,62 @@ mod tests {
     }
 
     #[test]
+    fn constructor_rejects_an_astronomical_element_product() {
+        // Security regression: each dimension alone (67,108,864) is within
+        // count()'s own per-dimension cap, but their PRODUCT (~4.5e15
+        // elements, ~36 petabytes) is not -- this must be a clean error, not
+        // an attempted allocation that aborts the process.
+        assert!(eval("zeros(67108864, 67108864)\n").is_err());
+        assert!(eval("eye(67108864)\n").is_err());
+        // A genuinely small, in-bounds construction still works.
+        assert!(eval("zeros(3, 4)\n").is_ok());
+    }
+
+    #[test]
+    fn matrix_self_concatenation_cannot_double_past_the_element_cap() {
+        // Security regression: `[A A]`/`[A; A]` repeated doubles the element
+        // count each time with no individually-large input -- only the
+        // ACCUMULATED result grows exponentially. 40 repetitions alone
+        // already reaches 2^40 elements; this must error out well before an
+        // attacker-reachable number of repetitions produces an
+        // allocation-aborting size.
+        let mut m = Interpreter::new();
+        m.feed("A = 1;\n").unwrap();
+        let mut last_ok = true;
+        for _ in 0..40 {
+            last_ok = m.feed("A = [A A];\n").is_ok();
+            if !last_ok {
+                break;
+            }
+        }
+        assert!(
+            !last_ok,
+            "40 doublings (up to 2^40 elements) must be rejected before completing"
+        );
+    }
+
+    #[test]
+    fn two_d_indexing_rejects_a_product_overflow() {
+        // Security regression: each index vector's own length is bounded
+        // independently (here, by `ones`'s own dimension cap) but nothing
+        // bounded their PRODUCT -- `A(idx, idx)` with two
+        // independently-in-bounds index vectors could still request an
+        // astronomical result. 8200x8200 (67,240,000 elements) exceeds the
+        // 1<<26 (67,108,864) total-element cap and must be rejected before
+        // any allocation is attempted.
+        let mut m = Interpreter::new();
+        m.feed("A = 0;\n").unwrap();
+        m.feed("idx = ones(1, 8200);\n").unwrap();
+        assert!(m.feed("B = A(idx, idx);\n").is_err());
+
+        // A genuinely small, in-bounds 2-D index still works.
+        let mut m2 = Interpreter::new();
+        m2.feed("A = 0;\n").unwrap();
+        m2.feed("idx2 = ones(1, 3);\n").unwrap();
+        assert!(m2.feed("B = A(idx2, idx2);\n").is_ok());
+    }
+
+    #[test]
     fn deeply_nested_input_errors_instead_of_crashing() {
         // Pathologically nested parentheses must be a clean error, not a stack
         // overflow that aborts the process.

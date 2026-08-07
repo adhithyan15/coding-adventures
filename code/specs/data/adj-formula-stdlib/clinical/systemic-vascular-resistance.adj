@@ -1,0 +1,98 @@
+% ============================================================================
+% systemic-vascular-resistance.adj — systemic vascular resistance
+% (SVR = 80 × (mean arterial pressure − mean venous pressure) / cardiac output) in the ADJ standard library.
+% ============================================================================
+% The systemic-vascular-resistance entry of the *clinical* track — the total resistance the systemic
+% circulation offers to the blood the left heart ejects. It is the haemodynamic analogue of Ohm's law
+% (resistance = pressure drop / flow): the pressure DROP across the systemic circuit is the mean arterial
+% pressure minus the mean (central) venous pressure, the flow is the cardiac output, and the leading factor
+% of 80 converts the pressure-per-flow ratio from mmHg·min/L (Wood units) into the conventional CGS units of
+% dynes·s·cm⁻⁵. A vasoconstricted patient (hypovolaemic or cardiogenic shock) has a HIGH SVR; a vasodilated
+% patient (septic or neurogenic shock, or after a vasodilator) has a LOW SVR, which is why SVR is the number
+% that distinguishes the shock states at the bedside. THE SYSTEMIC VASCULAR RESISTANCE IS 80 TIMES THE
+% ARTERIOVENOUS PRESSURE DIFFERENCE DIVIDED BY THE CARDIAC OUTPUT — i.e. SVR = 80 × (MAP − MVP) / CO. It ships
+% as an importable, byte-provenanced, PARAMETERIZED `formula`, together with two exact rearrangements (the
+% cardiac output a given resistance and pressure gradient imply, and the mean arterial pressure a given
+% resistance and output imply). As with every compute library, a consumer states NO arithmetic: it `import`s
+% this file, binds the mean arterial pressure, mean venous pressure, and cardiac output from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "systemic-vascular-resistance.adj"
+%     observe mean_arterial_pressure(90)   % "…MAP 90 mmHg…"   (span cited by the model)
+%     observe mean_venous_pressure(10)      % "…CVP 10 mmHg…"   (span cited by the model)
+%     observe cardiac_output(5)             % "…CO 5 L/min…"    (span cited by the model)
+%     ? systemic_vascular_resistance(mean_arterial_pressure, mean_venous_pressure, cardiac_output)   % engine → 1280
+%
+% Structurally this is a CONSTANT TIMES A DIFFERENCE, OVER A DIVISOR — the arteriovenous pressure gap scaled
+% by the unit-conversion factor 80 and divided by the flow — a shape distinct from the ratio, ratio-of-ratios,
+% percentage-sum, product-over-constant, chained-division, constant-scaled-difference, product-times-constant,
+% three-way-product-over-divisor, product-of-a-ratio-and-a-value, and quotient-over-a-difference forms of the
+% other clinical libraries. The ONLY constant is the exact integer 80 (the mmHg·min/L → dyn·s·cm⁻⁵ unit
+% factor named in the cited equation); the three pressures and flow are all formal parameters bound at apply
+% time, so every value the engine returns is exact. The three formulas COMPOSE and invert cleanly around the
+% worked case mean arterial pressure = 90 mmHg, mean venous pressure = 10 mmHg, cardiac output = 5 L/min
+% (SVR = 80 × (90 − 10) / 5 = 80 × 80 / 5 = 1280 dyn·s·cm⁻⁵): the `systemic_vascular_resistance` a consumer
+% computes is exactly the value each inverse formula back-solves to recover its own measured input (5, 90).
+%
+%   systemic_vascular_resistance(mean_arterial_pressure, mean_venous_pressure, cardiac_output) = 80 * (mean_arterial_pressure - mean_venous_pressure) / cardiac_output   % (dyn·s·cm⁻⁵)
+%   cardiac_output(systemic_vascular_resistance, mean_arterial_pressure, mean_venous_pressure) = 80 * (mean_arterial_pressure - mean_venous_pressure) / systemic_vascular_resistance   % (solved for flow)
+%   mean_arterial_pressure(systemic_vascular_resistance, cardiac_output, mean_venous_pressure) = systemic_vascular_resistance * cardiac_output / 80 + mean_venous_pressure   % (solved for MAP)
+%
+% NOTE ON UNITS AND MODELLING: the pressures are in millimetres of mercury (mmHg), the cardiac output in
+% litres per minute (L/min), and — because of the leading factor of 80 — the resistance in dyn·s·cm⁻⁵
+% (normal ≈ 800–1200). Omitting the 80 leaves the resistance in Wood units (mmHg·min/L) instead; this library
+% grounds the equation exactly as the source prints it, WITH the 80. The mean venous pressure is often
+% approximated by the central venous pressure (and taken as 0 when unmeasured). This library only COMPUTES
+% the resistance; interpreting it against the shock state is the clinician's task, stated by the cited source
+% but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted SVR equation — because that one equation
+% (80 × (MAP − MVP) / CO) sanctions the relation read every way. The quote is transcribed verbatim from the
+% StatPearls "Hypotension" article on the NCBI Bookshelf (a current, non-archived article), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `mean_arterial_pressure`, `mean_venous_pressure`, `cardiac_output` and
+% `systemic_vascular_resistance` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the everyday
+% names a decomposer maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary systemic_vascular_resistance_vocab {
+    define mean_arterial_pressure        : finding  surface "mean arterial pressure", "MAP"                           % mmHg
+    define mean_venous_pressure          : finding  surface "mean venous pressure", "MVP", "central venous pressure", "CVP" % mmHg
+    define cardiac_output                : finding  surface "cardiac output", "CO"                                    % L/min
+    define systemic_vascular_resistance  : finding  surface "systemic vascular resistance", "SVR"                     % dyn·s·cm⁻⁵
+}
+
+% ----------------------------------------------------------------------------
+% The systemic vascular resistance, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the SVR equation from the StatPearls "Hypotension" article
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact expression in the
+% measured values and the exact integer 80, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook systemic_vascular_resistance_laws {
+    use systemic_vascular_resistance_vocab
+
+    % SVR — the unit factor 80 times the arteriovenous pressure gap, over the cardiac output.
+    formula systemic_vascular_resistance(mean_arterial_pressure, mean_venous_pressure, cardiac_output) = 80 * (mean_arterial_pressure - mean_venous_pressure) / cardiac_output
+        source "Systemic vascular resistance = 80 × (Mean arterial pressure − Mean venous pressure) / Cardiac output"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499961/"
+        trust authoritative
+
+    % Cardiac output — the same equation solved for the flow. Defended by the SAME equation.
+    formula cardiac_output(systemic_vascular_resistance, mean_arterial_pressure, mean_venous_pressure) = 80 * (mean_arterial_pressure - mean_venous_pressure) / systemic_vascular_resistance
+        source "Systemic vascular resistance = 80 × (Mean arterial pressure − Mean venous pressure) / Cardiac output"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499961/"
+        trust authoritative
+
+    % Mean arterial pressure — the same equation solved for MAP, the third reading of the one law.
+    formula mean_arterial_pressure(systemic_vascular_resistance, cardiac_output, mean_venous_pressure) = systemic_vascular_resistance * cardiac_output / 80 + mean_venous_pressure
+        source "Systemic vascular resistance = 80 × (Mean arterial pressure − Mean venous pressure) / Cardiac output"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499961/"
+        trust authoritative
+}

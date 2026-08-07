@@ -54,6 +54,9 @@ pub struct UniqGroup {
 /// - `skip_fields`: skip the first N whitespace-delimited fields (-f)
 /// - `skip_chars`: skip the first N characters after field skipping (-s)
 /// - `check_chars`: compare only the first N characters (-w)
+// Each parameter maps directly to a uniq CLI flag (-c/-d/-u/-i/-f/-s/-w); the
+// flat argument list keeps the call sites readable against the man page.
+#[allow(clippy::too_many_arguments)]
 pub fn process_uniq(
     content: &str,
     show_count: bool,
@@ -126,8 +129,8 @@ fn compare_key(
 
     // Skip fields.
     for _ in 0..skip_fields {
-        remaining = remaining.trim_start_matches(|c: char| c == ' ' || c == '\t');
-        match remaining.find(|c: char| c == ' ' || c == '\t') {
+        remaining = remaining.trim_start_matches([' ', '\t']);
+        match remaining.find([' ', '\t']) {
             Some(idx) => remaining = &remaining[idx..],
             None => {
                 remaining = "";
@@ -136,7 +139,7 @@ fn compare_key(
         }
     }
     // Trim leading whitespace after skipping fields.
-    remaining = remaining.trim_start_matches(|c: char| c == ' ' || c == '\t');
+    remaining = remaining.trim_start_matches([' ', '\t']);
 
     // Skip characters.
     let chars: Vec<char> = remaining.chars().collect();

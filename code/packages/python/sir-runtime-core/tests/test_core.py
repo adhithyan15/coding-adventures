@@ -73,6 +73,25 @@ def test_eq_symbol_aware() -> None:
     assert sir.eq(1, 2) is False
 
 
+def test_ne_is_exact_negation_of_eq() -> None:
+    # `!=` must never disagree with `==`: symbol-aware, and native otherwise.
+    assert sir.ne(sir.intern("a"), sir.intern("a")) is False
+    assert sir.ne(sir.intern("a"), sir.intern("b")) is True
+    assert sir.ne(1, 2) is True
+    assert sir.ne(1, 1) is False
+    assert sir.ne(1, 1.0) is False  # cross int/float equality
+
+
+def test_le_and_ge() -> None:
+    assert sir.le(1, 2) is True
+    assert sir.le(2, 2) is True
+    assert sir.le(3, 2) is False
+    assert sir.le(1, 1.0) is True  # int vs float compares by value
+    assert sir.ge(2, 1) is True
+    assert sir.ge(2, 2) is True
+    assert sir.ge(1, 2) is False
+
+
 def test_predicates() -> None:
     assert sir.is_null(None) is True
     assert sir.is_null(0) is False
@@ -304,6 +323,67 @@ def test_mul_bool_count_is_not_treated_as_a_repeat() -> None:
     # here, but for larger truthy-int-like values the distinction matters and
     # the arm intentionally never fires on a bool).
     assert sir.mul("ab", True) == "ab"
+
+
+def test_shift_left_integer() -> None:
+    assert sir.shift_left(5, 2) == 20
+    assert sir.shift_left(1, 0) == 1
+    assert sir.shift_left(0, 5) == 0
+
+
+def test_shift_left_negative_amount_reverses_direction() -> None:
+    # Ruby: a negative shift amount reverses direction (a right shift).
+    assert sir.shift_left(5, -1) == 2
+    assert sir.shift_left(-8, -1) == -4
+
+
+def test_shift_left_no_saturation_unlike_fixed_width_backends() -> None:
+    # Python ints are arbitrary precision, so 1 << 63 is the TRUE
+    # mathematical result -- unlike the C/Go/Rust backends, which saturate
+    # at INT64_MAX as a documented v0 limitation. This is the MORE faithful
+    # match to real Ruby's own bignum-growing `<<`.
+    assert sir.shift_left(1, 63) == 9223372036854775808
+
+
+def test_shift_left_array_pushes_in_place() -> None:
+    # Ruby's Array#<< MUTATES the receiver (unlike `+`, which is
+    # non-destructive) and chains: `a << 1 << 2` pushes both (the frontend
+    # lowers a `<<` chain to one variadic call).
+    a = [1, 2]
+    result = sir.shift_left(a, 3, 4)
+    assert result is a
+    assert a == [1, 2, 3, 4]
+
+
+def test_shift_left_string_concatenates_to_a_new_string() -> None:
+    a = "ab"
+    result = sir.shift_left(a, "cd")
+    assert result == "abcd"
+    assert a == "ab"  # original string untouched (str is immutable anyway)
+
+
+def test_shift_left_string_non_string_operand_raises_type_error() -> None:
+    # Python's own `+` already raises TypeError for a non-str RHS, matching
+    # Ruby's TypeError for `<<` on an incompatible operand -- no explicit
+    # check needed, mirroring `add`'s String arm.
+    with pytest.raises(TypeError):
+        sir.shift_left("ab", 1)
+
+
+def test_shift_left_bool_amount_is_not_treated_as_a_shift_count() -> None:
+    # bool is an int subclass in Python but is NOT a SIR shift amount (same
+    # exclusion `mul`'s string/array repeat arms apply) -- contributes a 0
+    # shift, matching the C/Go/Rust backends' catch-all.
+    assert sir.shift_left(5, True) == 5
+
+
+def test_shift_left_float_amount_truncates_toward_zero() -> None:
+    assert sir.shift_left(1, 2.9) == 4  # int(2.9) == 2
+    assert sir.shift_left(1, -2.9) == 0  # int(-2.9) == -2, right shift by 2
+
+
+def test_shift_left_no_args_returns_zero() -> None:
+    assert sir.shift_left() == 0
 
 
 def test_integer_division_floors_and_float_true_divides() -> None:

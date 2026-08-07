@@ -73,6 +73,42 @@ use coding_adventures_sql_lexer::tokenize_sql;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 mod _grammar;
 
+/// Recursion-depth cap for the SQL [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_sql_parser` never called `with_max_depth` at all, leaving every
+/// caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `WHERE id = (((...1...)))`, or, per this
+/// crate's own doc comment above, deeply nested subqueries).
+///
+/// **Not the shared engine's bare default** (see `csharp-parser`'s own
+/// identically-named constant for why a blind `DEFAULT_MAX_RULE_DEPTH`
+/// (128) is unsafe-for-usability on a rich general-purpose grammar).
+/// Measured directly instead (binary search over candidate
+/// `with_max_depth` values against a fixed 5000-level adversarial
+/// `WHERE id = (((...1...)))` input — ordinary parenthesised grouping,
+/// one of two recursive shapes this crate's own doc comment calls out
+/// (the other being nested subqueries) — on a default-~2MiB-stack worker
+/// thread in a debug build, no `RUST_MIN_STACK` override or explicit
+/// `Builder::stack_size` present): safe at **288**, crashes at **289**.
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 30% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `200`: plain
+/// parenthesised nesting parses cleanly to at least 10 levels —
+/// comfortably beyond ordinary hand-written nesting depth.
+///
+/// This is measured against only **one** of SQL's recursion shapes
+/// (ordinary paren grouping) — a full audit would also cover nested
+/// subqueries (`SELECT * FROM (SELECT * FROM (...))`) explicitly, the way
+/// `css-parser`/`toml-parser` measured *every* shape in their own (much
+/// smaller) grammars. That fuller audit is a tracked follow-up; this pass
+/// at minimum replaces an unmeasured, silently-broken default with a
+/// properly-measured floor for the shape most likely to bind.
+const MAX_RULE_DEPTH: usize = 200;
+
 // ===========================================================================
 // Public API
 // ===========================================================================
@@ -122,7 +158,7 @@ pub fn create_sql_parser(source: &str) -> Result<GrammarParser, String> {
     // It uses packrat memoization to avoid redundant re-parsing of the same
     // position, which is important for SQL's expression grammar which requires
     // backtracking.
-    Ok(GrammarParser::new(tokens, grammar))
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH))
 }
 
 /// Parse SQL source text into an AST.
@@ -266,6 +302,37 @@ mod tests {
         assert!(find_rule(&ast, "order_clause"), "Expected order_clause");
     }
 
+    /// `NULLS FIRST` / `NULLS LAST` parse in ORDER BY, alone and combined with
+    /// ASC/DESC. FIRST/LAST are ordinary NAMEs (the planner validates them).
+    #[test]
+    fn test_parse_order_by_nulls() {
+        for q in [
+            "SELECT id FROM t ORDER BY a NULLS FIRST",
+            "SELECT id FROM t ORDER BY a NULLS LAST",
+            "SELECT id FROM t ORDER BY a ASC NULLS LAST",
+            "SELECT id FROM t ORDER BY a DESC NULLS FIRST",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "order_item"), "Expected order_item for {q:?}");
+        }
+    }
+
+    /// `COLLATE name` parses in ORDER BY — standalone, and composed with the
+    /// ASC/DESC direction and a NULLS clause (COLLATE comes first, per SQLite).
+    /// The collation name is an ordinary NAME; the planner validates it.
+    #[test]
+    fn test_parse_order_by_collate() {
+        for q in [
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE",
+            "SELECT id FROM t ORDER BY name COLLATE BINARY",
+            "SELECT id FROM t ORDER BY name COLLATE RTRIM DESC",
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE ASC NULLS LAST",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "order_item"), "Expected order_item for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: SELECT with LIMIT and OFFSET
     // -----------------------------------------------------------------------
@@ -276,6 +343,14 @@ mod tests {
     #[test]
     fn test_parse_select_limit_offset() {
         let ast = assert_program_root("SELECT id FROM users LIMIT 10 OFFSET 20");
+        assert!(find_rule(&ast, "limit_clause"), "Expected limit_clause");
+    }
+
+    /// MySQL comma shorthand `LIMIT off, count` parses (SQLite accepts it too).
+    /// The planner does the offset/count swap; here we only assert it parses.
+    #[test]
+    fn test_parse_limit_comma() {
+        let ast = assert_program_root("SELECT id FROM users LIMIT 5, 10");
         assert!(find_rule(&ast, "limit_clause"), "Expected limit_clause");
     }
 
@@ -306,6 +381,44 @@ mod tests {
     fn test_parse_select_alias() {
         let ast = assert_program_root("SELECT age AS years FROM users");
         assert!(find_rule(&ast, "select_item"), "Expected select_item");
+    }
+
+    /// The `AS` keyword is optional in a column alias: `SELECT age years`
+    /// parses the same as `SELECT age AS years` (SQLite accepts both). This
+    /// exercises the `[ [ "AS" ] NAME ]` optional-AS branch of `select_item`.
+    #[test]
+    fn test_parse_select_alias_without_as() {
+        let ast = assert_program_root("SELECT age years FROM users");
+        assert!(find_rule(&ast, "select_item"), "Expected select_item");
+        // The bare alias must NOT swallow the FROM clause.
+        assert!(find_rule(&ast, "table_ref"), "Expected FROM table_ref to still parse");
+    }
+
+    /// A bare alias in a multi-item list must not consume the comma or the
+    /// following item: `SELECT a x, b y` yields two aliased items.
+    #[test]
+    fn test_parse_bare_alias_in_list() {
+        let ast = assert_program_root("SELECT a x, b y FROM t");
+        assert!(find_rule(&ast, "select_list"), "Expected select_list");
+    }
+
+    /// A table alias may omit `AS`: `FROM users u` parses like
+    /// `FROM users AS u` (SQLite accepts both). Exercises the
+    /// `table_ref = table_name [ [ "AS" ] NAME ]` optional-AS branch.
+    #[test]
+    fn test_parse_table_alias_without_as() {
+        let ast = assert_program_root("SELECT u.id FROM users u WHERE u.id > 1");
+        assert!(find_rule(&ast, "table_ref"), "Expected table_ref");
+        // The bare alias must NOT swallow the WHERE clause.
+        assert!(find_rule(&ast, "where_clause"), "Expected WHERE to still parse");
+    }
+
+    /// Bare table aliases must work across a JOIN and not eat the `JOIN`
+    /// keyword: `FROM a x JOIN b y ON …`.
+    #[test]
+    fn test_parse_join_bare_table_alias() {
+        let ast = assert_program_root("SELECT x.id FROM a x JOIN b y ON x.id = y.id");
+        assert!(find_rule(&ast, "join_clause"), "Expected join_clause");
     }
 
     // -----------------------------------------------------------------------
@@ -495,6 +608,157 @@ mod tests {
         assert!(find_rule(&ast, "comparison"), "Expected comparison");
     }
 
+    /// `IS <expr>` / `IS NOT <expr>` (null-safe (in)equality) parse as comparison
+    /// forms, without disturbing `IS NULL` / `IS NOT NULL` (which must still
+    /// match their dedicated sequences first).
+    #[test]
+    fn test_parse_is_operator() {
+        for q in [
+            "SELECT x FROM t WHERE a IS b",
+            "SELECT x FROM t WHERE a IS NOT b",
+            "SELECT x FROM t WHERE a IS NULL",
+            "SELECT x FROM t WHERE a IS NOT NULL",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
+    /// `IS [NOT] DISTINCT FROM` (the standard-SQL null-safe compare) parses as a
+    /// comparison — its DISTINCT sequences are matched ahead of the plain
+    /// `IS [NOT] <expr>` forms, and `IS NULL` still works unchanged.
+    #[test]
+    fn test_parse_is_distinct_from() {
+        for q in [
+            "SELECT x FROM t WHERE a IS DISTINCT FROM b",
+            "SELECT x FROM t WHERE a IS NOT DISTINCT FROM b",
+            "SELECT x FROM t WHERE a IS NULL",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
+    /// The `GLOB` and `NOT GLOB` infix operators parse as comparison forms
+    /// (the planner lowers them onto the `glob` builtin).
+    #[test]
+    fn test_parse_glob_operator() {
+        let ast = assert_program_root("SELECT x FROM t WHERE name GLOB 'A*'");
+        assert!(find_rule(&ast, "comparison"), "Expected comparison");
+        let ast2 = assert_program_root("SELECT x FROM t WHERE name NOT GLOB 'A*'");
+        assert!(find_rule(&ast2, "comparison"), "Expected comparison for NOT GLOB");
+    }
+
+    /// `CAST(expr AS type)` parses as a primary. The `CAST` alternative sits
+    /// before `function_call`, so `CAST(a AS INTEGER)` is not mistaken for a
+    /// function call named CAST.
+    #[test]
+    fn test_parse_cast() {
+        let ast = assert_program_root("SELECT CAST(a AS INTEGER) FROM t");
+        assert!(find_rule(&ast, "primary"), "Expected primary");
+        // A CAST expression can also appear in a WHERE predicate.
+        let ast2 = assert_program_root("SELECT x FROM t WHERE CAST(s AS REAL) > 1.5");
+        assert!(find_rule(&ast2, "comparison"), "Expected comparison");
+    }
+
+    /// Searched `CASE WHEN … THEN … [ELSE …] END` parses as a primary: a single
+    /// WHEN, multiple WHENs, with and without ELSE, and nested in a WHERE.
+    #[test]
+    fn test_parse_case() {
+        for q in [
+            "SELECT CASE WHEN a=1 THEN 'x' END FROM t",
+            "SELECT CASE WHEN a=1 THEN 'x' WHEN a=2 THEN 'y' ELSE 'z' END FROM t",
+            "SELECT x FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "primary"), "Expected primary for {q:?}");
+        }
+    }
+
+    /// Simple `CASE operand WHEN value THEN … END` parses (the operand form): a
+    /// column operand, a literal operand, with and without ELSE. The optional
+    /// operand must not disturb the searched form (covered by `test_parse_case`).
+    #[test]
+    fn test_parse_simple_case() {
+        for q in [
+            "SELECT CASE x WHEN 1 THEN 'a' END FROM t",
+            "SELECT CASE x WHEN 1 THEN 'a' WHEN 2 THEN 'b' ELSE 'c' END FROM t",
+            "SELECT CASE 5 WHEN 5 THEN 'five' ELSE 'no' END FROM t",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "primary"), "Expected primary for {q:?}");
+        }
+    }
+
+    /// Bitwise operators parse through the new `bitwise` precedence level and
+    /// the `~` prefix in `unary`: each operator alone, mixed precedence with
+    /// additive, and the unary complement.
+    #[test]
+    fn test_parse_bitwise() {
+        for q in [
+            "SELECT a & b FROM t",
+            "SELECT a | b FROM t",
+            "SELECT a << 2 FROM t",
+            "SELECT a >> 2 FROM t",
+            "SELECT ~a FROM t",
+            "SELECT 5 | 3 & 2 FROM t",
+            "SELECT 3 + 1 << 2 FROM t",
+            "SELECT x FROM t WHERE (a & 1) = 0",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "bitwise"), "Expected bitwise for {q:?}");
+        }
+    }
+
+    /// `COLLATE name` parses on the right operand of a comparison — with `=` and
+    /// the ordering operators, in a bare expression and in a WHERE clause.
+    #[test]
+    fn test_parse_expr_collate() {
+        for q in [
+            "SELECT 'A' = 'a' COLLATE NOCASE FROM t",
+            "SELECT a < b COLLATE RTRIM FROM t",
+            "SELECT x FROM t WHERE name = 'foo' COLLATE NOCASE",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
+    /// `COLLATE name` on the LEFT operand of a comparison parses — and crucially
+    /// does NOT steal an `ORDER BY … COLLATE …` clause's collation (the left-side
+    /// COLLATE only binds when a comparison operator follows, else it backtracks).
+    #[test]
+    fn test_parse_left_operand_collate() {
+        for q in [
+            "SELECT 'A' COLLATE NOCASE = 'a' FROM t",
+            "SELECT x FROM t WHERE name COLLATE NOCASE = 'foo'",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+        // Regression: ORDER BY COLLATE still routes the collation to order_item.
+        let ast = assert_program_root("SELECT name FROM t ORDER BY name COLLATE NOCASE");
+        assert!(find_rule(&ast, "order_item"), "Expected order_item to keep COLLATE");
+    }
+
+    /// A scalar subquery `( SELECT … )` parses as a `primary` containing a
+    /// nested `select_stmt` — in the SELECT list and in a WHERE comparison — and
+    /// does NOT disturb the plain parenthesised-expression form `( 1 + 2 )`.
+    #[test]
+    fn test_parse_scalar_subquery() {
+        for q in [
+            "SELECT (SELECT count(*) FROM t2) FROM t",
+            "SELECT x FROM t WHERE x > (SELECT max(y) FROM t2)",
+        ] {
+            let ast = assert_program_root(q);
+            // Two select_stmt nodes: the outer query and the nested subquery.
+            assert!(find_rule(&ast, "select_stmt"), "Expected select_stmt for {q:?}");
+        }
+        // Regression: a plain parenthesised expression still parses.
+        let ast = assert_program_root("SELECT (1 + 2) FROM t");
+        assert!(find_rule(&ast, "primary"), "Expected primary for parenthesised expr");
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------
@@ -640,6 +904,40 @@ mod tests {
         );
     }
 
+    /// A bare `JOIN` (no INNER/LEFT/… keyword) must parse — `join_type` is
+    /// optional and defaults to INNER downstream. Both the bare and the explicit
+    /// `INNER JOIN` forms should parse.
+    #[test]
+    fn test_parse_bare_join() {
+        assert!(
+            parse_sql("SELECT a.id FROM a JOIN b ON a.x = b.y").is_ok(),
+            "bare JOIN should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.id FROM a INNER JOIN b ON a.x = b.y").is_ok(),
+            "INNER JOIN should still parse"
+        );
+    }
+
+    /// A join with NO `ON` condition (a Cartesian product) must parse — both the
+    /// bare `JOIN` and the explicit `CROSS JOIN` forms — while the `ON` form
+    /// still works.
+    #[test]
+    fn test_parse_join_without_on() {
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b").is_ok(),
+            "JOIN with no ON should parse (cross product)"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a CROSS JOIN b").is_ok(),
+            "CROSS JOIN with no ON should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b ON a.x = b.y").is_ok(),
+            "JOIN ... ON should still parse"
+        );
+    }
+
     // -----------------------------------------------------------------------
     // Test 29: Error path — tokenization failure propagates
     // -----------------------------------------------------------------------
@@ -714,5 +1012,37 @@ mod tests {
     fn test_parse_parenthesized_expr() {
         let ast = assert_program_root("SELECT (a + b) * c FROM t");
         assert!(find_rule(&ast, "multiplicative"), "Expected multiplicative");
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!(
+            "SELECT id FROM users WHERE id = {}1{}",
+            "(".repeat(n),
+            ")".repeat(n)
+        )
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = parse_sql(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(parse_sql(&nested_paren_source(10)).is_ok());
     }
 }

@@ -283,7 +283,7 @@ pub fn decode_png_rgba(data: &[u8]) -> Result<(u32, u32, Vec<u8>), String> {
     //
     // Every PNG file begins with exactly these 8 bytes.  Any other value
     // means this is not (or is a corrupted) PNG.
-    if data.len() < 8 || &data[0..8] != &PNG_MAGIC {
+    if data.len() < 8 || data[0..8] != PNG_MAGIC {
         return Err("PNG decode: invalid magic signature".to_string());
     }
 

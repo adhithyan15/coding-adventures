@@ -23,6 +23,40 @@ public enum BuildToolError: Error, LocalizedError {
     }
 }
 
+public struct MetadataEncodingError: Error, LocalizedError, Equatable {
+    public let code: String
+    public let package: String
+    public let manifest: String
+    public let encoding: String
+
+    public init(code: String, package: String, manifest: String, encoding: String) {
+        self.code = code
+        self.package = package
+        self.manifest = manifest
+        self.encoding = encoding
+    }
+
+    public var errorDescription: String? {
+        "\(code): package=\(package) manifest=\(manifest) encoding=\(encoding)"
+    }
+}
+
+public struct DuplicatePackageIdentityError: Error, LocalizedError, Equatable {
+    public let code: String
+    public let package: String
+    public let paths: [String]
+
+    public init(code: String, package: String, paths: [String]) {
+        self.code = code
+        self.package = package
+        self.paths = paths
+    }
+
+    public var errorDescription: String? {
+        "\(code): package=\(package) paths=\(paths.joined(separator: ","))"
+    }
+}
+
 public enum BuildStatus: String, Codable {
     case built
     case failed

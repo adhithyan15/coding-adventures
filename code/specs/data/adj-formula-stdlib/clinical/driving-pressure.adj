@@ -1,0 +1,91 @@
+% ============================================================================
+% driving-pressure.adj — the ventilator driving pressure
+% (driving pressure = plateau pressure − PEEP) in the ADJ standard library.
+% ============================================================================
+% The driving-pressure entry of the *clinical* track — the lung-protective-ventilation quantity that,
+% in ARDS and mechanically ventilated patients, indexes the tidal volume delivered relative to the
+% aerated ("functional") lung compliance, and whose elevation tracks mortality. THE DRIVING PRESSURE
+% IS THE PLATEAU PRESSURE MINUS THE POSITIVE END-EXPIRATORY PRESSURE (PEEP). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the plateau
+% pressure a driving pressure implies at a given PEEP, and the PEEP it implies at a given plateau
+% pressure). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the measured airway pressures from its own byte-provenance decomposition, and asks the engine
+% to APPLY the cited definition on the CPU. Zero math is performed by the model; the engine computes
+% each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "driving-pressure.adj"
+%     observe plateau_pressure(30)   % "…plateau pressure 30 cmH2O…"   (span cited by the model)
+%     observe peep(10)                % "…PEEP 10 cmH2O…"               (span cited by the model)
+%     ? driving_pressure(plateau_pressure, peep)
+%                                      % engine → 20, carrying the driving pressure
+%
+% All three formulas are EXACT differences/sums over their parameters, so every value the engine
+% returns is exact. They COMPOSE and invert cleanly around the worked case plateau pressure = 30,
+% PEEP = 10 (driving pressure = 30 − 10 = 20): the `driving_pressure` a consumer computes is exactly the
+% value the `plateau_pressure` formula adds the PEEP back onto to recover 30, and exactly the value the
+% `peep` formula subtracts from the plateau pressure to recover 10.
+%
+%   driving_pressure(plateau_pressure, peep) = plateau_pressure - peep   % ΔP = Pplat − PEEP  (definition)
+%   plateau_pressure(driving_pressure, peep) = driving_pressure + peep    % Pplat = ΔP + PEEP  (solved for Pplat)
+%   peep(plateau_pressure, driving_pressure) = plateau_pressure - driving_pressure  % PEEP = Pplat − ΔP  (solved for PEEP)
+%
+% NOTE ON UNITS AND MODELLING: the plateau pressure and PEEP must be in the SAME pressure unit (they
+% subtract), and the driving pressure carries that unit (customarily cmH2O). The plateau pressure is
+% the end-inspiratory airway pressure measured during an inspiratory hold (no gas flow); PEEP is the
+% end-expiratory airway pressure. The cited article states the relation as prose — "Calculating the
+% driving pressure involves subtracting the PEEP level from the plateau pressure" — which is exactly
+% the definition read forward; the two rearrangements are the same relation solved for each input.
+%
+% All three formulas are defended by the SAME clause — "Calculating the driving pressure involves
+% subtracting the PEEP level from the plateau pressure." — because that one statement (the driving
+% pressure IS the plateau-pressure-minus-PEEP difference) sanctions the relation read every way. The
+% quote is transcribed verbatim from the StatPearls "Mechanical Ventilation" article on the NCBI
+% Bookshelf (a current, non-archived article), so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the statement is a verbatim span of the cited page, not asserted
+% from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable airway pressure the definition ranges over, and each
+% result is a derived pressure. `plateau_pressure`, `peep` and `driving_pressure` each appear BOTH as a
+% derived result and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary driving_pressure_vocab {
+    define plateau_pressure : finding  surface "plateau pressure", "Pplat", "plateau airway pressure"   % pressure (e.g. cmH2O)
+    define peep             : finding  surface "PEEP", "positive end-expiratory pressure"                % pressure (e.g. cmH2O)
+    define driving_pressure : finding  surface "driving pressure", "delta P", "transpulmonary driving pressure"  % pressure (e.g. cmH2O)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the driving-pressure statement from the StatPearls
+% "Mechanical Ventilation" article on the NCBI Bookshelf (a quote is required on a shipped formula).
+% Each is an exact difference or sum of the measured pressures, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook driving_pressure_laws {
+    use driving_pressure_vocab
+
+    % Driving pressure — the plateau pressure minus the PEEP.
+    formula driving_pressure(plateau_pressure, peep) = plateau_pressure - peep
+        source "Calculating the driving pressure involves subtracting the PEEP level from the plateau pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539742/"
+        trust authoritative
+
+    % Plateau pressure — the same definition solved for the plateau pressure (Pplat = ΔP + PEEP).
+    % Defended by the SAME statement.
+    formula plateau_pressure(driving_pressure, peep) = driving_pressure + peep
+        source "Calculating the driving pressure involves subtracting the PEEP level from the plateau pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539742/"
+        trust authoritative
+
+    % PEEP — the same definition solved for the PEEP (PEEP = Pplat − ΔP): the plateau pressure minus the
+    % driving pressure. The SAME statement, read the third way.
+    formula peep(plateau_pressure, driving_pressure) = plateau_pressure - driving_pressure
+        source "Calculating the driving pressure involves subtracting the PEEP level from the plateau pressure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539742/"
+        trust authoritative
+}

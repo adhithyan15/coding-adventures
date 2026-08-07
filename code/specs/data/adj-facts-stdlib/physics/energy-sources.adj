@@ -1,0 +1,114 @@
+% ============================================================================
+% energy-sources — the common sources we get energy from and whether each one
+% is RENEWABLE or NONRENEWABLE (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A first big idea of energy literacy, and a rung an ENERGY / EARTH-SCIENCE
+% agent reasons UP from: the things we get energy from split into two families.
+% A RENEWABLE source is "constantly replenished by nature" — the sun keeps
+% shining, the wind keeps blowing, the rivers keep flowing — so it is always
+% there when we need it. A NONRENEWABLE source is one whose "supplies are
+% limited to what we can mine or extract from the earth, and they take a very
+% long time to form" — burn the coal and it is gone. Before you can reason
+% about a country's energy mix, a power plant, or a climate policy you must
+% first know WHICH family a given source belongs to. Recall is a binding query:
+%
+%     ? energy_source_class(solar, $Class)     % renewable
+%
+% This is DISTINCT from the sibling `physics/energy-forms` library, which maps a
+% FORM of energy (chemical, thermal, nuclear, …) to the word that defines it.
+% This table is about SOURCES — where the energy comes from — and their
+% renewability, not about the physical form the energy takes.
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `energy_source_class(energy_source, class)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the class WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these enumerated sources (it never
+% invents a classification).
+%
+% Each source the U.S. EIA "Sources of energy" page enumerates, and the family
+% it places that source in, as a little truth table:
+%
+%     energy source   class          the source's own list it comes from
+%     -------------   ------------   ------------------------------------------
+%     solar           renewable      "the five major renewable energy sources"
+%     wind            renewable      "the five major renewable energy sources"
+%     hydropower      renewable      "the five major renewable energy sources"
+%     geothermal      renewable      "the five major renewable energy sources"
+%     biomass         renewable      "the five major renewable energy sources"
+%     coal            nonrenewable   nonrenewable energy "includes: … Coal …"
+%     natural_gas     nonrenewable   nonrenewable energy "includes: … Natural gas …"
+%     petroleum       nonrenewable   nonrenewable energy "includes: Petroleum …"
+%     nuclear         nonrenewable   nonrenewable energy "includes: … Nuclear energy"
+%
+% The query also runs BACKWARD — bind a class and recall every source in it:
+%
+%     ? energy_source_class($Source, nonrenewable)   % coal / natural_gas / …
+%
+% A word that is NOT one of these enumerated sources — `magnetic`, `lightning`,
+% `rock` — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a class. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the source→class pairs it can
+% ground, and only those.
+%
+% The `class` value of every row is a SINGLE lowercase atom, `renewable` or
+% `nonrenewable` — the EIA page's own two families — chosen only where the page
+% EXPLICITLY names the source inside one of the two lists, never inferred.
+% (`natural_gas` uses an underscore so the two-word source name stays one atom;
+% the source lists it as "Natural gas".)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every source→class pair
+% below was read out of a single fetched U.S. EIA "Energy Explained" page, and
+% any pair the page did not place in one of its two lists would have been
+% dropped). The two spans that fix every row:
+%
+%   renewable (solar, wind, hydropower, geothermal, biomass)
+%     https://www.eia.gov/energyexplained/what-is-energy/sources-of-energy.php
+%     (U.S. Energy Information Administration — Energy Explained)
+%     "The five major renewable energy sources include: Solar energy from the
+%      sun, Geothermal energy from heat inside the earth, Wind energy from
+%      uneven heating from the sun, Biomass from plants, Hydropower from flowing
+%      water" — and: "Renewable energy sources are constantly replenished by
+%      nature, which means they will always be there when we need them."
+%
+%   nonrenewable (coal, natural_gas, petroleum, nuclear)
+%     https://www.eia.gov/energyexplained/what-is-energy/sources-of-energy.php
+%     (U.S. Energy Information Administration — Energy Explained)
+%     "In the United States, nonrenewable energy is the primary source of the
+%      energy we use, which includes: Petroleum, Hydrocarbon gas liquids,
+%      Natural gas, Coal, Nuclear energy" — and: "These energy sources are
+%      called nonrenewable because their supplies are limited to what we can
+%      mine or extract from the earth, and they take a very long time to form."
+%
+% (The EIA list also names "Hydrocarbon gas liquids" as nonrenewable; it is NOT
+% shipped as a row because it is not one of the everyday energy sources this
+% table enumerates — an intentional drop, not an oversight.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the EIA statement that fixes the
+% first row (solar → renewable). Every OTHER row is grounded by one of the two
+% spans above, so each class remains independently checkable. The source is the
+% U.S. Energy Information Administration, a primary U.S. government teaching
+% resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table energy_source_class {
+    columns energy_source, class
+
+    row (solar, renewable)
+    row (wind, renewable)
+    row (hydropower, renewable)
+    row (geothermal, renewable)
+    row (biomass, renewable)
+    row (coal, nonrenewable)
+    row (natural_gas, nonrenewable)
+    row (petroleum, nonrenewable)
+    row (nuclear, nonrenewable)
+
+    source "The five major renewable energy sources include: Solar energy from the sun, Geothermal energy from heat inside the earth, Wind energy from uneven heating from the sun, Biomass from plants, Hydropower from flowing water"
+    locator "https://www.eia.gov/energyexplained/what-is-energy/sources-of-energy.php"
+    trust authoritative
+}

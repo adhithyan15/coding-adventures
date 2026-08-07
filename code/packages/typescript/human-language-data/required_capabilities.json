@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/human-language-data",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../learning/human-languages/**",
+      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, and script JSON from the repo working tree to build and validate the cross-language dataset."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "../../learning/human-languages/**",
+      "justification": "The loader enumerates each track's lessons/ directory and data/scripts/ to discover files to parse."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/**/book/chapters/*.tex",
+      "justification": "The explicit generate:books command refreshes configured LaTeX chapters from the canonical lesson AST; CI normally uses the read-only check:books drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/generated-book-hashes.json",
+      "justification": "The explicit generate:books command refreshes the deterministic app/book source-hash manifest; CI normally verifies it without writing."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/lesson-modality.json",
+      "justification": "The explicit generate:modality command refreshes the derived per-lesson modality manifest that lets the complete book, the app, and the driving edition be filtered from one source; CI normally uses the read-only check:modality drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/*/narration/*.txt",
+      "justification": "The explicit generate:narration command refreshes the HL08 plain-text voice script for each chapter from the canonical lesson AST; CI normally uses the read-only check:narration drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/*/narration/*.json",
+      "justification": "The explicit generate:narration command refreshes the HL08 structured narration a voice agent consumes; CI normally uses the read-only check:narration drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/generated-narration-hashes.json",
+      "justification": "The explicit generate:narration command refreshes the narration source-hash manifest that detects drift between the lessons and the committed voice script; CI normally verifies it without writing."
+    }
+  ],
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book and narration generators write only configured LaTeX chapters, per-chapter narration scripts, and their shared source-hash manifests, each path checked against the curriculum root before opening. No network or process access is needed."
+}

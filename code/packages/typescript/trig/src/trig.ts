@@ -193,31 +193,43 @@ export function sqrt(x: number): number {
   }
 
   // sqrt(0) is exactly 0 by definition.
-  if (x === 0.0) return 0.0;
+  if (x === 0.0) return x;
+  if (x === Infinity) return x;
+
+  let scaled = x;
+  let resultScale = 1.0;
+  while (scaled < 0.25) {
+    scaled *= 4.0;
+    resultScale *= 0.5;
+  }
+  while (scaled >= 4.0) {
+    scaled *= 0.25;
+    resultScale *= 2.0;
+  }
 
   // Initial guess: use x itself for x >= 1 (decent for large numbers),
   // and 1.0 for x < 1 (avoids dividing by a very small number early on).
   // Both converge correctly; this just saves a few iterations.
-  let guess = x >= 1.0 ? x : 1.0;
+  let guess = scaled >= 1.0 ? scaled : 1.0;
 
   // Iterate up to 60 times. In practice the loop exits in ~15 iterations
   // due to quadratic convergence. The cap prevents infinite loops on
   // edge cases near floating-point subnormals.
   for (let i = 0; i < 60; i++) {
-    const next = (guess + x / guess) / 2.0;
+    const next = (guess + scaled / guess) / 2.0;
 
     // Convergence check: stop when the improvement is smaller than the
     // best precision we can hope for at this magnitude.
     // The 1e-15 * guess term accounts for relative precision near large values.
     // The 1e-300 absolute floor handles subnormals safely.
     if (Math.abs(next - guess) < 1e-15 * guess + 1e-300) {
-      return next;
+      return next * resultScale;
     }
 
     guess = next;
   }
 
-  return guess;
+  return guess * resultScale;
 }
 
 // ----------------------------------------------------------------------------
@@ -346,8 +358,8 @@ function atanCore(x: number): number {
 // (because tan and cot are complementary), meaning atan(1/x) = π/2 - θ.
 
 export function atan(x: number): number {
-  // Special case: atan(0) = 0 exactly.
-  if (x === 0.0) return 0.0;
+  // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+  if (Math.abs(x) <= 7.450580596923828e-9) return x;
 
   // Reduce |x| > 1 using the complementary identity.
   if (x > 1.0) {

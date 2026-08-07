@@ -1,0 +1,17 @@
+[package]
+name = "chief-of-staff-daemon-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Fail-closed local authentication and wiring policy for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
+coding_adventures_zeroize = { path = "../zeroize" }
+
+[dev-dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }

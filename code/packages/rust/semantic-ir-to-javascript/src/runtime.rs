@@ -35,6 +35,17 @@
 //!
 //! The constant is fixed text — byte-identical in every artifact — so
 //! two compilations of the same module produce the same output.
+//!
+//! ## Symbolic expressions + pattern/rewrite (SIR23)
+//!
+//! `__Sir.Symbolic` is a plain-JS port of the published
+//! `@coding-adventures/symbolic-ir` / `@coding-adventures/
+//! cas-pattern-matching` / `@coding-adventures/sir-runtime-symbolic`
+//! TypeScript packages — the same "port it inline" treatment the
+//! exception runtime gives `@coding-adventures/sir-runtime-exceptions`
+//! (see that section's own comment). A `SymApply`/`SymPatternBlank`/
+//! `SymRule`/`SymReplaceAll` node lowers to a call into
+//! `__Sir.Symbolic.*`; see that section for the full algorithm.
 
 /// The full inlined runtime.  Always emitted verbatim, exactly once,
 /// near the top of every artifact (after the banner, before the user's
@@ -52,6 +63,121 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
   // unchanged.
   const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
+  // A second, independent display-convention flag: `true` when the
+  // module's `source_language` is APL, else `false`. APL's own console
+  // convention renders a negative number with the high-minus glyph `¯`
+  // (U+00AF), never ASCII `-` (`apl_runtime::value::fmt_num`,
+  // `negative_numbers_use_high_minus_not_ascii`). `formatSeen` (below)
+  // reads this flag wherever a value could reach `print` as a BARE
+  // (unboxed) number or a boxed `SirFloat` -- i.e. every case that is
+  // NOT already a genuine (rank >= 1, or rank-0-and-caught-by-the-NDArray
+  // branch) `NDArray`, which already renders high-minus unconditionally
+  // via `ArrayRt.display`/`fmtNum` (see that branch's own comment).
+  //
+  // Why this can't be decided from the VALUE alone (a bug-history note):
+  // a rank-0 SIR22 `NDArray` is NOT unique to APL -- `matlab-to-semantic-
+  // ir`'s `^`/`.^` unconditionally lower to `ElementwiseOp::Pow` even for
+  // two literals (no scalar fast path exists for power), so a plain
+  // MATLAB `2 ^ 2` is ALSO a rank-0 `{shape: [], data}` object by the
+  // time it reaches a consumer -- the identical runtime representation
+  // APL's own scalars can arrive as. Yet the two must print with
+  // DIFFERENT glyphs: APL wants `¯4` for `-2 ^ 2`-shaped values, while
+  // `matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power`
+  // case asserts plain ASCII `-4` for the identical shape. A value-shape
+  // test genuinely cannot distinguish the two cases; only the SOURCE
+  // LANGUAGE that emitted the module can -- hence a second per-module
+  // flag, mirroring `SIR_DISPLAY_RUBY` immediately above rather than
+  // inventing a new mechanism.
+  //
+  // Given that, the actual fix keeps `neg`/`sign`/`recip`/`ceil`/`floor`
+  // (below) blissfully unaware of source language: a rank-0 (or non-
+  // array) operand ALWAYS unwraps to a bare number exactly as before
+  // (never boxed into an NDArray just to carry a glyph decision), and
+  // ONLY `formatSeen`'s bare-number/`SirFloat` branches consult this flag
+  // at the one place the glyph is actually chosen. This is deliberately
+  // NOT specific to `neg` — any bare scalar an APL program prints (a
+  // literal `-5`, a negated float literal `-3.0`, `sign`/`recip`/`ceil`/
+  // `floor`'s own scalar results) goes through the same two branches, so
+  // fixing it there fixes all of them in one place.
+  const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;
+  // A THIRD, independent display-convention flag, added alongside J's own
+  // oracle tests (`j-to-semantic-ir/tests/oracle.rs`, "Bug A"): `true` when
+  // the module's `source_language` is J, else `false`. J's own console
+  // convention renders a negative number with a leading underscore `_`
+  // (never ASCII `-`, never APL's high-minus `¯`) and a non-finite value as
+  // lowercase `inf`/`_inf` (`j_runtime::value::fmt_num`, ported 1:1 in
+  // `ArrayRt.fmtNum` below). Mutually exclusive with
+  // `SIR_DISPLAY_APL_HIGH_MINUS` by construction (both flags are computed
+  // from the same single `source_language` field in `emit.rs`), so
+  // `fmtNum`/`formatSeen` below never need to arbitrate between them —
+  // only one can ever be `true` for a given module.
+  const SIR_DISPLAY_J_UNDERSCORE = __SIR_DISPLAY_J_UNDERSCORE__;
+  // A FOURTH, independent display-convention flag (SIR23 addendum, item 4
+  // of 4 — see `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s own
+  // "Per-language display convention" section): `true` when the module's
+  // `source_language` is Derive, else `false`. Unlike the three flags
+  // above (which all gate `formatSeen`'s bare-number/`SirFloat` branches),
+  // this one gates `Symbolic.toDisplayString` (further below, in the
+  // "Symbolic expressions" section) — the SIR23 domain's own stringifier,
+  // which until this item had no per-language convention at ALL (every
+  // source language rendered every compound term identically, generically,
+  // as `head(args, …)`). Derive's OWN convention — infix
+  // `+`/`-`/`*`/`/`/`^`, prefix `-`/`NOT`, a `;`-row-separated
+  // `[a, b; c, d]` bracket convention for `List`, and case-bridging a
+  // handful of builtin heads back to Derive's own UPPERCASE surface
+  // spelling (`Sin` → `"SIN"`, …) — is a direct, byte-for-byte port of
+  // `derive-runtime::printer::print_derive`'s existing, already-written
+  // precedence ladder; see `Symbolic`'s own `toDisplayString` for the full
+  // port and its own doc comment for the precedence-level mapping.
+  // Mutually exclusive with the three flags above by construction (all
+  // four are computed from the same single `source_language` field in
+  // `emit.rs`), and orthogonal in EFFECT too, since no `<lang>-to-
+  // semantic-ir` frontend that sets one of the first three (Ruby/APL/J)
+  // emits any SIR23 `SymApply`/`SymSymbol` node at all today.
+  const SIR_DISPLAY_DERIVE = __SIR_DISPLAY_DERIVE__;
+  // A FIFTH, independent display-convention flag (task #109, the direct Q
+  // sibling of J's own flag immediately above, found by `q-to-semantic-ir/
+  // tests/oracle.rs`'s own `DISPLAY_GAP` cases): `true` when the module's
+  // `source_language` is Q, else `false`. Q's own console convention
+  // renders a negative number with a plain ASCII `-` (never APL's
+  // high-minus `¯`, never J's leading underscore `_`) and a non-finite
+  // value as lowercase `-inf`/`inf` (note the ASCII minus PREFIX on
+  // infinity -- DIFFERENT from J's own `_inf` spelling immediately above),
+  // matching `q_runtime::value::fmt_num` exactly (`fmtNum` below is ported
+  // 1:1 from it). Mutually exclusive with the four flags above by
+  // construction (all five are computed from the same single
+  // `source_language` field in `emit.rs`), so `fmtNum`/`formatSeen` below
+  // never need to arbitrate between them -- only one can ever be `true`
+  // for a given module.
+  const SIR_DISPLAY_Q_ASCII_MINUS = __SIR_DISPLAY_Q_ASCII_MINUS__;
+  // A SIXTH, independent display-convention flag (MA13/Wave 7 close-out,
+  // `axiom-to-semantic-ir`'s oracle tests): `true` when the module's
+  // `source_language` is Axiom, else `false`. Unlike the five flags above
+  // (which gate `formatSeen`'s bare-number/`SirFloat` branches or, for
+  // `SIR_DISPLAY_DERIVE`, the whole `Symbolic.toDisplayString` stringifier),
+  // this one gates a single, narrow spot inside the GENERIC (non-Derive)
+  // branch of `Symbolic.toDisplayString`'s own `"symbol"` case: real Axiom's
+  // own interactive session renders the `True`/`False` symbols the shared
+  // comparison/logic/`has`-query handlers already produce as LOWERCASE
+  // `true`/`false` (`axiom-runtime::value::print_axiom`'s own render(),
+  // confirmed directly: `IRNode::Symbol(s) if s == "True" => "true"`) --
+  // every OTHER source language in this symbolic (SIR23) domain (Wolfram,
+  // Macsyma, Derive, Reduce, Maple) either has no comparable native
+  // lowercasing convention or (Maple) already gets its own dedicated
+  // case-bridging fix tracked as separate follow-up work, per
+  // `HML01-math-to-semantic-ir.md` §5's own "True/False CASE mismatch"
+  // finding -- so a plain boolean-only flag, mirroring `SIR_DISPLAY_RUBY`'s
+  // minimal shape exactly (NOT Derive's whole precedence-aware printer),
+  // is the correct, narrowest fix here: it does not touch how any
+  // COMPOUND term prints (Axiom still has no infix/bracket display
+  // convention of its own, the same disclosed "finding five"-class gap
+  // every CAS-family language without a `SIR_DISPLAY_<LANG>` flag has --
+  // see `axiom-to-semantic-ir/tests/oracle.rs`'s own module doc for the
+  // corpus cases that document it), only the two atomic boolean symbols.
+  // Mutually exclusive with the five flags above by construction (all six
+  // are computed from the same single `source_language` field in
+  // `emit.rs`).
+  const SIR_DISPLAY_AXIOM_BOOLEAN = __SIR_DISPLAY_AXIOM_BOOLEAN__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -87,12 +213,203 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return c.fn(...args);
   }
 
+  // ── tagged floats (Ruby Integer vs Float) ──────────────────────
+  //
+  // JavaScript has ONE number type (`f64`), so Ruby's `Integer` `7` and
+  // `Float` `7.0` are the same JS value — and Ruby distinguishes them
+  // everywhere: `7 / 2 == 3` (Integer#/ floors) but `7.0 / 2 == 3.5`
+  // (Float#/ true-divides); `puts 7.0` prints `7.0`, not `7`.  The
+  // Rust/Go/C backends carry a tagged `Int`/`Float` runtime value; we do
+  // the same, but only where JS can't already tell the two apart.
+  //
+  //   INVARIANT.  A Ruby Integer is an INTEGRAL native `number`.  A Ruby
+  //   Float is EITHER a non-integral native `number` (`3.5` — already
+  //   distinguishable, so left native) OR a `SirFloat` box wrapping an
+  //   integral value (`7.0` — otherwise indistinguishable from `7`).
+  //
+  // Only integral-valued floats are boxed, so the whole non-integral
+  // corpus stays native and untouched.  `mkFloat` is the SOLE factory;
+  // everything numeric unwraps through `numOf` and re-tags through
+  // `mkFloat`, so the box never escapes to native arithmetic by accident.
+  class SirFloat {
+    constructor(f) { this.f = f; Object.freeze(this); }
+  }
+  // Interning gives equal integral floats a single identity, so a boxed
+  // `7.0` used as a `Map` key or `Set` member (`tally`, `group_by`,
+  // `uniq`, a Hash literal) dedups by identity exactly like Ruby's `eql?`
+  // — while native Integer `7` stays a DISTINCT key (`7.eql?(7.0)` is
+  // false).  The cache is hard-capped: past the cap `mkFloat` returns
+  // fresh un-interned boxes, so memory is bounded (no unbounded-growth
+  // DoS) at the cost of losing dedup for programs with more than
+  // `FLOAT_INTERN_CAP` distinct integral-float keys — bounded and rare.
+  const FLOAT_INTERN_CAP = 4096;
+  const floatIntern = new Map();
+  function mkFloat(v) {
+    if (!Number.isInteger(v)) { return v; } // non-integral float: stays native
+    const hit = floatIntern.get(v);
+    if (hit !== undefined) { return hit; }
+    const box = new SirFloat(v);
+    if (floatIntern.size < FLOAT_INTERN_CAP) { floatIntern.set(v, box); }
+    return box;
+  }
+  // `numOf` unwraps to the raw f64 for arithmetic/comparison; `isNum`
+  // recognises "a number" at type gates; `isFloat` recognises "a Ruby
+  // Float" (boxed integral OR non-integral native).
+  //
+  // SECOND unwrap case, added alongside the `SirFloat` one above: a
+  // rank-0 (scalar) SIR22 `NDArray` — `{ shape: [], data: <1 element> }`
+  // (see the "SIR22: array/matrix domain" section far below, `ndarray`/
+  // `toArrayValue`). A scalar-only MATLAB accumulator (`n = n + 1` inside
+  // a `while` loop, where `n` was never provably scalar to the *frontend*
+  // because it is a variable, not a literal — see `matlab-to-semantic-ir`'s
+  // `expr_is_known_scalar`) takes the array-domain `ElementwiseOp` codegen
+  // path even though every value it ever holds is a plain number, so `n`
+  // becomes this NDArray shape after its first update. Every OTHER
+  // consumer of `numOf` (arithmetic re-tagging, comparisons) then sees an
+  // object where it expects a number; a bare JS `<`/`>`/native `-` on that
+  // object coerces through `ToPrimitive` to `NaN`, which is silently
+  // wrong (`NaN < 10` is `false`, not an error) rather than a crash. Since
+  // `numOf` is the identity on any value it doesn't recognise, and only
+  // MATLAB/APL-style SIR22 frontends ever construct an NDArray in the
+  // first place, this second branch is a no-op for every other language
+  // this backend serves (Ruby, JS, …) and a real fix for this one: it
+  // makes "a comparison/negation/subtraction/mod against a 0-D NDArray"
+  // behave exactly like "against the plain number it degenerately holds"
+  // — fixing not just the while-loop non-termination bug this was written
+  // for, but also (for free, same mechanism) unary minus on a scalar power
+  // expression (`-2 ^ 2`, which lowers to `ElementwiseOp::Pow` even for two
+  // literals and previously gave `NaN` via `neg`'s own `numOf` call).
+  function numOf(x) {
+    if (x instanceof SirFloat) { return x.f; }
+    if (x !== null && typeof x === "object" && Array.isArray(x.shape) && x.shape.length === 0) {
+      return x.data[0];
+    }
+    return x;
+  }
+  function isNum(x) { return typeof x === "number" || x instanceof SirFloat; }
+  function isFloat(x) {
+    return x instanceof SirFloat || (typeof x === "number" && !Number.isInteger(x));
+  }
+  // Arithmetic re-tags: the result is a Float iff an operand is a Float
+  // (or the op forces float, e.g. Float#/).  `mkFloat` then leaves a
+  // non-integral result native and boxes an integral one (`3.5 + 3.5`
+  // → boxed `7.0`; `7.0 - 0.5` → native `6.5`).
+  //
+  // `x` may ALSO be a genuine SIR22 `{shape, data}` NDArray of rank >= 1
+  // (a real APL array, e.g. `-1 2 ¯3`) -- historically this silently gave
+  // `NaN`: the old code always fell through to `-numOf(x)`, and `numOf`
+  // does not recognise a rank >= 1 NDArray, so native JS unary minus ran
+  // on a plain object (`ToPrimitive` coercion) instead of negating any
+  // element. Fixed below by mapping over `.data` into a NEW NDArray with
+  // the SAME shape (`mapNDArrayRank1Plus`, defined just below `isFloat`'s
+  // sibling helpers) -- this is unconditionally correct regardless of
+  // source language: no OTHER frontend ever `print`/`disp`s a computed
+  // array through `neg`'s result without first reading a scalar element
+  // back via `IndexGet` (`formatSeen`'s own NDArray-branch comment below),
+  // so only APL's own auto-print ever observes this branch's output today.
+  //
+  // A rank-0 NDArray operand (e.g. APL's `-(3+4)`, or MATLAB's `-2 ^ 2`,
+  // whose `^` always lowers through the SIR22 array domain even for two
+  // literals) is DELIBERATELY **not** given its own array-preserving
+  // branch here: `mapNDArrayRank1Plus` only matches rank >= 1, so a rank-0
+  // operand falls through to the plain `numOf`-unwrapping fallback below,
+  // exactly as it always has. The high-minus-vs-ASCII glyph question for
+  // that bare scalar RESULT is answered entirely by `formatSeen`'s
+  // `SIR_DISPLAY_APL_HIGH_MINUS`-gated branches (see that flag's own
+  // comment for why the value itself can't carry the decision) -- not by
+  // this function boxing or not boxing its return value.
+  function mapNDArrayRank1Plus(x, f) {
+    if (
+      x !== null && typeof x === "object" &&
+      Array.isArray(x.shape) && x.data instanceof Float64Array &&
+      x.shape.length >= 1
+    ) {
+      return ArrayRt.ndarray(x.shape, Float64Array.from(x.data, f));
+    }
+    return undefined; // not an array (or a rank-0 scalar): caller handles it
+  }
+  function neg(x) {
+    const arr = mapNDArrayRank1Plus(x, (v) => -v);
+    if (arr !== undefined) { return arr; }
+    return isFloat(x) ? mkFloat(-numOf(x)) : -numOf(x);
+  }
+  function minus(a, b) {
+    const r = numOf(a) - numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  function mod(a, b) {
+    const r = numOf(a) % numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  // Equality is Ruby `==`: by VALUE for numbers, STRUCTURAL for composites.
+  //
+  // First unwrap BOTH operands through `numOf` (which reduces a `SirFloat` box
+  // AND a degenerate scalar `NDArray` to a plain number). If both reduce to a
+  // number, compare by value — so `7.0 == 7`, and a scalar NDArray equals the
+  // number it holds (`NaN === NaN` stays false, matching Ruby). Otherwise defer
+  // to `valEq` (hoisted; defined below) — the SAME structural equality
+  // `include?`/`index`/`case`-`when` use — so `[1,2] == [1,2]` is true, symbols
+  // compare by name, and nested composites recurse (cycle-safe). Earlier `eq`
+  // was `numOf(a) === numOf(b)`: right for numbers but REFERENCE equality for
+  // arrays/maps, so `[1,2] == [1,2]` was wrongly false — harmless while `==`
+  // threw `unknown builtin`, but wrong once it is lowered. `ne` is its exact
+  // negation. This now agrees with the Python, Ruby, Go, C and Rust backends.
+  //
+  // Ordering (`lt`/`gt`/`le`/`ge`) stays a `numOf` unwrap: order is numeric
+  // (a boxed Float `7.0 < 8` avoids the `NaN` a native `<` on the box gives),
+  // and Ruby has no structural `<` on composites here.
+  function eq(a, b) {
+    const na = numOf(a), nb = numOf(b);
+    if (typeof na === "number" && typeof nb === "number") { return na === nb; }
+    return valEq(a, b);
+  }
+  function ne(a, b) { return !eq(a, b); }
+  function lt(a, b) { return numOf(a) < numOf(b); }
+  function gt(a, b) { return numOf(a) > numOf(b); }
+  function le(a, b) { return numOf(a) <= numOf(b); }
+  function ge(a, b) { return numOf(a) >= numOf(b); }
+  // Render a boxed float the way Ruby's `to_s` does.  A box only ever
+  // holds a FINITE INTEGRAL value (non-finite/non-integral never box), so
+  // the job is to restore the trailing `.0` that `String(7)` drops:
+  //   7.0        → "7.0"          (append ".0")
+  //   -0.0       → "-0.0"         (String(-0) loses the sign — special-case)
+  //   1e21       → "1.0e+21"      (insert ".0" BEFORE the exponent)
+  // matching the Rust/Go backends ("shortest decimal, `.0` when integral").
+  function floatToRubyString(f) {
+    if (Object.is(f, -0)) { return "-0.0"; }
+    const s = f.toString();
+    const e = s.search(/[eE]/);
+    if (e >= 0) { return s.slice(0, e) + ".0" + s.slice(e); }
+    return s + ".0";
+  }
+
   // ── truthiness ─────────────────────────────────────────────────
   // SIR truthiness, NOT JavaScript's: only `false` and `nil` (null)
   // are falsy.  `0`, `""`, and `NaN` are all truthy — matching Lisp /
-  // Ruby semantics rather than JS's surprising coercions.
+  // Ruby semantics rather than JS's surprising coercions.  A `SirFloat`
+  // box is an object, so it is truthy — matching Ruby (all numbers are).
   function truthy(v) {
     return v !== false && v !== null && v !== undefined;
+  }
+
+  // Real MATLAB/Octave has no separate boolean type: logicals are doubles,
+  // and truthiness is "nonzero is true, zero is false" — the OPPOSITE
+  // convention from `truthy()` above (canonical SIR truthy(0) is `true`;
+  // MATLAB's `~0` is `1`, i.e. `0` is falsy there). A MATLAB/Octave-sourced
+  // value reaching a boolean context can be EITHER a genuine JS boolean
+  // (the output of a comparison/`~`/`&&`/`||`, which this backend already
+  // renders as native `true`/`false`) OR a bare number (a variable, a
+  // function-call result, an array-element read, …) that has never passed
+  // through a comparison at all — `matlabTruthy` handles both correctly in
+  // one place, so the frontend never has to prove, via static shape
+  // analysis alone, which case it's looking at (an earlier version of this
+  // fix tried exactly that — a lowering-time-only `!= 0` wrap gated on
+  // recognising "already boolean" shapes — and got it wrong for the most
+  // ordinary case, a variable holding a stored comparison result, silently
+  // inverting `false`; see `matlab-to-semantic-ir::lower::to_matlab_condition`
+  // for the corrected, always-wrap-through-here approach).
+  function matlabTruthy(x) {
+    return typeof x === "boolean" ? x : (numOf(x) !== 0);
   }
 
   // ── display / formatting ───────────────────────────────────────
@@ -117,7 +434,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
     if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
     if (typeof v === "string") { return v; }
-    if (typeof v === "number") { return String(v); }
+    // An EXCEPTION renders as its MESSAGE, matching Ruby's `Exception#to_s`.
+    // `Error`, not `SirError`: `emit.rs`'s `catch` binds the RAW thrown value,
+    // so `e` may be a native JS error (a V8 `RangeError` from deep recursion),
+    // and `classOfThrown` already buckets exactly those as `StandardError`.
+    // Every reflection answer must gate on the same test or they disagree —
+    // `e.class` saying `StandardError` while `puts e` takes a different path.
+    // `Error.prototype.toString` prefixes the class ("ArgumentError: boom"),
+    // so the generic `String(v)` fallback at the end would print that rather
+    // than Ruby's plain "boom".
+    if (v instanceof Error) { return v.message; }
+    // A boxed Float renders with its trailing `.0` (`7.0`, not `7`); a native
+    // number (Integer, or a non-integral Float like `3.5`) renders as-is.
+    // This is Ruby/Lisp's OWN convention -- an APL-sourced module renders
+    // EITHER shape through `ArrayRt.fmtNum` instead (high-minus `¯`, no
+    // trailing `.0` ever), matching `apl_runtime::value::fmt_num` exactly.
+    // See `SIR_DISPLAY_APL_HIGH_MINUS`'s own comment (near the top of this
+    // file) for why this decision has to live HERE (at display time) and
+    // not inside `neg`/`sign`/`recip`/`ceil`/`floor` themselves: a rank-0
+    // SIR22 NDArray -- the representation a bare/boxed scalar RESULT from
+    // any of those five degenerately unwraps from -- is not unique to APL
+    // (MATLAB's `2 ^ 2` reaches the identical shape), so only the source
+    // language, not the value's own shape, can decide the glyph.
+    if (v instanceof SirFloat) {
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
+    }
+    if (typeof v === "number") {
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v) : String(v);
+    }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
       return "(" + formatSeen(v.car, seen) + " . " + formatSeen(v.cdr, seen) + ")";
@@ -130,6 +474,46 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       seen.delete(v);
       return "[" + body + "]";
     }
+    // A Ruby Hash is a JS `Map`.  It renders `{k: v, …}` (colon-space between
+    // key and value, comma-space between pairs) — the SAME surface the Go/Rust
+    // backends emit, so a printed hash (e.g. a `group_by` result) round-trips
+    // identically across backends.  Cycle-guarded via `seen` like Arrays.
+    if (v instanceof Map) {
+      if (seen.has(v)) { return "{...}"; }
+      seen.add(v);
+      const body = [...v]
+        .map(([k, val]) => formatSeen(k, seen) + ": " + formatSeen(val, seen))
+        .join(", ");
+      seen.delete(v);
+      return "{" + body + "}";
+    }
+    // A SIR23 symbolic-expression term (see the "symbolic expressions"
+    // section far below) — a plain frozen `{ kind: "symbol"|"integer"|…
+    // }` object, never a class instance. Unlike Array/Map, a term is
+    // built exclusively through `Symbolic.*`'s constructors, which only
+    // ever wrap ALREADY-frozen children, so a term can never reference
+    // itself; no cycle guard is needed here the way Array/Map need `seen`.
+    if (v !== null && typeof v === "object" && typeof v.kind === "string") {
+      const s = Symbolic.toDisplayString(v);
+      if (s !== undefined) { return s; }
+    }
+    // SIR22/APL: an `NDArray` (the `{ shape, data }` value this file's
+    // "array/matrix domain" section below constructs) has no Ruby/Scheme
+    // display convention of its own. The MATLAB frontend never reaches this
+    // branch -- it always reads a computed array back through a scalar
+    // `IndexGet` instead of printing the whole thing (see
+    // `semantic-ir-to-javascript`'s own `tests/sir22_array.rs` doc
+    // comments) -- but APL auto-prints a bare top-level expression (see
+    // `apl-to-semantic-ir`'s "Auto-print, not MATLAB-style suppression"),
+    // and APL has no bracket-indexing syntax to read a value back with, so
+    // a real APL program's `print` call can only ever be made to work by
+    // rendering the NDArray itself. `ArrayRt.display` (below) is a 1:1 port
+    // of `apl_runtime::value::display` -- APL's OWN console convention
+    // (high-minus `¯` negatives, no name/`ans=` prefix), which is exactly
+    // what an `apl-runtime` session would print for the same value.
+    if (v !== null && typeof v === "object" && Array.isArray(v.shape) && v.data instanceof Float64Array) {
+      return ArrayRt.display(v);
+    }
     return String(v);
   }
 
@@ -137,41 +521,161 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // Reached only for builtins the emitter did not specialise inline
   // (e.g. a variadic `+`, or a builtin referenced as a value via
   // `__Sir.builtins["name"]`).  Each entry is an ordinary JS function.
+  // Numeric fold shared by `plus`/`times`/`-`/`/`.  It unwraps every operand
+  // through `numOf` (so `step` always sees raw f64s), tracks whether ANY
+  // operand — including `init` — was a Ruby Float, and re-tags the result
+  // via `mkFloat` iff so.  Thus `1 + 2` stays a native Integer, `3.5 + 3.5`
+  // becomes the boxed Float `7.0`, and `1 + 2.5` stays the native `3.5`.
   function numFold(args, init, step) {
-    let acc = init;
-    for (const a of args) { acc = step(acc, a); }
-    return acc;
+    let acc = numOf(init);
+    let anyFloat = isFloat(init);
+    for (const a of args) {
+      if (isFloat(a)) { anyFloat = true; }
+      acc = step(acc, numOf(a));
+    }
+    return anyFloat ? mkFloat(acc) : acc;
   }
-  const builtins = {
+  // ── SIR22/APL monadic scalar atoms: sign / reciprocal / ceiling / floor ──
+  //
+  // APL's monadic `× ÷ ⌈ ⌊` (`apl-to-semantic-ir/src/lower.rs`'s
+  // `apply_monadic_scalar`) lower to `BuiltinCall("sign"/"recip"/"ceil"/
+  // "floor", [x])`. These four names were documented (this crate's own
+  // README/CHANGELOG) but never given a runtime implementation anywhere in
+  // this file OR in `emit.rs`'s fixed-arm table, so every one of them
+  // crashed with `TypeError: unknown builtin: <name>` for EVERY operand,
+  // scalar or array (found by `apl-to-semantic-ir/tests/oracle.rs`, this
+  // crate's own oracle harness). Ported 1:1 from `apl_runtime::eval::
+  // apply_monadic_scalar`/`apl_sign` (`code/packages/rust/apl-runtime/
+  // src/eval.rs`):
+  //   - `aplSign`: NaN → NaN; positive → 1; negative → -1; zero (either
+  //     sign) → 0. Deliberately NOT `Math.sign()`: although `Math.sign(0)
+  //     === 0` and `Math.sign(-0) === -0` happen to compare `=== 0` (so a
+  //     bare `Math.sign` call would likely also pass), `aplSign` is
+  //     written to match the Rust reference's explicit if/else branching
+  //     literally rather than lean on that coincidence.
+  //   - `aplRecip`: plain `1 / v`, IEEE-754 -- `aplRecip(0)` is `Infinity`,
+  //     never an error/`NaN` (unlike Ruby's `ZeroDivisionError`-raising
+  //     `divide()` elsewhere in this file).
+  //   - ceiling/floor: plain `Math.ceil`/`Math.floor` directly -- no APL
+  //     comparison-tolerance quirk exists anywhere in this codebase for
+  //     these two. (`runtime.rs` also has `"floor"`/`"ceil"` CASE LABELS
+  //     inside `numericMethod`'s `switch`, but that is Ruby's UNRELATED
+  //     `recv.floor`/`recv.ceil` METHOD-call dispatch, reached only via
+  //     `BuiltinCall("__method__", ...)` -- never via a bare top-level
+  //     `BuiltinCall("floor"/"ceil", ...)` the way APL's monadic atoms emit
+  //     one. The two mechanisms coexist without collision.)
+  //
+  // `monadicScalarAtom` is the scalar/array dispatch every one of the four
+  // needs: a genuine NDArray of rank >= 1 maps `f` elementwise (reusing
+  // `mapNDArrayRank1Plus`, defined next to `neg` above -- the exact same
+  // "rank >= 1 preserves the box, everything else falls through" split
+  // `neg`'s own array branch uses); anything else (a bare number, a boxed
+  // `SirFloat`, or a rank-0 NDArray) unwraps via `numOf` and returns a BARE
+  // result -- deliberately never re-boxing through `mkFloat` the way `neg`/
+  // `minus`/`mod` do for Ruby, because none of these four names is ever
+  // emitted by a Ruby-sourced module (confirmed by a repo-wide grep for
+  // `"sign"`/`"recip"`/`"ceil"`/`"floor"` as `BuiltinCall` names: only
+  // `apl-to-semantic-ir` and the not-yet-`node`-tested `j-to-semantic-ir`
+  // emit them) -- so there is no Integer-vs-Float distinction to preserve,
+  // and re-boxing would actively be WRONG: `mkFloat` would box a whole-
+  // valued result like `⌈3.2` (`Math.ceil(3.2) === 4`) into a `SirFloat`,
+  // which `formatSeen` would then render Ruby-style with a spurious
+  // trailing `.0` (`"4.0"`) instead of APL's own `"4"`. As with `neg`, the
+  // glyph question for a bare/rank-0 result is answered entirely by
+  // `formatSeen`'s `SIR_DISPLAY_APL_HIGH_MINUS`-gated branches, not here.
+  function aplSign(v) {
+    if (Number.isNaN(v)) { return NaN; }
+    if (v > 0) { return 1; }
+    if (v < 0) { return -1; }
+    return 0;
+  }
+  function aplRecip(v) { return 1 / v; }
+  function monadicScalarAtom(x, f) {
+    const arr = mapNDArrayRank1Plus(x, f);
+    if (arr !== undefined) { return arr; }
+    return f(numOf(x));
+  }
+
+  // NULL-PROTOTYPE table.  `builtins[name]` is indexed by a SOURCE-DERIVED
+  // name, so a plain object literal would resolve inherited `Object.prototype`
+  // members — `builtins["toString"]`, `["constructor"]`, `["__defineGetter__"]`
+  // all yield functions, sail past the `f === undefined` check in
+  // `callBuiltin`/`builtinClosure`, and get INVOKED (a define-a-getter-on-
+  // global gadget).  `Object.create(null)` removes the prototype chain, so an
+  // unknown name is `undefined` and raises cleanly.  This matches how the
+  // runtime's other name-indexed tables (`ancestry`, the ivar bags) are built.
+  const builtins = Object.assign(Object.create(null), {
     // `+`/`*` route through the polymorphic helpers (hoisted function
     // declarations below) so a builtin referenced as a VALUE, or a
     // variadic `(+ 1 2 3)`, gets the same string/array/numeric dispatch
     // as the inlined 2-arg form.
     "+": (...a) => plus(...a),
-    "-": (...a) => a.length === 1 ? -a[0] : numFold(a.slice(1), a[0], (x, y) => x - y),
+    "<<": (...a) => shiftLeft(...a),
+    "-": (...a) => a.length === 1 ? neg(a[0]) : numFold(a.slice(1), a[0], (x, y) => x - y),
     "*": (...a) => times(...a),
-    "/": (...a) => a.length === 1 ? 1 / a[0] : numFold(a.slice(1), a[0], (x, y) => x / y),
-    "=": (x, y) => x === y,
+    "/": (...a) => a.length === 1
+      ? (isFloat(a[0]) ? mkFloat(1 / numOf(a[0])) : 1 / numOf(a[0]))
+      : numFold(a.slice(1), a[0], (x, y) => x / y),
+    "=": (x, y) => eq(x, y),
+    // `==` is a synonym for `=`; `!=` its negation.  Present in this table (not
+    // only the emitter's infix map) so a first-class `:==`/`:!=` symbol
+    // reference dispatches — matching `<=`/`>=`, which were already here.
+    "==": (x, y) => eq(x, y),
+    "!=": (x, y) => ne(x, y),
     // Ruby case-equality (`pattern === value`) — the test a `when`/`in` arm
     // runs.  Ruby keys `===` to the pattern's type (Range → membership, Regexp
     // → match); this backend has no Range/Regexp value, so the only patterns
     // that reach here are plain values and the op is ordinary equality (the
     // same `===` the `=` builtin uses).  `when SomeClass` is lowered to
     // `.is_a?` at the frontend and never becomes a case_eq call.
-    "case_eq": (pattern, value) => pattern === value,
-    "<": (x, y) => x < y,
-    ">": (x, y) => x > y,
-    "<=": (x, y) => x <= y,
-    ">=": (x, y) => x >= y,
+    "case_eq": (pattern, value) => eq(pattern, value),
+    "<": (x, y) => lt(x, y),
+    ">": (x, y) => gt(x, y),
+    "<=": (x, y) => le(x, y),
+    ">=": (x, y) => ge(x, y),
     "not": (x) => !truthy(x),
-    "neg": (x) => -x,
+    "neg": (x) => neg(x),
+    // SIR22/APL monadic scalar atoms (see the section just above this
+    // table for the full root-cause writeup and ground-truth citations).
+    "sign": (x) => monadicScalarAtom(x, aplSign),
+    "recip": (x) => monadicScalarAtom(x, aplRecip),
+    "ceil": (x) => monadicScalarAtom(x, Math.ceil),
+    "floor": (x) => monadicScalarAtom(x, Math.floor),
+    // SIR22/J: two genuinely new primitives, no APL precedent (see the
+    // `tally`/`replicate`/`monadicExp` definitions in the `ArrayRt` section
+    // above for the full root-cause writeup — found by `j-to-semantic-ir/
+    // tests/oracle.rs`, "Bug B": documented since that crate's 0.1.0/0.1.1
+    // but never registered here, so every use crashed with `TypeError:
+    // unknown builtin: <name>`).
+    "tally": (x) => ArrayRt.tally(x),
+    "replicate": (x, y) => ArrayRt.replicate(x, y),
+    "exp": (x) => ArrayRt.monadicExp(x),
+    // SIR22/Q: five genuinely new primitives, no APL/J precedent (see the
+    // `qFirst`/`qWhere`/`qReverse`/`qNot`/`qTake`/`qDrop`/`qMatch`
+    // definitions in the `ArrayRt` section above for the full root-cause
+    // writeup and ground-truth citations).
+    "q_first": (x) => ArrayRt.qFirst(x),
+    "q_where": (x) => ArrayRt.qWhere(x),
+    "q_reverse": (x) => ArrayRt.qReverse(x),
+    "q_not": (x) => ArrayRt.qNot(x),
+    "q_take": (x, y) => ArrayRt.qTake(x, y),
+    "q_drop": (x, y) => ArrayRt.qDrop(x, y),
+    "q_match": (x, y) => ArrayRt.qMatch(x, y),
     "cons": (x, y) => new Pair(x, y),
     "car": (p) => p.car,
     "cdr": (p) => p.cdr,
     "pair?": (p) => p instanceof Pair,
     "null?": (x) => x === null || x === undefined,
-    "number?": (x) => typeof x === "number",
+    "number?": (x) => isNum(x),
     "symbol?": (x) => x instanceof Sym,
+    // Type reflection as BUILTINS: the Ruby frontend lowers `x.is_a?(Foo)`
+    // and a `case/in Foo` class pattern to `BuiltinCall("is_a?", [x,
+    // StrLit("Foo")])` — the class arrives as its NAME, so no constant-
+    // reference support is needed here.
+    "is_a?": (v, cls) => isA(v, methodNameArg(cls)),
+    "kind_of?": (v, cls) => isA(v, methodNameArg(cls)),
+    "instance_of?": (v, cls) => rubyClassName(v) === methodNameArg(cls),
+    "class": (v) => rubyClassName(v),
     "len": (x) => x.length,
     "print": (x) => { console.log(format(x)); return null; },
     "puts": (...args) => puts(...args),
@@ -182,7 +686,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       else { for (let i = start; i > stop; i += s) { out.push(i); } }
       return out;
     },
-  };
+  });
   // A builtin referenced as a value (e.g. passed to `map`) becomes a
   // Closure wrapping the table entry, so it round-trips through
   // `applyClosure` like any other first-class function.
@@ -303,6 +807,66 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `+` — left-associative fold so the variadic contract survives.  The
   // arm is chosen by the FIRST operand; `plus()` with no args is `0`,
   // mirroring the numeric identity.
+  // `<<` — Ruby's shift operator, polymorphic like `plus`:
+  //   Array   — push each RHS operand IN PLACE (`.push`, never flattened —
+  //             unlike `plus`'s Array arm, which concatenates, `<<` pushes
+  //             a nested-array operand as ONE element), returns the
+  //             (mutated) receiver. The frontend lowers a `<<` chain
+  //             (`a << 1 << 2`) to NESTED binary calls
+  //             (`shiftLeft(shiftLeft(a, 1), 2)`), not one flat variadic
+  //             call — but since `<<` mutates and returns the SAME
+  //             receiver, nesting composes exactly like a fold, so this
+  //             function stays variadic-capable (`...args`) for a
+  //             hand-built module that constructs a flat call directly.
+  //   String  — concatenates via `format` (the SAME tolerant convention
+  //             `plus`'s String arm already uses on this backend — never
+  //             raises for a non-string operand, unlike the C/Rust/Python
+  //             backends' stricter TypeError).
+  //   numeric — bitwise shift, implemented via MULTIPLICATION/DIVISION by
+  //             a power of two rather than native `<<`/`>>`: JS's native
+  //             bitwise operators coerce both operands to Int32 and mask
+  //             the shift count to 5 bits, so `1 << 40` would silently
+  //             give the WRONG answer (not even close) rather than the
+  //             correct `1099511627776`. This backend's numeric model is
+  //             plain `number` everywhere (see `numFold`) — deliberately
+  //             NOT the arbitrary-precision integer primitive (a
+  //             divergence from the TypeScript sibling package; see
+  //             `symbolic_uses_plain_numbers_not_bigint`) — so, like
+  //             `+`/`*`, precision silently degrades past
+  //             `Number.MAX_SAFE_INTEGER` (2^53) rather than saturating
+  //             like the fixed-width C/Go/Rust backends. A negative
+  //             amount REVERSES direction (a right shift by the absolute
+  //             value, matching Ruby's `5 << -1 == 5 >> 1 == 2`);
+  //             `Math.floor` on the division correctly replicates
+  //             ARITHMETIC (sign-extending) right shift for a negative
+  //             receiver too (floor division by a power of two IS
+  //             arithmetic right shift). The `acc === 0` short-circuit
+  //             both matches "0 shifted by anything is 0" and avoids
+  //             `0 * Infinity === NaN` once `Math.pow(2, amount)`
+  //             overflows to `Infinity` for an extreme shift amount.
+  function shiftAmountArg(v) {
+    return isNum(v) ? Math.trunc(numOf(v)) : 0;
+  }
+  function shiftLeft(...args) {
+    if (args.length === 0) { return 0; }
+    const first = args[0];
+    if (Array.isArray(first)) {
+      for (const a of args.slice(1)) { first.push(a); }
+      return first;
+    }
+    if (typeof first === "string") {
+      let acc = first;
+      for (const a of args.slice(1)) { acc += format(a); }
+      return acc;
+    }
+    let acc = numOf(first);
+    for (const a of args.slice(1)) {
+      if (acc === 0) { continue; }
+      const amount = shiftAmountArg(a);
+      acc = amount < 0 ? Math.floor(acc / Math.pow(2, -amount)) : acc * Math.pow(2, amount);
+    }
+    return acc;
+  }
   function plus(...args) {
     if (args.length === 0) { return 0; }
     const first = args[0];
@@ -336,19 +900,20 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     const first = args[0];
     if (args.length === 2) {
       const rhs = args[1];
-      if (typeof first === "string" && typeof rhs === "number") {
+      if (typeof first === "string" && isNum(rhs)) {
         // String repeat: `"ab" * 3` → "ababab".  Empty receiver short-
         // circuits so a huge count does no work; the guard rejects an
-        // oversized product before `repeat` allocates.
+        // oversized product before `repeat` allocates.  A boxed-Float count
+        // unwraps via `numOf`, then `repeatCount` rejects a non-integer.
         if (first.length === 0) { return ""; }
-        const n = repeatCount(first.length, rhs);
+        const n = repeatCount(first.length, numOf(rhs));
         return n === 0 ? "" : first.repeat(n);
       }
-      if (Array.isArray(first) && typeof rhs === "number") {
+      if (Array.isArray(first) && isNum(rhs)) {
         // Array repeat: `[0] * 3` → [0, 0, 0], a NEW array.  Empty
         // receiver short-circuits; the guard bounds total elements.
         if (first.length === 0) { return []; }
-        const n = repeatCount(first.length, rhs);
+        const n = repeatCount(first.length, numOf(rhs));
         const out = [];
         for (let i = 0; i < n; i++) {
           for (const e of first) { out.push(e); }
@@ -384,10 +949,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `0 === -0` and `0 === 0.0` in JS, so the single `=== 0` test covers the
   // integer-zero, float-zero, and negative-zero divisors uniformly.
   function divide(a, b) {
-    if (b === 0) {
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
       raiseError("ZeroDivisionError", "divided by 0");
     }
-    return a / b;
+    // Ruby's `/` is polymorphic on the RECEIVER's type: `Integer#/` FLOORS
+    // toward −∞ (`-7 / 2 == -4`), while `Float#/` true-divides (`7.0 / 2 ==
+    // 3.5`).  With tagged floats the two are now distinguishable: if EITHER
+    // operand is a Ruby Float, true-divide and re-tag the result (`6.0 / 2`
+    // → boxed `3.0`, `7.0 / 2` → native `3.5`); otherwise both are Integers,
+    // so floor — matching the SIR21 §E3 oracle `DivOp::Floor` on every sign
+    // combination.  (A boxed Float is unwrapped via `numOf` for the math.)
+    return (isFloat(a) || isFloat(b)) ? mkFloat(an / bn) : Math.floor(an / bn);
   }
 
   // ── method dispatch (`__method__`) ─────────────────────────────
@@ -526,10 +1099,22 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (name === "respond_to?" || SEND_METHODS.has(name) || OBJECT_BLOCK_METHODS.has(name)) {
       return true;
     }
+    // Type reflection answers on every receiver (matching the Go backend,
+    // which reports `class`/`is_a?`/`kind_of?`/`instance_of?` universally).
+    if (name === "class" || REFLECT_PREDICATES.has(name)) { return true; }
+    // An EXCEPTION answers `message` — `Error`, not `SirError`, matching
+    // `rubyClassName`/`isA` (a caught native JS error reflects as
+    // `StandardError`, so it must answer `message` too).  Do NOT early-return
+    // false otherwise: a user class may define its own `message`, which
+    // `callMethod` resolves from the `SirInstance` method table below —
+    // returning false here would DENY a method that actually works, the same
+    // dishonest-`respond_to?` shape this change fixes elsewhere.  (Go and
+    // Python fall through for the identical reason.)
+    if (name === "message" && recv instanceof Error) { return true; }
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
     // A number resolves the hand-implemented Ruby Numeric catalog (kept in
     // lockstep with `numericMethod`'s case labels), ahead of the native gate.
-    if (typeof recv === "number" && NUMERIC_METHODS.has(name)) { return true; }
+    if (isNum(recv) && NUMERIC_METHODS.has(name)) { return true; }
     // A string resolves the hand-implemented Ruby String catalog (in lockstep
     // with `stringMethod`'s case labels), ahead of the native gate.
     if (typeof recv === "string" && STRING_METHODS.has(name)) { return true; }
@@ -581,12 +1166,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const NUM_MISS = Symbol("num-miss");
   const NUMERIC_METHODS = new Set([
     "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?", "positive?",
-    "negative?", "succ", "next", "pred", "floor", "ceil", "round", "gcd",
+    "negative?", "succ", "next", "pred", "floor", "ceil", "round",
+    "divmod", "fdiv", "clamp", "between?", "gcd",
     "pow", "**", "digits", "times", "upto", "downto", "step",
+    // Tagged-float type predicates: distinguish Integer from Float now that
+    // the runtime carries the tag.
+    "integer?", "float?", "finite?", "nan?", "infinite?",
   ]);
   // Lenient numeric coercion: a non-number argument becomes 0 rather than
   // producing NaN (which would silently break `<=`/`>=` loop guards).
-  function numArg(x) { return typeof x === "number" ? x : 0; }
+  // Unwrap a numeric method argument to a raw f64 (a boxed Float too),
+  // defaulting a non-number to 0 (the lenient coercion Ruby's numeric
+  // methods use for their integer arguments).
+  function numArg(x) { return isNum(x) ? numOf(x) : 0; }
   // Ruby rounds half AWAY from zero (`2.5.round == 3`, `-2.5.round == -3`),
   // unlike JS `Math.round` (half toward +∞).
   function rubyRound(x) {
@@ -599,39 +1191,100 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return a;
   }
   function numericMethod(recv, name, args) {
+    // `recv` may be a native number (Integer, or a non-integral Float like
+    // `3.5`) or a boxed integral Float (`7.0`).  `n` is the raw f64 for the
+    // arithmetic; `rf` is "the receiver is a Ruby Float".  A result that Ruby
+    // types as a Float is re-tagged through `mkFloat` (which boxes an integral
+    // result, leaves a non-integral one native); an Integer result stays
+    // native.  `floatIf(x)` centralises "Float iff the receiver is a Float".
+    const n = numOf(recv);
+    const rf = isFloat(recv);
+    const floatIf = (x) => rf ? mkFloat(x) : x;
     switch (name) {
-      case "abs": return Math.abs(recv);
-      case "to_i": case "to_int": return Math.trunc(recv);
-      case "to_f": return recv;
-      case "even?": return Math.trunc(recv) % 2 === 0;
-      case "odd?": return Math.abs(Math.trunc(recv) % 2) === 1;
-      case "zero?": return recv === 0;
-      case "positive?": return recv > 0;
-      case "negative?": return recv < 0;
-      case "succ": case "next": return recv + 1;
-      case "pred": return recv - 1;
-      case "floor": return Math.floor(recv);
-      case "ceil": return Math.ceil(recv);
-      case "round": return rubyRound(recv);
-      case "gcd": return gcdInt(recv, numArg(args[0]));
-      case "pow": case "**": return Math.pow(recv, numArg(args[0]));
+      // Type predicates (now that Integer and Float are distinguishable).
+      case "integer?": return !rf;
+      case "float?": return rf;
+      case "finite?": return Number.isFinite(n);
+      case "nan?": return Number.isNaN(n);
+      case "infinite?": return n === Infinity ? 1 : (n === -Infinity ? -1 : null);
+      case "abs": return floatIf(Math.abs(n));
+      case "to_i": case "to_int": return Math.trunc(n);      // → Integer
+      case "to_f": return mkFloat(n);                        // → Float (7 → 7.0)
+      case "even?": return Math.trunc(n) % 2 === 0;
+      case "odd?": return Math.abs(Math.trunc(n) % 2) === 1;
+      case "zero?": return n === 0;
+      case "positive?": return n > 0;
+      case "negative?": return n < 0;
+      case "succ": case "next": return floatIf(n + 1);
+      case "pred": return floatIf(n - 1);
+      case "floor": return Math.floor(n);                    // → Integer
+      case "ceil": return Math.ceil(n);                      // → Integer
+      case "round": {
+        // Ruby `round` / `round(ndigits)` — half AWAY from zero (via `rubyRound`,
+        // NOT `Math.round` which is half-toward-+∞).  Return TYPE: an Integer
+        // receiver is always an Integer; a Float receiver is an Integer when
+        // `ndigits <= 0` (`7.5.round == 8`) and a Float when `ndigits > 0`
+        // (`7.0.round(2) == 7.0`).  A non-finite receiver returns unchanged
+        // (tag preserved).  Hostile-magnitude `ndigits` degrades naturally —
+        // `factor` saturates to `Infinity`, `n / Infinity` is `0`.
+        const nd = isNum(args[0]) ? Math.trunc(numOf(args[0])) : 0;
+        if (!Number.isFinite(n)) { return recv; }
+        let result;
+        if (Number.isInteger(n) && nd >= 0) { result = n; }
+        else { const factor = Math.pow(10, nd); result = rubyRound(n * factor) / factor; }
+        return (rf && nd > 0) ? mkFloat(result) : result;
+      }
+      case "divmod": {
+        // Ruby `divmod(n)` → `[quotient, remainder]`, FLOORED quotient (always
+        // Integer) and divisor-signed remainder (a Float iff either operand is
+        // a Float: `7.0.divmod(2) == [3, 1.0]`).  Zero divisor raises.
+        const d = numArg(args[0]);
+        if (d === 0) { raiseError("ZeroDivisionError", "divided by 0"); }
+        const q = Math.floor(n / d);
+        const r = n - q * d;
+        const remFloat = rf || isFloat(args[0]);
+        return [q, remFloat ? mkFloat(r) : r];
+      }
+      case "fdiv": {
+        // Ruby `fdiv(n)` — floating-point division that NEVER raises (a zero
+        // divisor yields `Infinity`/`-Infinity`/`NaN`).  Always a Float.
+        return mkFloat(n / numArg(args[0]));
+      }
+      case "clamp": {
+        // Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+        // recv > max, else recv.  Returns the ORIGINAL bound/receiver value so
+        // its tag is preserved.  (The Range form is a follow-up.)
+        if (n < numArg(args[0])) { return args[0]; }
+        if (n > numArg(args[1])) { return args[1]; }
+        return recv;
+      }
+      case "between?":
+        return n >= numArg(args[0]) && n <= numArg(args[1]);
+      case "gcd": return gcdInt(n, numArg(args[0]));         // → Integer
+      case "pow": case "**": {
+        // Float iff either the base or the exponent is a Float
+        // (`2 ** 3 == 8` Integer; `2.0 ** 3 == 8.0` Float).
+        const p = Math.pow(n, numArg(args[0]));
+        return (rf || isFloat(args[0])) ? mkFloat(p) : p;
+      }
       case "digits": {
         // Base-10 digits, least-significant first (`123.digits == [3, 2, 1]`).
         // A negative receiver is taken by magnitude (parity with the reference
-        // runtimes, which coerce via absolute value).
-        let n = Math.abs(Math.trunc(recv));
+        // runtimes).  Digits are Integers.
+        let d = Math.abs(Math.trunc(n));
         const out = [];
-        if (n === 0) { out.push(0); }
-        while (n > 0) { out.push(n % 10); n = Math.trunc(n / 10); }
+        if (d === 0) { out.push(0); }
+        while (d > 0) { out.push(d % 10); d = Math.trunc(d / 10); }
         return out;
       }
       case "times": {
         // Block arg arrives already unwrapped to a JS function; a block-less
-        // call returns the receiver (v0 floor for Ruby's Enumerator).
+        // call returns the receiver (v0 floor for Ruby's Enumerator).  Yields
+        // Integer indices (`3.times` yields `0, 1, 2`).
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
-          const n = Math.trunc(recv);
-          for (let i = 0; i < n; i++) { blk(i); }
+          const cnt = Math.trunc(n);
+          for (let i = 0; i < cnt; i++) { blk(i); }
         }
         return recv;
       }
@@ -639,7 +1292,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const hi = Math.trunc(numArg(args[0]));
-          for (let i = Math.trunc(recv); i <= hi; i++) { blk(i); }
+          for (let i = Math.trunc(n); i <= hi; i++) { blk(i); }
         }
         return recv;
       }
@@ -647,20 +1300,23 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const lo = Math.trunc(numArg(args[0]));
-          for (let i = Math.trunc(recv); i >= lo; i--) { blk(i); }
+          for (let i = Math.trunc(n); i >= lo; i--) { blk(i); }
         }
         return recv;
       }
       case "step": {
         // `a.step(limit, stride=1) { |v| … }`.  A zero (or non-numeric → 0)
         // stride yields nothing rather than spinning forever — the never-hang
-        // floor.  `args` is `[limit, block]` or `[limit, stride, block]`.
+        // floor.  Yielded values are Floats iff the receiver or stride is a
+        // Float (`1.0.step(2.0, 0.5)` yields Floats).
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const limit = numArg(args[0]);
           const stride = args.length >= 3 ? numArg(args[1]) : 1;
-          if (stride > 0) { for (let v = recv; v <= limit; v += stride) { blk(v); } }
-          else if (stride < 0) { for (let v = recv; v >= limit; v += stride) { blk(v); } }
+          const yieldFloat = rf || (args.length >= 3 && isFloat(args[1]));
+          const emit = (v) => blk(yieldFloat ? mkFloat(v) : v);
+          if (stride > 0) { for (let v = n; v <= limit; v += stride) { emit(v); } }
+          else if (stride < 0) { for (let v = n; v >= limit; v += stride) { emit(v); } }
         }
         return recv;
       }
@@ -684,6 +1340,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "capitalize", "chomp", "chars", "bytes", "sub", "gsub", "to_i", "to_f",
     "to_sym", "to_s", "empty?", "index", "reverse", "size",
     "ljust", "rjust", "center", "swapcase",
+    "tr", "count", "delete", "squeeze",
   ]);
   // Ruby `String#to_i` / `#to_f`: parse a LEADING numeric prefix (optional
   // sign, digits, and — for to_f — a fractional/exponent part), yielding 0 when
@@ -798,6 +1455,69 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         }
         return out;
       }
+      case "tr": {
+        // Ruby `String#tr(from, to)`: position-wise code-point translation.  A
+        // shorter `to` repeats its last code point; an empty `to` deletes
+        // matching code points; a repeated code point in `from` keeps the last
+        // mapping.  Iterates by code point (`[...str]`/`for..of`) so a multibyte
+        // receiver is never split.  Literal only — the range (`"a-z"`) and
+        // negation (`"^abc"`) forms are a follow-up, matching the literal-only
+        // sub/gsub precedent here.
+        const from = typeof args[0] === "string" ? args[0] : null;
+        const to = typeof args[1] === "string" ? args[1] : null;
+        if (from === null || to === null) { return recv; }
+        const toC = [...to];
+        const table = new Map();
+        const fromC = [...from];
+        for (let i = 0; i < fromC.length; i++) {
+          if (toC.length === 0) { table.set(fromC[i], null); }
+          else { table.set(fromC[i], i < toC.length ? toC[i] : toC[toC.length - 1]); }
+        }
+        let out = "";
+        for (const ch of recv) {
+          if (table.has(ch)) {
+            const r = table.get(ch);
+            if (r !== null) { out += r; }
+          } else { out += ch; }
+        }
+        return out;
+      }
+      case "count": case "delete": case "squeeze": {
+        // Char-set methods.  Each `set` argument is treated LITERALLY — the code
+        // points it contains (ranges/negation are a follow-up).  `count` tallies
+        // code points of the receiver in the set; `delete` removes them;
+        // `squeeze` collapses consecutive runs (of set code points, or of ALL
+        // when no set is given).  Multiple set args intersect (Ruby's rule).
+        const sets = [];
+        for (const a of args) {
+          if (typeof a === "string") { sets.push(new Set([...a])); }
+        }
+        const inAll = (ch) => sets.length > 0 && sets.every((set) => set.has(ch));
+        if (name === "squeeze" && sets.length === 0) {
+          let out = "";
+          let last = null;
+          for (const ch of recv) { if (ch !== last) { out += ch; last = ch; } }
+          return out;
+        }
+        if (name === "count") {
+          let n = 0;
+          for (const ch of recv) { if (inAll(ch)) { n++; } }
+          return n;
+        }
+        if (name === "delete") {
+          let out = "";
+          for (const ch of recv) { if (!inAll(ch)) { out += ch; } }
+          return out;
+        }
+        let out = "";
+        let last = null;
+        for (const ch of recv) {
+          if (ch === last && inAll(ch)) { continue; }
+          out += ch;
+          last = ch;
+        }
+        return out;
+      }
     }
     return STR_MISS;
   }
@@ -815,8 +1535,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const HASH_METHODS = new Set([
     "keys", "values", "size", "length", "empty?", "has_key?", "key?",
     "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
-    "invert", "delete", "store", "each", "each_pair", "map", "select",
-    "filter", "reject",
+    "invert", "delete", "store", "[]=", "fetch", "clear", "each", "each_pair",
+    "map", "select", "filter", "reject", "transform_values", "transform_keys",
+    "find", "detect", "any?", "all?", "none?", "count",
+    "sort_by", "min_by", "max_by",
+    "group_by", "partition", "flat_map", "collect_concat",
+    "reduce", "inject", "sum",
+    "to_h", "each_with_index", "each_with_object",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -848,7 +1573,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         let cur = recv;
         for (const k of args) {
           if (cur instanceof Map) { cur = cur.has(k) ? cur.get(k) : null; }
-          else if (Array.isArray(cur) && typeof k === "number") { cur = cur[k] ?? null; }
+          else if (Array.isArray(cur) && isNum(k)) { cur = cur[numOf(k)] ?? null; }
           else { return null; }
           if (cur === null) { return null; }
         }
@@ -864,10 +1589,27 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (recv.has(args[0])) { const v = recv.get(args[0]); recv.delete(args[0]); return v; }
         return null;
       }
-      case "store": {
+      case "store": case "[]=": {
         // Ruby `store(k, v)` (alias `[]=`): mutates, returns the value.
         recv.set(args[0], args[1]);
         return args[1];
+      }
+      case "fetch": {
+        // Ruby `Hash#fetch(k)`: returns the value for `k` if present; a MISSING
+        // key with no default raises `KeyError` (unlike `hash[k]`, which returns
+        // nil).  A second argument supplies a default returned instead of
+        // raising.  Typed `SirError` so a translated `rescue KeyError` catches it.
+        // (The block form is out of v0 scope.)
+        if (recv.has(args[0])) { return recv.get(args[0]); }
+        if (args.length > 1) { return args[1]; }
+        raiseError("KeyError", "key not found: " + format(args[0]));
+        return null; // unreachable — raiseError throws
+      }
+      case "clear": {
+        // Ruby `Hash#clear`: MUTATES, removing every pair, and returns the
+        // (now-empty) receiver.
+        recv.clear();
+        return recv;
       }
       case "each": case "each_pair": {
         // Yields (key, value); returns the receiver.
@@ -893,6 +1635,203 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           if (keepWhenTruthy ? t : !t) { out.set(k, v); }
         }
         return out;
+      }
+      case "transform_values": {
+        // Ruby `Hash#transform_values { |v| … }`: a NEW hash whose keys are
+        // copied verbatim and whose values are the block results.  The block
+        // yields ONE argument (the value); keys stay untouched (and unique, so
+        // no collision) and insertion order is preserved.  Non-mutating.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(k, blk(v)); }
+        return out;
+      }
+      case "transform_keys": {
+        // Ruby `Hash#transform_keys { |k| … }`: a NEW hash whose values are
+        // untouched and whose keys are the block results (yields ONE argument,
+        // the key).  Two source keys can map to the SAME new key; Ruby keeps the
+        // LAST such entry's value at the FIRST-seen position — which is exactly
+        // how `Map.set` behaves on an existing key (updates value, keeps slot).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(blk(k), v); }
+        return out;
+      }
+      // ── Enumerable aggregates (Hash includes Enumerable) ─────────
+      //
+      // Ruby's Hash mixes in Enumerable, so these iterate the hash as a
+      // sequence of [key, value] pairs: the block is yielded (key, value)
+      // (two arguments, matching `each`), and the "element" an aggregate
+      // returns is the two-element [key, value] Array.
+      case "find": case "detect": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return [k, v]; } }
+        return null;
+      }
+      case "any?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size > 0; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return true; } }
+        return false;
+      }
+      case "all?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return true; }
+        for (const [k, v] of recv) { if (!truthy(blk(k, v))) { return false; } }
+        return true;
+      }
+      case "none?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size === 0; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return false; } }
+        return true;
+      }
+      case "count": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size; }
+        let n = 0;
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { n++; } }
+        return n;
+      }
+      case "sort_by": {
+        // A NEW Array of [k, v] pairs sorted by the block key (`arrCmp` is the
+        // never-throw numeric-aware comparator used by Array#sort_by).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const keyed = [];
+        for (const [k, v] of recv) { keyed.push([blk(k, v), [k, v]]); }
+        keyed.sort((a, b) => arrCmp(a[0], b[0]));
+        return keyed.map((p) => p[1]);
+      }
+      case "min_by": case "max_by": {
+        // The [k, v] pair with the extremal block key (first-on-tie; nil on
+        // an empty hash).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        if (recv.size === 0) { return null; }
+        const wantMin = name === "min_by";
+        let bestPair = null;
+        let bestKey;
+        for (const [k, v] of recv) {
+          const key = blk(k, v);
+          if (bestPair === null || (wantMin ? key < bestKey : key > bestKey)) {
+            bestPair = [k, v];
+            bestKey = key;
+          }
+        }
+        return bestPair;
+      }
+      // ── Enumerable breadth (block-taking reshape / fold) ─────────
+      //
+      // Same [key, value]-pair iteration as the aggregates above: every method
+      // yields (key, value) EXCEPT `reduce`/`inject`, which follow Ruby's memo
+      // convention and yield (memo, pair) — the [k, v] Array as ONE argument.
+      case "group_by": {
+        // A Map from each block key to the Array of the [k, v] pairs that
+        // produced it, in first-seen key order (mirrors Array#group_by, which
+        // also returns a Map).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const groups = new Map();
+        for (const [k, v] of recv) {
+          const gk = blk(k, v);
+          const bucket = groups.get(gk);
+          if (bucket) { bucket.push([k, v]); } else { groups.set(gk, [[k, v]]); }
+        }
+        return groups;
+      }
+      case "partition": {
+        // [[matching pairs], [rest pairs]] — each a fresh Array of [k, v] pairs.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const yes = [];
+        const no = [];
+        for (const [k, v] of recv) {
+          if (truthy(blk(k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
+        }
+        return [yes, no];
+      }
+      case "flat_map": case "collect_concat": {
+        // Map each pair then concatenate one level: an Array result splices its
+        // elements, a scalar is appended as-is.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const out = [];
+        for (const [k, v] of recv) {
+          const r = blk(k, v);
+          if (Array.isArray(r)) { out.push(...r); } else { out.push(r); }
+        }
+        return out;
+      }
+      case "reduce": case "inject": {
+        // Ruby's memo fold.  Unlike every other method here (which yields the
+        // two-arg pair), `reduce` yields (memo, pair) — the [k, v] Array as ONE
+        // argument.  `reduce(seed) { … }` seeds from the arg; seedless seeds
+        // from the first pair; an empty seedless reduce is nil.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const pairs = [...recv]; // Map iteration yields [k, v] Arrays
+        let acc;
+        let start;
+        if (args.length >= 2) { acc = args[0]; start = 0; }
+        else if (pairs.length > 0) { acc = pairs[0]; start = 1; }
+        else { return null; }
+        for (let i = start; i < pairs.length; i++) { acc = blk(acc, pairs[i]); }
+        return acc;
+      }
+      case "sum": {
+        // Numeric fold seeded at 0 (or the explicit seed arg) over the block
+        // results — the same native `+` accumulation Array#sum uses, so
+        // integer inputs stay integers and any float promotes.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        let acc = args.length >= 2 ? args[0] : 0;
+        for (const [k, v] of recv) { acc = acc + blk(k, v); }
+        return acc;
+      }
+      case "to_h": {
+        // WITHOUT a block, a shallow copy of the hash (a fresh `Map`, so
+        // mutating it never aliases the receiver).  WITH a block
+        // `{ |k, v| [new_k, new_v] }`, a NEW hash from the `[k, v]` pairs the
+        // block returns: the block is yielded the two args `(k, v)` (matching
+        // `each`), a non-pair result is skipped (Ruby raises TypeError,
+        // deferred to the typed-error cascade), and a later pair with a
+        // duplicate key wins (Ruby's rule, and how `Map.set` behaves).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) {
+          const pair = blk(k, v);
+          if (Array.isArray(pair) && pair.length === 2) { out.set(pair[0], pair[1]); }
+        }
+        return out;
+      }
+      case "each_with_index": {
+        // Yields each `[k, v]` pair with its 0-based index and returns the
+        // receiver.  Unlike the two-arg `(k, v)` yield of `each`, the element
+        // arrives as a single `[k, v]` Array (the second block param is the
+        // index), matching Ruby's Enumerable convention.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        let i = 0;
+        for (const [k, v] of recv) { blk([k, v], i); i++; }
+        return recv;
+      }
+      case "each_with_object": {
+        // `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+        // pair with the memo object and returns the (mutated) memo.  Like
+        // `each_with_index`, the element is the single `[k, v]` pair (the second
+        // block param is the memo).  With no memo argument the receiver is
+        // returned unchanged.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        if (args.length < 2) { return recv; }
+        const memo = args[0];
+        for (const [k, v] of recv) { blk([k, v], memo); }
+        return memo;
       }
     }
     return HASH_MISS;
@@ -952,14 +1891,64 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const ARRAY_METHODS = new Set([
     "each", "each_with_index", "map", "collect", "select", "filter", "reject",
     "find", "detect", "reduce", "inject", "any?", "all?", "none?", "count",
-    "sort", "sort_by", "min", "max", "min_by", "max_by", "group_by",
+    "sort", "sort_by", "min", "max", "minmax", "min_by", "max_by", "group_by",
     "partition", "flat_map", "collect_concat", "take_while", "drop_while",
     "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
     "take", "drop", "values_at",
+    "flatten", "compact", "rotate", "zip",
+    "include?", "index",
+    "each_slice", "each_cons", "chunk_while", "slice_when", "tally", "cycle",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
   function arrCmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  // Ruby value equality (`==`) for `Array#include?` / `Array#index`.  Ruby
+  // compares by VALUE, not identity: `[[1,2]].include?([1, 2])` is `true` and
+  // `[1,2,3].index(9)` is `nil`.  Native JS `Array#includes` / `indexOf` use
+  // SameValueZero (identity for objects), so a nested Array or Symbol would
+  // wrongly miss — this mirrors the Go/Python reference (`_sir_value_eq`):
+  // scalars by `===`, Symbols by name, Arrays element-wise, Maps entry-wise.
+  // (`NaN !== NaN`, matching Ruby's `Float::NAN == Float::NAN == false`.)
+  // `seen` is a path-set of the `a`-side containers currently being compared; a
+  // cyclic array (`a = []; a << a`, which this runtime explicitly supports) would
+  // otherwise recurse forever.  Re-encountering `a` on the path means the two
+  // structures have matched identically all the way down to the back-edge, so we
+  // return `true` — exactly Ruby's recursive-`==` rule — mirroring the `seen` set
+  // the display path (`formatSeen`) carries for the same cyclic values.
+  function valEq(a, b, seen) {
+    if (a === b) { return true; }
+    // Ruby `==` on numbers is by VALUE across Integer/Float: `7.0 == 7` is
+    // true, so `[7.0].include?(7)`. Compare unwrapped payloads (a boxed
+    // `7.0` and native `7` are `===`-distinct objects/values but `==`
+    // equal). NaN stays `== NaN` false, matching Ruby. Hash keys use `eql?`
+    // (identity here), NOT this, so Integer `7` and Float `7.0` remain
+    // distinct KEYS while being `==` equal — exactly Ruby's split.
+    if (isNum(a) && isNum(b)) { return numOf(a) === numOf(b); }
+    if (a instanceof Sym && b instanceof Sym) { return a.name === b.name; }
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) { return false; }
+      if (seen === undefined) { seen = new Set(); }
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      for (let i = 0; i < a.length; i++) {
+        if (!valEq(a[i], b[i], seen)) { seen.delete(a); return false; }
+      }
+      seen.delete(a);
+      return true;
+    }
+    if (a instanceof Map && b instanceof Map) {
+      if (a.size !== b.size) { return false; }
+      if (seen === undefined) { seen = new Set(); }
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      for (const [k, v] of a) {
+        if (!b.has(k) || !valEq(b.get(k), v, seen)) { seen.delete(a); return false; }
+      }
+      seen.delete(a);
+      return true;
+    }
+    return false;
+  }
   function arrayMethod(recv, name, args) {
     // A trailing function positional is the block (`arr.map { … }`).
     const blk = args.length > 0 && typeof args[args.length - 1] === "function"
@@ -1010,6 +1999,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       case "min": return recv.length ? recv.reduce((a, b) => (b < a ? b : a)) : null;
       case "max": return recv.length ? recv.reduce((a, b) => (b > a ? b : a)) : null;
+      case "minmax": {
+        // `minmax` (no block) — the two-element array `[min, max]` in one pass,
+        // via `<`/`>` (the same comparison the `min`/`max` arms use).
+        // `[3,1,2].minmax` → `[1, 3]`.  An empty array yields `[null, null]`
+        // (Ruby `[nil, nil]` — no smallest/largest element), matching the
+        // Go/Rust/Python references' 2-element nil array.
+        if (recv.length === 0) { return [null, null]; }
+        let lo = recv[0];
+        let hi = recv[0];
+        for (let i = 1; i < recv.length; i++) {
+          if (recv[i] < lo) { lo = recv[i]; }
+          if (recv[i] > hi) { hi = recv[i]; }
+        }
+        return [lo, hi];
+      }
       case "min_by": case "max_by": {
         if (!blk) { return ARR_MISS; }
         if (recv.length === 0) { return null; }
@@ -1105,15 +2109,239 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // index from the end once; an out-of-range index yields `null`.
         const out = [];
         for (const a of args) {
-          let idx = typeof a === "number" ? Math.trunc(a) : 0;
+          let idx = isNum(a) ? Math.trunc(numOf(a)) : 0;
           if (idx < 0) { idx += recv.length; }
           out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
         }
         return out;
       }
+      case "flatten": {
+        // Ruby `flatten` fully flattens nested Arrays; `flatten(n)` flattens to
+        // depth `n` (a negative `n` means no limit).  Only Array elements are
+        // flattened — strings and other values stay intact — matching Ruby and
+        // the sibling backends.  (`Array#flat` is deliberately handled here, not
+        // via the native alias, so the no-arg case is full-depth, not depth 1.)
+        let depth = typeof args[0] === "number" ? Math.trunc(args[0]) : Infinity;
+        if (depth < 0) { depth = Infinity; }
+        return recv.flat(depth);
+      }
+      case "compact": {
+        // Ruby `compact` returns a copy with every `nil` (`null`) removed.
+        return recv.filter((x) => x !== null && x !== undefined);
+      }
+      case "rotate": {
+        // `a.rotate(n=1)` — elements rotated left by `n` (a negative `n` rotates
+        // right).  The modulo wraps so any magnitude terminates; an empty array
+        // is `[]`.  No arg defaults to 1; a non-numeric arg degrades to 0.
+        const length = recv.length;
+        if (length === 0) { return []; }
+        const n = args.length === 0
+          ? 1
+          : (typeof args[0] === "number" ? Math.trunc(args[0]) : 0);
+        const shift = ((n % length) + length) % length;
+        return recv.slice(shift).concat(recv.slice(0, shift));
+      }
+      case "zip": {
+        // `a.zip(b, c, ...)` — an Array of tuples `[a[i], b[i], ...]` of length
+        // `a.length`.  A shorter operand pads with `null`; a non-array operand
+        // is treated as empty (pad-only), never raising.
+        const others = args.map((o) => (Array.isArray(o) ? o : []));
+        const zipped = [];
+        for (let i = 0; i < recv.length; i++) {
+          const row = [recv[i]];
+          for (const o of others) { row.push(i < o.length ? o[i] : null); }
+          zipped.push(row);
+        }
+        return zipped;
+      }
+      case "include?": {
+        // Ruby `Array#include?(x)` — VALUE equality (see `valEq`), so a nested
+        // Array/Symbol matches structurally.  Overrides the native `includes`
+        // alias (SameValueZero), matching the Go/Python reference.
+        for (const x of recv) { if (valEq(x, args[0])) { return true; } }
+        return false;
+      }
+      case "index": {
+        // Ruby `Array#index(x)` — the first index whose element `== x` (value
+        // equality), or `nil` when absent.  Native JS `indexOf` returns `-1`
+        // and uses identity; this returns `null` and matches Ruby / the Go
+        // reference.  (The block form `index { … }` is out of v0 scope.)
+        for (let i = 0; i < recv.length; i++) {
+          if (valEq(recv[i], args[0])) { return i; }
+        }
+        return null;
+      }
       case "to_a": return recv;
+      case "each_slice": {
+        // `each_slice(n)` — consecutive sub-arrays of at most `n` elements (the
+        // last may be shorter).  `[1,2,3,4,5].each_slice(2)` → [[1,2],[3,4],[5]].
+        // Ruby raises ArgumentError for n <= 0; the never-throw floor yields [].
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
+        if (n <= 0) { return []; }
+        const out = [];
+        for (let i = 0; i < recv.length; i += n) { out.push(recv.slice(i, i + n)); }
+        return out;
+      }
+      case "each_cons": {
+        // `each_cons(n)` — every consecutive n-element sliding window.
+        // `[1,2,3,4].each_cons(2)` → [[1,2],[2,3],[3,4]].  A window larger than
+        // the array (or n <= 0) yields [].
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
+        if (n <= 0) { return []; }
+        const out = [];
+        for (let i = 0; i + n <= recv.length; i++) { out.push(recv.slice(i, i + n)); }
+        return out;
+      }
+      case "chunk_while": {
+        // `chunk_while { |prev, cur| pred }` — runs of consecutive elements: the
+        // block is called on each ADJACENT pair; while it is truthy the run
+        // continues, and a falsy result starts a new run.
+        // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → [[1,2],[4,5],[7]].
+        // An empty array yields []; a single element yields [[x]].
+        if (typeof blk !== "function") { return ARR_MISS; }
+        if (recv.length === 0) { return []; }
+        const chunks = [[recv[0]]];
+        for (let i = 1; i < recv.length; i++) {
+          if (truthy(blk(recv[i - 1], recv[i]))) { chunks[chunks.length - 1].push(recv[i]); }
+          else { chunks.push([recv[i]]); }
+        }
+        return chunks;
+      }
+      case "slice_when": {
+        // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`: runs
+        // of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+        // exactly WHERE the block is truthy (chunk_while starts a new run where
+        // the block is FALSY).
+        // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → [[1,2],[4],[9,10,11,12]].
+        // An empty array yields []; a single element yields [[x]].
+        if (typeof blk !== "function") { return ARR_MISS; }
+        if (recv.length === 0) { return []; }
+        const slices = [[recv[0]]];
+        for (let i = 1; i < recv.length; i++) {
+          if (truthy(blk(recv[i - 1], recv[i]))) { slices.push([recv[i]]); }
+          else { slices[slices.length - 1].push(recv[i]); }
+        }
+        return slices;
+      }
+      case "tally": {
+        // `tally` — a Hash counting how many times each element occurs, keyed
+        // in first-seen order.  `["a","b","a","c","a"].tally` →
+        // `{"a"=>3, "b"=>1, "c"=>1}`; an empty array yields `{}`.  Realised as a
+        // `Map` (insertion-ordered), the same shape `group_by` returns and the
+        // display path (`formatSeen`) prints as `{k=>v}`.  Keys compare by JS
+        // SameValueZero, which agrees with Ruby `eql?`/hash on the scalar
+        // elements this covers; matches the Go/Rust/Python references.
+        const counts = new Map();
+        for (const x of recv) { counts.set(x, (counts.get(x) || 0) + 1); }
+        return counts;
+      }
+      case "cycle": {
+        // `cycle(n) { |x| … }` — iterate the array n full passes in order,
+        // yielding each element on every pass; always returns null (Ruby nil).
+        // `[1,2,3].cycle(2)` yields 1,2,3,1,2,3.  n <= 0, a negative count, an
+        // empty receiver, or a nil / non-integer count (Ruby's block-less
+        // Enumerator and infinite no-`n` forms) yields nothing rather than
+        // hanging, so emitted programs can never spin forever.
+        if (typeof blk !== "function") { return ARR_MISS; }
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
+        if (n <= 0) { return null; }
+        for (let p = 0; p < n; p++) { for (const x of recv) { blk(x); } }
+        return null;
+      }
     }
     return ARR_MISS;
+  }
+
+  // ── Ruby type reflection (`class`, `is_a?`, `instance_of?`) ────
+  //
+  // The Ruby CLASS NAME of a runtime value, mirroring the Go backend's
+  // `_sir_ruby_class_name` so `.class` reads identically on both.  The
+  // Integer-vs-Float split is answerable only because numbers now carry a
+  // tag: an integral native number is an `Integer`, while a `SirFloat` box
+  // (or a non-integral native number) is a `Float`.  Before tagged floats
+  // this distinction was literally unrepresentable here — `7` and `7.0`
+  // were the same JS value.
+  function rubyClassName(v) {
+    if (v === null || v === undefined) { return "NilClass"; }
+    // A user instance reports its own class tag, so `obj.class` names the
+    // real class (e.g. `Dog`) rather than a generic label.
+    if (v instanceof SirInstance) { return v.sirClass; }
+    // A raised/caught exception is an `Error`, NOT a `SirInstance`.  Route it
+    // through `classOfThrown` — the SAME bucketing `rescue` matching uses — so
+    // reflection and rescue never disagree: a `SirError` reports its own class
+    // tag, and a native JS error (a `TypeError` from an internal operation)
+    // reports `StandardError`, which is exactly the class `rescue` catches it
+    // as.  Without this, `rescue => e; handle if e.is_a?(StandardError)` would
+    // silently skip the handler for a value `rescue` had just caught.
+    if (v instanceof Error) { return classOfThrown(v); }
+    if (v === true) { return "TrueClass"; }
+    if (v === false) { return "FalseClass"; }
+    if (isNum(v)) { return isFloat(v) ? "Float" : "Integer"; }
+    if (typeof v === "string") { return "String"; }
+    if (v instanceof Sym) { return "Symbol"; }
+    if (Array.isArray(v)) { return "Array"; }
+    if (v instanceof Map) { return "Hash"; }
+    if (v instanceof Closure) { return "Proc"; }
+    return "Object";
+  }
+  // Built-in ancestry for `is_a?`/`kind_of?`: a value is an instance of its
+  // own class AND of each ancestor.  Ruby's real MRO is deeper; this is the
+  // v0 surface (`Integer`/`Float` are `Numeric` and `Comparable`, `String`
+  // is `Comparable`), with `Object`/`BasicObject` matching everything.
+  // A `Map` (not an object literal) so a user-defined class name can never
+  // reach `Object.prototype` keys like `__proto__` on lookup.
+  const BUILTIN_ANCESTORS = new Map([
+    ["Integer", ["Numeric", "Comparable"]],
+    ["Float", ["Numeric", "Comparable"]],
+    ["String", ["Comparable"]],
+  ]);
+  const REFLECT_PREDICATES = new Set(["is_a?", "kind_of?", "instance_of?"]);
+  function isA(v, className) {
+    const actual = rubyClassName(v);
+    if (actual === className) { return true; }
+    if (className === "Object" || className === "BasicObject") { return true; }
+    const builtin = BUILTIN_ANCESTORS.get(actual);
+    if (builtin !== undefined && builtin.indexOf(className) >= 0) { return true; }
+    // A user instance — or an exception, which is a `SirError` — also matches
+    // its SUPERCLASS chain (the same cycle-guarded `ancestry` walk `rescue`
+    // matching uses) and any module mixed in along that chain.
+    if (v instanceof SirInstance || v instanceof Error) {
+      if (isAncestorOrSelf(actual, className)) { return true; }
+      if (includesModuleTransitively(actual, className)) { return true; }
+    }
+    return false;
+  }
+  // Does `owner` (a class) reach `target` through the modules mixed into it
+  // or into any of its ancestors?  Ruby's MRO is TRANSITIVE — `class C;
+  // include M; end` where `module M; include N; end` makes `c.is_a?(N)` true
+  // — so the module graph must be searched, not just scanned one level.
+  //
+  // Deliberately ITERATIVE (an explicit worklist, not recursion): the graph's
+  // depth is attacker-shaped by the source, and a recursive walk over a long
+  // `include` chain would exhaust the JS call stack.  A worklist keeps the JS
+  // stack at O(1) and the shared `seen` set makes each module name expand at
+  // most once, so a cyclic or self-including graph terminates.
+  function includesModuleTransitively(owner, target) {
+    const seen = new Set();
+    const work = [owner];
+    while (work.length > 0) {
+      // Walk this owner's SUPERCLASS chain, collecting the modules mixed in
+      // at every level; `chain` guards a cyclic ancestry table.
+      let cur = work.pop();
+      const chain = new Set();
+      while (cur !== undefined && cur !== null && !chain.has(cur)) {
+        chain.add(cur);
+        const mods = includedModules.get(cur);
+        if (mods !== undefined) {
+          for (const m of mods) {
+            if (m === target) { return true; }
+            if (!seen.has(m)) { seen.add(m); work.push(m); }
+          }
+        }
+        cur = ancestry[cur];
+      }
+    }
+    return false;
   }
 
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
@@ -1132,6 +2360,25 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     if (name === "respond_to?") {
       return respondsTo(recv, methodNameArg(rawArgs[0]));
+    }
+    // Type reflection on ANY receiver: `7.class` → "Integer", `7.0.class` →
+    // "Float" (the tagged-float split), `obj.class` → its own class tag.
+    if (name === "class") { return rubyClassName(recv); }
+    // `Exception#message` — the text a `raise Foo, "msg"` carried.  A
+    // `SirError` extends `Error`, so the message is its native `.message`;
+    // gating on `Error` also answers for a caught NATIVE JS error, which
+    // `rubyClassName`/`isA`/`rescueMatches` all treat as a `StandardError`.
+    // Gating on `SirError` here instead would let `e.class` report
+    // `StandardError` while `e.message` raised `NoMethodError` on the very
+    // same value.  Without this arm at all, `rescue => e; puts e.message` —
+    // everyday Ruby — died with `NoMethodError: undefined method 'message'`.
+    if (name === "message" && recv instanceof Error) { return recv.message; }
+    // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
+    // match.  The class argument arrives as a NAME (the frontend lowers a
+    // constant reference to its name string, and a Symbol is accepted too).
+    if (REFLECT_PREDICATES.has(name) && rawArgs.length > 0) {
+      const cls = methodNameArg(rawArgs[0]);
+      return name === "instance_of?" ? rubyClassName(recv) === cls : isA(recv, cls);
     }
     // `tap`/`then`/`yield_self` with an actual trailing Closure block.  `tap`
     // returns the receiver; `then`/`yield_self` return the block's result.
@@ -1187,10 +2434,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const b = boolMethod(recv, name, args);
       if (b !== BOOL_MISS) { return b; }
     }
-    // Ruby Numeric catalog on a `number` receiver — explicit-switch dispatch
-    // (no `recv[name]`) ahead of the native allowlist, so `gcd`/`digits`/
-    // `upto`/… resolve while `toString`/`toFixed` still fall through below.
-    if (typeof recv === "number") {
+    // Ruby Numeric catalog on a number receiver (native Integer/Float OR a
+    // boxed Float) — explicit-switch dispatch (no `recv[name]`) ahead of the
+    // native allowlist, so `gcd`/`digits`/`upto`/… resolve while
+    // `toString`/`toFixed` still fall through below.
+    if (isNum(recv)) {
       const nm = numericMethod(recv, name, args);
       if (nm !== NUM_MISS) { return nm; }
     }
@@ -1311,7 +2559,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (Array.isArray(recv)) { return "an instance of Array"; }
     if (recv instanceof Map) { return "an instance of Hash"; }
     if (typeof recv === "string") { return "an instance of String"; }
-    if (typeof recv === "number") { return "an instance of Numeric"; }
+    if (isNum(recv)) { return "an instance of Numeric"; }
     if (typeof recv === "boolean") { return recv ? "true" : "false"; }
     if (recv instanceof Sym) { return "an instance of Symbol"; }
     return "an instance of Object";
@@ -1573,20 +2821,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // name))` — explicit data, never `[name]` / reflection.
   function resolveMethod(ownerTable, cls, name, topModules) {
     const seen = new Set();
-    // Search a MODULE `mod` (and, depth-first, its own included modules).
+    // Search a MODULE `start` (and, depth-first, its own included modules).
     // A module's methods always live in `methodTable` (instance methods).
-    function searchModule(mod) {
-      if (mod === undefined || mod === null || seen.has(mod)) {
-        return undefined;
-      }
-      seen.add(mod);
-      const own = methodTable.get(methodKey(mod, name));
-      if (own !== undefined) { return own; }
-      const mods = includedModules.get(mod);
-      if (mods !== undefined) {
-        for (let i = mods.length - 1; i >= 0; i--) {
-          const fn = searchModule(mods[i]);
-          if (fn !== undefined) { return fn; }
+    //
+    // ITERATIVE (an explicit stack), NOT recursion.  A module's include graph
+    // is shaped by the source program, so a long `include` chain used to
+    // recurse once per level and exhaust the JS call stack — and because
+    // `resolveMethod` runs on EVERY method call to an instance, that made ANY
+    // call on such an object die with `RangeError: Maximum call stack size
+    // exceeded` (measured: fine at ~5k deep, fatal by ~9k).
+    //
+    // MRO ORDER IS PRESERVED EXACTLY.  The old walk visited a module's
+    // includes newest-first (`for (i = len-1; i >= 0; i--)`), fully exploring
+    // each subtree before the next sibling.  A LIFO stack reproduces that if
+    // children are PUSHED in ascending index order — they then POP in
+    // descending order, and a popped module's own children go on top, so its
+    // subtree is exhausted before its older siblings.  `seen` is the same
+    // shared set, checked on pop, so a cyclic or repeated include terminates.
+    function searchModuleTree(start) {
+      const stack = [start];
+      while (stack.length > 0) {
+        const mod = stack.pop();
+        if (mod === undefined || mod === null || seen.has(mod)) { continue; }
+        seen.add(mod);
+        const own = methodTable.get(methodKey(mod, name));
+        if (own !== undefined) { return own; }
+        const mods = includedModules.get(mod);
+        if (mods !== undefined) {
+          for (let i = 0; i < mods.length; i++) { stack.push(mods[i]); }
         }
       }
       return undefined;
@@ -1603,7 +2865,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const mods = topModules === undefined ? undefined : topModules.get(owner);
       if (mods !== undefined) {
         for (let i = mods.length - 1; i >= 0; i--) {
-          const fn = searchModule(mods[i]);
+          const fn = searchModuleTree(mods[i]);
           if (fn !== undefined) { return fn; }
         }
       }
@@ -1734,10 +2996,3514 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return val;
   }
 
+  // ── symbolic expressions + pattern/rewrite (SIR23) ─────────────
+  //
+  // A `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+  // `SymPatternNamed`/`SymRule`/`SymReplaceAll` node lowers to a call
+  // into `Symbolic.*` below — the same treatment the exceptions
+  // section above gave `@coding-adventures/sir-runtime-exceptions`: a
+  // plain-JS port of the published TypeScript packages
+  // (`@coding-adventures/symbolic-ir`, `@coding-adventures/
+  // cas-pattern-matching`, `@coding-adventures/sir-runtime-symbolic`)
+  // this backend's TypeScript sibling *imports*, so the JavaScript
+  // artifact stays self-contained (no `require`/`import`).
+  //
+  // ## Value model
+  //
+  // A term is a plain, `Object.freeze`d object — never a class
+  // instance, so it never collides with `Sym`/`Pair`/`Closure`/
+  // `SirInstance` above:
+  //
+  //   { kind: "symbol",   name }
+  //   { kind: "integer",  value }          -- a JS `number`, NOT bigint.
+  //   { kind: "rational", numer, denom }   -- reduced; denom > 0.
+  //   { kind: "float",    value }
+  //   { kind: "string",   value }
+  //   { kind: "apply",    head, args }
+  //
+  // The TypeScript sibling package uses `bigint` for `integer`/
+  // `rational` (arbitrary precision); this port deliberately uses
+  // `number` instead, matching how every OTHER numeric value in this
+  // backend already works (`IntLit` emits a bare JS number literal —
+  // see `emit.rs`'s `Expr::IntLit` arm — there is no bigint anywhere
+  // else in this runtime). A `Symbolic.int`/`Symbolic.rational` value
+  // therefore shares the same `Number.isSafeInteger` ceiling ordinary
+  // SIR integers already have on this backend; this is a pre-existing
+  // backend-wide limitation, not a new one this port introduces.
+  const Symbolic = (() => {
+    function frozen(obj) { return Object.freeze(obj); }
+
+    function symTerm(name) { return frozen({ kind: "symbol", name }); }
+    function intTerm(value) {
+      value = numOf(value); // boundary unwrap: a tagged Float box → raw f64
+      if (!Number.isSafeInteger(value)) {
+        throw new RangeError("Symbolic.int: value must be a safe integer");
+      }
+      return frozen({ kind: "integer", value });
+    }
+    function gcdAbs(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b !== 0) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a === 0 ? 1 : a;
+    }
+    function rationalTerm(numer, denom) {
+      if (denom === 0) {
+        throw new RangeError("Symbolic.rational: denominator cannot be zero");
+      }
+      if (denom < 0) {
+        numer = -numer;
+        denom = -denom;
+      }
+      const g = gcdAbs(numer, denom);
+      return frozen({ kind: "rational", numer: numer / g, denom: denom / g });
+    }
+    function floatTerm(value) {
+      value = numOf(value); // boundary unwrap: a tagged Float box → raw f64
+      if (!Number.isFinite(value)) {
+        throw new RangeError("Symbolic.numberNode: value must be finite");
+      }
+      return frozen({ kind: "float", value });
+    }
+    function stringTerm(value) { return frozen({ kind: "string", value }); }
+    function applyTerm(head, args) {
+      return frozen({ kind: "apply", head, args: Object.freeze([...args]) });
+    }
+
+    // Structural equality — used by the matcher (a repeated pattern
+    // variable must bind to the SAME term every occurrence), by
+    // `replaceRepeated`'s "did this firing actually change anything"
+    // fixed-point check, and (SIR23 addendum item 1) by
+    // `comparisonHandler`'s `Equal`/`NotEqual` structural-equality
+    // fallback below.
+    //
+    // SECURITY (CWE-674): capped with the SAME `MAX_TERM_DEPTH` guard
+    // `toDisplayString`/`walkOnce`/`replaceRepeatedTerm` already use
+    // (declared below) — reused deliberately, not measured fresh: this
+    // function's per-call-frame footprint (a `kind` check, a `switch`, at
+    // most one more recursive call plus an `Array.prototype.every`
+    // closure per level) is no heavier than `toDisplayString`'s own,
+    // already-proven-safe-at-`MAX_TERM_DEPTH` frame (also just a `kind`
+    // switch plus one more recursive call per level, but with string-
+    // concatenation work on top) — see that function's own doc comment.
+    // `comparisonHandler`'s equality fallback (added by this same PR) is
+    // the first call site whose OPERANDS can be an arbitrarily deep
+    // runtime-built term with no depth cap of its own upstream (every
+    // pre-existing call site below compares a pattern-matcher binding or
+    // a rewrite-rule replacement, both already implicitly bounded by
+    // `MAX_TERM_DEPTH`-capped traversals elsewhere) — without this guard,
+    // `Equal[<deep unfoldable tree>, <same shape>]` at the SIR23
+    // statement level could recurse this function past the native stack
+    // limit before `evalTerm`'s OWN cap (a different function, checked at
+    // a different call boundary) ever gets a chance to intervene. Past
+    // the cap, `false` ("not structurally equal") is the safe, contained
+    // answer — the same policy `matchPattern`'s own "give up cleanly"
+    // contract already uses for a failed match, not a special sentinel
+    // (unlike `toDisplayString`/`walkOnce`, `termEquals` already returns
+    // a plain `bool`, so reusing that same type past the cap needs no new
+    // return shape).
+    function termEquals(a, b, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return false; }
+      if (a.kind !== b.kind) { return false; }
+      switch (a.kind) {
+        case "symbol": return a.name === b.name;
+        case "integer": return a.value === b.value;
+        case "rational": return a.numer === b.numer && a.denom === b.denom;
+        case "float": return Object.is(a.value, b.value);
+        case "string": return a.value === b.value;
+        case "apply":
+          return termEquals(a.head, b.head, depth + 1)
+            && a.args.length === b.args.length
+            && a.args.every((arg, i) => termEquals(arg, b.args[i], depth + 1));
+        default: return false;
+      }
+    }
+
+    function headName(node) { return node.kind === "symbol" ? node.name : ""; }
+
+    // ── Derive's own SIR23 display convention (SIR_DISPLAY_DERIVE) ────
+    //
+    // A direct, byte-for-byte JS port of `derive-runtime::printer`'s
+    // precedence-based renderer (`print_derive`/`print_at`/`render`/
+    // `render_apply`/`render_list`/`infix_binary`/`nary_logic`/
+    // `ir_head_to_surface`) — SIR23 addendum item 4 (see `code/specs/
+    // SIR23-symbolic-pattern-semantic-ir.md`'s "Per-language display
+    // convention" section). Kept as its OWN set of functions rather than
+    // folded into the generic `toDisplayString` below, because the two
+    // conventions disagree on almost every compound shape (infix vs.
+    // generic `head(args)`, `;`-row-separated brackets vs. none,
+    // case-bridged builtin names vs. verbatim) — keeping them apart means
+    // neither reader has to mentally subtract the other's special cases.
+    // `toDisplayString` picks between the two wholesale, once, at its own
+    // top (see that function, below).
+    //
+    // Precedence ladder (loosest -> tightest), copied verbatim from
+    // `derive-runtime/src/printer.rs`'s own module-doc table:
+    //
+    //   0 lowest  (top-level / a generic call's argument position)
+    //   1 Or
+    //   2 And
+    //   3 Not (prefix) / comparisons  =  <=  <  >  >=
+    //   4 Add Sub
+    //   5 Mul Div  (and a bare Rational leaf, e.g. `1/3`)
+    //   6 unary Neg
+    //   7 Pow
+    //   8 atoms, F(…)
+    const DERIVE_PREC_LOWEST = 0;
+    const DERIVE_PREC_OR = 1;
+    const DERIVE_PREC_AND = 2;
+    const DERIVE_PREC_NOT_CMP = 3;
+    const DERIVE_PREC_ADD = 4;
+    const DERIVE_PREC_MUL = 5;
+    const DERIVE_PREC_NEG = 6;
+    const DERIVE_PREC_POW = 7;
+    const DERIVE_PREC_ATOM = 8;
+
+    // Binary infix arithmetic/comparison operators — `[surface, prec]`,
+    // mirroring `printer.rs::infix_binary` exactly (a `NotEqual` head has
+    // no entry here, matching that table exactly: Derive's own grammar has
+    // no "<>"/"!=" operator, so a `NotEqual` term — if one is ever built —
+    // falls through to the generic, case-bridged call form below, exactly
+    // as `printer.rs` itself does).
+    const DERIVE_INFIX_BINARY = new Map([
+      ["Add", [" + ", DERIVE_PREC_ADD]],
+      ["Sub", [" - ", DERIVE_PREC_ADD]],
+      ["Mul", ["*", DERIVE_PREC_MUL]],
+      ["Div", ["/", DERIVE_PREC_MUL]],
+      ["Equal", [" = ", DERIVE_PREC_NOT_CMP]],
+      ["Less", [" < ", DERIVE_PREC_NOT_CMP]],
+      ["Greater", [" > ", DERIVE_PREC_NOT_CMP]],
+      ["LessEqual", [" <= ", DERIVE_PREC_NOT_CMP]],
+      ["GreaterEqual", [" >= ", DERIVE_PREC_NOT_CMP]],
+    ]);
+
+    // n-ary associative logic — `[join-text, prec]`, mirroring
+    // `printer.rs::nary_logic`. A flat `And(a, b, c, …)`/`Or(a, b, c, …)`
+    // chain (matching how this frontend's own lowering already flattens a
+    // homogeneous run rather than nesting pairwise) joins with
+    // `" AND "`/`" OR "`.
+    const DERIVE_NARY_LOGIC = new Map([
+      ["And", [" AND ", DERIVE_PREC_AND]],
+      ["Or", [" OR ", DERIVE_PREC_OR]],
+    ]);
+
+    // The IR -> surface head dictionary — the exact same table as
+    // `printer.rs::ir_head_to_surface`. An unrecognised head (a
+    // user-defined function, or a head like `Abs`/`Inv`/`NotEqual` this
+    // subset's own printer never bridges either) renders AS-TYPED, exactly
+    // matching the Rust reference's `unwrap_or(name)` fallback.
+    const DERIVE_HEAD_TO_SURFACE = new Map([
+      ["D", "DIF"],
+      ["Integrate", "INT"],
+      ["If", "IF"],
+      ["Sin", "SIN"],
+      ["Cos", "COS"],
+      ["Tan", "TAN"],
+      ["Sqrt", "SQRT"],
+      ["Exp", "EXP"],
+      ["Log", "LOG"],
+      ["Atan", "ATAN"],
+      ["Asin", "ASIN"],
+      ["Acos", "ACOS"],
+      ["Sinh", "SINH"],
+      ["Cosh", "COSH"],
+      ["Tanh", "TANH"],
+      ["Asinh", "ASINH"],
+      ["Acosh", "ACOSH"],
+      ["Atanh", "ATANH"],
+      ["Coth", "COTH"],
+      ["Sech", "SECH"],
+      ["Csch", "CSCH"],
+    ]);
+
+    // True if `node` is itself a `List(...)` apply — `printer.rs::
+    // is_list_node`'s exact mirror.
+    function deriveIsListNode(node) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === "List";
+    }
+
+    // Render a `List(...)` node in Derive's own bracket surface (D-5) —
+    // the exact reverse of `derive-runtime::lower::lower_vector`,
+    // mirroring `printer.rs::render_list`. A matrix (every element ITSELF
+    // a `List`) prints `;`-separated rows; a flat vector (or the empty
+    // list) prints `,`-separated (or empty) — `lower_vector` never
+    // produces a mixed shape (some elements `List`, some not), so this
+    // all-or-nothing check is unambiguous for anything this frontend's own
+    // lowering can produce.
+    //
+    // SECURITY (CWE-674, /security-review finding): each `row` is itself
+    // ONE tree level below the `List(...)` node this call is rendering
+    // (the same distance every OTHER child in this function family covers
+    // via a single `derivePrintAt(child, ..., depth + 1)` call) — so
+    // entering it must consume exactly one unit of the shared depth
+    // budget, with its own `depth + 1 > MAX_TERM_DEPTH` check, before its
+    // OWN children (two levels below the current node) get `depth + 2`.
+    // Reaching into `row.args` directly with no check and `depth + 1` for
+    // the grandchildren (the original bug) skipped charging for the `row`
+    // level entirely, letting a nested-list-of-lists chain reach roughly
+    // DOUBLE `MAX_TERM_DEPTH` real tree-nesting levels before the "..."
+    // sentinel fires — still short of this walk's proven-safe crash
+    // margin today, but a real, measured erosion of it; see `tests/
+    // sir23_symbolic.rs::derive_display_on_a_deeply_nested_list_of_lists_
+    // truncates_at_the_same_depth_as_any_other_shape` for the executable
+    // proof (reverting this fix makes that test fail).
+    function deriveRenderList(args, depth) {
+      if (args.length > 0 && args.every(deriveIsListNode)) {
+        const rows = args.map((row) => {
+          if (depth + 1 > MAX_TERM_DEPTH) { return "..."; }
+          return row.args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 2)).join(", ");
+        });
+        return "[" + rows.join("; ") + "]";
+      }
+      const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+      return "[" + parts.join(", ") + "]";
+    }
+
+    // Render `node`, returning `[text, ownPrecedence]` — `printer.rs::
+    // render`'s exact mirror.
+    //
+    // SECURITY (CWE-674): capped with the SAME `MAX_TERM_DEPTH` guard
+    // `toDisplayString` uses below (reused deliberately — this walk's
+    // per-frame cost, a `kind` switch plus at most one more recursive call
+    // per level, is no heavier than `toDisplayString`'s own
+    // already-proven-safe-at-that-cap frame).
+    function deriveRender(node, depth) {
+      if (depth > MAX_TERM_DEPTH) { return ["...", DERIVE_PREC_ATOM]; }
+      switch (node.kind) {
+        case "integer": return [String(node.value), DERIVE_PREC_ATOM];
+        case "float": return [String(node.value), DERIVE_PREC_ATOM];
+        case "rational": return [node.numer + "/" + node.denom, DERIVE_PREC_MUL];
+        case "string": return [JSON.stringify(node.value), DERIVE_PREC_ATOM];
+        case "symbol": return [node.name, DERIVE_PREC_ATOM];
+        case "apply": return deriveRenderApply(node, depth);
+        default: return [String(node), DERIVE_PREC_ATOM];
+      }
+    }
+
+    // Render `node`, wrapping it in parentheses if its own precedence is
+    // looser than `parentPrec` — `printer.rs::print_at`'s exact mirror,
+    // the one place parenthesisation is actually decided (so the surface
+    // string re-parses to the same tree).
+    function derivePrintAt(node, parentPrec, depth) {
+      const [text, prec] = deriveRender(node, depth);
+      return prec < parentPrec ? "(" + text + ")" : text;
+    }
+
+    // Render a compound `head(args)` node in Derive's own convention —
+    // `printer.rs::render_apply`'s exact mirror (infix binary, n-ary
+    // logic, then the `Pow`/`Neg`/`Not`/`List` special cases, then the
+    // generic, case-bridged call form).
+    function deriveRenderApply(node, depth) {
+      const head = node.head;
+      const args = node.args;
+      if (head.kind === "symbol") {
+        const name = head.name;
+        const infix = DERIVE_INFIX_BINARY.get(name);
+        if (infix && args.length === 2) {
+          const [op, prec] = infix;
+          const l = derivePrintAt(args[0], prec, depth + 1);
+          const r = derivePrintAt(args[1], prec, depth + 1);
+          return [l + op + r, prec];
+        }
+        const logic = DERIVE_NARY_LOGIC.get(name);
+        if (logic) {
+          const [op, prec] = logic;
+          if (args.length >= 2) {
+            const parts = args.map((a) => derivePrintAt(a, prec, depth + 1));
+            return [parts.join(op), prec];
+          }
+          if (args.length === 1) { return deriveRender(args[0], depth + 1); }
+        }
+        if (name === "Pow" && args.length === 2) {
+          // Right-associative and tighter than unary minus, matching
+          // `printer.rs`'s own `POW` arm exactly (`PREC_POW + 1` for the
+          // base so a LEFT-nested `Pow` parenthesises while a
+          // RIGHT-nested one doesn't; `PREC_NEG` for the exponent so a
+          // bare `Neg` there needs no parens but anything looser does).
+          const base = derivePrintAt(args[0], DERIVE_PREC_POW + 1, depth + 1);
+          const exp = derivePrintAt(args[1], DERIVE_PREC_NEG, depth + 1);
+          return [base + "^" + exp, DERIVE_PREC_POW];
+        }
+        if (name === "Neg" && args.length === 1) {
+          const inner = derivePrintAt(args[0], DERIVE_PREC_NEG, depth + 1);
+          return ["-" + inner, DERIVE_PREC_NEG];
+        }
+        if (name === "Not" && args.length === 1) {
+          const inner = derivePrintAt(args[0], DERIVE_PREC_NOT_CMP, depth + 1);
+          return ["NOT " + inner, DERIVE_PREC_NOT_CMP];
+        }
+        if (name === "List") {
+          return [deriveRenderList(args, depth), DERIVE_PREC_ATOM];
+        }
+        // Ordinary function application: `head(args…)`, bridging the
+        // canonical IR head back to Derive's uppercase surface spelling;
+        // an unrecognised head (a user-defined function) renders as-typed.
+        // Each argument renders at `DERIVE_PREC_LOWEST` (a fresh,
+        // comma-separated slot never needs parens of its own), matching
+        // `printer.rs`'s own `args.iter().map(print_derive)`.
+        const surface = DERIVE_HEAD_TO_SURFACE.get(name) || name;
+        const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+        return [surface + "(" + parts.join(", ") + ")", DERIVE_PREC_ATOM];
+      }
+      // A computed (non-symbol) head — render generically as `(head)(args…)`.
+      const headText = derivePrintAt(head, DERIVE_PREC_ATOM, depth + 1);
+      const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+      return [headText + "(" + parts.join(", ") + ")", DERIVE_PREC_ATOM];
+    }
+
+    // A display helper `print`/`puts`/`formatSeen` (above) reach for,
+    // mirroring `symbolic-ir`'s own `toDisplayString`. Not part of the
+    // SIR23 spec's own contract.
+    //
+    // SECURITY (CWE-674): a term built via `Symbolic.apply`/`applyTerm`
+    // is NOT depth-capped at construction time (only `replaceAll`/
+    // `replaceRepeated`'s tree WALK enforces `MAX_TERM_DEPTH` above) — a
+    // compiled program can build one arbitrarily deep directly, e.g. a
+    // loop lowered to repeated `SymApply` nesting with an
+    // attacker-influenced iteration count. Without its own cap, this
+    // recursive walk would `RangeError: Maximum call stack size
+    // exceeded` well before 512 levels (this walk's per-frame cost is
+    // heavier than `walkOnce`'s). `depth` mirrors the SAME
+    // `MAX_TERM_DEPTH` cap and truncates rather than crashing, matching
+    // how `formatSeen` already renders `"[...]"`/`"{...}"` for an
+    // Array/Map cycle instead of recursing forever.
+    function toDisplayString(node, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return "..."; }
+      // SIR_DISPLAY_DERIVE (SIR23 addendum item 4): Derive's own
+      // precedence-aware, infix/prefix/bracket/case-bridged convention —
+      // see `deriveRender`'s own doc comment (just above) for the full
+      // port. Entirely separate from the generic `head(args, …)` form
+      // below, which every OTHER source language (and Derive before this
+      // item) still gets.
+      if (SIR_DISPLAY_DERIVE) {
+        return derivePrintAt(node, DERIVE_PREC_LOWEST, depth);
+      }
+      switch (node.kind) {
+        case "symbol":
+          // SIR_DISPLAY_AXIOM_BOOLEAN (see that flag's own comment, above):
+          // real Axiom's own session renders these two symbols lowercase;
+          // every other name (including every OTHER language's True/False,
+          // per the still-open, shared "finding five"/case-mismatch gaps
+          // documented in `HML01-math-to-semantic-ir.md` §5) is unaffected.
+          if (SIR_DISPLAY_AXIOM_BOOLEAN && (node.name === "True" || node.name === "False")) {
+            return node.name === "True" ? "true" : "false";
+          }
+          return node.name;
+        case "integer": return String(node.value);
+        case "rational": return node.numer + "/" + node.denom;
+        case "float": return String(node.value);
+        case "string": return JSON.stringify(node.value);
+        case "apply":
+          return toDisplayString(node.head, depth + 1) + "("
+            + node.args.map((a) => toDisplayString(a, depth + 1)).join(", ") + ")";
+        default: return undefined;
+      }
+    }
+
+    // ── pattern/rule vocabulary (cas-pattern-matching) ─────────────
+    const BLANK = "Blank";
+    const PATTERN = "Pattern";
+    const RULE = "Rule";
+    const RULE_DELAYED = "RuleDelayed";
+
+    function isHead(node, name) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === name;
+    }
+    function isBlank(node) { return isHead(node, BLANK); }
+    function isPattern(node) { return isHead(node, PATTERN); }
+    function isRule(node) {
+      return node.kind === "apply" && node.head.kind === "symbol"
+        && (node.head.name === RULE || node.head.name === RULE_DELAYED)
+        && node.args.length === 2;
+    }
+
+    function blankTerm() { return applyTerm(symTerm(BLANK), []); }
+    function blankTypedTerm(head) { return applyTerm(symTerm(BLANK), [symTerm(head)]); }
+    function namedTerm(name, inner) { return applyTerm(symTerm(PATTERN), [symTerm(name), inner]); }
+    function ruleTerm(lhs, rhs) { return applyTerm(symTerm(RULE), [lhs, rhs]); }
+    function ruleDelayedTerm(lhs, rhs) { return applyTerm(symTerm(RULE_DELAYED), [lhs, rhs]); }
+
+    // Bindings: a name -> term map. Persistent / copy-on-write (mirrors
+    // `cas-pattern-matching`'s `Bindings` class) so a failed match
+    // attempt never mutates a binding set an earlier attempt still
+    // holds a reference to.
+    function bindingsEmpty() { return new Map(); }
+    function bindingsBind(bindings, name, value) {
+      const existing = bindings.get(name);
+      if (existing !== undefined && termEquals(existing, value)) { return bindings; }
+      const next = new Map(bindings);
+      next.set(name, value);
+      return next;
+    }
+
+    function blankHeadConstraint(node) {
+      if (node.args.length === 0) { return null; }
+      const first = node.args[0];
+      return first.kind === "symbol" ? first.name : null;
+    }
+    function patternName(node) {
+      const first = node.args[0];
+      if (first === undefined || first.kind !== "symbol") {
+        throw new TypeError("Symbolic: Pattern name must be a Symbol");
+      }
+      return first.name;
+    }
+    function patternInner(node) {
+      if (node.args.length < 2) {
+        throw new TypeError("Symbolic: Pattern requires an inner expression");
+      }
+      return node.args[1];
+    }
+    function effectiveHeadName(node) {
+      if (node.kind === "apply") { return headName(node.head) || "Apply"; }
+      if (node.kind === "integer") { return "Integer"; }
+      if (node.kind === "rational") { return "Rational"; }
+      if (node.kind === "float") { return "Float"; }
+      if (node.kind === "string") { return "String"; }
+      return "Symbol";
+    }
+
+    // Five-case structural matcher: `Blank()`, `Blank(T)`,
+    // `Pattern(name, inner)`, compound-vs-compound (recurse head +
+    // every arg, same arity required), and plain structural equality —
+    // a direct port of `cas-pattern-matching::matchPattern`.
+    function matchPattern(pattern, target, bindings) {
+      if (bindings === undefined) { bindings = bindingsEmpty(); }
+      if (isBlank(pattern)) {
+        const constraint = blankHeadConstraint(pattern);
+        if (constraint === null) { return bindings; }
+        return effectiveHeadName(target) === constraint ? bindings : null;
+      }
+      if (isPattern(pattern)) {
+        const name = patternName(pattern);
+        const inner = patternInner(pattern);
+        const matched = matchPattern(inner, target, bindings);
+        if (matched === null) { return null; }
+        const existing = matched.get(name);
+        if (existing !== undefined) { return termEquals(existing, target) ? matched : null; }
+        return bindingsBind(matched, name, target);
+      }
+      if (pattern.kind === "apply") {
+        if (target.kind !== "apply") { return null; }
+        let current = matchPattern(pattern.head, target.head, bindings);
+        if (current === null) { return null; }
+        if (pattern.args.length !== target.args.length) { return null; }
+        for (let i = 0; i < pattern.args.length; i++) {
+          current = matchPattern(pattern.args[i], target.args[i], current);
+          if (current === null) { return null; }
+        }
+        return current;
+      }
+      return termEquals(pattern, target) ? bindings : null;
+    }
+
+    function substituteTerm(template, bindings) {
+      if (isPattern(template)) {
+        const captured = bindings.get(patternName(template));
+        return captured !== undefined ? captured : template;
+      }
+      if (template.kind === "apply") {
+        return applyTerm(
+          substituteTerm(template.head, bindings),
+          template.args.map((a) => substituteTerm(a, bindings)),
+        );
+      }
+      return template;
+    }
+
+    // ── substituteSymbols (symbolic-vm::vm::substitute port) ─────────
+    //
+    // SIR23 addendum item 2's own "Genuine, one-place reuse" note
+    // proposed reusing `substituteTerm` above, unchanged, for
+    // user-function-body substitution (see "Function dispatch" in
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s addendum).
+    // Confirmed, by direct inspection of both this file and the
+    // frontends' own lowering, that this does not typecheck against the
+    // ACTUAL data shapes involved, so this port deliberately does NOT
+    // reuse `substituteTerm`:
+    //
+    //   - `substituteTerm`'s only substitution site is `isPattern(
+    //     template)` — a template node shaped `Apply(Symbol("Pattern"),
+    //     [Symbol(name), inner])`. That shape is how a `SymRule`'s RHS
+    //     references a bound PATTERN variable — confirmed by this crate's
+    //     own `tests/sir23_symbolic.rs`
+    //     (`replace_repeated_reduces_nested_add_zero_to_bare_symbol`
+    //     reuses the literal SAME `named("x", blank())` node for both a
+    //     rule's `lhs` and its `rhs`). A bare `Symbol` template is passed
+    //     straight through unchanged by `substituteTerm` — by design, for
+    //     that domain: a bare symbol never happens to be a stand-in for a
+    //     pattern variable in a rewrite rule's RHS.
+    //   - A `Define(name, List(params...), body)`'s `body`, by contrast,
+    //     references its parameters as ORDINARY bare `Symbol` nodes —
+    //     confirmed directly in `derive-to-semantic-ir::lower`'s own
+    //     module doc ("this frontend ... never constructs
+    //     `SymPatternBlank`/`SymPatternNamed`/..."): `F(x) := x*x` lowers
+    //     to `Define(F, List(x), Mul(Symbol(x), Symbol(x)))`, a body with
+    //     no `Pattern`-wrapping anywhere. Calling `substituteTerm` on it
+    //     would substitute nothing at all — a silent no-op, not a loud
+    //     failure — since `isPattern` never matches a bare `Symbol`.
+    //
+    // This is instead a direct, from-scratch port of the actual function
+    // `apply_user_function` calls for this purpose:
+    // `symbolic-vm/src/vm.rs::substitute` (a free function, not a method
+    // on `Handler`/`Backend`) — match a bare `Symbol` directly against
+    // `bindings`, recurse into `head`/`args` for a compound term, pass
+    // every literal through unchanged. Not depth-capped, for the same
+    // reason `substituteTerm` above isn't: the tree being walked here is
+    // `body`, an author-written (compiled-in) function-definition body —
+    // bounded by *source* nesting, not by arbitrarily-deep *runtime* data
+    // (the concern `walkOnce`/`replaceRepeatedTerm`'s `MAX_TERM_DEPTH`
+    // guards against) — `args`' own depth is irrelevant here, since a
+    // bound parameter's value is spliced in by reference, never itself
+    // walked by this function.
+    function substituteSymbols(node, bindings) {
+      if (node.kind === "symbol") {
+        const replacement = bindings.get(node.name);
+        return replacement !== undefined ? replacement : node;
+      }
+      if (node.kind === "apply") {
+        return applyTerm(
+          substituteSymbols(node.head, bindings),
+          node.args.map((a) => substituteSymbols(a, bindings)),
+        );
+      }
+      return node;
+    }
+
+    function applyRuleTerm(rewriteRule, expr) {
+      if (!isRule(rewriteRule)) {
+        throw new TypeError("Symbolic.applyRule: expected Rule/RuleDelayed");
+      }
+      const lhs = rewriteRule.args[0];
+      const rhs = rewriteRule.args[1];
+      const bindings = matchPattern(lhs, expr, bindingsEmpty());
+      return bindings === null ? null : substituteTerm(rhs, bindings);
+    }
+
+    // ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ──
+    //
+    // `matchPattern`/`substituteTerm`/`applyRuleTerm` recurse, but only
+    // as deep as a single RULE's own (author-written, not runtime-
+    // controlled) pattern/RHS shape — always shallow regardless of how
+    // deep the *target* expression is. `replaceAllTerm`/
+    // `replaceRepeatedTerm`, by contrast, walk the ENTIRE target
+    // expression tree, which ordinary compiled-program data can build
+    // up to unbounded depth — so these two need an explicit cap
+    // (CWE-674 stack-overflow DoS guard), mirroring
+    // `semantic_ir::limits::MAX_IR_DEPTH`'s rationale.
+    const MAX_TERM_DEPTH = 512;
+
+    function isDepthLimitError(v) {
+      return v !== null && typeof v === "object" && v.kind === "depth-limit";
+    }
+    function isRewriteCycleErrorTerm(v) {
+      return v !== null && typeof v === "object" && v.kind === "rewrite-cycle";
+    }
+
+    // `expr /. rules` — one pass, bottom-up: a node's head/args are
+    // walked (and possibly replaced) before the node itself is tried
+    // against `rules`; the first matching rule wins and the freshly
+    // substituted replacement is NOT re-walked or retried at that same
+    // position (Wolfram's single-pass `/.` contract, distinct from
+    // {@link replaceRepeatedTerm}'s fixed point below).
+    function walkOnce(node, rules, depth) {
+      if (depth > MAX_TERM_DEPTH) {
+        return { kind: "depth-limit", maxDepth: MAX_TERM_DEPTH };
+      }
+      let current = node;
+      if (node.kind === "apply") {
+        const newHead = walkOnce(node.head, rules, depth + 1);
+        if (isDepthLimitError(newHead)) { return newHead; }
+        const newArgs = [];
+        for (const arg of node.args) {
+          const nextArg = walkOnce(arg, rules, depth + 1);
+          if (isDepthLimitError(nextArg)) { return nextArg; }
+          newArgs.push(nextArg);
+        }
+        current = applyTerm(newHead, newArgs);
+      }
+      for (const candidateRule of rules) {
+        const replacement = applyRuleTerm(candidateRule, current);
+        if (replacement !== null) { return replacement; }
+      }
+      return current;
+    }
+
+    function replaceAllTerm(expr, rules) {
+      return walkOnce(expr, rules, 0);
+    }
+
+    // `expr //. rules` — a fixed point: at each subtree, keep retrying
+    // `rules` until none fire (re-walking any fresh replacement so its
+    // own sub-parts also converge) before moving up to the parent.
+    // `maxIterations` (default 100) is a GLOBAL cap shared across the
+    // whole walk, guarding against a non-terminating rule set (SIR23
+    // spec "Matcher semantics" point 6). A firing loops LOCALLY at the
+    // current call frame (never a recursive call on the replacement),
+    // so however many times a rule fires at one tree position costs
+    // O(1) native stack frames, not O(firings) — `depth` only
+    // increases on a genuine descent into `head`/`args`, so
+    // `maxIterations` bounds iteration COUNT (CPU time) only, never
+    // native recursion depth.
+    function replaceRepeatedTerm(expr, rules, maxIterations) {
+      if (maxIterations === undefined) { maxIterations = 100; }
+      let counter = 0;
+      function walk(node, depth) {
+        if (depth > MAX_TERM_DEPTH) {
+          return { kind: "depth-limit", maxDepth: MAX_TERM_DEPTH };
+        }
+        let current = node;
+        while (true) {
+          if (current.kind === "apply") {
+            const newHead = walk(current.head, depth + 1);
+            if (isDepthLimitError(newHead) || isRewriteCycleErrorTerm(newHead)) { return newHead; }
+            const newArgs = [];
+            for (const arg of current.args) {
+              const nextArg = walk(arg, depth + 1);
+              if (isDepthLimitError(nextArg) || isRewriteCycleErrorTerm(nextArg)) { return nextArg; }
+              newArgs.push(nextArg);
+            }
+            current = applyTerm(newHead, newArgs);
+          }
+          let fired = false;
+          for (const candidateRule of rules) {
+            const replacement = applyRuleTerm(candidateRule, current);
+            if (replacement !== null && !termEquals(replacement, current)) {
+              counter += 1;
+              if (counter > maxIterations) {
+                return { kind: "rewrite-cycle", maxIterations };
+              }
+              current = replacement;
+              fired = true;
+              break;
+            }
+          }
+          if (!fired) { return current; }
+        }
+      }
+      return walk(expr, 0);
+    }
+
+    // Unwrap a `replaceAll`/`replaceRepeated` result, throwing a plain
+    // `Error` if the walk hit its depth cap or (for `replaceRepeated`)
+    // its iteration cap instead of returning a real term. Every
+    // compiled `SymReplaceAll` call site routes through this — a
+    // `SymReplaceAll` is an ordinary expression that must evaluate to a
+    // term or fail loudly, never silently hand a sentinel to code
+    // expecting a term.
+    function unwrapTerm(result) {
+      if (isDepthLimitError(result) || isRewriteCycleErrorTerm(result)) {
+        throw new Error("sir-runtime-symbolic: " + result.kind);
+      }
+      return result;
+    }
+
+    // ── evalTerm (SIR23 addendum, item 1 of 4) ──────────────────────
+    //
+    // `Symbolic.evalTerm(term)` is a direct JS port of `symbolic-vm`'s
+    // `VM::eval`/`eval_apply` dispatch architecture
+    // (`code/packages/rust/symbolic-vm/src/{vm,handlers}.rs`) — a plain
+    // per-head `Map<name, Handler>` lookup, NOT expressed as `SymRule`s
+    // run through `matchPattern`/`applyRuleTerm` above. See the SIR23
+    // spec's addendum ("Architecture decision: a dedicated head-dispatch
+    // evaluator, not rewrite-rules-through-the-existing-engine") for the
+    // full four-point rationale; the short version: `Add(2, 3) -> 5`
+    // needs no variable binding, no repeated-name consistency check, no
+    // bottom-up fixed point — the one thing the matcher provides that a
+    // plain `if (a.kind === "integer" ...)` dispatch doesn't — so a
+    // `Handler` is the right shape, not a `SymRule` whose RHS closure
+    // just happens to compute a sum.
+    //
+    // ## Scope: items 1-4 of 4 (see the addendum's "Crate layout and
+    // rollout (one item = one PR)" section) — all four now shipped
+    //
+    // Item 1 wired up arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/
+    // `Inv`/`Abs`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+    // `LessEqual`/`GreaterEqual`), and logic (`And`/`Or`/`Not`) folding.
+    // Item 2 added the environment (`symEnv` above) and real handlers for
+    // the three `HELD_HEADS` members plus user-function dispatch. Item 3
+    // (this PR) adds the elementary-function handlers (`Sin`/`Cos`/
+    // `Sqrt`) and the calculus handlers (`D`/`Integrate`) — see each new
+    // handler's own doc comment below, near `HANDLERS`, for exactly which
+    // `handlers.rs` match arms were ported (scoped tightly to what
+    // `derive-to-semantic-ir/tests/oracle.rs`'s remaining `known_bug`
+    // cases actually exercise) and which were deliberately left out:
+    //
+    //   item 1 (shipped) — arithmetic / comparison / logic folding
+    //   item 2 (shipped) — environment + Assign/Define/If + user functions
+    //   item 3 (this PR) — calculus / elementary-function handlers
+    //   item 4 (shipped) — Derive's own SIR23 display convention
+    //
+    // A FIFTH addition, layered on top of this same SIR23 addendum after
+    // all four items above shipped (MA13/Wave 7 close-out, not part of
+    // the addendum's own original 4-item plan): Axiom's three reserved
+    // `__axiom_declare`/`__axiom_coerce`/`__axiom_has` heads join
+    // `HELD_HEADS` and `HANDLERS`/`HELD_HANDLERS` below, exactly like any
+    // other new head this dispatch table gains — see
+    // `axiomDeclareHandler`/`axiomCoerceHandler`/`axiomHasHandler`'s own
+    // section comment (further down, right before `HANDLERS`) for the
+    // full design.
+    //
+    // `HELD_HEADS` was declared by item 1 — the held-vs-evaluated
+    // ARGUMENT treatment below was exercised starting then — but item 1
+    // wired up NO handler for any of its three members, so `Assign`/
+    // `Define`/`If` always fell through to "no handler matched", which
+    // rebuilds the term from the evaluated head and the ORIGINAL,
+    // unevaluated args: byte-for-byte the same inert `Apply` shape
+    // today's bare `SymApply` codegen already produces. Item 2 (below,
+    // see `HELD_HANDLERS`) replaces that fallthrough with real execution
+    // for these three: a binding environment, a self-loop guard, and
+    // user-function dispatch (`substituteSymbols`, not a reuse of
+    // `substituteTerm` — see that function's own doc comment for exactly
+    // why the addendum's suggested reuse doesn't typecheck against the
+    // real data shapes involved).
+    //
+    // `List` needs, and per the addendum's own handler table gets,
+    // forever, NO handler at all: applicative-order argument evaluation
+    // alone folds `List(Add(1,1), Mul(2,3))` into `List(2, 6)` "for
+    // free" via the same generic "no handler matched" fallthrough every
+    // other unrecognised head (present or future) takes.
+    // `__axiom_declare`/`__axiom_coerce`/`__axiom_has` (MA13/Wave 7
+    // close-out, `axiom-to-semantic-ir::lower`'s three reserved SIR23
+    // heads) join this set for the identical reason `Assign`'s
+    // left-hand-side name is held: each of the three has at least one
+    // argument position that must NOT be evaluated as an ordinary variable
+    // reference before dispatch (a declared name, a domain/category type
+    // expression) — see each handler's own doc comment, near
+    // `axiomDeclareHandler` above, for exactly which argument(s) each one
+    // evaluates itself versus leaves raw.
+    const HELD_HEADS = new Set([
+      "Assign", "Define", "If",
+      "__axiom_declare", "__axiom_coerce", "__axiom_has",
+    ]);
+
+    // SECURITY (CWE-674): `evalTerm`'s OWN recursion-depth cap — this is
+    // deliberately NOT a reuse of `MAX_TERM_DEPTH` above. That constant
+    // guards `walkOnce`/`replaceRepeatedTerm`'s tree WALK, a different
+    // function whose per-frame cost (rebuild `head`/args, try each rule
+    // in a list) differs from `evalTerm`'s own per-frame cost (a
+    // numeric-tower conversion, a `Map` handler lookup, an argument-array
+    // rebuild). Assuming one function's measured-safe cap is safe for a
+    // DIFFERENT function's stack frames is exactly the mistake this
+    // repo's own `derive-parser::MAX_RULE_DEPTH` doc comment warns
+    // against — a cap is only as good as the function it was measured
+    // against.
+    //
+    // ## Measurement methodology
+    //
+    // Mirrors `derive-parser::MAX_RULE_DEPTH`'s own documented discipline
+    // exactly: measure the real bare-stack crash floor first, on a
+    // representative build of the ACTUAL recursive function (not a
+    // simplified stand-in — `evalTerm`/`evalApply`'s own local-variable
+    // footprint, not which handler happens to run, is what determines
+    // per-frame stack cost), then set the cap with a healthy safety
+    // margin below it — never assume a round number is safe.
+    //
+    // Measured directly: a `node` v25 subprocess (default per-thread V8
+    // stack, NO `--stack-size` override — matching how a compiled SIR
+    // program actually runs in production, not an inflated test-only
+    // stack) calling this exact `evalTerm`/`evalApply` pair on a
+    // right-nested `Add(1, Add(1, Add(1, …)))` term built via a plain
+    // runtime loop of real `Symbolic.apply` calls (not a hand-written
+    // giant static literal — the same "a shallow compiled program can
+    // still build an arbitrarily deep runtime VALUE" concern
+    // `print_on_deeply_nested_term_truncates_instead_of_crashing_node`
+    // (`tests/sir23_symbolic.rs`) already documents for `toDisplayString`):
+    // evaluates safely through **2800** nesting levels, crashes
+    // (`RangeError: Maximum call stack size exceeded`) by **2805** (the
+    // exact boundary jitters by a few levels run to run — ASLR-driven
+    // stack-layout variance, not measurement error; binary-searched with
+    // multiple trials per candidate depth to confirm the jitter band).
+    //
+    // `MAX_EVAL_DEPTH` is set to **2000** — about **29%** below the
+    // measured ~2800-level floor (comparable margin to `apl-parser`'s
+    // ~26.5%, `j-parser`'s ~30%, `q-parser`'s ~29%). Verified (see
+    // `tests/sir23_eval_depth_guard.rs`): 2000 levels evaluates cleanly
+    // to a real folded integer; 2001 levels — and, separately, a term
+    // millions of levels deep, since the guard is checked on EVERY
+    // recursive step, not just once at the top — cleanly returns the
+    // depth-limit sentinel rather than crashing `node`, on a default,
+    // un-widened stack.
+    const MAX_EVAL_DEPTH = 2000;
+
+    // ── environment / held-form execution (SIR23 addendum item 2 of 4) ──
+    //
+    // `symEnv` is the JS port of `symbolic-vm`'s `BaseBackend.env: HashMap
+    // <String, IRNode>` (`code/packages/rust/symbolic-vm/src/backend.rs`)
+    // — see `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s addendum,
+    // "Environment / held-form execution model". A plain `Map`, declared
+    // once here (module scope inside this IIFE, which itself runs exactly
+    // once per compiled program's `node` process), living for the whole
+    // program's execution — one flat top-level script/session, exactly
+    // matching one `BaseBackend` instance per `symbolic_vm::VM::new()`.
+    // Not the OOP/closure machinery elsewhere in this file
+    // (`SirInstance`/`classVarBag`/`currentSelf`) — that models host JS
+    // object identity for SIR's class-instance-variable domain, a
+    // completely different value space; reusing it here would be a
+    // type-confusion hazard, not a simplification (per the addendum's own
+    // note). Every one of the 5 SIR23 frontends' currently-implemented
+    // grammars is single-session/flat (no nested `With`/`Module`/`Block`
+    // local scope reaches `SymbolicBackend` today), so one flat `Map` is a
+    // faithful, not a simplified, port of `BaseBackend.env`.
+    const symEnv = new Map();
+
+    // Axiom's own `:`-declared domain-constraint table (MA13 §2/§3/§4) —
+    // a name -> AxiomDomain map, populated ONLY by `axiomDeclareHandler`
+    // (below) and consulted ONLY by `assignHandler`'s own small, disclosed
+    // addition (see that function's comment). Deliberately a SEPARATE map
+    // from `symEnv` immediately above, mirroring `axiom-runtime::
+    // EvalContext`'s own identical separation (`declared: HashMap<String,
+    // AxiomDomain>`, kept apart from the shared VM's own name-binding
+    // environment, "since `symbolic-ir`/`symbolic-vm` have no concept of a
+    // domain at all to store one in") — a faithful port of that same
+    // architectural split, not a new design. Stays permanently EMPTY for
+    // every compiled program that never lowers a `__axiom_declare` call
+    // (i.e. every non-Axiom source language, and any Axiom program with no
+    // `:` declaration), so `assignHandler`'s extra lookup is a no-op there.
+    const axiomDeclaredDomains = new Map();
+
+    // ── numeric tower (handlers.rs::Numeric port) ───────────────────
+    //
+    // `{tag:"int", value}` / `{tag:"rat", n, d}` (lowest terms, d > 0) /
+    // `{tag:"float", value}` — an internal-only representation used
+    // solely inside the arithmetic handlers below; NOT the same shape as
+    // a `{kind:"integer"|"rational"|"float", ...}` TERM (`toNumeric`/
+    // `fromNumeric` convert between the two at each handler's boundary,
+    // mirroring `handlers.rs`'s own `to_numeric`/`from_numeric`).
+    //
+    // Every binary op checks `Number.isSafeInteger` on its exact-integer
+    // result and falls back to a Float — the JS-number analogue of
+    // Rust's `i64::checked_add` returning `None` (`handlers.rs`'s own
+    // documented policy: "Int(i64) — exact integer (checked arithmetic;
+    // overflows to Float)"). `Number.isSafeInteger` is this backend's
+    // existing, established integer ceiling (see this IIFE's own
+    // "Value model" doc comment above), not an arbitrary new choice.
+    function numInt(value) { return { tag: "int", value }; }
+    function numRat(n, d) { return { tag: "rat", n, d }; } // caller pre-reduces
+    function numFloat(value) { return { tag: "float", value }; }
+
+    function numToF64(v) {
+      if (v.tag === "int") { return v.value; }
+      if (v.tag === "rat") { return v.n / v.d; }
+      return v.value;
+    }
+    function numIsZero(v) {
+      if (v.tag === "int") { return v.value === 0; }
+      if (v.tag === "rat") { return v.n === 0; }
+      return v.value === 0;
+    }
+    function numIsOne(v) {
+      if (v.tag === "int") { return v.value === 1; }
+      if (v.tag === "rat") { return v.n === v.d; }
+      return v.value === 1;
+    }
+
+    // Build a lowest-terms Rat, collapsing denom===1 to an Int — a
+    // direct port of `handlers.rs::make_rat`. Reuses `gcdAbs` above
+    // (already used by `rationalTerm`'s own construction-time reduction)
+    // rather than re-implementing GCD a second time.
+    function makeRat(numer, denom) {
+      if (denom < 0) { numer = -numer; denom = -denom; }
+      const g = gcdAbs(numer, denom);
+      const n = numer / g;
+      const d = denom / g;
+      return d === 1 ? numInt(n) : numRat(n, d);
+    }
+
+    function toNumeric(term) {
+      if (term.kind === "integer") { return numInt(term.value); }
+      if (term.kind === "rational") { return numRat(term.numer, term.denom); }
+      if (term.kind === "float") { return numFloat(term.value); }
+      return null; // not a numeric leaf (a Symbol or a compound Apply)
+    }
+    // Convert a Numeric back to the most compact TERM representation —
+    // mirrors `handlers.rs::from_numeric` exactly: `Rat(n, 1)` collapses
+    // to a plain integer term (though `makeRat` above already collapses
+    // that case before it ever reaches here in practice).
+    function fromNumeric(v) {
+      if (v.tag === "int") { return intTerm(v.value); }
+      if (v.tag === "rat") { return v.d === 1 ? intTerm(v.n) : rationalTerm(v.n, v.d); }
+      return floatTerm(v.value);
+    }
+
+    function numAdd(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const s = a.value + b.value;
+        return Number.isSafeInteger(s) ? numInt(s) : numFloat(a.value + b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.d + b.n * a.d;
+        const denom = a.d * b.d;
+        if (denom !== 0 && Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) {
+          return makeRat(numer, denom);
+        }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.d + b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = b.value * a.d + a.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      return numFloat(numToF64(a) + numToF64(b));
+    }
+
+    function numSub(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const s = a.value - b.value;
+        return Number.isSafeInteger(s) ? numInt(s) : numFloat(a.value - b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.d - b.n * a.d;
+        const denom = a.d * b.d;
+        if (denom !== 0 && Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) {
+          return makeRat(numer, denom);
+        }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.d - b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = a.n - b.value * a.d;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      return numFloat(numToF64(a) - numToF64(b));
+    }
+
+    function numMul(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const p = a.value * b.value;
+        return Number.isSafeInteger(p) ? numInt(p) : numFloat(a.value * b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.n;
+        const denom = a.d * b.d;
+        if (Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) { return makeRat(numer, denom); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = b.value * a.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      return numFloat(numToF64(a) * numToF64(b));
+    }
+
+    // `a / b` — mirrors `handlers.rs`'s `impl Div for Numeric` exactly:
+    // dispatches on `b`'s OWN tag (not a symmetric a-vs-b case split),
+    // computing `a * reciprocal(b)`. NEITHER this function NOR the Rust
+    // it ports checks `b`'s zero-ness — that is each CALLER's
+    // responsibility (`divHandler`/`invHandler` below both check
+    // `numIsZero` and throw before ever calling this, exactly mirroring
+    // `div_handler`/`inv_handler`'s own pre-check-then-panic order).
+    function numDiv(a, b) {
+      if (b.tag === "float") { return numFloat(numToF64(a) / b.value); }
+      if (b.tag === "int") { return numMul(a, makeRat(1, b.value)); }
+      return numMul(a, makeRat(b.d, b.n));
+    }
+
+    function numNeg(a) {
+      if (a.tag === "int") { return numInt(-a.value); } // safe: negating a
+      // safe integer never leaves the safe range (`-Number.MIN_SAFE_
+      // INTEGER === Number.MAX_SAFE_INTEGER`, symmetric around 0).
+      if (a.tag === "rat") { return numRat(-a.n, a.d); } // already lowest terms
+      return numFloat(-a.value);
+    }
+
+    // `base^exp` — a direct port of `handlers.rs::pow_numeric`, using
+    // `Number.isSafeInteger` in place of the Rust reference's widen-to-
+    // i128-then-range-check `checked_pow` trick (there is no i128 in
+    // JS, so an explicit repeated-multiplication loop with a
+    // safe-integer check after every step is the equivalent overflow
+    // detector — `checkedIntPow` below).
+    function checkedIntPow(base, exp) {
+      let result = 1;
+      for (let i = 0; i < exp; i++) {
+        result *= base;
+        if (!Number.isSafeInteger(result)) { return null; }
+      }
+      return result;
+    }
+    function powNumeric(base, exp) {
+      if (base.tag === "int" && exp.tag === "int") {
+        if (exp.value >= 0 && exp.value <= 62) {
+          const r = checkedIntPow(base.value, exp.value);
+          if (r !== null) { return numInt(r); }
+        } else if (exp.value < 0) {
+          // b^(-n) = 1 / b^n
+          if (base.value === 0) { throw new RangeError("Symbolic.evalTerm: 0^negative"); }
+          const pos = powNumeric(base, numInt(-exp.value));
+          return numDiv(numInt(1), pos);
+        }
+      }
+      if (base.tag === "rat" && exp.tag === "int" && exp.value >= 0 && exp.value <= 30) {
+        const nn = checkedIntPow(base.n, exp.value);
+        const dd = checkedIntPow(base.d, exp.value);
+        if (nn !== null && dd !== null && dd >= 1) { return makeRat(nn, dd); }
+      }
+      // Fall back to float (also the correct path for a negative-exponent
+      // Rat base and any Float operand, exactly like the Rust reference).
+      return numFloat(Math.pow(numToF64(base), numToF64(exp)));
+    }
+
+    // ── True/False helper (handlers.rs's `is_truthy`/`bool_node`) ───
+    //
+    // `True`/`False` are ordinary SYMBOL terms in this domain — never a
+    // JS boolean, never `1`/`0` (the addendum's own comparison-handler
+    // table entry is explicit about this). `isTruthy` returns `true`/
+    // `false` for a recognised boolean symbol, or `null` (tri-state) for
+    // anything else — the `null` case is what lets `andHandler`/
+    // `orHandler`/`notHandler` below leave a non-boolean operand alone.
+    function isTruthy(term) {
+      if (term.kind === "symbol") {
+        if (term.name === "True") { return true; }
+        if (term.name === "False") { return false; }
+      }
+      return null;
+    }
+
+    // ── arithmetic handlers ──────────────────────────────────────────
+    //
+    // Every handler below shares `handlers.rs`'s own contract: given the
+    // (already evaluated, applicative-order) `args` and the (already
+    // evaluated) `head`, either fold to a fully-reduced term or rebuild
+    // the ORIGINAL, unevaluated-further `applyTerm(head, args)` shape —
+    // never `null`, never something needing a second `evalTerm` pass.
+    // `binary_args`'s `None`-on-wrong-arity early return (`handlers.rs`
+    // line ~7593) is ported as a plain `args.length !== 2` check at the
+    // top of each binary handler.
+    //
+    // Identity-law fallbacks (`x+0->x`, `1*x->x`, …) ARE ported here —
+    // they are a few lines each and match `handlers.rs` exactly (its own
+    // "Reality check" section explicitly says only the nested-Add
+    // canonicalization/flattening special case, "Phase 47", is skippable
+    // since oracle tests only ever compare a DISPLAYED value, never
+    // internal tree shape — these plain identity laws are not that, they
+    // change the displayed/folded result itself, e.g. `x + 0` must
+    // display as bare `x`, not `Add(x, 0)`).
+    function addHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numAdd(va, vb)); }
+      if (va !== null && numIsZero(va)) { return bTerm; } // 0 + x -> x
+      if (vb !== null && numIsZero(vb)) { return aTerm; } // x + 0 -> x
+      return applyTerm(head, args);
+    }
+
+    function subHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numSub(va, vb)); }
+      if (vb !== null && numIsZero(vb)) { return aTerm; } // x - 0 -> x
+      return applyTerm(head, args);
+    }
+
+    function mulHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numMul(va, vb)); }
+      // 0 * x -> 0, x * 0 -> 0
+      if ((va !== null && numIsZero(va)) || (vb !== null && numIsZero(vb))) { return intTerm(0); }
+      if (va !== null && numIsOne(va)) { return bTerm; } // 1 * x -> x
+      if (vb !== null && numIsOne(vb)) { return aTerm; } // x * 1 -> x
+      return applyTerm(head, args);
+    }
+
+    function divHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) {
+        if (numIsZero(vb)) { throw new RangeError("Symbolic.evalTerm: division by zero"); }
+        return fromNumeric(numDiv(va, vb));
+      }
+      if (va !== null && numIsZero(va)) { return intTerm(0); } // 0 / x -> 0
+      if (vb !== null && numIsOne(vb)) { return aTerm; } // x / 1 -> x
+      return applyTerm(head, args);
+    }
+
+    function powHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [baseTerm, expTerm] = args;
+      const vb = toNumeric(baseTerm);
+      const ve = toNumeric(expTerm);
+      if (vb !== null && ve !== null) { return fromNumeric(powNumeric(vb, ve)); }
+      if (ve !== null && numIsZero(ve)) { return intTerm(1); } // x^0 -> 1
+      if (ve !== null && numIsOne(ve)) { return baseTerm; } // x^1 -> x
+      if (vb !== null && numIsZero(vb)) { return intTerm(0); } // 0^n -> 0 (n != 0, above)
+      if (vb !== null && numIsOne(vb)) { return intTerm(1); } // 1^n -> 1
+      return applyTerm(head, args);
+    }
+
+    function negHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const a = args[0];
+      const va = toNumeric(a);
+      if (va !== null) { return fromNumeric(numNeg(va)); }
+      // -(-x) -> x
+      if (a.kind === "apply" && headName(a.head) === "Neg" && a.args.length === 1) {
+        return a.args[0];
+      }
+      return applyTerm(head, args);
+    }
+
+    function invHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const a = args[0];
+      const va = toNumeric(a);
+      if (va !== null) {
+        if (numIsZero(va)) { throw new RangeError("Symbolic.evalTerm: inverse of zero"); }
+        return fromNumeric(numDiv(numInt(1), va));
+      }
+      return applyTerm(head, args);
+    }
+
+    // Numeric fold only (`|n|`, preserving exact int/rational form) —
+    // `handlers.rs::abs_handler`'s further algebraic identities
+    // (`abs(abs(x))->abs(x)`, `abs(-x)->abs(x)`, `abs(x^even)->x^even`,
+    // …) are NOT ported: no Stream B oracle case exercises `Abs` at all
+    // yet, and those rules are meaningfully more involved (one even
+    // recurses back through `vm.eval`) than the "a few lines, matches
+    // the reference exactly" bar the other identity laws above clear.
+    // Deferred alongside the rest of the non-oracle-required
+    // simplification surface, same as calculus/elementary functions.
+    function absHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const inner = args[0];
+      const v = toNumeric(inner);
+      if (v !== null) {
+        if (inner.kind === "integer") { return intTerm(Math.abs(inner.value)); }
+        if (inner.kind === "rational") { return rationalTerm(Math.abs(inner.numer), inner.denom); }
+        return floatTerm(Math.abs(inner.value));
+      }
+      return applyTerm(head, args);
+    }
+
+    // ── comparison handlers ──────────────────────────────────────────
+    //
+    // Folds to the `True`/`False` SYMBOL (never a JS boolean, never
+    // `1`/`0`) when both operands are numeric literals (compared via
+    // `to_f64`, matching `comparison_handler`'s own `op(va.to_f64(),
+    // vb.to_f64())`); `Equal`/`NotEqual` additionally fall back to
+    // structural equality when either side isn't numeric (`eq_based`,
+    // `handlers.rs` lines 1317–1342) — `x == x -> True` even for a free
+    // symbol `x`. Stays unevaluated (arg-evaluated pass-through) when
+    // neither condition applies, e.g. a free symbol on one side of `<`.
+    function comparisonHandler(op, eqBased, isEqualOp) {
+      return function (head, args) {
+        if (args.length !== 2) { return applyTerm(head, args); }
+        const [aTerm, bTerm] = args;
+        const va = toNumeric(aTerm);
+        const vb = toNumeric(bTerm);
+        if (va !== null && vb !== null) {
+          return op(numToF64(va), numToF64(vb)) ? symTerm("True") : symTerm("False");
+        }
+        if (eqBased && termEquals(aTerm, bTerm)) {
+          return symTerm(isEqualOp ? "True" : "False");
+        }
+        return applyTerm(head, args);
+      };
+    }
+
+    // ── logic handlers (N-ARY, per handlers.rs::and_handler/or_handler)
+    //
+    // A flat `And(a, b, c, …)` chain — matching how every frontend's own
+    // lowering already flattens a chain — NOT pairwise binary nesting.
+    // Short-circuits on a `True`/`False` symbol among the (already
+    // evaluated) args, drops the identity element, collapses to a bare
+    // remaining term if exactly one non-boolean arg is left, else
+    // rebuilds an n-ary node from whatever didn't resolve.
+    function andHandler(head, args) {
+      const remaining = [];
+      for (const a of args) {
+        const t = isTruthy(a);
+        if (t === false) { return symTerm("False"); }
+        if (t === true) { continue; } // identity element, drop
+        remaining.push(a);
+      }
+      if (remaining.length === 0) { return symTerm("True"); }
+      if (remaining.length === 1) { return remaining[0]; }
+      return applyTerm(head, remaining);
+    }
+
+    function orHandler(head, args) {
+      const remaining = [];
+      for (const a of args) {
+        const t = isTruthy(a);
+        if (t === true) { return symTerm("True"); }
+        if (t === false) { continue; } // identity element, drop
+        remaining.push(a);
+      }
+      if (remaining.length === 0) { return symTerm("False"); }
+      if (remaining.length === 1) { return remaining[0]; }
+      return applyTerm(head, remaining);
+    }
+
+    function notHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const t = isTruthy(args[0]);
+      if (t === true) { return symTerm("False"); }
+      if (t === false) { return symTerm("True"); }
+      return applyTerm(head, args);
+    }
+
+    // ── elementary-function handlers (SIR23 addendum item 3 of 4) ────
+    //
+    // Direct ports of `handlers.rs::{sin_handler, cos_handler,
+    // sqrt_handler}`, but ONLY their numeric-argument branch
+    // (`to_numeric(arg)` succeeds → compute, special-casing an exact
+    // zero/perfect-square result so it stays an exact integer term —
+    // `Sqrt(4) -> 2`, not the float `2.0` — mirroring `handlers.rs`'s own
+    // `va == Numeric::Int(0)`/`Int(1)` exact-variant checks, not a
+    // generic "numerically zero/one" test, so a hypothetical `Sin(0.0)`
+    // float argument degrades the same way the Rust reference does: past
+    // the exact-zero check, into the general `Float(sin(x))` branch).
+    //
+    // Deliberately NOT ported, per the SIR23 addendum's own "Explicitly
+    // out of scope" list and canonical head→evaluator table ("general
+    // (non-identity, non-literal) simplification is out of scope"):
+    // the π-multiple exact-value tables (`try_pi_multiple`/`frac_mod`/
+    // `sin_pi_table`/`cos_pi_table`), odd/even symmetry rewrites
+    // (`sin(-x) = -sin(x)`, `cos(-x) = cos(x)`), arc-cancellation
+    // rewrites (`sin(asin(x)) = x`, `cos(acos(x)) = x`), `Sqrt`'s
+    // `x^{2k}` even-power split, and the `simplify == false` `panic!`
+    // branch. That last omission is confirmed correct, not guessed: all
+    // three runtimes this evaluator serves construct their backend via
+    // `SymbolicBackend::new()` unchanged (confirmed by reading
+    // `derive-runtime`, `reduce-runtime`, and `maple-runtime`'s own
+    // `src/lib.rs`), and `SymbolicBackend::new` always builds its handler
+    // table with `simplify: true` (`backends.rs`) — so a non-numeric
+    // argument (a free symbol, or any compound term the narrower rules
+    // above would have mattered for) is never a `panic!` for any of
+    // these five frontends; it falls through to the plain arg-evaluated
+    // pass-through every other unrecognised shape in this dispatcher
+    // already uses. This is exactly what lets `DIF(SIN(x), x)` (see
+    // `chainRuleTerm` below) leave a still-free-symbol `Cos(x)` alone
+    // rather than erroring.
+    function sinHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(0); } // Sin(0) -> 0, exact
+        return floatTerm(Math.sin(numToF64(v)));
+      }
+      return applyTerm(head, args);
+    }
+
+    function cosHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(1); } // Cos(0) -> 1, exact
+        return floatTerm(Math.cos(numToF64(v)));
+      }
+      return applyTerm(head, args);
+    }
+
+    // `Sqrt` additionally round-trips any non-special numeric result
+    // through an exact-perfect-square check (`sqrt_handler`'s own
+    // `result.round()` trick) — this is why `Sqrt(4)` folds to the plain
+    // integer `2` even though `4` isn't `Int(0)`/`Int(1)`.
+    // `Number.isSafeInteger` guards the `intTerm` call below from ever
+    // throwing on a result outside this backend's established safe-
+    // integer ceiling (see this IIFE's own "Value model" doc comment);
+    // the Rust reference has no equivalent guard (`as i64` truncates
+    // instead), but no oracle case gets anywhere near that boundary, and
+    // falling back to a `Float` result here is strictly safer than the
+    // alternative of throwing.
+    function sqrtHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(0); }
+        if (v.tag === "int" && v.value === 1) { return intTerm(1); }
+        const f = numToF64(v);
+        const result = Math.sqrt(f);
+        const intResult = Math.round(result);
+        if (Number.isSafeInteger(intResult) && Math.abs(intResult * intResult - f) < 1e-9) {
+          return intTerm(intResult);
+        }
+        return floatTerm(result);
+      }
+      return applyTerm(head, args);
+    }
+
+    // ── calculus handlers (SIR23 addendum item 3 of 4): D / Integrate ──
+    //
+    // Narrow, deliberately-partial ports of `handlers.rs::{diff, diff_pow,
+    // chain, integrate, depends_on}`, restricted to EXACTLY the match arms
+    // the 4 currently-`known_bug` DIF/INT oracle cases in
+    // `derive-to-semantic-ir/tests/oracle.rs` (`dif_differentiates_a_
+    // power`, `dif_of_sin_gives_cos`, `a_worksheet_program_defines_then_
+    // differentiates`, `int_integrates_a_symbol`) actually exercise —
+    // confirmed by reading each case's own `source`/`expected` fields
+    // directly, not assumed from the SIR23 addendum's own prose summary
+    // ("sum, power, and chain rules"): none of the four sources ever
+    // differentiates a sum, so `Add`/`Sub` are NOT ported here, only
+    // `Pow` (constant-exponent power rule) and `Sin` (chain rule,
+    // producing `Cos`). Every other rule `diff()` implements (`Mul`/`Div`
+    // product/quotient rule, `Tan`/`Exp`/`Log`/`Sqrt`/`Asin`/`Acos`/
+    // `Sinh`/`Cosh`/`Tanh`/`Asinh`/`Acosh`/`Atanh`/`Coth`/`Sech`/`Csch`
+    // differentiation, and `diff_pow`'s other two branches — constant
+    // base with a variable exponent, and both base and exponent
+    // depending on `x`, both of which route back through `Exp`/`Log`
+    // differentiation) is deliberately NOT ported: an unhandled shape
+    // falls through to the exact same "leave it as an unevaluated
+    // `D(f, x)` term" default `diff()`'s own final match arm
+    // (`_ => apply_node(D, ...)`) already uses, so every one of these
+    // omissions is a strict subset of the reference's behaviour, never a
+    // divergence, for any input this port doesn't implement.
+    //
+    // These are SOURCE-tree walks over a term already fully built
+    // (mirroring `substituteSymbols`'s own established precedent from
+    // item 2), which is why the FINAL re-evaluation of the differentiated
+    // /integrated RESULT (`derivativeHandler`/`integrateHandler` below)
+    // is the one that goes through the existing depth-checked
+    // `evalTerm(result, depth + 1)` path — exactly like item 2's
+    // user-function dispatch did for `substituteSymbols`'s own output.
+    //
+    // SECURITY (CWE-674) — considered and deliberately NOT given their own
+    // depth cap, unlike `termEquals`/`toDisplayString` above: a `/security-
+    // review` pass flagged that `diffTerm`'s/`integrateTerm`'s input `f`
+    // is an ordinary EVALUATED argument (`D`/`Integrate` are not held
+    // heads), unlike `substituteSymbols`'s always-raw `Define` body, so in
+    // principle `f` could be a `Symbol` resolving to an arbitrarily deep
+    // RUNTIME-constructed term (the same "a shallow compiled program can
+    // build an arbitrarily deep runtime value" concern
+    // `print_on_deeply_nested_term_truncates_instead_of_crashing_node`,
+    // `tests/sir23_symbolic.rs`, documents for `toDisplayString`).
+    // Verified this is NOT actually reachable, rather than assuming a cap
+    // is unnecessary: EVERY value `evalApply` ever hands to a `HANDLERS`
+    // entry (this dispatcher's *only* call path to `diffTerm`/
+    // `integrateTerm`) has already been produced by `evalTerm(rawArg,
+    // depth + 1)` as part of ordinary applicative-order argument
+    // evaluation — and since evaluating an N-level-deep, not-yet-folded
+    // `Apply` chain costs N nested `evalTerm`/`evalApply` frames
+    // regardless of whether any level's head has a handler, that
+    // evaluation itself hits the existing `MAX_EVAL_DEPTH` cap (2000, a
+    // HEAVIER per-frame cost than this pure tree-walk) before `f` can ever
+    // reach a handler at all. Confirmed empirically, not just argued: a
+    // hand-built term 1,000 `Symbolic.apply` levels deep (comfortably
+    // under `MAX_EVAL_DEPTH`, comfortably over what a native crash would
+    // need for a frame this light) differentiates correctly with no
+    // additional guard here at all (`tests/sir23_symbolic.rs`'s
+    // `differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_
+    // of_crashing_node`) — adding a redundant cap that can never fire
+    // given this call graph would be exactly the unreachable defensive
+    // complexity this repo's own "only guard what's actually reachable"
+    // discipline (see e.g. `Abs`'s un-ported identity laws above) argues
+    // against. If a FUTURE change ever calls `diffTerm`/`integrateTerm`
+    // from somewhere that bypasses `evalApply`'s argument-evaluation gate
+    // (e.g. a later item's decorator-layer builtin handed a raw, unheld
+    // term directly), this reasoning must be re-verified, not assumed
+    // still true.
+
+    // `depends_on`'s port: does `node`'s tree mention the free variable
+    // `varName` anywhere (as a bare `Symbol`, or nested inside an
+    // `Apply`'s head/args)? Numeric/string leaves never do.
+    function dependsOnVar(node, varName) {
+      if (node.kind === "symbol") { return node.name === varName; }
+      if (node.kind === "apply") {
+        return dependsOnVar(node.head, varName) || node.args.some((a) => dependsOnVar(a, varName));
+      }
+      return false;
+    }
+
+    // `diff_pow`'s port, restricted to the constant-exponent (power rule)
+    // branch: `d/dx[base^n] = n * base^(n-1) * d/dx[base]`, when `n`
+    // itself doesn't mention `x` — exactly `dif_differentiates_a_power`'s
+    // own shape (`DIF(x^2, x)`, exponent `2` is a literal). Falls through
+    // to the unevaluated `D(f, x)` term for the other two branches (see
+    // the section doc comment above for why).
+    function diffPowTerm(f, base, exponent, varName) {
+      if (!dependsOnVar(exponent, varName)) {
+        return applyTerm(symTerm("Mul"), [
+          applyTerm(symTerm("Mul"), [
+            exponent,
+            applyTerm(symTerm("Pow"), [base, applyTerm(symTerm("Sub"), [exponent, intTerm(1)])]),
+          ]),
+          diffTerm(base, varName),
+        ]);
+      }
+      return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+    }
+
+    // `chain`'s port: `d/dx[g(inner)] = g'(inner) * d/dx[inner]` — used
+    // here only for `Sin`'s chain rule (`d/dx[sin(u)] = cos(u) * u'`,
+    // `dif_of_sin_gives_cos`'s and `a_worksheet_program_defines_then_
+    // differentiates`'s shared shape).
+    function chainRuleTerm(headName, inner, varName) {
+      return applyTerm(symTerm("Mul"), [
+        applyTerm(symTerm(headName), [inner]),
+        diffTerm(inner, varName),
+      ]);
+    }
+
+    // `diff`'s port — see the section doc comment above for exactly which
+    // match arms are implemented (base cases, `Pow`, `Sin`) and which are
+    // deliberately not; any other shape falls through to `diff()`'s own
+    // final arm, an unevaluated `D(f, x)` term.
+    function diffTerm(f, varName) {
+      if (!dependsOnVar(f, varName)) { return intTerm(0); }
+      if (f.kind === "symbol" && f.name === varName) { return intTerm(1); }
+      if (f.kind !== "apply" || f.head.kind !== "symbol") {
+        return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+      }
+      const name = f.head.name;
+      if (name === "Pow" && f.args.length === 2) {
+        return diffPowTerm(f, f.args[0], f.args[1], varName);
+      }
+      if (name === "Sin" && f.args.length === 1) {
+        return chainRuleTerm("Cos", f.args[0], varName);
+      }
+      return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+    }
+
+    // `integrate`'s port, restricted to the bare-symbol case `∫x dx =
+    // (1/2)x^2` — an exact RATIONAL term (`rationalTerm(1, 2)`, matching
+    // this crate's own exact-rational discipline already established by
+    // item 1's arithmetic folding), not a float. `int_integrates_a_
+    // symbol`'s own shape (`INT(x, x)`) is the only currently-failing
+    // case exercising `Integrate` at all, and the SIR23 addendum's own
+    // canonical head→evaluator table scopes `Integrate` to "a bare
+    // symbol" only — so the Rust reference's `!depends_on(f, x)`
+    // constant-integral branch (`∫c dx = c*x`) is deliberately NOT ported
+    // either; any other shape falls through to the unevaluated
+    // `Integrate(f, x)` term, the same pass-through policy as everywhere
+    // else in this port.
+    function integrateTerm(f, varName) {
+      if (f.kind === "symbol" && f.name === varName) {
+        return applyTerm(symTerm("Mul"), [
+          rationalTerm(1, 2),
+          applyTerm(symTerm("Pow"), [f, intTerm(2)]),
+        ]);
+      }
+      return applyTerm(symTerm("Integrate"), [f, symTerm(varName)]);
+    }
+
+    // `derivative_handler`'s port: `D(f, x)`. Arity must be exactly 2 —
+    // the Rust reference panics otherwise; ported as a thrown
+    // `RangeError`, this file's own established convention for a domain
+    // error no oracle case can construct (e.g. `ifHandler`'s arity check
+    // above). The second argument must already be a `Symbol` (mirrors
+    // `derivative_handler`'s own `match &expr.args[1] { Symbol(s) => ...,
+    // _ => return unevaluated }`) — anything else leaves the call
+    // unevaluated, not an error.
+    //
+    // Unlike every other `HANDLERS` entry above, `D` needs `depth`: after
+    // computing the symbolic derivative via `diffTerm`, a genuinely
+    // different result is re-evaluated through the SAME depth-checked
+    // `evalTerm` this whole dispatcher already threads through
+    // everywhere else — mirroring `differentiate`'s own policy exactly:
+    // return the result as-is when it structurally equals (via
+    // `termEquals`, this file's existing structural-equality check) the
+    // original unevaluated term, otherwise hand it back to the VM's own
+    // evaluator for a second pass.
+    function derivativeHandler(head, args, depth) {
+      if (args.length !== 2) {
+        throw new RangeError("Symbolic.evalTerm: D expects 2 arguments, got " + args.length);
+      }
+      const f = args[0];
+      const xTerm = args[1];
+      if (xTerm.kind !== "symbol") { return applyTerm(head, args); }
+      const result = diffTerm(f, xTerm.name);
+      const original = applyTerm(symTerm("D"), [f, symTerm(xTerm.name)]);
+      if (termEquals(result, original)) { return result; }
+      return evalTerm(result, depth + 1);
+    }
+
+    // `integrate_handler`'s port. The Rust reference accepts either 2
+    // arguments (indefinite integral) or 4 (definite integral bounds, via
+    // elliptic-integral closed forms — explicitly out of scope for this
+    // rollout) and panics for any OTHER arity; ported the same way. A
+    // 4-argument call is NOT an error, but this port has no elliptic-kind
+    // handler to try, so it goes straight to the unevaluated pass-through
+    // — exactly where the Rust reference's OWN 4-argument branch already
+    // ends up whenever none of its three elliptic-kind checks match
+    // (which, for every shape this port's callers can construct, is
+    // always), so this is a faithful port of the one reachable outcome,
+    // not a shortcut around the others.
+    function integrateHandler(head, args, depth) {
+      if (args.length !== 2 && args.length !== 4) {
+        throw new RangeError("Symbolic.evalTerm: Integrate expects 2 or 4 arguments, got " + args.length);
+      }
+      if (args.length === 4) { return applyTerm(head, args); }
+      const f = args[0];
+      const xTerm = args[1];
+      if (xTerm.kind !== "symbol") { return applyTerm(head, args); }
+      const result = integrateTerm(f, xTerm.name);
+      const original = applyTerm(symTerm("Integrate"), [f, symTerm(xTerm.name)]);
+      if (termEquals(result, original)) { return result; }
+      return evalTerm(result, depth + 1);
+    }
+
+    // ── Axiom domain/category table + reserved-head handlers ─────────
+    //
+    // MA13 §2/§3/§4 (`code/specs/MA13-axiom-language.md`): a JS-side port
+    // of `axiom-runtime::domains`'s fixed, non-extensible
+    // `AxiomDomain`/`AxiomCategory` table -- the ONE piece of genuinely new
+    // evaluator design MA13 needed (`symbolic_ir::IRNode` has no domain/
+    // category/type-tag concept anywhere), reused here for the THREE
+    // reserved SIR23 heads `axiom-to-semantic-ir::lower` defines locally
+    // (never added to shared `semantic-ir`/`symbolic-ir`, per that crate's
+    // own "Decision" section):
+    //
+    //   __axiom_declare(List(name, ...), typeExpr)   -- `a : T` / `(a,b): T`
+    //   __axiom_coerce(value, typeExpr)               -- `e :: T`
+    //   __axiom_has(domainTypeExpr, categoryTypeExpr) -- `D has C`
+    //
+    // `typeExpr` positions are ordinary `SymSymbol`/`SymApply` DATA (a bare
+    // NAME lowers to `SymSymbol`, a parameterized one to
+    // `SymApply(SymSymbol(name), [args...])` -- confirmed directly against
+    // `axiom-to-semantic-ir::lower::Lowerer::lower_type_expr`), the EXACT
+    // same shape an ordinary call already has -- so `axiomParseTypeSpec`
+    // reads a term into the same `{ name, args }` shape
+    // `axiom-runtime::builtins::parse_type_spec` reads a parsed CST node
+    // into, and every function below is a direct, one-for-one port of its
+    // `axiom-runtime::domains` counterpart (same shape, same match arms,
+    // same error TEXT verbatim -- so a coercion/declaration/has-query
+    // failure throws the byte-for-byte SAME message `axiom-runtime` itself
+    // produces for an atomic operand, confirmed by
+    // `axiom-to-semantic-ir/tests/oracle.rs`'s own failing-case entries;
+    // for a COMPOUND operand the message text can still diverge, since it
+    // embeds `toDisplayString`'s generic rendering rather than
+    // `axiom-runtime::value::print_axiom`'s own infix one -- the same
+    // disclosed "no per-language compound-display convention" gap every
+    // CAS-family language without a dedicated `SIR_DISPLAY_<LANG>` printer
+    // has, see `SIR_DISPLAY_AXIOM_BOOLEAN`'s own comment above).
+    //
+    // A JS `AxiomDomain` is represented exactly as compactly as its Rust
+    // counterpart: the eight zero-argument variants are plain STRINGS
+    // (`"Boolean"`, `"Integer"`, `"PositiveInteger"`, `"NonNegativeInteger"`,
+    // `"Float"`, `"String"`, `"FractionInteger"`, `"PolynomialInteger"` --
+    // matching the Rust enum's own variant names, NOT their `display_name()`
+    // spelling, e.g. `"FractionInteger"` not `"Fraction(Integer)"`; see
+    // `axiomDomainDisplayName` below for that separate rendering), and
+    // `List(T)` is `{ tag: "List", inner: <AxiomDomain> }`. `AxiomCategory`
+    // is simply the string `"Ring"` or `"OrderedSet"`.
+
+    // SECURITY (CWE-674): every one of the six Axiom domain/category
+    // functions below (`axiomParseTypeSpec`, `axiomResolveDomain`,
+    // `axiomIsPolynomialOverIntegers`, `axiomCoerceValue`,
+    // `axiomDomainDisplayName`) is plain recursion with no cap of its own
+    // -- a security-review finding, since `axiomCoerceHandler` hands
+    // `axiomCoerceValue`/`axiomIsPolynomialOverIntegers` an already-
+    // EVALUATED value that only went through `evalTerm`'s OWN depth cap
+    // (`MAX_EVAL_DEPTH`, checked on `evalTerm`'s own recursive descent),
+    // not a cap on the SIZE of the resulting term -- `evalTerm`'s own doc
+    // comment already establishes "a shallow compiled program can still
+    // build an arbitrarily deep runtime VALUE" (the same concern
+    // `toDisplayString`'s own guard, just below in this file, exists to
+    // close for the display path). Every function here now threads an
+    // explicit `depth` parameter and reuses the SAME `MAX_TERM_DEPTH`
+    // (512) cap `toDisplayString`/`termEquals` already use -- a
+    // deliberate REUSE, not a fresh measurement, justified the same way
+    // `termEquals`'s own comment justifies reusing it: each of these six
+    // functions' per-call-frame footprint (a `kind`/`tag` check, a string
+    // comparison or two, at most one more recursive call per level) is no
+    // heavier than `toDisplayString`'s own already-proven-safe-at-
+    // `MAX_TERM_DEPTH` frame. Past the cap, each function returns its own
+    // existing "this failed" value (`false` for the boolean predicate,
+    // `null` for the coerce-or-fail function, `"..."` for the display
+    // function, matching `toDisplayString`'s own truncation convention)
+    // or throws a clean `Error`/`RangeError` (for the two functions whose
+    // contract is already "return a value or throw", where a silent
+    // truncated answer would be worse than a clean, catchable failure) --
+    // never an uncaught native `RangeError: Maximum call stack size
+    // exceeded` that would crash the whole `node` process.
+
+    // `axiom-runtime::builtins::parse_type_spec`'s port: read a `typeExpr`
+    // TERM (never `evalTerm`'d -- see the three handlers below, all of
+    // which pass this a RAW, unevaluated argument) into a `{ name, args }`
+    // spec.
+    function axiomParseTypeSpec(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) {
+        throw new RangeError("Symbolic.evalTerm: Axiom type expression nesting too deep");
+      }
+      if (term.kind === "symbol") { return { name: term.name, args: [] }; }
+      if (term.kind === "apply" && term.head.kind === "symbol") {
+        return { name: term.head.name, args: term.args.map((a) => axiomParseTypeSpec(a, depth + 1)) };
+      }
+      throw new TypeError("Symbolic.evalTerm: malformed Axiom type expression");
+    }
+
+    // `axiom-runtime::domains::resolve_domain`'s port -- every error
+    // message is copied VERBATIM from that function so a rejection reads
+    // identically on both the native and compiled paths.
+    function axiomResolveDomain(spec, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) {
+        throw new RangeError("Symbolic.evalTerm: Axiom domain nesting too deep");
+      }
+      const n = spec.args.length;
+      switch (spec.name) {
+        case "Boolean": if (n === 0) { return "Boolean"; } break;
+        case "Integer": if (n === 0) { return "Integer"; } break;
+        case "PositiveInteger": if (n === 0) { return "PositiveInteger"; } break;
+        case "NonNegativeInteger": if (n === 0) { return "NonNegativeInteger"; } break;
+        case "Float": if (n === 0) { return "Float"; } break;
+        case "String": if (n === 0) { return "String"; } break;
+        case "Fraction":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
+            if (inner === "Integer") { return "FractionInteger"; }
+            throw new Error(
+              "Fraction(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
+              + "`Fraction` is fixed to `Fraction(Integer)` only"
+            );
+          }
+          break;
+        case "Polynomial":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
+            if (inner === "Integer") { return "PolynomialInteger"; }
+            throw new Error(
+              "Polynomial(" + axiomDomainDisplayName(inner) + ") is not a valid type -- this cut's "
+              + "`Polynomial` is fixed to `Polynomial(Integer)` only"
+            );
+          }
+          break;
+        case "List":
+          if (n === 1) {
+            const inner = axiomResolveDomain(spec.args[0], depth + 1);
+            if (typeof inner === "object" && inner.tag === "List") {
+              throw new Error(
+                "List(" + axiomDomainDisplayName(inner) + ") is not a valid type -- `List`'s element "
+                + "type cannot itself be a `List`"
+              );
+            }
+            return { tag: "List", inner };
+          }
+          break;
+        default:
+          break;
+      }
+      if (spec.name === "Fraction" || spec.name === "Polynomial" || spec.name === "List") {
+        throw new Error("`" + spec.name + "` takes exactly 1 type argument, got " + n);
+      }
+      throw new Error(
+        "`" + spec.name + "` is not one of this cut's fixed built-in domains (Boolean, Integer, "
+        + "PositiveInteger, NonNegativeInteger, Float, String, Fraction(Integer), Polynomial(Integer), "
+        + "List(T))"
+      );
+    }
+
+    // `axiom-runtime::domains::resolve_category`'s port.
+    function axiomResolveCategory(spec) {
+      const n = spec.args.length;
+      if (spec.name === "Ring" && n === 0) { return "Ring"; }
+      if (spec.name === "OrderedSet" && n === 0) { return "OrderedSet"; }
+      if (spec.name === "Ring" || spec.name === "OrderedSet") {
+        throw new Error("`" + spec.name + "` takes no type arguments, got " + n);
+      }
+      throw new Error(
+        "`" + spec.name + "` is not one of this cut's fixed built-in categories (Ring, OrderedSet)"
+      );
+    }
+
+    // `axiom-runtime::domains::domain_has_category`'s port -- the fixed
+    // membership table (MA13 §3/§4). `Polynomial(Integer) has Ring` is
+    // `true`; `List(Integer) has Ring` is `false` (the book's own confirmed
+    // examples -- `axiom-to-semantic-ir/tests/oracle.rs`'s own two
+    // headline cases).
+    function axiomDomainHasCategory(domain, category) {
+      if (category === "Ring") {
+        return domain === "Integer" || domain === "FractionInteger" || domain === "PolynomialInteger";
+      }
+      // OrderedSet
+      return domain === "Integer" || domain === "Float"
+        || domain === "PositiveInteger" || domain === "NonNegativeInteger";
+    }
+
+    // `axiom-runtime::domains::is_polynomial_over_integers`'s port -- an
+    // Axiom-runtime-internal STRUCTURAL predicate, not a `symbolic-vm`
+    // change (mirrors that function's own doc comment: "evaluated entirely
+    // within `axiom-runtime`'s own dispatcher, never inside `symbolic-vm`
+    // itself"). Note the same quirk the Rust reference has: ANY bare
+    // symbol (including `True`/`False`) counts as "polynomial", matching
+    // `IRNode::Integer(_) | IRNode::Symbol(_) => true` exactly -- a
+    // faithful port, not a hardening.
+    function axiomIsPolynomialOverIntegers(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return false; } // safe, conservative "not polynomial" answer
+      if (term.kind === "integer" || term.kind === "symbol") { return true; }
+      if (term.kind !== "apply" || term.head.kind !== "symbol") { return false; }
+      const h = term.head.name;
+      if (h === "Add" || h === "Sub" || h === "Mul") {
+        return term.args.every((a) => axiomIsPolynomialOverIntegers(a, depth + 1));
+      }
+      if (h === "Neg") {
+        return term.args.length === 1 && axiomIsPolynomialOverIntegers(term.args[0], depth + 1);
+      }
+      if (h === "Pow") {
+        return term.args.length === 2 && axiomIsPolynomialOverIntegers(term.args[0], depth + 1)
+          && term.args[1].kind === "integer" && term.args[1].value >= 0;
+      }
+      return false;
+    }
+
+    // `axiom-runtime::domains::coerce_value`'s port: attempt to coerce an
+    // ALREADY-EVALUATED `term` into `domain`, returning the (possibly
+    // representation-converted) term on success or `null` on failure.
+    // `Float` is the one domain that genuinely CONVERTS representation
+    // (`Integer`/`Rational` -> `Float`, matching real Axiom's own
+    // `3 :: Float` producing `3.0`); every other domain is a pure
+    // membership check that returns the value unchanged.
+    function axiomCoerceValue(term, domain, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return null; } // safe, conservative "coercion failed" answer
+      if (domain === "Boolean") {
+        return (term.kind === "symbol" && (term.name === "True" || term.name === "False")) ? term : null;
+      }
+      if (domain === "Integer") { return term.kind === "integer" ? term : null; }
+      if (domain === "PositiveInteger") {
+        return (term.kind === "integer" && term.value > 0) ? term : null;
+      }
+      if (domain === "NonNegativeInteger") {
+        return (term.kind === "integer" && term.value >= 0) ? term : null;
+      }
+      if (domain === "Float") {
+        if (term.kind === "float") { return term; }
+        if (term.kind === "integer") { return floatTerm(term.value); }
+        if (term.kind === "rational") { return floatTerm(term.numer / term.denom); }
+        return null;
+      }
+      if (domain === "String") { return term.kind === "string" ? term : null; }
+      if (domain === "FractionInteger") {
+        return (term.kind === "rational" || term.kind === "integer") ? term : null;
+      }
+      if (domain === "PolynomialInteger") {
+        return axiomIsPolynomialOverIntegers(term, depth + 1) ? term : null;
+      }
+      if (typeof domain === "object" && domain.tag === "List") {
+        if (!(term.kind === "apply" && term.head.kind === "symbol" && term.head.name === "List")) {
+          return null;
+        }
+        const coercedArgs = [];
+        for (const elem of term.args) {
+          const c = axiomCoerceValue(elem, domain.inner, depth + 1);
+          if (c === null) { return null; }
+          coercedArgs.push(c);
+        }
+        return applyTerm(symTerm("List"), coercedArgs);
+      }
+      return null;
+    }
+
+    // `axiom-runtime::domains::AxiomDomain::display_name`'s port -- the
+    // book's own spelling (`Integer`, `Fraction(Integer)`, `List(Float)`,
+    // …), used only in error-message text (never the enum/string tag
+    // above, which is `"FractionInteger"`/`"PolynomialInteger"`).
+    function axiomDomainDisplayName(domain, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return "..."; } // matches toDisplayString's own truncation marker
+      if (typeof domain === "object" && domain.tag === "List") {
+        return "List(" + axiomDomainDisplayName(domain.inner, depth + 1) + ")";
+      }
+      if (domain === "FractionInteger") { return "Fraction(Integer)"; }
+      if (domain === "PolynomialInteger") { return "Polynomial(Integer)"; }
+      return domain;
+    }
+
+    // `__axiom_declare(List(name, ...), typeExpr)` -- `a : T` / `(a,b,c): T`
+    // (MA13 §3/§4). BOTH arguments are HELD (never `evalTerm`'d): the
+    // names are bare identifiers, not variable reads (evaluating them
+    // would resolve an ALREADY-bound name to its current VALUE instead of
+    // its NAME -- wrong for a declaration, which must restrict the name
+    // going forward regardless of whether it is already bound), and the
+    // type expression is domain/category-shaped data, never an ordinary
+    // variable reference (mirrors `axiom-runtime::eval_declaration`'s own
+    // identical treatment: it walks `type_expr` structurally via
+    // `parse_type_spec`, never through `eval_expr`). Records `name ->
+    // domain` in `axiomDeclaredDomains` for every declared name (consulted
+    // later by `assignHandler`'s own small addition, below) and returns
+    // the `True` symbol -- `axiom-runtime::eval_declaration`'s own
+    // disclosed presentation convention ("a pure declaration has no value
+    // of its own in real Axiom's own interactive session... echoes `true`
+    // to confirm the declaration was accepted").
+    function axiomDeclareHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const namesListTerm = args[0];
+      const typeExprTerm = args[1];
+      if (!(namesListTerm.kind === "apply" && namesListTerm.head.kind === "symbol"
+            && namesListTerm.head.name === "List")) {
+        throw new TypeError("Symbolic.evalTerm: __axiom_declare names must be a List, got " + namesListTerm.kind);
+      }
+      const names = [];
+      for (const n of namesListTerm.args) {
+        if (n.kind !== "symbol") {
+          throw new TypeError("Symbolic.evalTerm: __axiom_declare name list must contain only symbols");
+        }
+        names.push(n.name);
+      }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(typeExprTerm));
+      for (const name of names) { axiomDeclaredDomains.set(name, domain); }
+      return symTerm("True");
+    }
+
+    // `__axiom_coerce(value, typeExpr)` -- `e :: T` (MA13 §3/§4). `value`
+    // IS evaluated (real Axiom's own `(a + b) :: Float` coerces a COMPUTED
+    // value, MA13 §3), `typeExpr` is held (same reasoning as
+    // `axiomDeclareHandler` above). Throws the book's own confirmed
+    // coercion-failure phrasing, adapted for the standalone `::` case
+    // exactly as `axiom-runtime::eval_coercion` itself adapts it (that
+    // function's own comment: "adapted from the book's own confirmed
+    // assignment-mismatch phrase... for the standalone `::` case, which
+    // has no left-hand side of its own to name").
+    function axiomCoerceHandler(head, args, depth) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const value = evalTerm(args[0], depth + 1);
+      if (isDepthLimitError(value)) { return value; }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(args[1]));
+      const coerced = axiomCoerceValue(value, domain);
+      if (coerced === null) {
+        throw new Error(
+          "Cannot convert " + toDisplayString(value) + " to an object of the type "
+          + axiomDomainDisplayName(domain) + "."
+        );
+      }
+      return coerced;
+    }
+
+    // `__axiom_has(domainTypeExpr, categoryTypeExpr)` -- `D has C` (MA13
+    // §3/§4). BOTH arguments are held type expressions (neither is ever a
+    // variable read -- mirrors `axiom-runtime::eval_has_query`'s identical
+    // treatment). Returns the `True`/`False` symbol from the fixed lookup
+    // table, never a computed `Join`/conditional-export algebra.
+    function axiomHasHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const domain = axiomResolveDomain(axiomParseTypeSpec(args[0]));
+      const category = axiomResolveCategory(axiomParseTypeSpec(args[1]));
+      return symTerm(axiomDomainHasCategory(domain, category) ? "True" : "False");
+    }
+
+    // Per-head dispatch table (arg-evaluated heads only — arithmetic /
+    // comparison / logic / elementary-function / calculus; see
+    // `HELD_HANDLERS` below for the three `HELD_HEADS` members, whose
+    // handlers need the RAW, un-evaluated args instead). Every entry here
+    // is called with the ALREADY-evaluated `(head, args)` — `D`/
+    // `Integrate` (SIR23 addendum item 3) additionally receive `depth`,
+    // since they need `evalTerm` access to re-evaluate their
+    // differentiated/integrated result; every other entry here simply
+    // ignores that third argument. A `Map`, not a plain object literal:
+    // `name` is derived from a compiled program's
+    // OWN term data (any source identifier can end up as a SymApply
+    // head, e.g. a user writing a call literally named `__proto__`), and
+    // a plain object's `obj[name]` lookup walks the prototype chain —
+    // `Map.prototype.get` has no such hazard. Mirrors this same file's
+    // existing preference for `Map` over object literals for name-keyed
+    // lookups (see `bindingsEmpty` above).
+    const HANDLERS = new Map([
+      ["Add", addHandler],
+      ["Sub", subHandler],
+      ["Mul", mulHandler],
+      ["Div", divHandler],
+      ["Pow", powHandler],
+      ["Neg", negHandler],
+      ["Inv", invHandler],
+      ["Abs", absHandler],
+      ["Equal", comparisonHandler((a, b) => a === b, true, true)],
+      ["NotEqual", comparisonHandler((a, b) => a !== b, true, false)],
+      ["Less", comparisonHandler((a, b) => a < b, false, false)],
+      ["Greater", comparisonHandler((a, b) => a > b, false, false)],
+      ["LessEqual", comparisonHandler((a, b) => a <= b, false, false)],
+      ["GreaterEqual", comparisonHandler((a, b) => a >= b, false, false)],
+      ["And", andHandler],
+      ["Or", orHandler],
+      ["Not", notHandler],
+      ["Sin", sinHandler],
+      ["Cos", cosHandler],
+      ["Sqrt", sqrtHandler],
+      ["D", derivativeHandler],
+      ["Integrate", integrateHandler],
+    ]);
+
+    // ── held-form handlers (Assign / Define / If) — SIR23 addendum item 2
+    //
+    // Direct ports of `handlers.rs::assign_handler`/`define_handler`/
+    // `if_handler` (search that file for "Assign / Define -- binding
+    // forms" and "If handler -- held head"). Unlike the arg-evaluated
+    // `HANDLERS` above, each of these receives the ORIGINAL, unevaluated
+    // `args` (per `HELD_HEADS`) plus `depth`, since each decides FOR
+    // ITSELF what (if anything) to evaluate and how — exactly why
+    // `handlers.rs`'s own `Handler` type is `Fn(&mut VM, IRApply) ->
+    // IRNode`, giving every handler potential access to `vm.eval`; only
+    // the held ones actually use it.
+
+    // `assign_handler`'s port: `x := rhs` evaluates the RHS, binds
+    // `name -> value` in `symEnv`, returns `value`. Wrong arity (not
+    // exactly 2 args) leaves the call unevaluated, mirroring
+    // `binary_args`'s `None` early-return; a non-Symbol lhs panics in the
+    // Rust reference (`panic!("Assign lhs must be a symbol, ...")`),
+    // ported here as a thrown `TypeError` — matching this file's own
+    // existing convention of throwing on a domain error no oracle case
+    // can even construct (e.g. `divHandler`'s "division by zero" above).
+    //
+    // Axiom's own `:`-declared domain check (MA13 §3/§4) -- a small,
+    // disclosed addition to this otherwise fully shared handler, gated
+    // entirely on `axiomDeclaredDomains` (populated ONLY by
+    // `axiomDeclareHandler`, above). For every OTHER source language, and
+    // for any Axiom program with no prior `a : T` declaration for this
+    // name, that map has no entry for `lhs.name`, so the branch below is a
+    // single, cheap `Map.prototype.get` miss and `assignHandler` behaves
+    // EXACTLY as it did before this addition -- confirmed no other
+    // frontend in this repo ever calls `axiomDeclareHandler` (only
+    // `axiom-to-semantic-ir` emits `__axiom_declare`). This mirrors
+    // `axiom-runtime::eval_assignment`'s own identical design: that
+    // function ALSO consults a private `declared: HashMap<String,
+    // AxiomDomain>` table when handling what is otherwise the shared
+    // `:=` construct, and produces the exact same error text on failure
+    // (the book's own confirmed error shape, quoted verbatim in both
+    // places) -- a faithful port of that cross-construct behaviour, not a
+    // new mechanism invented for the compiled path.
+    function assignHandler(head, args, depth) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [lhs, rhs] = args;
+      if (lhs.kind !== "symbol") {
+        throw new TypeError("Symbolic.evalTerm: Assign lhs must be a symbol, got " + lhs.kind);
+      }
+      const value = evalTerm(rhs, depth + 1);
+      if (isDepthLimitError(value)) { return value; }
+      const declaredDomain = axiomDeclaredDomains.get(lhs.name);
+      if (declaredDomain !== undefined) {
+        const coerced = axiomCoerceValue(value, declaredDomain);
+        if (coerced === null) {
+          throw new Error(
+            "Cannot convert right-hand side of assignment " + toDisplayString(value)
+            + " to an object of the type " + axiomDomainDisplayName(declaredDomain) + " of the left-hand side."
+          );
+        }
+        symEnv.set(lhs.name, coerced);
+        return coerced;
+      }
+      symEnv.set(lhs.name, value);
+      return value;
+    }
+
+    // `define_handler`'s port: `F(params) := body` stores the WHOLE
+    // `Define(name, List(params...), body)` record under `name` (so the
+    // user-function dispatch step in `evalApply` below can find it), and
+    // returns the bare `Symbol(name)` — NOT the stored record — which is
+    // why a correctly-evaluated `F(x) := x*x` displays as `"F"`, never as
+    // `"Define(...)"` (`handlers.rs::define_handler`'s own comment).
+    // Wrong arity (not exactly 3 args) leaves the call unevaluated; a
+    // non-Symbol name panics in the Rust reference, ported as a thrown
+    // `TypeError` (same convention as `assignHandler` above).
+    function defineHandler(head, args) {
+      if (args.length !== 3) { return applyTerm(head, args); }
+      const nameTerm = args[0];
+      if (nameTerm.kind !== "symbol") {
+        throw new TypeError("Symbolic.evalTerm: Define name must be a symbol, got " + nameTerm.kind);
+      }
+      symEnv.set(nameTerm.name, applyTerm(head, args));
+      return symTerm(nameTerm.name);
+    }
+
+    // `if_handler`'s port: evaluate the condition; branch on the
+    // resulting `True`/`False` SYMBOL (2- or 3-arg form, matching
+    // `symbolic-vm`'s own arity check — `args.length < 2 || > 3` panics
+    // in the Rust reference, ported as a thrown `RangeError`, same
+    // convention as above). If the condition doesn't resolve to a
+    // boolean symbol, rebuild the unevaluated `If(...)` term with the
+    // condition's own (partially-)evaluated form spliced in — matches
+    // `if_handler`'s own "predicate didn't reduce -- rebuild the
+    // expression" branch exactly, free-variable-safe.
+    function ifHandler(head, args, depth) {
+      if (args.length < 2 || args.length > 3) {
+        throw new RangeError("Symbolic.evalTerm: If expects 2 or 3 arguments, got " + args.length);
+      }
+      const predicate = evalTerm(args[0], depth + 1);
+      if (isDepthLimitError(predicate)) { return predicate; }
+      const t = isTruthy(predicate);
+      if (t === true) { return evalTerm(args[1], depth + 1); }
+      if (t === false) {
+        return args.length === 3 ? evalTerm(args[2], depth + 1) : symTerm("False");
+      }
+      return applyTerm(head, [predicate].concat(args.slice(1)));
+    }
+
+    const HELD_HANDLERS = new Map([
+      ["Assign", assignHandler],
+      ["Define", defineHandler],
+      ["If", ifHandler],
+      ["__axiom_declare", axiomDeclareHandler],
+      ["__axiom_coerce", axiomCoerceHandler],
+      ["__axiom_has", axiomHasHandler],
+    ]);
+
+    // `is_define_record`'s port: true iff `node` is a stored
+    // `Apply(Symbol("Define"), ...)` binding.
+    function isDefineRecord(node) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === "Define";
+    }
+
+    // `apply_user_function`'s port, exactly: `definition` is the stored
+    // `Define(name, List(params...), body)` record; `args` are the
+    // ALREADY-evaluated (applicative-order) call arguments. Zips
+    // `params` against `args` BY POSITION; a non-`Symbol` param entry is
+    // silently DROPPED from the zip (mirrors the Rust reference's own
+    // `filter_map` over `params_ir`'s elements exactly — a deliberate
+    // port of that quirk, not an improvement on it, per this task's own
+    // "don't improvise different behavior" constraint). Arity mismatch
+    // (post-drop param count != arg count) or a malformed record (not
+    // exactly 3 fields, or a middle field that isn't a `List(...)`)
+    // returns `null` — "leave the call unevaluated", mirroring the Rust
+    // reference's `Option<IRNode>` `None` exactly.
+    function applyUserFunction(definition, args) {
+      if (definition.args.length !== 3) { return null; }
+      const paramsTerm = definition.args[1];
+      const body = definition.args[2];
+      if (!(paramsTerm.kind === "apply" && paramsTerm.head.kind === "symbol" && paramsTerm.head.name === "List")) {
+        return null;
+      }
+      const paramNames = [];
+      for (const p of paramsTerm.args) {
+        if (p.kind === "symbol") { paramNames.push(p.name); }
+        // else: silently dropped, matching `apply_user_function`'s own
+        // `filter_map` over non-Symbol param entries.
+      }
+      if (paramNames.length !== args.length) { return null; } // arity mismatch
+      const bindings = new Map();
+      for (let i = 0; i < paramNames.length; i++) {
+        bindings.set(paramNames[i], args[i]);
+      }
+      return substituteSymbols(body, bindings);
+    }
+
+    // `Apply(head, args)`: evaluate `head` first (mirrors `eval_apply`'s
+    // own treatment of the head), then either dispatch a HELD form
+    // (`Assign`/`Define`/`If` — args passed RAW, see `HELD_HANDLERS`
+    // above) or evaluate every arg in applicative order and dispatch on
+    // the evaluated head's name against `HANDLERS`. If no core handler
+    // matches, check whether the evaluated head is a `Symbol` bound in
+    // `symEnv` to a stored `Define` record (user-function dispatch,
+    // `vm.rs::eval_apply` step 4); if so, substitute and re-`evalTerm`
+    // the result. Otherwise — every held head with no handler (can't
+    // happen post item 2, since all three now have one; kept as a
+    // defensive fallback exactly mirroring `on_unknown_head`'s
+    // pass-through policy), any other unknown/future head, plus `List`
+    // forever — rebuild the term from the evaluated head and the args
+    // just computed, the single "arg-evaluated, pass-through" policy that
+    // makes `List(Add(1,1), Mul(2,3))` fold its elements "for free".
+    function evalApply(term, depth) {
+      const evaluatedHead = evalTerm(term.head, depth + 1);
+      if (isDepthLimitError(evaluatedHead)) { return evaluatedHead; }
+      const name = headName(evaluatedHead);
+
+      if (HELD_HEADS.has(name)) {
+        const heldHandler = HELD_HANDLERS.get(name);
+        return heldHandler !== undefined
+          ? heldHandler(evaluatedHead, term.args, depth) // RAW args -- held
+          : applyTerm(evaluatedHead, term.args);
+      }
+
+      const args = [];
+      for (const a of term.args) {
+        const evaluated = evalTerm(a, depth + 1);
+        if (isDepthLimitError(evaluated)) { return evaluated; }
+        args.push(evaluated);
+      }
+
+      // `depth` is passed to every `HANDLERS` entry, not just the
+      // `HELD_HANDLERS` ones — most (arithmetic/comparison/logic/
+      // elementary-function) handlers ignore this third argument
+      // entirely, but `D`/`Integrate` (SIR23 addendum item 3) need it to
+      // re-`evalTerm` their differentiated/integrated result through the
+      // same depth-checked path everything else in this dispatcher uses.
+      const handler = HANDLERS.get(name);
+      if (handler !== undefined) { return handler(evaluatedHead, args, depth); }
+
+      if (evaluatedHead.kind === "symbol") {
+        const bound = symEnv.get(evaluatedHead.name);
+        if (bound !== undefined && isDefineRecord(bound)) {
+          const substituted = applyUserFunction(bound, args);
+          if (substituted !== null) { return evalTerm(substituted, depth + 1); }
+        }
+      }
+
+      return applyTerm(evaluatedHead, args);
+    }
+
+    // `Symbolic.evalTerm(term, depth)` — the public entry point emitted
+    // once per top-level statement by `emit.rs`'s `Stmt::ExprStmt` arm
+    // (never once per nested `SymApply` — this function recurses into
+    // `head`/args itself, see `evalApply` above). `depth` defaults to 0
+    // at the top call, exactly like `walkOnce`/`replaceRepeatedTerm`'s
+    // own `depth` parameter above, and this function returns the SAME
+    // `{kind: "depth-limit", maxDepth}` sentinel shape those two already
+    // use (checked by the same, unmodified `isDepthLimitError`/
+    // `Symbolic.unwrap`) when `MAX_EVAL_DEPTH` is exceeded.
+    //
+    // A `Symbol` leaf (SIR23 addendum item 2): look it up in `symEnv`.
+    // Unbound -> pass through unchanged, mirroring
+    // `SymbolicBackend::on_unresolved`'s pass-through policy (the only
+    // policy any of these 5 frontends use — `StrictBackend`'s
+    // panic-on-unknown policy is not used by any of them). Bound -> a
+    // self-loop guard (`x := x` would recurse forever without it,
+    // `eval_symbol`'s own comment) via `termEquals` — reusing this
+    // file's existing structural-equality check (a freshly rebuilt term
+    // with the same shape must still count as "the same value" here,
+    // exactly like every other `termEquals` call site in this IIFE) —
+    // then recursively `evalTerm`s the binding.
+    //
+    // An `integer`/`rational`/`float`/`string` leaf is already its own
+    // fully-reduced value and is returned unchanged (unaffected by item
+    // 2 — only `Symbol` gained an environment lookup).
+    function evalSymbol(term, depth) {
+      const bound = symEnv.get(term.name);
+      if (bound === undefined) { return term; }
+      if (termEquals(bound, term)) { return term; }
+      return evalTerm(bound, depth + 1);
+    }
+
+    function evalTerm(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_EVAL_DEPTH) {
+        return { kind: "depth-limit", maxDepth: MAX_EVAL_DEPTH };
+      }
+      if (term.kind === "apply") { return evalApply(term, depth); }
+      if (term.kind === "symbol") { return evalSymbol(term, depth); }
+      return term;
+    }
+
+    return {
+      sym: symTerm, int: intTerm, rational: rationalTerm,
+      numberNode: floatTerm, stringNode: stringTerm, apply: applyTerm,
+      blank: blankTerm, blankTyped: blankTypedTerm, named: namedTerm,
+      rule: ruleTerm, ruleDelayed: ruleDelayedTerm,
+      matchPattern, applyRule: applyRuleTerm, substitute: substituteTerm,
+      replaceAll: replaceAllTerm, replaceRepeated: replaceRepeatedTerm,
+      unwrap: unwrapTerm, toDisplayString, equals: termEquals,
+      evalTerm,
+    };
+  })();
+
+  // ── array/matrix domain (SIR22) ────────────────────────────────
+  //
+  // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+  // (and `IndexSet`, a `Stmt`) lower to calls into `Array.*` below — a
+  // plain-JS port of the published `@coding-adventures/sir-runtime-array`
+  // TypeScript package this backend's TypeScript sibling *imports*, so
+  // the JavaScript artifact stays self-contained — the same treatment
+  // `Symbolic` above already got for SIR23.
+  //
+  // ## Value model
+  //
+  // `{ shape: number[], data: Float64Array }` — dense, rectangular,
+  // COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+  // `array_runtime::value::Array` (`code/packages/rust/array-runtime/src/value.rs`)
+  // field-for-field. `shape == []` is a scalar, `[n]` a vector (an `n×1`
+  // column for row/column purposes), `[r, c]` a matrix — this port's
+  // whole scope, like the Rust reference and the TypeScript sibling, is
+  // rank ≤ 2.
+  //
+  // ## The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+  // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`)
+  //
+  // These nine were deferred when the base cut above first landed (no
+  // frontend crate emitted them yet) but `apl-to-semantic-ir` now does —
+  // APL's `/` (reduce), `\` (scan), `∘.` (outer product), `⍴`, `⍳`, and `,`
+  // are first-class glyphs, not library calls, so real APL source reaches
+  // every one of these nodes. They are ported here (below, after the base
+  // cut's own helpers) from TWO Rust references, exactly as the SIR22
+  // spec's addendum section describes: `array_runtime::ops::{reduce,scan,
+  // outer}` (the three that take an `ElementwiseOpKind` and so reuse
+  // `applyOp` above, unchanged) and `apl_runtime::builtins::{shape,reshape,
+  // index_generator,index_of,ravel,catenate}` (the "bespoke, not
+  // BinOp-shaped" ones — see that Rust file's own module doc comment for
+  // why). The TypeScript sibling (`sir-runtime-array`) still does not
+  // implement these — that package gaining them is separate, unstarted
+  // follow-on work (SIR22 spec, "Backend impact"), not a precondition for
+  // this inlined port.
+  const ArrayRt = (() => {
+    // SECURITY: every factory below validates a shape/output size
+    // *before* allocating a `Float64Array` from it — a compiled
+    // program's array sizes come from potentially attacker-influenced
+    // runtime values (loop counts, parsed input, ...), not fixed
+    // compile-time constants, so an unbounded or malformed shape must
+    // fail cleanly with a catchable `Error` rather than let
+    // `new Float64Array(n)` itself throw an uncaught `RangeError` or
+    // stall attempting a huge allocation. Mirrors `matlab-runtime`'s own
+    // `MAX_RANGE` bound and the TypeScript sibling's `MAX_ELEMENTS`
+    // exactly, so behaviour is identical across both backends.
+    const MAX_ELEMENTS = 1 << 26; // 67,108,864
+
+    function checkedShapeSize(shape) {
+      if (!shape.every((d) => Number.isInteger(d) && d >= 0)) {
+        throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} has a negative or non-integer dimension`);
+      }
+      const n = shape.reduce((acc, d) => acc * d, 1);
+      if (!Number.isFinite(n) || n > MAX_ELEMENTS) {
+        throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} (${n} elements) exceeds the ${MAX_ELEMENTS}-element cap`);
+      }
+      return n;
+    }
+
+    function ndarray(shape, data) {
+      if (!(data instanceof Float64Array)) {
+        throw new Error("ndarray: data must be a Float64Array");
+      }
+      const n = checkedShapeSize(shape);
+      if (n !== data.length) {
+        throw new Error(`ndarray: shape ${JSON.stringify(shape)} implies ${n} elements, got ${data.length}`);
+      }
+      return { shape, data };
+    }
+
+    function fromRows(rows) {
+      const nrowsIn = rows.length;
+      if (nrowsIn === 0) {
+        return ndarray([0, 0], new Float64Array(0));
+      }
+      const ncolsIn = rows[0].length;
+      if (rows.some((r) => r.length !== ncolsIn)) {
+        throw new Error("fromRows: ragged rows");
+      }
+      const n = checkedShapeSize([nrowsIn, ncolsIn]);
+      const data = new Float64Array(n);
+      for (let r = 0; r < nrowsIn; r++) {
+        for (let c = 0; c < ncolsIn; c++) {
+          data[c * nrowsIn + r] = rows[r][c]; // column-major store
+        }
+      }
+      return ndarray([nrowsIn, ncolsIn], data);
+    }
+
+    /**
+     * Coerce a bare JS `number` into a rank-0 (scalar) `NDArray`; an
+     * already-`NDArray` value passes through unchanged. Needed because
+     * `matlab-to-semantic-ir`'s lowerer emits a mixed operand pair for
+     * `.* ./ .\` and for `* /` when exactly one side is scalar (e.g.
+     * `A .* 2`) — the *bare* scalar sub-expression is passed through
+     * `ElementwiseOp` unwrapped (a plain `IntLit`/`FloatLit`/arithmetic
+     * result, which emits as an ordinary JS `number`), not wrapped in an
+     * `ArrayLit`/scalar-array constructor first. Every function below
+     * that accepts an "array" operand normalizes through this first, so
+     * a raw number never reaches `.data`/`.shape` and throws a
+     * `TypeError` instead of behaving correctly.
+     */
+    function toArrayValue(v) {
+      // Boundary unwrap: a boxed Float scalar entering the tensor domain
+      // becomes a native f64 in the `Float64Array` (tensor internals are
+      // untagged native numbers — the tagged-float box lives outside SIR22).
+      return isNum(v) ? { shape: [], data: Float64Array.of(numOf(v)) } : v;
+    }
+
+    function isScalar(a) { return a.data.length === 1; }
+
+    /** Rows, treating a scalar as `1×1` and a vector `[n]` as `n×1`. */
+    function nrows(a) {
+      switch (a.shape.length) {
+        case 0: return 1;
+        default: return a.shape[0];
+      }
+    }
+
+    /** Columns, treating a scalar as `1×1` and a vector `[n]` as `n×1`. */
+    function ncols(a) {
+      switch (a.shape.length) {
+        case 0:
+        case 1: return 1;
+        default: return a.shape[1];
+      }
+    }
+
+    /** Element `(r, c)` (column-major), or `undefined` if out of bounds. */
+    function get(a, r, c) {
+      if (r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a)) {
+        return a.data[c * nrows(a) + r];
+      }
+      return undefined;
+    }
+
+    /**
+     * Set element `(r, c)` in place (column-major) — mutates `a.data`
+     * directly, matching MATLAB assignment semantics (`A(i,j) = v`
+     * rebinds one element of the existing array, it does not produce a
+     * new one). This is why `Stmt::IndexSet` is a statement, not a pure
+     * expression, in the SIR22 spec.
+     */
+    function set(a, r, c, value) {
+      // SECURITY: written as the negation of `get`'s AND-form
+      // (`!(r >= 0 && ...)`), not as an OR-form (`r < 0 || ...`) --
+      // under IEEE-754 those are NOT equivalent for NaN: every
+      // relational comparison with NaN is false, so an OR-form check
+      // would have every branch evaluate false for r=NaN, silently
+      // skipping the throw. `a.data[c * nrows(a) + NaN] = value` would
+      // then set a stray, non-index property on the Float64Array rather
+      // than writing the buffer -- the exact same silent-write-drop bug
+      // this file's `resolvePositions`/`assertValidPosition` fix closed
+      // for `indexSet`'s call path into this function. `set` itself is
+      // not reachable with an unvalidated NaN today (every caller
+      // resolves positions through `assertValidPosition` first), but it
+      // is part of this module's exported public surface, so it stays
+      // NaN-safe on its own rather than relying on every future caller
+      // to re-derive that invariant.
+      if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {
+        throw new Error(`set: index (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
+      }
+      a.data[c * nrows(a) + r] = value;
+    }
+
+    // ── elementwise binary ops ────────────────────────────────────
+    // Comparisons follow the same APL-style boolean convention
+    // `array_runtime::BinOp` uses: `1` for true, `0` for false (never a
+    // native `boolean`), since the result must stay a plain array
+    // element like every other value here.
+    function applyOp(op, a, b) {
+      const b2f = (cond) => (cond ? 1 : 0);
+      switch (op) {
+        case "Add": return a + b;
+        case "Sub": return a - b;
+        case "Mul": return a * b;
+        case "Div": return a / b;
+        case "Pow": return Math.pow(a, b);
+        case "Max": return Math.max(a, b);
+        case "Min": return Math.min(a, b);
+        case "Eq": return b2f(a === b);
+        case "Ne": return b2f(a !== b);
+        case "Lt": return b2f(a < b);
+        case "Le": return b2f(a <= b);
+        case "Ge": return b2f(a >= b);
+        case "Gt": return b2f(a > b);
+        default:
+          // Same "crosses a JS runtime boundary the emitter can't
+          // enforce" reasoning `resolvePositions` below documents: an
+          // unrecognised `op` must fail loudly here, not fall through
+          // to `undefined`, which would otherwise silently corrupt data
+          // as `NaN` instead of erroring.
+          throw new Error(`applyOp: unrecognised ElementwiseOpKind ${JSON.stringify(op)}`);
+      }
+    }
+
+    function sameShape(a, b) {
+      return a.length === b.length && a.every((d, i) => d === b[i]);
+    }
+
+    /**
+     * Elementwise binary op with scalar broadcasting. Either operand may
+     * be a scalar; otherwise the shapes must match exactly (full
+     * NumPy/MATLAB broadcasting is out of scope, same as the Rust
+     * reference). Result takes the non-scalar operand's shape (or the
+     * scalar's, if both are).
+     */
+    function elementwise(op, a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const ad = a.data;
+      const bd = b.data;
+      let data;
+      if (isScalar(a)) {
+        data = Float64Array.from(bd, (y) => applyOp(op, ad[0], y));
+      } else if (isScalar(b)) {
+        data = Float64Array.from(ad, (x) => applyOp(op, x, bd[0]));
+      } else {
+        if (!sameShape(a.shape, b.shape)) {
+          throw new Error(`elementwise: non-conformable arrays: ${JSON.stringify(a.shape)} vs ${JSON.stringify(b.shape)}`);
+        }
+        data = new Float64Array(ad.length);
+        for (let i = 0; i < data.length; i++) {
+          data[i] = applyOp(op, ad[i], bd[i]);
+        }
+      }
+      const shape = isScalar(a) ? b.shape : a.shape;
+      return ndarray(shape, data);
+    }
+
+    /**
+     * Matrix product `[m, k] · [k, n] → [m, n]` (column-major
+     * throughout). `m` and `n` come from two *independent* operands
+     * (each individually under `MAX_ELEMENTS`, but their product isn't
+     * bounded by that alone — an outer-product-shaped call could still
+     * ask for a huge output), so `checkedShapeSize` validates `[m, n]`
+     * *before* allocating `out`, not after.
+     *
+     * Like `elementwise`, normalizes both operands through
+     * `toArrayValue` first: every frontend's scalar/array
+     * disambiguation heuristic (`expr_is_known_scalar` or equivalent)
+     * runs at lowering time and can't see through a plain variable
+     * reference, so a provably-scalar `x * y` between two non-literal
+     * operands can still lower to `Expr::MatMul` and reach here as a
+     * bare boxed number on one or both sides. Reading `.shape` off an
+     * un-normalized number before this fix threw
+     * `TypeError: Cannot read properties of undefined (reading
+     * 'length')` out of `nrows`/`ncols`.
+     */
+    function matmul(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const m = nrows(a);
+      const ka = ncols(a);
+      const kb = nrows(b);
+      const n = ncols(b);
+      if (ka !== kb) {
+        throw new Error(`matmul: inner dimensions disagree (${m}x${ka} . ${kb}x${n})`);
+      }
+      const outLen = checkedShapeSize([m, n]);
+      const ad = a.data;
+      const bd = b.data;
+      const out = new Float64Array(outLen);
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < m; i++) {
+          let acc = 0;
+          for (let p = 0; p < ka; p++) {
+            acc += ad[p * m + i] * bd[j * kb + p]; // column-major indexing
+          }
+          out[j * m + i] = acc;
+        }
+      }
+      return ndarray([m, n], out);
+    }
+
+    /**
+     * Matrix transpose. `conjugate` distinguishes MATLAB `'` (`true`)
+     * from `.'` (`false`) — this runtime has no `Complex` value type yet
+     * (matching `array-runtime`'s own real-only scope today), so a
+     * conjugate transpose of real data is identical to a plain
+     * transpose; `conjugate` is accepted for call-shape parity with the
+     * SIR spec only.
+     */
+    function transpose(a, conjugate) {
+      void conjugate;
+      const m = nrows(a);
+      const n = ncols(a);
+      const ad = a.data;
+      const out = new Float64Array(ad.length);
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < m; i++) {
+          out[i * n + j] = ad[j * m + i];
+        }
+      }
+      return ndarray([n, m], out);
+    }
+
+    // ── range ───────────────────────────────────────────────────────
+    // Tolerance for the inclusive-stop boundary check, matching
+    // `matlab-runtime`'s own `eval_colon` exactly — a floating step
+    // (e.g. `1:0.1:2`) can drift a few ULPs short of `stop` by the final
+    // iteration, and MATLAB's `a:step:b` is inclusive of `b`.
+    const RANGE_EPSILON = 1e-9;
+
+    /**
+     * Materialize a MATLAB-style range `start:step:stop` (default
+     * `step = 1`) as a `1×n` row vector — MATLAB's `:` always produces
+     * a row, never a column. Bounded by `MAX_ELEMENTS` so a compiled
+     * program's `1:1e18`-style range can't exhaust memory before this
+     * function ever gets to materialize anything.
+     */
+    function range(start, stop, step = 1) {
+      if (step === 0) {
+        throw new Error("range: step cannot be zero");
+      }
+      // SECURITY: the loop condition below is false on its very first
+      // check whenever start/stop/step is NaN (every relational
+      // comparison with NaN is false), so an unguarded NaN bound would
+      // silently produce an empty range instead of erroring -- the same
+      // "NaN defeats a comparison-based check" class the linear
+      // indexGet/indexSet fix below closes. Reject non-finite bounds
+      // up front instead of letting them fall through to a
+      // quietly-wrong empty result.
+      if (!Number.isFinite(start) || !Number.isFinite(stop) || !Number.isFinite(step)) {
+        throw new Error(`range: start/stop/step must be finite numbers, got (${start}, ${stop}, ${step})`);
+      }
+      const values = [];
+      let x = start;
+      while ((step > 0 && x <= stop + RANGE_EPSILON) || (step < 0 && x >= stop - RANGE_EPSILON)) {
+        if (values.length >= MAX_ELEMENTS) {
+          throw new Error(`range: produces more than ${MAX_ELEMENTS} elements`);
+        }
+        values.push(x);
+        x += step;
+      }
+      return ndarray(
+        values.length === 0 ? [1, 0] : [1, values.length],
+        Float64Array.from(values),
+      );
+    }
+
+    // ── indexing ────────────────────────────────────────────────────
+    // One MATLAB-style index-position argument, mirroring the SIR22
+    // spec's `IndexArg` exactly: `{kind:"scalar",value}` /
+    // `{kind:"whole"}` / `{kind:"range",indices: <NDArray>}`. `end`-
+    // relative indices are never seen here — per SIR10 discipline, the
+    // frontend resolves `end` to a concrete 0-based `scalar` index
+    // before emitting `IndexGet`/`IndexSet`.
+
+    /**
+     * Validate one resolved position is a real, finite integer.
+     *
+     * SECURITY: `indexGet`/`indexSet`'s own linear (1-argument) bounds
+     * checks are written as `i < 0 || i >= length` — the negation of
+     * `get`'s `r >= 0 && r < nrows(a)` AND-form. Under IEEE-754, `NaN`
+     * fails *every* relational comparison, so for `i = NaN` **both**
+     * halves of that OR are `false`, and the "out of bounds" check is
+     * silently skipped entirely — `a.data[NaN]` then reads/writes a
+     * stray, non-index `"NaN"` property on the `Float64Array` object
+     * rather than the buffer, so a NaN index makes `indexGet` silently
+     * return `undefined` (not throw) and makes `indexSet` silently drop
+     * the write (not throw, not mutate). This is the exact "malformed
+     * input crosses a JS boundary and must fail loudly, not fall
+     * through to `undefined`/corrupt data" hazard this file's other
+     * `default:` guards (`applyOp`, this function's own `default` arm)
+     * already guard against — validating here, once, at the single
+     * choke point both `indexGet` and `indexSet` resolve every position
+     * through, closes it for both without duplicating a NaN-safe bounds
+     * check at every call site.
+     */
+    function assertValidPosition(i) {
+      if (!Number.isInteger(i)) {
+        throw new Error(`resolvePositions: index ${i} is not a finite integer`);
+      }
+      return i;
+    }
+
+    /** Resolve one `IndexArg` against a dimension of size `dimSize` into a flat list of 0-based positions along that dimension. */
+    function resolvePositions(arg, dimSize) {
+      switch (arg.kind) {
+        case "scalar": return [assertValidPosition(arg.value)];
+        case "whole": return Array.from({ length: dimSize }, (_, i) => i);
+        case "range": return Array.from(arg.indices.data, (x) => assertValidPosition(Math.trunc(x)));
+        default:
+          // Emitted code crosses a JS runtime boundary the emitter can't
+          // enforce at the actual call site — a malformed `kind` must
+          // fail cleanly here, not fall through to `undefined` and
+          // surface as a confusing `TypeError` several calls further down.
+          throw new Error(`resolvePositions: unrecognised IndexArg ${JSON.stringify(arg)}`);
+      }
+    }
+
+    /**
+     * `A(i)` / `A(i, j)` — read one element or a sub-array. Scoped to 1
+     * or 2 index arguments (rank ≤ 2): a single argument indexes `a`'s
+     * underlying column-major data linearly (MATLAB's own single-
+     * subscript convention, which is column-major too); two arguments
+     * index `(row, col)`. Returns a bare `number` when every argument is
+     * `scalar` (a single element), otherwise an `NDArray`.
+     */
+    function indexGet(a, indices) {
+      if (indices.length === 1) {
+        const [arg] = indices;
+        const positions = resolvePositions(arg, a.data.length);
+        const read = (i) => {
+          if (i < 0 || i >= a.data.length) {
+            throw new Error(`indexGet: linear index ${i} out of bounds`);
+          }
+          return a.data[i];
+        };
+        if (arg.kind === "scalar") {
+          return read(positions[0]);
+        }
+        return ndarray([1, positions.length], Float64Array.from(positions, read));
+      }
+      if (indices.length === 2) {
+        const [rowArg, colArg] = indices;
+        const rows = resolvePositions(rowArg, nrows(a));
+        const cols = resolvePositions(colArg, ncols(a));
+        const read = (r, c) => {
+          const v = get(a, r, c);
+          if (v === undefined) {
+            throw new Error(`indexGet: (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
+          }
+          return v;
+        };
+        if (rowArg.kind === "scalar" && colArg.kind === "scalar") {
+          return read(rows[0], cols[0]);
+        }
+        // `rows.length`/`cols.length` are each individually bounded by
+        // `a`'s own dimensions (`whole`) or by a `range` NDArray's own
+        // `MAX_ELEMENTS` cap — but nothing bounds their *product* on its
+        // own, so this is the exact outer-product-shaped allocation
+        // `matmul` guards against, one level up. Validate before
+        // allocating, not after.
+        const outLen = checkedShapeSize([rows.length, cols.length]);
+        const data = new Float64Array(outLen);
+        for (let c = 0; c < cols.length; c++) {
+          for (let r = 0; r < rows.length; r++) {
+            data[c * rows.length + r] = read(rows[r], cols[c]);
+          }
+        }
+        return ndarray([rows.length, cols.length], data);
+      }
+      throw new Error(`indexGet: only 1 or 2 index arguments are supported (rank <= 2 scope), got ${indices.length}`);
+    }
+
+    /** Broadcast a scalar-or-`NDArray` right-hand side to exactly `count` values (mirrors `elementwise`'s scalar-broadcast rule). */
+    function broadcastValues(value, count) {
+      if (isNum(value)) {
+        return new Float64Array(count).fill(numOf(value));
+      }
+      if (value.data.length === 1) {
+        return new Float64Array(count).fill(value.data[0]);
+      }
+      if (value.data.length !== count) {
+        throw new Error(`indexSet: value has ${value.data.length} elements, expected ${count}`);
+      }
+      return value.data;
+    }
+
+    /**
+     * `A(i) = v` / `A(i, j) = v` — write one element or a sub-array, IN
+     * PLACE (see `set`'s doc comment above for why this mutates rather
+     * than returns a new array). `value` may be a scalar (broadcast to
+     * every selected position) or an `NDArray` with exactly as many
+     * elements as positions are selected.
+     */
+    function indexSet(a, indices, value) {
+      if (indices.length === 1) {
+        const [arg] = indices;
+        const positions = resolvePositions(arg, a.data.length);
+        const values = broadcastValues(value, positions.length);
+        positions.forEach((i, k) => {
+          if (i < 0 || i >= a.data.length) {
+            throw new Error(`indexSet: linear index ${i} out of bounds`);
+          }
+          a.data[i] = values[k];
+        });
+        return;
+      }
+      if (indices.length === 2) {
+        const [rowArg, colArg] = indices;
+        const rows = resolvePositions(rowArg, nrows(a));
+        const cols = resolvePositions(colArg, ncols(a));
+        // Same product-of-two-independent-selections gap `indexGet`
+        // closes above — validate before `broadcastValues` allocates.
+        const count = checkedShapeSize([rows.length, cols.length]);
+        const values = broadcastValues(value, count);
+        let k = 0;
+        for (let c = 0; c < cols.length; c++) {
+          for (let r = 0; r < rows.length; r++) {
+            set(a, rows[r], cols[c], values[k]);
+            k++;
+          }
+        }
+        return;
+      }
+      throw new Error(`indexSet: only 1 or 2 index arguments are supported (rank <= 2 scope), got ${indices.length}`);
+    }
+
+    // ── SIR22 addendum: APL primitive operators ────────────────────
+    // `Reduce`/`Scan`/`OuterProduct` reuse `applyOp` above (the same
+    // dispatch table `elementwise` uses) — see this section's own module
+    // doc comment for the two Rust references every function below ports
+    // 1:1. `MAX_ELEMENTS` (defined above) is reused as-is for every new
+    // bounded-allocation check here — this file has exactly one array-size
+    // cap, not one per domain, so `⍳`/dyadic `⍴`/`⍳` (index-of)/`,`
+    // (catenate) share it with `matmul`/`range`/`indexGet` rather than
+    // reintroducing `apl_runtime::builtins::MAX_ARRAY_LENGTH`'s smaller
+    // 1,000,000 figure as a second, competing constant.
+
+    /**
+     * `+/A` (APL reduce, dyadic-op monadic-adverb) — fold `target` with
+     * `op` along its one axis. Ported 1:1 from `array_runtime::ops::
+     * reduce`:
+     * - rank 0 (scalar): nothing to fold, returns `target` itself.
+     * - rank 1 (vector `[n]`): left-fold across all `n` elements
+     *   (`op(op(op(v0, v1), v2), …)`); an EMPTY vector is a clean error —
+     *   unlike `sum`/`mean` (which have a built-in identity, 0), `reduce`
+     *   is generic over any `op`, and guessing an identity (is it `0` for
+     *   `Add`, `1` for `Mul`, `-Infinity` for `Max`?) for an arbitrary,
+     *   possibly-future op would be silently wrong for most of them.
+     * - rank 2 (matrix `[r, c]`): folds EACH ROW independently across its
+     *   `c` columns, producing a `[r]` vector (one folded value per row).
+     *   Column-major storage means element `(row, col)` lives at
+     *   `col * r + row` — the row loop reads `d[row]` as the seed (column
+     *   0) then walks `d[col * r + row]` for `col = 1..c`; getting `row`
+     *   and `col` swapped here silently transposes the result instead of
+     *   throwing, so this indexing is the single easiest place to
+     *   introduce a wrong-answer bug when reading this function.
+     */
+    function reduce(op, a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        if (n === 0) {
+          throw new Error("reduce: cannot fold an empty vector (no identity element for an arbitrary op)");
+        }
+        const d = a.data;
+        let acc = d[0];
+        for (let i = 1; i < n; i++) {
+          acc = applyOp(op, acc, d[i]);
+        }
+        return ndarray([], Float64Array.of(acc));
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        if (c === 0) {
+          throw new Error("reduce: cannot fold an empty row (no identity element for an arbitrary op)");
+        }
+        const d = a.data;
+        const out = new Float64Array(r);
+        for (let row = 0; row < r; row++) {
+          let acc = d[row]; // column-major: (row, 0) lives at plain `row`
+          for (let col = 1; col < c; col++) {
+            acc = applyOp(op, acc, d[col * r + row]);
+          }
+          out[row] = acc;
+        }
+        return ndarray([r], out);
+      }
+      throw new Error(`reduce: rank > 2 not yet supported (shape ${JSON.stringify(shape)})`);
+    }
+
+    /**
+     * `+\A` (APL scan) — the same fold as `reduce`, but keeping EVERY
+     * intermediate result instead of only the last; output has the same
+     * shape as `target`. Ported 1:1 from `array_runtime::ops::scan`. An
+     * empty axis is NOT an error here (unlike `reduce`): there is simply
+     * nothing to scan, and the (empty) output shape already says so.
+     */
+    function scan(op, a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        const d = a.data;
+        const out = new Float64Array(n);
+        let acc;
+        let started = false;
+        for (let i = 0; i < n; i++) {
+          acc = started ? applyOp(op, acc, d[i]) : d[i];
+          started = true;
+          out[i] = acc;
+        }
+        return ndarray([n], out);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const d = a.data;
+        const out = new Float64Array(d.length);
+        for (let row = 0; row < r; row++) {
+          let acc;
+          let started = false;
+          for (let col = 0; col < c; col++) {
+            const x = d[col * r + row]; // column-major
+            acc = started ? applyOp(op, acc, x) : x;
+            started = true;
+            out[col * r + row] = acc;
+          }
+        }
+        return ndarray([r, c], out);
+      }
+      throw new Error(`scan: rank > 2 not yet supported (shape ${JSON.stringify(shape)})`);
+    }
+
+    /**
+     * `A∘.×B` (APL outer product) — apply `op` to every pair `(aᵢ, bⱼ)`,
+     * producing a result of rank `rank(a) + rank(b)`. Ported 1:1 from
+     * `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1`
+     * and `rank(b) <= 1` (the vector⊗vector case below already reaches
+     * this domain's rank-2 ceiling). `checkedShapeSize` validates the
+     * `[m, n]` output shape *before* allocating — `m`/`n` are two
+     * INDEPENDENT operand lengths, each individually under
+     * `MAX_ELEMENTS`, but nothing bounds their product alone (the same
+     * outer-product-shaped allocation `matmul`/`indexGet` above guard).
+     */
+    function outer(op, a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const as = a.shape;
+      const bs = b.shape;
+      if (as.length === 0 && bs.length === 0) {
+        return ndarray([], Float64Array.of(applyOp(op, a.data[0], b.data[0])));
+      }
+      if (as.length === 0 && bs.length === 1) {
+        const x = a.data[0];
+        return ndarray([bs[0]], Float64Array.from(b.data, (y) => applyOp(op, x, y)));
+      }
+      if (as.length === 1 && bs.length === 0) {
+        const y = b.data[0];
+        return ndarray([as[0]], Float64Array.from(a.data, (x) => applyOp(op, x, y)));
+      }
+      if (as.length === 1 && bs.length === 1) {
+        const m = as[0];
+        const n = bs[0];
+        const outLen = checkedShapeSize([m, n]);
+        const ad = a.data;
+        const bd = b.data;
+        const out = new Float64Array(outLen);
+        for (let j = 0; j < n; j++) {
+          for (let i = 0; i < m; i++) {
+            out[j * m + i] = applyOp(op, ad[i], bd[j]); // column-major
+          }
+        }
+        return ndarray([m, n], out);
+      }
+      throw new Error(`outer: operands of rank > 1 not yet supported (shapes ${JSON.stringify(as)}, ${JSON.stringify(bs)})`);
+    }
+
+    /**
+     * Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order —
+     * last axis varies fastest. `a` itself stores COLUMN-major (`get`'s
+     * own doc comment), so a matrix must be walked "row, then column" via
+     * `get` to produce true row-major order; returning the raw
+     * column-major buffer would silently ravel in the WRONG order. Always
+     * returns a fresh `Float64Array` (never `a.data` itself, even in the
+     * rank <= 1 no-op case) — mirrors `apl_runtime::builtins::flatten`
+     * returning an owned `Vec`, not a borrow, so the result never
+     * accidentally aliases `a`'s own buffer.
+     */
+    function flattenRowMajor(a) {
+      const shape = a.shape;
+      if (shape.length <= 1) {
+        return Float64Array.from(a.data);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const out = new Float64Array(r * c);
+        let k = 0;
+        for (let row = 0; row < r; row++) {
+          for (let col = 0; col < c; col++) {
+            out[k++] = get(a, row, col);
+          }
+        }
+        return out;
+      }
+      // Unreachable in practice (this domain's rank <= 2 ceiling) -- total
+      // rather than throwing, mirroring the Rust reference's own fallback.
+      return Float64Array.from(a.data);
+    }
+
+    /**
+     * Monadic `⍴` (shape-of) — `target`'s dimensions as a vector. Ported
+     * 1:1 from `apl_runtime::builtins::shape`: a SCALAR has zero
+     * dimensions, so its shape is the EMPTY vector (not a scalar!) — `⍴5`
+     * is `⍳0`-shaped, a length-0 vector, mirroring `shape.length === 0`
+     * exactly. A vector `[n]` has shape `[n]` (one element); a matrix
+     * `[r, c]` has shape `[r, c]` (two elements).
+     */
+    function shape(a) {
+      a = toArrayValue(a);
+      const dims = Float64Array.from(a.shape);
+      return ndarray([dims.length], dims);
+    }
+
+    /**
+     * Dyadic `⍴` (reshape) — reinterpret `target`'s data under the new
+     * dimensions `shapeArg`. Ported 1:1 from `apl_runtime::builtins::
+     * reshape`. `shapeArg` must itself be a scalar or vector (rank <= 1)
+     * of non-negative integers, and is itself capped at rank <= 2 (this
+     * domain's ceiling — a longer target shape is a clean error, not a
+     * silent truncation). `target`'s elements are ravelled
+     * (`flattenRowMajor`) then cyclically repeated or truncated to fill
+     * the target shape's element count.
+     *
+     * CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+     * fills the LAST axis fastest, same convention as ravel), but this
+     * domain's storage is COLUMN-major — so for a rank-2 target the
+     * row-major `filled` sequence must be TRANSPOSED into column-major
+     * storage (`data[col * r + row] = filled[row * c + col]`) before
+     * calling `ndarray`. Handing `filled` straight to `ndarray` would
+     * silently reshape column-major instead of APL's row-major
+     * convention — a wrong answer that still LOOKS plausible (right
+     * multiset of values, wrong positions).
+     */
+    function reshape(shapeArg, target) {
+      shapeArg = toArrayValue(shapeArg);
+      target = toArrayValue(target);
+      if (shapeArg.shape.length > 1) {
+        throw new Error(`reshape: shape argument must be a scalar or vector (got rank ${shapeArg.shape.length})`);
+      }
+      const dims = Array.from(shapeArg.data, (x) => {
+        if (!(Number.isInteger(x) && x >= 0)) {
+          throw new Error(`reshape: shape elements must be non-negative integers, got ${x}`);
+        }
+        return x;
+      });
+      if (dims.length > 2) {
+        throw new Error(`reshape: reshape to rank > 2 is not yet supported (target shape ${JSON.stringify(dims)})`);
+      }
+      const total = checkedShapeSize(dims);
+      const source = flattenRowMajor(target);
+      if (total > 0 && source.length === 0) {
+        throw new Error("reshape: cannot reshape an empty source into a non-empty shape");
+      }
+      const filled = new Float64Array(total);
+      for (let k = 0; k < total; k++) {
+        filled[k] = source[k % source.length];
+      }
+      if (dims.length <= 1) {
+        return ndarray(dims, filled);
+      }
+      const [r, c] = dims;
+      const data = new Float64Array(total);
+      for (let row = 0; row < r; row++) {
+        for (let col = 0; col < c; col++) {
+          data[col * r + row] = filled[row * c + col];
+        }
+      }
+      return ndarray(dims, data);
+    }
+
+    /**
+     * Monadic `⍳` (index generator / iota) — `⍳n` is the 1-BASED vector
+     * `[1, 2, …, n]`. Ported 1:1 from `apl_runtime::builtins::
+     * index_generator` — note this is 1-based, unlike every 0-based index
+     * elsewhere in this domain (`indexGet`/`indexSet`), because that is
+     * genuinely what APL's `⍳` means at the SURFACE-SYNTAX level (the
+     * `Expr::IndexGenerator` doc comment in `semantic-ir`'s `nodes.rs`
+     * makes the same point). `checkedShapeSize([n])` both validates `n`
+     * is a non-negative integer AND caps it at `MAX_ELEMENTS` before
+     * allocating — `n` is a runtime value a compiled program computes,
+     * not a fixed constant, so `⍳` of an absurd size must fail cleanly.
+     */
+    function indexGenerator(a) {
+      a = toArrayValue(a);
+      if (!isScalar(a)) {
+        throw new Error("indexGenerator: monadic argument must be a scalar");
+      }
+      const x = a.data[0];
+      if (!(Number.isInteger(x) && x >= 0)) {
+        throw new Error(`indexGenerator: monadic argument must be a non-negative integer, got ${x}`);
+      }
+      const n = checkedShapeSize([x]);
+      const out = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        out[i] = i + 1;
+      }
+      return ndarray([n], out);
+    }
+
+    /**
+     * Dyadic `⍳` (index-of / search) — for every element of `needle`, the
+     * 1-based index of its first occurrence in the vector `haystack` (or
+     * `haystack.length + 1` if not found — "not found" is a valid,
+     * always-in-range position, not `-1`/`undefined`). Ported 1:1 from
+     * `apl_runtime::builtins::index_of`: plain EXACT equality (no
+     * floating-point tolerance — `Float64Array.prototype.indexOf` already
+     * uses strict `===`, so `NaN` correctly never matches, same as Rust's
+     * `==`). The work done is O(len(haystack) * len(needle)) (a full
+     * linear scan per needle element) — `checkedShapeSize` is reused here
+     * purely for its "product <= MAX_ELEMENTS" check (both lengths are
+     * already valid non-negative integers, so its dimension-validity half
+     * is a no-op) to cap the PRODUCT before scanning, since each operand
+     * individually staying under `MAX_ELEMENTS` does not bound their
+     * product (up to ~4.5 * 10^15 comparisons otherwise).
+     */
+    function indexOf(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      if (a.shape.length > 1) {
+        throw new Error(`indexOf: left argument must be a scalar or vector (got rank ${a.shape.length})`);
+      }
+      checkedShapeSize([a.data.length, b.data.length]);
+      const haystack = a.data;
+      const out = Float64Array.from(b.data, (needle) => {
+        const idx = haystack.indexOf(needle);
+        return idx === -1 ? haystack.length + 1 : idx + 1;
+      });
+      return ndarray(b.shape, out);
+    }
+
+    /**
+     * Monadic `,` (ravel) — flatten `target` to a rank-1 vector, in
+     * row-major order (see `flattenRowMajor`'s own doc comment for the
+     * column-major-storage-vs-row-major-order subtlety). Ported 1:1 from
+     * `apl_runtime::builtins::ravel`.
+     */
+    function ravel(a) {
+      a = toArrayValue(a);
+      const flat = flattenRowMajor(a);
+      return ndarray([flat.length], flat);
+    }
+
+    /**
+     * Dyadic `,` (catenate) — supports scalar-scalar, scalar-vector,
+     * vector-scalar, vector-vector (all producing a vector), and
+     * matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+     * producing `[r, ca + cb]`). Any other rank combination is a clean
+     * "not yet supported" error. Ported 1:1 from `apl_runtime::builtins::
+     * catenate`. The combined-length cap check happens ONCE, up front,
+     * regardless of which rank combination follows (mirroring the Rust
+     * reference's own structure) — neither operand alone need be
+     * oversized for the RESULT to be, since a script that repeatedly
+     * catenates a value with itself (`A←A,A`) doubles the size every line
+     * with no other ceiling.
+     */
+    function catenate(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      checkedShapeSize([a.data.length + b.data.length]);
+      const ra = a.shape.length;
+      const rb = b.shape.length;
+      if (ra === 0 && rb === 0) {
+        return ndarray([2], Float64Array.of(a.data[0], b.data[0]));
+      }
+      if (ra === 0 && rb === 1) {
+        const out = new Float64Array(1 + b.data.length);
+        out[0] = a.data[0];
+        out.set(b.data, 1);
+        return ndarray([out.length], out);
+      }
+      if (ra === 1 && rb === 0) {
+        const out = new Float64Array(a.data.length + 1);
+        out.set(a.data, 0);
+        out[a.data.length] = b.data[0];
+        return ndarray([out.length], out);
+      }
+      if (ra === 1 && rb === 1) {
+        const out = new Float64Array(a.data.length + b.data.length);
+        out.set(a.data, 0);
+        out.set(b.data, a.data.length);
+        return ndarray([out.length], out);
+      }
+      if (ra === 2 && rb === 2) {
+        const r = nrows(a);
+        if (r !== nrows(b)) {
+          throw new Error(`catenate: matrix catenate needs equal row counts (${r} vs ${nrows(b)})`);
+        }
+        const ca = ncols(a);
+        const cb = ncols(b);
+        const outLen = checkedShapeSize([r, ca + cb]);
+        const data = new Float64Array(outLen);
+        for (let row = 0; row < r; row++) {
+          for (let col = 0; col < ca; col++) {
+            data[col * r + row] = get(a, row, col);
+          }
+          for (let col = 0; col < cb; col++) {
+            data[(ca + col) * r + row] = get(b, row, col);
+          }
+        }
+        return ndarray([r, ca + cb], data);
+      }
+      throw new Error(`catenate: catenate of rank ${ra} and rank ${rb} is not yet supported`);
+    }
+
+    // ── J's two genuinely new primitives: `#` (tally/replicate), `^` ──
+    // (monadic exponential) — no APL precedent at all (`j-to-semantic-ir`'s
+    // own module doc comment, "Two new primitives"; `j_runtime::builtins`'
+    // own module doc comment, "genuinely new relative to this repo's APL
+    // cut"). Documented as `BuiltinCall("tally"/"replicate"/"exp", ...)`
+    // names since `j-to-semantic-ir` 0.1.0/0.1.1, but never registered in
+    // the `builtins` dispatch table below until now — every use crashed
+    // with `TypeError: unknown builtin: <name>` for every operand (found by
+    // `j-to-semantic-ir/tests/oracle.rs`, "Bug B"). Ported 1:1 from
+    // `j_runtime::builtins::{tally, replicate, monadic_exp}`
+    // (`code/packages/rust/j-runtime/src/builtins.rs`).
+
+    /**
+     * Monadic `#` (tally): the item count along the leading axis — a
+     * scalar has exactly one item (itself), a vector `[n]` has `n` items, a
+     * matrix `[r, c]` has `r` items (one per row). Returned as a genuine
+     * rank-0 `NDArray` (`Array::scalar` on the Rust side), matching
+     * `tally`'s own return type there.
+     */
+    function tally(a) {
+      a = toArrayValue(a);
+      const n = a.shape.length === 0 ? 1 : a.shape[0];
+      return ndarray([], Float64Array.of(n));
+    }
+
+    /**
+     * Dyadic `#` (copy/replicate): `x # y`, where `x` is a vector (or
+     * scalar, for a length-1 `y`) of non-negative integer counts the same
+     * length as `y`'s tally. Each item of `y` is repeated `x[i]` times and
+     * the results concatenated end to end; a count of `0` drops that item
+     * entirely. **Disclosed scope limit, ported from the Rust reference**:
+     * `y` (and `x`) are restricted to rank <= 1 — a rank-2 `y` would need a
+     * genuinely different per-row replicate this cut does not attempt.
+     * SECURITY: every count is validated as a non-negative integer, and
+     * the TOTAL output size is capped via `checkedShapeSize` *before*
+     * allocating — a script that replicates its own output over and over
+     * (`Y=.Y#Y`-shaped) could otherwise grow without bound.
+     */
+    function replicate(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (y.shape.length > 1) {
+        throw new Error(`replicate: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length} -- per-row replicate of a matrix is out of scope for this cut`);
+      }
+      if (x.shape.length > 1) {
+        throw new Error(`replicate: dyadic left argument (counts) must be a scalar or vector (rank <= 1), got rank ${x.shape.length}`);
+      }
+      const items = y.data;
+      const counts = x.data;
+      if (counts.length !== items.length) {
+        throw new Error(`replicate: left argument's length must equal the right argument's tally (${counts.length} vs ${items.length})`);
+      }
+      let total = 0;
+      for (const c of counts) {
+        if (!(Number.isInteger(c) && c >= 0)) {
+          throw new Error(`replicate: counts must be non-negative integers, got ${c}`);
+        }
+        total += c;
+      }
+      checkedShapeSize([total]);
+      const out = new Float64Array(total);
+      let k = 0;
+      for (let i = 0; i < items.length; i++) {
+        for (let j = 0; j < counts[i]; j++) {
+          out[k++] = items[i];
+        }
+      }
+      return ndarray([total], out);
+    }
+
+    /**
+     * Monadic `^` (natural exponential): `e` raised to each element,
+     * elementwise, shape-preserving. `array_runtime::ops::BinOp` has no
+     * `Pow` variant (MA06 §2 confirms this cut needs no new
+     * `array-runtime` substrate), so this is implemented directly here
+     * rather than routing through `applyOp`.
+     */
+    function monadicExp(a) {
+      a = toArrayValue(a);
+      return ndarray(a.shape, Float64Array.from(a.data, Math.exp));
+    }
+
+    // ── SIR22/Q: five genuinely new primitives, no APL/J precedent ──────
+    // (`q-to-semantic-ir`'s own module doc comment, "The 17 primitives").
+    // Documented as `BuiltinCall("q_first"/"q_where"/"q_reverse"/"q_not"/
+    // "q_take"/"q_drop"/"q_match", ...)` names since `q-to-semantic-ir`
+    // 0.1.0. Ported 1:1 from `q_runtime::builtins::{first, where_indices,
+    // reverse, not_, take, drop_, match_}`
+    // (`code/packages/rust/q-runtime/src/builtins.rs`). The `q_`-prefixed
+    // names are deliberately distinct from any existing dispatch-table
+    // entry (e.g. the generic boolean `"not"`, which returns a native JS
+    // boolean and is not elementwise) to avoid any semantic collision with
+    // another producer's identically-spelled but differently-behaved
+    // builtin.
+
+    /**
+     * Monadic `*` (first): the first item along the leading axis — a
+     * scalar's first item is itself; a vector's first item is its element
+     * 0 (a scalar result); a matrix's first item is its row 0 (a vector
+     * result). Ported 1:1 from `q_runtime::builtins::first`. The rank-2
+     * branch is unreachable through `q-to-semantic-ir` itself (this cut's
+     * grammar has no primitive that can ever construct a rank-2 value —
+     * see that crate's own module doc comment), but is still implemented,
+     * total over this domain's own rank <= 2 ceiling, exactly like every
+     * other `ArrayRt` function here.
+     */
+    function qFirst(a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        if (shape[0] === 0) {
+          throw new Error("q_first: first of an empty vector is undefined");
+        }
+        return ndarray([], Float64Array.of(a.data[0]));
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        if (r === 0) {
+          throw new Error("q_first: first of an empty matrix is undefined");
+        }
+        const row = new Float64Array(c);
+        for (let col = 0; col < c; col++) {
+          row[col] = get(a, 0, col);
+        }
+        return ndarray([c], row);
+      }
+      throw new Error("q_first: first is only supported for rank <= 2");
+    }
+
+    /**
+     * Monadic `&` (where): the indices (0-based) of every nonzero element.
+     * Ported 1:1 from `q_runtime::builtins::where_indices`, scoped
+     * identically to rank <= 1 (a scalar or vector).
+     */
+    function qWhere(a) {
+      a = toArrayValue(a);
+      if (a.shape.length > 1) {
+        throw new Error(`q_where: monadic argument (where) must be a scalar or vector, got rank ${a.shape.length}`);
+      }
+      const idx = [];
+      for (let i = 0; i < a.data.length; i++) {
+        if (a.data[i] !== 0) { idx.push(i); }
+      }
+      return ndarray([idx.length], Float64Array.from(idx));
+    }
+
+    /**
+     * Monadic `|` (reverse): reverses element order for a vector; reverses
+     * row order (each row's own column order stays intact) for a matrix; a
+     * scalar reverses to itself. Ported 1:1 from
+     * `q_runtime::builtins::reverse`.
+     */
+    function qReverse(a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const out = Float64Array.from(a.data);
+        out.reverse();
+        return ndarray(shape, out);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const data = new Float64Array(r * c);
+        for (let row = 0; row < r; row++) {
+          const srcRow = r - 1 - row;
+          for (let col = 0; col < c; col++) {
+            data[col * r + row] = get(a, srcRow, col);
+          }
+        }
+        return ndarray([r, c], data);
+      }
+      throw new Error("q_reverse: reverse is only supported for rank <= 2");
+    }
+
+    /**
+     * Monadic `~` (not): `1` for `0`, `0` for anything nonzero, elementwise
+     * — matching MA11 §4's "comparisons/logic produce/accept plain 0/1
+     * numerics" (no native boolean type in this cut). Deliberately
+     * DISTINCT from the generic `"not"` builtin (which returns a native JS
+     * `boolean` for short-circuit logic, not an elementwise array result).
+     * Ported 1:1 from `q_runtime::builtins::not_`.
+     */
+    function qNot(a) {
+      a = toArrayValue(a);
+      return ndarray(a.shape, Float64Array.from(a.data, (v) => (v === 0 ? 1 : 0)));
+    }
+
+    /**
+     * Dyadic `#` (take): `x#y` takes `|x|` items from `y`, CYCLING if `y`
+     * is shorter than needed — from the front if `x >= 0`, from the *end*
+     * if `x < 0`. Ported 1:1 from `q_runtime::builtins::take`. `y` is
+     * scoped to rank <= 1 (a scalar or vector). SECURITY: the take count is
+     * capped via `checkedShapeSize` *before* allocating, exactly like
+     * `replicate`'s own count cap above.
+     */
+    function qTake(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (x.shape.length !== 0) {
+        throw new Error("q_take: dyadic left argument (take count) must be a scalar");
+      }
+      if (y.shape.length > 1) {
+        throw new Error(`q_take: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length}`);
+      }
+      const n = x.data[0];
+      if (!Number.isInteger(n)) {
+        throw new Error(`q_take: take count must be an integer, got ${n}`);
+      }
+      const count = Math.abs(n);
+      checkedShapeSize([count]);
+      const src = y.data;
+      if (count === 0) {
+        return ndarray([0], new Float64Array(0));
+      }
+      if (src.length === 0) {
+        throw new Error("q_take: cannot take a nonzero count from an empty array");
+      }
+      const out = new Float64Array(count);
+      if (n >= 0) {
+        for (let i = 0; i < count; i++) { out[i] = src[i % src.length]; }
+      } else {
+        // Negative count: the last `count` items of the infinite cyclic
+        // repetition of `y`, ending exactly at `y`'s own last element --
+        // equivalent to taking `count` from the front of the REVERSED
+        // source, then reversing that result back.
+        const rev = Float64Array.from(src);
+        rev.reverse();
+        const tmp = new Float64Array(count);
+        for (let i = 0; i < count; i++) { tmp[i] = rev[i % rev.length]; }
+        tmp.reverse();
+        out.set(tmp);
+      }
+      return ndarray([count], out);
+    }
+
+    /**
+     * Dyadic `_` (drop): `x _ y` drops `|x|` items from `y` — from the
+     * front if `x >= 0`, from the end if `x < 0` — with NO cycling (unlike
+     * `qTake` above): dropping more items than `y` has simply empties it.
+     * Ported 1:1 from `q_runtime::builtins::drop_`. `y` is scoped to rank
+     * <= 1, mirroring `qTake`'s identical restriction.
+     */
+    function qDrop(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (x.shape.length !== 0) {
+        throw new Error("q_drop: dyadic left argument (drop count) must be a scalar");
+      }
+      if (y.shape.length > 1) {
+        throw new Error(`q_drop: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length}`);
+      }
+      const n = x.data[0];
+      if (!Number.isInteger(n)) {
+        throw new Error(`q_drop: drop count must be an integer, got ${n}`);
+      }
+      const src = y.data;
+      const len = src.length;
+      const k = Math.min(Math.abs(n), len);
+      const out = n >= 0 ? src.slice(k) : src.slice(0, len - k);
+      return ndarray([out.length], Float64Array.from(out));
+    }
+
+    /**
+     * Dyadic `~` (match): deep equality — same shape AND every element
+     * exactly equal (plain `===`, no floating-point tolerance, matching
+     * every other comparison in this domain) — producing a single scalar
+     * `1` or `0`, NOT an elementwise array (a genuine, deliberate
+     * difference from every other dyadic primitive in this domain, which
+     * are all elementwise). Ported 1:1 from `q_runtime::builtins::match_`.
+     */
+    function qMatch(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const eqShape = sameShape(a.shape, b.shape);
+      const eqData = eqShape && a.data.length === b.data.length
+        && Array.from(a.data).every((v, i) => v === b.data[i]);
+      return ndarray([], Float64Array.of(eqShape && eqData ? 1 : 0));
+    }
+
+    /**
+     * Format one number the way `apl_runtime::value::fmt_num` (APL),
+     * `j_runtime::value::fmt_num` (J, when `SIR_DISPLAY_J_UNDERSCORE` is
+     * set — added alongside `j-to-semantic-ir/tests/oracle.rs`'s "Bug A"),
+     * or `q_runtime::value::fmt_num` (Q, when `SIR_DISPLAY_Q_ASCII_MINUS`
+     * is set — task #109, the direct Q sibling of J's own fix, added
+     * alongside `q-to-semantic-ir/tests/oracle.rs`'s `DISPLAY_GAP` cases)
+     * does, ported 1:1 from whichever is active: APL's high-minus glyph
+     * `¯` (never ASCII `-`), J's leading underscore `_` (never `¯`, never
+     * `-`), or Q's own plain ASCII `-` (never `¯`, never `_`) prefixes a
+     * negative number; a whole-valued float prints without a trailing
+     * `.0`. Unlike the Rust source, no separate integer-vs-float branch is
+     * needed for the whole-value case — `String(5)` and `String(5.0)` are
+     * both `"5"` in JS, where Rust needs `format!("{}", mag as i64)`
+     * specifically to avoid `5.0`'s `Display` impl printing a trailing
+     * `.0`. `x < 0` (a numeric comparison) already excludes `-0` from any
+     * of the three negative-glyph branches on its own — `-0 < 0` is
+     * `false` in JS — so, unlike Rust's `is_sign_negative()` (a bit-level
+     * check that says `true` for `-0`), no separate `-0`-is-plain-`0`
+     * guard is needed here either (matching `q_runtime::value::fmt_num`'s
+     * own explicit `mag != 0.0` guard against exactly this, via a
+     * different mechanism that reaches the identical result).
+     */
+    function fmtNum(x) {
+      if (Number.isNaN(x)) {
+        return "NaN";
+      }
+      if (!Number.isFinite(x)) {
+        if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_inf" : "inf"; }
+        if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? "-inf" : "inf"; }
+        return x < 0 ? "¯∞" : "∞";
+      }
+      const body = String(Math.abs(x));
+      if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_" + body : body; }
+      if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? "-" + body : body; }
+      return x < 0 ? "¯" + body : body;
+    }
+
+    /**
+     * Render `a` the way an APL session echoes a bare (auto-printed)
+     * result — ported 1:1 from `apl_runtime::value::display`. This is
+     * APL's OWN display convention (high-minus negatives, no name/`ans=`
+     * prefix), distinct from MATLAB's own `Array` `Display` impl (never
+     * reached from this backend — MATLAB always reads a computed array
+     * back through a scalar `IndexGet` instead, see `formatSeen`'s call
+     * site above).
+     *
+     * - rank 0 (scalar): the one number.
+     * - rank 1 (vector): elements, space-separated, on one line (the
+     *   empty vector prints as the empty string — an APL session shows a
+     *   blank line for `⍳0`, `⍴5`, etc.).
+     * - rank 2 (matrix): one row per line, elements space-separated and
+     *   right-aligned to the widest cell's width IN THIS DISPLAY.
+     */
+    function display(a) {
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return fmtNum(a.data[0]);
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        if (n === 0) {
+          return "";
+        }
+        return Array.from(a.data, fmtNum).join(" ");
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        // Formatted once, up front (in the array's own column-major
+        // storage order), so the alignment width is independent of
+        // row/column traversal order -- only the WIDEST cell matters, and
+        // order doesn't affect a max().
+        const width = Array.from(a.data, fmtNum).reduce((w, s) => Math.max(w, s.length), 1);
+        const lines = [];
+        for (let row = 0; row < r; row++) {
+          const rowCells = [];
+          for (let col = 0; col < c; col++) {
+            rowCells.push(fmtNum(get(a, row, col)).padStart(width, " "));
+          }
+          lines.push(rowCells.join(" "));
+        }
+        return lines.join("\n");
+      }
+      // Unreachable in practice (this domain's rank <= 2 ceiling) --
+      // render something total rather than throwing, mirroring the Rust
+      // reference's own `_ => format!("{a}")` fallback.
+      return String(Array.from(a.data));
+    }
+
+    return {
+      ndarray, fromRows, isScalar, nrows, ncols, get, set,
+      elementwise, matmul, transpose, range, indexGet, indexSet,
+      // SIR22 addendum (APL primitives).
+      reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,
+      catenate, display,
+      // SIR22 addendum (J's two genuinely new primitives, no APL precedent).
+      tally, replicate, monadicExp,
+      // SIR22 addendum (Q's five genuinely new primitives, no APL/J
+      // precedent -- see `q-to-semantic-ir`'s own module doc comment).
+      qFirst, qWhere, qReverse, qNot, qTake, qDrop, qMatch,
+      // Exported so `formatSeen` (defined outside this IIFE, near the top
+      // of the file) can render a bare/boxed scalar through the SAME
+      // high-minus-aware number formatter a raw NDArray already uses via
+      // `display` -- see `SIR_DISPLAY_APL_HIGH_MINUS`'s own comment.
+      fmtNum,
+    };
+  })();
+
   return {
     Sym, Pair, Closure,
-    intern, applyClosure, truthy, format, print, puts,
-    plus, times, divide,
+    intern, applyClosure, truthy, matlabTruthy, format, print, puts,
+    plus, times, divide, shiftLeft,
+    // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
+    // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through
+    // the re-tagging helpers. `mkFloat` is the sole factory.
+    SirFloat, mkFloat, numOf, isNum, isFloat, neg, minus, mod, floatToRubyString,
+    eq, ne, lt, gt, le, ge,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,
@@ -1747,6 +6513,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     ivarGet, ivarSet, cvarGet, cvarSet,
     // Mixins (MX4): include/extend registration + class-method dispatch.
     includeModule, extendModule, callClassMethod,
+    // SIR23: symbolic expression + pattern/rewrite domain, ported from
+    // the published sir-runtime-symbolic/symbolic-ir/cas-pattern-matching
+    // TypeScript packages so this backend stays self-contained.
+    Symbolic,
+    // SIR22: array/matrix domain, ported from the published
+    // sir-runtime-array TypeScript package so this backend stays
+    // self-contained. Exposed as `Array` (a property key, not a `const`
+    // binding — this never shadows the global `Array` constructor
+    // anywhere in this file).
+    Array: ArrayRt,
   };
 })();
 "##;
@@ -1773,19 +6549,58 @@ mod tests {
     #[test]
     fn runtime_exports_the_helpers_the_emitter_calls() {
         for needed in [
-            "intern", "applyClosure", "truthy", "format",
-            "builtins", "builtinClosure", "callBuiltin", "callMethod",
-            "class Sym", "class Pair", "class Closure",
+            "intern",
+            "applyClosure",
+            "truthy",
+            "format",
+            "builtins",
+            "builtinClosure",
+            "callBuiltin",
+            "callMethod",
+            "class Sym",
+            "class Pair",
+            "class Closure",
             // Exception runtime (SIR17): the four helpers the emitter
             // references from its TryCatch / raise / ClassDef arms.
-            "class SirError", "raiseError", "rescueMatches", "registerAncestry",
+            "class SirError",
+            "raiseError",
+            "rescueMatches",
+            "registerAncestry",
             // OOP runtime (O3): the helpers the emitter references from
             // its __new__ / __super__ / __def_method__ / @ivar arms.
-            "class SirInstance", "callNew", "callSuper",
-            "defMethod", "defClassMethod", "currentSelf",
-            "ivarGet", "ivarSet", "cvarGet", "cvarSet",
+            "class SirInstance",
+            "callNew",
+            "callSuper",
+            "defMethod",
+            "defClassMethod",
+            "currentSelf",
+            "ivarGet",
+            "ivarSet",
+            "cvarGet",
+            "cvarSet",
             // Mixins (MX4): include/extend + class-method dispatch.
-            "includeModule", "extendModule", "callClassMethod",
+            "includeModule",
+            "extendModule",
+            "callClassMethod",
+            // Tagged floats (Ruby Integer vs Float): the boxed-float
+            // factory + tag helpers the emitter mints/routes through.
+            "class SirFloat",
+            "mkFloat",
+            "numOf",
+            "isNum",
+            "isFloat",
+            "floatToRubyString",
+            // Re-tagging arithmetic + `numOf`-unwrapping comparisons the
+            // emitter routes `-`/`%`/`neg` and `=`/`!=`/`<`/`>`/`<=`/`>=` through.
+            "minus",
+            "mod",
+            "neg",
+            "eq",
+            "ne",
+            "lt",
+            "gt",
+            "le",
+            "ge",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
@@ -1892,7 +6707,10 @@ mod tests {
         // adds the check native JS `/` lacks (it yields Infinity).
         assert!(RUNTIME.contains("function divide(a, b)"));
         assert!(RUNTIME.contains(r#"raiseError("ZeroDivisionError", "divided by 0")"#));
-        assert!(RUNTIME.contains("plus, times, divide,"), "divide must be exported");
+        assert!(
+            RUNTIME.contains("plus, times, divide,"),
+            "divide must be exported"
+        );
 
         // `.fetch` raises typed errors: IndexError for a sequence OOB,
         // KeyError for a missing hash key (no default).
@@ -1902,7 +6720,9 @@ mod tests {
 
         // An unknown method raises NoMethodError (not a JS-native TypeError).
         assert!(RUNTIME.contains(r#"raiseError("NoMethodError","#));
-        assert!(RUNTIME.contains(r#""undefined method `" + name + "` for " + classDescription(recv)"#));
+        assert!(
+            RUNTIME.contains(r#""undefined method `" + name + "` for " + classDescription(recv)"#)
+        );
         assert!(RUNTIME.contains("function classDescription(recv)"));
         // The old JS-native TypeError floor for the allowlist miss is gone.
         assert!(!RUNTIME.contains("is not an allowed collection method"));
@@ -1912,25 +6732,32 @@ mod tests {
     fn runtime_defines_m6_universal_metaprogramming_surface() {
         // M6: send/tap/then/yield_self/respond_to? + boolean &/|/^ are mixed
         // into EVERY receiver, ported to match the Python/TS references.
-        assert!(RUNTIME.contains(r#"const SEND_METHODS = new Set(["send", "__send__", "public_send"]);"#));
-        assert!(RUNTIME.contains(r#"const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);"#));
+        assert!(RUNTIME
+            .contains(r#"const SEND_METHODS = new Set(["send", "__send__", "public_send"]);"#));
+        assert!(RUNTIME
+            .contains(r#"const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);"#));
         assert!(RUNTIME.contains(r#"const BOOL_METHODS = new Set(["&", "|", "^"]);"#));
         assert!(RUNTIME.contains("function objectMetaMethod("));
         assert!(RUNTIME.contains("function respondsTo("));
         assert!(RUNTIME.contains("function boolMethod("));
         // `tap` returns the receiver; `then`/`yield_self` return the block result.
-        assert!(RUNTIME.contains(r#"if (name === "tap") { applyClosure(last, [recv]); return recv; }"#));
+        assert!(
+            RUNTIME.contains(r#"if (name === "tap") { applyClosure(last, [recv]); return recv; }"#)
+        );
         assert!(RUNTIME.contains("return applyClosure(last, [recv]); // then / yield_self"));
 
         // SECURITY (the C3 RCE lesson): `send` routes the DYNAMIC name back
         // through `callMethod` — the SAME allowlist / method-table gate a direct
         // call uses — NEVER `recv[name]` / `eval` / `new Function` on the name.
-        assert!(RUNTIME.contains("return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));"));
+        assert!(RUNTIME
+            .contains("return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));"));
         assert!(!RUNTIME.contains("new Function("));
         assert!(!RUNTIME.contains("eval("));
         // `respond_to?` checks the same tables dispatch uses (method table for a
         // SirInstance, the allowlist for a primitive) — not a probe of recv[name].
-        assert!(RUNTIME.contains("resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"));
+        assert!(RUNTIME.contains(
+            "resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"
+        ));
         assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
     }
 
@@ -1942,5 +6769,436 @@ mod tests {
         assert!(RUNTIME.contains("ancestry[cur]"));
         assert!(RUNTIME.contains("Object.create(null)"));
         assert!(!RUNTIME.contains("eval("));
+    }
+
+    #[test]
+    fn runtime_defines_symbolic_expression_domain() {
+        // SIR23: the emitter's Sym* arms all call into `Symbolic.*` — this
+        // must stay inlined (no import/require), matching every other
+        // domain in this file.
+        assert!(RUNTIME.contains("const Symbolic = (() => {"));
+        assert!(RUNTIME.contains("Symbolic,"), "Symbolic must be exported");
+        for needed in [
+            "function symTerm(",
+            "function intTerm(",
+            "function rationalTerm(",
+            "function floatTerm(",
+            "function stringTerm(",
+            "function applyTerm(",
+            "function blankTerm(",
+            "function blankTypedTerm(",
+            "function namedTerm(",
+            "function ruleTerm(",
+            "function ruleDelayedTerm(",
+            "function matchPattern(",
+            "function applyRuleTerm(",
+            "function substituteTerm(",
+            "function replaceAllTerm(",
+            "function replaceRepeatedTerm(",
+            "function unwrapTerm(",
+            "function toDisplayString(",
+        ] {
+            assert!(
+                RUNTIME.contains(needed),
+                "Symbolic runtime missing `{needed}`"
+            );
+        }
+        assert!(!RUNTIME.contains("import "));
+        assert!(!RUNTIME.contains("require("));
+    }
+
+    #[test]
+    fn symbolic_uses_plain_numbers_not_bigint() {
+        // Deliberate divergence from the TypeScript sibling package (which
+        // uses `bigint` for arbitrary precision): this backend's numeric
+        // model is `number` everywhere (see `Expr::IntLit`'s emit arm), so
+        // the symbolic-term port follows suit rather than introducing the
+        // only `bigint` anywhere in this runtime.
+        assert!(!RUNTIME.contains("BigInt"));
+        assert!(!RUNTIME.contains("0n"));
+    }
+
+    #[test]
+    fn symbolic_replace_repeated_loops_locally_not_recursively() {
+        // SECURITY: a rule firing must loop at the SAME call frame (the
+        // `while (true)` body), never recurse on the fresh replacement —
+        // otherwise a caller-supplied `maxIterations` bounds only CPU time
+        // in theory while still exhausting the native stack in practice
+        // (the exact gap `sir-runtime-symbolic`'s own /security-review
+        // found and fixed in the TypeScript sibling; this port carries the
+        // fix forward rather than reintroducing the gap).
+        assert!(RUNTIME.contains("while (true) {"));
+        assert!(RUNTIME.contains("const MAX_TERM_DEPTH = 512;"));
+    }
+
+    #[test]
+    fn symbolic_terms_render_through_format() {
+        // `print`/`puts` on a Symbolic term must not fall through to the
+        // useless `[object Object]` default — formatSeen dispatches to
+        // `Symbolic.toDisplayString` for any plain object carrying a
+        // `.kind` tag.
+        assert!(RUNTIME.contains("typeof v.kind === \"string\""));
+        assert!(RUNTIME.contains("Symbolic.toDisplayString(v)"));
+    }
+
+    #[test]
+    fn runtime_defines_array_matrix_domain() {
+        // SIR22: the emitter's ArrayLit/Range/MatMul/ElementwiseOp/
+        // Transpose/IndexGet/IndexSet arms all call into `Array.*` — this
+        // must stay inlined (no import/require), matching every other
+        // domain in this file.
+        assert!(RUNTIME.contains("const ArrayRt = (() => {"));
+        assert!(RUNTIME.contains("Array: ArrayRt,"), "Array must be exported");
+        for needed in [
+            "function checkedShapeSize(",
+            "function ndarray(",
+            "function fromRows(",
+            "function isScalar(",
+            "function nrows(",
+            "function ncols(",
+            "function get(",
+            "function set(",
+            "function applyOp(",
+            "function elementwise(",
+            "function matmul(",
+            "function transpose(",
+            "function range(",
+            "function resolvePositions(",
+            "function indexGet(",
+            "function indexSet(",
+            "function toArrayValue(",
+        ] {
+            assert!(RUNTIME.contains(needed), "Array runtime missing `{needed}`");
+        }
+        assert!(!RUNTIME.contains("import "));
+        assert!(!RUNTIME.contains("require("));
+    }
+
+    #[test]
+    fn array_runtime_validates_shape_before_allocating() {
+        // SECURITY: every factory that computes an output size from
+        // caller-supplied numbers must validate via `checkedShapeSize`
+        // *before* `new Float64Array(...)` runs, not after — an
+        // unbounded or malformed shape must fail with a catchable
+        // `Error`, not an uncaught `RangeError` or a stalled huge
+        // allocation. Spot-check the two shapes most likely to regress:
+        // an outer-product-shaped `matmul`/`indexGet` (two independently-
+        // bounded dimensions whose product isn't bounded by either
+        // alone) and `range`'s own element cap.
+        assert!(RUNTIME.contains("const MAX_ELEMENTS = 1 << 26;"));
+        assert!(RUNTIME.contains("checkedShapeSize([m, n])"));
+        assert!(RUNTIME.contains("checkedShapeSize([rows.length, cols.length])"));
+        assert!(RUNTIME.contains(
+            "if (values.length >= MAX_ELEMENTS) {\n          throw new Error(`range: produces more than ${MAX_ELEMENTS} elements`);"
+        ));
+    }
+
+    #[test]
+    fn array_elementwise_coerces_bare_scalar_operands() {
+        // `matlab-to-semantic-ir`'s lowerer emits a mixed number/NDArray
+        // operand pair for `.* ./ .\` and for `* /` when exactly one side
+        // is scalar (e.g. `A .* 2`) — the bare scalar sub-expression is
+        // passed through `ElementwiseOp` unwrapped, so `elementwise` must
+        // coerce a plain JS `number` into a scalar NDArray itself rather
+        // than assume both operands already carry `.data`/`.shape`.
+        assert!(RUNTIME.contains("a = toArrayValue(a);"));
+        assert!(RUNTIME.contains("b = toArrayValue(b);"));
+    }
+
+    #[test]
+    fn array_elementwise_comparisons_return_apl_style_numbers_not_booleans() {
+        // Comparisons (`Eq`/`Ne`/`Lt`/`Le`/`Ge`/`Gt`) must return `1`/`0`,
+        // never a native `boolean` — the result has to stay a plain
+        // Float64Array element like every other value here.
+        assert!(RUNTIME.contains("const b2f = (cond) => (cond ? 1 : 0);"));
+    }
+
+    #[test]
+    fn array_set_bounds_check_is_a_nan_safe_negated_and_not_an_or() {
+        // Security-review follow-up: `set`'s bounds check must be the
+        // negation of `get`'s AND-form (`!(r >= 0 && ...)`), not an
+        // OR-form (`r < 0 || ...`) -- those are NOT equivalent for NaN
+        // under IEEE-754 (every relational comparison with NaN is
+        // false), so an OR-form would silently skip the throw and let
+        // `a.data[c * nrows(a) + NaN] = value` silently drop the write.
+        // `set` is not reachable with an unvalidated NaN through any
+        // current codegen path (every caller resolves positions through
+        // `assertValidPosition` first), but it is part of this module's
+        // exported public surface, so it must stay NaN-safe on its own.
+        assert!(RUNTIME.contains("if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {"));
+    }
+
+    // ── SIR22 addendum: APL primitive operators ────────────────────────
+
+    #[test]
+    fn runtime_defines_array_addendum_functions() {
+        // `apl-to-semantic-ir` emits `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+        // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`; the
+        // emitter's arms for all nine call into these, plus `display` (the
+        // APL auto-print formatter `formatSeen` dispatches to).
+        for needed in [
+            "function reduce(",
+            "function scan(",
+            "function outer(",
+            "function shape(",
+            "function reshape(",
+            "function indexGenerator(",
+            "function indexOf(",
+            "function ravel(",
+            "function catenate(",
+            "function flattenRowMajor(",
+            "function fmtNum(",
+            "function display(",
+        ] {
+            assert!(RUNTIME.contains(needed), "Array runtime missing `{needed}`");
+        }
+        assert!(RUNTIME.contains("reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,"));
+    }
+
+    #[test]
+    fn array_addendum_reuses_the_one_bounded_allocation_cap() {
+        // SECURITY: `⍳`'s length, dyadic `⍴`'s target element count,
+        // `⍳`(index-of)'s O(len*len) product, and `,`(catenate)'s combined
+        // length are all runtime-computed from potentially attacker-
+        // influenced program values -- every one of them must route
+        // through `checkedShapeSize` (this file's ONE existing
+        // `MAX_ELEMENTS`-capped guard), not a freshly-invented cap value
+        // (`apl_runtime::builtins::MAX_ARRAY_LENGTH` is a *different*,
+        // smaller Rust-side constant that this port deliberately does not
+        // reintroduce -- see the addendum's own module doc comment).
+        assert!(RUNTIME.contains("const n = checkedShapeSize([x]);"));
+        assert!(RUNTIME.contains("const total = checkedShapeSize(dims);"));
+        assert!(RUNTIME.contains("checkedShapeSize([a.data.length, b.data.length]);"));
+        assert!(RUNTIME.contains("checkedShapeSize([a.data.length + b.data.length]);"));
+        // (A JS-side doc comment nearby mentions the Rust constant's NAME in
+        // prose, explaining why it is deliberately NOT reintroduced here —
+        // so this asserts there is no `const MAX_ARRAY_LENGTH` DECLARATION,
+        // not that the identifier never appears as text anywhere at all.)
+        assert!(!RUNTIME.contains("const MAX_ARRAY_LENGTH"));
+    }
+
+    #[test]
+    fn reduce_on_an_empty_vector_is_a_clean_error_not_a_guessed_identity() {
+        // `reduce` has no built-in identity for an arbitrary op (unlike
+        // `sum`, which hardcodes 0) -- an empty axis must throw, not
+        // silently return e.g. 0.
+        assert!(RUNTIME.contains(
+            "throw new Error(\"reduce: cannot fold an empty vector (no identity element for an arbitrary op)\");"
+        ));
+    }
+
+    #[test]
+    fn index_generator_is_one_based_unlike_the_rest_of_this_domain() {
+        // `⍳n` is `[1, 2, ..., n]` -- 1-based, unlike `indexGet`/`indexSet`
+        // elsewhere in this same Array namespace, which are 0-based. This
+        // is a real APL-surface-syntax fact (see `semantic-ir`'s
+        // `Expr::IndexGenerator` doc comment), not an inconsistency.
+        assert!(RUNTIME.contains("out[i] = i + 1;"));
+    }
+
+    #[test]
+    fn reshape_transposes_row_major_fill_into_column_major_storage() {
+        // The single easiest place to introduce a silent wrong-answer bug
+        // in this whole port: reshape's cyclic fill is computed in
+        // ROW-major order (APL convention) but must be written back into
+        // COLUMN-major storage (this domain's convention) for a rank-2
+        // target -- `filled[row * c + col]` read, `data[col * r + row]`
+        // written, never the other way around.
+        assert!(RUNTIME.contains("data[col * r + row] = filled[row * c + col];"));
+    }
+
+    #[test]
+    fn array_display_uses_apl_high_minus_and_no_trailing_dot_zero() {
+        // `apl-to-semantic-ir` auto-prints a bare top-level expression
+        // through this backend's shared `print` builtin, and APL has no
+        // bracket-indexing syntax to read a scalar back with (unlike
+        // MATLAB) -- so `formatSeen` must render a raw NDArray using APL's
+        // OWN console convention (high-minus `¯`, matching
+        // `apl_runtime::value::fmt_num` 1:1), not `[object Object]`.
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+        assert!(RUNTIME.contains("ArrayRt.display(v)"));
+    }
+
+    #[test]
+    fn neg_negates_a_rank1_plus_ndarray_elementwise_instead_of_relying_on_numof() {
+        // Regression guard for bug #2 (`apl-to-semantic-ir/tests/oracle.rs`):
+        // a genuine rank >= 1 NDArray operand must be mapped elementwise into
+        // a NEW NDArray (never coerced to `NaN` via native unary minus on a
+        // plain object).
+        assert!(RUNTIME.contains("function mapNDArrayRank1Plus(x, f) {"));
+        assert!(RUNTIME.contains("x.shape.length >= 1"));
+        assert!(RUNTIME.contains("ArrayRt.ndarray(x.shape, Float64Array.from(x.data, f));"));
+    }
+
+    #[test]
+    fn runtime_registers_apl_monadic_scalar_atom_builtins() {
+        // Regression guard for bug #3: `sign`/`recip`/`ceil`/`floor` were
+        // documented but never registered in the `builtins` dispatch table,
+        // so `__Sir.callBuiltin` crashed with `TypeError: unknown builtin:
+        // <name>` for every one of them. `monadicScalarAtom` is the shared
+        // scalar/array dispatch all four route through.
+        assert!(RUNTIME.contains("function aplSign(v) {"));
+        assert!(RUNTIME.contains("function aplRecip(v) { return 1 / v; }"));
+        assert!(RUNTIME.contains("function monadicScalarAtom(x, f) {"));
+        for (name, helper) in [
+            ("\"sign\"", "aplSign"),
+            ("\"recip\"", "aplRecip"),
+            ("\"ceil\"", "Math.ceil"),
+            ("\"floor\"", "Math.floor"),
+        ] {
+            assert!(
+                RUNTIME.contains(&format!("{name}: (x) => monadicScalarAtom(x, {helper}),")),
+                "builtins table missing {name} -> monadicScalarAtom(x, {helper})"
+            );
+        }
+        // `aplSign` is explicit if/else branching (matching `apl_runtime::
+        // eval::apl_sign` 1:1) -- confirmed by the `function aplSign(v) {`
+        // assertion above; see that function's own doc comment for why a
+        // bare `Math.sign()` call is deliberately not used instead.
+    }
+
+    #[test]
+    fn formatseen_gates_bare_number_and_boxed_float_glyph_on_apl_high_minus_flag() {
+        // Regression guard for bug #1: a rank-0 SIR22 NDArray is not unique
+        // to APL (MATLAB's `2 ^ 2` reaches the same shape), so the glyph
+        // decision for a BARE/boxed scalar has to live in `formatSeen`,
+        // gated by a per-module flag -- never inferred from the value's own
+        // shape the way `neg`'s array branch is.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;"));
+        assert!(RUNTIME.contains(
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
+        ));
+        assert!(RUNTIME.contains(
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v) : String(v);"
+        ));
+        // `fmtNum` must be reachable from OUTSIDE the `ArrayRt` IIFE (where
+        // `formatSeen` lives) for the branches above to compile at all.
+        assert!(RUNTIME.contains("fmtNum,"));
+    }
+
+    // ── J's own display convention (`j-to-semantic-ir/tests/oracle.rs`,
+    // "Bug A") and its two new builtins (that file's "Bug B") ──────────────
+
+    #[test]
+    fn fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_j_underscore_flag() {
+        // Regression guard for J's "Bug A": `SIR_DISPLAY_APL_HIGH_MINUS`
+        // had no J-specific counterpart at all, so a J-sourced module's
+        // negative numbers/infinity fell through to plain ASCII (via
+        // `formatSeen`'s default) or APL's own high-minus glyph
+        // (`ArrayRt.fmtNum`'s previously-unconditional branch) instead of
+        // J's own leading underscore / lowercase `inf`.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_J_UNDERSCORE = __SIR_DISPLAY_J_UNDERSCORE__;"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_\" + body : body; }"));
+        // The APL branch must still be the DEFAULT (reached when the J flag
+        // is false) -- these two lines are unchanged from before this fix,
+        // confirming APL's own display is untouched by adding J's.
+        assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+    }
+
+    // ── Q's own display convention (task #109, the direct Q sibling of
+    // J's "Bug A" above, `q-to-semantic-ir/tests/oracle.rs`'s `DISPLAY_GAP`
+    // cases) ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_q_ascii_minus_flag() {
+        // Regression guard for task #109: `semantic-ir-to-javascript` had
+        // no Q-specific counterpart to `SIR_DISPLAY_APL_HIGH_MINUS`/
+        // `SIR_DISPLAY_J_UNDERSCORE` at all, so a Q-sourced module's
+        // genuine-NDArray negative numbers/infinity fell through to APL's
+        // own high-minus glyph (`ArrayRt.fmtNum`'s previously-unconditional
+        // branch) instead of Q's own plain ASCII `-`/lowercase `-inf`.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_Q_ASCII_MINUS = __SIR_DISPLAY_Q_ASCII_MINUS__;"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? \"-inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? \"-\" + body : body; }"));
+        // J's and APL's own branches must still be reachable (both unchanged
+        // by adding Q's) -- confirming Q's flag is a pure addition, not a
+        // replacement.
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_\" + body : body; }"));
+        assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+    }
+
+    // ── Axiom's own display convention + reserved-head handlers
+    // (MA13/Wave 7 close-out, `axiom-to-semantic-ir/tests/oracle.rs`) ────
+
+    #[test]
+    fn todisplaystring_gates_true_false_case_on_the_axiom_boolean_flag() {
+        // Regression guard: real Axiom's own session renders the shared
+        // True/False symbols lowercase; every other source language keeps
+        // the generic, unchanged capitalized spelling.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_AXIOM_BOOLEAN = __SIR_DISPLAY_AXIOM_BOOLEAN__;"));
+        assert!(RUNTIME.contains(
+            "if (SIR_DISPLAY_AXIOM_BOOLEAN && (node.name === \"True\" || node.name === \"False\")) {"
+        ));
+        // The default (flag off) still returns the bare symbol name --
+        // confirming this is a narrow addition, not a replacement of the
+        // generic `"symbol"` case every other language relies on.
+        assert!(RUNTIME.contains("return node.name;"));
+    }
+
+    #[test]
+    fn axiom_reserved_heads_are_wired_into_the_held_dispatch_tables() {
+        // The three reserved SIR23 heads `axiom-to-semantic-ir::lower`
+        // defines locally (never added to shared `semantic-ir`/
+        // `symbolic-ir`) must be held (not argument-evaluated) AND have a
+        // real handler, not just fall through to the generic "rebuild an
+        // inert Apply" policy every OTHER unrecognised head gets.
+        for head in ["__axiom_declare", "__axiom_coerce", "__axiom_has"] {
+            assert!(
+                RUNTIME.contains(&format!("\"{head}\",")),
+                "HELD_HEADS must list `{head}`"
+            );
+        }
+        assert!(RUNTIME.contains("[\"__axiom_declare\", axiomDeclareHandler],"));
+        assert!(RUNTIME.contains("[\"__axiom_coerce\", axiomCoerceHandler],"));
+        assert!(RUNTIME.contains("[\"__axiom_has\", axiomHasHandler],"));
+        // The fixed domain/category table (MA13 §3/§4) — spot-check the
+        // two book-confirmed `has` examples' own membership arm, and that
+        // the coercion-failure message text matches `axiom-runtime`'s own
+        // verbatim.
+        assert!(RUNTIME.contains(
+            "return domain === \"Integer\" || domain === \"FractionInteger\" || domain === \"PolynomialInteger\";"
+        ));
+        assert!(RUNTIME.contains("\"Cannot convert \" + toDisplayString(value) + \" to an object of the type \""));
+        assert!(RUNTIME.contains(
+            "\"Cannot convert right-hand side of assignment \" + toDisplayString(value)"
+        ));
+        // `assignHandler`'s own small, disclosed cross-head addition:
+        // consults `axiomDeclaredDomains`, populated only by
+        // `axiomDeclareHandler` -- a no-op for every other source language.
+        assert!(RUNTIME.contains("const axiomDeclaredDomains = new Map();"));
+        assert!(RUNTIME.contains("const declaredDomain = axiomDeclaredDomains.get(lhs.name);"));
+    }
+
+    #[test]
+    fn runtime_registers_js_own_tally_replicate_exp_builtins() {
+        // Regression guard for J's "Bug B": `tally`/`replicate`/`exp` were
+        // documented (`j-to-semantic-ir`'s own README/CHANGELOG since
+        // 0.1.0/0.1.1) but never registered in the `builtins` dispatch
+        // table, so `__Sir.callBuiltin`/`builtinClosure` crashed with
+        // `TypeError: unknown builtin: <name>` for every operand.
+        assert!(RUNTIME.contains("function tally(a) {"));
+        assert!(RUNTIME.contains("function replicate(x, y) {"));
+        assert!(RUNTIME.contains("function monadicExp(a) {"));
+        assert!(RUNTIME.contains("tally, replicate, monadicExp,"));
+        assert!(RUNTIME.contains("\"tally\": (x) => ArrayRt.tally(x),"));
+        assert!(RUNTIME.contains("\"replicate\": (x, y) => ArrayRt.replicate(x, y),"));
+        assert!(RUNTIME.contains("\"exp\": (x) => ArrayRt.monadicExp(x),"));
+    }
+
+    #[test]
+    fn replicate_validates_counts_and_caps_total_output_before_allocating() {
+        // SECURITY: dyadic `#`'s total replicated-output length is a
+        // runtime-computed value (a compiled program's own counts, not a
+        // fixed constant) -- must route through `checkedShapeSize` (this
+        // file's one existing `MAX_ELEMENTS`-capped guard, per
+        // `array_addendum_reuses_the_one_bounded_allocation_cap` above)
+        // *before* `new Float64Array(total)` runs, exactly like every
+        // other bounded-allocation factory in this domain.
+        assert!(RUNTIME.contains("if (!(Number.isInteger(c) && c >= 0)) {"));
+        assert!(RUNTIME.contains("checkedShapeSize([total]);"));
     }
 }

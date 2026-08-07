@@ -1,3 +1,8 @@
+// These integration tests build browser-readiness fixtures via helper fns that
+// mirror large descriptor structs; the many parameters are inherent to the test
+// data, so allow the too_many_arguments lint for this test file.
+#![allow(clippy::too_many_arguments)]
+
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAnchorDescriptor,
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionDescriptor,

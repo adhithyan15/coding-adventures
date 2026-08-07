@@ -86,7 +86,7 @@ impl VM {
     fn eval_symbol(&mut self, name: String, original: IRNode) -> IRNode {
         // Clone the binding out of the backend (releases borrow) before
         // recursing into eval so borrow checker is satisfied.
-        let value = self.backend.lookup(&name).map(|v| v.clone());
+        let value = self.backend.lookup(&name);
         match value {
             None => self.backend.on_unresolved(&name),
             Some(bound) => {
@@ -126,7 +126,7 @@ impl VM {
 
         // 3. Dispatch to a head-specific handler.
         //    Clone the Arc handler to release the borrow before calling.
-        let handler = self.backend.handler_for(&head_name).map(|h| h.clone());
+        let handler = self.backend.handler_for(&head_name).cloned();
         if let Some(handler) = handler {
             return handler(self, expr);
         }
@@ -134,7 +134,7 @@ impl VM {
         // 4. User-defined function? Check if the head symbol is bound to a
         //    Define record, and if so, inline-substitute and evaluate.
         if let IRNode::Symbol(ref sym_name) = expr.head {
-            let bound = self.backend.lookup(sym_name).map(|v| v.clone());
+            let bound = self.backend.lookup(sym_name);
             if let Some(definition) = bound {
                 if is_define_record(&definition) {
                     if let IRNode::Apply(def) = definition {

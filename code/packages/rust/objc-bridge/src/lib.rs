@@ -49,6 +49,11 @@
 //! (`objc_msgSend_stret`) and float returns (`objc_msgSend_fpret`).
 //! We support both architectures.
 
+// These wrappers are thin `unsafe` shims over the Objective-C runtime's raw
+// C API; the caller's contract (valid class names / live object pointers) is
+// the runtime's own, described in the module header above.
+#![allow(clippy::missing_safety_doc)]
+
 pub const VERSION: &str = "0.1.0";
 
 // Everything below requires an Apple platform (macOS, iOS, tvOS).
@@ -278,6 +283,12 @@ extern "C" {
     /// Raw objc_msgSend entry point.  Do NOT call directly — use the
     /// `msg!` macro which casts to the correct function pointer type.
     pub fn objc_msgSend(receiver: Id, sel: Sel, ...) -> Id;
+
+    /// x86_64 Objective-C entry point for floating-point return values.
+    ///
+    /// Apple Silicon uses `objc_msgSend` for the same calls.
+    #[cfg(target_arch = "x86_64")]
+    pub fn objc_msgSend_fpret(receiver: Id, sel: Sel, ...) -> c_double;
 
     // -- Class creation (for delegate/callback classes) -------------------
 
@@ -784,6 +795,40 @@ macro_rules! msg_u64 {
         let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> u64 =
             ::std::mem::transmute($crate::objc_msgSend as *const ());
         f($receiver, $crate::sel($sel))
+    }};
+}
+
+/// Message dispatch for methods returning an Objective-C `BOOL`.
+#[macro_export]
+macro_rules! msg_bool {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> ::std::ffi::c_schar =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel)) != 0
+    }};
+    ($receiver:expr, $sel:expr, $a1:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel, _) -> ::std::ffi::c_schar =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel), $a1) != 0
+    }};
+}
+
+/// Message dispatch for methods returning an `f64`/Objective-C `double`.
+#[macro_export]
+macro_rules! msg_f64 {
+    ($receiver:expr, $sel:expr) => {{
+        #[cfg(target_arch = "x86_64")]
+        {
+            let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> f64 =
+                ::std::mem::transmute($crate::objc_msgSend_fpret as *const ());
+            f($receiver, $crate::sel($sel))
+        }
+        #[cfg(not(target_arch = "x86_64"))]
+        {
+            let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> f64 =
+                ::std::mem::transmute($crate::objc_msgSend as *const ());
+            f($receiver, $crate::sel($sel))
+        }
     }};
 }
 

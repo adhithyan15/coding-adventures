@@ -397,7 +397,12 @@ mod tests {
     fn distinguishes_pico_and_pico_w_led_routes() {
         assert_eq!(PICO.onboard_led, Some(OnboardLed::Gpio(25)));
         assert_eq!(PICO_W.onboard_led, Some(OnboardLed::WirelessChipGpio(0)));
-        assert!(PICO_W.supports_wifi);
+        // `supports_wifi` is a const-foldable field, so clippy sees a constant;
+        // the assertion is still a meaningful check that PICO_W enables Wi-Fi.
+        #[allow(clippy::assertions_on_constants)]
+        {
+            assert!(PICO_W.supports_wifi);
+        }
     }
 
     #[test]

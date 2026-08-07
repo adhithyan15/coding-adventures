@@ -47,7 +47,7 @@ impl Register8 {
 
     /// Clock a new value into the register (rising clock edge).
     pub fn write(&mut self, value: u8) {
-        self.value = value & 0xFF;
+        self.value = value;
     }
 
     /// Read the current Q output.
@@ -71,7 +71,7 @@ impl Register16 {
 
     /// Clock a new 16-bit value into the register.
     pub fn write(&mut self, value: u16) {
-        self.value = value & 0xFFFF;
+        self.value = value;
     }
 
     /// Read the current value.
@@ -84,7 +84,7 @@ impl Register16 {
     /// Used for PC advancement during instruction fetch.
     pub fn inc(&mut self, amount: u16) {
         let (new_val, _carry) = add_16bit(self.value, amount, 0);
-        self.value = new_val & 0xFFFF;
+        self.value = new_val;
     }
 }
 

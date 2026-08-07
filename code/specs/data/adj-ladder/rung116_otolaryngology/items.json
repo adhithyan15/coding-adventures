@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 116 \u2014 airway patency index from four stated quantities (a NEW panel: otolaryngology / nasal airway). From a total airflow divided by the sum of a septal resistance, a turbinate resistance, and a valve resistance, compute the airway patency index (total_airflow/(septal_resistance+turbinate_resistance+valve_resistance)), the total resistance (septal_resistance+turbinate_resistance+valve_resistance), or the total airflow. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a SINGLE TERM OVER A THREE-TERM SUM DENOMINATOR a/(b+c+d) (sum the three resistances, divide the airflow by that whole sum, so a/(b+c+d) = (a/((b+c)+d)); the ladder's FIRST three-term denominator. Every earlier three-term structure lived in the NUMERATOR (108 (a+b+c)/d, 109 (a-b+c)/d, 110 (a*b+c)/d, 111 (a*b-c)/d, 114 (a+b-c)/d, 115 (a-b-c)/d) over a SINGLE-term divisor d; the distributive pair (112 a*(b+c)/d, 113 a*(b-c)/d) still divided by a single term; and every two-term ratio had at most TWO terms below the bar (37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 rung-116 is the first to divide by a sum of THREE quantities. The harness matches the scalar to the printed options. The airway patency index is a rate (airflow per unit of combined resistance), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via + and / \u2014 no constant leaks, and neither the total resistance, the total airflow, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the septal resistance divides (a/b+c+d, a wrong grouping) and regrouping so only two resistances form the denominator (a/(b+c)+d, a wrong pairing). The core confusion tested is that a/(b+c+d) is (a/((b+c)+d)), not a/b+c+d and not a/(b+c)+d. This rung uses only + and /, so positivity is guaranteed by construction: every observed quantity is >= 2 and the three-term denominator b+c+d >= 6 (division never by zero), keeping every family member strictly positive.",
+  "items": [
+    {
+      "id": "r116ent-01",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 30 divided by a septal resistance of 2 plus a turbinate resistance of 3 plus a valve resistance of 5. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(30)\nobserve septal_resistance(2)\nobserve turbinate_resistance(3)\nobserve valve_resistance(5)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r116ent-02",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 30 divided by a septal resistance of 2 plus a turbinate resistance of 3 plus a valve resistance of 5. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(30)\nobserve septal_resistance(2)\nobserve turbinate_resistance(3)\nobserve valve_resistance(5)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r116ent-03",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 30 divided by a septal resistance of 2 plus a turbinate resistance of 3 plus a valve resistance of 5. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(30)\nobserve septal_resistance(2)\nobserve turbinate_resistance(3)\nobserve valve_resistance(5)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r116ent-04",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 34 divided by a septal resistance of 3 plus a turbinate resistance of 4 plus a valve resistance of 5. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(34)\nobserve septal_resistance(3)\nobserve turbinate_resistance(4)\nobserve valve_resistance(5)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.857142857142858,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r116ent-05",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 34 divided by a septal resistance of 3 plus a turbinate resistance of 4 plus a valve resistance of 5. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(34)\nobserve septal_resistance(3)\nobserve turbinate_resistance(4)\nobserve valve_resistance(5)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r116ent-06",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 34 divided by a septal resistance of 3 plus a turbinate resistance of 4 plus a valve resistance of 5. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(34)\nobserve septal_resistance(3)\nobserve turbinate_resistance(4)\nobserve valve_resistance(5)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.8333333333333335,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.857142857142858,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r116ent-07",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 40 divided by a septal resistance of 4 plus a turbinate resistance of 3 plus a valve resistance of 6. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(40)\nobserve septal_resistance(4)\nobserve turbinate_resistance(3)\nobserve valve_resistance(6)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.076923076923077,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.714285714285715,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r116ent-08",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 40 divided by a septal resistance of 4 plus a turbinate resistance of 3 plus a valve resistance of 6. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(40)\nobserve septal_resistance(4)\nobserve turbinate_resistance(3)\nobserve valve_resistance(6)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.076923076923077,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.714285714285715,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r116ent-09",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 40 divided by a septal resistance of 4 plus a turbinate resistance of 3 plus a valve resistance of 6. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(40)\nobserve septal_resistance(4)\nobserve turbinate_resistance(3)\nobserve valve_resistance(6)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.076923076923077,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.714285714285715,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r116ent-10",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 45 divided by a septal resistance of 3 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(45)\nobserve septal_resistance(3)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r116ent-11",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 45 divided by a septal resistance of 3 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(45)\nobserve septal_resistance(3)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r116ent-12",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 45 divided by a septal resistance of 3 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(45)\nobserve septal_resistance(3)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r116ent-13",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 50 divided by a septal resistance of 4 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(50)\nobserve septal_resistance(4)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.555555555555555,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r116ent-14",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 50 divided by a septal resistance of 4 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(50)\nobserve septal_resistance(4)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.555555555555555,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r116ent-15",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 50 divided by a septal resistance of 4 plus a turbinate resistance of 5 plus a valve resistance of 6. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(50)\nobserve septal_resistance(4)\nobserve turbinate_resistance(5)\nobserve valve_resistance(6)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.555555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r116ent-16",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 52 divided by a septal resistance of 3 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(52)\nobserve septal_resistance(3)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.777777777777779,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r116ent-17",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 52 divided by a septal resistance of 3 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(52)\nobserve septal_resistance(3)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.777777777777779,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r116ent-18",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 52 divided by a septal resistance of 3 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(52)\nobserve septal_resistance(3)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.777777777777779,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r116ent-19",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 58 divided by a septal resistance of 5 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the airway patency index (the total airflow divided by the sum of the three resistances)?",
+      "program": "observe total_airflow(58)\nobserve septal_resistance(5)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = total_airflow / (septal_resistance + turbinate_resistance + valve_resistance)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 58,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2222222222222223,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r116ent-20",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 58 divided by a septal resistance of 5 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the the total resistance (the septal plus the turbinate plus the valve resistance, the divisor the airflow is divided by)?",
+      "program": "observe total_airflow(58)\nobserve septal_resistance(5)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = septal_resistance + turbinate_resistance + valve_resistance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2222222222222223,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 58,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r116ent-21",
+      "qtype": "patency_index",
+      "stem": "A rhinomanometry report records a total airflow of 58 divided by a septal resistance of 5 plus a turbinate resistance of 6 plus a valve resistance of 7. What is the the total airflow (the numerator divided by the total resistance)?",
+      "program": "observe total_airflow(58)\nobserve septal_resistance(5)\nobserve turbinate_resistance(6)\nobserve valve_resistance(7)\nlet answer = total_airflow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 58,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2222222222222223,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

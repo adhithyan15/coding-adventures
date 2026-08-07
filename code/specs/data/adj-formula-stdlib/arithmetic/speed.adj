@@ -1,0 +1,102 @@
+% ============================================================================
+% speed.adj — the distance–speed–time rates library (ADJ-FORMULA-LIBRARIES).
+% ============================================================================
+% The most-taught elementary rate: average speed is distance divided by time,
+% and the two rearrangements that complete the distance–speed–time "triangle".
+% Built ENTIRELY by composing the cited primitives of `arithmetic.adj` — it
+% re-derives no arithmetic. Where `powers.adj` nests the cited `product`, this
+% APPLIES the cited `quotient` and `product`: a speed is a quotient, a distance
+% is a product, a time is a quotient, each cited as such.
+%
+%     import "speed.adj"                       % transitively imports arithmetic.adj
+%     observe distance(150)                    % "…150 km…"   (span cited by the model)
+%     observe time(3)                          % "…in 3 hours…" (span cited by the model)
+%     ? average_speed(distance, time)          % engine → 50, carrying every citation
+%
+% The engine expands `average_speed` → `quotient` (from arithmetic.adj) on the
+% CPU and composes the provenance chain, so the answer cites BOTH the speed
+% definition (primary) and the `quotient` primitive it builds on (corroboration).
+% The model performs zero arithmetic, and the audit trail names every formula
+% that participated.
+%
+% The three formulas are the one relation v = d / t and its algebraic
+% rearrangements d = v · t and t = d / v — the classic triangle. They are the
+% same relation mathematically, but they are NOT the same CITATION: a source
+% that defines average speed does not thereby state d = v·t. So each formula
+% cites bytes stating that formula. `average_speed` rests on the definition;
+% the two rearrangements rest on a page that names the uniform-rate formula and
+% then solves it for the other variable, printing `d=rt` and `t=(d/r)` outright.
+%
+% The gap this file used to record is now CLOSED for `distance_travelled`. Its
+% citation previously said only "the formula d=rt", leaving the letters unbound
+% — it never said d is distance, r is rate, t is time. The page does bind them,
+% one sentence later, but that sentence typesets its variables with MathML
+% `<mspace>`/`<mtext>`, which the renderer rejected as unsupported, so it could
+% not be projected into the bytes claims pin into. Now that those two elements
+% render, the citation spans BOTH sentences and is self-contained: it names the
+% formula AND binds every letter in it.
+%
+% `travel_time` still cites a sentence that states `t=(d/r)` without re-binding
+% the letters. That is not an oversight: the page binds d, r and t once, in the
+% distance passage above, and a claim pins ONE contiguous span — there is no
+% span containing both the binding and `t=(d/r)`. Stated plainly rather than
+% smoothed over, since the alternative is to imply a binding the cited bytes
+% do not carry.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on two elementary primitives — `quotient` and `product`.
+% The import is RELATIVE to this file, so a consumer that imports `speed.adj`
+% gets those primitives transitively and the bodies below resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The three quantities of the distance–speed–time relation, plus the
+% three results. Rung-0 types an observable slot as `finding`; the `surface`
+% synonyms let a decomposer map everyday phrasing ("how far", "how fast", "how
+% long") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary speed_vocab {
+    define distance : finding  surface "distance", "how far", "length travelled", "displacement"
+    define time     : finding  surface "time", "how long", "elapsed time", "duration"
+    define speed    : finding  surface "speed", "how fast", "average speed", "rate"
+
+    define average_speed     : finding  surface "average speed", "speed", "how fast"
+    define distance_travelled : finding  surface "distance travelled", "distance", "how far"
+    define travel_time       : finding  surface "travel time", "time taken", "how long"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. None writes a bare `/` or `*`: each APPLIES the cited
+% primitive from `arithmetic.adj`, so the rate is what it is BECAUSE of the
+% division (or multiplication) it composes, cited as such.
+%
+%   average_speed(distance, time)     = distance / time        (v = d / t)
+%   distance_travelled(speed, time)   = speed * time           (d = v · t)
+%   travel_time(distance, speed)      = distance / speed        (t = d / v)
+% ----------------------------------------------------------------------------
+formulabook speeds {
+    use speed_vocab
+
+    % Average speed — distance divided by time. Composes `quotient`: 150 km over
+    % 3 hours is 150 / 3 = 50 km/h.
+    formula average_speed(distance, time) = quotient(distance, time)
+        source "Average speed is the rate of change of distance with time."
+        locator "https://physics.info/velocity/"
+        trust authoritative
+
+    % Distance travelled — speed multiplied by time, the rearrangement d = v·t.
+    % Composes `product`: 50 km/h for 3 hours covers 50 * 3 = 150 km.
+    formula distance_travelled(speed, time) = product(speed, time)
+        source "In Example 2.58 and Example 2.59, we used the formula d=rt. This formula gives the value of d, distance, when you substitute in the values of r and t, the rate and time."
+        locator "https://openstax.org/books/elementary-algebra-2e/pages/2-6-solve-a-formula-for-a-specific-variable"
+        trust authoritative
+
+    % Travel time — distance divided by speed, the rearrangement t = d/v.
+    % Composes `quotient`: 150 km at 50 km/h takes 150 / 50 = 3 hours.
+    formula travel_time(distance, speed) = quotient(distance, speed)
+        source "We say the formula t=(d/r) is solved for t."
+        locator "https://openstax.org/books/elementary-algebra-2e/pages/2-6-solve-a-formula-for-a-specific-variable"
+        trust authoritative
+}

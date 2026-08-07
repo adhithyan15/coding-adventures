@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.DartmouthBasicParser.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.DartmouthBasicParser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Grammar-driven parser for the original 1964 Dartmouth BASIC language</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="DartmouthBasicParser.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../../../grammars/dartmouth_basic/dartmouth_basic.grammar" LogicalName="dartmouth_basic.grammar" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../grammar-tools/CodingAdventures.GrammarTools.fsproj" />
+    <ProjectReference Include="../lexer/CodingAdventures.Lexer.fsproj" />
+    <ProjectReference Include="../parser/CodingAdventures.Parser.fsproj" />
+    <ProjectReference Include="../dartmouth-basic-lexer/CodingAdventures.DartmouthBasicLexer.fsproj" />
+  </ItemGroup>
+</Project>

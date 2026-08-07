@@ -173,12 +173,17 @@ def is_foreign_content_case(
 ) -> bool:
     if source.startswith("foreign-fragment.dat:"):
         return True
-    if (
-        fragment_context is not None
-        and fragment_context.lower() in FOREIGN_FRAGMENT_CONTEXTS
-    ):
+    if is_foreign_fragment_context(fragment_context):
         return True
     return CORE_FOREIGN_MARKUP.search(data) is not None
+
+
+def is_foreign_fragment_context(fragment_context: str | None) -> bool:
+    if fragment_context is None:
+        return False
+    normalized = fragment_context.lower()
+    namespace = normalized.split(maxsplit=1)[0]
+    return normalized in FOREIGN_FRAGMENT_CONTEXTS or namespace in {"math", "svg"}
 
 
 def build_fixture(cases: list[SmokeCase]) -> dict[str, object]:
@@ -226,7 +231,7 @@ def axis_for_case(case: SmokeCase) -> str:
 
     if case.source.startswith("foreign-fragment.dat:"):
         return "foreign-fragment"
-    if fragment_context in FOREIGN_FRAGMENT_CONTEXTS:
+    if is_foreign_fragment_context(case.fragment_context):
         return "foreign-fragment"
     if HTML_INTEGRATION_MARKUP.search(case.data):
         return "html-integration-point"

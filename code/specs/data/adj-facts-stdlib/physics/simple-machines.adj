@@ -1,0 +1,110 @@
+% ============================================================================
+% simple-machines — each of the six classical simple machines and a common
+% everyday EXAMPLE of it (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% An elementary/middle-school physics fact on the way to mechanics: there are
+% SIX classical simple machines — the basic devices that change the direction
+% or amount of a force to make work easier — and each one shows up in an
+% everyday object a child already knows. Recall is a binding query:
+%
+%     ? simple_machine_example(lever, $Ex)   % seesaw
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `simple_machine_example(machine, example)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the everyday example WITH its source, on the CPU, with zero model
+% calls, and abstains on anything that is not one of the six simple machines.
+%
+% The six simple machines, as a little truth table (machine → what it does →
+% the everyday object the source names):
+%
+%     machine          what it does (NASA)               everyday example
+%     --------------   -------------------------------   ----------------
+%     lever            moves an object over a fulcrum     seesaw
+%     inclined_plane   angled surface, move things up     ramp
+%     wedge            two planes that split/separate     door_stop
+%     screw            fastens two objects together       bottle_cap
+%     wheel_and_axle   wheel on an axle turns a load      bicycle
+%     pulley           wheel+axle changes force direction elevator
+%
+% This is the concrete rung a physics learner reasons UP from: before reasoning
+% about mechanical advantage, torque, or friction, a student first learns to
+% NAME the six machines and point to one in the room. The query also runs
+% BACKWARD — bind the example and recall the machine it is an instance of:
+%
+%     ? simple_machine_example($M, seesaw)   % lever — reverse recall
+%
+% Something that is not one of the six machines — a gear, a spring, an engine —
+% has no row, so a recall on it ABSTAINS rather than inventing an example. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% Each `example` value is a SINGLE lowercase snake_case atom, chosen to be a
+% faithful short paraphrase of an example the source explicitly states for that
+% machine — never an object the source does not list. Where NASA lists two
+% examples for a machine, we carry the FIRST everyday one (for the screw, whose
+% first listed "example" is the word "screw" itself, we carry the second,
+% "bottle caps", so the example is a distinct everyday object).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every machine→example pair
+% was read out of a fetched NASA education page this session, and any machine
+% that could not be grounded there would have been dropped). All six spans come
+% from the SAME primary U.S. government source, NASA's Next Gen STEM "Simple
+% Machines" classroom-connection educator notes
+% (nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf),
+% each quoted here character-for-character so any reader can re-check it. The
+% document first states the set —
+%
+%   "There are six simple machines: screw, inclined plane, wedge, lever, wheel
+%    and axle, and pulley."
+%
+% — and then defines each with examples:
+%
+%   lever → seesaw
+%     "Lever: uses a surface situated on a fulcrum (pivoting point) to move an
+%      object (examples: seesaw, scissors)"
+%
+%   inclined_plane → ramp
+%     "Inclined Plane: uses an angled plane, or surface, to move objects more
+%      easily (examples: ramp, stairs)"
+%
+%   wedge → door_stop
+%     "Wedge: uses two inclined converging planes in order to split, or
+%      separate, objects (examples: door stop, knife)"
+%
+%   screw → bottle_cap
+%     "Screw: helps to fasten two objects together (examples: screw, bottle
+%      caps)"
+%
+%   wheel_and_axle → bicycle
+%     "Wheel and axle: a wheel attached to an axle used to turn or move a load
+%      (examples: bicycle, clock)"
+%
+%   pulley → elevator
+%     "Pulley: uses a wheel and axle to change the direction of an object
+%      (examples: elevator, water well)"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NASA sentence that fixes the
+% first row (lever → seesaw). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each example remains independently checkable. The
+% source is a primary U.S. government NASA education page (nasa.gov), so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table simple_machine_example {
+    columns machine, example
+
+    row (lever, seesaw)
+    row (inclined_plane, ramp)
+    row (wedge, door_stop)
+    row (screw, bottle_cap)
+    row (wheel_and_axle, bicycle)
+    row (pulley, elevator)
+
+    source "Lever: uses a surface situated on a fulcrum (pivoting point) to move an object (examples: seesaw, scissors)"
+    locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    trust authoritative
+}

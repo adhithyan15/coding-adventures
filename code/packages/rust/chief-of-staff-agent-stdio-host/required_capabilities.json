@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-agent-stdio-host",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Launches the exact already-authorized Level 4 agent executable without invoking a shell."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "*",
+      "justification": "Kills and reaps only the child process owned by the session after protocol or pipe failure."
+    }
+  ],
+  "justification": "Concrete process adapter that transports bounded Level 4 records over owned child pipes; package trust, sandbox policy, restart policy, and timeouts are injected or enforced by its caller."
+}

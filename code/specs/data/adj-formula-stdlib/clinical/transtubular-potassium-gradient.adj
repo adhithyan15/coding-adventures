@@ -1,0 +1,118 @@
+% ============================================================================
+% transtubular-potassium-gradient.adj — the transtubular potassium gradient
+% (TTKG = (urine K / serum K) / (urine osmolality / serum osmolality)) in the ADJ standard library.
+% ============================================================================
+% The transtubular-potassium-gradient entry of the *clinical* track — a bedside index of ALDOSTERONE
+% ACTION at the cortical collecting duct, used to work up a potassium disorder. It estimates the
+% potassium concentration at the end of the cortical collecting duct (relative to plasma) by correcting
+% the urine-to-plasma potassium ratio for the water that has since been reabsorbed — which the
+% urine-to-plasma OSMOLALITY ratio measures. A low TTKG in the face of HYPERkalaemia points to too
+% little aldosterone effect (hypoaldosteronism); a low TTKG in HYPOkalaemia points to appropriate renal
+% potassium conservation. THE TRANSTUBULAR POTASSIUM GRADIENT IS THE URINE POTASSIUM OVER THE SERUM
+% POTASSIUM, ALL DIVIDED BY THE URINE OSMOLALITY OVER THE SERUM OSMOLALITY — i.e.
+% (urine K / serum K) / (urine osmolality / serum osmolality). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its four exact rearrangements (each of the
+% four measured quantities solved for from the other three and the gradient). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the four laboratory values
+% from its own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU.
+% Zero math is performed by the model; the engine computes each value EXACTLY (over exact rationals),
+% carrying the formula's citation.
+%
+%     import "transtubular-potassium-gradient.adj"
+%     observe urine_potassium(63)      % "…urine K 63 mmol/L…"       (span cited by the model)
+%     observe serum_potassium(7)        % "…serum K 7 mmol/L…"        (span cited by the model)
+%     observe urine_osmolality(610)     % "…urine osm 610 mOsm/kg…"   (span cited by the model)
+%     observe serum_osmolality(305)     % "…serum osm 305 mOsm/kg…"   (span cited by the model)
+%     ? transtubular_potassium_gradient(urine_potassium, serum_potassium, urine_osmolality, serum_osmolality)
+%                                        % engine → 4.5, the transtubular potassium gradient
+%
+% The gradient is a pure ratio of ratios — there is NO constant to taint it — so it is exact whenever
+% the four inputs are exact, and every value the engine returns is exact. The formulas COMPOSE and
+% invert cleanly around the worked case urine K = 63, serum K = 7, urine osmolality = 610, serum
+% osmolality = 305 (TTKG = (63 / 7) / (610 / 305) = 9 / 2 = 4.5): the
+% `transtubular_potassium_gradient` a consumer computes is exactly the value each of the four inverse
+% formulas back-solves to recover its own measured input (63, 7, 610, 305).
+%
+%   transtubular_potassium_gradient(urine_potassium, serum_potassium, urine_osmolality, serum_osmolality)
+%       = (urine_potassium / serum_potassium) / (urine_osmolality / serum_osmolality)                              % (TTKG)
+%   urine_potassium(transtubular_potassium_gradient, serum_potassium, urine_osmolality, serum_osmolality)
+%       = transtubular_potassium_gradient * serum_potassium * urine_osmolality / serum_osmolality                  % (solved for urine K)
+%   serum_potassium(transtubular_potassium_gradient, urine_potassium, urine_osmolality, serum_osmolality)
+%       = urine_potassium * serum_osmolality / (transtubular_potassium_gradient * urine_osmolality)                % (solved for serum K)
+%   urine_osmolality(transtubular_potassium_gradient, urine_potassium, serum_potassium, serum_osmolality)
+%       = urine_potassium * serum_osmolality / (transtubular_potassium_gradient * serum_potassium)                 % (solved for urine osm)
+%   serum_osmolality(transtubular_potassium_gradient, urine_potassium, serum_potassium, urine_osmolality)
+%       = transtubular_potassium_gradient * serum_potassium * urine_osmolality / urine_potassium                   % (solved for serum osm)
+%
+% NOTE ON UNITS AND MODELLING: the two potassiums must be in the SAME concentration unit (e.g. mmol/L)
+% and the two osmolalities in the SAME unit (e.g. mOsm/kg); because potassium appears as a ratio and
+% osmolality appears as a ratio, those units CANCEL and the TTKG is a pure dimensionless number — which
+% is exactly why it is written as this ratio of two ratios. The index is only valid when the urine
+% osmolality EXCEEDS the serum osmolality and the urine sodium is adequate (the cited page states these
+% limits); this library COMPUTES the gradient — it does not itself check those preconditions or make the
+% aldosterone call.
+%
+% All five formulas are defended by the SAME clause — the quoted TTKG equation — because that one
+% statement (the TTKG IS urine-K-over-serum-K divided by urine-osm-over-serum-osm) sanctions the
+% relation read every way. The quote is transcribed verbatim from a peer-reviewed
+% potassium-metabolism review on PubMed Central (NCBI), a primary, re-fetchable source, so each
+% `formula` carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the formula is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each of the five quantities appears BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the intended
+% unit.
+% ----------------------------------------------------------------------------
+dictionary transtubular_potassium_gradient_vocab {
+    define urine_potassium                  : finding  surface "urine potassium", "urinary potassium", "urine K", "UK"        % concentration (e.g. mmol/L)
+    define serum_potassium                  : finding  surface "serum potassium", "plasma potassium", "serum K", "SK"         % concentration (e.g. mmol/L)
+    define urine_osmolality                 : finding  surface "urine osmolality", "urinary osmolality", "urine osm"          % mOsm/kg
+    define serum_osmolality                 : finding  surface "serum osmolality", "plasma osmolality", "serum osm"           % mOsm/kg
+    define transtubular_potassium_gradient  : finding  surface "transtubular potassium gradient", "TTKG", "transtubular K gradient"  % dimensionless
+}
+
+% ----------------------------------------------------------------------------
+% The transtubular potassium gradient, all five ways. Each is a named, importable, reusable formula over
+% its formal parameters, bound at apply time, and each carries the TTKG equation from the cited
+% potassium-metabolism review on PubMed Central (a quote is required on a shipped formula). Each is an
+% exact expression in the four measured quantities (the gradient carries NO constant), so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook transtubular_potassium_gradient_laws {
+    use transtubular_potassium_gradient_vocab
+
+    % Transtubular potassium gradient — urine-K-over-serum-K, all divided by urine-osm-over-serum-osm.
+    formula transtubular_potassium_gradient(urine_potassium, serum_potassium, urine_osmolality, serum_osmolality) = (urine_potassium / serum_potassium) / (urine_osmolality / serum_osmolality)
+        source "TTKG is calculated as (urine K concentration/serum K concentration)/(urine osmolality/plasma osmolality)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224083/"
+        trust authoritative
+
+    % Urine potassium — the same equation solved for the urine potassium. Defended by the SAME sentence.
+    formula urine_potassium(transtubular_potassium_gradient, serum_potassium, urine_osmolality, serum_osmolality) = transtubular_potassium_gradient * serum_potassium * urine_osmolality / serum_osmolality
+        source "TTKG is calculated as (urine K concentration/serum K concentration)/(urine osmolality/plasma osmolality)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224083/"
+        trust authoritative
+
+    % Serum potassium — the same equation solved for the serum potassium. The SAME sentence.
+    formula serum_potassium(transtubular_potassium_gradient, urine_potassium, urine_osmolality, serum_osmolality) = urine_potassium * serum_osmolality / (transtubular_potassium_gradient * urine_osmolality)
+        source "TTKG is calculated as (urine K concentration/serum K concentration)/(urine osmolality/plasma osmolality)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224083/"
+        trust authoritative
+
+    % Urine osmolality — the same equation solved for the urine osmolality. The SAME sentence, again.
+    formula urine_osmolality(transtubular_potassium_gradient, urine_potassium, serum_potassium, serum_osmolality) = urine_potassium * serum_osmolality / (transtubular_potassium_gradient * serum_potassium)
+        source "TTKG is calculated as (urine K concentration/serum K concentration)/(urine osmolality/plasma osmolality)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224083/"
+        trust authoritative
+
+    % Serum osmolality — the same equation solved for the serum osmolality. The SAME sentence, the fifth
+    % reading of the one gradient.
+    formula serum_osmolality(transtubular_potassium_gradient, urine_potassium, serum_potassium, urine_osmolality) = transtubular_potassium_gradient * serum_potassium * urine_osmolality / urine_potassium
+        source "TTKG is calculated as (urine K concentration/serum K concentration)/(urine osmolality/plasma osmolality)"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224083/"
+        trust authoritative
+}

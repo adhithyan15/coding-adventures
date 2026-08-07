@@ -35,6 +35,8 @@ mod tests {
         assert_eq!(t_text(Some("")), "");
     }
 
+    // `3.14` is arbitrary numeric test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn n_basic() {
         assert_eq!(n_number(Some(3.14)), 3.14);

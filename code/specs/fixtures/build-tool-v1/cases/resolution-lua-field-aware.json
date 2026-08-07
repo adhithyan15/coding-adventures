@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "resolution/lua-field-aware",
+  "domain": "resolution",
+  "summary": "Lua dependency resolution ignores package aliases outside the authoritative dependencies table.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/alpha/BUILD",
+        "content_utf8": "echo \"building alpha\"\n"
+      },
+      {
+        "path": "code/packages/lua/alpha/coding-adventures-alpha-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-alpha\"\nversion = \"0.1.0-1\"\ndescription = { summary = \"Alpha sources mention coding-adventures-gamma\" }\nsource = { url = \"git+https://example.invalid/coding-adventures-gamma\" }\ndependencies = {\n    \"lua >= 5.4\",\n    -- \"coding-adventures-gamma\" is documentation, not a dependency\n    \"coding-adventures-beta >= 0.1.0\",\n}\n"
+      },
+      {
+        "path": "code/packages/lua/beta/BUILD",
+        "content_utf8": "echo \"building beta\"\n"
+      },
+      {
+        "path": "code/packages/lua/beta/coding-adventures-beta-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-beta\"\nversion = \"0.1.0-1\"\ndescription = { summary = \"Beta documentation mentions coding-adventures-alpha\" }\ndependencies = { \"lua >= 5.4\" }\n"
+      },
+      {
+        "path": "code/packages/lua/gamma/BUILD",
+        "content_utf8": "echo \"building gamma\"\n"
+      },
+      {
+        "path": "code/packages/lua/gamma/coding-adventures-gamma-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-gamma\"\nversion = \"0.1.0-1\"\ndependencies = { \"lua >= 5.4\" }\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/lua-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "lua/beta",
+          "lua/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

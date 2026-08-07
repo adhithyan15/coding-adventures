@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/reference-validation-v1.json",
+  "title": "Neural reference-validation catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "protocol", "families"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"const": "neural-reference-catalog"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 160},
+    "question": {"type": "string", "minLength": 1, "maxLength": 240},
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "success_exit_code", "steps", "hand_check"],
+      "properties": {
+        "command": {"const": "python code/scripts/validate_reference_fixture_catalog.py"},
+        "success_exit_code": {"const": 0},
+        "steps": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string", "minLength": 1, "maxLength": 200}},
+        "hand_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["equation", "stored", "recomputed", "absolute_tolerance", "absolute_error", "passes"],
+          "properties": {
+            "equation": {"const": "absolute_error = |recomputed - stored|"},
+            "stored": {"type": "number"},
+            "recomputed": {"type": "number"},
+            "absolute_tolerance": {"type": "number", "exclusiveMinimum": 0},
+            "absolute_error": {"type": "number", "minimum": 0},
+            "passes": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "families": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order", "id", "title", "track", "spec", "fixture_root", "validator", "lab_count", "oracle"],
+        "properties": {
+          "order": {"type": "integer", "minimum": 3, "maximum": 32},
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,79}$"},
+          "title": {"type": "string", "minLength": 1, "maxLength": 120},
+          "track": {"enum": ["foundation", "spatial", "sequence", "attention", "representation", "structured", "deep-training", "autograd", "compilation"]},
+          "spec": {"type": "string", "pattern": "^code/specs/NN[0-9]{2}-[a-z0-9-]+\\.md$"},
+          "fixture_root": {"type": "string", "pattern": "^code/specs/fixtures/[a-z0-9-]+-v1$"},
+          "validator": {"type": "string", "pattern": "^code/scripts/validate_[a-z0-9_]+_labs\\.py$"},
+          "lab_count": {"type": "integer", "minimum": 1, "maximum": 100},
+          "oracle": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,79}$"}
+        }
+      }
+    }
+  }
+}

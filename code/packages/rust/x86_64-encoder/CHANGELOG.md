@@ -1,6 +1,26 @@
 # Changelog — `x86_64-encoder`
 
-## 0.6.0 — 2026-06-28 (AL8-sqrt — `SQRTSD xmm_dst, xmm_src`)
+## 0.7.0 — 2026-07-23 — RIP-relative `lea` primitives (GC stack-map registration)
+
+Three additive primitives the twig-aot x86-64 GC stack-map registration codegen
+(`__gc_init_stackmaps`, AOT00-T1 x86_64 PR-x3) needs to point registers at constant
+tables and cross-function code addresses — the x86-64 analogue of the aarch64 encoder's
+`adr` / `adr_placeholder` / `emit_data_word`:
+
+- **`lea_rip_label(dst, label)`** — `LEA r64, [RIP + <label>]` to a label bound later in
+  the same function, resolved at `finish()` via the existing fix-up mechanism (like a
+  `jmp`). No relocation — the target is intra-function. Points a register at a data word
+  embedded in the stream.
+- **`lea_rip_placeholder(dst) -> usize`** — `LEA r64, [RIP + #0]` returning its `disp32`
+  slot offset, for a caller that patches the displacement once a cross-function target
+  offset is known (`disp32 = target − (slot + 4)`). Base-independent (RIP cancels the
+  load base), so no relocation is needed — the x86-64 counterpart of the aarch64 `ADR`
+  used for `func_start`.
+- **`emit_data_u32(word) -> usize`** — append a raw little-endian `u32` table element
+  (constant data, not an instruction), returning its byte offset.
+
+Three unit tests (byte-exact `48 8D …` encodings + a data-pool round trip + iced-x86
+decode confirming the `lea`). Purely additive; existing encodings unchanged.
 
 ### Added — `sqrtsd`
 

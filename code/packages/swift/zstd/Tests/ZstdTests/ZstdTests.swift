@@ -361,4 +361,316 @@ final class ZstdTests: XCTestCase {
         }
         try rt(data)
     }
+
+    // =========================================================================
+    // TC-9 CLI interop: real `zstd` binary in both directions
+    // =========================================================================
+    //
+    // Every test above this point only round-trips through OUR OWN encoder and
+    // decoder. That is necessary but never sufficient for a codec that claims
+    // wire-format compatibility with an external spec: lessons.md "Lesson 96"
+    // documents that the java/zstd and rust/zstd ports carried THREE
+    // compounding bugs in the FSE sequences-section codec (a fabricated
+    // two-pass table-spread algorithm, a wrong per-sequence field order, and
+    // an unconditional state-transition that should have been skipped for the
+    // last sequence in a block) which were entirely invisible to same-codebase
+    // round-trip tests — including a dedicated low-level "encode two sequences
+    // by hand, decode them, check they match" unit test — because encoder and
+    // decoder followed the identical wrong convention. Only comparing against
+    // an INDEPENDENT, spec-conformant implementation (the real `zstd` CLI) can
+    // catch a systematic, symmetric protocol deviation like that.
+    //
+    // This suite shells out to the real `zstd` binary, when present on PATH,
+    // in both directions:
+    //   (a) compress with OUR encoder, decompress with `zstd -d`  — proves our
+    //       wire format is real ZStd, not just self-consistent.
+    //   (b) compress with `zstd -c`, decompress with OUR decoder — proves our
+    //       decoder accepts real ZStd frames (including ones with the
+    //       Content_Checksum_Flag set — see Lesson 95 — since the CLI enables
+    //       the checksum by default).
+    //
+    // If `zstd` isn't installed, the tests are skipped (XCTSkip) rather than
+    // failed, since not every CI environment has the CLI available.
+
+    /// Locate the `zstd` CLI executable, or `nil` if it isn't on PATH.
+    private func findZstdCLI() -> String? {
+        let commonPaths = ["/opt/homebrew/bin/zstd", "/usr/local/bin/zstd", "/usr/bin/zstd"]
+        for path in commonPaths where FileManager.default.isExecutableFile(atPath: path) {
+            return path
+        }
+        let which = Process()
+        which.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        which.arguments = ["which", "zstd"]
+        let outPipe = Pipe()
+        which.standardOutput = outPipe
+        which.standardError = Pipe()
+        do {
+            try which.run()
+            which.waitUntilExit()
+            guard which.terminationStatus == 0 else { return nil }
+            let outData = outPipe.fileHandleForReading.readDataToEndOfFile()
+            let path = String(data: outData, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            return (path?.isEmpty == false) ? path : nil
+        } catch {
+            return nil
+        }
+    }
+
+    /// Run `zstd` with the given arguments, feeding `stdin` and returning
+    /// captured stdout. Throws if the process exits non-zero.
+    private func runZstdCLI(_ zstdPath: String, args: [String], stdin: Data) throws -> Data {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: zstdPath)
+        process.arguments = args
+
+        let inPipe = Pipe()
+        let outPipe = Pipe()
+        let errPipe = Pipe()
+        process.standardInput = inPipe
+        process.standardOutput = outPipe
+        process.standardError = errPipe
+
+        try process.run()
+
+        // Write stdin on a background queue so a large payload can't deadlock
+        // against the child simultaneously trying to flush stdout.
+        let writeQueue = DispatchQueue(label: "zstd-cli-stdin")
+        writeQueue.async {
+            inPipe.fileHandleForWriting.write(stdin)
+            try? inPipe.fileHandleForWriting.close()
+        }
+
+        let outData = outPipe.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+
+        guard process.terminationStatus == 0 else {
+            let errData = errPipe.fileHandleForReading.readDataToEndOfFile()
+            let errText = String(data: errData, encoding: .utf8) ?? "<no stderr>"
+            throw ZstdCLIError.nonZeroExit(process.terminationStatus, errText)
+        }
+        return outData
+    }
+
+    private enum ZstdCLIError: Error, CustomStringConvertible {
+        case nonZeroExit(Int32, String)
+        var description: String {
+            switch self {
+            case .nonZeroExit(let code, let stderr):
+                return "zstd CLI exited with status \(code): \(stderr)"
+            }
+        }
+    }
+
+    /// One round of bidirectional interop for a single payload.
+    ///
+    /// Direction (a), ours → CLI, is the direction Lesson 96's bug class
+    /// lives in (our FSE sequences-section encoder producing real wire
+    /// format), and must ALWAYS pass — this package only ever emits
+    /// Predefined-mode FSE tables, so there is no case where a real decoder
+    /// should reject our own output.
+    ///
+    /// Direction (b), CLI → ours, additionally exercises a separate, already
+    /// -documented scope boundary: this decoder only implements
+    /// Predefined-mode FSE tables and Raw literals (see `decodeLiteralsSection`
+    /// and the `unsupportedFSEModes` guard in `decompressBlock`) — it does not
+    /// implement FSE_Compressed/RLE/Repeat table modes or Huffman literals.
+    /// The real `zstd` CLI is free to choose those richer modes when a
+    /// block's statistics diverge enough from the built-in default
+    /// distribution that a custom table pays for its own transmission cost.
+    /// When that happens for a given payload, `unsupportedFSEModes` is an
+    /// expected, non-corruption outcome — not the Lesson 96 conformance bug
+    /// (which manifested as `Decoding error (36): Data corruption detected`,
+    /// or silent byte-for-byte mismatches, never this specific typed error)
+    /// — so it is tolerated here rather than treated as a failure.
+    private func assertCliInterop(
+        _ data: [UInt8], zstdPath: String, label: String,
+        file: StaticString = #file, line: UInt = #line
+    ) throws {
+        // (a) ours → CLI: compress with our encoder, decompress with real `zstd -d`.
+        let ours = compress(data)
+        let decodedByCli = try runZstdCLI(
+            zstdPath, args: ["-d", "-c"], stdin: Data(ours))
+        XCTAssertEqual(
+            [UInt8](decodedByCli), data,
+            "[\(label)] real `zstd -d` failed to decode our compressed output " +
+            "(this is the Lesson 96 FSE sequences-codec conformance bug if it fails)",
+            file: file, line: line)
+
+        // (b) CLI → ours: compress with real `zstd -c` (checksum ON by default,
+        // exercising Lesson 95's FHD Content_Checksum_Flag), decompress with ours.
+        let cliCompressed = try runZstdCLI(
+            zstdPath, args: ["-c"], stdin: Data(data))
+        do {
+            let decodedByOurs = try decompress([UInt8](cliCompressed))
+            XCTAssertEqual(
+                decodedByOurs, data,
+                "[\(label)] our decoder failed to decode real `zstd -c` output",
+                file: file, line: line)
+        } catch ZstdError.unsupportedFSEModes {
+            // Expected scope boundary (see doc comment above) — the CLI chose
+            // a non-Predefined FSE table mode for this payload's statistics.
+            // Not a conformance failure of the Predefined-mode codec path.
+        }
+    }
+
+    /// Minimal repro from Lesson 96: a single sequence (ll=2, ml=28, off=2)
+    /// is enough to exercise the FSE sequences codec end-to-end.
+    func testTC9CliInterop() throws {
+        guard let zstdPath = findZstdCLI() else {
+            throw XCTSkip("real `zstd` CLI not found on PATH; skipping interop test")
+        }
+        let data = Array(String(repeating: "ababababab", count: 3).utf8)
+        try assertCliInterop(data, zstdPath: zstdPath, label: "minimal-repro")
+    }
+
+    /// Broader interop corpus: periodic patterns, semi-random run-length data,
+    /// pure random data, and prose, at several sizes — enough to reliably
+    /// drive the sequences count well past 1 so the FSE state machine cycles
+    /// through many symbols, not just the trivial single-sequence case.
+    func testTC9CliInteropCorpus() throws {
+        guard let zstdPath = findZstdCLI() else {
+            throw XCTSkip("real `zstd` CLI not found on PATH; skipping interop test")
+        }
+
+        var cases: [(String, [UInt8])] = []
+
+        // Periodic patterns at multiple repeat counts.
+        for (period, reps) in [("ab", 20), ("abc", 50), ("ZStdRocks!", 200), ("hello world ", 500)] {
+            cases.append((
+                "periodic(\(period)x\(reps))",
+                Array(String(repeating: period, count: reps).utf8)))
+        }
+
+        // Prose at multiple repeat counts.
+        let sentence = "The quick brown fox jumps over the lazy dog. "
+        for reps in [10, 100, 1000] {
+            cases.append(("prose(x\(reps))", Array(String(repeating: sentence, count: reps).utf8)))
+        }
+
+        // Semi-random run-length data: runs of a byte whose length is itself
+        // pseudo-random, giving a mix of RLE-friendly and LZ77-friendly spans.
+        do {
+            var seed: UInt32 = 12345
+            var data = [UInt8]()
+            while data.count < 8000 {
+                seed = seed &* 1664525 &+ 1013904223
+                let runLen = Int(seed % 40) + 1
+                let byte = UInt8((seed >> 8) & 0xFF)
+                data.append(contentsOf: repeatElement(byte, count: runLen))
+            }
+            cases.append(("semi-random-runs", data))
+        }
+
+        // Pure pseudo-random data (LCG) — worst case for LZ77, still must
+        // round-trip exactly through the real CLI.
+        do {
+            var seed: UInt32 = 0xC0FFEE
+            var data = [UInt8]()
+            for _ in 0..<4000 {
+                seed = seed &* 1664525 &+ 1013904223
+                data.append(UInt8(seed & 0xFF))
+            }
+            cases.append(("pure-random", data))
+        }
+
+        for (label, data) in cases {
+            try assertCliInterop(data, zstdPath: zstdPath, label: label)
+        }
+    }
+
+    // =========================================================================
+    // TC-16: Repeated-Offset (R1/R2/R3) decode — lessons.md Lesson 98
+    // =========================================================================
+    //
+    // RFC 8878 §3.1.1.3.2.1.1 defines a Repeated_Offset mechanism: when the
+    // decoded Offset_Value for a sequence is 1, 2, or 3, the actual match
+    // offset is NOT `Offset_Value - 3` (which would underflow) — it is looked
+    // up from a 3-entry offset HISTORY (Repeated_Offset1/2/3, seeded 1/4/8 at
+    // the start of a frame and updated after every sequence). Real `zstd`
+    // encoders reach for this constantly: reusing the previous match's
+    // distance is one of the format's principal entropy wins, especially for
+    // periodic or highly repetitive data.
+    //
+    // This package's own ENCODER intentionally never emits repeat-offset
+    // codes — `encodeSequencesSection`'s minimum possible LZ77 offset is 1,
+    // so `rawOff = offset + 3 >= 4` always, meaning `ofCode` is always >= 2.
+    // That is a deliberate educational simplification on the ENCODE side
+    // only (see `code/packages/c/zstd`'s `zstd.h` for the same documented
+    // choice). But a DECODER that only understands explicit offset codes
+    // will fail on a meaningful fraction of real-world `.zst` files, because
+    // it can never round-trip through this package's own encoder/decoder
+    // pair — no internal self-consistency test can catch the gap. It only
+    // shows up against an INDEPENDENT, spec-conformant encoder: the real
+    // `zstd` CLI. See lessons.md Lesson 98 (found while implementing
+    // `code/packages/c/zstd`, PR #9941) for the sibling bug in the C port,
+    // which this package inherited from the same design lineage (Lesson 96's
+    // FSE codec was fixed repo-wide, but repeat-offset decode was never
+    // implemented in any port to begin with).
+    //
+    // Lesson 98's own minimal repro (4713 bytes of a single repeated byte
+    // compressed by the real CLI) picks a single Compressed block containing
+    // one sequence with `Offset_Value = 1` — "reuse Repeated_Offset1", which
+    // starts at its default value of 1 — an unmistakable RLE-via-repeat-
+    // offset pattern that a naive `offset = Offset_Value - 3` decode
+    // corrupts into a huge bogus offset (correctly rejected by the
+    // offset-bounds guard, but for the wrong reason: the frame was valid).
+    //
+    // `runLengths` below repeats that repro at a size chosen so real `zstd`
+    // picks a Compressed block (not RLE, which sidesteps the sequences
+    // codec entirely), and `periodicOffsets` adds a case built from two
+    // interleaved periods so the encoder is likely to reuse more than one
+    // distance, exercising Repeated_Offset2/3 as well as Repeated_Offset1.
+
+    func testTC16RepeatedOffsetDecode() throws {
+        guard let zstdPath = findZstdCLI() else {
+            throw XCTSkip("real `zstd` CLI not found on PATH; skipping interop test")
+        }
+
+        var cases: [(String, [UInt8])] = []
+
+        // Lesson 98's exact repro shape: a long run of one repeated byte.
+        // Large enough, and with just enough entropy noise (a handful of
+        // distinct bytes) that the real CLI is not guaranteed to fold the
+        // whole thing into a single RLE block, while still being dominated
+        // by one back-reference distance reused sequence after sequence.
+        do {
+            var data = [UInt8](repeating: UInt8(ascii: "Z"), count: 4713)
+            // Sprinkle a few different bytes in so the block has more than
+            // one literal run, forcing multiple sequences (each reusing the
+            // same distance) rather than one giant match.
+            for i in stride(from: 100, to: data.count, by: 137) {
+                data[i] = UInt8(ascii: "Q")
+            }
+            cases.append(("lesson98-repeated-byte", data))
+        }
+
+        // Two interleaved back-to-back-match periods: forces the encoder to
+        // alternate between (at least) two distinct recent offsets, which
+        // real zstd encodes via Repeated_Offset1 AND Repeated_Offset2/3
+        // shortcuts once each distance has been used before.
+        do {
+            let a = Array("ABCDEFGHIJ".utf8)   // period-10 run
+            let b = Array("0123456789012".utf8) // period-13 run
+            var data: [UInt8] = []
+            for _ in 0..<300 {
+                data.append(contentsOf: a)
+                data.append(contentsOf: b)
+            }
+            cases.append(("interleaved-periods", data))
+        }
+
+        for (label, data) in cases {
+            // Compress with the REAL zstd CLI (an independent, spec-
+            // conformant encoder that uses repeat-offsets freely), decompress
+            // with OUR decoder. This is the direction Lesson 98 lives in.
+            let cliCompressed = try runZstdCLI(zstdPath, args: ["-c", "-19"], stdin: Data(data))
+            let decodedByOurs = try decompress([UInt8](cliCompressed))
+            XCTAssertEqual(
+                decodedByOurs, data,
+                "[\(label)] our decoder failed to correctly decode real `zstd` output " +
+                "using Repeated-Offset (R1/R2/R3) sequences — RFC 8878 §3.1.1.3.2.1.1 " +
+                "(lessons.md Lesson 98)")
+        }
+    }
 }

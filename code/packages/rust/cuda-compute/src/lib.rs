@@ -724,7 +724,7 @@ impl CudaDevice {
         block: [u32; 3],
         args:  &mut [*mut c_void],
     ) -> Result<(), CudaError> {
-        if grid.iter().any(|&d| d == 0) || block.iter().any(|&d| d == 0) {
+        if grid.contains(&0) || block.contains(&0) {
             return Err(CudaError::DriverError {
                 code: -1,
                 message: format!(
@@ -790,6 +790,11 @@ unsafe impl Send for CudaBuffer {}
 impl CudaBuffer {
     pub fn len(&self) -> usize {
         self.len
+    }
+
+    /// Returns `true` when the buffer holds zero elements.
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
     }
 
     /// The raw CUDA device pointer value.
@@ -976,7 +981,7 @@ mod tests {
         let n = src_data.len() as u32;
 
         let src_buf = device.alloc_with_bytes(&src_data).unwrap();
-        let mut dst_buf = device.alloc(src_data.len()).unwrap();
+        let dst_buf = device.alloc(src_data.len()).unwrap();
 
         let module   = device.compile(CUDA_C).unwrap();
         let function = module.function("invert").unwrap();

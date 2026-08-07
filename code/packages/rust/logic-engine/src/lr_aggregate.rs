@@ -206,10 +206,10 @@ impl CmpOp {
     ) -> bool {
         match (lhs_exact, rhs_exact) {
             (Some(a), Some(b)) => match self {
-                CmpOp::Ge => cmp_exact(a, b) >= 0,
-                CmpOp::Le => cmp_exact(a, b) <= 0,
-                CmpOp::Gt => cmp_exact(a, b) > 0,
-                CmpOp::Lt => cmp_exact(a, b) < 0,
+                CmpOp::Ge => cmp_exact(&a, &b) >= 0,
+                CmpOp::Le => cmp_exact(&a, &b) <= 0,
+                CmpOp::Gt => cmp_exact(&a, &b) > 0,
+                CmpOp::Lt => cmp_exact(&a, &b) < 0,
                 CmpOp::Eq => a == b,
             },
             _ => self.eval(lhs, rhs),
@@ -227,14 +227,24 @@ impl CmpOp {
     }
 }
 
-fn cmp_exact(lhs: ExactRational, rhs: ExactRational) -> i8 {
-    let Some(a) = lhs.num.checked_mul(rhs.den) else {
-        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
-    };
-    let Some(b) = rhs.num.checked_mul(lhs.den) else {
-        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
-    };
-    ordering_i8(a.cmp(&b))
+/// Whether comparison would have to discard a non-round-trippable exact
+/// observed value because the threshold has no exact sidecar. An exact RHS is
+/// an explicitly authored threshold and may narrow to its stated decimal.
+pub fn comparison_requires_lossy_fallback(
+    lhs_exact: &Option<ExactRational>,
+    rhs_exact: &Option<ExactRational>,
+) -> bool {
+    matches!(
+        (lhs_exact, rhs_exact),
+        (Some(value), None) if !value.is_representable_as_f64()
+    )
+}
+
+/// Exact ordering of two rationals. `BigRational` is unbounded and totally ordered, so this is
+/// an exact comparison with no cross-multiplication overflow to guard against (the old `i128`
+/// sidecar needed an `f64` fallback; this never does).
+fn cmp_exact(lhs: &ExactRational, rhs: &ExactRational) -> i8 {
+    ordering_i8(lhs.as_ratio().cmp(rhs.as_ratio()))
 }
 
 fn ordering_i8(ordering: std::cmp::Ordering) -> i8 {
@@ -761,6 +771,19 @@ pub enum LrAggregateWarning {
     /// `LR == 1.0`) fired. Permitted but a no-op; emitted once per
     /// such clause to surface likely modeller intent errors.
     DegenerateContribution { clause_id: ContributionClauseId },
+    /// A predicate contribution was not evaluated because doing so would make
+    /// a discrete decision from a precision-lost exact source.
+    PredicatePrecisionLoss {
+        clause_id: PredicateContributionClauseId,
+        slot: String,
+    },
+    /// A predicate threshold could not be evaluated, so the contribution was
+    /// not silently treated as absent.
+    PredicateEvaluationError {
+        clause_id: PredicateContributionClauseId,
+        slot: String,
+        detail: String,
+    },
 }
 
 /// Run LR aggregation for `query` against `kb`.
@@ -800,6 +823,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     clause_id: prior.id,
                     prior_logit: prior.prior_logit,
                 },
+                depth: 0,
             });
             prior.prior_logit
         }
@@ -832,6 +856,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     evidence_proof: observed.proof.clone(),
                     logit_delta,
                 },
+                depth: 0,
             });
             running_logit += logit_delta;
             via_facts.extend(observed.fact_ids);
@@ -874,6 +899,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     evidence_proofs: joint_evidence_proofs,
                     joint_logit_delta,
                 },
+                depth: 0,
             });
             running_logit += joint_logit_delta;
             via_facts.extend(joint_evidence_facts);
@@ -885,25 +911,63 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     // value of its slot and evaluate the predicate on CPU; if true, apply its
     // logit_delta. A saturating logit_delta makes this a deterministic rule.
     for pc in kb.predicate_contributions_for(query) {
-        if let Some((observed, observed_exact)) = kb.observed_numeric(&pc.slot) {
-            let Ok(rhs) = compute("__predicate_rhs", &pc.rhs, kb) else {
+        if let Some(observed) = kb.observed_numeric(&pc.slot) {
+            if observed.precision_loss {
+                warnings.push(LrAggregateWarning::PredicatePrecisionLoss {
+                    clause_id: pc.id,
+                    slot: pc.slot.clone(),
+                });
                 continue;
+            }
+            let rhs = match compute("__predicate_rhs", &pc.rhs, kb) {
+                Ok(rhs) => rhs,
+                Err(error) => {
+                    warnings.push(LrAggregateWarning::PredicateEvaluationError {
+                        clause_id: pc.id,
+                        slot: pc.slot.clone(),
+                        detail: format!("{error:?}"),
+                    });
+                    continue;
+                }
             };
-            if pc
-                .op
-                .eval_values(observed, rhs.value, observed_exact, rhs.exact)
-            {
+            if rhs.precision_loss {
+                warnings.push(LrAggregateWarning::PredicatePrecisionLoss {
+                    clause_id: pc.id,
+                    slot: pc.slot.clone(),
+                });
+                continue;
+            }
+            if comparison_requires_lossy_fallback(&observed.exact, &rhs.exact) {
+                warnings.push(LrAggregateWarning::PredicatePrecisionLoss {
+                    clause_id: pc.id,
+                    slot: pc.slot.clone(),
+                });
+                continue;
+            }
+            if pc.op.eval_values(
+                observed.value,
+                rhs.value,
+                observed.exact.clone(),
+                rhs.exact.clone(),
+            ) {
                 any_contribution_active = true;
                 steps.push(ProofStep {
                     goal: query.clone(),
                     origin: DerivationOrigin::FromPredicateContribution {
                         clause_id: pc.id,
                         slot: pc.slot.clone(),
+                        observation_fact_id: kb
+                            .observed_numerics_all(&pc.slot)
+                            .last()
+                            .map(|(_, fact_id)| *fact_id),
                         op: pc.op,
                         threshold: rhs.value,
-                        observed,
+                        threshold_exact: rhs.exact,
+                        observed: observed.value,
+                        observed_exact: observed.exact,
                         logit_delta: pc.logit_delta,
                     },
+                    depth: 0,
                 });
                 running_logit += pc.logit_delta;
             }
@@ -978,6 +1042,9 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                 posterior_logit: Some(running_logit),
                 posterior_probability: Some(posterior),
             }],
+            // LR aggregation walks a FIXED clause list rather than searching,
+            // so it has no budget to exhaust and can never be truncated.
+            truncated: false,
         },
         posterior,
         posterior_logit: running_logit,
@@ -1192,6 +1259,24 @@ mod tests {
     }
 
     #[test]
+    fn mixed_comparison_rejects_a_non_round_trippable_exact_operand() {
+        let tenth = ExactRational::new(1, 10).unwrap();
+        assert!(comparison_requires_lossy_fallback(&Some(tenth), &None));
+        assert!(!comparison_requires_lossy_fallback(
+            &Some(ExactRational::from_i128(1)),
+            &None
+        ));
+        assert!(!comparison_requires_lossy_fallback(
+            &Some(ExactRational::new(1, 10).unwrap()),
+            &Some(ExactRational::from_i128(0))
+        ));
+        assert!(!comparison_requires_lossy_fallback(
+            &None,
+            &Some(ExactRational::new(1, 10).unwrap())
+        ));
+    }
+
+    #[test]
     #[should_panic(expected = "lr > 0.0")]
     fn predicate_contribution_with_negative_lr_panics() {
         let _ = PredicateContributionClause::from_lr(
@@ -1319,6 +1404,53 @@ mod tests {
             .steps
             .iter()
             .any(|s| matches!(s.origin, DerivationOrigin::FromPredicateContribution { .. })));
+    }
+
+    #[test]
+    fn predicate_does_not_fire_on_a_precision_lost_observation() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("decision"), 0.10))
+            .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("decision"),
+            "measurement",
+            CmpOp::Ge,
+            0.0,
+            1e6,
+        ));
+        let measurement = crate::compute("measurement", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(measurement);
+
+        let result = lr_aggregate(&atom("decision"), &kb);
+        assert!(approx_eq(result.posterior, 0.10, 1e-12));
+        assert!(!result.dag.proofs[0].steps.iter().any(|step| matches!(
+            step.origin,
+            DerivationOrigin::FromPredicateContribution { .. }
+        )));
+    }
+
+    #[test]
+    fn predicate_does_not_fire_on_a_precision_lost_rhs() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("decision"), 0.10))
+            .unwrap();
+        kb.add_fact(Fact::certain(compound("measurement", vec![int(5)])));
+        let threshold = crate::compute("threshold", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(threshold);
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr_expr(
+            atom("decision"),
+            "measurement",
+            CmpOp::Ge,
+            ComputeExpr::Ref("threshold".into()),
+            1e6,
+        ));
+
+        let result = lr_aggregate(&atom("decision"), &kb);
+        assert!(approx_eq(result.posterior, 0.10, 1e-12));
     }
 
     #[test]

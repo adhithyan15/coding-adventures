@@ -1,5 +1,222 @@
 # Changelog — iir-to-llvm
 
+## 0.49.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, LLVM, conditional)
+
+Closes the reference-tracing gap `lower_alloc_array`'s own 0.48.0 doc comment
+flagged and deliberately left open: `alloc_array` was registering every
+block under `__twig_alloc_bytes`'s no-ref `HeapKind`, correct only for
+scalar (`i64`/`f64`) elements — a `str`/`any`/`symbol`/`ref<T>` element (e.g.
+`algol-iir-compiler`'s `string array`) is itself a GC reference, and the
+collector's precise tracer never scanned an array's payload for the handles
+stored inside it. A string reachable ONLY via an array element (no other
+live reference) could be collected while the array still held a now-dangling
+handle.
+
+`lower_alloc_array` now picks its allocator **per array**, based on the
+original (pre-erasure) IIR element type: a new `elem_is_gc_reference` helper
+checks whether the element is one of `str`/`any`/`ref<any>`/`symbol`/
+`ref<Lispy...>` (the same set `llvm_type_for` collapses to plain `i64`) and,
+if so, calls the new `@__twig_alloc_ref_array_bytes`
+(`twig-aot/runtime/twig_runtime.c`, registers under
+`__gc_register_ref_array_kind(NULL, 0, 8)`, `tail_from = 8` skipping the
+length header) instead of the plain no-ref `@__twig_alloc_bytes`. A
+genuinely scalar element keeps using `@__twig_alloc_bytes` unchanged.
+
+**Revision note**: an earlier draft applied the new allocator
+unconditionally to every array (any element type) across all three
+backends, reasoning that `FlatHeap::mark_word`'s `find_header` validation
+makes over-tracing "always sound, just conservative." A security review
+caught that this is false against `gc-core::FlatHeap`'s COMPACTING
+collector (`collect_compacting`, exposed as the `gc_collect_compacting`
+builtin on native backends): a scalar element that coincidentally matches
+another live, movable object's address can have that object's post-move
+address silently written into it by `fixup_ref_fields` — genuine data
+corruption, not harmless over-retention. The fix is now conditional and
+LLVM-only; `aarch64-backend`/`x86_64-backend` are unchanged from before this
+round (they keep calling `__twig_alloc_bytes` unconditionally, since the AOT
+specialiser erases the element type before native codegen sees it — see
+`AOT00-T7-array-reference-tracing.md` for the full writeup and the
+native-backend follow-up this leaves open).
+
+Verification: the real regression proof (`gc-core`'s
+`array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`)
+and a real test-harness bug this fix's own verification found
+(`lang_matrix.rs`'s LLVM-linking heuristic missing the new symbol name,
+breaking 24 matrix tests until fixed) both remain valid under the corrected
+design.
+
+## 0.48.0 - 2026-08-03 - Twig GC completion, Part 2: alloc_bytes/alloc_array stop leaking, gc_live_bytes added
+
+A harder verification pass across Twig's GC story found two things on the
+LLVM backend, one confirming a real gap and one correcting an earlier wrong
+claim about a gap that doesn't actually exist:
+
+- **`alloc_bytes` (Brainfuck's byte tape) and `alloc_array` (LANG-FULL E5
+  arrays) now call `@__twig_alloc_bytes`** (`twig-aot/runtime/twig_runtime.c`)
+  instead of raw, never-freed, never-traced `@calloc` — the same GC-tracked
+  allocator `aarch64-backend`/`x86_64-backend` already use for these ops, and
+  the one this runtime's own `str_concat`/`str_slice` helpers already
+  allocate through. Registering the array's block under `__twig_alloc_bytes`'s
+  no-ref `HeapKind` is correct for genuinely scalar element types — but see
+  the security-review finding below: it is *not* correct for every element
+  type this op can be asked to lower, and that gap is left open here, not
+  fixed. Both call sites' i64 handle is recovered as a `ptr` via `inttoptr`, the
+  same convention `field_store`/`field_load` already use for `alloc`'s own
+  handle. `array_get`/`array_set`/`array_len`'s interior-pointer handle model
+  (8 bytes past the length header) is unaffected — `FlatHeap::find_header`
+  resolves an interior address to its enclosing block correctly.
+- **`gc_live_bytes` is now a supported `call_builtin`**, mirroring
+  aarch64/x86_64-backend's identically-named diagnostic builtin — lowers to
+  `@__twig_gc_live_bytes()`. This is what makes real end-to-end verification
+  possible: an earlier sub-agent claimed LLVM-compiled cons cells/records
+  never collect at all, based on finding no explicit safepoint call in
+  `iir-to-llvm`'s own codegen. That claim missed that `lower_alloc`'s
+  `@__twig_gc_alloc` routes through `gc-core-capi`'s `__gc_alloc_kind`, which
+  *already* runs a conservative collection before every allocation once
+  `FlatHeap::should_collect()` fires — a mechanism agnostic to which
+  compiler produced the currently-executing code. New end-to-end test
+  `alloc_on_llvm_auto_collects_under_real_allocation_pressure`
+  (`lang-aot/tests/llvm_gc_completion.rs`) proves this by actually running a
+  loop of 70,000 throwaway allocations (crossing `FlatHeap`'s 1 MiB
+  threshold) through real `clang`-compiled, `gc-core-capi`-linked code, with
+  no explicit `gc_collect` call anywhere — auto-collection or nothing.
+- Tests: `iir-to-llvm/tests/test_backend.rs`'s
+  `alloc_bytes_emits_twig_alloc_bytes_and_declare`/
+  `array_ops_emit_twig_alloc_bytes_trap_and_gep` (renamed from their
+  `_calloc_` predecessors) assert the new call target, the `inttoptr`
+  handle recovery, and the absence of `@calloc`.
+- **Security-review finding, documented not fixed (pre-existing, cross-backend,
+  tracked separately):** `array<str>`/`array<any>`/`array<symbol>` elements
+  are i64 handles to separately GC-managed blocks, but `lower_alloc_array`
+  registers every array under `__twig_alloc_bytes`'s no-ref `HeapKind`
+  regardless of element type — a string/symbol reachable only via such an
+  array element isn't traced as a root and could be collected while the
+  array still holds a dangling handle. Not introduced by this fix (the old
+  `@calloc` block was equally untraced), but this is the first point the
+  array's own block becomes collector-managed, so it's the right place to
+  flag it. `aarch64-backend`/`x86_64-backend` share the identical gap. Fixed
+  the doc comment that previously claimed (incorrectly) that no array
+  element type could ever hold a GC reference.
+- See `code/specs/AOT00-T1w-llvm-gc-completion.md` for the full design
+  rationale, including a real exit-code-truncation bug found while writing
+  the end-to-end proof and a `lang_matrix.rs` test-harness duplicate-symbol
+  bug found by running the full matrix (not just the new test).
+
+## 0.47.0 - 2026-08-02 - boolean procedure call results
+
+Boolean user-function calls now retain their LLVM `i1` companion value, and
+typed boolean procedure result slots use `i1` storage. A subsequent logical
+operation or conditional branch therefore does not truncate an `i1` result as
+if it were an `i64` slot.
+
+## 0.46.0 - 2026-07-31 - boolean array elements
+
+`array<bool>` now loads and stores LLVM `i1` elements. Boolean array reads
+also retain their `i1` companion value so ALGOL `not` and boolean branches do
+not widen the loaded bit to an invalid `i64` comparison.
+
+## 0.45.0 - 2026-07-30 - ALGOL captured-array globals
+
+`global_load` and `global_store` now infer a module-global storage type instead
+of assuming every global is an `i64`. Scalar globals retain their historical
+word slot; `array<T>` globals use `ptr`, preserving the array handle when an
+ALGOL procedure captures an enclosing array. The generated LLVM emits
+`internal global ptr null`, `load ptr`, and `store ptr` for those globals.
+
+## 0.44.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
+
+`str_cmp` now mirrors the established runtime `str_eq` path. Literal pairs still
+fold to `-1`/`0`/`1`, but a parameter, procedure result, or branch-selected local
+now lowers to `@__twig_str_cmp(i64, i64)`. Literal operands mixed with a runtime
+handle are converted with `ptrtoint`, so both arguments follow the same
+length-prefixed-string ABI. The same mixed-handle conversion now covers runtime
+`str_concat`, which ALGOL's snapshot-copy lowering uses with an empty literal
+suffix; without it LLVM emitted invalid `i64 @__twig_str_N` call arguments.
+Focused backend tests lock in both runtime calls and their on-demand declarations.
+
+## 0.43.0 - 2026-07-20 — builtin whitelist: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
+## 0.42.0 - 2026-07-14 (E6d-6-LLVM: structural heap ops + special-char name quoting → records run on LLVM)
+
+Two additions give the LLVM column the word-granular heap model the native
+backend already has, so a Twig **record** (its constructor + field accessors)
+runs on LLVM — the last language feature that built for native but not LLVM.
+
+1. **Structural heap ops.** `SUPPORTED_OPS` + `lower_instr` gain `alloc`,
+   `field_store`, `field_load`, and `is_null`, mirroring the aarch64/x86_64
+   memory model exactly:
+   - `alloc [<size>]` → `call i64 @__twig_gc_alloc(i64 <size>)` (default 16, a
+     2-word `LispyPair`); the extern is declared once per module that allocates.
+   - `field_store ptr, idx, val` → `inttoptr`; `getelementptr i64, ptr, i64 <idx>`
+     (the i64 element type scales the raw field index by 8); `store i64`.
+   - `field_load ptr, idx -> dest` → same GEP + `load i64`.
+   - `is_null x -> dest` → `icmp eq i64 x, 0` + `zext`, with the i1 kept in
+     `env_i1` so a downstream `jmp_if_*` uses it directly.
+   The object handle and every field are raw 64-bit words (tagged `DynValue`s),
+   identical to the native backend, so the two columns agree byte-for-byte.
+
+2. **Special-char function-name quoting.** `llvm_fn_ident` quotes any function
+   name outside LLVM's unquoted set (`[-a-zA-Z$._][-a-zA-Z$._0-9]*`) — the Twig
+   record accessor `point-x` and the union predicate `Some?` need `@"point-x"` /
+   `@"Some?"`, which an unquoted `@Some?` mis-parses as a hard error. Applied at
+   the `define` site and every `call` site so the reference always resolves; a
+   plain identifier is emitted unquoted (no output churn).
+
+Run-verified: `(record Point (x : int) (y : int)) (point-x (Point 42 7))` and the
+`point-y` sibling exit 42 on native, LLVM, and WASM (new `e6d6_llvm_records`
+integration test + the existing matrix record cells).
+
+Not covered — a documented follow-up (E6d-6b): union `match` on the tagged
+backends (native/LLVM). The union constructor stores raw words while `match`
+reads them boxed; that only round-trips on the structural backends
+(Wasm/Jvm/Clr), where the call boundary boxes `int → any`. The two union matrix
+cells are scoped to `[Wasm, Jvm, Clr]` accordingly.
+
+## 0.41.0 - 2026-07-14 (fix: dynamic comparison width — a `bool`-typed cmp compares i64s)
+
+`lower_cmp` typed the `icmp`/`fcmp` operand width from the comparison's
+`type_hint`. `lower_dynamic_arith` tags a dynamic `DynValue` comparison result
+`"bool"` though its operands are the unboxed i64s, so LLVM emitted `icmp i1 %x`
+on a 64-bit `%x` (`'%x' defined with type 'i64' but expected 'i1'`) — blocking
+every dynamic `=`/`<` on the LLVM column (E6d-7 closure dispatch, E6d-6 match tag
+tests). Fix: map a `"bool"` cmp hint to `i64` for the operand width, resolution,
+and predicate; the i1 RESULT is unchanged (still threaded to `jmp_if_*` and
+zext'd). The distinct legitimate `"i1"` hint (produce-i1, skip-zext) is left
+untouched. Latent — the dynamic comparison path was never run on the LLVM column.
+
+## 0.40.0 - 2026-07-11 (E6d-2b: ref<any> is a tagged i64)
+
+E6d-2b: `llvm_type_for` now maps `ref<any>` -> `i64` (a tagged word, exactly like `ref<LispyPair>`), so a `dyn_box_int` result (a re-boxed dynamic-arithmetic value) validates and lowers on the LLVM backend. The `DYN_BUILTINS` table already routes `dyn_box_int`/`dyn_unbox_int` to `@__dyn_box_int`/`@__dyn_unbox_int`.
+
+## 0.39.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_*)
+
+DVAL01-2: the LLVM name->runtime-symbol table `LISPY_BUILTINS` is renamed `DYN_BUILTINS` and its first column de-lisped (`lispy_cons`->`dyn_cons`, ... -> the unchanged `__dyn_*` C symbols). `lispy_builtin()` lookup -> `dyn_builtin()`. Pure rename; LLVM lowering unchanged.
+
+## 0.38.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
+
+DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.
+
+## 0.37.0 - 2026-07-11 (DVAL01-1a: dynamic-value runtime ABI __twig_lispy_* -> __dyn_*)
+
+De-lisp the tagged dynamic-value runtime ABI: every `__twig_lispy_*` C symbol (box_int/unbox_int/cons/car/cdr/pair_p/equal/not/nil/make_symbol/truthy/to_exit_code/tag_*) is renamed to the language-neutral `__dyn_*` (per spec DVAL01). Pure rename -- the 3-bit tag layout, encodings, and runtime behaviour are byte-for-byte unchanged, so any dynamic frontend (not just lisp) can target the same primitives. The GC ABI (`__twig_gc_*`) is untouched.
+
+## [0.36.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `array<str>` elements)
+
+BASIC string arrays (`DIM A$(n)`) store a `str` element as an i64 handle
+(`array_elem_llvm("str")` → `llvm_type_for("str")` = `i64`, 8-byte stride). No
+new validator or element-type code was needed — `str` already maps to `i64` — but
+`lower_array_set` had a latent bug: a folded `str` literal's value is tracked as
+its `{i64 len,[N×i8]}` **global pointer** (`@__twig_str_N`), so storing it directly
+emitted `store i64 @__twig_str_N` — a `ptr` constant in an i64 slot, which clang
+rejects. Fix: `array_set` now `ptrtoint`s the literal's global to an i64 handle
+before the store (the exact mirror of the existing call-arg and `ret` guards). A
+runtime str element (branch-selected / read from another `array_get`) already
+carries an i64, so the guard is scoped to the `@__twig_str` global.
+
+Test: `str_array_set_ptrtoints_the_literal_handle` (asserts the `ptrtoint` and the
+absence of a bare `store i64 @__twig_str`).
+
 ## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` over non-literal operands)
 
 `lower_str_eq` gains a runtime path. It keeps the both-operands-literal compile-time

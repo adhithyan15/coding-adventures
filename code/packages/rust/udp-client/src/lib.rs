@@ -222,6 +222,13 @@ impl UdpClient {
         Ok(())
     }
 
+    /// Enable or disable IPv4 broadcast sends on this socket.
+    pub fn set_broadcast(&self, enabled: bool) -> Result<(), UdpError> {
+        self.socket
+            .set_broadcast(enabled)
+            .map_err(|err| UdpError::SendFailed(err.to_string()))
+    }
+
     /// Send exactly one datagram to an explicit destination.
     pub fn send_to(&self, payload: &[u8], destination: SocketAddr) -> Result<usize, UdpError> {
         self.validate_payload_len(payload)?;
@@ -587,6 +594,14 @@ mod tests {
     }
 
     #[test]
+    fn broadcast_configuration_is_exposed() {
+        let client = UdpClient::bind(UdpOptions::default()).unwrap();
+
+        client.set_broadcast(true).unwrap();
+        client.set_broadcast(false).unwrap();
+    }
+
+    #[test]
     fn send_without_connect_reports_not_connected() {
         let client = bind_test_client();
 
@@ -773,7 +788,7 @@ mod tests {
             UdpError::Timeout
         );
         assert_eq!(
-            map_send_error(io::Error::new(io::ErrorKind::Other, "boom")),
+            map_send_error(io::Error::other("boom")),
             UdpError::SendFailed("boom".to_string())
         );
         assert_eq!(
@@ -781,7 +796,7 @@ mod tests {
             UdpError::Timeout
         );
         assert_eq!(
-            map_receive_error(io::Error::new(io::ErrorKind::Other, "boom")),
+            map_receive_error(io::Error::other("boom")),
             UdpError::ReceiveFailed("boom".to_string())
         );
     }

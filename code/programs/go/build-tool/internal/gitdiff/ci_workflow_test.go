@@ -195,6 +195,38 @@ func TestAnalyzeCIWorkflowPatchAllowsPatchedLuaRocksBootstrap(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsVerifiedLuaCacheAndFallback(t *testing.T) {
+	patch := `
+@@ -409,0 +410,14 @@
++      - name: Restore pinned Lua 5.4.7 cache
++        id: lua-cache
++        uses: actions/cache@v4
++        with:
+-          luaVersion: "5.4"
++          path: .lua
++          key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}
++      - name: Install pinned Lua 5.4.7 from verified mirrors
++        shell: bash
++        run: |
++          if [ "$RUNNER_OS" = "macOS" ]; then
++            brew install readline ncurses
++          else
++            sudo apt-get install -q libreadline-dev libncurses-dev
++          fi
++          python3 code/scripts/setup_lua.py --prefix .lua
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatalf("expected verified Lua bootstrap change to stay incremental")
+	}
+
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "lua" {
+		t.Fatalf("expected lua toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchIgnoresCommentOnlyChanges(t *testing.T) {
 	patch := `
 @@ -316,2 +316,2 @@

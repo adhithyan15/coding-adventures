@@ -131,6 +131,8 @@ pub enum TcpError {
     BrokenPipe,
     /// Connection closed before the expected number of bytes arrived.
     UnexpectedEof { expected: usize, received: usize },
+    /// A delimiter-framed read exceeded its caller-supplied byte limit.
+    ReadLimitExceeded { limit: usize },
     /// A low-level I/O error not covered by the specific variants.
     IoError(io::Error),
 }
@@ -155,6 +157,9 @@ impl fmt::Display for TcpError {
                     "unexpected EOF: expected {} bytes, got {}",
                     expected, received
                 )
+            }
+            TcpError::ReadLimitExceeded { limit } => {
+                write!(f, "read exceeded the configured {limit}-byte limit")
             }
             TcpError::IoError(e) => write!(f, "I/O error: {}", e),
         }
@@ -402,6 +407,57 @@ impl TcpConnection {
         Ok(buf)
     }
 
+    /// Read through `delimiter` without buffering more than `max_bytes`.
+    ///
+    /// The delimiter is included in the returned bytes. Clean EOF returns the
+    /// bytes accumulated so far; if more than `max_bytes` would be required,
+    /// the read fails with [`TcpError::ReadLimitExceeded`].
+    pub fn read_until_limit(
+        &mut self,
+        delimiter: u8,
+        max_bytes: usize,
+    ) -> Result<Vec<u8>, TcpError> {
+        let mut output = Vec::with_capacity(max_bytes.min(8 * 1024));
+        loop {
+            let available = self.reader.fill_buf().map_err(map_io_error)?;
+            if available.is_empty() {
+                return Ok(output);
+            }
+
+            let through_delimiter = available
+                .iter()
+                .position(|byte| *byte == delimiter)
+                .map_or(available.len(), |index| index + 1);
+            let remaining = max_bytes.saturating_sub(output.len());
+            if through_delimiter > remaining {
+                self.reader.consume(remaining);
+                return Err(TcpError::ReadLimitExceeded { limit: max_bytes });
+            }
+
+            output.extend_from_slice(&available[..through_delimiter]);
+            self.reader.consume(through_delimiter);
+            if output.last() == Some(&delimiter) {
+                return Ok(output);
+            }
+        }
+    }
+
+    /// Read up to `max_bytes` from the connection.
+    ///
+    /// Returns an empty vector only when `max_bytes` is zero or the peer has
+    /// closed its write half. This bounded primitive lets higher-level
+    /// protocols stream bodies without allocating an unbounded buffer.
+    pub fn read_chunk(&mut self, max_bytes: usize) -> Result<Vec<u8>, TcpError> {
+        if max_bytes == 0 {
+            return Ok(Vec::new());
+        }
+
+        let mut buf = vec![0; max_bytes];
+        let bytes_read = self.reader.read(&mut buf).map_err(map_io_error)?;
+        buf.truncate(bytes_read);
+        Ok(buf)
+    }
+
     /// Write all bytes to the connection.
     ///
     /// Data is buffered internally. You **must** call [`flush()`](Self::flush)
@@ -617,6 +673,26 @@ mod tests {
     }
 
     #[test]
+    fn read_chunk_is_bounded_and_reports_eof() {
+        let (port, _stop) = start_partial_server(b"abcdef".to_vec());
+        let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
+
+        assert_eq!(conn.read_chunk(2).unwrap(), b"ab");
+        assert_eq!(conn.read_chunk(3).unwrap(), b"cde");
+        assert_eq!(conn.read_chunk(3).unwrap(), b"f");
+        assert!(conn.read_chunk(3).unwrap().is_empty());
+    }
+
+    #[test]
+    fn zero_length_read_chunk_does_not_consume_input() {
+        let (port, _stop) = start_partial_server(b"ok".to_vec());
+        let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
+
+        assert!(conn.read_chunk(0).unwrap().is_empty());
+        assert_eq!(conn.read_chunk(2).unwrap(), b"ok");
+    }
+
+    #[test]
     fn read_exact_from_echo() {
         let (port, _stop) = start_echo_server();
         let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
@@ -639,6 +715,27 @@ mod tests {
 
         let result = conn.read_until(b'\0').unwrap();
         assert_eq!(result, b"key:value\0");
+    }
+
+    #[test]
+    fn read_until_limit_bounds_delimiter_frames() {
+        let (port, _stop) = start_partial_server(b"header\nbody".to_vec());
+        let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
+
+        assert_eq!(conn.read_until_limit(b'\n', 7).unwrap(), b"header\n");
+        assert_eq!(conn.read_chunk(4).unwrap(), b"body");
+    }
+
+    #[test]
+    fn read_until_limit_rejects_oversized_frames() {
+        let (port, _stop) = start_partial_server(b"toolong\n".to_vec());
+        let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
+
+        let error = conn.read_until_limit(b'\n', 4).unwrap_err();
+        assert!(matches!(
+            error,
+            TcpError::ReadLimitExceeded { limit: 4 }
+        ));
     }
 
     #[test]

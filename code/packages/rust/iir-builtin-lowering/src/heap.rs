@@ -68,6 +68,90 @@ use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::function::IIRFunction;
 
 // ---------------------------------------------------------------------------
+// `list` desugaring (LANG-FULL E6d-3a)
+// ---------------------------------------------------------------------------
+//
+// `list` is pure syntactic sugar over `cons`: `(list a b c)` is
+// `(cons a (cons b (cons c nil)))`.  Rather than teach every backend a new
+// builtin, we desugar `call_builtin "list"` into a nil `const` plus a
+// right-to-left chain of `call_builtin "cons"` **before** the cons lowering
+// runs — so the chain rides the exact same path (`alloc`/`field_store` on the
+// managed backends, `dyn_cons` on the native/LLVM runtime) that E6d-1 already
+// proved on all five code-gen backends.  `(list)` (no args) is `nil`.
+//
+// This runs at the head of BOTH `lower_heap_builtins` and
+// `lower_heap_builtins_runtime`, so it reaches the managed and native paths
+// with no lang-aot pipeline change.
+
+/// Desugar every `call_builtin "list" …` in `fn_` into `const nil` + a
+/// right-to-left `cons` chain.  In-place via list rebuild (one `list`
+/// expands to up to `n + 1` instructions).
+pub fn desugar_list_in_function(fn_: &mut IIRFunction) {
+    let old = std::mem::take(&mut fn_.instructions);
+    let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 4);
+    // Monotonic suffix so the temporaries introduced here never collide.
+    let mut counter = 0usize;
+
+    for instr in old {
+        let is_list = instr.op == "call_builtin"
+            && matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "list");
+        if !is_list {
+            out.push(instr);
+            continue;
+        }
+        // No dest ⇒ the list result is unused; drop the (pure) construction.
+        let dest = match &instr.dest {
+            Some(d) => d.clone(),
+            None => continue,
+        };
+        // Elements are srcs[1..] (srcs[0] is the builtin name "list").
+        let args: Vec<Operand> = instr.srcs.iter().skip(1).cloned().collect();
+
+        // `(list)` ⇒ nil (the empty list) directly into the dest.
+        if args.is_empty() {
+            out.push(IIRInstr::new(
+                "const", Some(dest), vec![Operand::Int(0)], "ref<LispyPair>",
+            ));
+            continue;
+        }
+
+        // The shared nil tail (const 0 : ref<LispyPair>, the nil sentinel).
+        // Temporaries are DERIVED from the list's own (unique) `dest` name plus a
+        // pass-local monotonic counter — `{dest}.list_nil{n}` / `{dest}.list_cell{n}`
+        // — mirroring how `dynamic_arith` mints `{dest}.raw{n}`. Deriving from the
+        // already-unique `dest` (rather than a bare `__list_*` prefix) makes these
+        // names provably disjoint from any pre-existing source-derived variable, so
+        // a Twig identifier of the form `__list_cellN` can never be clobbered.
+        counter += 1;
+        let nil_name = format!("{dest}.list_nil{counter}");
+        out.push(IIRInstr::new(
+            "const", Some(nil_name.clone()), vec![Operand::Int(0)], "ref<LispyPair>",
+        ));
+
+        // Build right-to-left: (cons last nil), (cons … prev), …, (cons first prev).
+        // The outermost cons (element 0) receives the original `dest`.
+        let mut acc = nil_name;
+        for (i, arg) in args.iter().enumerate().rev() {
+            let cell = if i == 0 {
+                dest.clone()
+            } else {
+                counter += 1;
+                format!("{dest}.list_cell{counter}")
+            };
+            out.push(IIRInstr::new(
+                "call_builtin",
+                Some(cell.clone()),
+                vec![Operand::Var("cons".to_string()), arg.clone(), Operand::Var(acc)],
+                "ref<LispyPair>",
+            ));
+            acc = cell;
+        }
+    }
+
+    fn_.instructions = out;
+}
+
+// ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
 
@@ -319,7 +403,14 @@ pub fn lower_heap_function(fn_: &mut IIRFunction) {
 /// Called from `lib.rs::lower_builtins()` after numeric lowering.
 /// Returns no errors — malformed instructions are left for the backend.
 pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
+    // E6d-3b: rewrite list *operations* (`length`, …) to calls to a synthesized
+    // cons-walk helper injected into the module — BEFORE the per-function heap
+    // lowering, so the helper's `null?`/`cdr` are lowered by the same pass.
+    crate::list_ops::lower_list_ops(module);
     for fn_ in &mut module.functions {
+        // E6d-3a: expand `list` → `cons` chain first, so the structural cons
+        // lowering below turns the whole thing into alloc/field_store cells.
+        desugar_list_in_function(fn_);
         lower_heap_function(fn_);
     }
 }
@@ -339,8 +430,8 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // The **native** backends (aarch64 / x86_64, driven by `twig-aot`) have no
 // managed heap.  Instead they link the shared C lisp runtime
-// (`twig-aot/runtime/lispy_runtime.c`, see LANG77) which implements
-// `lispy-runtime`'s tagged-value model — `__twig_lispy_cons`/`car`/`cdr`.
+// (`twig-aot/runtime/dynval_runtime.c`, see LANG77) which implements
+// `lispy-runtime`'s tagged-value model — `__dyn_cons`/`car`/`cdr`.
 // For those backends a cons cell is a *runtime call*, not an inline
 // allocation, so the value is a proper NaN-box-tagged `LispyValue` (a
 // heap-tagged pointer) rather than a raw machine word.  That tag is what
@@ -358,15 +449,15 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // | Frontend builtin | Native runtime symbol  |
 // |------------------|------------------------|
-// | `cons`           | `lispy_cons` (→ `__twig_lispy_cons(car, cdr)`) |
-// | `car`            | `lispy_car`  (→ `__twig_lispy_car(pair)`)      |
-// | `cdr`            | `lispy_cdr`  (→ `__twig_lispy_cdr(pair)`)      |
+// | `cons`           | `dyn_cons` (→ `__dyn_cons(car, cdr)`) |
+// | `car`            | `dyn_car`  (→ `__dyn_car(pair)`)      |
+// | `cdr`            | `dyn_cdr`  (→ `__dyn_cdr(pair)`)      |
 //
 // The argument order already matches the C ABI (`cons head tail` →
-// `lispy_cons(car, cdr)`), so the transform is a pure **rename** of the
+// `dyn_cons(car, cdr)`), so the transform is a pure **rename** of the
 // builtin name in `srcs[0]` — no operand shuffling, no instruction
-// expansion.  The native backends turn `call_builtin "lispy_cons"` into
-// `BL/CALL __twig_lispy_cons` via their generic `call_builtin` dispatch +
+// expansion.  The native backends turn `call_builtin "dyn_cons"` into
+// `BL/CALL __dyn_cons` via their generic `call_builtin` dispatch +
 // the `V1_BUILTINS` table; no new backend opcodes are needed.
 //
 // `null?` / `make_nil` / `make_symbol` are intentionally **not** renamed
@@ -375,15 +466,15 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // `pair?` / `not` / `equal?` (the `ATOM`/`EQ` predicates) ARE renamed as of
 // L3b-2c-2 — they consume/produce tagged `LispyValue`s, which the
-// representation pass (`lower_lisp_repr`) has set up by the time the native
+// representation pass (`lower_dyn_repr`) has set up by the time the native
 // backend runs.
 
 /// The frontend→native-runtime builtin renames (LANG77 / L3b-2b, L3b-2c-2).
 const RUNTIME_RENAMES: &[(&str, &str)] = &[
     // L3b-2b — the cons data path.
-    ("cons", "lispy_cons"),
-    ("car", "lispy_car"),
-    ("cdr", "lispy_cdr"),
+    ("cons", "dyn_cons"),
+    ("car", "dyn_car"),
+    ("cdr", "dyn_cdr"),
     // L3b-2c-2 — the predicates (ATOM = pair? + not; EQ = equal?).
     //
     // `pair?` and `equal?` are unambiguous lisp builtins (no machine meaning),
@@ -391,12 +482,19 @@ const RUNTIME_RENAMES: &[(&str, &str)] = &[
     // *numeric* builtin (machine boolean-not, used by Twig), so renaming it
     // unconditionally would hijack Twig's `not`. McCarthy's `not` (the second
     // half of `ATOM` = `not(pair?)`) is renamed *type-directed* in
-    // `lisp_repr` — only when its argument is a `lispy_*` result.
-    ("pair?", "lispy_pair_p"),
-    ("equal?", "lispy_equal"),
+    // `dyn_repr` — only when its argument is a `dyn_*` result.
+    ("pair?", "dyn_pair_p"),
+    ("equal?", "dyn_equal"),
+    // `null?` — the empty-list test. The structural path lowers this to the
+    // `is_null` opcode, but that emits a compare-against-**zero**, and in the
+    // tagged runtime representation nil is the whole-word constant 1. So the
+    // native path needs a real runtime call that knows the encoding; without
+    // this entry `null?` reached the backend un-renamed and every cons-walk
+    // helper (`length`, `append`, `reverse`, `assoc`, …) failed to compile.
+    ("null?", "dyn_null_p"),
 ];
 
-/// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `lispy_*`
+/// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `dyn_*`
 /// runtime-call form (see the module note above).  In-place, allocation-free
 /// (a rename never expands an instruction), and a no-op for any
 /// `call_builtin` not in [`RUNTIME_RENAMES`].
@@ -423,7 +521,13 @@ pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
 /// the linked C lisp runtime rather than inline `alloc`/`field_*`.  The
 /// managed `iir-to-*` backends keep calling [`lower_heap_builtins`].
 pub fn lower_heap_builtins_runtime(module: &mut interpreter_ir::IIRModule) {
+    // E6d-3b: inject + rewrite the cons-walk helper (`length`, …) before the
+    // per-function runtime rename, so its `cdr`/`null?` route to the runtime too.
+    crate::list_ops::lower_list_ops(module);
     for fn_ in &mut module.functions {
+        // E6d-3a: expand `list` → `cons` chain first, so the runtime rename
+        // below turns each `cons` into a `dyn_cons` runtime call.
+        desugar_list_in_function(fn_);
         lower_heap_function_runtime(fn_);
     }
 }
@@ -787,13 +891,13 @@ mod tests {
     #[test]
     fn runtime_cons_is_renamed_not_expanded() {
         // The runtime lowering does NOT expand cons to alloc+field_store —
-        // it stays a single `call_builtin`, just renamed to `lispy_cons`.
+        // it stays a single `call_builtin`, just renamed to `dyn_cons`.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
         lower_heap_builtins_runtime(&mut m);
         assert_eq!(m.functions[0].instructions.len(), 1, "cons must stay one instr");
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.op, "call_builtin");
-        assert_eq!(builtin_name(instr), "lispy_cons");
+        assert_eq!(builtin_name(instr), "dyn_cons");
     }
 
     #[test]
@@ -803,7 +907,7 @@ mod tests {
         lower_heap_builtins_runtime(&mut m);
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.dest.as_deref(), Some("%cell"));
-        // srcs = [Var("lispy_cons"), Var("%h"), Var("%t")] — args unchanged.
+        // srcs = [Var("dyn_cons"), Var("%h"), Var("%t")] — args unchanged.
         assert_eq!(instr.srcs[1], Operand::Var("%h".into()));
         assert_eq!(instr.srcs[2], Operand::Var("%t".into()));
     }
@@ -824,8 +928,8 @@ mod tests {
         );
         let mut m = make_module(vec![car, cdr]);
         lower_heap_builtins_runtime(&mut m);
-        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "lispy_car");
-        assert_eq!(builtin_name(&m.functions[0].instructions[1]), "lispy_cdr");
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_car");
+        assert_eq!(builtin_name(&m.functions[0].instructions[1]), "dyn_cdr");
         // car/cdr stay 1-arg, dest preserved.
         assert_eq!(m.functions[0].instructions[0].srcs[1], Operand::Var("%pair".into()));
         assert_eq!(m.functions[0].instructions[0].dest.as_deref(), Some("%head"));
@@ -834,12 +938,12 @@ mod tests {
     #[test]
     fn runtime_renames_atom_eq_predicates() {
         // L3b-2c-2: pair?/equal? are renamed here (unambiguous lisp builtins).
-        // `not` is renamed type-directed in lisp_repr (it is also a numeric
+        // `not` is renamed type-directed in dyn_repr (it is also a numeric
         // builtin), so it is NOT renamed by this pass — see
         // `runtime_leaves_not_for_type_directed_rename`.
         for (name, renamed) in [
-            ("pair?", "lispy_pair_p"),
-            ("equal?", "lispy_equal"),
+            ("pair?", "dyn_pair_p"),
+            ("equal?", "dyn_equal"),
         ] {
             let instr = IIRInstr::new(
                 "call_builtin",
@@ -859,8 +963,8 @@ mod tests {
     #[test]
     fn runtime_leaves_not_for_type_directed_rename() {
         // `not` is a numeric builtin too (machine boolean-not), so this pass
-        // must NOT rename it — lisp_repr renames it only when its arg is a
-        // lispy_* result (ATOM = not(pair?)). Renaming here would hijack Twig.
+        // must NOT rename it — dyn_repr renames it only when its arg is a
+        // dyn_* result (ATOM = not(pair?)). Renaming here would hijack Twig.
         let instr = IIRInstr::new(
             "call_builtin",
             Some("%r".into()),
@@ -874,9 +978,10 @@ mod tests {
 
     #[test]
     fn runtime_leaves_symbol_and_nil_builtins_unchanged() {
-        // null?/make_nil/make_symbol are NOT renamed yet — make_symbol needs
-        // string-literal emission (L3b-2c-3).
-        for name in ["null?", "make_nil", "make_symbol"] {
+        // make_nil/make_symbol are NOT renamed yet — make_symbol needs
+        // string-literal emission (L3b-2c-3). (`null?` IS now renamed to the
+        // runtime call `dyn_null_p`; see `null_p_is_renamed_to_runtime_call`.)
+        for name in ["make_nil", "make_symbol"] {
             let instr = IIRInstr::new(
                 "call_builtin",
                 Some("%r".into()),
@@ -890,6 +995,96 @@ mod tests {
                 "{name} must be left for L3b-2c-3, not renamed",
             );
         }
+    }
+
+    /// `null?` routes to the runtime `dyn_null_p` on the native path — it must, or the
+    /// cons-walk helpers (`length`/`append`/`reverse`/`assoc`) fail to compile and the
+    /// backend V1 table has no lisp `null?`. (Native `is_null` is a compare-against-0,
+    /// but the tagged nil is the whole-word constant 1, so a dedicated primitive that
+    /// knows the encoding is required.)
+    #[test]
+    fn null_p_is_renamed_to_runtime_call() {
+        let instr = IIRInstr::new(
+            "call_builtin",
+            Some("%r".into()),
+            vec![Operand::Var("null?".into()), Operand::Var("%x".into())],
+            "bool",
+        );
+        let mut m = make_module(vec![instr]);
+        lower_heap_builtins_runtime(&mut m);
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_null_p");
+    }
+
+    // ── E6d-3a: `list` desugaring ─────────────────────────────────────────
+
+    /// A `call_builtin "list" a b c …` instruction.
+    fn list_call(dest: &str, elems: &[&str]) -> IIRInstr {
+        let mut srcs = vec![Operand::Var("list".into())];
+        srcs.extend(elems.iter().map(|e| Operand::Var((*e).into())));
+        IIRInstr::new("call_builtin", Some(dest.into()), srcs, "ref<LispyPair>")
+    }
+
+    #[test]
+    fn list_desugars_to_nil_and_cons_chain() {
+        // (list a b c) → const nil ; cons c nil ; cons b _ ; cons a _
+        let mut m = make_module(vec![list_call("%r", &["%a", "%b", "%c"])]);
+        desugar_list_in_function(&mut m.functions[0]);
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["const", "call_builtin", "call_builtin", "call_builtin"]);
+        // The nil sentinel is const 0 : ref<LispyPair>.
+        assert_eq!(m.functions[0].instructions[0].srcs[0], Operand::Int(0));
+        assert_eq!(m.functions[0].instructions[0].type_hint, "ref<LispyPair>");
+        // Every non-const op is a `cons`.
+        for i in &m.functions[0].instructions[1..] {
+            assert_eq!(builtin_name(i), "cons");
+        }
+    }
+
+    #[test]
+    fn list_outermost_cons_has_first_element_and_original_dest() {
+        // (list a b c): the final cons must produce %r and carry %a as its head.
+        let mut m = make_module(vec![list_call("%r", &["%a", "%b", "%c"])]);
+        desugar_list_in_function(&mut m.functions[0]);
+        let last = m.functions[0].instructions.last().unwrap();
+        assert_eq!(last.dest.as_deref(), Some("%r"), "outermost cons keeps the list's dest");
+        assert_eq!(last.srcs[1], Operand::Var("%a".into()), "outermost cons head is the first element");
+    }
+
+    #[test]
+    fn empty_list_is_nil_const() {
+        // (list) → %r = const 0 : ref<LispyPair>
+        let mut m = make_module(vec![list_call("%r", &[])]);
+        desugar_list_in_function(&mut m.functions[0]);
+        assert_eq!(m.functions[0].instructions.len(), 1);
+        let nil = &m.functions[0].instructions[0];
+        assert_eq!(nil.op, "const");
+        assert_eq!(nil.dest.as_deref(), Some("%r"));
+        assert_eq!(nil.srcs[0], Operand::Int(0));
+        assert_eq!(nil.type_hint, "ref<LispyPair>");
+    }
+
+    #[test]
+    fn list_lowers_end_to_end_to_alloc_and_field_stores() {
+        // Through the full managed lowering, (list a b) becomes 2 cons cells =
+        // 2 × (alloc + 2 field_store) = 6 heap ops, plus the nil const = 7.
+        let mut m = make_module(vec![list_call("%r", &["%a", "%b"])]);
+        lower_heap_builtins(&mut m);
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops.iter().filter(|o| **o == "alloc").count(), 2, "two cons cells");
+        assert_eq!(ops.iter().filter(|o| **o == "field_store").count(), 4);
+        assert!(ops.iter().all(|o| *o != "call_builtin"), "no `list`/`cons` call_builtin survives");
+    }
+
+    #[test]
+    fn list_lowers_to_dyn_cons_on_the_runtime_path() {
+        // On the native/LLVM runtime path, (list a b) desugars then renames each
+        // cons to dyn_cons — so two dyn_cons calls survive, no `list`.
+        let mut m = make_module(vec![list_call("%r", &["%a", "%b"])]);
+        lower_heap_builtins_runtime(&mut m);
+        let dyn_cons = m.functions[0].instructions.iter()
+            .filter(|i| builtin_name(i) == "dyn_cons").count();
+        assert_eq!(dyn_cons, 2, "two cons cells → two dyn_cons runtime calls");
+        assert!(m.functions[0].instructions.iter().all(|i| builtin_name(i) != "list"));
     }
 
     #[test]

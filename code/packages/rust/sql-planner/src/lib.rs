@@ -115,13 +115,17 @@ pub enum SqlExpr {
         negated: bool,
     },
 
-    /// `value LIKE pattern` — SQL pattern matching.
+    /// `value LIKE pattern [ESCAPE ch]` — SQL pattern matching.
     ///
-    /// `negated = true` for `NOT LIKE`.
+    /// `negated = true` for `NOT LIKE`. `escape` carries the optional
+    /// `ESCAPE ch` operand (an expression, usually a one-character string
+    /// literal); when present, that character makes a following `%`, `_`, or
+    /// escape character itself a literal in the pattern.
     Like {
         value: Box<SqlExpr>,
         pattern: Box<SqlExpr>,
         negated: bool,
+        escape: Option<Box<SqlExpr>>,
     },
 
     /// `value IN (v1, v2, ...)` — membership test.
@@ -141,6 +145,25 @@ pub enum SqlExpr {
         args: Vec<SqlExpr>,
         /// `star = true` for `func(*)` — the argument is an asterisk.
         star: bool,
+    },
+
+    /// `CAST(expr AS type)` — an explicit type conversion.
+    ///
+    /// Example: `CAST('12' AS INTEGER)` → the integer `12`.
+    Cast {
+        expr: Box<SqlExpr>,
+        ty: CastType,
+    },
+
+    /// A searched `CASE WHEN cond THEN val … [ELSE val] END` expression.
+    ///
+    /// The `branches` are evaluated top-to-bottom; the value of the first branch
+    /// whose condition is truthy (non-zero, non-NULL) is the result. If none
+    /// match, the result is `else_val` if present, otherwise `NULL`. Later
+    /// branches are NOT evaluated once one matches (short-circuit).
+    Case {
+        branches: Vec<(SqlExpr, SqlExpr)>,
+        else_val: Option<Box<SqlExpr>>,
     },
 
     /// An aggregate function applied within GROUP BY context.
@@ -181,6 +204,11 @@ pub enum BinaryOp {
     Or,
     // String concatenation
     Concat,
+    // Bitwise — operands coerced to integer, NULL-propagating
+    BitAnd,
+    BitOr,
+    ShiftLeft,
+    ShiftRight,
 }
 
 /// A unary operator.
@@ -190,6 +218,33 @@ pub enum UnaryOp {
     Neg,
     /// Logical negation: `NOT x`
     Not,
+    /// Bitwise complement: `~x` (operand coerced to integer, NULL-propagating).
+    BitNot,
+}
+
+/// The target type of a `CAST(expr AS type)` conversion.
+///
+/// SQLite resolves any declared type name to one of five "affinities"; this
+/// enum covers the three whose CAST results compare exactly or within the
+/// oracle's numeric epsilon (INTEGER, REAL, TEXT). BLOB and NUMERIC are not
+/// yet supported (a later increment) — see the planner's cast parser.
+#[derive(Debug, Clone, PartialEq)]
+pub enum CastType {
+    /// `CAST(x AS INTEGER)` — truncate reals toward zero; parse a leading
+    /// numeric prefix of text (`'12abc'` → 12, `'abc'` → 0).
+    Integer,
+    /// `CAST(x AS REAL)` — parse a leading numeric prefix of text as f64.
+    Real,
+    /// `CAST(x AS TEXT)` — render the value as its text representation.
+    Text,
+    /// `CAST(x AS NUMERIC)` — SQLite's NUMERIC affinity, and the *default*
+    /// affinity for any type name that is not INTEGER/TEXT/REAL/BLOB (e.g.
+    /// `NUMERIC`, `DECIMAL`, `BOOLEAN`, `DATE`). An INTEGER stays INTEGER and a
+    /// REAL stays REAL (the cast is a no-op on numbers — `CAST(3.0 AS NUMERIC)`
+    /// is `3.0`, not `3`). Text/blob is parsed to a number, preferring INTEGER
+    /// when the value is integral and fits i64 (`'3.0'`→`3`, `'1e3'`→`1000`),
+    /// otherwise REAL (`'3.5'`→`3.5`, an i64-overflowing integer→real).
+    Numeric,
 }
 
 /// An aggregate function name.
@@ -199,9 +254,18 @@ pub enum UnaryOp {
 pub enum AggFunc {
     Count,
     Sum,
+    /// `TOTAL(x)` — like `SUM(x)` but ALWAYS returns a REAL and yields `0.0`
+    /// (never NULL) for an empty group or an all-NULL column. This is SQLite's
+    /// non-standard, NULL-free companion to SUM.
+    Total,
     Avg,
     Min,
     Max,
+    /// `GROUP_CONCAT(x [, sep])` — concatenate the non-NULL values of `x` in row
+    /// order, joined by `sep` (which defaults to a comma). The separator is a
+    /// constant captured at plan time and carried on the aggregate, so the value
+    /// stream fed to the accumulator stays single-column (just `x`).
+    GroupConcat { sep: String },
 }
 
 // ===========================================================================
@@ -298,7 +362,11 @@ pub enum LogicalPlan {
     },
 
     /// `SELECT DISTINCT` — removes duplicate rows from the output.
-    Distinct(Box<LogicalPlan>),
+    /// Remove duplicate rows. The `Vec<Option<String>>` gives one collation per
+    /// OUTPUT column (positionally parallel to the emitted row); `None` = default
+    /// BINARY. Only a bare column reference to a column with a declared COLLATE
+    /// gets `Some` — see `distinct_output_collations`.
+    Distinct(Box<LogicalPlan>, Vec<Option<String>>),
 
     /// `UNION [ALL]` of two plan subtrees.
     Union {
@@ -373,6 +441,24 @@ pub struct SortKey {
     pub expr: SqlExpr,
     /// `ascending = true` for ASC (default), `false` for DESC.
     pub ascending: bool,
+    /// Explicit NULL placement from a `NULLS FIRST` / `NULLS LAST` clause.
+    /// `None` = SQLite's default (NULLs sort first for ASC, last for DESC);
+    /// `Some(true)` = NULLs first; `Some(false)` = NULLs last.
+    pub nulls_first: Option<bool>,
+    /// Collating sequence from a `COLLATE name` clause, applied to **text**
+    /// values before comparison. `None` (or an explicit `COLLATE BINARY`) means
+    /// the default byte-order comparison. `Some("NOCASE")` compares ASCII
+    /// case-insensitively; `Some("RTRIM")` ignores trailing spaces. Non-text
+    /// values are unaffected by collation. Stored uppercased.
+    pub collation: Option<String>,
+    /// A positional `ORDER BY <n>` that points at an AGGREGATE output column
+    /// (e.g. `SELECT k, sum(v) … ORDER BY 2`) binds to output column `n-1` by
+    /// INDEX rather than by re-substituting the aggregate expression: the sort
+    /// must read the already-materialized value, which an aggregate has no
+    /// per-row form for. Codegen resolves this index to that column's emitted
+    /// name (the planner cannot — the name is computed in codegen). `None` for
+    /// every ordinary key, whose `expr` drives the sort as before.
+    pub output_index: Option<usize>,
 }
 
 /// An aggregate item inside an `Aggregate` plan node.
@@ -453,7 +539,7 @@ impl std::error::Error for PlanError {}
 /// // ... implement SchemaProvider ...
 /// ```
 pub fn plan_sql(sql: &str, schema: &dyn SchemaProvider) -> Result<LogicalPlan, PlanError> {
-    let ast = parse_sql(sql).map_err(|e| PlanError::ParseError(e))?;
+    let ast = parse_sql(sql).map_err(PlanError::ParseError)?;
     plan(&ast, schema)
 }
 
@@ -577,6 +663,12 @@ fn plan_select(
     // single-row, no-column virtual table (the "dual" table).  We model
     // this as a `Scan` of a special `__dual__` table that the backend and
     // codegen handle as yielding one empty row.
+    // Records the single base table (real name + optional alias) so ORDER BY can
+    // resolve a bare column's schema-defined COLLATE. Left `None` for the dual
+    // table and (below) for any query with JOINs, where column→table resolution
+    // is ambiguous and out of scope for this pass.
+    let mut base_table_ref: Option<(String, Option<String>)> = None;
+
     let mut plan: LogicalPlan = if let Some(table_ref) = find_node(stmt, "table_ref") {
         // Extract table name and optional alias from `table_ref = table_name [ "AS" NAME ]`.
         let (table_name, table_alias) = extract_table_ref(table_ref);
@@ -585,6 +677,8 @@ fn plan_select(
         schema
             .column_names(&table_name)
             .map_err(|_| PlanError::UnknownTable(table_name.clone()))?;
+
+        base_table_ref = Some((table_name.clone(), table_alias.clone()));
 
         LogicalPlan::Scan {
             table: table_name,
@@ -617,7 +711,16 @@ fn plan_select(
     if let Some(where_clause) = find_node(stmt, "where_clause") {
         // Grammar: where_clause = WHERE expr
         // The WHERE clause wraps an expr node; we skip the WHERE keyword token.
-        let predicate = extract_clause_expr(where_clause)?;
+        let mut predicate = extract_clause_expr(where_clause)?;
+        // Column-defined COLLATE flows into WHERE comparisons only for a single
+        // base table (no JOINs), matching the ORDER BY restriction — with joins,
+        // column→table resolution is ambiguous and out of scope for this pass.
+        if find_nodes(stmt, "join_clause").is_empty() {
+            if let Some((table, alias)) = base_table_ref.as_ref() {
+                let ctx = build_collate_ctx(schema, table, alias.as_deref());
+                predicate = collate_comparisons(predicate, &ctx);
+            }
+        }
         plan = LogicalPlan::Filter {
             input: Box::new(plan),
             predicate,
@@ -665,11 +768,30 @@ fn plan_select(
 
     // Build an Aggregate node if there's a GROUP BY or any aggregate calls.
     if group_clause.is_some() || !aggregates.is_empty() {
-        let group_by = if let Some(gc) = group_clause {
+        let mut group_by = if let Some(gc) = group_clause {
             plan_group_by_exprs(gc)?
         } else {
             Vec::new()
         };
+        // Column-defined COLLATE flows into the GROUP BY key, so a column
+        // declared `COLLATE NOCASE` groups 'A' with 'a'. Restricted to a single
+        // base table (no JOINs) like the ORDER BY / WHERE passes, since with
+        // joins a bare column's owning table is ambiguous. A key that already
+        // carries an explicit `COLLATE` is left alone — explicit outranks
+        // declared. Codegen peels the `__collate` wrapper back off so the
+        // collation folds only the grouping key, never the emitted value.
+        if find_nodes(stmt, "join_clause").is_empty() {
+            if let Some((table, alias)) = base_table_ref.as_ref() {
+                let ctx = build_collate_ctx(schema, table, alias.as_deref());
+                group_by = group_by
+                    .into_iter()
+                    .map(|k| match resolve_column_collation(&k, &ctx) {
+                        Some(coll) => wrap_collate(k, &coll),
+                        None => k,
+                    })
+                    .collect();
+            }
+        }
         plan = LogicalPlan::Aggregate {
             input: Box::new(plan),
             group_by,
@@ -691,15 +813,63 @@ fn plan_select(
     // -----------------------------------------------------------------------
     // Grammar: select_stmt = SELECT [ DISTINCT | ALL ] ...
     // We check for the DISTINCT keyword token among the direct children of select_stmt.
-    if has_token(stmt, "DISTINCT") {
-        plan = LogicalPlan::Distinct(Box::new(plan));
+    // NOTE: the node itself is built AFTER `output_columns` is computed (just
+    // below), because DISTINCT needs one collation per OUTPUT column. Nothing
+    // between here and there mutates `plan`, so the tree shape is unchanged.
+    let is_distinct = has_token(stmt, "DISTINCT");
+
+    // -----------------------------------------------------------------------
+    // Projected output columns — computed HERE (before ORDER BY) so a
+    // positional `ORDER BY <n>` can resolve the integer to the n-th output
+    // expression. The same list is reused for the outermost Project (step 9),
+    // so `plan_select_list` runs exactly once.
+    // -----------------------------------------------------------------------
+    let output_columns: Vec<OutputColumn> = if let Some(sl) = select_list {
+        plan_select_list(sl)?
+    } else {
+        // Fallback: treat as SELECT * (shouldn't happen with a valid grammar).
+        vec![OutputColumn {
+            expr: SqlExpr::Column {
+                table: None,
+                name: "*".to_string(),
+            },
+            alias: None,
+        }]
+    };
+
+    // Expand a `*` output column into the base table's columns, in definition
+    // order. `*` is only a placeholder — the rest of the pipeline cannot resolve
+    // it (`LoadColumn("*")` finds no such column and yields NULL), so without
+    // this a `SELECT *` returns a single NULL column literally named `*`. SQLite
+    // expands it to every column of the FROM clause.
+    let output_columns = expand_star_columns(output_columns, schema, &base_table_ref, stmt);
+
+    // Now that the output list is known, build the DISTINCT node with one
+    // collation per output column. SQLite folds a DISTINCT column only when the
+    // output expression is a BARE COLUMN REFERENCE whose column declares a
+    // collation — an alias to a collated column's *name* does not inherit it
+    // (`SELECT DISTINCT x AS c` keeps 'p' and 'P' apart even when `c` is
+    // NOCASE), and an expression drops it (`c||''` keeps 'A' and 'a' apart).
+    // `SELECT DISTINCT *` does fold, because `*` expands to bare columns.
+    if is_distinct {
+        let collations = distinct_output_collations(schema, &output_columns, &base_table_ref, stmt);
+        plan = LogicalPlan::Distinct(Box::new(plan), collations);
     }
 
     // -----------------------------------------------------------------------
     // Step 7: ORDER BY.
     // -----------------------------------------------------------------------
     if let Some(order_clause) = find_node(stmt, "order_clause") {
-        let keys = plan_order_by(order_clause)?;
+        // Column-defined COLLATE only propagates into ORDER BY for a single
+        // base table (no JOINs) — see `base_table_ref`. With JOINs present we
+        // pass `None`, so every sort key keeps whatever explicit collation it
+        // carried and otherwise falls back to BINARY.
+        let collate_ctx = if find_nodes(stmt, "join_clause").is_empty() {
+            base_table_ref.as_ref().map(|(t, a)| (t.as_str(), a.as_deref()))
+        } else {
+            None
+        };
+        let keys = plan_order_by(order_clause, schema, collate_ctx, &output_columns)?;
         plan = LogicalPlan::Sort {
             input: Box::new(plan),
             keys,
@@ -725,23 +895,12 @@ fn plan_select(
     //
     // The SELECT list tells us which columns (or expressions) to include in the
     // output.  This wrapping happens AFTER sort/limit so those operations can
-    // still access columns that aren't in the final output.
-    let columns = if let Some(sl) = select_list {
-        plan_select_list(sl)?
-    } else {
-        // Fallback: treat as SELECT * (shouldn't happen with a valid grammar).
-        vec![OutputColumn {
-            expr: SqlExpr::Column {
-                table: None,
-                name: "*".to_string(),
-            },
-            alias: None,
-        }]
-    };
-
+    // still access columns that aren't in the final output.  The list was
+    // already computed above (before ORDER BY) so positional sort keys could
+    // resolve against it; reuse it here rather than re-planning.
     plan = LogicalPlan::Project {
         input: Box::new(plan),
-        columns,
+        columns: output_columns,
     };
 
     Ok(plan)
@@ -753,7 +912,9 @@ fn plan_select(
 
 /// Extract the table name and optional alias from a `table_ref` node.
 ///
-/// Grammar: `table_ref = table_name [ "AS" NAME ]`
+/// Grammar: `table_ref = table_name [ [ "AS" ] NAME ]` — the alias may be
+/// written with or without `AS` (`FROM users AS u` and `FROM users u` are
+/// equivalent in SQLite).
 /// Grammar: `table_name = NAME [ "." NAME ]`
 ///
 /// Returns `(table_name, Option<alias>)`.
@@ -762,13 +923,14 @@ fn extract_table_ref(table_ref: &GrammarASTNode) -> (String, Option<String>) {
     // If no name token is found, we return an empty string.  The caller
     // immediately validates the table against the schema, so an empty string
     // will produce `PlanError::UnknownTable("")` — a visible, safe error.
-    let table_name = if let Some(tn) = find_node(table_ref, "table_name") {
+    let table_name_node = find_node(table_ref, "table_name");
+    let table_name = if let Some(tn) = table_name_node {
         first_name_token(tn).unwrap_or_default()
     } else {
         first_name_token(table_ref).unwrap_or_default()
     };
 
-    // Look for an AS alias by scanning the token children.
+    // Explicit `AS name`: scan for the AS keyword, take the following token.
     let mut alias: Option<String> = None;
     let children = &table_ref.children;
     for (i, child) in children.iter().enumerate() {
@@ -776,6 +938,22 @@ fn extract_table_ref(table_ref: &GrammarASTNode) -> (String, Option<String>) {
             // The token after "AS" is the alias name.
             if let Some(next) = children.get(i + 1) {
                 alias = Some(token_text_of(next));
+            }
+        }
+    }
+
+    // Implicit `name` (no AS): the table name lives in its own nested
+    // `table_name` node, so any bare `Name`-type token directly under
+    // `table_ref` is the alias (`FROM users u`). Guard on the `table_name`
+    // node being present — in the degenerate fallback above the lone direct
+    // token IS the table name and must not be doubled up as its own alias.
+    if alias.is_none() && table_name_node.is_some() {
+        for child in children {
+            if let ASTNodeOrToken::Token(tok) = child {
+                if tok.type_ == lexer::token::TokenType::Name {
+                    alias = Some(tok.value.clone());
+                    break;
+                }
             }
         }
     }
@@ -861,10 +1039,8 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
     let children = &join_clause.children;
     for (i, child) in children.iter().enumerate() {
         if is_keyword_token(child, "ON") {
-            if let Some(next) = children.get(i + 1) {
-                if let ASTNodeOrToken::Node(expr_node) = next {
-                    return Ok(Some(plan_expression(expr_node)?));
-                }
+            if let Some(ASTNodeOrToken::Node(expr_node)) = children.get(i + 1) {
+                return Ok(Some(plan_expression(expr_node)?));
             }
         }
     }
@@ -873,27 +1049,598 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
 
 /// Plan the `group_clause` into a list of GROUP BY key expressions.
 ///
-/// Grammar: `group_clause = GROUP BY column_ref { "," column_ref }`
+/// Grammar: `group_clause = GROUP BY column_ref [ COLLATE name ]
+///                          { "," column_ref [ COLLATE name ] }`
+///
+/// Because the grammar's optionals/repetitions FLATTEN into `group_clause`'s
+/// direct children, a `COLLATE name` clause appears as two loose tokens sitting
+/// immediately after the `column_ref` node it qualifies (and before the next
+/// key's comma). We therefore walk the children in order — planning each
+/// `column_ref` node, then reading any `COLLATE` tokens that follow it up to the
+/// next node — rather than harvesting `column_ref` nodes in isolation (which
+/// would drop the per-key collation). An explicit collation wraps the key in
+/// `__collate`; codegen groups on the collated value but emits the original.
 fn plan_group_by_exprs(group_clause: &GrammarASTNode) -> Result<Vec<SqlExpr>, PlanError> {
-    find_nodes(group_clause, "column_ref")
-        .iter()
-        .map(|cr| plan_column_ref(cr))
-        .collect()
+    let children = &group_clause.children;
+    let mut keys = Vec::new();
+    for (i, child) in children.iter().enumerate() {
+        let ASTNodeOrToken::Node(node) = child else {
+            continue;
+        };
+        if node.rule_name != "column_ref" {
+            continue;
+        }
+        let mut key = plan_column_ref(node)?;
+        // Collect the loose tokens between this column_ref and the next node —
+        // that window holds this key's optional `COLLATE name` (plus a trailing
+        // comma, which `tail_collation` ignores).
+        let tail: Vec<String> = children[i + 1..]
+            .iter()
+            .take_while(|c| matches!(c, ASTNodeOrToken::Token(_)))
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+                ASTNodeOrToken::Node(_) => None,
+            })
+            .collect();
+        if let Some(name) = tail_collation(&tail)? {
+            key = wrap_collate(key, &name);
+        }
+        keys.push(key);
+    }
+    Ok(keys)
 }
 
 /// Plan the `order_clause` into sort keys.
 ///
 /// Grammar: `order_clause = ORDER BY order_item { "," order_item }`
 /// Grammar: `order_item = expr [ ASC | DESC ]`
-fn plan_order_by(order_clause: &GrammarASTNode) -> Result<Vec<SortKey>, PlanError> {
+fn plan_order_by(
+    order_clause: &GrammarASTNode,
+    schema: &dyn SchemaProvider,
+    collate_ctx: Option<(&str, Option<&str>)>,
+    output_columns: &[OutputColumn],
+) -> Result<Vec<SortKey>, PlanError> {
+    // Fetch the base table's declared collations exactly ONCE (not per sort
+    // key). A bare `ORDER BY c0, c0, …` over a very wide table would otherwise
+    // clone the whole schema for every key — O(keys × columns) deep copies,
+    // both dimensions attacker-controlled. Building a name→collation map up
+    // front keeps planning linear in the number of keys.
+    let order_ctx = collate_ctx.map(|(table, alias)| {
+        let collations = schema
+            .table_collations(table)
+            .unwrap_or_default()
+            .into_iter()
+            .map(|(name, coll)| (name.to_ascii_lowercase(), coll))
+            .collect::<std::collections::HashMap<String, String>>();
+        OrderCollateCtx {
+            table,
+            alias,
+            collations,
+        }
+    });
+    // Same reasoning for the output ALIAS lookup an unqualified key needs (see
+    // `plan_order_item`): scanning `output_columns` per key would be
+    // O(keys × columns) with both dimensions attacker-controlled — a wide
+    // `SELECT x AS a1, …` with many non-matching ORDER BY keys never
+    // short-circuits. Build the map once instead.
+    //
+    // FIRST alias wins on a duplicate (`or_insert`, not `insert`): SQLite's
+    // `resolveAsName` returns the first select-list match and raises no
+    // ambiguity error for ORDER BY, so `SELECT x AS c, y AS c … ORDER BY c`
+    // binds to `x`. Keys are lowercased to match the collation map's convention.
+    // Skipped entirely when there is no collation context, since the result
+    // would be discarded.
+    let alias_exprs: std::collections::HashMap<String, &SqlExpr> = if order_ctx.is_some() {
+        let mut m = std::collections::HashMap::new();
+        for oc in output_columns {
+            if let Some(a) = oc.alias.as_deref() {
+                m.entry(a.to_ascii_lowercase()).or_insert(&oc.expr);
+            }
+        }
+        m
+    } else {
+        std::collections::HashMap::new()
+    };
     find_nodes(order_clause, "order_item")
         .iter()
-        .map(|item| plan_order_item(item))
+        .map(|item| plan_order_item(item, order_ctx.as_ref(), output_columns, &alias_exprs))
         .collect()
 }
 
+/// Resolve a **positional** `ORDER BY <n>` key: SQLite treats a *bare integer
+/// literal* in ORDER BY as a 1-based reference to the n-th column of the SELECT
+/// output list (`SELECT a, b FROM t ORDER BY 2` sorts by `b`).
+///
+/// The rule is deliberately narrow — only a lone integer literal is positional.
+/// An *expression* that happens to evaluate to an integer is NOT: `ORDER BY 1+0`
+/// sorts by the constant `1`, i.e. does not reorder at all. So we match strictly
+/// on `Literal(Int(_))` and nothing else.
+///
+/// | ORDER BY term | interpreted as              |
+/// |---------------|-----------------------------|
+/// | `1`           | the 1st output column       |
+/// | `2 DESC`      | the 2nd output column, desc |
+/// | `1+0`         | constant `1` (no reorder)   |
+/// | `name`        | column/alias `name`         |
+///
+/// Returns a [`PositionalKey`]:
+/// - `Expr(e)` — a positional reference; `e` is the substituted n-th output
+///   expression (routed through the ordinary per-row sort path).
+/// - `Index(i)` — a positional reference whose target output column is (or
+///   contains) an AGGREGATE; the sort must bind to the MATERIALIZED value at
+///   output index `i`, not re-evaluate the aggregate per row.
+/// - `NotPositional` — the key is not positional (leave it as written), also the
+///   escape hatch for `SELECT *`, whose column identity isn't known at plan time.
+/// - `Err(..)` — a positional reference out of range, matching SQLite's
+///   "ORDER BY term out of range" (only diagnosed for a fully-explicit list).
+fn resolve_positional_key(
+    expr: &SqlExpr,
+    outputs: &[OutputColumn],
+) -> Result<PositionalKey, PlanError> {
+    // Only a bare integer literal is a positional reference.
+    let SqlExpr::Literal(SqlValue::Int(n)) = expr else {
+        return Ok(PositionalKey::NotPositional);
+    };
+    let n = *n;
+
+    // If the output list contains an unexpanded `*` (or `t.*`), we can't count
+    // or identify columns at plan time. Leave the key unchanged — no regression
+    // versus prior behavior; positional-over-star is a documented follow-up.
+    let has_star = outputs.iter().any(|c| {
+        matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*")
+    });
+    if has_star {
+        return Ok(PositionalKey::NotPositional);
+    }
+
+    // Fully explicit list: range-check exactly like SQLite (1..=ncols). Compare
+    // in i64 (not `n as usize`) so a huge ordinal like 2^32 can't truncate to an
+    // in-range value on a 32-bit `usize` and then index out of bounds; on any
+    // platform, an out-of-range `n` is rejected here before it becomes an index.
+    if n < 1 || n > outputs.len() as i64 {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "ORDER BY term out of range - should be between 1 and {}",
+            outputs.len()
+        )));
+    }
+
+    // Safe: `1 <= n <= outputs.len()`, so `n - 1` is a valid 0-based index that
+    // fits `usize` on every platform.
+    let idx = (n - 1) as usize;
+    let target = &outputs[idx].expr;
+
+    // If the target is (or contains) an aggregate, we cannot substitute its
+    // expression: aggregates are computed once per group, not re-evaluated per
+    // row in the sort path, so routing `SUM(v)` back through the sort would
+    // ignore it. Instead bind by INDEX — codegen sorts the already-materialized
+    // output column at this position (see `SortKey::output_index`).
+    if expr_contains_aggregate(target) {
+        return Ok(PositionalKey::Index(idx));
+    }
+
+    // Substitute the n-th output expression. Routing the real expression through
+    // the ordinary sort path means positional keys inherit all the existing
+    // machinery (hidden sort-key columns, collation, NULL placement) for free.
+    Ok(PositionalKey::Expr(target.clone()))
+}
+
+/// The three outcomes of resolving a positional `ORDER BY <n>` key — see
+/// [`resolve_positional_key`].
+enum PositionalKey {
+    /// Not a positional reference (or an unresolvable `SELECT *`): leave as-is.
+    NotPositional,
+    /// A positional non-aggregate reference; sort by the substituted expression.
+    Expr(SqlExpr),
+    /// A positional reference to an aggregate output column; sort by the
+    /// materialized value at this 0-based output index.
+    Index(usize),
+}
+
+/// Does this expression tree contain an aggregate function anywhere?
+///
+/// Used to keep positional `ORDER BY <n>` from substituting an aggregate output
+/// expression back into the (per-row) sort path, where it can't be recomputed.
+fn expr_contains_aggregate(expr: &SqlExpr) -> bool {
+    match expr {
+        SqlExpr::Aggregate { .. } => true,
+        SqlExpr::Literal(_) | SqlExpr::Column { .. } => false,
+        SqlExpr::BinaryOp { left, right, .. } => {
+            expr_contains_aggregate(left) || expr_contains_aggregate(right)
+        }
+        SqlExpr::UnaryOp { expr, .. }
+        | SqlExpr::IsNull(expr)
+        | SqlExpr::IsNotNull(expr)
+        | SqlExpr::Cast { expr, .. } => expr_contains_aggregate(expr),
+        SqlExpr::Between {
+            value, low, high, ..
+        } => {
+            expr_contains_aggregate(value)
+                || expr_contains_aggregate(low)
+                || expr_contains_aggregate(high)
+        }
+        SqlExpr::Like {
+            value,
+            pattern,
+            escape,
+            ..
+        } => {
+            expr_contains_aggregate(value)
+                || expr_contains_aggregate(pattern)
+                || escape.as_deref().is_some_and(expr_contains_aggregate)
+        }
+        SqlExpr::InList { value, list, .. } => {
+            expr_contains_aggregate(value) || list.iter().any(expr_contains_aggregate)
+        }
+        SqlExpr::FunctionCall { args, .. } => args.iter().any(expr_contains_aggregate),
+        SqlExpr::Case { branches, else_val } => {
+            branches
+                .iter()
+                .any(|(c, v)| expr_contains_aggregate(c) || expr_contains_aggregate(v))
+                || else_val.as_deref().is_some_and(expr_contains_aggregate)
+        }
+    }
+}
+
+/// Single base table (name + alias) plus its precomputed `column → COLLATE`
+/// map, used to resolve a bare ORDER BY column's inherited collation without
+/// re-querying the schema per key.
+struct OrderCollateCtx<'a> {
+    table: &'a str,
+    alias: Option<&'a str>,
+    /// Lowercased column name → declared collation, for columns that have one.
+    collations: std::collections::HashMap<String, String>,
+}
+
+/// Resolve the collation a bare-column ORDER BY key inherits from its column
+/// definition. Returns `Some(name)` only when the sort expression is a plain
+/// column reference (optionally qualified by the table's name or alias) whose
+/// column was declared with a non-default `COLLATE`. Anything else — a computed
+/// expression, an alias to an output column, a qualifier that doesn't match the
+/// base table — yields `None`, and the key keeps the default BINARY ordering.
+/// Build the single-base-table collation context: the table's name + optional
+/// alias plus its precomputed lowercased `column → COLLATE` map. Shared by the
+/// ORDER BY and WHERE-comparison collation passes so the schema is queried once.
+fn build_collate_ctx<'a>(
+    schema: &dyn SchemaProvider,
+    table: &'a str,
+    alias: Option<&'a str>,
+) -> OrderCollateCtx<'a> {
+    let collations = schema
+        .table_collations(table)
+        .unwrap_or_default()
+        .into_iter()
+        .map(|(name, coll)| (name.to_ascii_lowercase(), coll))
+        .collect();
+    OrderCollateCtx {
+        table,
+        alias,
+        collations,
+    }
+}
+
+/// Is `op` a binary comparison whose result depends on collation? These are the
+/// operators SQLite subjects to collating-sequence resolution; arithmetic /
+/// logical / bitwise operators are not.
+fn is_comparison_op(op: &BinaryOp) -> bool {
+    matches!(
+        op,
+        BinaryOp::Eq | BinaryOp::Neq | BinaryOp::Lt | BinaryOp::Lte | BinaryOp::Gt | BinaryOp::Gte
+    )
+}
+
+/// Does this expression already carry an explicit collation, i.e. is it an
+/// `__collate(_, _)` call produced by `wrap_collate`? Such an operand means a
+/// `COLLATE` clause was written on the comparison, which outranks any
+/// column-defined collation — so the column-collation pass must leave it alone.
+fn is_collate_call(expr: &SqlExpr) -> bool {
+    matches!(expr, SqlExpr::FunctionCall { name, .. } if name == "__collate")
+}
+
+/// Push column-defined `COLLATE` into the comparisons of a WHERE/HAVING
+/// predicate. SQLite resolves a binary comparison's collating sequence as:
+/// explicit `COLLATE` on either operand → the left operand's column collation →
+/// the right operand's → BINARY. The explicit case is already lowered onto
+/// `__collate` in `plan_comparison`; this pass handles the column cases.
+///
+/// It walks the boolean skeleton (`AND` / `OR` / `NOT`) down to each comparison
+/// and, when neither operand is already `__collate`-wrapped and a column operand
+/// declares a collation, wraps BOTH operands in `__collate(_, coll)` — turning
+/// the collated comparison into a plain byte comparison of canonicalised values,
+/// reusing the exact mechanism explicit `COLLATE` already uses. Non-comparison
+/// leaves pass through unchanged. Only invoked for a single base table (no
+/// JOINs), matching the ORDER BY collation restriction.
+fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
+    match expr {
+        SqlExpr::BinaryOp { op, left, right } if is_comparison_op(&op) => {
+            // An explicit COLLATE (already `__collate`-wrapped) outranks the
+            // column's declared collation — leave the comparison untouched.
+            if is_collate_call(&left) || is_collate_call(&right) {
+                return SqlExpr::BinaryOp { op, left, right };
+            }
+            // SQLite picks the comparison's collation from the LEFT operand if it
+            // is a column, otherwise the right operand if IT is a column, else
+            // BINARY. Crucially, a *column* determines the collation even when
+            // that collation is the default BINARY: `bin_col = nocase_col` uses
+            // BINARY (the left column), it does NOT fall through to the right
+            // column's NOCASE. So we resolve on the first operand that is a
+            // base-table column and stop there — never OR-ing past a BINARY
+            // column into the other operand. A resolved BINARY collation
+            // (`None`) means byte order, so we leave the comparison bare rather
+            // than wrapping it (which would also needlessly strip the column
+            // reference that drives type affinity).
+            let determining = if column_in_base_table(&left, ctx) {
+                resolve_column_collation(&left, ctx)
+            } else if column_in_base_table(&right, ctx) {
+                resolve_column_collation(&right, ctx)
+            } else {
+                None
+            };
+            match determining {
+                Some(name) => SqlExpr::BinaryOp {
+                    op,
+                    left: Box::new(wrap_collate(*left, &name)),
+                    right: Box::new(wrap_collate(*right, &name)),
+                },
+                None => SqlExpr::BinaryOp { op, left, right },
+            }
+        }
+        // Recurse through boolean connectives to reach nested comparisons.
+        SqlExpr::BinaryOp { op, left, right } if matches!(op, BinaryOp::And | BinaryOp::Or) => {
+            SqlExpr::BinaryOp {
+                op,
+                left: Box::new(collate_comparisons(*left, ctx)),
+                right: Box::new(collate_comparisons(*right, ctx)),
+            }
+        }
+        SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr,
+        } => SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr: Box::new(collate_comparisons(*expr, ctx)),
+        },
+        // `value IN (list…)` — SQLite takes the operator's collating sequence
+        // from the LEFT operand (`value`), exactly as for a binary comparison.
+        // When `value` is a base-table column with a declared collation and it
+        // is not already `__collate`-wrapped (an explicit COLLATE outranks), we
+        // wrap the value AND every list element in `__collate(_, coll)`. The VM
+        // then canonicalises each side before the membership test, so
+        // `name IN ('APPLE')` on a NOCASE column matches `'Apple'`/`'apple'`.
+        // `__collate` passes NULL/non-text through unchanged, so IN's NULL and
+        // numeric semantics are preserved. `NOT IN` inherits this via `negated`.
+        SqlExpr::InList {
+            value,
+            list,
+            negated,
+        } => {
+            if is_collate_call(&value) {
+                return SqlExpr::InList { value, list, negated };
+            }
+            let determining = if column_in_base_table(&value, ctx) {
+                resolve_column_collation(&value, ctx)
+            } else {
+                None
+            };
+            match determining {
+                Some(name) => SqlExpr::InList {
+                    value: Box::new(wrap_collate(*value, &name)),
+                    list: list.into_iter().map(|e| wrap_collate(e, &name)).collect(),
+                    negated,
+                },
+                None => SqlExpr::InList { value, list, negated },
+            }
+        }
+        other => other,
+    }
+}
+
+/// Expand a `*` output column into the base table's columns, in the table's
+/// declaration order (what SQLite uses). `*` is a placeholder that nothing
+/// downstream can resolve — `LoadColumn("*")` reads no column and yields NULL —
+/// so a `SELECT *` (plain OR `DISTINCT`) would otherwise return a single NULL
+/// column named `*`. Replacing it here with the concrete columns fixes both.
+///
+/// Scoped to a single base table with no JOIN: a joined `*` would need every
+/// table's columns in join order (and a qualified `t.*` there would need
+/// per-table resolution), which is a separate gap — a JOIN keeps the `*`
+/// placeholder. On a single base table the qualifier is irrelevant, so `t.*`
+/// expands the same as `*`. An unknown table or a table with no reported
+/// columns also passes through unchanged (the query errors elsewhere). A `*`
+/// mixed with other items (`SELECT a, *`) is expanded in place, preserving
+/// position.
+fn expand_star_columns(
+    cols: Vec<OutputColumn>,
+    schema: &dyn SchemaProvider,
+    base_table_ref: &Option<(String, Option<String>)>,
+    stmt: &GrammarASTNode,
+) -> Vec<OutputColumn> {
+    let has_star = cols
+        .iter()
+        .any(|c| matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*"));
+    if !has_star {
+        return cols;
+    }
+    let Some((table, _alias)) = base_table_ref.as_ref() else {
+        return cols;
+    };
+    if !find_nodes(stmt, "join_clause").is_empty() {
+        return cols;
+    }
+    let names = match schema.column_names(table) {
+        Ok(n) if !n.is_empty() => n,
+        _ => return cols,
+    };
+    let mut out = Vec::with_capacity(cols.len() + names.len());
+    for c in cols {
+        match &c.expr {
+            SqlExpr::Column { name, .. } if name == "*" => {
+                for cn in &names {
+                    out.push(OutputColumn {
+                        expr: SqlExpr::Column {
+                            table: None,
+                            name: cn.clone(),
+                        },
+                        alias: None,
+                    });
+                }
+            }
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
+/// One collation per DISTINCT **output** column, positionally parallel to the
+/// emitted row (`None` = default BINARY, i.e. dedupe on the bytes as-is).
+///
+/// SQLite folds a DISTINCT column only when the output expression is a BARE
+/// COLUMN REFERENCE to a column that declares a collation. Verified against real
+/// SQLite:
+///
+/// | `SELECT DISTINCT …` (with `c TEXT COLLATE NOCASE`, `x TEXT`) | folds? |
+/// |---------------------------------------------------------------|--------|
+/// | `c`                                                           | yes    |
+/// | `*`                                                           | yes — expands to bare columns |
+/// | `c AS y`                                                      | yes — an alias is just a label, the collation comes from the expression |
+/// | `x AS c` (alias shadowing a collated column's NAME)           | NO — `x` is BINARY; the name `c` is irrelevant |
+/// | `c||''`                                                       | NO — an expression drops the collation |
+///
+/// So the mapping must be POSITIONAL, never by output name: keying on the name
+/// would wrongly fold `x AS c`. `*` is expanded here through the schema's
+/// ordered `column_names` so the vector still lines up with what is emitted.
+/// Restricted to a single base table (no JOINs) like the other collation passes;
+/// with a join we return all-`None` and DISTINCT keeps byte semantics.
+fn distinct_output_collations(
+    schema: &dyn SchemaProvider,
+    output_columns: &[OutputColumn],
+    base_table_ref: &Option<(String, Option<String>)>,
+    stmt: &GrammarASTNode,
+) -> Vec<Option<String>> {
+    let none_for_each = |n: usize| vec![None; n];
+    if !find_nodes(stmt, "join_clause").is_empty() {
+        return none_for_each(output_columns.len());
+    }
+    // BAIL on GROUP BY / aggregates. This vector is indexed by output-column
+    // POSITION, but the aggregate emitter emits group-key columns in GROUP BY
+    // order, not SELECT-list order — so the two are shifted relative to each
+    // other and a collation would land on the wrong column, silently folding
+    // values that must stay distinct (rows would vanish from the result). E.g.
+    // `SELECT DISTINCT x, c FROM t GROUP BY c, x` emits `[c, x]` while this
+    // list describes `[x, c]`. Falling back to BINARY is the fail-safe
+    // direction: it dedupes strictly, never merging rows that differ.
+    if find_node(stmt, "group_clause").is_some() {
+        return none_for_each(output_columns.len());
+    }
+    let Some((table, alias)) = base_table_ref.as_ref() else {
+        return none_for_each(output_columns.len());
+    };
+    let ctx = build_collate_ctx(schema, table, alias.as_deref());
+
+    let mut out = Vec::new();
+    for col in output_columns {
+        match &col.expr {
+            // `*` expands to every column of the base table, in declaration
+            // order, each a bare reference — so each contributes its own
+            // declared collation (or None).
+            SqlExpr::Column { name, .. } if name == "*" => {
+                for cname in schema.column_names(table).unwrap_or_default() {
+                    out.push(ctx.collations.get(&cname.to_ascii_lowercase()).cloned());
+                }
+            }
+            // An explicit `COLLATE` on the select-item (wrapped as
+            // `__collate(inner, 'NAME')`) OUTRANKS any declared collation, and a
+            // bare column reference inherits its declared collation. An ALIAS is
+            // irrelevant — the collation comes from the expression, so `c AS y`
+            // still folds. (`effective_output_collation` yields `None` for any
+            // other expression, which is exactly the "expressions drop the
+            // collation" rule.)
+            expr => out.push(effective_output_collation(expr, &ctx)),
+        }
+    }
+    out
+}
+
+/// The collating sequence a DISTINCT output column dedupes under: an explicit
+/// `COLLATE` (carried as a `__collate` wrapper) if present — with `BINARY`
+/// meaning "compare bytes as-is", represented as `None` — otherwise the column's
+/// declared collation, otherwise `None`.
+fn effective_output_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
+    if let Some(name) = collate_wrapper_name(expr) {
+        return if name.eq_ignore_ascii_case("BINARY") {
+            None
+        } else {
+            Some(name)
+        };
+    }
+    resolve_column_collation(expr, ctx)
+}
+
+/// The collation name from a `__collate(inner, 'NAME')` wrapper, or `None` for
+/// any other expression. The production counterpart to the WHERE-comparison
+/// pass's `is_collate_call` boolean — here we need the name itself, to feed the
+/// DISTINCT collation vector.
+fn collate_wrapper_name(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+            match &args[1] {
+                SqlExpr::Literal(SqlValue::Text(coll)) => Some(coll.clone()),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
+}
+
+fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
+    let SqlExpr::Column { table, name } = expr else {
+        return None;
+    };
+    // A qualifier, if present, must name the base table or its alias; otherwise
+    // it refers to something not in scope for single-table collation resolution.
+    if let Some(qual) = table {
+        let matches_table = qual.eq_ignore_ascii_case(ctx.table);
+        let matches_alias = ctx.alias.is_some_and(|a| qual.eq_ignore_ascii_case(a));
+        if !matches_table && !matches_alias {
+            return None;
+        }
+    }
+    ctx.collations.get(&name.to_ascii_lowercase()).cloned()
+}
+
+/// Is `expr` a reference to a column of the single base table (optionally
+/// qualified by the table's name or alias)? Distinct from
+/// [`resolve_column_collation`], which returns `None` for a column whose
+/// collation is the default BINARY — here even a BINARY column is `true`,
+/// because *being a column* is what makes an operand determine a comparison's
+/// collating sequence (a left BINARY column forces byte order rather than
+/// deferring to the other operand).
+fn column_in_base_table(expr: &SqlExpr, ctx: &OrderCollateCtx) -> bool {
+    let SqlExpr::Column { table, .. } = expr else {
+        return false;
+    };
+    match table {
+        None => true,
+        Some(qual) => {
+            qual.eq_ignore_ascii_case(ctx.table)
+                || ctx.alias.is_some_and(|a| qual.eq_ignore_ascii_case(a))
+        }
+    }
+}
+
 /// Plan a single `order_item` node.
-fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
+///
+/// `collate_ctx` carries the single base table (name + alias + collation map)
+/// when the query has exactly one table, enabling column-defined COLLATE to
+/// flow into the sort key; it is `None` for multi-table or table-less queries.
+fn plan_order_item(
+    item: &GrammarASTNode,
+    collate_ctx: Option<&OrderCollateCtx>,
+    output_columns: &[OutputColumn],
+    // Lowercased output alias -> the expression it stands for, precomputed once
+    // in `plan_order_by` so alias lookup stays O(1) per key rather than
+    // O(output columns).
+    alias_exprs: &std::collections::HashMap<String, &SqlExpr>,
+) -> Result<SortKey, PlanError> {
     // The first child Node is the expression; check for ASC/DESC tokens.
     let expr_node = item
         .children
@@ -907,97 +1654,257 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
         })
         .ok_or_else(|| PlanError::UnsupportedStatement("empty order_item".to_string()))?;
 
-    let expr = plan_expression(expr_node)?;
+    let raw_expr = plan_expression(expr_node)?;
+
+    // A bare integer literal is a *positional* reference to the n-th output
+    // column (`ORDER BY 2` → sort by the 2nd SELECT column). Resolve it to the
+    // real output expression BEFORE collation inheritance below, so a positional
+    // key over a `COLLATE NOCASE` column still picks up that collation. Non-
+    // positional keys (and `SELECT *`) pass through unchanged.
+    let (expr, output_index) = match resolve_positional_key(&raw_expr, output_columns)? {
+        PositionalKey::Expr(resolved) => (resolved, None),
+        // A positional aggregate key: sort by the materialized output column at
+        // this index. The `expr` is kept as the aggregate for reference (codegen
+        // uses `output_index`, not the expr, to name the sort column); it also
+        // makes the collation-inheritance below a no-op (an aggregate is not a
+        // base-table column, so it inherits nothing).
+        PositionalKey::Index(i) => (output_columns[i].expr.clone(), Some(i)),
+        PositionalKey::NotPositional => (raw_expr, None),
+    };
 
     // ASC is the default; DESC reverses.
     let ascending = !has_token(item, "DESC");
 
-    Ok(SortKey { expr, ascending })
+    // Optional `NULLS FIRST` / `NULLS LAST`. FIRST/LAST are NOT reserved
+    // keywords (they are common column names), so the grammar accepts a generic
+    // NAME after `NULLS` and we validate it here. Anything other than
+    // FIRST/LAST is a syntax error, matching SQLite.
+    let nulls_first = {
+        let children = &item.children;
+        let mut placement = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "NULLS") {
+                match children.get(i + 1) {
+                    Some(tok) => {
+                        let w = token_text_of(tok).to_uppercase();
+                        placement = Some(match w.as_str() {
+                            "FIRST" => Ok(true),
+                            "LAST" => Ok(false),
+                            other => Err(PlanError::UnsupportedStatement(format!(
+                                "expected FIRST or LAST after NULLS, got {other:?}"
+                            ))),
+                        });
+                    }
+                    None => {
+                        placement = Some(Err(PlanError::UnsupportedStatement(
+                            "NULLS clause missing FIRST/LAST".to_string(),
+                        )))
+                    }
+                }
+            }
+        }
+        placement.transpose()?
+    };
+
+    // Optional `COLLATE name` clause. `COLLATE` is followed by the collation
+    // name (BINARY / NOCASE / RTRIM). We validate against the three built-in
+    // sequences and store the name uppercased; `BINARY` (the default) collapses
+    // to `None` so the VM takes the plain byte-order path. An unknown collation
+    // is a planning error, matching SQLite's "no such collating sequence".
+    let collation = {
+        let children = &item.children;
+        let mut coll: Option<Result<Option<String>, PlanError>> = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "COLLATE") {
+                coll = Some(match children.get(i + 1) {
+                    Some(tok) => {
+                        let name = token_text_of(tok).to_uppercase();
+                        match name.as_str() {
+                            "BINARY" => Ok(None),
+                            "NOCASE" | "RTRIM" => Ok(Some(name)),
+                            other => Err(PlanError::UnsupportedStatement(format!(
+                                "no such collating sequence: {other}"
+                            ))),
+                        }
+                    }
+                    None => Err(PlanError::UnsupportedStatement(
+                        "COLLATE clause missing collation name".to_string(),
+                    )),
+                });
+            }
+        }
+        coll.transpose()?.flatten()
+    };
+
+    // An explicit `COLLATE` on the ORDER BY item always wins — including
+    // `COLLATE BINARY`, which forces byte order even when the column is declared
+    // NOCASE/RTRIM. Because BINARY parses to `None` (same as "no collation"), we
+    // must detect the *presence* of the clause separately: only a key with no
+    // explicit COLLATE at all inherits the column's schema-defined sequence
+    // (`CREATE TABLE t(x TEXT COLLATE NOCASE); ... ORDER BY x`).
+    let has_explicit_collate = item
+        .children
+        .iter()
+        .any(|c| is_keyword_token(c, "COLLATE"));
+    let collation = if has_explicit_collate {
+        collation
+    } else {
+        // A bare ORDER BY name may be an OUTPUT ALIAS rather than a base-table
+        // column. When it is, the collation comes from what the alias STANDS FOR,
+        // never from a base-table column that merely shares the name:
+        //
+        //   CREATE TABLE t (x TEXT, c TEXT COLLATE NOCASE);
+        //   SELECT x AS c FROM t ORDER BY c;   -- byte order: `c` here IS `x`
+        //   SELECT c AS y FROM t ORDER BY y;   -- NOCASE: `y` stands for `c`
+        //
+        // Previously the name was resolved straight against the base table, so
+        // the first query sorted case-insensitively — the alias silently
+        // inherited an unrelated column's collating sequence. Only an
+        // UNQUALIFIED name can be an alias; `t.c` always means the column.
+        let via_alias = match &expr {
+            SqlExpr::Column { table: None, name } => {
+                alias_exprs.get(&name.to_ascii_lowercase()).copied()
+            }
+            _ => None,
+        };
+        let source = via_alias.unwrap_or(&expr);
+        collate_ctx.and_then(|ctx| resolve_column_collation(source, ctx))
+    };
+
+    Ok(SortKey {
+        expr,
+        ascending,
+        nulls_first,
+        collation,
+        output_index,
+    })
 }
 
 /// Parse the `limit_clause` and return `(count, offset)`.
 ///
-/// Grammar: `limit_clause = LIMIT [ "-" ] NUMBER [ OFFSET NUMBER ]`
+/// Grammar: `limit_clause = LIMIT [ "-" ] NUMBER [ OFFSET NUMBER | "," NUMBER ]`
 ///
-/// SQLite semantics: `LIMIT -1` means "no limit" (return all rows).
+/// Two tail forms, with the arguments in the OPPOSITE order:
+///
+/// | Written              | count | offset |
+/// |----------------------|-------|--------|
+/// | `LIMIT c`             | `c`   | —      |
+/// | `LIMIT c OFFSET o`    | `c`   | `o`    |
+/// | `LIMIT o , c`         | `c`   | `o`    |  ← MySQL shorthand, arguments swapped
+///
+/// So `LIMIT 1, 2` returns 2 rows starting after the first — identical to
+/// `LIMIT 2 OFFSET 1`. The comma form is a MySQL-compatibility spelling that
+/// SQLite also accepts; the only wrinkle is that the FIRST number is the
+/// offset, not the count. We detect the comma token and swap accordingly.
+///
+/// SQLite semantics: `LIMIT -1` means "no limit" (return all rows). The `-`
+/// sign only applies to the LIMIT count in the `OFFSET` form (`LIMIT -1
+/// OFFSET n`); the comma form takes two plain non-negative numbers.
 fn plan_limit(limit_clause: &GrammarASTNode) -> Result<(Option<i64>, Option<i64>), PlanError> {
-    // Walk the children in order, tracking whether we just saw a MINUS token
-    // (which only applies to the LIMIT count, not the OFFSET value).
-    let children = &limit_clause.children;
-    let mut past_limit_kw = false;
-    let mut pending_minus = false; // sign for the next NUMBER (only for count)
-    let mut count: Option<i64> = None;
-    let mut offset: Option<i64> = None;
+    // A comma anywhere in the clause selects the MySQL `LIMIT off, count` form.
+    let comma_form = limit_clause
+        .children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == ","));
 
-    for child in children {
-        match child {
-            ASTNodeOrToken::Token(tok) => match tok.value.as_str() {
-                "LIMIT" => { past_limit_kw = true; }
-                "OFFSET" => { /* next NUMBER is the offset */ }
-                "-" if past_limit_kw && count.is_none() => {
-                    // Unary minus before the LIMIT count (e.g. LIMIT -1).
-                    pending_minus = true;
-                }
+    // Collect the numeric operands in written order, carrying the optional
+    // leading `-` (only meaningful before the first number, i.e. the count in
+    // the OFFSET form). Keywords (LIMIT/OFFSET) and the comma are structural.
+    let mut nums: Vec<i64> = Vec::new();
+    let mut pending_minus = false;
+    for child in &limit_clause.children {
+        if let ASTNodeOrToken::Token(tok) = child {
+            match tok.value.as_str() {
+                "LIMIT" | "OFFSET" | "," => {}
+                "-" if nums.is_empty() => pending_minus = true,
                 _ => {
                     if let Ok(n) = tok.value.parse::<i64>() {
-                        if count.is_none() {
-                            let sign: i64 = if pending_minus { -1 } else { 1 };
-                            count = Some(n * sign);
-                            pending_minus = false;
-                        } else {
-                            offset = Some(n);
-                        }
+                        let sign = if pending_minus && nums.is_empty() { -1 } else { 1 };
+                        // `saturating_mul` rather than `*`: the current grammar
+                        // never feeds an `i64::MIN`-valued token together with a
+                        // leading `-`, so this can't overflow today — but this
+                        // keeps it panic-free even if a future lexer change let
+                        // NUMBER carry a sign.
+                        nums.push(n.saturating_mul(sign));
+                        pending_minus = false;
                     }
                 }
-            },
-            ASTNodeOrToken::Node(_) => {}
+            }
         }
     }
+
+    // Map the operands onto (count, offset) per the form.
+    let (count, offset) = match (comma_form, nums.as_slice()) {
+        // `LIMIT off, count` — first is offset, second is count.
+        (true, [off, cnt]) => (Some(*cnt), Some(*off)),
+        (true, [off]) => (None, Some(*off)), // degenerate `LIMIT n,` — treat n as offset
+        // `LIMIT count [OFFSET off]`.
+        (false, [cnt, off]) => (Some(*cnt), Some(*off)),
+        (false, [cnt]) => (Some(*cnt), None),
+        _ => (None, None),
+    };
 
     Ok((count, offset))
 }
 
 /// Plan the `select_list` into a list of `OutputColumn`s.
 ///
-/// Grammar: `select_list = STAR | select_item { "," select_item }`
-/// Grammar: `select_item = expr [ AS NAME ]`
+/// Grammar: `select_list = select_item { "," select_item }`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_list(select_list: &GrammarASTNode) -> Result<Vec<OutputColumn>, PlanError> {
-    // Check for SELECT * (STAR token).
-    if has_token(select_list, "*") {
-        return Ok(vec![OutputColumn {
-            expr: SqlExpr::Column {
-                table: None,
-                name: "*".to_string(),
-            },
-            alias: None,
-        }]);
-    }
-
-    // Plan each select_item.
+    // Every item — including a bare `*` — is a `select_item` now, so `*` can be
+    // one item among others (`SELECT a, *`). `plan_select_item` emits a `*`
+    // placeholder for the wildcard, which `expand_star_columns` expands in place.
     find_nodes(select_list, "select_item")
         .iter()
         .map(|item| plan_select_item(item))
         .collect()
 }
 
+/// The `*` placeholder output column. `expand_star_columns` replaces it with the
+/// base table's columns (in place, so it composes with other select items).
+fn star_output_column() -> OutputColumn {
+    OutputColumn {
+        expr: SqlExpr::Column {
+            table: None,
+            name: "*".to_string(),
+        },
+        alias: None,
+    }
+}
+
 /// Plan a single `select_item` node.
 ///
-/// Grammar: `select_item = expr [ "AS" NAME ]`
+/// Grammar: `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`
 fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
-    // The first child node is the expression.
-    let expr_node = item
-        .children
-        .iter()
-        .find_map(|c| {
-            if let ASTNodeOrToken::Node(n) = c {
-                Some(n)
-            } else {
-                None
-            }
-        })
-        .ok_or_else(|| PlanError::UnsupportedStatement("empty select_item".to_string()))?;
+    // The first child node is the expression. A bare `*` item (the STAR
+    // alternative) has NO child expr node — just a `*` token — so it is the
+    // wildcard placeholder.
+    let expr_node = match item.children.iter().find_map(|c| {
+        if let ASTNodeOrToken::Node(n) = c {
+            Some(n)
+        } else {
+            None
+        }
+    }) {
+        Some(n) => n,
+        None if has_token(item, "*") => return Ok(star_output_column()),
+        None => return Err(PlanError::UnsupportedStatement("empty select_item".to_string())),
+    };
 
     let expr = plan_expression(expr_node)?;
+
+    // An explicit trailing `COLLATE name` (grammar: `select_item = expr
+    // [ COLLATE name ] [ alias ]`) wraps the expression in the internal
+    // `__collate` builtin — the same representation explicit COLLATE uses in a
+    // WHERE comparison. `distinct_output_collations` reads that wrapper to fold a
+    // `SELECT DISTINCT b COLLATE NOCASE` key, after which `plan_select` peels the
+    // wrapper back off (collation never changes the emitted value or column name).
+    let expr = match tail_collation(&direct_token_uppers(item)) {
+        Ok(Some(name)) => wrap_collate(expr, &name),
+        Ok(None) => expr,
+        Err(e) => return Err(e),
+    };
 
     // Look for an AS alias.
     let alias = extract_as_alias(item);
@@ -1005,14 +1912,81 @@ fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
     Ok(OutputColumn { expr, alias })
 }
 
-/// Extract an AS alias from a node: scan for "AS" keyword then take the
-/// following token's text.
+/// Uppercased text of every DIRECT token child of `node` (nested nodes skipped),
+/// in order — the raw material for reading a trailing `COLLATE name` clause off a
+/// `select_item` or a `group_clause` key.
+fn direct_token_uppers(node: &GrammarASTNode) -> Vec<String> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .collect()
+}
+
+/// Read an optional trailing `COLLATE name` clause from a token list.
+///
+/// Returns `Ok(Some(NAME))` for a valid `COLLATE NOCASE|RTRIM|BINARY`, an error
+/// for an unknown collation (matching SQLite's "no such collating sequence"), and
+/// `Ok(None)` when there is no `COLLATE` — OR when a bare trailing `collate`
+/// token has nothing after it. That last case is not a collation clause but an
+/// (unusual) identifier named `collate` the grammar left as a select-item alias
+/// or the parser would already have rejected; either way it is not ours to fold.
+fn tail_collation(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
+    match direct_tok_uppers.iter().position(|t| t == "COLLATE") {
+        Some(p) if p + 1 < direct_tok_uppers.len() => collate_name_after(direct_tok_uppers),
+        _ => Ok(None),
+    }
+}
+
+/// Extract a `select_item` alias.
+///
+/// Grammar: `select_item = expr [ [ "AS" ] NAME ]` — the alias may be written
+/// with or without the `AS` keyword (`SELECT a AS x` and `SELECT a x` are
+/// equivalent in SQLite). Two AST shapes result:
+///
+/// * **Explicit** `expr AS name` → children `[Node(expr), Token("AS"),
+///   Token(name)]`. We scan for the `AS` keyword and take the token after it.
+/// * **Implicit** `expr name` → children `[Node(expr), Token(name)]` — no `AS`.
+///   The expression is *always* a nested Node (never a bare token) and the only
+///   bare tokens the grammar can place directly under `select_item` are the
+///   optional `AS` and the alias, so a lone `Name`-type token that isn't a
+///   keyword is unambiguously the implicit alias.
+///
+/// A bare `expr` with no alias (`SELECT a`) has no token children → `None`.
 fn extract_as_alias(node: &GrammarASTNode) -> Option<String> {
     let children = &node.children;
+    // Explicit `AS name`.
     for (i, child) in children.iter().enumerate() {
         if is_keyword_token(child, "AS") {
             if let Some(next) = children.get(i + 1) {
                 return Some(token_text_of(next));
+            }
+        }
+    }
+    // Implicit `name` (no AS): the first bare identifier token directly under
+    // the item. Restricting to Name-type tokens keeps us from mistaking any
+    // stray keyword/punctuation for an alias.
+    //
+    // A trailing `COLLATE name` clause (grammar: `expr [ COLLATE name ] [ alias ]`)
+    // arrives as TWO Name-type tokens — `COLLATE` is not a lexer keyword, and the
+    // collation name is a generic NAME — so both must be skipped or the collation
+    // name would be read as an implicit alias (`SELECT b COLLATE NOCASE` would be
+    // named `NOCASE`). Skip the `COLLATE` token and the one immediately after it.
+    let mut skip_next = false;
+    for child in children {
+        if skip_next {
+            skip_next = false; // the collation name — never an alias
+            continue;
+        }
+        if let ASTNodeOrToken::Token(tok) = child {
+            if tok.type_ == lexer::token::TokenType::Name {
+                if tok.value.eq_ignore_ascii_case("COLLATE") {
+                    skip_next = true;
+                    continue;
+                }
+                return Some(tok.value.clone());
             }
         }
     }
@@ -1034,7 +2008,7 @@ fn extract_clause_expr(clause: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 None
             }
         })
-        .map(|n| plan_expression(n))
+        .map(plan_expression)
         .ok_or_else(|| {
             PlanError::UnsupportedStatement(format!(
                 "clause without expression: {:?}",
@@ -1111,11 +2085,24 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => AggFunc::Count,
         "SUM" => AggFunc::Sum,
+        "TOTAL" => AggFunc::Total,
         "AVG" => AggFunc::Avg,
         "MIN" => AggFunc::Min,
         "MAX" => AggFunc::Max,
+        // `GROUP_CONCAT(x [, sep])` — the optional 2nd argument is the separator
+        // (default ","), captured now as a constant so the value stream stays
+        // single-column. `arg` below still resolves to the first argument (`x`).
+        "GROUP_CONCAT" => AggFunc::GroupConcat { sep: group_concat_separator(func_call) },
         _ => return None,
     };
+
+    // `MIN`/`MAX` are overloaded: with a single argument they are the aggregate
+    // (min/max over a column), but with two-or-more they are the SCALAR function
+    // that returns the smallest/largest of its arguments. Only the aggregate form
+    // is collected here; the multi-argument form is left to `plan_function_call`.
+    if matches!(agg_func, AggFunc::Min | AggFunc::Max) && call_arg_count(func_call) >= 2 {
+        return None;
+    }
 
     // Check for star argument: COUNT(*).
     let has_star = has_token(func_call, "*");
@@ -1154,6 +2141,40 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
     })
 }
 
+/// Collect the planned argument expressions of a `function_call` node, in order.
+/// Handles both the `value_list` wrapper (multi-arg calls) and a single direct
+/// argument node.
+fn collect_call_arg_exprs(func_call: &GrammarASTNode) -> Vec<SqlExpr> {
+    let mut out = Vec::new();
+    for child in &func_call.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            if n.rule_name == "value_list" {
+                for c2 in &n.children {
+                    if let ASTNodeOrToken::Node(n2) = c2 {
+                        if let Ok(e) = plan_expression(n2) {
+                            out.push(e);
+                        }
+                    }
+                }
+            } else if let Ok(e) = plan_expression(n) {
+                out.push(e);
+            }
+        }
+    }
+    out
+}
+
+/// The separator constant of a `GROUP_CONCAT(x [, sep])` call. SQLite joins with
+/// a comma when no separator is given; a string-literal second argument overrides
+/// it. Anything else (absent, or a non-constant second argument) falls back to
+/// ",".
+fn group_concat_separator(func_call: &GrammarASTNode) -> String {
+    match collect_call_arg_exprs(func_call).get(1) {
+        Some(SqlExpr::Literal(SqlValue::Text(s))) => s.clone(),
+        _ => ",".to_string(),
+    }
+}
+
 // ===========================================================================
 // DML statement planners
 // ===========================================================================
@@ -1185,7 +2206,6 @@ fn plan_insert(stmt: &GrammarASTNode, schema: &dyn SchemaProvider) -> Result<Log
         schema
             .column_names(&table)
             .ok()
-            .map(|cols| cols)
     };
 
     // The VALUES rows.
@@ -1441,7 +2461,7 @@ fn plan_col_def(col_def: &GrammarASTNode) -> Result<ColumnDef, PlanError> {
     for child in &col_def.children {
         if let ASTNodeOrToken::Node(constraint) = child {
             if constraint.rule_name == "col_constraint" {
-                apply_col_constraint(&mut col, constraint);
+                apply_col_constraint(&mut col, constraint)?;
             }
         }
     }
@@ -1451,8 +2471,19 @@ fn plan_col_def(col_def: &GrammarASTNode) -> Result<ColumnDef, PlanError> {
 
 /// Apply a `col_constraint` to a mutable `ColumnDef`.
 ///
-/// Grammar: `col_constraint = NOT NULL | NULL | PRIMARY KEY | UNIQUE | DEFAULT primary`
-fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
+/// Grammar: `col_constraint = ( "NOT" "NULL" … ) | "NULL" | ( "PRIMARY" "KEY" … )
+///                          | ( "UNIQUE" … ) | ( "DEFAULT" primary )
+///                          | ( "CHECK" "(" expr ")" ) | ( "COLLATE" NAME )
+///                          | ( "REFERENCES" NAME … ) ;`
+///
+/// Returns an error only for an unrecognised `COLLATE` sequence — SQLite
+/// rejects `CREATE TABLE t(x COLLATE BOGUS)` at prepare time with "no such
+/// collating sequence", so we surface that here rather than silently storing a
+/// collation the VM cannot honour.
+fn apply_col_constraint(
+    col: &mut ColumnDef,
+    constraint: &GrammarASTNode,
+) -> Result<(), PlanError> {
     // Check which constraint keyword tokens are present.
     if has_token(constraint, "PRIMARY") {
         col.primary_key = true;
@@ -1467,14 +2498,49 @@ fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
     // DEFAULT handling: if there's a "DEFAULT" keyword, look for the value.
     if has_token(constraint, "DEFAULT") {
         if let Some(primary) = find_node(constraint, "primary") {
-            if let Ok(val) = plan_primary(primary) {
-                if let SqlExpr::Literal(sql_val) = val {
-                    col.default_value = sql_val;
-                    col.has_default = true;
-                }
+            if let Ok(SqlExpr::Literal(sql_val)) = plan_primary(primary) {
+                col.default_value = sql_val;
+                col.has_default = true;
             }
         }
     }
+    // COLLATE handling: the collation name is the token immediately after the
+    // COLLATE keyword. `BINARY` is the default and collapses to `None` (see
+    // `ColumnDef::collation`); `NOCASE`/`RTRIM` are stored uppercased; anything
+    // else is a "no such collating sequence" error, matching SQLite. Only the
+    // three built-in sequences exist in mini-sqlite (no user-registered ones).
+    if has_token(constraint, "COLLATE") {
+        let name = token_after_keyword(constraint, "COLLATE").ok_or_else(|| {
+            PlanError::UnsupportedStatement("COLLATE clause missing collation name".to_string())
+        })?;
+        let upper = name.to_uppercase();
+        match upper.as_str() {
+            "BINARY" => col.collation = None,
+            "NOCASE" | "RTRIM" => col.collation = Some(upper),
+            other => {
+                return Err(PlanError::UnsupportedStatement(format!(
+                    "no such collating sequence: {other}"
+                )))
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Return the text of the token immediately following the first occurrence of
+/// keyword `kw` among a node's direct token children. Used to read the operand
+/// of a single-keyword clause such as `COLLATE NOCASE`.
+fn token_after_keyword(node: &GrammarASTNode, kw: &str) -> Option<String> {
+    let toks: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    let pos = toks.iter().position(|t| t.eq_ignore_ascii_case(kw))?;
+    toks.get(pos + 1).map(|s| s.to_string())
 }
 
 /// Plan a `drop_table_stmt` node.
@@ -1594,6 +2660,7 @@ fn plan_expression(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         "and_expr" => plan_and_expr(node),
         "not_expr" => plan_not_expr(node),
         "comparison" => plan_comparison(node),
+        "bitwise" => plan_bitwise(node),
         "additive" => plan_additive(node),
         "multiplicative" => plan_multiplicative(node),
         "unary" => plan_unary(node),
@@ -1761,11 +2828,25 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         return Ok(left);
     }
 
-    // IS NULL / IS NOT NULL
-    // Grammar: `IS NULL` or `IS NOT NULL` — these arrive as direct keyword tokens.
+    // IS [NOT] NULL   and   IS [NOT] <expr>  (null-safe (in)equality)
+    // Grammar: `IS NULL` / `IS NOT NULL` produce only keyword tokens (no right
+    // operand node), whereas `IS <expr>` / `IS NOT <expr>` produce a second
+    // expression node — that is how we tell the two apart.
     if direct_tok_uppers.contains(&"IS".to_string()) {
-        let negated = direct_tok_uppers.contains(&"NOT".to_string());
-        return Ok(if negated {
+        let has_not = direct_tok_uppers.contains(&"NOT".to_string());
+        if let Some(right_node) = child_nodes_ordered.get(1) {
+            let right = plan_expression(right_node)?;
+            // Two spellings share the null-safe compare `plan_is_distinct`:
+            //   `x IS [NOT] y`                 → negated = has_not
+            //   `x IS [NOT] DISTINCT FROM y`   → negated = !has_not
+            // because DISTINCT *inverts* the sense: `IS NOT DISTINCT FROM` is the
+            // null-safe equality (like `IS`), and `IS DISTINCT FROM` its negation
+            // (like `IS NOT`).
+            let has_distinct = direct_tok_uppers.contains(&"DISTINCT".to_string());
+            let negated = if has_distinct { !has_not } else { has_not };
+            return Ok(plan_is_distinct(left, right, negated));
+        }
+        return Ok(if has_not {
             SqlExpr::IsNotNull(Box::new(left))
         } else {
             SqlExpr::IsNull(Box::new(left))
@@ -1784,26 +2865,88 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         let high_node = child_nodes_ordered
             .get(2)
             .ok_or_else(|| PlanError::UnsupportedStatement("BETWEEN missing high".to_string()))?;
+        let low = plan_expression(low_node)?;
+        let high = plan_expression(high_node)?;
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE BETWEEN a
+        // AND c`). `x BETWEEN a AND c` is `x >= a AND x <= c`, so wrapping the
+        // value AND both bounds in `__collate` makes each ordered comparison
+        // canonicalise its text before the byte compare — exactly a collated
+        // range test. `__collate` passes NULL/non-text through unchanged, so the
+        // range's NULL propagation and numeric ordering are preserved.
+        let (value, low, high) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                wrap_collate(low, &name),
+                wrap_collate(high, &name),
+            ),
+            None => (left, low, high),
+        };
         return Ok(SqlExpr::Between {
-            value: Box::new(left),
-            low: Box::new(plan_expression(low_node)?),
-            high: Box::new(plan_expression(high_node)?),
+            value: Box::new(value),
+            low: Box::new(low),
+            high: Box::new(high),
             negated,
         });
     }
 
-    // LIKE / NOT LIKE
-    // Grammar: `[NOT] LIKE additive`
-    // The pattern is the 2nd child node.
+    // LIKE / NOT LIKE  [ESCAPE ch]
+    // Grammar: `[NOT] LIKE additive [ESCAPE additive]`
+    // Child nodes: [left, pattern] or [left, pattern, escape]; the `ESCAPE`
+    // keyword shows up as a direct token.
     if direct_tok_uppers.contains(&"LIKE".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // A `COLLATE name` may be written before LIKE, but the LIKE operator
+        // IGNORES the collation (it carries its own case-folding) — matching
+        // SQLite, where even `COLLATE BINARY` does not make LIKE case-sensitive.
+        // We still call `collate_name_after` to VALIDATE the name (an unknown
+        // collation errors like SQLite's "no such collating sequence"), then
+        // discard it — no `__collate` wrap.
+        let _ = collate_name_after(&direct_tok_uppers)?;
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("LIKE missing pattern".to_string()))?;
+        let escape = if direct_tok_uppers.contains(&"ESCAPE".to_string()) {
+            let escape_node = child_nodes_ordered.get(2).ok_or_else(|| {
+                PlanError::UnsupportedStatement("LIKE ESCAPE missing character".to_string())
+            })?;
+            Some(Box::new(plan_expression(escape_node)?))
+        } else {
+            None
+        };
         return Ok(SqlExpr::Like {
             value: Box::new(left),
             pattern: Box::new(plan_expression(pattern_node)?),
             negated,
+            escape,
+        });
+    }
+
+    // GLOB / NOT GLOB
+    // Grammar: `[NOT] GLOB additive`
+    //
+    // SQLite defines the operator `X GLOB Y` as the function `glob(Y, X)` —
+    // note the argument order: the PATTERN is the first argument. Rather than
+    // add a dedicated `Glob` expr node + codegen + VM opcode, we lower the
+    // operator onto the `glob` builtin the VM already implements, exactly as
+    // SQLite does. `NOT GLOB` wraps the call in a logical NOT.
+    if direct_tok_uppers.contains(&"GLOB".to_string()) {
+        let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // GLOB, like LIKE, ignores an explicit `COLLATE` (it is always
+        // case-sensitive). Validate the name, then discard it.
+        let _ = collate_name_after(&direct_tok_uppers)?;
+        let pattern_node = child_nodes_ordered
+            .get(1)
+            .ok_or_else(|| PlanError::UnsupportedStatement("GLOB missing pattern".to_string()))?;
+        let pattern = plan_expression(pattern_node)?;
+        let call = SqlExpr::FunctionCall {
+            name: "glob".to_string(),
+            args: vec![pattern, left], // glob(pattern, value)
+            star: false,
+        };
+        return Ok(if negated {
+            SqlExpr::UnaryOp { op: UnaryOp::Not, expr: Box::new(call) }
+        } else {
+            call
         });
     }
 
@@ -1813,7 +2956,7 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     if direct_tok_uppers.contains(&"IN".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
         // value_list is a direct child node.
-        let list_items = if let Some(vl) = find_node(node, "value_list") {
+        let list_items: Vec<SqlExpr> = if let Some(vl) = find_node(node, "value_list") {
             vl.children
                 .iter()
                 .filter_map(|c| {
@@ -1827,8 +2970,25 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         } else {
             Vec::new()
         };
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE IN (...)`).
+        // SQLite applies the explicit collation to every equality test the IN
+        // performs, so we wrap the value AND each list element in the internal
+        // `__collate` builtin — the same canonicalise-then-byte-compare mechanism
+        // the cmp_op branch uses. `__collate` passes NULL and non-text through
+        // unchanged, so IN's three-valued NULL logic (and numeric equality for
+        // non-text members) is preserved. This is the *explicit*-COLLATE path;
+        // the *column-defined* collation is pushed in separately by
+        // `collate_comparisons`, which yields to an already-`__collate`-wrapped
+        // operand so an explicit clause always wins.
+        let (value, list_items) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                list_items.into_iter().map(|e| wrap_collate(e, &name)).collect(),
+            ),
+            None => (left, list_items),
+        };
         return Ok(SqlExpr::InList {
-            value: Box::new(left),
+            value: Box::new(value),
             list: list_items,
             negated,
         });
@@ -1870,16 +3030,75 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         let right_node = child_nodes_ordered
             .get(2)
             .ok_or_else(|| PlanError::UnsupportedStatement("comparison missing right operand".to_string()))?;
+        let right = plan_expression(right_node)?;
+
+        // Optional `COLLATE name` on the comparison (grammar allows it after the
+        // right operand). NOCASE (ASCII case-fold) and RTRIM (trim trailing
+        // spaces) are *canonicalising* transforms, so `x <op> y COLLATE C` is
+        // exactly `canon_C(x) <op> canon_C(y)` under the default byte comparison
+        // — including the non-text and NULL cases (`5 = '5' COLLATE NOCASE` is 0
+        // because 5 stays 5 while '5' stays '5'; a NULL operand stays NULL). We
+        // therefore lower the collation onto the internal `__collate` builtin
+        // wrapping BOTH operands, reusing the VM's existing collation helper —
+        // no new comparison opcode, mirroring the `GLOB → glob()` lowering.
+        // `COLLATE BINARY` wraps too — an identity transform in the VM, but it
+        // marks the comparison as explicitly collated so a column-defined
+        // collation can't later override it.
+        let (left, right) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (wrap_collate(left, &name), wrap_collate(right, &name)),
+            None => (left, right),
+        };
 
         return Ok(SqlExpr::BinaryOp {
             op,
             left: Box::new(left),
-            right: Box::new(plan_expression(right_node)?),
+            right: Box::new(right),
         });
     }
 
     // Passthrough — single operand, no recognised operator.
     Ok(left)
+}
+
+/// Find the collation name in a comparison's direct tokens, if it carries a
+/// `COLLATE name` clause. Returns `None` only when no `COLLATE` clause is
+/// present; `Some(NAME)` for `NOCASE`/`RTRIM`/`BINARY` (BINARY is the identity
+/// transform but is still reported so an explicit clause overrides an operand's
+/// column-defined collation); and an error for an unknown collation, matching
+/// SQLite's "no such collating sequence".
+fn collate_name_after(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
+    let Some(pos) = direct_tok_uppers.iter().position(|t| t == "COLLATE") else {
+        return Ok(None);
+    };
+    let name = direct_tok_uppers.get(pos + 1).ok_or_else(|| {
+        PlanError::UnsupportedStatement("COLLATE clause missing collation name".to_string())
+    })?;
+    match name.as_str() {
+        // `COLLATE BINARY` is the default byte order, so at first glance it needs
+        // no wrapping. But it must still be *recorded* as an explicit collation:
+        // it forces byte order even when an operand's column is declared NOCASE,
+        // and the column-collation pass below keys off "is either operand already
+        // `__collate`-wrapped?" to decide whether an explicit collation is
+        // present. Wrapping in the identity `__collate(_, 'BINARY')` (the VM
+        // treats an unknown/BINARY collation as a no-op transform) both preserves
+        // byte semantics and marks the comparison as explicitly collated.
+        "BINARY" => Ok(Some(name.clone())),
+        "NOCASE" | "RTRIM" => Ok(Some(name.clone())),
+        other => Err(PlanError::UnsupportedStatement(format!(
+            "no such collating sequence: {other}"
+        ))),
+    }
+}
+
+/// Wrap an expression in the internal `__collate(value, 'NAME')` builtin, which
+/// canonicalises a text value for the given collation (and passes non-text and
+/// NULL through unchanged) so a following byte comparison honours the collation.
+fn wrap_collate(expr: SqlExpr, name: &str) -> SqlExpr {
+    SqlExpr::FunctionCall {
+        name: "__collate".to_string(),
+        args: vec![expr, SqlExpr::Literal(SqlValue::Text(name.to_string()))],
+        star: false,
+    }
 }
 
 /// Plan an `additive` node.
@@ -1890,6 +3109,23 @@ fn plan_additive(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         "+" => Some(BinaryOp::Add),
         "-" => Some(BinaryOp::Sub),
         "||" => Some(BinaryOp::Concat),
+        _ => None,
+    })
+}
+
+/// Plan a `bitwise` node.
+///
+/// Grammar: `bitwise = additive { ("&" | "|" | "<<" | ">>") additive }`
+///
+/// All four operators share one precedence level and are left-associative, so
+/// `5 | 3 & 2` parses as `(5 | 3) & 2`. The VM coerces both operands to integer
+/// and propagates NULL; see `apply_binary`/`apply_shift` in sql-vm.
+fn plan_bitwise(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    plan_left_assoc_binary(node, |tok| match tok {
+        "&" => Some(BinaryOp::BitAnd),
+        "|" => Some(BinaryOp::BitOr),
+        "<<" => Some(BinaryOp::ShiftLeft),
+        ">>" => Some(BinaryOp::ShiftRight),
         _ => None,
     })
 }
@@ -1910,7 +3146,17 @@ fn plan_multiplicative(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 ///
 /// Grammar: `unary = "-" unary | "+" unary | primary`
 fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
-    if has_token(node, "-") {
+    // `-x` (arithmetic negation) and `~x` (bitwise complement) both wrap the
+    // inner operand; `+x` is a no-op handled by the fall-through below. `~`
+    // coerces its operand to integer and propagates NULL (see the VM).
+    let unary_op = if has_token(node, "-") {
+        Some(UnaryOp::Neg)
+    } else if has_token(node, "~") {
+        Some(UnaryOp::BitNot)
+    } else {
+        None
+    };
+    if let Some(op) = unary_op {
         let inner = node
             .children
             .iter()
@@ -1921,9 +3167,9 @@ fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                     None
                 }
             })
-            .ok_or_else(|| PlanError::UnsupportedStatement("unary minus without operand".to_string()))?;
+            .ok_or_else(|| PlanError::UnsupportedStatement("unary operator without operand".to_string()))?;
         return Ok(SqlExpr::UnaryOp {
-            op: UnaryOp::Neg,
+            op,
             expr: Box::new(plan_expression(inner)?),
         });
     }
@@ -1957,6 +3203,18 @@ fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 /// | `TRUE`               | KEYWORD      | `Bool(true)`          |
 /// | `FALSE`              | KEYWORD      | `Bool(false)`         |
 fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    // `CAST(expr AS type)` — recognised by a leading `CAST` keyword token.
+    // Handled before the generic loop so the `CAST` token isn't mistaken for a
+    // bare column name.
+    if let Some(ASTNodeOrToken::Token(t)) = node.children.first() {
+        if t.value.eq_ignore_ascii_case("CAST") {
+            return plan_cast(node);
+        }
+        if t.value.eq_ignore_ascii_case("CASE") {
+            return plan_case(node);
+        }
+    }
+
     // Check child nodes first (column_ref, function_call, or parenthesized expr).
     for child in &node.children {
         match child {
@@ -1964,8 +3222,18 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 "column_ref" => return plan_column_ref(n),
                 "function_call" => return plan_function_call(n),
                 "expr" => return plan_expression(n),
-                "or_expr" | "and_expr" | "not_expr" | "comparison" | "additive"
-                | "multiplicative" | "unary" | "primary" => return plan_expression(n),
+                // A `( SELECT … )` scalar subquery parses to a nested `select_stmt`
+                // node in a primary. Parsing is wired but evaluation is not yet:
+                // reject it with a clear error rather than mis-planning it as an
+                // expression. Wiring `SqlExpr::ScalarSubquery` + the VM sub-plan
+                // eval is the follow-up.
+                "select_stmt" => {
+                    return Err(PlanError::UnsupportedStatement(
+                        "scalar subqueries are not yet supported".to_string(),
+                    ))
+                }
+                "or_expr" | "and_expr" | "not_expr" | "comparison" | "bitwise"
+                | "additive" | "multiplicative" | "unary" | "primary" => return plan_expression(n),
                 _ => return plan_expression(n),
             },
             ASTNodeOrToken::Token(tok) => {
@@ -1991,6 +3259,194 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     ))
 }
 
+/// Plan a `CAST(expr AS type)` primary node into [`SqlExpr::Cast`].
+///
+/// Grammar: `primary = "CAST" "(" expr "AS" NAME ")"` (among other choices).
+/// The node's children are the `CAST` / `(` / `AS` / `)` tokens, the inner
+/// expression node, and the type-name token.
+///
+/// The declared type name is mapped to a [`CastType`] using SQLite's
+/// substring affinity rule (so synonyms like `INT`, `VARCHAR`, `FLOAT` resolve
+/// correctly): a name containing `INT` → INTEGER; `CHAR`/`CLOB`/`TEXT` → TEXT;
+/// `REAL`/`FLOA`/`DOUB` → REAL. `BLOB` and `NUMERIC`/other names are not yet
+/// supported and yield an `UnsupportedStatement` error (a later increment).
+fn plan_cast(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    // The inner expression is the sole nested Node child.
+    let expr_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            _ => None,
+        })
+        .ok_or_else(|| PlanError::UnsupportedStatement("CAST missing expression".to_string()))?;
+    let inner = plan_expression(expr_node)?;
+
+    // The type name is the token following `AS`.
+    let type_name = {
+        let children = &node.children;
+        let mut found = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "AS") {
+                if let Some(ASTNodeOrToken::Token(t)) = children.get(i + 1) {
+                    found = Some(t.value.to_uppercase());
+                }
+            }
+        }
+        found.ok_or_else(|| PlanError::UnsupportedStatement("CAST missing type name".to_string()))?
+    };
+
+    // SQLite's type-name → affinity rules (https://sqlite.org/datatype3.html
+    // §3.1), applied in order: INT → INTEGER; CHAR/CLOB/TEXT → TEXT; BLOB (or an
+    // empty name) → BLOB; REAL/FLOA/DOUB → REAL; anything else → NUMERIC. NUMERIC
+    // is therefore the default for `NUMERIC`, `DECIMAL`, `BOOLEAN`, `DATE`, … .
+    // BLOB casts are not yet implemented, so we reject them explicitly rather
+    // than silently mis-routing them into the NUMERIC fallback.
+    let ty = if type_name.contains("INT") {
+        CastType::Integer
+    } else if type_name.contains("CHAR") || type_name.contains("CLOB") || type_name.contains("TEXT") {
+        CastType::Text
+    } else if type_name.contains("BLOB") {
+        return Err(PlanError::UnsupportedStatement(
+            "CAST to BLOB is not yet supported".to_string(),
+        ));
+    } else if type_name.contains("REAL") || type_name.contains("FLOA") || type_name.contains("DOUB") {
+        CastType::Real
+    } else {
+        CastType::Numeric
+    };
+
+    Ok(SqlExpr::Cast {
+        expr: Box::new(inner),
+        ty,
+    })
+}
+
+/// Lower `a IS b` (and `a IS NOT b`) — SQLite's **null-safe** (in)equality —
+/// onto a `CASE`, reusing existing nodes so no new codegen or VM opcode is
+/// needed.
+///
+/// Semantics: `a IS b` is 1 when both operands are NULL, 0 when exactly one is
+/// NULL, and `a = b` otherwise (in that last case neither is NULL, so `a = b` is
+/// a clean boolean, never NULL). This differs from `a = b`, which yields NULL
+/// whenever either side is NULL. `a IS NOT b` is the logical negation.
+///
+/// Expressed as:
+/// ```text
+/// CASE WHEN a IS NULL AND b IS NULL THEN 1
+///      WHEN a IS NULL OR  b IS NULL THEN 0
+///      ELSE a = b END
+/// ```
+/// Both operands are pure, so re-evaluating them across the CASE branches is
+/// sound. (The tempting `(a = b) OR (a IS NULL AND b IS NULL)` is WRONG — it
+/// yields NULL, not 0, for `1 IS NULL`.)
+fn plan_is_distinct(left: SqlExpr, right: SqlExpr, negated: bool) -> SqlExpr {
+    let both_null = SqlExpr::BinaryOp {
+        op: BinaryOp::And,
+        left: Box::new(SqlExpr::IsNull(Box::new(left.clone()))),
+        right: Box::new(SqlExpr::IsNull(Box::new(right.clone()))),
+    };
+    let either_null = SqlExpr::BinaryOp {
+        op: BinaryOp::Or,
+        left: Box::new(SqlExpr::IsNull(Box::new(left.clone()))),
+        right: Box::new(SqlExpr::IsNull(Box::new(right.clone()))),
+    };
+    let eq = SqlExpr::BinaryOp {
+        op: BinaryOp::Eq,
+        left: Box::new(left),
+        right: Box::new(right),
+    };
+    let case = SqlExpr::Case {
+        branches: vec![
+            (both_null, SqlExpr::Literal(SqlValue::Int(1))),
+            (either_null, SqlExpr::Literal(SqlValue::Int(0))),
+        ],
+        else_val: Some(Box::new(eq)),
+    };
+    if negated {
+        SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr: Box::new(case),
+        }
+    } else {
+        case
+    }
+}
+
+/// Plan a searched `CASE WHEN … THEN … [ELSE …] END` primary node into
+/// [`SqlExpr::Case`].
+///
+/// Grammar: `CASE ("WHEN" expr "THEN" expr)+ ["ELSE" expr] "END"`. The node's
+/// children are the `CASE`/`WHEN`/`THEN`/`ELSE`/`END` keyword tokens interleaved
+/// with the condition and value expression nodes. We walk them in order: each
+/// keyword tags the expression node that follows it, so `WHEN`→condition,
+/// `THEN`→pairs with the last condition into a branch, `ELSE`→the fallback.
+fn plan_case(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    let mut branches: Vec<(SqlExpr, SqlExpr)> = Vec::new();
+    let mut else_val: Option<Box<SqlExpr>> = None;
+    let mut pending_cond: Option<SqlExpr> = None;
+    // What the next expression node is filling (set by the preceding keyword).
+    let mut slot: Option<&'static str> = None;
+    // The *simple* form carries an operand expr between `CASE` and the first
+    // `WHEN` — the one expression node that appears while no WHEN/THEN/ELSE
+    // keyword is active. `None` = the searched form (`CASE WHEN cond …`).
+    let mut operand: Option<SqlExpr> = None;
+
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) => {
+                slot = match t.value.to_uppercase().as_str() {
+                    "WHEN" => Some("when"),
+                    "THEN" => Some("then"),
+                    "ELSE" => Some("else"),
+                    _ => None, // CASE / END and any punctuation
+                };
+            }
+            ASTNodeOrToken::Node(n) => {
+                let expr = plan_expression(n)?;
+                match slot {
+                    Some("when") => pending_cond = Some(expr),
+                    Some("then") => {
+                        let value = pending_cond.take().ok_or_else(|| {
+                            PlanError::UnsupportedStatement("CASE THEN without WHEN".to_string())
+                        })?;
+                        // Simple form: the WHEN expression is a *value* compared
+                        // to the operand for equality (`operand = value`); the
+                        // searched form uses the WHEN expression as the condition
+                        // verbatim. Cloning the operand per branch is exact
+                        // because mini-sqlite expressions are pure (SQLite
+                        // evaluates the operand once, but a pure operand yields
+                        // the same result each time). A NULL operand makes every
+                        // `operand = value` NULL — never true — so a NULL operand
+                        // falls through to ELSE, matching SQLite.
+                        let cond = match &operand {
+                            Some(op) => SqlExpr::BinaryOp {
+                                op: BinaryOp::Eq,
+                                left: Box::new(op.clone()),
+                                right: Box::new(value),
+                            },
+                            None => value,
+                        };
+                        branches.push((cond, expr));
+                    }
+                    Some("else") => else_val = Some(Box::new(expr)),
+                    // A node with no active slot, before any WHEN, is the simple
+                    // form's operand.
+                    _ => operand = Some(expr),
+                }
+                slot = None;
+            }
+        }
+    }
+
+    if branches.is_empty() {
+        return Err(PlanError::UnsupportedStatement(
+            "CASE requires at least one WHEN … THEN … branch".to_string(),
+        ));
+    }
+    Ok(SqlExpr::Case { branches, else_val })
+}
+
 /// Plan a single token from a primary node into a literal or column reference.
 ///
 /// ## Token classification
@@ -2005,13 +3461,46 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 /// | `Number`          | Integer or float literal   | `Literal(Int)` or `Float`    |
 /// | `Name`/`Keyword`  | Column name reference      | `Column { name: value }`     |
 fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
-    // STRING literal: the lexer strips quotes and sets type_ = TokenType::String.
-    // The value is already the inner content (no surrounding quotes).
+    // STRING literal: the lexer strips the surrounding quotes and sets
+    // type_ = TokenType::String, but leaves the inner content raw. SQL escapes a
+    // literal single quote by doubling it (`'it''s'` is the four-character string
+    // `it's`), so collapse each `''` back to one `'` here.
     if tok.type_ == TokenType::String {
-        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.clone())));
+        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.replace("''", "'"))));
     }
 
     let val = &tok.value;
+
+    // Blob literal `x'48656C6C6F'` / `X'…'`. The lexer's `BLOB_HEX` rule aliases
+    // it to `BLOB`; because `TokenType` has no `Blob` variant, the lexer records
+    // the name in `type_name` and falls `type_` back to `Name`. Decode the hex
+    // body into raw bytes: SQLite reads `x'414243'` as the three bytes
+    // `41 42 43`. An odd number of hex digits is a tokenizer error in SQLite
+    // (`x'012'` → "unrecognized token"); we surface it as a plan error rather
+    // than silently truncating. The empty blob `x''` is the zero-byte blob.
+    if tok.type_name.as_deref() == Some("BLOB") || tok.type_name.as_deref() == Some("BLOB_HEX") {
+        return decode_blob_literal(val).map(|bytes| SqlExpr::Literal(SqlValue::Blob(bytes)));
+    }
+
+    // Hexadecimal integer literal `0x1F` / `0X1F` (lexed by `HEX_INT`, aliased to
+    // `NUMBER`). SQLite decodes these as 64-bit INTEGERs that wrap: the hex digits
+    // are read as an unsigned 64-bit value and reinterpreted as `i64`, so `0x1F`
+    // is 31, `0x7FFFFFFFFFFFFFFF` is `i64::MAX`, and `0xFFFFFFFFFFFFFFFF` is -1.
+    // Parsing as `u64` (not `i64`) before the `as i64` bit-cast is what admits the
+    // full unsigned range — `i64::from_str_radix` would reject anything above
+    // `i64::MAX`. A hex literal always starts with a digit, so this branch can
+    // never shadow a column reference. More than 16 hex digits overflows 64 bits;
+    // SQLite rejects that at prepare time ("hex literal too big"), so we surface a
+    // plan error rather than silently falling through to a (nonsensical) column
+    // reference — the leading `0x` guarantees this token is a number, not a name.
+    if let Some(hex) = val.strip_prefix("0x").or_else(|| val.strip_prefix("0X")) {
+        return match u64::from_str_radix(hex, 16) {
+            Ok(u) => Ok(SqlExpr::Literal(SqlValue::Int(u as i64))),
+            Err(_) => Err(PlanError::UnsupportedStatement(format!(
+                "hex literal too big: {val}"
+            ))),
+        };
+    }
 
     // NUMBER literal: try integer first, then float.
     if let Ok(i) = val.parse::<i64>() {
@@ -2026,6 +3515,62 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
         table: None,
         name: val.clone(),
     })
+}
+
+/// Decode the body of a blob literal `x'…'` / `X'…'` into raw bytes.
+///
+/// The `raw` argument is the token text as the lexer captured it. The
+/// `BLOB_HEX` rule (`[xX]'[0-9A-Fa-f]*'`) keeps the surrounding `x'` / `'`, so
+/// we strip them here; we also tolerate a body that has already been unquoted,
+/// so the function is robust to either shape.
+///
+/// SQLite semantics:
+///
+/// | Literal        | Bytes            | Notes                                  |
+/// |----------------|------------------|----------------------------------------|
+/// | `x'414243'`    | `41 42 43`       | two hex digits per byte, case-insens.  |
+/// | `X'FF00'`      | `FF 00`          | leading `X` is equivalent to `x`       |
+/// | `x''`          | *(empty)*        | the zero-byte blob                     |
+/// | `x'012'`       | *error*          | odd digit count is a tokenizer error   |
+///
+/// The lexer's regex already guarantees the body is all hex digits, so the only
+/// failure this needs to guard is an odd digit count; the non-hex check is kept
+/// as defence in depth.
+fn decode_blob_literal(raw: &str) -> Result<Vec<u8>, PlanError> {
+    // Strip a leading `x'` / `X'` and the trailing `'` when present.
+    let body = raw
+        .strip_prefix("x'")
+        .or_else(|| raw.strip_prefix("X'"))
+        .and_then(|s| s.strip_suffix('\''))
+        .unwrap_or(raw);
+
+    if body.len() % 2 != 0 {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "blob literal has an odd number of hex digits: x'{body}'"
+        )));
+    }
+
+    let hex = body.as_bytes();
+    let mut bytes = Vec::with_capacity(hex.len() / 2);
+    let mut i = 0;
+    while i < hex.len() {
+        // Decode a nibble pair straight from the byte slice. Slicing the *bytes*
+        // (never the `&str`) sidesteps any UTF-8 char-boundary panic if a
+        // non-ASCII body ever reaches here; `from_utf8` then rejects it as a
+        // non-hex digit instead. `i` steps by two and `body.len()` is even, so
+        // `i + 2 <= hex.len()` always holds — the slice cannot go out of bounds.
+        let pair = std::str::from_utf8(&hex[i..i + 2])
+            .ok()
+            .and_then(|s| u8::from_str_radix(s, 16).ok())
+            .ok_or_else(|| {
+                PlanError::UnsupportedStatement(format!(
+                    "blob literal has a non-hex digit: x'{body}'"
+                ))
+            })?;
+        bytes.push(pair);
+        i += 2;
+    }
+    Ok(bytes)
 }
 
 /// Plan a `column_ref` node.
@@ -2078,10 +3623,28 @@ fn plan_function_call(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     let agg_func = match name.to_uppercase().as_str() {
         "COUNT" => Some(AggFunc::Count),
         "SUM" => Some(AggFunc::Sum),
+        "TOTAL" => Some(AggFunc::Total),
         "AVG" => Some(AggFunc::Avg),
         "MIN" => Some(AggFunc::Min),
         "MAX" => Some(AggFunc::Max),
+        // `GROUP_CONCAT(x [, sep])` is an aggregate too. Lowering it to
+        // `SqlExpr::Aggregate` here (rather than leaving it a `FunctionCall`, as
+        // it once was) means an aggregate SELECT item has ONE representation, so
+        // `compile_expr` can resolve it to its accumulator slot like COUNT/SUM —
+        // which is what lets a `group_concat` column be re-projected into
+        // SELECT-list order. The separator (the optional 2nd arg, default ",") is
+        // captured onto the func; `arg` below still resolves to the 1st argument.
+        "GROUP_CONCAT" => Some(AggFunc::GroupConcat {
+            sep: group_concat_separator(node),
+        }),
         _ => None,
+    };
+    // `MIN(a, b, …)` / `MAX(a, b, …)` with two-or-more arguments are the SCALAR
+    // largest/smallest functions, not the aggregate; fall through to the plain
+    // `FunctionCall` path so the VM's `call_builtin` handles them.
+    let agg_func = match agg_func {
+        Some(AggFunc::Min | AggFunc::Max) if call_arg_count(node) >= 2 => None,
+        other => other,
     };
 
     let has_star = has_token(node, "*");
@@ -2214,6 +3777,21 @@ where
 // ===========================================================================
 
 /// Find the first child node with a specific `rule_name`.
+/// Count the top-level arguments of a `function_call` node — the number of
+/// expression children inside its `value_list`. Used to distinguish the
+/// single-argument aggregate `MIN`/`MAX` from the two-or-more-argument scalar
+/// forms. A call with no `value_list` (`COUNT(*)` or no args) counts as 0.
+fn call_arg_count(node: &GrammarASTNode) -> usize {
+    find_node(node, "value_list")
+        .map(|vl| {
+            vl.children
+                .iter()
+                .filter(|c| matches!(c, ASTNodeOrToken::Node(_)))
+                .count()
+        })
+        .unwrap_or(0)
+}
+
 fn find_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarASTNode> {
     for child in &node.children {
         if let ASTNodeOrToken::Node(n) = child {
@@ -2422,8 +4000,12 @@ mod tests {
 
     /// The simplest possible plan: project all columns from a single scan.
     ///
+    /// `SELECT *` is expanded at plan time into the base table's columns, in
+    /// schema-definition order (`users` = id, name, age, city, status), so the
+    /// downstream stages see concrete column references — never a `*` placeholder.
+    ///
     /// ```text
-    /// Project { * }
+    /// Project { id, name, age, city, status }
     ///   Scan { users }
     /// ```
     #[test]
@@ -2434,9 +4016,17 @@ mod tests {
             "Root must be Project, got: {plan:?}"
         );
         if let LogicalPlan::Project { input, columns } = &plan {
-            assert!(
-                matches!(columns[0].expr, SqlExpr::Column { name: ref n, .. } if n == "*"),
-                "Expected * projection"
+            let names: Vec<&str> = columns
+                .iter()
+                .map(|c| match &c.expr {
+                    SqlExpr::Column { name, .. } => name.as_str(),
+                    other => panic!("Expected expanded Column, got {other:?}"),
+                })
+                .collect();
+            assert_eq!(
+                names,
+                ["id", "name", "age", "city", "status"],
+                "`*` must expand to the table's columns in definition order"
             );
             assert!(matches!(**input, LogicalPlan::Scan { .. }));
         }
@@ -2571,6 +4161,24 @@ mod tests {
         }
     }
 
+    /// MySQL shorthand `LIMIT off, count` swaps the arguments: `LIMIT 5, 10`
+    /// means `LIMIT 10 OFFSET 5` (offset 5, count 10) — the reverse of the
+    /// `OFFSET` form. Both spellings must yield the SAME Limit plan.
+    #[test]
+    fn test_select_limit_comma_form() {
+        let plan = plan_ok("SELECT * FROM t ORDER BY name LIMIT 5, 10");
+        if let LogicalPlan::Project { input, .. } = &plan {
+            if let LogicalPlan::Limit { count, offset, .. } = input.as_ref() {
+                assert_eq!(*count, Some(10), "comma form: second number is the count");
+                assert_eq!(*offset, Some(5), "comma form: first number is the offset");
+            } else {
+                panic!("Expected Limit below Project, got: {input:?}");
+            }
+        } else {
+            panic!("Expected Project root");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // C7: DISTINCT
     // -----------------------------------------------------------------------
@@ -2586,7 +4194,7 @@ mod tests {
     fn test_select_distinct() {
         let plan = plan_ok("SELECT DISTINCT city FROM users");
         if let LogicalPlan::Project { input, .. } = &plan {
-            assert!(matches!(**input, LogicalPlan::Distinct(_)), "Expected Distinct below Project");
+            assert!(matches!(**input, LogicalPlan::Distinct(..)), "Expected Distinct below Project");
         } else {
             panic!("Expected Project root");
         }
@@ -2730,6 +4338,219 @@ mod tests {
         }
     }
 
+    #[test]
+    fn test_create_table_stores_column_collation() {
+        // NOCASE / RTRIM are stored uppercased; an explicit BINARY collapses to
+        // None (the default), so `has-collation` is unambiguous downstream.
+        let plan = plan_ok(
+            "CREATE TABLE t2 (a TEXT COLLATE NOCASE, b TEXT COLLATE RTRIM, \
+             c TEXT COLLATE BINARY, d TEXT)",
+        );
+        if let LogicalPlan::CreateTable { columns, .. } = &plan {
+            assert_eq!(columns[0].collation.as_deref(), Some("NOCASE"));
+            assert_eq!(columns[1].collation.as_deref(), Some("RTRIM"));
+            assert_eq!(columns[2].collation, None, "explicit BINARY → None");
+            assert_eq!(columns[3].collation, None, "no COLLATE → None");
+        } else {
+            panic!("Expected CreateTable");
+        }
+    }
+
+    #[test]
+    fn test_create_table_unknown_collation_errors() {
+        // Matches SQLite's prepare-time "no such collating sequence" rejection.
+        let err = plan_err("CREATE TABLE t2 (x TEXT COLLATE BOGUS)");
+        let msg = format!("{err:?}");
+        assert!(
+            msg.contains("no such collating sequence"),
+            "unexpected error: {msg}"
+        );
+    }
+
+    /// A schema whose single table `tc` declares `name` with a `NOCASE`
+    /// collation, used to prove a bare ORDER BY key inherits it.
+    struct CollSchema;
+    impl SchemaProvider for CollSchema {
+        fn column_names(&self, table: &str) -> Result<Vec<String>, BackendError> {
+            if table.eq_ignore_ascii_case("tc") {
+                Ok(vec!["id".to_string(), "name".to_string()])
+            } else {
+                Err(BackendError::TableNotFound {
+                    table: table.to_string(),
+                })
+            }
+        }
+        fn table_collations(&self, table: &str) -> Result<Vec<(String, String)>, BackendError> {
+            if table.eq_ignore_ascii_case("tc") {
+                Ok(vec![("name".to_string(), "NOCASE".to_string())])
+            } else {
+                Ok(Vec::new())
+            }
+        }
+    }
+
+    /// Pull the first Sort node's keys out of a planned SELECT (Sort sits below
+    /// the outermost Project).
+    fn sort_keys(plan: &LogicalPlan) -> Vec<SortKey> {
+        fn walk(p: &LogicalPlan) -> Option<Vec<SortKey>> {
+            match p {
+                LogicalPlan::Sort { keys, .. } => Some(keys.clone()),
+                LogicalPlan::Project { input, .. }
+                | LogicalPlan::Filter { input, .. }
+                | LogicalPlan::Distinct(input, _)
+                | LogicalPlan::Limit { input, .. } => walk(input),
+                _ => None,
+            }
+        }
+        walk(plan).unwrap_or_default()
+    }
+
+    #[test]
+    fn test_order_by_inherits_column_collation() {
+        // Bare `ORDER BY name` inherits the column's declared NOCASE sequence…
+        let plan = plan_sql("SELECT name FROM tc ORDER BY name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+
+        // …a qualified reference (`tc.name`) resolves the same way…
+        let plan = plan_sql("SELECT name FROM tc ORDER BY tc.name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+
+        // …and through a table alias (`u.name`).
+        let plan = plan_sql("SELECT u.name FROM tc AS u ORDER BY u.name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_explicit_collate_overrides_column_collation() {
+        // An explicit COLLATE BINARY on the key wins over the column's NOCASE.
+        let plan =
+            plan_sql("SELECT name FROM tc ORDER BY name COLLATE BINARY", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation, None, "BINARY → no collation");
+    }
+
+    #[test]
+    fn test_order_by_column_without_collation_stays_binary() {
+        // `id` has no declared collation, so its sort key stays BINARY (None).
+        let plan = plan_sql("SELECT id FROM tc ORDER BY id", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation, None);
+    }
+
+    /// Pull the WHERE `Filter` predicate out of a plan built against a given
+    /// schema (Filter sits under the outermost Project).
+    fn filter_predicate(plan: &LogicalPlan) -> SqlExpr {
+        fn walk(p: &LogicalPlan) -> Option<SqlExpr> {
+            match p {
+                LogicalPlan::Filter { predicate, .. } => Some(predicate.clone()),
+                LogicalPlan::Project { input, .. }
+                | LogicalPlan::Sort { input, .. }
+                | LogicalPlan::Distinct(input, _)
+                | LogicalPlan::Limit { input, .. } => walk(input),
+                _ => None,
+            }
+        }
+        walk(plan).expect("expected a Filter in the plan")
+    }
+
+    /// If `expr` is a `__collate(inner, 'NAME')` call, return `NAME`.
+    fn collate_wrapper(expr: &SqlExpr) -> Option<String> {
+        if let SqlExpr::FunctionCall { name, args, .. } = expr {
+            if name == "__collate" {
+                if let Some(SqlExpr::Literal(SqlValue::Text(coll))) = args.get(1) {
+                    return Some(coll.clone());
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn test_where_comparison_inherits_column_collation() {
+        // A bare `WHERE name = 'x'` on a NOCASE column wraps BOTH operands in
+        // `__collate(_, 'NOCASE')`, so the byte comparison folds case.
+        let plan = plan_sql("SELECT id FROM tc WHERE name = 'apple'", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { op, left, right } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(op, BinaryOp::Eq);
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("NOCASE"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_where_explicit_collate_binary_overrides_column() {
+        // An explicit `COLLATE BINARY` outranks the column's NOCASE: the operands
+        // are wrapped in the identity `__collate(_, 'BINARY')`, NOT NOCASE, so the
+        // comparison is byte-exact.
+        let plan =
+            plan_sql("SELECT id FROM tc WHERE name = 'apple' COLLATE BINARY", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("BINARY"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("BINARY"));
+    }
+
+    #[test]
+    fn test_where_binary_left_column_does_not_inherit_right_collation() {
+        // `id = name`: the LEFT operand `id` is a column with the default BINARY
+        // collation, so it determines the comparison — the pass must NOT fall
+        // through to the right NOCASE column `name`. Result: no `__collate` wrap.
+        let plan = plan_sql("SELECT id FROM tc WHERE id = name", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left), None, "BINARY left column stays bare");
+        assert_eq!(collate_wrapper(&right), None);
+
+        // The mirror `name = id` is driven by the NOCASE left column, so BOTH
+        // operands are wrapped in NOCASE.
+        let plan = plan_sql("SELECT id FROM tc WHERE name = id", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("NOCASE"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_where_plain_column_comparison_stays_binary() {
+        // `id` has no declared collation, so its comparison is left bare — no
+        // `__collate` wrapping, plain byte comparison.
+        let plan = plan_sql("SELECT id FROM tc WHERE id = 5", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left), None);
+        assert_eq!(collate_wrapper(&right), None);
+    }
+
+    #[test]
+    fn test_where_column_collation_flows_through_and_or() {
+        // The pass recurses through boolean connectives: each comparison under an
+        // `OR` independently picks up the column's NOCASE collation.
+        let plan = plan_sql(
+            "SELECT id FROM tc WHERE name = 'a' OR name = 'b'",
+            &CollSchema,
+        )
+        .unwrap();
+        let SqlExpr::BinaryOp { op, left, right } = filter_predicate(&plan) else {
+            panic!("expected a boolean predicate");
+        };
+        assert_eq!(op, BinaryOp::Or);
+        for side in [&left, &right] {
+            let SqlExpr::BinaryOp {
+                left: l,
+                right: r,
+                ..
+            } = side.as_ref()
+            else {
+                panic!("expected a comparison on each side of OR");
+            };
+            assert_eq!(collate_wrapper(l).as_deref(), Some("NOCASE"));
+            assert_eq!(collate_wrapper(r).as_deref(), Some("NOCASE"));
+        }
+    }
+
     // -----------------------------------------------------------------------
     // C12: DROP TABLE
     // -----------------------------------------------------------------------
@@ -2799,6 +4620,86 @@ mod tests {
     fn test_expr_null_literal() {
         let expr = plan_where_expr("SELECT * FROM t WHERE x IS NULL");
         assert!(matches!(expr, SqlExpr::IsNull(_)));
+    }
+
+    #[test]
+    fn test_expr_blob_literal() {
+        // `x'414243'` → the three bytes `A B C`; upper-case `X'…'` is equivalent.
+        let expr = plan_where_expr("SELECT * FROM t WHERE b = x'414243'");
+        if let SqlExpr::BinaryOp { right, .. } = expr {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0x41, 0x42, 0x43])));
+        } else {
+            panic!("Expected blob literal");
+        }
+        let upper = plan_where_expr("SELECT * FROM t WHERE b = X'FF00'");
+        if let SqlExpr::BinaryOp { right, .. } = upper {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0xFF, 0x00])));
+        } else {
+            panic!("Expected upper-case blob literal");
+        }
+    }
+
+    #[test]
+    fn test_decode_blob_literal() {
+        assert_eq!(decode_blob_literal("x'414243'").unwrap(), vec![0x41, 0x42, 0x43]);
+        assert_eq!(decode_blob_literal("X'FF00'").unwrap(), vec![0xFF, 0x00]);
+        // Empty blob.
+        assert_eq!(decode_blob_literal("x''").unwrap(), Vec::<u8>::new());
+        // Already-unquoted body is tolerated.
+        assert_eq!(decode_blob_literal("0a0B").unwrap(), vec![0x0A, 0x0B]);
+        // Odd digit count is rejected (matches SQLite's tokenizer error).
+        assert!(decode_blob_literal("x'012'").is_err());
+    }
+
+    #[test]
+    fn test_expr_hex_integer_literal() {
+        // `0x1F` → 31; `0X10` → 16 (upper-case prefix). Decoded as INTEGER.
+        for (sql, want) in &[
+            ("SELECT * FROM t WHERE x = 0x1F", 31_i64),
+            ("SELECT * FROM t WHERE x = 0X10", 16),
+            ("SELECT * FROM t WHERE x = 0xff", 255),
+            ("SELECT * FROM t WHERE x = 0x0", 0),
+        ] {
+            let expr = plan_where_expr(sql);
+            if let SqlExpr::BinaryOp { right, .. } = expr {
+                assert_eq!(*right, SqlExpr::Literal(SqlValue::Int(*want)), "{sql}");
+            } else {
+                panic!("Expected EQ comparison for {sql}");
+            }
+        }
+    }
+
+    #[test]
+    fn test_expr_hex_integer_wraps_64bit() {
+        // SQLite reads hex as a 64-bit value that wraps: all-ones is -1, and the
+        // sign bit set is i64::MIN. Parsing as u64 then bit-casting to i64 is what
+        // reproduces this (an i64 parse would reject values above i64::MAX).
+        for (sql, want) in &[
+            ("SELECT * FROM t WHERE x = 0x7FFFFFFFFFFFFFFF", i64::MAX),
+            ("SELECT * FROM t WHERE x = 0xFFFFFFFFFFFFFFFF", -1),
+            ("SELECT * FROM t WHERE x = 0x8000000000000000", i64::MIN),
+        ] {
+            let expr = plan_where_expr(sql);
+            if let SqlExpr::BinaryOp { right, .. } = expr {
+                assert_eq!(*right, SqlExpr::Literal(SqlValue::Int(*want)), "{sql}");
+            } else {
+                panic!("Expected EQ comparison for {sql}");
+            }
+        }
+    }
+
+    #[test]
+    fn test_expr_hex_integer_too_big_errors() {
+        // More than 16 hex digits overflows 64 bits; SQLite rejects it at prepare
+        // time ("hex literal too big"). We surface a plan error rather than
+        // silently treating the token as a column reference.
+        let err = plan_err("SELECT * FROM t WHERE x = 0x1FFFFFFFFFFFFFFFF");
+        match err {
+            PlanError::UnsupportedStatement(msg) => {
+                assert!(msg.contains("hex literal too big"), "got: {msg}");
+            }
+            other => panic!("Expected UnsupportedStatement, got: {other:?}"),
+        }
     }
 
     #[test]
@@ -3063,7 +4964,7 @@ mod tests {
             panic!("Expected Sort below Limit");
         };
         // Distinct
-        let distinct_input = if let LogicalPlan::Distinct(input) = sort_input.as_ref() {
+        let distinct_input = if let LogicalPlan::Distinct(input, _) = sort_input.as_ref() {
             input
         } else {
             panic!("Expected Distinct below Sort");
@@ -3310,5 +5211,99 @@ mod tests {
                 assert!(keys[0].ascending, "Default ORDER BY should be ASC");
             }
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // ORDER BY positional (ordinal) column references
+    // -----------------------------------------------------------------------
+
+    /// Pull the sort keys out of a planned `SELECT … ORDER BY …`.
+    fn sort_keys_of(sql: &str) -> Vec<SortKey> {
+        match plan_ok(sql) {
+            LogicalPlan::Project { input, .. } => match *input {
+                LogicalPlan::Sort { keys, .. } => keys,
+                other => panic!("expected Sort under Project, got {other:?}"),
+            },
+            other => panic!("expected Project at root, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_order_by_ordinal_resolves_to_nth_column() {
+        // `ORDER BY 2` sorts by the 2nd output column (`b`), not the constant 2.
+        let keys = sort_keys_of("SELECT a, b, c FROM t ORDER BY 2");
+        assert_eq!(keys.len(), 1);
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "b".to_string()
+            }
+        );
+        assert!(keys[0].ascending);
+    }
+
+    #[test]
+    fn test_order_by_ordinal_carries_direction() {
+        // Direction and multi-key tie-breaks apply to the resolved columns.
+        let keys = sort_keys_of("SELECT a, b, c FROM t ORDER BY 3 DESC, 1");
+        assert_eq!(keys.len(), 2);
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "c".to_string()
+            }
+        );
+        assert!(!keys[0].ascending);
+        assert_eq!(
+            keys[1].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "a".to_string()
+            }
+        );
+        assert!(keys[1].ascending);
+    }
+
+    #[test]
+    fn test_order_by_integer_expression_is_not_positional() {
+        // Only a BARE integer literal is positional. `1+0` is an expression that
+        // happens to equal 1, so it sorts by the constant — it must stay a
+        // BinaryOp, NOT be rewritten to the first output column.
+        let keys = sort_keys_of("SELECT a, b FROM t ORDER BY 1+0");
+        assert_eq!(keys.len(), 1);
+        assert!(
+            matches!(keys[0].expr, SqlExpr::BinaryOp { op: BinaryOp::Add, .. }),
+            "1+0 must remain an expression, got {:?}",
+            keys[0].expr
+        );
+    }
+
+    #[test]
+    fn test_order_by_ordinal_out_of_range_errors() {
+        // `SELECT a` has one output column; `ORDER BY 2` (and `ORDER BY 0`) are
+        // out of range, matching SQLite's prepare-time error.
+        let err = plan_err("SELECT a FROM t ORDER BY 2");
+        assert!(
+            format!("{err}").contains("out of range"),
+            "expected out-of-range error, got {err}"
+        );
+        let err0 = plan_err("SELECT a FROM t ORDER BY 0");
+        assert!(format!("{err0}").contains("out of range"));
+    }
+
+    #[test]
+    fn test_order_by_ordinal_over_expanded_star() {
+        // `SELECT *` is expanded into the base table's columns before ORDER BY
+        // ordinals are resolved, so `ORDER BY 1` now binds to the first expanded
+        // column (`t` = id, x, y, …) exactly as SQLite does, rather than being
+        // left as an unresolved literal.
+        let keys = sort_keys_of("SELECT * FROM t ORDER BY 1");
+        assert_eq!(keys.len(), 1);
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column { table: None, name: "id".to_string() }
+        );
     }
 }

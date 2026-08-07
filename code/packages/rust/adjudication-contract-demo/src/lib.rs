@@ -1,3 +1,7 @@
+// `result_large_err`: the large `Err` variant is the crate's public error enum;
+// boxing it would churn the public API. `field_reassign_with_default`: config is
+// built by mutating a `Default::default()` base for readability.
+#![allow(clippy::result_large_err, clippy::field_reassign_with_default)]
 //! # adjudication-contract-demo — contract-clause A/B demo
 //!
 //! Third domain alongside `adjudication-tsa-demo` (compliance) and

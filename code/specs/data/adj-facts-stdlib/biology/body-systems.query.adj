@@ -1,0 +1,21 @@
+% ============================================================================
+% body-systems.query.adj — a worked recall over the biology body-systems library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the digestive
+% system do?": it states no biology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `body_system_function` rows and returns the function atom + the table's
+% source/locator/trust. The third query runs the relation BACKWARD (bind the
+% job, recall the system). A body part (or non-system) not in the table abstains
+% honestly — the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli body-systems.query.adj
+% ============================================================================
+
+import "body-systems.adj"
+
+? body_system_function(digestive, $F)    % expect breaks_down_food
+? body_system_function(respiratory, $F)  % expect breathing
+? body_system_function($S, moves_blood)  % expect circulatory — the reverse recall
+? body_system_function(elbow, $F)        % expect abstain — a body part, not a system

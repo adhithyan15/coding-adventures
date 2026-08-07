@@ -1,0 +1,29 @@
+{
+  "formulas": [
+    {
+      "body": {
+        "end": 3355,
+        "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+        "start": 3323
+      },
+      "declaration": {
+        "end": 3866,
+        "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+        "start": 3283
+      },
+      "formula": "ratio",
+      "formulabook": "ratios",
+      "parameters": [
+        "numerator",
+        "denominator"
+      ],
+      "step_count": 0
+    }
+  ],
+  "kind": "formula_parser_inventory",
+  "parser_contract": "adj-lang/formula_source_map/v1",
+  "schema_version": 1,
+  "scope": "source_file",
+  "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+  "source_size": 3869
+}

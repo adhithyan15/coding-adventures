@@ -1,0 +1,11 @@
+{
+  "body_sha256": "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86",
+  "body_size": 60805,
+  "final_locator": "https://mathworld.wolfram.com/Quotient.html",
+  "headers": {},
+  "kind": "fetch_receipt",
+  "locator": "https://mathworld.wolfram.com/Quotient.html",
+  "media_type": "text/html; charset=UTF-8",
+  "retrieved_at": "2026-08-02T21:45:54Z",
+  "status": 200
+}

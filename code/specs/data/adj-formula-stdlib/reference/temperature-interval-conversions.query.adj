@@ -1,0 +1,26 @@
+% ============================================================================
+% temperature-interval-conversions.query.adj — worked lookups over the NIST temperature-interval →
+% kelvin table.
+% ============================================================================
+% The shape a consumer produces to convert a temperature INTERVAL (a difference of temperatures, or a
+% per-degree quantity) given in degrees Celsius into SI: it `import`s the grounded table and asks the
+% engine to bind the factor. No arithmetic and no factor is stated by the consumer; the engine returns
+% the cell WITH the table's NIST citation as its proof, on the CPU.
+%
+%   ? temperature_interval_to_kelvin(degree_celsius, $v)   % 1   (a 1 °C interval = exactly 1 K)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The bare "degree" is a PLANE-ANGLE unit (it converts to the
+% radian), NOT a temperature-interval unit — and since the degree symbol "°" is shared by the Celsius
+% degree and the angular degree, this abstain guards that notational confusion directly:
+%
+%   ? temperature_interval_to_kelvin(degree, $v)   % abstains (degree is plane angle → radian)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli temperature-interval-conversions.query.adj
+% ============================================================================
+
+import "temperature-interval-conversions.adj"
+
+? temperature_interval_to_kelvin(degree_celsius, $v)   % expect 1        (exact NIST SP 811 B.9 factor)
+? temperature_interval_to_kelvin(degree, $v)           % expect abstain  (plane-angle unit, wrong dimension)

@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          point2d
+version:       0.1.0
+synopsis:      Immutable 2D points, vectors, and axis-aligned rectangles
+description:   Pure G2D00 point and vector arithmetic together with immutable half-open axis-aligned rectangle geometry.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Point2D
+    build-depends:    base >=4.14 && <5
+                    , trig >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Point2DSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , hspec == 2.*
+                    , point2d
+                    , trig >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

@@ -2,6 +2,20 @@
 
 All notable changes to this program will be documented in this file.
 
+## [Unreleased]
+
+### Security
+
+- Validate every manifest capability against Spec 13's closed 19-pair
+  category/action taxonomy before generating source.
+- Fail explicitly for recognized pairs whose enforcing Go wrapper is not yet
+  implemented. Unsupported pairs no longer produce TODO namespaces or replace
+  an existing generated cage.
+- Conform the embedded pair table to the shared language-neutral taxonomy
+  fixture.
+- Preflight and render every `--all` input before writing, so one invalid or
+  unsupported manifest cannot leave the repository partially regenerated.
+
 ## [1.0.0] - 2026-03-25
 
 ### Added

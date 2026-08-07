@@ -72,6 +72,9 @@ pub const PANASONIC_COLOR_MATRIX: [[f64; 3]; 3] = [
 ///
 /// A `Vec<(u8, u8, u8)>` of sRGB display-ready (R, G, B) bytes, length equal
 /// to `rgb.len()`.
+// Parameter descriptions wrap with hand-aligned indentation to the `—`;
+// the alignment is deliberate literate formatting.
+#[allow(clippy::doc_overindented_list_items)]
 pub fn apply_color_pipeline(
     rgb: Vec<(u16, u16, u16)>,
     black_level: u32,

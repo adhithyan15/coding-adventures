@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e5e120e17bcb588f",
+  "lessons": [
+    {
+      "id": "ML-C19-vayassu",
+      "sequence": 480,
+      "title": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — \"to you, how much age exists?\"",
+      "headword": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?",
+      "romanization": "",
+      "gloss": "how old are you? — literally \"to you how much age exists?\"; the SAME Sanskrit vayas word, but Malayalam adds a dative-subject + existential verb, a genuinely different shape than Kannada/Telugu's plain possessive",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0edebb4be94b008",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same Sanskrit word as Kannada and Telugu — but Malayalam builds a genuinely different sentence around it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വയസ്സ് (vayass) = \"age\" — the same Sanskrit वयस् (vayas, \"age, vigor,\" PIE cousin of Latin vīs) behind Kannada's vayassu and Telugu's vayasu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: dative subject + \"exists\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — \"How old are you?\" (formal/plural) — literally \"to you, how much age exists?\" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, \"to you\" [dative] + ethra vayassu, \"how much age\" + uṇṭŭ, \"exists.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് ഇരുപത് വയസ്സുണ്ട്. — \"I am twenty years old.\" — literally \"to me twenty age exists.\" (enikku irupatu vayassuṇṭŭ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "This is a real grammatical departure from Kannada and Telugu's plain \"your age how-much?\" Malayalam puts the person in the dative case (\"to you,\" not \"your\") and adds ഉണ്ട് (uṇṭŭ, \"exists, there is\") — the same existential verb Malayalam uses for ordinary possession and existence sentences generally. So the literal shape is \"to me, twenty years' worth of age exists\" — a dative-subject-plus-existential-verb construction, genuinely different from its two Dravidian cousins even though the age-word itself is identical."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vayassu\" — age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vayassu\" — age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ningaḷkku ethra vayassuṇṭŭ?\" — how old are you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ningaḷkku ethra vayassuṇṭŭ?\" — how old are you?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"enikku irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"enikku irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb ഉണ്ട്, \"exists.\") What does enikku irupatu vayassuṇṭŭ literally mean? (\"To me twenty age exists.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,29 @@
+% ============================================================================
+% static-compliance.query.adj — worked applications of static respiratory-system compliance.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a ventilator problem into a tidal volume, a plateau
+% pressure, and a PEEP: it `import`s the grounded formulabook, `observe`s the three values, and asks the
+% engine to APPLY the cited compliance formula. No arithmetic is stated by the consumer; the engine computes
+% each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with
+% zero model calls.
+%
+% Worked case (tidal volume = 500 mL, plateau pressure = 20 cmH2O, PEEP = 10 cmH2O): static compliance =
+% 500 / (20 − 10) = 500 / 10 = 50 mL/cmH2O. Each query fixes two of the three inputs and asks the engine to
+% recover another quantity; every answer is exact and the inversions COMPOSE (each recovers exactly the
+% worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli static-compliance.query.adj
+% ============================================================================
+
+import "static-compliance.adj"
+
+% --- Static compliance: the mL/cmH2O the volume and driving pressure imply (expect 50). --------------
+observe tidal_volume(500)
+observe plateau_pressure(20)
+observe peep(10)
+? static_compliance(tidal_volume, plateau_pressure, peep)   % expect 50
+
+% --- Inverse: the tidal volume a 50 mL/cmH2O compliance delivers at the same pressures (expect 500). --
+observe static_compliance(50)
+? tidal_volume(static_compliance, plateau_pressure, peep)   % expect 500

@@ -282,14 +282,14 @@ impl<'a> ClCommandQueue<'a> {
         };
 
         // Calculate grid dimensions
-        let grid_x = (global_size[0] + local.0 - 1) / local.0;
+        let grid_x = global_size[0].div_ceil(local.0);
         let grid_y = if global_size.len() > 1 {
-            (global_size[1] + local.1 - 1) / local.1
+            global_size[1].div_ceil(local.1)
         } else {
             1
         };
         let grid_z = if global_size.len() > 2 {
-            (global_size[2] + local.2 - 1) / local.2
+            global_size[2].div_ceil(local.2)
         } else {
             1
         };

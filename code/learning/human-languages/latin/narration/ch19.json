@@ -1,0 +1,390 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 19,
+  "title": "How Are You?",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:b6d1686c248ae1e9",
+  "lessons": [
+    {
+      "id": "LA-C19-quid-agis",
+      "sequence": 400,
+      "title": "quid agis?, ut valēs? — \"how are you?\", two genuinely Roman ways",
+      "headword": "quid agis? / ut valēs?",
+      "romanization": "quid agis? / ut valēs?",
+      "gloss": "how are you? — two colloquial questions genuinely attested in Plautus and Terence, unlike a popular modern spoken-Latin alternative",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eb2b3813eaf89bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Modern languages often teach one fixed \"how are you?\" formula. Roman comedy gives you two ordinary questions instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Two real, attested questions — not modern invention",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin has no single fixed idiom for \"how are you?\" the way Spanish has ¿cómo estás? — but it has two genuinely attested colloquial questions, both found repeatedly in Plautus and Terence's comedies (the closest thing Latin has to recorded everyday speech):"
+            },
+            {
+              "kind": "speech",
+              "text": "Quid agis? — literally \"what are you doing?\", used idiomatically the way English uses \"what's up?\" or \"how's it going?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ut valēs? — literally \"how do you fare?\", built on valēre, \"to be strong, to be well\" — the same verb as valē."
+            },
+            {
+              "kind": "speech",
+              "text": "A third phrase, quōmodo tē habēs? (\"how do you hold yourself?\"), shows up constantly in modern spoken-Latin teaching materials, and it's grammatically perfectly sound — but it is not actually found in any surviving classical text. Be careful with this one: it's a reasonable modern construction, not a Roman one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quid agis?\" — literally \"what are you doing?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quid agis?\" — literally \"what are you doing?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ut valēs?\" — literally \"how do you fare?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ut valēs?\" — literally \"how do you fare?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quōmodo tē habēs?\" — grammatical today, but not classically attested",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quōmodo tē habēs?\" — grammatical today, but not classically attested]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quid agis? literally mean? (\"What are you doing?\") What verb connects ut valēs?, valeō, and the valē you already knew from Chapter 1? (Valēre, \"to be strong/well.\") Is quōmodo tē habēs? genuinely attested in classical Latin? (No — grammatically sound, but a modern pedagogical construction, not found in surviving Roman texts.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C19-valeo-family",
+      "sequence": 410,
+      "title": "valeō and valē — answer and farewell from one verb",
+      "headword": "valeō, valē",
+      "romanization": "valeō, valē",
+      "gloss": "I fare well and be well — one verb supplies the wellbeing answer and the Chapter 1 farewell",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f0465f604011809",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask ut valēs?, \"how do you fare?\" Its most direct answer is already hiding inside the first farewell you learned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: valeō — I fare well",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The attested reply is valeō: \"I fare well\" or \"I am strong.\" Plautus's characters can intensify it as valeō rēctē (\"I am properly well\") or valeō et salvōs sum rēctē (\"I am well and safe\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The dictionary verb is valēre, \"to be strong, be well.\" Watch one stem move through the exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "ut valēs? — how do you fare?"
+            },
+            {
+              "kind": "speech",
+              "text": "valeō — I fare well."
+            },
+            {
+              "kind": "speech",
+              "text": "valē! — be well!"
+            },
+            {
+              "kind": "speech",
+              "text": "That last imperative became the Chapter 1 goodbye. Latin's farewell is therefore a wish for the other person to remain well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ut valēs?\" — how do you fare?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ut valēs?\" — how do you fare?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"valeō\" — I fare well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"valeō\" — I fare well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"valē\" — be well; goodbye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"valē\" — be well; goodbye]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb unites ut valēs?, valeō, and valē? (Valēre, \"to be strong or well.\") Which form answers the question? (Valeō.) What does the farewell valē literally command? (Be well.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C19-practice",
+      "sequence": 415,
+      "title": "Practice — open, check, answer, close",
+      "headword": "salvē — quid agis? — valeō — valē",
+      "romanization": "salvē — quid agis? — valeō — valē",
+      "gloss": "run a whole short Latin exchange end to end — greet, ask how someone is, answer, thank, and part",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81aeafc0622aef52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new. You already own every word below; this lesson only puts them in order, so that for the first time you can carry a whole Latin exchange from the first breath to the last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — five lines, all of them already yours",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: Salvē! Quid agis? Be well! What are you doing? — \"hello, how's it going?\""
+            },
+            {
+              "kind": "speech",
+              "text": "B: Valeō, grātiās tibi agō. Ut valēs? I fare well, I give thanks to you. How do you fare?"
+            },
+            {
+              "kind": "speech",
+              "text": "A: Valeō. — I fare well."
+            },
+            {
+              "kind": "speech",
+              "text": "B: Valē! — Be well!, the parting wish."
+            },
+            {
+              "kind": "speech",
+              "text": "A: Valē!"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear what holds it together. One verb, valēre (\"to be strong, to be well\"), supplies the second question (valēs), both answers (valeō), and the farewell (valē). Latin does not need a separate word for \"I\": the -ō of valeō and agō already is it. And the exchange opens and closes on the same wish — salvē \"be well,\" valē \"be well\" — because a Roman greeting is a wish for the other person's health, coming and going."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "both voices, aloud, once straight through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: both voices, aloud, once straight through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "you meet a whole room, not one person becomes salvēte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: you meet a whole room, not one person → **salvēte**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that already means \"I\" in valeō and agō — -ō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that already means \"I\" in *valeō* and *agō* — **-ō**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the exchange once more without looking. Then: which single verb supplies valēs, valeō, and valē? (Valēre.) Which of the two Roman \"how are you?\" questions is not attested? (Neither — both quid agis? and ut valēs? are real; the modern one was quōmodo tē habēs?)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C19-practice-answer-line",
+              "prompt": "Someone has just asked you ut vales? Type the one-word Latin answer.",
+              "assesses": [
+                "LA-DIALOGUE-WELLBEING-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "valeo",
+                "valeō"
+              ],
+              "feedback": {
+                "correct": "Right: valeo — I fare well. Same verb as vale.",
+                "incorrect": "Answer valeo, I fare well — the same valere behind vale."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

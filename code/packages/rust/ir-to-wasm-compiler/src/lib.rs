@@ -126,7 +126,7 @@ impl IrToWasmCompiler {
         }
 
         if needs_memory(program) || scratch_base.is_some() {
-            let page_count = ((total_bytes + 65_535) / 65_536).max(1);
+            let page_count = total_bytes.div_ceil(65_536).max(1);
             module.memories.push(MemoryType {
                 limits: Limits {
                     min: page_count,
@@ -1089,7 +1089,7 @@ fn is_if_else_label(label: &str) -> bool {
 }
 
 fn align_up(value: u32, alignment: u32) -> u32 {
-    ((value + alignment - 1) / alignment) * alignment
+    value.div_ceil(alignment) * alignment
 }
 
 fn total_data_size(decls: &[IrDataDecl]) -> u32 {
@@ -1116,7 +1116,7 @@ mod tests {
         let ast = parse_brainfuck(",.").unwrap();
         let compiled = compile(&ast, "echo.bf", release_config()).unwrap();
 
-        let module = IrToWasmCompiler::default()
+        let module = IrToWasmCompiler
             .compile(&compiled.program, &[])
             .unwrap();
 
@@ -1137,7 +1137,7 @@ mod tests {
     fn runs_lowered_brainfuck_echo_through_runtime() {
         let ast = parse_brainfuck(",.").unwrap();
         let compiled = compile(&ast, "echo.bf", release_config()).unwrap();
-        let module = IrToWasmCompiler::default()
+        let module = IrToWasmCompiler
             .compile(&compiled.program, &[])
             .unwrap();
         let binary = encode_module(&module).unwrap();
@@ -1175,7 +1175,7 @@ mod tests {
             version: 1,
         };
 
-        let err = IrToWasmCompiler::default()
+        let err = IrToWasmCompiler
             .compile(&program, &[])
             .unwrap_err();
 
@@ -1206,7 +1206,7 @@ mod tests {
     fn run_prog(prog: &IrProgram) -> i32 {
         use wasm_module_encoder::encode_module;
         use wasm_runtime::{WasiConfig, WasiEnv, WasmRuntime};
-        let module = IrToWasmCompiler::default().compile(prog, &[]).unwrap();
+        let module = IrToWasmCompiler.compile(prog, &[]).unwrap();
         let binary = encode_module(&module).unwrap();
         let wasi = WasiEnv::new(WasiConfig::default());
         let runtime = WasmRuntime::with_host(Box::new(wasi));

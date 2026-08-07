@@ -156,6 +156,10 @@ pub trait BlasBackend {
     ///   C     is (M x N)
     ///
     /// Returns: new Matrix of same shape as C
+    // Argument list mirrors the canonical BLAS `sgemm` signature (trans flags,
+    // alpha/beta scalars, the three matrices); it is a deliberate API shape, not
+    // accidental parameter sprawl.
+    #[allow(clippy::too_many_arguments)]
     fn sgemm(
         &self,
         trans_a: Transpose,
@@ -192,6 +196,7 @@ pub trait BlasBackend {
     ///
     /// Requires: len(As) == len(Bs) == len(Cs)
     /// Returns: list of new Matrices
+    #[allow(clippy::too_many_arguments)] // canonical batched-BLAS signature; see sgemm
     fn sgemm_batched(
         &self,
         trans_a: Transpose,
@@ -245,6 +250,9 @@ pub trait MlBlasBackend: BlasBackend {
     ) -> Result<Matrix, String>;
 
     /// Batch Normalization (Ioffe & Szegedy, 2015).
+    // Standard batch-norm inference signature (input, gamma/beta, running
+    // mean/var, eps); the parameter set is fixed by the algorithm.
+    #[allow(clippy::too_many_arguments)]
     fn batch_norm(
         &self,
         x: &Matrix,

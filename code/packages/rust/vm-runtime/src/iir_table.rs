@@ -319,12 +319,7 @@ impl IIRTableReader {
     ///
     /// Uses a linear scan; a binary search optimisation is future work.
     pub fn lookup(&self, name: &str) -> Option<usize> {
-        for i in 0..self.fn_count as usize {
-            if self.name_at(i) == Some(name) {
-                return Some(i);
-            }
-        }
-        None
+        (0..self.fn_count as usize).find(|&i| self.name_at(i) == Some(name))
     }
 
     /// Retrieve and decode the `IIRFunction` at `fn_index`.

@@ -237,6 +237,7 @@ fn infer_var_ref<P: LanguageProfile>(
 // Binder helper
 // ---------------------------------------------------------------------------
 
+#[allow(clippy::too_many_arguments)] // threaded inference context; signature kept as-is
 fn infer_binder<P: LanguageProfile>(
     node: &GrammarASTNode,
     binder: crate::profile::BinderInfo<'_>,

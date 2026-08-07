@@ -138,7 +138,9 @@ pub enum OptimizedPlan {
     },
 
     /// SELECT DISTINCT deduplication.
-    Distinct(Box<OptimizedPlan>),
+    /// Remove duplicate rows; carries one collation per OUTPUT column (see
+    /// `LogicalPlan::Distinct`).
+    Distinct(Box<OptimizedPlan>, Vec<Option<String>>),
 
     /// UNION [ALL].
     Union {
@@ -386,7 +388,7 @@ fn lift(plan: LogicalPlan) -> OptimizedPlan {
             count,
             offset,
         },
-        LogicalPlan::Distinct(inner) => OptimizedPlan::Distinct(Box::new(lift(*inner))),
+        LogicalPlan::Distinct(inner, colls) => OptimizedPlan::Distinct(Box::new(lift(*inner)), colls),
         LogicalPlan::Union { left, right, all } => OptimizedPlan::Union {
             left: Box::new(lift(*left)),
             right: Box::new(lift(*right)),
@@ -534,6 +536,11 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
                 .map(|k| SortKey {
                     expr: fold_expr(k.expr),
                     ascending: k.ascending,
+                    nulls_first: k.nulls_first,
+                    collation: k.collation,
+                    // Preserve the positional-aggregate output-index binding across
+                    // constant folding (codegen resolves it to a column name).
+                    output_index: k.output_index,
                 })
                 .collect(),
         },
@@ -548,8 +555,8 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(fold_plan(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(fold_plan(*inner)), colls)
         }
 
         OptimizedPlan::Union { left, right, all } => OptimizedPlan::Union {
@@ -604,6 +611,23 @@ fn fold_expr(expr: SqlExpr) -> SqlExpr {
             fold_unary(op, inner)
         }
 
+        // CAST: fold the operand, but keep the conversion (a cast of a constant
+        // is still evaluated by the VM — we don't constant-fold the coercion).
+        Cast { expr: inner, ty } => Cast {
+            expr: Box::new(fold_expr(*inner)),
+            ty,
+        },
+
+        // CASE: fold each condition/value and the ELSE, but keep the branch
+        // structure (short-circuit semantics are the VM's job, not the folder's).
+        Case { branches, else_val } => Case {
+            branches: branches
+                .into_iter()
+                .map(|(cond, val)| (fold_expr(cond), fold_expr(val)))
+                .collect(),
+            else_val: else_val.map(|e| Box::new(fold_expr(*e))),
+        },
+
         IsNull(inner) => {
             let inner = fold_expr(*inner);
             match &inner {
@@ -638,10 +662,12 @@ fn fold_expr(expr: SqlExpr) -> SqlExpr {
             value,
             pattern,
             negated,
+            escape,
         } => Like {
             value: Box::new(fold_expr(*value)),
             pattern: Box::new(fold_expr(*pattern)),
             negated,
+            escape: escape.map(|e| Box::new(fold_expr(*e))),
         },
 
         InList {
@@ -1010,8 +1036,8 @@ fn push_predicate(plan: OptimizedPlan) -> OptimizedPlan {
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(push_predicate(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(push_predicate(*inner)), colls)
         }
 
         OptimizedPlan::Union { left, right, all } => OptimizedPlan::Union {
@@ -1056,11 +1082,14 @@ fn push_filter_through(input: OptimizedPlan, predicate: SqlExpr) -> OptimizedPla
 
         // Through Distinct: Filter(Distinct(x), pred) → Distinct(Filter(x, pred))
         // Filtering before dedup yields the same unique rows.
-        OptimizedPlan::Distinct(distinct_input) => {
-            OptimizedPlan::Distinct(Box::new(OptimizedPlan::Filter {
-                input: distinct_input,
-                predicate,
-            }))
+        OptimizedPlan::Distinct(distinct_input, colls) => {
+            OptimizedPlan::Distinct(
+                Box::new(OptimizedPlan::Filter {
+                    input: distinct_input,
+                    predicate,
+                }),
+                colls,
+            )
         }
 
         // All other nodes: leave Filter on top.
@@ -1218,8 +1247,8 @@ fn prune_plan(plan: OptimizedPlan, required: Option<&HashSet<String>>) -> Optimi
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(prune_plan(*inner, required)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(prune_plan(*inner, required)), colls)
         }
 
         OptimizedPlan::Join {
@@ -1280,6 +1309,16 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
             collect_columns_in_expr(right, out);
         }
         SqlExpr::UnaryOp { expr, .. } => collect_columns_in_expr(expr, out),
+        SqlExpr::Cast { expr, .. } => collect_columns_in_expr(expr, out),
+        SqlExpr::Case { branches, else_val } => {
+            for (cond, val) in branches {
+                collect_columns_in_expr(cond, out);
+                collect_columns_in_expr(val, out);
+            }
+            if let Some(e) = else_val {
+                collect_columns_in_expr(e, out);
+            }
+        }
         SqlExpr::IsNull(inner) | SqlExpr::IsNotNull(inner) => {
             collect_columns_in_expr(inner, out)
         }
@@ -1290,9 +1329,17 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
             collect_columns_in_expr(low, out);
             collect_columns_in_expr(high, out);
         }
-        SqlExpr::Like { value, pattern, .. } => {
+        SqlExpr::Like {
+            value,
+            pattern,
+            escape,
+            ..
+        } => {
             collect_columns_in_expr(value, out);
             collect_columns_in_expr(pattern, out);
+            if let Some(escape) = escape {
+                collect_columns_in_expr(escape, out);
+            }
         }
         SqlExpr::InList { value, list, .. } => {
             collect_columns_in_expr(value, out);
@@ -1443,12 +1490,12 @@ fn eliminate_dead_code(plan: OptimizedPlan) -> OptimizedPlan {
             }
         }
 
-        OptimizedPlan::Distinct(inner) => {
+        OptimizedPlan::Distinct(inner, colls) => {
             let inner = eliminate_dead_code(*inner);
             if matches!(inner, OptimizedPlan::EmptyResult) {
                 OptimizedPlan::EmptyResult
             } else {
-                OptimizedPlan::Distinct(Box::new(inner))
+                OptimizedPlan::Distinct(Box::new(inner), colls)
             }
         }
 
@@ -1627,8 +1674,8 @@ fn push_limit(plan: OptimizedPlan) -> OptimizedPlan {
             predicate,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(push_limit(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(push_limit(*inner)), colls)
         }
 
         OptimizedPlan::Join {
@@ -1779,6 +1826,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col(col_name),
                 ascending: true,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         }
     }
@@ -2183,12 +2233,12 @@ mod tests {
         // Filter(Distinct(Scan), pred) → Distinct(Filter(Scan, pred))
         let pred = bin(BinaryOp::Eq, col("id"), lit_int(1));
         let plan = LogicalPlan::Filter {
-            input: Box::new(LogicalPlan::Distinct(Box::new(scan("t")))),
+            input: Box::new(LogicalPlan::Distinct(Box::new(scan("t")), vec![])),
             predicate: pred,
         };
         let opt = optimize_with_passes(plan, &[&PredicatePushdownPass]);
-        assert!(matches!(&opt, OptimizedPlan::Distinct(_)));
-        if let OptimizedPlan::Distinct(inner) = &opt {
+        assert!(matches!(&opt, OptimizedPlan::Distinct(..)));
+        if let OptimizedPlan::Distinct(inner, _) = &opt {
             assert!(matches!(inner.as_ref(), OptimizedPlan::Filter { .. }));
         }
     }
@@ -2414,6 +2464,9 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("id"),
                 ascending: true,
+                nulls_first: None,
+                collation: None,
+                output_index: None,
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
@@ -2591,6 +2644,9 @@ mod tests {
                 keys: vec![SortKey {
                     expr: col("name"),
                     ascending: true,
+                    nulls_first: None,
+                    collation: None,
+                    output_index: None,
                 }],
             }),
             count: Some(10),
@@ -2673,9 +2729,9 @@ mod tests {
 
     #[test]
     fn test_distinct_plan_lifted() {
-        let plan = LogicalPlan::Distinct(Box::new(scan("t")));
+        let plan = LogicalPlan::Distinct(Box::new(scan("t")), vec![]);
         let opt = optimize(plan);
-        assert!(matches!(&opt, OptimizedPlan::Distinct(_)));
+        assert!(matches!(&opt, OptimizedPlan::Distinct(..)));
     }
 
     #[test]
@@ -2785,7 +2841,7 @@ mod tests {
     #[test]
     fn test_dce_distinct_on_empty() {
         // Distinct(Filter(Scan, FALSE)) → EmptyResult
-        let plan = LogicalPlan::Distinct(Box::new(filter(scan("t"), lit_bool(false))));
+        let plan = LogicalPlan::Distinct(Box::new(filter(scan("t"), lit_bool(false))), vec![]);
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
         assert_eq!(opt, OptimizedPlan::EmptyResult);
     }

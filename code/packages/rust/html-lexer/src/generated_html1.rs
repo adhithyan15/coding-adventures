@@ -4,11 +4,7 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{
-    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
-    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
-    TokenDefinition, TransitionDefinition,
-};
+use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -57,6 +53,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         "Y".to_string(),
         "[".to_string(),
         "]".to_string(),
+        "_".to_string(),
         "`".to_string(),
         "a".to_string(),
         "b".to_string(),
@@ -81,7 +78,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -93,11 +92,22 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec!["name".to_string()],
+            fields: vec![
+                "name".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
+        },
+        TokenDefinition {
+            name: "ProcessingInstruction".to_string(),
+            fields: vec![
+                "target".to_string(),
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -277,6 +287,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         StateDefinition {
             id: "after_doctype_system_keyword".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "after_processing_instruction_target".to_string(),
             initial: false,
             accepting: false,
             final_state: false,
@@ -932,6 +949,34 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             accepting: false,
             final_state: false,
             external_entry: true,
+        },
+        StateDefinition {
+            id: "processing_instruction_data".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "processing_instruction_open".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "processing_instruction_questionable".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "processing_instruction_target".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
         },
         StateDefinition {
             id: "rawtext".to_string(),
@@ -7495,14 +7540,466 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal("?".to_string())),
             to: vec![
+                "processing_instruction_open".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "clear_temporary_buffer".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("_".to_string())),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-processing-instruction)".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_open".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
                 "bogus_comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(unexpected-question-mark-instead-of-tag-name)".to_string(),
-                "create_comment".to_string(),
+                "parse_error(invalid-first-character-of-processing-instruction-target)".to_string(),
+                "convert_temporary_buffer_to_comment".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("?".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "finalize_processing_instruction_target".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "0".to_string(), end: "9".to_string() }),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("-".to_string())),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("_".to_string())),
+            to: vec![
+                "processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-processing-instruction)".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(invalid-processing-instruction-target)".to_string(),
+                "convert_temporary_buffer_to_comment".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\t".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\n".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\u{C}".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(" ".to_string())),
+            to: vec![
+                "after_processing_instruction_target".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "processing_instruction_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "after_processing_instruction_target".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "processing_instruction_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("?".to_string())),
+            to: vec![
+                "processing_instruction_questionable".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_current_token".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-processing-instruction)".to_string(),
+                "discard_current_token".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_data".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "processing_instruction_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_processing_instruction_data(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_questionable".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal(">".to_string())),
+            to: vec![
+                "data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "emit_current_token".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_questionable".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(eof-in-processing-instruction)".to_string(),
+                "discard_current_token".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "processing_instruction_questionable".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "processing_instruction_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_processing_instruction_data(?)".to_string(),
             ],
             consume: false,
         },

@@ -1,0 +1,99 @@
+% ============================================================================
+% earth-layers — Earth's four internal layers → the physical STATE each one is
+% in (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% One of the first big ideas of earth science, and a rung a GEOLOGY (or plate-
+% tectonics, or earthquake) agent reasons UP from: our planet is built out of
+% concentric layers, and each layer is in a characteristic PHYSICAL STATE.
+% Cut the Earth open like a boiled egg and, from the outside in, you meet: a
+% thin RIGID crust (the shell), a hot SEMI-SOLID mantle (the white), a LIQUID
+% outer core, and a SOLID inner core (the two-part yolk). Before you can reason
+% about how seismic waves travel, why the outer core alone can generate a
+% magnetic field, or how the mantle "flows," you must first know WHICH state a
+% given layer is in. Recall is a binding query:
+%
+%     ? has_state(outer_core, $State)      % liquid
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `has_state(layer, state)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the state
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these four internal layers (it never invents a state).
+%
+% Each of the four internal layers and the physical state the source states for
+% it, as a little truth table:
+%
+%     layer         state (source's own word)   a beginner's cue
+%     -----------   -------------------------   -------------------------------
+%     crust         rigid                       thin brittle outer shell of rock
+%     mantle        semi_solid                  hot dense rock that slowly flows
+%     outer_core    liquid                      molten iron-nickel; spins → B field
+%     inner_core    solid                       iron-nickel kept solid by pressure
+%
+% The query also runs BACKWARD — bind a state and recall which layer is in it:
+%
+%     ? has_state($Layer, liquid)   % outer_core
+%
+% A word that is NOT one of these four internal layers — `atmosphere`,
+% `lithosphere`, `ocean` — is deliberately NOT a row, so a layer recall ABSTAINS
+% on it rather than inventing a state. (The lithosphere and asthenosphere are
+% real subdivisions the source names, but they are not one of the four primary
+% layers this table indexes, so they abstain too.) That honest-abstention
+% property is what makes the table safe to build a reasoner on: it answers
+% exactly the layer→state pairs it can ground, and only those.
+%
+% The `state` value of every row is a SINGLE lowercase atom, chosen to be the
+% state word the source EXPLICITLY uses for that layer — never one the source
+% does not support. Where the everyday word differs from the source's word, the
+% atom uses the SOURCE'S OWN word, so every value stays literally checkable
+% against the quoted span: the crust is called "rigid" (not "solid"), and the
+% mantle is called "semi-solid" (not "molten"). That literal fidelity is why
+% the crust cell is `rigid` and the mantle cell is `semi_solid`.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every layer→state pair
+% below was read out of a fetched USGS "This Dynamic Earth" page, and any pair
+% whose state word could not be verified there would have been dropped). All
+% four spans come from the SAME primary U.S. Geological Survey publication:
+%
+%   crust → rigid
+%     https://pubs.usgs.gov/gip/dynamic/inside.html
+%     (USGS — "This Dynamic Earth: The Story of Plate Tectonics", U.S. Geological Survey)
+%     "The crust, the outermost layer, is rigid and very thin compared with the
+%      other two." (also: "Like the shell of an egg, the Earth's crust is brittle
+%      and can break.")
+%
+%   mantle → semi_solid
+%     https://pubs.usgs.gov/gip/dynamic/inside.html
+%     "Below the crust is the mantle, a dense, hot layer of semi-solid rock
+%      approximately 2,900 km thick."
+%
+%   outer_core → liquid   and   inner_core → solid
+%     https://pubs.usgs.gov/gip/dynamic/inside.html
+%     "Unlike the yolk of an egg, however, the Earth's core is actually made up
+%      of two distinct parts: a 2,200 km-thick liquid outer core and a 1,250
+%      km-thick solid inner core."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the USGS statement that fixes BOTH
+% core rows (outer_core → liquid, inner_core → solid) at once. Every OTHER row's
+% per-fact source and verbatim span is listed above, so each state remains
+% independently checkable. All spans are from the same USGS "This Dynamic Earth"
+% publication, a primary U.S. government (U.S. Geological Survey) source, so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table has_state {
+    columns layer, state
+
+    row (crust, rigid)          % "The crust, the outermost layer, is rigid and very thin"
+    row (mantle, semi_solid)    % "a dense, hot layer of semi-solid rock"
+    row (outer_core, liquid)    % "a 2,200 km-thick liquid outer core"
+    row (inner_core, solid)     % "a 1,250 km-thick solid inner core"
+
+    source "Unlike the yolk of an egg, however, the Earth's core is actually made up of two distinct parts: a 2,200 km-thick liquid outer core and a 1,250 km-thick solid inner core."
+    locator "https://pubs.usgs.gov/gip/dynamic/inside.html"
+    trust authoritative
+}

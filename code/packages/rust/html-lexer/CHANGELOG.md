@@ -3,6 +3,13 @@
 All notable changes to the `coding-adventures-html-lexer` crate will be
 documented in this file.
 
+## Unreleased
+
+### Added
+- Added current HTML processing-instruction tokenizer states, including target
+  validation, data accumulation, EOF recovery, and legacy XML-target comment
+  recovery.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

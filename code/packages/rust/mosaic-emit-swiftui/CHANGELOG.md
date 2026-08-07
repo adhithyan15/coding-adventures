@@ -4,6 +4,85 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - optional generated-shell interaction acceptance
+
+Generated SwiftUI applications now call an optional package-host interaction
+hook after their Mosaic root appears. Package owners can exercise the emitted
+native controls and shared dispatch path in direct launch acceptance without
+adding application-specific behavior to the generated shell.
+
+### Added - Native automation identifiers for authored controls
+
+`HostInput` and `HostButton` now preserve their MLL part names as SwiftUI
+`accessibilityIdentifier` values. Generated applications can locate the same
+Mosaic-authored control deterministically for accessibility and direct native
+interaction acceptance without adding a parallel AppKit control tree.
+
+### Added - host-driven prop refresh
+
+Generated SwiftUI project shells now let optional native `MosaicHost` adapters
+register a props-changed handler. Host-surface interactions can request a fresh
+slot projection on the main queue without duplicating Mosaic component behavior
+in AppKit or UIKit.
+
+### Added - project-shell native node-slot bridge
+
+Generated SwiftUI project shells now resolve `node` and component slots through
+an optional `MosaicHostBridgeObject.node(named:)` hook. macOS `NSView` and iOS
+`UIView` objects are wrapped with `NSViewRepresentable` / `UIViewRepresentable`
+and passed to the generated component as `AnyView`; absent or mistyped nodes
+retain the empty-view fallback. A Venture acceptance test builds the generated
+SwiftPM app with a real host-provided `NSView` content surface.
+
+### Added - HostSurface native composition
+
+SwiftUI output now lowers Mosaic `HostSurface ( content: slot: ... )` to the
+host-supplied `AnyView` node slot. Generated SwiftPM previews retain an
+`AnyView(EmptyView())` fallback, while application hosts can mount a native
+Metal or other platform renderer inside Mosaic-authored chrome.
+
+### Added - Native activation for MSL pressed states
+
+SwiftUI output now connects UI15's built-in `state pressed` blocks on
+`HostButton`, `HostCheckbox`, `HostRadio`, and `HostLink` to a generated local
+`@GestureState`. Pointer and touch presses activate the shared MSL properties
+and transitions without replacing the control's native action, including
+independent instances inside `ForEach`. Explicit `state-when-pressed`
+predicates remain author-controlled. A Task App acceptance gate proves its
+Mosaic-authored add-task button feedback reaches generated, type-checked
+SwiftUI without handwritten AppKit UI.
+
+### Added - Native activation for MSL focused states
+
+SwiftUI output now connects UI15's built-in `state focused` blocks on native
+focus-capable host controls to a generated local `@FocusState`. The same shared
+MSL properties and transitions activate when `TextField`, `Button`, `Toggle`,
+or `Link` receives native keyboard or pointer focus, including independent
+instances inside `ForEach`. Explicit `state-when-focused` predicates remain
+author-controlled. A Task App acceptance gate proves its Mosaic-authored
+project-composer focus ring reaches generated SwiftUI without handwritten
+AppKit UI.
+
+### Added - Native activation for MSL hover states
+
+SwiftUI output now activates UI15's built-in `state hover` blocks without
+requiring authors to repeat the interaction as a `state-when-hover` layout
+predicate. The emitter generates a small native SwiftUI hover wrapper only
+when the compiled component uses a hover state. Every wrapper owns its own
+`@State`, including wrappers inside `ForEach`, so hovering one repeated row
+does not restyle the whole list. Existing explicit `state-when-hover`
+predicates remain author-controlled and do not install pointer tracking.
+
+### Added - Native SwiftUI lowering for MSL transitions
+
+Part-level and state-local transitions from `mosstyle-compiler` now lower to
+property-scoped SwiftUI `.animation(_:value:)` modifiers. Resolved millisecond
+and second durations, standard ease curves, and cubic Bézier timing curves map
+to native `Animation` values. State-local transitions apply while entering the
+matching `state-when-*` condition and fall back to the part transition, or no
+exit animation when no part transition exists. The emitter also now lowers the
+MSL `opacity` property so common fade transitions work natively.
+
 ### Added - Mosaic event envelopes for SwiftUI hosts
 
 Generated non-empty `{Component}Event` enums now include `mosaicName`,

@@ -63,7 +63,7 @@
 
 #![allow(non_snake_case)]
 
-use std::ffi::{c_char, c_int};
+use std::ffi::c_int;
 use std::ptr;
 
 use device_physics as dp;
@@ -151,15 +151,17 @@ pub fn eval_level1_rs(
     v_bs: f64,
     t: f64,
 ) -> (f64, f64, f64, f64, f64, f64, f64, f64, f64, &'static str) {
-    let mut p = mm::Level1Params::default();
-    p.vt0 = vt0;
-    p.kp = kp;
-    p.lambda = lambda;
-    p.gamma = gamma;
-    p.phi = phi;
-    p.w = w;
-    p.l = l;
-    p.n_sub = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..Default::default()
+    };
     let r = mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t);
     (r.id, r.gm, r.gds, r.gmb, r.cgs, r.cgd, r.cgb, r.cbs, r.cbd, r.region.as_str())
 }
@@ -454,15 +456,17 @@ unsafe extern "C" fn py_evaluate_level1(_s: PyObjectPtr, args: PyObjectPtr) -> P
     let v_bs   = req_f64!(args, 10, "evaluate_level1");
     let t      = req_f64!(args, 11, "evaluate_level1");
 
-    let mut p = mm::Level1Params::default();
-    p.vt0    = vt0;
-    p.kp     = kp;
-    p.lambda = lambda;
-    p.gamma  = gamma;
-    p.phi    = phi;
-    p.w      = w;
-    p.l      = l;
-    p.n_sub  = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..Default::default()
+    };
     let r = mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t);
     mos_result_to_py_dict(&r)
 }
@@ -617,163 +621,163 @@ unsafe extern "C" fn py_diffusivity_cm2_per_s(_s: PyObjectPtr, args: PyObjectPtr
 static mut MODULE_METHODS: [PyMethodDef; 27] = [
     // ------------ physical constants (no-arg) --------------------------------
     PyMethodDef {
-        ml_name:  b"k_boltzmann\0".as_ptr() as *const c_char,
+        ml_name:  c"k_boltzmann".as_ptr(),
         ml_meth:  Some(py_k_boltzmann),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"k_boltzmann() -> float\nBoltzmann constant [J/K].\0".as_ptr() as *const c_char,
+        ml_doc:   c"k_boltzmann() -> float\nBoltzmann constant [J/K].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"q_electron\0".as_ptr() as *const c_char,
+        ml_name:  c"q_electron".as_ptr(),
         ml_meth:  Some(py_q_electron),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"q_electron() -> float\nElementary charge [C].\0".as_ptr() as *const c_char,
+        ml_doc:   c"q_electron() -> float\nElementary charge [C].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"eps0\0".as_ptr() as *const c_char,
+        ml_name:  c"eps0".as_ptr(),
         ml_meth:  Some(py_eps0),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"eps0() -> float\nVacuum permittivity [F/m].\0".as_ptr() as *const c_char,
+        ml_doc:   c"eps0() -> float\nVacuum permittivity [F/m].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"eps_si\0".as_ptr() as *const c_char,
+        ml_name:  c"eps_si".as_ptr(),
         ml_meth:  Some(py_eps_si),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"eps_si() -> float\nSilicon permittivity [F/m].\0".as_ptr() as *const c_char,
+        ml_doc:   c"eps_si() -> float\nSilicon permittivity [F/m].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"eps_ox\0".as_ptr() as *const c_char,
+        ml_name:  c"eps_ox".as_ptr(),
         ml_meth:  Some(py_eps_ox),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"eps_ox() -> float\nSiO2 permittivity [F/m].\0".as_ptr() as *const c_char,
+        ml_doc:   c"eps_ox() -> float\nSiO2 permittivity [F/m].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"n_i_300k\0".as_ptr() as *const c_char,
+        ml_name:  c"n_i_300k".as_ptr(),
         ml_meth:  Some(py_n_i_300k),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"n_i_300k() -> float\nIntrinsic concentration at 300 K [/m3].\0".as_ptr() as *const c_char,
+        ml_doc:   c"n_i_300k() -> float\nIntrinsic concentration at 300 K [/m3].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"eg_si_300k\0".as_ptr() as *const c_char,
+        ml_name:  c"eg_si_300k".as_ptr(),
         ml_meth:  Some(py_eg_si_300k),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"eg_si_300k() -> float\nSilicon bandgap at 300 K [eV].\0".as_ptr() as *const c_char,
+        ml_doc:   c"eg_si_300k() -> float\nSilicon bandgap at 300 K [eV].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"mu_n_300k\0".as_ptr() as *const c_char,
+        ml_name:  c"mu_n_300k".as_ptr(),
         ml_meth:  Some(py_mu_n_300k),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"mu_n_300k() -> float\nElectron mobility at 300 K [m2/V/s].\0".as_ptr() as *const c_char,
+        ml_doc:   c"mu_n_300k() -> float\nElectron mobility at 300 K [m2/V/s].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"mu_p_300k\0".as_ptr() as *const c_char,
+        ml_name:  c"mu_p_300k".as_ptr(),
         ml_meth:  Some(py_mu_p_300k),
         ml_flags: METH_NOARGS,
-        ml_doc:   b"mu_p_300k() -> float\nHole mobility at 300 K [m2/V/s].\0".as_ptr() as *const c_char,
+        ml_doc:   c"mu_p_300k() -> float\nHole mobility at 300 K [m2/V/s].".as_ptr(),
     },
     // ------------ device-physics functions -----------------------------------
     PyMethodDef {
-        ml_name:  b"thermal_voltage\0".as_ptr() as *const c_char,
+        ml_name:  c"thermal_voltage".as_ptr(),
         ml_meth:  Some(py_thermal_voltage),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"thermal_voltage(t_kelvin: float) -> float\nV_T = kT/q [V].\0".as_ptr() as *const c_char,
+        ml_doc:   c"thermal_voltage(t_kelvin: float) -> float\nV_T = kT/q [V].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"intrinsic_concentration\0".as_ptr() as *const c_char,
+        ml_name:  c"intrinsic_concentration".as_ptr(),
         ml_meth:  Some(py_intrinsic_concentration),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"intrinsic_concentration(t_kelvin: float) -> float\nn_i(T) [/m3].\0".as_ptr() as *const c_char,
+        ml_doc:   c"intrinsic_concentration(t_kelvin: float) -> float\nn_i(T) [/m3].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"fermi_potential\0".as_ptr() as *const c_char,
+        ml_name:  c"fermi_potential".as_ptr(),
         ml_meth:  Some(py_fermi_potential),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"fermi_potential(n_doping: float, kind: str, t_kelvin: float) -> float\nFermi potential phi_F [V].\0".as_ptr() as *const c_char,
+        ml_doc:   c"fermi_potential(n_doping: float, kind: str, t_kelvin: float) -> float\nFermi potential phi_F [V].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"pn_junction_built_in_voltage\0".as_ptr() as *const c_char,
+        ml_name:  c"pn_junction_built_in_voltage".as_ptr(),
         ml_meth:  Some(py_pn_junction_built_in_voltage),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"pn_junction_built_in_voltage(na, nd, t) -> float\nBuilt-in voltage V_bi [V].\0".as_ptr() as *const c_char,
+        ml_doc:   c"pn_junction_built_in_voltage(na, nd, t) -> float\nBuilt-in voltage V_bi [V].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"pn_junction_depletion_width\0".as_ptr() as *const c_char,
+        ml_name:  c"pn_junction_depletion_width".as_ptr(),
         ml_meth:  Some(py_pn_junction_depletion_width),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"pn_junction_depletion_width(na, nd, t, v_applied) -> float\nDepletion width W [m].\0".as_ptr() as *const c_char,
+        ml_doc:   c"pn_junction_depletion_width(na, nd, t, v_applied) -> float\nDepletion width W [m].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"pn_junction_saturation_current\0".as_ptr() as *const c_char,
+        ml_name:  c"pn_junction_saturation_current".as_ptr(),
         ml_meth:  Some(py_pn_junction_saturation_current),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"pn_junction_saturation_current(na, nd, a, t, tau_n, tau_p) -> float\nSaturation current I_S [A].\0".as_ptr() as *const c_char,
+        ml_doc:   c"pn_junction_saturation_current(na, nd, a, t, tau_n, tau_p) -> float\nSaturation current I_S [A].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"pn_junction_current\0".as_ptr() as *const c_char,
+        ml_name:  c"pn_junction_current".as_ptr(),
         ml_meth:  Some(py_pn_junction_current),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"pn_junction_current(na, nd, a, t, tau_n, tau_p, v) -> float\nShockley diode current I [A].\0".as_ptr() as *const c_char,
+        ml_doc:   c"pn_junction_current(na, nd, a, t, tau_n, tau_p, v) -> float\nShockley diode current I [A].".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"mosfet_threshold_voltage\0".as_ptr() as *const c_char,
+        ml_name:  c"mosfet_threshold_voltage".as_ptr(),
         ml_meth:  Some(py_mosfet_threshold_voltage),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"mosfet_threshold_voltage(device_type, l, w, t_ox, n_body, phi_ms, q_ox, t, v_sb) -> float\nThreshold voltage V_t [V].\0".as_ptr() as *const c_char,
+        ml_doc:   c"mosfet_threshold_voltage(device_type, l, w, t_ox, n_body, phi_ms, q_ox, t, v_sb) -> float\nThreshold voltage V_t [V].".as_ptr(),
     },
     // ------------ mosfet-models functions ------------------------------------
     PyMethodDef {
-        ml_name:  b"evaluate_level1\0".as_ptr() as *const c_char,
+        ml_name:  c"evaluate_level1".as_ptr(),
         ml_meth:  Some(py_evaluate_level1),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"evaluate_level1(vt0, kp, lambda_, gamma, phi, w, l, n_sub, v_gs, v_ds, v_bs, t) -> dict\nLevel-1 MOSFET DC operating point.\0".as_ptr() as *const c_char,
+        ml_doc:   c"evaluate_level1(vt0, kp, lambda_, gamma, phi, w, l, n_sub, v_gs, v_ds, v_bs, t) -> dict\nLevel-1 MOSFET DC operating point.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"evaluate_level1_defaults\0".as_ptr() as *const c_char,
+        ml_name:  c"evaluate_level1_defaults".as_ptr(),
         ml_meth:  Some(py_evaluate_level1_defaults),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"evaluate_level1_defaults(v_gs, v_ds, v_bs, t) -> dict\nLevel-1 MOSFET with default 130 nm NMOS params.\0".as_ptr() as *const c_char,
+        ml_doc:   c"evaluate_level1_defaults(v_gs, v_ds, v_bs, t) -> dict\nLevel-1 MOSFET with default 130 nm NMOS params.".as_ptr(),
     },
     // ------------ fab-process-simulation functions ---------------------------
     PyMethodDef {
-        ml_name:  b"deal_grove_oxidation\0".as_ptr() as *const c_char,
+        ml_name:  c"deal_grove_oxidation".as_ptr(),
         ml_meth:  Some(py_deal_grove_oxidation),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"deal_grove_oxidation(cs_str, time_min[, a_um, b_um2_per_hr]) -> str\nGrow thermal SiO2 via Deal-Grove.\0".as_ptr() as *const c_char,
+        ml_doc:   c"deal_grove_oxidation(cs_str, time_min[, a_um, b_um2_per_hr]) -> str\nGrow thermal SiO2 via Deal-Grove.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"deposit\0".as_ptr() as *const c_char,
+        ml_name:  c"deposit".as_ptr(),
         ml_meth:  Some(py_deposit),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"deposit(cs_str, material, thickness_nm) -> str\nDeposit a film layer.\0".as_ptr() as *const c_char,
+        ml_doc:   c"deposit(cs_str, material, thickness_nm) -> str\nDeposit a film layer.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"etch\0".as_ptr() as *const c_char,
+        ml_name:  c"etch".as_ptr(),
         ml_meth:  Some(py_etch),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"etch(cs_str, target_material, depth_nm) -> str\nEtch the top layers.\0".as_ptr() as *const c_char,
+        ml_doc:   c"etch(cs_str, target_material, depth_nm) -> str\nEtch the top layers.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"implant\0".as_ptr() as *const c_char,
+        ml_name:  c"implant".as_ptr(),
         ml_meth:  Some(py_implant),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"implant(cs_str, species, energy_kev, dose_per_cm2) -> str\nIon implantation.\0".as_ptr() as *const c_char,
+        ml_doc:   c"implant(cs_str, species, energy_kev, dose_per_cm2) -> str\nIon implantation.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"diffuse\0".as_ptr() as *const c_char,
+        ml_name:  c"diffuse".as_ptr(),
         ml_meth:  Some(py_diffuse),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"diffuse(cs_str, time_min[, temperature_c]) -> str\nFick diffusion anneal.\0".as_ptr() as *const c_char,
+        ml_doc:   c"diffuse(cs_str, time_min[, temperature_c]) -> str\nFick diffusion anneal.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"implant_range\0".as_ptr() as *const c_char,
+        ml_name:  c"implant_range".as_ptr(),
         ml_meth:  Some(py_implant_range),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"implant_range(species, energy_kev) -> (float, float)\nReturn (Rp_nm, delta_Rp_nm) from SRIM table.\0".as_ptr() as *const c_char,
+        ml_doc:   c"implant_range(species, energy_kev) -> (float, float)\nReturn (Rp_nm, delta_Rp_nm) from SRIM table.".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"diffusivity_cm2_per_s\0".as_ptr() as *const c_char,
+        ml_name:  c"diffusivity_cm2_per_s".as_ptr(),
         ml_meth:  Some(py_diffusivity_cm2_per_s),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"diffusivity_cm2_per_s(species, temperature_c) -> float\nArrhenius diffusivity D(T) [cm2/s].\0".as_ptr() as *const c_char,
+        ml_doc:   c"diffusivity_cm2_per_s(species, temperature_c) -> float\nArrhenius diffusivity D(T) [cm2/s].".as_ptr(),
     },
     // sentinel
     PyMethodDef { ml_name: ptr::null(), ml_meth: None, ml_flags: 0, ml_doc: ptr::null() },
@@ -790,9 +794,8 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
         m_index: 0,
         m_copy:  ptr::null_mut(),
     },
-    m_name:    b"silicon_rust_python\0".as_ptr() as *const c_char,
-    m_doc:     b"Rust-backed silicon simulation stack: device-physics, mosfet-models, fab-process-simulation.\0"
-                   .as_ptr() as *const c_char,
+    m_name:    c"silicon_rust_python".as_ptr(),
+    m_doc:     c"Rust-backed silicon simulation stack: device-physics, mosfet-models, fab-process-simulation.".as_ptr(),
     m_size:    -1,
     m_methods: &raw mut MODULE_METHODS as *mut PyMethodDef,
     m_slots:   ptr::null_mut(),
@@ -805,6 +808,13 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
 // Module init — called by Python on `import silicon_rust_python`
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// # Safety
+///
+/// This is the CPython module initialization entry point, called by the
+/// interpreter exactly once when the extension module is imported. It must only
+/// be invoked by CPython through the standard import machinery; it reads the
+/// module-global `MODULE_DEF` static and hands it to `PyModule_Create2`, so the
+/// interpreter must be initialized and the ABI must match `PYTHON_API_VERSION`.
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_silicon_rust_python() -> PyObjectPtr {
     PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION as c_int)

@@ -1,0 +1,895 @@
+// TaskApp — styling (mosstyle), dark theme. Parts match the [ part-name ] labels
+// in TaskApp.mll, and mirror TaskApp.light.msl part-for-part.
+//
+// The "warm & approachable" identity from code/specs/task-app-ui-design.md: a warm
+// paper ground, crisp warm-white cards, warm-charcoal ink, and a single honey accent
+// (#eaa63f) spent only on *now* — the active project, the primary action, focus.
+// Semantic colour is a separate axis: sage for on-track, red for critical/overdue.
+// Shadows carry a brown tint rather than neutral black, so they sit in the same warm
+// world instead of greying the page.
+
+style TaskApp {
+  // ── shell ───────────────────────────────────────────────────────────────
+  part app-shell {
+    background : "#1a1714" ;
+    color : "#f1ebe1" ;
+    font-family : "-apple-system, Segoe UI, system-ui, Helvetica Neue, Arial, sans-serif" ;
+    min-height : "100vh" ;
+  }
+  part rail {
+    width : 236 ;
+    flex-shrink : 0 ;
+    padding-top : 20 ;
+    padding-right : 14 ;
+    padding-bottom : 20 ;
+    padding-left : 14 ;
+    gap : 22 ;
+    border-right-width : 1 ;
+    border-right-color : "#352e25" ;
+    border-right-style : "solid" ;
+  }
+  part main {
+    flex-grow : 1 ;
+    min-width : 0 ;
+    gap : 14 ;
+  }
+  part content {
+    gap : 14 ;
+    padding-top : 8 ;
+    padding-right : 30 ;
+    padding-bottom : 60 ;
+    padding-left : 30 ;
+  }
+
+  // ── brand ───────────────────────────────────────────────────────────────
+  part brand {
+    gap : 10 ;
+    align : center-vertical ;
+    padding : 4 ;
+  }
+  part brand-mark {
+    width : 28 ;
+    height : 28 ;
+    border-radius : 8 ;
+    background : "#eaa63f" ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part brand-name {
+    font-size : 15 ;
+    font-weight : bold ;
+    color : "#f1ebe1" ;
+  }
+
+  // rail-label/rail-projects/rail-row/project-indent/project-on/project-off/
+  // rail-composer/project-input/project-add/project-sub moved to
+  // mosaic-pkg-project-nav's own .msl themes — see
+  // code/specs/task-app-project-nav-v1.md.
+
+  // ── topbar ──────────────────────────────────────────────────────────────
+  part topbar {
+    gap : 18 ;
+    align : center-vertical ;
+    padding-top : 20 ;
+    padding-right : 30 ;
+    padding-bottom : 14 ;
+    padding-left : 30 ;
+  }
+  part title-block {
+    width : 100% ;
+    gap : 3 ;
+  }
+  part title {
+    font-size : 22 ;
+    font-weight : bold ;
+    color : "#f1ebe1" ;
+    letter-spacing : "-0.02em" ;
+  }
+  part subline {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part summary {
+    color : "#b3a99c" ;
+    font-size : 13 ;
+  }
+  // The engine's verdict. Semantic colour, deliberately not the honey accent.
+  part pill-ok {
+    background : "#22301f" ;
+    color : "#6fb489" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding-top : 2 ;
+    padding-right : 9 ;
+    padding-bottom : 2 ;
+    padding-left : 9 ;
+    border-radius : 20 ;
+  }
+  part pill-warn {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding-top : 2 ;
+    padding-right : 9 ;
+    padding-bottom : 2 ;
+    padding-left : 9 ;
+    border-radius : 20 ;
+  }
+
+  // ── segmented view switch ───────────────────────────────────────────────
+  part seg {
+    gap : 2 ;
+    align : center-vertical ;
+    background : "#2d271f" ;
+    padding : 3 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 10 ;
+  }
+  part seg-list-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-tl-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-board-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-board-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-board-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-board-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-sheet-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-list-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-list-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-list-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // Calendar tab. "on" mirrors seg-sheet-on's raised-card treatment; every
+  // "off" variant (one per other branch) mirrors seg-sheet-off's plain
+  // transparent-with-hover treatment — see TaskApp.mll's seg comment for why
+  // each mutually-exclusive branch needs its own part name.
+  part seg-cal-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-cal-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-cal-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-cal-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-cal-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // The new calendar-mode branch also needs an "off" instance of every OTHER
+  // family (list/board/sheet/timeline) — same plain treatment, next unused
+  // numeric suffix per family (see TaskApp.mll's seg block for the mapping).
+  part seg-list-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-board-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // Notes tab. "on" mirrors seg-cal-on's raised-card treatment; every "off"
+  // variant mirrors seg-cal-off's plain transparent-with-hover treatment.
+  part seg-notes-on {
+    background : "#252019" ;
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 6 ;
+    padding-right : 14 ;
+    padding-bottom : 6 ;
+    padding-left : 14 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+  part seg-notes-off {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off2 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off3 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off4 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-notes-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // The new notes-mode branch also needs an "off" instance of every OTHER
+  // family (list/board/sheet/calendar/timeline) — next unused numeric
+  // suffix per family (see TaskApp.mll's seg block for the mapping).
+  part seg-list-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-board-off6 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-sheet-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-cal-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+  part seg-tl-off5 {
+    background : "transparent" ;
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#f1ebe1" ;
+    }
+  }
+
+  // ── board (kanban) ──────────────────────────────────────────────────────
+  part board {
+    gap : 14 ;
+  }
+  part board-col {
+    width : 260 ;
+    flex-shrink : 0 ;
+    background : "#2d271f" ;
+    padding : 12 ;
+    gap : 10 ;
+    border-width : 1 ;
+    border-color : "#2c2620" ;
+    border-radius : 13 ;
+  }
+  part col-head {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#b3a99c" ;
+    letter-spacing : "0.07em" ;
+    text-transform : "uppercase" ;
+  }
+  // The drop target fills its column, so the whole column is a landing zone rather
+  // than only the strip of cards already in it — dropping into an empty column has
+  // to work.
+  part col-drop {
+    min-height : 60 ;
+    gap : 9 ;
+    // HostDropTarget lowers to a bare <div> with no built-in display, unlike Column —
+    // so without these the gap is inert and the cards stack flush against each other.
+    display : "flex" ;
+    flex-direction : "column" ;
+  }
+  part board-card {
+    background : "#252019" ;
+    padding : 11 ;
+    gap : 6 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 9 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+    cursor : "grab" ;
+    state hover {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part card-name {
+    font-size : 13 ;
+    color : "#f1ebe1" ;
+  }
+  part card-crit {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#e26a52" ;
+  }
+  // ── list ────────────────────────────────────────────────────────────────
+  part list-wrap {
+    max-width : 760 ;
+    gap : 16 ;
+  }
+  part composer {
+    gap : 8 ;
+    align : center-vertical ;
+    background : "#252019" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part name-input {
+    width : 100% ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
+  part due-input {
+    width : 150 ;
+    flex-shrink : 0 ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-left-width : 1 ;
+    border-left-color : "#2c2620" ;
+    border-left-style : "solid" ;
+  }
+  part add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+
+  // ── sheet: label composer ──────────────────────────────────────────────
+  part sheet-view-wrap {
+    gap : 14 ;
+  }
+  part label-composer {
+    gap : 8 ;
+    align : center-vertical ;
+    background : "#252019" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part label-name-input {
+    width : 220 ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
+  part label-add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+
+  part task-list {
+    gap : 7 ;
+  }
+  // Section heading between groups — the engine decides the grouping.
+  part group-head {
+    font-size : 11 ;
+    font-weight : bold ;
+    color : "#867c70" ;
+    letter-spacing : "0.07em" ;
+    text-transform : "uppercase" ;
+    padding : 10 ;
+  }
+  part task-card {
+    background : "#252019" ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part task-row {
+    gap : 10 ;
+    align : center-vertical ;
+    padding-top : 12 ;
+    padding-right : 14 ;
+    padding-bottom : 12 ;
+    padding-left : 14 ;
+  }
+  // The completion toggle — a round control whose label is the engine's glyph.
+  part toggle {
+    background : "transparent" ;
+    color : "#6fb489" ;
+    font-size : 14 ;
+    padding : 3 ;
+    border-width : 2 ;
+    border-color : "#867c70" ;
+    border-radius : 20 ;
+    state hover {
+      border-color : "#eaa63f" ;
+    }
+  }
+  part task-name {
+    width : 100% ;
+    background : "transparent" ;
+    color : "#f1ebe1" ;
+    font-size : 14 ;
+    text-align : "left" ;
+    padding : 4 ;
+    border-width : 0 ;
+    border-radius : 7 ;
+    state hover {
+      color : "#eaa63f" ;
+    }
+  }
+  // Meta chips: due is honey (time), schedule a quiet surface, overdue the one place
+  // semantic red appears in a row.
+  part chip-due {
+    background : "#3a2c17" ;
+    color : "#eaa63f" ;
+    font-size : 11 ;
+    font-weight : bold ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-sched {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-over {
+    background : "#3a221c" ;
+    color : "#e26a52" ;
+    font-size : 11 ;
+    font-weight : bold ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-priority {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part chip-labels {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    padding : 4 ;
+    border-radius : 20 ;
+  }
+  part del-btn {
+    background : "transparent" ;
+    color : "#867c70" ;
+    font-size : 12 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#3a221c" ;
+      color : "#e26a52" ;
+    }
+  }
+
+  // ── progressive disclosure ──────────────────────────────────────────────
+  part task-detail {
+    background : "#2d271f" ;
+    border-top-width : 1 ;
+    border-top-color : "#2c2620" ;
+    border-top-style : "solid" ;
+    // The 47px left indent lines the detail up under the task name (past the
+    // checkbox), matching the mock rather than sitting flush with the row edge.
+    padding-top : 15 ;
+    padding-right : 16 ;
+    padding-bottom : 16 ;
+    padding-left : 47 ;
+    gap : 5 ;
+  }
+  part detail-sched {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-slack {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-free {
+    color : "#867c70" ;
+    font-size : 12 ;
+  }
+  part detail-deps {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-notes {
+    color : "#867c70" ;
+    font-size : 12 ;
+  }
+
+  // ── timeline ────────────────────────────────────────────────────────────
+  part timeline-card {
+    background : "#252019" ;
+    padding : 16 ;
+    gap : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 13 ;
+    box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
+  }
+  part tl-scale {
+    color : "#867c70" ;
+    font-size : 11 ;
+  }
+  part timeline-row {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part tl-name {
+    color : "#f1ebe1" ;
+    font-size : 13 ;
+    width : 150 ;
+    flex-shrink : 0 ;
+  }
+  // The shared track every bar is measured against. Bars are positioned by a
+  // percentage pad, so the track is one common width for every row.
+  part tl-track {
+    width : 100% ;
+    background : "#2d271f" ;
+    border-radius : 6 ;
+  }
+  part tl-pad {
+    height : 16 ;
+  }
+  part tl-bar {
+    background : "#eaa63f" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  part tl-bar-crit {
+    background : "#e26a52" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  part tl-window {
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    width : 190 ;
+    flex-shrink : 0 ;
+  }
+}

@@ -1,0 +1,59 @@
+Kannada, chapter 20: Numbers 11–20 and Weather.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20.
+
+Warm-up.
+[pause 2 seconds]
+You've now seen four different language families each build "twenty" as its own special, opaque word — Sanskrit's vimshati, Latin's viginti, Arabic's ʿishrūn. Kannada's twenty genuinely started life as "two tens" too — but be careful: the modern surface no longer shows it plainly.
+
+The word, taken apart: ಹನ್ನೊಂದು–ಹತ್ತೊಂಬತ್ತು — "ten" + digit.
+Kannada's teens are built on ಹತ್ತು (hattu, "ten") plus each digit — ಹನ್ನೊಂದು (hannondu, 11), ಹನ್ನೆರಡು (hanneraḍu, 12), and onward through ಹತ್ತೊಂಬತ್ತು (hattombattu, 19). Each teen is a compound built the same way English builds "four-teen" — just placed the same digit-plus-ten pattern in front instead of behind.
+
+The word, taken apart: ಇಪ್ಪತ್ತು — "two-tens" underneath, but not on the surface anymore.
+ಇಪ್ಪತ್ತು (ippattu, "twenty") traces back to Proto-Dravidian ir- ("two") + paHtu ("ten") — a genuine compositional origin, "two-tens." But be honest about what's actually visible today: the ir- piece is an old bound root, not the same as modern Kannada's everyday word for "two," ಎರಡು (eraḍu) — a separate, longer descendant of the same ancient family. And the "ten" piece surfaces here as -pp- (geminated after the r), not as modern ಹತ್ತು (hattu)'s h- — because Kannada's historical p becomes h shift only fired at the start of a word, and this "ten" sits in the middle of the compound, so it never lenited. So ippattu really did start as "two-tens" — you just can't spot modern eraḍu or modern hattu inside it anymore the way you might expect. Compare this to Sanskrit's विंशति (vimshati), Latin's vīgintī, and Arabic's عشرون (ʿishrūn): those have no compositional "two-ten" origin at all, not even a buried one — a genuinely different kind of history from Kannada's.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hannondu, hanneraḍu" — 11, 12]
+[pause 8 seconds for the answer]
+[your turn — say: "hattu" — ten (today's word), "eraḍu" — two (today's word)]
+[pause 8 seconds for the answer]
+[your turn — say: "ippattu" — twenty, "two-tens" underneath, from the OLD ir-/ paHtu roots, not directly from hattu/eraḍu]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How are Kannada's teens built? (ಹತ್ತು (ten) + a digit, compounded.) Does ಇಪ್ಪತ್ತು (twenty) have a compositional "two-tens" origin? (Yes — Proto-Dravidian ir- "two" + paHtu "ten.") Can you still spot modern eraḍu or modern hattu inside it today? (No — the old bound "two" root and the un-lenited middle-of-word "ten" root look different from their modern standalone descendants.) Do Sanskrit's vimshati or Latin's vīgintī have any compositional origin like this at all? (No — neither has a buried "two-ten" history the way Kannada's does.)
+
+
+Lesson 2 of 2.
+ಹವಾಮಾನ — a genuine two-language hybrid word.
+
+Warm-up.
+[pause 2 seconds]
+Kannada's word for "weather" isn't purely Sanskrit or purely native — it's a compound with a piece from each of two different borrowed sources.
+
+The word, taken apart: ಹವಾಮಾನ — "air-measure," a hybrid compound.
+ಹವಾಮಾನ (havāmāna) = "weather" — built from two pieces:
+ಹವಾ (hava, "air") — itself a loanword, from Persian هوا (havā), which traces back to Arabic هَوَاء (hawāʾ, "air"). This is the exact same root behind Hindi's own हवा (havā, "air, wind").
+ಮಾನ (māna, "measure") — from Sanskrit मान (māna), "measure, standard" (the same word behind pramāṇa, "proof, measure of truth").
+So havāmāna literally means "air-measure" — and it's genuinely a two-source hybrid, not a single borrowed compound: one piece Perso-Arabic, one piece Sanskrit, fused into one Kannada word.
+
+You'll want to know: ಮಳೆ ಬರುತ್ತಿದೆ — "rain is coming".
+ಮಳೆ ಬರುತ್ತಿದೆ. — "It's raining." — literally "rain is coming." (maḷe baruttide.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "havāmāna" — weather, literally "air-measure"]
+[pause 8 seconds for the answer]
+[your turn — say: "hava" — air, a Persian/Arabic loan]
+[pause 8 seconds for the answer]
+[your turn — say: "maḷe baruttide" — it's raining, "rain is coming"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two pieces of ಹವಾಮಾನ, and where does each come from? (ಹವಾ, "air," a Persian/Arabic loan; ಮಾನ, "measure," native Sanskrit.) What does havāmāna literally mean? ("Air-measure.") What other Indian language shares the exact same word for "air"? (Hindi — havā.)

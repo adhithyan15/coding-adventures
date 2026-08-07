@@ -1,0 +1,81 @@
+// Notes.mil — interface for the list-plus-editor notes view.
+//
+// Notes renders a two-column shell: a list of every note on the left, an
+// editor for whichever one is selected on the right. See
+// code/specs/task-app-notes-ui-v1.md for the full scope and what's
+// deliberately deferred (attachment picker, tags, rich text, search).
+//
+// Fat engine, dumb UI: the host builds `note-rows` from task-core's
+// `Note` entities (via `workspace()` — no dedicated query needed, see the
+// spec), owns the in-progress edit buffer (`title-value`/`body-value`),
+// and decides what Save/Delete/Cancel mean as engine ops
+// (`upsertNote`/`deleteNote`). Notes does no persistence, filtering, or
+// id-minting of its own.
+//
+// Slot vocabulary
+// ---------------
+//
+//   notes-title       the panel's heading (e.g. "Notes").
+//
+//   note-rows         one row per note, in host display order:
+//                        [ 0 ] id     the note's id — a KEY, not an index
+//                                     (see TaskApp.mil's board-columns note
+//                                     on why: an inner render's index can
+//                                     drift from a stale click).
+//                        [ 1 ] title  display title (host substitutes a
+//                                     placeholder like "Untitled" for an
+//                                     empty title — Notes doesn't decide
+//                                     that).
+//
+//   selected-note-id   the currently open note's id, or empty for none
+//                       selected (the editor panel is hidden).
+//
+//   title-value        the editor's in-progress title text.
+//   body-value         the editor's in-progress body text.
+//   task-name-value    the editor's in-progress "attach to task" text —
+//                       a task NAME, not an id (Notes has no notion of
+//                       task ids; the host resolves name → id on Save,
+//                       the same discipline the Sheet Labels column
+//                       already uses — see
+//                       code/specs/task-app-notes-ui-v1.md's addendum).
+//                       Empty means "no attachment."
+//
+// Emit vocabulary
+// ---------------
+//
+//   onSelectNote ( index )   a list row was clicked. Payload is the
+//                            CLICKED ROW'S INDEX (HostButton's own
+//                            dedicated-primitive payload synthesis — the
+//                            same mechanism onSelectProject/onExpandTask
+//                            already use for plain list clicks, distinct
+//                            from the drag kernel's key-based payloads).
+//                            The host resolves index → id through the
+//                            SAME ordered list note-rows was built from.
+//   onNewNote                start a blank, unsaved note (host clears its
+//                            edit buffer and sets no id — the note is
+//                            minted on first Save, the same pattern
+//                            addTask/addProject already use).
+//   onTitleChange ( value )   the title field's content changed.
+//   onBodyChange ( value )    the body field's content changed.
+//   onTaskNameChange ( value )  the attach-to-task field's content changed.
+//   onSave                    commit the edit buffer via upsertNote.
+//   onDelete                  delete the open note via deleteNote.
+//   onCancel                  discard the edit buffer without saving.
+
+component Notes {
+  slot notes-title      : text ;
+  slot note-rows        : list<list<text>> ;
+  slot selected-note-id : text ;
+  slot title-value      : text ;
+  slot body-value       : text ;
+  slot task-name-value  : text ;
+
+  emit onSelectNote ( index : number ) ;
+  emit onNewNote ;
+  emit onTitleChange ( value : text ) ;
+  emit onBodyChange ( value : text ) ;
+  emit onTaskNameChange ( value : text ) ;
+  emit onSave ;
+  emit onDelete ;
+  emit onCancel ;
+}

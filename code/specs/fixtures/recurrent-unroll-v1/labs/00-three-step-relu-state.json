@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "three-step-relu-state",
+  "title": "Carry one scalar state through three time steps",
+  "question": "How can the final hidden state remember earlier inputs when the final input is zero?",
+  "absolute_tolerance": 1e-12,
+  "concepts": [
+    "recurrent state",
+    "time unrolling",
+    "shared parameters",
+    "initial state",
+    "memory ablation"
+  ],
+  "operation": {
+    "kind": "scalar-elman-rnn-forward",
+    "steps": 3,
+    "state_size": 1,
+    "activation": "relu",
+    "parameter_sharing": "all-steps"
+  },
+  "initial_state": 0,
+  "inputs": [1, 2, 0],
+  "parameters": {
+    "input_weight": 2,
+    "recurrent_weight": 0.5,
+    "bias": -1
+  },
+  "expected": {
+    "steps": [
+      {
+        "time": 0,
+        "input": 1,
+        "previous_state": 0,
+        "input_product": 2,
+        "recurrent_product": 0,
+        "bias": -1,
+        "preactivation": 1,
+        "state": 1
+      },
+      {
+        "time": 1,
+        "input": 2,
+        "previous_state": 1,
+        "input_product": 4,
+        "recurrent_product": 0.5,
+        "bias": -1,
+        "preactivation": 3.5,
+        "state": 3.5
+      },
+      {
+        "time": 2,
+        "input": 0,
+        "previous_state": 3.5,
+        "input_product": 0,
+        "recurrent_product": 1.75,
+        "bias": -1,
+        "preactivation": 0.75,
+        "state": 0.75
+      }
+    ],
+    "states": [1, 3.5, 0.75],
+    "final_state": 0.75,
+    "memory_ablation": {
+      "preactivations": [1, 3, -1],
+      "states": [1, 3, 0],
+      "state_differences": [0, 0.5, 0.75]
+    }
+  }
+}

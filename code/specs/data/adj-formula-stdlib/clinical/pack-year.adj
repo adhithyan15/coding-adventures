@@ -1,0 +1,95 @@
+% ============================================================================
+% pack-year.adj — the definition of the smoking pack-year
+% (pack-years = packs smoked per day × years smoked) in the ADJ standard library.
+% ============================================================================
+% The pack-year entry of the *clinical* track — a preventive-medicine/pulmonology exposure index, a
+% product sibling of the shipped cardiac-output.adj (HR × SV) and rate-pressure-product.adj (HR ×
+% SBP). The pack-year quantifies cumulative tobacco exposure: PACK-YEARS ARE THE PACKS SMOKED PER DAY
+% MULTIPLIED BY THE YEARS SMOKED — the standard summary of lifetime smoking used to stratify
+% lung-cancer-screening eligibility and to gauge COPD/coronary risk. It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the
+% packs-per-day a pack-year total implies for a given duration, and the years it implies for a given
+% daily rate). As with every compute library, a consumer states NO arithmetic: it `import`s this
+% file, binds the daily rate and the duration from its own byte-provenance decomposition, and asks
+% the engine to APPLY the cited definition on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "pack-year.adj"
+%     observe packs_per_day(2)     % "…2 packs per day…"    (span cited by the model)
+%     observe years_smoked(15)     % "…for 15 years…"        (span cited by the model)
+%     ? pack_years(packs_per_day, years_smoked)
+%                                   % engine → 30, carrying the pack-year product
+%
+% All three formulas are EXACT over their parameters (a product or a quotient of the daily rate and
+% the duration), so every value the engine returns is exact. They COMPOSE and invert cleanly around
+% the worked case packs per day = 2, years smoked = 15 (pack-years = 2 × 15 = 30): the `pack_years` a
+% consumer computes is exactly the total the `packs_per_day` formula divides by the years to recover
+% 2, and exactly the total the `years_smoked` formula divides by the daily rate to recover 15.
+%
+%   pack_years(packs_per_day, years_smoked)
+%       = packs_per_day * years_smoked        % pack-years = packs/day × years   (definition)
+%   packs_per_day(pack_years, years_smoked)
+%       = pack_years / years_smoked           % packs/day = pack-years ÷ years   (solved for the rate)
+%   years_smoked(pack_years, packs_per_day)
+%       = pack_years / packs_per_day          % years = pack-years ÷ packs/day   (solved for the duration)
+%
+% NOTE ON UNITS: the daily rate is in packs per day (one pack = 20 cigarettes by the standard
+% convention the cited article uses in its worked example, but that pack↔cigarette conversion is a
+% SEPARATE fact — this formula ranges over packs, so it carries NO embedded constant and is exact over
+% whatever consistent inputs it is given); the duration is in years; the product is in pack-years.
+%
+% All three formulas are defended by the SAME definitional clause — "Pack-year history provides an
+% estimated number of cigarettes a patient has consumed over a lifetime and is calculated as packs
+% smoked per day multiplied by the total number of years smoked." — because that one definition (the
+% pack-year IS the packs-per-day × years product) sanctions the relation read every way (the total
+% from the rate and the duration, the rate from the total and the duration, or the duration from the
+% total and the rate). The quote is transcribed verbatim from the StatPearls "Nicotine Addiction and
+% Smoking: Health Effects and Interventions" article on the NCBI Bookshelf, so each `formula` carries
+% the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the definitional clause is a verbatim span of the cited page,
+% not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable smoking quantity the definition ranges over, and each
+% result is a derived quantity. `packs_per_day`, `years_smoked` and `pack_years` each appear BOTH as a
+% derived result and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term;
+% the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary pack_year_vocab {
+    define packs_per_day : finding  surface "packs per day", "packs smoked per day", "packs/day"   % packs per day
+    define years_smoked  : finding  surface "years smoked", "years of smoking", "pack-year duration"  % years
+    define pack_years    : finding  surface "pack-years", "pack years", "pack-year history"        % pack-years
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the StatPearls
+% "Nicotine Addiction and Smoking" article on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact product or quotient of the daily rate and the duration, so the engine
+% returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook pack_year_laws {
+    use pack_year_vocab
+
+    % Pack-years — the packs smoked per day multiplied by the years smoked, i.e. total = rate × years.
+    formula pack_years(packs_per_day, years_smoked) = packs_per_day * years_smoked
+        source "Pack-year history provides an estimated number of cigarettes a patient has consumed over a lifetime and is calculated as packs smoked per day multiplied by the total number of years smoked."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537066/"
+        trust authoritative
+
+    % Packs per day — the same definition solved for the daily rate a pack-year total implies for a
+    % given duration (packs/day = pack-years ÷ years). Defended by the SAME clause.
+    formula packs_per_day(pack_years, years_smoked) = pack_years / years_smoked
+        source "Pack-year history provides an estimated number of cigarettes a patient has consumed over a lifetime and is calculated as packs smoked per day multiplied by the total number of years smoked."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537066/"
+        trust authoritative
+
+    % Years smoked — the same definition solved for the duration (years = pack-years ÷ packs/day): the
+    % pack-year total divided by the daily rate. The SAME clause, read the third way.
+    formula years_smoked(pack_years, packs_per_day) = pack_years / packs_per_day
+        source "Pack-year history provides an estimated number of cigarettes a patient has consumed over a lifetime and is calculated as packs smoked per day multiplied by the total number of years smoked."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537066/"
+        trust authoritative
+}

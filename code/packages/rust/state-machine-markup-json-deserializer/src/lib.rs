@@ -378,7 +378,7 @@ fn optional_matcher(
 }
 
 fn parse_matcher_object(
-    fields: &Vec<(String, JsonValue)>,
+    fields: &[(String, JsonValue)],
     object: &str,
 ) -> Result<MatcherDefinition> {
     if fields.len() != 1 {

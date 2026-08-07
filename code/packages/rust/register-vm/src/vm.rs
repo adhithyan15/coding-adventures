@@ -94,6 +94,12 @@ pub struct VM {
     pub max_depth: usize,
 }
 
+impl Default for VM {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl VM {
     /// Creates a new VM with an empty global environment.
     pub fn new() -> Self {

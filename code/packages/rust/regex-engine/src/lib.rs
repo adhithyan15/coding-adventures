@@ -29,9 +29,11 @@
 //! Character classes and `\b` are **Unicode-aware by default** (matching the
 //! `regex` crate), backed by generated tables in [`unicode_tables`]; `(?-u)`
 //! selects the ASCII sets. `(?i)` uses Unicode simple case folding. Boolean
-//! matching ([`Regex::is_match`]) and the overall match *extent* ([`Regex::find`])
-//! are implemented; capture groups and `replace_all` build on `find` in later
-//! changes.
+//! matching ([`Regex::is_match`]), the overall match *extent* ([`Regex::find`]),
+//! capture groups ([`Regex::captures`]), the match iterators
+//! ([`Regex::find_iter`]/[`Regex::captures_iter`]), and [`Regex::replace_all`] are
+//! all implemented — the full surface Engram's search and media-tag replacement
+//! need.
 
 mod ast;
 mod casefold;
@@ -39,7 +41,8 @@ mod program;
 mod unicode_tables;
 
 use ast::Flags;
-use program::{Input, Program};
+use program::{Input, Program, RawCaptures};
+use std::borrow::Cow;
 
 /// An error building or running a regular expression.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -108,6 +111,282 @@ impl Regex {
         self.program
             .find_from(&input, 0)
             .map(|(start, end)| Match { text, start, end })
+    }
+
+    /// The leftmost match in `text` with its capture groups, or `None`.
+    ///
+    /// [`Captures::get(0)`](Captures::get) is the overall match (same extent as
+    /// [`find`](Self::find)); `get(i)` for `i ≥ 1` is the `i`-th capturing group
+    /// `(…)`, or `None` if that group did not participate in the match. Capture
+    /// boundaries use the `regex` crate's leftmost-first Pike-VM semantics, so on
+    /// the patterns Engram builds (`re:`, whole-word, and the media-tag regex — no
+    /// nested lazy-nullable groups) they agree with `regex` byte-for-byte.
+    ///
+    /// A pattern with more than 1000 capturing groups is rejected at
+    /// [`RegexBuilder::build`] time (a DoS guard on per-thread slot state).
+    pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
+        let input = Input::new(text);
+        self.program
+            .captures_from(&input, 0)
+            .map(|slots| Captures { text, slots })
+    }
+
+    /// Iterate the leftmost, **non-overlapping** matches in `text`, yielding each
+    /// match's overall extent. Same iteration semantics as the `regex` crate: after
+    /// a match the search resumes at its end, and an *empty* match immediately
+    /// adjacent to the previous match's end is skipped (so `a*` on `"aba"` yields
+    /// the two `a`s and the empty gaps, not a doubled empty match).
+    pub fn find_iter<'r, 't>(&'r self, text: &'t str) -> FindIter<'r, 't> {
+        FindIter {
+            it: Searcher::new(&self.program, text),
+            text,
+        }
+    }
+
+    /// Iterate the leftmost, non-overlapping matches in `text` with their capture
+    /// groups. Same non-overlapping semantics as [`find_iter`](Self::find_iter).
+    pub fn captures_iter<'r, 't>(&'r self, text: &'t str) -> CapturesIter<'r, 't> {
+        CapturesIter {
+            it: Searcher::new(&self.program, text),
+            text,
+        }
+    }
+
+    /// Replace every non-overlapping match in `text` using `rep`, returning the
+    /// result (borrowed unchanged when there is no match). `rep` may be a closure
+    /// `FnMut(&Captures) -> String` (given each match's captures, produce its
+    /// replacement) or a replacement **string** with `$N`/`${N}` numbered-group
+    /// references and `$$` for a literal `$` — see [`Replacer`].
+    pub fn replace_all<'t, R: Replacer>(&self, text: &'t str, mut rep: R) -> Cow<'t, str> {
+        let mut searcher = Searcher::new(&self.program, text);
+        let mut out: Option<String> = None;
+        let mut last_byte = 0usize;
+        while let Some(raw) = searcher.next_raw() {
+            // Slots 0/1 are always set on a match.
+            let start = raw.byte_slots[0].expect("overall start");
+            let end = raw.byte_slots[1].expect("overall end");
+            let dst = out.get_or_insert_with(|| String::with_capacity(text.len()));
+            dst.push_str(&text[last_byte..start]);
+            let caps = Captures {
+                text,
+                slots: raw.byte_slots,
+            };
+            rep.replace_append(&caps, dst);
+            last_byte = end;
+        }
+        match out {
+            Some(mut dst) => {
+                dst.push_str(&text[last_byte..]);
+                Cow::Owned(dst)
+            }
+            None => Cow::Borrowed(text),
+        }
+    }
+}
+
+/// Drives leftmost non-overlapping iteration over a compiled program, mirroring
+/// the `regex` crate's match-iterator semantics (resume at the previous match's
+/// end; skip an empty match sitting exactly at that end). Works in char positions
+/// for control and reports byte offsets.
+struct Searcher<'r> {
+    program: &'r Program,
+    input: Input,
+    from: usize,             // next char index to search from
+    last_end: Option<usize>, // char index of the previous match's end
+}
+
+impl<'r> Searcher<'r> {
+    fn new(program: &'r Program, text: &str) -> Self {
+        Searcher {
+            program,
+            input: Input::new(text),
+            from: 0,
+            last_end: None,
+        }
+    }
+
+    fn next_raw(&mut self) -> Option<RawCaptures> {
+        loop {
+            let raw = self.program.captures_at(&self.input, self.from)?;
+            if raw.start_char == raw.end_char {
+                // Empty match: always step forward one char so we make progress…
+                self.from = raw.end_char + 1;
+                // …and skip it if it sits exactly where the previous match ended.
+                if Some(raw.end_char) == self.last_end {
+                    continue;
+                }
+            } else {
+                self.from = raw.end_char;
+            }
+            self.last_end = Some(raw.end_char);
+            return Some(raw);
+        }
+    }
+}
+
+/// Iterator over overall match extents; see [`Regex::find_iter`].
+pub struct FindIter<'r, 't> {
+    it: Searcher<'r>,
+    text: &'t str,
+}
+
+impl<'t> Iterator for FindIter<'_, 't> {
+    type Item = Match<'t>;
+    fn next(&mut self) -> Option<Match<'t>> {
+        let raw = self.it.next_raw()?;
+        Some(Match {
+            text: self.text,
+            start: raw.byte_slots[0].expect("overall start"),
+            end: raw.byte_slots[1].expect("overall end"),
+        })
+    }
+}
+
+/// Iterator over per-match capture groups; see [`Regex::captures_iter`].
+pub struct CapturesIter<'r, 't> {
+    it: Searcher<'r>,
+    text: &'t str,
+}
+
+impl<'t> Iterator for CapturesIter<'_, 't> {
+    type Item = Captures<'t>;
+    fn next(&mut self) -> Option<Captures<'t>> {
+        let raw = self.it.next_raw()?;
+        Some(Captures {
+            text: self.text,
+            slots: raw.byte_slots,
+        })
+    }
+}
+
+/// A replacement source for [`Regex::replace_all`]. Implemented for closures
+/// `FnMut(&Captures) -> String` and for replacement strings (`$N`/`${N}` numbered
+/// groups, `$$` → `$`).
+pub trait Replacer {
+    /// Append the replacement for `caps` to `dst`.
+    fn replace_append(&mut self, caps: &Captures<'_>, dst: &mut String);
+}
+
+impl<F> Replacer for F
+where
+    F: FnMut(&Captures<'_>) -> String,
+{
+    fn replace_append(&mut self, caps: &Captures<'_>, dst: &mut String) {
+        dst.push_str(&self(caps));
+    }
+}
+
+impl Replacer for &str {
+    fn replace_append(&mut self, caps: &Captures<'_>, dst: &mut String) {
+        expand_replacement(self, caps, dst);
+    }
+}
+
+impl Replacer for String {
+    fn replace_append(&mut self, caps: &Captures<'_>, dst: &mut String) {
+        expand_replacement(self, caps, dst);
+    }
+}
+
+/// Expand a replacement string's `$`-references against `caps`, appending to `dst`:
+/// `$N` / `${N}` insert group `N`'s text (empty if it did not participate), `$$`
+/// inserts a literal `$`, and any other `$` is kept verbatim. (Named groups are
+/// not supported — this engine has no named-group syntax.)
+fn expand_replacement(rep: &str, caps: &Captures<'_>, dst: &mut String) {
+    let bytes = rep.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] != b'$' {
+            // Copy the run up to the next `$` in one push (valid UTF-8 boundary:
+            // `$` is ASCII, so slicing at these indices is safe).
+            let start = i;
+            while i < bytes.len() && bytes[i] != b'$' {
+                i += 1;
+            }
+            dst.push_str(&rep[start..i]);
+            continue;
+        }
+        // At a `$`.
+        i += 1;
+        if i >= bytes.len() {
+            dst.push('$');
+            break;
+        }
+        match bytes[i] {
+            b'$' => {
+                dst.push('$');
+                i += 1;
+            }
+            b'{' => {
+                // `${N}` — read digits until `}`.
+                let num_start = i + 1;
+                let mut j = num_start;
+                while j < bytes.len() && bytes[j].is_ascii_digit() {
+                    j += 1;
+                }
+                if j < bytes.len() && bytes[j] == b'}' && j > num_start {
+                    let n: usize = rep[num_start..j].parse().unwrap_or(usize::MAX);
+                    if let Some(m) = caps.get(n) {
+                        dst.push_str(m.as_str());
+                    }
+                    i = j + 1;
+                } else {
+                    // Malformed `${…}` — emit the `$` literally and continue.
+                    dst.push('$');
+                }
+            }
+            b'0'..=b'9' => {
+                let num_start = i;
+                while i < bytes.len() && bytes[i].is_ascii_digit() {
+                    i += 1;
+                }
+                let n: usize = rep[num_start..i].parse().unwrap_or(usize::MAX);
+                if let Some(m) = caps.get(n) {
+                    dst.push_str(m.as_str());
+                }
+            }
+            _ => dst.push('$'), // a lone `$` before a non-special char
+        }
+    }
+}
+
+/// The capture groups of a single match. Slot pairs index into the searched text
+/// by **byte** offset: group `i` spans `slots[2i]..slots[2i+1]` (each `Option`
+/// because a group may not participate). Group `0` is the overall match.
+#[derive(Debug, Clone)]
+pub struct Captures<'t> {
+    text: &'t str,
+    slots: Vec<Option<usize>>,
+}
+
+impl<'t> Captures<'t> {
+    /// The `i`-th capture group's match (`0` = the overall match), or `None` if
+    /// the group index is out of range or the group did not participate.
+    ///
+    /// `checked_mul` keeps a huge `i` (e.g. from a `$99999999999999999999` group
+    /// reference in a `replace_all` template) from overflowing the slot index — it
+    /// returns `None` rather than panicking under overflow-checked builds.
+    pub fn get(&self, i: usize) -> Option<Match<'t>> {
+        let lo = i.checked_mul(2)?;
+        let start = (*self.slots.get(lo)?)?;
+        let end = (*self.slots.get(lo + 1)?)?;
+        Some(Match {
+            text: self.text,
+            start,
+            end,
+        })
+    }
+
+    /// The number of capture groups, **including** the overall match at index 0
+    /// (so this is always ≥ 1). Mirrors `regex::Captures::len`.
+    pub fn len(&self) -> usize {
+        self.slots.len() / 2
+    }
+
+    /// Always `false` — a `Captures` always has at least the overall match (group
+    /// 0). Present so `len` has its conventional companion.
+    pub fn is_empty(&self) -> bool {
+        self.slots.is_empty()
     }
 }
 
@@ -243,7 +522,10 @@ mod tests {
         let raw = r"a.b*c+d?(e)|[f]{g}^h$#&-~i\j";
         let escaped = escape(raw);
         let re = Regex::new(&escaped).unwrap();
-        assert!(re.is_match(raw), "escaped pattern must match its own literal");
+        assert!(
+            re.is_match(raw),
+            "escaped pattern must match its own literal"
+        );
         // `.` is escaped, so it must NOT act as a wildcard.
         assert!(!Regex::new(&escape("a.c")).unwrap().is_match("axc"));
         assert!(Regex::new(&escape("a.c")).unwrap().is_match("a.c"));
@@ -252,7 +534,125 @@ mod tests {
     }
 
     fn find_span(pat: &str, text: &str) -> Option<(usize, usize)> {
-        Regex::new(pat).unwrap().find(text).map(|m| (m.start(), m.end()))
+        Regex::new(pat)
+            .unwrap()
+            .find(text)
+            .map(|m| (m.start(), m.end()))
+    }
+
+    fn group_spans(pat: &str, text: &str) -> Vec<Option<(usize, usize)>> {
+        let re = Regex::new(pat).unwrap();
+        let caps = re.captures(text).unwrap();
+        (0..caps.len())
+            .map(|i| caps.get(i).map(|m| (m.start(), m.end())))
+            .collect()
+    }
+
+    #[test]
+    fn replace_all_with_closure() {
+        // The shape Engram's media replace_all uses: a closure reading groups.
+        let re = Regex::new(r"(\d+)").unwrap();
+        let out = re.replace_all("a12b345c", |caps: &Captures| {
+            format!("[{}]", caps.get(1).unwrap().as_str())
+        });
+        assert_eq!(out, "a[12]b[345]c");
+        // No match ⇒ borrowed unchanged.
+        let out = re.replace_all("abc", |_: &Captures| String::new());
+        assert_eq!(out, "abc");
+        assert!(matches!(out, std::borrow::Cow::Borrowed(_)));
+    }
+
+    #[test]
+    fn replace_all_with_string_refs() {
+        let re = Regex::new(r"(\w+)@(\w+)").unwrap();
+        assert_eq!(re.replace_all("x a@b y", "$2.$1"), "x b.a y");
+        assert_eq!(re.replace_all("a@b", "${1}_${2}"), "a_b");
+        // `$$` is a literal dollar; `$0` is the whole match.
+        assert_eq!(re.replace_all("a@b", "$$$0"), "$a@b");
+        // A group number that overflows `usize` must not panic — it expands empty.
+        assert_eq!(re.replace_all("a@b", "x$99999999999999999999y"), "xy");
+    }
+
+    #[test]
+    fn replace_all_empty_match_semantics() {
+        // Matches `regex`: an empty-matching pattern inserts between chars without
+        // doubling at the seams.
+        assert_eq!(Regex::new("").unwrap().replace_all("ab", "-"), "-a-b-");
+        assert_eq!(Regex::new("a*").unwrap().replace_all("aba", "-"), "-b-");
+    }
+
+    #[test]
+    fn find_iter_and_captures_iter() {
+        let re = Regex::new(r"\d+").unwrap();
+        let spans: Vec<_> = re
+            .find_iter("a1b22c333")
+            .map(|m| m.as_str().to_string())
+            .collect();
+        assert_eq!(spans, ["1", "22", "333"]);
+        let re = Regex::new(r"(\w)=(\d)").unwrap();
+        let pairs: Vec<_> = re
+            .captures_iter("x=1 y=2")
+            .map(|c| {
+                format!(
+                    "{}{}",
+                    c.get(1).unwrap().as_str(),
+                    c.get(2).unwrap().as_str()
+                )
+            })
+            .collect();
+        assert_eq!(pairs, ["x1", "y2"]);
+    }
+
+    #[test]
+    fn captures_reports_group_boundaries() {
+        // Overall match + one group.
+        assert_eq!(
+            group_spans(r"(\d+)-(\d+)", "x12-345y"),
+            vec![Some((1, 7)), Some((1, 3)), Some((4, 7))]
+        );
+        // A non-participating alternation branch is `None`.
+        let caps = Regex::new(r"(a)|(b)").unwrap().captures("b").unwrap();
+        assert_eq!(caps.get(0).map(|m| m.as_str()), Some("b"));
+        assert_eq!(caps.get(1), None); // (a) did not participate
+        assert_eq!(caps.get(2).map(|m| m.as_str()), Some("b"));
+        // No match ⇒ None.
+        assert!(Regex::new(r"(z)").unwrap().captures("abc").is_none());
+    }
+
+    #[test]
+    fn captures_noncapturing_group_has_no_slot() {
+        let caps = Regex::new(r"(?:ab)+(c)")
+            .unwrap()
+            .captures("ababc")
+            .unwrap();
+        assert_eq!(caps.len(), 2); // group 0 + the one capturing group
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("c"));
+    }
+
+    #[test]
+    fn captures_last_iteration_wins_in_repeat() {
+        // A quantified group captures its last iteration (matching `regex`).
+        let caps = Regex::new(r"(\d)+").unwrap().captures("789").unwrap();
+        assert_eq!(caps.get(0).map(|m| m.as_str()), Some("789"));
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("9"));
+    }
+
+    #[test]
+    fn captures_media_pattern_shape() {
+        // The shape of Engram's media-tag regex: disjoint quoted alternatives.
+        let re = Regex::new(r#"<img src=(?:"([^"]+)"|'([^']+)')>"#).unwrap();
+        let caps = re.captures(r#"<img src="a.png">"#).unwrap();
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("a.png"));
+        assert_eq!(caps.get(2), None);
+        let caps = re.captures(r#"<img src='b.gif'>"#).unwrap();
+        assert_eq!(caps.get(1), None);
+        assert_eq!(caps.get(2).map(|m| m.as_str()), Some("b.gif"));
+    }
+
+    #[test]
+    fn too_many_groups_is_rejected() {
+        let pat = "()".repeat(1001);
+        assert!(Regex::new(&pat).is_err());
     }
 
     #[test]
@@ -260,7 +660,7 @@ mod tests {
         // Leftmost start, greedy end.
         assert_eq!(find_span("a+", "xaaay"), Some((1, 4)));
         assert_eq!(find_span("a+", "xaay aaaa"), Some((1, 3))); // leftmost, not longest-overall
-        // as_str reflects the span.
+                                                                // as_str reflects the span.
         let re = Regex::new(r"\d+").unwrap();
         assert_eq!(re.find("abc123def").unwrap().as_str(), "123");
         // No match.

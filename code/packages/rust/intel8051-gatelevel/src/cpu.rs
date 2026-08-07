@@ -159,7 +159,7 @@ impl Cpu8051 {
     /// Fetch one byte from code memory at PC, then increment PC.
     fn fetch8(&mut self) -> u8 {
         let pc = self.rf.read_pc();
-        let byte = self.code[(pc & 0xFFFF) as usize];
+        let byte = self.code[pc as usize];
         self.rf.increment_pc(1);
         byte
     }
@@ -489,7 +489,7 @@ impl Cpu8051 {
             let acc = self.acc() as u16;
             let dptr = self.dptr();
             let (ea, _) = add_16bit_full(acc, dptr, 0);
-            self.set_acc(self.code[(ea & 0xFFFF) as usize]);
+            self.set_acc(self.code[ea as usize]);
             return;
         }
         // MOVC A, @A+PC  (0x83)
@@ -497,7 +497,7 @@ impl Cpu8051 {
             let acc = self.acc() as u16;
             let pc = self.rf.read_pc();
             let (ea, _) = add_16bit_full(acc, pc, 0);
-            self.set_acc(self.code[(ea & 0xFFFF) as usize]);
+            self.set_acc(self.code[ea as usize]);
             return;
         }
 
@@ -1265,7 +1265,6 @@ impl Cpu8051 {
         // RETI  (0x32) — return from interrupt (same as RET for behavioural sim)
         if opcode == 0x32 {
             self.pop_pc();
-            return;
         }
 
         // Unknown opcode — silently skip (undefined on real 8051)

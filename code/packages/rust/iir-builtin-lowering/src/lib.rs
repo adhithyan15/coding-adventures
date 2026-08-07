@@ -114,11 +114,14 @@
 pub mod error;
 pub mod numeric;
 pub mod heap;
-pub mod lisp_repr;
-pub mod lisp_repr_structural;
+pub mod dyn_repr;
+pub mod dyn_repr_structural;
 pub mod symbol_intern;
 pub mod global_io;
 pub mod closure;
+pub mod dynamic_arith;
+pub mod list_ops;
+pub mod closure_heap;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -132,35 +135,39 @@ pub use error::BuiltinLoweringError;
 pub use heap::lower_heap_builtins;
 // Re-export the native runtime-call heap lowering (LANG77) — the target-aware
 // counterpart of `lower_heap_builtins` that routes cons/car/cdr to the linked
-// C lisp runtime (`__twig_lispy_*`) instead of inline `alloc`/`field_*`.
+// C lisp runtime (`__dyn_*`) instead of inline `alloc`/`field_*`.
 // Used by `twig-aot` for the native backends.
 pub use heap::lower_heap_builtins_runtime;
 // Re-export the type-directed lisp-value representation pass (LANG77 / L3b-2c):
 // boxes integer atoms that flow into `lispy_*` calls and unboxes the program
 // result, so native lisp values carry their NaN-box tag.  Runs after
 // `lower_heap_builtins_runtime`; a no-op for non-lisp modules.
-pub use lisp_repr::lower_lisp_repr;
+pub use dyn_repr::lower_dyn_repr;
 // Re-export the *structural* lisp-value representation pass (LANG77 / L3b-3a-3c):
-// the managed-backend (wasm/jvm/clr/beam) twin of `lower_lisp_repr`. Boxes
+// the managed-backend (wasm/jvm/clr/beam) twin of `lower_dyn_repr`. Boxes
 // integer atoms stored into cons fields as `i31ref` (`box`) and unboxes the
 // entry function's reference result (`unbox`), so the uniform-anyref value model
 // is concretely typed. Runs after `lower_heap_builtins`; a no-op for functions
 // that touch no heap op.
-pub use lisp_repr_structural::lower_lisp_repr_structural;
+pub use dyn_repr_structural::lower_dyn_repr_structural;
 // Re-export the compile-time symbol interning pass (LANG77 / L3b-2c-3):
 // rewrites `const Var(name):symbol` → the tagged immediate `(id<<32)|TAG_SYMBOL`
 // so native symbols carry identity (for `EQ`) without runtime interning.
-// Runs before `lower_lisp_repr`.
+// Runs before `lower_dyn_repr`.
 pub use symbol_intern::intern_symbols;
 // The managed-backend (uniform-reference) symbol interner (LANG77 / McCarthy
 // W1): interns symbol literals to distinct integers in a reserved range so they
 // box as `i31ref`s and `EQ` compares them with `i32.eq`. Twin of
-// `intern_symbols`. Run before `lower_lisp_repr_structural`.
+// `intern_symbols`. Run before `lower_dyn_repr_structural`.
 pub use symbol_intern::intern_symbols_structural;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).
 pub use closure::lower_closure_builtins;
+pub use dynamic_arith::lower_dynamic_arith;
+pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
+pub use list_ops::lower_list_ops;
+pub use closure_heap::lower_closures_to_heap;
 
 use interpreter_ir::IIRModule;
 

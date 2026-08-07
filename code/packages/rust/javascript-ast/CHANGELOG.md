@@ -2,6 +2,166 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.42.0] - 2026-07-14
+
+### Added — `FunctionParam::AssignmentPattern` (`name = expr` default parameter) — CLOC12.191 PR1
+
+New `AssignmentPattern` struct (`left: Identifier`, `right: Expression`) + a `FunctionParam::AssignmentPattern`
+variant so a default-valued parameter (`function f(a = 1){}`) is representable. The `#[serde(untagged)]`
+`FunctionParam` tells it apart from a plain identifier (`name`) and a rest element (`argument`) by its
+`left`/`right` shape — no `type` tag. `binding_identifier()`/`binding_identifier_mut()` return the `left`
+name for this variant; two new accessors — `default_value()`/`default_value_mut()` — expose the `right`
+expression so the folding, renaming, and inlining passes can walk and rewrite the default as live code
+(`function f(a = 1 + 2)` → `function f(a = 3)`), unlike a rest element whose only payload is a bound name.
+Additive; MINOR.
+
+## [0.41.0] - 2026-07-14
+
+### Added — `FunctionParam::RestElement` (`...name` rest parameter) — CLOC12.190 PR1
+
+New `RestElement` struct (`argument: Identifier`) + a `FunctionParam::RestElement` variant so a trailing
+rest parameter (`function f(a, ...rest){}`) is representable. The `#[serde(untagged)]` `FunctionParam`
+tells it apart from a plain identifier by shape (`argument` vs `name`). Adds
+`FunctionParam::binding_identifier()`/`binding_identifier_mut()` accessors yielding the single bound name
+for either variant so passes treat params uniformly. Additive; MINOR.
+
+## [0.40.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: ES-module export declarations
+
+Three new `Declaration` variants (ESTree-shaped), completing the Phase-4
+module-level set alongside `ImportDeclaration`:
+  - `ExportNamedDeclaration { cv, declaration: Option<Box<Declaration>>,
+    specifiers: Vec<ExportSpecifier>, source: Option<StringLiteral> }` — models
+    `export { a, b as c }`, `export { a } from "y"` (re-export), and
+    `export const x = 1` / `export function f(){}` / `export class C {}`
+    (declaration export, via the boxed self-referential `declaration`).
+  - `ExportSpecifier { local, exported }` (`export { a as c }` → local `a`,
+    exported `c` — the mirror of `ImportSpecifier::Named`).
+  - `ExportDefaultDeclaration { cv, declaration: ExportDefaultKind }` where
+    `ExportDefaultKind` = `Expression | FunctionDeclaration | ClassDeclaration`
+    (`export default <expr | function | class>`).
+  - `ExportAllDeclaration { cv, exported: Option<Identifier>, source }` —
+    `export * from "y"` (`export * as ns` is grammar-gated; the `exported`
+    field models the full ESTree shape).
+
+Four convenience constructors + four roundtrip tests. Not yet produced by the
+parser bridge (a follow-up PR wires `convert_export_declaration` with the
+renaming-soundness gate exports demand — an exported name is the module's public
+surface); this PR only adds the types so the pass pipeline traverses them
+exhaustively.
+
+## [0.39.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: ES-module `import` declarations
+
+New `ImportDeclaration { cv, specifiers, source }` struct and a
+`Declaration::ImportDeclaration(ImportDeclaration)` variant (ESTree
+`ImportDeclaration`), plus the `Declaration::import_declaration` convenience
+constructor. A companion `ImportSpecifier` enum models the three binding shapes:
+`Default(Identifier)` (`import x from …`), `Namespace(Identifier)`
+(`import * as ns from …`), and `Named { imported, local }` (`import { a } from …`
+/ `import { a as c } from …`). A side-effect `import "y"` carries an empty
+`specifiers` vector. The node is **not** yet produced by the parser bridge (a
+follow-up PR wires `convert_import_declaration` together with the
+renaming-soundness gate that imports demand — an imported local name references a
+foreign module's export and must not be renamed); this PR only adds the type so
+the whole pass pipeline can traverse it exhaustively. New
+`import_declaration_all_specifier_kinds_roundtrip` and
+`side_effect_import_has_empty_specifiers` tests.
+
+## [0.38.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: `with (obj) { … }` statement
+
+New `WithStatement { cv, object, body }` struct and a
+`TaggedStatement::WithStatement(WithStatement)` variant (ESTree `WithStatement`),
+plus the `Statement::with_statement` convenience constructor. Models the legacy
+`with` scope-injection statement — the last unmodelled self-contained statement
+node. The node is **not** yet produced by the parser bridge (a follow-up PR
+wires it, together with the scope-analyzer renaming-soundness bailout that `with`
+demands — renaming a binding inside a `with` body is unsound); this PR only adds
+the type so the whole pass pipeline can traverse it exhaustively. New
+`with_statement_roundtrips` test.
+
+## [0.37.0] - 2026-07-11
+
+### Added — CLOC12.183: ES2021 logical assignment operators
+
+Added three variants to `AssignmentOperator`, retiring the "Phase 5" TODO:
+`LogicalAndEq` (`&&=`), `LogicalOrEq` (`||=`), and `NullishCoalescingEq`
+(`??=`), each with its ESTree serde `rename`. These short-circuiting operators
+were the last unmodelled compound-assignment forms; the parser bridge and
+emitter now recognise them (see those crates' 0.47.0 / 0.42.0 entries).
+
+## [0.36.0] - 2026-07-11
+
+### Added — CLOC12.177 PR1: private class-member names (`#x` / `#m()`)
+
+New `PrivateName { cv, name }` struct and a `PropertyKey::PrivateName(PrivateName)`
+variant — the key of a private class field (`#x = 1`) or method (`#m(){}`),
+ESTree's `PrivateIdentifier`. The `name` holds the bare name **without** the
+leading `#` (mirroring `Identifier`); the emitter prepends it.
+
+Because `PropertyKey` is `#[serde(untagged)]`, a bare `{ cv, name }` `PrivateName`
+would be structurally identical to an `Identifier` and the deserializer would
+silently pick whichever variant comes first (a `#x` key round-tripping back as a
+plain `x` — data loss). The payload therefore serializes under the distinct key
+`private_name` (`#[serde(rename)]`), giving the variant a unique required field;
+the Rust field stays `name` for API symmetry. Two round-trip tests pin this.
+
+MINOR. Member *access* (`this.#x`) is a distinct later node.
+
+## [0.35.0] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` (static initialization blocks)
+
+`ClassMember` grows a third variant beside `Method` and `Field`:
+
+- `ClassMember::StaticBlock(BlockStatement)` models a `static { … }` block — a
+  statement list that runs once at class-definition time. It has no name, key,
+  param list, or initializer, so the variant wraps the existing `BlockStatement`
+  (its body is exactly a `Vec<Statement>`) rather than re-modelling it.
+
+3 roundtrip tests (empty block / block with a statement / static block interleaved
+with a field).
+
+## [0.34.0] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` (class fields / `PropertyDefinition`)
+
+The class-body member enum `ClassMember` grows a second variant beside `Method`:
+
+- `ClassMember::Field(PropertyDefinition)` models a class field
+  `[static] key [= initializer];`.
+- `PropertyDefinition { cv, key: PropertyKey, value: Option<Expression>, computed, is_static }`
+  — a bare field (`x;`) has `value: None`; an initialized field (`x = 1;`) carries
+  the initializer. The `key` reuses the existing `PropertyKey` (so a computed
+  `[expr]` field is `PropertyKey::Expression`), and `is_static` serializes as the
+  JSON key `static`.
+
+Reuses `PropertyKey` from the method form — no new key modelling. Four roundtrip
+tests cover initialized / bare / static / computed-key fields.
+
+## [0.33.0] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `ClassDeclaration` node (the class *statement*)
+
+The declaration half of the class arc whose *expression* form shipped in 0.32.0
+(CLOC12.173). New `Declaration` variant `ClassDeclaration(ClassDeclaration)`:
+
+- `ClassDeclaration { cv, id: Identifier, super_class: Option<Box<Expression>>, body: Vec<ClassMember> }`
+  — `class C [extends S] { members }` in statement position.
+- **Reuses** `ClassMember` / `MethodDefinition` / `MethodKind` from the expression
+  form — no new member modelling.
+- The one structural difference from `ClassExpression`: `id` is `Identifier`
+  (required), not `Option<Identifier>` — a class declaration must bind a name
+  (`class {}` in statement position is a syntax error), exactly as
+  `FunctionDeclaration.id` is required where `FunctionExpression.id` is optional.
+
+Round-trip tests cover the `ClassDeclaration` type tag and the ESTree
+`superClass` camelCase field (present with heritage, omitted without).
+
 ## [0.32.0] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` node + class member sub-AST

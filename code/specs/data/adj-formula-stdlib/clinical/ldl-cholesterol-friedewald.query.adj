@@ -1,0 +1,41 @@
+% ============================================================================
+% ldl-cholesterol-friedewald.query.adj — worked lookups over the Friedewald LDL equation.
+% ============================================================================
+% The shape a consumer produces to estimate LDL cholesterol from a fasting lipid panel: it
+% `import`s the grounded library, `observe`s the total cholesterol, HDL and triglycerides it
+% decomposed from its own source bytes, and asks the engine to APPLY the cited equation. No
+% arithmetic is stated by the consumer (and no constant — the /5 lives in the cited equation,
+% not the query); the engine computes the exact value WITH the StatPearls citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (total cholesterol = 200 mg/dL, HDL-C = 50 mg/dL, triglycerides = 150 mg/dL):
+%
+%   ? ldl_cholesterol(total_cholesterol, hdl_cholesterol, triglycerides)   % 120  (200 − 50 − 150/5, LDL-C = TC − HDL − TG/5)
+%
+% and the same one equation, inverted the three other ways:
+%
+%   ? total_cholesterol(ldl_cholesterol, hdl_cholesterol, triglycerides)   % 200  (120 + 50 + 150/5, TC = LDL + HDL + TG/5)
+%   ? hdl_cholesterol(total_cholesterol, ldl_cholesterol, triglycerides)   % 50   (200 − 120 − 150/5, HDL = TC − LDL − TG/5)
+%   ? triglycerides(total_cholesterol, hdl_cholesterol, ldl_cholesterol)   % 150  (5·(200 − 50 − 120), TG = 5·(TC − HDL − LDL))
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ldl-cholesterol-friedewald.query.adj
+% ============================================================================
+
+import "ldl-cholesterol-friedewald.adj"
+
+% Forward: the Friedewald LDL estimate from the fasting panel.
+observe total_cholesterol(200)
+observe hdl_cholesterol(50)
+observe triglycerides(150)
+? ldl_cholesterol(total_cholesterol, hdl_cholesterol, triglycerides)   % expect 120
+
+% Inverse 1: the total cholesterol the other three imply.
+observe ldl_cholesterol(120)
+? total_cholesterol(ldl_cholesterol, hdl_cholesterol, triglycerides)   % expect 200
+
+% Inverse 2: the HDL the other three imply.
+? hdl_cholesterol(total_cholesterol, ldl_cholesterol, triglycerides)   % expect 50
+
+% Inverse 3: the triglycerides the other three imply (the /5 becomes a ×5).
+? triglycerides(total_cholesterol, hdl_cholesterol, ldl_cholesterol)   % expect 150

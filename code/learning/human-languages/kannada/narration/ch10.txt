@@ -1,0 +1,34 @@
+Kannada, chapter 10: Days of the Week.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+ಸೋಮವಾರ to ಭಾನುವಾರ — the Sanskrit week.
+
+Warm-up.
+[pause 2 seconds]
+Unlike Tamil and Malayalam, Kannada's week is built entirely from Sanskrit — the same recipe as Hindi's. But even here, one day picks a different Sanskrit word than Hindi does.
+
+You'll want to know: The pattern: [deity] + ವಾರ, "day".
+[a table of 7 rows, read aloud]
+Kannada: ಸೋಮವಾರ (Somavāra). deity/planet: Moon (Soma). day: Monday.
+Kannada: ಮಂಗಳವಾರ (Maṅgaḷavāra). deity/planet: Mars (Maṅgala). day: Tuesday.
+Kannada: ಬುಧವಾರ (Budhavāra). deity/planet: Mercury (Budha). day: Wednesday.
+Kannada: ಗುರುವಾರ (Guruvāra). deity/planet: Jupiter (Guru/Bṛhaspati). day: Thursday.
+Kannada: ಶುಕ್ರವಾರ (Śukravāra). deity/planet: Venus (Śukra). day: Friday.
+Kannada: ಶನಿವಾರ (Śanivāra). deity/planet: Saturn (Śani). day: Saturday.
+Kannada: ಭಾನುವಾರ (Bhānuvāra). deity/planet: the Sun (Bhānu, "light, splendor"). day: Sunday.
+Five of these are identical in shape to Hindi's — same deity, same ‑vāra/ ‑vār ending. Sunday is the interesting exception: where Hindi says रविवार (Ravivār, from Ravi, "sun"), Kannada says ಭಾನುವಾರ (Bhānuvāra), built on a different Sanskrit word for the sun — Bhānu, "light, splendor," rather than Ravi. Sanskrit has many names for the sun, and different languages downstream picked different ones for their week.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Somavāra, Maṅgaḷavāra, Budhavāra, Guruvāra, Śukravāra, Śanivāra" — Monday through Saturday]
+[pause 8 seconds for the answer]
+[your turn — say: the different one — "Bhānuvāra," Sunday]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — Hindi says Ravivāra (Ravi), Kannada says Bhānuvāra (Bhānu) — two different Sanskrit sun-names]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What ending does every Kannada weekday share, and where's it from? (‑ವಾರ -vāra, Sanskrit "day.") Which day differs from Hindi's version, and how? (Sunday — Kannada's Bhānuvāra ("light") uses a different Sanskrit sun-name than Hindi's Ravivār ("Ravi").)

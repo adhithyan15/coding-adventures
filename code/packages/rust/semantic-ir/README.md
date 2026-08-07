@@ -51,6 +51,11 @@ use semantic_ir::{
     print_module, print_expr,
     // SIR22: array/matrix IR extension
     ElementwiseOpKind, IndexArg,
+    // SIR23 (symbolic expression + pattern/rewrite IR extension) adds no
+    // new standalone type — its seven nodes are `Expr` variants
+    // (`SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll`), already covered by the
+    // `Expr` re-export above.
 };
 ```
 
@@ -82,12 +87,14 @@ What's covered:
 - MakeClosure
 - Intrinsic with escape-hatch discipline
 - SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional,
-  NDArray, Rational, Complex)
+  NDArray, Rational, Complex, SymExpr)
   — SIR21: `Int` carries an `IntSpec { width, signed, overflow }`; `Dynamic` (was `Any`) is the top type;
   `Ptr`/`Struct`/`Optional` (T1b) are source-fidelity types for typed frontends
   — SIR22: `NDArray { elem, rank }` is a dense N-D numeric array (rank `None` = unknown/dynamic);
-  `Rational`/`Complex` are exact-rational and complex scalar carriers, shared with the future SIR23
+  `Rational`/`Complex` are exact-rational and complex scalar carriers, shared with the SIR23
   symbolic-math extension
+  — SIR23: `SymExpr` is an opaque symbolic-expression handle with no static shape (the shape lives
+  in the `Expr` tree, not the type carrier)
 - SIR22 array/matrix nodes (additive, numeric-array languages — MATLAB/Octave and future
   APL/J/K/Scilab/IDL frontends): `Expr::ArrayLit` (matrix literal `[1 2; 3 4]`), `Expr::Range`
   (`1:5`, `0:2:10`), `Expr::MatMul`, `Expr::ElementwiseOp` (the five dotted ops `.+ .- .* ./ .^`
@@ -97,6 +104,16 @@ What's covered:
   `NDArrays`/`MatrixOps`/`Rationals`/`Complex`/`ArrayColumnMajor`. Every new node kind maps 1:1 onto
   an `array_runtime::execute()` op shape — see
   [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
+- SIR23 symbolic expression + pattern/rewrite nodes (additive, symbolic-CAS math languages —
+  Wolfram/Macsyma/Maxima and future Reduce/Derive/Maple frontends): `Expr::SymSymbol` (a bare
+  symbol used as data), `Expr::SymRational` (exact rational scalar), `Expr::SymApply`
+  (`head[args…]` as data — `head` is a full `Expr`, since a *computed* head like `f[x][y]` is
+  legal Wolfram), `Expr::SymPatternBlank` (`_` / `_h`), `Expr::SymPatternNamed` (`x_` / `x_h`),
+  `Expr::SymRule` (`->` / `:>` via a `delayed` flag), `Expr::SymReplaceAll` (`/.` / `//.` via a
+  `repeated` flag). No new `Stmt` — every node is `Pure`. New features: `SymbolicExpr`/
+  `PatternMatching` (`Rationals` is reused from SIR22). Every node maps 1:1 onto
+  `symbolic_ir::IRNode`'s five-variant shape — see
+  [SIR23](../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
 - `int_const` — the `int.max`/`int.min`/`int.width` reflection const-intrinsics (T3a);
   pure, const-folding functions of an `IntSpec` (`IntConst::eval`), `None` for arbitrary-precision
 - `op_select` — type-directed op selection (T3c): `resolve_binary(op, lhs, rhs)` chooses
@@ -113,10 +130,14 @@ What's deferred to later versions:
 - Ownership / borrow markers
 - Async / await / coroutines
 - Exception handling (Raise / Try / Catch)
-- Pattern matching (Match)
 - Records / unions / type aliases
 - The stdlib primitive set beyond Twig needs
 - Text format parser (round-trip via printer only in v0)
+- Symbolic pattern-matching / rewrite-rule **execution**: SIR23 lands the
+  IR vocabulary (`Expr::SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+  `SymReplaceAll`), but no backend implements the matcher yet — that's
+  `sir-runtime-symbolic`, a separate future package (see the SIR23 spec's
+  "Backend impact")
 
 ## Related crates
 

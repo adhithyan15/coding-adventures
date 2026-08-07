@@ -1,0 +1,99 @@
+% ============================================================================
+% total-lung-capacity.adj — the definition of the total lung capacity
+% (total lung capacity = vital capacity + residual volume) in the ADJ standard library.
+% ============================================================================
+% The total-lung-capacity entry of the *clinical* track, a respiratory-physiology library.
+% Where the hemodynamics libraries ground pressure differences and ratios, this grounds a
+% respiratory SUM: THE TOTAL LUNG CAPACITY IS THE VITAL CAPACITY PLUS THE RESIDUAL VOLUME —
+% the greatest volume the lungs hold at the end of a maximal inspiration (TLC) is the volume a
+% person can move between a maximal inspiration and a maximal expiration (the vital capacity,
+% VC) plus the volume that CANNOT be exhaled and always remains behind (the residual volume,
+% RV). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its
+% two exact rearrangements (the vital capacity a total capacity leaves once the residual volume
+% is taken out, and the residual volume a total capacity leaves once the vital capacity is taken
+% out). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the measured quantities from its own byte-provenance decomposition, and asks the engine
+% to APPLY the cited definition on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "total-lung-capacity.adj"
+%     observe vital_capacity(4)          % "…vital capacity 4 L…"     (span cited by the model)
+%     observe residual_volume(2)         % "…residual volume 2 L…"    (span cited by the model)
+%     ? total_lung_capacity(vital_capacity, residual_volume)
+%                                         % engine → 6, carrying TLC = VC + RV
+%
+% All three formulas are EXACT over their parameters (a sum and two of its inverse readings),
+% so every value the engine returns is exact. The three COMPOSE and invert cleanly around the
+% worked case VC = 4 L, RV = 2 L (TLC = 4 + 2 = 6 L): the `total_lung_capacity` a consumer
+% computes from the two volumes is exactly the `total_lung_capacity` the `vital_capacity`
+% formula subtracts the residual volume from, to recover the 4 L vital capacity, and exactly
+% the `total_lung_capacity` the `residual_volume` formula subtracts the vital capacity from to
+% recover the 2 L residual volume.
+%
+%   total_lung_capacity(vital_capacity, residual_volume)
+%       = vital_capacity + residual_volume        % TLC = VC + RV   (definition)
+%   vital_capacity(total_lung_capacity, residual_volume)
+%       = total_lung_capacity - residual_volume   % VC = TLC − RV   (same def, solved for VC)
+%   residual_volume(total_lung_capacity, vital_capacity)
+%       = total_lung_capacity - vital_capacity    % RV = TLC − VC   (same def, solved for RV)
+%
+% NOTE ON UNITS: the three volumes must be in the SAME unit (all litres, as in the worked case),
+% and the total lung capacity comes out in that same unit (here 6 L). This library computes the
+% exact value over whatever consistent volume unit it is given.
+%
+% All three formulas are defended by the SAME defining span — "the sum of vital capacity and the
+% residual volume: TLC = VC + RV" — because that one definition (the total lung capacity IS the
+% vital capacity plus the residual volume) sanctions the relation read every way (the total from
+% the two volumes, the vital capacity from the total and the residual volume, or the residual
+% volume from the total and the vital capacity). The span is transcribed verbatim from the
+% StatPearls "Physiology, Lung Capacity" article on the NCBI Bookshelf, so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the defining span is a verbatim quote
+% of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable respiratory volume the definition ranges over,
+% and each result is a derived volume. `total_lung_capacity`, `vital_capacity` and
+% `residual_volume` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term; the trailing comment records
+% the intended unit.
+% ----------------------------------------------------------------------------
+dictionary total_lung_capacity_vocab {
+    define vital_capacity        : finding  surface "vital capacity", "VC"           % litres (L)
+    define residual_volume       : finding  surface "residual volume", "RV"          % litres (L)
+    define total_lung_capacity   : finding  surface "total lung capacity", "TLC"     % litres (L)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining span from StatPearls on
+% the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact sum/difference
+% of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook total_lung_capacity_laws {
+    use total_lung_capacity_vocab
+
+    % Total lung capacity — the vital capacity plus the residual volume, i.e. TLC = VC + RV.
+    formula total_lung_capacity(vital_capacity, residual_volume) = vital_capacity + residual_volume
+        source "the sum of vital capacity and the residual volume: TLC = VC + RV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Vital capacity — the same definition solved for the vital capacity a total capacity leaves
+    % once the residual volume is removed (VC = TLC − RV). Defended by the SAME defining span,
+    % read the other way.
+    formula vital_capacity(total_lung_capacity, residual_volume) = total_lung_capacity - residual_volume
+        source "the sum of vital capacity and the residual volume: TLC = VC + RV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Residual volume — the same definition solved for the residual volume a total capacity
+    % leaves once the vital capacity is removed (RV = TLC − VC). Again the SAME defining span,
+    % read the third way.
+    formula residual_volume(total_lung_capacity, vital_capacity) = total_lung_capacity - vital_capacity
+        source "the sum of vital capacity and the residual volume: TLC = VC + RV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+}

@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 120 \u2014 ventilation index from four stated quantities (a NEW panel: pulmonology spirometry / ventilation). From a minute-ventilation product (a tidal volume times a breath rate) divided by a clearance-demand product (a deadspace ratio times a cycle count), compute the ventilation index (tidal_volume*breath_rate/(deadspace_ratio*cycle_count)), the minute ventilation (tidal_volume*breath_rate), or the clearance demand (deadspace_ratio*cycle_count). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a PRODUCT OVER A PRODUCT a*b/(c*d) (multiply the tidal volume and breath rate, multiply the deadspace ratio and cycle count, divide the minute ventilation by that whole clearance demand, so a*b/(c*d) = ((a*b)/(c*d)); the ladder's FIRST ratio with a product on BOTH sides of the bar. Every two-term ratio with a product before rung-120 had the product on ONE side only (99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), 106 a*b/(c-d)) \u2014 rung-120 is the first product-over-product. The harness matches the scalar to the printed options. The ventilation index is a rate (minute ventilation per unit of clearance demand), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via * and / \u2014 no constant leaks, and neither the minute ventilation, the clearance demand, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the deadspace ratio divides (a*b/c*d, a wrong grouping) and moving the breath rate out of the numerator and under the bar (a/(b*c*d), a wrong pairing). The core confusion tested is that a*b/(c*d) is ((a*b)/(c*d)), not a*b/c*d and not a/(b*c*d). This rung is all multiplication and division of positive quantities so positivity is automatic; with every observed quantity >= 2 the tables keep the five family values pairwise distinct and all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r120ps-01",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 6 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 3. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(6)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(3)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r120ps-02",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 6 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 3. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(6)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(3)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r120ps-03",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 6 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 3. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(6)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(3)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r120ps-04",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 3 divided by a deadspace ratio of 2 times a cycle count of 4. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(3)\nobserve deadspace_ratio(2)\nobserve cycle_count(4)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r120ps-05",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 3 divided by a deadspace ratio of 2 times a cycle count of 4. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(3)\nobserve deadspace_ratio(2)\nobserve cycle_count(4)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r120ps-06",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 3 divided by a deadspace ratio of 2 times a cycle count of 4. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(3)\nobserve deadspace_ratio(2)\nobserve cycle_count(4)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r120ps-07",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 8 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 5. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(8)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(5)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r120ps-08",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 8 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 5. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(8)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(5)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r120ps-09",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 8 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 5. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(8)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(5)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r120ps-10",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 3 divided by a deadspace ratio of 3 times a cycle count of 4. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(3)\nobserve deadspace_ratio(3)\nobserve cycle_count(4)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r120ps-11",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 3 divided by a deadspace ratio of 3 times a cycle count of 4. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(3)\nobserve deadspace_ratio(3)\nobserve cycle_count(4)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r120ps-12",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 3 divided by a deadspace ratio of 3 times a cycle count of 4. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(3)\nobserve deadspace_ratio(3)\nobserve cycle_count(4)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r120ps-13",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 7 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 7. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(7)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(7)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 98.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r120ps-14",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 7 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 7. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(7)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(7)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 98.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r120ps-15",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 7 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 7. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(7)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(7)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 98.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r120ps-16",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 8. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(8)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.15625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r120ps-17",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 8. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(8)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.15625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r120ps-18",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 10 times a breath rate of 4 divided by a deadspace ratio of 2 times a cycle count of 8. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(10)\nobserve breath_rate(4)\nobserve deadspace_ratio(2)\nobserve cycle_count(8)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.15625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r120ps-19",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 4 divided by a deadspace ratio of 3 times a cycle count of 6. What is the ventilation index (the minute ventilation divided by the clearance demand)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(4)\nobserve deadspace_ratio(3)\nobserve cycle_count(6)\nlet answer = tidal_volume * breath_rate / (deadspace_ratio * cycle_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r120ps-20",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 4 divided by a deadspace ratio of 3 times a cycle count of 6. What is the the minute ventilation (the tidal volume times the breath rate, the numerator divided by the clearance demand)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(4)\nobserve deadspace_ratio(3)\nobserve cycle_count(6)\nlet answer = tidal_volume * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r120ps-21",
+      "qtype": "ventilation_index",
+      "stem": "A spirometry report records a tidal volume of 12 times a breath rate of 4 divided by a deadspace ratio of 3 times a cycle count of 6. What is the the clearance demand (the deadspace ratio times the cycle count, the divisor the minute ventilation is divided by)?",
+      "program": "observe tidal_volume(12)\nobserve breath_rate(4)\nobserve deadspace_ratio(3)\nobserve cycle_count(6)\nlet answer = deadspace_ratio * cycle_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

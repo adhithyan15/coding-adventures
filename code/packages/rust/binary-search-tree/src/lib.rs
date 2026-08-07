@@ -154,9 +154,7 @@ pub fn bst_delete<T: Ord + Clone>(
     root: Option<Box<BSTNode<T>>>,
     value: &T,
 ) -> Option<Box<BSTNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     match value.cmp(&node.value) {
         Ordering::Less => {
@@ -243,10 +241,10 @@ pub fn bst_successor<'a, T: Ord>(
     best
 }
 
-pub fn bst_kth_smallest<'a, T: Ord>(
-    root: &'a Option<Box<BSTNode<T>>>,
+pub fn bst_kth_smallest<T: Ord>(
+    root: &Option<Box<BSTNode<T>>>,
     k: usize,
-) -> Option<&'a T> {
+) -> Option<&T> {
     if k == 0 {
         return None;
     }

@@ -5,6 +5,172 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.1.4] — 2026-08-05
+
+Repo-wide audit follow-up: while implementing the first `c/zstd` port
+(PR #9941), that effort found a second, independent gap in the sequence
+decoder — separate from Lesson 96's FSE-codec bug class fixed in 0.1.3 —
+and traced it into every other language port, including this one. See
+lessons.md Lesson 98 for the full incident report.
+
+### Fixed
+
+- **Decoder never implemented Repeated-Offset (R1/R2/R3) sequence decoding**
+  (RFC 8878 §3.1.1.3.2.1.1). `apply_sequences/14` computed
+  `offset = of_raw - 3` for every sequence, treating offset codes 1–3 as a
+  literal (and, for `of_raw` in `{1, 2, 3}`, *negative*) distance instead of
+  a reference into the 3-slot Repeated_Offset history (`R1`/`R2`/`R3`,
+  default `1`/`4`/`8`). Real `zstd` encoders use repeat offsets constantly —
+  one of their principal entropy wins, especially on periodic or
+  highly-repetitive data — so any `.zst` frame from the real CLI using this
+  mechanism would either crash (`:binary.at/2` `ArgumentError` from the
+  negative offset slipping past the `offset == 0 or offset > out_len` guard
+  — confirmed by temporarily reverting the fix and re-running the new test
+  below) or silently decode wrong bytes if it didn't crash. This package's
+  own encoder never emits repeat-offset codes (by design — minimum LZ77
+  match offset is 1, so `raw_off = offset + 3 >= 4` always), and TC-9's
+  fixed prose/pattern corpus never happened to trigger the real CLI's use
+  of the mechanism either, so no test in this package's history had ever
+  exercised the decode path.
+  - Fixed by threading three frame-scoped Repeated_Offset registers
+    (`rep1`/`rep2`/`rep3`, defaulting to `1`/`4`/`8`) through
+    `decompress_blocks/6` → `decompress_block/5` → `decompress_block_seqs/8`
+    → `apply_sequences/14`. Raw and RLE blocks pass the registers through
+    unchanged (they carry no sequences); every Compressed block's sequences
+    both consume and update them, offset code `>= 2` (explicit) alike with
+    the repeat case.
+  - Offset_Value → actual offset now follows RFC 8878 exactly, including
+    the "when Literals_Length is 0, repeated offsets are shifted by 1"
+    special case: `selector = ll_is_zero + of_raw - 1` where `of_raw in {1,
+    2, 3}` selects, respectively, "reuse R1 unchanged", "use R2 (swap with
+    R1)", "use R3 (full rotate)", or "use R1 − 1 (full rotate)".
+  - Cross-checked against three independent sources before implementing, per
+    the Lesson-96 playbook of not trusting any single one: RFC 8878
+    §3.1.1.3.2.1.1's prose (fetched directly), the real `ZSTD_decodeSequence`
+    reference C source (`zstd_decompress_block.c` from
+    github.com/facebook/zstd, fetched directly), and PR #9941's
+    already-reviewed `code/packages/c/zstd` fix — all three agree on the
+    exact selector mapping and register-rotation shape used here.
+
+### Added
+
+- **Repeat-offset interop test** (`test/zstd_test.exs`): compresses a
+  constant-byte run (the Lesson-98 minimal repro — 4713 bytes of `'Z'`,
+  which the real `zstd` CLI encodes as a Compressed block with one
+  Offset_Value=1 sequence rather than the RLE block type this port's own
+  encoder would choose), a fixed-distance repeating pattern (this package's
+  spec `CMP07-zstd.md` TC-8 shape), and two more repeat-offset-prone shapes,
+  with the real `zstd` CLI, then decodes them with `decompress/1`. Confirmed
+  this test fails (crashes with an `ArgumentError` from the underflowed
+  offset) against the pre-fix decoder before the fix was applied, and
+  passes after. A companion test round-trips the same inputs through this
+  package's own encoder/decoder pair for regression coverage of the
+  ordinary explicit-offset path (not evidence of the repeat-offset decode
+  path, since this package's own encoder never emits it).
+- Corrected a stale comment in the TC-9 test group that had claimed
+  repeat-offset inputs were "a pre-existing, spec-documented limitation" per
+  `code/specs/CMP07-zstd.md`'s "Educational Simplification" note — that
+  table lists no such carve-out; the limitation was an undocumented decoder
+  gap, now fixed.
+
+## [0.1.3] — 2026-08-03
+
+Repo-wide audit follow-up: a sibling effort fixing `java/zstd` (PR #9780,
+rescuing it from a stale branch and running it against the real `zstd` CLI
+for the first time) discovered a real RFC 8878 conformance bug in the
+sequences-section FSE codec, later confirmed also present in `rust/zstd`.
+This release audits and fixes the same bug class here. See lessons.md
+Lesson 96 (FSE codec) and Lesson 95 (FHD checksum-flag bit) for full detail.
+
+### Fixed
+
+- **Three compounding bugs in the sequences-section FSE codec**, found by
+  cross-checking against the real `zstd` CLI (new TC-9 test below) and the
+  reference C source (`fse.h` / `fse_decompress.c` /
+  `zstd_decompress_block.c` from github.com/facebook/zstd). All three were
+  invisible to every prior test in this package, because encoder and
+  decoder were wrong in the same self-consistent way — internal round-trip
+  tests can never catch a systematic, symmetric protocol deviation, only an
+  independent reference implementation can:
+  1. `build_decode_table/2` and `build_encode_sym/2` used a fabricated
+     two-pass symbol-table spread ("count > 1 first, then count == 1")
+     instead of the real single pass over symbols in ascending index order
+     (`FSE_buildDTable_internal`'s actual algorithm). There is no
+     correctness reason for the count>1-vs-count==1 split — it was a
+     spurious deterministic-looking convention with no basis in the
+     reference algorithm.
+  2. Per-sequence field order was wrong on both sides. The real decoder:
+     PEEKS all 3 FSE symbols (LL, ML, OF) from the current states first
+     (a bare table lookup — consumes NO bits), THEN reads extra bits in
+     order Offset, Match_Length, Literals_Length, THEN updates FSE states
+     (consuming bits) in order Literals_Length, Match_Length, Offset. The
+     initial states (read once, before any sequences) are read in order LL,
+     OF, ML — a DIFFERENT order from the per-sequence update order; RFC
+     8878 is asymmetric here. This package previously fused "peek" and
+     "state update" into one step (in the wrong order, LL/OF/ML) and read
+     extra bits before doing so, corrupting the bitstream position for
+     every stream that followed the first sequence.
+  3. The FSE state-transition update must be SKIPPED for the LAST sequence
+     in a block — there is no "next" sequence to prepare a state for, and
+     symmetrically the encoder must never flush bits for that non-existent
+     transition. Added `fse_init_state/3` (mirrors the real zstd reference's
+     `FSE_initCState2`), which derives the encoder's starting state directly
+     from a symbol via a rounding formula (`(delta_nb + 2^15) >>> 16`)
+     instead of the normal `(state + delta_nb) >>> 16` transition, writing
+     no bits. `apply_sequences/11` now skips the state-update read on the
+     decode side's last iteration (`remaining == 1`) to match.
+  - Confirmed this bug class also reproduced against `rust/zstd` with the
+    same minimal repro (`compress("ababababab" * 3)`, one sequence:
+    ll=2, ml=28, offset=2) before this fix — not an Elixir-specific porting
+    mistake. Flagged as a follow-up for the remaining `zstd` ports.
+- **Frame Header Descriptor `Content_Checksum_Flag` bit position**: the
+  comment above the encoder's fixed FHD byte (`0xE0`) mislabelled bit 4 as
+  `Content_Checksum_Flag` (it is actually `Unused_bit`; the real checksum
+  flag is bit 2, per RFC 8878 §3.1.1.1 and verified empirically —
+  `zstd -c file` emits FHD `0x64`, `zstd -c --no-check file` emits FHD
+  `0x60`, differing at bit 2). Since `0xE0` already has both bits clear,
+  this was comment-only and never caused a wire-format bug in this package;
+  fixed the documentation to prevent the mistake from spreading if
+  checksum support is ever added. No functional change.
+
+### Added
+
+- **TC-9 (CLI interoperability)**: two new tests exercise the real `zstd`
+  CLI binary via `System.cmd/3`, in both directions (compress here,
+  decompress with `zstd -d`; and compress with `zstd`, decompress here),
+  gracefully skipped when `zstd` isn't found on `PATH`. This is the test
+  that would have caught (and, once written, did catch) the FSE bug above —
+  every existing test in this package only ever round-tripped through our
+  own encoder/decoder pair. Covers the exact minimal repro from the bug
+  report, prose text, and a ~9 KB high-sequence-count input (to also
+  exercise the `Number_of_Sequences` 2-byte wire form past the 128-sequence
+  boundary).
+- The previous "TC-9: bad magic returns error" test is renamed to
+  "bad magic returns error" (dropping the TC-9 label) — per
+  `code/specs/CMP07-zstd.md`, TC-9 is Cross-language / interoperability;
+  the old label collided with the spec's numbering.
+
+### Security
+
+- Hardened the new TC-9 tests' temp-file names (`unique_tmp_name/1`): mixes
+  `:crypto.strong_rand_bytes/1` output in alongside the monotonic counter,
+  so a co-resident local user can't pre-guess the path and symlink-race it
+  between `File.write!/2` and the `zstd` CLI's read. Flagged as LOW severity
+  in security review (test-only temp files, no sensitive content); fixed
+  anyway since the change was cheap.
+
+## [0.1.2] — 2026-07-12
+
+### Fixed
+
+- `TC-8: 300 KB repetitive text round-trip with compression` now carries
+  `@tag timeout: 300_000`. The pure-Elixir compressor makes a single bounded
+  pass over the 300 KB buffer, but on a saturated CI runner that could exceed
+  ExUnit's 60 s default and turn transient load into a red build.
+- Grouped the two `encode_blocks/3` clauses together (the `is_all_same/2`
+  helper had been defined between them), clearing the compiler's
+  "clauses with the same name and arity should be grouped together" warning.
+
 ## [0.1.1] — 2026-04-26
 
 ### Tests

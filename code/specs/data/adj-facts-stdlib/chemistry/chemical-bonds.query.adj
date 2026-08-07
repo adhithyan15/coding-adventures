@@ -1,0 +1,25 @@
+% ============================================================================
+% chemical-bonds.query.adj — a worked recall over the chemistry chemical-bonds
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word defines an ionic
+% bond?": it states no chemistry fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `chemical_bond_token` rows and returns the token + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% token `weak`, recall the bond type that has it — van der Waals, the secondary
+% bond). Hydrogen bonding is not in the table — the source mentions it but does
+% not pin it to a defining token — so a recall on it abstains honestly; the
+% engine never invents a token.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli chemical-bonds.query.adj
+% ============================================================================
+
+import "chemical-bonds.adj"
+
+? chemical_bond_token(ionic, $T)      % expect transfer — electrons handed over
+? chemical_bond_token(covalent, $T)   % expect sharing  — electrons shared
+? chemical_bond_token(metallic, $T)   % expect gas      — a gas of free electrons
+? chemical_bond_token($B, weak)        % expect van_der_waals — reverse recall
+? chemical_bond_token(hydrogen, $T)    % expect abstain — not pinned by this source

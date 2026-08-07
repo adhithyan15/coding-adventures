@@ -842,7 +842,11 @@ The lexer (all 5 languages) must be extended to:
 
    e. **Handle blank lines and comment-only lines.** These do NOT affect indentation. Skip them without emitting `NEWLINE`.
 
-   f. **Handle end-of-file.** Emit `DEDENT` for each remaining indentation level, then `NEWLINE` (if not already emitted), then `EOF`.
+   f. **Handle end-of-file.** Emit `NEWLINE` first (if the final logical
+      statement has not already emitted one), then one `DEDENT` for each
+      remaining indentation level, then `EOF`. The terminating `NEWLINE`
+      belongs to the final `simple_stmt`; emitting a `DEDENT` before it makes
+      a correctly terminated final block unparsable.
 
    g. **Reject tabs.** If a tab character appears in leading whitespace, emit an error.
 

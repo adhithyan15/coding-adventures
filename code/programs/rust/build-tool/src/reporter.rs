@@ -187,14 +187,12 @@ pub fn print_report(results: &HashMap<String, BuildResult>, writer: Option<&mut 
 mod tests {
     use super::*;
 
-    fn make_result(name: &str, status: &str, duration: f64) -> BuildResult {
+    fn make_result(status: &str, duration: f64) -> BuildResult {
         BuildResult {
-            package_name: name.to_string(),
             status: status.to_string(),
             duration,
             stdout: String::new(),
             stderr: String::new(),
-            return_code: 0,
         }
     }
 
@@ -208,14 +206,8 @@ mod tests {
     #[test]
     fn test_format_report_basic() {
         let mut results = HashMap::new();
-        results.insert(
-            "python/logic-gates".to_string(),
-            make_result("python/logic-gates", "built", 2.3),
-        );
-        results.insert(
-            "python/arithmetic".to_string(),
-            make_result("python/arithmetic", "skipped", 0.0),
-        );
+        results.insert("python/logic-gates".to_string(), make_result("built", 2.3));
+        results.insert("python/arithmetic".to_string(), make_result("skipped", 0.0));
 
         let report = format_report(&results);
         assert!(report.contains("Build Report"));
@@ -231,12 +223,10 @@ mod tests {
         results.insert(
             "python/broken".to_string(),
             BuildResult {
-                package_name: "python/broken".to_string(),
                 status: "failed".to_string(),
                 duration: 0.5,
                 stdout: "some output\n".to_string(),
                 stderr: "error: something broke\n".to_string(),
-                return_code: 1,
             },
         );
 
@@ -252,7 +242,7 @@ mod tests {
         let mut results = HashMap::new();
         results.insert(
             "python/child".to_string(),
-            make_result("python/child", "dep-skipped", 0.0),
+            make_result("dep-skipped", 0.0),
         );
 
         let report = format_report(&results);
@@ -284,7 +274,7 @@ mod tests {
         let mut results = HashMap::new();
         results.insert(
             "test/pkg".to_string(),
-            make_result("test/pkg", "built", 1.0),
+            make_result("built", 1.0),
         );
 
         let mut buf = Vec::new();

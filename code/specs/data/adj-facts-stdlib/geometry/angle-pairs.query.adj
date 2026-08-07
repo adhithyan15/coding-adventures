@@ -1,0 +1,27 @@
+% ============================================================================
+% angle-pairs.query.adj — a worked recall over the geometry angle-pairs library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what defines a pair of
+% complementary angles?": it states no geometry fact — it only `import`s the
+% grounded table and asks binding queries.  The engine resolves each `?` against
+% the `angle_pair` rows and returns the condition + the table's source/locator/
+% trust.  A name that is not a pair relationship abstains honestly — the engine
+% never invents a condition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli angle-pairs.query.adj
+% ============================================================================
+
+import "angle-pairs.adj"
+
+? angle_pair(complementary, $Cond)     % expect sum_to_90
+? angle_pair(supplementary, $Cond)     % expect sum_to_180
+? angle_pair(vertical, $Cond)          % expect equal
+? angle_pair(adjacent, $Cond)          % expect share_side_and_vertex
+
+% Backward: given the condition, recall which relationship it defines.
+? angle_pair($Rel, sum_to_180)         % expect supplementary
+
+% Abstain — `acute` is a single-angle TYPE (see geometry/angle-types), not a
+% pair-of-angles relationship, so it is not in this table.
+? angle_pair(acute, $Cond)             % expect abstain

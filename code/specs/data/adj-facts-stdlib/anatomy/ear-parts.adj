@@ -1,0 +1,93 @@
+% ============================================================================
+% ear-parts — which region of the ear each structure belongs to
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A hearing-anatomy fact on the way to medicine: the ear is built in three
+% regions, and sound passes through them in order. The OUTER ear catches sound
+% and funnels it inward; the MIDDLE ear turns the air-pressure wave into a
+% mechanical push through three tiny bones; the INNER ear turns that mechanical
+% push into the fluid wave the nerve can read. Recall is a binding query:
+%
+%     ? ear_structure_region(cochlea, $R)     % inner_ear
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `ear_structure_region(structure, region)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the region WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the listed structures (it never
+% invents a region).
+%
+% The path of sound, as a little truth table (structure → region it sits in):
+%
+%     structure     region        role on the path of sound
+%     -----------   -----------   -------------------------------------------
+%     ear_canal     outer_ear     narrow passageway sound travels down
+%     malleus       middle_ear    first of the three tiny bones (the "hammer")
+%     incus         middle_ear    second bone (the "anvil")
+%     stapes        middle_ear    third bone (the "stirrup")
+%     cochlea       inner_ear     snail-shaped, fluid-filled hearing organ
+%
+% Because each `region` is a stable token, a recalled region composes straight
+% into checks: a note describing a "middle-ear cochlea" is suspect precisely
+% because the cochlea is an inner-ear structure; a "malleus" placed in the inner
+% ear contradicts this table. That is the concrete bridge from anatomy RECALL to
+% reasoning, and the rung a medicine agent climbs UP from before it can reason
+% about conductive vs. sensorineural hearing loss (a broken ossicle is a
+% MIDDLE-ear, conductive problem; a damaged cochlea is an INNER-ear,
+% sensorineural one). The query also runs BACKWARD — bind a region and recall a
+% structure that lives there:
+%
+%     ? ear_structure_region($S, middle_ear)  % malleus / incus / stapes
+%
+% Something that is not one of the listed structures — the pinna, the eardrum,
+% the auditory nerve — has no row, so a recall on it ABSTAINS rather than
+% inventing a region. That honest-abstention property is what makes the table
+% safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every structure→region pair
+% was read out of a single fetched U.S. government page this session, and any
+% pair that could not be grounded there would have been dropped). The single
+% source is the primary U.S. National Institutes of Health reference, the
+% National Institute on Deafness and Other Communication Disorders (NIDCD),
+% "How Do We Hear?" (nidcd.nih.gov/health/how-do-we-hear), whose step-by-step
+% description of the path of sound places each structure in its region. Each
+% span is quoted here character-for-character so any reader can re-check it:
+%
+%   ear_canal → outer_ear
+%     "Sound waves enter the outer ear and travel through a narrow passageway
+%      called the ear canal, which leads to the eardrum."
+%
+%   malleus, incus, stapes → middle_ear
+%     "The eardrum vibrates from the incoming sound waves and sends these
+%      vibrations to three tiny bones in the middle ear. These bones are called
+%      the malleus, incus, and stapes."
+%
+%   cochlea → inner_ear
+%     "The bones in the middle ear amplify, or increase, the sound vibrations
+%      and send them to the cochlea, a snail-shaped structure filled with fluid,
+%      in the inner ear."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NIDCD sentence that fixes
+% the cochlea → inner_ear row ("... send them to the cochlea, ... in the inner
+% ear."). The other rows' per-fact source spans are listed above, so each pair
+% remains independently checkable. NIDCD is a primary U.S. government NIH
+% institute, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table ear_structure_region {
+    columns structure, region
+
+    row (ear_canal, outer_ear)
+    row (malleus, middle_ear)
+    row (incus, middle_ear)
+    row (stapes, middle_ear)
+    row (cochlea, inner_ear)
+
+    source "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear."
+    locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    trust authoritative
+}

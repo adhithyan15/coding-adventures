@@ -1,0 +1,84 @@
+% ============================================================================
+% magnet-poles — how a pair of magnetic poles INTERACTS: like poles repel,
+% opposite poles attract (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% The very first fact a child learns about magnetism, on the way to fields,
+% forces, and electromagnetism: two magnetic poles either PUSH apart or PULL
+% together, and which one happens depends only on whether the poles are the
+% SAME kind or OPPOSITE kinds. Recall is a binding query:
+%
+%     ? magnet_pole_interaction(like_poles, $Out)   % repel
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `magnet_pole_interaction(pairing, outcome)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the outcome WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not a pole pairing the source names.
+%
+% The rule of magnetic poles, as a little truth table (a pair of poles → what
+% the two poles DO, in the word the source uses):
+%
+%     pairing          the two poles are…          they…      (NASA)
+%     --------------   -------------------------    ---------
+%     like_poles       the SAME kind (N & N)        repel
+%     opposite_poles   OPPOSITE kinds (N & S)       attract
+%     north_to_north   N brought toward N           repel
+%     north_to_south   N brought toward S           attract
+%
+% "like_poles"/"opposite_poles" are the general rule; "north_to_north"/
+% "north_to_south" are the SAME rule stated for the concrete pole pairs the
+% source names in its own parenthetical — every key and every outcome token
+% appears verbatim in the one NASA sentence quoted below. This is the concrete
+% rung a physics learner reasons UP from: before reasoning about field lines,
+% flux, or the right-hand rule, a student first learns that same-pole → push,
+% opposite-pole → pull.
+%
+% The query also runs BACKWARD — bind the outcome and recall a pairing that
+% produces it:
+%
+%     ? magnet_pole_interaction($P, attract)   % opposite_poles — reverse recall
+%
+% Something that is not a pole pairing the source states — a single pole, a
+% pole and a piece of unmagnetized iron — has no row, so a recall on it
+% ABSTAINS rather than inventing an interaction. That honest-abstention
+% property is what makes the table safe to reason from.
+%
+% Each `pairing` and each `outcome` value is a SINGLE lowercase snake_case atom,
+% chosen to be a faithful short paraphrase of the pole pairing and outcome the
+% source explicitly states — never an interaction the source does not name.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every pairing→outcome pair
+% was read out of a fetched NASA education page this session, and any pairing
+% that could not be grounded there would have been dropped). All four rows come
+% from ONE sentence in the SAME primary U.S. government source, NASA's
+% Heliophysics Education "Introductory Activities in Magnetism with Smart
+% Devices" educator guide
+% (assets.science.nasa.gov/.../NASAMagnetism-Introduction_FINAL.pdf), quoted
+% here character-for-character so any reader can re-check it:
+%
+%   "Elementary School Experiments (Grades 3-5) have observed how like poles
+%    (North to North) repel and opposite poles (North to South) attract."
+%
+% That single sentence fixes all four rows: it states that LIKE poles — which
+% it glosses as "North to North" — REPEL, and that OPPOSITE poles — which it
+% glosses as "North to South" — ATTRACT. An ADJ `table` carries ONE provenance
+% envelope, so the `source`/`locator`/`trust` below hold that span, and every
+% row is a token drawn straight from it. The source is a primary U.S.
+% government NASA science-education page (nasa.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table magnet_pole_interaction {
+    columns pairing, outcome
+
+    row (like_poles, repel)
+    row (opposite_poles, attract)
+    row (north_to_north, repel)
+    row (north_to_south, attract)
+
+    source "Elementary School Experiments (Grades 3-5) have observed how like poles (North to North) repel and opposite poles (North to South) attract."
+    locator "https://assets.science.nasa.gov/content/dam/science/hpd/heat/sten-guides/sten-guides-pdfs/NASAMagnetism-Introduction_FINAL.pdf"
+    trust authoritative
+}

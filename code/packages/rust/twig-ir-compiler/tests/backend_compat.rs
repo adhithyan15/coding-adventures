@@ -1146,3 +1146,45 @@ fn twig_arithmetic_over_dynamic_args_still_rejected() {
          got: {wasm_errs:?}",
     );
 }
+
+/// E6d-6b: a union constructor must store its tag + fields **boxed** so that
+/// `match` (which reads them back as boxed `DynValue`s and `unbox`es) round-trips
+/// on the tagged backends. Concretely: every value written into the variant's
+/// cons chain — the tag word and each field — is the result of a `box` op, not a
+/// raw register. Without this the tagged backends `unbox` a raw word (`unbox(42)=5`).
+#[test]
+fn union_constructor_boxes_tag_and_fields() {
+    let m = compile_source(
+        "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
+        "u",
+    )
+    .expect("union program must compile");
+
+    let some = m.functions.iter().find(|f| f.name == "Some").expect("constructor Some");
+
+    // The set of registers produced by a `box` op in this function.
+    let boxed: std::collections::HashSet<&str> = some
+        .instructions
+        .iter()
+        .filter(|i| i.op == "box")
+        .filter_map(|i| i.dest.as_deref())
+        .collect();
+    // `Some(v)` has one field + one tag ⇒ at least two `box`es.
+    assert!(boxed.len() >= 2, "Some must box the tag and its field; boxes = {boxed:?}");
+
+    // Every `field_store` that writes the car (index 0 — a value slot, not the
+    // cdr link) must store a boxed register.
+    for i in some.instructions.iter().filter(|i| i.op == "field_store") {
+        let is_car = matches!(i.srcs.get(1), Some(Operand::Int(0)));
+        if !is_car {
+            continue; // cdr link (index 1) carries a cons pointer, not a boxed value
+        }
+        match i.srcs.get(2) {
+            Some(Operand::Var(v)) => assert!(
+                boxed.contains(v.as_str()),
+                "field_store car must store a boxed value; stored {v:?}, boxes = {boxed:?}"
+            ),
+            other => panic!("field_store car value operand unexpected: {other:?}"),
+        }
+    }
+}

@@ -493,6 +493,9 @@ mod tests {
     }
 
     /// A toy `ClassRef` enum.
+    // `Cons` is part of the illustrative class set but isn't constructed by these
+    // tests; kept so the toy enum mirrors a realistic class hierarchy.
+    #[allow(dead_code)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
     enum TestClass { Int, Nil, Bool, Cons }
 

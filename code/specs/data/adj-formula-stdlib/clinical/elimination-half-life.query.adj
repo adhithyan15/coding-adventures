@@ -1,0 +1,27 @@
+% ============================================================================
+% elimination-half-life.query.adj — worked applications of the drug elimination half-life.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a pharmacokinetic assessment into a volume of
+% distribution and a clearance: it `import`s the grounded formulabook, `observe`s the two values, and asks the
+% engine to APPLY the cited half-life formula. No arithmetic is stated by the consumer; the engine computes
+% each value EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with
+% zero model calls.
+%
+% Worked case (Vd = 2000 mL, CL = 693 mL/h): half-life = 0.693 × 2000 / 693 = 1386 / 693 = 2 h. Each query
+% fixes one input and asks the engine to recover another quantity; every answer is exact and the inversions
+% COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli elimination-half-life.query.adj
+% ============================================================================
+
+import "elimination-half-life.adj"
+
+% --- Half-life: the value Vd and CL imply (expect 2). ------------------------------------------------
+observe volume_of_distribution(2000)
+observe clearance(693)
+? half_life(volume_of_distribution, clearance)   % expect 2
+
+% --- Inverse: the Vd a half-life of 2 implies at the same clearance (expect 2000). -------------------
+observe half_life(2)
+? volume_of_distribution(half_life, clearance)   % expect 2000

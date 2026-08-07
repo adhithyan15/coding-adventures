@@ -27,7 +27,7 @@ pub(crate) fn child_rules<'a>(node: &'a GrammarASTNode, rule: &str) -> Vec<&'a G
 }
 
 /// Return all direct children that are rule nodes (any name).
-pub(crate) fn child_nodes<'a>(node: &'a GrammarASTNode) -> Vec<&'a GrammarASTNode> {
+pub(crate) fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     node.children.iter().filter_map(|c| match c {
         ASTNodeOrToken::Node(n) => Some(n),
         _ => None,

@@ -87,6 +87,26 @@ fn puts_stmt(expr: Expr) -> Stmt {
     }
 }
 
+/// One-parameter lambda (for `cycle`'s block), registered top-level.
+fn lambda_fn1(fn_name: &str, p0: &str, body: Block) -> Function {
+    Function {
+        name: fn_name.into(),
+        params: vec![semantic_ir::Param {
+            name: p0.into(),
+            kind: semantic_ir::ParamKind::Required,
+            sir_type: None,
+            default: None,
+            span: s(),
+        }],
+        return_type: None,
+        captures: vec![],
+        body,
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
 /// Two-parameter lambda (for `each_with_index`), registered top-level.
 fn lambda_fn2(fn_name: &str, p0: &str, p1: &str, body: Block) -> Function {
     Function {
@@ -171,6 +191,10 @@ fn catalog_module() -> Module {
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max", vec![])),
         // [].max → nil
         print_stmt(method(seq(vec![]), "max", vec![])),
+        // [3,1,2].minmax → [1, 3]
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "minmax", vec![])),
+        // [].minmax → [nil, nil]
+        print_stmt(method(seq(vec![]), "minmax", vec![])),
         // [1,2,3].sum → 6
         print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "sum", vec![])),
         // [].sum → 0
@@ -262,6 +286,8 @@ fn array_methods_compile_and_run() {
             "1",         // [3,1,2].min
             "3",         // [3,1,2].max
             "nil",       // [].max  (print of nil is "nil")
+            "[1, 3]",    // [3,1,2].minmax
+            "[nil, nil]", // [].minmax → [nil, nil]
             "6",         // [1,2,3].sum
             "0",         // [].sum
             "[1, 2, 3]", // [1,2,2,3,1].uniq
@@ -271,6 +297,247 @@ fn array_methods_compile_and_run() {
             "0:10",      // each_with_index pair 0
             "1:20",      // each_with_index pair 1
             "[10, 20]",  // each_with_index returns the receiver (then print's it)
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python reference (#8031).
+// `each_slice`/`each_cons` are non-block (take an int `n`); `chunk_while` is a
+// block method (the block is called on each ADJACENT pair).
+fn slice_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]),
+                    "each_slice",
+                    vec![ilit(2)],
+                )),
+                // [1,2,3].each_slice(0) → []  (never-panic floor)
+                print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "each_slice", vec![ilit(0)])),
+                // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+                    "each_cons",
+                    vec![ilit(2)],
+                )),
+                // [1,2].each_cons(3) → []  (window larger than the array)
+                print_stmt(method(seq(vec![ilit(1), ilit(2)]), "each_cons", vec![ilit(3)])),
+                // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(4), ilit(5), ilit(7)]),
+                    "chunk_while",
+                    vec![closure("__lam_adj")],
+                )),
+                // [].chunk_while { … } → []
+                print_stmt(method(seq(vec![]), "chunk_while", vec![closure("__lam_adj")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_each_slice_each_cons_chunk_while_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let adj = lambda_fn2(
+        "__lam_adj",
+        "a",
+        "b",
+        Block {
+            stmts: vec![],
+            value: builtin("=", vec![builtin("-", vec![var_p("b"), var_p("a")]), ilit(1)]),
+            span: s(),
+        },
+    );
+    let module = program(vec![slice_module(), adj]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "slice");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [3, 4], [5]]",    // each_slice(2)
+            "[]",                       // each_slice(0) → []
+            "[[1, 2], [2, 3], [3, 4]]", // each_cons(2)
+            "[]",                       // each_cons(3) on len-2 → []
+            "[[1, 2], [4, 5], [7]]",    // chunk_while { b-a==1 }
+            "[]",                       // [].chunk_while → []
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+// ── Array slice_when ───────────────────────────────────────────────────────
+//
+// `slice_when { |a, b| pred }` is the INVERSE of chunk_while: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070).
+fn slice_when_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1,2],[4],[9,10,11,12]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(4), ilit(9), ilit(10), ilit(11), ilit(12)]),
+                    "slice_when",
+                    vec![closure("__lam_gap")],
+                )),
+                // [9].slice_when { … } → [[9]]  (single element)
+                print_stmt(method(seq(vec![ilit(9)]), "slice_when", vec![closure("__lam_gap")])),
+                // [].slice_when { … } → []
+                print_stmt(method(seq(vec![]), "slice_when", vec![closure("__lam_gap")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_slice_when_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    // { |a, b| b - a > 1 } — split on an upward gap greater than one.
+    let gap = lambda_fn2(
+        "__lam_gap",
+        "a",
+        "b",
+        Block {
+            stmts: vec![],
+            value: builtin(">", vec![builtin("-", vec![var_p("b"), var_p("a")]), ilit(1)]),
+            span: s(),
+        },
+    );
+    let module = program(vec![slice_when_module(), gap]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "slicewhen");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [4], [9, 10, 11, 12]]", // slice_when { b-a>1 }
+            "[[9]]",                          // single element
+            "[]",                             // [].slice_when → []
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+// ── Array cycle(n) ─────────────────────────────────────────────────────────
+//
+// `cycle(n) { |x| ... }` iterates the array n full passes in order, yielding
+// each element on every pass, and always returns nil.  n <= 0, a negative
+// count, or an empty receiver yields nothing.  Mirrors the Python reference
+// (#8117): the block `puts`es each element so the passes are observable, and
+// the method's nil return is printed after each call.
+fn cycle_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,3].cycle(2) { |x| puts x.to_s }  → 1 2 3 1 2 3, then nil
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3)]),
+                    "cycle",
+                    vec![ilit(2), closure("__lam_puts")],
+                )),
+                // [1,2,3].cycle(0) { … }  → no yields, nil
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3)]),
+                    "cycle",
+                    vec![ilit(0), closure("__lam_puts")],
+                )),
+                // [].cycle(5) { … }  → no yields, nil
+                print_stmt(method(seq(vec![]), "cycle", vec![ilit(5), closure("__lam_puts")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_cycle_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    // { |x| puts x.to_s } — emit one line per yielded element.
+    let puts_lam = lambda_fn1(
+        "__lam_puts",
+        "x",
+        Block {
+            stmts: vec![puts_stmt(method(var_p("x"), "to_s", vec![]))],
+            value: nil(),
+            span: s(),
+        },
+    );
+    let module = program(vec![cycle_module(), puts_lam]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "cycle");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "1", "2", "3", "1", "2", "3", // cycle(2) yields two full passes
+            "nil", // cycle(2) returns nil
+            "nil", // cycle(0) — no yields, nil
+            "nil", // [].cycle(5) — no yields, nil
         ],
         "unexpected stdout:\n{stdout}"
     );

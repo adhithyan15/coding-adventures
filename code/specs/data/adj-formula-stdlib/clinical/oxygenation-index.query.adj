@@ -1,0 +1,28 @@
+% ============================================================================
+% oxygenation-index.query.adj — worked applications of the oxygenation index.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a ventilator problem into a mean airway pressure, an
+% FiO2 (as a fraction), and a PaO2: it `import`s the grounded formulabook, `observe`s the three values, and
+% asks the engine to APPLY the cited oxygenation-index formula. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its proof,
+% on the CPU, with zero model calls.
+%
+% Worked case (mean airway pressure = 10 cmH2O, FiO2 = 0.5, PaO2 = 50 mmHg): OI = 10 × 0.5 × 100 / 50 =
+% 500 / 50 = 10. Each query fixes two of the three inputs and asks the engine to recover another quantity;
+% every answer is exact and the inversions COMPOSE (each recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli oxygenation-index.query.adj
+% ============================================================================
+
+import "oxygenation-index.adj"
+
+% --- OI: the index the support and PaO2 imply (expect 10). -------------------------------------------
+observe mean_airway_pressure(10)
+observe fio2(0.5)
+observe pao2(50)
+? oxygen_index(mean_airway_pressure, fio2, pao2)   % expect 10
+
+% --- Inverse: the PaO2 an index of 10 implies at the same support (expect 50). -----------------------
+observe oxygen_index(10)
+? pao2(oxygen_index, mean_airway_pressure, fio2)   % expect 50

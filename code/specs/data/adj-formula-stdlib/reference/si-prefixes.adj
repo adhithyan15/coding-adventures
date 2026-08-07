@@ -1,0 +1,51 @@
+% ============================================================================
+% si-prefixes — SI (metric) prefix → power-of-ten exponent (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of the `*-conversions.adj` references: a native tabular
+% relation ingested VERBATIM from the NIST "Metric (SI) Prefixes" table. Each row
+% maps an SI prefix to the base-10 EXPONENT it denotes (the integer n in 10ⁿ):
+%
+%     ? si_prefix_to_exponent(kilo, $E)     % 3    (kilo = 10³)
+%     ? si_prefix_to_exponent(milli, $E)    % -3   (milli = 10⁻³)
+%
+% Why a `table`, and why the EXPONENT rather than the factor string: this is exactly
+% the shape reference data comes in — a published table, not prose — and it was the
+% concrete trigger for the `table` construct (RS-5): NIST prints these factors as
+% "10³", "10⁻³", … with the power as a rendered SUPERSCRIPT, so a byte-quotable
+% *sentence* naming both prefix and value does not exist, and quoting the superscript
+% glyph is fragile. Storing the plain signed INTEGER exponent removes that fragility
+% entirely: the value is `3`, `-3`, `12`, `-12` — a number a byte-check verifies
+% against the cited table, and a number that can feed a `let`/`formula` downstream
+% (e.g. as the exponent of a power). The whole table is defended by one provenance
+% envelope; each `row` lowers to a ground relation `si_prefix_to_exponent(prefix, n)`,
+% so exact lookup is the ordinary SLD binding query — the engine returns the exponent
+% WITH this table's citation, on the CPU, 0 model calls, and a prefix not in the
+% table (an SI prefix this row set omits, or a non-prefix) abstains honestly.
+%
+% The prefixes and exponents below are the NIST SP / "Metric (SI) Prefixes" values,
+% transcribed as the plain integer power of ten each prefix names (NIST spells the
+% 10¹ prefix "deka"). `trust authoritative` — a primary, re-fetchable standards
+% reference. (See ADJ-TABLES.md; and feedback_nothing_human_authored — every
+% exponent is a verbatim cell of the cited table, nothing asserted from memory.)
+% ============================================================================
+
+table si_prefix_to_exponent {
+    columns prefix, exponent
+
+    row (tera, 12)
+    row (giga, 9)
+    row (mega, 6)
+    row (kilo, 3)
+    row (hecto, 2)
+    row (deka, 1)
+    row (deci, -1)
+    row (centi, -2)
+    row (milli, -3)
+    row (micro, -6)
+    row (nano, -9)
+    row (pico, -12)
+
+    source "Metric (SI) Prefixes"
+    locator "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    trust authoritative
+}

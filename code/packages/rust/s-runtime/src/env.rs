@@ -156,9 +156,9 @@ pub fn lookup(env: &Env, name: &str) -> Option<SValue> {
         if let Some(v) = cursor.borrow().vars.get(name) {
             return Some(v.clone());
         }
-        match parent_of(&cursor) {
-            Some(p) => cursor = p,
-            None => return None,
+        {
+            let p = parent_of(&cursor)?;
+            cursor = p
         }
     }
 }

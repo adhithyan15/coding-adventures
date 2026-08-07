@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-jsdoc-parser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "JSDoc parser — parses the interior of a /** ... */ block comment into a tag tree using the grammar-driven parser. Per CLOC05."
 

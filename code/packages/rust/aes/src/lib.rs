@@ -487,11 +487,11 @@ pub fn encrypt_block(block: &[u8; 16], key: &[u8]) -> Result<[u8; 16], String> {
     let mut state = bytes_to_state(block);
     state = add_round_key(&state, &round_keys[0]);
 
-    for rnd in 1..nr {
+    for round_key in &round_keys[1..nr] {
         state = sub_bytes(&state);
         state = shift_rows(&state);
         state = mix_columns(&state);
-        state = add_round_key(&state, &round_keys[rnd]);
+        state = add_round_key(&state, round_key);
     }
 
     // Final round: no MixColumns

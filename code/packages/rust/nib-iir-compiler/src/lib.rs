@@ -1190,7 +1190,7 @@ impl Compiler {
             // directly instead of `call_builtin "+"` (the latter requires
             // a downstream `pre_lower_aot_builtins` pass that only runs
             // in the AOT chain, not in the IIR-to-* backends).
-            let cir_op = cir_op_for(&op_tok.value, &op_tok.effective_type_name())
+            let cir_op = cir_op_for(&op_tok.value, op_tok.effective_type_name())
                 .ok_or_else(|| CompileError::Unsupported(format!("op {:?}", op_tok.value)))?;
 
             let dest = self.fresh_var();
@@ -1497,7 +1497,7 @@ fn fold_const_chain(
             Some(ASTNodeOrToken::Node(child)) => const_expr_value(child, consts, declared)?,
             _ => return Err(format!("`{}` has a dangling operator", node.rule_name)),
         };
-        acc = fold_const_binary(acc, rhs, &op.value, &op.effective_type_name(), declared)?;
+        acc = fold_const_binary(acc, rhs, &op.value, op.effective_type_name(), declared)?;
     }
 
     Ok(fold_width(acc, declared))
@@ -1800,7 +1800,7 @@ fn first_type_name(node: &GrammarASTNode) -> Option<String> {
     child_nodes(node)
         .into_iter()
         .find(|c| c.rule_name == "type")
-        .map(|n| type_str_from_node(n))
+        .map(type_str_from_node)
 }
 
 fn parse_literal(node: &GrammarASTNode) -> Option<i64> {

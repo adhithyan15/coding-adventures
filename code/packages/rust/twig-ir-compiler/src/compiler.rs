@@ -737,7 +737,7 @@ impl Compiler {
                 mi.exports
                     .iter()
                     .filter(|name| self.fn_globals.contains(*name))
-                    .map(|name| IIRExport::new(name))
+                    .map(IIRExport::new)
                     .collect()
             })
             .unwrap_or_default();
@@ -1346,14 +1346,26 @@ impl Compiler {
             }
 
             Expr::SymLit(SymLit { name, .. }) => {
-                let name_reg = self.string_arg(ctx, name, loc);
+                // E6d-4 (symbols): a quote literal (`'a` / `(quote a)`) whose name
+                // is known at compile time lowers to `const Var(name) : symbol` —
+                // the SAME interned-const form McCarthy Lisp's `emit_symbol` emits,
+                // rather than the runtime `make_symbol` string path (which needs
+                // data-section string emission the code-gen backends lack). This
+                // rides the existing `intern_symbols` / `intern_symbols_structural`
+                // passes: each distinct name gets one module-wide id, so `equal?`
+                // on symbols is bit-equality (`(equal? 'a 'a)` #t, `(equal? 'a 'b)`
+                // #f) on all five code-gen backends — with no new value type. On
+                // twig-vm the `const Var(name)` dispatch already interns the text to
+                // a symbol, so the VM is unaffected. (Runtime symbol *creation* —
+                // `string->symbol` over a runtime string — keeps `make_symbol`.)
                 let v = ctx.fresh_var("sym");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "const",
                     Some(v.clone()),
-                    vec![Operand::Var("make_symbol".into()), Operand::Var(name_reg)],
-                    "any",
+                    vec![Operand::Var(name.clone())],
+                    "symbol",
                 ), loc);
+                ctx.record_type(&v, "symbol");
                 Ok(v)
             }
 
@@ -2507,14 +2519,25 @@ impl Compiler {
                     ), arm_loc);
                     ctx.record_type(&tag_reg, "ref<any>");
 
-                    // Emit: tag_int = integer constant for this variant
+                    // Emit: tag_int = integer constant for this variant.
+                    //
+                    // E6d-6: type this `i64`, NOT `"any"`. It is a raw
+                    // compile-time integer, not a boxed lisp value. If it were
+                    // `"any"`, `lower_dynamic_arith` would treat it as boxed
+                    // (`is_boxed("any")`) and emit a bogus `unbox` on it — on WASM
+                    // the `i31.get_s` of a raw `i64` traps `expected i32, got I64`.
+                    // As `i64` it flows straight into the typed comparison; only
+                    // the genuinely-boxed `tag_reg` (a `field_load` result) is
+                    // unboxed. (This mirrors how a `list-ref` index literal is a
+                    // raw `i64` const.)
                     let tag_int_reg = ctx.fresh_var("tag_val");
                     ctx.emit(IIRInstr::new(
                         "const",
                         Some(tag_int_reg.clone()),
                         vec![Operand::Int(tag as i64)],
-                        "any",
+                        "i64",
                     ), arm_loc);
+                    ctx.record_type(&tag_int_reg, "i64");
 
                     // Emit: cond = (= tag_reg tag_int)
                     let cond_reg = ctx.fresh_var("tag_eq");
@@ -2912,13 +2935,28 @@ impl Compiler {
                     alloc.may_alloc = true;
                     ctx.emit(alloc, loc);
                     ctx.record_type(&cell, "ref<LispyPair>");
+                    // E6d-6b: the field must be stored as a *boxed* `DynValue`, not
+                    // a raw word. `match`/accessors read the field back as `any`
+                    // (the loaded value flows through `unbox`/dynamic ops), so the
+                    // constructor boxes here. On the tagged backends (`any` = raw
+                    // i64) this is the `n<<3` that makes `unbox` recover the value;
+                    // on the structural backends `box` of an already-`anyref` field
+                    // is the identity, so the round-trip is unchanged.
+                    let field_boxed = ctx.fresh_var("fbox");
+                    ctx.emit(IIRInstr::new(
+                        "box",
+                        Some(field_boxed.clone()),
+                        vec![Operand::Var(field_name.clone())],
+                        "ref<any>",
+                    ), loc);
+                    ctx.record_type(&field_boxed, "ref<any>");
                     ctx.emit(IIRInstr::new(
                         "field_store",
                         None,
                         vec![
                             Operand::Var(cell.clone()),
                             Operand::Int(0),
-                            Operand::Var(field_name.clone()),
+                            Operand::Var(field_boxed),
                         ],
                         "void",
                     ), loc);
@@ -2945,6 +2983,19 @@ impl Compiler {
                     "i64",
                 ), loc);
                 ctx.record_type(&tag_reg, "i64");
+                // E6d-6b: box the tag for the same reason as the fields — `match`
+                // reads the tag (`car`) back as a boxed `DynValue` and compares it
+                // with the dynamic `=` (which unboxes). A raw tag word makes
+                // `unbox(raw tag)` wrong on the tagged backends (`unbox(1)=0`, so
+                // the second variant never matches).
+                let tag_boxed = ctx.fresh_var("tbox");
+                ctx.emit(IIRInstr::new(
+                    "box",
+                    Some(tag_boxed.clone()),
+                    vec![Operand::Var(tag_reg)],
+                    "ref<any>",
+                ), loc);
+                ctx.record_type(&tag_boxed, "ref<any>");
                 let head = ctx.fresh_var("head");
                 let mut alloc_head = IIRInstr::new(
                     "alloc",
@@ -2961,7 +3012,7 @@ impl Compiler {
                     vec![
                         Operand::Var(head.clone()),
                         Operand::Int(0),
-                        Operand::Var(tag_reg),
+                        Operand::Var(tag_boxed),
                     ],
                     "void",
                 ), loc);

@@ -476,7 +476,7 @@ fn read_header(cur: &mut Cursor) -> Result<(u8, u8, u64), CborError> {
             }
             v
         }
-        28 | 29 | 30 => return Err(CborError::Reserved),
+        28..=30 => return Err(CborError::Reserved),
         31 => return Err(CborError::Indefinite),
         _ => unreachable!(),
     };
@@ -575,7 +575,7 @@ fn read_value(cur: &mut Cursor, depth: usize) -> Result<CborValue, CborError> {
                 20 => Ok(CborValue::Bool(false)),
                 21 => Ok(CborValue::Bool(true)),
                 22 => Ok(CborValue::Null),
-                25 | 26 | 27 => Err(CborError::FloatNotSupported),
+                25..=27 => Err(CborError::FloatNotSupported),
                 _ => Err(CborError::UnsupportedSimple),
             }
         }

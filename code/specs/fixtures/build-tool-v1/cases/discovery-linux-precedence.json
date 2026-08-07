@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "discovery/linux-precedence",
+  "domain": "discovery",
+  "summary": "The Linux-specific BUILD file wins over the shared macOS/Linux and canonical files.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "discovery"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/haskell/demo/BUILD",
+        "content_utf8": "cabal test\n"
+      },
+      {
+        "path": "code/packages/haskell/demo/BUILD_linux",
+        "content_utf8": "cabal test --test-show-details=direct\n"
+      },
+      {
+        "path": "code/packages/haskell/demo/BUILD_mac_and_linux",
+        "content_utf8": "cabal test --enable-tests\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "discovery",
+    "options": {
+      "code_root": "code",
+      "platform": "linux"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "discovery/linux-precedence",
+    "domain": "discovery",
+    "outcome": "ok",
+    "result": {
+      "packages": [
+        {
+          "build_file": "code/packages/haskell/demo/BUILD_linux",
+          "is_starlark": false,
+          "language": "haskell",
+          "name": "haskell/demo",
+          "rel_path": "code/packages/haskell/demo"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

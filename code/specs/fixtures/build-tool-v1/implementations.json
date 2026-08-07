@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "conformance_revision": "build-tool-v1",
+  "implementations": [
+    {
+      "language": "csharp",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/dotnet/build-tool-csharp",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "dart",
+      "lane_status": "established",
+      "implementation_status": "missing",
+      "front_door": null,
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "elixir",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/elixir/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "fsharp",
+      "lane_status": "established",
+      "implementation_status": "shared_engine",
+      "front_door": "code/programs/dotnet/build-tool-fsharp",
+      "shared_engine": "csharp",
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "go",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/go/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "haskell",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/haskell/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "java",
+      "lane_status": "established",
+      "implementation_status": "missing",
+      "front_door": null,
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "kotlin",
+      "lane_status": "established",
+      "implementation_status": "missing",
+      "front_door": null,
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "lua",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/lua/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "ocaml",
+      "lane_status": "emerging",
+      "implementation_status": "missing",
+      "front_door": null,
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "perl",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/perl/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "python",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/python/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "ruby",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/ruby/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "rust",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/rust/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "swift",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/swift/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    },
+    {
+      "language": "typescript",
+      "lane_status": "established",
+      "implementation_status": "present",
+      "front_door": "code/programs/typescript/build-tool",
+      "shared_engine": null,
+      "adapter_status": "missing",
+      "capabilities": [],
+      "expected_failures": []
+    }
+  ]
+}

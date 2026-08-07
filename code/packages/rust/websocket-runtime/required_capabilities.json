@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/websocket-runtime",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "*",
+      "justification": "The blocking WebSocket client resolves caller-supplied hostnames through tcp-client."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "*:*",
+      "justification": "The blocking WebSocket client connects to caller-supplied TCP endpoints through tcp-client."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "*:*",
+      "justification": "The WebSocket server binds caller-supplied TCP listener addresses through tcp-runtime."
+    }
+  ],
+  "justification": "Concrete WebSocket transport adapter over repository TCP and OS entropy packages; it performs no filesystem, process, environment, standard-stream, or FFI access."
+}

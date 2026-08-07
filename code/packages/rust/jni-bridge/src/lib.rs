@@ -952,7 +952,7 @@ mod byte_array_tests {
         table[GET_BYTE_ARRAY_REGION_OFFSET] = mock_get_byte_array_region as *const c_void;
         table[SET_BYTE_ARRAY_REGION_OFFSET] = mock_set_byte_array_region as *const c_void;
         // JNIEnv is a pointer to the table base (`*const *const c_void`).
-        let env: Box<JNIEnv> = Box::new(table.as_ptr() as *const *const c_void);
+        let env: Box<JNIEnv> = Box::new(table.as_ptr());
         (table, env)
     }
 

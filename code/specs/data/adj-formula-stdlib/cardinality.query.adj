@@ -1,0 +1,8 @@
+% This entry program stays at the stdlib root so the mathematics library's
+% cross-directory arithmetic import remains inside the import root.
+import "mathematics/cardinality.adj"
+
+% 5 red blocks and 3 blue blocks: total = 5 + 3.
+observe count_a(5)
+observe count_b(3)
+? total_cardinality(count_a, count_b)   % expect 8

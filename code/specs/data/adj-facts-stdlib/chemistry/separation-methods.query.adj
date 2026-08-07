@@ -1,0 +1,24 @@
+% ============================================================================
+% separation-methods.query.adj — a worked recall over the chemistry
+% separation-methods library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how do you separate this
+% mixture, and on what basis?": it states no chemistry fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `separation_basis` rows and returns the basis + the
+% table's source/locator/trust. The fourth query runs the relation BACKWARD
+% (bind the basis `by_particle_size`, recall its method — filtration). A word
+% that is not one of these separation methods abstains honestly — the engine
+% never invents a basis.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli separation-methods.query.adj
+% ============================================================================
+
+import "separation-methods.adj"
+
+? separation_basis(filtration, $Basis)        % expect by_particle_size
+? separation_basis(distillation, $Basis)      % expect by_volatility
+? separation_basis(chromatography, $Basis)    % expect by_different_rates
+? separation_basis($Method, by_particle_size) % reverse bind — expect filtration
+? separation_basis(centrifugation, $Basis)    % expect abstain — centrifugation is not one of the methods this source lists

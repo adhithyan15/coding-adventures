@@ -4,10 +4,8 @@ import 'token.dart';
 import 'tokenizer.dart';
 
 class _CompiledPattern {
-  _CompiledPattern({
-    required this.definition,
-    required this.caseSensitive,
-  }) : regex = definition.isRegex
+  _CompiledPattern({required this.definition, required this.caseSensitive})
+      : regex = definition.isRegex
             ? RegExp(
                 '^(?:${definition.pattern})',
                 caseSensitive: caseSensitive,
@@ -192,17 +190,25 @@ String _resolveTokenType(
 }
 
 String _resolveTokenValue(String matchedText, String type, String? escapeMode) {
-  if (type == 'STRING' &&
-      matchedText.length >= 2 &&
-      matchedText.startsWith('"') &&
-      matchedText.endsWith('"')) {
-    final inner = matchedText.substring(1, matchedText.length - 1);
-    if (escapeMode == 'none') {
-      return inner;
-    }
-    return _decodeEscapes(inner);
+  if (type != 'STRING' && !type.contains('STRING')) {
+    return matchedText;
   }
-  return matchedText;
+
+  String? inner;
+  if (matchedText.length >= 6 &&
+      ((matchedText.startsWith('"""') && matchedText.endsWith('"""')) ||
+          (matchedText.startsWith("'''") && matchedText.endsWith("'''")))) {
+    inner = matchedText.substring(3, matchedText.length - 3);
+  } else if (matchedText.length >= 2 &&
+      ((matchedText.startsWith('"') && matchedText.endsWith('"')) ||
+          (matchedText.startsWith("'") && matchedText.endsWith("'")))) {
+    inner = matchedText.substring(1, matchedText.length - 1);
+  }
+
+  if (inner == null || escapeMode == 'none') {
+    return inner ?? matchedText;
+  }
+  return _decodeEscapes(inner);
 }
 
 String _decodeEscapes(String value) {

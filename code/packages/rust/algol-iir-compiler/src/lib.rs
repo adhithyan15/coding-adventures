@@ -116,9 +116,8 @@ enum ScalarType {
     /// the VM/JIT execute as doubles.
     Real,
     Boolean,
-    /// LANG-FULL AL4 literal-backed string scalar. This is not a full dynamic
-    /// ALGOL string model yet: a variable is printable only after a literal
-    /// assignment emits a direct E4 `str_const` to its slot.
+    /// LANG-FULL E4 scalar string. Local slots, captured block scalars, and
+    /// `own` statics all hold runtime string handles.
     String,
 }
 
@@ -208,9 +207,75 @@ struct ArrayInfo {
     elem_ty: ScalarType,
 }
 
+/// A captured array needs more than its handle in module-global storage: every
+/// procedure that indexes it must also recover the declaration-time lower
+/// bounds and row-major strides. These opaque names are never emitted as
+/// backend identifiers, only as string keys for `global_load`/`global_store`.
+fn array_dim_global_name(array_slot: &str, dim_index: usize, field: &str) -> String {
+    format!("{array_slot}.__algol_array_dim_{dim_index}_{field}")
+}
+
+/// Hidden IIR parameter carrying an array formal's first lower bound. It keeps
+/// the old 1-D spelling so existing IIR consumers and snapshots stay stable.
+/// Compiler-generated slots cannot collide with source names because ALGOL
+/// identifiers do not admit the double-underscore spelling.
+fn array_param_lower_slot(name: &str) -> String {
+    format!("__algol_array_param_{name}_lower")
+}
+
+/// Hidden IIR parameter carrying an array formal's lower bound for dimensions
+/// after the first. Dimension zero deliberately uses [`array_param_lower_slot`]
+/// for backward-compatible names.
+fn array_param_dim_lower_slot(name: &str, dim_index: usize) -> String {
+    if dim_index == 0 {
+        array_param_lower_slot(name)
+    } else {
+        format!("__algol_array_param_{name}_lower_{dim_index}")
+    }
+}
+
+/// Hidden IIR parameter carrying an array formal's row-major stride for one
+/// non-final dimension. The final dimension has an implicit stride of one.
+fn array_param_stride_slot(name: &str, dim_index: usize) -> String {
+    format!("__algol_array_param_{name}_stride_{dim_index}")
+}
+
+/// Module-global backing name for an array formal captured by a nested
+/// procedure. It is distinct from the incoming IIR parameter slot so the
+/// outer procedure can copy the complete descriptor before the nested sibling
+/// function runs.
+fn array_param_capture_slot(procedure_name: &str, param_name: &str) -> String {
+    format!("__algol_capture_{procedure_name}_{param_name}")
+}
+
+/// Module-global backing name for a scalar value parameter captured by a nested
+/// procedure. The incoming IIR parameter remains the procedure ABI slot; the
+/// outer procedure publishes its value here before the nested sibling runs.
+fn scalar_param_capture_slot(procedure_name: &str, param_name: &str) -> String {
+    format!("__algol_scalar_capture_{procedure_name}_{param_name}")
+}
+
+/// A procedure formal that the supported call-by-value slice can carry.
+///
+/// An array formal receives the caller's storage handle plus its complete
+/// rank-specific descriptor: each dimension's lower bound and every non-final
+/// row-major stride. The handle is shared storage, while this descriptor is
+/// copied into the callee's frame. The rank is inferred from the formal's
+/// subscripted uses in its body, so the fixed IIR function signature remains
+/// statically known before either caller or callee is lowered.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ProcedureParamType {
+    Scalar(ScalarType),
+    Array {
+        elem_ty: ScalarType,
+        dimensions: usize,
+    },
+}
+
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
-/// where each value parameter is `(name, type)` in declaration order.
-type ProcedureParts = (String, Vec<(String, ScalarType)>, ScalarType);
+/// where each value parameter is `(name, type)` in declaration order. A missing
+/// return type is an ALGOL proper procedure.
+type ProcedureParts = (String, Vec<(String, ProcedureParamType)>, Option<ScalarType>);
 
 /// The compile-time signature of a procedure: the ordered types of its
 /// value parameters plus its return type.
@@ -222,18 +287,17 @@ type ProcedureParts = (String, Vec<(String, ScalarType)>, ScalarType);
 /// looks the name up here to know (a) how many arguments to evaluate,
 /// (b) what type each argument must be, and (c) what type the call yields.
 ///
-/// We deliberately only model **typed** procedures (ALGOL "function
-/// procedures") with **value** parameters.  A proper (void) procedure has
-/// no observable effect on the current executable slice — there is no
-/// output statement and no by-reference / enclosing-scope mutation yet —
-/// so admitting one would be lowering code no test could ever witness.
-/// Those are rejected with a clear message and tracked as follow-up work.
+/// We model typed procedures (ALGOL "function procedures") as value-producing
+/// calls and proper procedures as void functions usable only in statement
+/// position. Parameters are still restricted to `value` parameters.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ProcSig {
-    /// Parameter types in declaration order (matches `IIRFunction::params`).
-    params: Vec<ScalarType>,
-    /// The procedure's return type (always `Some` on the supported slice).
-    ret: ScalarType,
+    /// Source-level parameter types in declaration order. Array formals lower
+    /// to a handle plus rank-specific descriptor values, but still consume one
+    /// ALGOL actual at a call site.
+    params: Vec<ProcedureParamType>,
+    /// The procedure's return type, or `None` for a proper procedure.
+    ret: Option<ScalarType>,
 }
 
 #[derive(Debug, Clone)]
@@ -259,21 +323,28 @@ struct Compiler {
     /// Procedure name → signature, registered in a pre-pass so a call can be
     /// lowered before the callee's body is (forward references / recursion).
     proc_sigs: HashMap<String, ProcSig>,
-    /// Switch name → its ordered list of target label slots.  A
-    /// `switch s := first, second` becomes `s → ["L_first", "L_second"]`, and a
-    /// `goto s[i]` (1-based) selects the i-th target.  Declared in the block's
-    /// declaration part, before the statements that use it.
-    switches: HashMap<String, Vec<String>>,
+    /// Switch name → its ordered designational expressions. A `goto s[i]`
+    /// evaluates the selected expression at run time, which permits both
+    /// conditional and nested switch-list elements.
+    switches: HashMap<String, Vec<GrammarASTNode>>,
+    /// Switches being expanded into the current linear dispatch chain. The
+    /// source grammar permits a switch to name another switch, but a cycle
+    /// cannot be finitely inlined into portable IIR control flow.
+    resolving_switches: HashSet<String>,
+    /// Number of switch-designator arms expanded in the current function.
+    /// This bounds exponential fan-out through an otherwise acyclic switch
+    /// graph before it can exhaust compiler resources.
+    switch_expansion_steps: usize,
     /// Names referenced inside a **procedure** body in the block currently being
     /// compiled (LANG-FULL **E6**).  Computed once per block before any scalar
     /// is declared; a block scalar whose name is in this set is materialised as
     /// a module global (`is_global`) so the procedure and the enclosing block
     /// share it.  Saved/restored around nested blocks.
     block_captured: HashSet<String>,
-    /// String slots known to be backed by a direct E4 `str_const` in the
-    /// current function. Static backends such as WASM use that producer table
-    /// for `print_str`, so AL4 only lets `print(s)` through after `s := '...'`.
-    literal_string_slots: HashSet<String>,
+    /// String slots that hold a defined value in source order. Unlike
+    /// a literal-only model, this also covers runtime results such as a string
+    /// procedure call copied into a scalar local.
+    initialized_string_slots: HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -292,8 +363,10 @@ impl Default for Compiler {
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             switches: HashMap::new(),
+            resolving_switches: HashSet::new(),
+            switch_expansion_steps: 0,
             block_captured: HashSet::new(),
-            literal_string_slots: HashSet::new(),
+            initialized_string_slots: HashSet::new(),
         }
     }
 }
@@ -318,6 +391,16 @@ impl Compiler {
                 return Err(CompileError::Unsupported(
                     "string result variables as main return values".into(),
                 ));
+            }
+            Some(binding) if binding.is_global => {
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(dest.clone()),
+                    vec![Operand::Str(binding.slot)],
+                    binding.ty.iir(),
+                ));
+                (binding.ty.iir(), Operand::Var(dest))
             }
             Some(binding) => (binding.ty.iir(), Operand::Var(binding.slot)),
             None => {
@@ -425,17 +508,9 @@ impl Compiler {
         Ok(())
     }
 
-    /// E6 capture analysis: collect every NAME referenced inside a procedure
-    /// body of `block`, minus each procedure's own parameters and its result
-    /// name (those are local to the procedure, not enclosing-scope captures).
-    /// A block scalar whose name lands in this set is materialised as a global.
-    ///
-    /// Caveat: only the *immediate* procedure's own params/result are excluded;
-    /// `collect_name_tokens` recurses into any **nested** procedures, so a nested
-    /// procedure's own locals could be over-captured. Harmless unless a block
-    /// scalar shares a name with a nested-procedure local — a rare, untested
-    /// shape (this slice targets one level of block→procedure capture). A proper
-    /// fix tracks nested scopes; tracked as an E6 follow-up.
+    /// E6 capture analysis: collect names used from a procedure body that are
+    /// not declared by that procedure or any intervening nested procedure. A
+    /// block scalar whose name lands in this set is materialised as a global.
     fn collect_block_captures(&self, block: &GrammarASTNode) -> HashSet<String> {
         let mut captured = HashSet::new();
         for child in direct_nodes(block) {
@@ -445,21 +520,16 @@ impl Compiler {
             let Some(proc_decl) = first_direct_node(child, "procedure_decl") else {
                 continue;
             };
-            // The procedure's own locals (param names + the result name) are not
-            // captures. `procedure_parts` is best-effort here; an unparseable
-            // heading just means we exclude nothing, which is safe (we only ever
-            // globalise names that are *also* declared as block scalars).
-            let mut local: HashSet<String> = HashSet::new();
-            if let Ok((pname, params, _)) = self.procedure_parts(proc_decl) {
-                local.insert(pname);
-                for (p, _) in params {
-                    local.insert(p);
-                }
-            }
-            collect_name_tokens(proc_decl, &mut captured);
-            for l in &local {
-                captured.remove(l);
-            }
+            let hidden = procedure_local_names(proc_decl);
+            let Some(body) = first_direct_node(proc_decl, "proc_body") else {
+                continue;
+            };
+
+            let mut references = HashSet::new();
+            collect_name_tokens_excluding_nested_procedures(body, &mut references);
+            references.retain(|name| !hidden.contains(name));
+            captured.extend(references);
+            collect_nested_block_captures(body, &hidden, &mut captured);
         }
         captured
     }
@@ -482,8 +552,11 @@ impl Compiler {
         // segment is lowered to an `alloc_array` whose length is the run-time
         // span `upper - lower + 1`; the binding records the lower bound so a
         // later `A[i]` access can translate to the 0-based IIR index `i - lower`.
+        if let Some(array_decl) = first_direct_node(node, "own_array_decl") {
+            return self.emit_array_decl(array_decl, true);
+        }
         if let Some(array_decl) = first_direct_node(node, "array_decl") {
-            return self.emit_array_decl(array_decl);
+            return self.emit_array_decl(array_decl, false);
         }
         let Some(type_decl) = first_direct_node(node, "type_decl") else {
             let construct = direct_nodes(node)
@@ -509,11 +582,6 @@ impl Compiler {
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
-            if ty == ScalarType::String && (is_own || self.block_captured.contains(&name)) {
-                return Err(CompileError::Unsupported(
-                    "own/captured string variables".into(),
-                ));
-            }
             let slot = self.declare_var(&name, ty, is_own)?;
             // A global (an `own` variable, or an E6-captured block scalar) is
             // zero-initialised once at module load — exactly the `own`
@@ -526,10 +594,61 @@ impl Compiler {
             if !is_global && ty != ScalarType::String {
                 self.emit(IIRInstr::new(
                     "const",
-                    Some(slot),
+                    Some(slot.clone()),
                     vec![ty.default_operand()],
                     ty.iir(),
                 ));
+            }
+            if is_own && ty == ScalarType::String {
+                // A string handle cannot use the all-zero scalar default: the
+                // string backends dereference it for comparison and output. An
+                // `own` declaration runs in a procedure body, so initialise its
+                // empty-string value behind a persistent flag exactly once.
+                let flag = format!("{slot}.__algol_own_string_initialized");
+                let initialized = self.fresh_temp();
+                let initialize_label = self.fresh_label("own_string_initialize");
+                let ready_label = self.fresh_label("own_string_ready");
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(initialized.clone()),
+                    vec![Operand::Str(flag.clone())],
+                    "i64",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(initialized), Operand::Var(initialize_label.clone())],
+                    "void",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp",
+                    None,
+                    vec![Operand::Var(ready_label.clone())],
+                    "void",
+                ));
+                self.emit_label(&initialize_label);
+                let empty = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(empty.clone()),
+                    vec![Operand::Str(String::new())],
+                    "str",
+                ));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(slot.clone()), Operand::Var(empty)],
+                    "void",
+                ));
+                let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(flag), Operand::Var(one)],
+                    "void",
+                ));
+                self.emit_label(&ready_label);
+                self.initialized_string_slots.insert(slot);
             }
         }
         Ok(())
@@ -549,14 +668,21 @@ impl Compiler {
     /// flat total length (product of all dimension sizes), and emit one
     /// `alloc_array`.  Per-dimension lower bounds and row-major strides are
     /// recorded in `ArrayInfo.dims` so `A[i, j]` can compute the flat index.
-    fn emit_array_decl(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
+    fn emit_array_decl(
+        &mut self,
+        node: &GrammarASTNode,
+        is_own: bool,
+    ) -> Result<(), CompileError> {
         let elem_ty = match first_direct_node(node, "type") {
             Some(type_node) => self.scalar_type(type_node)?,
             None => ScalarType::Real, // bare `array A[..]` is `real` in ALGOL 60
         };
-        if !matches!(elem_ty, ScalarType::Integer | ScalarType::Real) {
+        if !matches!(
+            elem_ty,
+            ScalarType::Integer | ScalarType::Real | ScalarType::Boolean | ScalarType::String
+        ) {
             return Err(CompileError::Unsupported(format!(
-                "{} arrays (only integer/real element types so far)",
+                "{} arrays (only integer/real/boolean/string element types so far)",
                 elem_ty.name()
             )));
         }
@@ -565,6 +691,47 @@ impl Compiler {
             .into_iter()
             .filter(|n| n.rule_name == "array_segment")
         {
+            let names: Vec<String> = first_direct_node(segment, "ident_list")
+                .map(ident_list_names)
+                .unwrap_or_default();
+            if names.is_empty() {
+                return Err(CompileError::Malformed(
+                    "array_segment has no names".into(),
+                ));
+            }
+
+            // An `own` array declared inside a procedure is allocated on the
+            // first invocation only. The flag is a separate scalar global so
+            // every standard backend can use its existing i64 global support
+            // to guard the typed array-handle global and its dimension metadata.
+            let own_init = is_own.then(|| {
+                let array_slot = self.scoped_slot_name(&names[0]);
+                let flag = format!("{array_slot}.__algol_own_array_initialized");
+                let initialized = self.fresh_temp();
+                let allocate_label = self.fresh_label("own_array_allocate");
+                let ready_label = self.fresh_label("own_array_ready");
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(initialized.clone()),
+                    vec![Operand::Str(flag.clone())],
+                    "i64",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(initialized), Operand::Var(allocate_label.clone())],
+                    "void",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp",
+                    None,
+                    vec![Operand::Var(ready_label.clone())],
+                    "void",
+                ));
+                self.emit_label(&allocate_label);
+                (flag, ready_label)
+            });
+
             let bound_pairs: Vec<&GrammarASTNode> = direct_nodes(segment)
                 .into_iter()
                 .filter(|n| n.rule_name == "bound_pair")
@@ -683,23 +850,65 @@ impl Compiler {
                 })
                 .collect();
 
-            let names: Vec<String> = first_direct_node(segment, "ident_list")
-                .map(ident_list_names)
-                .unwrap_or_default();
-            if names.is_empty() {
-                return Err(CompileError::Malformed(
-                    "array_segment has no names".into(),
-                ));
-            }
             let array_ty = make_array_type(elem_ty.iir());
             for name in names {
-                let handle = self.declare_array(&name, elem_ty, dims.clone())?;
+                let is_global = is_own || self.block_captured.contains(&name);
+                let handle = self.declare_array(&name, elem_ty, dims.clone(), is_global)?;
+                let alloc_dest = if is_global {
+                    self.fresh_temp()
+                } else {
+                    handle.clone()
+                };
                 self.emit(IIRInstr::new(
                     "alloc_array",
-                    Some(handle),
+                    Some(alloc_dest.clone()),
                     vec![Operand::Var(total_len.clone())],
                     &array_ty,
                 ));
+                if is_global {
+                    self.emit(IIRInstr::new(
+                        "global_store",
+                        None,
+                        vec![Operand::Str(handle.clone()), Operand::Var(alloc_dest)],
+                        "void",
+                    ));
+                    for (dim_index, dim) in dims.iter().enumerate() {
+                        self.emit(IIRInstr::new(
+                            "global_store",
+                            None,
+                            vec![
+                                Operand::Str(array_dim_global_name(&handle, dim_index, "lower")),
+                                Operand::Var(dim.lower_slot.clone()),
+                            ],
+                            "void",
+                        ));
+                        if let Some(stride) = &dim.stride_slot {
+                            self.emit(IIRInstr::new(
+                                "global_store",
+                                None,
+                                vec![
+                                    Operand::Str(array_dim_global_name(
+                                        &handle,
+                                        dim_index,
+                                        "stride",
+                                    )),
+                                    Operand::Var(stride.clone()),
+                                ],
+                                "void",
+                            ));
+                        }
+                    }
+                }
+            }
+            if let Some((flag, ready_label)) = own_init {
+                let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(flag), Operand::Var(one)],
+                    "void",
+                ));
+                self.emit_label(&ready_label);
             }
         }
         Ok(())
@@ -723,7 +932,7 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("subscripted variable missing name".into()))?;
-        let binding = self.require_var(&name)?;
+        let mut binding = self.require_var(&name)?;
         let Some(info) = binding.array.clone() else {
             return Err(CompileError::Type(format!(
                 "{name:?} is not an array — cannot subscript it"
@@ -744,7 +953,7 @@ impl Compiler {
         // Accumulate into `flat`; start with None meaning "haven't written yet".
         let mut flat: Option<String> = None;
 
-        for (dim, sub_node) in info.dims.iter().zip(subs) {
+        for (dim_index, (dim, sub_node)) in info.dims.iter().zip(subs).enumerate() {
             let idx = self.emit_expr(sub_node)?;
             if idx.ty != ScalarType::Integer {
                 return Err(CompileError::Type(format!(
@@ -752,22 +961,56 @@ impl Compiler {
                 )));
             }
 
-            // diff = sub − lower
+            // diff = sub − lower. A captured array owns its bound metadata in
+            // module globals, because the procedure body has a fresh register
+            // frame and cannot directly see the declaring block's temporaries.
+            let lower_slot = if binding.is_global {
+                let slot = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(slot.clone()),
+                    vec![Operand::Str(array_dim_global_name(
+                        &binding.slot,
+                        dim_index,
+                        "lower",
+                    ))],
+                    "i64",
+                ));
+                slot
+            } else {
+                dim.lower_slot.clone()
+            };
             let diff = self.fresh_temp();
             self.emit(IIRInstr::new(
                 "sub",
                 Some(diff.clone()),
-                vec![Operand::Var(idx.slot), Operand::Var(dim.lower_slot.clone())],
+                vec![Operand::Var(idx.slot), Operand::Var(lower_slot)],
                 "i64",
             ));
 
             // contrib = diff * stride  (or just diff when stride = 1, last dim)
             let contrib = if let Some(stride) = &dim.stride_slot {
+                let stride_slot = if binding.is_global {
+                    let slot = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "global_load",
+                        Some(slot.clone()),
+                        vec![Operand::Str(array_dim_global_name(
+                            &binding.slot,
+                            dim_index,
+                            "stride",
+                        ))],
+                        "i64",
+                    ));
+                    slot
+                } else {
+                    stride.clone()
+                };
                 let prod = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "mul",
                     Some(prod.clone()),
-                    vec![Operand::Var(diff), Operand::Var(stride.clone())],
+                    vec![Operand::Var(diff), Operand::Var(stride_slot)],
                     "i64",
                 ));
                 prod
@@ -791,6 +1034,17 @@ impl Compiler {
         }
 
         let flat = flat.expect("dims is always non-empty");
+        if binding.is_global {
+            let handle = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "global_load",
+                Some(handle.clone()),
+                vec![Operand::Str(binding.slot.clone())],
+                make_array_type(binding.ty.iir()),
+            ));
+            binding.slot = handle;
+            binding.is_global = false;
+        }
         Ok((binding, flat))
     }
 
@@ -824,24 +1078,48 @@ impl Compiler {
         }
     }
 
-    /// Map a `specifier` keyword (the type a `spec_part` attaches to a formal
-    /// parameter) to a scalar type.  `specifier` is a superset of `type`: it
-    /// also admits `array`, `label`, `switch`, and `procedure`, none of which
-    /// the current executable slice carries, so those produce a clear
-    /// "unsupported" message rather than a confusing "unknown token".
-    fn specifier_scalar_type(&self, node: &GrammarASTNode) -> Result<ScalarType, CompileError> {
-        let token = single_token_recursive(node)
-            .ok_or_else(|| CompileError::Malformed("specifier has no token".into()))?;
-        match token.value.as_str() {
-            "integer" => Ok(ScalarType::Integer),
-            "real" => Ok(ScalarType::Real),
-            "boolean" => Ok(ScalarType::Boolean),
-            "string" => Ok(ScalarType::String),
-            kind @ ("array" | "label" | "switch" | "procedure") => Err(
+    /// Map a procedure `specifier` to the supported formal shape.
+    ///
+    /// The compiled parser accepts `integer array a` as a two-token specifier;
+    /// its legacy `array a` spelling remains a real-array formal, matching the
+    /// default element type of an untyped ALGOL array declaration. Array
+    /// formals infer their dimension count from their subscripted uses in the
+    /// procedure body; the actual's rank is checked when the call is lowered.
+    fn procedure_param_type(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Result<ProcedureParamType, CompileError> {
+        let tokens = recursive_tokens(node);
+        let words: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+        let scalar = |word: &str| match word {
+            "integer" => Some(ScalarType::Integer),
+            "real" => Some(ScalarType::Real),
+            "boolean" => Some(ScalarType::Boolean),
+            "string" => Some(ScalarType::String),
+            _ => None,
+        };
+
+        match words.as_slice() {
+            ["array"] => Ok(ProcedureParamType::Array {
+                elem_ty: ScalarType::Real,
+                dimensions: 1,
+            }),
+            [ty, "array"] => scalar(ty)
+                .map(|elem_ty| ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions: 1,
+                })
+                .ok_or_else(|| CompileError::Malformed(format!(
+                    "unknown array parameter element type {ty:?}"
+                ))),
+            [ty] => scalar(ty)
+                .map(ProcedureParamType::Scalar)
+                .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
+            [_, kind] if matches!(*kind, "label" | "switch" | "procedure") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
-            other => Err(CompileError::Malformed(format!(
-                "unknown specifier token {other:?}"
+            _ => Err(CompileError::Malformed(format!(
+                "unknown procedure parameter specifier {words:?}"
             ))),
         }
     }
@@ -860,9 +1138,11 @@ impl Compiler {
     /// * each `spec_part` declares the *type* of one or more parameters.
     ///
     /// On the supported slice every parameter must be a `value` parameter
-    /// (call-by-name / Jensen's device is not modelled), the procedure must
-    /// have a return type (proper/void procedures are inert here), and every
-    /// parameter must be specified exactly once.
+    /// (call-by-name / Jensen's device is not modelled), and every parameter
+    /// must be specified exactly once. Scalar formals and integer/real/boolean/string
+    /// array descriptors are supported; an array formal's rank is inferred from
+    /// subscripted uses in its body. A missing heading type is a proper procedure
+    /// and lowers to an IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -873,15 +1153,9 @@ impl Compiler {
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
 
-        let ret = match first_direct_node(proc_decl, "type") {
-            Some(type_node) => self.scalar_type(type_node)?,
-            None => {
-                return Err(CompileError::Unsupported(format!(
-                    "proper (void) procedure {name:?}: only typed procedures with a return \
-                     value are observable on the current ALGOL slice"
-                )))
-            }
-        };
+        let ret = first_direct_node(proc_decl, "type")
+            .map(|type_node| self.scalar_type(type_node))
+            .transpose()?;
         // E4-dyn payoff (E4d-AL): `string procedure`s are now supported. The
         // result variable (the procedure name) holds a runtime string handle,
         // which every backend can carry and `print` since the E4-dyn foothold
@@ -917,14 +1191,14 @@ impl Compiler {
         }
 
         // Each parameter's type, gathered from the `spec_part` declarations.
-        let mut type_of: HashMap<String, ScalarType> = HashMap::new();
+        let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
         for spec in direct_nodes(proc_decl)
             .into_iter()
             .filter(|n| n.rule_name == "spec_part")
         {
             let specifier = first_direct_node(spec, "specifier")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing specifier".into()))?;
-            let ty = self.specifier_scalar_type(specifier)?;
+            let ty = self.procedure_param_type(specifier)?;
             let list = first_direct_node(spec, "ident_list")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
             for n in ident_list_names(list) {
@@ -937,6 +1211,13 @@ impl Compiler {
             let ty = type_of.get(&p).copied().ok_or_else(|| {
                 CompileError::Malformed(format!("parameter {p:?} has no specification"))
             })?;
+            let ty = match ty {
+                ProcedureParamType::Array { elem_ty, .. } => ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions: array_formal_dimension_count(proc_decl, &p)?,
+                },
+                ProcedureParamType::Scalar(_) => ty,
+            };
             params.push((p, ty));
         }
 
@@ -982,6 +1263,8 @@ impl Compiler {
     ) -> Result<IIRFunction, CompileError> {
         self.set_loc(proc_decl);
         let (name, params, ret) = self.procedure_parts(proc_decl)?;
+        let captured_array_formals = array_formals_captured_by_nested_procedures(proc_decl, &params);
+        let captured_scalar_formals = scalar_formals_captured_by_nested_procedures(proc_decl, &params);
 
         // ── swap in a fresh emission context ─────────────────────────────
         let saved_instrs = std::mem::take(&mut self.instrs);
@@ -990,7 +1273,9 @@ impl Compiler {
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
-        let saved_literal_string_slots = std::mem::take(&mut self.literal_string_slots);
+        let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
+        let saved_initialized_string_slots =
+            std::mem::take(&mut self.initialized_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
 
         // E6: a procedure body addresses an enclosing block scalar that was
@@ -1007,46 +1292,131 @@ impl Compiler {
                 }
             }
         }
+        // A formal parameter or result with the same spelling shadows an
+        // injected enclosing global. Keep this set separate so a duplicate
+        // formal still reaches the normal duplicate-declaration error.
+        let mut injected_global_names: HashSet<String> =
+            self.scopes[0].keys().cloned().collect();
 
-        // Bind value parameters and the result variable (the procedure name).
-        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
+        // Bind value parameters and, for typed procedures, the result variable
+        // (the procedure name). An array descriptor carries its typed handle,
+        // every lower bound, and every non-final row-major stride. The caller
+        // keeps ownership of the backing storage, so element writes in the
+        // callee are visible to the actual array.
+        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 4);
         for (pname, pty) in &params {
-            // Parameters and the result slot are real registers, never `own`.
-            let slot = self.declare_var(pname, *pty, false)?;
-            // A string parameter is pre-initialized by the caller (the call
-            // site already emitted a str_const or passed a known-literal slot).
-            // Mark it as literal-backed so `print(s)` can emit `print_str`
-            // directly inside the body — the same invariant a variable holds
-            // after `s := 'HI'`.
-            if *pty == ScalarType::String {
-                self.literal_string_slots.insert(slot.clone());
+            if injected_global_names.remove(pname) {
+                self.scopes[0].remove(pname);
             }
-            param_pairs.push((slot, pty.iir().to_string()));
+            match pty {
+                ProcedureParamType::Scalar(pty) => {
+                    // Parameters and the result slot are real registers, never `own`.
+                    let slot = self.declare_var(pname, *pty, false)?;
+                    // A string parameter is initialized by the caller, but can carry
+                    // a runtime handle. It is deliberately not literal-backed: only
+                    // direct `str_const` producers support ordering comparisons.
+                    if *pty == ScalarType::String {
+                        self.initialized_string_slots.insert(slot.clone());
+                    }
+                    if captured_scalar_formals.contains(pname) {
+                        self.promote_scalar_parameter_capture(&name, pname, *pty, &slot)?;
+                    }
+                    param_pairs.push((slot, pty.iir().to_string()));
+                }
+                ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions,
+                } => {
+                    if !matches!(
+                        *elem_ty,
+                        ScalarType::Integer
+                            | ScalarType::Real
+                            | ScalarType::Boolean
+                            | ScalarType::String
+                    ) {
+                        return Err(CompileError::Unsupported(format!(
+                            "{} array parameters (only integer/real/boolean/string element types so far)",
+                            elem_ty.name()
+                        )));
+                    }
+                    let dims = (0..*dimensions)
+                        .map(|dim_index| ArrayDim {
+                            lower_slot: array_param_dim_lower_slot(pname, dim_index),
+                            stride_slot: (dim_index + 1 < *dimensions)
+                                .then(|| array_param_stride_slot(pname, dim_index)),
+                        })
+                        .collect();
+                    let handle = self.declare_array(
+                        pname,
+                        *elem_ty,
+                        dims,
+                        false,
+                    )?;
+                    param_pairs.push((handle.clone(), make_array_type(elem_ty.iir())));
+                    for dim_index in 0..*dimensions {
+                        let lower_slot = array_param_dim_lower_slot(pname, dim_index);
+                        self.register_names.insert(lower_slot.clone());
+                        param_pairs.push((lower_slot, "i64".to_string()));
+                        if dim_index + 1 < *dimensions {
+                            let stride_slot = array_param_stride_slot(pname, dim_index);
+                            self.register_names.insert(stride_slot.clone());
+                            param_pairs.push((stride_slot, "i64".to_string()));
+                        }
+                    }
+                    if captured_array_formals.contains(pname) {
+                        self.promote_array_parameter_capture(
+                            &name,
+                            pname,
+                            *elem_ty,
+                            *dimensions,
+                            &handle,
+                        )?;
+                    }
+                }
+            }
         }
-        // The procedure's name is an in-scope variable holding the return
-        // value; seed it with a default so a path that never assigns it still
-        // returns a defined value.
-        let result_slot = self.declare_var(&name, ret, false)?;
-        if ret == ScalarType::String {
-            // A string result is a runtime handle, so its default must be a real
-            // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
-            // — the same shape a literal assignment produces — and mark it
-            // literal-backed so an unassigned path still yields a printable value.
-            self.emit(IIRInstr::new(
-                "str_const",
-                Some(result_slot.clone()),
-                vec![Operand::Str(String::new())],
-                "str",
-            ));
-            self.literal_string_slots.insert(result_slot.clone());
+        let result_slot = if let Some(ret) = ret {
+            // The procedure's name is an in-scope variable holding the return
+            // value; seed it with a default so a path that never assigns it
+            // still returns a defined value.
+            // Capture analysis is deliberately conservative and walks the
+            // whole declaration, including `name := ...` in this procedure's
+            // body. The result variable belongs to this fresh procedure frame,
+            // never to the enclosing block, even if that scan recorded its
+            // spelling as a candidate capture.
+            let result_was_captured = self.block_captured.remove(&name);
+            if injected_global_names.remove(&name) {
+                self.scopes[0].remove(&name);
+            }
+            let declared_result = self.declare_var(&name, ret, false);
+            if result_was_captured {
+                self.block_captured.insert(name.clone());
+            }
+            let result_slot = declared_result?;
+            if ret == ScalarType::String {
+                // A string result is a runtime handle, so its default must be a real
+                // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
+                // — the same shape a literal assignment produces — and mark it
+                // literal-backed so an unassigned path still yields a printable value.
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(result_slot.clone()),
+                    vec![Operand::Str(String::new())],
+                    "str",
+                ));
+                self.initialized_string_slots.insert(result_slot.clone());
+            } else {
+                self.emit(IIRInstr::new(
+                    "const",
+                    Some(result_slot.clone()),
+                    vec![ret.default_operand()],
+                    ret.iir(),
+                ));
+            }
+            Some(result_slot)
         } else {
-            self.emit(IIRInstr::new(
-                "const",
-                Some(result_slot.clone()),
-                vec![ret.default_operand()],
-                ret.iir(),
-            ));
-        }
+            None
+        };
 
         // ── lower the body ───────────────────────────────────────────────
         let body = first_direct_node(proc_decl, "proc_body")
@@ -1075,17 +1445,23 @@ impl Compiler {
             }
         }
 
-        self.emit(IIRInstr::new(
-            "ret",
-            None,
-            vec![Operand::Var(result_slot)],
-            ret.iir(),
-        ));
+        let return_type = if let (Some(ret), Some(result_slot)) = (ret, result_slot) {
+            self.emit(IIRInstr::new(
+                "ret",
+                None,
+                vec![Operand::Var(result_slot)],
+                ret.iir(),
+            ));
+            ret.iir()
+        } else {
+            self.emit(IIRInstr::new("ret_void", None, vec![], "void"));
+            "void"
+        };
 
         // ── assemble the function and restore the caller's context ───────
         let body_instrs = std::mem::take(&mut self.instrs);
         let body_len = body_instrs.len();
-        let mut func = IIRFunction::new(name, param_pairs, ret.iir(), body_instrs);
+        let mut func = IIRFunction::new(name, param_pairs, return_type, body_instrs);
         func.type_status = FunctionTypeStatus::FullyTyped;
         func.register_count = self.register_names.len().saturating_add(8).max(8);
         let mut sm = std::mem::take(&mut self.source_map);
@@ -1101,22 +1477,125 @@ impl Compiler {
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
-        self.literal_string_slots = saved_literal_string_slots;
+        self.switch_expansion_steps = saved_switch_expansion_steps;
+        self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
 
         Ok(func)
+    }
+
+    /// Publish a scalar value formal into module-global storage when a nested
+    /// procedure needs to read or write it from a separate IIR function frame.
+    fn promote_scalar_parameter_capture(
+        &mut self,
+        procedure_name: &str,
+        param_name: &str,
+        ty: ScalarType,
+        incoming_slot: &str,
+    ) -> Result<(), CompileError> {
+        let capture_slot = scalar_param_capture_slot(procedure_name, param_name);
+        let binding = self
+            .scopes
+            .last_mut()
+            .and_then(|scope| scope.get_mut(param_name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "scalar parameter {param_name:?} missing while preparing nested capture"
+            )))?;
+        if binding.ty != ty || binding.array.is_some() {
+            return Err(CompileError::Malformed(format!(
+                "scalar parameter {param_name:?} has an inconsistent binding"
+            )));
+        }
+        binding.slot = capture_slot.clone();
+        binding.is_global = true;
+
+        self.emit(IIRInstr::new(
+            "global_store",
+            None,
+            vec![
+                Operand::Str(capture_slot),
+                Operand::Var(incoming_slot.to_string()),
+            ],
+            "void",
+        ));
+        Ok(())
+    }
+
+    /// Copy an incoming array descriptor into module globals before a nested
+    /// procedure can run. Nested procedures compile as sibling IIR functions,
+    /// so their fresh frames cannot read the outer procedure's parameter slots
+    /// directly; rebinding the outer formal to the global descriptor gives both
+    /// functions the same storage handle, lower bounds, and strides.
+    fn promote_array_parameter_capture(
+        &mut self,
+        procedure_name: &str,
+        param_name: &str,
+        elem_ty: ScalarType,
+        dimensions: usize,
+        incoming_handle: &str,
+    ) -> Result<(), CompileError> {
+        let capture_slot = array_param_capture_slot(procedure_name, param_name);
+        let binding = self
+            .scopes
+            .last_mut()
+            .and_then(|scope| scope.get_mut(param_name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "array parameter {param_name:?} missing while preparing nested capture"
+            )))?;
+        if binding.ty != elem_ty || binding.array.is_none() {
+            return Err(CompileError::Malformed(format!(
+                "array parameter {param_name:?} has an inconsistent descriptor"
+            )));
+        }
+        binding.slot = capture_slot.clone();
+        binding.is_global = true;
+
+        self.emit(IIRInstr::new(
+            "global_store",
+            None,
+            vec![
+                Operand::Str(capture_slot.clone()),
+                Operand::Var(incoming_handle.to_string()),
+            ],
+            "void",
+        ));
+        for dim_index in 0..dimensions {
+            self.emit(IIRInstr::new(
+                "global_store",
+                None,
+                vec![
+                    Operand::Str(array_dim_global_name(&capture_slot, dim_index, "lower")),
+                    Operand::Var(array_param_dim_lower_slot(param_name, dim_index)),
+                ],
+                "void",
+            ));
+            if dim_index + 1 < dimensions {
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![
+                        Operand::Str(array_dim_global_name(&capture_slot, dim_index, "stride")),
+                        Operand::Var(array_param_stride_slot(param_name, dim_index)),
+                    ],
+                    "void",
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// Lower a procedure *call* in value position (`sq(7)`), returning the
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
-        let dest = self.emit_call_common(node)?;
-        Ok(dest)
+        self.emit_call_common(node, true)?.ok_or_else(|| {
+            CompileError::Type("proper procedure call has no return value".into())
+        })
     }
 
-    /// Lower a procedure *call* in statement position (`bump(3)`).  The
-    /// returned value is computed but discarded.
+    /// Lower a procedure *call* in statement position (`bump(3)`).  A typed
+    /// procedure's returned value is computed but discarded; a proper procedure
+    /// emits a void call with no destination.
     fn emit_proc_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         let name = direct_tokens(node)
@@ -1127,7 +1606,7 @@ impl Compiler {
         if self.try_emit_standard_output_stmt(&name, node)? {
             return Ok(());
         }
-        self.emit_call_common(node)?;
+        self.emit_call_common(node, false)?;
         Ok(())
     }
 
@@ -1178,15 +1657,16 @@ impl Compiler {
                         binding.ty.name()
                     )));
                 }
-                if !self.literal_string_slots.contains(&binding.slot) {
+                if !binding.is_global && !self.initialized_string_slots.contains(&binding.slot) {
                     return Err(CompileError::Unsupported(format!(
-                        "standard output procedure {name:?} requires literal-backed string variable {var_name:?}"
+                        "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
+                let value = self.read_scalar(binding);
                 self.emit(IIRInstr::new(
                     "print_str",
                     None,
-                    vec![Operand::Var(binding.slot)],
+                    vec![Operand::Var(value.slot)],
                     "void",
                 ));
                 continue;
@@ -1222,7 +1702,11 @@ impl Compiler {
     /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
     /// argument slots, matching the IIR calling convention every backend
     /// understands.
-    fn emit_call_common(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+    fn emit_call_common(
+        &mut self,
+        node: &GrammarASTNode,
+        require_value: bool,
+    ) -> Result<Option<ExprValue>, CompileError> {
         let name = direct_tokens(node)
             .into_iter()
             .find(|t| t.effective_type_name() == "NAME")
@@ -1239,7 +1723,7 @@ impl Compiler {
             Some(sig) => sig,
             None => {
                 if let Some(result) = self.try_emit_standard_function(&name, node)? {
-                    return Ok(result);
+                    return Ok(Some(result));
                 }
                 return Err(CompileError::Type(format!(
                     "call to undeclared procedure {name:?}"
@@ -1262,32 +1746,119 @@ impl Compiler {
             )));
         }
 
-        let mut arg_slots = Vec::with_capacity(actuals.len());
+        let mut arg_slots = Vec::with_capacity(actuals.len() * 4);
         for (actual, expected) in actuals.iter().zip(sig.params.iter()) {
-            let value = self.emit_expr(actual)?;
-            if value.ty != *expected {
-                return Err(CompileError::Type(format!(
-                    "procedure {name:?}: argument is {} but parameter is {}",
-                    value.ty.name(),
-                    expected.name()
-                )));
+            match expected {
+                ProcedureParamType::Scalar(expected) => {
+                    let value = self.emit_expr(actual)?;
+                    let value = self.coerce_value(
+                        value,
+                        *expected,
+                        &format!("procedure {name:?}: argument"),
+                    )?;
+                    arg_slots.push(value.slot);
+                }
+                ProcedureParamType::Array {
+                    elem_ty: expected_elem_ty,
+                    dimensions: expected_dimensions,
+                } => {
+                    let actual_name = expr_variable_name(actual).ok_or_else(|| {
+                        CompileError::Type(format!(
+                            "procedure {name:?}: array parameter requires a bare array variable"
+                        ))
+                    })?;
+                    let binding = self.require_var(&actual_name)?;
+                    let info = binding.array.clone().ok_or_else(|| {
+                        CompileError::Type(format!(
+                            "procedure {name:?}: argument {actual_name:?} is not an array"
+                        ))
+                    })?;
+                    if info.elem_ty != *expected_elem_ty {
+                        return Err(CompileError::Type(format!(
+                            "procedure {name:?}: array argument {actual_name:?} has {} elements but parameter expects {}",
+                            info.elem_ty.name(),
+                            expected_elem_ty.name()
+                        )));
+                    }
+                    if info.dims.len() != *expected_dimensions {
+                        return Err(CompileError::Type(format!(
+                            "procedure {name:?}: array argument {actual_name:?} is {}-dimensional but the formal is {}-dimensional",
+                            info.dims.len(),
+                            expected_dimensions
+                        )));
+                    }
+
+                    // Global arrays (captured or `own`) store their descriptor
+                    // metadata outside the current frame. Reload the complete
+                    // rank-specific descriptor so the callee gets the same
+                    // handle/lower-bound/stride values as a local-array actual.
+                    if binding.is_global {
+                        let handle = self.fresh_temp();
+                        self.emit(IIRInstr::new(
+                            "global_load",
+                            Some(handle.clone()),
+                            vec![Operand::Str(binding.slot.clone())],
+                            make_array_type(binding.ty.iir()),
+                        ));
+                        arg_slots.push(handle);
+                        for (dim_index, dim) in info.dims.iter().enumerate() {
+                            let lower = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "global_load",
+                                Some(lower.clone()),
+                                vec![Operand::Str(array_dim_global_name(
+                                    &binding.slot,
+                                    dim_index,
+                                    "lower",
+                                ))],
+                                "i64",
+                            ));
+                            arg_slots.push(lower);
+                            if dim.stride_slot.is_some() {
+                                let stride = self.fresh_temp();
+                                self.emit(IIRInstr::new(
+                                    "global_load",
+                                    Some(stride.clone()),
+                                    vec![Operand::Str(array_dim_global_name(
+                                        &binding.slot,
+                                        dim_index,
+                                        "stride",
+                                    ))],
+                                    "i64",
+                                ));
+                                arg_slots.push(stride);
+                            }
+                        }
+                    } else {
+                        arg_slots.push(binding.slot);
+                        for dim in &info.dims {
+                            arg_slots.push(dim.lower_slot.clone());
+                            if let Some(stride_slot) = &dim.stride_slot {
+                                arg_slots.push(stride_slot.clone());
+                            }
+                        }
+                    }
+                }
             }
-            arg_slots.push(value.slot);
         }
 
-        let dest = self.fresh_temp();
+        if require_value && sig.ret.is_none() {
+            return Err(CompileError::Type(format!(
+                "proper procedure {name:?} has no return value"
+            )));
+        }
+
+        let (dest, type_hint) = match sig.ret {
+            Some(ret) => (Some(self.fresh_temp()), ret.iir()),
+            None => (None, "void"),
+        };
         let mut srcs = Vec::with_capacity(arg_slots.len() + 1);
         srcs.push(Operand::Var(name));
         srcs.extend(arg_slots.into_iter().map(Operand::Var));
-        self.emit(IIRInstr::new(
-            "call",
-            Some(dest.clone()),
-            srcs,
-            sig.ret.iir(),
-        ));
-        Ok(ExprValue {
-            slot: dest,
-            ty: sig.ret,
+        self.emit(IIRInstr::new("call", dest.clone(), srcs, type_hint));
+        Ok(match (dest, sig.ret) {
+            (Some(slot), Some(ty)) => Some(ExprValue { slot, ty }),
+            _ => None,
         })
     }
 
@@ -1566,11 +2137,10 @@ impl Compiler {
     /// `i64.trunc_sat`, `Math.floor`+`d2l`, `Math::Floor`+`conv.ovf.i4`,
     /// `frintm`+`fcvtzs`, `roundsd`+`cvttsd2si`).
     ///
-    /// The operand must be `real`: `entier` is *specifically* the real→integer
-    /// floor, so an `integer` argument is a type error (there is nothing to
-    /// floor — the frontend would just be discarding the type).  A user
-    /// `integer procedure entier` still wins, because `proc_sigs` is consulted
-    /// before this fallback in `emit_call_common`.
+    /// Integer operands widen to real before flooring, which preserves
+    /// ALGOL's arithmetic coercion rule (`entier(7)` is 7). A user `integer
+    /// procedure entier` still wins, because `proc_sigs` is consulted before
+    /// this fallback in `emit_call_common`.
     fn emit_entier(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let actuals = self.standard_fn_actuals(node);
         if actuals.len() != 1 {
@@ -1580,15 +2150,7 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function entier requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(value, ScalarType::Real, "standard function entier")?;
 
         // result := floor(E), narrowed to an integer.  `real_to_int_floor`'s
         // `type_hint` is the *result* type (`integer`/`i64`), matching the E8
@@ -1606,11 +2168,11 @@ impl Compiler {
         })
     }
 
-    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root.  The operand must be `real`
-    /// (integer `sqrt` is a type error per the standard).  Lowers to the
-    /// portable `f64_sqrt` IIR op: every backend maps it to its native hardware
-    /// square-root instruction (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM
-    /// `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `Math.Sqrt`).
+    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root. Integer operands widen to
+    /// `real` before the portable `f64_sqrt` IIR op, which every backend maps
+    /// to its native hardware square-root instruction (aarch64 `fsqrt`, SSE2
+    /// `sqrtsd`, WASM `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR
+    /// `Math.Sqrt`).
     ///
     /// ```text
     ///   t := E          ; evaluate the operand once (real)
@@ -1625,15 +2187,7 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function sqrt requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(value, ScalarType::Real, "standard function sqrt")?;
 
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
@@ -1655,7 +2209,7 @@ impl Compiler {
     /// identifier; `op` is the IIR opcode (e.g. `"f64_sin"`).
     ///
     /// ```text
-    ///   t    := E         ; evaluate the argument once (must be real)
+    ///   t    := E         ; evaluate the argument once (integer inputs widen)
     ///   dest := <op> t
     /// ```
     fn emit_f64_unary(
@@ -1672,15 +2226,11 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function {fn_name} requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(
+            value,
+            ScalarType::Real,
+            &format!("standard function {fn_name}"),
+        )?;
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             op,
@@ -1766,9 +2316,32 @@ impl Compiler {
                 let var_node = first_direct_node(left, "variable")
                     .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
                 if array_subscripts(var_node).is_some() {
-                    return Err(CompileError::Unsupported(
-                        "string array assignments".into(),
+                    let (binding, zero) = self.resolve_array_index(var_node)?;
+                    if binding.ty != ScalarType::String {
+                        return Err(CompileError::Type(format!(
+                            "cannot assign string expression to {} array element",
+                            binding.ty.name()
+                        )));
+                    }
+                    let value = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(value.clone()),
+                        vec![Operand::Str(literal.clone())],
+                        "str",
                     ));
+                    self.emit(IIRInstr::new(
+                        "array_set",
+                        None,
+                        vec![
+                            Operand::Var(binding.slot),
+                            Operand::Var(zero),
+                            Operand::Var(value),
+                        ],
+                        "str",
+                    ));
+                    saw_string_target = true;
+                    continue;
                 }
                 let name = self.simple_variable_name(var_node)?;
                 let binding = self.require_var(&name)?;
@@ -1778,19 +2351,27 @@ impl Compiler {
                         binding.ty.name()
                     )));
                 }
-                if binding.is_global {
-                    return Err(CompileError::Unsupported(
-                        "captured string assignments".into(),
-                    ));
-                }
                 saw_string_target = true;
+                let dest = if binding.is_global {
+                    self.fresh_temp()
+                } else {
+                    binding.slot.clone()
+                };
                 self.emit(IIRInstr::new(
                     "str_const",
-                    Some(binding.slot.clone()),
+                    Some(dest.clone()),
                     vec![Operand::Str(literal.clone())],
                     "str",
                 ));
-                self.literal_string_slots.insert(binding.slot);
+                if binding.is_global {
+                    self.emit(IIRInstr::new(
+                        "global_store",
+                        None,
+                        vec![Operand::Str(binding.slot.clone()), Operand::Var(dest)],
+                        "void",
+                    ));
+                }
+                self.initialized_string_slots.insert(binding.slot.clone());
             }
             if saw_string_target {
                 return Ok(());
@@ -1798,21 +2379,39 @@ impl Compiler {
         } else if let Some(src_name) = expr_variable_name(expr) {
             let src_binding = self.require_var(&src_name)?;
             if src_binding.ty == ScalarType::String {
-                if !self.literal_string_slots.contains(&src_binding.slot) {
+                if !src_binding.is_global
+                    && !self.initialized_string_slots.contains(&src_binding.slot)
+                {
                     return Err(CompileError::Unsupported(format!(
-                        "string assignment requires literal-backed string variable {src_name:?}"
+                        "string assignment requires initialized string variable {src_name:?}"
                     )));
                 }
-                let src_slot = src_binding.slot.clone();
+                let src_slot = self.read_scalar(src_binding).slot;
                 let mut saw_string_target = false;
                 for left in &left_parts {
                     let var_node = first_direct_node(left, "variable").ok_or_else(|| {
                         CompileError::Malformed("left_part has no variable".into())
                     })?;
                     if array_subscripts(var_node).is_some() {
-                        return Err(CompileError::Unsupported(
-                            "string array assignments".into(),
+                        let (binding, zero) = self.resolve_array_index(var_node)?;
+                        if binding.ty != ScalarType::String {
+                            return Err(CompileError::Type(format!(
+                                "cannot assign string expression to {} array element",
+                                binding.ty.name()
+                            )));
+                        }
+                        self.emit(IIRInstr::new(
+                            "array_set",
+                            None,
+                            vec![
+                                Operand::Var(binding.slot),
+                                Operand::Var(zero),
+                                Operand::Var(src_slot.clone()),
+                            ],
+                            "str",
                         ));
+                        saw_string_target = true;
+                        continue;
                     }
                     let name = self.simple_variable_name(var_node)?;
                     let binding = self.require_var(&name)?;
@@ -1825,14 +2424,14 @@ impl Compiler {
                             target_ty.name()
                         )));
                     }
-                    if target_is_global {
-                        return Err(CompileError::Unsupported(
-                            "captured string assignments".into(),
-                        ));
-                    }
                     saw_string_target = true;
-                    if target_slot != src_slot {
+                    if target_is_global || target_slot != src_slot {
                         let empty = self.fresh_temp();
+                        let copy = if target_is_global {
+                            self.fresh_temp()
+                        } else {
+                            target_slot.clone()
+                        };
                         self.emit(IIRInstr::new(
                             "str_const",
                             Some(empty.clone()),
@@ -1841,28 +2440,23 @@ impl Compiler {
                         ));
                         self.emit(IIRInstr::new(
                             "str_concat",
-                            Some(target_slot.clone()),
+                            Some(copy.clone()),
                             vec![Operand::Var(src_slot.clone()), Operand::Var(empty)],
                             "str",
                         ));
+                        if target_is_global {
+                            self.emit(IIRInstr::new(
+                                "global_store",
+                                None,
+                                vec![Operand::Str(target_slot.clone()), Operand::Var(copy)],
+                                "void",
+                            ));
+                        }
                     }
-                    self.literal_string_slots.insert(target_slot);
+                    self.initialized_string_slots.insert(target_slot.clone());
                 }
                 if saw_string_target {
                     return Ok(());
-                }
-            }
-        }
-
-        for left in &left_parts {
-            let var_node = first_direct_node(left, "variable")
-                .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
-            if array_subscripts(var_node).is_none() {
-                let name = self.simple_variable_name(var_node)?;
-                if self.require_var(&name)?.ty == ScalarType::String {
-                    return Err(CompileError::Unsupported(
-                        "string assignment currently supports literal or literal-backed variable RHS only".into(),
-                    ));
                 }
             }
         }
@@ -1876,20 +2470,15 @@ impl Compiler {
             // `A[i] := e` stores into an array element (E5); `x := e` is a mov.
             if array_subscripts(var_node).is_some() {
                 let (binding, zero) = self.resolve_array_index(var_node)?;
-                if binding.ty != rhs.ty {
-                    return Err(CompileError::Type(format!(
-                        "cannot assign {} expression to {} array element",
-                        rhs.ty.name(),
-                        binding.ty.name()
-                    )));
-                }
+                let value =
+                    self.coerce_value(rhs.clone(), binding.ty, "array element assignment")?;
                 self.emit(IIRInstr::new(
                     "array_set",
                     None,
                     vec![
                         Operand::Var(binding.slot),
                         Operand::Var(zero),
-                        Operand::Var(rhs.slot.clone()),
+                        Operand::Var(value.slot),
                     ],
                     binding.ty.iir(),
                 ));
@@ -1898,26 +2487,53 @@ impl Compiler {
 
             let name = self.simple_variable_name(var_node)?;
             let binding = self.require_var(&name)?;
-            if binding.ty != rhs.ty {
-                return Err(CompileError::Type(format!(
-                    "cannot assign {} expression to {} variable {name:?}",
-                    rhs.ty.name(),
-                    binding.ty.name()
-                )));
+            let value =
+                self.coerce_value(rhs.clone(), binding.ty, &format!("assignment to {name:?}"))?;
+            if binding.ty == ScalarType::String {
+                if binding.is_global || binding.slot != value.slot {
+                    let empty = self.fresh_temp();
+                    let copy = if binding.is_global {
+                        self.fresh_temp()
+                    } else {
+                        binding.slot.clone()
+                    };
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(empty.clone()),
+                        vec![Operand::Str(String::new())],
+                        "str",
+                    ));
+                    self.emit(IIRInstr::new(
+                        "str_concat",
+                        Some(copy.clone()),
+                        vec![Operand::Var(value.slot), Operand::Var(empty)],
+                        "str",
+                    ));
+                    if binding.is_global {
+                        self.emit(IIRInstr::new(
+                            "global_store",
+                            None,
+                            vec![Operand::Str(binding.slot.clone()), Operand::Var(copy)],
+                            "void",
+                        ));
+                    }
+                }
+                self.initialized_string_slots.insert(binding.slot.clone());
+                continue;
             }
             if binding.is_global {
                 // E6: a captured block scalar is a module global.
                 self.emit(IIRInstr::new(
                     "global_store",
                     None,
-                    vec![Operand::Str(binding.slot), Operand::Var(rhs.slot.clone())],
+                    vec![Operand::Str(binding.slot), Operand::Var(value.slot)],
                     "void",
                 ));
             } else {
                 self.emit(IIRInstr::new(
                     "mov",
                     Some(binding.slot),
-                    vec![Operand::Var(rhs.slot.clone())],
+                    vec![Operand::Var(value.slot)],
                     binding.ty.iir(),
                 ));
             }
@@ -1970,6 +2586,7 @@ impl Compiler {
                 ));
             }
             let else_label = self.fresh_label("desig_else");
+            let end_label = self.fresh_label("desig_end");
             self.emit(IIRInstr::new(
                 "jmp_if_false",
                 None,
@@ -1977,8 +2594,16 @@ impl Compiler {
                 "void",
             ));
             self.emit_simple_desig_jump(then_node)?;
+            self.emit(IIRInstr::new(
+                "jmp",
+                None,
+                vec![Operand::Var(end_label.clone())],
+                "void",
+            ));
             self.emit_label(&else_label);
-            self.emit_desig_jump(else_node)
+            self.emit_desig_jump(else_node)?;
+            self.emit_label(&end_label);
+            Ok(())
         } else {
             let simple = first_direct_node(desig, "simple_desig").ok_or_else(|| {
                 CompileError::Malformed("designator missing simple_desig".into())
@@ -2004,7 +2629,7 @@ impl Compiler {
             let index_node = first_direct_node(simple, "arith_expr").ok_or_else(|| {
                 CompileError::Malformed("switch subscript missing index".into())
             })?;
-            let labels = self.switches.get(&name).cloned().ok_or_else(|| {
+            let targets = self.switches.get(&name).cloned().ok_or_else(|| {
                 CompileError::Type(format!("goto uses undeclared switch {name:?}"))
             })?;
             let index = self.emit_expr(index_node)?;
@@ -2013,32 +2638,56 @@ impl Compiler {
                     "switch subscript index must be an integer".into(),
                 ));
             }
-            // 1-based: `goto s[k]` jumps to the k-th target.  Emit a linear
-            // `index == k ? jmp Lk` chain; an out-of-range index matches no arm
-            // and falls through.
-            for (i, label) in labels.iter().enumerate() {
-                let k = ExprValue {
-                    slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
-                    ty: ScalarType::Integer,
-                };
-                let matched = self.emit_binary("=", index.clone(), k)?;
-                let next_label = self.fresh_label("switch_next");
-                self.emit(IIRInstr::new(
-                    "jmp_if_false",
-                    None,
-                    vec![Operand::Var(matched.slot), Operand::Var(next_label.clone())],
-                    "void",
-                ));
-                self.referenced_labels.insert(label.clone());
-                self.emit(IIRInstr::new(
-                    "jmp",
-                    None,
-                    vec![Operand::Var(label.clone())],
-                    "void",
-                ));
-                self.emit_label(&next_label);
+            self.switch_expansion_steps = self
+                .switch_expansion_steps
+                .checked_add(targets.len())
+                .ok_or_else(|| {
+                    CompileError::Unsupported("switch designator expansion is too large".into())
+                })?;
+            if self.switch_expansion_steps > MAX_SWITCH_DESIGNATOR_EXPANSIONS {
+                return Err(CompileError::Unsupported(format!(
+                    "switch designator expansion exceeds {MAX_SWITCH_DESIGNATOR_EXPANSIONS} arms"
+                )));
             }
-            Ok(())
+            if !self.resolving_switches.insert(name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "cyclic switch-list element involving {name:?}"
+                )));
+            }
+            let result = (|| {
+                // 1-based: `goto s[k]` selects the k-th designator. An
+                // out-of-range index matches no arm and falls through. Each
+                // matched arm jumps to `switch_done` after its designator so
+                // a nested switch with an out-of-range subscript cannot fall
+                // through and test this outer switch's next arm.
+                let done_label = self.fresh_label("switch_done");
+                for (i, target) in targets.iter().enumerate() {
+                    let k = ExprValue {
+                        slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
+                        ty: ScalarType::Integer,
+                    };
+                    let matched = self.emit_binary("=", index.clone(), k)?;
+                    let next_label = self.fresh_label("switch_next");
+                    self.emit(IIRInstr::new(
+                        "jmp_if_false",
+                        None,
+                        vec![Operand::Var(matched.slot), Operand::Var(next_label.clone())],
+                        "void",
+                    ));
+                    self.emit_desig_jump(target)?;
+                    self.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(done_label.clone())],
+                        "void",
+                    ));
+                    self.emit_label(&next_label);
+                }
+                self.emit_label(&done_label);
+                Ok(())
+            })();
+            self.resolving_switches.remove(&name);
+            result
         } else if tokens.iter().any(|t| t.effective_type_name() == "LPAREN") {
             // simple_desig = LPAREN desig_expr RPAREN
             let inner = first_direct_node(simple, "desig_expr").ok_or_else(|| {
@@ -2056,12 +2705,12 @@ impl Compiler {
         }
     }
 
-    /// Record a switch declaration's ordered target labels.
+    /// Record a switch declaration's ordered designational expressions.
     ///
     /// `switch_decl = "switch" NAME ASSIGN switch_list` and
-    /// `switch_list = desig_expr { COMMA desig_expr }`.  On the executable
-    /// slice each element must be a plain label (the overwhelmingly common
-    /// form); conditional or nested-subscript switch elements are rejected.
+    /// `switch_list = desig_expr { COMMA desig_expr }`. The expressions are
+    /// retained until a `goto switch[index]` selects one, preserving ALGOL's
+    /// run-time conditional and nested-switch semantics.
     fn register_switch(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         let name = direct_tokens(node)
@@ -2072,14 +2721,12 @@ impl Compiler {
         let switch_list = first_direct_node(node, "switch_list")
             .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
 
-        let mut labels = Vec::new();
-        for elem in direct_nodes(switch_list)
+        let targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
             .into_iter()
             .filter(|n| n.rule_name == "desig_expr")
-        {
-            labels.push(self.switch_element_label(elem)?);
-        }
-        if labels.is_empty() {
+            .cloned()
+            .collect();
+        if targets.is_empty() {
             return Err(CompileError::Malformed("switch has no targets".into()));
         }
         if self.switches.contains_key(&name) {
@@ -2087,39 +2734,8 @@ impl Compiler {
                 "duplicate declaration for switch {name:?}"
             )));
         }
-        self.switches.insert(name, labels);
+        self.switches.insert(name, targets);
         Ok(())
-    }
-
-    /// Resolve a switch-list element to a single target label slot.  Only plain
-    /// labels are supported as switch elements on the current slice.
-    fn switch_element_label(&self, desig: &GrammarASTNode) -> Result<String, CompileError> {
-        let toks = recursive_tokens(desig);
-        if toks.iter().any(|t| t.value == "if") {
-            return Err(CompileError::Unsupported(
-                "conditional switch-list elements".into(),
-            ));
-        }
-        if toks
-            .iter()
-            .any(|t| matches!(t.effective_type_name(), "LBRACKET" | "RBRACKET"))
-        {
-            return Err(CompileError::Unsupported(
-                "nested switch-list elements".into(),
-            ));
-        }
-        let names: Vec<&Token> = toks
-            .into_iter()
-            .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
-            .collect();
-        if names.len() == 1 {
-            Ok(format!("L_{}", names[0].value))
-        } else {
-            Err(CompileError::Malformed(format!(
-                "switch element should be one label, got {} tokens",
-                names.len()
-            )))
-        }
     }
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -2481,6 +3097,14 @@ impl Compiler {
                 }
                 let name = self.simple_variable_name(node)?;
                 let binding = self.require_var(&name)?;
+                if binding.ty == ScalarType::String
+                    && !binding.is_global
+                    && !self.initialized_string_slots.contains(&binding.slot)
+                {
+                    return Err(CompileError::Unsupported(format!(
+                        "string variable {name:?} is read before it is initialized"
+                    )));
+                }
                 Ok(self.read_scalar(binding))
             }
             "proc_call" => self.emit_proc_call(node),
@@ -2693,7 +3317,6 @@ impl Compiler {
                     vec![Operand::Str(unquote_algol_string(&token.value))],
                     "str",
                 ));
-                self.literal_string_slots.insert(slot.clone());
                 Ok(ExprValue {
                     slot,
                     ty: ScalarType::String,
@@ -2797,9 +3420,9 @@ impl Compiler {
     /// Lower ALGOL 60's exponentiation operator `↑` (§3.3.4; spelled `^` or `**`
     /// in our grammar) — LANG-FULL **AL-pow**.
     ///
-    /// The `factor` / `expr_pow` node is `base [ ^ exp [ ^ exp … ] ]`.  With no
-    /// `^` operator it is a plain pass-through to the single child.  Otherwise we
-    /// fold left-to-right, raising the accumulator to each successive exponent.
+    /// The grammar keeps a `factor` / `expr_pow` chain flat as
+    /// `base [ ^ exp [ ^ exp … ] ]`, but ALGOL exponentiation associates from
+    /// the right: `2 ^ 3 ^ 2` is `2 ^ (3 ^ 2)`, not `(2 ^ 3) ^ 2`.
     ///
     /// Two exponent shapes are in this slice, both reusing IIR the code-gen
     /// backends already run (no new op):
@@ -2807,72 +3430,74 @@ impl Compiler {
     /// | exponent            | lowering                          | result type |
     /// |---------------------|-----------------------------------|-------------|
     /// | nonneg integer literal `k` | `k−1` repeated `mul`s (`x*x*…`); `x↑0 = 1` | **base's type** — `integer↑k` stays `integer`, `real↑k` stays `real` |
-    /// | `real` (base also `real`) | `f64_pow` (libm `pow`, the same op BASIC's BA-pow proved on all 7 backends) | `real` |
+    /// | non-literal numeric pair | `f64_pow` after integer→real widening (libm `pow`) | `real` |
     ///
     /// The integer-literal path keeps ALGOL's typing (`2 ↑ 10` = the *integer*
-    /// 1024), unlike BASIC which always widens to `real`.  A non-literal exponent
-    /// on an `integer` base, or a negative literal, is a clean `Unsupported` —
-    /// those need int→real coercion / reciprocals not in this slice.
+    /// 1024), unlike BASIC which always widens to `real`. Every other numeric
+    /// pair takes the `f64_pow` path, so runtime and negative integer exponents
+    /// produce the real-valued result required for reciprocal powers.
     fn emit_pow(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let seq = pieces(node);
-        let has_pow = seq
+        if !seq
             .iter()
-            .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"));
-        if !has_pow {
+            .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"))
+        {
             return self.emit_single_child_expr(node);
         }
-
-        let mut idx = 0;
-        let first = match seq.first() {
-            Some(Piece::Node(n)) => *n,
-            _ => {
-                return Err(CompileError::Malformed(
-                    "exponentiation missing a base expression".into(),
-                ))
-            }
-        };
-        idx += 1;
-        let mut acc = self.emit_expr(first)?;
-
-        while idx < seq.len() {
-            match seq.get(idx) {
-                Some(Piece::Op(op)) if op == "^" || op == "**" => {}
-                _ => {
-                    return Err(CompileError::Malformed(
-                        "exponentiation expected `^` between operands".into(),
-                    ))
-                }
-            }
-            idx += 1;
-            let exp_node = match seq.get(idx) {
-                Some(Piece::Node(n)) => *n,
-                _ => {
-                    return Err(CompileError::Malformed(
-                        "exponentiation missing an exponent expression".into(),
-                    ))
-                }
-            };
-            idx += 1;
-            acc = self.emit_power_step(acc, exp_node)?;
+        if seq.len().is_multiple_of(2) {
+            return Err(CompileError::Malformed(
+                "exponentiation missing an exponent expression".into(),
+            ));
         }
-        Ok(acc)
+
+        let mut operands = Vec::new();
+        for (idx, piece) in seq.iter().enumerate() {
+            if idx % 2 == 0 {
+                match piece {
+                    Piece::Node(operand) => operands.push(*operand),
+                    _ => {
+                        return Err(CompileError::Malformed(
+                            "exponentiation missing an operand expression".into(),
+                        ))
+                    }
+                }
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return Err(CompileError::Malformed(
+                    "exponentiation expected `^` between operands".into(),
+                ));
+            }
+        }
+
+        self.emit_power_chain(&operands)
     }
 
-    /// Raise `base` to a single exponent expression (see [`emit_pow`]).
-    fn emit_power_step(
+    /// Lower a flat exponentiation chain using ALGOL's right associativity.
+    fn emit_power_chain(
         &mut self,
-        base: ExprValue,
-        exp_node: &GrammarASTNode,
+        operands: &[&GrammarASTNode],
     ) -> Result<ExprValue, CompileError> {
-        // Fast path: a bare nonnegative integer literal exponent unrolls to
-        // repeated multiplication, preserving the base's numeric type.
-        if let Some(k) = literal_nonneg_integer_exponent(exp_node) {
+        let Some((base_node, exponent_nodes)) = operands.split_first() else {
+            return Err(CompileError::Malformed(
+                "exponentiation missing a base expression".into(),
+            ));
+        };
+        let base = self.emit_expr(base_node)?;
+        if exponent_nodes.is_empty() {
+            return Ok(base);
+        }
+
+        // When the complete right-hand exponent chain is a small nonnegative
+        // integer constant, preserve the integer/real literal fast path.
+        if let Some(k) = literal_nonneg_integer_power_chain(exponent_nodes) {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
-        // General path: `real ↑ real` via the `f64_pow` IIR op (libm `pow`).
-        let exp = self.emit_expr(exp_node)?;
-        if base.ty == ScalarType::Real && exp.ty == ScalarType::Real {
+        let exp = self.emit_power_chain(exponent_nodes)?;
+        if matches!(base.ty, ScalarType::Integer | ScalarType::Real)
+            && matches!(exp.ty, ScalarType::Integer | ScalarType::Real)
+        {
+            let base = self.coerce_value(base, ScalarType::Real, "exponentiation base")?;
+            let exp = self.coerce_value(exp, ScalarType::Real, "exponentiation exponent")?;
             let dest = self.fresh_temp();
             self.emit(IIRInstr::new(
                 "f64_pow",
@@ -2888,7 +3513,7 @@ impl Compiler {
 
         Err(CompileError::Unsupported(format!(
             "exponentiation with a {} base and a {} exponent — this slice supports a \
-             nonnegative integer-literal exponent (any base) or `real ↑ real` (via pow)",
+             nonnegative integer-literal exponent (any base) or a numeric pair",
             base.ty.name(),
             exp.ty.name()
         )))
@@ -2920,15 +3545,52 @@ impl Compiler {
         ExprValue { slot: acc, ty }
     }
 
-    /// Require both operands of a numeric operator to be the **same** numeric
-    /// type (`integer`+`integer` or `real`+`real`) and return it. Rejects a
-    /// boolean operand and an integer/real mix — v1 has no implicit coercion.
-    fn same_numeric_type(
-        &self,
+    /// Widen an integer value to `real` with the shared IIR conversion.
+    fn widen_integer_to_real(&mut self, value: ExprValue) -> ExprValue {
+        debug_assert_eq!(value.ty, ScalarType::Integer);
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "int_to_real",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
+        }
+    }
+
+    /// Convert an expression only along ALGOL's numeric widening edge:
+    /// `integer` to `real`. All other source/target pairs stay errors.
+    fn coerce_value(
+        &mut self,
+        value: ExprValue,
+        target: ScalarType,
+        context: &str,
+    ) -> Result<ExprValue, CompileError> {
+        if value.ty == target {
+            return Ok(value);
+        }
+        if value.ty == ScalarType::Integer && target == ScalarType::Real {
+            return Ok(self.widen_integer_to_real(value));
+        }
+        Err(CompileError::Type(format!(
+            "{context} cannot use {} where {} is required",
+            value.ty.name(),
+            target.name()
+        )))
+    }
+
+    /// Promote a numeric pair to a common type. ALGOL's arithmetic widening is
+    /// one-way: any `real` operand widens an `integer` peer; two integers stay
+    /// integer. Boolean and string operands remain invalid for numeric ops.
+    fn promote_numeric_pair(
+        &mut self,
         op: &str,
-        lhs: &ExprValue,
-        rhs: &ExprValue,
-    ) -> Result<ScalarType, CompileError> {
+        lhs: ExprValue,
+        rhs: ExprValue,
+    ) -> Result<(ExprValue, ExprValue, ScalarType), CompileError> {
         let numeric = |t: ScalarType| matches!(t, ScalarType::Integer | ScalarType::Real);
         if !numeric(lhs.ty) || !numeric(rhs.ty) {
             return Err(CompileError::Type(format!(
@@ -2937,15 +3599,14 @@ impl Compiler {
                 rhs.ty.name()
             )));
         }
-        if lhs.ty != rhs.ty {
-            return Err(CompileError::Type(format!(
-                "operator {op:?} cannot mix {} and {} (no implicit integer→real \
-                 coercion in this slice)",
-                lhs.ty.name(),
-                rhs.ty.name()
-            )));
+        if lhs.ty == ScalarType::Real || rhs.ty == ScalarType::Real {
+            return Ok((
+                self.coerce_value(lhs, ScalarType::Real, "numeric promotion")?,
+                self.coerce_value(rhs, ScalarType::Real, "numeric promotion")?,
+                ScalarType::Real,
+            ));
         }
-        Ok(lhs.ty)
+        Ok((lhs, rhs, ScalarType::Integer))
     }
 
     fn emit_binary(
@@ -2956,14 +3617,7 @@ impl Compiler {
     ) -> Result<ExprValue, CompileError> {
         match op {
             "+" | "-" | "*" => {
-                // `+`/`-`/`*` work on **either** `integer` (i64) or `real` (f64)
-                // operands, but not a mix — ALGOL's implicit integer→real
-                // coercion needs an IIR int→f64 convert op the code-gen slice
-                // doesn't carry yet, so v1 requires both operands the same
-                // numeric type (a clean error otherwise). The IIR `type_hint`
-                // carries the operand width, so the backends pick `add`/`fadd`
-                // etc. from it.
-                let ty = self.same_numeric_type(op, &lhs, &rhs)?;
+                let (lhs, rhs, ty) = self.promote_numeric_pair(op, lhs, rhs)?;
                 let iir_op = match op {
                     "+" => "add",
                     "-" => "sub",
@@ -3000,18 +3654,11 @@ impl Compiler {
                 })
             }
             "/" => {
-                // Real division. ALGOL's `/` always yields a `real`; v1 requires
-                // real operands (no integer→real coercion yet — see the `+`/`-`
-                // note). Lowers to the IIR `div` with an `f64` hint, so the
-                // backends emit `fdiv`/`f64.div`/`ddiv`. IEEE division by zero
-                // is `±inf`, consistent across every backend (no trap).
-                if lhs.ty != ScalarType::Real || rhs.ty != ScalarType::Real {
-                    return Err(CompileError::Type(
-                        "real division '/' requires real operands (integer→real \
-                         coercion is not in this slice; use `div` for integers)"
-                            .into(),
-                    ));
-                }
+                // Real division always yields a `real`, widening integer inputs
+                // first. `div` and `mod` remain the integer-only operators.
+                let (lhs, rhs, _) = self.promote_numeric_pair(op, lhs, rhs)?;
+                let lhs = self.coerce_value(lhs, ScalarType::Real, "operator '/'")?;
+                let rhs = self.coerce_value(rhs, ScalarType::Real, "operator '/'")?;
                 let dest = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "div",
@@ -3025,21 +3672,22 @@ impl Compiler {
                 })
             }
             "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
-                if lhs.ty != rhs.ty {
+                let (lhs, rhs) = if lhs.ty != rhs.ty
+                    && matches!(lhs.ty, ScalarType::Integer | ScalarType::Real)
+                    && matches!(rhs.ty, ScalarType::Integer | ScalarType::Real)
+                {
+                    let (lhs, rhs, _) = self.promote_numeric_pair(op, lhs, rhs)?;
+                    (lhs, rhs)
+                } else if lhs.ty != rhs.ty {
                     return Err(CompileError::Type(format!(
                         "cannot compare {} and {}",
                         lhs.ty.name(),
                         rhs.ty.name()
                     )));
-                }
+                } else {
+                    (lhs, rhs)
+                };
                 if lhs.ty == ScalarType::String {
-                    if !self.literal_string_slots.contains(&lhs.slot)
-                        || !self.literal_string_slots.contains(&rhs.slot)
-                    {
-                        return Err(CompileError::Unsupported(
-                            "string comparisons require literal-backed string operands".into(),
-                        ));
-                    }
                     let dest = self.fresh_temp();
                     match op {
                         "=" | "!=" | "<>" => {
@@ -3193,20 +3841,16 @@ impl Compiler {
         if value.ty != ScalarType::Boolean {
             return Err(CompileError::Type("not operand must be boolean".into()));
         }
-        // Emit `cmp_eq bool_value, 0` with type_hint "i64" so LLVM generates
-        // `icmp eq i64 <i64_load>, 0` — correct when `b` is promoted to an i64
-        // alloca (written 2+ times).  The false constant uses `ScalarType::Boolean`
-        // so it gets a "bool" type_hint: in WASM this makes the false-slot an i32
-        // local, matching a non-promoted boolean variable's i32 register width.
-        // In LLVM both Bool(false) and Int(0) render as the literal "0", so the
-        // choice of ScalarType here has no effect on LLVM output.
+        // Comparisons carry their operand type hint. Both operands are booleans,
+        // so this remains a `bool` operation all the way through the typed call
+        // ABI: LLVM emits `icmp eq i1`, and WASM keeps the result in an i32 local.
         let false_slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_eq",
             Some(dest.clone()),
             vec![Operand::Var(value.slot), Operand::Var(false_slot)],
-            "i64",
+            "bool",
         ));
         Ok(ExprValue {
             slot: dest,
@@ -3297,11 +3941,7 @@ impl Compiler {
         ty: ScalarType,
         is_own: bool,
     ) -> Result<String, CompileError> {
-        let slot = if self.scopes.len() == 1 {
-            name.to_string()
-        } else {
-            format!("__algol_s{}_{}", self.scope_counter, name)
-        };
+        let slot = self.scoped_slot_name(name);
         let current = self
             .scopes
             .last_mut()
@@ -3347,12 +3987,9 @@ impl Compiler {
         name: &str,
         elem_ty: ScalarType,
         dims: Vec<ArrayDim>,
+        is_global: bool,
     ) -> Result<String, CompileError> {
-        let slot = if self.scopes.len() == 1 {
-            name.to_string()
-        } else {
-            format!("__algol_s{}_{}", self.scope_counter, name)
-        };
+        let slot = self.scoped_slot_name(name);
         let current = self
             .scopes
             .last_mut()
@@ -3368,11 +4005,21 @@ impl Compiler {
                 slot: slot.clone(),
                 ty: elem_ty,
                 array: Some(ArrayInfo { dims, elem_ty }),
-                is_global: false, // arrays-as-globals are a later E6 slice
+                is_global,
             },
         );
-        self.register_names.insert(slot.clone());
+        if !is_global {
+            self.register_names.insert(slot.clone());
+        }
         Ok(slot)
+    }
+
+    fn scoped_slot_name(&self, name: &str) -> String {
+        if self.scopes.len() == 1 {
+            name.to_string()
+        } else {
+            format!("__algol_s{}_{}", self.scope_counter, name)
+        }
     }
 
     fn require_var(&self, name: &str) -> Result<VarBinding, CompileError> {
@@ -3449,24 +4096,6 @@ fn direct_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
-/// Recursively collect every `NAME` token value reachable under `node` into
-/// `out` (LANG-FULL E6 capture analysis). Over-collection is harmless: only a
-/// name that is *also* declared as an enclosing block scalar is ever
-/// globalised, so a stray identifier (operator, keyword token, label) that
-/// happens through here never affects a real variable.
-fn collect_name_tokens(node: &GrammarASTNode, out: &mut HashSet<String>) {
-    for child in &node.children {
-        match child {
-            ASTNodeOrToken::Token(t) => {
-                if t.effective_type_name() == "NAME" {
-                    out.insert(t.value.clone());
-                }
-            }
-            ASTNodeOrToken::Node(n) => collect_name_tokens(n, out),
-        }
-    }
-}
-
 /// The `arith_expr` subscripts of a `variable` node, or `None` when the
 /// variable is an unsubscripted scalar.  `variable = NAME [ LBRACKET subscripts
 /// RBRACKET ]`, and `subscripts = arith_expr { COMMA arith_expr }`, so a present
@@ -3479,6 +4108,213 @@ fn array_subscripts(var_node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode>> {
             .filter(|n| n.rule_name == "arith_expr")
             .collect(),
     )
+}
+
+/// Infer an array formal's rank from its lexical subscripted uses. ALGOL's
+/// array parameter specifier does not carry bounds or a rank, but a compiled
+/// IIR function needs a fixed descriptor parameter list. A formal that is only
+/// forwarded or never indexed retains the established 1-D ABI; an indexed
+/// formal records the exact number of source subscripts, including use by a
+/// nested procedure unless that procedure shadows the formal.
+fn array_formal_dimension_count(
+    proc_decl: &GrammarASTNode,
+    formal_name: &str,
+) -> Result<usize, CompileError> {
+    let mut dimensions = None;
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        collect_array_formal_dimensions(body, formal_name, &mut dimensions)?;
+    }
+    Ok(dimensions.unwrap_or(1))
+}
+
+fn collect_array_formal_dimensions(
+    node: &GrammarASTNode,
+    formal_name: &str,
+    dimensions: &mut Option<usize>,
+) -> Result<(), CompileError> {
+    for child in &node.children {
+        let ASTNodeOrToken::Node(node) = child else {
+            continue;
+        };
+        if node.rule_name == "procedure_decl" && procedure_local_names(node).contains(formal_name) {
+            continue;
+        }
+        if node.rule_name == "variable" {
+            let is_formal = direct_tokens(node)
+                .iter()
+                .filter(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.as_str())
+                .eq(std::iter::once(formal_name));
+            if is_formal {
+                if let Some(subscripts) = array_subscripts(node) {
+                    let observed = subscripts.len();
+                    match dimensions {
+                        Some(expected) if *expected != observed => {
+                            return Err(CompileError::Type(format!(
+                                "array parameter {formal_name:?} is used with both {expected} and {observed} subscripts"
+                            )));
+                        }
+                        None => *dimensions = Some(observed),
+                        _ => {}
+                    }
+                }
+            }
+        }
+        collect_array_formal_dimensions(node, formal_name, dimensions)?;
+    }
+    Ok(())
+}
+
+/// Find array formals that a nested procedure must read from the outer
+/// procedure's frame. The ordinary capture substrate is a typed module global;
+/// array formals need the same treatment for their handle and full descriptor.
+/// Formal and block-local declarations on the nested procedure shadow the
+/// enclosing formal before its references are collected.
+fn array_formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    params: &[(String, ProcedureParamType)],
+) -> HashSet<String> {
+    let visible: HashSet<String> = params
+        .iter()
+        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Array { .. }).then_some(name.clone()))
+        .collect();
+    formals_captured_by_nested_procedures(proc_decl, &visible)
+}
+
+/// Scalar value formals use the same sibling-function capture model as array
+/// descriptors. They are copied into a typed global before the nested procedure
+/// runs, so a nested read or assignment sees the outer invocation's value.
+fn scalar_formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    params: &[(String, ProcedureParamType)],
+) -> HashSet<String> {
+    let visible: HashSet<String> = params
+        .iter()
+        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Scalar(_)).then_some(name.clone()))
+        .collect();
+    formals_captured_by_nested_procedures(proc_decl, &visible)
+}
+
+fn formals_captured_by_nested_procedures(
+    proc_decl: &GrammarASTNode,
+    visible: &HashSet<String>,
+) -> HashSet<String> {
+    let mut captured = HashSet::new();
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        collect_nested_formal_captures(body, visible, &mut captured);
+    }
+    captured
+}
+
+fn collect_nested_formal_captures(
+    node: &GrammarASTNode,
+    visible: &HashSet<String>,
+    captured: &mut HashSet<String>,
+) {
+    for child in direct_nodes(node) {
+        if child.rule_name != "procedure_decl" {
+            collect_nested_formal_captures(child, visible, captured);
+            continue;
+        }
+
+        let mut nested_visible = visible.clone();
+        for local in procedure_local_names(child) {
+            nested_visible.remove(&local);
+        }
+        let Some(body) = first_direct_node(child, "proc_body") else {
+            continue;
+        };
+
+        let mut references = HashSet::new();
+        collect_name_tokens_excluding_nested_procedures(body, &mut references);
+        captured.extend(nested_visible.intersection(&references).cloned());
+        collect_nested_formal_captures(body, &nested_visible, captured);
+    }
+}
+
+fn procedure_local_names(proc_decl: &GrammarASTNode) -> HashSet<String> {
+    let mut names = HashSet::new();
+    if let Some(name) = direct_tokens(proc_decl)
+        .into_iter()
+        .find(|token| token.effective_type_name() == "NAME")
+        .map(|token| token.value.clone())
+    {
+        names.insert(name);
+    }
+    if let Some(formals) = first_direct_node(proc_decl, "formal_params") {
+        if let Some(list) = first_direct_node(formals, "ident_list") {
+            names.extend(ident_list_names(list));
+        }
+    }
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        if let Some(block) = first_direct_node(body, "block") {
+            for declaration in direct_nodes(block)
+                .into_iter()
+                .filter(|node| node.rule_name == "declaration")
+            {
+                collect_declared_ident_list_names(declaration, &mut names);
+            }
+        }
+    }
+    names
+}
+
+fn collect_declared_ident_list_names(node: &GrammarASTNode, names: &mut HashSet<String>) {
+    for child in direct_nodes(node) {
+        if child.rule_name == "procedure_decl" {
+            continue;
+        }
+        if child.rule_name == "ident_list" {
+            names.extend(ident_list_names(child));
+            continue;
+        }
+        collect_declared_ident_list_names(child, names);
+    }
+}
+
+fn collect_name_tokens_excluding_nested_procedures(
+    node: &GrammarASTNode,
+    names: &mut HashSet<String>,
+) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(token) if token.effective_type_name() == "NAME" => {
+                names.insert(token.value.clone());
+            }
+            ASTNodeOrToken::Node(node) if node.rule_name != "procedure_decl" => {
+                collect_name_tokens_excluding_nested_procedures(node, names);
+            }
+            _ => {}
+        }
+    }
+}
+
+/// Collect names that a nested procedure resolves outside every enclosing
+/// procedure-local scope. Nested formals, result variables, and direct block
+/// declarations shadow names from the block currently being analysed.
+fn collect_nested_block_captures(
+    node: &GrammarASTNode,
+    hidden: &HashSet<String>,
+    captured: &mut HashSet<String>,
+) {
+    for child in direct_nodes(node) {
+        if child.rule_name != "procedure_decl" {
+            collect_nested_block_captures(child, hidden, captured);
+            continue;
+        }
+
+        let mut nested_hidden = hidden.clone();
+        nested_hidden.extend(procedure_local_names(child));
+        let Some(body) = first_direct_node(child, "proc_body") else {
+            continue;
+        };
+
+        let mut references = HashSet::new();
+        collect_name_tokens_excluding_nested_procedures(body, &mut references);
+        references.retain(|name| !nested_hidden.contains(name));
+        captured.extend(references);
+        collect_nested_block_captures(body, &nested_hidden, captured);
+    }
 }
 
 fn direct_tokens(node: &GrammarASTNode) -> Vec<&Token> {
@@ -3535,6 +4371,11 @@ fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
 /// for an integer base).  64 mirrors BASIC's BA-pow cap.
 const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 
+/// Hard cap for the number of switch-list arms emitted while lowering one IIR
+/// function. Nested switch designators form a graph; without this cap an
+/// acyclic graph with repeated fan-out can grow exponentially during inlining.
+const MAX_SWITCH_DESIGNATOR_EXPANSIONS: usize = 16_384;
+
 /// If `node` is a **bare nonnegative integer literal** (an `INTEGER_LIT` token,
 /// possibly wrapped in single-child expression nodes) no larger than
 /// [`MAX_POW_UNROLL_EXPONENT`], return its value — the exponents AL-pow unrolls.
@@ -3552,6 +4393,23 @@ fn literal_nonneg_integer_exponent(node: &GrammarASTNode) -> Option<u32> {
     }
 }
 
+/// Evaluate a literal-only right-associative exponent chain when its result
+/// remains small enough for AL-pow's fixed-size multiplication expansion.
+fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let mut value = literal_nonneg_integer_exponent(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = literal_nonneg_integer_exponent(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
@@ -3567,6 +4425,12 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
 }
 
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
+    // A call with one bare-variable actual has a single `actual_params` child.
+    // Do not mistake that actual for the call expression itself.
+    if node.rule_name == "proc_call" {
+        return None;
+    }
+
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "NAME" {
         return Some(tokens[0].value.clone());
@@ -3768,6 +4632,193 @@ mod tests {
     fn al6_own_variable_persists_across_calls_runs_on_vm() {
         // RUN it: 1 + 2 + 3 = 6 (own persists); a plain local would give 3.
         assert_eq!(run_i64(AL6_OWN_PROG), 6);
+    }
+
+    /// `own` arrays share the scalar `own` lifetime rule, but need an explicit
+    /// first-call allocation guard because their handle and index metadata are
+    /// module globals rather than zero-initialized scalar values.
+    const AL6_OWN_ARRAY_PROG: &str = "begin integer result; \
+         integer procedure bump(d); value d; integer d; \
+         begin own integer array memo[4:5]; memo[4] := memo[4] + d; bump := memo[4] end; \
+         result := bump(1) + bump(1) + bump(1) end";
+
+    #[test]
+    fn al6_own_array_lowers_to_guarded_typed_globals() {
+        let module = compile_source(AL6_OWN_ARRAY_PROG, "test").expect("compiles");
+        let bump = module.functions.iter().find(|f| f.name == "bump").expect("bump fn");
+        let array_slot = "__algol_s1_memo";
+        let flag = "__algol_s1_memo.__algol_own_array_initialized";
+        assert!(bump.instructions.iter().any(|i| i.op == "global_load"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(flag)),
+            "own array must read its initialization flag");
+        assert!(bump.instructions.iter().any(|i| i.op == "global_store"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(array_slot)),
+            "own array allocation must store a typed handle global");
+        assert!(bump.instructions.iter().any(|i| i.op == "global_store"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(flag)),
+            "own array allocation must mark the initialization flag");
+        assert!(bump.instructions.iter().any(|i| i.op == "jmp_if_false"),
+            "own array initialization must be guarded");
+    }
+
+    #[test]
+    fn al6_own_array_persists_across_calls_runs_on_vm() {
+        // RUN it: memo[4] advances 0 → 1 → 2 → 3, so 1 + 2 + 3 = 6.
+        assert_eq!(run_i64(AL6_OWN_ARRAY_PROG), 6);
+    }
+
+    /// Captured string assignments must cross a procedure boundary, and an
+    /// `own string` must retain the first call's value. The latter uses the
+    /// second invocation to prove it did not receive a fresh empty handle.
+    const AL7_GLOBAL_STRING_PROG: &str = "begin integer result; string shared; \
+         procedure setshared; shared := 'C'; \
+         integer procedure remember(n); value n; integer n; \
+            begin own string memo; if n = 1 then memo := 'A'; \
+              if memo = 'A' then remember := 1 else remember := 0 end; \
+         setshared; result := 0; \
+         if shared = 'C' then result := result + 1; \
+         result := result + remember(1) + remember(2) end";
+
+    #[test]
+    fn al7_captured_and_own_strings_lower_to_typed_globals() {
+        let module = compile_source(AL7_GLOBAL_STRING_PROG, "test")
+            .expect("captured and own strings compile");
+        let setshared = module.functions.iter().find(|f| f.name == "setshared")
+            .expect("setshared function");
+        assert!(setshared.instructions.iter().any(|i| {
+            i.op == "global_store"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some("shared")
+        }), "captured string assignment must be a global_store");
+
+        let remember = module.functions.iter().find(|f| f.name == "remember")
+            .expect("remember function");
+        let memo = "__algol_s1_memo";
+        let flag = "__algol_s1_memo.__algol_own_string_initialized";
+        assert!(remember.instructions.iter().any(|i| {
+            i.op == "global_load"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some(flag)
+        }), "own string initialization must read its persistent flag");
+        assert!(remember.instructions.iter().any(|i| {
+            i.op == "global_store"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some(memo)
+        }), "own string assignment must use a typed global_store");
+    }
+
+    #[test]
+    fn al7_captured_and_own_strings_run_on_vm() {
+        // captured `shared` supplies the first point; the two `remember` calls
+        // prove the `own string memo` survives past its declaring procedure.
+        assert_eq!(run_i64(AL7_GLOBAL_STRING_PROG), 3);
+    }
+
+    /// A procedure can reassign a captured string from a dynamic string
+    /// procedure result; the later caller observes the newest handle through a
+    /// string value formal.
+    const DYNAMIC_CAPTURED_STRING_PROG: &str = "begin integer result; string shared; \
+         string procedure pick(n); value n; integer n; \
+            if n > 0 then pick := 'HI' else pick := 'LO'; \
+         integer procedure matches(s); value s; string s; \
+            if s = 'HI' then matches := 42 else matches := 0; \
+         procedure store(n); value n; integer n; shared := pick(n); \
+         store(0); store(1); result := matches(shared) end";
+
+    #[test]
+    fn dynamic_captured_strings_reassign_through_typed_globals() {
+        assert_eq!(run_i64(DYNAMIC_CAPTURED_STRING_PROG), 42);
+
+        let module = compile_source(DYNAMIC_CAPTURED_STRING_PROG, "dynamic_captured_string")
+            .expect("dynamic captured string program compiles");
+        let store = module.get_function("store").expect("store procedure exists");
+        assert!(
+            store.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("pick")
+            }),
+            "store must receive a dynamic str from pick: {:?}",
+            store.instructions
+        );
+        assert!(
+            store.instructions.iter().enumerate().any(|(index, instr)| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("shared")
+                    && instr.srcs.get(1).and_then(Operand::as_var).is_some_and(|value| {
+                        store.instructions[..index].iter().any(|producer| {
+                            producer.op == "str_concat"
+                                && producer.dest.as_deref() == Some(value)
+                                && producer.type_hint == "str"
+                        })
+                    })
+            }),
+            "the captured dynamic string must store the dynamic str value: {:?}",
+            store.instructions
+        );
+
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("shared")
+            }),
+            "main must reload the dynamic captured str: {:?}",
+            main.instructions
+        );
+    }
+
+    /// An `own string` is a persistent typed global, so repeated calls may
+    /// replace its runtime handle before forwarding the current value to a
+    /// string formal.
+    const DYNAMIC_OWN_STRING_PROG: &str = "begin integer result; \
+         string procedure pick(n); value n; integer n; \
+            if n > 0 then pick := 'HI' else pick := 'LO'; \
+         integer procedure matches(s); value s; string s; \
+            if s = 'HI' then matches := 42 else matches := 0; \
+         integer procedure remember(n); value n; integer n; \
+            begin own string memo; memo := pick(n); remember := matches(memo) end; \
+         result := remember(0) + remember(1) end";
+
+    #[test]
+    fn dynamic_own_strings_reassign_and_forward_through_typed_globals() {
+        assert_eq!(run_i64(DYNAMIC_OWN_STRING_PROG), 42);
+
+        let module = compile_source(DYNAMIC_OWN_STRING_PROG, "dynamic_own_string")
+            .expect("dynamic own string program compiles");
+        let remember = module
+            .get_function("remember")
+            .expect("remember procedure exists");
+        assert!(
+            remember.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("pick")
+            }),
+            "remember must receive a dynamic str from pick: {:?}",
+            remember.instructions
+        );
+        assert!(
+            remember.instructions.iter().enumerate().any(|(index, instr)| {
+                instr.op == "global_store"
+                    && instr.srcs.get(1).and_then(Operand::as_var).is_some_and(|value| {
+                        remember.instructions[..index].iter().any(|producer| {
+                            producer.op == "str_concat"
+                                && producer.dest.as_deref() == Some(value)
+                                && producer.type_hint == "str"
+                        })
+                    })
+            }),
+            "the own string must store the dynamic str value: {:?}",
+            remember.instructions
+        );
+        assert!(
+            remember.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_str_lit).is_some()
+            }),
+            "remember must reload its own string before forwarding it: {:?}",
+            remember.instructions
+        );
     }
 
     #[test]
@@ -4025,8 +5076,8 @@ mod tests {
     #[test]
     fn al4_unassigned_string_variable_print_rejects() {
         let err = compile_source("begin string s; print(s) end", "test")
-            .expect_err("unassigned string variables are not literal-backed");
-        assert!(format!("{err:?}").contains("literal-backed string variable"));
+            .expect_err("unassigned string variables are not initialized");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
@@ -4040,6 +5091,22 @@ mod tests {
         "begin string procedure pick(n); value n; integer n; \
              if n > 0 then pick := 'HI' else pick := 'LO'; \
          print(pick(1)) end";
+
+    const RUNTIME_STRING_LOCAL_PROG: &str =
+        "begin string s; integer result; \
+             string procedure pick(n); value n; integer n; \
+               if n > 0 then pick := 'HI' else pick := 'LO'; \
+             s := pick(1); \
+             if s = 'HI' then result := 42 else result := 0; \
+             print(s) end";
+
+    const RUNTIME_STRING_ORDERING_PROG: &str =
+        "begin string s; integer result; \
+             string procedure pick(n); value n; integer n; \
+               if n > 0 then pick := 'HI' else pick := 'LO'; \
+             s := pick(1); \
+             if s < 'LO' then result := 42 else result := 0; \
+             print(s) end";
 
     #[test]
     fn string_procedure_returns_runtime_string_and_prints() {
@@ -4098,6 +5165,75 @@ mod tests {
                     && matches!(i.srcs.first(), Some(Operand::Var(v)) if *v == call_dest)
             }),
             "print(pick(1)) must print the call's runtime-string result: {:?}",
+            main.instructions
+        );
+    }
+
+    #[test]
+    fn runtime_string_procedure_result_can_fill_a_scalar_variable() {
+        let module = compile_source(RUNTIME_STRING_LOCAL_PROG, "test")
+            .expect("runtime string local compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let call_result = main
+            .instructions
+            .iter()
+            .find(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "pick")
+            })
+            .and_then(|i| i.dest.as_deref())
+            .expect("main calls pick into a result slot");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_concat"
+                    && i.dest.as_deref() == Some("s")
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == call_result)
+            }),
+            "s := pick(1) must copy the runtime result into s: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_eq"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "s = 'HI' must compare the scalar string slot: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "print(s) must consume the initialized scalar string: {:?}",
+            main.instructions
+        );
+    }
+
+    #[test]
+    fn runtime_string_procedure_result_can_be_lexically_ordered() {
+        let module = compile_source(RUNTIME_STRING_ORDERING_PROG, "test")
+            .expect("runtime string ordering compiles");
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "str_cmp"
+                    && matches!(i.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+            }),
+            "s < 'LO' must compare the runtime scalar string with str_cmp: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|i| i.op == "cmp_lt" && i.type_hint == "i64"),
+            "runtime ordering must compare str_cmp's integer result against zero: {:?}",
             main.instructions
         );
     }
@@ -4177,8 +5313,8 @@ mod tests {
     #[test]
     fn al4_unassigned_string_variable_copy_rejects() {
         let err = compile_source("begin string s, t; t := s; print(t) end", "test")
-            .expect_err("unassigned string variable copies are not literal-backed");
-        assert!(format!("{err:?}").contains("literal-backed string variable"));
+            .expect_err("unassigned string variable copies are not initialized");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     #[test]
@@ -4414,12 +5550,11 @@ mod tests {
     }
 
     #[test]
-    fn entier_requires_a_real_argument() {
-        // An `integer` argument is a type error — entier is specifically the
-        // real→integer floor.
-        let err = compile_source("begin integer result; result := entier(7) end", "test")
-            .expect_err("entier of an integer is a type error");
-        assert!(format!("{err:?}").contains("entier requires a real argument"));
+    fn entier_widens_an_integer_argument() {
+        assert_eq!(
+            run_i64("begin integer result; result := entier(7) end"),
+            7
+        );
     }
 
     #[test]
@@ -4501,7 +5636,7 @@ mod tests {
         assert_eq!(main.type_status, FunctionTypeStatus::FullyTyped);
     }
 
-    // ---- AL3: typed procedures with value parameters ----
+    // ---- AL3: procedures with value parameters ----
 
     #[test]
     fn compiles_and_runs_value_procedure() {
@@ -4515,6 +5650,50 @@ mod tests {
         let src = "begin integer result; integer procedure add(a, b); value a, b; integer a, b; \
                    add := a + b; result := add(20, 22) end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn integer_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "integer procedure scale(x); value x; integer x; scale := x * 6; ",
+            "integer procedure combine(a,b); value a,b; integer a,b; combine := a + b; ",
+            "result := combine(scale(3), scale(4)) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "integer_procedure_composition").expect("compiles");
+        let combine = module.get_function("combine").expect("integer procedure exists");
+        assert_eq!(combine.params, vec![
+            ("a".into(), "i64".into()),
+            ("b".into(), "i64".into()),
+        ]);
+        assert_eq!(combine.return_type, "i64");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.type_hint == "i64"
+                        && instr.srcs.first().and_then(Operand::as_var) == Some("scale")
+                })
+                .count(),
+            2,
+            "both scale calls must retain their i64 result type: {:?}",
+            main.instructions
+        );
+        let combine_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "i64"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("combine")
+            })
+            .expect("composition must call combine");
+        assert_eq!(combine_call.srcs.len(), 3, "combine receives two integer call values");
     }
 
     #[test]
@@ -4534,6 +5713,65 @@ mod tests {
     }
 
     #[test]
+    fn boolean_procedure_results_drive_control_flow() {
+        let src = concat!(
+            "begin integer result; ",
+            "boolean procedure neg(p); value p; boolean p; ",
+            "neg := not p; ",
+            "if neg(false) and not neg(true) then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_procedure_control_flow").expect("compiles");
+        let neg = module.get_function("neg").expect("boolean procedure exists");
+        assert_eq!(neg.return_type, "bool");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "call" && instr.type_hint == "bool")
+                .count(),
+            2,
+            "both boolean procedure calls must remain typed bool values: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "jmp_if_false"),
+            "the boolean procedure results must feed the conditional branch: {:?}",
+            main.instructions
+        );
+    }
+
+    #[test]
+    fn boolean_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "boolean procedure neg(p); value p; boolean p; neg := not p; ",
+            "boolean procedure both(p,q); value p,q; boolean p,q; both := p and q; ",
+            "if both(neg(false), not neg(true)) then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_procedure_composition").expect("compiles");
+        let both = module.get_function("both").expect("boolean procedure exists");
+        assert_eq!(both.params, vec![("p".into(), "bool".into()), ("q".into(), "bool".into())]);
+        assert_eq!(both.return_type, "bool");
+
+        let main = module.get_function("main").expect("has main");
+        let both_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "bool"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("both")
+            })
+            .expect("composition must call both");
+        assert_eq!(both_call.srcs.len(), 3, "both must receive two boolean call values");
+    }
+
+    #[test]
     fn procedure_call_as_statement_runs() {
         // A typed procedure invoked in statement position: the result is
         // discarded, but the call still executes (and the assignment of `m`
@@ -4541,6 +5779,24 @@ mod tests {
         let src = "begin integer result; integer procedure id(x); value x; integer x; id := x; \
                    id(99); result := 42 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn zero_argument_procedures_run_with_explicit_empty_parentheses() {
+        let src = "begin integer result; integer procedure answer; answer := 42; \
+                   procedure store; result := answer(); store() end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "zero_arg_procedures").expect("compiles");
+        let store = module.get_function("store").expect("store function exists");
+        let calls: Vec<&IIRInstr> = store
+            .instructions
+            .iter()
+            .filter(|instr| instr.op == "call")
+            .collect();
+        assert_eq!(calls.len(), 1, "store calls answer once");
+        assert_eq!(calls[0].srcs.len(), 1, "zero-argument call has only callee");
+        assert!(matches!(calls[0].srcs.first(), Some(Operand::Var(name)) if name == "answer"));
     }
 
     #[test]
@@ -4566,14 +5822,925 @@ mod tests {
         assert!(matches!(call.srcs.first(), Some(Operand::Var(s)) if s == "sq"));
     }
 
+    // ---- AL8: one-dimensional array descriptor value parameters ----
+
+    /// A typed array formal preserves the caller's non-unit lower bound and
+    /// aliases its element storage. The callee writes 40 and 2 through `a`, then
+    /// reads them back for the typed procedure result: `sum(values)` = 42.
+    const AL8_ARRAY_PARAMETER_PROG: &str = "begin integer array values[4:5]; integer result; \
+         integer procedure sum(a); value a; integer array a; \
+         begin a[4] := 40; a[5] := 2; sum := a[4] + a[5] end; \
+         result := sum(values) end";
+
     #[test]
-    fn rejects_void_procedure_cleanly() {
+    fn one_dimensional_integer_array_parameter_runs_on_vm() {
+        assert_eq!(run_i64(AL8_ARRAY_PARAMETER_PROG), 42);
+    }
+
+    #[test]
+    fn array_parameter_lowers_to_handle_and_lower_bound_iir_params() {
+        let module = compile_source(AL8_ARRAY_PARAMETER_PROG, "array_param")
+            .expect("array parameter program compiles");
+        let sum = module.get_function("sum").expect("sum function exists");
+        assert_eq!(
+            sum.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+            ],
+            "array formal must receive its handle plus declared lower bound"
+        );
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|instr| instr.op == "call")
+            .expect("main calls sum");
+        assert_eq!(call.srcs.len(), 3, "callee + handle + lower bound");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(name)) if name == "sum"));
+
+        assert!(
+            matches!(sum.instructions.last(), Some(instr)
+                if instr.op == "ret"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "sum")),
+            "the implicit procedure result must stay in its local return slot"
+        );
+        assert!(
+            !sum.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("sum")
+            }),
+            "the implicit procedure result must never be treated as a captured global"
+        );
+    }
+
+    #[test]
+    fn array_parameter_accepts_real_elements() {
+        let src = "begin real array values[4:5, -2:-1]; integer result; \
+                   real procedure sum(a); value a; real array a; \
+                   begin a[4,-2] := 40.0; a[5,-1] := 2.0; sum := a[4,-2] + a[5,-1] end; \
+                   result := entier(sum(values)) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn array_parameter_accepts_string_elements() {
+        let src = "begin string array values[4:4, -2:-1]; integer result; \
+                   procedure writeok(a); value a; string array a; \
+                   begin a[4,-2] := 'OK'; if a[4,-2] = 'OK' then result := 42 else result := 0 end; \
+                   writeok(values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn array_parameter_accepts_boolean_elements() {
+        let src = "begin boolean array flags[-1:0]; integer result; \
+                   procedure setflags(a); value a; boolean array a; \
+                   begin a[-1] := true; a[0] := false end; \
+                   setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_array_param").expect("compiles");
+        let proc_ = module
+            .get_function("setflags")
+            .expect("boolean array procedure exists");
+        assert_eq!(
+            proc_.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+            ],
+            "boolean array formal must preserve the descriptor element type"
+        );
+    }
+
+    #[test]
+    fn multidimensional_boolean_array_parameter_preserves_full_descriptor() {
+        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module =
+            compile_source(src, "multidimensional_boolean_array_param").expect("compiles");
+        let proc_ = module
+            .get_function("setflags")
+            .expect("boolean array procedure exists");
+        assert_eq!(
+            proc_.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "2-D boolean array formals must preserve every lower bound and row-major stride"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_three_dimensional_boolean_array_parameter() {
+        let src = "begin boolean array flags[-1:0, 2:3, 5:6]; integer result; \
+                   procedure setflags(a); value a; boolean array a; \
+                     begin procedure populate; begin a[-1,2,5] := true; a[-1,3,6] := false; a[0,2,5] := false; a[0,3,6] := true end; \
+                           populate(); if a[-1,2,5] and not a[-1,3,6] and not a[0,2,5] and a[0,3,6] then result := 42 else result := 0 end; \
+                   setflags(flags) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "three_dimensional_boolean_array_formal_capture")
+            .expect("compiles");
+        let setflags = module
+            .get_function("setflags")
+            .expect("setflags function exists");
+        assert_eq!(
+            setflags.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+            ],
+            "a 3-D boolean array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setflags", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested boolean writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<bool>"
+            }),
+            "nested boolean writes must reload the captured 3-D array<bool> handle"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_three_dimensional_real_array_parameter() {
+        let src = "begin real array values[-1:0, 2:3, 5:6]; integer result, total; \
+                   procedure setvalues(a); value a; real array a; \
+                     begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; \
+                           populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; \
+                   setvalues(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "three_dimensional_real_array_formal_capture")
+            .expect("compiles");
+        let setvalues = module
+            .get_function("setvalues")
+            .expect("setvalues function exists");
+        assert_eq!(
+            setvalues.params,
+            vec![
+                ("a".to_string(), "array<f64>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+            ],
+            "a 3-D real array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setvalues", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested real writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<f64>"
+            }),
+            "nested real writes must reload the captured 3-D array<f64> handle"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_four_dimensional_integer_array_parameter() {
+        let src = "begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; \
+                   procedure setvalues(a); value a; integer array a; \
+                     begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; \
+                           populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; \
+                   setvalues(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "four_dimensional_integer_array_formal_capture")
+            .expect("compiles");
+        let setvalues = module
+            .get_function("setvalues")
+            .expect("setvalues function exists");
+        assert_eq!(
+            setvalues.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+                (array_param_stride_slot("a", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 3), "i64".to_string()),
+            ],
+            "a 4-D integer array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setvalues", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested integer writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<i64>"
+            }),
+            "nested integer writes must reload the captured 4-D array<i64> handle"
+        );
+    }
+
+    #[test]
+    fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
+        let src = "begin integer array values[4:5, -2:-1]; integer result; \
+                   procedure seed(a); value a; integer array a; \
+                     begin a[4,-2] := 40; a[5,-1] := 2 end; \
+                   procedure invoke; seed(values); \
+                   invoke; result := values[4,-2] + values[5,-1] end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_array_param").expect("compiles");
+        let invoke = module.get_function("invoke").expect("invoke function exists");
+        let descriptor_loads = invoke
+            .instructions
+            .iter()
+            .filter(|instr| instr.op == "global_load")
+            .count();
+        assert!(
+            descriptor_loads >= 4,
+            "captured actual must reload its handle, bounds, and stride, got: {:?}",
+            invoke.instructions
+        );
+    }
+
+    const AL8_2D_ARRAY_PARAMETER_PROG: &str = "begin integer array values[-1:0, 4:5]; integer result; \
+         integer procedure fill(a); value a; integer array a; \
+         begin a[-1,4] := 40; a[0,5] := 2; fill := a[-1,4] + a[0,5] end; \
+         result := fill(values) end";
+
+    #[test]
+    fn two_dimensional_integer_array_parameter_runs_on_vm() {
+        // The two dimensions have distinct lower bounds, so this proves the
+        // descriptor crosses both lower-bound values and the row-major stride.
+        assert_eq!(run_i64(AL8_2D_ARRAY_PARAMETER_PROG), 42);
+    }
+
+    #[test]
+    fn two_dimensional_array_parameter_lowers_complete_descriptor() {
+        let module = compile_source(AL8_2D_ARRAY_PARAMETER_PROG, "array_param_2d")
+            .expect("two-dimensional array parameter program compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "a 2-D formal must receive its handle, both lower bounds, and outer stride"
+        );
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|instr| instr.op == "call")
+            .expect("main calls fill");
+        assert_eq!(call.srcs.len(), 5, "callee + 2-D array descriptor");
+    }
+
+    #[test]
+    fn nested_procedure_captures_multidimensional_array_parameter() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           seed(); fill := a[-1,4] + a[0,5] end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "array_formal_capture").expect("compiles");
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert!(
+            fill.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "fill must publish its incoming array handle for the nested procedure"
+        );
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "seed must reload its captured array handle from the shared descriptor"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_multidimensional_string_array_parameter() {
+        let src = "begin string array words[-1:0, 4:5]; integer result; \
+                   procedure fill(a); value a; string array a; \
+                     begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; \
+                           seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; \
+                   fill(words) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "string_array_formal_capture").expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<str>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "a 2-D string array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<str>"
+            }),
+            "nested string writes must reload the captured array<str> handle"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_three_dimensional_string_array_parameter() {
+        let src = "begin string array words[-1:0, 4:5, 7:8]; integer result; \
+                   procedure fill(a); value a; string array a; \
+                     begin procedure seed; begin a[-1,4,7] := 'HI'; a[-1,5,8] := 'NO'; a[0,4,7] := 'LO'; a[0,5,8] := 'OK' end; \
+                           seed(); if a[-1,4,7] < a[0,4,7] and a[0,5,8] = 'OK' and a[-1,5,8] != 'HI' then result := 42 else result := 0 end; \
+                   fill(words) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "three_dimensional_string_array_formal_capture")
+            .expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<str>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+            ],
+            "a 3-D string array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let seed = module.get_function("seed").expect("seed function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+        ] {
+            assert!(
+                seed.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested string writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<str>"
+            }),
+            "nested string writes must reload the captured 3-D array<str> handle"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_captures_four_dimensional_string_array_parameter() {
+        let src = "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; \
+                   procedure fill(a); value a; string array a; \
+                     begin procedure seed; begin a[-1,4,7,10] := 'HI'; a[-1,5,8,11] := 'NO'; a[0,4,7,10] := 'LO'; a[0,5,8,11] := 'OK' end; \
+                           seed(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; \
+                   fill(words) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "four_dimensional_string_array_formal_capture")
+            .expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<str>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+                (array_param_stride_slot("a", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 3), "i64".to_string()),
+            ],
+            "a 4-D string array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let seed = module.get_function("seed").expect("seed function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                seed.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested string writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<str>"
+            }),
+            "nested string writes must reload the captured 4-D array<str> handle"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_forwards_captured_four_dimensional_string_array_parameter() {
+        let src = "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; \
+                   procedure fill(a); value a; string array a; \
+                     begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; \
+                           procedure invoke; seed(a); \
+                           invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; \
+                   fill(words) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_four_dimensional_string_array_forwarding")
+            .expect("compiles");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert_eq!(
+            seed.params,
+            vec![
+                ("b".to_string(), "array<str>".to_string()),
+                (array_param_dim_lower_slot("b", 0), "i64".to_string()),
+                (array_param_stride_slot("b", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 1), "i64".to_string()),
+                (array_param_stride_slot("b", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 2), "i64".to_string()),
+                (array_param_stride_slot("b", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 3), "i64".to_string()),
+            ],
+            "the 4-D string callee must receive the complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let invoke = module
+            .get_function("invoke")
+            .expect("invoke function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                invoke.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested forwarding must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            invoke.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<str>"
+            }),
+            "nested forwarding must reload the captured 4-D array<str> handle"
+        );
+        let forward = invoke
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+            })
+            .expect("invoke forwards the captured array to seed");
+        assert_eq!(
+            forward.srcs.len(),
+            9,
+            "the forwarded 4-D descriptor needs a callee, handle, four lowers, and three strides"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_forwards_captured_four_dimensional_real_array_parameter() {
+        let src = "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; \
+                   procedure fill(a); value a; real array a; \
+                     begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
+                           procedure invoke; seed(a); \
+                           invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; \
+                   fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_four_dimensional_real_array_forwarding")
+            .expect("compiles");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert_eq!(
+            seed.params,
+            vec![
+                ("b".to_string(), "array<f64>".to_string()),
+                (array_param_dim_lower_slot("b", 0), "i64".to_string()),
+                (array_param_stride_slot("b", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 1), "i64".to_string()),
+                (array_param_stride_slot("b", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 2), "i64".to_string()),
+                (array_param_stride_slot("b", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 3), "i64".to_string()),
+            ],
+            "the 4-D real callee must receive the complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let invoke = module
+            .get_function("invoke")
+            .expect("invoke function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                invoke.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested forwarding must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            invoke.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<f64>"
+            }),
+            "nested forwarding must reload the captured 4-D array<f64> handle"
+        );
+        let forward = invoke
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+            })
+            .expect("invoke forwards the captured array to seed");
+        assert_eq!(
+            forward.srcs.len(),
+            9,
+            "the forwarded 4-D descriptor needs a callee, handle, four lowers, and three strides"
+        );
+    }
+
+    #[test]
+    fn nested_procedure_forwards_captured_four_dimensional_boolean_array_parameter() {
+        let src = "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; \
+                   procedure fill(a); value a; boolean array a; \
+                     begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; \
+                           procedure invoke; seed(a); \
+                           invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; \
+                   fill(flags) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_four_dimensional_boolean_array_forwarding")
+            .expect("compiles");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert_eq!(
+            seed.params,
+            vec![
+                ("b".to_string(), "array<bool>".to_string()),
+                (array_param_dim_lower_slot("b", 0), "i64".to_string()),
+                (array_param_stride_slot("b", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 1), "i64".to_string()),
+                (array_param_stride_slot("b", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 2), "i64".to_string()),
+                (array_param_stride_slot("b", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 3), "i64".to_string()),
+            ],
+            "the 4-D boolean callee must receive the complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let invoke = module
+            .get_function("invoke")
+            .expect("invoke function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                invoke.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested forwarding must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            invoke.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<bool>"
+            }),
+            "nested forwarding must reload the captured 4-D array<bool> handle"
+        );
+        let forward = invoke
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+            })
+            .expect("invoke forwards the captured array to seed");
+        assert_eq!(
+            forward.srcs.len(),
+            9,
+            "the forwarded 4-D descriptor needs a callee, handle, four lowers, and three strides"
+        );
+    }
+
+    #[test]
+    fn nested_array_capture_infers_rank_from_nested_use() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           seed(); fill := 42 end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "nested_array_formal_rank").expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(fill.params.len(), 4, "2-D array descriptor parameters");
+    }
+
+    #[test]
+    fn nested_array_capture_allows_sibling_formal_to_shadow_it() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                           integer procedure shadow(a); value a; integer a; shadow := a; \
+                           seed(); fill := a[-1,4] + a[0,5] end; \
+                   result := fill(values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_procedure_captures_scalar_value_parameter() {
+        let src = "begin integer result; \
+                   integer procedure total(seed); value seed; integer seed; \
+                     begin integer procedure bump; begin seed := seed + 2; bump := seed end; \
+                           total := bump() end; \
+                   result := total(40) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "scalar_formal_capture").expect("compiles");
+        let capture_slot = scalar_param_capture_slot("total", "seed");
+        let total = module.get_function("total").expect("total function exists");
+        assert!(
+            total.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "total must publish its incoming scalar parameter before the nested call"
+        );
+        let bump = module.get_function("bump").expect("bump function exists");
+        assert!(
+            bump.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+            }),
+            "bump must reload its captured scalar parameter from shared storage"
+        );
+    }
+
+    #[test]
+    fn nested_formal_shadow_does_not_capture_enclosing_block_scalar() {
+        let src = "begin integer seed, result; \
+                   procedure invoke; \
+                     begin integer procedure local(seed); value seed; integer seed; \
+                           local := seed + 1; \
+                           result := local(1) end; \
+                   seed := 41; invoke; result := result + seed end";
+        assert_eq!(run_i64(src), 43);
+
+        let module = compile_source(src, "nested_formal_shadow").expect("compiles");
+        assert!(
+            module.functions.iter().flat_map(|function| &function.instructions).all(|instr| {
+                !matches!(instr.op.as_str(), "global_load" | "global_store")
+                    || instr.srcs.first().and_then(Operand::as_str_lit) != Some("seed")
+            }),
+            "a nested formal named seed must shadow, not capture, the enclosing block scalar"
+        );
+    }
+
+    #[test]
+    fn three_dimensional_array_parameter_runs_on_vm() {
+        let src = "begin integer array values[1:2, 3:4, 5:6]; integer result; \
+                   integer procedure pick(a); value a; integer array a; \
+                   begin a[1,3,5] := 40; a[2,4,6] := 2; pick := a[1,3,5] + a[2,4,6] end; \
+                   result := pick(values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn array_parameter_rejects_rank_mismatch() {
         let err = compile_source(
-            "begin integer result; procedure noop; result := 1; result := 42 end",
+            "begin integer array values[1:2]; integer result; \
+             integer procedure first(a); value a; integer array a; first := a[1,1]; \
+             result := first(values) end",
+            "array_param_rank",
+        )
+        .expect_err("rank-mismatched array parameter must fail");
+        assert!(
+            matches!(err, CompileError::Type(ref message) if message.contains("formal is 2-dimensional")),
+            "expected rank diagnostic, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn array_parameter_rejects_inconsistent_formal_subscripts() {
+        let err = compile_source(
+            "begin integer array values[1:2]; integer result; \
+             integer procedure first(a); value a; integer array a; \
+             begin first := a[1]; first := a[1,1] end; \
+             result := first(values) end",
+            "array_param_inconsistent_rank",
+        )
+        .expect_err("inconsistent array formal ranks must fail");
+        assert!(
+            matches!(err, CompileError::Type(ref message) if message.contains("both 1 and 2 subscripts")),
+            "expected inconsistent-rank diagnostic, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn proper_procedure_statement_mutates_enclosing_scalar() {
+        let src = "begin integer result; procedure bump(d); value d; integer d; \
+                   result := result + d; result := 40; bump(2) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn proper_procedure_emits_void_function_and_no_dest_call() {
+        let module = compile_source(
+            "begin integer result; procedure bump(d); value d; integer d; \
+             result := result + d; result := 40; bump(2) end",
+            "proper_proc",
+        )
+        .expect("proper procedure should compile");
+        let bump = module
+            .get_function("bump")
+            .expect("bump is a sibling function");
+        assert_eq!(bump.params, vec![("d".to_string(), "i64".to_string())]);
+        assert_eq!(bump.return_type, "void");
+        assert!(bump.instructions.iter().any(|i| i.op == "ret_void"));
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|i| i.op == "call")
+            .expect("main calls bump");
+        assert!(call.dest.is_none(), "proper procedure calls have no dest");
+        assert_eq!(call.type_hint, "void");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(s)) if s == "bump"));
+    }
+
+    #[test]
+    fn rejects_proper_procedure_in_value_position() {
+        let err = compile_source(
+            "begin integer result; procedure bump(d); value d; integer d; \
+             result := result + d; result := bump(2) end",
             "bad",
         )
-        .expect_err("proper (void) procedures are outside this slice");
-        assert!(err.to_string().contains("void"));
+        .expect_err("proper procedure does not yield a value");
+        assert!(err.to_string().contains("no return value"));
     }
 
     #[test]
@@ -4618,6 +6785,50 @@ mod tests {
         let src = "begin real procedure scale(x); value x; real x; scale := x * 6.0; \
                    integer result; result := entier(scale(7.0)) end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "real procedure scale(x); value x; real x; scale := x * 6.0; ",
+            "real procedure combine(a,b); value a,b; real a,b; combine := a + b; ",
+            "result := entier(combine(scale(3.0), scale(4.0))) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "real_procedure_composition").expect("compiles");
+        let combine = module.get_function("combine").expect("real procedure exists");
+        assert_eq!(combine.params, vec![
+            ("a".into(), "f64".into()),
+            ("b".into(), "f64".into()),
+        ]);
+        assert_eq!(combine.return_type, "f64");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.type_hint == "f64"
+                        && instr.srcs.first().and_then(Operand::as_var) == Some("scale")
+                })
+                .count(),
+            2,
+            "both scale calls must retain their f64 result type: {:?}",
+            main.instructions
+        );
+        let combine_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "f64"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("combine")
+            })
+            .expect("composition must call combine");
+        assert_eq!(combine_call.srcs.len(), 3, "combine receives two real call values");
     }
 
     // ---- AL5: switches + conditional designational expressions ----
@@ -4668,6 +6879,38 @@ mod tests {
         let src = "begin integer result; boolean b; b := false; goto if b then yes else no; \
                    yes: result := 1; goto fin; no: result := 42; fin: end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn conditional_switch_element_evaluates_at_goto_time() {
+        let src = "begin integer result, i; boolean chooseyes; \
+                   switch s := if chooseyes then yes else no, fallback; \
+                   chooseyes := true; i := 1; goto s[i]; \
+                   yes: result := 40; goto done; no: result := 1; goto done; \
+                   fallback: result := 2; done: result := result + 2 end";
+        assert_eq!(run_i64(src), 42);
+
+        let else_src = src.replace("chooseyes := true", "chooseyes := false");
+        assert_eq!(run_i64(&else_src), 3);
+    }
+
+    #[test]
+    fn nested_switch_element_resolves_selected_designator() {
+        let src = "begin integer result, i; switch inner := yes, no; \
+                   switch outer := inner[i]; i := 2; goto outer[1]; \
+                   yes: result := 1; goto done; no: result := 40; \
+                   done: result := result + 2 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn rejects_cyclic_switch_list_elements() {
+        let err = compile_source(
+            "begin integer result; switch s := s[1]; goto s[1]; result := 0 end",
+            "bad",
+        )
+        .expect_err("recursive switch expansion must be rejected");
+        assert!(err.to_string().contains("cyclic switch"));
     }
 
     #[test]
@@ -4766,20 +7009,43 @@ mod tests {
     }
 
     #[test]
-    fn rejects_mixed_integer_and_real() {
-        // No implicit integer→real coercion in this slice.
-        let err = compile_source(
-            "begin real result; result := 1 + 2.5 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Type(_)),
-            "mixing integer and real should be a Type error, got {err:?}");
+    fn mixed_integer_and_real_widens_to_real() {
+        let src = "begin real r; integer result; r := 1 + 2.5; \
+                   if 7 = 7.0 then result := entier(r * 12) else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "mixed_numeric").expect("mixed arithmetic compiles");
+        let main = module.get_function("main").expect("main exists");
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "int_to_real"),
+            "mixed arithmetic and comparison must widen through int_to_real"
+        );
     }
 
     #[test]
-    fn rejects_real_division_on_integers() {
-        let err = compile_source(
-            "begin integer result; result := 7 / 2 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Type(_)),
-            "`/` on integers should be a Type error (use div), got {err:?}");
+    fn integer_division_widens_to_real() {
+        assert_eq!(
+            run_f64("begin real result; result := 7 / 2 end"),
+            3.5,
+            "`/` is real division even for integer operands"
+        );
+    }
+
+    #[test]
+    fn promotion_flows_through_real_arrays_and_parameters() {
+        let src = "begin integer i, result; real r; real array a[1:1]; \
+                   real procedure scale(x); value x; real x; scale := x * 6; \
+                   i := 7; a[1] := i; r := i; \
+                   if a[1] = i then result := entier(scale(r)) else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_standard_functions_widen_integer_arguments() {
+        assert_eq!(
+            run_i64("begin integer result; result := entier(sqrt(49)) + entier(sin(0)) end"),
+            7
+        );
     }
 
     // ---------------------------------------------------------------------
@@ -4792,6 +7058,31 @@ mod tests {
         let src = "begin integer array A[1:3]; integer result; \
                    A[2] := 42; result := A[2] end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    /// Boolean arrays use the same bounds-aware E5 descriptor as numeric arrays
+    /// while keeping their `bool` element type through the load/store path.
+    #[test]
+    fn boolean_array_store_and_load_roundtrips() {
+        let src = "begin boolean array flags[-1:0]; integer result; \
+                   flags[-1] := true; flags[0] := false; \
+                   if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_array").expect("compiles");
+        let main = module.get_function("main").expect("main exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "alloc_array" && instr.type_hint == "array<bool>"
+            }),
+            "boolean declaration must allocate an array<bool>"
+        );
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "array_get" && instr.type_hint == "bool"
+            }),
+            "boolean read must retain the bool element type"
+        );
     }
 
     /// The 1-based ALGOL lower bound is honoured: writing `A[1]` and reading it
@@ -4983,6 +7274,131 @@ mod tests {
         assert_eq!(run_f64(src), 2.5);
     }
 
+    /// A `string array` shares the E5 aggregate substrate with numeric arrays:
+    /// literals store as `str` elements, reads feed lexical ordering, and the
+    /// VM observes the selected element as a real string value.
+    #[test]
+    fn string_array_elements_feed_lexical_ordering() {
+        let src = "begin string array words[1:2]; integer result; \
+                   words[1] := 'HI'; words[2] := 'LO'; \
+                   if words[1] < words[2] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string array program compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "alloc_array" && instr.type_hint == "array<str>"),
+            "string array declaration must retain the str element type: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "array_get" && instr.type_hint == "str"),
+            "string array read must produce a str value: {:?}",
+            main.instructions
+        );
+    }
+
+    /// An initialized scalar string can populate an array element without
+    /// losing its runtime handle; the read then remains a normal `str` value.
+    #[test]
+    fn string_array_accepts_initialized_scalar_values() {
+        let src = "begin string array words[1:1]; string greeting; integer result; \
+                   greeting := 'HI'; words[1] := greeting; \
+                   if words[1] = greeting then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// A runtime `string procedure` result is a normal `str` value, so it can
+    /// cross an `array_set`/`array_get` round trip before lexical comparison.
+    #[test]
+    fn string_array_accepts_runtime_procedure_results() {
+        let src = concat!(
+            "begin string array words[1:2]; integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "words[1] := pick(1); words[2] := pick(0); ",
+            "if words[1] < words[2] then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string array program compiles");
+        let main = module.get_function("main").expect("has main");
+        let first_call = main
+            .instructions
+            .iter()
+            .position(|instr| instr.op == "call" && instr.type_hint == "str")
+            .expect("runtime string procedure call");
+        let first_store = main
+            .instructions
+            .iter()
+            .position(|instr| instr.op == "array_set" && instr.type_hint == "str")
+            .expect("runtime string array store");
+        assert!(
+            first_call < first_store,
+            "the procedure result must be evaluated before array storage: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions
+                .iter()
+                .any(|instr| instr.op == "array_get" && instr.type_hint == "str"),
+            "runtime string array reads must remain typed str values: {:?}",
+            main.instructions
+        );
+    }
+
+    /// A runtime string procedure result remains a typed `str` value when it
+    /// immediately becomes the value actual of another typed procedure.
+    #[test]
+    fn string_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "integer procedure matches(s); value s; string s; ",
+            "if s = 'HI' then matches := 42 else matches := 0; ",
+            "result := matches(pick(1)) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string composition compiles");
+        let matches_fn = module
+            .functions
+            .iter()
+            .find(|function| function.name == "matches")
+            .expect("matches procedure exists");
+        assert!(
+            matches_fn.params.iter().any(|(_, ty)| ty == "str"),
+            "the string formal must retain the str IIR type: {:?}",
+            matches_fn.params
+        );
+
+        let main = module.get_function("main").expect("has main");
+        let pick_call = main
+            .instructions
+            .iter()
+            .position(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "pick")
+            })
+            .expect("pick call returns str");
+        let matches_call = main
+            .instructions
+            .iter()
+            .position(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "i64"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "matches")
+            })
+            .expect("matches call returns integer");
+        assert!(
+            pick_call < matches_call,
+            "the string result must be evaluated before it is passed onward: {:?}",
+            main.instructions
+        );
+    }
+
     // ── AL-pow: ALGOL 60 `↑` exponentiation (spelled `^`) ───────────────────
 
     /// `integer ↑ integer-literal` unrolls to repeated integer multiply and
@@ -5016,6 +7432,13 @@ mod tests {
         assert_eq!(run_i64("begin integer result; result := 3 * 2 ^ 3 end"), 24);
     }
 
+    /// ALGOL exponentiation is right-associative: `2 ^ 3 ^ 2` is
+    /// `2 ^ (3 ^ 2)` = 512, not `(2 ^ 3) ^ 2` = 64.
+    #[test]
+    fn power_chain_associates_right_to_left() {
+        assert_eq!(run_i64("begin integer result; result := 2 ^ 3 ^ 2 end"), 512);
+    }
+
     /// A `real` base with an integer-literal exponent unrolls with f64 multiply
     /// and stays `real`: `2.5 ↑ 2` = 6.25.
     #[test]
@@ -5029,14 +7452,42 @@ mod tests {
         assert_eq!(run_f64("begin real result; result := 2.0 ^ 3.0 end"), 8.0);
     }
 
-    /// An `integer` base with a `real` exponent is a clean `Unsupported` — it
-    /// would need int→real coercion not in this slice.
+    /// An integer base widens when a real exponent selects the `f64_pow` path.
     #[test]
-    fn rejects_integer_base_real_exponent() {
-        let err = compile_source(
-            "begin integer result; result := 2 ^ 3.0 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)),
-            "integer↑real should be Unsupported, got {err:?}");
+    fn integer_base_real_exponent_widens_to_real() {
+        assert_eq!(
+            run_f64("begin real result; result := 2 ^ 3.0 end"),
+            8.0
+        );
+    }
+
+    /// A runtime integer exponent widens both operands to the shared
+    /// `f64_pow` path rather than requiring a compile-time unroll.
+    #[test]
+    fn integer_base_runtime_integer_exponent_widens_to_real() {
+        let src = "begin integer exponent; real result; exponent := 3; result := 2 ^ exponent end";
+        assert_eq!(run_f64(src), 8.0);
+
+        let module = compile_source(src, "runtime_integer_exponent").expect("compiles");
+        let main = module.get_function("main").expect("main function exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "f64_pow"
+                    && instr.type_hint == "f64"
+                    && instr.srcs.len() == 2
+            }),
+            "a runtime integer exponent must use the f64_pow operation"
+        );
+    }
+
+    /// A negative integer exponent is not a literal-unroll shape and therefore
+    /// uses `f64_pow`, preserving the reciprocal as a real result.
+    #[test]
+    fn integer_base_negative_integer_exponent_widens_to_real() {
+        assert_eq!(
+            run_f64("begin integer exponent; real result; exponent := -1; result := 2 ^ exponent end"),
+            0.5
+        );
     }
 
     /// A 2-D **`real`** array (AL-multidim-real): the multidim flat-index path
@@ -5080,7 +7531,7 @@ mod tests {
     }
 
     /// The procedure body emits a `print_str` on the parameter slot, not on an
-    /// intermediate copy — the parameter is in `literal_string_slots` on entry.
+    /// intermediate copy — the parameter is initialized at procedure entry.
     #[test]
     fn al4_string_parameter_body_emits_print_str() {
         let src = "begin \

@@ -501,7 +501,7 @@ pub fn write<W: Write>(file: &LdpFile, writer: W) -> Result<(), LdpWriteError> {
     // ── Build string table in first-occurrence order ────────────────
     let mut strings: Vec<String> = Vec::new();
     let mut str_idx: HashMap<String, u32> = HashMap::new();
-    let mut intern = |s: &str, strings: &mut Vec<String>, idx: &mut HashMap<String, u32>|
+    let intern = |s: &str, strings: &mut Vec<String>, idx: &mut HashMap<String, u32>|
         -> Result<u32, LdpWriteError>
     {
         if let Some(&i) = idx.get(s) {

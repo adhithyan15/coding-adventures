@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-07-13
+
+### Added
+- `GrammarCompiler.swift`: `compileTokenGrammarExpression(_:)` and
+  `compileParserGrammarExpression(_:)` render a parsed grammar back into Swift
+  source that reconstructs it as native `TokenGrammar` / `ParserGrammar` values
+  (plus `swiftStringLiteral(_:)`, an exhaustive Swift string-literal escaper).
+- `grammar-tools-embed` executable target: reads canonical grammar file(s),
+  parses them with GrammarTools' own parser, and writes a package's
+  `_Grammar.swift` embedding the grammar(s). This lets lexer/parser packages
+  compile the grammar in instead of reading `code/grammars/**` at run time.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

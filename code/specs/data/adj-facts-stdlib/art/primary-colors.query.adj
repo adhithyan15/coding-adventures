@@ -1,0 +1,20 @@
+% ============================================================================
+% primary-colors.query.adj — a worked recall over the ART primary-colors library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is red a primary color?"
+% in the traditional artists' (RYB) color model: it states no art fact — it only
+% `import`s the grounded table and asks membership binding queries. The engine
+% resolves each `?` against the `primary_color` rows and returns yes + the Tate
+% source/locator/trust. A color that is NOT a traditional RYB primary — a
+% secondary color such as green — abstains honestly; the engine never invents a
+% membership.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli primary-colors.query.adj
+% ============================================================================
+
+import "primary-colors.adj"
+
+? primary_color(red, $Is)      % expect yes  (red is a traditional RYB primary)
+? primary_color(blue, $Is)     % expect yes  (blue is a traditional RYB primary)
+? primary_color(green, $Is)    % expect abstain — green is a SECONDARY color

@@ -31,7 +31,7 @@ use std::cell::RefCell;
 use crate::runner::{DutHandle, TestCase};
 
 thread_local! {
-    static REGISTRY: RefCell<Vec<TestCase>> = RefCell::new(Vec::new());
+    static REGISTRY: RefCell<Vec<TestCase>> = const { RefCell::new(Vec::new()) };
 }
 
 /// Register a test function under `name`.

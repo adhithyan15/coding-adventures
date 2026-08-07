@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-docx-writer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "WordprocessingML (.docx) writer — turns a simple Document → paragraph/run/table model into valid .docx bytes via the generic opc-writer packaging layer. Write-side sibling of the wordprocessingml reader (OOXML milestone C2)"
 license = "MIT"
@@ -11,3 +11,5 @@ coding-adventures-opc-writer = { path = "../opc-writer" }
 [dev-dependencies]
 # Round-trip proof: re-open our output with the read-side WordprocessingML reader.
 coding-adventures-wordprocessingml = { path = "../wordprocessingml" }
+# Inspect the emitted OPC package's parts (assert styles.xml is present iff styled).
+coding-adventures-opc = { path = "../opc" }

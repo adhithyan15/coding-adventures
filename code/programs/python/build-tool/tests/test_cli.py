@@ -97,6 +97,27 @@ class TestMainCli:
         ])
         assert exit_code == 0
 
+    def test_invalid_lua_metadata_fails_closed(self, tmp_path, capsys):
+        pkg_dir = tmp_path / "code" / "packages" / "lua" / "pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text('echo "hi"\n', encoding="utf-8")
+        (pkg_dir / "test-0.1.0-1.rockspec").write_bytes(
+            b'package = "coding-adventures-pkg"\n-- invalid byte: \x97\n'
+        )
+
+        exit_code = main([
+            "--root", str(tmp_path),
+            "--language", "lua",
+            "--dry-run",
+        ])
+
+        captured = capsys.readouterr()
+        assert exit_code == 2
+        assert "METADATA_INVALID_UTF8" in captured.err
+        assert "lua/pkg" in captured.err
+        assert "test-0.1.0-1.rockspec" in captured.err
+        assert str(tmp_path) not in captured.err
+
     def test_no_packages_found(self, tmp_path):
         """Test when no packages match the language filter."""
         code_dir = tmp_path / "code"

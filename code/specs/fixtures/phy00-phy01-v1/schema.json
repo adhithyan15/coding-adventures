@@ -1,0 +1,620 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/phy00-phy01-conformance-v1.json",
+  "title": "PHY00 and PHY01 conformance corpus v1",
+  "description": "Closed language-neutral cases for first-principles trigonometry and simple harmonic waves.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "suite",
+    "summary",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "suite": {
+      "enum": [
+        "phy00-trig",
+        "phy01-wave"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/trig_case"
+          },
+          {
+            "$ref": "#/$defs/wave_case"
+          }
+        ]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "suite": {
+            "const": "phy00-trig"
+          }
+        },
+        "required": [
+          "suite"
+        ]
+      },
+      "then": {
+        "properties": {
+          "cases": {
+            "items": {
+              "$ref": "#/$defs/trig_case"
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "cases": {
+            "items": {
+              "$ref": "#/$defs/wave_case"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^phy0[01]/[a-z0-9][a-z0-9-]*(/[a-z0-9][a-z0-9-]*)+$",
+      "maxLength": 120
+    },
+    "finite_decimal": {
+      "type": "string",
+      "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$",
+      "maxLength": 64
+    },
+    "positive_decimal": {
+      "type": "string",
+      "pattern": "^(?:0\\.(?:0*[1-9][0-9]*)|[1-9][0-9]*(?:\\.[0-9]+)?)(?:[eE][+-]?[0-9]+)?$",
+      "maxLength": 64
+    },
+    "scalar": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "decimal"
+          ],
+          "properties": {
+            "kind": {
+              "const": "finite"
+            },
+            "decimal": {
+              "$ref": "#/$defs/finite_decimal"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "positive-infinity",
+                "negative-infinity",
+                "nan"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "comparison": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "exact"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "tolerance"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "absolute",
+                "relative"
+              ]
+            },
+            "tolerance": {
+              "$ref": "#/$defs/positive_decimal"
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "value",
+            "comparison"
+          ],
+          "properties": {
+            "outcome": {
+              "const": "value"
+            },
+            "value": {
+              "$ref": "#/$defs/scalar"
+            },
+            "comparison": {
+              "$ref": "#/$defs/comparison"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "value": {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "positive-infinity",
+                          "negative-infinity",
+                          "nan"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  }
+                },
+                "required": [
+                  "value"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "comparison": {
+                    "properties": {
+                      "kind": {
+                        "const": "exact"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "error_code"
+          ],
+          "properties": {
+            "outcome": {
+              "const": "error"
+            },
+            "error_code": {
+              "const": "invalid-argument"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome"
+          ],
+          "properties": {
+            "outcome": {
+              "const": "accepted"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "predicate"
+          ],
+          "properties": {
+            "outcome": {
+              "const": "property"
+            },
+            "predicate": {
+              "const": "finite-absolute-not-greater-than-amplitude"
+            }
+          }
+        }
+      ]
+    },
+    "trig_case_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "operation",
+        "summary",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/case_id"
+        },
+        "operation": {
+          "enum": [
+            "constant",
+            "sin",
+            "cos",
+            "tan",
+            "sqrt",
+            "atan",
+            "atan2",
+            "radians",
+            "degrees"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "input": {
+          "type": "object"
+        },
+        "expected": {
+          "$ref": "#/$defs/expected"
+        }
+      }
+    },
+    "unary_x_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x"
+      ],
+      "properties": {
+        "x": {
+          "$ref": "#/$defs/scalar"
+        }
+      }
+    },
+    "trig_case": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/trig_case_base"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "operation": {
+                  "const": "constant"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "const": "pi"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "enum": [
+                    "sin",
+                    "cos",
+                    "tan",
+                    "sqrt",
+                    "atan"
+                  ]
+                },
+                "input": {
+                  "$ref": "#/$defs/unary_x_input"
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "const": "atan2"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "y",
+                    "x"
+                  ],
+                  "properties": {
+                    "y": {
+                      "$ref": "#/$defs/scalar"
+                    },
+                    "x": {
+                      "$ref": "#/$defs/scalar"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "const": "radians"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "degrees"
+                  ],
+                  "properties": {
+                    "degrees": {
+                      "$ref": "#/$defs/scalar"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "const": "degrees"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "radians"
+                  ],
+                  "properties": {
+                    "radians": {
+                      "$ref": "#/$defs/scalar"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "expected": {
+              "not": {
+                "properties": {
+                  "outcome": {
+                    "enum": [
+                      "accepted",
+                      "property"
+                    ]
+                  }
+                },
+                "required": [
+                  "outcome"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "wave_parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "amplitude",
+        "frequency",
+        "phase"
+      ],
+      "properties": {
+        "amplitude": {
+          "$ref": "#/$defs/scalar"
+        },
+        "frequency": {
+          "$ref": "#/$defs/scalar"
+        },
+        "phase": {
+          "$ref": "#/$defs/scalar"
+        }
+      }
+    },
+    "wave_case_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "operation",
+        "summary",
+        "input",
+        "expected"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/case_id"
+        },
+        "operation": {
+          "enum": [
+            "construct",
+            "period",
+            "angular-frequency",
+            "evaluate"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "input": {
+          "type": "object"
+        },
+        "expected": {
+          "$ref": "#/$defs/expected"
+        }
+      }
+    },
+    "wave_case": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/wave_case_base"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "operation": {
+                  "const": "construct"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "wave"
+                  ],
+                  "properties": {
+                    "wave": {
+                      "$ref": "#/$defs/wave_parameters"
+                    }
+                  }
+                },
+                "expected": {
+                  "properties": {
+                    "outcome": {
+                      "enum": [
+                        "accepted",
+                        "error"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "outcome"
+                  ]
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "enum": [
+                    "period",
+                    "angular-frequency"
+                  ]
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "wave"
+                  ],
+                  "properties": {
+                    "wave": {
+                      "$ref": "#/$defs/wave_parameters"
+                    }
+                  }
+                },
+                "expected": {
+                  "properties": {
+                    "outcome": {
+                      "enum": [
+                        "value",
+                        "error"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "outcome"
+                  ]
+                }
+              }
+            },
+            {
+              "properties": {
+                "operation": {
+                  "const": "evaluate"
+                },
+                "input": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "wave",
+                    "time"
+                  ],
+                  "properties": {
+                    "wave": {
+                      "$ref": "#/$defs/wave_parameters"
+                    },
+                    "time": {
+                      "$ref": "#/$defs/scalar"
+                    }
+                  }
+                },
+                "expected": {
+                  "properties": {
+                    "outcome": {
+                      "enum": [
+                        "value",
+                        "error",
+                        "property"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "outcome"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

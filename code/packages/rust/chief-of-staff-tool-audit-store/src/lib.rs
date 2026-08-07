@@ -15164,7 +15164,7 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn drain_status_flags_match(&self) -> bool {
         self.is_idle() == (self.drained_records() == 0)
             && self.made_progress() == (self.drained_records() > 0)
-            && self.should_continue() == !self.reached_end_of_log()
+            && self.should_continue() != self.reached_end_of_log()
             && self.exhausted_tick_budget()
                 == (self.drain_ticks() == self.max_ticks() && !self.reached_end_of_log())
             && self.advanced_checkpoint() == self.made_progress()

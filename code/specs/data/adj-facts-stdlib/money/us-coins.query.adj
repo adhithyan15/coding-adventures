@@ -1,0 +1,20 @@
+% ============================================================================
+% us-coins.query.adj — a worked recall over the US-coins money library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how much is a quarter
+% worth?": it states no money fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `coin_cents`
+% rows and returns the value + the table's source/locator/trust. A token that is
+% not a US coin abstains honestly — the engine never invents a value. The last
+% query runs the relation BACKWARDS: given the value 5, recall the coin.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli us-coins.query.adj
+% ============================================================================
+
+import "us-coins.adj"
+
+? coin_cents(quarter, $Cents)      % expect 25
+? coin_cents(dime, $Cents)         % expect 10
+? coin_cents($Coin, 5)             % expect nickel — reverse lookup by value
+? coin_cents(doubloon, $Cents)     % expect abstain — a doubloon is not a US coin

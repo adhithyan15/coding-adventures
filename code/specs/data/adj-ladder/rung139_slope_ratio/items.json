@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 139 \u2014 slope ratio from four stated quantities (CONTINUING the OVER-A-DIFFERENCE column). rung-137 put a product over a difference (a*b)/(c-d); rung-138 a sum (a+b)/(c-d); rung-139 puts a DIFFERENCE over a difference (a-b)/(c-d) \u2014 the classic slope shape, a rise over a run, the first ladder figure with a difference in BOTH the numerator and the denominator. From a net rise (rise_top - rise_base) divided by a net run (run_right - run_left), compute the slope ratio ((rise_top-rise_base)/(run_right-run_left)), the net rise (rise_top-rise_base), or the net run (run_right-run_left). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a DIFFERENCE NUMERATOR OVER A DIFFERENCE (a-b)/(c-d) (subtract the rise, subtract the run, then divide the rise by the run \u2014 the two-part denominator is ONE run, not two divisors). As on rungs 137-138, the divide-across and lost-grouping errors go negative when c>d, so the two in-range canonical slips are used as distractors. The harness matches the scalar to the printed options. The slope ratio is a slope (how much net rise rides on each unit of the net run, rise over run), framed as a RATIO so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via -, /, and + \u2014 no constant leaks, and neither the net rise, the net run, nor the slope ratio ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make with a gap denominator: dividing by the SUM of the run marks instead of their gap ((a-b)/(c+d), a total where a gap belongs, a wrong operation) and INVERTING the ratio ((c-d)/(a-b), run over rise, the reciprocal, a wrong operation). The core confusion tested is that (a-b)/(c-d) is one rise over one run, not (a-b)/(c+d) and not (c-d)/(a-b). This rung has a subtraction in BOTH the numerator and the denominator, so both differences are guarded (rise_top - rise_base >= 2 and run_right - run_left >= 2) to keep them positive; the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r139sra-01",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 2 up to a rise top of 8, over a run from a run left of 2 to a run right of 7. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(8)\nobserve rise_base(2)\nobserve run_right(7)\nobserve run_left(2)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r139sra-02",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 2 up to a rise top of 8, over a run from a run left of 2 to a run right of 7. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(8)\nobserve rise_base(2)\nobserve run_right(7)\nobserve run_left(2)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r139sra-03",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 2 up to a rise top of 8, over a run from a run left of 2 to a run right of 7. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(8)\nobserve rise_base(2)\nobserve run_right(7)\nobserve run_left(2)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r139sra-04",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 11, over a run from a run left of 3 to a run right of 6. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(11)\nobserve rise_base(3)\nobserve run_right(6)\nobserve run_left(3)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r139sra-05",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 11, over a run from a run left of 3 to a run right of 6. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(11)\nobserve rise_base(3)\nobserve run_right(6)\nobserve run_left(3)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r139sra-06",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 11, over a run from a run left of 3 to a run right of 6. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(11)\nobserve rise_base(3)\nobserve run_right(6)\nobserve run_left(3)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r139sra-07",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 14, over a run from a run left of 4 to a run right of 8. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(14)\nobserve rise_base(4)\nobserve run_right(8)\nobserve run_left(4)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r139sra-08",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 14, over a run from a run left of 4 to a run right of 8. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(14)\nobserve rise_base(4)\nobserve run_right(8)\nobserve run_left(4)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r139sra-09",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 14, over a run from a run left of 4 to a run right of 8. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(14)\nobserve rise_base(4)\nobserve run_right(8)\nobserve run_left(4)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r139sra-10",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 16, over a run from a run left of 4 to a run right of 10. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(16)\nobserve rise_base(4)\nobserve run_right(10)\nobserve run_left(4)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r139sra-11",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 16, over a run from a run left of 4 to a run right of 10. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(16)\nobserve rise_base(4)\nobserve run_right(10)\nobserve run_left(4)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r139sra-12",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 4 up to a rise top of 16, over a run from a run left of 4 to a run right of 10. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(16)\nobserve rise_base(4)\nobserve run_right(10)\nobserve run_left(4)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r139sra-13",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 5 up to a rise top of 19, over a run from a run left of 2 to a run right of 11. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(19)\nobserve rise_base(5)\nobserve run_right(11)\nobserve run_left(2)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r139sra-14",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 5 up to a rise top of 19, over a run from a run left of 2 to a run right of 11. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(19)\nobserve rise_base(5)\nobserve run_right(11)\nobserve run_left(2)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r139sra-15",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 5 up to a rise top of 19, over a run from a run left of 2 to a run right of 11. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(19)\nobserve rise_base(5)\nobserve run_right(11)\nobserve run_left(2)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r139sra-16",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 12, over a run from a run left of 2 to a run right of 9. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(12)\nobserve rise_base(3)\nobserve run_right(9)\nobserve run_left(2)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r139sra-17",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 12, over a run from a run left of 2 to a run right of 9. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(12)\nobserve rise_base(3)\nobserve run_right(9)\nobserve run_left(2)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r139sra-18",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 3 up to a rise top of 12, over a run from a run left of 2 to a run right of 9. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(12)\nobserve rise_base(3)\nobserve run_right(9)\nobserve run_left(2)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r139sra-19",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 6 up to a rise top of 22, over a run from a run left of 3 to a run right of 13. What is the slope ratio (the net rise divided by the net run)?",
+      "program": "observe rise_top(22)\nobserve rise_base(6)\nobserve run_right(13)\nobserve run_left(3)\nlet answer = (rise_top - rise_base) / (run_right - run_left)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r139sra-20",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 6 up to a rise top of 22, over a run from a run left of 3 to a run right of 13. What is the the net rise (the rise top minus the rise base, the numerator that is divided by the net run)?",
+      "program": "observe rise_top(22)\nobserve rise_base(6)\nobserve run_right(13)\nobserve run_left(3)\nlet answer = rise_top - rise_base\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r139sra-21",
+      "qtype": "slope_ratio",
+      "stem": "A slope study records a rise from a rise base of 6 up to a rise top of 22, over a run from a run left of 3 to a run right of 13. What is the the net run (the run right minus the run left, the difference the net rise is divided by)?",
+      "program": "observe rise_top(22)\nobserve rise_base(6)\nobserve run_right(13)\nobserve run_left(3)\nlet answer = run_right - run_left\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

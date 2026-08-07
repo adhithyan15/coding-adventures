@@ -1,0 +1,41 @@
+% ============================================================================
+% rainbow-colors — the visible-spectrum colors in order (adj-facts-stdlib, OPTICS).
+% ============================================================================
+% An optics facts library — an early science fact: the colors of the rainbow
+% (the visible spectrum), counting from red, the thing a child remembers with
+% the name "Roy G. Biv". Recall is a binding query:
+%
+%     ? rainbow_color_order(green, $N)   % 4  (green is the fourth color)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `rainbow_color_order(color, order)` carrying the NASA citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the position WITH
+% its source, on the CPU, with zero model calls, and abstains on a non-color
+% (e.g. brown, which is not a spectral color, is deliberately NOT a row here).
+% The `order` value is a NUMBER, so a recalled position composes into arithmetic
+% (how many colors lie between red and green? 4 − 1 − 1 = 2).
+%
+% Provenance: NASA's Goddard "Imagine the Universe" education lesson names the
+% seven colors of visible sunlight in order in one sentence (see `source` below);
+% the citable artifact is that lesson page at the `locator`. `trust authoritative`
+% — a NASA (.gov) primary education reference. Nothing here is asserted from
+% memory. Order is red (longest wavelength) → violet (shortest), exactly as the
+% cited sentence lists them. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table rainbow_color_order {
+    columns color, order
+
+    row (red, 1)
+    row (orange, 2)
+    row (yellow, 3)
+    row (green, 4)
+    row (blue, 5)
+    row (indigo, 6)
+    row (violet, 7)
+
+    source "the colors red, orange, yellow, green, blue, indigo, and violet"
+    locator "https://imagine.gsfc.nasa.gov/educators/lessons/roygbiv/"
+    trust authoritative
+}

@@ -1,0 +1,40 @@
+Kannada, chapter 9: Sorry.
+1 lesson. All 1 can be done entirely by ear.
+
+
+Lesson 1 of 1.
+ಕ್ಷಮಿಸಿ (kṣamisi) — forgive me / sorry.
+
+Warm-up.
+[pause 2 seconds]
+You already know ದಯವಿಟ್ಟು, "please." Kannada's "sorry" reuses a trick you'll see everywhere in this language: taking a Sanskrit noun and turning it into a working Kannada verb.
+
+The word, taken apart.
+ಕ್ಷಮಾ (kṣamā) = "patience, forbearance, forgiveness" — a Sanskrit noun, unchanged.
+‑ಇಸು (‑isu) = a verb-making suffix: bolt it onto a Sanskrit noun and you get a brand-new Kannada verb. kṣamā + ‑isu becomes ಕ್ಷಮಿಸು (kṣamisu), "to forgive." (The same move builds ಪ್ರಾರಂಭಿಸು prārambhisu, "to begin," from Sanskrit prārambha.)
+‑ಿ (‑i) = the plain imperative ending — the very one you met on kuḷitukoḷḷi ("please sit") in the please lesson.
+So ಕ್ಷಮಿಸಿ is simply "forgive!" — kṣamisu wearing its imperative ending.
+
+The word, taken apart: The Dravidian family, side by side.
+Three of the four Dravidian cousins build "sorry" from the very same Sanskrit noun, each with its own verb-making suffix and its own imperative shape:
+Kannada ಕ್ಷಮಿಸಿ kṣamisi — Sanskrit kṣamā + ‑isu (verb) + ‑i (imperative).
+Telugu క్షమించండి kṣamin̄caṇḍi — Sanskrit kṣamā + ‑in̄cu (verb) + ‑aṇḍi (imperative).
+Malayalam ക്ഷമിക്കണം kṣamikkaṇaṁ — Sanskrit kṣama + ‑ikkuka (verb) + ‑aṇaṁ (necessitative).
+Tamil மன்னிக்கவும் maṉṉikkavum — its own native root maṉṉi, not Sanskrit at all.
+
+Why it's said this way: about how it's used.
+ಕ್ಷಮಿಸಿ is a genuine, everyday way to say "sorry" — not overly formal — but in casual conversation you'll also hear the softer ಕ್ಷಮಿಸಿ ಬಿಡಿ (kṣamisi biḍi, roughly "just forgive [it]") or simply the borrowed English "sorry," which is extremely common in spoken Kannada.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kṣamā" — the Sanskrit noun, patience/forgiveness]
+[pause 8 seconds for the answer]
+[your turn — say: the verb — "kṣamisu," to forgive — then "kṣamisi," forgive!]
+[pause 8 seconds for the answer]
+[your turn — say: contrast — Tamil's maṉṉikkavum uses its own root instead]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is ಕ್ಷಮಿಸಿ built from? (Sanskrit kṣamā "forgiveness".
+the verb-making suffix ‑isu + the imperative ‑i.) Which cousin languages do the same trick, and which one doesn't? (Telugu and Malayalam also verb-ify kṣamā; Tamil uses its own native root maṉṉi instead.) What do people often say casually instead? (Kṣamisi biḍi, or simply borrowed English "sorry.")

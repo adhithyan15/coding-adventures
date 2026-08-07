@@ -1,30 +1,30 @@
-/// IPC Manager -- the kernel component that owns all IPC resources.
-///
-/// In a real OS kernel, IPC resources (pipes, message queues, shared memory
-/// segments) are global kernel objects managed by a central authority. The
-/// `IpcManager` is that authority.
-///
-/// When a process calls `pipe()`, `msgget()`, or `shmget()`, the kernel
-/// dispatches to the IpcManager, which creates the resource and returns an
-/// identifier.
-///
-/// ## Resource Lifecycle
-///
-/// ```text
-///   +----------+     create_pipe()      +--------+
-///   | Process  | ---------------------> | Pipe   |
-///   |          | <-- (pipe_id, r, w) -- |        |
-///   +----------+                        +--------+
-///        |
-///        | close_pipe_read(pipe_id)
-///        v
-///   Reader count decremented. If both hit 0, pipe is eligible for cleanup.
-/// ```
-///
-/// ## Identifier Scheme
-///
-/// Each resource type has its own ID counter starting from 0. Pipe IDs,
-/// queue names, and shared memory names are independent.
+//! IPC Manager -- the kernel component that owns all IPC resources.
+//!
+//! In a real OS kernel, IPC resources (pipes, message queues, shared memory
+//! segments) are global kernel objects managed by a central authority. The
+//! `IpcManager` is that authority.
+//!
+//! When a process calls `pipe()`, `msgget()`, or `shmget()`, the kernel
+//! dispatches to the IpcManager, which creates the resource and returns an
+//! identifier.
+//!
+//! ## Resource Lifecycle
+//!
+//! ```text
+//!   +----------+     create_pipe()      +--------+
+//!   | Process  | ---------------------> | Pipe   |
+//!   |          | <-- (pipe_id, r, w) -- |        |
+//!   +----------+                        +--------+
+//!        |
+//!        | close_pipe_read(pipe_id)
+//!        v
+//!   Reader count decremented. If both hit 0, pipe is eligible for cleanup.
+//! ```
+//!
+//! ## Identifier Scheme
+//!
+//! Each resource type has its own ID counter starting from 0. Pipe IDs,
+//! queue names, and shared memory names are independent.
 
 use std::collections::HashMap;
 use crate::pipe::Pipe;

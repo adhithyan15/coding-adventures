@@ -48,7 +48,21 @@ layout Cell {
     // (`r == selectedRow && c == selectedCol`) ends up inlined
     // here verbatim.
     state-when-selected: slot: is-selected ,
-    state-when-editing:  slot: is-editing
+    state-when-editing:  slot: is-editing ,
+    // v0.2.2 fix: Cell.mil declares `emit onClick`, and every call site
+    // (Grid.mll's own `Cell(onClick: emit: onNavigate, ...)`) supplies a
+    // handler for it — but nothing in this layout ever referenced
+    // `emit: onClick`, so the resolver had nothing to substitute and a
+    // click did NOTHING. Never caught because no real app exercised Grid
+    // until the task-app sheet view did. Box takes a generic onClick
+    // like any other node (UI24's connects-wiring is tag-agnostic).
+    onClick: emit: onClick ,
+    // v0.2.3 / UI37: row/col ride along so the click can actually carry
+    // Cell's coordinate. Slot form (not expression), same reasoning as
+    // is-selected/is-editing above — the resolver's rewrite_bindings
+    // needs a SlotRef to substitute the call site's bound expression in.
+    row: slot: row ,
+    col: slot: col
   ) {
     If ( when: slot: is-editing ) {
       // value: slot: edit-content — the host's live edit buffer,

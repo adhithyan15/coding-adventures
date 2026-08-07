@@ -62,6 +62,27 @@ pub const RUNTIME_SHELL: &str = r##"import * as __SirShell from "@coding-adventu
 pub const RUNTIME_RANGE: &str = r##"import * as __SirRange from "@coding-adventures/sir-runtime-range";
 "##;
 
+/// The symbolic-expression runtime import, emitted **only** when a module
+/// uses the SIR23 symbolic/pattern domain (`Feature::SymbolicExpr` or
+/// `Feature::PatternMatching` — a `SymApply`/`SymPatternBlank`/
+/// `SymPatternNamed`/`SymRule`/`SymReplaceAll` node).  Pure non-symbolic
+/// modules (e.g. a MATLAB program) never gain a dependency on it.  Bound as
+/// `__SirSym` so the emitter's `__SirSym.*` call sites resolve; see
+/// `code/specs/SIR23-symbolic-pattern-semantic-ir.md` §"Backend impact".
+pub const RUNTIME_SYM: &str = r##"import * as __SirSym from "@coding-adventures/sir-runtime-symbolic";
+"##;
+
+/// The array/matrix runtime import, emitted **only** when a module uses the
+/// SIR22 array/matrix domain (`Feature::NDArrays`, `Feature::MatrixOps`, or
+/// `Feature::ArrayColumnMajor` — an `ArrayLit`/`Range`/`MatMul`/
+/// `ElementwiseOp`/`Transpose`/`IndexGet`/`IndexSet` node). Pure non-array
+/// modules (e.g. a Wolfram program with no matrix literal) never gain a
+/// dependency on it. Bound as `__SirArray` so the emitter's `__SirArray.*`
+/// call sites resolve; see
+/// `code/specs/SIR22-array-matrix-semantic-ir.md` §"Backend impact".
+pub const RUNTIME_ARRAY: &str = r##"import * as __SirArray from "@coding-adventures/sir-runtime-array";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -102,5 +123,21 @@ mod tests {
         assert!(RUNTIME_PAIRS.ends_with('\n'));
         // cons/car/cdr no longer come from the core namespace import.
         assert!(!RUNTIME.contains("cons"));
+    }
+
+    #[test]
+    fn symbolic_import_binds_its_namespace() {
+        assert!(RUNTIME_SYM.contains(
+            r#"import * as __SirSym from "@coding-adventures/sir-runtime-symbolic";"#
+        ));
+        assert!(RUNTIME_SYM.ends_with('\n'));
+    }
+
+    #[test]
+    fn array_import_binds_its_namespace() {
+        assert!(RUNTIME_ARRAY.contains(
+            r#"import * as __SirArray from "@coding-adventures/sir-runtime-array";"#
+        ));
+        assert!(RUNTIME_ARRAY.ends_with('\n'));
     }
 }

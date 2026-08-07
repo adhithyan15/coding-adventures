@@ -1,0 +1,209 @@
+// TaskApp — interface (mosmodel).
+//
+// A to-do app that *auto-schedules*. The host fills these slots from the pure
+// task-core engine (via task-wasm) and turns the emitted events back into engine
+// operations. Each row is a *list of cells* — [done-glyph, name, due, schedule,
+// overdue] — pre-formatted by the engine's `table` projection, so the layout can
+// place each cell in its own styled element (a real toggle, the name, meta chips)
+// via a `For` over `list<list<text>>` with `( row[n] )` cell access. The cell order
+// here is the contract between the host (main.tsx) and the layout's `row[n]` indices.
+
+component TaskApp {
+  // Header + add-row inputs.
+  slot app-title     : text ;
+  slot new-task-name : text ;
+  slot new-task-due  : text ;
+
+  // The workspace's projects, depth-first so a sub-project follows its parent. Each row
+  // is [ name, active-marker, indent ]: the marker is non-empty for exactly the project
+  // being shown (the layout renders that one as selected), and `indent` is a non-empty
+  // glyph for a *nested* project, empty for a top-level one — which is what turns a
+  // flat list into a visible hierarchy. Everything else in this interface (tasks,
+  // summary, schedule) describes the active project.
+  //
+  // Straight pass-through to pkg::mosaic-pkg-project-nav::ProjectNav — see
+  // ProjectNav.mil for the full contract and
+  // code/specs/task-app-project-nav-v1.md for the extraction rationale
+  // (the tree + composer moved into the package; the brand row and the
+  // view-switcher deliberately did not).
+  slot project-rows     : list<list<text>> ;
+  slot new-project-name : text ;
+
+  // A one-line summary (counts, project finish), plus the engine's verdict on the
+  // plan rendered as a pill. `status-warn` is non-empty when that verdict is bad
+  // news, which is the layout's cue to colour it as a warning rather than as OK.
+  slot summary      : text ;
+  slot status-label : text ;
+  slot status-warn  : text ;
+
+  // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
+  // of the task list, and `view-toggle-label` names the view you'd switch TO.
+  //
+  // Each timeline row is [ name, pad-width, bar-width, window, critical-marker ].
+  // `pad-width` and `bar-width` are CSS percentages of the shared track (e.g. "18%"),
+  // so every bar sits on one date scale — they reach the layout through UI36
+  // data-driven sizing (`width: ( t[n] )`). `timeline-scale` is the matching date
+  // ruler, and a non-empty `critical-marker` means the row is on the critical path.
+  slot timeline-mode     : text ;
+
+  // Board (kanban). `board-mode` is non-empty when the board is showing.
+  //
+  //   board-columns : one per status column, [ title, key ]
+  //   board-cards   : one per task,          [ name, column-key, task-id, critical ]
+  //
+  // A card is placed by comparing its column-key with the column's, rather than by
+  // nesting a list inside a list — the layout can express that with a single `If`,
+  // and it keeps both loops flat enough to read.
+  //
+  // Dropping carries KEYS, never indices: that is what makes the drag kernel usable
+  // from a nested loop at all, since an inner loop's index would otherwise shadow the
+  // outer one and a card would report the wrong row.
+  slot board-mode    : text ;
+  slot board-columns : list<list<text>> ;
+  slot board-cards   : list<list<text>> ;
+  slot timeline-scale    : text ;
+  slot timeline-rows     : list<list<text>> ;
+
+  // Sheet (spreadsheet). `sheet-mode` is non-empty when the sheet is showing. Every
+  // `sheet-*` slot is a straight pass-through to `pkg::mosaic-pkg-sheet::Sheet` — see
+  // Sheet.mil for the full contract. TaskApp adds no shaping of its own here; the host
+  // builds the sheet's rows from the SAME `table(view)` projection call it already uses
+  // for the list view, just with a broader `visibleFields` and the current filter/sort.
+  slot sheet-mode           : text ;
+  slot sheet-viewport-rows  : list<list<text>> ;
+  slot sheet-column-headers : list<text> ;
+  slot sheet-column-widths  : list<number> ;
+  slot sheet-selected-row   : number ;
+  slot sheet-selected-col   : number ;
+  slot sheet-edit-row       : number ;
+  slot sheet-edit-col       : number ;
+  slot sheet-edit-content   : text ;
+  slot sheet-filter-text    : text ;
+  slot sheet-sort-field      : text ;
+  slot sheet-sort-options    : list<text> ;
+  slot sheet-sort-open        : bool ;
+  slot sheet-sort-ascending   : bool ;
+
+  // The label composer wrapping the Sheet (see TaskApp.mll's sheet-mode branch).
+  // Deliberately TaskApp's own concern, not a mosaic-pkg-sheet slot — Sheet is a
+  // generic grid+toolbar wrapper and has no business knowing about labels
+  // specifically. Assignment (typing an existing label's name into a task's Labels
+  // cell) goes through the Sheet's own editable-cell mechanism instead; this
+  // composer is creation only.
+  slot new-label-name : text ;
+
+  // Calendar (month grid). `calendar-mode` is non-empty when the calendar is
+  // showing. Every `calendar-*` slot is a straight pass-through to
+  // `pkg::mosaic-pkg-calendar::Calendar` — see Calendar.mil for the full
+  // contract and code/specs/task-app-calendar-v1.md for the scope. The host
+  // builds calendar-cells/calendar-events from the SAME `calendar(range,
+  // view)` engine call each time the visible month changes.
+  slot calendar-mode   : text ;
+  slot calendar-title  : text ;
+  slot calendar-cells  : list<list<text>> ;
+  slot calendar-events : list<list<text>> ;
+
+  // Notes (list + editor). `notes-mode` is non-empty when the notes view is
+  // showing. Every `notes-*` slot is a straight pass-through to
+  // `pkg::mosaic-pkg-notes::Notes` — see Notes.mil for the full contract
+  // and code/specs/task-app-notes-ui-v1.md for the scope. The host builds
+  // note-rows from task-core's Note entities (via `workspace()`) and owns
+  // the in-progress edit buffer.
+  slot notes-mode          : text ;
+  slot notes-title         : text ;
+  slot note-rows           : list<list<text>> ;
+  slot selected-note-id    : text ;
+  slot note-title-value    : text ;
+  slot note-body-value     : text ;
+  slot note-task-value     : text ;
+
+  // One row per task, in schedule order. Each row is a list of pre-formatted cells:
+  //
+  //   [ 0 ] done-glyph      [ 5  ] expanded-marker  — non-empty for the ONE open row
+  //   [ 1 ] name            [ 6  ] detail: scheduled / earliest / latest
+  //   [ 2 ] due             [ 7  ] detail: slack, or "on the critical path"
+  //   [ 3 ] schedule        [ 8  ] detail: free slack (only when it differs)
+  //   [ 4 ] overdue         [ 9  ] group heading — present ONLY on the row that
+  //                                opens a group, so the list reads as sections
+  //                         [ 10 ] priority display name (e.g. "High"), or empty
+  //                         [ 11 ] labels, comma-joined display names, or empty
+  //                         [ 12 ] detail: dependency list (predecessors/successors,
+  //                                each labelled FS/SS/FF/SF), or empty
+  //                         [ 13 ] detail: attached notes' body text, or empty
+  //
+  // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
+  // is the empty string and the layout hides it. Cells 6-8 and 12-13 are the
+  // progressive-disclosure payload, filled ONLY for the expanded row — so a collapsed
+  // list stays a plain to-do list, and the host skips the CPM recompute (and the
+  // dependency/notes lookups) entirely when nothing is open. 10-13 are appended
+  // rather than inserted between 9 and the old end, so no existing row[n] reference
+  // anywhere shifts meaning. Cell 13 was drafted once before and pulled back out
+  // because nothing could populate `Note.attached_task` — now that
+  // `pkg::mosaic-pkg-notes::Notes` has the attach-to-task field (see its own
+  // Notes.mil and code/specs/task-app-notes-ui-v1.md's addendum), the read side
+  // is reachable and ships here.
+  slot task-rows : list<list<text>> ;
+
+  // Typing in the inputs.
+  emit onNewTaskNameChange ( value : text ) ;
+  emit onNewTaskDueChange ( value : text ) ;
+  emit onNewProjectNameChange ( value : text ) ;
+
+  // Create a project (top-level, or nested under the one currently shown), and switch
+  // which one is shown (by row index).
+  emit onAddProject ;
+  emit onAddSubproject ;
+  emit onSelectProject ( index : number ) ;
+
+  // Choose a view. Two explicit events rather than one toggle, so clicking the view
+  // you are already on is a no-op instead of switching away from it.
+  emit onShowList ;
+  emit onShowBoard ;
+  emit onShowTimeline ;
+  emit onShowSheet ;
+  emit onShowCalendar ;
+  emit onShowNotes ;
+
+  // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
+  // it. The payload is the UI35 contract — what moved, of what kind, onto which
+  // target, and where within it.
+  emit onCardDropped ( key : text , kind : text , targetKey : text , position : text ) ;
+
+  // Sheet emits — straight pass-through to/from pkg::mosaic-pkg-sheet::Sheet.
+  emit onSheetNavigate ( row : number , col : number ) ;
+  emit onSheetFormulaChange ( value : text ) ;
+  emit onSheetEditCommit ( value : text ) ;
+  emit onSheetEditCancel ;
+  emit onSheetFilterChange        ( value : text ) ;
+  emit onSheetSortFieldChange     ( value : text ) ;
+  emit onSheetToggleSortOpen ;
+  emit onSheetToggleSortDirection ;
+
+  // Label composer (TaskApp's own — see the new-label-name slot's note).
+  emit onNewLabelNameChange ( value : text ) ;
+  emit onAddLabel ;
+
+  // Calendar emits — straight pass-through to/from pkg::mosaic-pkg-calendar::Calendar.
+  emit onCalendarPrev ;
+  emit onCalendarNext ;
+  emit onCalendarEventDropped ( key : text , kind : text , targetKey : text , position : text ) ;
+
+  // Notes emits — straight pass-through to/from pkg::mosaic-pkg-notes::Notes.
+  emit onSelectNote ( index : number ) ;
+  emit onNewNote ;
+  emit onNoteTitleChange ( value : text ) ;
+  emit onNoteBodyChange ( value : text ) ;
+  emit onNoteTaskNameChange ( value : text ) ;
+  emit onSaveNote ;
+  emit onDeleteNote ;
+  emit onCancelNote ;
+
+  // Expand (or collapse) a task row to reveal its scheduling detail.
+  emit onExpandTask ( index : number ) ;
+
+  // Add the typed task; toggle/delete a row (the row index is delivered as the number
+  // payload of a single-number-param event).
+  emit onAddTask ;
+  emit onToggleTask ( index : number ) ;
+  emit onDeleteTask ( index : number ) ;
+}

@@ -1,0 +1,159 @@
+# Neural Network Curriculum
+
+This curriculum grows complexity along two dimensions: the mathematical
+capabilities shared by every network and the model families that use those
+capabilities differently.
+
+Do not treat it as a race to transformers. A later stage is useful only when
+you can inspect its tensors, validate its gradients, and explain why the added
+structure helps.
+
+## Shared Foundation
+
+| Stage | Build | Required understanding |
+| --- | --- | --- |
+| F0 | Fixed weighted neuron | Contributions, bias, activation |
+| F1 | Linear and logistic regression | Loss and gradient descent |
+| F2 | Perceptron and softmax classifier | Boundaries and multiclass output |
+| F3 | Two-layer MLP and XOR | Backpropagation through hidden features |
+| F4 | Deep MLP | initialization, normalization, dropout, residual paths |
+| F5 | Tensor/autograd engine | broadcasting, batches, saved values, gradient accumulation |
+| F6 | Compiled training step | NeuralIR, MatrixIR, Rust CPU/GPU execution |
+
+Implementation progress and the commit-sized delivery queue live in the
+[neural learning delivery roadmap](./ROADMAP.md).
+
+Every model family below starts with the smallest example that needs its new
+idea.
+
+## Spatial Track
+
+```text
+moving 1D filter
+  -> trainable 1D convolution
+  -> tiny image CNN
+  -> pooling and normalization
+  -> residual CNN
+  -> U-Net and vision transformer
+```
+
+The first visualizer should let the learner slide one kernel across one signal
+and inspect every multiply-accumulate before adding channels or batches.
+
+## Sequence Track
+
+```text
+one recurrent state value
+  -> Elman RNN
+  -> gated recurrent unit
+  -> LSTM
+  -> sequence-to-sequence model
+  -> attention and transformer
+```
+
+The first recurrent lab should unroll only three time steps and show how one
+parameter receives gradient contributions from each step.
+
+## Representation and Generation Track
+
+```text
+two-number bottleneck
+  -> tiny autoencoder
+  -> denoising autoencoder
+  -> variational autoencoder
+  -> small GAN
+  -> one-dimensional diffusion process
+  -> image diffusion model
+```
+
+Generation should begin with distributions and noise in one dimension. Images
+come after the learner can visualize what the model is trying to match.
+
+## Structured and Memory Track
+
+```text
+associative memory
+  -> Hopfield network
+  -> radial basis network / self-organizing map
+  -> message passing on a tiny graph
+  -> graph convolution
+  -> graph attention
+```
+
+These labs demonstrate that not every useful neural architecture is a stack of
+dense layers over a rectangular dataset.
+
+## Scaling Track
+
+Scaling is its own curriculum rather than a final switch:
+
+1. Vectorize one scalar loop.
+2. Batch several examples.
+3. Compile a full forward graph.
+4. Compile backward and optimizer graphs.
+5. Keep buffers resident across steps.
+6. Add f16 and bf16 with numerical checks.
+7. Quantize a trained tiny model and measure accuracy change.
+8. Split one model across devices.
+9. Replicate training data and synchronize gradients.
+
+Each step needs a correctness oracle and a benchmark. A GPU label without a
+real-hardware execution test is not evidence of acceleration.
+
+NN31 establishes the bridge for one forward pass before persistent buffers or
+reduced precision are introduced: one graph contract and byte oracle connect
+the scalar and TypeScript CPU lanes, a Node-free Rust execution helper, and an
+optional live WebGPU dispatch. Buffer residency and evidence provenance stay
+visible so later performance experiments can change mechanics without changing
+the mathematical contract.
+
+NN32 performs that next experiment on one two-value affine neuron. Binary32,
+binary16, and symmetric int8 share a paper oracle while raw payloads expose the
+actual stored values and scales. Eager and resident schedules then replay the
+same pass with explicit transfer-byte equations, completing the local
+compilation/performance bridge before cross-language consumers expand.
+
+NN33 begins that expansion by proving the existing corpus is one complete
+contract. A strict catalog links NN03 through NN32 to 30 fixture roots, 30
+independent Python reference validators, and 33 lab documents. One fail-closed
+command checks the roster before running every validator, while the browser
+separates a registered mapping from evidence that Python actually executed it.
+
+NN34 gives that contract its first representative non-Python consumers. Go,
+Ruby, and Rust independently read the same NN03 weighted-neuron fixture,
+recompute its hand-sized arithmetic, and emit one closed JSON receipt. A bounded
+shell-free orchestrator checks all three native lanes, while the browser keeps
+registered commands distinct from evidence that an external process ran. The
+next cross-language tranche can therefore define a stable Rust C ABI without
+confusing a native reference baseline with a core binding.
+
+NN35 defines that stable boundary. One allocation-free C function accepts
+caller-owned binary64 buffers, exposes both weighted contributions and the
+prediction, and returns a closed status without partial output writes. A
+versioned header, language-neutral ABI catalog, direct Rust tests, and a Python
+`ctypes` call all pin the same `0x00010000` contract. Native NN34 lanes remain
+the comparison baseline; the next tranche can add binding-backed lanes and
+track which language concepts use native code or the Rust core.
+
+NN36 closes that comparison with an executable ownership inventory. Go, Ruby,
+and Rust remain three native lanes; Python `ctypes` is one Rust-core binding.
+The language-neutral catalog preserves the 1.35 paper oracle, records who owns
+each calculation, and reruns both underlying gates before counting `3 + 1 = 4`
+verified lanes. Future coverage grows only when a real native implementation or
+Rust-core binding earns the same fixture result.
+
+## Corpus Rule
+
+Every new curriculum unit should contribute all of the following:
+
+- a plain-language learning entry;
+- one hand-calculable example;
+- one interactive visualizer or trace view;
+- one deterministic language-neutral fixture;
+- finite-difference gradient checks when training is involved;
+- reference-versus-accelerated backend parity;
+- a small runnable program in at least one language;
+- a coverage entry showing which other language ports exist.
+
+This makes the learning corpus, implementations, and performance substrate grow
+together.

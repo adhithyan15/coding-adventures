@@ -279,23 +279,31 @@ function buildDecodeTable(norm: ReadonlyArray<number>, accLog: number): FseDe[] 
   }
 
   // Phase 2: spread remaining symbols into the lower portion of the table.
-  // Two-pass approach: first symbols with count > 1, then count == 1.
-  // This matches the reference implementation's deterministic ordering.
+  //
+  // A SINGLE pass over symbols in ascending order 0..norm.length-1, placing
+  // each symbol's full count immediately when encountered — this is the real
+  // algorithm (FSE_buildDTable_internal's "else" branch, verified against
+  // the reference C source). An earlier revision of this codec used a
+  // two-pass split (all count>1 symbols first, then all count==1 symbols)
+  // which produces a DIFFERENT table layout — internally self-consistent
+  // (our own decoder mirrored our own encoder) but not the real wire format,
+  // so our output was rejected by the real `zstd` CLI with "Data corruption
+  // detected" even though our own round-trip tests passed. See lessons.md
+  // Lesson 96. There is no correctness reason to special-case cnt>1 vs
+  // cnt==1 here — treating them as separate passes was a spurious
+  // deterministic-looking convention with no basis in the reference
+  // algorithm.
   let pos = 0;
-  for (let pass = 0; pass < 2; pass++) {
-    for (let s = 0; s < norm.length; s++) {
-      const c = norm[s]!;
-      if (c <= 0) continue;
-      const cnt = c;
-      // pass 0 handles cnt > 1, pass 1 handles cnt == 1
-      if ((pass === 0) !== (cnt > 1)) continue;
-      symNext[s] = cnt;
-      for (let i = 0; i < cnt; i++) {
-        tbl[pos]!.sym = s;
+  for (let s = 0; s < norm.length; s++) {
+    const c = norm[s]!;
+    if (c <= 0) continue;
+    const cnt = c;
+    symNext[s] = cnt;
+    for (let i = 0; i < cnt; i++) {
+      tbl[pos]!.sym = s;
+      pos = (pos + step) & (sz - 1);
+      while (pos > high) {
         pos = (pos + step) & (sz - 1);
-        while (pos > high) {
-          pos = (pos + step) & (sz - 1);
-        }
       }
     }
   }
@@ -369,20 +377,21 @@ function buildEncodeTable(norm: ReadonlyArray<number>, accLog: number): [FseEe[]
   }
   const idxLimit = idxHigh;
 
-  // Phase 2: spread remaining symbols
+  // Phase 2: spread remaining symbols.
+  //
+  // Single pass in ascending symbol order — must match buildDecodeTable's
+  // spread exactly (see the comment there for why the previous two-pass
+  // split was wrong).
   let pos2 = 0;
-  for (let pass = 0; pass < 2; pass++) {
-    for (let s = 0; s < norm.length; s++) {
-      const c = norm[s]!;
-      if (c <= 0) continue;
-      const cnt = c;
-      if ((pass === 0) !== (cnt > 1)) continue;
-      for (let i = 0; i < cnt; i++) {
-        spread[pos2] = s;
+  for (let s = 0; s < norm.length; s++) {
+    const c = norm[s]!;
+    if (c <= 0) continue;
+    const cnt = c;
+    for (let i = 0; i < cnt; i++) {
+      spread[pos2] = s;
+      pos2 = (pos2 + step) & (sz - 1);
+      while (pos2 > idxLimit) {
         pos2 = (pos2 + step) & (sz - 1);
-        while (pos2 > idxLimit) {
-          pos2 = (pos2 + step) & (sz - 1);
-        }
       }
     }
   }
@@ -622,21 +631,36 @@ function fseEncodeSym(
 }
 
 /**
- * Decode one symbol from the backward bitstream, updating the FSE state.
+ * Initialise an FSE encoder state directly from a symbol, WITHOUT flushing
+ * any bits — the reverse-encoding-loop analogue of real zstd's
+ * `FSE_initCState2`.
  *
- *   1. Look up `de[state]` to get `sym`, `nb`, and `base`.
- *   2. New state = `base + read(nb bits)`.
+ * RFC 8878's decoder never performs a state-update read after the LAST
+ * sequence in a block (there is no "next" sequence whose peek needs a fresh
+ * state) — see the sequences-decode loop in `decompressBlock`. Symmetrically,
+ * the ENCODER'S first symbol processed in its reverse loop (which
+ * corresponds to that same last sequence) cannot derive its starting state
+ * via a normal `fseEncodeSym` flush (there is no bit-consuming "update" on
+ * the decode side to produce it) — it must be computed directly.
  *
- * @param state  Current decoder state (index into de[]), mutated in place.
- * @param de     Decode table.
- * @param br     Reverse bit reader.
- * @returns [decoded symbol, new state].
+ * Formula (mirrors `FSE_initCState2` in the reference C implementation):
+ * `nbBitsOut = (deltaNb + (1<<15)) >>> 16`,
+ * `value = (nbBitsOut << 16) - deltaNb`, then a table lookup exactly like
+ * `fseEncodeSym` but starting from that computed `value` instead of a live
+ * running state.
+ *
+ * @param sym  Symbol to initialise the state from (index into ee[]).
+ * @param ee   Encode transform table (one entry per symbol).
+ * @param st   Encoder state table (slot → output state).
+ * @returns The initial encoder state (in [sz, 2*sz)).
  */
-function fseDecodeSym(state: number, de: FseDe[], br: RevBitReader): [number, number] {
-  const e = de[state]!;
-  const sym = e.sym;
-  const nextState = e.base + Number(br.readBits(e.nb));
-  return [sym, nextState];
+function fseInitState(sym: number, ee: FseEe[], st: number[]): number {
+  const e = ee[sym]!;
+  const nbBitsOut = (e.deltaNb + (1 << 15)) >>> 16;
+  const value = (nbBitsOut << 16) - e.deltaNb;
+  const slotI = (value >>> nbBitsOut) + e.deltaFs;
+  const slot = Math.max(0, slotI);
+  return st[slot]!;
 }
 
 // ─── LL/ML/OF code number computation ────────────────────────────────────────
@@ -686,8 +710,18 @@ function mlToCode(ml: number): number {
  * Example: input = "abcabc"
  *   lits = [a, b, c]
  *   seqs = [{ll:3, ml:3, off:3}]   (copy 3 bytes from 3 back)
+ *
+ * Exported (along with `encodeLiteralsSection`, `encodeSeqCount`, and
+ * `encodeSequencesSection` below) ONLY for white-box unit testing of the
+ * FSE sequences codec in isolation from the LZSS front-end — NOT re-exported
+ * from `index.ts`, so this does not add to the package's published API.
+ * This lets a test hand-craft an exact sequence list (e.g. specific
+ * `off` values below the repeat-offset threshold) that the real LZSS-driven
+ * `compress()` could never itself produce, to deterministically exercise
+ * every Repeated-Offset (R1/R2/R3) decode branch — see the "Repeated-Offset
+ * (R1/R2/R3) deterministic coverage" tests in tests/zstd.test.ts.
  */
-interface Seq {
+export interface Seq {
   ll: number;   // literal length
   ml: number;   // match length
   off: number;  // match offset (1-indexed: 1 = last byte written)
@@ -739,7 +773,7 @@ function tokensToSeqs(tokens: LzssToken[]): [Uint8Array, Seq[]] {
  *   bits [1:0] = Literals_Block_Type = 00 (Raw)
  *   bits [3:2] = Size_Format: 00=1-byte, 01=2-byte, 11=3-byte
  */
-function encodeLiteralsSection(lits: Uint8Array): number[] {
+export function encodeLiteralsSection(lits: Uint8Array): number[] {
   const n = lits.length;
   const out: number[] = [];
 
@@ -821,32 +855,65 @@ function decodeLiteralsSection(data: Uint8Array, offset: number): [Uint8Array, n
 //   bits [1:0] = reserved (0)
 // Mode 0 = Predefined. We always write 0x00.
 //
-// The FSE bitstream is a backward bit-stream (reverse bit writer):
-//   - Sequences are encoded in REVERSE ORDER (last first).
-//   - For each sequence:
-//       OF extra bits, ML extra bits, LL extra bits  (in this order)
-//       then FSE symbol for ML, OF, LL               (reverse of decode order)
-//   - After all sequences, flush the final FSE states:
-//       (state_of - sz_of) as OF_ACC_LOG bits
-//       (state_ml - sz_ml) as ML_ACC_LOG bits
-//       (state_ll - sz_ll) as LL_ACC_LOG bits
-//   - Add sentinel and flush.
+// The FSE bitstream is a backward bit-stream (reverse bit writer): the LAST
+// bits written are the FIRST bits a forward reader consumes.
 //
-// The decoder does the mirror:
-//   1. Read LL_ACC_LOG bits → initial state_ll
-//   2. Read ML_ACC_LOG bits → initial state_ml
-//   3. Read OF_ACC_LOG bits → initial state_of
-//   4. For each sequence:
-//       decode LL symbol (state transition)
-//       decode OF symbol
-//       decode ML symbol
-//       read LL extra bits
-//       read ML extra bits
-//       read OF extra bits
-//   5. Apply sequence to output buffer.
+// RFC 8878 §3.1.1.3.2.1.2 (cross-checked against the real `zstd` CLI via the
+// TC-9 interop test and the reference C source — ZSTD_decodeSequence,
+// FSE_encodeSymbol, FSE_initCState2): a forward-reading decoder, for each
+// sequence, PEEKS all three symbols (LL, OF, ML) from the CURRENT states —
+// a bare table lookup that consumes NO bits, since the state itself IS the
+// decode-table index — THEN reads the value extra bits in order OF, ML, LL,
+// THEN (except after the LAST sequence, see below) updates the three states
+// in order LL, ML, OF, consuming bits to prepare the states the NEXT
+// sequence's peek will use.
+//
+// The state-transition update is skipped entirely after the LAST sequence:
+// there is no "next" sequence to prepare a state for, and a real decoder
+// never reads those bits. Symmetrically, this encoder — which walks
+// sequences in REVERSE order, so its FIRST iteration is the semantically
+// LAST sequence — cannot produce that sequence's starting state via a
+// normal bit-flushing `fseEncodeSym` transition (there is no corresponding
+// decode-side read to consume it); it must be computed directly via
+// `fseInitState` (real zstd's `FSE_initCState2`), which writes no bits.
+//
+// An earlier revision of this codec (a) combined peek-and-update into one
+// step and got the extras/updates relative order backwards, (b) got the
+// OF/ML sub-order backwards, and (c) always flushed a transition for every
+// sequence instead of special-casing the last one. All three bugs are
+// self-cancelling in an own-decoder/own-encoder round trip — which is why
+// they survived every internal test — but produced a bitstream the real
+// `zstd` CLI rejected as corrupt. See lessons.md Lesson 96.
+//
+// Full layout, decoder's view:
+//   1. Read initial states, order LL, OF, ML (NOTE: different order from the
+//      per-sequence update below — the RFC is asymmetric here):
+//        LL_ACC_LOG bits → state_ll
+//        OF_ACC_LOG bits → state_of
+//        ML_ACC_LOG bits → state_ml
+//   2. For each sequence:
+//        peek llCode = dtLl[state_ll].sym  (free)
+//        peek ofCode = dtOf[state_of].sym  (free)
+//        peek mlCode = dtMl[state_ml].sym  (free)
+//        read OF extra bits, then ML extra bits, then LL extra bits
+//        if not the last sequence:
+//          state_ll = dtLl[state_ll].base + read(dtLl[state_ll].nb)
+//          state_ml = dtMl[state_ml].base + read(dtMl[state_ml].nb)
+//          state_of = dtOf[state_of].base + read(dtOf[state_of].nb)
+//   3. Apply sequence to output buffer.
+//
+// The encoder (this function) writes the exact bit-for-bit mirror, in
+// reverse: process sequences from last to first; for the first iteration
+// (last real sequence) initialise states via fseInitState (no bits); for
+// every later iteration, flush a state transition in order OF, ML, LL
+// (write order — a forward reader consumes this AFTER decoding the
+// PREVIOUS sequence, as its LL/ML/OF update); then write extra bits in
+// order LL, ML, OF (write order — a forward reader consumes these
+// immediately after peeking, in OF/ML/LL order). Finally flush the initial
+// states in write order ML, OF, LL, so a forward reader sees LL, OF, ML.
 
 /** Encode sequence count as 1, 2, or 3 bytes. */
-function encodeSeqCount(count: number): number[] {
+export function encodeSeqCount(count: number): number[] {
   // RFC 8878 §3.1.1.3.1 layout — byte0 is the FORMAT MARKER:
   //   byte0 < 128            → 1-byte form, count = byte0
   //   byte0 ∈ [128, 254]     → 2-byte form, count = ((byte0 - 128) << 8) | byte1
@@ -895,7 +962,7 @@ function decodeSeqCount(data: Uint8Array, offset: number): [number, number] {
  *
  * Returns the raw FSE bitstream bytes (not including the count or modes byte).
  */
-function encodeSequencesSection(seqs: Seq[]): Uint8Array {
+export function encodeSequencesSection(seqs: Seq[]): Uint8Array {
   // Build encode tables (precomputed from predefined distributions).
   const [eeLl, stLl] = buildEncodeTable(LL_NORM, LL_ACC_LOG);
   const [eeMl, stMl] = buildEncodeTable(ML_NORM, ML_ACC_LOG);
@@ -905,14 +972,19 @@ function encodeSequencesSection(seqs: Seq[]): Uint8Array {
   const szMl = 1 << ML_ACC_LOG;
   const szOf = 1 << OF_ACC_LOG;
 
-  // Encoder states start at table_size. Range [sz, 2*sz) maps to slot [0, sz).
-  let stateLl = szLl;
-  let stateMl = szMl;
-  let stateOf = szOf;
+  // States are set on the first loop iteration (via fseInitState, since
+  // seqs.length >= 1 is guaranteed by the caller); the 0 here is never read.
+  let stateLl = 0;
+  let stateMl = 0;
+  let stateOf = 0;
 
   const bw = new RevBitWriter();
 
-  // Encode sequences in REVERSE ORDER (the decoder will see them in forward order).
+  // Encode sequences in REVERSE ORDER (the decoder will see them in forward
+  // order). `first` tracks whether this is the FIRST iteration of this
+  // reversed loop, i.e. the semantically LAST real sequence — which gets its
+  // starting state via fseInitState (no bits) instead of a normal transition.
+  let first = true;
   for (let si = seqs.length - 1; si >= 0; si--) {
     const seq = seqs[si]!;
     const llCode = llToCode(seq.ll);
@@ -923,27 +995,39 @@ function encodeSequencesSection(seqs: Seq[]): Uint8Array {
     const rawOff = seq.off + 3;
     const ofCode = rawOff <= 1 ? 0 : (31 - Math.clz32(rawOff));
     const ofExtra = rawOff - (1 << ofCode);
-
-    // Write extra bits (OF, ML, LL in this order for the backward stream).
-    bw.addBits(BigInt(ofExtra), ofCode);
     const mlExtra = seq.ml - ML_CODES[mlCode]![0];
-    bw.addBits(BigInt(mlExtra), ML_CODES[mlCode]![1]);
     const llExtra = seq.ll - LL_CODES[llCode]![0];
-    bw.addBits(BigInt(llExtra), LL_CODES[llCode]![1]);
 
-    // FSE encode symbols. Since the backward stream reverses write order,
-    // we write the REVERSE of the decode order: ML → OF → LL.
-    // Decode order is: LL, OF, ML.
-    // Encode (reversed): ML, OF, LL (LL is written last = read first by decoder).
-    stateMl = fseEncodeSym(stateMl, mlCode, eeMl, stMl, bw);
-    stateOf = fseEncodeSym(stateOf, ofCode, eeOf, stOf, bw);
-    stateLl = fseEncodeSym(stateLl, llCode, eeLl, stLl, bw);
+    if (!first) {
+      // Transition state FROM "state used to peek the sequence processed in
+      // the PREVIOUS iteration" TO "state used to peek THIS sequence" —
+      // write order OF, ML, LL (a forward decoder consumes this AFTER
+      // decoding the previous sequence, as its LL, ML, OF update).
+      stateOf = fseEncodeSym(stateOf, ofCode, eeOf, stOf, bw);
+      stateMl = fseEncodeSym(stateMl, mlCode, eeMl, stMl, bw);
+      stateLl = fseEncodeSym(stateLl, llCode, eeLl, stLl, bw);
+    } else {
+      // Last real sequence: no incoming transition to flush. Initialise
+      // state directly from the symbol (no bits written) — see fseInitState.
+      stateOf = fseInitState(ofCode, eeOf, stOf);
+      stateMl = fseInitState(mlCode, eeMl, stMl);
+      stateLl = fseInitState(llCode, eeLl, stLl);
+      first = false;
+    }
+
+    // Extra bits, write order LL, ML, OF (a forward decoder reads these in
+    // order OF, ML, LL immediately after peeking symbols).
+    bw.addBits(BigInt(llExtra), LL_CODES[llCode]![1]);
+    bw.addBits(BigInt(mlExtra), ML_CODES[mlCode]![1]);
+    bw.addBits(BigInt(ofExtra), ofCode);
   }
 
-  // Flush final states (low accLog bits of state - sz).
-  // These are read FIRST by the decoder to initialise its states.
-  bw.addBits(BigInt(stateOf - szOf), OF_ACC_LOG);
+  // Flush the initial states (the state used to peek the FIRST real
+  // sequence). A forward-reading decoder reads these FIRST, in order LL, OF,
+  // ML. Since these are the very LAST bits written overall (and thus the
+  // FIRST a forward reader sees), write them in the reverse order: ML, OF, LL.
   bw.addBits(BigInt(stateMl - szMl), ML_ACC_LOG);
+  bw.addBits(BigInt(stateOf - szOf), OF_ACC_LOG);
   bw.addBits(BigInt(stateLl - szLl), LL_ACC_LOG);
   bw.flush();
 
@@ -995,6 +1079,23 @@ function compressBlock(block: Uint8Array): Uint8Array | null {
 }
 
 /**
+ * The three Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1), threaded
+ * through every Compressed block in a frame.
+ *
+ * "For the first block, the starting offset history is populated with the
+ * following values: Repeated_Offset1 = 1, Repeated_Offset2 = 4,
+ * Repeated_Offset3 = 8" — `decompress()` creates one of these per frame and
+ * every Compressed block's sequences read AND update it. Raw and RLE blocks
+ * do not touch it; it survives across them unchanged, because the registers
+ * are FRAME-scoped, not block-scoped.
+ */
+interface RepOffsets {
+  r1: number;
+  r2: number;
+  r3: number;
+}
+
+/**
  * Decompress one ZStd compressed block.
  *
  * Reads the literals section, sequences section, and applies the sequences
@@ -1002,8 +1103,12 @@ function compressBlock(block: Uint8Array): Uint8Array | null {
  *
  * @param data  The compressed block content (no block header).
  * @param out   Output buffer to append decompressed bytes to.
+ * @param reps  Repeated-Offset registers (RFC 8878 §3.1.1.3.2.1.1) —
+ *              mutated in place; the caller threads the same object through
+ *              every Compressed block in a frame. See the module doc
+ *              comment on `RepOffsets` and the offset-decode step below.
  */
-function decompressBlock(data: Uint8Array, out: number[]): void {
+function decompressBlock(data: Uint8Array, out: number[], reps: RepOffsets): void {
   // ── Literals section ─────────────────────────────────────────────────
   const [lits, litConsumed] = decodeLiteralsSection(data, 0);
   let pos = litConsumed;
@@ -1046,24 +1151,28 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
   const dtMl = buildDecodeTable(ML_NORM, ML_ACC_LOG);
   const dtOf = buildDecodeTable(OF_NORM, OF_ACC_LOG);
 
-  // Initialise FSE states from the bitstream.
-  // The encoder wrote: state_ll, state_ml, state_of (each as accLog bits).
-  // The decoder reads them in the same order (since the backward bitstream
-  // reverses write order, the last-written = first-read).
+  // Initialise FSE states from the bitstream. RFC 8878 §3.1.1.3.2.1.2: the
+  // initial states are read in order LL, OF, ML (NOTE: this is a DIFFERENT
+  // order from the per-sequence state UPDATE below, which is LL, ML, OF —
+  // the RFC is asymmetric here; verified against the real `zstd` CLI, see
+  // lessons.md Lesson 96).
   let stateLl = Number(br.readBits(LL_ACC_LOG));
-  let stateMl = Number(br.readBits(ML_ACC_LOG));
   let stateOf = Number(br.readBits(OF_ACC_LOG));
+  let stateMl = Number(br.readBits(ML_ACC_LOG));
 
   let litPos = 0;
 
   for (let i = 0; i < nSeqs; i++) {
-    // Decode symbols (state transitions) — order: LL, OF, ML.
-    let llCode: number;
-    let ofCode: number;
-    let mlCode: number;
-    [llCode, stateLl] = fseDecodeSym(stateLl, dtLl, br);
-    [ofCode, stateOf] = fseDecodeSym(stateOf, dtOf, br);
-    [mlCode, stateMl] = fseDecodeSym(stateMl, dtMl, br);
+    // Step 1 — PEEK symbols from the current states. This is a bare table
+    // lookup (table[state].sym) and consumes NO bits — the FSE state itself
+    // already IS the decode-table index. Only the subsequent state UPDATE
+    // (step 3 below) reads bits.
+    const llEntry = dtLl[stateLl]!;
+    const ofEntry = dtOf[stateOf]!;
+    const mlEntry = dtMl[stateMl]!;
+    const llCode = llEntry.sym;
+    const ofCode = ofEntry.sym;
+    const mlCode = mlEntry.sym;
 
     if (llCode >= LL_CODES.length) throw new Error(`invalid LL code ${llCode}`);
     if (mlCode >= ML_CODES.length) throw new Error(`invalid ML code ${mlCode}`);
@@ -1071,12 +1180,110 @@ function decompressBlock(data: Uint8Array, out: number[]): void {
     const llInfo = LL_CODES[llCode]!;
     const mlInfo = ML_CODES[mlCode]!;
 
-    // Read extra bits for literal length, match length, and offset.
-    const ll = llInfo[0] + Number(br.readBits(llInfo[1]));
-    const ml = mlInfo[0] + Number(br.readBits(mlInfo[1]));
-    // Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
+    // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
+    // §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
+    // required to decode offset. It does the same for Match_Length and then
+    // for Literals_Length.").
+    // `ofRaw` is the RFC's "Offset_Value": `(1 << of_code) | extra_bits`.
+    // The NUMBER of bits read is always exactly `ofCode`, regardless of how
+    // `ofRaw` is later interpreted below (explicit offset vs. repeat-offset
+    // reference) — the reference decoder never varies bit-consumption on
+    // that interpretation, only what it means.
     const ofRaw = (1 << ofCode) | Number(br.readBits(ofCode));
-    const offset = ofRaw - 3;
+    const ml = mlInfo[0] + Number(br.readBits(mlInfo[1]));
+    const ll = llInfo[0] + Number(br.readBits(llInfo[1]));
+
+    // `llCode === 0` is the only LL code with baseline 0 and 0 extra bits
+    // (see LL_CODES), so it is knowable from the PEEKED code alone — no
+    // extra bits need to be read yet to know whether the eventual `ll`
+    // value is 0. RFC 8878's repeat-offset mapping shifts by exactly this
+    // condition ("when Literals_Length is 0, repeated offsets are shifted
+    // by 1" — see below).
+    const llIsZero = llCode === 0;
+
+    // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including the
+    // Repeated_Offset (R1/R2/R3) mechanism. `of_code >= 2` guarantees
+    // `ofRaw = (1<<of_code)+extra >= 4`, i.e. Offset_Value > 3: an ordinary
+    // explicit offset — push it onto the offset history (full rotate) and
+    // use it directly. `of_code <= 1` guarantees `ofRaw` in {1, 2, 3}: a
+    // repeat-offset reference, whose slot additionally depends on
+    // `llIsZero`.
+    //
+    // The repeat case collapses to one selector in [0, 3]:
+    //     selector = llIsZero + ofRaw - 1
+    // (cross-checked against RFC 8878 prose AND the literal reference C
+    // source `ZSTD_decodeSequence` in zstd_decompress_block.c — specifically
+    // its non-aarch64 branch, which indexes `prevOffset[]` directly by a
+    // combined `ofBase + ll0 + extraBit` value using the ACTUAL predefined
+    // `OF_base` table (`OF_base[0]=0, OF_base[1]=1`, NOT `1 << code`); once
+    // that real table is used instead of a naive `1 << code` assumption,
+    // the two formulations agree exactly on all four (of_code, llIsZero,
+    // extraBit) combinations for of_code ∈ {0, 1}):
+    //   0 -> reuse rep1 unchanged (no rotation)
+    //   1 -> use rep2 (rep1, rep2 swap; rep3 untouched)
+    //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+    //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+    //
+    // Repeat-offset sequences are never emitted by this package's OWN
+    // encoder (`encodeSequencesSection` always writes `rawOff = offset + 3`,
+    // i.e. an explicit offset code >= 2, since the minimum LZ77 match offset
+    // is 1) — so this port's own compress()/decompress() round trip never
+    // exercises this branch. The real `zstd` CLI's encoder uses repeat
+    // offsets constantly (one of its main entropy wins, especially for
+    // periodic/repetitive data), so a decoder that only understood explicit
+    // offset codes would systematically fail to decode real-world `.zst`
+    // files using them. See lessons.md Lesson 98 (found while implementing
+    // `code/packages/c/zstd`, PR #9941) and TC-9's repeat-offset interop
+    // test below.
+    let offset: number;
+    if (ofCode >= 2) {
+      offset = ofRaw - 3;
+      reps.r3 = reps.r2;
+      reps.r2 = reps.r1;
+      reps.r1 = offset;
+    } else {
+      const selector = (llIsZero ? 1 : 0) + ofRaw - 1;
+      switch (selector) {
+        case 0:
+          offset = reps.r1;
+          break;
+        case 1:
+          offset = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+        case 2:
+          offset = reps.r3;
+          reps.r3 = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+        default: // 3
+          offset = reps.r1 > 0 ? reps.r1 - 1 : 0;
+          reps.r3 = reps.r2;
+          reps.r2 = reps.r1;
+          reps.r1 = offset;
+          break;
+      }
+    }
+
+    // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC 8878
+    // §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
+    // Match_Length_State, and then Offset_State"), preparing the states the
+    // NEXT sequence's peek (step 1) will use.
+    //
+    // Per the reference decoder (ZSTD_decodeSequence), this update is
+    // skipped entirely for the LAST sequence — there is no "next" sequence
+    // to prepare a state for, and (symmetrically) the encoder never flushed
+    // any bits for that non-existent transition (see fseInitState() in
+    // encodeSequencesSection()). Performing this read unconditionally, as an
+    // earlier revision of this codec did, consumes bits that were never
+    // written, corrupting the position of every read that follows.
+    if (i !== nSeqs - 1) {
+      stateLl = llEntry.base + Number(br.readBits(llEntry.nb));
+      stateMl = mlEntry.base + Number(br.readBits(mlEntry.nb));
+      stateOf = ofEntry.base + Number(br.readBits(ofEntry.nb));
+    }
 
     // Emit `ll` literal bytes from the literals buffer.
     const litEnd = litPos + ll;
@@ -1145,9 +1352,19 @@ export function compress(data: Uint8Array): Uint8Array {
   // Frame Header Descriptor (FHD) = 0xE0:
   //   bit 7-6: FCS_Field_Size flag = 11 → 8-byte FCS
   //   bit 5:   Single_Segment_Flag = 1 (no Window_Descriptor)
-  //   bit 4:   Content_Checksum_Flag = 0
-  //   bit 3-2: reserved = 0
+  //   bit 4:   Unused_bit = 0
+  //   bit 3:   reserved = 0
+  //   bit 2:   Content_Checksum_Flag = 0 (we never append a checksum)
   //   bit 1-0: Dict_ID_Flag = 0
+  //
+  // NOTE: Content_Checksum_Flag is bit 2, not bit 4 — an earlier revision of
+  // this comment (and the shared spec at code/specs/CMP07-zstd.md, and the
+  // Go/Rust ports) mislabeled bit 4 as the checksum flag. Verified against
+  // RFC 8878 §3.1.1.1 and empirically against the real `zstd` CLI: `zstd -c`
+  // (checksum on by default) emits FHD byte 0x64; `zstd -c --no-check` emits
+  // 0x60 — the differing bit is bit 2. This never caused a functional bug
+  // here because we always emit 0 for both bits (no checksum is ever
+  // produced or required), but the label was wrong. See lessons.md Lesson 95.
   out.push(0xE0);
 
   // Frame_Content_Size (8 bytes LE) — the uncompressed size.
@@ -1279,6 +1496,12 @@ export function decompress(data: Uint8Array): Uint8Array {
   // ── Blocks ───────────────────────────────────────────────────────────
   const out: number[] = [];
 
+  // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+  // default 1/4/8 "for the first block", then threaded unmodified through
+  // every Compressed block's sequences for the rest of the frame (Raw/RLE
+  // blocks don't touch them). See `RepOffsets` and `decompressBlock`.
+  const reps: RepOffsets = { r1: 1, r2: 4, r3: 8 };
+
   for (;;) {
     if (pos + 3 > data.length) throw new Error("truncated block header");
 
@@ -1316,7 +1539,7 @@ export function decompress(data: Uint8Array): Uint8Array {
       }
       const blockData = data.subarray(pos, pos + bsize);
       pos += bsize;
-      decompressBlock(blockData, out);
+      decompressBlock(blockData, out, reps);
     } else {
       throw new Error("reserved block type 3");
     }

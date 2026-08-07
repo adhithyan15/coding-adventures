@@ -2,6 +2,259 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## 0.2.0 — reflection on a rescued exception
+
+A `SirError` is not a `SirInstance`, but it carries its Ruby class tag the same
+way. `class_of` had no case for it, so it fell through to the `Object` default:
+`rescue => e; e.class` said `Object` and `e.is_a?(StandardError)` was **false**
+for every exception — silently skipping a handler guarded that way. `e.message`
+raised.
+
+- `class_of` recognises an exception and reports its Ruby class.
+- `is_a` matches an exception by the SAME ancestry `rescue` dispatches on (that
+  table lives in the exceptions package, not this module\'s class registry, so
+  it consults `rescue_matches` directly).
+- `call_method` answers `message` with the raised text, for an exception
+  receiver only; `_responds_to` reports it for an exception while still falling
+  through to the method tables, so a user-defined `message` is not DENIED by
+  `respond_to?`.
+
+A security review then found four holes, all fixed here — the emitted
+`except Exception as __exc` binds the RAW caught value, so `e` can be a NATIVE
+Python error, not a `SirError`, and every arm above tested `isinstance(_,
+SirError)` only:
+
+- **Native caught error reflected as `Object`.** `class_of` and `is_a` now
+  gate on `BaseException` and route through `class_of_thrown` — the SAME
+  bucketing `rescue` uses — so a caught native error reflects as the
+  `StandardError` it was caught as, instead of falling to `Object` (which made
+  `e.is_a?(StandardError)` false and inverted `retry unless
+  e.is_a?(StandardError)`).
+- **`is_a?` ignored included modules.** `rescue_matches` is a pure ancestry
+  name-walk, so it could not see an `include`. `is_a` now also checks, for each
+  link in the exception's ancestry (`ancestry_chain`), whether the queried name
+  is a transitively-included module — the Rust, Go and JavaScript backends all
+  do, and `retry unless e.is_a?(Recoverable)` took the opposite branch on
+  Python without it.
+- **`respond_to?` missed per-class methods.** `_responds_to` fell through every
+  branch to `False` for a `SirInstance`, so `respond_to?(:m)` lied about a
+  user-defined method that `call_method` then dispatched fine. It now resolves
+  through the same MRO walk (`_resolve_instance_method`).
+
+New helper `_module_closure` (transitive included-module set, cycle-safe).
+Depends on the new `ancestry_chain` export from `sir-runtime-exceptions`
+0.3.0. Twelve new tests; coverage 97%.
+
+## [0.1.26] - 2026-07-12
+
+### Added
+
+- **`Array#cycle(n)`** — the block-taking Array method that iterates the array
+  `n` full passes in order, yielding each element on every pass, and always
+  returns nil (`[1,2,3].cycle(2) { |x| … }` yields `1,2,3,1,2,3`). A count of
+  `0`, a negative count, or an empty receiver yields nothing; a non-integer /
+  nil count (including the block-less and infinite no-`n` Enumerator forms) is a
+  documented v0 boundary that yields nothing rather than hanging. This is the
+  Python **reference** for the new cross-backend cascade (Go/Rust/JS/TS mirrors
+  to follow). `respond_to?("cycle")` reports `true`.
+
+## [0.1.25] - 2026-07-11
+
+### Added
+
+- **`Array#minmax`** — the non-block Array method returning the two-element
+  array `[min, max]` in one call (`[3,1,2].minmax` → `[1, 3]`;
+  `["b","a","c"].minmax` → `["a", "c"]`). Ruby returns `[nil, nil]` for an empty
+  array (there is no smallest/largest element), which the runtime mirrors with
+  `[None, None]`. This is the Python **reference** for the new cross-backend
+  cascade (Go/Rust/JS/TS mirrors to follow). `respond_to?("minmax")` reports
+  `true`.
+
+## [0.1.24] - 2026-07-11
+
+### Added
+
+- **`Array#slice_when`** — the block-taking Array method that is the INVERSE of
+  `chunk_while`: it splits into runs of consecutive elements, starting a NEW run
+  BETWEEN an adjacent pair exactly WHERE the block is truthy (whereas
+  `chunk_while` starts a new run where the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b - a > 1 }` →
+  `[[1,2],[4],[9,10,11,12]]`; an empty array yields `[]`, a single element
+  `[[x]]`. This is the Python **reference** for the new cross-backend cascade
+  (Go/Rust/JS/TS mirrors to follow). `respond_to?("slice_when")` reports `true`.
+
+## [0.1.23] - 2026-07-11
+
+### Added
+
+- **`Array#tally`** — a Hash mapping each element to its occurrence count, in
+  first-seen key order (`["a","b","a","c","a"].tally` → `{a: 3, b: 1, c: 1}`; a
+  `dict` preserves insertion order, matching Ruby).  Brings the Python reference
+  level with the Go/Rust runtimes, which already ship `tally` (JS/TS mirrors to
+  follow).  As with the rest of the Python `Hash` surface (a `dict`), elements
+  are counted by hash/equality — hashable elements only.
+
+
+
+## [0.1.22] - 2026-07-11
+
+### Added
+
+- **`Array#each_slice`, `Array#each_cons`, `Array#chunk_while`** — the
+  consecutive-grouping family.  Reference implementation for the next
+  cross-backend cascade (Go/Rust/JS/TS mirrors to follow).
+  - `each_slice(n)` (`_array_method` + `_ARRAY_METHODS`) → consecutive
+    sub-arrays of at most `n` elements, the last possibly shorter
+    (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+  - `each_cons(n)` (non-block) → every consecutive `n`-element sliding window
+    (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+    array yields `[]`.
+  - Both treat `n <= 0` as `[]` (Ruby raises `ArgumentError`; the never-raise
+    floor yields empty instead).
+  - `chunk_while { |prev, cur| pred }` (`_array_block_method` +
+    `_ARRAY_BLOCK_METHODS`) → runs of consecutive elements; the block is called
+    on each ADJACENT pair, a truthy result extends the current run and a falsy
+    one starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+    `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.
+
+
+
+## [0.1.21] - 2026-07-11
+
+### Added
+
+- **`Hash#to_h`, `Hash#each_with_index`, `Hash#each_with_object`** — rounding out
+  Hash's Enumerable iteration surface.
+  - `to_h` **without** a block (`_hash_method` + `_HASH_METHODS`) returns a
+    shallow copy of the hash (a fresh `dict`, so mutating it does not alias the
+    receiver).
+  - `to_h { |k, v| [new_k, new_v] }` (`_hash_block_method` + `_HASH_BLOCK_METHODS`)
+    returns a NEW hash whose entries are the `[k, v]` pairs the block returns;
+    the block is yielded the two args `(key, value)` and colliding new keys keep
+    the LAST pair (Ruby's rule).
+  - `each_with_index { |(k, v), i| … }` yields each `[k, v]` pair with its
+    0-based position and returns the receiver.
+  - `each_with_object(memo) { |(k, v), memo| … }` yields each `[k, v]` pair with
+    the memo and returns the (mutated) memo; with no memo argument the receiver
+    is returned unchanged.
+  - Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object`
+    pass the element as a single `[k, v]` pair (the second block param is the
+    index/memo), matching Ruby's Enumerable convention.
+- This is the Python reference for the next cross-backend mirror (Go/Rust/JS/TS
+  to follow).
+
+## [0.1.20] - 2026-07-11
+
+### Added
+
+- **`Hash` Enumerable breadth part 2** (`_hash_block_method` +
+  `_HASH_BLOCK_METHODS`): `group_by`, `partition`, `flat_map`/`collect_concat`,
+  `reduce`/`inject`, and `sum` (block form).  Ruby's `Hash` iterates as
+  `[key, value]` pairs, so `group_by`/`partition` collect `[k, v]` pairs
+  (`{a:1,b:2}.group_by { |k,v| v.even? }` → `{false: [[:a,1]], true: [[:b,2]]}`),
+  `flat_map` flattens one level of block results, and `sum(init) { |k, v| … }`
+  folds the block results onto `init`.  `reduce`/`inject` follow Ruby's memo
+  convention — the block is yielded `[memo, [k, v]]` (the pair as one argument,
+  matching `h.inject(0) { |sum, (k, v)| … }`); a seedless `reduce` starts from
+  the first pair and an empty seedless `reduce` returns `nil`.
+- `_hash_block_method` now receives the positional `args` preceding the block
+  (mirroring `_array_block_method`), so `reduce`/`inject`/`sum` can read their
+  seed/initial value.
+
+  Reference implementation for a cross-backend cascade (Go/Rust/JS/TS follow).
+
+## [0.1.19] - 2026-07-11
+
+### Added
+
+- **`Hash` Enumerable aggregates** (`_hash_block_method` + `_HASH_BLOCK_METHODS`):
+  `find`/`detect`, `any?`, `all?`, `none?`, `count` (block form), `sort_by`,
+  `min_by`, `max_by`.  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+  hash as a sequence of `[key, value]` pairs — the block is yielded
+  `[key, value]` (two arguments, matching `each`), and the "element" an
+  aggregate returns is the two-element `[key, value]` list.  For example
+  `{a: 1, b: 2}.min_by { |k, v| v }` is `[:a, 1]`, and
+  `{a: 1, b: 2, c: 3}.sort_by { |k, v| -v }` is `[[:c, 3], [:b, 2], [:a, 1]]`.
+  `min_by`/`max_by` on an empty hash return `nil`.  This is the reference
+  implementation for a cross-backend cascade (Go/Rust/JS/TS mirrors follow).
+
+## [0.1.18] - 2026-07-11
+
+### Added — Hash block methods: `transform_values` / `transform_keys`
+
+Extends the block-taking `Hash` catalog (`_hash_block_method` +
+`_HASH_BLOCK_METHODS`) with two more Ruby `Hash` methods — this establishes the
+**reference** semantics before the embedded backends mirror them:
+
+- `transform_values { |v| … }` — a **new** hash with each value replaced by the
+  block's result; keys are untouched (non-mutating; the `!` bang variant is a
+  follow-up).
+- `transform_keys { |k| … }` — a **new** hash with each key replaced by the
+  block's result; values are untouched. On a key collision the **last** pair
+  wins (Ruby's rule).
+
+## [0.1.17] - 2026-07-10
+
+### Added — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Extends the `Integer`/`Float` catalog (`_numeric_method` + `_NUMERIC_METHODS`)
+with five more Ruby numeric methods — this establishes the **reference**
+semantics for the N1 breadth sweep before the embedded backends mirror them:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds a `Float` to that many decimals (half **away from zero**, not
+  Python's banker's rounding); `ndigits <= 0` rounds to an `Integer` power of ten.
+  A non-finite `Float` returns unchanged (never-raise floor).
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient and the
+  divisor-signed remainder; division by zero raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that **never raises**: dividing by zero
+  yields `Infinity`/`-Infinity`/`NaN` (matching Ruby) rather than raising.
+- `clamp(min, max)` — `min` if `recv < min`, `max` if `recv > max`, else `recv`.
+- `between?(min, max)` — `min <= recv <= max`.
+
+The `clamp`/`between?` `Range` form is deferred, matching the literal-only
+precedent elsewhere in the catalog. All arithmetic is hardened to the
+never-raise floor: `round` bounds a hostile `ndigits` (no bignum allocation),
+guards non-finite arguments, and uses all-integer rounding for large-integer
+receivers; `divmod`/`fdiv` saturate bignum operands to `±Infinity` (via
+`_sat_float`) and route a non-numeric argument to the typed `ZeroDivisionError`
+rather than an untyped `OverflowError`/`ValueError`/`TypeError`.
+
+## [0.1.16] - 2026-07-07
+
+### Added — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Extends `_string_method` (and the `_STRING_METHODS` `respond_to?` catalog) with
+four more non-block Ruby String methods:
+
+- `tr(from, to)` — position-wise character translation; a shorter `to` repeats
+  its last char, an empty `to` deletes matching chars, and the last mapping wins
+  when `from` repeats a char.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies chars of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set chars, or of *all* chars when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the character-range
+(`"a-z"`) and negation (`"^abc"`) forms are a follow-up, matching the existing
+literal-only `sub`/`gsub` precedent. First backend of the String char-set sweep
+(reference; the Go/Rust/JS/TS backends follow).
+
+## [0.1.15] - 2026-07-07
+
+### Added — Array reorder/combine methods: `rotate` / `zip`
+
+Closes the parity gap with the Go/Rust runtimes (which already carry these) by
+adding two more non-block Ruby Array methods to `_array_method` and the
+`_ARRAY_METHODS` `respond_to?` catalog:
+
+- `rotate(n=1)` — rotate left by `n` (a negative `n` rotates right); the modulo
+  wraps so any magnitude terminates, and an empty array stays `[]`. No argument
+  defaults to `1`; a non-numeric argument degrades to `0` (never raises).
+- `zip(*others)` — an Array of tuples `[self[i], others..[i]]` of length
+  `len(self)`; a shorter operand pads with `nil` (`None`), a longer one is
+  truncated, and a non-array operand is treated as empty (pad-only).
+
 ## [0.1.14] - 2026-07-07
 
 ### Added — Array slice-selection methods: `take` / `drop` / `values_at`

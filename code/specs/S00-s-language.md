@@ -221,7 +221,7 @@ Mirrors the Dartmouth BASIC / Macsyma frontends and `LANG00`:
 | REPL | `s-repl` (impl `repl::Language`) + `s` binary |
 
 `s-lexer` / `s-parser` embed their compiled grammar as a committed
-`src/_grammar.rs` (regenerated with `scripts/generate-compiled-grammars.sh`),
+`src/_grammar.rs` (regenerated with `code/scripts/generate-compiled-grammars.sh`),
 never re-parsing the `.tokens` / `.grammar` files at runtime.
 
 ## §V2 — Language v2 additions

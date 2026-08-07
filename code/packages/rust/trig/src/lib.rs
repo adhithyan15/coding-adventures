@@ -41,6 +41,10 @@
 ///
 /// We hard-code this to the same precision as `std::f64::consts::PI` so that
 /// our library is fully self-contained — no dependency on `std` constants.
+// This is an intentional, self-contained hand-written constant (the whole point
+// of the crate is not to depend on `std::f64::consts::PI`); not an approximation
+// to be replaced by the std constant.
+#[allow(clippy::approx_constant)]
 pub const PI: f64 = 3.141592653589793;
 
 /// Two times pi — a full revolution in radians.
@@ -288,29 +292,43 @@ pub fn sqrt(x: f64) -> f64 {
 
     // sqrt(0) is exactly 0.
     if x == 0.0 {
-        return 0.0;
+        return x;
+    }
+    if x.is_infinite() {
+        return x;
+    }
+
+    let mut scaled = x;
+    let mut result_scale = 1.0;
+    while scaled < 0.25 {
+        scaled *= 4.0;
+        result_scale *= 0.5;
+    }
+    while scaled >= 4.0 {
+        scaled *= 0.25;
+        result_scale *= 2.0;
     }
 
     // Initial guess: x itself for x >= 1 (avoids a slow start for large values),
     // 1.0 for x < 1 (avoids the first step dividing by a tiny number).
-    let mut guess = if x >= 1.0 { x } else { 1.0 };
+    let mut guess = if scaled >= 1.0 { scaled } else { 1.0 };
 
     // Iterate up to 60 times. Quadratic convergence means 60 is an extreme
     // safety margin; typical convergence happens in 15 or fewer iterations.
     for _ in 0..60 {
-        let next = (guess + x / guess) / 2.0;
+        let next = (guess + scaled / guess) / 2.0;
 
         // Convergence criterion: stop when improvement is negligible.
         // 1e-15 * guess handles relative precision near large values.
         // 1e-300 is a floor to handle subnormal (near-zero) inputs safely.
         if (next - guess).abs() < 1e-15 * guess + 1e-300 {
-            return next;
+            return next * result_scale;
         }
 
         guess = next;
     }
 
-    guess
+    guess * result_scale
 }
 
 // ============================================================================
@@ -425,8 +443,9 @@ fn atan_core(x: f64) -> f64 {
 /// assert!((trig::atan(0.0)).abs() < 1e-10);
 /// ```
 pub fn atan(x: f64) -> f64 {
-    if x == 0.0 {
-        return 0.0;
+    // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    if x.abs() <= 7.450580596923828e-9 {
+        return x;
     }
 
     if x > 1.0 {

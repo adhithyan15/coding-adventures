@@ -1,0 +1,687 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "path": [
+    {
+      "id": "TE-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TE-C01-namaskaram"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-002",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C01-avunu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-003",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C01-dhanyavadamulu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C01-ledu",
+        "TE-C01-sare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C02-peru",
+        "TE-C02-naa",
+        "TE-C02-naa-peru",
+        "TE-C02-nuvvu-miiru",
+        "TE-C02-emiti",
+        "TE-C02-mii-peru-emiti",
+        "TE-C02-santosham"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C03-elaa",
+        "TE-C03-miiru-elaa-unnaaru"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C03-nenu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C03-baagaa"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-009",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C03-paravaaledu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-010",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TE-C04-vellu",
+        "TE-C04-velli-vastaanu",
+        "TE-C04-reepu-kaluddaam",
+        "TE-C04-malli-kaluddaam"
+      ],
+      "before": [
+        "TE-EXT-010-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C05-maatlaadu",
+        "TE-C05-nenu-telugu-maatlaadataanu",
+        "TE-C05-pani-ceyu",
+        "TE-C05-undu",
+        "TE-C05-practice",
+        "TE-C06-dative-ku",
+        "TE-C06-dative-subject"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-011-LANGUAGE-SPECIFIC",
+        "TE-EXT-011-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-012",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "TE-C07-numbers-1-5",
+        "TE-C07-numbers-6-10"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-012-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C08-dayachesi",
+        "TE-C09-kshaminchandi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-014",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TE-C10-vaaram"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-015",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TE-C11-rangulu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-016",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C12-kutumbam"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-017",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C13-sharira-bhagalu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-018",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TE-C14-rutuvulu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-019",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C15-neellu-biyyam"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-020",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TE-C16-nelalu",
+        "TE-C17-madhyaahnam-ardharaatri",
+        "TE-C18-ganta"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-021",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C19-vayasu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-022",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "TE-C20-padakondu-iravai"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-023",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TE-C20-vatavaranam"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-024",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TE-C21-kukka-pilli",
+        "TE-C22-pacha-pasupu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-024-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-025",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "TE-C23-roju",
+        "TE-C24-ratri",
+        "TE-C25-shubha-ratri",
+        "TE-C26-udayam",
+        "TE-C27-sayantram",
+        "TE-C28-madhyahnam-widened",
+        "TE-C29-subhodayam",
+        "TE-C30-subha-sayantram",
+        "TE-C31-subha-madhyahnam",
+        "TE-C31-subha-madhyahnam-register"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": [
+        "TE-EXT-025-REGISTER"
+      ]
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "TE-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "TE-PATH-003",
+        "TE-PATH-009"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "TE-PATH-002",
+        "TE-PATH-004"
+      ],
+      "omits": [
+        "RESPONSE-YESNO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "TE-PATH-005",
+        "TE-PATH-007",
+        "TE-PATH-011",
+        "TE-PATH-016",
+        "TE-PATH-021"
+      ],
+      "omits": [
+        "PRONOUN-ME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "TE-PATH-006",
+        "TE-PATH-008",
+        "TE-PATH-017"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "TE-PATH-013",
+        "TE-PATH-019"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "TE-PATH-010"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON"
+      ],
+      "relocates": {
+        "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+      }
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "TE-PATH-014",
+        "TE-PATH-018",
+        "TE-PATH-020",
+        "TE-PATH-023",
+        "TE-PATH-025"
+      ],
+      "omits": [
+        "GREETING-DAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "TE-PATH-015",
+        "TE-PATH-024"
+      ],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "TE-PATH-012",
+        "TE-PATH-022"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "TE-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C04-vellu"
+      ]
+    },
+    {
+      "id": "TE-EXT-011-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C05-maatlaadu",
+        "TE-C05-nenu-telugu-maatlaadataanu",
+        "TE-C05-pani-ceyu",
+        "TE-C05-undu",
+        "TE-C06-dative-ku",
+        "TE-C06-dative-subject"
+      ]
+    },
+    {
+      "id": "TE-EXT-011-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Telugu material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C05-practice"
+      ]
+    },
+    {
+      "id": "TE-EXT-012-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C07-numbers-1-5",
+        "TE-C07-numbers-6-10"
+      ]
+    },
+    {
+      "id": "TE-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C10-vaaram"
+      ]
+    },
+    {
+      "id": "TE-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C11-rangulu"
+      ]
+    },
+    {
+      "id": "TE-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C12-kutumbam"
+      ]
+    },
+    {
+      "id": "TE-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C13-sharira-bhagalu"
+      ]
+    },
+    {
+      "id": "TE-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C14-rutuvulu"
+      ]
+    },
+    {
+      "id": "TE-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C15-neellu-biyyam"
+      ]
+    },
+    {
+      "id": "TE-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C16-nelalu",
+        "TE-C17-madhyaahnam-ardharaatri",
+        "TE-C18-ganta"
+      ]
+    },
+    {
+      "id": "TE-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C19-vayasu"
+      ]
+    },
+    {
+      "id": "TE-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C20-padakondu-iravai"
+      ]
+    },
+    {
+      "id": "TE-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C20-vatavaranam"
+      ]
+    },
+    {
+      "id": "TE-EXT-024-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C21-kukka-pilli",
+        "TE-C22-pacha-pasupu"
+      ]
+    },
+    {
+      "id": "TE-EXT-025-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Telugu material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C25-shubha-ratri"
+      ]
+    },
+    {
+      "id": "TE-EXT-025-REGISTER",
+      "stage": "A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose the Telugu form that fits this relationship and setting.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C31-subha-madhyahnam-register"
+      ]
+    },
+    {
+      "id": "TE-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Telugu script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C01-namaskaram"
+      ]
+    }
+  ]
+}

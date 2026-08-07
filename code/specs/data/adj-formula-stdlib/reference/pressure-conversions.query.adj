@@ -1,0 +1,21 @@
+% ============================================================================
+% pressure-conversions.query.adj — a worked lookup over the pressure-conversions table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many pascals
+% in a bar?" question: it states no conversion fact — it only `import`s the grounded
+% table and asks binding queries. The native adj-lang engine resolves each `?`
+% against the table's rows (lowered to `pressure_to_pascals` relations) and returns
+% the binding + the table's source/locator/trust. A unit not in the table abstains
+% honestly — the engine never invents a factor (notably the torr and the psi, which
+% have no single EXACT factor and so have no row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pressure-conversions.query.adj
+% ============================================================================
+
+import "pressure-conversions.adj"
+
+? pressure_to_pascals(atmosphere_standard, $Pa)   % expect 101325
+? pressure_to_pascals(bar, $Pa)                   % expect 100000
+? pressure_to_pascals(kilogram_force_per_square_meter, $Pa)  % expect 9.80665
+? pressure_to_pascals(torr, $Pa)                  % expect abstain — rounded factor, not a row

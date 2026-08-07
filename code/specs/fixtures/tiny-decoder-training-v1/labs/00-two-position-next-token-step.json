@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "two-position-next-token-step",
+  "title": "Train one tiny decoder output head on two next-token positions",
+  "question": "How does a causal decoder turn two saved states into next-token loss, shared gradients, and a loss-reducing update?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "decoder-only language model",
+    "causal next-token shift",
+    "unembedding",
+    "cross-entropy",
+    "shared parameter gradients",
+    "stochastic gradient descent"
+  ],
+  "operation": {
+    "kind": "saved-causal-decoder-state-next-token-step",
+    "position_count": 2,
+    "model_width": 2,
+    "vocabulary_size": 3,
+    "state_source": "frozen-causal-decoder-block-output",
+    "objective": "next-token-cross-entropy",
+    "softmax": "stable-row-wise",
+    "reduction": "mean-over-positions",
+    "trainable_parameters": ["unembedding", "bias"],
+    "update": "sgd"
+  },
+  "vocabulary": ["red", "blue", "purple"],
+  "sequence": ["red", "blue", "purple"],
+  "input_tokens": ["red", "blue"],
+  "target_tokens": ["blue", "purple"],
+  "causal_prefixes": [["red"], ["red", "blue"]],
+  "decoder_states": [[1, 0], [0, 1]],
+  "unembedding": [[1, 0, -1], [0, 1, -1]],
+  "bias": [0, 0, 0],
+  "optimizer": {
+    "learning_rate": 0.5
+  },
+  "expected": {
+    "rows": [
+      {
+        "position": 0,
+        "input_token": "red",
+        "target_token": "blue",
+        "causal_prefix": ["red"],
+        "decoder_state": [1, 0],
+        "logit_products": [[1, 0], [0, 0], [-1, 0]],
+        "logits": [1, 0, -1],
+        "row_max": 1,
+        "shifted_logits": [0, -1, -2],
+        "exponentials": [1, 0.36787944117144233, 0.1353352832366127],
+        "denominator": 1.5032147244080551,
+        "probabilities": [0.6652409557748218, 0.24472847105479764, 0.09003057317038046],
+        "target_probability": 0.24472847105479764,
+        "loss": 1.4076059644443804,
+        "logit_gradients": [0.3326204778874109, -0.37763576447260117, 0.04501528658519023],
+        "unembedding_gradient_contribution": [[0.3326204778874109, -0.37763576447260117, 0.04501528658519023], [0, 0, 0]],
+        "bias_gradient_contribution": [0.3326204778874109, -0.37763576447260117, 0.04501528658519023],
+        "state_gradient": [0.2876051913022207, -0.4226510510577914]
+      },
+      {
+        "position": 1,
+        "input_token": "blue",
+        "target_token": "purple",
+        "causal_prefix": ["red", "blue"],
+        "decoder_state": [0, 1],
+        "logit_products": [[0, 0], [0, 1], [0, -1]],
+        "logits": [0, 1, -1],
+        "row_max": 1,
+        "shifted_logits": [-1, 0, -2],
+        "exponentials": [0.36787944117144233, 1, 0.1353352832366127],
+        "denominator": 1.5032147244080551,
+        "probabilities": [0.24472847105479764, 0.6652409557748218, 0.09003057317038046],
+        "target_probability": 0.09003057317038046,
+        "loss": 2.40760596444438,
+        "logit_gradients": [0.12236423552739882, 0.3326204778874109, -0.4549847134148098],
+        "unembedding_gradient_contribution": [[0, 0, 0], [0.12236423552739882, 0.3326204778874109, -0.4549847134148098]],
+        "bias_gradient_contribution": [0.12236423552739882, 0.3326204778874109, -0.4549847134148098],
+        "state_gradient": [0.5773489489422086, 0.7876051913022206]
+      }
+    ],
+    "mean_loss": 1.9076059644443801,
+    "unembedding_gradient": [[0.3326204778874109, -0.37763576447260117, 0.04501528658519023], [0.12236423552739882, 0.3326204778874109, -0.4549847134148098]],
+    "bias_gradient": [0.4549847134148097, -0.04501528658519027, -0.40996942682961957],
+    "gradient_check": {
+      "epsilon": 1e-6,
+      "numerical_unembedding_gradient": [[0.332620477827561, -0.37763576443694546, 0.045015286609384475], [0.12236423541089891, 0.3326204780496056, -0.4549847134605045]],
+      "numerical_bias_gradient": [0.4549847133494822, -0.04501528638733987, -0.40996942685112003],
+      "max_absolute_error": 1.9785040272779497e-10
+    },
+    "updated_unembedding": [[0.8336897610562946, 0.18881788223630058, -1.022507643292595], [-0.06118211776369941, 0.8336897610562946, -0.7725076432925951]],
+    "updated_bias": [-0.22749235670740486, 0.022507643292595136, 0.20498471341480978],
+    "post_update_rows": [
+      {
+        "position": 0,
+        "logits": [0.6061974043488897, 0.21132552552889572, -0.8175229298777853],
+        "probabilities": [0.5223070040134588, 0.35191288756995204, 0.12578010841658918],
+        "target_probability": 0.35191288756995204,
+        "loss": 1.0443716125063502
+      },
+      {
+        "position": 1,
+        "logits": [-0.2886744744711043, 0.8561974043488897, -0.5675229298777853],
+        "probabilities": [0.2041360690449428, 0.641403443158851, 0.1544604877962062],
+        "target_probability": 0.1544604877962062,
+        "loss": 1.8678169577713835
+      }
+    ],
+    "post_update_mean_loss": 1.456094285138867
+  }
+}

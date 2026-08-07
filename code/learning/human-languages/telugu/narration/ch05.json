@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 5,
+  "title": "Chapter 5",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e585e84796aea7f4",
+  "lessons": [
+    {
+      "id": "TE-C05-maatlaadu",
+      "sequence": null,
+      "title": "మాట్లాడు (māṭlāḍu) — \"to speak,\" your first full verb",
+      "headword": "మాట్లాడు",
+      "romanization": "",
+      "gloss": "to speak",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8d053f228fb6653b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Telugu builds \"I do X.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాట్లాడు (māṭlāḍu, \"to speak, to talk\") is native Dravidian, built on మాట (māṭa, \"word, speech\"). To say \"I speak,\" Telugu adds a two-part ending to the stem — tense + person:"
+            },
+            {
+              "kind": "speech",
+              "text": "māṭlāḍ- (speak) + -t- (present/future) + -ānu (\"I\") becomes మాట్లాడతాను (māṭlāḍatānu), \"I speak / I will speak.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ాను (-ānu) ending is \"I,\" so nēnu is rarely needed. Change the ending, change the person: māṭlāḍtāḍu (he), māṭlāḍtundi (she/it), māṭlāḍtāru (they / you-respectful)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + tense + person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Telugu verb is built this way — a stem, a tense-marker, a person-ending, stacked and glued. Learn the pattern once and every verb follows it. (Telugu, like Tamil, marks no gender in the first person: māṭlāḍatānu is the same for a man or a woman.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"māṭlāḍu\" (speak)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"māṭlāḍu\" (speak)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — māṭlāḍatānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak\" — *māṭlāḍatānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word \"speech\" inside it (māṭa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word \"speech\" inside it (*māṭa*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak\" from māṭlāḍu, and name the noun it's built on. (Māṭlāḍatānu; māṭa, \"word / speech.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C05-nenu-telugu-maatlaadataanu",
+      "sequence": null,
+      "title": "నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) — \"I speak Telugu\"",
+      "headword": "నేను తెలుగు మాట్లాడతాను",
+      "romanization": "",
+      "gloss": "I speak Telugu",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b49ca03d60180860",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first full, moving sentence — and it names one of India's most musical languages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెలుగు (telugu): తె (te) + లు (lu) + గు (gu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నేను తెలుగు మాట్లాడతాను = నేను (nēnu, \"I\") + తెలుగు (telugu, \"Telugu,\" the object) + మాట్లాడతాను (māṭlāḍatānu, \"speak\") — \"I Telugu speak,\" the verb last as always. The name తెలుగు (telugu) is native, of debated origin (often linked to tenugu, and to the land Trilinga); its vowel-rich sound and habit of ending most words in a vowel earned it the old nickname \"the Italian of the East.\" It is the language of the Kāvya poets and, today, of some eighty million speakers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender on \"I speak\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Māṭlāḍatānu is the same whether a man or a woman says it — Telugu, like Tamil, marks no gender in the first or second person (only the third: -āḍu he, -undi she/it). This is unlike Hindi, where even \"I speak\" changes for the speaker's gender (boltā/boltī)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nēnu telugu māṭlāḍatānu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nēnu telugu māṭlāḍatānu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old nickname for Telugu and why (\"the Italian of the East\" — vowel-rich, most words end in a vowel)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old nickname for Telugu and why (\"the Italian of the East\" — vowel-rich, most words end in a vowel)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Telugu,\" and give Telugu's old nickname. (Nēnu telugu māṭlāḍatānu; \"the Italian of the East.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C05-pani-ceyu",
+      "sequence": null,
+      "title": "పని చేయు (pani cēyu) — \"to work\"",
+      "headword": "పని చేయు",
+      "romanization": "",
+      "gloss": "to work (lit. \"work-do\")",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:eaa29c2ebacac405",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last verb of the chapter — and, like Hindi's karnā and Tamil's sey, it is a \"do\" verb that builds a hundred others."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పని (pani, \"work\"): ప (pa) + ని (ni). చేయు (cēyu, \"do\"): చే (cē) + యు (yu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చేయు (cēyu, \"to do, to make\") is a core native Dravidian verb, and Telugu — like Hindi with karnā and Tamil with sey — builds compound verbs by putting a noun in front of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "పని చేయు (pani cēyu) = \"work-do\" = \"to work\" (pani, \"work\")."
+            },
+            {
+              "kind": "speech",
+              "text": "వంట చేయు (vaṇṭa cēyu) = \"to cook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సహాయం చేయు (sahāyaṁ cēyu) = \"to help\" (sahāyaṁ from Sanskrit)."
+            },
+            {
+              "kind": "speech",
+              "text": "So \"I work\" is నేను పని చేస్తాను (nēnu pani cēstānu) — cēy- + tense + \"I.\" Master cēyu and a whole grammar of \"do-verbs\" opens up — and notice sahāyaṁ cēyu (\"to help\") pairs a Sanskrit noun with the native cēyu: Telugu's two vocabularies working together in a single verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: noun + చేయు = a new verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This \"noun + cēyu\" pattern is the exact twin of Hindi's \"noun + karnā\" and Tamil's \"noun + sey.\" Three languages — two of them from unrelated families — all hit on the same trick: an all-purpose \"do\" verb with nouns bolted on."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pani cēyu\" (to work)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pani cēyu\" (to work)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — nēnu pani cēstānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *nēnu pani cēstānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Hindi and Tamil twins of this trick (karnā, sey)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Hindi and Tamil twins of this trick (*karnā*, *sey*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Telugu turn \"work\" into \"to work,\" and what verbs work the same way in Hindi and Tamil? (Pani + cēyu = \"work-do\"; Hindi karnā, Tamil sey.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C05-practice",
+      "sequence": null,
+      "title": "Chapter 5 — The first verbs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 5 recap — the first verbs",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a2239c5402cad44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Three verbs, one engine — build real sentences about yourself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Build the sentences",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak Telugu\" — nēnu telugu māṭlāḍatānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak Telugu\" — *nēnu telugu māṭlāḍatānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Hyderabad\" — nēnu Hyderābādlō uṇṭānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Hyderabad\" — *nēnu Hyderābādlō uṇṭānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — nēnu pani cēstānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *nēnu pani cēstānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"he speaks\" vs. \"she speaks\" — māṭlāḍtāḍu / māṭlāḍtundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"he speaks\" vs. \"she speaks\" — *māṭlāḍtāḍu* / *māṭlāḍtundi*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The engine",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three stacked pieces of every Telugu verb (stem + tense + person)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three stacked pieces of every Telugu verb (stem + tense + person)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that means \"I\" (-ānu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that means \"I\" (*-ānu*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where Telugu marks gender — and where it doesn't (3rd person only)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where Telugu marks gender — and where it doesn't (3rd person only)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "māṭlāḍu \"to speak\" from māṭa \"word\"."
+            },
+            {
+              "kind": "speech",
+              "text": "uṇḍu \"to be / stay / live\"; -lō \"in\" attaches to the noun's end."
+            },
+            {
+              "kind": "speech",
+              "text": "cēyu \"to do\" becomes pani cēyu \"to work\" (the twin of Hindi's karnā, Tamil's sey)."
+            },
+            {
+              "kind": "speech",
+              "text": "telugu — \"the Italian of the East,\" vowel-rich."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In one breath, say your language, your city, and your work in Telugu. (Nēnu telugu māṭlāḍatānu. Nēnu … lō uṇṭānu. Nēnu pani cēstānu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C05-undu",
+      "sequence": null,
+      "title": "ఉండు (uṇḍu) — \"to be, to stay, to live\"",
+      "headword": "ఉండు",
+      "romanization": "",
+      "gloss": "to be, to stay, to live",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:26e4f178d9a9f193",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have already used this verb — in \"how are you.\" Now meet it in its own right, and use it to say where you live."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉ (independent u) + ండు (ṇḍu, with the retroflex cluster ండ) becomes ఉండు (uṇḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్‌లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"in\" comes after the noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హైదరాబాద్‌లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"uṇḍu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"uṇḍu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Hyderabad\" — nēnu Hyderābādlō uṇṭānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Hyderabad\" — *nēnu Hyderābādlō uṇṭānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where \"in\" (-lō) sits — glued to the end of the noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where \"in\" (*-lō*) sits — glued to the end of the noun]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name three things the one verb uṇḍu can mean, and say where \"in\" goes. (\"To be / to stay / to live\"; -lō \"in\" attaches to the end of the noun.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

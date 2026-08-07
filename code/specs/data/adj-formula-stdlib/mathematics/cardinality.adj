@@ -1,0 +1,56 @@
+% ============================================================================
+% cardinality.adj — the count of a group made by combining two counted groups.
+% ============================================================================
+% CCSS-M K.CC.B "Count to tell the number of objects" and 1.OA "represent and
+% solve problems involving addition" meet at the same skill a kindergartner
+% practices with two piles of blocks: count each pile, then find the
+% cardinality of the combined pile by ADDING the two counts — not by
+% recounting the whole pile from one. This is the specific claim (not just
+% "addition", which `arithmetic.adj` already covers): a cardinal number is a
+% number reached BY COUNTING, and the count of a union of two counted groups
+% is the sum of their two cardinalities.
+%
+%     import "cardinality.adj"              % transitively imports arithmetic.adj
+%     observe count_a(5)                    % "…5 red blocks…"   (span cited)
+%     observe count_b(3)                    % "…3 blue blocks…"  (span cited)
+%     ? total_cardinality(count_a, count_b) % engine → 8, MathWorld-cited
+%
+% Like `number-sequence.adj`, this states no bare arithmetic of its own — it
+% CALLS the cited `sum` primitive from `arithmetic.adj` (RS-1 write-once-
+% use-many); the citation here grounds specifically that the RESULT of
+% counting is itself a cardinal number the model recalls, not computes.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitive `sum`. The import is RELATIVE to this
+% file (same package, arithmetic/ sibling directory).
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `count_a`/`count_b` are the two observed group counts;
+% `total_cardinality` is the derived count of the combined group. Rung-0
+% types each observable slot as `finding`; the `surface` synonyms let a
+% decomposer map everyday phrasing ("how many altogether", "combined", "in
+% all") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary cardinality_vocab {
+    define count_a            : finding  surface "first count", "first group", "how many in the first group"
+    define count_b            : finding  surface "second count", "second group", "how many in the second group"
+    define total_cardinality  : finding  surface "total", "how many altogether", "combined count", "in all"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. `total_cardinality(count_a, count_b) = sum(count_a,
+% count_b)` CALLS the cited `sum` primitive; the engine composes both
+% citations (this claim about counted-group cardinality, plus `arithmetic.adj`'s
+% addition definition) into one derivation.
+% ----------------------------------------------------------------------------
+formulabook cardinality {
+    use cardinality_vocab
+
+    formula total_cardinality(count_a, count_b) = sum(count_a, count_b)
+        source "In common usage, a cardinal number is a number used in counting (a counting number), such as 1, 2, 3, ...."
+        locator "https://mathworld.wolfram.com/CardinalNumber.html"
+        trust authoritative
+}

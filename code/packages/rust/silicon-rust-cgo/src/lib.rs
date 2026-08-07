@@ -36,6 +36,13 @@
 //! Material names containing `|` or `:` are rejected by `deposit`, `etch`,
 //! and `implant` to prevent wire-format injection.
 
+// Every `pub unsafe extern "C"` function below shares one C-ABI safety contract:
+// the caller (Go CGo) must pass valid, properly-aligned pointers for `out`/`err`
+// buffers of at least the stated capacity. That contract is documented once in
+// the module header ("Error handling pattern") rather than repeated per function,
+// so a crate-level allow is used instead of ~19 identical `# Safety` blocks.
+#![allow(clippy::missing_safety_doc)]
+
 use std::ffi::{CStr, c_char, c_double, c_int};
 use std::ptr;
 
@@ -325,7 +332,7 @@ pub unsafe extern "C" fn silicon_mosfet_threshold_voltage(
 ) -> c_int {
     let dev = unsafe { read_c_str(device_type) };
     match dp::MOSFETParams::new(&dev, l, w, t_ox, n_body, phi_ms, q_ox, t) {
-        Err(m) => unsafe { return err_msg(&m, err, err_cap) },
+        Err(m) => unsafe { err_msg(&m, err, err_cap) },
         Ok(p)  => match p.threshold_voltage(v_sb) {
             Ok(vt) => unsafe { ok_f64(vt, out) },
             Err(m) => unsafe { err_msg(&m, err, err_cap) },
@@ -390,15 +397,17 @@ pub unsafe extern "C" fn silicon_evaluate_level1(
     if out.is_null() {
         return unsafe { err_msg("out pointer is null", err, err_cap) };
     }
-    let mut p = mm::Level1Params::default();
-    p.vt0    = vt0;
-    p.kp     = kp;
-    p.lambda = lambda;
-    p.gamma  = gamma;
-    p.phi    = phi;
-    p.w      = w;
-    p.l      = l;
-    p.n_sub  = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..mm::Level1Params::default()
+    };
     fill_mos_result(&mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t), unsafe { &mut *out });
     0
 }

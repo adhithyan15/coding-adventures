@@ -2,6 +2,11 @@
 
 All notable changes to the `coding-adventures-jsdoc-parser` crate will be documented in this file.
 
+## [0.1.1] - 2026-07-18
+
+### Fixed
+- **Security hardening**: `create_jsdoc_parser` never called `GrammarParser::with_max_depth`, leaving every caller exposed to a native-stack-overflow DoS from an adversarial `@type {(((...)))}` payload. Added a `MAX_RULE_DEPTH = 200` cap, derived from measuring `jsdoc.grammar`'s one self-referential recursion shape (nested parenthesised type expressions) — safe at 289, crashes at 290. Cap sits ~31% below that. Notable surprise: exceeding the cap does not produce a parse error — `jsdoc.grammar`'s own `unknown_tag` catch-all (documented as a deliberate "unknown tags survive and round-trip" fallback) absorbs the too-deep payload as an unstructured tag instead, so the overall parse still succeeds, just with a different (degraded but harmless) tree shape. 3 new depth-guard regression tests assert "does not crash" rather than "returns Err" for this reason.
+
 ## [0.1.0] - 2026-05-22
 
 ### Added

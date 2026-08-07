@@ -1,5 +1,222 @@
 # Changelog — iir-to-wasm
 
+## [0.45.0] — 2026-08-03 (linear memory growth — Twig GC completion, Part 3 stage 1)
+
+Fix a confirmed bug found by direct source reading (not assumed): every
+memory-using module hardcoded `Limits { min: 1, max: Some(1) }` — a single
+64 KiB page with no growth path — and `iir-to-wasm` never emitted a
+`memory.grow` instruction anywhere. Any program whose bump-allocated
+strings/E5 arrays outgrew the first page would trap on the very first
+out-of-page write.
+
+- Added a shared, in-module `$__ensure_capacity(needed_end: i64)` helper
+  (emitted once per module, gated by `uses_memory`, appended after
+  `$__str_eq`/`$__str_cmp` if present) that calls the new `memory.grow`
+  encoder when the requested byte offset exceeds the current page count.
+- Wired a call to it into all four bump-allocation sites — `alloc_array`,
+  `str_concat`'s runtime path, `str_slice`'s runtime path, and
+  `call_builtin "input_str"` — before each one writes past the current
+  `__array_bump` offset.
+- Raised the module's declared memory `max` from the hardcoded `1` to a new
+  `IIRWasmConfig::max_memory_pages` field (default `1024` pages = 64 MiB),
+  clamped to `65536` (the WASM spec's absolute page ceiling) regardless of
+  configuration. **Security review caught that jumping straight to the 4
+  GiB ceiling unconditionally would itself be a regression**: this backend's
+  allocator never frees, so an unbounded cap would let a long-running or
+  malformed module monotonically consume real host memory with no
+  backstop — a real, caller-configured bound (not the raw spec maximum) is
+  the fix.
+- New `encode_memory_size()`/`encode_memory_grow()` opcode encoders in
+  `codegen.rs` (0x3F/0x40, both followed by the reserved memory-index byte).
+- See `AOT00-T1x-wasm-linear-memory-growth.md` for the full writeup,
+  including the explicit stage-2 scope (free-list allocator + conservative
+  collector) this round does **not** yet cover.
+
+## [0.44.0] — 2026-07-31 (boolean array elements)
+
+`array<bool>` now uses full-width i32 cells in linear memory. The four-byte
+stride preserves the existing i32 load/store representation without allowing
+adjacent boolean writes to overlap.
+
+## [0.43.0] — 2026-07-30 (runtime `str_concat` allocation discovery)
+
+The feature-discovery pass now marks linear memory and `__array_bump` as
+required for a non-foldable `str_concat`, even when the module contains no array
+operations. Previously the runtime concat lowering emitted allocation code
+without reserving its global, causing a missing-global lowering error. The new
+regression concatenates runtime string parameters in an array-free module and
+executes the result on WASM.
+
+## [0.42.0] — 2026-07-23 (runtime `str_slice` i64 index truncation guard)
+
+Fix a correctness divergence in the runtime `str_slice` lowering exposed by
+COBOL **computed reference modification** (`IDENT(J:K)` with data-name indices) —
+the first producer to feed genuinely data-dependent `i64` values into
+`str_slice`.
+
+- **The bug:** the runtime `str_slice` bounds check (`0 ≤ start ≤ end ≤ len`) ran
+  on the **i32-wrapped** index operands. A huge `i64` index whose low 32 bits
+  happened to land in `[0, len]` (e.g. `start = 2^32`, which wraps to `0`) slipped
+  past the wrapped check and spliced the wrong run — while the VM interpreter and
+  the oracle (which evaluate the bounds on the full `i64`) correctly trapped. A
+  silent wrong-output divergence on the wasm target only. (Memory-safe — the
+  wrapped indices still satisfied `start ≤ end ≤ len`, so the `memory.copy` stayed
+  in bounds.)
+- **The fix:** an **i64 truncation guard** now runs BEFORE the wrap — for each i64
+  index slot, `index >u len` (full i64, `len` zero-extended) traps, matching the
+  approach `str_index` already used. This makes the wasm trap predicate agree with
+  the VM/oracle `i64` bounds rule. i32 index slots skip the guard (they can't
+  truncate). New `I64_GT_U` (0x55) opcode.
+- **Test:** `str_slice_runtime.rs` gains `runtime_str_slice_huge_i64_index_traps_not_truncates`
+  (`start = 2^32` low-bits-0, and `end = 2^32+len` low-bits-in-range) — both must
+  trap, not alias. All prior `str_slice`/`str_index`/`str_cmp` runtime tests
+  unchanged.
+
+## [0.41.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_index` — rung closed)
+
+Give `str_index` a **runtime path** on WASM, closing the last E4d-3b rung. A
+`str_index` on a literal source still folds to a data-segment byte load. But when
+the source is a runtime string handle (a function parameter, a call result, a
+runtime slice/concat), the byte lives in a `[i32 len][bytes]` block whose length
+is only known at run time. Previously that shape errored (`str_index source … is
+not a direct str_const local`); now it reads the header for the bounds check and
+loads the byte from the block body.
+
+- **Runtime lowering.** Bounds `idx >=u len` (with `len = i32.load handle`) →
+  `unreachable`; a negative i64 index becomes a huge unsigned and trips the same
+  compare (E4 §2.2). Then `byte = i32.load8_u(handle + 4 + idx)`, skipping the i32
+  length header, zero-extended to i64 when the result slot is 64-bit (unlike the
+  literal path, whose bytes sit raw in the data segment at `offset + idx`, no
+  header). Unlike runtime `str_slice`/`str_concat`, `str_index` only **reads** —
+  no bump-allocation — so no `__array_bump` global is needed (the source handle's
+  producer already established linear memory).
+- **Source dispatch fix.** The arm now selects the literal vs. runtime path by
+  `runtime_str_vars.contains(src) || !string_literals.contains_key(src)` — the
+  same test `str_slice` uses. This also corrects a latent bug: a **promoted**
+  literal (in the string table *and* laid out as a runtime block) previously took
+  the literal raw-offset path, which would read the block's length-header bytes as
+  string data; it now correctly reads through the header.
+- **Tests.** `tests/str_index_runtime.rs` indexes inside an `at(a: str, i: i64)`
+  helper (params force the runtime path) and checks the returned byte against the
+  Rust `src.as_bytes()[i]` oracle across every position, first/last, plus three
+  out-of-bounds trap cases (`idx == len`, `idx > len`, negative idx). (A byte
+  ≥ 0x80 would exercise the unsigned zero-extension, but the WASM `str_const`
+  slice only accepts printable-ASCII literals, so it is untestable here and moot —
+  the runtime path reuses the literal path's identical extension.)
+
+## [0.40.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_slice`)
+
+Give `str_slice` a **runtime path** on WASM, mirroring the runtime `str_concat`
+that already bump-allocates blocks. A `str_slice` with a literal source and
+compile-time, in-bounds indices still folds to a constant slice at compile time
+(`collect_module_features`). But when the source is a runtime string handle (a
+function parameter, a call result) or an index is a runtime value, there is no
+compile-time answer — the `[start, end)` run must be copied into a fresh
+`[i32 len][bytes]` block at run time. Previously that shape errored (`str_slice
+missing module string table entry for …`); now it lowers to an inline
+bump-allocate-and-`memory.copy` sequence.
+
+- **Runtime lowering.** `new = bump; bump += 4 + (end - start); mem[new] =
+  end - start; memory.copy(new+4, src_base + start, end - start)` — the same
+  block-building shape as a runtime `str_concat`, but splicing one operand's
+  `[start, end)` run. The source's `len`/bytes-base come from its `[i32 len]
+  [bytes]` header when it is a runtime handle, or from its compile-time literal
+  offset/length when it is a folded literal reached only with runtime indices
+  (whose bytes sit raw in the data segment, no header). Index slots are the
+  widened i64 value model, so they are `i32.wrap`ped to the memory-op width
+  exactly as `str_index` does.
+- **Bounds trap.** `unreachable` unless `0 ≤ start ≤ end ≤ len`, via two
+  **unsigned** compares (`start >u end`, `end >u len`) — a negative index (a huge
+  unsigned) fails one of them, matching `str_index`'s trap rule and E4 §2.2.
+- **Feature gating.** A non-folding `str_slice` now marks `uses_memory` and
+  injects the `__array_bump` global in `collect_module_features` (a pure
+  runtime-slice program has no array op, so this is where they get injected for
+  it) — otherwise the lowering would fail to find the bump global.
+- **Tests.** `tests/str_slice_runtime.rs` slices inside a `slice(a: str, s: i64,
+  e: i64)` helper (params force the runtime path) and `str_eq`s the result
+  against a Rust `&src[start..end]` oracle — a byte-exact content+length check —
+  across middle/prefix/suffix/whole/empty slices, plus a mismatch sanity case and
+  three out-of-bounds trap cases (`end > len`, `start > end`, negative start).
+
+## [0.39.0] — 2026-07-19 (LANG-FULL E4-dyn E4d-3b: runtime `str_cmp`)
+
+Give `str_cmp` a **runtime path** on WASM, mirroring the runtime `str_eq` that
+already landed. A `str_cmp` whose operands are both compile-time literals still
+folds to a `-1`/`0`/`1` constant. But when an operand is a runtime string handle
+(a function parameter, a call result, a branch-selected slot), there is no
+compile-time answer — the two `[i32 len][bytes]` blocks must be compared at run
+time. Previously that shape errored (`str_cmp left source … is not a direct
+str_const local`); now it lowers to a `call` of a self-contained in-module
+`$__str_cmp(i32,i32) -> i32` helper.
+
+- **`$__str_cmp` helper.** A shared-prefix scan (`n = min(len a, len b)`, then a
+  byte-by-byte `i32.load8_u` compare — **unsigned**, so bytes ≥ 0x80 sort above
+  ASCII) with a length tiebreak (a prefix sorts before the longer string),
+  returning `-1`/`0`/`1`. The result is **byte-identical to the folded literal
+  path** (`left.bytes.cmp(&right.bytes)`, Rust slice ordering). Emitted once per
+  module (gated by a new `uses_str_cmp_runtime` feature) and appended directly
+  after the `$__str_eq` helper; `str_cmp_fn_idx` accounts for that preceding slot.
+  In-module rather than a host import for the same reason as `$__str_eq`: string
+  ordering is pure computation, so the emitted WASM stays self-contained (mirrors
+  the native/LLVM `__twig_str_cmp`).
+- **Signed widening.** Unlike `str_eq`'s `0`/`1` result (zero-extended), a
+  `str_cmp` result is a **signed** `-1`/`0`/`1`, so widening to an `i64` result
+  slot uses `i64.extend_i32_s` — a `-1` stays `-1`, matching the folded
+  `encode_i64_const(-1)` path exactly.
+- A folded-literal operand paired with a runtime operand is promoted to a runtime
+  `[i32 len][bytes]` block (same `lay_runtime_str_block` path as `str_eq`) so it
+  presents a real header to the helper.
+- No validator change: `str_cmp` already accepted two `Var` operands (it never
+  enforced literals); only the stale "materialises literal ordering" comment was
+  refreshed.
+- Tests: `tests/str_cmp_runtime.rs` runs the emitted module on the real
+  `WasmRuntime` and checks equal / first-differing-byte / prefix / byte-value /
+  empty-string cases against the `left.bytes.cmp(&right.bytes)` oracle.
+
+Runtime `str_slice`/`str_index` over promoted operands remain the last deferred
+E4d-3b pieces.
+
+## [0.38.0] — 2026-07-12 (LANG-FULL E6d-3b: nil `const 0 : ref<…>` → `ref.null`)
+
+The `const` lowering's nil special-case previously required an **empty** source
+operand (`const : ref<LispyPair>` → `ref.null`). But `make_nil` and the E6d-3a
+`list` desugar emit nil as `const 0 : ref<LispyPair>` — **with** an `Int(0)`
+sentinel source — which fell through to `i32.const 0`. So nil became an `i32(0)`,
+and `is_null` (`ref.is_null`) never recognised it: `null?` on the empty list, and
+any cons-walk (`length`, …) that must stop at the terminator, failed — the walk
+ran past the end into `struct.get` on an `i32` (trap: "expected a struct
+reference, got I32(0)"). Fix: a `ref<…>`-typed const is nil when its source is
+empty **or** `Int(0)`, so both forms emit `ref.null`. This aligns WASM with the
+CLR backend, which already lowers `const 0 : ref<…>` to `ldnull`. (Car/cdr on a
+list never dereference the nil tail, so E6d-1/E6d-3a were unaffected and stay
+green.)
+
+## [0.37.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
+
+`box`/`unbox` become i64-slot aware for E6d-2 dynamic arithmetic (which works uniformly in i64). `unbox` sign-extends `i31.get_s` (i32) with the new `i64.extend_i32_s` (0xAC) when the destination rides an i64 register; `box` narrows an i64 source with `i32.wrap_i64` before `ref.i31`. Existing i32-atom lisp box/unbox are unchanged (the guard is `slot_is_i64`).
+
+## [0.36.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `array<str>` elements)
+
+BASIC string arrays (`DIM A$(n)`) store an E4-dyn runtime string **handle** per
+element. A `str` handle on WASM is a 4-byte `i32` linear-memory offset (unlike the
+8-byte `i64`/`f64` elements E5 arrays used so far), so `array<str>` is a flat block
+of i32 handles.
+
+- **`wasm_array_elem`** gains a `"str" => (I32, 4)` branch; `alloc_array` sizes the
+  block by the 4-byte element, and `array_get`/`array_set` select `i32.load`/
+  `i32.store` for a `str` element.
+- **`collect_runtime_str_vars`** now promotes a folded str literal used as the
+  *value* of an `array_set` to a runtime-block handle — the same treatment call
+  arguments already get. Without it, `array_set` would store the val local's
+  uninitialised `0` (a folded literal's handle lives only in the compile-time
+  `string_literals` table, never in its runtime local), and a later `array_get` +
+  `print_str`/`str_concat` would read the module header as a bogus length and trap
+  (`out of bounds memory.copy`).
+- **Validator** (`validate.rs`) accepts a `str` type_hint on `array_get`/`array_set`.
+
+**Tests:** `str_array_uses_i32_element_store` (an `array<str>` element `array_set`
+emits `i32.store`), `str_array_elem_is_i32_4_bytes`.
+
 ## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` via a self-contained in-module `$__str_eq` helper)
 
 Adds a runtime path for `str_eq`. Previously `str_eq` only supported the case where

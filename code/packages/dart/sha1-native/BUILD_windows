@@ -1,0 +1,1 @@
+echo "sha1-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for sha1_native.dll)"

@@ -1,0 +1,64 @@
+% ============================================================================
+% number-words — each counting number's English word (adj-facts-stdlib, MATHEMATICS).
+% ============================================================================
+% The very first fact of arithmetic: the number you can hold up on your fingers,
+% and the WORD you say for it. One, two, three, four, five, six, seven, eight,
+% nine, ten — the count a kindergartener chants before they can read or add. This
+% library lives under the MATHEMATICS subject (early numeracy); the facts stdlib
+% is organized by SUBJECT, not by grade level. Recall is a binding query:
+%
+%     ? number_word(5, $W)         % five  (what do we SAY for 5?)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `number_word(number, word)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the word
+% WITH its source, on the CPU, with zero model calls, and abstains on any number
+% the source does not name (e.g. 99 — this table only ships 1 through 10, the
+% numbers the source spells out).
+%
+% WHY THIS IS THE FOUNDATION. A number-word looked up here underlies BOTH the
+% things a child builds next:
+%   * READING — to read the numeral "5" aloud you recall its word, "five".
+%   * ARITHMETIC — "two plus three" is spoken in words; each spoken number is a
+%     recalled word standing in for a `number` key that then composes into a sum
+%     (2 + 3 = 5, whose answer is in turn read back as "five"). Because the
+%     `number` column is a NUMBER, a recalled row drops straight into arithmetic.
+% The relation also binds in REVERSE — `? number_word($N, five)` recovers 5 — so
+% the same table answers "which number is this word?" as well as "which word is
+% this number?".
+%
+% A NOTE ON CASE: ADJ atoms are lowercase, so each `word` key is written with the
+% lowercase spelling (`one`, `two`, …). The source (below) writes the words with
+% an initial capital (One, Two, …); the word each denotes is identical — only the
+% atom spelling is lowercased so it parses as a bare identifier.
+%
+% Provenance: the ten number→word pairs are copied from the sentence quoted in
+% `source`, taken verbatim from Cuemath's "Number Names 1 to 10" FAQ ("What are
+% One to Ten Spellings in English?") at the `locator`. The quoted span reads
+% "2 - two" in lowercase — a spelling quirk of the source, reproduced faithfully;
+% the atom here is `two` regardless. `trust consensus` — Cuemath is a SECONDARY
+% math-education reference, not a primary standards body: the `authoritative` tier
+% is reserved for a primary/official source (a standards body, a .gov/NIST
+% publication). Nothing here is asserted from memory; every word traces to that
+% sentence. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table number_word {
+    columns number, word
+
+    row (1, one)
+    row (2, two)
+    row (3, three)
+    row (4, four)
+    row (5, five)
+    row (6, six)
+    row (7, seven)
+    row (8, eight)
+    row (9, nine)
+    row (10, ten)
+
+    source "1 - One, 2 - two, 3 - Three, 4 - Four, 5 - Five, 6 - Six, 7 - Seven, 8 - Eight, 9 - Nine, 10 - Ten."
+    locator "https://www.cuemath.com/numbers/number-names-1-to-10/"
+    trust consensus
+}

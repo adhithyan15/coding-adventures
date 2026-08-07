@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/initialization-activation-distribution-v1.json",
+  "title": "Initialization and activation distribution V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "inputs", "weight_templates", "initializers", "activations", "expected"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "absolute_tolerance": {"type": "number", "exclusiveMinimum": 0},
+    "concepts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "bias", "variance", "zero_threshold", "tanh_saturation_threshold", "canonical_initializer", "canonical_activation"],
+      "properties": {
+        "kind": {"const": "initialization-activation-distribution"},
+        "bias": {"const": "none"},
+        "variance": {"const": "population"},
+        "zero_threshold": {"const": 1e-12},
+        "tanh_saturation_threshold": {"const": 0.95},
+        "canonical_initializer": {"const": "xavier"},
+        "canonical_activation": {"const": "tanh"}
+      }
+    },
+    "inputs": {"$ref": "#/$defs/matrix"},
+    "weight_templates": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/matrix"}},
+    "initializers": {"const": ["tiny", "xavier", "he", "large"]},
+    "activations": {"const": ["tanh", "relu"]},
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical", "comparison"],
+      "properties": {
+        "canonical": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["initializer", "activation", "layers"],
+          "properties": {
+            "initializer": {"const": "xavier"},
+            "activation": {"const": "tanh"},
+            "layers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/layer"}}
+          }
+        },
+        "comparison": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"$ref": "#/$defs/comparison"}}
+      }
+    }
+  },
+  "$defs": {
+    "numberArray": {"type": "array", "minItems": 1, "items": {"type": "number"}},
+    "matrix": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/numberArray"}},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean", "variance", "standard_deviation", "minimum", "maximum", "zero_fraction", "saturated_fraction"],
+      "properties": {
+        "mean": {"type": "number"},
+        "variance": {"type": "number", "minimum": 0},
+        "standard_deviation": {"type": "number", "minimum": 0},
+        "minimum": {"type": "number"},
+        "maximum": {"type": "number"},
+        "zero_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "saturated_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer", "scale", "preactivations", "activations", "summary"],
+      "properties": {
+        "layer": {"type": "integer", "minimum": 1},
+        "scale": {"type": "number", "exclusiveMinimum": 0},
+        "preactivations": {"$ref": "#/$defs/matrix"},
+        "activations": {"$ref": "#/$defs/matrix"},
+        "summary": {"$ref": "#/$defs/summary"}
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initializer", "activation", "standard_deviations", "zero_fractions", "saturated_fractions"],
+      "properties": {
+        "initializer": {"enum": ["tiny", "xavier", "he", "large"]},
+        "activation": {"enum": ["tanh", "relu"]},
+        "standard_deviations": {"$ref": "#/$defs/numberArray"},
+        "zero_fractions": {"type": "array", "minItems": 1, "items": {"type": "number", "minimum": 0, "maximum": 1}},
+        "saturated_fractions": {"type": "array", "minItems": 1, "items": {"type": "number", "minimum": 0, "maximum": 1}}
+      }
+    }
+  }
+}

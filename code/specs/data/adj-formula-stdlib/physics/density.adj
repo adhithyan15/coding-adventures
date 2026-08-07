@@ -1,0 +1,74 @@
+% ============================================================================
+% density.adj — the definition of density in the ADJ standard library.
+% ============================================================================
+% The density entry of the *physics* track, a sibling of `pressure.adj` and
+% `electricity.adj`: the foundational material definition a first course opens
+% with — DENSITY IS MASS PER UNIT VOLUME — as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its exact rearrangement (the mass a given
+% density fills a volume with). As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the physical quantities from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited definition
+% on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY, carrying the definition's citation.
+%
+%     import "density.adj"
+%     observe mass(60)          % "…60 g…"        (span cited by the model)
+%     observe volume(3)         % "…in 3 cm³…"    (span cited by the model)
+%     ? density(mass, volume)   % engine → 20, carrying the def ρ = m/V
+%
+% Both formulas are EXACT over their parameters — one a quotient, one a product of
+% two measured quantities. There is no *separately grounded* physical constant here,
+% so every value the engine returns is exact. The two COMPOSE and invert cleanly:
+% the `density` a consumer computes from a mass in a volume is exactly the `density`
+% the `mass` formula multiplies back by a volume to recover the mass.
+%
+%   density(mass, volume) = mass / volume    %  ρ = m/V   (definition of density)
+%   mass(density, volume) = density · volume  %  m = ρ·V   (the same definition, solved for m)
+%
+% Both formulas are defended by the SAME definitional sentence — "Density is defined
+% as mass per unit volume." — because that one definition sanctions the relation read
+% either way (ρ from m and V, or m from ρ and V). The quote is transcribed verbatim
+% from Georgia State University's HyperPhysics (a university .edu physics reference —
+% the same primary source `pressure.adj` and `electricity.adj` cite), so each
+% `formula` carries the provenance envelope every shipped grounded clause carries;
+% the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
+% definitional sentence is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable physical quantity the definition
+% ranges over, and each result is the derived quantity. `density` and `mass` each
+% appear BOTH as a derived result and as an input (of the other formula), so each
+% is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended SI unit.
+% ----------------------------------------------------------------------------
+dictionary density_vocab {
+    define mass    : finding  surface "mass", "m"                        % mass, e.g. kg
+    define volume  : finding  surface "volume", "V"                      % volume, e.g. m³
+    define density : finding  surface "density", "rho"                  % density, e.g. kg/m³
+}
+
+% ----------------------------------------------------------------------------
+% The definition, both ways. Each is a named, importable, reusable `let` over its
+% formal parameters, bound at apply time, and each carries the definitional quote
+% from HyperPhysics (a quote is required on a shipped formula). One is a quotient
+% and one a product, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook density_laws {
+    use density_vocab
+
+    % Density — the mass per unit volume. HyperPhysics defines density as the mass
+    % distributed over the volume it occupies, i.e. ρ = m/V.
+    formula density(mass, volume) = mass / volume
+        source "Density is defined as mass per unit volume."
+        locator "https://hyperphysics.gsu.edu/hbase/dens.html"
+        trust authoritative
+
+    % Mass — the same definition solved for the mass a density fills a volume with
+    % (m = ρ·V). Defended by the SAME definitional sentence, read the other way.
+    formula mass(density, volume) = density * volume
+        source "Density is defined as mass per unit volume."
+        locator "https://hyperphysics.gsu.edu/hbase/dens.html"
+        trust authoritative
+}

@@ -14,7 +14,62 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name |
+
+**AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
+boolean array through a rank-aware value formal with two non-unit lower bounds.
+The checkerboard payload verifies both descriptor lower bounds and the outer
+row-major stride after the procedure call.
+
+**AL-multidim-string-capture:** the seven-backend matrix executes a nested
+procedure that writes a two-dimensional string-array value formal through its
+captured descriptor. Lexical ordering plus equality and inequality of separate
+cells verifies the `array<str>` handle, both lower bounds, and outer row-major
+stride survive the call and capture boundary.
+
+**AL-3D-string-capture:** the seven-backend matrix executes a nested procedure
+that writes a three-dimensional string-array value formal through its captured
+descriptor. Lexical ordering plus equality and inequality of separate cells
+verifies the `array<str>` handle, all three lower bounds, and both row-major
+strides survive the call and capture boundary.
+
+**AL-3D-boolean-capture:** the seven-backend matrix executes a nested procedure
+that writes a three-dimensional boolean-array value formal through its captured
+descriptor. Checkerboard reads verify the `array<bool>` handle, all three lower
+bounds, and both row-major strides survive the call and capture boundary.
+
+**AL-3D-real-capture:** the seven-backend matrix executes a nested procedure
+that writes a three-dimensional real-array value formal through its captured
+descriptor. A caller-side floating-point sum verifies the `array<f64>` handle,
+all three lower bounds, and both row-major strides survive the call and capture
+boundary.
+
+**AL-4D-integer-capture:** the seven-backend matrix executes a nested procedure
+that writes a four-dimensional integer-array value formal through its captured
+descriptor. A caller-side corner sum verifies the `array<i64>` handle, all four
+lower bounds, and all three row-major strides survive the call and capture boundary.
+
+**AL-4D-string-capture:** the seven-backend matrix executes a nested procedure
+that writes a four-dimensional string-array value formal through its captured
+descriptor. Lexical ordering plus equality and inequality verify the `array<str>`
+handle, all four lower bounds, and all three row-major strides survive the call and
+capture boundary.
+
+**AL-4D-string-forwarding:** the seven-backend matrix executes a nested procedure
+that forwards a captured four-dimensional string-array value formal to a sibling
+array formal. The caller's lexical ordering, equality, and inequality checks verify
+the `array<str>` handle, all four lower bounds, and all three row-major strides survive
+both procedure boundaries.
+
+**AL-4D-real-forwarding:** the seven-backend matrix executes a nested procedure
+that forwards a captured four-dimensional real-array value formal to a sibling array
+formal. A caller-side floating-point sum verifies the `array<f64>` handle, all four
+lower bounds, and all three row-major strides survive both procedure boundaries.
+
+**AL-4D-boolean-forwarding:** the seven-backend matrix executes a nested procedure
+that forwards a captured four-dimensional boolean-array value formal to a sibling array
+formal. Caller-side checkerboard reads verify the `array<bool>` handle, all four lower
+bounds, and all three row-major strides survive both procedure boundaries.
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -269,13 +324,13 @@ multiple languages; close an enabler before the features that depend on it.
   multi-item string `PRINT` (`PRINT A$; B$` and `PRINT A$, B$`), and copied-slot equality
   (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`, plus
   lexical string ordering branches through `str_cmp`.
-  Captured, reassigned, and unobserved/conflicting or closure-derived string
-  parameter values plus broader dynamic string values remain — the **runtime
-  (non-literal) string** representation on the static backends is designed in
-  **[`lang-full-e4-dyn-strings.md`](lang-full-e4-dyn-strings.md)** (E4-dyn:
-  reuse the E5 length-prefixed heap block; adds `__twig_str_concat`/`_slice`/
-  `_index` runtime helpers; unblocks ALGOL string procedures + BASIC string
-  `INPUT`/arrays). Pending sign-off.
+  The runtime (non-literal) representation now carries ALGOL string-procedure
+  results through initialized scalar locals (`str_concat` copy, `str_eq`, and
+  `print_str`) across the seven standard backends and the BEAM ASCII
+  character-list subset. Runtime lexical ordering now uses `str_cmp` across the
+  seven standard backends and BEAM's character-list subset. Captured/`own`
+  strings, string arrays, and Unicode-aware BEAM strings remain outside this slice. The fuller
+  plan remains in **[`lang-full-e4-dyn-strings.md`](lang-full-e4-dyn-strings.md)**.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
@@ -286,17 +341,26 @@ multiple languages; close an enabler before the features that depend on it.
   checks on JVM/CLR/WasmGC). Bounds-checked from the start (OOB → trap). Full design + PR
   breakdown in **[`lang-full-e5-arrays.md`](lang-full-e5-arrays.md)**. Unlocks ALGOL arrays (AL2),
   BASIC `DIM` (BA3), Twig lists (TW3).
-- **E6 — General `call_builtin` / closures / dynamic dispatch on code-gen backends.** ⚠
-  Today the IIR-to-{wasm,jvm,clr,llvm} validators reject `call_builtin`/`type_hint="any"`,
-  which is why most of Twig only runs on the VM. Closing this is the biggest single unlock
-  for Twig (and McCarthy cons/symbols). **Architectural fork — design pass first.**
+- **E6 — General `call_builtin` / closures / dynamic dispatch on code-gen backends.**
+  The `call_builtin` allowlists + `type_hint="any"` rejection are why most of Twig
+  runs only on the VM. **Design surveyed & written — the substrate already exists:**
+  McCarthy Lisp's full cons/symbol/lambda/recursion suite runs on all 5 code-gen
+  backends via the uniform boxed `ref<any>` value + two language-agnostic
+  `iir-builtin-lowering` passes, and **Twig rides them too** — so this is a
+  *catalog-extension*, not a from-scratch fork. Full design + PR breakdown in
+  **[`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md)** (E6 layer 2).
   - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
-    The tractable, run-verifiable first slice: a typed `i64` module global a *function*
-    can read/write, on all 7 backends. `global_load`/`global_store` already work on
-    BEAM/WASM/native; the work is LLVM/JVM/CLR (the `LANG32b` rejections) + an ALGOL
-    enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
-    globals); foundation for closures. The general `any`-dispatch / closure layers
-    stack on top.
+    ✅ DONE. A function can read/write a typed scalar or array module global on
+    all 7 backends (`global_load`/`global_store`). Scalars retain the original
+    word slots; LLVM uses `ptr` and JVM/CLR use concrete reference fields for
+    `array<T>`, so captured ALGOL arrays retain their handle and bounds across a
+    call. Unblocks AL6 (`own`), O3 (Oct globals), and enclosing-array capture.
+  - **E6 layer 2 (general dynamic dispatch) — spec [`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md).**
+    ◑ STARTED. **E6d-1 ✅** — Twig `cons`/`car`/`cdr` (TW3-core) proven on the
+    code-gen backends (matrix: `(car (cons 42 0))` → 42, run-verified on WASM +
+    real dotnet CLR). Remaining: dynamic arithmetic (E6d-2), list ops (E6d-3),
+    symbols (E6d-4), records/unions (E6d-5/6, TW6), closures-on-WASM (E6d-7, TW5),
+    dynamic globals (E6d-8).
 - **E7 — Subroutine / return-stack.** ✅ COMPLETE. `GOSUB`/`RETURN` and procedure
   call/return ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
   Structured procedure call/return was already done (`call`/`ret` — ALGOL AL3,
@@ -588,7 +652,16 @@ backend immediately) come before the enabler-dependent items.
   matrix proofs).
   `IF A$ < "B" THEN n` / `IF "B" > A$ THEN n` lower through `str_cmp` plus typed
   zero comparisons and also run on every backend.
-  String arrays, string `INPUT`, and broader dynamic string expressions remain.
+  **String `INPUT` ✅** (E4d-BA-input, all 7 backends): `INPUT A$` reads a whole
+  stdin line as a runtime string via `call_builtin "input_str"`; two matrix cells
+  (`INPUT A$` → `OK`, runtime concat `INPUT A$ / INPUT B$ / PRINT A$ + B$` → `OK!`).
+  **String arrays ✅** (E4d-BA-arr, **all 7 backends**): `DIM A$(n)` lowers to an
+  `array<str>` (the E5 aggregate carrying E4-dyn string handles); `A$(i)=s`/`A$(i)`
+  are `str`-typed `array_set`/`array_get` feeding PRINT / `+` concat. Static
+  backends carry an 8-byte (LLVM/native) or 4-byte (WASM) handle element; JVM/CLR
+  use native reference arrays (`String[]` / `System.String[]`). Matrix cell
+  `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)` → `OK` on all 7. Broader
+  dynamic string expressions and string `READ`/`DATA` remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every
@@ -650,8 +723,9 @@ backend immediately) come before the enabler-dependent items.
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
   → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit the `f64` hint, `/` is real
-  division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; no implicit
-  int→real coercion (mixing is a clean error). **Verified by RUNNING on ALL 7 backends**
+  division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; integer
+  values widen with `int_to_real` whenever a real is required (mixed numeric operations, `/`,
+  real assignments/array elements/formals, and real standard functions). **Verified by RUNNING on ALL 7 backends**
   (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1): VM/JIT (tagged value model), LLVM
   (`double` slots), WASM (typed locals), JVM (`CONSTANT_Double`+`dcmpl`), CLR (`float64`+`ldc.r8`),
   and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**
@@ -663,7 +737,7 @@ backend immediately) come before the enabler-dependent items.
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
   x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
-  guard-type fix landed in `algol-iir-compiler` 0.5.1). Array value parameters are follow-up.
+  guard-type fix landed in `algol-iir-compiler` 0.5.1).
   **AL-multidim ✅**: `integer array M[1:2, 1:2]` (2D) runs on **all 7 backends**
   via row-major flat index `(i-lo1)*stride + (j-lo2)` computed during declaration; strides
   accumulated right-to-left; `alloc_array`/`array_set`/`array_get` with flat 0-based index;
@@ -680,16 +754,42 @@ backend immediately) come before the enabler-dependent items.
   lower bounds) runs on **all 7 backends** — proves the per-dim `sub−lower` subtraction composes
   with the row-major strides (`flat = Σ_d (sub[d]−lower[d])*stride[d]`); no compiler change (the
   `ArrayDim.lower_slot` subtraction already existed); `algol-iir-compiler` 0.26.0 / `lang-aot` 0.169.0.
-  Array **value parameters** (passing an array to a procedure) remain a follow-up — they need
-  managed-backend (JVM/CLR) call-signature work, not just the frontend.
+  **AL-array-params ✅**: an array `value` formal infers its rank from its
+  indexed uses in the procedure body, then receives the caller's typed handle,
+  every lower bound, and each non-final row-major stride. The descriptor keeps
+  `a[i,j,...]` in the actual's declared index space, with rank mismatches and
+  inconsistent formal subscript counts rejected before lowering. A 2-D,
+  nonzero-lower-bound captured actual runs through a forwarding procedure on
+  all seven standard backends; the compiler unit suite also executes a 3-D
+  formal on the VM. One-dimensional formals retain the original handle-plus-
+  lower-bound ABI. Nested procedures can likewise capture an outer scalar
+  `value` formal: the outer function publishes its typed incoming value before
+  the nested sibling runs, and shadowing formals remain local.
+  **AL-captured-arrays ✅**: procedures can now read/write arrays declared in an
+  enclosing block. The frontend globalizes the handle and every lower-bound /
+  row-major-stride metadata value, so `integer array values[4:5]; procedure
+  seed; values[4] := 40; values[5] := 2; seed` returns 42 on all seven standard
+  backends. Array `value` descriptors use the call ABI above, and a nested
+  procedure can capture an outer formal by reloading its globalized handle and
+  every bound/stride component in the fresh nested frame. A 2-D `string array`
+  formal now exercises that captured descriptor on all seven backends, with
+  dynamic string cells checked by lexical ordering, equality, and inequality.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
   sibling `IIRFunction` + IIR `call`; supports forward references + recursion + multi-arg.
   Surfaced & fixed a real `jit-core` constant-propagation bug (reassigned result slot
-  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** typed
-  procedures only — proper (void) procedures rejected (inert on this slice); bodies are
-  lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
+  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** `value`
+  params only (by-name is AL7); zero-argument calls may use explicit `f()` in
+  value or statement position; procedures may capture enclosing scalar, array,
+  array-formal, and scalar-formal declarations through typed globals.
+  `boolean procedure` results now also feed compound conditions directly and
+  compose as typed actuals across all seven standard backends
+  (`both(neg(false), not neg(true))` → a real branch). `real procedure` values
+  likewise compose as `f64` actuals before `entier` consumes the final result
+  (`combine(scale(3.0), scale(4.0))` → 42 on all seven backends), and integer
+  procedure values likewise compose as `i64` actuals
+  (`combine(scale(3), scale(4))` → 42 on all seven backends).
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
@@ -701,8 +801,20 @@ backend immediately) come before the enabler-dependent items.
   procedures are now proven** (`algol-iir-compiler` 0.18.0): `integer procedure
   echo(s); value s; string s; print(s)` passes a literal or named-variable
   string to the body's `print_str` on all 7 backends (`lang-aot` 0.154.0, AL4-str-params).
-  `own`/captured strings, string arrays, and broader dynamic string expressions
-  remain.
+  Runtime string procedure results can now be copied into initialized scalar
+  locals, compared for equality or lexical ordering, and printed across the
+  standard seven backends; the same program is executed on BEAM using
+  printable-ASCII character lists. Those dynamic results also compose as
+  `string` value actuals (`matches(pick(1))`) before the callee's equality test
+  selects an integer result on all seven standard backends. `string array A[1:2]` now reuses the E5
+  `array<str>` substrate on all seven standard backends: literal, initialized-scalar,
+  and runtime string-procedure elements can be read for lexical ordering and output.
+  Captured strings use typed globals and can be reassigned from branch-selected
+  procedure results before being forwarded through another string formal,
+  while an `own string` initializes once to the empty string and retains its
+  typed global identity as repeated calls replace it from procedure results
+  before forwarding the latest handle through another string formal.
+  Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based
@@ -710,9 +822,11 @@ backend immediately) come before the enabler-dependent items.
   branch subset. **Surfaced & fixed a latent ALGOL cmp bug**: comparisons emitted a
   `bool` type_hint, so LLVM compared `i64` operands at 1-bit `i1` and emitted invalid IR
   (the cell *failed to run*) — fixed to emit the i64 operand width (the BA0 fix). This was
-  the first ALGOL comparison ever exercised on a code-gen backend. **Limits:** switch-list
-  elements must be plain labels (no conditional/nested elements); switches aren't
-  block-scope-shadowable.
+  the first ALGOL comparison ever exercised on a code-gen backend. Switch-list
+  elements retain their full designator until the selected `goto`: a conditional
+  branch and a nested switch subscript execute at that time, so both see current
+  variables. A cyclic switch graph is rejected before it can recursively expand
+  the IIR dispatch chain. **Limit:** switches aren't block-scope-shadowable.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique
@@ -745,12 +859,12 @@ backend immediately) come before the enabler-dependent items.
 - ✅ **AL-pow** — the `↑` exponentiation operator (§3.3.4; spelled `^`/`**`).
   A **nonnegative integer-literal exponent** unrolls to repeated multiply
   (`k−1` `mul`s; `x↑0=1`, `x↑1=x`), **keeping the base's type** — `2↑10` is the
-  *integer* 1024, unlike BASIC's always-`real` BA-pow. A **`real↑real`** exponent
-  lowers to the `f64_pow` op (libm `pow`) BA-pow already proved on every backend.
-  No new IIR op, no backend change. An `integer` base with a `real`/runtime/negative
-  exponent is a clean `Unsupported` (needs int→real coercion / reciprocals — a later
-  slice). Verified by RUNNING `10 + 2 ^ 5` ⇒ 42 (integer unroll) on all 7 backends
-  (`algol-iir-compiler` 0.27.0 / `lang-aot` 0.170.0).
+  *integer* 1024, unlike BASIC's always-`real` BA-pow. Every other numeric pair,
+  including an integer base with a runtime or negative integer exponent, widens to the
+  `f64_pow` op (libm `pow`) that BA-pow already proved on every backend. No new IIR op
+  or backend change. Verified by RUNNING `10 + 2 ^ 5` ⇒ 42 (integer unroll) and
+  `entier(2^3 + 68 * 2^-1)` ⇒ 42 (runtime positive and reciprocal exponents) on all 7
+  backends (`algol-iir-compiler` 0.52.0 / `lang-aot` 0.220.24).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
@@ -768,7 +882,13 @@ backend immediately) come before the enabler-dependent items.
   (`lang_matrix.rs`). Added a reusable escape analysis (`free_vars::lambda_captured_globals`).
   **Limits:** a value captured by a closure, or a top-level forward reference, stays on
   the host global table (unchanged) — full mutable globals on code-gen backends need **E6**.
-- ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
+- ◑ **TW3** — list / cons ops on code-gen backends. **Cons core ✅** (E6d-1):
+  `(car (cons 42 0))` and nested `(car (cdr (cons 1 (cons 42 0))))` run on the
+  code-gen backends (WASM + real dotnet CLR verified; native/LLVM/JVM via CI) —
+  the Twig frontend's `call_builtin "cons"/"car"/"cdr"` lowers through the shared
+  `iir-builtin-lowering` heap passes to the same `ref<any>` substrate McCarthy
+  uses. List builtins (`list`/`length`/`append`/…) remain (E6d-3, needs the
+  allowlist/lowering extension). See [`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md).
 - ✅ **TW4** — typed E4 strings on code-gen backends. Direct literals,
   immutable top-level string value defines, and lexical `let`/`let*` string
   locals lower to shared `str_const`/`str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`

@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "path": [
+    {
+      "id": "GU-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "GU-C01-namaste"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "GU-C01-aabhaar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-003",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "GU-C01-aavjo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "GU-C01-haa-naa",
+        "GU-C01-saarun"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-C02-naam",
+        "GU-C02-chhe",
+        "GU-C02-maarun",
+        "GU-C02-maarun-naam-chhe",
+        "GU-C02-anand",
+        "GU-C02-shun",
+        "GU-C02-tu-tame",
+        "GU-C02-tamarun-naam-shun-chhe",
+        "GU-C03-hun"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GU-C03-kem",
+        "GU-C03-tame-kem-chho",
+        "GU-C03-majaa"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-007",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "GU-C03-vandho-nahi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-008",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "GU-C04-malishun",
+        "GU-C04-kaale",
+        "GU-C04-pachha",
+        "GU-C04-pachha-malishun"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-009",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "GU-C06-numbers-1-5",
+        "GU-C06-number-histories"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-009-LANGUAGE-SPECIFIC",
+        "GU-EXT-009-ETYMOLOGY"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "GU-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "GU-PATH-002",
+        "GU-PATH-007"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "GU-PATH-004"
+      ],
+      "omits": [
+        "RESPONSE-YES",
+        "RESPONSE-NO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "GU-PATH-005"
+      ],
+      "omits": [
+        "PRONOUN-ME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "GU-PATH-006"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "GU-PATH-003",
+        "GU-PATH-008"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-SOON",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [
+        "GU-PATH-009"
+      ],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "GU-EXT-008-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Gujarati material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C04-malishun",
+        "GU-C04-pachha"
+      ]
+    },
+    {
+      "id": "GU-EXT-009-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Gujarati material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C06-numbers-1-5"
+      ]
+    },
+    {
+      "id": "GU-EXT-009-ETYMOLOGY",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use this Gujarati word history as a memory hook without confusing origin and current use.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C06-number-histories"
+      ]
+    },
+    {
+      "id": "GU-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Gujarati script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C01-namaste"
+      ]
+    }
+  ]
+}

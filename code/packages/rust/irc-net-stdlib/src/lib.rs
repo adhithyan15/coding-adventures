@@ -607,7 +607,7 @@ mod tests {
         drop(stream);
         server_thread.join().unwrap();
 
-        assert!(true, "send_to delivered data correctly");
+        // Reaching this point without panicking means send_to delivered data correctly.
     }
 
     #[test]

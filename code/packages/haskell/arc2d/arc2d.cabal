@@ -1,0 +1,37 @@
+cabal-version: 3.0
+name:          arc2d
+version:       0.1.0
+synopsis:      Elliptical arcs in SVG endpoint and center forms
+description:   Pure G2D03 SVG endpoint-to-center conversion, evaluation, tangents, tight bounds, and cubic Bezier approximation for elliptical arcs.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Arc2D
+    build-depends:    base >=4.14 && <5
+                    , bezier2d >=0.1 && <0.2
+                    , point2d >=0.1 && <0.2
+                    , trig >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Arc2DSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , arc2d
+                    , bezier2d >=0.1 && <0.2
+                    , hspec == 2.*
+                    , point2d >=0.1 && <0.2
+                    , trig >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

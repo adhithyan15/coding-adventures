@@ -101,7 +101,7 @@ pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
     // The combined formula collapses to:
     //   `j_lo = max(0, i + 1 - n)`,  `j_hi = min(k, i + 1)`.
     for i in 0..out_len {
-        let j_lo = if i + 1 > n { i + 1 - n } else { 0 };
+        let j_lo = (i + 1).saturating_sub(n);
         let j_hi = if i + 1 < k { i + 1 } else { k };
         let mut acc = 0.0f32;
         for j in j_lo..j_hi {

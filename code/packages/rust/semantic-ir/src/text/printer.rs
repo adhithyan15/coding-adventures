@@ -644,6 +644,138 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_index_args(out, indices, depth);
             out.push(')');
         }
+
+        // ── SIR22 addendum: APL primitive operators ────────────────────
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(out, "(reduce {} ", op.name());
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(out, "(scan {} ", op.name());
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(out, "(outer-product {} ", op.name());
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            let _ = write!(out, "(shape ");
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Reshape { shape, target, .. } => {
+            let _ = write!(out, "(reshape ");
+            print_expr_inline_depth(out, shape, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            let _ = write!(out, "(index-generator ");
+            print_expr_inline_depth(out, count, depth + 1);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            let _ = write!(out, "(index-of ");
+            print_expr_inline_depth(out, haystack, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, needle, depth + 1);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            let _ = write!(out, "(ravel ");
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            let _ = write!(out, "(catenate ");
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+
+        // ── SIR26: integer conversion ──────────────────────────────────
+        Expr::Convert { value, to, .. } => {
+            // `(convert <to> <value>)`, where <to> is the IntSpec text form
+            // (SIR21), e.g. `(convert (int u8 wrap) (var-ref t local))`.
+            let _ = write!(out, "(convert {} ", to);
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
+
+        // ── SIR23: symbolic expression + pattern/rewrite nodes ─────────
+        // Every head keyword below is prefixed `sym-` so it can never
+        // collide with an existing form — notably `(sym name)` above is
+        // `Expr::SymLit` (a Ruby-style interned `:symbol` literal), a
+        // wholly different concept from `SymSymbol`'s symbolic-expression-
+        // tree leaf.
+        Expr::SymSymbol { name, .. } => {
+            let _ = write!(out, "(sym-symbol {})", name);
+        }
+        // `(sym-rational <numer> <denom>)` — printed as the two integer
+        // fields rather than a single `n/d` token so the shape matches
+        // every other multi-field node in this file (e.g. `Transpose`,
+        // `IndexArg::Scalar`); the IR does not reduce the fraction (see
+        // `SymRational`'s doc comment), and neither does the printer.
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "(sym-rational {} {})", numer, denom);
+        }
+        Expr::SymApply { head, args, .. } => {
+            let _ = write!(out, "(sym-apply ");
+            print_expr_inline_depth(out, head, depth + 1);
+            print_args(out, args, depth);
+            out.push(')');
+        }
+        // `(sym-pattern-blank)` for Wolfram `_`; `(sym-pattern-blank
+        // <head>)` for `_h`.
+        Expr::SymPatternBlank { head, .. } => {
+            let _ = write!(out, "(sym-pattern-blank");
+            if let Some(h) = head {
+                out.push(' ');
+                print_expr_inline_depth(out, h, depth + 1);
+            }
+            out.push(')');
+        }
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            let _ = write!(out, "(sym-pattern-named {} ", name);
+            print_expr_inline_depth(out, pattern, depth + 1);
+            out.push(')');
+        }
+        // `(sym-rule <lhs> <rhs> eager)` for `->`; `... delayed)` for
+        // `:>` — mirroring how `Transpose` renders its boolean flag as a
+        // trailing keyword (`conjugate`/`plain`) rather than `true`/`false`.
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            let _ = write!(out, "(sym-rule ");
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            let _ = write!(out, " {})", if *delayed { "delayed" } else { "eager" });
+        }
+        // `(sym-replace-all <expr> (rules <rule>...) once)` for `/.`;
+        // `... repeated)` for `//.`.
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            let _ = write!(out, "(sym-replace-all ");
+            print_expr_inline_depth(out, expr, depth + 1);
+            let _ = write!(out, " (rules");
+            print_args(out, rules, depth);
+            out.push(')');
+            let _ = write!(out, " {})", if *repeated { "repeated" } else { "once" });
+        }
     }
 }
 
@@ -756,7 +888,7 @@ mod tests {
     fn print_empty_module() {
         let m = module_with(vec![], FeatureManifest::new());
         let t = print_module(&m);
-        assert!(t.starts_with("(sir-module demo v2"));
+        assert!(t.starts_with("(sir-module demo v4"));
         assert!(t.contains("(metadata"));
         assert!(t.ends_with(")\n"));
     }
@@ -1177,6 +1309,8 @@ mod tests {
         );
     }
 
+    // `3.14` is an arbitrary float literal exercised by the printer, not PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn print_float_lit_emits_decimal_form() {
         // Integer-valued floats render with explicit `.0` so the
@@ -1696,6 +1830,168 @@ mod tests {
         assert_eq!(print_expr(&e), "(index-get (var-ref a local))");
     }
 
+    // ── SIR22 addendum: APL primitive operator printer tests ─────────
+
+    #[test]
+    fn print_reduce() {
+        // +/A
+        let e = Expr::Reduce {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(reduce add (var-ref a local))");
+    }
+
+    #[test]
+    fn print_scan() {
+        // +\A
+        let e = Expr::Scan {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(scan add (var-ref a local))");
+    }
+
+    #[test]
+    fn print_outer_product() {
+        // A∘.×B
+        let e = Expr::OuterProduct {
+            op: ElementwiseOpKind::Mul,
+            lhs: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(outer-product mul (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_shape() {
+        // ⍴A
+        let e = Expr::Shape {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(shape (var-ref a local))");
+    }
+
+    #[test]
+    fn print_reshape() {
+        // A⍴B — `shape` first, `target` second, matching field order.
+        let e = Expr::Reshape {
+            shape: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            target: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(reshape (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_index_generator() {
+        // ⍳N
+        let e = Expr::IndexGenerator {
+            count: Box::new(Expr::IntLit {
+                value: 5,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(index-generator (int 5))");
+    }
+
+    #[test]
+    fn print_index_of() {
+        // A⍳B
+        let e = Expr::IndexOf {
+            haystack: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            needle: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(index-of (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_ravel() {
+        // ,A
+        let e = Expr::Ravel {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(ravel (var-ref a local))");
+    }
+
+    #[test]
+    fn print_catenate() {
+        // A,B
+        let e = Expr::Catenate {
+            lhs: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(catenate (var-ref a local) (var-ref b local))"
+        );
+    }
+
     #[test]
     fn print_index_set_stmt() {
         // a(1) = 9 — printed via print_block since IndexSet is a Stmt.
@@ -1726,5 +2022,199 @@ mod tests {
             "got:\n{}",
             out
         );
+    }
+
+    // ── SIR23: symbolic expression + pattern/rewrite printer tests ──
+
+    #[test]
+    fn print_sym_symbol() {
+        let e = Expr::SymSymbol {
+            name: "Plus".into(),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(sym-symbol Plus)");
+    }
+
+    #[test]
+    fn print_sym_rational_unreduced() {
+        // The printer does not reduce the fraction — 2/4 prints verbatim.
+        let e = Expr::SymRational {
+            numer: 2,
+            denom: 4,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(sym-rational 2 4)");
+    }
+
+    #[test]
+    fn print_sym_apply_with_computed_head() {
+        // f[x][y] — head is itself a SymApply, not a bare name.
+        let e = Expr::SymApply {
+            head: Box::new(Expr::SymApply {
+                head: Box::new(Expr::SymSymbol {
+                    name: "f".into(),
+                    span: s(),
+                }),
+                args: vec![Expr::SymSymbol {
+                    name: "x".into(),
+                    span: s(),
+                }],
+                span: s(),
+            }),
+            args: vec![Expr::SymSymbol {
+                name: "y".into(),
+                span: s(),
+            }],
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(sym-apply (sym-apply (sym-symbol f) (sym-symbol x)) (sym-symbol y))"
+        );
+    }
+
+    #[test]
+    fn print_sym_apply_no_args() {
+        let e = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "f".into(),
+                span: s(),
+            }),
+            args: vec![],
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(sym-apply (sym-symbol f))");
+    }
+
+    #[test]
+    fn print_sym_pattern_blank_bare_and_head_constrained() {
+        // Wolfram `_` vs `_h`.
+        let bare = Expr::SymPatternBlank {
+            head: None,
+            span: s(),
+        };
+        assert_eq!(print_expr(&bare), "(sym-pattern-blank)");
+        let constrained = Expr::SymPatternBlank {
+            head: Some(Box::new(Expr::SymSymbol {
+                name: "Integer".into(),
+                span: s(),
+            })),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&constrained),
+            "(sym-pattern-blank (sym-symbol Integer))"
+        );
+    }
+
+    #[test]
+    fn print_sym_pattern_named() {
+        // Wolfram `x_`.
+        let e = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank {
+                head: None,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(sym-pattern-named x (sym-pattern-blank))"
+        );
+    }
+
+    #[test]
+    fn print_sym_rule_eager_vs_delayed() {
+        // `->` (Rule) vs `:>` (RuleDelayed).
+        let eager = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&eager),
+            "(sym-rule (sym-symbol x) (int 1) eager)"
+        );
+        let delayed = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: true,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&delayed),
+            "(sym-rule (sym-symbol x) (int 1) delayed)"
+        );
+    }
+
+    #[test]
+    fn print_sym_replace_all_once_vs_repeated() {
+        // `/.` (ReplaceAll) vs `//.` (ReplaceRepeated).
+        let rule = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let once = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![rule.clone()],
+            repeated: false,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&once),
+            "(sym-replace-all (sym-symbol x) (rules (sym-rule (sym-symbol x) (int 0) eager)) once)"
+        );
+        let repeated = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![rule],
+            repeated: true,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&repeated),
+            "(sym-replace-all (sym-symbol x) (rules (sym-rule (sym-symbol x) (int 0) eager)) repeated)"
+        );
+    }
+
+    #[test]
+    fn print_sym_replace_all_no_rules() {
+        let e = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![],
+            repeated: false,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(sym-replace-all (sym-symbol x) (rules) once)");
     }
 }

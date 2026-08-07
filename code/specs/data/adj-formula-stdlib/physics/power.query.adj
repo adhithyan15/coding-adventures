@@ -1,0 +1,32 @@
+% ============================================================================
+% power.query.adj — worked examples over the physics power library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a power question: it
+% states NO arithmetic and NO definition — it only `import`s the grounded library,
+% `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% definition. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the definition's source/locator/trust.
+%
+% The three questions INVERT: 6 J of work done in 2 s is a power of 3 W; that 3 W
+% power over the same 2 s is exactly what the work formula multiplies to recover the
+% 6 J, and that 6 J at the same 3 W is exactly what the time formula divides to
+% recover the 2 s.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli power.query.adj
+% ============================================================================
+
+import "power.adj"
+
+% 6 J of work done in 2 s: power = 6 / 2.
+observe work(6)
+observe time(2)
+? power(work, time)      % expect 3   (definition: P = W/t)
+
+% That 3 W power over the same 2 s: work = 3 * 2.
+observe power(3)
+? work(power, time)       % expect 6   (same definition, solved for W = P·t)
+
+% That 6 J of work at the same 3 W: time = 6 / 3.
+? time(work, power)       % expect 2   (same definition, solved for t = W/P)

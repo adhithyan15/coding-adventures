@@ -63,6 +63,8 @@ fn test_vector_debug_format() {
 }
 
 #[test]
+// 3.14 is arbitrary test data, not an intended approximation of PI.
+#[allow(clippy::approx_constant)]
 fn test_vector_negative_values() {
     let v = Vector::new(vec![-1.0, -2.5, 3.14]);
     assert_eq!(v.data()[0], -1.0);

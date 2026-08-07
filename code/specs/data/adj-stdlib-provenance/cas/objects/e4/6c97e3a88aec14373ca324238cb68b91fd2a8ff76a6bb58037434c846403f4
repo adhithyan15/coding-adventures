@@ -1,0 +1,47 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.ratio.numerator",
+          "end": 15,
+          "quote": "numerator is 3.",
+          "quote_sha256": "fc0649511a55c34d4982b3cf6339ccebf09c855608fbcdb1f6ba9fecec5c6a15",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 15,
+      "start": 0
+    },
+    {
+      "disposition": "discarded",
+      "end": 16,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 15
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.ratio.denominator",
+          "end": 33,
+          "quote": "denominator is 4.",
+          "quote_sha256": "0fe3fd93a2e09b50888a3e3bf9a3e3b27bb6dde869f323469f005092bf20e4f8",
+          "start": 16
+        }
+      ],
+      "disposition": "represented",
+      "end": 33,
+      "start": 16
+    },
+    {
+      "disposition": "discarded",
+      "end": 34,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 33
+    }
+  ],
+  "source_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+  "source_size": 34
+}

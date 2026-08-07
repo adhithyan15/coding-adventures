@@ -422,7 +422,7 @@ pub struct SymLit {
 /// (`\"`, `\\`, `\n`, `\t`, `\r`) are already converted to their byte
 /// values by the AST extractor.  The IIR compiler emits a `const`
 /// instruction with `Operand::Str(value)` which the VM materialises
-/// as a [`lispy_runtime::heap::LangString`] heap object.
+/// as a [`dynval_runtime::heap::LangString`] heap object.
 ///
 /// Added in LANG51 to enable writing the self-hosted Twig compiler in
 /// Twig itself — the compiler source needs string constants for keyword

@@ -1,0 +1,40 @@
+% ============================================================================
+% alveolar-ventilation.query.adj — worked lookups over the alveolar ventilation definition.
+% ============================================================================
+% The shape a consumer produces to compute alveolar ventilation at the bedside: it `import`s the
+% grounded library, `observe`s the tidal volume, dead space and respiratory rate it decomposed
+% from its own source bytes, and asks the engine to APPLY the cited equation. No arithmetic is
+% stated by the consumer; the engine computes the exact value WITH the StatPearls citation as
+% its proof, on the CPU, with zero model calls.
+%
+% Worked case (tidal volume = 500 mL, dead space = 150 mL, respiratory rate = 12 /min):
+%
+%   ? alveolar_ventilation(tidal_volume, dead_space, respiratory_rate)   % 4200  ((500 − 150) × 12, VA = (VT − VD) × RR)
+%
+% and the same one definition, inverted the three other ways:
+%
+%   ? respiratory_rate(alveolar_ventilation, tidal_volume, dead_space)   % 12   (4200 / (500 − 150), RR = VA / (VT − VD))
+%   ? tidal_volume(alveolar_ventilation, respiratory_rate, dead_space)   % 500  (4200/12 + 150, VT = VA/RR + VD)
+%   ? dead_space(tidal_volume, alveolar_ventilation, respiratory_rate)   % 150  (500 − 4200/12, VD = VT − VA/RR)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli alveolar-ventilation.query.adj
+% ============================================================================
+
+import "alveolar-ventilation.adj"
+
+% Forward: alveolar ventilation from the three respiratory quantities.
+observe tidal_volume(500)
+observe dead_space(150)
+observe respiratory_rate(12)
+? alveolar_ventilation(tidal_volume, dead_space, respiratory_rate)   % expect 4200
+
+% Inverse 1: the respiratory rate the other three imply.
+observe alveolar_ventilation(4200)
+? respiratory_rate(alveolar_ventilation, tidal_volume, dead_space)   % expect 12
+
+% Inverse 2: the tidal volume the other three imply.
+? tidal_volume(alveolar_ventilation, respiratory_rate, dead_space)   % expect 500
+
+% Inverse 3: the dead space the other three imply.
+? dead_space(tidal_volume, alveolar_ventilation, respiratory_rate)   % expect 150

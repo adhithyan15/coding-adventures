@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "c7ac138ce2bcafe7b3a747441f28268663e28533",
+  "body_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+  "body_size": 941,
+  "captured_at": "2026-08-03T20:00:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/proportion-zero-second.query.adj"
+}

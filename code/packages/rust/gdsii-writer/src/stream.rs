@@ -91,7 +91,7 @@ fn rec_int4(rec_type: u16, values: &[i32]) -> Vec<u8> {
 fn rec_string(rec_type: u16, s: &str) -> Vec<u8> {
     // GDSII strings must be ASCII, padded to even length with a NUL.
     let mut bytes: Vec<u8> = s.bytes().collect();
-    if bytes.len() % 2 != 0 { bytes.push(0); }
+    if !bytes.len().is_multiple_of(2) { bytes.push(0); }
     record(rec_type, &bytes)
 }
 

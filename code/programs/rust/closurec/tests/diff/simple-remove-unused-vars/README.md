@@ -7,7 +7,7 @@ End-to-end oracle for the `remove-unused-vars` pass in
 |------|------|
 | `flags.txt` | `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | Three top-level `var`s — one dead, one live, one impure |
-| `expected.stdout` | `var live=10;var impure=run();log(live);` |
+| `expected.stdout` | `var live=10,impure=run();log(live);` |
 
 The SIMPLE pipeline is now
 `constant-fold → fold-control-flow → dce → inline → remove-unused-vars`.

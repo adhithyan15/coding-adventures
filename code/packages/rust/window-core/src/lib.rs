@@ -116,8 +116,10 @@ pub enum SurfacePreference {
 
 /// Where a backend should mount or create the presentation host.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub enum MountTarget {
     /// Create a normal native top-level host.
+    #[default]
     Native,
     /// Browser-only: create or attach under `<body>`.
     BrowserBody,
@@ -149,11 +151,6 @@ impl MountTarget {
     }
 }
 
-impl Default for MountTarget {
-    fn default() -> Self {
-        Self::Native
-    }
-}
 
 /// Shared creation attributes for a presentation host.
 #[derive(Debug, Clone, PartialEq)]

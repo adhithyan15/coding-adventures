@@ -1,0 +1,35 @@
+cabal-version: 3.0
+name:          affine2d
+version:       0.1.0
+synopsis:      Immutable two-dimensional affine transformation matrices
+description:   Pure G2D01 affine matrix construction, composition, application, inversion, and classification.
+category:      Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Affine2D
+    build-depends:    base >=4.14 && <5
+                    , point2d >=0.1 && <0.2
+                    , trig >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Affine2DSpec
+    hs-source-dirs:   test
+    build-depends:    affine2d
+                    , base >=4.14 && <5
+                    , hspec == 2.*
+                    , point2d >=0.1 && <0.2
+                    , trig >=0.1 && <0.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

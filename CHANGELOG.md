@@ -6,6 +6,76 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed — Ruby Canonical Starlark BUILD Compatibility
+- Ruby's Starlark stack now closes indented files in the specified token order,
+  preserves `r`/`b`-leading identifiers, binds mixed keyword calls, and keeps
+  defining-module globals across nested loads.
+- The Ruby build tool injects the normalized v1 evaluation context, validates
+  structured commands, and fails closed after Starlark classification instead
+  of silently falling back to raw shell lines; evaluation errors redact the
+  checkout root.
+
+### Fixed — Venture Windows CI Acceptance
+- The pull-request Windows runner now derives a dedicated Venture acceptance
+  flag from the shared build plan, installs MSVC and .NET only when that slice
+  is affected, and executes the package-owned Rust/WinUI integration test
+  instead of reporting a green job whose general build step was skipped. A
+  focused detector test ratchets force, package, unrelated, and malformed plans.
+
+### Added — OCaml CI Toolchain Evidence
+- Added OCAML03, a closed evidence manifest, and digest-checked transitive opam
+  solver locks plus installed-package receipts for Ubuntu x64, macOS arm64, and
+  Windows x64.
+- Added a commit-pinned, read-only three-platform workflow that fresh-solves
+  against one reviewed opam-repository commit, compares checked evidence, then
+  performs a separate locked install.
+- Added real line-oriented execution of the library and program scaffold
+  `BUILD`/`BUILD_windows` contracts, including formatting, Alcotest, and
+  measured `bisect_ppx` coverage on every runner family.
+- Added an offline validator and CI unit tests for closed keys, action/repository
+  identities, safe evidence paths, digests, direct versions, workflow security,
+  and platform command-shell dispatch.
+
+### Added — OCaml Scaffold Infrastructure
+- Added the OCAML02 contract, lane README, repository ignores, and shared
+  byte-exact library/program fixture trees for the emerging OCaml lane.
+- Added matching Go and TypeScript scaffold-generator support with exact direct
+  OCaml/opam/Dune/Alcotest/`bisect_ppx`/`ocamlformat` metadata, resolved local
+  dependency pins, real formatting/test/coverage build commands, and
+  schema-valid capability profiles.
+- Added OCaml-specific metadata serialization and `*)` injection hardening
+  before any scaffold directory is written.
+- Rejected Dune `%{...}` interpolation openers before output generation.
+- Added a shared OCaml/opam string encoding contract so accepted Unicode remains
+  byte-identical raw UTF-8 across the Go and TypeScript front doors.
+- Added dependency-reader regressions for self-name/metadata decoys,
+  program-to-library pin paths, and direct/transitive symlink rejection.
+
+### Added — OCaml Emerging-Lane Contract
+- Added OCAML01 to define OCaml as a known emerging implementation lane that
+  remains outside the established 15-language parity denominator until its
+  package, build, security, documentation, and three-platform promotion gates
+  pass.
+- Made the package-parity reporter derive its high-consensus completion-band
+  upper bound and Markdown missing-slot heading from the established-language
+  count instead of embedding `15`.
+- Advanced the package-parity JSON output to schema version 3 for its explicit
+  denominator and ordered completion-band metadata, and documented the CSV
+  presence matrix as header-addressed when emerging buckets add columns.
+- Added reporter conformance coverage proving OCaml packages are inventoried
+  without creating unknown buckets, established identities, completion-band
+  entries, or missing slots.
+
+### Added — Learning Coverage Backfill
+- Added a generated inventory that maps all 1,155 package concepts to dedicated,
+  related, index-only, or missing learning material and prioritizes the backlog
+  by cross-language implementation breadth.
+- Added the first backfill lessons for tree and probabilistic data structures,
+  dictionary and entropy compression, cryptographic composition, and
+  intermediate representations.
+- Added a tested `code/scripts/learning_coverage_report.py` command so the inventory
+  can be regenerated as packages and learning material evolve.
+
 ### Added — SPICE Berkeley Mosaic App Startup Summary
 - `spice-netlist-parser` now exposes Berkeley Mosaic app startup summaries plus
   JSON helpers. The summary derives a compact ready/blocked route from the

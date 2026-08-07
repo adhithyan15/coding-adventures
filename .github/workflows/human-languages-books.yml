@@ -1,0 +1,364 @@
+# Build every Human Languages LaTeX book in one job. Relevant pull requests
+# retain one complete publication bundle as a build artifact; main-branch
+# builds publish that same bundle as a stable download catalog on GitHub Pages
+# AND cut a dated GitHub Release with every book's PDF attached, so a reader
+# can grab a stable, versioned snapshot instead of only the always-current
+# Pages catalog. Every pull request receives one stable gate result, while
+# unrelated changes skip the expensive all-books build after a small
+# change-detection job.
+#
+# Each language track under code/learning/human-languages/<lang>/book/
+# contains a self-contained XeLaTeX book (see HL00 spec). This workflow
+# discovers every such book/ directory dynamically, installs TeX once, and
+# compiles the books sequentially so adding a new track needs zero changes here.
+
+name: Human Languages Books
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/learning/human-languages/**"
+      - "code/packages/typescript/human-language-data/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - "code/scripts/scan_latex_log_warnings.py"
+      - "code/scripts/tests/test_build_human_language_book_catalog.py"
+      - "code/scripts/tests/test_scan_latex_log_warnings.py"
+      - ".github/workflows/human-languages-books.yml"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: human-languages-books-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: Detect human-language book changes
+    runs-on: ubuntu-latest
+    outputs:
+      books: ${{ steps.changes.outputs.books }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect relevant paths
+        id: changes
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "books=true" >> "$GITHUB_OUTPUT"
+            echo "A non-pull-request run always builds the publication bundle."
+            exit 0
+          fi
+
+          if [[ ! "$PR_BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || \
+             [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Pull-request base or head SHA is invalid."
+            exit 1
+          fi
+
+          set +e
+          git diff --quiet "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
+            code/learning/human-languages \
+            code/packages/typescript/human-language-data \
+            code/scripts/build_human_language_book_catalog.py \
+            code/scripts/scan_latex_log_warnings.py \
+            code/scripts/tests/test_build_human_language_book_catalog.py \
+            code/scripts/tests/test_scan_latex_log_warnings.py \
+            .github/workflows/human-languages-books.yml
+          diff_status=$?
+          set -e
+
+          case "$diff_status" in
+            0)
+              echo "books=false" >> "$GITHUB_OUTPUT"
+              echo "No human-language book inputs changed; the all-books build will be skipped."
+              ;;
+            1)
+              echo "books=true" >> "$GITHUB_OUTPUT"
+              echo "Human-language book inputs changed; the all-books build is required."
+              ;;
+            *)
+              echo "::error::git diff failed with status $diff_status."
+              exit "$diff_status"
+              ;;
+          esac
+
+  build-and-publish:
+    name: Build and publish all human-language books
+    needs: detect
+    if: ${{ needs.detect.outputs.books == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The log scanner is what enforces the books' zero-warning claim, so it is
+      # tested before anything expensive runs: a silently broken gate is worse
+      # than no gate, and finding that out after a 20-book XeLaTeX build wastes
+      # twenty minutes. No dependencies beyond the runner's stock python3.
+      - name: Test the LaTeX warning scanner
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_scan_latex_log_warnings.py' -v
+
+      # The catalog builder writes the index.html and catalog.json that main
+      # pushes publish to GitHub Pages, so it is the other piece of this
+      # workflow whose breakage reaches readers. Same reasoning as above: test
+      # it before the 20-book build, not after.
+      #
+      # This is a second step rather than a widened `-p` on the step above
+      # because `unittest discover` takes exactly ONE pattern, and no glob
+      # matches these two files without also sweeping in the unrelated
+      # test_build_tool_conformance_* and test_build_adj_* suites. Separate
+      # named steps also keep the failure legible — the red step name says
+      # which suite broke without anyone opening the log.
+      - name: Test the book catalog builder
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_build_human_language_book_catalog.py' -v
+
+      - name: Build curriculum gap report
+        working-directory: code/packages/typescript/human-language-data
+        run: |
+          npm ci
+          npm run build
+          npm run check:books
+          # The modality manifest (core/lesson-modality.json) is derived from the
+          # lessons and is what lets the complete book, the app, and the future
+          # dictation-friendly driving edition be filtered out of one source. A stale
+          # manifest is not cosmetic: a lesson that gained a paradigm table would still
+          # read `drivable: true`, and the driving edition would tell somebody at 70mph
+          # to look at a chart. Regenerate with `npm run generate:modality`.
+          npm run check:modality
+          # The narration export is committed like the generated .tex, and drifts the
+          # same way: someone edits a lesson and forgets to re-run the exporter. The
+          # consequence is worse here, though — a stale .tex looks wrong to whoever
+          # opens the book, while a stale script has a voice assistant confidently
+          # teaching a lesson that no longer exists, to someone driving who cannot
+          # check. Byte-for-byte, before anything expensive runs.
+          npm run check:narration
+          mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
+          npm run --silent report -- --format json \
+            > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"
+          npm run --silent report -- --format text \
+            > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
+          cat "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
+
+      # Keep one shared XeLaTeX toolchain for the one all-books job, but avoid
+      # installing TeX Live's unrelated documentation, music, science, CJK,
+      # and publishing collections. texlive-xetex pulls the LaTeX base,
+      # recommended, and extra layers used by every preamble. The Arabic
+      # collection supplies bidi.sty for Arabic, Persian, and Urdu; every
+      # non-Latin book font is vendored under human-languages/_fonts. The
+      # recommended font collection supplies Hyperref's Zapf Dingbats metric.
+      - name: Install focused TeX toolchain
+        run: |
+          setup_started_at=$(date +%s)
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            fontconfig latexmk lmodern texlive-fonts-recommended \
+            texlive-lang-arabic texlive-xetex
+
+          setup_seconds=$(($(date +%s) - setup_started_at))
+          echo "TeX toolchain setup completed in ${setup_seconds}s"
+          echo "TeX toolchain setup: ${setup_seconds}s" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify focused TeX toolchain
+        run: |
+          set -euo pipefail
+
+          for executable in xelatex latexmk kpsewhich fc-match; do
+            command -v "$executable"
+          done
+
+          for tex_asset in \
+            book.cls fontspec.sty newunicodechar.sty xcolor.sty \
+            tcolorbox.sty booktabs.sty longtable.sty tabularx.sty array.sty \
+            hyperref.sty titlesec.sty polyglossia.sty bidi.sty pzdr.tfm; do
+            asset_path=$(kpsewhich "$tex_asset")
+            test -n "$asset_path"
+            echo "$tex_asset -> $asset_path"
+          done
+
+          latin_modern_path=$(fc-match -f '%{file}\n' 'Latin Modern Roman' | head -n 1)
+          test -f "$latin_modern_path"
+          echo "Latin Modern Roman -> $latin_modern_path"
+
+      - name: Build every book
+        run: |
+          set -euo pipefail
+          output_dir="dist/human-languages/books"
+          mkdir -p "$output_dir"
+          book_count=0
+
+          while IFS= read -r book_dir; do
+            language=$(basename "$(dirname "$book_dir")")
+            echo "::group::Build $language"
+            (
+              cd "$book_dir"
+              latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+            )
+            cp "$book_dir/book.pdf" "$output_dir/$language.pdf"
+            echo "::endgroup::"
+            book_count=$((book_count + 1))
+          done < <(
+            find code/learning/human-languages \
+              -mindepth 2 -maxdepth 2 -type d -name book | sort
+          )
+
+          test "$book_count" -gt 0
+          echo "Built $book_count human-language books"
+
+      # `latexmk -halt-on-error` stops on hard TeX errors but is perfectly happy
+      # with a log full of warnings, so every track's "zero overfull boxes, zero
+      # missing glyphs" claim was prose and nothing else. These two steps turn it
+      # into a contract by reading each book.log the loop above left behind.
+      #
+      # The gate is baselined, not absolute. A track fails only when it EXCEEDS
+      # the counts recorded in core/latex-warning-baseline.json; a track with no
+      # recorded baseline is measured and reported but never failed. Baselines
+      # ship unseeded on purpose — real numbers need a real XeLaTeX run, so the
+      # scanner prints the counts it actually measured into the job summary for
+      # a human to paste back into the baseline file. See HL06's "warning gate".
+      - name: Scan book logs for LaTeX warnings
+        run: |
+          set -euo pipefail
+          python3 code/scripts/scan_latex_log_warnings.py \
+            --book-root code/learning/human-languages \
+            --baseline code/learning/human-languages/core/latex-warning-baseline.json \
+            --summary "$GITHUB_STEP_SUMMARY" \
+            --json dist/human-languages/books/latex-warnings.json
+
+      - name: Build download catalog
+        run: |
+          python code/scripts/build_human_language_book_catalog.py \
+            --pdf-dir dist/human-languages/books \
+            --registry code/learning/human-languages/core/languages.json \
+            --output-dir dist/human-languages/books
+
+      - name: Verify publication bundle
+        run: |
+          test -s dist/human-languages/books/index.html
+          test -s dist/human-languages/books/catalog.json
+          test -s dist/human-languages/books/curriculum-gaps.json
+          test -s dist/human-languages/books/curriculum-gaps.txt
+          test -s dist/human-languages/books/latex-warnings.json
+          python -m json.tool dist/human-languages/books/curriculum-gaps.json >/dev/null
+          python -m json.tool dist/human-languages/books/latex-warnings.json >/dev/null
+          test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
+
+      - name: Upload complete publication bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: human-language-books
+          path: dist/human-languages/books
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish books to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/human-languages/books
+          destination_dir: human-languages/books
+          keep_files: true
+
+      # Every main-branch build that reaches this point already built and
+      # verified every book PDF, so cut a dated GitHub Release from it. The
+      # tag combines a UTC date with the run number so same-day pushes still
+      # get distinct, monotonically increasing releases without any manual
+      # version bump.
+      - name: Determine release version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: version
+        run: |
+          set -euo pipefail
+          version="v$(date -u +%Y.%m.%d).${{ github.run_number }}"
+          echo "tag=human-languages-$version" >> "$GITHUB_OUTPUT"
+          echo "name=Human Languages Books $version" >> "$GITHUB_OUTPUT"
+
+      - name: Build release notes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          {
+            echo "Snapshot of every Human Languages curriculum book, built from"
+            echo "commit $(git rev-parse --short HEAD) on main."
+            echo
+            echo "## Books in this release"
+            for pdf in dist/human-languages/books/*.pdf; do
+              echo "- $(basename "$pdf" .pdf)"
+            done
+            echo
+            echo "Always-current catalog: https://${{ github.repository_owner }}.github.io/$(basename "${{ github.repository }}")/human-languages/books/"
+          } > release-notes.md
+          cat release-notes.md
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          body_path: release-notes.md
+          make_latest: true
+          files: dist/human-languages/books/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  books-gate:
+    # Keep the required pull-request context distinct from the push context.
+    # Otherwise a faster main/branch push can satisfy protection while the
+    # pull-request all-books build is still running.
+    name: ${{ github.event_name == 'pull_request' && 'Human Languages Books gate' || 'Human Languages Books push gate' }}
+    needs: [detect, build-and-publish]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the required book work succeeded
+        shell: bash
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
+          BUILD_RESULT: ${{ needs['build-and-publish'].result }}
+        run: |
+          set -euo pipefail
+          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+
+          if [ "$DETECT_RESULT" != "success" ]; then
+            echo "::error::Human-language book change detection did not succeed."
+            exit 1
+          fi
+
+          case "$BOOKS_RELEVANT:$BUILD_RESULT" in
+            true:success)
+              echo "The required all-books build passed."
+              ;;
+            false:skipped)
+              echo "No book inputs changed; the all-books build was legitimately skipped."
+              ;;
+            *)
+              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+              exit 1
+              ;;
+          esac

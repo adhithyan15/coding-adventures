@@ -1,0 +1,161 @@
+Marathi, chapter 5: Chapter 5.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+बोलणे (bolṇe) — "to speak".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Until now, verbs of being and meeting. Here is your first verb of doing — to speak — and the pattern that runs every Marathi verb.
+
+The letters in this word.
+(Skim if you read Devanagari.) बो (bo) + ल (la) + णे (ṇe, the retroflex ण ṇa with the -e stroke) becomes बोलणे bolṇe.
+
+The word, taken apart.
+बोलणे (bolṇe, "to speak") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive ("to ___"): bol-ṇe "to speak," bheṭ-ṇe "to meet," ye-ṇe "to come." Strip -ṇe and you have the stem to build on: bol-.
+
+Grammar Lens: stem + gendered present ending.
+From the stem you build the present tense — and, as with yeto/yete, it splits by the speaker's gender:
+मी बोलतो (mī bolto) — a man speaks.
+मी बोलते (mī bolte) — a woman speaks.
+(plural / respectful: बोलतो / बोलता).
+The verb still ends the sentence; the copula-less present tense is one word doing the work.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bolṇe" — to speak; then the stem (bol-)]
+[pause 8 seconds for the answer]
+[your turn — say: "I speak" for your own gender (mī bolto / mī bolte)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the Marathi infinitive ending, and how does the present split? (-ṇe; the present ending changes with the speaker's gender — bolto m. / bolte f.)
+
+
+Lesson 2 of 5.
+काम करणे (kām karṇe) — "to work".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Your third verb — to work — and it closes a circle back to Chapter 1's greeting.
+
+The letters in this word.
+(Skim if you read Devanagari.) काम (kām): का + म (ma). करणे (karṇe): क (ka) + र (ra) + णे (ṇe, retroflex).
+
+The word, taken apart.
+करणे (karṇe, "to do, make") is from Sanskrit √कृ (kṛ, "to do"), from PIE kʷer-. That is the very root hiding inside Chapter 1's नमस्कार (namaskār = "the making of a bow") and inside कर्म (karma, "a thing done"). And काम (kām, "work") is itself worn down from that same कर्म (karma). So "to work" is literally built twice from doing: काम करणे (kām karṇe) = "work-do."
+
+Grammar Lens: noun + करणे makes a verb.
+Marathi builds countless verbs as noun + करणे: kām karṇe (to work), madat karṇe (to help), sevā karṇe (to serve). Present tense, gendered: मी काम करतो (mī kām karto, m.) / करते (karte, f.) — "I work."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kām karṇe" — to work; then "mī kām karto/karte"]
+[pause 8 seconds for the answer]
+[your turn — say: the root it shares with namaskār and karma (√kṛ, "to do")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What links karṇe, namaskār, and karma? (All from √kṛ, "to do" — and kām "work" is worn-down karma.)
+
+
+Lesson 3 of 5.
+मी मराठी बोलतो (mī marāṭhī bolto) — "I speak Marathi".
+
+Warm-up.
+[pause 2 seconds]
+Your first full action-sentence — and it names the language itself.
+
+The phrase, assembled.
+मी (mī, I) + मराठी (marāṭhī, Marathi, the object) + बोलतो (bolto, speak) becomes "I Marathi speak," verb last.
+A woman says मी मराठी बोलते (mī marāṭhī bolte).
+
+The word, taken apart.
+मराठी (marāṭhī) is "[the language] of महाराष्ट्र (Mahārāṣṭra)" — the "great kingdom/realm," mahā ("great," cousin of Latin magnus and English magnitude) + rāṣṭra ("nation, realm"). The people are the Marāṭhā, the land Mahārāṣṭra, and the tongue marāṭhī — all one root. It carries the same retroflex sounds you keep meeting: the ट (ṭa) of marāṭhī, the ळ of kāḷjī.
+
+Why it's said this way.
+The present tense needs no separate "am/do" — बोलतो alone says "I speak." Contrast Hindi, which adds a copula (maiṁ hindī boltā hūṁ); Marathi folds the "am" into the verb ending. Cleaner, and gendered.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "mī marāṭhī bolto/bolte" — I speak Marathi]
+[pause 8 seconds for the answer]
+[your turn — say: the root of marāṭhī (Mahārāṣṭra = "great realm")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does the name marāṭhī come from? (Mahārāṣṭra, "great realm" — mahā "great" + rāṣṭra "nation.")
+
+
+Lesson 4 of 5.
+Chapter 5 recap — the first verbs.
+
+Warm-up.
+[pause 2 seconds]
+Three verbs, one engine — sentences about yourself.
+
+Sentences about yourself.
+[a table of 3 rows, read aloud]
+मी मराठी बोलतो / बोलते. means I speak Marathi.
+मी पुण्यात राहतो / राहते. means I live in Pune.
+मी काम करतो / करते. means I work.
+
+The engine, in one look.
+Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe.
+Present = stem + a gendered ending — -to (m.) / -te (f.): bolto/ bolte, rāhto/rāhte, karto/karte. No separate "am" — the ending carries it.
+Verb goes last; "in" attaches to the noun's end (puṇyāt).
+
+Roots banked.
+बोलणे (bolṇe) — to speak (native bol-).
+मराठी (marāṭhī) — from Mahārāṣṭra, "great realm."
+राहणे (rāhṇe) — to live (Sanskrit rah-).
+करणे (karṇe) — to do/work (√kṛ — root of namaskār, karma; kām from karma).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all three sentences for your own gender]
+[pause 8 seconds for the answer]
+[your turn — say: "I speak Marathi and I work" (mī marāṭhī bolto āṇi kām karto)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What three things does the Marathi present tense fold into one word? (The action, the person, and their gender — no separate "am.") From here, Marathi only opens further.
+
+
+Lesson 5 of 5.
+राहणे (rāhṇe) — "to live, to stay".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A second verb on the same engine — to live — and a first postposition to place yourself somewhere.
+
+The letters in this word.
+(Skim if you read Devanagari.) रा (rā) + ह (ha) + णे (ṇe, retroflex) becomes राहणे rāhṇe.
+
+The word, taken apart.
+राहणे (rāhṇe, "to live, remain, stay") is from Sanskrit रह् (rah-, "to remain") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — "I live in Pune."
+
+Grammar Lens: "in" comes after the noun.
+Look at पुण्यात (puṇyāt) = पुणे (Puṇe, the city) + -ात (-āt, "in"). Marathi glues "in" onto the end of the noun — a postposition, not a preposition. Verb last, place-marker on the noun's tail: mī puṇyāt rāhto, "I in-Pune live."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rāhṇe" — to live; then "mī puṇyāt rāhto/rāhte"]
+[pause 8 seconds for the answer]
+[your turn — say: how "in" attaches (Puṇe + -āt becomes puṇyāt)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does "in" go in Marathi, and on what root is rāhṇe? (On the end of the noun (-āt); Sanskrit rah- "to remain.")

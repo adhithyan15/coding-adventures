@@ -1,5 +1,34 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.37.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: BASIC string arrays)
+
+`DIM A$(n)` string arrays now lower to the shared E5 aggregate substrate carrying
+an E4-dyn runtime **string handle** per element (`array<str>`), rather than being
+rejected as a BA4 follow-up. A program can `DIM A$(2)`, assign `A$(0)="O"` /
+`A$(1)="K"`, and `PRINT A$(0)+A$(1)` (→ `OK`).
+
+**Frontend (`src/lib.rs`):**
+- New `string_arrays` set marks which DIMmed arrays hold `str` elements (they are
+  also recorded in `arrays` for the shared row-major flat-index folding).
+- `emit_dim` picks the element type per name: a `$`-suffixed array emits
+  `alloc_array … array<str>`; every other array stays `array<f64>`. The aggregate
+  handle register is sanitised to a `$`-free `__basic_strarr_<stem>` (mirroring the
+  scalar `__basic_str_<stem>` convention) so a string array `A$` never collides with
+  a numeric array `A`.
+- `emit_let` array path: `A$(i) = <string expr>` lowers the RHS through the shared
+  E4 string-expression path to a runtime `str` handle and stores it with a
+  `str`-typed `array_set`. A numeric RHS is a clean `Unsupported`.
+- `emit_basic_string_expr_to` recognises a subscripted string-array read `A$(i)` and
+  emits a `str`-typed `array_get`, so element reads compose with PRINT, `+` concat,
+  and string assignment.
+- `emit_primary` rejects a string-array element used in a numeric expression.
+
+**Tests:** 8 new unit tests (alloc_array `array<str>`; `array_set`/`array_get` `str`;
+element-feeds-concat; numeric-context + numeric-RHS rejections; numeric/string array
+coexistence).
+
+**Deferred:** string `READ`/`DATA` (numeric `DATA` only today).
+
 ## [0.36.0] — 2026-07-06 (LANG-FULL E4-dyn — string `INPUT A$` reads a runtime string)
 
 `INPUT A$` (a `$`-suffixed *string* variable) now reads a whole line from the

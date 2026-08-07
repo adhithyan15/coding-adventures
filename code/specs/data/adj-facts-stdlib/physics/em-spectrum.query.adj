@@ -1,0 +1,22 @@
+% ============================================================================
+% em-spectrum.query.adj — a worked recall over the physics em-spectrum library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what everyday thing uses
+% microwaves?": it states no physics fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `band_use` rows and returns the application + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the use
+% `night_vision`, recall its band — infrared). A word that is not one of the
+% seven EM bands abstains honestly — the engine never invents a use.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli em-spectrum.query.adj
+% ============================================================================
+
+import "em-spectrum.adj"
+
+? band_use(radio, $Application)        % expect radio_stations
+? band_use(microwave, $Application)    % expect cooking
+? band_use(x_ray, $Application)        % expect teeth
+? band_use($Band, night_vision)        % reverse bind — expect infrared
+? band_use(sound, $Application)        % expect abstain — sound is a mechanical wave, not one of the seven EM bands

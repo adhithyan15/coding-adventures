@@ -21,7 +21,8 @@ use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
+    Block, ElementwiseOpKind, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope,
+    Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -257,6 +258,28 @@ fn uses_range(m: &Module) -> bool {
     module_uses_builtin(m, "range")
 }
 
+/// True if the module uses the SIR23 symbolic/pattern domain, in which case
+/// the emitted artifact imports `@coding-adventures/sir-runtime-symbolic`.
+/// Both `Feature::SymbolicExpr` (`SymSymbol`/`SymApply`) and
+/// `Feature::PatternMatching` (`SymPatternBlank`/`SymPatternNamed`/
+/// `SymRule`/`SymReplaceAll`) gate the same single import — a module using
+/// only bare symbolic values with no pattern/rule ever still needs `sym`/
+/// `apply` from this package.
+fn uses_symbolic(m: &Module) -> bool {
+    m.manifest.contains(Feature::SymbolicExpr) || m.manifest.contains(Feature::PatternMatching)
+}
+
+/// True if the module uses the SIR22 array/matrix domain, in which case the
+/// emitted artifact imports `@coding-adventures/sir-runtime-array`. Any of
+/// the three SIR22 features gates the same single import — a module using
+/// only a bare `ArrayLit`/`IndexGet` with no `MatMul`/`ElementwiseOp`/
+/// `Transpose` still needs `fromRows`/`indexGet` from this package.
+fn uses_array(m: &Module) -> bool {
+    m.manifest.contains(Feature::NDArrays)
+        || m.manifest.contains(Feature::MatrixOps)
+        || m.manifest.contains(Feature::ArrayColumnMajor)
+}
+
 /// Walk every function body for a `BuiltinCall` named `name` — gates
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
@@ -421,6 +444,47 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
         }
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above — this backend doesn't accept `MatrixOps`/
+        // `NDArrays`/`ArrayColumnMajor` either, so these never reach
+        // emission, but the scan still recurses faithfully.
+        Expr::Reduce { target, .. } => expr_uses_builtin(target, name),
+        Expr::Scan { target, .. } => expr_uses_builtin(target, name),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Shape { target, .. } => expr_uses_builtin(target, name),
+        Expr::Reshape { shape, target, .. } => {
+            expr_uses_builtin(shape, name) || expr_uses_builtin(target, name)
+        }
+        Expr::IndexGenerator { count, .. } => expr_uses_builtin(count, name),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => expr_uses_builtin(haystack, name) || expr_uses_builtin(needle, name),
+        Expr::Ravel { target, .. } => expr_uses_builtin(target, name),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Convert { value, .. } => expr_uses_builtin(value, name),
+        // SIR23 compile-compat stubs: this backend does not accept
+        // `Feature::SymbolicExpr`/`Feature::PatternMatching` (see
+        // `accepts_features` in lib.rs), so `check_module` rejects any
+        // module using these nodes before emission — same rationale as the
+        // SIR22 stubs above.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_uses_builtin(head, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(|h| expr_uses_builtin(h, name))
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_uses_builtin(pattern, name),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_uses_builtin(expr, name) || rules.iter().any(|r| expr_uses_builtin(r, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -496,6 +560,14 @@ pub fn emit_module(m: &Module) -> String {
     // Only range-using modules import the range runtime.
     if uses_range(m) {
         out.push_str(crate::runtime::RUNTIME_RANGE);
+    }
+    // Only symbolic/pattern-using modules import the SIR23 runtime.
+    if uses_symbolic(m) {
+        out.push_str(crate::runtime::RUNTIME_SYM);
+    }
+    // Only array/matrix-using modules import the SIR22 runtime.
+    if uses_array(m) {
+        out.push_str(crate::runtime::RUNTIME_ARRAY);
     }
     // E2: thread user `class Child < Parent` ancestry into the exception
     // matcher at program init, *before* any function or main body runs, so a
@@ -921,6 +993,55 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
                 collect_index_arg_assigned(idx, out);
             }
         }
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above.
+        Expr::Reduce { target, .. }
+        | Expr::Scan { target, .. }
+        | Expr::Shape { target, .. }
+        | Expr::Ravel { target, .. } => collect_expr_assigned(target, out),
+        Expr::OuterProduct { lhs, rhs, .. } | Expr::Catenate { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::Reshape { shape, target, .. } => {
+            collect_expr_assigned(shape, out);
+            collect_expr_assigned(target, out);
+        }
+        Expr::IndexGenerator { count, .. } => collect_expr_assigned(count, out),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            collect_expr_assigned(haystack, out);
+            collect_expr_assigned(needle, out);
+        }
+        Expr::Convert { value, .. } => collect_expr_assigned(value, out),
+        // SIR23 compile-compat stubs: rejected by `check_module` before this
+        // backend ever emits (no `Feature::SymbolicExpr`/`Feature::PatternMatching`
+        // in `accepts_features`), but recurse into every operand so the scan
+        // stays faithful regardless.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            collect_expr_assigned(head, out);
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(h) = head {
+                collect_expr_assigned(h, out);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => collect_expr_assigned(pattern, out),
+        Expr::SymRule { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            collect_expr_assigned(expr, out);
+            for r in rules {
+                collect_expr_assigned(r, out);
+            }
+        }
         // Leaves with no nested blocks/exprs that could hold an Assign.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -1036,7 +1157,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, cond, indent);
             out.push_str(")) {\n");
             emit_block_as_stmts(out, body, indent + 2);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // `for (var = start; …; var += step) { body }` — half-open
         // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
@@ -1056,7 +1177,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
             // Open a block so the temporaries don't leak.
-            let _ = write!(out, "{}{{\n", pad);
+            let _ = writeln!(out, "{}{{", pad);
             let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
             emit_expr(out, start, inner);
             out.push_str(";\n");
@@ -1066,22 +1187,22 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let _ = write!(out, "{}const __sir_step_{}: number = (", inner_pad, id);
             emit_expr(out, step, inner);
             out.push_str(") as number;\n");
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{\n",
+                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{",
                 inner_pad, id = id, v = v
             );
             emit_block_as_stmts(out, body, inner + 2);
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}{} = ({} as number) + __sir_step_{};\n",
+                "{}{} = ({} as number) + __sir_step_{};",
                 " ".repeat(inner + 2),
                 v,
                 v,
                 id
             );
-            let _ = write!(out, "{}}}\n", inner_pad);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", inner_pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // `for (const var of iter) { body }` — iterate a Seq.  The
         // binding uses `let` if the body reassigns the loop variable.
@@ -1097,7 +1218,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, iter, indent);
             out.push_str(") as __Sir.Val[])) {\n");
             emit_block_as_stmts(out, body, indent + 2);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // ── SIR17 scopes (assignment) ───────────────────────────────
         // `@x = v` → current-self instance-variable write via the OOP
@@ -1180,9 +1301,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}__SirOop.defineClass({}, null);\n",
+                "{}__SirOop.defineClass({}, null);",
                 pad,
                 quote_ts_string(name)
             );
@@ -1211,7 +1332,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let pad = " ".repeat(indent);
-            let _ = write!(out, "{}try {{\n", pad);
+            let _ = writeln!(out, "{}try {{", pad);
             emit_stmt_block(out, body, indent + 2);
             let _ = write!(out, "{}}}", pad);
             if !rescues.is_empty() {
@@ -1228,16 +1349,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     }
                     types.push(']');
                     let kw = if i == 0 { "if" } else { "} else if" };
-                    let _ = write!(
+                    let _ = writeln!(
                         out,
-                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{\n",
+                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{",
                         ipad, kw, types
                     );
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
-                        let _ = write!(
+                        let _ = writeln!(
                             out,
-                            "{}  const {}: __Sir.Val = __exc;\n",
+                            "{}  const {}: __Sir.Val = __exc;",
                             ipad,
                             sanitize_ident(bind)
                         );
@@ -1245,9 +1366,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     emit_stmt_block(out, &r.body, inner + 2);
                 }
                 // No clause matched → propagate the original exception.
-                let _ = write!(out, "{}}} else {{\n", ipad);
-                let _ = write!(out, "{}  throw __exc;\n", ipad);
-                let _ = write!(out, "{}}}\n", ipad);
+                let _ = writeln!(out, "{}}} else {{", ipad);
+                let _ = writeln!(out, "{}  throw __exc;", ipad);
+                let _ = writeln!(out, "{}}}", ipad);
                 let _ = write!(out, "{}}}", pad);
             }
             if let Some(ens) = ensure_body {
@@ -1257,18 +1378,83 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push('\n');
         }
-        // SIR22 array/matrix indexed assignment.  This backend does not
-        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
-        // `accepts_features` (see lib.rs), so `Backend::check_module`
-        // rejects any module containing this node before it ever reaches
-        // emission.  Panic here to catch a backend/validator drift, mirroring
-        // the `Expr::Intrinsic` guard below.
-        Stmt::IndexSet { span, .. } => {
-            panic!(
-                "typescript backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
-                span
-            );
+        // SIR22: array/matrix indexed assignment — `target[indices...] =
+        // value;`, mutating in place via `__SirArray.indexSet` (the
+        // imported `@coding-adventures/sir-runtime-array` package, gated by
+        // `uses_array` — see `emit_module`). Matches the SIR22 spec's own
+        // note that `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly
+        // this in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("__SirArray.indexSet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
+    }
+}
+
+/// The `@coding-adventures/sir-runtime-array` string `elementwise`'s
+/// `applyOp` switches on — exact `ElementwiseOpKind` variant names, not
+/// `.name()`'s lowercase forms, since this string is a real runtime
+/// dispatch key, not a cosmetic label.
+fn elementwise_op_ts_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the object literal `__SirArray.indexGet`/
+/// `indexSet` expect: `{ kind: "scalar", value }` / `{ kind: "whole" }` /
+/// `{ kind: "range", indices: <NDArray> }`. The `Range` case reuses
+/// `emit_expr` on the inner `Expr::Range` node directly — that node's own
+/// `Expr::Range` arm already emits a call into `__SirArray.range(...)`,
+/// which returns exactly the `NDArray` shape `indices` needs, so no
+/// separate handling is needed here.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("{ kind: \"scalar\", value: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+        IndexArg::Whole => {
+            out.push_str("{ kind: \"whole\" }");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("{ kind: \"range\", indices: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -1449,25 +1635,301 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 span
             );
         }
-        // SIR22 array/matrix expressions (`ArrayLit`/`Range`/`MatMul`/
-        // `ElementwiseOp`/`Transpose`/`IndexGet`).  This backend does not
-        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
-        // `accepts_features` (see lib.rs), so `Backend::check_module` rejects
-        // any module using these nodes before it ever reaches emission.
-        // Panic here to catch a backend/validator drift (mirrors the
-        // `Intrinsic` guard above).
-        Expr::ArrayLit { .. }
-        | Expr::Range { .. }
-        | Expr::MatMul { .. }
-        | Expr::ElementwiseOp { .. }
-        | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        // ── SIR22: array/matrix nodes (base cut) ──────────────────────
+        // Real codegen: calls into the imported `@coding-adventures/sir-runtime-array`
+        // package (bound as `__SirArray`, gated by `uses_array` — see
+        // `emit_module`), mirroring how the SIR23 `Sym*` arms above call
+        // into `__SirSym.*`. `rows` is row-major in the literal syntax (per
+        // the SIR22 spec); `__SirArray.fromRows` reconciles that with
+        // column-major storage, so the emitter just nests the row/element
+        // expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("__SirArray.fromRows([");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_args(out, row, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `__SirArray.range(start, stop, step)` — note the argument ORDER:
+        // the SIR node's own field order is `start, step, stop`, but
+        // `sir-runtime-array`'s `range(start, stop, step = 1)` takes `stop`
+        // before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("__SirArray.range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("__SirArray.matmul(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // The op name must match `elementwise`'s `applyOp` switch (in
+        // `sir-runtime-array`) exactly (`"Add"`, not `.name()`'s lowercase
+        // `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.elementwise({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("__SirArray.transpose(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, ", {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("__SirArray.indexGet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("])");
+        }
+        // ── SIR22 addendum: APL primitive operators — real codegen ────
+        // Each of the nine maps 1:1 onto a call into the published
+        // `@coding-adventures/sir-runtime-array` package's own SIR22-
+        // addendum port (see that package's `reduce.ts`/`outer.ts`/
+        // `shape.ts`/`iota.ts`/`ravel.ts`) — the SAME `__SirArray` import
+        // the base cut above already gates in via `uses_array`, so no new
+        // import-gating logic is needed here. `Reduce`/`Scan`/
+        // `OuterProduct` carry an `ElementwiseOpKind` and so reuse
+        // `elementwise_op_ts_name` exactly like `ElementwiseOp` above does;
+        // the remaining six have no `op` field at all (they are "bespoke,
+        // not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl_runtime::builtins`'s own doc comment) and just recurse into
+        // their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.reduce({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.scan({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.outer({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("__SirArray.shape(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs` — see `semantic_ir::Expr::Reshape`'s own doc comment
+        // in `nodes.rs`) — `sir-runtime-array`'s `reshape(shapeArg, target)`
+        // (`shape.ts`) takes that SAME order, so no argument reordering is
+        // needed at this call site (contrast `Expr::Range`'s `start, step,
+        // stop` vs. `range`'s `start, stop, step` just above, which DOES
+        // reorder — checked both directly rather than assumed, since this
+        // crate's own base-cut `Range` arm already proves field order can
+        // legitimately differ between a SIR node and its runtime callee).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("__SirArray.reshape(");
+            emit_expr(out, shape, indent);
+            out.push_str(", ");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("__SirArray.indexGenerator(");
+            emit_expr(out, count, indent);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("__SirArray.indexOf(");
+            emit_expr(out, haystack, indent);
+            out.push_str(", ");
+            emit_expr(out, needle, indent);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("__SirArray.ravel(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("__SirArray.catenate(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module.
+        Expr::Convert { span, .. } => {
             panic!(
-                "typescript backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                e.span()
+                "typescript backend reached a deferred SIR26 expression ({}) at {span} — not accepted yet",
+                e.kind_name()
             );
         }
+        // SIR23 symbolic-expression/pattern nodes — construct/consume a
+        // tagged term-tree value at runtime via `sir-runtime-symbolic`,
+        // imported as `__SirSym` (gated by `uses_symbolic`, see
+        // `emit_module`).  See the SIR23 spec's "Backend impact" and
+        // `emit_sym_operand`'s doc comment for why a plain `IntLit`/
+        // `FloatLit`/`StrLit` child needs wrapping but every other child
+        // expression does not.
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("__SirSym.sym(");
+            out.push_str(&quote_ts_string(name));
+            out.push(')');
+        }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "__SirSym.rational({}, {})", numer, denom);
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("__SirSym.apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", [");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent);
+            }
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("__SirSym.blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("__SirSym.blankTyped(");
+                out.push_str(&quote_ts_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "typescript backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("__SirSym.named(");
+            out.push_str(&quote_ts_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "__SirSym.ruleDelayed("
+            } else {
+                "__SirSym.rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str("__SirSym.unwrap(");
+            out.push_str(if *repeated {
+                "__SirSym.replaceRepeated("
+            } else {
+                "__SirSym.replaceAll("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", [");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent);
+            }
+            out.push_str("]))");
+        }
+    }
+}
+
+/// Emit `e` as a value usable as a `symbolic-ir` `IRNode` term — used for
+/// the `head`/`args`/`lhs`/`rhs`/`pattern`/`expr`/rule-list children of
+/// `SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+/// `SymReplaceAll`, where the SIR23 spec requires a real term-tree node,
+/// not a bare host value.
+///
+/// The three literal kinds SIR23 "reuses directly" instead of defining new
+/// leaf nodes for (`IntLit`/`FloatLit`/`StrLit`, per the spec's "New Expr
+/// variants" section) need wrapping into the matching `__SirSym`
+/// constructor here — a bare JS number or string is never a valid
+/// `IRNode`. Every other expression (a `SymSymbol`/`SymRational`/
+/// `SymApply`/pattern/rule node, which already constructs a term via the
+/// ordinary `emit_expr` arms above, or a `VarRef`/call whose runtime value
+/// is already a term by the frontend's own convention) emits unchanged.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("__SirSym.int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { .. } => {
+            out.push_str("__SirSym.numberNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("__SirSym.stringNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
     }
 }
 
@@ -1930,6 +2392,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     }
     let helper = match name {
         "+" => "__Sir.add",
+        "<<" => "__Sir.shiftLeft",
         "-" => "__Sir.sub",
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
@@ -2139,6 +2602,8 @@ fn is_ts_reserved(s: &str) -> bool {
             | "private"
             | "protected"
             | "public"
+            | "arguments"
+            | "eval"
     )
 }
 
@@ -2184,7 +2649,7 @@ mod tests {
         let safe = sanitize_comment(injected);
         assert!(!safe.contains('\n'));
         assert!(!safe.contains('\r'));
-        let with_sep = format!("a\u{2028}b\u{2029}c\u{0085}d");
+        let with_sep = "a\u{2028}b\u{2029}c\u{0085}d".to_string();
         let safe2 = sanitize_comment(&with_sep);
         assert!(!safe2.contains('\u{2028}'));
         assert!(!safe2.contains('\u{2029}'));
@@ -2198,7 +2663,7 @@ mod tests {
 
     #[test]
     fn quote_ts_string_escapes_unicode_line_separators() {
-        let s = format!("a\u{2028}b\u{2029}c");
+        let s = "a\u{2028}b\u{2029}c".to_string();
         let q = quote_ts_string(&s);
         assert!(q.contains(r"\u2028"), "got {}", q);
         assert!(q.contains(r"\u2029"), "got {}", q);
@@ -2266,6 +2731,27 @@ mod tests {
     fn sanitize_avoids_reserved_words() {
         assert_ne!(sanitize_ident("class"), "class");
         assert!(sanitize_ident("class").starts_with("_$"));
+    }
+
+    #[test]
+    fn is_ts_reserved_flags_strict_mode_contextual_words() {
+        // `eval` and `arguments` are not syntactic keywords, but this
+        // backend emits TypeScript that is a strict-mode-equivalent
+        // superset of JavaScript (compiled/parsed under the same
+        // strict-mode identifier restrictions), and strict mode forbids
+        // binding, assigning to, or otherwise shadowing either name — so
+        // they must be treated as reserved here too, exactly like the
+        // syntactic keywords above.
+        assert!(is_ts_reserved("eval"));
+        assert!(is_ts_reserved("arguments"));
+        assert!(sanitize_ident("eval").starts_with("_$"));
+        assert!(sanitize_ident("arguments").starts_with("_$"));
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_ts_reserved("value"));
+        assert!(!is_ts_reserved("evaluate"));
+        assert!(!is_ts_reserved("argument"));
     }
 
     #[test]
@@ -2393,6 +2879,35 @@ mod tests {
             0,
         );
         assert_eq!(out, "__Sir.add(1, 2)");
+    }
+
+    #[test]
+    fn emit_builtin_call_shift_left() {
+        // `ruby-to-semantic-ir` lowers `<<` to a top-level
+        // `BuiltinCall("<<", [lhs, rhs])` -- a separate protocol from
+        // `__method__("<<", recv, arg)` -- and must route through
+        // `__Sir.shiftLeft`, not `__Sir.callBuiltin`'s generic fallback.
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "<<".into(),
+                args: vec![
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 40,
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__Sir.shiftLeft(1, 40)");
     }
 
     #[test]

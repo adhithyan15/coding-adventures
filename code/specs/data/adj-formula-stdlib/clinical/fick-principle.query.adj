@@ -1,0 +1,37 @@
+% ============================================================================
+% fick-principle.query.adj — worked examples over the clinical Fick-principle library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a Fick cardiac-output
+% question: it states NO arithmetic and NO relation — it only `import`s the grounded
+% library, `observe`s the quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited relation.
+% The native adj-lang engine binds the parameters, computes each value EXACTLY on the CPU,
+% and returns it with the relation's source/locator/trust.
+%
+% The three questions INVERT: an oxygen consumption of 250 mL/min across an arteriovenous
+% content difference of 200 − 150 = 50 mL O2/L gives a cardiac output of 250 / 50 = 5
+% L/min; that 5 L/min cardiac output across the same 50 mL O2/L difference is exactly what
+% the oxygen-consumption formula multiplies back to recover the 250 mL/min consumption,
+% and that 5 L/min cardiac output with the same 200 mL O2/L arterial content and 250
+% mL/min consumption is exactly what the venous-content formula recovers the 150 mL O2/L
+% venous content from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fick-principle.query.adj
+% ============================================================================
+
+import "fick-principle.adj"
+
+% VO2 250 mL/min, CaO2 200 mL O2/L, CvO2 150 mL O2/L: cardiac output = 250 / (200 − 150).
+observe oxygen_consumption(250)
+observe arterial_oxygen_content(200)
+observe venous_oxygen_content(150)
+? cardiac_output(oxygen_consumption, arterial_oxygen_content, venous_oxygen_content)     % expect 5    (Fick: CO = VO2 / (CaO2 − CvO2))
+
+% That 5 L/min cardiac output across the same 200/150 contents: VO2 = 5 × (200 − 150).
+observe cardiac_output(5)
+? oxygen_consumption(cardiac_output, arterial_oxygen_content, venous_oxygen_content)       % expect 250  (same relation, solved for VO2 = CO × (CaO2 − CvO2))
+
+% That 5 L/min cardiac output with the same 200 mL O2/L arterial and 250 mL/min VO2:
+% CvO2 = 200 − 250 / 5.
+? venous_oxygen_content(arterial_oxygen_content, oxygen_consumption, cardiac_output)       % expect 150  (same relation, solved for CvO2 = CaO2 − VO2 / CO)

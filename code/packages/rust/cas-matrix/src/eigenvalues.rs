@@ -71,7 +71,6 @@ pub fn eigenvalues(m: &IRNode) -> MatrixResult<IRNode> {
     let coeffs: Vec<SolveFrac> = coeff_fracs
         .iter()
         .copied()
-        .into_iter()
         .map(to_solve_frac)
         .collect::<MatrixResult<Vec<SolveFrac>>>()?;
     let result = solve_characteristic(&coeffs)?;
@@ -151,7 +150,7 @@ pub fn eigenvectors(m: &IRNode) -> MatrixResult<IRNode> {
                         } else {
                             Frac::zero()
                         };
-                        Ok((*entry - adjustment).to_irnode()?)
+                        (*entry - adjustment).to_irnode()
                     })
                     .collect::<MatrixResult<Vec<IRNode>>>()
             })

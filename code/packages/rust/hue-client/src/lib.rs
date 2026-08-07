@@ -8,6 +8,7 @@
 
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
+use coding_adventures_zeroize::Zeroize;
 use http_core::{find_header, Header};
 use hue_core::{
     validate_brightness, HueBridgeResource, HueButtonResource, HueButtonStateUpdate, HueCommand,
@@ -647,12 +648,47 @@ impl HueEventStreamDecoder {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct HueHttpRequest {
     pub method: HueMethod,
     pub path: String,
     pub headers: Vec<Header>,
     pub body: Vec<u8>,
+}
+
+impl fmt::Debug for HueHttpRequest {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let headers: Vec<_> = self
+            .headers
+            .iter()
+            .map(|header| {
+                if header.name.eq_ignore_ascii_case(HUE_APPLICATION_KEY_HEADER) {
+                    Header {
+                        name: header.name.clone(),
+                        value: "[REDACTED]".to_string(),
+                    }
+                } else {
+                    header.clone()
+                }
+            })
+            .collect();
+        f.debug_struct("HueHttpRequest")
+            .field("method", &self.method)
+            .field("path", &self.path)
+            .field("headers", &headers)
+            .field("body", &self.body)
+            .finish()
+    }
+}
+
+impl Drop for HueHttpRequest {
+    fn drop(&mut self) {
+        for header in &mut self.headers {
+            if header.name.eq_ignore_ascii_case(HUE_APPLICATION_KEY_HEADER) {
+                header.value.zeroize();
+            }
+        }
+    }
 }
 
 impl HueHttpRequest {
@@ -693,9 +729,28 @@ pub trait HueTransport {
     fn send(&mut self, request: HueHttpRequest) -> Result<HueHttpResponse, HueClientError>;
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Clone, PartialEq, Eq, Default)]
 pub struct HueClientConfig {
     pub application_key: Option<String>,
+}
+
+impl fmt::Debug for HueClientConfig {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("HueClientConfig")
+            .field(
+                "application_key",
+                &self.application_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .finish()
+    }
+}
+
+impl Drop for HueClientConfig {
+    fn drop(&mut self) {
+        if let Some(application_key) = &mut self.application_key {
+            application_key.zeroize();
+        }
+    }
 }
 
 impl HueClientConfig {
@@ -2141,6 +2196,15 @@ mod tests {
         assert_eq!(request.path, "/eventstream/clip/v2");
         assert_eq!(request.header("Accept"), Some(ACCEPT_EVENT_STREAM));
         assert_eq!(request.header(HUE_APPLICATION_KEY_HEADER), Some("app-key"));
+    }
+
+    #[test]
+    fn credential_bearing_debug_output_is_redacted() {
+        let request = event_stream_request("raw-application-key").unwrap();
+        let config = HueClientConfig::paired("raw-application-key");
+
+        assert!(!format!("{request:?}").contains("raw-application-key"));
+        assert!(!format!("{config:?}").contains("raw-application-key"));
     }
 
     #[test]

@@ -2,6 +2,119 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.18.1] - 2026-07-19
+
+### Changed — test goldens updated for `closure-emitter` 0.55.0
+
+`closure-emitter` 0.55.0 terminates a top-level function/class declaration with
+`;` only when it is the last program item. This pass's emit-shape test goldens
+(in `src/lib.rs` and `tests/upstream/rename_vars_test.rs`) were regenerated to the
+new byte-identical-to-Closure output. No behaviour change in this crate — only the
+expected emitted strings moved.
+
+## [0.18.0] - 2026-07-14
+
+### Changed — rename globals referenced inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. The apply step now rewrites global references inside a
+`FunctionParam::AssignmentPattern` default `right` (using the same shadow-stripped map as the function body,
+so a global read is renamed while a reference to an earlier param is left alone), and the new
+`collect_param_idents` helper adds a default’s identifiers to the avoid set so a freshly-minted global name
+never collides with one. Covers both the nested-value apply path (`rename_apply_expr`) and the top-level
+declaration apply path (`rename_apply_decl`, for a global read in a top-level function/method default —
+added after security review).
+
+## [0.17.0] - 2026-07-14
+
+### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. Handles the new `FunctionParam::RestElement` variant via
+`binding_identifier()`, so a rest parameter (`...name`) is walked as an ordinary single-name binding
+(counted / looked up / renamed) rather than being unrepresentable. Additive; MINOR.
+
+## [0.16.0] - 2026-07-12
+
+### Changed — CLOC12.189 PR2: bail on module `export`
+
+The global-renaming soundness gate now also declines when
+`program_contains_export_declaration` is true — an exported global is public
+surface other modules reference by name.
+
+## [0.15.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the global-renaming walk does not descend into exports
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the global-renaming walk does not descend into exports. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.14.0] - 2026-07-12
+
+### Changed — CLOC12.188 PR2: bail on module `import`
+
+The global-renaming soundness gate now also declines when
+`program_contains_import_declaration` is true, mirroring the `with` gate — an
+import name aliases a foreign export and must not be renamed into or out of.
+
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arm
+
+Exhaustive-match no-op arm for the new `Declaration::ImportDeclaration` variant —
+the global-renaming walk does not descend into imports (import bindings link to
+foreign exports and must not be renamed; the gate lands with the bridge PR).
+
+## [0.12.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: decline to rename globals in the presence of `with`
+
+`run` now bails at the top when `program_contains_with_statement`
+(closure-scope-analyzer 0.14.0, added as a new dependency) is `true`, returning
+the program unchanged. Renaming a global is unsound when a `with` is present:
+a bare name in the `with` body may resolve to a property of the injected object
+rather than to the global. `with` is rare (a strict-mode syntax error), so the
+program-wide bail costs little. New `with_statement_disables_global_renaming`
+test.
+
+## [0.11.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in the decl-name counter, ident
+collector, and rename-apply walk descend into the `with` object and body. Picks
+up javascript-ast 0.38.0.
+
+## [0.10.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 5 sites: count-decl-names + collect + rename recurse the block's statements; a static block introduces no class-body binding name; rename uses the class-inner map (the class's own name in scope).
+
+## [0.10.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` handling
+(collect + rename) that leaves the field key alone (a property name, not a
+variable) but collects and renames global identifiers referenced in the
+initializer and computed key. Reachable once the CLOC12.175 PR2 bridge produces
+the node.
+
+## [0.10.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each exhaustive `Declaration` match site: `count_decl_names_decl` (class
+name + method params + bodies — counting params upholds the rename invariant that
+a global shadowed by a method param is disqualified), `collect_all_idents_decl`
+(class name + heritage + member keys/params/bodies), and `rename_apply_decl`
+(rename the class's own name as a global binding, the `extends` operand as a use,
+and recurse each method body with the full map). Reachable once the CLOC12.174
+PR2 bridge produces the node.
+
 ## [0.10.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

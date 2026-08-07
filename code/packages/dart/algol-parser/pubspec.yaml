@@ -1,0 +1,20 @@
+name: coding_adventures_algol_parser
+description: >
+  Grammar-driven ALGOL 60 parser for Dart backed by the shared ParserGrammar format.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_algol_lexer:
+    path: ../algol-lexer
+  coding_adventures_grammar_tools:
+    path: ../grammar-tools
+  coding_adventures_parser:
+    path: ../parser
+
+dev_dependencies:
+  test: ^1.25.0

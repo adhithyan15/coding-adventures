@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `UdpMulticast` source and catalog-mechanism projection for vendor LAN
+  discovery over local UDP endpoints.
+- `WsDiscovery` source and catalog-mechanism projection for ONVIF discovery
+  records over local HTTP camera endpoints.
 - Bounded IPv4/IPv6 mDNS scan helpers that build PTR queries, collect UDP
   replies through `udp-client`, and return deterministic `MdnsScanResult`
   envelopes.

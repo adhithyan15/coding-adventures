@@ -1,0 +1,4 @@
+--js
+tests/diff/identity-escape/input/a.js
+--compilation_level
+SIMPLE

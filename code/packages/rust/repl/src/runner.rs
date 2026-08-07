@@ -304,15 +304,8 @@ pub fn run_with_options<L, P, W, I, O>(
     I: FnMut() -> Option<String>,
     O: FnMut(&str),
 {
-    loop {
-        // ------------------------------------------------------------------
-        // 1. Read one line of input. EOF → stop the loop.
-        // ------------------------------------------------------------------
-        let input = match input_fn() {
-            Some(line) => line,
-            None => break,
-        };
-
+    // Read one line of input per iteration; EOF (`None`) stops the loop.
+    while let Some(input) = input_fn() {
         // ------------------------------------------------------------------
         // 2. Evaluate — async or sync depending on `mode`.
         // ------------------------------------------------------------------

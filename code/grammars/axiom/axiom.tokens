@@ -1,0 +1,293 @@
+# Axiom Token Grammar
+# ============================================================================
+#
+# Tokenizes the MA-13b-scoped lexical surface of Axiom (Scratchpad II ->
+# IBM Axiom -> NAG -> BSD re-release -> OpenAxiom/FriCAS, 1977-1992-present;
+# code/specs/MA13-axiom-language.md §1) -- the strongly-typed CAS whose
+# category/domain type system is this repo's first symbolic-family language
+# to need any per-value type-tag vocabulary at all (MA13 §2/§3). This file
+# covers ONLY the "consumer view" surface MA13 §3/§4 scopes for the first
+# cut: ordinary arithmetic/comparison expressions, `:=`/`==` assignment and
+# held-body function definition, `if`-`then`-`else`, a `;`-separated
+# parenthesised block, and the THREE genuinely new tokens no prior
+# symbolic-family grammar in this repo has ever needed -- `:` (declare),
+# `::` (coerce), and the `has` category-membership query keyword (MA13 §3's
+# central finding).
+#
+# Axiom's arithmetic/comparison surface is an ordinary infix expression
+# grammar, closer in overall shape to Reduce/Derive/Maple's `head(args)`-
+# style CAS grammars (MA13 §5) than to any array-family grammar in this
+# repo -- so this file is structured the same way reduce.tokens/
+# maple.tokens/derive.tokens already are (multi-char operators first,
+# longest-match-first; single-char operators/delimiters; literals;
+# skip/keywords), not forked from any array-family sibling.
+#
+# Axiom is CASE-SENSITIVE (case_sensitive left at its default, no
+# `@case_insensitive` directive) -- confirmed directly against the book
+# (MA13 §4's own surface table): `if`/`then`/`else`/`has` are spelled
+# lowercase, matching reduce.tokens's/maple.tokens's identical lowercase-
+# keyword, case-sensitive convention (the mirror image of derive.tokens's
+# uppercase `AND`/`OR`/`NOT`). Built-in domain/category names (`Integer`,
+# `Boolean`, `Ring`, `PositiveInteger`, ...) are capitalized by real-Axiom
+# convention but are NOT reserved words at the lexer level -- MA13 §3/§4
+# fixes the built-in domain/category table as an `axiom-runtime`-internal,
+# fixed lookup table (MA-13d), entirely invisible to this crate, which
+# tokenizes every domain/category name as an ordinary NAME like any other
+# identifier, exactly as `idl-lexer` resolves IDL's intrinsic
+# procedure/function names (PLOT, SIN, TOTAL, ...) as plain NAMEs rather
+# than lexer-level keywords.
+#
+# @version 1
+
+# No confirmed escape mechanism for Axiom string literals anywhere in MA13
+# §2/§3/§4 (the spec's own worked examples never show one) -- so, per this
+# repo's "confirm, don't assume" discipline, this file makes the same
+# conservative choice every sibling CAS-family grammar with no confirmed
+# escape convention already makes (derive.tokens, maple.tokens,
+# reduce.tokens, macsyma.tokens, idl.tokens): `escapes: none`, and STRING's
+# own pattern (SECTION 3) is simply "every character up to the next `"`",
+# with no backslash-escape clause to interpret. A real backslash-escape
+# convention, if FriCAS/Axiom documentation later confirms one, is a narrow
+# follow-on fix to this file, not a blocking question for MA-13b.
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators -- longest-match-first.
+#
+# Every multi-character operator below is declared before any shorter
+# operator/token it begins with, the same defensive convention every
+# sibling `.tokens` file in this repo already documents (idl.tokens's
+# `##`/`#`, reduce.tokens's/derive.tokens's `:=`, maple.tokens's `->`):
+# `GrammarLexer::try_match_token` walks the compiled pattern list in
+# DECLARATION ORDER and returns the FIRST pattern that matches at the
+# current position -- it does NOT pick the longest overall match itself --
+# so a shorter prefix pattern declared earlier would silently win and strand
+# the rest of a longer operator behind it.
+#
+# Three of these five tokens are the genuinely new ones MA13 §3 is about
+# (COERCE `::`, and -- paired with COLON in SECTION 2 -- DECLARE `:`); the
+# other three (ASSIGN, DEFINE, NE, LE, GE, POW) are ordinary CAS-family
+# operators this repo's Reduce/Derive/Maple siblings already have under
+# their own names.
+# ============================================================================
+
+# `:=` -- immediate assignment (MA13 §4's `x := e` row; real Axiom,
+# Programming Guide-equivalent Chapter 5 §5.1's "immediate" assignment).
+# Spelled identically to REDUCE's/Derive's/Maple's own `:=`, but MUST be
+# declared before both `::` and bare `:` below since all three share the
+# leading `:` character.
+ASSIGN   = ":="
+
+# `::` -- the coercion operator (MA13 §3's `e :: T` row, e.g.
+# `3 :: Fraction Integer`) -- the SECOND of the three tokens no prior
+# symbolic-family grammar in this repo has ever needed (MA13 §3's own
+# "genuinely new" finding). Not a prefix of `:=` (second character differs),
+# so its declaration order relative to ASSIGN does not matter, but it MUST
+# be declared before bare COLON (SECTION 2) for the same longest-match
+# reason.
+COERCE   = "::"
+
+# `==` -- held-body function-definition operator (MA13 §4's
+# `f(x: T, ...): T == e` row) -- Axiom's own spelling for what Wolfram
+# calls `SetDelayed`/Derive-Maple call `:=`'s function-definition use; here
+# `:=` (above) is reserved for immediate assignment ONLY (MA13 §4), and
+# `==` is the separate held-body definition form, so this repo's Axiom
+# grammar needs BOTH tokens where Reduce/Derive/Maple each only needed one.
+# Must be declared before bare EQ (SECTION 2).
+DEFINE   = "=="
+
+# `~=` -- Axiom's own not-equal spelling (MA13 §3/§4, confirmed directly
+# against the book: NOT Maple's `<>`, NOT Wolfram's `!=` -- a real,
+# disclosed divergence-avoidance point). No bare `~` token exists anywhere
+# in this cut's grammar, so there is no ordering hazard to guard against,
+# but it is grouped here with the other multi-character relational
+# operators for readability.
+NE       = "~="
+
+LE       = "<="
+GE       = ">="
+
+# `**` -- Axiom's alternate power spelling (MA13 §4: "both spellings real,
+# confirmed -- mirroring Reduce's own `^`/`**` pair, MA08 §3"). Must be
+# declared before bare TIMES (SECTION 2) -- the same POW-before-TIMES
+# ordering reduce.tokens's own header documents for the identical `^`/`**`
+# pair.
+POW      = "**"
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters (MA13 §4).
+# ============================================================================
+
+PLUS     = "+"
+MINUS    = "-"
+TIMES    = "*"
+SLASH    = "/"
+
+# `^` -- Axiom's primary power spelling (MA13 §4), a single glyph with no
+# shorter-prefix hazard of its own; POW (`**`, SECTION 1) is the alternate
+# two-character spelling for the SAME operation, kept as a distinct token
+# type exactly like reduce.tokens's own CARET/POW split -- "the parser, not
+# this lexer, is where the two spellings collapse onto one production."
+CARET    = "^"
+
+# `=` -- equality (MA13 §4's `a = b` row). Per MA13 §3's own disclosed
+# divergence, this cut's `=` lowers straight to the shared Boolean-valued
+# `Equal` handler rather than reproducing real Axiom's default `Equation`
+# object -- a lowering-layer (MA-13d) decision, invisible here: this lexer
+# just emits one ordinary EQ token, exactly as it always has for every
+# sibling CAS-family grammar (Reduce/Derive/Maple/Macsyma all draw the same
+# `=`-is-a-value-producing-relational-operator line). Must be declared
+# AFTER `==` (DEFINE, SECTION 1) or a lone `=` prefix would strand the
+# second `=` of every held-body definition.
+EQ       = "="
+LESS     = "<"
+GREATER  = ">"
+
+LPAREN   = "("
+RPAREN   = ")"
+
+# List literals use SQUARE brackets (`[a, b, c]`, MA13 §4's `List(T)` row)
+# -- reusing the existing shared `List` handler (MA13 §2/§5), the same
+# bracket choice Maple's own `[a, b, c]` ordered-list literal already uses
+# in this repo (maple.tokens SECTION 2).
+LBRACKET = "["
+RBRACKET = "]"
+
+COMMA    = ","
+
+# `;` -- the ONLY separator for a parenthesised, semicolon-separated block
+# (MA13 §4's `( e1; e2; ...; eN )` row) -- Axiom has no other in-scope use
+# for `;` (no matrix-row separator the way Derive's `[...]` needs one; list
+# literals here use COMMA only, per LBRACKET/RBRACKET above).
+SEMI     = ";"
+
+# `:` -- the declaration operator (MA13 §3/§4's `a : T` row, e.g.
+# `a : PositiveInteger`), and ALSO the type-annotation position inside a
+# function header (`f(x: T, ...): T == e`) -- the THIRD of the three
+# genuinely new tokens (alongside COERCE and the `has` keyword below).
+# MA13's own task framing is explicit that this single COLON token is
+# overloaded across both grammar positions at the LEXER level: "the lexer
+# just emits a `:` token, disambiguation is the parser's job later, not
+# this crate's" -- exactly the same "one glyph, one token type, multiple
+# grammar-level meanings, parser's job to disambiguate" discipline
+# idl.tokens documents for its own EQUALS (assignment vs. keyword-bind) and
+# STAR (multiplication vs. wildcard subscript). MUST be declared after
+# BOTH `:=` (ASSIGN) and `::` (COERCE) above, since all three share the
+# leading `:` character and this is the shortest of the three.
+COLON    = ":"
+
+# ============================================================================
+# SECTION 3: Literal value tokens (MA13 §4).
+#
+# NUMBER covers both the integer (`123`) and float (`1.5`) rows of MA13
+# §4's surface table in one pattern, requiring a leading digit (so a bare
+# `.5` is not a number) -- matching every sibling symbolic-family lexer's
+# convention in this repo (reduce.tokens, derive.tokens, maple.tokens,
+# macsyma.tokens, wolfram.tokens all share this exact shape). There is
+# deliberately NO separate rational-literal token: MA13 §4's own table
+# confirms `1/3` is ordinary integer division (`NUMBER SLASH NUMBER`,
+# three tokens) that lowers to the packed `IRNode::Rational` representation
+# entirely at evaluation/lowering time (MA13 §2), not via any special
+# lexer-level literal syntax -- inventing one here would tokenize a
+# construct this cut's own grammar does not have.
+#
+# STRING has no confirmed escape mechanism (see the file header's
+# `escapes: none` note) -- content is simply every character up to the
+# next `"`. Any token name ending in "STRING" has its outer quotes stripped
+# automatically by the shared GrammarLexer engine (see
+# `code/packages/rust/lexer/src/grammar_lexer.rs`'s own
+# `try_match_token_in_group` quote-handling), so this pattern needs no
+# manual quote-stripping code in `axiom-lexer` itself.
+#
+# NAME is a case-sensitive identifier covering BOTH ordinary
+# variables/functions (`x`, `foo`, `f`) AND every built-in domain/category
+# name (`Integer`, `Boolean`, `Ring`, `PositiveInteger`, `Fraction`,
+# `Polynomial`, `List`, `OrderedSet`, ...) -- per this file's own header
+# note and MA13 §3/§4, none of the fixed built-in domain/category table is
+# a lexer-level reserved word; only `if`/`then`/`else`/`has` are (SECTION
+# 4/5 below). Kept to the same plain `[a-zA-Z][a-zA-Z0-9]*` shape every
+# sibling CAS-family NAME already uses (reduce.tokens, derive.tokens,
+# maple.tokens) rather than adding underscore/apostrophe continuation
+# characters MA13 never confirms Axiom identifiers use.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+STRING = /"[^"]*"/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ============================================================================
+# SECTION 4: Skip patterns -- whitespace and `--` line comments.
+#
+# Axiom has no numbered-worksheet significant-newline convention the way
+# Derive's/Wolfram's own `#n:`/`In[n]:=` prompts do (MA13 §5: `axiom-repl`
+# tracks its own step counter as a REPL-layer concern, not a lexer-level
+# significant-NEWLINE token) -- blocks are `;`-separated (SECTION 2), never
+# newline-separated, exactly mirroring reduce.tokens's/maple.tokens's
+# identical "statements end with a punctuation separator, not a
+# significant newline" rationale. So newlines fold into WHITESPACE here,
+# and this file declares no NEWLINE token and needs no bracket-interior-
+# newline post-tokenize hook in `axiom-lexer`.
+#
+# `--` opens a line comment, ending just before the next newline (or EOF) --
+# real FriCAS/SPAD line-comment convention, confirmed real per the task's
+# own sibling-precedent check (this repo's existing `--`-comment
+# grammars -- haskell*.tokens, sql.tokens, vhdl*.tokens -- all use the
+# identical `/--[^\n]*/` shape). No ambiguity with MINUS (SECTION 2) to
+# guard against: `GrammarLexer::try_skip` (see
+# `code/packages/rust/lexer/src/grammar_lexer.rs`) tries every `skip:`
+# pattern BEFORE any ordinary token pattern at each position, so a `--`
+# always matches COMMENT here before MINUS ever gets a chance at the first
+# `-` -- the same reason sql.tokens/vhdl.tokens/haskell*.tokens already
+# have both a bare MINUS token AND a `--` line comment with no pre/post-
+# tokenize hook of their own. A comment's content is arbitrary text and is
+# never re-lexed as code (it is consumed whole by this skip pattern), so a
+# comment may freely contain characters outside this grammar's alphabet.
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT    = /--[^\n]*/
+
+# ============================================================================
+# SECTION 5: Keywords (MA13 §3/§4).
+#
+# Exactly four reserved words, no more -- the closed set MA13 §4's own
+# surface table fixes: `if`/`then`/`else` (conditional) and `has` (the
+# category-membership query infix operator, e.g.
+# `Polynomial(Integer) has Ring`) -- the FOURTH and last of the tokens no
+# prior symbolic-family grammar in this repo has needed (alongside COERCE
+# and COLON's declare-position overload above). All four are spelled
+# lowercase in real Axiom (confirmed directly, MA13 §4), matching
+# reduce.tokens's/maple.tokens's identical lowercase-keyword convention --
+# `IF`/`THEN`/`ELSE`/`HAS` in uppercase lex as ordinary NAMEs here, the
+# mirror image of derive.tokens's uppercase `AND`/`OR`/`NOT`.
+#
+# Deliberately NOT keywords (MA13 §3/§4, and this file's own header note):
+# every built-in domain name (`Integer`, `Boolean`, `Fraction`,
+# `Polynomial`, `List`, `PositiveInteger`, `NonNegativeInteger`, `Float`,
+# `String`) and every built-in category name (`Ring`, `OrderedSet`) --
+# these are ordinary NAMEs, resolved against `axiom-runtime`'s fixed
+# lookup table (MA-13d), not reserved words at the lexer level.
+#
+# Also deliberately absent (MA13 §4's own deferred-surface list -- see
+# this file's own header and the crate's README/CHANGELOG for the full
+# accounting): `Record`, `Union`, `Any`, `macro`, package-calling `$`,
+# target-type `@`, anonymous "maps-to" `+->`, block early-exit `=>`,
+# piecewise/multi-clause function definitions, list comprehensions, and
+# `for`/`while` iteration -- none of these has a token anywhere in this
+# file; a source construct using one falls through to SECTION 6's honest
+# catch-all error rather than silently lexing as something else.
+# ============================================================================
+
+keywords:
+  if
+  then
+  else
+  has
+
+# ============================================================================
+# SECTION 6: Error recovery.
+# ============================================================================
+
+errors:
+  UNKNOWN = /./

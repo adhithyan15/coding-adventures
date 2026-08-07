@@ -1,3 +1,7 @@
+// `needless_range_loop`: the index loop indexes a parallel coefficient array and
+// mirrors the recogniser's math. `type_complexity`: the returned tuple is an
+// internal recogniser signature; a type alias would not improve clarity.
+#![allow(clippy::needless_range_loop, clippy::type_complexity)]
 //! Canonical infinite-series closed-form recogniser — Track I2.
 //!
 //! Rust port of

@@ -1,0 +1,32 @@
+% ============================================================================
+% hookes-law.query.adj — worked examples over the physics Hooke's-law library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a spring question: it
+% states NO arithmetic and NO relation — it only `import`s the grounded library,
+% `observe`s the measured quantities it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited relation.
+% The native adj-lang engine binds the parameters, computes each value EXACTLY on the
+% CPU, and returns it with the relation's source/locator/trust.
+%
+% The three questions INVERT: a spring with a 3 N/m force constant stretched 2 m
+% exerts a 6 N restoring force; that 6 N restoring force over the same 2 m implies
+% exactly the 3 N/m force constant, and that 6 N force with the same 3 N/m constant
+% implies exactly the 2 m displacement.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hookes-law.query.adj
+% ============================================================================
+
+import "hookes-law.adj"
+
+% A 3 N/m spring stretched 2 m: force = 3 * 2.
+observe spring_constant(3)
+observe displacement(2)
+? spring_force(spring_constant, displacement)   % expect 6   (relation: F = k·x)
+
+% That 6 N restoring force over the same 2 m: k = 6 / 2.
+observe spring_force(6)
+? spring_constant(spring_force, displacement)    % expect 3   (same relation, solved for k = F/x)
+
+% That 6 N force with the same 3 N/m constant: x = 6 / 3.
+? displacement(spring_force, spring_constant)    % expect 2   (same relation, solved for x = F/k)

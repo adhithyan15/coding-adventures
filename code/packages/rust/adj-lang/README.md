@@ -69,6 +69,25 @@ tree** back to the cited facts, so a reviewer can audit the arithmetic — the
 model never evaluates it. **Space your operators** (`a - 5`, not `a-5`): a `-`
 glued to a digit lexes as a negative literal.
 
+A **formula's** final expression may additionally end in a single comparison
+(`a relop b`, `relop ∈ { >= <= > < == != }`) — the one place the value
+answered is a truth value rather than a magnitude:
+
+```adj
+formula greater_than(a, b) = a > b
+    source "A quantity a is said to be greater than b if a is larger than b, written a>b."
+    locator "https://mathworld.wolfram.com/Greater.html"
+    trust authoritative
+```
+
+`? greater_than(5, 3)` returns a dimensionless `1` (true) / `0` (false), exact
+whenever both operands are, carrying the same provenance envelope as any other
+formula. Dimensionally it combines like addition (`5 kg > 3 usd` is the same
+category error as `5 kg + 3 usd`), but the *result* collapses to a
+dimensionless scalar rather than the operands' shared dimension. This is
+additive — every formula's body already parsed as plain `<expr>` still parses
+unchanged; only a *trailing* comparison is new.
+
 LaTeX math is native input, not a caller-side normalization step. Use
 `latex "<math>"` anywhere an arithmetic expression is expected:
 
@@ -80,6 +99,35 @@ let ratio  = latex "\frac{csf_glucose}{serum_glucose}"
 The frontend parses the string with the repo's LaTeX `MathFrontend` and lowers
 the supported arithmetic subset into the same expression tree as ASCII ADJ.
 Unsupported math is a compile error, not a guessed rewrite.
+
+### Parser-backed formula source maps
+
+Provenance tooling can call `formula_source_map(source)` to inventory every formula with the
+same grammar and typed adapter used for execution. Each entry carries its `FormulaDef` plus
+half-open UTF-8 byte spans for the complete declaration and final executable body. Multi-step
+formulas point at the final expression, quoted math retains its exact source spelling, and any
+formula-boundary, order, count, or name disagreement is an error rather than a best-effort match.
+The source map is structural: import resolution, lowering, derivation replay, and execution
+coverage remain separate gates.
+
+### Formula domain requirements
+
+A formula may declare ordered requirements after its body and before its provenance annotations:
+
+```adj
+formula divide(dividend, divisor) = dividend / divisor
+    requires nonzero(divisor)
+    source "division definition" trust authoritative
+```
+
+Requirement predicates use a generic AST, but execution is a closed set: an unknown predicate,
+wrong arity, out-of-scope reference, or nested formula/built-in application is a compile error.
+The first slice accepts ordinary arithmetic expressions over bound parameters. `nonzero(expr)` is
+evaluated on the CPU after arguments are bound and before the body runs, including inside nested
+formula calls. Exact observed and derived values use rational sidecars; a literal consumed by a
+guard that cannot cross the current compute IR's `f64` boundary unchanged is rejected explicitly.
+A false or unresolved requirement emits a structured abstention and no derived value. Formula
+source maps expose the exact declaration and argument byte spans for every requirement.
 
 ### Constraints — `symbol` / `constrain` / `solve` / `check` (v0.7)
 

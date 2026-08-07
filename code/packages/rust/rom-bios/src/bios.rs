@@ -92,7 +92,7 @@ impl BiosFirmware {
                 &format!("Step 1: Load configured memory size ({} bytes)", self.config.memory_size));
             if lower != 0 {
                 emit(&mut instructions, &mut address,
-                    encode_addi(8, 8, sign_extend_12(lower) as i32),
+                    encode_addi(8, 8, sign_extend_12(lower)),
                     &format!("addi x8, x8, 0x{:03X}", lower),
                     "Step 1: Add lower 12 bits");
             }
@@ -106,7 +106,7 @@ impl BiosFirmware {
                 "lui x6, 0xDEADC",
                 "Step 1: x6 upper = 0xDEADC000 (compensated)");
             emit(&mut instructions, &mut address,
-                encode_addi(6, 6, sign_extend_12(0xEEF) as i32),
+                encode_addi(6, 6, sign_extend_12(0xEEF)),
                 &format!("addi x6, x6, {}", sign_extend_12(0xEEF)),
                 "Step 1: x6 = 0xDEADBEEF (test pattern)");
             emit(&mut instructions, &mut address,
@@ -249,7 +249,7 @@ impl BiosFirmware {
             "Step 3: FramebufferBase upper");
         if fb_lower != 0 {
             emit(&mut instructions, &mut address,
-                encode_addi(6, 6, sign_extend_12(fb_lower) as i32),
+                encode_addi(6, 6, sign_extend_12(fb_lower)),
                 &format!("addi x6, x6, {}", sign_extend_12(fb_lower)),
                 "Step 3: FramebufferBase lower");
         }
@@ -270,7 +270,7 @@ impl BiosFirmware {
             "Step 3: BootloaderEntry upper");
         if bl_lower != 0 {
             emit(&mut instructions, &mut address,
-                encode_addi(6, 6, sign_extend_12(bl_lower) as i32),
+                encode_addi(6, 6, sign_extend_12(bl_lower)),
                 &format!("addi x6, x6, {}", sign_extend_12(bl_lower)),
                 "Step 3: BootloaderEntry lower");
         }
@@ -284,7 +284,7 @@ impl BiosFirmware {
             "Step 4: Bootloader entry upper");
         if self.config.bootloader_entry & 0xFFF != 0 {
             emit(&mut instructions, &mut address,
-                encode_addi(6, 6, sign_extend_12(self.config.bootloader_entry & 0xFFF) as i32),
+                encode_addi(6, 6, sign_extend_12(self.config.bootloader_entry & 0xFFF)),
                 &format!("addi x6, x6, {}", sign_extend_12(self.config.bootloader_entry & 0xFFF)),
                 "Step 4: Bootloader entry lower");
         }

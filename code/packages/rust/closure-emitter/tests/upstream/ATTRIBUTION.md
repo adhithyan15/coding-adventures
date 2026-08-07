@@ -193,6 +193,110 @@ under the Apache License, Version 2.0:
       are not asserted to be valid JS (`super` is syntactically restricted to
       member/call position inside a method or derived constructor).
 
+- `code_printer_class_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-expression `class[ id][ extends S]{members}` printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_class` + `emit_class_member` + the `PREC_UNARY`
+      classification that landed with `Expression::ClassExpression`
+      (CLOC12.173). 22 active `#[test]`s and **0 `#[ignore]`** — the emitter
+      conforms to every covered shape: the statement-start wrap (`(class{});`),
+      anonymous/named surface, the four `extends`-operand precedence cases
+      (identifier / member / call heritage print bare, a conditional heritage
+      wraps: `extends (a?b:c)`), the member forms (empty / params+body /
+      `static` / `get` / `set` / `constructor` / stacked `static get` /
+      generator `*m` / `async m` / computed `[k]` / two members back-to-back),
+      and the whole-node precedence cases where the class wraps as a member
+      object (`(class{}).x`) and a call callee (`(class{})()`) but stays bare
+      under a binary parent (`class{}+1`). Inputs are hand-constructed AST; the
+      bridge conversion of `class_expression` (CLOC12.173 PR2, gap-167) is
+      exercised separately in `javascript-parser`, and building the AST directly
+      lets the port cover generator / async / computed-key methods and
+      multi-member classes the grammar cannot yet parse.
+
+- `code_printer_class_declaration_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-**declaration** `class <id>[ extends S]{members}` printing
+      cases — the `class` keyword in statement position)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs`; isolates
+      `emit_class_declaration` + the shared `emit_class_tail` helper that landed
+      with `Declaration::ClassDeclaration` (CLOC12.174 PR1). 20 active `#[test]`s
+      and **0 `#[ignore]`** — the emitter conforms to every covered shape: the
+      declaration is emitted **bare** (no wrapping paren — unlike the expression
+      form's `(class …);` — and **no trailing `;`** — unlike a `function`
+      declaration); the four `extends`-operand precedence cases (identifier /
+      member / call heritage print bare, a conditional heritage wraps:
+      `extends (a?b:c)`); the member forms (method / params+body / `static` /
+      `get` / `set` / `constructor` / stacked `static get` / generator `*m` /
+      `async m` / computed `[k]`, `[0]`, `[a+b]` / two members back-to-back); and
+      the whole-node full shape (`class C extends B{m(){}}`). Inputs are
+      hand-constructed AST; the bridge conversion of `class_declaration`
+      (CLOC12.174 PR2) is exercised separately in `javascript-parser`, and
+      building the AST directly lets the port cover the generator / async /
+      computed-key / multi-member shapes the grammar cannot yet parse.
+
+- `code_printer_class_field_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-**field** `[static ]key[=value];` printing cases — a
+      `PropertyDefinition` member, the non-method class member)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs` /
+      `code_printer_class_declaration_test.rs`; isolates `emit_class_field` + the
+      shared `emit_class_tail` member loop's `Field` arm that landed with
+      `ClassMember::Field` (CLOC12.175 PR1). 14 active `#[test]`s and **0
+      `#[ignore]`** — the emitter conforms to every covered shape: an initialized
+      field (`x=1;`, `x=y;`); a **bare** field (`y;`, with no stray `=`); the
+      `static` prefix (`static z=2;`, `static z;`); computed / literal keys
+      (`[k]=v;`, `static [k]=v;`, `0=1;`, a non-identifier string key stays quoted
+      `"a-b"=1;`); the initializer emitted at `PREC_ASSIGNMENT` so a bare comma
+      *sequence* wraps (`x=(a,b);`); and fields interleaving with methods and each
+      other (`x=1;m(){}`, `m(){}x=1;`, `x=1;y;static z=2;`). Inputs are
+      hand-constructed AST; the bridge conversion of a field (CLOC12.175 PR2) is
+      exercised separately in `javascript-parser`, and building the AST directly
+      lets the port cover computed / numeric / string-key and sequence-initializer
+      shapes the grammar/bridge cannot yet parse.
+
+- `code_printer_static_block_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the **static initialization block** `static { … }` printing cases — a
+      `ClassMember::StaticBlock`, the third and last kind of class member)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs` /
+      `code_printer_class_declaration_test.rs` / `code_printer_class_field_test.rs`;
+      isolates `emit_static_block` + the shared `emit_class_tail` member loop's
+      `StaticBlock` arm that landed with `ClassMember::StaticBlock` (CLOC12.176
+      PR1). 9 active `#[test]`s and **0 `#[ignore]`** — the emitter conforms to
+      every covered shape: an empty block (`static{}`, with `static` abutting the
+      `{`); a statement body (`static{x}`); a real initializer assignment
+      (`static{x=1}`); a two-statement body (`static{x;y}`); brace-termination so
+      the block needs no `;` separator (`static{}m(){}`, `m(){}static{}`); two
+      static blocks back-to-back (`static{}static{}`); and all three member kinds
+      coexisting in source order (`x=1;static{y=2}m(){}`). Inputs are
+      hand-constructed AST; the bridge conversion of a static block (CLOC12.176
+      PR2) is exercised separately in `javascript-parser` + a `closurec` e2e diff
+      fixture.
+
+- `code_printer_private_name_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the **private class-member name** printing cases — a `#x` field key or a
+      `#m()` method key, a `PropertyKey::PrivateName` / ESTree `PrivateIdentifier`)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_field_test.rs`; isolates the `PrivateName`
+      arm of `emit_property_key` that landed with `PropertyKey::PrivateName`
+      (CLOC12.177 PR1). 7 active `#[test]`s and **0 `#[ignore]`** — the emitter
+      conforms to every covered shape: an initialized private field (`#x=1;`); a
+      bare private field (`#x;`); a single-`#` regression guard (no `##`, no
+      missing `#`); a `static` private field (`static #x=1;`); a private method
+      key (`#m(){}`, brace-terminated); and private/public members interleaving
+      (`#x=1;m(){}`, `x=1;#y=2;`). The stored `PrivateName.name` omits the leading
+      `#` (mirroring `Identifier`); the emitter prepends it, with no quote/shorten
+      logic (a private name is a hard token boundary). Inputs are hand-constructed
+      AST; the bridge conversion of a private *field* (CLOC12.177 PR2) is
+      exercised separately in `javascript-parser` + a `closurec` e2e fixture, and
+      building the AST directly lets this port cover the private *method* key
+      shape (whose bridge is a later slice) today.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Keep the Windows backend clean under Rust 1.97 by documenting the
+  platform-specific wake helper and using the standard backlog clamp.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

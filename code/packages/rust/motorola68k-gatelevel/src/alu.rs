@@ -520,7 +520,7 @@ pub fn shift_op(
                 // ROL/ROR with count=0: C=0.
                 last_out = 0;
             } else if left {
-                let count_mod = (count % bits) as u32;
+                let count_mod = count % bits;
                 // count_mod == 0 means a full-width rotation → identity; avoid shift-by-width panic.
                 if count_mod != 0 {
                     result = ((result << count_mod) | (result >> (bits - count_mod))) & mask;
@@ -528,7 +528,7 @@ pub fn shift_op(
                 // C = last bit rotated into bit 0 (the new LSB)
                 last_out = (result & 1) as u8;
             } else {
-                let count_mod = (count % bits) as u32;
+                let count_mod = count % bits;
                 if count_mod != 0 {
                     result = ((result >> count_mod) | (result << (bits - count_mod))) & mask;
                 }

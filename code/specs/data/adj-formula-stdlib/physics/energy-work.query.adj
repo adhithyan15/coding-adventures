@@ -1,0 +1,25 @@
+% ============================================================================
+% energy-work.query.adj — worked examples over the physics energy/work library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a mechanics
+% question: it states NO arithmetic and NO law — it only `import`s the grounded
+% library, `observe`s the physical quantities it decomposed from the prompt (each
+% a byte-provenanced span, elided here), and asks the engine to APPLY the cited
+% law. The native adj-lang engine binds the parameters, computes each value
+% EXACTLY on the CPU, and returns it with the law's source/locator/trust.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli energy-work.query.adj
+% ============================================================================
+
+import "energy-work.adj"
+
+% A 10 N force acting through 3 m: work = 10 * 3.
+observe force(10)
+observe distance(3)
+? work(force, distance)               % expect 30  (NASA: W = F d)
+
+% A 2 kg mass moving at 3 m/s: KE = ½ * 2 * 3².
+observe mass(2)
+observe velocity(3)
+? kinetic_energy(mass, velocity)      % expect 9   (HyperPhysics: KE = ½ m v²)

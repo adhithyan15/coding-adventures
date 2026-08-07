@@ -453,6 +453,10 @@ pub(crate) fn encode_cmp_reg(rn: u8, rm: u8) -> u32 {
 
 /// Encode an ARMv7-A `MOVEQ Rd, #imm8` instruction (MOV immediate
 /// under the EQ condition prefix — "move only if Z flag is set").
+// Part of the complete conditional-MOV encoder family (EQ/NE/CC/…); kept for
+// ISA-encoder completeness and symmetry even though the current lowering only
+// wires the NE/CC variants.
+#[allow(dead_code)]
 pub(crate) fn encode_mov_imm_eq(rd: u8, imm8: u8) -> u32 {
     debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
     MOV_IMM_EQ_BASE | ((rd as u32) << 12) | (imm8 as u32)

@@ -2,6 +2,114 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `RD` drain resistance.
+- Validate and lower JFET model-card `GDSNOI` channel-noise coefficient.
+- Validate and lower JFET model-card `NLEV` noise equation level.
+- Validate and lower JFET model-card `EG` energy gap.
+- Validate and lower JFET model-card `XTI` temperature exponent.
+- Validate and lower JFET model-card `IS` gate saturation current.
+- Validate and lower JFET model-card `FC` depletion coefficient.
+- Validate and lower JFET model-card `PB` / `VJ` junction potential.
+- Validate and lower JFET model-card `AF` flicker-noise exponent.
+- Validate and lower JFET model-card `KF` flicker-noise coefficient.
+- Validate and lower diode model-card `AF` flicker-noise exponent.
+- Validate and lower diode model-card `KF` flicker-noise coefficient.
+- Validate and lower diode model-card `EG` energy gap.
+- Validate and lower diode model-card `XTI` temperature exponent.
+- Validate and lower diode model-card `FC` depletion coefficient.
+- Validate and lower diode model-card `M` / `MJ` grading coefficient.
+- Validate and lower diode model-card `VJ` / `PB` junction potential.
+- Validate and lower finite, non-negative diode model-card `RS` series resistance.
+- Validate positive finite diode model-card `IBV` breakdown current.
+- Validate positive finite diode model-card `BV` breakdown voltage.
+- Validate positive finite diode model-card `N` emission coefficient.
+- Validate finite, non-negative diode model-card `TT` transit time.
+- Validate positive finite BJT model-card `IS` saturation current.
+- Validate finite, non-negative BJT model-card `TF` and `TR` transit times.
+- Validate BJT model-card `CJC` / `CJC0` / `CBC` base-collector capacitance and
+  lower the `CJC0` alias instead of silently dropping it.
+- Validate BJT model-card `CJE` / `CJE0` / `CBE` base-emitter capacitance and
+  lower the `CJE0` alias instead of silently dropping it.
+- Validate BJT model-card `VT` / `V_T` thermal voltage and lower the `V_T`
+  alias instead of silently dropping it.
+- Validate and lower the BJT model-card `HFE` forward-beta alias.
+- Validate BJT model-card `BF` / `BETA` / `BETA_F` forward beta and lower the
+  `BETA` alias instead of silently dropping it.
+- Validate diode model-card `CJO` / `CJ` / `CJ0` junction capacitance and
+  lower the `CJ` alias instead of silently dropping it.
+- Validate diode model-card `VT` / `V_T` thermal voltage and lower the `V_T`
+  alias instead of silently dropping it.
+- Validate diode model-card `IS` / `JS` saturation current and lower the `JS`
+  alias instead of silently dropping it.
+- Validate and lower JFET model-card `CGD` and `CGD0` gate-drain capacitance
+  parameters instead of silently dropping them.
+- Validate and lower JFET model-card `CGS` and `CGS0` gate-source capacitance
+  parameters instead of silently dropping them.
+- Validate MOS model-card `NSS` and `TPG` process parameters and derive missing
+  `VT0`, `GAMMA`, and `PHI` values from `N_SUB` / `TOX` through shared engine semantics.
+- Validate and lower MOS model-card `CJS` and `CJD` aliases as canonical `CBS`
+  and `CBD` junction capacitances.
+- Reject negative and non-finite MOS model-card `AF` values before lowering
+  valid flicker-noise exponents.
+- Reject negative and non-finite MOS model-card `KF` values before lowering
+  valid flicker-noise coefficients.
+- Reject MOS model-card `FC` values outside `[0, 1)` or non-finite values
+  before lowering valid forward-bias depletion coefficients.
+- Reject negative and non-finite MOS model-card `MJSW` values before lowering
+  valid sidewall-junction grading coefficients.
+- Reject negative and non-finite MOS model-card `MJ` values before lowering
+  valid bottom-junction grading coefficients.
+- Reject zero, negative, and non-finite MOS model-card `PB` values before
+  lowering valid bulk-junction potentials.
+- Reject negative and non-finite MOS model-card `JS` values before lowering
+  valid junction saturation-current densities.
+- Reject negative and non-finite MOS model-card `CJSW` values before lowering
+  valid sidewall-junction capacitance densities.
+- Reject negative and non-finite MOS model-card `CJ` values before lowering
+  valid bottom-junction capacitance densities.
+- Reject negative and non-finite MOS instance `PS` values before lowering
+  valid source diffusion perimeters.
+- Reject negative and non-finite MOS instance `PD` values before lowering
+  valid drain diffusion perimeters.
+- Reject negative and non-finite MOS instance `AS` values before lowering
+  valid source diffusion areas.
+- Reject negative and non-finite MOS instance `AD` values before lowering
+  valid drain diffusion areas.
+- Reject negative and non-finite MOS instance `NRS` values before lowering
+  valid source diffusion square counts.
+- Reject negative and non-finite MOS instance `NRD` values before lowering
+  valid drain diffusion square counts.
+- Reject MOS model-card `LD` values that are non-finite, negative, or leave a
+  non-positive effective Level-1 channel length.
+- Reject negative and non-finite MOS model-card `RSH` values before lowering
+  Level-1 sheet resistance.
+- Reject negative and non-finite MOS model-card `RS` values before lowering
+  Level-1 source resistance.
+- Reject negative and non-finite MOS model-card `RD` values before lowering
+  Level-1 drain resistance.
+- Reject zero, negative, and non-finite MOS model-card `TNOM` / `T_NOM` values
+  before lowering Level-1 nominal temperature.
+- Reject zero, negative, and non-finite MOS model-card `IS` values before
+  lowering Level-1 saturation current.
+- Reject zero, negative, and non-finite MOS model-card `L` values before
+  lowering Level-1 default length.
+- Reject zero, negative, and non-finite MOS model-card `W` values before
+  lowering Level-1 default width.
+- Reject zero, negative, and non-finite MOS model-card `PHI` values before
+  lowering Level-1 surface potential.
+- Reject negative and non-finite MOS model-card `GAMMA` values before lowering
+  Level-1 body effect.
+- Reject non-finite MOS model-card `LAMBDA` / `LAM` values and lower the `LAM`
+  alias into Level-1 channel-length modulation.
+- Reject non-finite MOS model-card `VT0` / `VTO` / `VTH` values and lower the
+  `VTH` alias into Level-1 threshold voltage.
+- Reject zero, negative, and non-finite explicit MOS model-card `KP` values.
+- Lower and validate MOS model-card `U0` / `UO`, deriving `KP` from surface
+  mobility and `TOX` when no explicit transconductance is supplied.
+- Validate and lower MOS model-card `TOX` into Level-1 oxide thickness instead
+  of silently discarding it.
+- Reject non-finite and non-Level-1 MOS model-card `LEVEL` values while
+  preserving explicit and implicit Level 1 cards.
 - Parse `.save`, scoped or global `.probe`, and `.measure` / `.meas` cards,
   and expose `select_outputs()` / `measure_results()` helpers plus matching
   `ParsedNetlist` methods for analysis-plan results.

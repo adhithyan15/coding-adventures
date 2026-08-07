@@ -1,0 +1,269 @@
+# @version 1
+
+# =============================================================================
+# q.grammar — Parser grammar for the Q historical core (MA-11c)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the Q lexer (code/grammars/q/q.tokens). See
+# code/specs/MA11-q-language.md, especially §3 (the grammar design this file
+# implements) and §4 (the exact primitive/adverb/function-literal scope).
+#
+# Token names (UPPERCASE) come from the Q lexer:
+#   NUMBER NAME                                        literals and variables
+#   COLON                                              assignment (name:expr)
+#   PLUS MINUS STAR PERCENT BANG COMMA HASH UNDERSCORE  primitive verbs
+#   AMP PIPE TILDE
+#   EQ LT GT LE GE NE                                   dyadic comparison verbs
+#   EACH (') REDUCE (/) SCAN (\)                        adverbs
+#   LPAREN RPAREN                                       grouping / list literal
+#   LBRACE RBRACE LBRACKET RBRACKET                     function-literal delims
+#   SEMICOLON                                           list/param/stmt separator
+#   NEWLINE
+#
+# -----------------------------------------------------------------------------
+# What is REUSED unchanged from APL/J (MA11 §3's own framing: "reused
+# UNCHANGED... this is the easy, mechanical part")
+# -----------------------------------------------------------------------------
+# Two nonterminals, exactly like `apl.grammar`/`j.grammar`:
+#
+#   noun_expr  — arrays and scalars (values). Built from `term`s combined by
+#                `verb_expr`s, ONE precedence tier, right-to-left (`a F b G c`
+#                parses as `a F (b G c)`).
+#   verb_expr  — a callable: a primitive glyph (optionally with one adverb
+#                applied — a "derived verb", e.g. `+/`), OR (MA11's own
+#                novelty, see below) something that names a user-defined
+#                callable.
+#
+# Monadic-vs-dyadic dispatch is still a RUNTIME concern, not a grammar
+# concern (MA05 §3 bullet 3, reused unchanged by MA06 §3 and again here):
+# `noun_expr`'s two productions that start with a `verb_expr` (monadic:
+# nothing precedes it) vs. that have a `term` before it (dyadic) are exactly
+# the "which alternative matched" a later pass reads off.
+#
+# Q has NO trains and NO `@` compose in this cut (MA11 §4 explicitly defers
+# `@`; trains/hooks/forks are a J/K-internal device this repo's Q subset
+# never uses at all — Q's own real grammar doesn't have them either), so
+# `verb_expr` is flatter here than `j.grammar`'s own (no `verb_train`, no
+# `AT`-continuation).
+#
+# -----------------------------------------------------------------------------
+# What is GENUINELY NEW here (MA11 §3 bullets 1 and 3)
+# -----------------------------------------------------------------------------
+# 1. FUNCTION LITERALS (§3 bullet 1 / §4) — `function_literal`, a new `term`
+#    alternative: `{[x;y] stmt; stmt; ...}` — an optional bracketed,
+#    semicolon-separated parameter list (`param_list`; defaulting to the
+#    implicit `x`/`y`/`z` names when the brackets are omitted entirely — that
+#    default is a RUNTIME/lowering concern, not something this grammar needs
+#    to encode, since the brackets are simply absent from the parse tree in
+#    that case) followed by a semicolon-separated sequence of statements
+#    (`stmt_seq`), the last one's value being the result.
+#
+# 2. DUAL LIST-LITERAL SYNTAX (§3 bullet 3) — adjacent NUMBER stranding is
+#    reused unchanged from APL/J (`term`'s own `NUMBER { NUMBER }`
+#    alternative, below); the EXPLICIT `(a; b; c)` form is a second, new
+#    `term` alternative (`list_literal`), disambiguated from ordinary
+#    parenthesised grouping purely by the PRESENCE of a top-level `;` inside
+#    the parens (MA11 §3 bullet 3's own last sentence, and §4's
+#    "Parenthesised grouping" bullet says the same thing). See the
+#    `list_literal` rule's own comment below for exactly how the packrat
+#    parser's first-alternative-wins Alternation makes this disambiguation
+#    fall out for free with NO lookahead of its own: `term`'s
+#    `LPAREN noun_expr RPAREN` alternative is tried FIRST and simply FAILS
+#    (the mandatory trailing RPAREN never arrives; a SEMICOLON is in its
+#    place) whenever the parenthesised content contains a top-level `;`,
+#    naturally falling through to `list_literal` on backtrack.
+#
+# -----------------------------------------------------------------------------
+# THE ONE GENUINELY HARD PROBLEM: calling a NAME-bound or inline function
+# value via juxtaposition, without a symbol table (MA11 §2/§3 bullet 1)
+# -----------------------------------------------------------------------------
+# MA11 §3 bullet 1 is explicit: "A function literal is itself an ordinary
+# noun value (assignable, passable), applied with the same juxtaposition/`@`
+# mechanism as a primitive verb — no new *application* production, only a
+# new way to *produce* a callable value." Taken completely literally, this
+# means: do NOT add a brand-new top-level rule like `function_call = ...`;
+# instead, extend the alphabet of things `verb_expr` can BE, so the EXISTING
+# `noun_expr` alternatives (unchanged in SHAPE) already parse a call.
+#
+# Concretely, `verb_expr` gains two new alternatives beyond a bare primitive
+# glyph: a bare `NAME` (a previously-assigned function value, per MA11 §4's
+# "every function body in scope calls only primitives and other
+# already-defined functions") and an inline `function_literal` (so an
+# anonymous lambda can be applied the moment it's written, e.g.
+# `{x+y}[2]`... no — bracket-CALL syntax is out of scope (MA11 §4 reserves
+# `[`/`]` for the function-literal's OWN parameter list only, and indexing
+# is explicitly deferred) — but plain juxtaposition, `{x*2} 5` or
+# `2 {x+y} 3`, works via this same mechanism).
+#
+# The hard part: `NAME` and `function_literal` are ALSO valid `term`
+# (noun-side) alternatives — they have to be, so a bare, un-applied function
+# value can still be assigned (`f:{x+y}`) or passed around. This means
+# `term` and `verb_expr` now OVERLAP on two token shapes, where APL/J's own
+# `term`/`verb_expr` were always completely DISJOINT (NUMBER/NAME/LPAREN vs.
+# a fixed set of primitive-glyph tokens) — the exact reason APL/J never
+# needed to solve this problem at all. Two consequences, both deliberate,
+# both disclosed:
+#
+#   (a) `noun_expr`'s OPTIONAL dyadic continuation is widened from
+#       `[ verb_expr noun_expr ]` (APL/J's own shape, unchanged in the
+#       PRIMITIVE case) to `[ verb_expr noun_expr | noun_expr ]` — an
+#       ADDITIONAL fallback alternative, tried only when no verb_expr is
+#       present at that position. This is what lets `f 5` (nothing before
+#       `f`, calling it monadically with the value that follows) parse at
+#       all: `term` will always win the FIRST alternative's mandatory
+#       leading element when the input starts with a NAME (there is no way
+#       to make an Alternation prefer "treat this NAME as a verb" over
+#       "treat this NAME as a plain term" at that exact position without
+#       unbounded lookahead a packrat parser doesn't have) — but once `f`
+#       is consumed as `term`, checking "does an entire, independent
+#       `noun_expr` immediately follow with nothing in between?" is exactly
+#       the shape that means "apply." This is still `noun_expr`'s OWN
+#       existing optional continuation, just with one more inner
+#       alternative — not a new named production.
+#   (b) A GENUINE, DISCLOSED LIMITATION: real K/Q resolves whether a bare
+#       NAME plays a noun role or a verb (callable) role, in a chain of
+#       three or more juxtaposed names (`f g h`), by tracking each name's
+#       already-defined ARITY during parsing (a symbol table) — something
+#       no context-free grammar can do, and something this repo's shared
+#       `GrammarParser` engine has no mechanism for at all (every other
+#       frontend in this family resolves monadic/dyadic dispatch purely
+#       from grammar SHAPE, never from what a name was previously bound
+#       to). This grammar's own resolution for a 3+-name juxtaposition
+#       chain — inner alternative (a) (`verb_expr noun_expr`, i.e. "the
+#       token right after the first term looks like a verb-shaped thing")
+#       is tried BEFORE inner alternative (b) (a bare `noun_expr`) — means
+#       `x f y` (exactly one middle "verb" name between two operands)
+#       parses as a DYADIC call `f(x, y)`, but a longer chain right of that
+#       point recurses through the SAME rule and does not attempt to look
+#       further ahead to decide any global grouping. This is a best-effort,
+#       NOT a faithful reproduction of true K/Q valence resolution — exactly
+#       the same class of disclosed simplification `j.grammar`'s own header
+#       comment accepts for a bare-noun train tooth outside a fork's leading
+#       position ("this grammar accepts the shape syntactically and leaves
+#       the restriction to a later pass"). A future `q-runtime` (MA-11d)
+#       needs to be aware of this when it walks the tree.
+#
+# See `verb_expr` and `noun_expr`'s own comments below for the exact rules.
+# =============================================================================
+
+program = { line } ;
+
+line = statement NEWLINE
+     | statement
+     | NEWLINE ;
+
+statement = assignment ;
+
+# Assignment (MA11 §4): `name:expr`, right-associative and right-to-left
+# evaluated, mirroring `apl.grammar`/`j.grammar`'s own `assignment`
+# production shape exactly (chained assignment, `a:b:3`, assigns 3 to both).
+# Q spells assignment with a single COLON (no local/global distinction —
+# MA11 §4's own "Assignment" bullet explicitly puts the global-vs-local `::`
+# subtlety out of scope, since this cut has no nested function literals for
+# it to matter to).
+assignment = NAME COLON assignment
+           | noun_expr ;
+
+# The core two-nonterminal, one-precedence-tier, right-to-left application
+# chain (MA11 §3), reused from `apl.grammar`/`j.grammar`'s `value_expr`/
+# `noun_expr` in SHAPE for the primitive-verb case, widened by exactly one
+# inner alternative for the genuinely new "apply a callable term" case (see
+# the header note above). Read as: a `term`, optionally followed EITHER by
+# an explicit `verb_expr` and another `noun_expr` (ordinary dyadic — a
+# primitive glyph, or a NAME/function_literal playing the same role, e.g.
+# `x f y`) OR by a bare `noun_expr` with nothing in between (function
+# application — `f 5`, the first `term` is assumed callable) — OR, with no
+# leading `term` at all, a bare `verb_expr noun_expr` (ordinary monadic
+# primitive application, e.g. `+5`, unchanged from APL/J).
+noun_expr = term [ verb_expr noun_expr | noun_expr ]
+          | verb_expr noun_expr ;
+
+# A noun atom (MA11 §4): a run of one or more juxtaposed NUMBER literals
+# (stranding, reused unchanged from APL/J's own numeric-only restriction:
+# `1 2 3` strands, `a b` does not strand this way — two bare NAMEs
+# juxtaposed instead falls through to `noun_expr`'s new "apply" alternative
+# above), a NAME, a function literal (MA11 §3 bullet 1 — needed here so an
+# UN-applied lambda value can still be assigned/passed, e.g. `f:{x+y}`), a
+# fully parenthesised noun_expr (ordinary grouping), or an explicit
+# semicolon-separated list literal (MA11 §3 bullet 3).
+term = NUMBER { NUMBER }
+     | NAME
+     | function_literal
+     | LPAREN noun_expr RPAREN
+     | list_literal ;
+
+# The explicit list-literal form (MA11 §3 bullet 3 / §4): `(a; b; c)`, for
+# lists of arbitrary expressions (including function literals or mixed
+# types) that numeric stranding cannot express. Requires AT LEAST one
+# SEMICOLON (i.e. 2+ elements) — this is exactly what disambiguates it from
+# ordinary parenthesised grouping (`term`'s OTHER, plain
+# `LPAREN noun_expr RPAREN` alternative, which has no SEMICOLON at all).
+#
+# No explicit lookahead is written anywhere for this disambiguation — it
+# falls out entirely from `term`'s alternatives being tried IN ORDER by the
+# underlying packrat Alternation: for `(2+3)` (plain grouping), the earlier
+# `LPAREN noun_expr RPAREN` alternative already succeeds outright (noun_expr
+# greedily consumes `2+3` as one dyadic chain, then RPAREN matches), so
+# `list_literal` is never even attempted. For `(2;3)` (an explicit list),
+# that SAME earlier alternative is tried first and FAILS cleanly: noun_expr
+# can only consume `2` (its own dyadic continuation requires a verb_expr or
+# a bare noun_expr right after `2`, and a bare SEMICOLON is neither), then
+# the mandatory RPAREN check finds a SEMICOLON instead and the whole
+# alternative backtracks (the packrat engine resets `self.pos` on every
+# failed Alternation choice) — falling through cleanly to `list_literal`,
+# which matches.
+list_literal = LPAREN noun_expr SEMICOLON noun_expr { SEMICOLON noun_expr } RPAREN ;
+
+# Function literals — the headline novelty (MA11 §2 / §3 bullet 1 / §4):
+# `{[x;y] stmt; stmt; ...}`. The bracketed parameter list is OPTIONAL in the
+# grammar (defaulting to the implicit `x`/`y`/`z` names when omitted — a
+# RUNTIME/lowering convention this grammar does not need to encode itself,
+# since the parse tree simply has no `param_list` child in that case); the
+# body is a semicolon-separated sequence of statements (`stmt_seq`), the
+# last one's value being the call's result (also a RUNTIME concern, not a
+# grammar one — this rule only builds the flat statement sequence).
+function_literal = LBRACE [ LBRACKET param_list RBRACKET ] stmt_seq RBRACE ;
+
+# One or more parameter NAMEs, semicolon-separated (`{[x;y;z] ...}`). At
+# least one NAME is required whenever the brackets are present at all — an
+# explicitly empty `[]` (a real, rarer Q idiom meaning "no implicit
+# parameters, an explicitly niladic function") is not handled here; this
+# cut only needs the two forms MA11 §3 bullet 1 actually describes
+# (brackets present with 1+ names, or brackets entirely absent).
+param_list = NAME { SEMICOLON NAME } ;
+
+# One or more statements, semicolon-separated, forming a function literal's
+# body (MA11 §3 bullet 1). Reuses `statement` (== `assignment`) directly —
+# assignment inside a function body is syntactically identical to top-level
+# assignment (MA11 §4's "Assignment" bullet: local to that call, no nested-
+# function scoping subtlety to encode here since this cut has no nested
+# function literals inside a parameter list's own scope to worry about
+# distinguishing).
+stmt_seq = statement { SEMICOLON statement } ;
+
+# Verb-valued expressions (MA11 §3/§4). A bare primitive verb, optionally
+# postfixed by ONE adverb (a "derived verb", e.g. `+/`, `+\`, `+'`) — OR,
+# the two genuinely new alternatives this grammar needs for function
+# literals to be "applied with the same juxtaposition mechanism as a
+# primitive verb" (see the header note's full rationale): a bare NAME
+# (assumed, at evaluation time, to be bound to a previously-defined
+# function value) or an inline function_literal (an anonymous lambda,
+# applied the moment it is written). Stacking adverbs (applying one to an
+# already-adverbed verb), and adverbing a NAME/function_literal directly
+# (Q's real `f/x` idiom for a user-defined `f`), are both out of this first
+# cut's scope, matching how `apl.grammar`/`j.grammar` restrict adverb
+# stacking on primitives too.
+verb_expr = verb_primitive [ EACH | REDUCE | SCAN ]
+          | NAME
+          | function_literal ;
+
+# One primitive verb glyph (MA11 §4's full primitive-verb table): flip/add,
+# negate/subtract, first/multiply, reciprocal/divide, til (monadic-only —
+# dyadic `!` is deferred), enlist/join, count/take, floor/drop, where/min,
+# reverse/max, not/match, then the six comparison glyphs (Q's own `<>` for
+# not-equal, never `~=` or `#` — see `q.tokens`' own header callout on this
+# exact trap).
+verb_primitive = PLUS | MINUS | STAR | PERCENT | BANG | COMMA | HASH
+               | UNDERSCORE | AMP | PIPE | TILDE
+               | EQ | LT | GT | LE | GE | NE ;

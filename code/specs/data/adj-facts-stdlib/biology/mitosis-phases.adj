@@ -1,0 +1,109 @@
+% ============================================================================
+% mitosis-phases — each phase of mitosis and the defining event that happens
+% in it (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the first big ideas of cell biology, and a rung a MEDICINE or genetics
+% agent reasons UP from: a cell does not split all at once — mitosis proceeds
+% through FOUR ordered phases, and each phase is defined by one characteristic
+% event. In prophase the loose chromatin is transformed into visible
+% chromosomes; in metaphase those chromosomes line up down the middle of the
+% cell; in anaphase the sister chromatids are pulled apart, one to each future
+% daughter cell; in telophase a new nuclear membrane forms around each set.
+% Recall is a binding query:
+%
+%     ? mitosis_phase(metaphase, $Event)   % chromosomes_line_up
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `mitosis_phase(phase, event)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the event
+% atom WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of the four mitotic phases (it never invents an event).
+%
+% The four phases IN ORDER, with the defining event the source states, as a
+% little truth table (the ordering — prophase → metaphase → anaphase →
+% telophase — is itself asserted by the source's "The four phases of mitosis
+% are ..." list; the table stores the pairs, and the ordinal reading is the
+% top-to-bottom row order):
+%
+%     phase       defining event          a beginner's cue
+%     ---------   ---------------------   -----------------------------------
+%     prophase    chromatin_forms_        chromatin is transformed INTO
+%                 chromosomes             visible chromosomes (chromatids)
+%     metaphase   chromosomes_line_up     paired chromosomes line up between
+%                                         the centrioles (the cell's middle)
+%     anaphase    chromatids_separate     chromatids are pulled apart — one
+%                                         from each pair to each daughter cell
+%     telophase   nuclear_membrane_forms  a new nuclear membrane forms around
+%                                         each set of chromosomes
+%
+% The query also runs BACKWARD — bind an event and recall its phase:
+%
+%     ? mitosis_phase($Phase, chromosomes_line_up)   % metaphase
+%
+% A word that is NOT one of these four phases — `interphase` (the resting phase
+% BETWEEN divisions, not a phase OF mitosis), `prometaphase`, `cytokinesis`,
+% `rock` — is deliberately NOT a row, so a phase recall ABSTAINS on it rather
+% than inventing an event. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the phase→event pairs
+% it can ground, and only those. (Interphase and cytokinesis ARE described on
+% the same source page, but as stages OUTSIDE the four-phase mitosis list — so
+% they are intentionally excluded here to keep the relation to the four classic
+% mitotic phases the source names.)
+%
+% The `event` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful paraphrase of the event the source EXPLICITLY states for that phase
+% — never one the source does not support. Where the everyday word differs from
+% the source's word, the atom stays anchored to the source's own span (the
+% source says chromatin is "transformed into chromosomes", so the atom is
+% `chromatin_forms_chromosomes`, not the textbook shorthand "condense").
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every phase→event pair
+% below was read out of a fetched NCI SEER Training Modules "Cell Cycle" page,
+% and any pair whose event could not be verified there would have been
+% dropped). The single primary source, and the verbatim span that fixes each
+% row:
+%
+%   Source: NCI SEER Training Modules — "Cell Cycle" (U.S. National Cancer
+%   Institute, cancer.gov), which states: "The four phases of mitosis are
+%   Prophase ... Metaphase ... Anaphase ... Telophase".
+%   https://training.seer.cancer.gov/disease/cancer/biology/cycle.html
+%
+%   prophase → chromatin_forms_chromosomes
+%     "Chromatin is transformed into chromosomes composed of pairs of filaments
+%      called chromatids (each is a complete genetic copy of its chromosome)."
+%
+%   metaphase → chromosomes_line_up
+%     "Paired chromosomes become lined up between the centrioles."
+%
+%   anaphase → chromatids_separate
+%     "Chromatids are pulled toward the centrioles. One chromatid from each pair
+%      goes to each daughter cell."
+%
+%   telophase → nuclear_membrane_forms
+%     "A nuclear membrane forms around each set of chromosomes forming a new
+%      nucleus with a nucleolus."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (prophase → chromatin_forms_chromosomes). Every OTHER row's verbatim
+% span is listed above and echoed in an inline `%` comment on the row, so each
+% event remains independently checkable against the same primary page. The
+% source is the NCI SEER Training Modules, a primary U.S. government (National
+% Cancer Institute) teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table mitosis_phase {
+    columns phase, event
+
+    row (prophase, chromatin_forms_chromosomes)   % "Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome)."
+    row (metaphase, chromosomes_line_up)          % "Paired chromosomes become lined up between the centrioles."
+    row (anaphase, chromatids_separate)           % "Chromatids are pulled toward the centrioles. One chromatid from each pair goes to each daughter cell."
+    row (telophase, nuclear_membrane_forms)       % "A nuclear membrane forms around each set of chromosomes forming a new nucleus with a nucleolus."
+
+    source "Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome)."
+    locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    trust authoritative
+}

@@ -1,0 +1,21 @@
+% ============================================================================
+% states-of-matter.query.adj — a worked recall over the physics states-of-matter
+% (phase-change) library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the change from a
+% solid to a liquid called?": it states no physics fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `phase_change_name` rows and returns the name + the table's source/locator/
+% trust. A direction not in the table abstains honestly — the engine never
+% invents a name.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli states-of-matter.query.adj
+% ============================================================================
+
+import "states-of-matter.adj"
+
+? phase_change_name(solid_to_liquid, $Name)    % expect melting
+? phase_change_name(gas_to_liquid, $Name)      % expect condensation
+? phase_change_name($Change, sublimation)      % expect solid_to_gas — reverse recall
+? phase_change_name(solid_to_plasma, $Name)    % expect abstain — not one of the six phase changes

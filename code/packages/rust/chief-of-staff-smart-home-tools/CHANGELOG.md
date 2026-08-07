@@ -1,9 +1,24 @@
 # Changelog
 
+- Add Chief boundary labels for typed camera PTZ preset recall and bounded
+  movement commands.
+
+- Expose device indicator/display and sensor calibration command labels across
+  the Chief smart-home tool boundary.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Expose the `camera_set_recording` D23 command label.
+- Expose labels for typed non-credential device-configuration commands.
+
+- Added explicit labels and argument conversion for D23 media playback,
+  volume, grouping, and queue commands.
+- Added `udp_multicast` discovery, `lan_udp` transport, and LAN UDP topology
+  labels to Chief catalog filters and serialized runtime reports.
+- Added `camera`, `onvif`, and `ws_discovery` labels to Chief catalog filters
+  and serialized integration reports.
 - Added `smart_home.get_command_resolution_brief`, a read-only Chief adapter
   that joins command audit, remediation plan, operator action, and closeout
   retention signals into one resolution packet without dispatching commands,

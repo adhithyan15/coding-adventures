@@ -60,7 +60,19 @@ Analogy — Huffman vs FSE:
 FSE encoding:
 1. Build a **normalised frequency table** for the symbols (lit lengths, match lengths,
    offsets). Normalised counts sum to a power of 2 (the table size = 2^AccuracyLog).
-2. Build a **spread table** — each symbol occupies `table_size / count[sym]` slots.
+2. Build a **spread table** — each symbol occupies `count[sym]` slots, assigned by a
+   **single pass** over symbols in ascending order `0..maxSymbolValue`: for each symbol,
+   place its full count immediately (step = `(table_size>>1) + (table_size>>3) + 3`,
+   skipping any slot already claimed by a probability−1 symbol). This is
+   `FSE_buildDTable_internal`'s low-probability branch in the reference C implementation —
+   there is **no** "handle count>1 symbols first, then count==1 symbols" second pass; a
+   fabricated two-pass split of that shape produces a different (but internally
+   self-consistent) table layout that is silently non-conformant with real zstd. This bug
+   shape — passing a language port's own round-trip tests while producing wire-incompatible
+   output — was found independently in three ports; see lessons.md Lesson 96 for the full
+   derivation and the exact per-sequence field order (peek LL/ML/OF → read extras OF, ML,
+   LL → update states LL, ML, OF, skipping the update entirely for the last sequence in a
+   block).
 3. Encode backwards: each symbol takes the current state, looks up which new state to
    transition to, and emits the difference as bits.
 
@@ -93,15 +105,44 @@ After literals are extracted, the LZ77 back-references are encoded as **sequence
 each sequence is a triple `(literal_length, match_length, offset)`. Three separate FSE
 streams encode these three fields simultaneously.
 
-**Repeat Offsets:** ZStd tracks the three most-recently-used offsets in slots R1, R2, R3.
-Referencing a recent offset costs only 2 bits instead of encoding the full distance:
+**Repeat Offsets:** ZStd tracks the three most-recently-used offsets in slots R1, R2, R3
+(RFC 8878 §3.1.1.3.2.1.1). Referencing a recent offset costs only 2 bits instead of
+encoding the full distance. The history is **frame-scoped**, not block-scoped: it starts
+at `R1=1, R2=4, R3=8` for the first block of a frame and is threaded, unmodified across
+Raw/RLE blocks, through every Compressed block's sequences for the rest of the frame.
+
+The mapping from `Offset_Value` (the raw FSE-decoded value, `of_raw` below) to an actual
+offset — including the one genuinely easy-to-miss special case — is:
 
 ```
-offset code 1 → R1 (most recent)
-offset code 2 → R2
-offset code 3 → R3
-offset code ≥ 4 → (value - 3) is the actual offset; update R1, shift others
+Offset_Value ≥ 4        → actual offset = Offset_Value - 3 (explicit); then push it onto
+                           the history: R3←R2, R2←R1, R1←new_offset
+Offset_Value ∈ {1, 2, 3} → a repeat-offset reference, chosen by
+                           selector = (Literals_Length == 0 ? 1 : 0) + Offset_Value - 1:
+                             selector 0 → reuse R1 (no rotation)
+                             selector 1 → use R2 (R1,R2 swap; R3 untouched)
+                             selector 2 → use R3 (rotate: R1,R2,R3 ← new,old_R1,old_R2)
+                             selector 3 → use R1-1 (same rotation shape as selector 2)
 ```
+
+See "Repeat-Offset (R1/R2/R3) decode algorithm" below for further detail.
+
+> **Correction (2026-08):** the history-selection rule is NOT simply "offset code N
+> selects Rn" — that description (an earlier revision of this section) omits the
+> `Literals_Length == 0` shift, which changes which slot codes 1/2/3 select and, for
+> `Offset_Value == 3` with `Literals_Length == 0`, replaces the slot lookup entirely with
+> `R1 - 1`. Every language port's DECODER in this repo initially implemented `offset =
+> Offset_Value - 3` unconditionally for every code — including code 1/2/3 — because this
+> repo's own ENCODERS never emit repeat-offset codes by design (an explicit "no
+> repeat-offset shortcuts" educational simplification: every offset an encoder here
+> writes is `>= 4` on the wire), so a self round trip never exercises this path, and even
+> the spec's own TC-8 (built to be repeat-offset-*friendly* input, not repeat-offset-*
+> aware* output) doesn't catch it. Real `zstd` encoders use repeat offsets constantly, so
+> a decoder missing this fails to decode a large fraction of real-world `.zst` files. See
+> `lessons.md` Lesson 98 and the `rust/zstd` / `c/zstd` conformance fixes; cross-checked
+> against the reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`).
+> Implementing this remains DECODE-only — encoders in this repo are not required to emit
+> repeat-offset codes.
 
 ### ZStd vs DEFLATE vs Brotli
 
@@ -143,15 +184,30 @@ Bits 7–6:  Frame_Content_Size_Flag
            10 → FCS is 4 bytes
            11 → FCS is 8 bytes
 Bits 5:    Single_Segment_Flag — if 1, no Window_Descriptor; FCS always present
-Bit  4:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
+Bit  4:    Unused_bit (decoders must ignore; not the checksum flag — see note below)
 Bit  3:    Reserved (must be 0)
-Bit  2:    Reserved (must be 0)
+Bit  2:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
 Bits 1–0:  Dictionary_ID_Flag
            00 → no dictionary ID
            01 → 1-byte dict ID
            10 → 2-byte dict ID
            11 → 4-byte dict ID
 ```
+
+> **Correction (2026-08):** an earlier revision of this table placed
+> Content_Checksum_Flag at bit 4 and marked bit 2 as reserved. That was
+> backwards. Verified empirically against the real `zstd` CLI: `zstd -c file`
+> (checksum on by default) emits FHD `0x64`; `zstd -c --no-check file` emits
+> FHD `0x60` — the differing bit is bit 2, and the checksummed output is
+> exactly 4 bytes longer. RFC 8878 §3.1.1.1 agrees: bit 4 is Unused_bit, bit 2
+> is Content_Checksum_Flag. A decoder that reads bit 4 for the checksum flag
+> will misparse any real-world frame that has a trailing checksum (which is
+> the common case — most encoders, including the reference `zstd` CLI, enable
+> it by default) as having trailing garbage after the last block. This
+> mistake was repo-wide (spec, Go, and Rust) — several language ports had
+> already copied the wrong bit position into a code comment before this was
+> caught; see `lessons.md` Lesson 95/96 and the `rust/zstd` conformance fix
+> that corrected this table.
 
 ### Window Descriptor (1 byte, present when Single_Segment_Flag=0)
 
@@ -233,6 +289,142 @@ Offset_Code         → actual offset (see repeat offset rules above)
 The bit streams are written **right-to-left** (backwards) and decoded left-to-right.
 This allows the encoder to determine state transitions without lookahead.
 
+#### Exact decode algorithm (bit-consumption order)
+
+This is the part every language port in this repo got wrong on the first pass
+(discovered during a repo-wide zstd conformance audit, 2026-08 — first found
+during the `java/zstd` rescue and reproduced identically against the Rust
+reference and multiple other independent implementations across this repo —
+see `lessons.md`). It is NOT recoverable from a same-codebase round-trip
+test: an encoder/decoder pair that agree with each other on a wrong order
+will still round-trip correctly against themselves. It is only detectable by
+decoding with (or encoding for) an independent, spec-conformant
+implementation — i.e. `zstd -d` on the CLI (TC-9, aka test case 9). Verified
+against RFC 8878 §3.1.1.3.2.1.2 and the actual
+reference C source (`ZSTD_decodeSequence`, `FSE_encodeSymbol`,
+`FSE_initCState2` in `github.com/facebook/zstd`):
+
+1. **Initial states.** Three reads at the start of the bitstream, each
+   `AccuracyLog` bits: **Literals_Length_State, Offset_State,
+   Match_Length_State** — in that order. This becomes the state used to
+   decode sequence 1.
+2. **Per sequence**, repeated for every sequence in the block:
+   a. **Peek** all three symbols from the CURRENT states —
+      `symbol = table[state].symbol`. This is a bare table lookup; it
+      consumes **zero bits**. (This is the detail every port missed: it's
+      tempting to fold "get symbol" and "consume transition bits" into one
+      step, but real zstd keeps them separate, and the separation is load-
+      bearing for step (c) below.)
+   b. **Read extra value bits**, in order **Offset, Match_Length,
+      Literals_Length**. (Note: this is the REVERSE of the initial-state
+      order in step 1, and also the reverse of the state-update order in
+      step (c) — the RFC is genuinely asymmetric here, not a typo.)
+   c. **Update FSE states** (consumes bits: `new_state = table[old_state].base
+      + read(table[old_state].nbBits)`), in order **Literals_Length,
+      Match_Length, Offset** — but **only if this is not the last sequence
+      in the block**. There is no "next" sequence to prepare a state for
+      after the last one, so no update bits are read (and a conformant
+      encoder must not write any either — see below).
+3. No content checksum / trailing bytes may follow the last block's payload
+   (`Content_Checksum_Flag`, if set, contributes exactly 4 more bytes before
+   end-of-frame; anything after that is a malformed/truncated frame and
+   must be rejected, not silently ignored).
+
+**Encoder implications** (the above is what a forward decoder consumes; the
+encoder writes it in exact reverse, since the bitstream is backward): process
+sequences from last to first. For the FIRST sequence processed (semantically
+the LAST real sequence), there is no bit-consuming transition to produce its
+starting state — it must be computed directly from the symbol with **zero
+bits written**, using the same formula real zstd calls `FSE_initCState2`:
+given per-symbol encode-table entries `deltaNbBits`/`deltaFindState` and the
+`stateTable`,
+```
+nbBitsOut = (deltaNbBits + (1 << 15)) >>> 16
+value     = (nbBitsOut << 16) - deltaNbBits
+state     = stateTable[(value >>> nbBitsOut) + deltaFindState]
+```
+For every subsequent sequence processed (all but the first), the normal
+`FSE_encodeSymbol` transition applies: `nbBitsOut = (state + deltaNbBits) >>>
+16`, flush the low `nbBitsOut` bits of `state`, then
+`state = stateTable[(state >>> nbBitsOut) + deltaFindState]`.
+
+#### Repeat-Offset (R1/R2/R3) decode algorithm
+
+RFC 8878 §3.1.1.3.2.1.1. A **decode-only** feature gap this repo's ports can
+share even after the FSE-codec bugs above are fixed, because this repo's own
+encoders (by design — "Educational Simplification" below) never emit it, so
+no port's self-consistency round trip, and not even a fixed single-corpus
+CLI-interop test (TC-9), reliably exercises this path. First found missing in
+`code/packages/c/zstd` (PR #9941) via ad hoc fuzzing against the real `zstd`
+CLI, then confirmed as a repo-wide gap; see `lessons.md` Lesson 99.
+
+The three registers `rep1, rep2, rep3` are **frame-scoped**: initialized to
+`1, 4, 8` "for the first block" (RFC 8878's literal words), then carried
+unmodified across Raw/RLE blocks and updated after **every** Compressed
+block's sequences — explicit-offset sequences included, not only
+repeat-offset ones. They are never reset mid-frame.
+
+For each decoded sequence, after Step 2 ("read extra value bits") above
+produces `of_code` (the peeked Offset symbol) and `Offset_Value = (1 <<
+of_code) | extra_bits`:
+
+```
+if of_code >= 2:
+    # Offset_Value >= 4 always here: an ordinary explicit offset.
+    offset = Offset_Value - 3
+    rep3, rep2, rep1 = rep2, rep1, offset
+
+else:
+    # of_code in {0, 1} => Offset_Value in {1, 2, 3}: a repeat-offset
+    # reference. Literals_Length == 0 shifts the interpretation by one
+    # slot (RFC 8878: "the Literals_Length is used ... to determine
+    # which repeated offset is meant"). Literals_Length == 0 is knowable
+    # from of_code alone at this point in decoding — LL code 0 is the
+    # only Literal_Length code with baseline 0 and 0 extra bits, so it is
+    # decidable from the PEEKED ll_code, before ll's extra bits are read.
+    selector = Offset_Value - 1 + (1 if Literals_Length == 0 else 0)
+    if selector == 0:
+        offset = rep1                              # no rotation
+    elif selector == 1:
+        offset = rep2;  rep2, rep1 = rep1, rep2     # swap; rep3 untouched
+    elif selector == 2:
+        offset = rep3;  rep3, rep2, rep1 = rep2, rep1, rep3   # full rotate
+    else:  # selector == 3
+        offset = rep1 - 1 if rep1 > 0 else 0        # full rotate, same shape as 2
+        rep3, rep2, rep1 = rep2, rep1, offset
+```
+
+Cross-checked against both the RFC prose and the literal reference C source
+(`ZSTD_decodeSequence` in `zstd_decompress_block.c`,
+`github.com/facebook/zstd`) rather than re-derived from memory — the exact
+slot-rotation shape per selector, and the `Literals_Length == 0` shift in
+particular, are easy to get subtly wrong and this repo has already paid for
+that once (Lesson 96) on the adjacent FSE-codec bug class.
+
+#### Exact FSE table-construction algorithm
+
+Also load-bearing, also invisible to self-round-trip tests: the symbol
+"spread" step that assigns table slots must be a **single pass** over
+symbols in ascending order (`for s in 0..maxSymbolValue: place
+normalizedCount[s] copies of s, advancing by `step = (tableSize>>1) +
+(tableSize>>3) + 3` positions each time, skipping any position already
+claimed by a -1-probability symbol`). There is no "handle count>1 symbols in
+one pass, then count==1 symbols in a second pass" — that is NOT part of the
+real algorithm; it produces a different (but internally self-consistent)
+table and was one of several such bugs found independently across this
+repo's language ports (first in `java/zstd`'s first pass). See
+`FSE_buildDTable_internal` in `github.com/facebook/zstd`'s `fse_decompress.c`
+for the canonical version.
+
+#### Number_of_Sequences wire encoding
+
+The 2-byte form of `Number_of_Sequences` (values 128–32511) is **not** a
+plain little-endian `u16` with the high bit set — the marker/high byte comes
+FIRST on the wire regardless of host endianness: `byte0 = (count >> 8) |
+0x80`, `byte1 = count & 0xFF`. A little-endian-style encoding that writes the
+low byte first is self-consistent (round-trips against itself) but produces a
+non-conformant frame for any block with 128+ sequences.
+
 ## Educational Simplification
 
 The educational implementation **must produce and consume valid .zst files**
@@ -247,6 +439,7 @@ The educational implementation **must produce and consume valid .zst files**
 | Skippable frames | Yes | No (skip on read) |
 | Checksums | Optional | Omit (flag=0) |
 | Window size | Up to 8 MB | Fixed 8 MB |
+| Repeat offsets | R1/R2/R3 shortcuts | Encoder: none, every offset coded in full (raw offset ≥ 4 always). Decoder: full support required — real `zstd`'s encoder uses repeat offsets constantly, so a decoder that only understands explicit offsets fails to interoperate with real-world `.zst` files (see "Repeat-Offset (R1/R2/R3) decode algorithm" above and `lessons.md` Lesson 99) |
 
 Raw literals + predefined FSE tables for sequences produces valid, decompressible output.
 The interoperability requirement (test case 9) ensures the format is real, not toy.
@@ -349,6 +542,13 @@ assert output == input
 # The repeat-offset mechanism should make this compress efficiently
 assert len(compressed) < len(input) * 0.70
 ```
+> Note: this test only requires the compressed round trip to be correct and reasonably
+> small — it does NOT, by itself, prove an implementation's *decoder* understands
+> repeat-offset sequences (offset codes 1/2/3), since an implementation whose own encoder
+> never emits repeat-offset codes at all (this repo's educational encoders don't) can pass
+> TC-8 while still failing to decode a real repeat-offset-aware encoder's output. See the
+> Repeat Offsets correction above (Lesson 98) — that gap is only caught by real
+> cross-implementation interop (TC-9-style), not by this test.
 
 ### TC-9: Cross-language / interoperability
 ```
@@ -376,7 +576,12 @@ assert decompress(frame) == b"hello"
 ## Security Considerations
 
 - **Bomb protection**: the `Content_Size` field is an untrusted hint — do not pre-allocate
-  `Content_Size` bytes; grow output incrementally.
+  `Content_Size` bytes; grow output incrementally. Enforce a hard cap on total decompressed
+  output size, checked incrementally at every point output can grow — including inside the
+  per-sequence loop of Compressed-block decoding, not just once per top-level Raw/RLE block.
+  A Compressed block's *wire* size is capped (see Block size cap below), but that says
+  nothing about how large it can LZ77-expand to: a single sequence's match length can be
+  tens of KB, and one block can carry tens of thousands of sequences.
 - **Block size cap**: reject blocks claiming `Block_Size > 1 << 17` (128 KB + 1) as malformed.
 - **FSE table validation**: verify that normalised counts sum to the declared table size;
   reject tables with negative counts or counts that overflow.

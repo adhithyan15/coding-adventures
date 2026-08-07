@@ -20,7 +20,7 @@ use coding_adventures_javascript_lexer::{
     tokenize_javascript, tokenize_javascript_typed, tokenize_javascript_with_cv,
 };
 use coding_adventures_javascript_tokens::EsVersion;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 use std::collections::HashMap;
 
 /// Typed default version. New code should prefer this over the string form.
@@ -63,12 +63,24 @@ fn validate_version(version: &str) -> Result<&str, String> {
     }
 }
 
+// SECURITY: `GrammarParser::new` defaults to an *unbounded* recursion depth,
+// and `javascript-to-semantic-ir::compile_source` (and any other caller
+// reachable with untrusted JS on an ordinary ~2 MiB stack) calls this
+// function's parse path directly, so pathologically deep nesting
+// (`((((…))))`, `1+1+…`) would otherwise overflow the native thread stack —
+// an uncatchable process abort — before either `Result`-returning entry
+// point below ever got a chance to report anything. `asi.rs`'s own
+// `parse_with_asi` already measured `DEFAULT_MAX_RULE_DEPTH` (128) safe for
+// this exact grammar ("trips a clean, recoverable parse error well below
+// the ~200-frame overflow point... real JS never nests grouping this
+// deep") — opted in here too, for the untyped/typed factories that
+// `parse_with_asi` does not sit in front of.
 pub fn create_javascript_parser(source: &str, version: &str) -> Result<GrammarParser, String> {
     let version = validate_version(version)?;
     let tokens = tokenize_javascript(source, version)?;
     let grammar = _grammar::parser_grammar(version)
         .expect("compiled JavaScript parser grammar missing supported version");
-    Ok(GrammarParser::new(tokens, grammar))
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH))
 }
 
 pub fn parse_javascript(source: &str, version: &str) -> Result<GrammarASTNode, String> {
@@ -87,7 +99,7 @@ pub fn create_javascript_parser_typed(
     let tokens = tokenize_javascript_typed(source, version)?;
     let grammar = _grammar::parser_grammar(version.as_str())
         .expect("compiled JavaScript parser grammar missing supported version");
-    Ok(GrammarParser::new(tokens, grammar))
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH))
 }
 
 /// Typed version of [`parse_javascript`]. Takes an [`EsVersion`] directly.
@@ -198,10 +210,11 @@ pub fn parse_javascript_with_cv(
         })
         .collect();
 
-    // 2. Parse via the existing GrammarParser.
+    // 2. Parse via the existing GrammarParser. Opt into the depth guard —
+    //    see `create_javascript_parser`'s SECURITY comment.
     let grammar = _grammar::parser_grammar(version.as_str())
         .expect("compiled JavaScript parser grammar missing supported version");
-    let mut parser = GrammarParser::new(tokens, grammar);
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH);
     let ast = parser
         .parse()
         .map_err(|e| format!("JavaScript parse failed: {e}"))?;
@@ -477,5 +490,100 @@ mod tests {
             }
             other => panic!("expected an expression statement, got {other:?}"),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // MAX_RULE_DEPTH recursion-depth guard (create_javascript_parser /
+    // create_javascript_parser_typed / parse_javascript_with_cv)
+    //
+    // `asi.rs`'s own `parse_with_asi` already opts into `DEFAULT_MAX_RULE_DEPTH`
+    // and documents it safe for this grammar; these three entry points did
+    // not. Measured directly (binary search against `create_javascript_parser`,
+    // the untyped factory `javascript-to-semantic-ir::compile_source` calls):
+    // safe up to 17 real nesting levels, trips at 18 — comfortably below
+    // `asi.rs`'s own documented ~200-frame native overflow point.
+    // -----------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("var x = {}1{};", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must produce a recoverable error, not overflow the
+    /// native stack. We parse 5000 levels — far past `DEFAULT_MAX_RULE_DEPTH`
+    /// — on a worker thread with a generous 32 MiB stack, so the *guard* is
+    /// what stops the recursion, not the stack running out.
+    #[test]
+    fn test_deeply_nested_input_returns_error_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("javascript-parser-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(|| {
+                let result = parse_javascript(&nested_paren_source(5000), "es2020");
+                assert!(
+                    result.is_err(),
+                    "deeply-nested input must fail with an error, not parse or crash"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
+    /// Input that nests *exactly up to* `DEFAULT_MAX_RULE_DEPTH` still
+    /// parses cleanly, and one layer deeper cleanly trips the guard. These
+    /// exact boundary counts (17 legitimate levels) were found empirically
+    /// by binary-searching against increasing nesting counts at the
+    /// production cap.
+    #[test]
+    fn test_nesting_up_to_cap_still_parses() {
+        assert!(
+            parse_javascript(&nested_paren_source(17), "es2020").is_ok(),
+            "17 levels must stay under the cap"
+        );
+        assert!(
+            parse_javascript(&nested_paren_source(18), "es2020").is_err(),
+            "one nesting level past the cap's measured limit must fail"
+        );
+    }
+
+    /// A caller relying on the depth guard must have it trip *before* the
+    /// native stack overflows on a default-stack thread — otherwise a
+    /// production caller (e.g. `javascript-to-semantic-ir::compile_source`,
+    /// or `cargo test`'s own per-test thread) would still crash. We parse
+    /// far-too-deep input on a worker thread with **no** `stack_size`
+    /// override (the same ~2 MiB a default thread gets). A clean `Err` (not
+    /// a `join()` failure from a crashed thread) proves the cap sits safely
+    /// below the native overflow point on the default stack.
+    #[test]
+    fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let result = parse_javascript(&nested_paren_source(5000), "es2020");
+            assert!(result.is_err(), "deeply-nested input must error, not crash");
+        });
+        handle
+            .join()
+            .expect("the depth guard must trip BEFORE native overflow on the default stack");
+    }
+
+    /// `create_javascript_parser_typed` shares the same guard: constructing
+    /// the parser always succeeds (it does no parsing yet), but calling
+    /// `.parse()` on deeply-nested input must fail cleanly.
+    #[test]
+    fn test_typed_entry_point_also_rejects_deep_nesting() {
+        let mut parser =
+            create_javascript_parser_typed(&nested_paren_source(5000), EsVersion::Es2020)
+                .expect("constructing the parser never fails");
+        assert!(parser.parse().is_err(), "deeply-nested input must fail to parse");
+    }
+
+    /// `parse_javascript_with_cv` shares the same guard.
+    #[test]
+    fn test_cv_entry_point_also_rejects_deep_nesting() {
+        let mut cv = CVLog::new(false);
+        assert!(
+            parse_javascript_with_cv(&nested_paren_source(5000), "test.js", EsVersion::Es2020, &mut cv)
+                .is_err()
+        );
     }
 }

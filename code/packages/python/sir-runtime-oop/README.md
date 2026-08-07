@@ -64,25 +64,28 @@ native Python subscripts and still return `nil` (Ruby does not raise for `[]`).
 The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
-`min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
-`take`/`drop`/`values_at` — and the
+`min`/`max`/`minmax`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
+`take`/`drop`/`values_at`, `rotate`/`zip`, `each_slice`/`each_cons`, `tally` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
 `freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`, plus the **Kernel
 flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
 (item **M6**); and (item **M1b**)
 **block-taking `Array`/`Enumerable`** methods `each`, `each_with_index`,
 `map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
-`flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
+`flat_map`, `any?`/`all?`/`none?`, `chunk_while`/`slice_when`, `cycle` — a trailing `Closure` block is applied via
 `sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
 `truthy`; (item **M1c**) the **`Hash`** catalog
-(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/…); and (item
+(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/`transform_values`/`transform_keys`/`to_h`/`each_with_index`/`each_with_object`/ Enumerable aggregates `find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by`/`group_by`/`partition`/`flat_map`/`reduce`/`sum`/…);
+and (item
 **M1c**) the **`String`** catalog (`length`, `upcase`/`downcase`/`capitalize`,
 `reverse`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`, `split`,
 `include?`/`start_with?`/`end_with?`/`index`, `replace`, `sub`/`gsub` *literal*,
-`to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `each_char`); and (item **M1c**) the
+`to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `tr`/`count`/`delete`/`squeeze`
+*(literal char sets)*, `each_char`); and (item **M1c**) the
 **`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`, `even?`/`odd?`/`zero?`/
-`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round`, `gcd`, `pow`/`**`,
-`digits`, and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
+`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round` (with optional
+`ndigits`), `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `pow`/`**`, `digits`,
+and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
 (`to_s`/`to_sym`/`length`/`upcase`/`downcase`/`inspect`), and universal
 **`to_s`/`inspect`** Ruby display forms (so `nil`/`true`/`false` need no catalog)
 plus **`Array#join`**.

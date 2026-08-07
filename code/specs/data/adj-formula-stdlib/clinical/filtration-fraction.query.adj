@@ -1,0 +1,34 @@
+% ============================================================================
+% filtration-fraction.query.adj — worked examples over the clinical filtration-fraction library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a filtration-fraction question:
+% it states NO arithmetic and NO relation — it only `import`s the grounded library, `observe`s
+% the quantities it decomposed from the prompt (each a byte-provenanced span, elided here), and
+% asks the engine to APPLY the cited definition. The native adj-lang engine binds the
+% parameters, computes each value EXACTLY on the CPU, and returns it with the definition's
+% source/locator/trust.
+%
+% The three questions INVERT: a glomerular filtration rate of 120 mL/min over a renal plasma
+% flow of 600 mL/min gives a filtration fraction of 120 ÷ 600 = 0.2; that 0.2 filtration
+% fraction multiplied back by the same 600 mL/min renal plasma flow is exactly what the
+% GFR formula recovers the 120 mL/min from, and that 0.2 filtration fraction divided into the
+% same 120 mL/min glomerular filtration rate is exactly what the RPF formula recovers the
+% 600 mL/min from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli filtration-fraction.query.adj
+% ============================================================================
+
+import "filtration-fraction.adj"
+
+% GFR 120 mL/min, RPF 600 mL/min: filtration fraction = 120 ÷ 600.
+observe glomerular_filtration_rate(120)
+observe renal_plasma_flow(600)
+? filtration_fraction(glomerular_filtration_rate, renal_plasma_flow)          % expect 0.2  (FF = GFR ÷ RPF)
+
+% That 0.2 filtration fraction with the same 600 mL/min renal plasma flow: GFR = 0.2 × 600.
+observe filtration_fraction(0.2)
+? glomerular_filtration_rate(filtration_fraction, renal_plasma_flow)          % expect 120  (same def, solved for GFR = FF × RPF)
+
+% That 0.2 filtration fraction with the same 120 mL/min glomerular filtration rate: RPF = 120 ÷ 0.2.
+? renal_plasma_flow(glomerular_filtration_rate, filtration_fraction)          % expect 600  (same def, solved for RPF = GFR ÷ FF)

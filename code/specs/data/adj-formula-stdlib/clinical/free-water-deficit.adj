@@ -1,0 +1,93 @@
+% ============================================================================
+% free-water-deficit.adj — the free water deficit in hypernatraemia
+% (deficit = total body water × (plasma sodium / 140 − 1)) in the ADJ standard library.
+% ============================================================================
+% The free-water-deficit entry of the *clinical* track — the volume of pure water a hypernatraemic
+% patient must retain (or be given) to bring the plasma sodium back to a normal 140 mmol/L. Sodium is
+% confined to the body water it is dissolved in, so the total sodium content stays fixed while water is
+% lost; the plasma sodium therefore rises in inverse proportion to the remaining water. Restoring it to
+% 140 means adding back exactly the water that the concentration ratio says is missing. THE FREE WATER
+% DEFICIT IS THE TOTAL BODY WATER TIMES THE QUANTITY PLASMA SODIUM OVER 140 MINUS 1 — i.e. total body
+% water × (plasma sodium / 140 − 1). It ships as an importable, byte-provenanced, PARAMETERIZED
+% `formula`, together with its two exact rearrangements (the total body water a deficit implies at a
+% given plasma sodium, and the plasma sodium a deficit/total-body-water pair implies). As with every
+% compute library, a consumer states NO arithmetic: it `import`s this file, binds the total body water
+% and plasma sodium from its own byte-provenance decomposition, and asks the engine to APPLY the cited
+% formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY (over
+% exact rationals), carrying the formula's citation.
+%
+%     import "free-water-deficit.adj"
+%     observe total_body_water(42)   % "…70 kg man, TBW 0.6 × 70 = 42 L…"   (span cited by the model)
+%     observe plasma_sodium(154)      % "…sodium 154 mmol/L…"                (span cited by the model)
+%     ? free_water_deficit(total_body_water, plasma_sodium)
+%                                      % engine → 4.2 (litres), the free water deficit
+%
+% The 140 normal-sodium reference is the EXACT constant of the cited formula (not a measurement); the
+% formulas are otherwise exact expressions over the parameters, so every value the engine returns is
+% exact. They COMPOSE and invert cleanly around the worked case total body water = 42 L, plasma sodium =
+% 154 mmol/L (deficit = 42 × (154 / 140 − 1) = 42 × (1.1 − 1) = 42 × 0.1 = 4.2 L): the
+% `free_water_deficit` a consumer computes is exactly the value each inverse formula back-solves to
+% recover its own measured input (42, 154).
+%
+%   free_water_deficit(total_body_water, plasma_sodium) = total_body_water * (plasma_sodium / 140 - 1)      % (deficit, litres)
+%   total_body_water(free_water_deficit, plasma_sodium) = free_water_deficit / (plasma_sodium / 140 - 1)      % (solved for TBW)
+%   plasma_sodium(free_water_deficit, total_body_water) = 140 * (free_water_deficit / total_body_water + 1)    % (solved for plasma sodium)
+%
+% NOTE ON UNITS AND MODELLING: total body water in litres, plasma sodium in mmol/L, deficit in litres.
+% The cited page writes the total body water inline as "0.6 in men and 0.5 in women × body weight (kg)";
+% this library takes the total body water as its bound input (a consumer computes it from weight and sex
+% and binds it), and grounds the deficit relation itself — total body water × (plasma sodium / 140 − 1)
+% — exactly as the page prints it. The page also gives a separate replacement-rate formula (4 mL ×
+% weight × desired change in sodium); that is a different quantity and is not this library. The deficit
+% only says how much water is missing; it does not itself prescribe the correction rate (which must be
+% slow to avoid cerebral oedema).
+%
+% All three formulas are defended by the SAME clause — the quoted free-water-deficit equation — because
+% that one statement (the deficit IS the total body water times plasma-sodium-over-140 minus 1)
+% sanctions the relation read every way. The quote is transcribed verbatim from the StatPearls
+% "Hypernatremia" article on the NCBI Bookshelf (a current, non-archived article), so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the formula, including its 140 constant, is a verbatim
+% span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `total_body_water`, `plasma_sodium` and `free_water_deficit` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary free_water_deficit_vocab {
+    define total_body_water    : finding  surface "total body water", "TBW"                                    % litres
+    define plasma_sodium       : finding  surface "plasma sodium", "serum sodium", "sodium", "Na"              % mmol/L
+    define free_water_deficit  : finding  surface "free water deficit", "water deficit", "free-water deficit"  % litres
+}
+
+% ----------------------------------------------------------------------------
+% The free water deficit, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the deficit equation from the StatPearls
+% "Hypernatremia" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact expression in the measured quantities and the cited 140 constant, so the engine returns each
+% value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook free_water_deficit_laws {
+    use free_water_deficit_vocab
+
+    % Free water deficit — the total body water times plasma-sodium-over-140 minus 1.
+    formula free_water_deficit(total_body_water, plasma_sodium) = total_body_water * (plasma_sodium / 140 - 1)
+        source "Total Body Water[0.6 in men and 0.5 in women x body weight(kg)] x [(plasma sodium/140) -1]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441960/"
+        trust authoritative
+
+    % Total body water — the same equation solved for the total body water. Defended by the SAME sentence.
+    formula total_body_water(free_water_deficit, plasma_sodium) = free_water_deficit / (plasma_sodium / 140 - 1)
+        source "Total Body Water[0.6 in men and 0.5 in women x body weight(kg)] x [(plasma sodium/140) -1]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441960/"
+        trust authoritative
+
+    % Plasma sodium — the same equation solved for the plasma sodium. The SAME sentence, read the third way.
+    formula plasma_sodium(free_water_deficit, total_body_water) = 140 * (free_water_deficit / total_body_water + 1)
+        source "Total Body Water[0.6 in men and 0.5 in women x body weight(kg)] x [(plasma sodium/140) -1]"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441960/"
+        trust authoritative
+}

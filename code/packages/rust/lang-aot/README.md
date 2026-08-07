@@ -237,7 +237,7 @@ each native backend's `V1_BUILTINS` (W14b) — the seventh backend.
 `run_mccarthy_on_jit(source)` runs McCarthy on the **universal JIT** —
 `jit-core::GenericCirJit`, the **eighth and final backend** (W15, **F1–F7**). The JIT
 dispatches `call_builtin "lispy_*"` to Rust callbacks backed by the shared
-`lispy-runtime` crate (the C runtime's Rust twin), with a `LispyValue` riding inside
+`dynval-runtime` crate (the C runtime's Rust twin), with a `LispyValue` riding inside
 the VM's `Value::Int` as its bit pattern — `(CAR (CONS 7 9))` → 7, `(ATOM 7)` → 1,
 nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1, `((LAMBDA (X) X) 5)` → 5, and a
 recursive `LABEL` → 7. **With the JIT, McCarthy 1960 LISP now runs on every LANG VM
@@ -317,7 +317,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 | Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
 | Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | full integer subset — LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM, GOSUB / RETURN, DEF FN, DIM arrays, and READ / DATA / RESTORE compile and run end-to-end through the matrix. Strings, floating point, and `^` remain LANG-FULL follow-ups |
 | Oct             | `.oct`          | `oct-iir-compiler` (OCT02 phases 1–4) | full — integer subset compiles end-to-end (`fn`/`let`/`if`/`while`/`loop`/`break`, recursion).  8008 hardware intrinsics (`in`, `out`, `adc`, `sbb`, `rlc`, `rrc`, `ral`, `rar`, `carry`, `parity`) rejected cleanly with a pointer to the dedicated Intel-8008 simulator backend |
-| McCarthy Lisp   | `.mcl`, `.lisp` | `mccarthy-lisp-iir-compiler` | **L3a** — the full Lisp 1.0 frontend (literals, `QUOTE`, `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`, `COND`, `LAMBDA`/`LABEL` closures) produces an `IIRModule`, and **scalar** programs run end-to-end on the native AOT pipeline (`echo 42 > p.mcl; lang-aot p.mcl` → exits 42).  Symbol/cons-returning programs (e.g. `(CAR '(A B C))`) are accepted by the frontend but the native backend `BackendRefused`s them until the `lispy-runtime` value model is lowered into each backend (**L3b**) |
+| McCarthy Lisp   | `.mcl`, `.lisp` | `mccarthy-lisp-iir-compiler` | **L3a** — the full Lisp 1.0 frontend (literals, `QUOTE`, `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`, `COND`, `LAMBDA`/`LABEL` closures) produces an `IIRModule`, and **scalar** programs run end-to-end on the native AOT pipeline (`echo 42 > p.mcl; lang-aot p.mcl` → exits 42).  Symbol/cons-returning programs (e.g. `(CAR '(A B C))`) are accepted by the frontend but the native backend `BackendRefused`s them until the `dynval-runtime` value model is lowered into each backend (**L3b**) |
 
 If `--lang` is omitted the language is inferred from the file
 extension; unknown extensions get a "could not infer language" error

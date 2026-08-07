@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 25,
+  "title": "Good Night",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:447949184dfe4ff4",
+  "lessons": [
+    {
+      "id": "ML-C25-shubha-rathri",
+      "sequence": 570,
+      "title": "ശുഭ രാത്രി (śubha rāthri) — \"good night,\" and a pattern seen before",
+      "headword": "ശുഭ രാത്രി",
+      "romanization": "",
+      "gloss": "\"good night\" — the standard Sanskrit-tatsama phrase (rāthri already met, śubha new); some sources describe modern Malayalam speakers often code-switching to English \"good night\" instead — the same claim already made, similarly thinly sourced, for Telugu earlier in this arc",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5ee132494024238",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already have rāthri. One more Sanskrit word, already familiar from three earlier languages in this arc, completes Malayalam's \"good night\" — and this lesson's honest twist is one you've technically seen before, just in a different language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശുഭ രാത്രി (śubha rāthri) — \"good night\" — literally \"auspicious night.\" Both pieces are Sanskrit tatsama: രാത്രി (rāthri, \"night,\" already met last lesson) plus ശുഭ (śubha, \"auspicious,\" from root śubh, \"to be beautiful,\" ultimately PIE ḱewbʰ- — the same word, the same root, already verified for the Hindi, Kannada, and Telugu siblings of this exact arc)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the honest twist, hedged deliberately: some sources describe modern Malayalam speakers, especially in casual settings, code-switching to English \"good night\" rather than saying ശുഭ രാത്രി aloud — treating it more as the standard, correct-but-formal translation than an everyday spoken phrase. But this lesson isn't presenting that as a fresh Malayalam discovery. The exact same claim, sourced from similarly thin blogs and forum posts, was already made for Telugu earlier in this arc — and there, it was left genuinely unclear whether the pattern was Telugu-specific or something broader. Seeing the same claim turn up again for Malayalam strengthens the suspicion that this is a broader South Asian pattern (or simply a sourcing artifact — the languages that happen to get commented on in casual sources), not a language-specific trait worth treating as a genuine discovery each time. Either way, śubha rāthri itself remains perfectly correct, understood Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"śubha rāthri\" — \"good night,\" literally \"auspicious night\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"śubha rāthri\" — \"good night,\" literally \"auspicious night\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śubha's own root — śubh, \"to be beautiful\" becomes \"auspicious\" — the same root already met for Hindi, Kannada, and Telugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: śubha's own root — śubh, \"to be beautiful\" → \"auspicious\" — the same root already met for Hindi, Kannada, and Telugu]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest twist — this code-switching claim isn't uniquely Malayalam's; the same weakly-sourced claim already appeared for Telugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest twist — this code-switching claim isn't uniquely Malayalam's; the same weakly-sourced claim already appeared for Telugu]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശുഭ രാത്രി literally mean? (\"Auspicious night.\") Is the \"Malayalam speakers code-switch to English instead\" claim a fresh discovery in this lesson? (No — the identical claim, similarly thinly sourced, already appeared for Telugu earlier in this arc, suggesting a broader pattern or a sourcing artifact, not a Malayalam-specific fact.) Does this affect whether śubha rāthri itself is correct? (No — it's perfectly correct and understood Malayalam, whatever its actual spoken frequency.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

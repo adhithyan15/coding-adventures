@@ -1,0 +1,21 @@
+% ============================================================================
+% si-base-units.query.adj — a worked recall over the SI base-units library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the SI unit of
+% mass?": it states no metrology fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `si_base_unit`
+% rows and returns the unit + symbol + the table's source/locator/trust. A
+% quantity that is not an SI base quantity abstains honestly — the engine never
+% invents a unit. The last query runs the relation BACKWARDS: given the unit
+% `second`, recall the quantity it measures.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli si-base-units.query.adj
+% ============================================================================
+
+import "si-base-units.adj"
+
+? si_base_unit(mass, $Unit, $Symbol)             % expect kilogram, "kg"
+? si_base_unit(temperature, $Unit, $Symbol)      % expect kelvin, "K"
+? si_base_unit($Quantity, second, $Symbol)       % expect time — reverse lookup by unit
+? si_base_unit(luminance, $Unit, $Symbol)        % expect abstain — not an SI base quantity

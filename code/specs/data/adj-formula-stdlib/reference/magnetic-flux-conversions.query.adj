@@ -1,0 +1,20 @@
+% ============================================================================
+% magnetic-flux-conversions.query.adj — worked example over the magnetic-flux table.
+% ============================================================================
+% The shape a consumer produces to convert a magnetic flux out of a traditional unit and
+% into SI before reasoning: it states NO arithmetic — it `import`s the grounded table and
+% asks the engine to look the factor up. The native adj-lang engine binds the row and
+% returns the weber value EXACTLY, with the NIST SP 811 B.9 citation as its proof.
+%
+% The first query HITS (the maxwell has a row); the second ABSTAINS honestly — the "gauss"
+% is a magnetic-flux-DENSITY unit (it converts to the tesla, a different quantity), so this
+% flux table has no row for it and the engine refuses to fabricate a cross-dimension factor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli magnetic-flux-conversions.query.adj
+% ============================================================================
+
+import "magnetic-flux-conversions.adj"
+
+? magnetic_flux_to_weber(maxwell, $v)   % expect 0.00000001  (maxwell = 1.0 E-08 Wb, exact)
+? magnetic_flux_to_weber(gauss, $v)     % expect ABSTAIN     (gauss → tesla, a different quantity)

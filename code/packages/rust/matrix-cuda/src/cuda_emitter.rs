@@ -311,7 +311,7 @@ fn emit_matmul_with_folded_matrix(
     if key.folded_slot != Some(1) {
         return None;
     }
-    if bytes.len() % 4 != 0 {
+    if !bytes.len().is_multiple_of(4) {
         return None;
     }
     let n_floats = bytes.len() / 4;

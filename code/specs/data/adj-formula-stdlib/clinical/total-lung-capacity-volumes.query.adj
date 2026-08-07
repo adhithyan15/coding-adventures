@@ -1,0 +1,41 @@
+% ============================================================================
+% total-lung-capacity-volumes.query.adj — worked examples over the clinical
+% Total-Lung-Capacity-from-four-volumes library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a TLC question from the four
+% primary lung volumes: it states NO arithmetic and NO relation — it only `import`s the
+% grounded library, `observe`s the volumes it decomposed from the prompt (each a
+% byte-provenanced span, elided here), and asks the engine to APPLY the cited definition. The
+% native adj-lang engine binds the parameters, computes each value EXACTLY on the CPU, and
+% returns it with the definition's source/locator/trust.
+%
+% The five questions INVERT: a residual volume of 2 plus an expiratory reserve volume of 3
+% plus an inspiratory reserve volume of 4 plus a tidal volume of 5 gives a total lung capacity
+% of 2 + 3 + 4 + 5 = 14; and that 14 total minus any three of the volumes is exactly what the
+% fourth volume's formula recovers the missing volume from.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli total-lung-capacity-volumes.query.adj
+% ============================================================================
+
+import "total-lung-capacity-volumes.adj"
+
+% RV 2, ERV 3, IRV 4, TV 5: total TLC = 2 + 3 + 4 + 5.
+observe residual_volume(2)
+observe expiratory_reserve_volume(3)
+observe inspiratory_reserve_volume(4)
+observe tidal_volume(5)
+? total_lung_capacity(residual_volume, expiratory_reserve_volume, inspiratory_reserve_volume, tidal_volume)   % expect 14  (TLC = RV + ERV + IRV + TV)
+
+% That 14 total with the same ERV 3, IRV 4, TV 5: RV = 14 − 3 − 4 − 5.
+observe total_lung_capacity(14)
+? residual_volume(total_lung_capacity, expiratory_reserve_volume, inspiratory_reserve_volume, tidal_volume)   % expect 2   (same def, solved for RV = TLC − ERV − IRV − TV)
+
+% That 14 total with the same RV 2, IRV 4, TV 5: ERV = 14 − 2 − 4 − 5.
+? expiratory_reserve_volume(total_lung_capacity, residual_volume, inspiratory_reserve_volume, tidal_volume)   % expect 3   (same def, solved for ERV = TLC − RV − IRV − TV)
+
+% That 14 total with the same RV 2, ERV 3, TV 5: IRV = 14 − 2 − 3 − 5.
+? inspiratory_reserve_volume(total_lung_capacity, residual_volume, expiratory_reserve_volume, tidal_volume)   % expect 4   (same def, solved for IRV = TLC − RV − ERV − TV)
+
+% That 14 total with the same RV 2, ERV 3, IRV 4: TV = 14 − 2 − 3 − 4.
+? tidal_volume(total_lung_capacity, residual_volume, expiratory_reserve_volume, inspiratory_reserve_volume)   % expect 5   (same def, solved for TV = TLC − RV − ERV − IRV)

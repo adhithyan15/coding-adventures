@@ -191,6 +191,71 @@ fn ilit(v: i64) -> Expr {
     Expr::IntLit { value: v, span: s() }
 }
 
+/// The v0.24.0 **char-set** String methods: `tr`, `count`, `delete`, `squeeze`.
+/// Each `set`/`from`/`to` argument is treated LITERALLY (the runes it contains);
+/// range/negation forms are a follow-up, matching the literal-only sub/gsub
+/// precedent.  Mirrors the Python `sir-runtime-oop` reference semantics.
+fn charset_module() -> Module {
+    let stmts = vec![
+        // tr: position-wise translate; shorter `to` repeats its last rune
+        print_stmt(method(slit("hello"), "tr", vec![slit("el"), slit("ip")])), // hippo
+        print_stmt(method(slit("hello"), "tr", vec![slit("aeiou"), slit("*")])), // h*ll*
+        // tr with empty `to` deletes matching runes
+        print_stmt(method(slit("hello"), "tr", vec![slit("l"), slit("")])), // heo
+        // count / delete over a literal set
+        print_stmt(method(slit("hello"), "count", vec![slit("lo")])), // 3
+        print_stmt(method(slit("hello"), "delete", vec![slit("aeiou")])), // hll
+        // squeeze: no arg collapses every run; a set squeezes only those runes
+        print_stmt(method(slit("mississippi"), "squeeze", vec![])), // misisipi
+        print_stmt(method(slit("aaabbbccc"), "squeeze", vec![slit("a")])), // abbbccc
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![main])
+}
+
+#[test]
+fn string_charset_methods_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&charset_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "charset");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "hippo",    // "hello".tr("el", "ip")
+            "h*ll*",    // "hello".tr("aeiou", "*") — shorter `to` repeats last
+            "heo",      // "hello".tr("l", "") — empty `to` deletes
+            "3",        // "hello".count("lo")
+            "hll",      // "hello".delete("aeiou")
+            "misisipi", // "mississippi".squeeze
+            "abbbccc",  // "aaabbbccc".squeeze("a")
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
 /// The v0.22.0 **justify / swapcase** String methods: `ljust`, `rjust`,
 /// `center`, `swapcase`.  Width is counted in RUNES; center puts an odd extra
 /// pad rune on the RIGHT; an omitted pad defaults to a space.  Assertions use a

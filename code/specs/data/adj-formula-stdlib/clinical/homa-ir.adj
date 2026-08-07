@@ -1,0 +1,93 @@
+% ============================================================================
+% homa-ir.adj — the homeostatic model assessment of insulin resistance
+% (HOMA-IR = fasting insulin × fasting glucose / 22.5) in the ADJ standard library.
+% ============================================================================
+% The HOMA-IR entry of the *clinical* track — a fasting-sample estimate of insulin resistance. In a
+% steady fasting state the pancreas trims insulin secretion until glucose settles, so the PRODUCT of the
+% fasting glucose and the fasting insulin measures how hard the beta cells must work to hold that glucose:
+% the more insulin it takes to keep glucose in range, the more resistant the tissues. Dividing that product
+% by a normalising constant scales an ideal, fully-insulin-sensitive individual to a value of 1. HOMA-IR
+% is the workhorse index for insulin resistance in metabolic syndrome, type 2 diabetes risk, and polycystic
+% ovary syndrome. THE HOMA-IR IS THE FASTING INSULIN TIMES THE FASTING GLUCOSE, DIVIDED BY 22.5 — i.e.
+% fasting insulin × fasting glucose / 22.5 (with glucose in mmol/L). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the fasting
+% insulin a given HOMA-IR implies at a known glucose, and the fasting glucose a given HOMA-IR implies at a
+% known insulin). As with every compute library, a consumer states NO arithmetic: it `import`s this file,
+% binds the two fasting values from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited formula on the CPU. Zero math is performed by the model; the engine computes each value EXACTLY
+% (over exact rationals), carrying the formula's citation.
+%
+%     import "homa-ir.adj"
+%     observe fasting_insulin(9)   % "…fasting insulin 9 μU/ml…"    (span cited by the model)
+%     observe fasting_glucose(5)    % "…fasting glucose 5 mmol/l…"   (span cited by the model)
+%     ? homa_ir(fasting_insulin, fasting_glucose)   % engine → 2
+%
+% Structurally this is a PRODUCT of two measured quantities over a single normalising constant — a shape
+% distinct from the ratio, ratio-of-ratios, and percentage-sum forms of the other clinical libraries. The
+% 22.5 normalising constant is the EXACT constant of the cited formula (the product of a normal fasting
+% insulin of 5 μU/ml and a normal fasting glucose of 4.5 mmol/l — not a measurement), so every value the
+% engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked case fasting
+% insulin = 9 μU/ml, fasting glucose = 5 mmol/l (HOMA-IR = 9 × 5 / 22.5 = 45 / 22.5 = 2 — a value at the
+% upper limit of normal, insulin resistance being roughly HOMA-IR ≥ 2): the `homa_ir` a consumer computes
+% is exactly the value each inverse formula back-solves to recover its own measured input (9, 5).
+%
+%   homa_ir(fasting_insulin, fasting_glucose) = fasting_insulin * fasting_glucose / 22.5   % (index)
+%   fasting_insulin(homa_ir, fasting_glucose) = homa_ir * 22.5 / fasting_glucose            % (solved for insulin)
+%   fasting_glucose(homa_ir, fasting_insulin) = homa_ir * 22.5 / fasting_insulin            % (solved for glucose)
+%
+% NOTE ON UNITS AND MODELLING: this is the mmol/L form the cited page prints, so the fasting glucose is in
+% millimoles per litre (mmol/L) and the fasting insulin in microunits per millilitre (μU/ml), with 22.5 as
+% the divisor; the equivalent mg/dL form uses a divisor of 405 instead, but this library grounds the
+% mmol/L form exactly as printed. HOMA-IR is a plain dimensionless index (about 1 in a normal individual).
+% This library only COMPUTES the index; the interpretation (higher values indicating greater insulin
+% resistance) is stated by the cited source but is applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted HOMA-IR equation — because that one
+% equation (fasting insulin × fasting glucose / 22.5) sanctions the relation read every way. The quote is
+% transcribed verbatim from the Endotext "Assessing Insulin Sensitivity and Resistance in Humans" chapter
+% on the NCBI Bookshelf (a current, freely available NCBI-hosted reference), so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula, including its 22.5 constant, is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `fasting_insulin`, `fasting_glucose` and `homa_ir` each appear BOTH as a derived result and
+% as an input (of the other formulas), so each is a single dictionary term used in both roles. The
+% `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary homa_ir_vocab {
+    define fasting_insulin  : finding  surface "fasting insulin", "insulin", "fasting plasma insulin"          % μU/ml
+    define fasting_glucose  : finding  surface "fasting glucose", "glucose", "fasting plasma glucose", "FPG"    % mmol/L
+    define homa_ir          : finding  surface "HOMA-IR", "HOMA", "insulin resistance index"                    % index
+}
+
+% ----------------------------------------------------------------------------
+% HOMA-IR, three ways. Each is a named, importable, reusable formula over its formal parameters, bound at
+% apply time, and each carries the HOMA-IR equation from the Endotext "Assessing Insulin Sensitivity and
+% Resistance in Humans" chapter on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an
+% exact expression in the measured values and the cited 22.5 constant, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook homa_ir_laws {
+    use homa_ir_vocab
+
+    % HOMA-IR — the fasting insulin times the fasting glucose, over 22.5.
+    formula homa_ir(fasting_insulin, fasting_glucose) = fasting_insulin * fasting_glucose / 22.5
+        source "HOMA-IR = fasting insulin (μU/ml) × fasting glucose (mmol/l) / 22.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK278954/"
+        trust authoritative
+
+    % Fasting insulin — the same equation solved for the insulin. Defended by the SAME equation.
+    formula fasting_insulin(homa_ir, fasting_glucose) = homa_ir * 22.5 / fasting_glucose
+        source "HOMA-IR = fasting insulin (μU/ml) × fasting glucose (mmol/l) / 22.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK278954/"
+        trust authoritative
+
+    % Fasting glucose — the same equation solved for the glucose, the third reading of the one index.
+    formula fasting_glucose(homa_ir, fasting_insulin) = homa_ir * 22.5 / fasting_insulin
+        source "HOMA-IR = fasting insulin (μU/ml) × fasting glucose (mmol/l) / 22.5"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK278954/"
+        trust authoritative
+}

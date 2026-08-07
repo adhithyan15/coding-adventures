@@ -541,12 +541,9 @@ mod tests {
     fn test_default_flag_already_defined() {
         let source = "$color: red; $color: blue !default; h1 { color: $color; }";
         let result = transform_lattice(source);
-        match result {
-            Ok(css) => {
-                assert!(css.contains("color: red"), "!default should not overwrite: {css}");
-                assert!(!css.contains("blue"), "blue should not appear: {css}");
-            }
-            Err(_) => {}
+        if let Ok(css) = result {
+            assert!(css.contains("color: red"), "!default should not overwrite: {css}");
+            assert!(!css.contains("blue"), "blue should not appear: {css}");
         }
     }
 
@@ -650,12 +647,9 @@ mod tests {
             .item { padding: spacing(2); }
         "#;
         let result = transform_lattice(source);
-        match result {
-            Ok(css) => {
-                assert!(css.contains("16") || css.contains("padding:"),
-                    "Arithmetic in function should work: {css}");
-            }
-            Err(_) => {}
+        if let Ok(css) = result {
+            assert!(css.contains("16") || css.contains("padding:"),
+                "Arithmetic in function should work: {css}");
         }
     }
 
@@ -1044,8 +1038,8 @@ mod tests {
         use crate::values::LatticeValue;
 
         let color = LatticeValue::Color("#ff8040".to_string());
-        let r = evaluate_builtin("red", &[color.clone()]).unwrap();
-        let g = evaluate_builtin("green", &[color.clone()]).unwrap();
+        let r = evaluate_builtin("red", std::slice::from_ref(&color)).unwrap();
+        let g = evaluate_builtin("green", std::slice::from_ref(&color)).unwrap();
         let b = evaluate_builtin("blue", &[color]).unwrap();
 
         assert_eq!(r, LatticeValue::Number(255.0));
@@ -1065,7 +1059,7 @@ mod tests {
         let dim = LatticeValue::Dimension { value: 16.0, unit: "px".to_string() };
         let num = LatticeValue::Number(42.0);
 
-        let u = evaluate_builtin("unit", &[dim.clone()]).unwrap();
+        let u = evaluate_builtin("unit", std::slice::from_ref(&dim)).unwrap();
         assert_eq!(u, LatticeValue::String("px".to_string()));
 
         let ul = evaluate_builtin("unitless", &[dim]).unwrap();
@@ -1232,8 +1226,8 @@ mod tests {
         use crate::values::LatticeValue;
 
         let color = LatticeValue::Color("#ff0000".to_string());
-        let h = evaluate_builtin("hue", &[color.clone()]).unwrap();
-        let s = evaluate_builtin("saturation", &[color.clone()]).unwrap();
+        let h = evaluate_builtin("hue", std::slice::from_ref(&color)).unwrap();
+        let s = evaluate_builtin("saturation", std::slice::from_ref(&color)).unwrap();
         let l = evaluate_builtin("lightness", &[color]).unwrap();
 
         // Red: hue ~0deg, saturation 100%, lightness 50%

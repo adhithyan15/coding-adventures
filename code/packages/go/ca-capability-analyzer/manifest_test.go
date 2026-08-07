@@ -7,10 +7,72 @@ package main
 // The temp directory is automatically cleaned up after each test.
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
 )
+
+type taxonomyFixture struct {
+	Categories                    map[string][]string `json:"categories"`
+	AllActions                    []string            `json:"all_actions"`
+	ExpectedValidPairCount        int                 `json:"expected_valid_pair_count"`
+	ExpectedInvalidCrossPairCount int                 `json:"expected_invalid_cross_pair_count"`
+}
+
+func loadTaxonomyFixture(t *testing.T) taxonomyFixture {
+	t.Helper()
+	path := filepath.Join("..", "..", "..", "specs", "fixtures", "capability-security-v1", "taxonomy.json")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read shared taxonomy fixture: %v", err)
+	}
+	var fixture taxonomyFixture
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatalf("parse shared taxonomy fixture: %v", err)
+	}
+	return fixture
+}
+
+func containsAction(actions []string, wanted string) bool {
+	for _, action := range actions {
+		if action == wanted {
+			return true
+		}
+	}
+	return false
+}
+
+func TestCapabilityTaxonomyMatchesSharedFixture(t *testing.T) {
+	fixture := loadTaxonomyFixture(t)
+	validCount := 0
+	invalidCount := 0
+	for category, allowed := range fixture.Categories {
+		for _, action := range fixture.AllActions {
+			want := containsAction(allowed, action)
+			if got := validCapabilityPair(category, action); got != want {
+				t.Errorf("validCapabilityPair(%q, %q) = %v, want %v", category, action, got, want)
+			}
+			if want {
+				validCount++
+			} else {
+				invalidCount++
+			}
+		}
+	}
+	if validCount != fixture.ExpectedValidPairCount {
+		t.Errorf("valid pair count = %d, want %d", validCount, fixture.ExpectedValidPairCount)
+	}
+	if invalidCount != fixture.ExpectedInvalidCrossPairCount {
+		t.Errorf("invalid cross-pair count = %d, want %d", invalidCount, fixture.ExpectedInvalidCrossPairCount)
+	}
+	if validCapabilityPair("filesystem", "read") {
+		t.Error("unknown category must fail closed")
+	}
+	if validCapabilityPair("fs", "destroy") {
+		t.Error("unknown action must fail closed")
+	}
+}
 
 // writeManifest is a test helper that writes content to
 // required_capabilities.json in dir.
@@ -227,6 +289,28 @@ func TestLoadManifest_InvalidJSON(t *testing.T) {
 	}
 }
 
+func TestLoadManifest_InvalidCategoryActionPairRejected(t *testing.T) {
+	dir := t.TempDir()
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [
+			{
+				"category": "net",
+				"action": "read",
+				"target": "*",
+				"justification": "Invalid cross-pair fixture."
+			}
+		],
+		"justification": "Must fail before declarations are recorded."
+	}`)
+
+	m, err := LoadManifestData(dir)
+	if err == nil {
+		t.Fatalf("expected invalid pair error, got manifest: %#v", m)
+	}
+}
+
 // TestLoadManifest_CanonicalForm verifies that canonical capability strings
 // use the "category:action:target" colon-separated format.
 func TestLoadManifest_CanonicalForm(t *testing.T) {
@@ -237,7 +321,7 @@ func TestLoadManifest_CanonicalForm(t *testing.T) {
 		"capabilities": [
 			{
 				"category": "net",
-				"action": "*",
+				"action": "connect",
 				"target": "*",
 				"justification": "Network access."
 			}
@@ -251,7 +335,7 @@ func TestLoadManifest_CanonicalForm(t *testing.T) {
 	}
 
 	// The canonical form must use colons, not any other separator.
-	expected := CapabilityString("net:*:*")
+	expected := CapabilityString("net:connect:*")
 	if !m[expected] {
 		t.Errorf("expected canonical %q in declared set, got %v", expected, m)
 	}

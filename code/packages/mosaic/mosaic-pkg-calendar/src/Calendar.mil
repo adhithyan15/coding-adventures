@@ -1,0 +1,67 @@
+// Calendar.mil — interface for the month-grid calendar view.
+//
+// Calendar renders a 6×7 month grid over task-core's `calendar(range, view)`
+// projection (task-app-super-app.md Phase 7). See
+// code/specs/task-app-calendar-v1.md for the full scope and what's
+// deliberately deferred (week/day views, resize, time-blocking).
+//
+// Fat engine, dumb UI: the host computes the visible month's date range, calls
+// `calendar(range, view)`, and hands this component pre-shaped rows — Calendar
+// does no date arithmetic, filtering, or scheduling of its own. It only places
+// cells and events, and reports drag/nav gestures back as proposals.
+//
+// Slot vocabulary
+// ---------------
+//
+//   calendar-title   the visible month's display label (e.g. "August 2026").
+//
+//   calendar-cells    one row per grid cell (always 42 = 6 weeks × 7 days,
+//                     Sunday-first, the same shape design/ui-prototype.html's
+//                     renderCalendar() builds):
+//                       [ 0 ] day-number   e.g. "14"
+//                       [ 1 ] day-key      the cell's ISO date, e.g. "2026-08-14" —
+//                                          a KEY, not an index (see TaskApp.mil's
+//                                          board-columns note on why: an inner
+//                                          loop's index would otherwise shadow the
+//                                          outer one, and a re-render can reorder
+//                                          cells out from under a stale index).
+//                       [ 2 ] is-today     non-empty when this cell is today.
+//
+//   calendar-events   one row per (event, day-it-covers) pair — a task spanning
+//                     three days contributes three rows, one per day-key, so a
+//                     multi-day event renders on every day it spans rather than
+//                     only its start day (the engine already computed the full
+//                     span; discarding it to match the day-only mock would throw
+//                     away real data):
+//                       [ 0 ] task-id    the drag key.
+//                       [ 1 ] label      the task's name.
+//                       [ 2 ] day-key    which cell this row belongs in — compared
+//                                        against calendar-cells[n][1], never an index.
+//                       [ 3 ] critical   non-empty when on the critical path.
+//                       [ 4 ] completed  non-empty when done.
+//                       [ 5 ] overdue    non-empty when late and not done.
+//
+// Emit vocabulary
+// ---------------
+//
+//   onPrev / onNext   month navigation. No payload — the host owns which month
+//                     is showing and recomputes the range.
+//
+//   onEventDropped    a drop is a PROPOSAL, exactly like TaskApp's own
+//                     onCardDropped: the UI35 contract (what moved, of what
+//                     kind, onto which target, and where within it). The host
+//                     decides what "moved to this day" means (task-app-calendar-v1.md:
+//                     a MustStartOn constraint, not a deadline change — the
+//                     calendar's own display precedence favours a computed
+//                     schedule over the deadline fallback, so only a constraint
+//                     that feeds the CPM pass actually moves the event on screen).
+
+component Calendar {
+  slot calendar-title  : text ;
+  slot calendar-cells  : list<list<text>> ;
+  slot calendar-events : list<list<text>> ;
+
+  emit onPrev ;
+  emit onNext ;
+  emit onEventDropped ( key : text , kind : text , targetKey : text , position : text ) ;
+}

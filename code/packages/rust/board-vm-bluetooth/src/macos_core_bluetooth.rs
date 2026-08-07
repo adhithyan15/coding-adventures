@@ -493,7 +493,7 @@ extern "C" fn central_manager_did_update_state(this: Id, _cmd: Sel, central: Id)
             state.powered_on = true;
             return;
         }
-        if matches!(manager_state, 2 | 3 | 4) {
+        if matches!(manager_state, 2..=4) {
             state.set_error(format!(
                 "CoreBluetooth manager is {} for {}",
                 manager_state_name(manager_state),

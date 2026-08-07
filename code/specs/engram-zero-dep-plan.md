@@ -21,7 +21,7 @@ so each landed PR is independently green.
 | `zstd_crate` | engram-anki-package | prod | repo `zstd` — **currently INCOMPLETE** (see below) | **L** | must bidirectionally interop with real zstd (Anki `.anki21b`) |
 | `prost` (protobuf) | engram-anki-package | prod | new tiny `protobuf` codec (4 messages) | **S/M** | must byte-interop with Anki `meta`/`media` protobufs |
 | `fsrs 6.6.1` | engram-core | prod | reimplement forward FSRS-5/6 (~200 LOC) | **M** | **numeric** — must match crate output |
-| `regex` | engram-core (search.rs) | prod | hand-scanners + glob matcher; mini regex engine only for `re:` | **S…L** | `re:` user-search is the only true-regex need |
+| `regex` | engram-core (**✅ DONE — now test-only dev-dep**; was prod in search.rs) | dev | zero-dep `regex-engine` (Pike VM) — all boolean uses + media `replace_all` moved over (Phase D); `regex` kept only as the `html_scan` cross-check oracle | **S…L** | `re:` user-search + media extent both run on `regex-engine` now |
 | `unicode-normalization` | engram-core (search.rs, template.rs) | prod | NFD/combining-class tables (+ NFC for dedup) | **M** | Unicode tables shared with regex whole-word |
 | `serde` + `serde_json` | engram-core, -core-wasm, -capi, -anki-package | prod | repo `json-value`/`json-parser`/`json-serializer` + **new `json-derive` macro** | **L** | **wire-critical** — JS/Swift/Anki parse the exact bytes |
 | `tempfile` | engram-capi (**test-only, already dev-dep**), engram-anki-package (test) | test | drop with rusqlite | trivial | — |
@@ -151,12 +151,31 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   relies on — it never calls `find`). Reported extents can differ from `regex` only
   on lazy/overlapping-greedy-alternation corners, which the media pattern avoids.
   regex-engine v0.4.0.
-- **D3b — captures.** Add `Regex::captures` (per-group `Save` instructions,
-  copy-on-write capture slots, a group-count DoS cap), cross-verified vs `regex`.
-- **D3c — `replace_all`/`find_iter`.** Built on find/captures; cross-verified.
-- **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
-  engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
-  then remove `regex` from `engram-core`'s Cargo.toml. **`regex` gone.**
+- **D3b — ✅ DONE (captures).** `Regex::captures` + `Captures` type. Capturing
+  groups compile to `Save` instructions bracketing the body (slots `2g`/`2g+1`;
+  `0`/`1` = overall); the `captures` run carries a **copy-on-write** (`Rc`) slot
+  vector per thread (branches share until a `Save` writes). `Save` is an epsilon
+  no-op for `is_match`/`find`, so those paths are unchanged. **MAX_GROUPS=1000**
+  DoS cap (rejects at build). Cross-verified vs live `regex`: 72k existence + 39k
+  full-group comparisons (group boundaries agree wherever the overall span does;
+  the lazy/overlapping-greedy overall-match corner from D3a is skipped, not group-
+  compared). regex-engine v0.5.0.
+- **D3c — ✅ DONE (`replace_all` + iterators).** `Regex::replace_all` (Cow return;
+  `Replacer` = closure `FnMut(&Captures)->String` *or* `$N`/`${N}`/`$$` string),
+  `find_iter`, `captures_iter`. Non-overlapping iteration matches `regex` (resume
+  at prev end; skip empty match at that end). Cross-verified vs live `regex`: 84k
+  iteration checks + 84k replace-output comparisons (byte-identical where the two
+  iterate identically). regex-engine v0.6.0.
+- **D4 — ✅ DONE (swap media + drop `regex`).** `DUPLICATE_HTML_MEDIA_TAGS` now
+  compiles on `regex_engine::Regex` and its `replace_all` closure takes
+  `&regex_engine::Captures` (same `get()`/`Match::as_str()` API — the media
+  pattern is greedy with disjoint quote-alternation, so the new engine's leftmost
+  extents match the old crate exactly; the full `engram-core` suite, incl. the
+  media-dedup tests, is byte-identical). `regex` is **removed from
+  `[dependencies]`** and kept only as a **`[dev-dependency]`** — its sole
+  remaining use is the `html_scan` cross-check test's independent oracle. No
+  non-test `regex::` reference remains in `engram-core/src`. **`regex` gone from
+  the runtime graph — Phase D complete; the whole regex removal is done.**
 - Rationale for the split: `is_match` (D0) is the bulk of engram's use and is
   cross-verifiable independently; extents (D3) are a genuinely separate, harder
   sub-problem, so they get their own PR rather than blocking the core.
@@ -170,10 +189,22 @@ Per `code/specs/storage-sqlite.md` + the Python `storage-sqlite` port:
 - E5: cut anki-pkg **reader** over (`open_serialized_v11_collection` +
   `read_v11_*`), delete the `ffi`/`OwnedData` unsafe block. M — import runs rusqlite-free.
 
+Status update: E1-E4 are now landed in `sqlite-file`; E5 has started by cutting
+`engram-anki-package`'s V11 import tables over to
+`sqlite_file::read_table(bytes, name)`. The reader path no longer needs the
+unsafe serialized-rusqlite open helper; remaining `rusqlite` usage is writer and
+test-fixture work for Phase F.
+
 ### Phase F — sqlite-file writer (**removes rusqlite**) — L (PRs A6–A8)
 - F1: record/header/b-tree **write** — smallest-serial-type rule, leaf-insert,
   page splits → interior pages, overflow-write for large `col` JSON. L
-- F2: sqlite_schema writer + `build(tables)` API. M
+- F2: sqlite_schema writer + `build(tables)` API. M — **DONE.**
+  `write_multi_table_db(page_size, tables)` (with `write_single_table_db` as the
+  one-table case) emits a full multi-table database — page-1 `sqlite_schema` leaf
+  + per-table data b-trees — accepted by real SQLite (`PRAGMA integrity_check`).
+  Page-1 `sqlite_schema` records that overflow now spill onto overflow pages
+  (sqlite-file 0.17.0). Remaining later rung: a schema so large its inline heads
+  need page 1 to become an interior b-tree.
 - F3: cut anki-pkg **writer** over (`write_v11_collection_bytes_from_engram_state`),
   **delete `rusqlite`** from Cargo.toml; port engram-capi's test-only sqlite
   fixture builder to the new writer, drop its dev-dep. **rusqlite gone from repo.**

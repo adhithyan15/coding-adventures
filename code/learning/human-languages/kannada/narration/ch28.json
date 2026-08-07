@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 28,
+  "title": "Afternoon",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6133ff939c0603ea",
+  "lessons": [
+    {
+      "id": "KA-C28-aparahna",
+      "sequence": 570,
+      "title": "ಅಪರಾಹ್ನ (aparāhna) — the same \"-ahna\" pattern, a different first piece",
+      "headword": "ಅಪರಾಹ್ನ",
+      "romanization": "",
+      "gloss": "\"afternoon\" (aparāhna) — a genuine Sanskrit tatsama distinct from ಮಧ್ಯಾಹ್ನ/madhyāhna (\"noon\"), sharing its \"-ahna\" (\"day\") suffix; apara (\"latter\") vs madhya (\"middle\"), the same clean structure applied to two different day-parts",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdb40bc5c17babcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know ಮಧ್ಯಾಹ್ನ, \"noon\" — \"middle\" plus \"day.\" This lesson's word for \"afternoon\" uses the exact same building pattern, just with a different first piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: ಅಪರಾಹ್ನ — \"the latter part of the day\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪರಾಹ್ನ (aparāhna) — \"afternoon\" — is a genuine Sanskrit tatsama: ಅಪರ (apara, \"latter, further\") + the same -ಅಹ್ನ (-ahna, \"day\") suffix already hiding inside ಮಧ್ಯಾಹ್ನ (madhyāhna, \"noon,\" Chapter 17). Same clean two-piece structure, same \"day\" ending — just swap madhya (\"middle\") for apara (\"latter, further along\") and you move from \"noon\" to \"afternoon.\" This distinction comes from a genuine, classical five-part Sanskrit division of the day — prāta (early morning), saṅgava, madhyāhna (noon), aparāhna (afternoon), sāyāhna (evening) — with aparāhna landing specifically as the fourth part, after noon and before evening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: a much thinner echo of Hindi's दोपहर story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's where this lesson needs real care: some sources describe ಮಧ್ಯಾಹ್ನ itself being stretched loosely in casual modern speech to cover the whole afternoon too — which would echo Hindi's own दोपहर, already found in this course to have genuinely widened from \"precisely noon\" to \"the whole afternoon.\" But the evidence for Kannada is much thinner than what backed the Hindi finding — general dictionary listings rather than clear, independently-confirmed usage sources. Treat this as a plausible, hedged parallel, not a settled fact the way दोपहर's widening was. ಅಪರಾಹ್ನ remains the more precisely, formally correct word for \"afternoon\" specifically."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aparāhna\" — \"afternoon,\" apara + ahna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aparāhna\" — \"afternoon,\" apara + ahna]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared piece with madhyāhna — both end in \"-ahna,\" \"day\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared piece with madhyāhna — both end in \"-ahna,\" \"day\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the honest hedge — madhyāhna MAY also loosely cover \"afternoon\" in casual speech, but this is far less certain than Hindi's dopahar-widening story",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the honest hedge — madhyāhna MAY also loosely cover \"afternoon\" in casual speech, but this is far less certain than Hindi's dopahar-widening story]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What suffix does ಅಪರಾಹ್ನ share with ಮಧ್ಯಾಹ್ನ, and what does it mean? (-ಅಹ್ನ, -ahna, \"day.\") What's the difference in their first pieces? (ಅಪರ, apara, \"latter/further\" vs. ಮಧ್ಯ, madhya, \"middle.\") Is the claim that ಮಧ್ಯಾಹ್ನ also covers \"afternoon\" in casual speech as well-supported as Hindi's दोपहर-widening finding? (No — much more thinly sourced; treat it as a hedged possibility, not a settled fact.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

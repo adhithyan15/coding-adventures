@@ -138,7 +138,7 @@ pub fn compare_readers<R1: Read, R2: Read>(
     let mut buf_b = [0u8; 1];
 
     loop {
-        if byte_offset - 1 >= max {
+        if byte_offset > max {
             break;
         }
 

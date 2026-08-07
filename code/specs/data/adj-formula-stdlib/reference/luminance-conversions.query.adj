@@ -1,0 +1,19 @@
+% ============================================================================
+% luminance-conversions.query.adj — a worked lookup over the luminance table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many candela per
+% square metre is one stilb?" question: it states no conversion fact — it only `import`s
+% the grounded table and asks binding queries. The native adj-lang engine resolves each
+% `?` against the table's row (lowered to a `luminance_to_candela_per_square_metre`
+% relation) and returns the binding + the table's source/locator/trust. A unit not in the
+% table abstains honestly — the engine never invents a factor (notably NIST's non-exact
+% customary rows, e.g. the footlambert, which is rounded and therefore gets no row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli luminance-conversions.query.adj
+% ============================================================================
+
+import "luminance-conversions.adj"
+
+? luminance_to_candela_per_square_metre(stilb, $v)        % expect 10000
+? luminance_to_candela_per_square_metre(footlambert, $v)  % expect abstain — non-exact, no row

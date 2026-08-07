@@ -1,0 +1,112 @@
+% ============================================================================
+% celestial-objects — the basic types of celestial object and one short
+% defining property its source states for each (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% One of the very first sorting tasks in astronomy, and a rung a SPACE-SCIENCE
+% agent reasons UP from: the night sky is not one undifferentiated glitter, it
+% is a handful of KINDS of object, and each kind has a characteristic property
+% that TELLS IT APART from the others. "A star gives off its own light; a
+% planet revolves around a star; a moon orbits a planet; a comet is frozen
+% gases and dust; an asteroid is rocky." Before you can reason about a point of
+% light — is it shining or reflecting? orbiting the Sun or a planet? — you must
+% first know WHICH kind of celestial object you are looking at. Recall is a
+% binding query:
+%
+%     ? celestial_property(star, $Property)      % gives_off_light
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `celestial_property(object, property)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the property WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these basic celestial-object types (it
+% never invents a property).
+%
+% Each basic type of celestial object and the short defining property the
+% source states for it, as a little truth table:
+%
+%     celestial object   defining property (source's word)   a beginner's cue
+%     ----------------   ---------------------------------   ------------------
+%     star               gives_off_light                     it shines by itself
+%     planet             revolves_around_star                it goes around a star
+%     moon               orbits_planet                       it goes around a planet
+%     comet              frozen_gases_and_dust               a dirty cosmic snowball
+%     asteroid           rocky                               a rocky leftover chunk
+%
+% The query also runs BACKWARD — bind a property and recall which object it
+% defines:
+%
+%     ? celestial_property($Object, orbits_planet)   % moon
+%
+% A word that is NOT one of these basic celestial-object types — `cloud`,
+% `galaxy`, `nebula` — is deliberately NOT a row, so a recall ABSTAINS on it
+% rather than inventing a property. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% object→property pairs it can ground, and only those.
+%
+% The `property` value of every row is a SINGLE lowercase atom, chosen to be a
+% defining property the source EXPLICITLY states for that object — never one
+% the source does not support. Where the everyday word differs from the
+% source's word — the source says a star "gives off ... light" (not "emits"),
+% a planet "revolves around a star" (not "orbits the Sun") — the atom uses the
+% source's own word, so every value stays literally checkable against the
+% quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every object→property pair
+% below was read out of a fetched NASA page, and any pair whose property could
+% not be verified there would have been dropped). Each pair, with the primary
+% source it was copied from and the verbatim span that states it:
+%
+%   star → gives_off_light
+%     https://starchild.gsfc.nasa.gov/docs/StarChild/universe_level1/stars.html
+%     (NASA StarChild — NASA Goddard Space Flight Center)
+%     "A star is a big ball of gas which gives off both heat and light."
+%
+%   planet → revolves_around_star
+%     https://starchild.gsfc.nasa.gov/docs/StarChild/solar_system_level1/planets.html
+%     (NASA StarChild — NASA Goddard Space Flight Center)
+%     "A planet is a large space object which revolves around a star."
+%
+%   moon → orbits_planet
+%     https://science.nasa.gov/solar-system/moons/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Naturally-formed bodies that orbit planets are called moons, or
+%      planetary satellites."
+%
+%   comet → frozen_gases_and_dust
+%     https://science.nasa.gov/solar-system/comets/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Comets are cosmic snowballs of frozen gases, rock, and dust that orbit
+%      the Sun."
+%
+%   asteroid → rocky
+%     https://science.nasa.gov/solar-system/asteroids/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Asteroids, sometimes called minor planets, are rocky, airless remnants
+%      left over from the early formation of our solar system about 4.6 billion
+%      years ago."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA StarChild statement
+% that fixes the first row (star → gives_off_light). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each property remains
+% independently checkable. All sources are NASA (StarChild / NASA Science), a
+% primary U.S. government (National Aeronautics and Space Administration)
+% resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table celestial_property {
+    columns object, property
+
+    row (star, gives_off_light)
+    row (planet, revolves_around_star)
+    row (moon, orbits_planet)
+    row (comet, frozen_gases_and_dust)
+    row (asteroid, rocky)
+
+    source "A star is a big ball of gas which gives off both heat and light."
+    locator "https://starchild.gsfc.nasa.gov/docs/StarChild/universe_level1/stars.html"
+    trust authoritative
+}

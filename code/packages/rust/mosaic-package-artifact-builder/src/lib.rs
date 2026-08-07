@@ -136,6 +136,22 @@ pub enum Backend {
 }
 
 impl Backend {
+    /// Every backend driven by the MIL/MLL/MSL package pipeline. Keeping the
+    /// list here gives cross-backend acceptance tests one exhaustive source of
+    /// truth; adding a new enum variant requires extending this list and the
+    /// Venture browser gate together.
+    pub const ALL: [Self; 9] = [
+        Self::React,
+        Self::Electron,
+        Self::SwiftUI,
+        Self::Qt,
+        Self::WebComponent,
+        Self::Html,
+        Self::Xaml,
+        Self::Flutter,
+        Self::Compose,
+    ];
+
     /// The on-disk subdirectory name beneath `output_root`.
     ///
     /// Conforms to the UI29 §4.3 layout: `dist/react/`, `dist/swiftui/`,
@@ -476,6 +492,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
         &components_built,
         opts.backend,
         &manifest.package.name,
+        &artifacts,
     )?;
     artifacts.push(index_path);
 
@@ -617,6 +634,13 @@ fn activate_react_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<()
 }
 
 fn is_html_module_asset(path: &Path) -> bool {
+    let Some(file_name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    if file_name.contains(".test.") || file_name.contains(".spec.") {
+        return false;
+    }
+
     matches!(
         path.extension().and_then(|extension| extension.to_str()),
         Some("js") | Some("mjs")
@@ -648,6 +672,9 @@ fn is_react_module_asset(path: &Path) -> bool {
         return false;
     };
     if file_name.ends_with(".d.ts") {
+        return false;
+    }
+    if file_name.contains(".test.") || file_name.contains(".spec.") {
         return false;
     }
 
@@ -775,8 +802,10 @@ fn emit_project_shell(
     let mut written: Vec<PathBuf> = Vec::new();
     match backend {
         Backend::React => {
-            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
-            react_opts.emit_project = true;
+            let react_opts = mosaic_emit_react::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -806,10 +835,12 @@ fn emit_project_shell(
             }
         }
         Backend::Electron => {
-            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
-            react_opts.emit_project = true;
             let npm_name = format!("{package_name}-electron");
-            react_opts.package_name = Some(npm_name.clone());
+            let react_opts = mosaic_emit_react::pipeline::EmitOptions {
+                emit_project: true,
+                package_name: Some(npm_name.clone()),
+                ..Default::default()
+            };
             let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -854,8 +885,7 @@ fn emit_project_shell(
             }
         }
         Backend::Html => {
-            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
-            html_opts.emit_project = true;
+            let html_opts = mosaic_emit_html::pipeline::EmitOptions { emit_project: true };
             let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -881,8 +911,7 @@ fn emit_project_shell(
             }
         }
         Backend::WebComponent => {
-            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
-            wc_opts.emit_project = true;
+            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions { emit_project: true };
             let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -904,8 +933,10 @@ fn emit_project_shell(
             }
         }
         Backend::Flutter => {
-            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
-            fl_opts.emit_project = true;
+            let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -929,6 +960,15 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                // Dart package imports may not escape `lib/`. Keep the
+                // top-level component artifact for Mosaic package consumers,
+                // and mirror it into the runnable Flutter shell so
+                // `lib/main.dart` can import it as a package-local library.
+                let component_source =
+                    read_to_string(&backend_dir.join(format!("{component}.dart")))?;
+                let component_copy = backend_dir.join(format!("lib/{component}.dart"));
+                write_file(&component_copy, component_source.as_bytes())?;
+                written.push(component_copy);
                 let host_stub = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host_stub.parent() {
                     create_dir_all(parent)?;
@@ -974,8 +1014,10 @@ fn emit_project_shell(
             written.push(component_nested);
         }
         Backend::Qt => {
-            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
-            qt_opts.emit_project = true;
+            let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1002,8 +1044,10 @@ fn emit_project_shell(
             }
         }
         Backend::SwiftUI => {
-            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
-            sw_opts.emit_project = true;
+            let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1035,8 +1079,10 @@ fn emit_project_shell(
             }
         }
         Backend::Xaml => {
-            let mut xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
-            xaml_opts.emit_project = true;
+            let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1077,7 +1123,7 @@ fn build_electron_package_json(
     react_opts: &mosaic_emit_react::pipeline::EmitOptions,
 ) -> String {
     format!(
-        "{{\n  \"//\": \"AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. Fork the file (remove this comment) to customise.\",\n  \"name\": \"{}\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"dist-electron/main.js\",\n  \"scripts\": {{\n    \"dev\": \"tsc -p tsconfig.electron.json && concurrently -k \\\"vite --host 127.0.0.1\\\" \\\"wait-on http://127.0.0.1:5173 && electron .\\\"\",\n    \"build\": \"tsc -p tsconfig.json && vite build && tsc -p tsconfig.electron.json\",\n    \"start\": \"electron .\",\n    \"preview\": \"vite preview\"\n  }},\n  \"engines\": {{\n    \"node\": \"{}\"\n  }},\n  \"dependencies\": {{\n    \"react\": \"{}\",\n    \"react-dom\": \"{}\"\n  }},\n  \"devDependencies\": {{\n    \"@types/node\": \"26.0.1\",\n    \"@types/react\": \"{}\",\n    \"@types/react-dom\": \"{}\",\n    \"@vitejs/plugin-react-swc\": \"{}\",\n    \"concurrently\": \"10.0.3\",\n    \"electron\": \"42.5.0\",\n    \"typescript\": \"{}\",\n    \"vite\": \"{}\",\n    \"wait-on\": \"9.0.10\"\n  }}\n}}\n",
+        "{{\n  \"//\": \"AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. Fork the file (remove this comment) to customise.\",\n  \"name\": \"{}\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"dist-electron/main.js\",\n  \"scripts\": {{\n    \"dev\": \"tsc -p tsconfig.electron.json && concurrently -k \\\"vite --host 127.0.0.1\\\" \\\"wait-on http://127.0.0.1:5173 && electron .\\\"\",\n    \"build\": \"tsc -p tsconfig.json && vite build && tsc -p tsconfig.electron.json\",\n    \"test\": \"vitest run --environment jsdom\",\n    \"start\": \"electron .\",\n    \"preview\": \"vite preview\"\n  }},\n  \"engines\": {{\n    \"node\": \"{}\"\n  }},\n  \"dependencies\": {{\n    \"react\": \"{}\",\n    \"react-dom\": \"{}\"\n  }},\n  \"devDependencies\": {{\n    \"@types/node\": \"26.0.1\",\n    \"@types/react\": \"{}\",\n    \"@types/react-dom\": \"{}\",\n    \"@vitejs/plugin-react-swc\": \"{}\",\n    \"concurrently\": \"10.0.4\",\n    \"electron\": \"42.5.0\",\n    \"jsdom\": \"25.0.1\",\n    \"typescript\": \"{}\",\n    \"vite\": \"{}\",\n    \"vitest\": \"3.2.7\",\n    \"wait-on\": \"9.0.10\"\n  }}\n}}\n",
         npm_name,
         react_opts.pinned_node_engines,
         react_opts.pinned_react,
@@ -1098,6 +1144,8 @@ fn build_electron_renderer_tsconfig() -> String {
 const COMPOSE_GRADLE_PLUGIN_VERSION: &str = "1.11.1";
 const COMPOSE_KOTLIN_PLUGIN_VERSION: &str = "2.3.21";
 const COMPOSE_DESKTOP_PACKAGE_VERSION: &str = "1.0.0";
+const COMPOSE_JNA_VERSION: &str = "5.19.1";
+const COMPOSE_SERIALIZATION_JSON_VERSION: &str = "1.11.0";
 
 fn build_compose_settings_gradle_kts(package_name: &str) -> String {
     format!(
@@ -1136,6 +1184,10 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
             "}}\n\n",
             "dependencies {{\n",
             "    implementation(compose.desktop.currentOs)\n",
+            "    implementation(\"net.java.dev.jna:jna:{jna_version}\")\n",
+            "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization_json_version}\")\n",
+            "    testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:{compose_version}\")\n",
+            "    testImplementation(kotlin(\"test\"))\n",
             "}}\n\n",
             "kotlin {{\n",
             "    jvmToolchain(21)\n",
@@ -1153,6 +1205,8 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
         ),
         kotlin_version = COMPOSE_KOTLIN_PLUGIN_VERSION,
         compose_version = COMPOSE_GRADLE_PLUGIN_VERSION,
+        jna_version = COMPOSE_JNA_VERSION,
+        serialization_json_version = COMPOSE_SERIALIZATION_JSON_VERSION,
         app_id = escape_kotlin_string(&app_id),
         package_version = COMPOSE_DESKTOP_PACKAGE_VERSION,
     )
@@ -1164,6 +1218,8 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
             "import androidx.compose.material.MaterialTheme\n",
+            "import androidx.compose.runtime.Composable\n",
+            "import androidx.compose.runtime.DisposableEffect\n",
             "import androidx.compose.runtime.LaunchedEffect\n",
             "import androidx.compose.runtime.getValue\n",
             "import androidx.compose.runtime.mutableStateOf\n",
@@ -1173,6 +1229,17 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
             "    val mosaicHost = remember {{ MosaicComposeHostBridge.load() }}\n",
+            "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
+            "        MosaicApp(mosaicHost)\n",
+            "    }}\n",
+            "}}\n\n",
+            "interface MosaicComposeHost {{\n",
+            "    fun props(): Map<String, Any?>?\n",
+            "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>?\n",
+            "    fun setPropsChangedHandler(handler: (() -> Unit)?) {{}}\n",
+            "}}\n\n",
+            "@Composable\n",
+            "fun MosaicApp(mosaicHost: MosaicComposeHost?) {{\n",
             "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
             "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
             "        if (response == null) return\n",
@@ -1185,21 +1252,26 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "    LaunchedEffect(mosaicHost) {{\n",
             "        applyMosaicResponse(mosaicHost?.props())\n",
             "    }}\n",
-            "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
-            "        MaterialTheme {{\n",
+            "    DisposableEffect(mosaicHost) {{\n",
+            "        mosaicHost?.setPropsChangedHandler {{ applyMosaicResponse(mosaicHost.props()) }}\n",
+            "        onDispose {{ mosaicHost?.setPropsChangedHandler(null) }}\n",
+            "    }}\n",
+            "    MaterialTheme {{\n",
             "{root}\n",
-            "        }}\n",
             "    }}\n",
             "}}\n\n",
-            "private class MosaicComposeHostBridge(private val instance: Any) {{\n",
-            "    fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
-            "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
-            "    private fun invokeMap(methodName: String, vararg args: Any): Map<String, Any?>? = runCatching {{\n",
+            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {{\n",
+            "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
+            "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
+            "    override fun setPropsChangedHandler(handler: (() -> Unit)?) {{ invoke(\"setPropsChangedHandler\", handler) }}\n\n",
+            "    private fun invoke(methodName: String, vararg args: Any?): Any? = runCatching {{\n",
             "        val method = instance.javaClass.methods.firstOrNull {{ method ->\n",
             "            method.name == methodName && method.parameterCount == args.size\n",
             "        }} ?: return@runCatching null\n",
-            "        mosaicMap(method.invoke(instance, *args))\n",
+            "        method.invoke(instance, *args)\n",
             "    }}.getOrNull()\n\n",
+            "    private fun invokeMap(methodName: String, vararg args: Any?): Map<String, Any?>? =\n",
+            "        mosaicMap(invoke(methodName, *args))\n\n",
             "    companion object {{\n",
             "        fun load(): MosaicComposeHostBridge? = runCatching {{\n",
             "            val clazz = Class.forName(\"MosaicHost\")\n",
@@ -1245,7 +1317,14 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "            is String -> value.equals(\"true\", ignoreCase = true)\n",
             "            else -> null\n",
             "        }}\n",
-            "    }} ?: emptyList()\n",
+            "    }} ?: emptyList()\n\n",
+            "@Suppress(\"UNCHECKED_CAST\")\n",
+            "private fun mosaicNode(\n",
+            "    props: Map<String, Any?>,\n",
+            "    name: String,\n",
+            "    fallback: @Composable () -> Unit,\n",
+            "): @Composable () -> Unit =\n",
+            "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
         escape_kotlin_string(component_name),
         root = root,
@@ -1289,7 +1368,9 @@ fn compose_host_value_for_slot(slot: &SlotDecl) -> String {
             ListInnerType::Bool => format!("mosaicBooleanList(hostProps, \"{slot_name}\")"),
             _ => fallback,
         },
-        SlotType::Node | SlotType::Component(_) => fallback,
+        SlotType::Node | SlotType::Component(_) => {
+            format!("mosaicNode(hostProps, \"{slot_name}\", {fallback})")
+        }
     }
 }
 
@@ -1312,7 +1393,7 @@ fn sample_kotlin_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> S
         SlotType::Bool => "false".to_string(),
         SlotType::Image => "\"sample-image\"".to_string(),
         SlotType::Color => "\"#808080\"".to_string(),
-        SlotType::Node => "Unit".to_string(),
+        SlotType::Node => "{}".to_string(),
         SlotType::List(_) => "emptyList()".to_string(),
         SlotType::Component(name) => format!("TODO(\"Sample {}\")", escape_kotlin_string(name)),
     }
@@ -1552,6 +1633,7 @@ fn compile_one_component(
         None => out_dir.join(format!("{component}.{ext}")),
     };
 
+    let mut backend_artifacts = Vec::new();
     let primary_bytes: String = match backend {
         Backend::React | Backend::Electron => mosaic_emit_react::pipeline::from_pipeline(
             &mosmodel_out.component,
@@ -1626,6 +1708,22 @@ fn compile_one_component(
             };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
             write_file(&events_path, result.events.as_bytes())?;
+            backend_artifacts.push(code_behind_path);
+            backend_artifacts.push(events_path);
+
+            // XAML can reference generated C# support files from its markup
+            // (for example a ViewModel or an IValueConverter). Package mode
+            // must preserve those emitter-owned side files just as project
+            // shell mode does; otherwise the packaged XAML cannot compile.
+            for side_file in result
+                .for_view_models
+                .iter()
+                .chain(result.if_helpers.iter())
+            {
+                let side_file_path = out_dir.join(&side_file.filename);
+                write_file(&side_file_path, side_file.source.as_bytes())?;
+                backend_artifacts.push(side_file_path);
+            }
 
             result.xaml
         }
@@ -1648,6 +1746,7 @@ fn compile_one_component(
     // ----- 4. Write the primary artifact and backend-agnostic style sidecar --
     write_file(&primary_path, primary_bytes.as_bytes())?;
     let mut artifacts = vec![primary_path];
+    artifacts.extend(backend_artifacts);
     if !lattice.trim().is_empty() {
         let lattice_path = match variant {
             Some(v) => out_dir.join(format!("{component}.{v}.lattice")),
@@ -2130,6 +2229,7 @@ fn emit_index_file(
     components: &[String],
     backend: Backend,
     package_name: &str,
+    component_artifacts: &[PathBuf],
 ) -> Result<PathBuf, BuildError> {
     match backend {
         Backend::React | Backend::Electron => {
@@ -2351,6 +2451,20 @@ fn emit_index_file(
                     "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
                 ));
                 body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+            }
+            let mut support_files = component_artifacts
+                .iter()
+                .filter_map(|artifact| artifact.file_name().and_then(|name| name.to_str()))
+                .filter(|name| {
+                    name.ends_with(".cs")
+                        && !name.ends_with(".xaml.cs")
+                        && !name.ends_with(".Event.cs")
+                })
+                .collect::<Vec<_>>();
+            support_files.sort_unstable();
+            support_files.dedup();
+            for support_file in support_files {
+                body.push_str(&format!("    <Compile Include=\"{support_file}\"/>\n"));
             }
             body.push_str("  </ItemGroup>\n");
             body.push_str("</Project>\n");
@@ -2861,6 +2975,29 @@ files = [
     }
 
     #[test]
+    fn html_test_host_assets_are_copied_without_production_activation() {
+        assert!(!is_html_module_asset(Path::new("test/grid-host.test.js")));
+        assert!(!is_html_module_asset(Path::new("test/grid-host.spec.mjs")));
+        assert!(is_html_module_asset(Path::new("host/grid-host.js")));
+    }
+
+    #[test]
+    fn react_test_host_assets_are_copied_without_production_activation() {
+        assert_eq!(
+            react_host_asset_import_path(Path::new("src/grid-host.ts")),
+            Some("./grid-host".to_string())
+        );
+        assert_eq!(
+            react_host_asset_import_path(Path::new("src/grid-host.test.tsx")),
+            None
+        );
+        assert_eq!(
+            react_host_asset_import_path(Path::new("src/grid-host.spec.ts")),
+            None
+        );
+    }
+
+    #[test]
     fn manifest_host_assets_reject_escaping_targets() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let host_dir = pkg.path().join("host");
@@ -3089,6 +3226,68 @@ files = [
         assert!(props.contains("<Compile Include=\"Grid.xaml.cs\""));
         assert!(props.contains("DependentUpon>Grid.xaml<"));
         assert!(props.contains("<Compile Include=\"Grid.Event.cs\""));
+    }
+
+    #[test]
+    fn xaml_package_pipeline_writes_native_focus_converter_side_file() {
+        let pkg = make_package("mosaic-pkg-focus", &["FocusField"]);
+        write_component_sources(
+            pkg.path(),
+            "FocusField",
+            "component FocusField { }\n",
+            r#"
+layout FocusField {
+  HostInput [ field ] ( placeholder : "Search" )
+}
+"#,
+            r##"
+style FocusField {
+  part field {
+    border-color : "#d0d0d0" ;
+    state focused {
+      border-color : "#e0942a" ;
+    }
+  }
+}
+"##,
+        );
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("xaml focus package build");
+
+        let xaml_dir = out.path().join("xaml");
+        let xaml = fs::read_to_string(xaml_dir.join("FocusField.xaml")).unwrap();
+        assert!(
+            xaml.contains(
+                "Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}"
+            ),
+            "package output must preserve native focus activation:\n{xaml}"
+        );
+        let converter_path = xaml_dir.join("FocusStateToBoolConverter.cs");
+        assert!(
+            converter_path.exists(),
+            "package pipeline must write the converter referenced by XAML"
+        );
+        let converter = fs::read_to_string(&converter_path).unwrap();
+        assert!(converter.contains("state != FocusState.Unfocused"));
+        let props = fs::read_to_string(xaml_dir.join("MosaicPackage.props")).unwrap();
+        assert!(
+            props.contains("<Compile Include=\"FocusStateToBoolConverter.cs\"/>"),
+            "package import must compile the converter referenced by XAML:\n{props}"
+        );
+        assert!(
+            result
+                .artifacts
+                .iter()
+                .any(|artifact| artifact == &converter_path),
+            "generated converter must be reported as a package artifact"
+        );
     }
 
     /// Flutter backend: writes one `.dart` file per component, an
@@ -3780,9 +3979,13 @@ version = "1"
         fs::write(src.join("Grid.light.msl"), minimal_msl("Grid")).unwrap();
 
         // Exact theme match wins for each theme.
-        let light = resolve_style_path(src, "Grid", Some("light")).unwrap().unwrap();
+        let light = resolve_style_path(src, "Grid", Some("light"))
+            .unwrap()
+            .unwrap();
         assert_eq!(light.file_name().unwrap(), "Grid.light.msl");
-        let dark = resolve_style_path(src, "Grid", Some("dark")).unwrap().unwrap();
+        let dark = resolve_style_path(src, "Grid", Some("dark"))
+            .unwrap()
+            .unwrap();
         assert_eq!(dark.file_name().unwrap(), "Grid.dark.msl");
 
         // Theme-agnostic (None) resolution keeps the historical
@@ -3797,19 +4000,25 @@ version = "1"
         // A requested theme with no matching file, and no bare `.msl`,
         // degrades to the alphabetically-first stylesheet rather than
         // erroring or producing nothing (migration-friendly fallback).
-        let sepia = resolve_style_path(src, "Grid", Some("sepia")).unwrap().unwrap();
+        let sepia = resolve_style_path(src, "Grid", Some("sepia"))
+            .unwrap()
+            .unwrap();
         assert_eq!(sepia.file_name().unwrap(), "Grid.dark.msl");
 
         // A bare `.msl` is the theme-neutral fallback ahead of the
         // alphabetical scan: adding it makes an unknown theme resolve to
         // the bare file, and the None path prefer it too.
         fs::write(src.join("Grid.msl"), minimal_msl("Grid")).unwrap();
-        let bare_fallback = resolve_style_path(src, "Grid", Some("sepia")).unwrap().unwrap();
+        let bare_fallback = resolve_style_path(src, "Grid", Some("sepia"))
+            .unwrap()
+            .unwrap();
         assert_eq!(bare_fallback.file_name().unwrap(), "Grid.msl");
         let none_bare = resolve_style_path(src, "Grid", None).unwrap().unwrap();
         assert_eq!(none_bare.file_name().unwrap(), "Grid.msl");
         // But the exact theme file still wins over the bare file.
-        let light_over_bare = resolve_style_path(src, "Grid", Some("light")).unwrap().unwrap();
+        let light_over_bare = resolve_style_path(src, "Grid", Some("light"))
+            .unwrap()
+            .unwrap();
         assert_eq!(light_over_bare.file_name().unwrap(), "Grid.light.msl");
     }
 
@@ -3843,8 +4052,7 @@ version = "1"
         })
         .expect("light-theme react build");
 
-        let lattice =
-            fs::read_to_string(out.path().join("react").join("Grid.lattice")).unwrap();
+        let lattice = fs::read_to_string(out.path().join("react").join("Grid.lattice")).unwrap();
         assert!(
             lattice.contains("width: 22%"),
             "light build must emit the LIGHT stylesheet's declarations"
@@ -4097,6 +4305,7 @@ version = "1"
                     "pubspec.yaml",
                     "README.md",
                     "lib/main.dart",
+                    "lib/Grid.dart",
                     "lib/mosaic_host.dart",
                 ],
             ),
@@ -4160,6 +4369,147 @@ version = "1"
     }
 
     #[test]
+    fn venture_browser_builds_and_mounts_host_surface_on_every_backend() {
+        let package_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(Path::parent)
+            .and_then(Path::parent)
+            .expect("derive code root")
+            .join("programs/mosaic/venture-browser");
+
+        for backend in Backend::ALL {
+            let out = TempDir::new().expect("backend output dir");
+            build_package(&BuildOptions {
+                package_root: package_root.clone(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+                theme: Some("light".to_string()),
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} Venture build failed: {error:?}"));
+
+            let extension = backend.component_extension().expect("text backend");
+            let artifact = out
+                .path()
+                .join(backend.dir_name())
+                .join(format!("VentureChrome.{extension}"));
+            let source = fs::read_to_string(&artifact)
+                .unwrap_or_else(|error| panic!("read {}: {error}", artifact.display()));
+            let expected_mounts: &[&str] = match backend {
+                Backend::React | Backend::Electron => &[
+                    "data-mosaic-host-surface=\"content-surface\"",
+                    "{contentSurface}",
+                ],
+                Backend::SwiftUI => &["contentSurface"],
+                Backend::Qt => &["Loader {", "sourceComponent: mosaicRoot.contentSurface"],
+                Backend::WebComponent => &["<slot name=\"content-surface\"></slot>"],
+                Backend::Html => &["{{{contentSurface}}}"],
+                Backend::Xaml => {
+                    &["<ContentPresenter Content=\"{x:Bind ContentSurface, Mode=OneWay}\"/>"]
+                }
+                Backend::Flutter => &["final Widget contentSurface;", "contentSurface,"],
+                Backend::Compose => &["contentSurface: @Composable () -> Unit", "contentSurface()"],
+            };
+            for expected in expected_mounts {
+                assert!(
+                    source.contains(expected),
+                    "{backend:?} must mount the host surface with {expected:?}:\n{source}"
+                );
+            }
+            assert!(
+                !source.contains("component reference 'HostSurface'"),
+                "{backend:?} must not silently replace HostSurface with a placeholder"
+            );
+
+            let (shell_path, expected_shell_mounts): (&str, &[&str]) = match backend {
+                Backend::React | Backend::Electron => (
+                    "src/main.tsx",
+                    &[
+                        "window.mosaicHost?.getProps",
+                        "<{component_name} {...props}",
+                    ],
+                ),
+                Backend::SwiftUI => (
+                    "Sources/App/App.swift",
+                    &[
+                        "contentSurface: host.node(named: \"content-surface\")",
+                        "optional func node(named name: NSString)",
+                        "MosaicHostPlatformView",
+                    ],
+                ),
+                Backend::Qt => (
+                    "main.cpp",
+                    &[
+                        "root->setProperty(\"mosaicHost\"",
+                        "QVariant::fromValue(static_cast<QObject *>(&mosaicHost))",
+                    ],
+                ),
+                Backend::WebComponent => (
+                    "main.js",
+                    &[
+                        "applyNodeSlot(slot, value)",
+                        "value.setAttribute(\"slot\", slot.name)",
+                    ],
+                ),
+                Backend::Html => (
+                    "main.js",
+                    &[
+                        "value instanceof Node",
+                        "surface.replaceChildren(value)",
+                        "trustedHostHtml(readPath(context, key))",
+                        "function trustedHostHtml(value)",
+                    ],
+                ),
+                Backend::Xaml => (
+                    "MainWindow.xaml.cs",
+                    &[
+                        "TryApplyMosaicHostProps(this.Component)",
+                        "FindMosaicHostMethod(\"ApplyProps\"",
+                    ],
+                ),
+                Backend::Flutter => (
+                    "lib/main.dart",
+                    &[
+                        "contentSurface: mosaicWidget(_hostProps, \"content-surface\"",
+                        "Widget mosaicWidget(",
+                    ],
+                ),
+                Backend::Compose => (
+                    "src/main/kotlin/Main.kt",
+                    &[
+                        "contentSurface = mosaicNode(hostProps, \"content-surface\"",
+                        "private fun mosaicNode(",
+                    ],
+                ),
+            };
+            let shell = fs::read_to_string(out.path().join(backend.dir_name()).join(shell_path))
+                .unwrap_or_else(|error| {
+                    panic!("read {backend:?} Venture project shell {shell_path}: {error}")
+                });
+            for expected in expected_shell_mounts {
+                let expected = expected.replace("{component_name}", "VentureChrome");
+                assert!(
+                    shell.contains(&expected),
+                    "{backend:?} project shell must accept the host surface through its MosaicHost contract with {expected:?}:\n{shell}"
+                );
+            }
+            match backend {
+                Backend::SwiftUI => assert!(
+                    out.path()
+                        .join("swiftui/Sources/App/MosaicHost.swift")
+                        .exists(),
+                    "Venture must install its package-owned SwiftUI host adapter"
+                ),
+                Backend::Xaml => assert!(
+                    out.path().join("xaml/MosaicHost.cs").exists(),
+                    "Venture must install its package-owned XAML host adapter"
+                ),
+                _ => {}
+            }
+        }
+    }
+
+    #[test]
     fn flutter_project_shell_exposes_mosaic_host_hook() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
@@ -4218,14 +4568,28 @@ version = "1"
         assert!(gradle.contains("id(\"org.jetbrains.compose\") version \"1.11.1\""));
         assert!(gradle.contains("id(\"org.jetbrains.kotlin.plugin.compose\") version \"2.3.21\""));
         assert!(gradle.contains("kotlin(\"jvm\") version \"2.3.21\""));
+        assert!(gradle.contains(
+            "testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:1.11.1\")"
+        ));
+        assert!(gradle.contains("implementation(\"net.java.dev.jna:jna:5.19.1\")"));
+        assert!(gradle.contains(
+            "implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0\")"
+        ));
+        assert!(gradle.contains("testImplementation(kotlin(\"test\"))"));
         assert!(gradle.contains("mainClass = \"MainKt\""));
         assert!(gradle.contains("packageName = \"mosaic_pkg_grid\""));
         let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt");
         assert!(main_kt.contains("fun main() = application"));
         assert!(main_kt.contains("Window(onCloseRequest = ::exitApplication, title = \"Grid\")"));
+        assert!(main_kt.contains("interface MosaicComposeHost"));
+        assert!(main_kt.contains("fun MosaicApp(mosaicHost: MosaicComposeHost?)"));
+        assert!(main_kt.contains("MosaicApp(mosaicHost)"));
         assert!(main_kt.contains("MosaicComposeHostBridge.load()"));
         assert!(main_kt.contains("var hostProps by remember"));
         assert!(main_kt.contains("applyMosaicResponse(mosaicHost?.props())"));
+        assert!(main_kt.contains("fun setPropsChangedHandler(handler: (() -> Unit)?)"));
+        assert!(main_kt.contains("DisposableEffect(mosaicHost)"));
+        assert!(main_kt.contains("mosaicHost?.setPropsChangedHandler"));
         assert!(main_kt.contains("Grid("));
         assert!(main_kt.contains("private fun mosaicString("));
         assert!(main_kt.contains("mosaicHost?.handleEvent(event.mosaicEnvelope)"));
@@ -4259,6 +4623,10 @@ version = "1"
         assert!(
             package_json.contains("\"dev\": \"tsc -p tsconfig.electron.json && concurrently -k")
         );
+        assert!(package_json.contains("\"test\": \"vitest run --environment jsdom\""));
+        assert!(package_json.contains("\"jsdom\": \"25.0.1\""));
+        assert!(package_json.contains("\"vitest\": \"3.2.7\""));
+        assert!(package_json.contains("\"concurrently\": \"10.0.4\""));
         let readme = fs::read_to_string(dir.join("README.md")).unwrap();
         assert!(
             readme.contains("`npm run dev` compiles `electron/main.ts` and `electron/preload.ts`")

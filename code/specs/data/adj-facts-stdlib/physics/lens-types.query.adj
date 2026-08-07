@@ -1,0 +1,24 @@
+% ============================================================================
+% lens-types.query.adj — a worked recall over the physics lens-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a convex lens do
+% to light?": it states no optics fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `optic_action` rows and returns the action + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the action
+% `converges_light`, recall which elements do it — the convex lens AND the
+% concave mirror, since both converge light). An optical element that is not one
+% of the four basic converging/diverging types abstains honestly — the engine
+% never invents an action.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lens-types.query.adj
+% ============================================================================
+
+import "lens-types.adj"
+
+? optic_action(convex_lens, $Action)     % expect converges_light
+? optic_action(concave_lens, $Action)    % expect diverges_light
+? optic_action(convex_mirror, $Action)   % expect diverges_light
+? optic_action($Optic, converges_light)  % reverse bind — expect convex_lens AND concave_mirror
+? optic_action(prism, $Action)           % expect abstain — a prism disperses light, it is not a converging or diverging lens/mirror

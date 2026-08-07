@@ -23,7 +23,7 @@ pub fn kronecker_factor(p: &[i64]) -> Option<(Poly, Poly)> {
     for k in 1..=(d as usize / 2) {
         let points = eval_points(k + 1);
         let values: Vec<i64> = points.iter().map(|&point| evaluate(&p, point)).collect();
-        if values.iter().any(|&value| value == 0) {
+        if values.contains(&0) {
             continue;
         }
 
@@ -117,6 +117,10 @@ fn signed_divisors(value: i64) -> Vec<i64> {
         .collect()
 }
 
+// Lagrange interpolation: the basis-building loop iterates node index `j`,
+// skipping `j == i`, and indexes the node vector `xs[j]`; the indexed form
+// mirrors the interpolation formula and keeps the skip-self condition explicit.
+#[allow(clippy::needless_range_loop)]
 fn lagrange_interpolate(xs: &[i64], ys: &[i64]) -> Option<Vec<Rational>> {
     let n = xs.len();
     let mut result = vec![Rational::zero(); n];

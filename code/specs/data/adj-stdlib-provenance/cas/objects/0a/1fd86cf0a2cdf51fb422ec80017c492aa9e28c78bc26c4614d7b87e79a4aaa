@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion.definition",
+          "end": 71,
+          "quote": "A proportion is an equation of the form (a/b)=(c/d), where b\u22600,d\u22600.",
+          "quote_sha256": "b8e6728b95578281c1f646cbf57c563f64b435a8836ed0ebe15c03a13a48dc44",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 71,
+      "start": 0
+    }
+  ],
+  "source_sha256": "b8e6728b95578281c1f646cbf57c563f64b435a8836ed0ebe15c03a13a48dc44",
+  "source_size": 71
+}

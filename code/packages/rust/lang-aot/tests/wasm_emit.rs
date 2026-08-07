@@ -22,6 +22,101 @@ fn assert_wellformed(bytes: &[u8], what: &str) {
     assert_eq!(&bytes[..8], &WASM_HEADER, "{what}: missing wasm magic/version header");
 }
 
+struct CapturePrintStr {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for CapturePrintStr {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let ptr = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing ptr"))?
+            .as_i32()
+            .map_err(|error| wasm_execution::TrapError::new(error.message))?;
+        let len = args
+            .get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing len"))?
+            .as_i32()
+            .map_err(|error| wasm_execution::TrapError::new(error.message))?;
+        if ptr < 0 || len < 0 {
+            return Err(wasm_execution::TrapError::new("__print_str: negative ptr/len"));
+        }
+
+        let start = usize::try_from(ptr)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: ptr overflow"))?;
+        let len = usize::try_from(len)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: len overflow"))?;
+        let end = start
+            .checked_add(len)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: range overflow"))?;
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: no linear memory"))?;
+        let bytes = (start..end)
+            .map(|offset| memory.load_i32_8u(offset).map(|byte| byte as u8))
+            .collect::<Result<Vec<_>, _>>()?;
+        self.bytes
+            .lock()
+            .expect("wasm print capture poisoned")
+            .extend_from_slice(&bytes);
+        Ok(vec![])
+    }
+}
+
+struct PrintStrHost {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostInterface for PrintStrHost {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn wasm_execution::HostFunction>> {
+        (module_name == "env" && name == "__print_str").then(|| {
+            Box::new(CapturePrintStr {
+                bytes: std::sync::Arc::clone(&self.bytes),
+            }) as Box<dyn wasm_execution::HostFunction>
+        })
+    }
+
+    fn resolve_global(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+        None
+    }
+
+    fn resolve_memory(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::LinearMemory> {
+        None
+    }
+
+    fn resolve_table(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::Table> {
+        None
+    }
+}
+
 /// A scalar McCarthy program emits a valid wasm module **and runs** to the
 /// right value on the in-repo runtime — the end-to-end proof of the
 /// McCarthy → wasm pipeline.
@@ -63,6 +158,27 @@ fn algol_scalar_emits_and_runs_on_wasm() {
     let rt = WasmRuntime::new();
     let result = rt.load_and_run(&bytes, "main", &[]).expect("ALGOL wasm must run");
     assert_eq!(result, vec![42], "ALGOL main() should return 42");
+}
+
+#[test]
+fn algol_captured_and_own_strings_emit_and_run_on_wasm() {
+    let source = "begin integer result; string shared; \
+                  procedure setshared; shared := 'C'; \
+                  integer procedure remember(n); value n; integer n; \
+                     begin own string memo; if n = 1 then memo := 'A'; \
+                       if memo = 'A' then remember := 1 else remember := 0 end; \
+                  setshared; result := 0; \
+                  if shared = 'C' then result := result + 1; \
+                  result := result + remember(1) + remember(2) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_global_string")
+        .expect("ALGOL captured/own strings should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL captured/own strings)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL captured/own string wasm must run");
+    assert_eq!(result, vec![3], "ALGOL globals should preserve string handles");
 }
 
 #[test]
@@ -151,6 +267,20 @@ fn algol_dynamic_step_emits_and_runs_on_wasm() {
 }
 
 #[test]
+fn algol_proper_procedure_emits_and_runs_on_wasm() {
+    let source = "begin integer result; procedure bump(d); value d; integer d; result := result + d; result := 40; bump(2) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_proper_proc")
+        .expect("ALGOL proper procedure should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL proper procedure)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL proper-procedure wasm must run");
+    assert_eq!(result, vec![42], "ALGOL proper procedure should return 42");
+}
+
+#[test]
 fn algol_conditional_expressions_emit_and_run_on_wasm() {
     let source = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
     let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_cond_expr")
@@ -176,6 +306,50 @@ fn algol_nested_blocks_emit_and_run_on_wasm() {
         .load_and_run(&bytes, "main", &[])
         .expect("ALGOL nested-block wasm must run");
     assert_eq!(result, vec![42], "ALGOL nested blocks should return 42");
+}
+
+#[test]
+fn algol_runtime_string_local_emits_and_runs_on_wasm() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s = 'HI' then result := 42 else result := 0; \
+                  print(s) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_runtime_string")
+        .expect("ALGOL runtime string local should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL runtime string local)");
+
+    let output = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let result = WasmRuntime::with_host(Box::new(PrintStrHost {
+        bytes: std::sync::Arc::clone(&output),
+    }))
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL runtime string wasm must run");
+    assert_eq!(result, vec![42]);
+    assert_eq!(&*output.lock().expect("wasm print capture poisoned"), b"HI");
+}
+
+#[test]
+fn algol_runtime_string_ordering_emits_and_runs_on_wasm() {
+    let source = "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_runtime_string_ordering")
+        .expect("ALGOL runtime string ordering should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL runtime string ordering)");
+
+    let output = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let result = WasmRuntime::with_host(Box::new(PrintStrHost {
+        bytes: std::sync::Arc::clone(&output),
+    }))
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL runtime string ordering wasm must run");
+    assert_eq!(result, vec![42]);
+    assert_eq!(&*output.lock().expect("wasm print capture poisoned"), b"HI");
 }
 
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs

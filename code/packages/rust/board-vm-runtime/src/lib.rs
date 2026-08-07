@@ -66,7 +66,9 @@ impl Default for ByteBuffer {
 pub struct ByteBufferError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Value {
+    #[default]
     Unit,
     Bool(bool),
     U8(u8),
@@ -77,11 +79,6 @@ pub enum Value {
     Bytes(ByteBuffer),
 }
 
-impl Default for Value {
-    fn default() -> Self {
-        Self::Unit
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Handle {
@@ -1532,6 +1529,10 @@ where
         Ok(response)
     }
 
+    // DNS-over-UDP exchange parameters (interface, resolver address, transaction
+    // id, query/response buffers, retry budget); the argument set is dictated by
+    // the protocol exchange, not incidental sprawl.
+    #[allow(clippy::too_many_arguments)]
     fn network_dns_exchange_udp_retry(
         &mut self,
         interface: u16,
@@ -1579,6 +1580,9 @@ where
         }
     }
 
+    // Primary+fallback DNS-over-UDP exchange; parameter set is fixed by the
+    // protocol (see network_dns_exchange_udp_retry).
+    #[allow(clippy::too_many_arguments)]
     fn network_dns_exchange_udp_fallback(
         &mut self,
         interface: u16,

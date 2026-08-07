@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "discovery/simple",
+  "domain": "discovery",
+  "summary": "A canonical BUILD file establishes one Python package.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "discovery"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "python -m unittest discover tests\n"
+      },
+      {
+        "path": "code/packages/python/demo/pyproject.toml",
+        "content_utf8": "[project]\nname = \"demo\"\nversion = \"0.1.0\"\ndependencies = []\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "discovery",
+    "options": {
+      "code_root": "code",
+      "platform": "linux"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "discovery/simple",
+    "domain": "discovery",
+    "outcome": "ok",
+    "result": {
+      "packages": [
+        {
+          "build_file": "code/packages/python/demo/BUILD",
+          "is_starlark": false,
+          "language": "python",
+          "name": "python/demo",
+          "rel_path": "code/packages/python/demo"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

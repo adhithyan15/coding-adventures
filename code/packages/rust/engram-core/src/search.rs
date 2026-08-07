@@ -10,19 +10,20 @@ use crate::model::{
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
-// Engram's boolean search matching — user `re:` patterns, whole-word, and
-// `*`/`_` globs — runs on the zero-dependency `regex_engine` (Pike VM,
-// linear-time). The one place a match *extent* is still needed, the media-tag
-// `replace_all` below, keeps the third-party `regex` crate (fully qualified)
-// until a later, separately-verified change adds extents to `regex_engine`.
+// Engram's search matching runs entirely on the zero-dependency `regex_engine`
+// (Pike VM, linear-time): the boolean uses — user `re:` patterns, whole-word,
+// and `*`/`_` globs — plus the one place a match *extent* is needed, the
+// media-tag `replace_all` below. No third-party regex crate remains in the
+// runtime dependency graph (`regex` is now a dev-dependency, used only by the
+// `html_scan` cross-check test).
 use regex_engine::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
 
-static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<regex::Regex> = LazyLock::new(|| {
-    regex::Regex::new(
+static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
         r#"(?is)<(?:img|audio|video|object|source)[^>]*(?:src|data)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^ >]+))[^>]*>"#,
     )
     .expect("duplicate media tag regex should compile")
@@ -583,6 +584,8 @@ impl SearchParser {
         Ok(fold_or(expressions))
     }
 
+    // Explicit loop with multiple break conditions reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn parse_and(&mut self) -> Result<SearchExpr, SearchError> {
         let mut expressions = Vec::new();
 
@@ -1261,7 +1264,7 @@ fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchErr
         })?
         .max(1);
     let rating = match parts.next() {
-        Some(raw_rating) if raw_rating.is_empty() => {
+        Some("") => {
             return Err(SearchError {
                 message: "rated search rating is missing".to_string(),
                 token: token.to_string(),
@@ -1401,6 +1404,10 @@ fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> 
     }
 }
 
+// Search matching threads the full evaluation context (card, progress, deck,
+// note, metadata, reviews, clock) through each recursive call; a params struct
+// would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn expression_matches(
     expression: &SearchExpr,
     card: &Card,
@@ -1432,6 +1439,9 @@ fn expression_matches(
     }
 }
 
+// Mirrors `expression_matches`: the full evaluation context is threaded through;
+// a params struct would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn clause_matches(
     clause: &SearchClause,
     card: &Card,
@@ -1842,15 +1852,13 @@ fn anki_excluded_field_ids(source: &ExternalSourceRecord) -> Vec<String> {
     fields
         .iter()
         .enumerate()
-        .filter_map(|(index, field)| {
-            anki_field_excluded_from_search(field).then(|| {
+        .filter(|&(_index, field)| anki_field_excluded_from_search(field)).map(|(index, field)| {
                 let ordinal = field
                     .get("ord")
                     .and_then(Value::as_i64)
                     .unwrap_or(index as i64);
                 format!("{}:field:{ordinal}", source.target_id)
             })
-        })
         .collect()
 }
 
@@ -2032,7 +2040,7 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
     match filter {
         TagFilter::Hierarchical(tag) if tag == "*" => true,
         TagFilter::Hierarchical(tag) if tag == "none" => {
-            note.map_or(true, |note| note.tags.is_empty())
+            note.is_none_or(|note| note.tags.is_empty())
         }
         TagFilter::Hierarchical(tag) => note.is_some_and(|note| {
             note.tags
@@ -2045,7 +2053,7 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
                 return true;
             }
             if pattern == "none" {
-                return note.map_or(true, |note| note.tags.is_empty());
+                return note.is_none_or(|note| note.tags.is_empty());
             }
             note.is_some_and(|note| {
                 note.tags.iter().any(|candidate| {
@@ -2276,14 +2284,15 @@ fn rendered_search_text(value: &str) -> Cow<'_, str> {
         return Cow::Borrowed(value);
     }
 
-    let with_media = DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex::Captures| {
-        let filename = captures
-            .get(1)
-            .or_else(|| captures.get(2))
-            .or_else(|| captures.get(3))
-            .map_or("", |capture| capture.as_str());
-        format!(" {filename} ")
-    });
+    let with_media =
+        DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex_engine::Captures| {
+            let filename = captures
+                .get(1)
+                .or_else(|| captures.get(2))
+                .or_else(|| captures.get(3))
+                .map_or("", |capture| capture.as_str());
+            format!(" {filename} ")
+        });
     let without_tags = crate::html_scan::strip_tags(&with_media);
     Cow::Owned(decode_search_html_entities(&without_tags))
 }
@@ -2394,7 +2403,7 @@ fn state_matches(
 ) -> bool {
     match state {
         CardSearchState::New => imported_anki_state_matches(state, card_sources, metadata, now)
-            .unwrap_or_else(|| progress.map_or(true, is_new_progress_overlay)),
+            .unwrap_or_else(|| progress.is_none_or(is_new_progress_overlay)),
         CardSearchState::Due => imported_anki_card_is_due(card_sources, metadata, now)
             .unwrap_or_else(|| progress.is_some_and(|progress| is_reviewable(progress, now))),
         CardSearchState::Learning => {
@@ -2591,7 +2600,7 @@ fn property_matches(
         ),
         CardProperty::Rated => reviews.iter().any(|review| {
             !anki_review_is_manual_reschedule(review, metadata)
-                && filter.rating.map_or(true, |rating| review.rating == rating)
+                && filter.rating.is_none_or(|rating| review.rating == rating)
                 && compare_number(
                     f64::from(relative_day_bucket(
                         review.reviewed_at,
@@ -2675,7 +2684,7 @@ fn imported_fsrs_retrievability(
     metadata: &SearchMetadata<'_>,
     now: u64,
 ) -> Option<f64> {
-    if progress.map_or(true, is_new_progress_overlay) {
+    if progress.is_none_or(is_new_progress_overlay) {
         return None;
     }
 
@@ -2798,7 +2807,7 @@ fn imported_new_card_position(
     progress: Option<&CardProgress>,
     card_sources: &[&ExternalSourceRecord],
 ) -> Option<i64> {
-    if !progress.map_or(true, is_new_progress_overlay) {
+    if !progress.is_none_or(is_new_progress_overlay) {
         return None;
     }
 
@@ -2931,7 +2940,7 @@ fn rated_matches(
 ) -> bool {
     reviews.iter().any(|review| {
         !anki_review_is_manual_reschedule(review, metadata)
-            && filter.rating.map_or(true, |rating| review.rating == rating)
+            && filter.rating.is_none_or(|rating| review.rating == rating)
             && happened_recently(review.reviewed_at, filter.days, metadata, now)
     })
 }

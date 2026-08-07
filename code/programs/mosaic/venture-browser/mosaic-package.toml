@@ -1,0 +1,30 @@
+[package]
+name = "venture-browser"
+version = "0.1.0"
+description = "Shared Mosaic-authored browser chrome for Venture."
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["VentureChrome"]
+
+[host_assets]
+files = [
+  { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
+  { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
+  { backend = "flutter", source = "host/flutter/mosaic_host.dart", target = "lib/mosaic_host.dart" },
+  { backend = "flutter", source = "host/flutter/venture_chrome_interaction_test.dart", target = "test/venture_chrome_interaction_test.dart" },
+  { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
+  { backend = "qt", source = "host/qt/MosaicHost.h", target = "MosaicHost.h" },
+  { backend = "qt", source = "host/qt/tst_venture_chrome.qml", target = "test/tst_venture_chrome.qml" },
+  { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
+  { backend = "compose", source = "host/compose/VentureChromeInteractionTest.kt", target = "src/test/kotlin/VentureChromeInteractionTest.kt" },
+  { backend = "react", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },
+  { backend = "electron", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },
+  { backend = "html", source = "host/web/package.json", target = "package.json" },
+  { backend = "html", source = "host/web/VentureChromeInteraction.test.js", target = "test/VentureChromeInteraction.test.js" },
+  { backend = "webcomponent", source = "host/web/package.json", target = "package.json" },
+  { backend = "webcomponent", source = "host/web/VentureChromeInteraction.test.js", target = "test/VentureChromeInteraction.test.js" },
+]
+
+[kernel]
+version = "1"

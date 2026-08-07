@@ -877,6 +877,28 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_ruby_to_python_shift_operator() {
+        // `ruby-to-semantic-ir` lowers `<<` to a top-level
+        // `BuiltinCall("<<", [lhs, rhs, ...])`, distinct from the
+        // `__method__("<<", recv, arg)` Collections-dispatch protocol.
+        // Before this fix the Python backend had no `<<` entry at all (no
+        // `_sir_shift_left` alias, no `_builtins` registration) and any
+        // program using `<<` as an operator failed with `NameError: SIR
+        // builtin '<<' is not implemented`.
+        let module = ruby_to_semantic_ir::compile_source("puts(5 << 2)\n", "demo")
+            .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_puts(_sir_shift_left(5, 2))"),
+            "expected `5 << 2` to lower to _sir_shift_left; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "20\n", "5 << 2 should print 20");
+        }
+    }
+
+    #[test]
     fn end_to_end_ruby_to_python_locals() {
         // Local assignments thread through to the Python body: the final
         // `puts(x + y)` references both locals via `_sir_plus(x, y)`.
@@ -1958,7 +1980,7 @@ mod tests {
 
     #[test]
     fn defined_method_call_operand_emits_method_py() {
-        use semantic_ir::Scope;
+        
         // Q10h: `defined?(recv.meth)` — the operand is the `__method__` dispatch
         // envelope — reports the constant "method" (Ruby's category when the
         // method resolves), not the generic "expression".  The receiver `r` and

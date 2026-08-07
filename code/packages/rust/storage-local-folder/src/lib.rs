@@ -194,6 +194,28 @@ mod tests {
     }
 
     #[test]
+    fn conformance_create_if_absent_rejects_existing() {
+        with_backend("create-if-absent", |backend| {
+            conformance::create_if_absent_rejects_existing(backend).unwrap();
+        });
+    }
+
+    #[test]
+    fn conformance_concurrent_create_if_absent_has_one_winner() {
+        let root = temp_root("concurrent-create-if-absent");
+        let backend = std::sync::Arc::new(LocalFolderStorageBackend::new(&root));
+        conformance::concurrent_create_if_absent_has_one_winner(backend).unwrap();
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn conformance_multiple_write_conditions_are_rejected() {
+        with_backend("multiple-write-conditions", |backend| {
+            conformance::multiple_write_conditions_are_rejected(backend).unwrap();
+        });
+    }
+
+    #[test]
     fn conformance_delete_is_idempotent() {
         with_backend("delete", |backend| {
             conformance::delete_is_idempotent(backend).unwrap();

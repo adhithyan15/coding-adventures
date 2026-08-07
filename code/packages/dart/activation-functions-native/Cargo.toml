@@ -1,0 +1,18 @@
+# Standalone workspace so this cdylib stays out of the main Rust workspace.
+[workspace]
+
+[package]
+name = "activation-functions-native"
+version = "0.1.0"
+edition = "2021"
+description = "C-ABI cdylib wrapping the Rust activation-functions crate, called from Dart via dart:ffi (zero third-party deps)"
+
+[lib]
+name = "activation_functions_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+activation-functions = { path = "../../rust/activation-functions" }
+
+[profile.release]
+opt-level = 3

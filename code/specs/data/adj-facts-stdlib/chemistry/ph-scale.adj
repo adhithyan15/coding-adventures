@@ -1,0 +1,106 @@
+% ============================================================================
+% substance_ph — the approximate pH of common everyday substances
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% An elementary/middle-school science fact set: where does each familiar liquid
+% sit on the pH scale? The pH scale runs from 0 to 14. A value BELOW 7 is acidic
+% (lemon juice, vinegar, soda), exactly 7 is NEUTRAL (pure water), and ABOVE 7 is
+% basic / alkaline (milk of magnesia, ammonia). Recall is a binding query:
+%
+%     ? substance_ph(lemon_juice, $P)      % 2.2
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each
+% `row` lowers to a ground relation `substance_ph(substance, ph)` carrying the
+% table's citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the pH WITH its source, on the CPU, with zero model calls, and
+% abstains on a substance that is not in the table. It also runs BACKWARD (bind a
+% pH, recall the substance that has it):
+%
+%     ? substance_ph($S, 7.0)              % pure_water — the neutral point
+%
+% WHY a number and not just a label — recall feeding COMPUTE. Because each `ph`
+% cell is a NUMBER (not an atom), a recalled pH composes straight into
+% arithmetic. pH is a LOGARITHMIC scale: each whole step is a ten-fold change in
+% acidity, so lemon juice (2.2) is roughly 100000 times more acidic than pure
+% water (7.0) — that "100000" is 10 raised to (7.0 - 2.2), a subtraction and a
+% power that a recalled pH flows straight into. That is the concrete bridge from
+% chemistry RECALL to acidity COMPUTE, the reason a facts library and a formula
+% library belong in one standard library.
+%
+% The thirteen substances, ordered up the scale from most acidic to most basic
+% (a little truth table — follow the value from 0 toward 14):
+%
+%     substance          pH     where it sits
+%     ----------------   ----   -------------------------
+%     stomach_acid       1.7    strongly acidic
+%     lemon_juice        2.2    acidic
+%     vinegar            2.9    acidic
+%     soda               3.0    acidic (a fizzy soft drink)
+%     wine               3.5    acidic
+%     black_coffee       5.0    weakly acidic
+%     milk               6.9    just below neutral
+%     pure_water         7.0    NEUTRAL — the middle of the scale
+%     blood              7.4    just above neutral
+%     seawater           8.5    weakly basic
+%     milk_of_magnesia   10.5   basic
+%     ammonia            12.5   strongly basic
+%     sodium_hydroxide   14.0   strongly basic (1.0 M NaOH — the top)
+%
+% A substance that is not one of these thirteen — dish soap, tomato juice, a rock
+% — has no row, so a recall on it ABSTAINS rather than inventing a pH. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every substance→pH pair was
+% read out of a fetched teaching-reference page, and any substance whose value
+% could not be copied verbatim would have been dropped). All thirteen values come
+% from the SAME source: the LibreTexts Chemistry table "Typical pH Values of
+% Various Substances" (chem.libretexts.org, South Puget Sound Community College
+% "Chem 121: Introduction to Chemistry", §9.2 "The pH Scale"), each pH copied
+% character-for-character from that table:
+%
+%   stomach acid → 1.7        milk → 6.9              milk of magnesia → 10.5
+%   lemon juice → 2.2         pure water → 7.0        ammonia solution → 12.5
+%   vinegar → 2.9             blood → 7.4             1.0 M NaOH → 14.0
+%   soda → 3.0                seawater → 8.5
+%   wine → 3.5                coffee, black → 5.0
+%
+% The table carries the footnote "*Actual values may vary depending on
+% conditions", so each pH is an APPROXIMATE representative value (the single
+% number the source states), which is exactly what an elementary/middle-school
+% pH fact set wants. The neutral point pure_water → 7.0 is independently
+% corroborated by primary U.S. government sources (USGS Water Science School and
+% EPA both state pure water has "a pH of 7.0"), but this table's ONE provenance
+% envelope holds the LibreTexts source that fixes ALL thirteen rows in text.
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single source's caption and two representative verbatim
+% rows; every other row's verbatim value is listed above, so each pH remains
+% independently checkable. LibreTexts is a SECONDARY teaching reference (a
+% college course text, not a primary standards body), so `trust consensus` — the
+% honest tier for a teaching summary, per the standard-library trust convention.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table substance_ph {
+    columns substance, ph
+
+    row (stomach_acid, 1.7)
+    row (lemon_juice, 2.2)
+    row (vinegar, 2.9)
+    row (soda, 3.0)
+    row (wine, 3.5)
+    row (black_coffee, 5.0)
+    row (milk, 6.9)
+    row (pure_water, 7.0)
+    row (blood, 7.4)
+    row (seawater, 8.5)
+    row (milk_of_magnesia, 10.5)
+    row (ammonia, 12.5)
+    row (sodium_hydroxide, 14.0)
+
+    source "Typical pH Values of Various Substances* — lemon juice 2.2 … pure water 7.0 … ammonia solution 12.5 (*Actual values may vary depending on conditions)"
+    locator "https://chem.libretexts.org/Courses/South_Puget_Sound_Community_College/Chem_121:_Introduction_to_Chemistry/09:_Chapter_8A_-_Acids_bases_and_pH/9.02:_The_pH_Scale_(Acidic_Basic_Neutral_solutions)"
+    trust consensus
+}

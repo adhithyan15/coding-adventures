@@ -874,7 +874,7 @@ mod tests {
         let src = r#"component X { Text { content: "Welcome"; } }"#;
         let scene = render_scene(src, 400.0, 300.0).unwrap();
         let texts = all_texts(&scene);
-        assert!(texts.iter().any(|t| *t == "Welcome"), "texts: {texts:?}");
+        assert!(texts.contains(&"Welcome"), "texts: {texts:?}");
     }
 
     // ─── layout: SlotRef in Text content ─────────────────────────────────────
@@ -1063,7 +1063,7 @@ mod tests {
         let scene = render_scene(src, 400.0, 300.0).unwrap();
         let texts = all_texts(&scene);
         assert!(
-            texts.iter().any(|t| *t == "nested"),
+            texts.contains(&"nested"),
             "expected 'nested' text, got: {texts:?}"
         );
     }

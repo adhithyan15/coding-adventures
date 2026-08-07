@@ -163,7 +163,7 @@ pub unsafe extern "C" fn paint_vm_direct2d_render_rect_scene(
     {
         let _ = (width, height, background, rects, rect_count);
         clear_out_buffer(out_buffer);
-        return 0;
+        0
     }
 
     #[cfg(target_os = "windows")]
@@ -220,7 +220,7 @@ pub unsafe extern "C" fn paint_vm_direct2d_render_scene(
             width, height, background, rects, rect_count, texts, text_count,
         );
         clear_out_buffer(out_buffer);
-        return 0;
+        0
     }
 
     #[cfg(target_os = "windows")]
@@ -271,7 +271,7 @@ pub unsafe extern "C" fn paint_vm_gdi_render_scene(
             width, height, background, rects, rect_count, texts, text_count,
         );
         clear_out_buffer(out_buffer);
-        return 0;
+        0
     }
 
     #[cfg(target_os = "windows")]

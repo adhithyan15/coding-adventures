@@ -1,5 +1,151 @@
 # Changelog — `aarch64-backend`
 
+## 0.36.1 - 2026-08-02 - fix stale "no GC" comment on cons-cell allocation
+
+The comment block introducing the heap-cons-cell lowering still described
+the pre-AOT00 allocator (`__twig_alloc_bytes`, "V1 leaks... no GC"), even
+though the `alloc` op it sits directly above has allocated cons cells
+through the GC-managed, movable `__twig_gc_alloc_pair` path since 0.34.0.
+No behavior change — corrects the comment to match the code.
+
+## 0.36.0 - 2026-07-31 - boolean array elements
+
+The native array element-size helper now accepts `bool`, using the backend's
+existing fixed word cell representation for erased `array<T>` values.
+
+## 0.35.0 - 2026-07-30 - runtime string ordering builtin
+
+Register `str_cmp` as a two-argument, i64-returning `V1_BUILTINS` helper. The
+generic AArch64 call path now resolves it to `__twig_str_cmp`, whose runtime ABI
+returns the shared lexical `-1`/`0`/`1` result.
+
+## 0.34.0 - 2026-07-30 — records are movable: `alloc` → `__twig_gc_alloc_pair`
+
+- The default (2-word pair) **`alloc`** op — the record/union constructor cell — now lowers to
+  `BL __twig_gc_alloc_pair` (the movable `{0,8}` pair allocator) instead of the kind-0 conservative
+  `__twig_gc_alloc`. A Twig record's two boxed-`any` fields are thereby traced precisely and the
+  cell is **relocated** under a compacting collect, on par with cons cells / closures. An explicit
+  non-pair `alloc` size keeps the conservative kind-0 path (unknown layout → a precise ref-map
+  would be unsound). Unit test `pair_alloc_uses_movable_pair_allocator`.
+
+## 0.33.0 - 2026-07-29 — `gc_register_ref_array_kind` builtin (frontend array GC, AOT00-T5 §7)
+
+- **`gc_register_ref_array_kind` `BuiltinSig` row** (`(fixed, fixed_count, tail_from) -> kind_id`)
+  — a `call_builtin` lowers to a `BL` to `__twig_gc_register_ref_array_kind` via the generic
+  `__twig_<name>` dispatch (three args in x0/x1/x2), the C-ABI seam a language frontend's **array**
+  type calls to declare its layout so the collector traces — and under compaction relocates — the
+  array + its elements precisely instead of pinning them. Adding the row is the whole change (no
+  per-name lowering). Test `gc_register_ref_array_kind_emits_external_twig_call`.
+
+## 0.32.0 - 2026-07-27 — `gc_collect_incremental_*` builtin trio (frontend incremental GC, AOT00-T4 §6)
+
+- Three new `V1_BUILTINS` entries — `gc_collect_incremental_start` (0 args, void),
+  `gc_collect_incremental_step` (1 arg = budget, returns 1 done / 0 more),
+  `gc_collect_incremental_finish` (0 args, returns freed count) — the bounded-pause collection
+  cycle. The generic `__twig_<name>` `call_builtin` dispatch auto-emits `BL
+  __twig_gc_collect_incremental_*` (no per-name lowering). A native program can now drive an
+  incremental collection. New emission unit test asserts the three external reloc symbols.
+
+## 0.31.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
+
+- New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the
+  moving/compacting collect. The generic `__twig_<name>` `call_builtin` dispatch auto-emits a
+  `BL __twig_gc_collect_compacting`, so no per-name lowering is needed; it sits beside
+  `gc_collect` / `gc_collect_precise`. A native program can now trigger a compaction. New
+  emission unit test asserts the external reloc symbol.
+
+## 0.30.0 - 2026-07-21 — V1_BUILTINS: GC collection + observability (AOT00-T1 increment C)
+
+Four `call_builtin` entries the native GC-stress differential drives, resolving to the
+`__twig_gc_*` aliases in gc-core-capi: `gc_collect` (forced conservative full collect,
+void), `gc_collect_precise` (precise-roots frame walk, returns freed count),
+`gc_live_bytes` (live payload bytes), and `gc_stackmap_count` (registered-function
+count). No new lowering — the generic `call_builtin` marshaller emits the `BL`.
+
+## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
+## 0.28.0 - 2026-07-18 (GC stack maps: `compile_with_globals_and_stackmap`)
+
+Second implementation rung of `AOT00-T1-stackmap-emission.md`: the backend now
+computes each function's **GC stack map** — the data that lets
+`__gc_collect_precise` resolve a real frame instead of falling back to a
+conservative scan.
+
+- **`compile_with_globals_and_stackmap(ctx, ir, global_slots)`** — like
+  `compile_with_globals`, but also returns one `StackMapRecord` per call return
+  address naming the frame slots that may hold GC references. Built via
+  `gc_core::StackMapBuilder` (Rule R1), so the ordering hazards are handled there.
+  It mirrors `compile_with_globals` rather than `compile` deliberately: a function
+  with a safepoint has by definition at least one call, whose `BL` is an unpatched
+  placeholder until the linker applies its `ExternalReloc` — an entry point that
+  dropped the relocs (or that could not accept `global_slots`) would hand back code
+  that cannot be linked, with no signal.
+- **Root-ness is a DENY-list, not an allow-list.** A slot is a root unless its type
+  is a provable machine scalar (`u4…u64`, `i8…i64`, `f32`, `f64`, `bool`, `void`).
+  Everything else — `any`, `str`, `ref<…>`, `array<…>`, and any type string added
+  later — is treated as a potential reference.
+  - This polarity is the whole correctness story. An earlier draft keyed root-ness on
+    `ref<…>` and was **dead code in production**: `aot_core::specialise` validates
+    every type against its own allow-list, which does not contain `ref<…>`, so every
+    reference is erased to `"any"` before reaching this backend. That draft would
+    have emitted records naming *nothing* — and an empty record is authoritative,
+    suppressing the frame's conservative scan and freeing live objects. A regression
+    test now compiles the exact shape the specialiser produces (`alloc` typed
+    `"any"`) and asserts it is rooted.
+  - `any` is not a fallback but the *normal* type of every dynamic value
+    (`__dyn_cons` allocates through `__twig_gc_alloc`), so it must be a root.
+    Honest cost: in a dyn-heavy function most slots are `any`, so the map approaches
+    a conservative scan for that frame. The win is real for statically-typed
+    frontends, where integer/float/bool slots — the ones producing heap-address
+    look-alikes — are excluded outright.
+- **A missing slot or an out-of-range offset is now a hard `BackendError`**, not a
+  skipped iteration: silently dropping a root is a use-after-free, so it must never
+  be the quiet path. (Neither is reachable today.)
+- **Offsets need no translation.** `RegAlloc` hands out SP-relative offsets and the
+  prologue pins `fp = sp`, so an SP-relative offset *is* the FP-relative offset the
+  record format wants. Slot lookups are **read-only** (`slots.get`, never
+  `slot_of`) — minting a slot post-compile would silently grow the frame the code
+  was already generated against.
+- **Call sites are found by scanning the finished code** for `BL`/`BLR` rather than
+  hooking the ~10 scattered emission sites, so a newly added call can never silently
+  escape the map. AArch64 is fixed-width and the assembler stores instructions only
+  (no inline literal pools), so every 4-byte word is a real instruction.
+- The stack map is **pure metadata**: a test asserts `compile` and the stack-map
+  entry point emit byte-identical code.
+- 9 new tests, including the production-shape `any`-alloc regression above, the
+  scalar-vs-root type classification (with an unknown type failing safe as a root),
+  BL/BLR detection (patched `imm26`, ragged tail), reference parameters, empty
+  records for scalar-only functions, and codegen invariance.
+
+Emitting these into `.rodata` and registering them via `__gc_register_stackmap` at
+start-up is the next rung — that is when precise roots actually fire.
+
+## 0.27.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
+
+E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`uint64_t __dyn_box_int(int64_t)`), so dynamic arithmetic that re-boxes a machine result at runtime lowers to `bl __dyn_box_int`. Mirrors the existing `dyn_unbox_int`.
+
+## 0.26.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names + fix native runtime-symbol emit)
+
+DVAL01-2: the V1 builtin table's lisp entries are de-lisped (`lispy_cons`->`dyn_cons`, ... `lispy_to_exit_code`->`dyn_to_exit_code`). **Also fixes a latent bug left by DVAL01-1a**: the `call_builtin` emit hard-coded `__twig_<name>` for *all* helpers, so the tagged-value builtins emitted `__twig_lispy_cons` -- a symbol the runtime (which exports `__dyn_cons`) does not provide. The emit now routes `dyn_*` names to `__<name>` (= `__dyn_cons`) and everything else to `__twig_<name>`, matching `dynval_runtime.c` + the LLVM backend. Fixes the 4 previously-red `call_builtin`->external-symbol unit tests (real programs were unaffected: they lower cons/car via the structural alloc path).
+
+## 0.25.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
+
+DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.
+
+## 0.24.0 - 2026-07-11 (DVAL01-1a: dynamic-value runtime ABI __twig_lispy_* -> __dyn_*)
+
+De-lisp the tagged dynamic-value runtime ABI: every `__twig_lispy_*` C symbol (box_int/unbox_int/cons/car/cdr/pair_p/equal/not/nil/make_symbol/truthy/to_exit_code/tag_*) is renamed to the language-neutral `__dyn_*` (per spec DVAL01). Pure rename -- the 3-bit tag layout, encodings, and runtime behaviour are byte-for-byte unchanged, so any dynamic frontend (not just lisp) can target the same primitives. The GC ABI (`__twig_gc_*`) is untouched.
+
+## 0.23.0 — 2026-07-10 — E4d-BA-arr: `str` array element (BASIC string arrays)
+
+`native_array_elem_size` now accepts a `str` element as an 8-byte element (BASIC
+`DIM A$(n)` → `array<str>`). A `str` value on the native backend is already an
+8-byte runtime string handle (the address of a `[i64 len][bytes]` block), stored
+and loaded as a plain word exactly like an i64, so no separate str load/store path
+is needed — twig-aot already materialises the handle into the var's slot. One-line
+element-size allowance mirroring the x86_64 backend.
+
 ## 0.22.0 — 2026-07-07 — E4-dyn: `str_concat` in V1_BUILTINS (runtime string concat)
 
 `V1_BUILTINS` gains `str_concat { n_args: 2, returns: true }` — the runtime string

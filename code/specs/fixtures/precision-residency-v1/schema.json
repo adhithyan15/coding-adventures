@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/precision-residency-v1.json",
+  "title": "NN32 precision, quantization, and residency lab",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "graph", "scenario", "formats", "residency"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "tiny-affine-precision-residency" },
+    "title": { "$ref": "#/$defs/text" },
+    "question": { "$ref": "#/$defs/text" },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["equation", "weight", "bias"],
+      "properties": {
+        "equation": { "const": "y = x * w + b" },
+        "weight": { "const": 2 },
+        "bias": { "const": 0 }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputs", "reference_outputs"],
+      "properties": {
+        "inputs": { "$ref": "#/$defs/pair" },
+        "reference_outputs": { "$ref": "#/$defs/pair" }
+      }
+    },
+    "formats": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        { "$ref": "#/$defs/floatFormat" },
+        { "$ref": "#/$defs/floatFormat" },
+        { "$ref": "#/$defs/int8Format" }
+      ],
+      "items": false
+    },
+    "residency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dtype", "repeat_count", "upload_bytes_per_copy", "download_bytes_per_copy", "strategies"],
+      "properties": {
+        "dtype": { "const": "binary32" },
+        "repeat_count": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "upload_bytes_per_copy": { "type": "integer", "minimum": 1, "maximum": 1024 },
+        "download_bytes_per_copy": { "type": "integer", "minimum": 1, "maximum": 1024 },
+        "strategies": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/strategy" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "number": { "type": "number", "minimum": -1000000, "maximum": 1000000 },
+    "pair": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/number" }
+    },
+    "floatFormat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "storage_bytes_per_value", "input_payload_file", "output_payload_file", "encoded_inputs", "encoded_weight", "accumulators", "outputs", "maximum_absolute_error"],
+      "properties": {
+        "id": { "enum": ["binary32", "binary16"] },
+        "title": { "$ref": "#/$defs/text" },
+        "storage_bytes_per_value": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "input_payload_file": { "$ref": "#/$defs/text" },
+        "output_payload_file": { "$ref": "#/$defs/text" },
+        "encoded_inputs": { "$ref": "#/$defs/pair" },
+        "encoded_weight": { "$ref": "#/$defs/number" },
+        "accumulators": { "$ref": "#/$defs/pair" },
+        "outputs": { "$ref": "#/$defs/pair" },
+        "maximum_absolute_error": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "int8Format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "storage_bytes_per_value", "accumulator_storage_bytes", "input_payload_file", "weight_payload_file", "input_scale", "weight_scale", "zero_point", "encoded_inputs", "encoded_weight", "accumulators", "outputs", "maximum_absolute_error"],
+      "properties": {
+        "id": { "const": "symmetric_int8" },
+        "title": { "$ref": "#/$defs/text" },
+        "storage_bytes_per_value": { "const": 1 },
+        "accumulator_storage_bytes": { "const": 4 },
+        "input_payload_file": { "$ref": "#/$defs/text" },
+        "weight_payload_file": { "$ref": "#/$defs/text" },
+        "input_scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000 },
+        "weight_scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000 },
+        "zero_point": { "const": 0 },
+        "encoded_inputs": { "$ref": "#/$defs/pair" },
+        "encoded_weight": { "type": "integer", "minimum": -128, "maximum": 127 },
+        "accumulators": { "$ref": "#/$defs/pair" },
+        "outputs": { "$ref": "#/$defs/pair" },
+        "maximum_absolute_error": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "steps", "upload_count", "download_count", "total_transfer_bytes"],
+      "properties": {
+        "id": { "enum": ["eager", "resident"] },
+        "title": { "$ref": "#/$defs/text" },
+        "steps": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "upload_count": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "download_count": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "total_transfer_bytes": { "type": "integer", "minimum": 1, "maximum": 1000000 }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+% ============================================================================
+% place-value.query.adj — a worked recall over the mathematics place-value library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the hundreds place
+% worth?": it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `place_value`
+% rows and returns the value + the table's source/locator/trust. Note the reverse
+% query below: because `value` is an ordinary column, you can bind the PLACE from a
+% known value (which place is worth 1000? → thousands). A word that is not a place
+% name abstains honestly — the engine never invents a value.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli place-value.query.adj
+% ============================================================================
+
+import "place-value.adj"
+
+? place_value(hundreds, $V)        % expect 100  (a digit in the hundreds column is worth 100)
+? place_value(tens, $V)            % expect 10   (a digit in the tens column is worth 10)
+? place_value($Place, 1000)        % expect thousands (reverse: which place is worth 1000?)
+? place_value(dozen, $V)           % expect abstain — "dozen" is not a place-value column

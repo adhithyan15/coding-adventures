@@ -1,0 +1,35 @@
+[package]
+name = "coding-adventures-axiom-to-semantic-ir"
+version = "0.1.1"
+edition = "2021"
+description = "Axiom CST -> narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). MA-13e, the last item in Axiom's native pipeline per MA13 §6; front3 of HML01."
+license = "MIT"
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-axiom-parser = { path = "../axiom-parser" }
+# The reusable canonical head-name constants (`ADD`/`SUB`/`MUL`/…) so the
+# surface->canonical bridging table stays typo-proof and in lockstep with the
+# native `axiom-runtime`'s own identical table (MA13 §2/§5: the shared
+# `symbolic-vm` arithmetic engine is reused unchanged).
+symbolic-ir = { path = "../symbolic-ir" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# tests/test_validator.rs (confirms the JS backend structurally accepts every
+# module this frontend produces) and tests/e2e_node.rs (actually runs the
+# compiled JS through `node`).
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# tests/oracle.rs's ground truth (HML01 §7's oracle/golden-testing
+# convention: the same source run through the native runtime AND through
+# this crate -> semantic-ir-to-javascript -> node, diffed) — mirrors
+# `macsyma-to-semantic-ir`'s/`reduce-to-semantic-ir`'s own identical
+# dev-dependency on their own native runtime crate as ground truth. The
+# main `[dependencies]` above deliberately still does NOT depend on
+# `coding-adventures-axiom-runtime` -- lowering only ever needs the
+# parse-tree shape, never the evaluator, mirroring every sibling
+# `-to-semantic-ir` frontend's identical choice; this is a TEST-ONLY dep.
+coding-adventures-axiom-runtime = { path = "../axiom-runtime" }

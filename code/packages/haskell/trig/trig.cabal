@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          trig
+version:       0.1.0
+synopsis:      Trigonometric functions from first principles
+description:   Pure range-reduced trigonometry and Newton-method square root.
+category:      Math
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Trig
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    TrigSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , trig
+                    , hspec == 2.*
+    default-language: Haskell2010

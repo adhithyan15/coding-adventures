@@ -1,0 +1,27 @@
+# mosaic-package.toml — manifest for mosaic-pkg-calendar.
+#
+# A month-grid calendar view over task-core's calendar(range, view) projection,
+# with drag-to-move rescheduling via the UI35 drag kernel. Built entirely from
+# kernel primitives (Box/Row/Column/Text/HostButton/HostDraggable/HostDropTarget/
+# For/If) — no dependency on another mosaic-pkg-*, same as mosaic-pkg-grid.
+# Conforms to the UI29 §4.2 package-manifest shape.
+#
+# v0.1.0 scope — see code/specs/task-app-calendar-v1.md for the full rationale.
+# Month view only; drag-to-move (not resize); events render on every day they
+# span; today gets a badge. Weekend/out-of-month cell tinting, week/day views,
+# resize, and time-blocking are deferred — see the spec's "explicitly deferred"
+# section.
+
+[package]
+name = "mosaic-pkg-calendar"
+version = "0.1.0"
+description = "Month-grid calendar view wired to task-core's calendar(range, view) projection, with drag-to-move rescheduling"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Calendar"]
+
+[dependencies]
+
+[kernel]
+version = "1"

@@ -259,6 +259,8 @@ fn validate_accepts_f32_type() {
 }
 
 /// Float constant operands are accepted (unlike the BEAM backend).
+// `3.14` is an arbitrary float operand payload, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 #[test]
 fn validate_accepts_float_const_operand() {
     let func = IIRFunction::new(
@@ -757,6 +759,8 @@ fn lower_f64_method_descriptor() {
 }
 
 /// A `const` with float operand and f64 type should lower.
+// `3.14` is an arbitrary float operand payload, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 #[test]
 fn lower_const_float_operand_ok() {
     let func = IIRFunction::new(
@@ -3301,7 +3305,7 @@ fn e6_globals_module() -> IIRModule {
 /// reads/writes it via `getstatic`/`putstatic`.
 #[test]
 fn e6_global_lowers_to_static_field_and_getstatic_putstatic() {
-    let class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+    let class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into() })
         .expect("E6 globals should lower");
     // A single static long field G_0.
     assert_eq!(class.fields.len(), 1, "one global ⇒ one static field");
@@ -3333,7 +3337,7 @@ fn e6_global_load_into_i32_dest_narrows_with_l2i() {
             IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
         ],
     ));
-    let class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+    let class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into() })
         .expect("lowers");
     let f = class.methods.iter().find(|m| m.name == "f").expect("f");
     let code = &f.code_attribute().expect("Code").code;
@@ -3350,7 +3354,7 @@ fn e6_global_runs_on_real_java() {
         eprintln!("java not available — skipping e6_global_runs_on_real_java");
         return;
     }
-    let mut class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+    let mut class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into() })
         .expect("lower");
 
     // Append the CP entries the launcher needs (System.out + println(J)V), then
@@ -3502,7 +3506,7 @@ fn e8_conversions_round_trip_runs_on_real_java() {
         IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("d".into())], "i64"),
         IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i64"),
     ]));
-    let mut class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+    let mut class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into() })
         .expect("lower");
 
     // Inject a `main(String[])` that prints Main.compute()J (same launcher shape

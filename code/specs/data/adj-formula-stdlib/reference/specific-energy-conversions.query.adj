@@ -1,0 +1,27 @@
+% ============================================================================
+% specific-energy-conversions.query.adj — worked lookups over the NIST specific-energy →
+% joule-per-kilogram table.
+% ============================================================================
+% The shape a consumer produces to convert a specific energy (an energy-per-mass content, e.g. a fuel
+% or food energy density in cal/g) into SI: it `import`s the grounded table and asks the engine to bind
+% the factor. No arithmetic and no factor is stated by the consumer; the engine returns the cell WITH
+% the table's NIST citation as its proof, on the CPU.
+%
+%   ? specific_energy_to_joule_per_kilogram(calorie_it_per_gram, $v)   % 4186.8
+%   ? specific_energy_to_joule_per_kilogram(calorie_th_per_gram, $v)   % 4184
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a specific-energy unit — so it is caught rather than silently mis-converted:
+%
+%   ? specific_energy_to_joule_per_kilogram(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli specific-energy-conversions.query.adj
+% ============================================================================
+
+import "specific-energy-conversions.adj"
+
+? specific_energy_to_joule_per_kilogram(calorie_it_per_gram, $v)   % expect 4186.8  (exact NIST SP 811 B.9 factor)
+? specific_energy_to_joule_per_kilogram(calorie_th_per_gram, $v)   % expect 4184    (exact NIST SP 811 B.9 factor)
+? specific_energy_to_joule_per_kilogram(pound, $v)                 % expect abstain (mass unit, wrong dimension)

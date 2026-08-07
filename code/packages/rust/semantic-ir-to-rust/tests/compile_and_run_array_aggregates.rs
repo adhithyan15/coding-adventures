@@ -155,6 +155,10 @@ fn full_demo() -> Module {
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max", vec![])),
         // 2. [3, 1, 2].min  → 1
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "min", vec![])),
+        // 2b. [3, 1, 2].minmax  → [1, 3]
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "minmax", vec![])),
+        // 2c. [].minmax  → [nil, nil]
+        print_stmt(method(seq(vec![]), "minmax", vec![])),
         // 3. [1, 2, 3].sum  → 6
         print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "sum", vec![])),
         // 4. [1, 2, 2, 3].uniq  → [1, 2, 3]
@@ -250,6 +254,8 @@ fn array_aggregates_compile_and_run() {
         vec![
             "3",         // [3,1,2].max
             "1",         // [3,1,2].min
+            "[1, 3]",    // [3,1,2].minmax
+            "[nil, nil]", // [].minmax → [nil, nil]
             "6",         // [1,2,3].sum
             "[1, 2, 3]", // [1,2,2,3].uniq
             "[1, 2, 3]", // [[1,[2]],3].flatten
@@ -496,6 +502,284 @@ fn take_drop_values_at_compile_and_run() {
             "[3, 4, 5]",    // drop(2)
             "[]",           // drop(9) -> empty
             "[10, 30, 30]", // values_at(0, 2, -1)
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python reference (#8031) and
+// the Go backend (#8036).  `each_slice`/`each_cons` are non-block (take an int
+// `n`); `chunk_while` is a block method (the block is called on each ADJACENT
+// pair).
+fn slice_demo() -> Module {
+    // `{ |a, b| b - a == 1 }` — adjacent-pair predicate (SIR equality builtin is
+    // `=`, subtraction `-`).
+    let adj = block_fn("__b_adj", &["a", "b"], call("=", vec![call("-", vec![param("b"), param("a")]), ilit(1)]));
+    let main_stmts = vec![
+        // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]),
+            "each_slice",
+            vec![ilit(2)],
+        )),
+        // [1,2,3].each_slice(0) → []  (never-panic floor)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "each_slice", vec![ilit(0)])),
+        // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]), "each_cons", vec![ilit(2)])),
+        // [1,2].each_cons(3) → []  (window larger than the array)
+        print_stmt(method(seq(vec![ilit(1), ilit(2)]), "each_cons", vec![ilit(3)])),
+        // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(4), ilit(5), ilit(7)]),
+            "chunk_while",
+            vec![block("__b_adj")],
+        )),
+        // [].chunk_while { … } → []
+        print_stmt(method(seq(vec![]), "chunk_while", vec![block("__b_adj")])),
+    ];
+    demo_module(main_stmts, vec![adj])
+}
+
+#[test]
+fn array_each_slice_each_cons_chunk_while_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&slice_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arr_slice_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_arr_slice_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [3, 4], [5]]",    // each_slice(2)
+            "[]",                       // each_slice(0) → []
+            "[[1, 2], [2, 3], [3, 4]]", // each_cons(2)
+            "[]",                       // each_cons(3) on len-2 → []
+            "[[1, 2], [4, 5], [7]]",    // chunk_while { b-a==1 }
+            "[]",                       // [].chunk_while → []
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
+
+// ── Array slice_when ───────────────────────────────────────────────────────
+//
+// `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070) and the Go backend (#8073).
+fn slice_when_demo() -> Module {
+    // `{ |a, b| b - a > 1 }` — split on an upward gap greater than one.
+    let gap = block_fn("__b_gap", &["a", "b"], call(">", vec![call("-", vec![param("b"), param("a")]), ilit(1)]));
+    let main_stmts = vec![
+        // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1, 2], [4], [9, 10, 11, 12]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(4), ilit(9), ilit(10), ilit(11), ilit(12)]),
+            "slice_when",
+            vec![block("__b_gap")],
+        )),
+        // [9].slice_when { … } → [[9]]  (single element)
+        print_stmt(method(seq(vec![ilit(9)]), "slice_when", vec![block("__b_gap")])),
+        // [].slice_when { … } → []
+        print_stmt(method(seq(vec![]), "slice_when", vec![block("__b_gap")])),
+    ];
+    demo_module(main_stmts, vec![gap])
+}
+
+#[test]
+fn array_slice_when_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&slice_when_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arr_slicewhen_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_arr_slicewhen_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [4], [9, 10, 11, 12]]", // slice_when { b-a>1 }
+            "[[9]]",                          // single element
+            "[]",                             // [].slice_when → []
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
+
+// ── Array cycle(n) ─────────────────────────────────────────────────────────
+//
+// `cycle(n) { |x| … }` iterates the array n full passes in order, yielding each
+// element on every pass, and always returns nil.  n <= 0, a negative count, or
+// an empty receiver yields nothing.  Mirrors the Python reference (#8117) and
+// the Go backend (#8123): the block `print`s each yielded element, so the two
+// passes (1,2,3,1,2,3) are observable, and the nil return is printed after each
+// call.
+fn cycle_demo() -> Module {
+    // `{ |x| print x }` — emit one line per yielded element.
+    let puts = block_fn("__b_puts", &["x"], print_expr(param("x")));
+    let main_stmts = vec![
+        // [1,2,3].cycle(2) { |x| print x }  → 1 2 3 1 2 3, then nil
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "cycle",
+            vec![ilit(2), block("__b_puts")],
+        )),
+        // [1,2,3].cycle(0) { … }  → no yields, nil
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "cycle",
+            vec![ilit(0), block("__b_puts")],
+        )),
+        // [].cycle(5) { … }  → no yields, nil
+        print_stmt(method(seq(vec![]), "cycle", vec![ilit(5), block("__b_puts")])),
+    ];
+    demo_module(main_stmts, vec![puts])
+}
+
+#[test]
+fn array_cycle_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&cycle_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arr_cycle_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_arr_cycle_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "1", "2", "3", "1", "2", "3", // cycle(2) yields two full passes
+            "nil", // cycle(2) returns nil
+            "nil", // cycle(0) — no yields, nil
+            "nil", // [].cycle(5) — no yields, nil
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );

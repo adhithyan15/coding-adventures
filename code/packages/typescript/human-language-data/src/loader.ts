@@ -1,0 +1,245 @@
+// The filesystem boundary. Everything impure lives here: it reads the curriculum
+// directory off disk and hands strings to the pure parse/build/validate core.
+// This is the only module that needs the `filesystem` capability.
+
+import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  MODALITY_MANIFEST_PATH,
+  type ModalityManifest,
+  type ModalityManifestLesson,
+} from "./modality-manifest.js";
+import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
+import type {
+  BookChapter,
+  BookCorpus,
+  ChapterPolicy,
+  CurriculumSpine,
+  Dataset,
+  LanguageCurriculum,
+  LanguageRegistry,
+  Script,
+  ScriptData,
+  Taxonomy,
+  TrackChapters,
+} from "./types.js";
+
+/** Default curriculum root: code/learning/human-languages, relative to this package. */
+export function defaultCurriculumRoot(): string {
+  const here = dirname(fileURLToPath(import.meta.url));
+  // src/ -> human-language-data -> typescript -> packages -> code
+  return join(here, "..", "..", "..", "..", "learning", "human-languages");
+}
+
+export function loadTaxonomy(root = defaultCurriculumRoot()): Taxonomy {
+  const raw = JSON.parse(readFileSync(join(root, "concepts", "taxonomy.json"), "utf8"));
+  return { version: raw.version ?? 1, concepts: raw.concepts ?? {} };
+}
+
+export function loadLanguageRegistry(root = defaultCurriculumRoot()): LanguageRegistry {
+  return JSON.parse(
+    readFileSync(join(root, "core", "languages.json"), "utf8"),
+  ) as LanguageRegistry;
+}
+
+export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
+  return JSON.parse(
+    readFileSync(join(root, "core", "spine.json"), "utf8"),
+  ) as CurriculumSpine;
+}
+
+/** Read each track's authored shared-spine realization map. */
+export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
+  const out: LanguageCurriculum[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "curriculum.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read each track's authored chapter capability ledger (HL05).
+ *
+ * Tracks without a `chapters.json` are skipped rather than defaulted. That is
+ * deliberate: an absent ledger means "not yet authored", which the gap report must
+ * be able to distinguish from "authored and empty". Inventing a placeholder here
+ * would erase exactly the debt the report exists to measure.
+ */
+export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters[] {
+  const out: TrackChapters[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "chapters.json");
+    if (!existsSync(path)) continue;
+    out.push(JSON.parse(readFileSync(path, "utf8")) as TrackChapters);
+  }
+  return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/**
+ * Read the tunable chapter policy. Unlike the ledgers above, this file is required:
+ * a missing policy would silently disable the payoff and ramp rules, and a gate that
+ * quietly stops running is worse than one that fails loudly.
+ */
+export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy {
+  return JSON.parse(
+    readFileSync(join(root, "core", "chapter-policy.json"), "utf8"),
+  ) as ChapterPolicy;
+}
+
+/**
+ * Load the existing authored LaTeX books losslessly. The short Markdown lessons
+ * remain the smallest teaching units; chapters are the narrative and sequencing
+ * layer around them. Keeping both in the data package prevents an app or future
+ * book generator from silently forgetting either source.
+ */
+export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
+  const books: BookCorpus["books"] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const bookDir = join(root, track.name, "book");
+    const entrypoint = join(bookDir, "book.tex");
+    const chaptersDir = join(bookDir, "chapters");
+    if (!existsSync(entrypoint) || !existsSync(chaptersDir)) continue;
+
+    const chapters: BookChapter[] = [];
+    for (const file of readdirSync(chaptersDir).sort()) {
+      const match = /^ch(\d+)-(.+)\.tex$/.exec(file);
+      if (!match) continue;
+      const tex = readFileSync(join(chaptersDir, file), "utf8");
+      const title = /\\chapter(?:\[[^\]]*\])?\{([^}]*)\}/.exec(tex)?.[1] ?? match[2];
+      chapters.push({
+        language: track.name,
+        chapter: Number(match[1]),
+        slug: match[2],
+        title,
+        source: `${track.name}/book/chapters/${file}`,
+        tex,
+      });
+    }
+    books.push({
+      language: track.name,
+      entrypoint: `${track.name}/book/book.tex`,
+      chapters,
+    });
+  }
+  return { books: books.sort((a, b) => a.language.localeCompare(b.language)) };
+}
+
+/**
+ * A track may declare its own script in `<track>/track.json` (`{ "script": "hebrew" }`),
+ * so adding a new-script language needs no edit to the built-in map. Returns
+ * `undefined` when there's no declaration, and the parser falls back to the map.
+ */
+export function trackScript(root: string, trackName: string): Script | undefined {
+  const p = join(root, trackName, "track.json");
+  if (!existsSync(p)) return undefined;
+  try {
+    const t = JSON.parse(readFileSync(p, "utf8"));
+    return typeof t?.script === "string" ? t.script : undefined;
+  } catch {
+    return undefined; // a malformed track.json just falls back to the map
+  }
+}
+
+/** Read every track's lessons/*.md into parsed lessons. */
+export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
+  const out: ParsedLesson[] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const lessonsDir = join(root, track.name, "lessons");
+    if (!existsSync(lessonsDir)) continue;
+    const script = trackScript(root, track.name);
+    for (const file of readdirSync(lessonsDir)) {
+      if (!file.endsWith(".md")) continue;
+      const source = readFileSync(join(lessonsDir, file), "utf8");
+      out.push(parseLesson(source, track.name, script));
+    }
+  }
+  return out;
+}
+
+/**
+ * Read the generated modality manifest (HL08 / HL-C44).
+ *
+ * The consumer-side counterpart of `modality-cli --write`. An app, a book builder, or
+ * the future driving edition reads this instead of importing the derivation and
+ * re-parsing 1,096 Markdown files — which is the point of emitting it at all.
+ *
+ * Required, not optional, and deliberately so. A missing manifest throws rather than
+ * returning an empty one: "no modality data" and "no lesson needs eyes" are opposite
+ * facts, and a loader that quietly returns the second when it means the first would
+ * hand a driver the handwriting drills. CI's `--check` guarantees the file is present
+ * and current, so the throw is unreachable in a healthy checkout.
+ */
+export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
+  return JSON.parse(readFileSync(join(root, MODALITY_MANIFEST_PATH), "utf8")) as ModalityManifest;
+}
+
+/**
+ * Index a manifest's lessons by id.
+ *
+ * A `Map`, never a plain object, and this is the one place in the package where that
+ * choice is load-bearing rather than stylistic. The keys come straight out of parsed
+ * JSON, so `obj[lesson.id] = lesson` with an id of `__proto__` writes the object's
+ * prototype instead of a property — every later lookup then inherits attacker-chosen
+ * fields, and `manifest["anything"]` starts answering with a modality nobody authored.
+ * `Map` keys are plain data with no prototype chain behind them, so the same input is
+ * simply a key named `__proto__`.
+ *
+ * Providing this here means no consumer has to rediscover that.
+ */
+export function modalityManifestById(
+  manifest: ModalityManifest,
+): Map<string, ModalityManifestLesson> {
+  const index = new Map<string, ModalityManifestLesson>();
+  for (const lesson of manifest.lessons) index.set(lesson.id, lesson);
+  return index;
+}
+
+/** Read data/scripts/*.json (may be empty while scripts are still being authored). */
+export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
+  const dir = join(root, "data", "scripts");
+  const out: Record<string, ScriptData> = Object.create(null);
+  if (!existsSync(dir)) return out;
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith(".json")) continue;
+    const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
+    out[sd.script] = sd;
+  }
+  return out;
+}
+
+/** Load and build everything from disk in one call. */
+export function loadEverything(root = defaultCurriculumRoot()): {
+  taxonomy: Taxonomy;
+  registry: LanguageRegistry;
+  spine: CurriculumSpine;
+  curricula: LanguageCurriculum[];
+  books: BookCorpus;
+  lessons: ParsedLesson[];
+  scripts: Record<string, ScriptData>;
+  dataset: Dataset;
+} {
+  const taxonomy = loadTaxonomy(root);
+  const registry = loadLanguageRegistry(root);
+  const spine = loadCurriculumSpine(root);
+  const curricula = loadLanguageCurricula(root);
+  const books = loadBookCorpus(root);
+  const lessons = loadLessons(root);
+  const scripts = loadScripts(root);
+  return {
+    taxonomy,
+    registry,
+    spine,
+    curricula,
+    books,
+    lessons,
+    scripts,
+    dataset: buildDataset(taxonomy, lessons),
+  };
+}

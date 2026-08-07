@@ -1,0 +1,95 @@
+% ============================================================================
+% animal-classes — a familiar animal and the vertebrate CLASS it belongs to
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the first classifications a child (and a biology student) learns: the
+% backboned animals — the vertebrates — fall into five big groups, called
+% CLASSES: mammals, birds, reptiles, amphibians and fishes. This tiny library
+% records, for a handful of familiar animals, which class each one belongs to.
+% Recall is a binding query:
+%
+%     ? animal_class(cat, $Class)          % mammal
+%     ? animal_class(snake, $Class)        % reptile
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `animal_class(animal, class)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the class
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of the recorded animals (ask it about a `rock` and it stays
+% honestly silent rather than inventing a class).
+%
+% The five vertebrate classes, as a truth table over the animals shipped here:
+%
+%     animal     class        why (a beginner's cue)
+%     ---------  ----------   --------------------------------------------
+%     cat        mammal       has fur, feeds its young milk
+%     kangaroo   mammal       a marsupial mammal (a pouched mammal)
+%     emu        bird         has feathers, lays hard-shelled eggs
+%     ostrich    bird         a huge flightless bird
+%     frog       amphibian    lives part in water, part on land
+%     snake      reptile      cold-blooded, has scales
+%     turtle     reptile      a shelled reptile
+%     shark      fish         cold-blooded, has gills and fins
+%
+% All five classes appear, so a learner sees the whole family: two mammals, two
+% birds, one amphibian, two reptiles and one fish. The animals were chosen to be
+% FAMILIAR and to have ONE clear class each — no tricky borderline cases (a whale
+% is a mammal and a bat is a mammal, but those surprise beginners, so they are
+% left out of this first library). A word that is not one of these animals —
+% `rock`, `banana`, `oak` — is deliberately NOT a row, so a class recall ABSTAINS
+% on it rather than fabricating an answer. That honest-abstention property is what
+% makes a recall table safe to build a reasoner on.
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is copied from the AUSTRALIAN MUSEUM's animal library
+% (australian.museum/learn/animals), a natural-history museum and a primary
+% reference — hence `trust authoritative`. Nothing here is asserted from memory.
+% Because ADJ tables carry ONE shared provenance envelope (per-row provenance is
+% a documented future extension — see ADJ-TABLES §6), the envelope below cites the
+% museum's animal library at its `locator`, and the `source` quotes the museum's
+% REPTILE grouping verbatim. For full auditability, here is the exact museum span
+% that grounds EACH row, with the page it was read from:
+%
+%   mammals  — "introduced mammals such as cats, foxes and rabbits" and
+%              "marsupials like kangaroos, bandicoots, quolls and the Koala"
+%              → cat, kangaroo are mammals.
+%              https://australian.museum/learn/animals/mammals/
+%
+%   birds    — "Australia is home to two of the largest flightless birds- the
+%              Emu and Southern Cassowary" and "ranging from tiny hummingbirds up
+%              to huge ostriches" → emu, ostrich are birds.
+%              https://australian.museum/learn/animals/birds/
+%
+%   amphibs  — "Frogs are the only remaining amphibians in Australia."
+%              → frog is an amphibian.
+%              https://australian.museum/learn/animals/frogs/
+%
+%   reptiles — "A diverse group of animals including turtles, lizards, snakes
+%              and crocodiles." → snake, turtle are reptiles.
+%              https://australian.museum/learn/animals/reptiles/
+%
+%   fishes   — "Cartilaginous fish are characterised by their bones made of
+%              cartilage, this include sharks and rays." → shark is a fish.
+%              https://australian.museum/learn/animals/fishes/
+%
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_class {
+    columns animal, class
+
+    row (cat, mammal)
+    row (kangaroo, mammal)
+    row (emu, bird)
+    row (ostrich, bird)
+    row (frog, amphibian)
+    row (snake, reptile)
+    row (turtle, reptile)
+    row (shark, fish)
+
+    source "turtles, lizards, snakes and crocodiles, including the largest living reptile in the world: the Australian Crocodile"
+    locator "https://australian.museum/learn/animals/"
+    trust authoritative
+}

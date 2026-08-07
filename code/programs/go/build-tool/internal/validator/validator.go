@@ -50,6 +50,11 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"dart":       true,
 	"swift":      true,
 	"haskell":    true,
+	// C/C++: CI installs Clang alongside GCC on Linux and MSVC on Windows so the
+	// pure-ISO multi-compiler check has all three across the matrix. Adding this
+	// makes validateCIFullBuildToolchains require ci.yml to bind needs_cpp and
+	// force it on the main full-build path.
+	"cpp": true,
 }
 
 // ValidateBuildFiles returns an error describing every package whose BUILD file
@@ -67,6 +72,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 			pythonKnownNames["coding-adventures-"+strings.ToLower(filepath.Base(pkg.Path))] = pkg.Name
 		}
 	}
+	perlKnownNames := buildPerlKnownNames(packages)
 
 	var problems []string
 	for _, pkg := range packages {
@@ -84,7 +90,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
-		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames)
+		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames, perlKnownNames, graph)
 		delete(referenced, pkg.Name)      // Self-references are allowed.
 		delete(referencedFuzzy, pkg.Name) // Self-references are allowed.
 
@@ -233,11 +239,91 @@ func transitivePredecessors(graph *directedgraph.Graph, node string) map[string]
 	return visited
 }
 
-func allowedDirectRefsFromMetadata(pkg discovery.Package, pythonKnownNames map[string]string) map[string]bool {
-	if pkg.Language != "python" {
+func allowedDirectRefsFromMetadata(
+	pkg discovery.Package,
+	pythonKnownNames map[string]string,
+	perlKnownNames map[string]string,
+	graph *directedgraph.Graph,
+) map[string]bool {
+	switch pkg.Language {
+	case "python":
+		return parsePythonOptionalDeps(pkg, pythonKnownNames)
+	case "perl":
+		direct := parsePerlTestDeps(pkg, perlKnownNames)
+		if len(direct) == 0 {
+			return nil
+		}
+		allowed := make(map[string]bool, len(direct))
+		for dep := range direct {
+			allowed[dep] = true
+			for prerequisite := range transitivePredecessors(graph, dep) {
+				allowed[prerequisite] = true
+			}
+		}
+		return allowed
+	default:
 		return nil
 	}
-	return parsePythonOptionalDeps(pkg, pythonKnownNames)
+}
+
+var perlDeclaredNameRe = regexp.MustCompile(`(?m)\bNAME\s*=>\s*['"]([^'"]+)['"]`)
+var perlTestBlockRe = regexp.MustCompile(`(?i)\bon\s*['"]test['"]\s*=>\s*sub\s*\{`)
+var perlRequiresRe = regexp.MustCompile(`(?i)\brequires\s*['"]([^'"]+)['"]`)
+
+func buildPerlKnownNames(packages []discovery.Package) map[string]string {
+	known := make(map[string]string)
+	for _, pkg := range packages {
+		if pkg.Language != "perl" {
+			continue
+		}
+		base := strings.TrimPrefix(pkg.Name, "perl/")
+		known[strings.ToLower(base)] = pkg.Name
+		known["coding-adventures-"+strings.ToLower(base)] = pkg.Name
+		known["coding_adventures_"+strings.ReplaceAll(strings.ToLower(base), "-", "_")] = pkg.Name
+
+		makefile, err := os.ReadFile(filepath.Join(pkg.Path, "Makefile.PL"))
+		if err != nil {
+			continue
+		}
+		if match := perlDeclaredNameRe.FindSubmatch(makefile); len(match) == 2 {
+			known[strings.ToLower(string(match[1]))] = pkg.Name
+		}
+	}
+	return known
+}
+
+func parsePerlTestDeps(pkg discovery.Package, knownNames map[string]string) map[string]bool {
+	data, err := os.ReadFile(filepath.Join(pkg.Path, "cpanfile"))
+	if err != nil {
+		return nil
+	}
+
+	allowed := make(map[string]bool)
+	inTestBlock := false
+	blockDepth := 0
+	for _, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.SplitN(rawLine, "#", 2)[0]
+		if !inTestBlock && perlTestBlockRe.MatchString(line) {
+			inTestBlock = true
+		}
+		if !inTestBlock {
+			continue
+		}
+		for _, match := range perlRequiresRe.FindAllStringSubmatch(line, -1) {
+			if len(match) != 2 {
+				continue
+			}
+			if packageName, ok := knownNames[strings.ToLower(strings.TrimSpace(match[1]))]; ok {
+				allowed[packageName] = true
+			}
+		}
+		blockDepth += strings.Count(line, "{") - strings.Count(line, "}")
+		if blockDepth <= 0 {
+			inTestBlock = false
+			blockDepth = 0
+		}
+	}
+	return allowed
 }
 
 func isIntentionalSkipBuild(pkg discovery.Package) bool {

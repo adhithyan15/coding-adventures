@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 117 \u2014 plantar pressure index from four stated quantities (a NEW panel: podiatry / plantar pressure). From a peak force divided by the net weight-bearing area (forefoot area plus midfoot area minus lesion area), compute the plantar pressure index (peak_force/(forefoot_area+midfoot_area-lesion_area)), the effective area (forefoot_area+midfoot_area-lesion_area), or the peak force. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a SINGLE TERM OVER A SUM-MINUS-DIFFERENCE DENOMINATOR a/(b+c-d) (sum the forefoot and midfoot areas, subtract the lesion, divide the force by that whole net area, so a/(b+c-d) = (a/((b+c)-d)); the ladder's FIRST denominator that contains a subtraction. Rung-116 opened the three-term denominator with the pure sum a/(b+c+d); every three-term NUMERATOR (108-111/114/115) sat over a SINGLE-term divisor d; the distributive pair (112/113) still divided by a single term; and every two-term ratio had at most TWO terms below the bar (37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 rung-117 is the first three-term denominator that subtracts. The harness matches the scalar to the printed options. The plantar pressure index is a rate (force per effective area), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, - and / \u2014 no constant leaks, and neither the effective area, the peak force, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the forefoot area divides (a/b+c-d, a wrong grouping) and subtracting the lesion from the force instead of the area ((a-d)/(b+c), a wrong pairing). The core confusion tested is that a/(b+c-d) is (a/((b+c)-d)), not a/b+c-d and not (a-d)/(b+c). This rung SUBTRACTS the lesion area in the denominator, so positivity is guaranteed by table construction: every table has midfoot_area > lesion_area (c>d) and peak_force > lesion_area (a>d), with b+c-d >= 3 (division never by zero), keeping every family member strictly positive.",
+  "items": [
+    {
+      "id": "r117pod-01",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 30 divided by a forefoot area of 3 plus a midfoot area of 4 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(30)\nobserve forefoot_area(3)\nobserve midfoot_area(4)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r117pod-02",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 30 divided by a forefoot area of 3 plus a midfoot area of 4 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(30)\nobserve forefoot_area(3)\nobserve midfoot_area(4)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r117pod-03",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 30 divided by a forefoot area of 3 plus a midfoot area of 4 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(30)\nobserve forefoot_area(3)\nobserve midfoot_area(4)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r117pod-04",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 34 divided by a forefoot area of 3 plus a midfoot area of 5 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(34)\nobserve forefoot_area(3)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r117pod-05",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 34 divided by a forefoot area of 3 plus a midfoot area of 5 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(34)\nobserve forefoot_area(3)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r117pod-06",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 34 divided by a forefoot area of 3 plus a midfoot area of 5 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(34)\nobserve forefoot_area(3)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r117pod-07",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 40 divided by a forefoot area of 4 plus a midfoot area of 5 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(40)\nobserve forefoot_area(4)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r117pod-08",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 40 divided by a forefoot area of 4 plus a midfoot area of 5 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(40)\nobserve forefoot_area(4)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r117pod-09",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 40 divided by a forefoot area of 4 plus a midfoot area of 5 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(40)\nobserve forefoot_area(4)\nobserve midfoot_area(5)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r117pod-10",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 45 divided by a forefoot area of 4 plus a midfoot area of 6 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(45)\nobserve forefoot_area(4)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r117pod-11",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 45 divided by a forefoot area of 4 plus a midfoot area of 6 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(45)\nobserve forefoot_area(4)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r117pod-12",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 45 divided by a forefoot area of 4 plus a midfoot area of 6 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(45)\nobserve forefoot_area(4)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r117pod-13",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 50 divided by a forefoot area of 5 plus a midfoot area of 6 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(50)\nobserve forefoot_area(5)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2727272727272725,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r117pod-14",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 50 divided by a forefoot area of 5 plus a midfoot area of 6 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(50)\nobserve forefoot_area(5)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2727272727272725,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r117pod-15",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 50 divided by a forefoot area of 5 plus a midfoot area of 6 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(50)\nobserve forefoot_area(5)\nobserve midfoot_area(6)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.2727272727272725,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r117pod-16",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 54 divided by a forefoot area of 5 plus a midfoot area of 7 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(54)\nobserve forefoot_area(5)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r117pod-17",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 54 divided by a forefoot area of 5 plus a midfoot area of 7 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(54)\nobserve forefoot_area(5)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r117pod-18",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 54 divided by a forefoot area of 5 plus a midfoot area of 7 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(54)\nobserve forefoot_area(5)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r117pod-19",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 62 divided by a forefoot area of 6 plus a midfoot area of 7 minus a lesion area of 3. What is the plantar pressure index (the peak force divided by the effective area)?",
+      "program": "observe peak_force(62)\nobserve forefoot_area(6)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = peak_force / (forefoot_area + midfoot_area - lesion_area)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.538461538461538,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r117pod-20",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 62 divided by a forefoot area of 6 plus a midfoot area of 7 minus a lesion area of 3. What is the the effective area (the forefoot plus the midfoot minus the lesion area, the divisor the force is divided by)?",
+      "program": "observe peak_force(62)\nobserve forefoot_area(6)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = forefoot_area + midfoot_area - lesion_area\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.538461538461538,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r117pod-21",
+      "qtype": "pressure_index",
+      "stem": "A pedobarography report records a peak force of 62 divided by a forefoot area of 6 plus a midfoot area of 7 minus a lesion area of 3. What is the the peak force (the numerator divided by the effective area)?",
+      "program": "observe peak_force(62)\nobserve forefoot_area(6)\nobserve midfoot_area(7)\nobserve lesion_area(3)\nlet answer = peak_force\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.538461538461538,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

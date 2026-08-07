@@ -1,0 +1,674 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 4,
+  "title": "Chapter 4",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e6cc92ef0275935e",
+  "lessons": [
+    {
+      "id": "TA-C04-mindum-sandippom",
+      "sequence": null,
+      "title": "மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) — \"we'll meet again\"",
+      "headword": "மீண்டும் சந்திப்போம்",
+      "romanization": "",
+      "gloss": "we'll meet again",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2bd30145a8a3485b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A warmer, open-ended goodbye — and a chance to see Tamil's two vocabularies side by side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டும் (mīṇḍum): note the retroflex cluster ண்ட (ṇḍ). சந்திப்போம் (sandippōm): சந்தி (sandi) + -ப்போம் (-ppōm, \"we will\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டும் சந்திப்போம் = மீண்டும் (mīṇḍum, \"again\") + சந்திப்போம் (sandippōm, \"we will meet\") — \"we'll meet again.\" Two vocabularies meet in these two words:"
+            },
+            {
+              "kind": "speech",
+              "text": "மீண்டும் (mīṇḍum, \"again\") is native Dravidian, from mīḷ (\"to return\")."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தி (sandi, \"to meet, a junction\") is a Sanskrit loan — from sandhi (\"a joining, union\"), the very word Sanskrit grammar uses for how sounds join at a word-boundary."
+            },
+            {
+              "kind": "speech",
+              "text": "So even a goodbye shows Tamil's balance: an ancient Dravidian core (mīṇḍum) beside a Sanskrit borrowing (sandi) — the recurring thread of this whole track."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mīṇḍum sandippōm\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mīṇḍum sandippōm\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word is native Dravidian and which is Sanskrit (mīṇḍum / sandi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word is native Dravidian and which is Sanskrit (*mīṇḍum* / *sandi*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase mean, and which of its two words is the Sanskrit loan? (\"We'll meet again\"; sandi \"to meet\" from Sanskrit sandhi — while mīṇḍum \"again\" is native Dravidian.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C04-naalai",
+      "sequence": null,
+      "title": "நாளை பார்க்கலாம் (nāḷai pārkkalām) — \"see you tomorrow\"",
+      "headword": "நாளை பார்க்கலாம்",
+      "romanization": "",
+      "gloss": "see you tomorrow",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:46d7d64986982553",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye with a date on it — built on the Tamil word for \"day.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாளை (nāḷai): நா (nā) + ளை (ḷai, with the retroflex ள ḷ, tongue curled back). பார்க்கலாம் (pārkkalām) = pār (\"see\") + -kkalām (\"let's / we may\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாளை (nāḷai, \"tomorrow\") is native Dravidian, from நாள் (nāḷ, \"day\") — the same nāḷ in iṉṟu / nāḷ counting and in nal-vāḻttukkaḷ (\"good [day]-wishes\"). பார்க்கலாம் (pārkkalām) is \"let's see / we may see,\" from பார் (pār, \"to see, to look\") — so the whole phrase is \"tomorrow, let's see [each other],\" the Tamil \"see you tomorrow.\" Note the retroflex ள் (ḷ) — a sound English lacks entirely, made with the tongue-tip curled up and back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāḷai pārkkalām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāḷai pārkkalām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for \"day\" inside \"tomorrow\" (nāḷ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for \"day\" inside \"tomorrow\" (*nāḷ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb \"to see\" (pār)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb \"to see\" (*pār*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nāḷai come from, and what does pārkkalām add? (Nāḷ, \"day\"; \"let's see\" — from pār, \"to see\" — so \"tomorrow, let's see each other.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C04-po",
+      "sequence": null,
+      "title": "போ (pō) — \"go,\" and வா (come)",
+      "headword": "போ",
+      "romanization": "",
+      "gloss": "to go (and வா, to come)",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:99257b30e11fb454",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the shortest, oldest verbs in Tamil — and together they make the Tamil goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ப (pa) + ோ (the long-ō sign) becomes போ (pō). Its partner: வா (vā, \"come\") — வ (va) + long ā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போ (pō, \"to go\") and வா (vā, \"to come\") are native Dravidian verbs of the deepest layer — single syllables, unchanged for millennia. As bare commands they are already whole words: pō! (\"go!\"), vā! (\"come!\"). You need both for the next lesson, because Tamil does not say a plain \"goodbye\" — it says \"I go, and I come back.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pō\" (go) and \"vā\" (come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pō\" (go) and \"vā\" (come)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the commands — pō! / vā!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the commands — *pō!* / *vā!*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do pō and vā mean, and why will you need them both to say goodbye? (\"Go\" and \"come\"; the Tamil farewell is \"I go and come back,\" not \"I leave.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C04-poy-varugiren",
+      "sequence": null,
+      "title": "போய் வருகிறேன் (pōy varugiṟēṉ) — \"I'll go and come back\"",
+      "headword": "போய் வருகிறேன்",
+      "romanization": "",
+      "gloss": "goodbye (lit. \"I'll go and come back\")",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f14e5eedd7053032",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday Tamil goodbye — and it is, quite literally, a promise to return."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போய் (pōy, \"having gone\") is pō + the ending -ய் that means \"having …d.\" வருகிறேன் (varugiṟēṉ, \"I come\") is varu (come) + present + -ஏன் (\"I\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போய் வருகிறேன் = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. It is the exact \"promise of return\" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, \"go and come [back]\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"having …d\" participle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pōy is Tamil's way of chaining actions: \"having gone, (then) I come.\" Tamil strings verbs like beads — one in the participle \"-y\" form, the last one fully conjugated. You will see this chaining everywhere."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the goodbye — pōy varugiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the goodbye — *pōy varugiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its literal meaning (\"having gone, I come\" becomes \"I'll come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its literal meaning (\"having gone, I come\" → \"I'll come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm reply — pōy vā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm reply — *pōy vā*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Tamil goodbye literally promise, and how do you answer it? (\"I'll go and come back\"; reply pōy vā, \"go and come [back]\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C04-practice",
+      "sequence": null,
+      "title": "Chapter 4 — The farewells",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 4 recap — the farewells",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65bb3e5878370184",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The farewells",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday goodbye — pōy varugiṟēṉ (\"I'll go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday goodbye — *pōy varugiṟēṉ* (\"I'll go and come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm reply — pōy vā (\"go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm reply — *pōy vā* (\"go and come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"see you tomorrow\" — nāḷai pārkkalām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"see you tomorrow\" — *nāḷai pārkkalām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"we'll meet again\" — mīṇḍum sandippōm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"we'll meet again\" — *mīṇḍum sandippōm*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The atoms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two oldest verbs (pō go, vā come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two oldest verbs (*pō* go, *vā* come)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"day\" hidden in \"tomorrow\" (nāḷ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"day\" hidden in \"tomorrow\" (*nāḷ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which farewell-word is a Sanskrit loan (sandi from sandhi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which farewell-word is a Sanskrit loan (*sandi* ← *sandhi*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "pōy varugiṟēṉ — \"having gone, I come\"; the Dravidian promise-of-return goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "nāḷai from nāḷ \"day\"; pār \"to see\"."
+            },
+            {
+              "kind": "speech",
+              "text": "mīṇḍum (native \"again\") + sandi (Sanskrit \"to meet\") — the two vocabularies."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Tamil never say a plain \"I'm leaving,\" and what does its everyday goodbye promise instead? (It sounds final/ill-omened; pōy varugiṟēṉ promises \"I'll go and come back.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

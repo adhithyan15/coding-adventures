@@ -535,10 +535,10 @@ impl<'m> ValidatorState<'m> {
                     }
                     // Check every RHS in the *outer* env (no new
                     // names added yet).
-                    for k in i..j {
+                    for stmt in &stmts[i..j] {
                         if let Stmt::LetBinding {
                             value, sir_type, ..
-                        } = &stmts[k]
+                        } = stmt
                         {
                             self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
@@ -547,8 +547,8 @@ impl<'m> ValidatorState<'m> {
                         }
                     }
                     // Add every bound name to the env, all at once.
-                    for k in i..j {
-                        if let Stmt::LetBinding { name, .. } = &stmts[k] {
+                    for stmt in &stmts[i..j] {
+                        if let Stmt::LetBinding { name, .. } = stmt {
                             env.add_local(name.clone());
                         }
                     }
@@ -1023,6 +1023,122 @@ impl<'m> ValidatorState<'m> {
                 self.observed.add(Feature::NDArrays);
                 self.check_expr(target, env, depth + 1);
                 self.check_index_args(indices, env, depth + 1);
+            }
+
+            // ── SIR22 addendum: APL primitive operators ─────────────
+            // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`Ravel`/
+            // `Catenate` are genuine array/matrix operations on the
+            // column-major representation, same class as `MatMul`/
+            // `Transpose` above, so they observe both `MatrixOps` and
+            // `ArrayColumnMajor`. `IndexGenerator`/`IndexOf` only
+            // construct/query arrays, without inherently being a "matrix
+            // op" any more than `Range`/`IndexGet` are, so they observe
+            // only `NDArrays`.
+            Expr::Reduce { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Scan { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+            Expr::Shape { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Reshape { shape, target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(shape, env, depth + 1);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::IndexGenerator { count, .. } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(count, env, depth + 1);
+            }
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(haystack, env, depth + 1);
+                self.check_expr(needle, env, depth + 1);
+            }
+            Expr::Ravel { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Catenate { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+
+            // ── SIR26: integer conversion ──────────────────────────────
+            Expr::Convert { value, to, .. } => {
+                // Observe the conversion feature plus the SIR21 type-implied
+                // features of the target type, so the manifest and capability
+                // check see exactly what a backend must support.
+                self.observed.add(Feature::Conversions);
+                if !to.is_arbitrary() {
+                    self.observed.add(Feature::SizedIntegers);
+                }
+                if !to.signed {
+                    self.observed.add(Feature::Unsigned);
+                }
+                if to.overflow != crate::types::Overflow::Arbitrary {
+                    self.observed.add(Feature::WrappingArithmetic);
+                }
+                self.check_expr(value, env, depth + 1);
+            }
+
+            // ── SIR23: symbolic expression + pattern/rewrite nodes ──
+            Expr::SymSymbol { .. } => {
+                self.observed.add(Feature::SymbolicExpr);
+            }
+            Expr::SymRational { .. } => {
+                // Shares the SIR22 `Rationals` feature rather than a new
+                // one — see the SIR23 spec's "New `Feature` flags".
+                self.observed.add(Feature::Rationals);
+            }
+            Expr::SymApply { head, args, .. } => {
+                self.observed.add(Feature::SymbolicExpr);
+                self.check_expr(head, env, depth + 1);
+                for a in args {
+                    self.check_expr(a, env, depth + 1);
+                }
+            }
+            Expr::SymPatternBlank { head, .. } => {
+                self.observed.add(Feature::PatternMatching);
+                if let Some(h) = head {
+                    self.check_expr(h, env, depth + 1);
+                }
+            }
+            Expr::SymPatternNamed { pattern, .. } => {
+                self.observed.add(Feature::PatternMatching);
+                self.check_expr(pattern, env, depth + 1);
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                self.observed.add(Feature::PatternMatching);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                self.observed.add(Feature::PatternMatching);
+                self.check_expr(expr, env, depth + 1);
+                for r in rules {
+                    self.check_expr(r, env, depth + 1);
+                }
             }
         }
     }
@@ -2338,6 +2454,8 @@ mod tests {
         e
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_lit_observes_floats_feature() {
         // Module uses a float literal but doesn't declare Floats →
@@ -4113,6 +4231,354 @@ mod tests {
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 
+    // ── SIR22 addendum: APL primitive operator validator tests ───────
+
+    #[test]
+    fn reduce_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Reduce {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn reduce_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Reduce {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn scan_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Scan {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn scan_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Scan {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn outer_product_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::OuterProduct {
+                op: ElementwiseOpKind::Mul,
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn outer_product_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::OuterProduct {
+                op: ElementwiseOpKind::Mul,
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn shape_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Shape {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn shape_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Shape {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn reshape_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Reshape {
+                shape: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn reshape_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Reshape {
+                shape: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_generator_observes_nd_arrays_feature_only() {
+        // ⍳N — construction/query only, not a "matrix op" any more than
+        // Range/IndexGet are, so only NDArrays should be observed.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::IndexGenerator {
+                count: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(!r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn index_generator_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays]),
+            Expr::IndexGenerator {
+                count: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_of_observes_nd_arrays_feature_only() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::IndexOf {
+                haystack: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                needle: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(!r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn index_of_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays]),
+            Expr::IndexOf {
+                haystack: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                needle: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn ravel_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Ravel {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn ravel_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Ravel {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn catenate_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Catenate {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn catenate_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Catenate {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
     #[test]
     fn index_set_observes_nd_arrays_feature() {
         // a(1) = 9 — IndexSet without NDArrays declared → error.
@@ -4296,6 +4762,467 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // ── SIR23: symbolic expression + pattern/rewrite validator tests ──
+    //
+    // Same shape as the SIR22 block above: for every new node kind, one
+    // test proves the module is REJECTED when the matching `Feature` is
+    // not declared (the "manifest does not declare feature `X` but
+    // module uses it" error from `compare_manifests`), and a companion
+    // test proves it is ACCEPTED once declared. This is the validator-
+    // level half of the SIR23 spec's most important correctness
+    // property; `backend.rs` has the end-to-end `Backend::check_module`
+    // half.
+
+    #[test]
+    fn sym_symbol_observes_symbolic_expr_feature() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("symbolic-expr")));
+    }
+
+    #[test]
+    fn sym_symbol_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::SymbolicExpr]),
+            Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sym_rational_observes_rationals_feature() {
+        // SymRational reuses the SIR22 `Rationals` feature, not a new one.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymRational {
+                numer: 1,
+                denom: 3,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("rationals")));
+    }
+
+    #[test]
+    fn sym_rational_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::Rationals]),
+            Expr::SymRational {
+                numer: 1,
+                denom: 3,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sym_apply_observes_symbolic_expr_feature_and_validates_head_and_args() {
+        // f(ghost) — the unresolvable local `ghost` inside args must
+        // still be scope-checked, alongside the missing-feature error.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymApply {
+                head: Box::new(Expr::SymSymbol {
+                    name: "f".into(),
+                    span: s(),
+                }),
+                args: vec![Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                }],
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("symbolic-expr")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn sym_apply_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::SymbolicExpr]),
+            Expr::SymApply {
+                head: Box::new(Expr::SymSymbol {
+                    name: "f".into(),
+                    span: s(),
+                }),
+                args: vec![Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }],
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sym_apply_computed_head_is_validated() {
+        // f[x][y] — the outer SymApply's own head is a SymApply, which
+        // must itself observe SymbolicExpr and be recursively validated.
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::SymbolicExpr]),
+            Expr::SymApply {
+                head: Box::new(Expr::SymApply {
+                    head: Box::new(Expr::SymSymbol {
+                        name: "f".into(),
+                        span: s(),
+                    }),
+                    args: vec![Expr::VarRef {
+                        name: "ghost".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    }],
+                    span: s(),
+                }),
+                args: vec![],
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn sym_pattern_blank_observes_pattern_matching_feature() {
+        // Bare `_` (head: None).
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymPatternBlank {
+                head: None,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("pattern-matching")));
+    }
+
+    #[test]
+    fn sym_pattern_blank_head_constrained_validates_head() {
+        // `_h` where `h` is an unresolvable local — the head must be
+        // scope-checked too.
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::PatternMatching]),
+            Expr::SymPatternBlank {
+                head: Some(Box::new(Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                })),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn sym_pattern_blank_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::PatternMatching]),
+            Expr::SymPatternBlank {
+                head: None,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sym_pattern_named_observes_pattern_matching_feature() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymPatternNamed {
+                name: "x".into(),
+                pattern: Box::new(Expr::SymPatternBlank {
+                    head: None,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("pattern-matching")));
+    }
+
+    #[test]
+    fn sym_pattern_named_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::PatternMatching]),
+            Expr::SymPatternNamed {
+                name: "x".into(),
+                pattern: Box::new(Expr::SymPatternBlank {
+                    head: None,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sym_rule_observes_pattern_matching_feature_and_validates_lhs_rhs() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymRule {
+                lhs: Box::new(Expr::SymSymbol {
+                    name: "x".into(),
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                }),
+                delayed: false,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("pattern-matching")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn sym_rule_with_declared_feature_is_valid() {
+        // Both `->` (delayed: false) and `:>` (delayed: true) observe the
+        // same feature.  `lhs`/`rhs` are plain `IntLit`s here (rather than
+        // a `SymSymbol`) so this test stays focused on `SymRule`'s own
+        // `PatternMatching` observation, without also pulling in
+        // `SymbolicExpr` (a `SymSymbol`'s own feature).
+        for delayed in [false, true] {
+            let m = module_with_fn_body_value(
+                FeatureManifest::from_features(&[Feature::PatternMatching]),
+                Expr::SymRule {
+                    lhs: Box::new(Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }),
+                    delayed,
+                    span: s(),
+                },
+            );
+            let r = validate(&m);
+            assert!(r.is_ok(), "expected ok for delayed={}, got {:?}", delayed, r.issues);
+        }
+    }
+
+    #[test]
+    fn sym_replace_all_observes_pattern_matching_feature_and_validates_rules() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymReplaceAll {
+                expr: Box::new(Expr::SymSymbol {
+                    name: "x".into(),
+                    span: s(),
+                }),
+                rules: vec![Expr::SymRule {
+                    lhs: Box::new(Expr::SymSymbol {
+                        name: "x".into(),
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::VarRef {
+                        name: "ghost".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    }),
+                    delayed: false,
+                    span: s(),
+                }],
+                repeated: false,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("pattern-matching")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn sym_replace_all_with_declared_feature_is_valid() {
+        // Both `/.` (repeated: false) and `//.` (repeated: true) observe
+        // the same feature.  `expr`/`lhs`/`rhs` are plain `IntLit`s here
+        // (rather than `SymSymbol`s) for the same reason as
+        // `sym_rule_with_declared_feature_is_valid` above: stay focused on
+        // `SymReplaceAll`'s own `PatternMatching` observation without also
+        // requiring `SymbolicExpr`.
+        for repeated in [false, true] {
+            let m = module_with_fn_body_value(
+                FeatureManifest::from_features(&[Feature::PatternMatching]),
+                Expr::SymReplaceAll {
+                    expr: Box::new(Expr::IntLit {
+                        value: 5,
+                        span: s(),
+                    }),
+                    rules: vec![Expr::SymRule {
+                        lhs: Box::new(Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        }),
+                        rhs: Box::new(Expr::IntLit {
+                            value: 0,
+                            span: s(),
+                        }),
+                        delayed: false,
+                        span: s(),
+                    }],
+                    repeated,
+                    span: s(),
+                },
+            );
+            let r = validate(&m);
+            assert!(
+                r.is_ok(),
+                "expected ok for repeated={}, got {:?}",
+                repeated,
+                r.issues
+            );
+        }
+    }
+
+    /// End-to-end version of the rejection tests above, in the same spirit
+    /// as `backend.rs`'s `backend_rejects_module_whose_body_uses_array_lit_and_matmul`:
+    /// a real module whose body nests `SymReplaceAll` around a `SymApply`
+    /// and a `SymRule` with a `SymPatternNamed`/`SymPatternBlank` pattern —
+    /// the full symbolic + pattern-matching vocabulary in one tree — with
+    /// NO features declared, confirming every one of `SymbolicExpr` and
+    /// `PatternMatching` is independently required.
+    #[test]
+    fn sym_replace_all_over_sym_apply_with_pattern_rule_requires_both_features() {
+        // f(x) /. (x_ -> 0) — replace any argument matching the pattern
+        // `x_` with 0 inside the symbolic application `f(x)`.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::SymReplaceAll {
+                expr: Box::new(Expr::SymApply {
+                    head: Box::new(Expr::SymSymbol {
+                        name: "f".into(),
+                        span: s(),
+                    }),
+                    args: vec![Expr::SymSymbol {
+                        name: "x".into(),
+                        span: s(),
+                    }],
+                    span: s(),
+                }),
+                rules: vec![Expr::SymRule {
+                    lhs: Box::new(Expr::SymPatternNamed {
+                        name: "x".into(),
+                        pattern: Box::new(Expr::SymPatternBlank {
+                            head: None,
+                            span: s(),
+                        }),
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }),
+                    delayed: false,
+                    span: s(),
+                }],
+                repeated: false,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("symbolic-expr")),
+            "expected a symbolic-expr rejection, got {:?}",
+            r.issues
+        );
+        assert!(
+            r.errors().any(|i| i.message.contains("pattern-matching")),
+            "expected a pattern-matching rejection, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn sym_replace_all_over_sym_apply_with_pattern_rule_valid_when_declared() {
+        // The same tree as above, but with both required features
+        // declared — must validate cleanly end to end.
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::SymbolicExpr, Feature::PatternMatching]),
+            Expr::SymReplaceAll {
+                expr: Box::new(Expr::SymApply {
+                    head: Box::new(Expr::SymSymbol {
+                        name: "f".into(),
+                        span: s(),
+                    }),
+                    args: vec![Expr::SymSymbol {
+                        name: "x".into(),
+                        span: s(),
+                    }],
+                    span: s(),
+                }),
+                rules: vec![Expr::SymRule {
+                    lhs: Box::new(Expr::SymPatternNamed {
+                        name: "x".into(),
+                        pattern: Box::new(Expr::SymPatternBlank {
+                            head: None,
+                            span: s(),
+                        }),
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }),
+                    delayed: false,
+                    span: s(),
+                }],
+                repeated: false,
+                span: s(),
+            },
+        );
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }

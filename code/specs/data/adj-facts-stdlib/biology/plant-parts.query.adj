@@ -1,0 +1,22 @@
+% ============================================================================
+% plant-parts.query.adj — a worked recall over the biology plant-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the stem do?":
+% it states no biology fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `plant_part_function`
+% rows and returns the function atom + the table's source/locator/trust. The
+% fourth query runs the relation BACKWARD (bind the function, recall the part).
+% A part not in the table — here `mushroom`, which is a fungus, not a plant part —
+% abstains honestly: the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli plant-parts.query.adj
+% ============================================================================
+
+import "plant-parts.adj"
+
+? plant_part_function(roots, $Function)        % expect absorb_water
+? plant_part_function(leaves, $Function)       % expect photosynthesis
+? plant_part_function(flower, $Function)       % expect reproduction
+? plant_part_function($Part, photosynthesis)   % expect leaves — the reverse recall
+? plant_part_function(mushroom, $Function)     % expect abstain — not a plant part

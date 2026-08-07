@@ -48,7 +48,9 @@ use std::collections::HashMap;
 
 /// Efabless shuttle programme variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Shuttle {
+    #[default]
     ChipigniteOpenMpw,
     ChipignitePaidMpw,
     TinyTapeout,
@@ -65,9 +67,6 @@ impl Shuttle {
     }
 }
 
-impl Default for Shuttle {
-    fn default() -> Self { Shuttle::ChipigniteOpenMpw }
-}
 
 /// IO pad location on the die boundary.
 #[derive(Debug, Clone, PartialEq)]

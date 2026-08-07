@@ -1,0 +1,131 @@
+% ============================================================================
+% total-lung-capacity-volumes.adj — the definition of the total lung capacity as the
+% sum of its FOUR primary volumes (total lung capacity = residual volume + expiratory
+% reserve volume + inspiratory reserve volume + tidal volume) in the ADJ standard library.
+% ============================================================================
+% The total-lung-capacity-volumes entry of the *clinical* track, a pulmonary-physiology
+% library. Where total-lung-capacity.adj decomposes the total into two CAPACITIES
+% (TLC = VC + RV) and inspiratory-capacity.adj decomposes it another way (TLC = FRC + IC),
+% this grounds the FULL four-VOLUME decomposition: THE TOTAL LUNG CAPACITY IS THE SUM OF THE
+% FOUR PRIMARY LUNG VOLUMES — the residual volume (RV), the expiratory reserve volume (ERV),
+% the inspiratory reserve volume (IRV), and the tidal volume (TV). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its four exact rearrangements
+% (each primary volume the total leaves once the other three are removed). It is the first
+% four-input (five-formula) n-ary inverter in the clinical track: the same substrate that
+% inverts a two-input relation three ways and a three-input sum four ways inverts a
+% four-input sum five ways. As with every compute library, a consumer states NO arithmetic:
+% it `import`s this file, binds the measured volumes from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited definition on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY, carrying the definition's
+% citation.
+%
+%     import "total-lung-capacity-volumes.adj"
+%     observe residual_volume(2)             % "…RV 2 L…"    (span cited by the model)
+%     observe expiratory_reserve_volume(3)   % "…ERV 3 L…"   (span cited by the model)
+%     observe inspiratory_reserve_volume(4)  % "…IRV 4 L…"   (span cited by the model)
+%     observe tidal_volume(5)                % "…Vt 5 L…"    (span cited by the model)
+%     ? total_lung_capacity(residual_volume, expiratory_reserve_volume,
+%                           inspiratory_reserve_volume, tidal_volume)
+%                                              % engine → 14, carrying TLC = RV + ERV + IRV + TV
+%
+% All five formulas are EXACT over their parameters (a four-term sum and its four inverse
+% readings), so every value the engine returns is exact. The five COMPOSE and invert cleanly
+% around the worked case RV = 2, ERV = 3, IRV = 4, TV = 5 (TLC = 2 + 3 + 4 + 5 = 14): the
+% `total_lung_capacity` a consumer computes from the four volumes is exactly the total each
+% single-volume formula subtracts the other three from to recover the missing volume.
+%
+%   total_lung_capacity(residual_volume, expiratory_reserve_volume,
+%                       inspiratory_reserve_volume, tidal_volume)
+%       = residual_volume + expiratory_reserve_volume
+%         + inspiratory_reserve_volume + tidal_volume        % TLC = RV + ERV + IRV + TV (definition)
+%   residual_volume(total_lung_capacity, expiratory_reserve_volume,
+%                   inspiratory_reserve_volume, tidal_volume)
+%       = total_lung_capacity - expiratory_reserve_volume
+%         - inspiratory_reserve_volume - tidal_volume        % RV = TLC − ERV − IRV − TV (solved for RV)
+%   expiratory_reserve_volume(total_lung_capacity, residual_volume,
+%                             inspiratory_reserve_volume, tidal_volume)
+%       = total_lung_capacity - residual_volume
+%         - inspiratory_reserve_volume - tidal_volume        % ERV = TLC − RV − IRV − TV (solved for ERV)
+%   inspiratory_reserve_volume(total_lung_capacity, residual_volume,
+%                              expiratory_reserve_volume, tidal_volume)
+%       = total_lung_capacity - residual_volume
+%         - expiratory_reserve_volume - tidal_volume         % IRV = TLC − RV − ERV − TV (solved for IRV)
+%   tidal_volume(total_lung_capacity, residual_volume,
+%                expiratory_reserve_volume, inspiratory_reserve_volume)
+%       = total_lung_capacity - residual_volume
+%         - expiratory_reserve_volume - inspiratory_reserve_volume % TV = TLC − RV − ERV − IRV (solved for TV)
+%
+% NOTE ON UNITS: RV, ERV, IRV, TV, and TLC are all lung gas volumes and must be observed in
+% the SAME unit (e.g. litres, or millilitres) for the sum to be meaningful; this library
+% performs no unit conversion. It computes the exact sum (or the exact complementary
+% difference) over whatever same-unit volumes it is given. A consumer that mixes units
+% converts them upstream.
+%
+% All five formulas are defended by the SAME defining span — "TLC = RV + ERV + IRV + TV" —
+% because that one definition (the total lung capacity IS the sum of the four primary lung
+% volumes) sanctions the relation read every way (the total from the four volumes, or any one
+% volume from the total and the other three). The span is transcribed verbatim from the
+% StatPearls "Physiology, Lung Capacity" article on the NCBI Bookshelf, so each `formula`
+% carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the defining span is a verbatim quote
+% of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each primary volume is an observable finding the definition ranges over, and
+% the capacity is the derived total. `total_lung_capacity`, `residual_volume`,
+% `expiratory_reserve_volume`, `inspiratory_reserve_volume` and `tidal_volume` each appear
+% BOTH as a derived result and as an input (of the other formulas), so each is a single
+% dictionary term used in both roles. The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary total_lung_capacity_volumes_vocab {
+    define residual_volume             : finding  surface "residual volume", "RV"
+    define expiratory_reserve_volume   : finding  surface "expiratory reserve volume", "ERV"
+    define inspiratory_reserve_volume  : finding  surface "inspiratory reserve volume", "IRV"
+    define tidal_volume                : finding  surface "tidal volume", "TV", "Vt"
+    define total_lung_capacity         : finding  surface "total lung capacity", "TLC"
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all five ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining span from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% sum/difference of measured volumes, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook total_lung_capacity_volumes_laws {
+    use total_lung_capacity_volumes_vocab
+
+    % Total lung capacity — the sum of the four primary volumes, i.e. TLC = RV + ERV + IRV + TV.
+    formula total_lung_capacity(residual_volume, expiratory_reserve_volume, inspiratory_reserve_volume, tidal_volume) = residual_volume + expiratory_reserve_volume + inspiratory_reserve_volume + tidal_volume
+        source "TLC = RV + ERV + IRV + TV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Residual volume — the same definition solved for the residual gas a total leaves once the
+    % expiratory reserve, inspiratory reserve, and tidal volumes are removed
+    % (RV = TLC − ERV − IRV − TV). Defended by the SAME defining span.
+    formula residual_volume(total_lung_capacity, expiratory_reserve_volume, inspiratory_reserve_volume, tidal_volume) = total_lung_capacity - expiratory_reserve_volume - inspiratory_reserve_volume - tidal_volume
+        source "TLC = RV + ERV + IRV + TV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Expiratory reserve volume — solved for ERV (ERV = TLC − RV − IRV − TV). Same defining span.
+    formula expiratory_reserve_volume(total_lung_capacity, residual_volume, inspiratory_reserve_volume, tidal_volume) = total_lung_capacity - residual_volume - inspiratory_reserve_volume - tidal_volume
+        source "TLC = RV + ERV + IRV + TV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Inspiratory reserve volume — solved for IRV (IRV = TLC − RV − ERV − TV). Same defining span.
+    formula inspiratory_reserve_volume(total_lung_capacity, residual_volume, expiratory_reserve_volume, tidal_volume) = total_lung_capacity - residual_volume - expiratory_reserve_volume - tidal_volume
+        source "TLC = RV + ERV + IRV + TV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+
+    % Tidal volume — solved for TV (TV = TLC − RV − ERV − IRV). The fifth reading of the one
+    % definition.
+    formula tidal_volume(total_lung_capacity, residual_volume, expiratory_reserve_volume, inspiratory_reserve_volume) = total_lung_capacity - residual_volume - expiratory_reserve_volume - inspiratory_reserve_volume
+        source "TLC = RV + ERV + IRV + TV"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541029/"
+        trust authoritative
+}

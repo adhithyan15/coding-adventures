@@ -1605,6 +1605,9 @@ fn gauss_jordan(mut a: Vec<f64>, n: usize, mut b: Vec<f64>, m: usize) -> SResult
 ///   test this **before** calling `sqrt`, so we never take the square root of a
 ///   negative number — the result is R's exact error *"the leading minor of order
 ///   i is not positive definite"*, never a propagated `NaN` and never a panic.
+// The `!(pivot > 0.0)` form is a deliberate NaN-safe guard (see the inline
+// comment): rewriting as `pivot <= 0.0` would let NaN through. Behavior-preserving allow.
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
 fn b_chol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     // Reuse the det/solve square-matrix reader: it rejects non-matrix, non-square
     // and over-MAX_SOLVE_DIM inputs up front and returns column-major data + n.
@@ -3578,9 +3581,10 @@ fn b_unique(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     // it is the first sighting of a comparable key in the scan direction.
     let mut keep_flag = vec![false; n];
     let mut decide = |i: usize| {
-        if incomparable.contains(&keys[i]) {
-            keep_flag[i] = true;
-        } else if seen.insert(keys[i].clone()) {
+        // Kept if incomparable, or the first sighting of a comparable key. The `||`
+        // short-circuits exactly like the original if/else-if: `seen.insert` runs
+        // only when the key is comparable.
+        if incomparable.contains(&keys[i]) || seen.insert(keys[i].clone()) {
             keep_flag[i] = true;
         }
     };

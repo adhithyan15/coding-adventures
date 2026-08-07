@@ -1,0 +1,93 @@
+% ============================================================================
+% corrected-phenytoin.adj — the albumin-corrected (Sheiner–Tozer / Winter–Tozer) phenytoin
+% concentration (corrected = obtained / (0.275 × albumin + 0.1)) in the ADJ standard library.
+% ============================================================================
+% The corrected-phenytoin entry of the *clinical* track — the albumin-adjusted estimate of the total
+% phenytoin concentration. Phenytoin is ~90% bound to albumin and only the UNBOUND fraction is
+% pharmacologically active, so in HYPOALBUMINAEMIA a measured TOTAL level understates the active drug:
+% the same total corresponds to a higher free concentration. The Sheiner–Tozer correction scales the
+% obtained total up to the total that WOULD have been measured at a normal albumin. THE CORRECTED
+% PHENYTOIN IS THE OBTAINED PHENYTOIN LEVEL DIVIDED BY 0.275 TIMES THE ALBUMIN PLUS 0.1 — i.e. obtained
+% / (0.275 × albumin + 0.1), using the page's standard adjustment 0.275 (albumin in g/dL, phenytoin in
+% µg/mL). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two
+% exact rearrangements (the obtained level a corrected value implies at a given albumin, and the albumin
+% an obtained/corrected pair implies). As with every compute library, a consumer states NO arithmetic:
+% it `import`s this file, binds the obtained level and albumin from its own byte-provenance
+% decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is performed by
+% the model; the engine computes each value EXACTLY (over exact rationals), carrying the formula's
+% citation.
+%
+%     import "corrected-phenytoin.adj"
+%     observe obtained_phenytoin(6.5)   % "…phenytoin level 6.5 µg/mL…"   (span cited by the model)
+%     observe albumin(2)                 % "…albumin 2 g/dL…"              (span cited by the model)
+%     ? corrected_phenytoin(obtained_phenytoin, albumin)
+%                                         % engine → 10 (µg/mL), the albumin-corrected phenytoin
+%
+% The 0.275, 0.1 are the EXACT defined constants of the cited formula's standard adjustment (not
+% measurements); the formulas are otherwise exact expressions over the parameters, so every value the
+% engine returns is exact — 0.275 is exactly 11/40 and 0.1 is exactly 1/10, so the products and sums
+% stay in the exact rationals. They COMPOSE and invert cleanly around the worked case obtained = 6.5,
+% albumin = 2 (corrected = 6.5 / (0.275 × 2 + 0.1) = 6.5 / (0.55 + 0.1) = 6.5 / 0.65 = 10): the
+% `corrected_phenytoin` a consumer computes is exactly the value each inverse formula back-solves to
+% recover its own measured input (6.5, 2).
+%
+%   corrected_phenytoin(obtained_phenytoin, albumin) = obtained_phenytoin / (0.275 * albumin + 0.1)          % (corrected, µg/mL)
+%   obtained_phenytoin(corrected_phenytoin, albumin) = corrected_phenytoin * (0.275 * albumin + 0.1)          % (solved for obtained)
+%   albumin(corrected_phenytoin, obtained_phenytoin) = (obtained_phenytoin / corrected_phenytoin - 0.1) / 0.275 % (solved for albumin)
+%
+% NOTE ON UNITS AND MODELLING: albumin in g/dL, phenytoin in µg/mL. The cited page writes the general
+% form with a symbolic "adjustment" and states its STANDARD value is 0.275; it also gives a variant
+% adjustment of 0.2 when the creatinine clearance is < 20 mL/min (renal impairment reduces binding
+% further). This library grounds the STANDARD 0.275 form; a renal-impairment library would ground the
+% 0.2 variant identically. The correction only reinterprets the measured total for the degree of
+% hypoalbuminaemia — it does not itself decide dosing.
+%
+% All three formulas are defended by the SAME clause — the quoted correction equation — because that one
+% statement (corrected phenytoin IS the obtained level over 0.275 times albumin plus 0.1) sanctions the
+% relation read every way. The quote is transcribed verbatim from the StatPearls "Antiepileptic Drug
+% Monitoring" article on the NCBI Bookshelf (a current, non-archived article), so each `formula` carries
+% the provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one.
+% (See feedback_nothing_human_authored — the formula, including its 0.275 and 0.1 constants, is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `obtained_phenytoin`, `albumin` and `corrected_phenytoin` each appear BOTH as a derived
+% result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary corrected_phenytoin_vocab {
+    define obtained_phenytoin   : finding  surface "obtained phenytoin", "measured phenytoin", "total phenytoin", "phenytoin level"  % µg/mL
+    define albumin              : finding  surface "albumin", "serum albumin"                                                        % g/dL
+    define corrected_phenytoin  : finding  surface "corrected phenytoin", "adjusted phenytoin", "albumin-corrected phenytoin"        % µg/mL
+}
+
+% ----------------------------------------------------------------------------
+% The albumin-corrected phenytoin, all three ways. Each is a named, importable, reusable formula over
+% its formal parameters, bound at apply time, and each carries the correction equation from the
+% StatPearls "Antiepileptic Drug Monitoring" article on the NCBI Bookshelf (a quote is required on a
+% shipped formula). Each is an exact expression in the measured quantities and the cited 0.275 / 0.1
+% constants, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook corrected_phenytoin_laws {
+    use corrected_phenytoin_vocab
+
+    % Corrected phenytoin — the obtained level over 0.275 times albumin plus 0.1.
+    formula corrected_phenytoin(obtained_phenytoin, albumin) = obtained_phenytoin / (0.275 * albumin + 0.1)
+        source "Corrected phenytoin = obtained phenytoin level/([adjustment x albumin] + 0.1)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482298/"
+        trust authoritative
+
+    % Obtained phenytoin — the same equation solved for the obtained level. Defended by the SAME sentence.
+    formula obtained_phenytoin(corrected_phenytoin, albumin) = corrected_phenytoin * (0.275 * albumin + 0.1)
+        source "Corrected phenytoin = obtained phenytoin level/([adjustment x albumin] + 0.1)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482298/"
+        trust authoritative
+
+    % Albumin — the same equation solved for the albumin. The SAME sentence, read the third way.
+    formula albumin(corrected_phenytoin, obtained_phenytoin) = (obtained_phenytoin / corrected_phenytoin - 0.1) / 0.275
+        source "Corrected phenytoin = obtained phenytoin level/([adjustment x albumin] + 0.1)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482298/"
+        trust authoritative
+}

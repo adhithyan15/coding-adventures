@@ -400,8 +400,19 @@ class TestCompiler < Minitest::Test
   def test_function_call_with_kwargs
     code = compile("f(x=1, y=2)\n")
 
-    assert has_opcode?(code, Op::CALL_FUNCTION_KW),
+    instruction = code.instructions.find { |item| item.opcode == Op::CALL_FUNCTION_KW }
+    assert instruction,
       "Expected CALL_FUNCTION_KW opcode\nDisassembly:\n#{Compiler.disassemble(code)}"
+    assert_equal [0, 2], instruction.operand
+  end
+
+  def test_function_call_with_positional_and_keyword_counts
+    code = compile("f(1, y=2, z=3)\n")
+    instruction = code.instructions.find { |item| item.opcode == Op::CALL_FUNCTION_KW }
+
+    assert instruction,
+      "Expected CALL_FUNCTION_KW opcode\nDisassembly:\n#{Compiler.disassemble(code)}"
+    assert_equal [1, 2], instruction.operand
   end
 
   # ================================================================
@@ -678,6 +689,12 @@ class TestCompiler < Minitest::Test
   def test_parse_string_literal_bare
     # Already stripped by lexer
     assert_equal "hello", Compiler.parse_string_literal("hello")
+  end
+
+  def test_parse_string_literal_bare_values_keep_prefix_letters
+    %w[rule rust_library build Binary].each do |value|
+      assert_equal value, Compiler.parse_string_literal(value)
+    end
   end
 
   def test_parse_string_literal_empty

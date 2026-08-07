@@ -1,0 +1,25 @@
+% ============================================================================
+% constants.query.adj — a worked recall over the mathematics constants library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is pi?" or "which
+% constant is the base of the natural logarithm?": it states no mathematical fact
+% of its own — it only `import`s the grounded table and asks binding queries. The
+% engine resolves each `?` against the `math_constant` rows and returns the value
+% + the table's source/locator/trust. A name that is not a constant in the table
+% abstains honestly — the engine never invents digits.
+%
+% Note the two directions of recall a `table` gives for free:
+%   - forward  `? math_constant(pi, $V)`   name  → value
+%   - reverse  `? math_constant($C, ...)`  value → name
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli constants.query.adj
+% ============================================================================
+
+import "constants.adj"
+
+? math_constant(pi, $V)             % expect pi EXACT: 3.141592653589793238462643383279502884197
+? math_constant(e, $V)              % expect e  EXACT: 2.718281828459045235360287471352662497757
+? math_constant(golden_ratio, $V)   % expect phi EXACT: 1.61803398874989484820458683436563811772
+? math_constant($C, 3.141592653589793238462643383279502884197) % reverse recall — expect C = pi
+? math_constant(tau, $V)            % expect abstain — tau is not a row in this table

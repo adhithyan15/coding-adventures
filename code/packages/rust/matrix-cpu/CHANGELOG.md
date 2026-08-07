@@ -2,6 +2,17 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [unreleased] - NN31 backend parity fixture
+
+### Added - shared execution evidence
+
+The Node-free graph-to-CPU execution helper now lives in `matrix-cpu`, where
+native bindings can reuse it without pulling host symbols into core tests. An
+integration test decodes the language-neutral NN31 MatrixIR graph and little-
+endian `f32` payloads, executes the helper, and requires byte-for-byte output
+parity with `[3, 5, 7]`. Oversized graphs are rejected before input payload
+length validation, so the resource-cap tests stay bounded.
+
 ## [unreleased] — MX12 f64 dtype
 
 ### Added — f64 kernels (MX12)

@@ -369,6 +369,192 @@ fn tokenizer_appends_replacement_character_to_comments() {
 }
 
 #[test]
+fn tokenizer_builds_processing_instruction_tokens() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "target",
+                "after_processing_instruction_target",
+                "processing_instruction_data",
+                "processing_instruction_questionable",
+                "bogus_comment",
+                "done",
+            ]),
+            set(&[" ", "d", "a", "t", "?", "x", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "target",
+                    EffectfulMatcher::Event(" ".to_string()),
+                    "after_processing_instruction_target",
+                )
+                .consuming(false)
+                .with_effects(&["finalize_processing_instruction_target"]),
+                EffectfulTransition::new(
+                    "after_processing_instruction_target",
+                    EffectfulMatcher::Event(" ".to_string()),
+                    "after_processing_instruction_target",
+                ),
+                EffectfulTransition::new(
+                    "after_processing_instruction_target",
+                    EffectfulMatcher::Event("d".to_string()),
+                    "processing_instruction_data",
+                )
+                .consuming(false),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event("d".to_string()),
+                    "processing_instruction_data",
+                )
+                .with_effects(&["append_processing_instruction_data(current)"]),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event("a".to_string()),
+                    "processing_instruction_data",
+                )
+                .with_effects(&["append_processing_instruction_data(current)"]),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event("t".to_string()),
+                    "processing_instruction_data",
+                )
+                .with_effects(&["append_processing_instruction_data(current)"]),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event("?".to_string()),
+                    "processing_instruction_questionable",
+                ),
+                EffectfulTransition::new(
+                    "processing_instruction_questionable",
+                    EffectfulMatcher::Event("x".to_string()),
+                    "processing_instruction_data",
+                )
+                .consuming(false)
+                .with_effects(&["append_processing_instruction_data(?)"]),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event("x".to_string()),
+                    "processing_instruction_data",
+                )
+                .with_effects(&["append_processing_instruction_data(current)"]),
+                EffectfulTransition::new(
+                    "processing_instruction_data",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "done",
+                )
+                .with_effects(&["emit_current_token"]),
+            ],
+            "target".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_temporary_buffer("xml-model");
+
+    tokenizer.push(" data?x>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::ProcessingInstruction {
+            target: "xml-model".to_string(),
+            data: "data?x".to_string(),
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_recovers_disallowed_processing_instruction_target_as_comment() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&[
+                "target",
+                "after_processing_instruction_target",
+                "bogus_comment",
+                "done",
+            ]),
+            set(&[" ", "d", "a", "t", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "target",
+                    EffectfulMatcher::Event(" ".to_string()),
+                    "after_processing_instruction_target",
+                )
+                .consuming(false)
+                .with_effects(&["finalize_processing_instruction_target"]),
+                EffectfulTransition::new(
+                    "bogus_comment",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "done",
+                )
+                .with_effects(&["emit_current_token"]),
+                EffectfulTransition::new("bogus_comment", EffectfulMatcher::Any, "bogus_comment")
+                    .with_effects(&["append_comment(current)"]),
+            ],
+            "target".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_temporary_buffer("XmL");
+
+    tokenizer.push(" data>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Comment("?XmL data".to_string())]
+    );
+    assert_eq!(
+        tokenizer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["disallowed-processing-instruction-target"]
+    );
+}
+
+#[test]
+fn tokenizer_comment_recovery_preserves_processing_instruction_opener() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["target", "bogus_comment", "done"]),
+            set(&["!", ">"]),
+            vec![
+                EffectfulTransition::new(
+                    "target",
+                    EffectfulMatcher::Event("!".to_string()),
+                    "bogus_comment",
+                )
+                .consuming(false)
+                .with_effects(&["convert_temporary_buffer_to_comment"]),
+                EffectfulTransition::new(
+                    "bogus_comment",
+                    EffectfulMatcher::Event("!".to_string()),
+                    "bogus_comment",
+                )
+                .with_effects(&["append_comment(current)"]),
+                EffectfulTransition::new(
+                    "bogus_comment",
+                    EffectfulMatcher::Event(">".to_string()),
+                    "done",
+                )
+                .with_effects(&["emit_current_token"]),
+            ],
+            "target".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
+    .with_temporary_buffer("bad");
+
+    tokenizer.push("!>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Comment("?bad!".to_string())]
+    );
+}
+
+#[test]
 fn tokenizer_builds_doctypes_and_marks_force_quirks() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(

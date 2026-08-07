@@ -208,8 +208,14 @@ end
 -- Phase 2 — Spread remaining symbols using the step function.
 --   The step size step = (sz >> 1) + (sz >> 3) + 3 is co-prime to sz
 --   (which is always a power of 2), so the walk visits every remaining
---   slot exactly once. The two-pass approach (first symbols with count > 1,
---   then count == 1) matches the reference encoder ordering.
+--   slot exactly once. This is a SINGLE pass over symbols in ascending
+--   order 0..maxSymbolValue: each symbol's full count is placed immediately
+--   when encountered (FSE_buildDTable_internal's low-probability branch in
+--   the reference C implementation). There is no "count>1 symbols first,
+--   then count==1 symbols" second pass — an earlier revision of this codec
+--   used that fabricated two-pass split, which produces a different (but
+--   internally self-consistent) table layout that is NOT wire-compatible
+--   with real zstd. See lessons.md Lesson 96.
 --
 -- Phase 3 — Assign nb and base.
 --   For symbol s appearing at table positions i₀, i₁, i₂, ...:
@@ -246,25 +252,20 @@ local function build_decode_table(norm, acc_log)
     end
 
     -- ── Phase 2: spread remaining symbols into slots 1..hi_limit ─────────
-    -- Two-pass: first symbols with count > 1, then count == 1.
-    -- This deterministic ordering matches the reference C implementation.
+    -- SINGLE pass over symbols in ascending order 0..maxSymbolValue: place
+    -- each symbol's full count immediately when encountered. This is the
+    -- real algorithm (see the Phase 2 note above and lessons.md Lesson 96).
     local pos = 1  -- current insertion position (1-indexed)
-    for pass = 0, 1 do
-        for s = 1, #norm do
-            local c = norm[s]
-            if c > 0 then
-                -- In pass 0: process only symbols with c > 1.
-                -- In pass 1: process only symbols with c == 1.
-                if (pass == 0) == (c > 1) then
-                    sym_next[s] = c  -- will be refined in Phase 3
-                    for _ = 1, c do
-                        tbl[pos].sym = s - 1  -- 0-indexed symbol
-                        -- Step forward, wrapping within [1, hi_limit].
-                        pos = ((pos - 1 + step) % sz) + 1
-                        while pos > hi_limit do
-                            pos = ((pos - 1 + step) % sz) + 1
-                        end
-                    end
+    for s = 1, #norm do
+        local c = norm[s]
+        if c > 0 then
+            sym_next[s] = c  -- will be refined in Phase 3
+            for _ = 1, c do
+                tbl[pos].sym = s - 1  -- 0-indexed symbol
+                -- Step forward, wrapping within [1, hi_limit].
+                pos = ((pos - 1 + step) % sz) + 1
+                while pos > hi_limit do
+                    pos = ((pos - 1 + step) % sz) + 1
                 end
             end
         end
@@ -369,20 +370,19 @@ local function build_encode_sym(norm, acc_log)
     end
     local idx_limit = idx_high  -- highest free slot for Phase 2
 
+    -- SINGLE pass over symbols in ascending order — must mirror
+    -- build_decode_table()'s Phase 2 exactly (see lessons.md Lesson 96: the
+    -- real algorithm has no count>1-vs-count==1 split).
     local pos = 1
-    for pass = 0, 1 do
-        for s = 0, #norm - 1 do
-            local c = norm[s + 1]
-            if c > 0 then
-                local cnt = c
-                if (pass == 0) == (cnt > 1) then
-                    for _ = 1, cnt do
-                        spread[pos] = s
-                        pos = ((pos - 1 + step) % sz) + 1
-                        while pos > idx_limit do
-                            pos = ((pos - 1 + step) % sz) + 1
-                        end
-                    end
+    for s = 0, #norm - 1 do
+        local c = norm[s + 1]
+        if c > 0 then
+            local cnt = c
+            for _ = 1, cnt do
+                spread[pos] = s
+                pos = ((pos - 1 + step) % sz) + 1
+                while pos > idx_limit do
+                    pos = ((pos - 1 + step) % sz) + 1
                 end
             end
         end
@@ -629,20 +629,43 @@ local function fse_encode_sym(state, sym, ee, st)
     return new_state, nb, bits_out
 end
 
--- fse_decode_sym decodes one symbol and updates the FSE state.
+-- fse_init_state derives the FSE encoder's starting state directly from a
+-- symbol, WITHOUT flushing any bits — the reverse-encoding-loop analogue of
+-- real zstd's FSE_initCState2.
 --
--- Table entry tbl[state+1] provides:
---   sym  = the decoded symbol (0-indexed)
---   nb   = number of extra state bits to read
---   base = base value for next state: new_state = base + read(nb bits)
+-- RFC 8878's decoder never performs a state-update read after the LAST
+-- sequence in a block (there is no "next" sequence whose peek needs a fresh
+-- state) — see the per-sequence loop in decompress_block. Symmetrically, the
+-- ENCODER's first symbol processed in its reverse loop (which corresponds to
+-- that same last sequence) cannot derive its starting state via a normal
+-- fse_encode_sym() flush (there is no bit-consuming "update" on the decode
+-- side to produce it) — it must be computed directly.
 --
--- Returns the decoded symbol (0-indexed).
-local function fse_decode_sym(state, tbl, br)
-    -- state is 0-indexed; tbl is 1-indexed.
-    local e      = tbl[state + 1]
-    local sym    = e.sym
-    local next   = e.base + br:read_bits(e.nb)
-    return sym, next
+-- Formula (mirrors FSE_initCState2 in the reference C implementation):
+--   nb_bits_out = (delta_nb + (1 << 15)) >> 16
+--   value       = (nb_bits_out << 16) - delta_nb
+-- then a table lookup exactly like fse_encode_sym, but starting from that
+-- computed `value` instead of a live running state.
+local function fse_init_state(sym, ee, st)
+    local e           = ee[sym + 1]
+    local nb_bits_out = (e.delta_nb + (1 << 15)) >> 16
+    local value       = (nb_bits_out << 16) - e.delta_nb
+    local slot_i      = (value >> nb_bits_out) + e.delta_fs
+    local state       = st[slot_i + 1]
+    assert(state ~= nil,
+        "fse_init_state: slot_i=" .. slot_i .. " out of range (sym=" .. sym .. ")")
+    return state
+end
+
+-- fse_update_state consumes tbl_entry.nb bits from br and returns the new
+-- FSE state: new_state = tbl_entry.base + read(tbl_entry.nb bits).
+--
+-- Must only be called when there IS a next sequence to prepare a state for.
+-- RFC 8878 (verified against the real zstd C source, ZSTD_decodeSequence):
+-- this update is skipped entirely for the LAST sequence in a block — see
+-- lessons.md Lesson 96.
+local function fse_update_state(tbl_entry, br)
+    return tbl_entry.base + br:read_bits(tbl_entry.nb)
 end
 
 -- ============================================================================
@@ -874,18 +897,45 @@ end
 --   bits [3:2] = ML mode  (0 = Predefined)
 --   bits [1:0] = reserved (0)
 --
--- FSE Bitstream Layout (written in REVERSE sequence order):
---   For each sequence (last→first):
---     write OF extra bits, ML extra bits, LL extra bits
---     FSE encode OF symbol, ML symbol, LL symbol
---   After all sequences:
---     flush initial states: (state_of - sz_of) as OF_ACC_LOG bits
---                           (state_ml - sz_ml) as ML_ACC_LOG bits
---                           (state_ll - sz_ll) as LL_ACC_LOG bits
---   Add sentinel and flush.
+-- Per-sequence decode order (RFC 8878 §3.1.1.3.2.1.2, cross-checked against
+-- the real zstd C source — ZSTD_decodeSequence / FSE_encodeSymbol /
+-- FSE_initCState2 — see lessons.md Lesson 96):
 --
--- The decoder reads the same stream in the natural (left-to-right) order
--- because the backward bit-stream reverses the write order.
+--   1. PEEK all three symbols (LL, ML, OF) from the current states. This is
+--      a bare table lookup and costs no bits.
+--   2. Read extra value bits, in order OFFSET, MATCH_LENGTH, LITERALS_LENGTH
+--      (the REVERSE of the initial-state read order below, and also the
+--      reverse of the state-update order in step 3 — the RFC is genuinely
+--      asymmetric here, not a typo).
+--   3. Update FSE states, in order LITERALS_LENGTH, MATCH_LENGTH, OFFSET —
+--      but ONLY IF this is not the last sequence in the block. There is no
+--      "next" sequence to prepare a state for after the last one, so no
+--      update bits are read (and a conformant encoder must not write any
+--      either).
+--
+-- Initial states are read in order LL, OF, ML (again, a different order
+-- from both of the above — see the read in decompress_block).
+--
+-- FSE Bitstream Layout (written in REVERSE sequence order, since the
+-- bitstream itself is backward — the encoder writes what the decoder reads
+-- last, first):
+--   For each sequence, processed last→first:
+--     if this is NOT the first iteration (i.e. not the last real sequence):
+--       FSE-encode transition, write order OF, ML, LL (a forward decoder
+--       consumes this as the update AFTER decoding the sequence, in order
+--       LL, ML, OF)
+--     else (the first-processed iteration = the LAST real sequence):
+--       derive the starting state directly via fse_init_state — NO bits
+--       written, mirroring real zstd's FSE_initCState2, since a forward
+--       decoder never performs an update read after the last sequence
+--       either
+--     write extra bits, order LL, ML, OF (a forward decoder reads these in
+--     order OF, ML, LL immediately after peeking symbols)
+--   After all sequences:
+--     flush initial states — decode order is LL, OF, ML, so being the very
+--     LAST bits written (and thus the FIRST a forward reader sees), we
+--     write them in reverse: ML, OF, LL.
+--   Add sentinel and flush.
 
 local function encode_sequences_section(seqs)
     -- Build encode tables from the predefined distributions.
@@ -897,14 +947,15 @@ local function encode_sequences_section(seqs)
     local sz_ml = 1 << ML_ACC_LOG  -- 64
     local sz_of = 1 << OF_ACC_LOG  -- 32
 
-    -- FSE encoder states start at table_size (= sz). Valid range: [sz, 2*sz).
-    local state_ll = sz_ll
-    local state_ml = sz_ml
-    local state_of = sz_of
-
     local bw = RevBitWriter.new()
 
-    -- Encode sequences in REVERSE order so the decoder sees them in forward order.
+    -- Assigned on the first loop iteration (via fse_init_state); no
+    -- meaningful value before that.
+    local state_ll, state_ml, state_of
+
+    -- `first` denotes the FIRST iteration of this reverse loop, i.e. the
+    -- LAST real sequence in the block (see the header comment above).
+    local first = true
     for i = #seqs, 1, -1 do
         local seq = seqs[i]
 
@@ -924,37 +975,45 @@ local function encode_sequences_section(seqs)
             of_code = floor_log2(raw_off)
         end
         local of_extra = raw_off - (1 << of_code)
-
-        -- Write extra bits in the order: OF extras, ML extras, LL extras.
-        -- (The backward stream will reverse this for the decoder.)
-        bw:add_bits(of_extra, of_code)
         local ml_extra = seq.ml - ML_CODES[ml_code + 1][1]
-        bw:add_bits(ml_extra, ML_CODES[ml_code + 1][2])
         local ll_extra = seq.ll - LL_CODES[ll_code + 1][1]
+
+        if not first then
+            -- Transition FROM the state used to peek the sequence processed
+            -- in the PREVIOUS iteration TO the state used to peek THIS
+            -- sequence. Write order OF, ML, LL.
+            local new_state_of, nb_of, bits_of = fse_encode_sym(state_of, of_code, ee_of, st_of)
+            bw:add_bits(bits_of, nb_of)
+            state_of = new_state_of
+
+            local new_state_ml, nb_ml, bits_ml = fse_encode_sym(state_ml, ml_code, ee_ml, st_ml)
+            bw:add_bits(bits_ml, nb_ml)
+            state_ml = new_state_ml
+
+            local new_state_ll, nb_ll, bits_ll = fse_encode_sym(state_ll, ll_code, ee_ll, st_ll)
+            bw:add_bits(bits_ll, nb_ll)
+            state_ll = new_state_ll
+        else
+            -- Last real sequence: no incoming transition to flush.
+            -- Initialise state directly from the symbol (no bits written).
+            state_of = fse_init_state(of_code, ee_of, st_of)
+            state_ml = fse_init_state(ml_code, ee_ml, st_ml)
+            state_ll = fse_init_state(ll_code, ee_ll, st_ll)
+            first = false
+        end
+
+        -- Extra bits, write order LL, ML, OF (a forward decoder reads these
+        -- in order OF, ML, LL immediately after peeking symbols).
         bw:add_bits(ll_extra, LL_CODES[ll_code + 1][2])
-
-        -- FSE encode symbols in REVERSE decode order.
-        -- Decode order: LL, OF, ML  (state transitions happen in this order).
-        -- Encode order (reversed): ML, OF, LL  (LL is last written → first read).
-        --
-        -- We call fse_encode_sym which returns the new state plus bits to write.
-        local new_state_ml, nb_ml, bits_ml = fse_encode_sym(state_ml, ml_code, ee_ml, st_ml)
-        bw:add_bits(bits_ml, nb_ml)
-        state_ml = new_state_ml
-
-        local new_state_of, nb_of, bits_of = fse_encode_sym(state_of, of_code, ee_of, st_of)
-        bw:add_bits(bits_of, nb_of)
-        state_of = new_state_of
-
-        local new_state_ll, nb_ll, bits_ll = fse_encode_sym(state_ll, ll_code, ee_ll, st_ll)
-        bw:add_bits(bits_ll, nb_ll)
-        state_ll = new_state_ll
+        bw:add_bits(ml_extra, ML_CODES[ml_code + 1][2])
+        bw:add_bits(of_extra, of_code)
     end
 
     -- Write the initial FSE states so the decoder can initialise.
-    -- Write order: OF, ML, LL — decoder reads LL first, then ML, then OF.
-    bw:add_bits(state_of - sz_of, OF_ACC_LOG)
+    -- Decode order is LL, OF, ML; being the last bits written, we write
+    -- them in reverse: ML, OF, LL.
     bw:add_bits(state_ml - sz_ml, ML_ACC_LOG)
+    bw:add_bits(state_of - sz_of, OF_ACC_LOG)
     bw:add_bits(state_ll - sz_ll, LL_ACC_LOG)
     bw:flush()
 
@@ -1020,12 +1079,40 @@ end
 --
 -- decompress_block decodes one ZStd compressed block and appends output bytes
 -- to the `out` array. Calls error() on any format violation.
-
-local function decompress_block(data, start, bsize, out)
+--
+-- `rep` is the three-element Repeated_Offset register array (RFC 8878
+-- §3.1.1.3.2.1.1) — {rep[1], rep[2], rep[3]} — passed by reference (Lua
+-- tables are references) because these registers are FRAME-scoped, not
+-- block-scoped: "For the first block, the starting offset history is
+-- populated with Repeated_Offset1=1, Repeated_Offset2=4, Repeated_Offset3=8"
+-- (RFC 8878), and every later Compressed block in the same frame continues
+-- from wherever the previous Compressed block's sequences left them. The
+-- caller (M.decompress) owns `rep` and threads it through every Compressed
+-- block in the frame; Raw/RLE blocks don't touch it.
+--
+-- WHY THIS DECODER NEEDS THIS EVEN THOUGH ITS OWN ENCODER NEVER EMITS
+-- REPEAT-OFFSET SEQUENCES: encode_sequences_section always writes an
+-- explicit offset code (raw_off = offset + 3 >= 4, since our minimum LZ77
+-- match offset is 1), so this port's own compress()/decompress() round trip
+-- never exercises the repeat-offset path — the "no repeat-offset shortcuts"
+-- simplification documented on the encoder side is entirely an ENCODER
+-- choice. But the real `zstd` CLI's encoder uses repeat offsets constantly
+-- (one of its main entropy wins, especially for periodic/repetitive data),
+-- so a decoder that only understands explicit offset codes will
+-- systematically fail to decode real-world `.zst` output — e.g. 4713 bytes
+-- of a single repeated byte compresses (via the real CLI) to a single
+-- Compressed block whose one sequence has Offset_Value=1, i.e. "reuse
+-- Repeated_Offset1" (which starts at its default value of 1). See
+-- lessons.md Lesson 98 and c/zstd's PR #9941, which found and fixed the
+-- identical gap; this port's fix was cross-checked against both that PR's
+-- reference implementation and the RFC 8878 prose directly (fetched live,
+-- not recalled from memory).
+local function decompress_block(data, start, bsize, out, rep)
     -- data:  full frame byte array (integers 0-255)
     -- start: 1-indexed start of this block's payload within data
     -- bsize: number of bytes in the block payload
     -- out:   output byte array (appended in-place)
+    -- rep:   {rep1, rep2, rep3} Repeated_Offset registers, mutated in place
 
     local block_end = start + bsize - 1
 
@@ -1084,27 +1171,35 @@ local function decompress_block(data, start, bsize, out)
     local dt_of = build_decode_table(OF_NORM, OF_ACC_LOG)
 
     -- Initialise FSE states from the bitstream.
-    -- The encoder wrote: (state_ll - sz_ll), (state_ml - sz_ml), (state_of - sz_of).
-    -- The decoder reads them in the same order (the bitstream reverses write order).
+    -- The encoder wrote: (state_ml - sz_ml), (state_of - sz_of), (state_ll - sz_ll)
+    -- (see encode_sequences_section's header comment — that's the reverse of
+    -- decode order LL, OF, ML, since these are the last bits written and thus
+    -- the first a forward reader sees). The decoder therefore reads them in
+    -- order LL, OF, ML — NOT the LL, ML, OF order used for per-sequence
+    -- symbol decoding below; RFC 8878 is genuinely asymmetric here. See
+    -- lessons.md Lesson 96.
     local state_ll = br:read_bits(LL_ACC_LOG)
-    local state_ml = br:read_bits(ML_ACC_LOG)
     local state_of = br:read_bits(OF_ACC_LOG)
+    local state_ml = br:read_bits(ML_ACC_LOG)
 
     -- Track position within the literals buffer (lits[1..]).
     local lit_pos = 1
 
     -- ── Apply each sequence ────────────────────────────────────────────────
-    for _ = 1, n_seqs do
-        -- Step 1: Decode symbols (state transitions).
-        -- Decode order: LL → OF → ML.
-        local ll_code, next_ll = fse_decode_sym(state_ll, dt_ll, br)
-        local of_code, next_of = fse_decode_sym(state_of, dt_of, br)
-        local ml_code, next_ml = fse_decode_sym(state_ml, dt_ml, br)
-        state_ll = next_ll
-        state_of = next_of
-        state_ml = next_ml
+    for seq_i = 1, n_seqs do
+        -- Step 1: PEEK all three symbols from the current states. This is a
+        -- bare table lookup (table[state].sym) and consumes NO bits — the
+        -- FSE state itself already IS the decode-table index. Only the
+        -- subsequent state UPDATE (step 3 below) reads bits. RFC 8878
+        -- §3.1.1.3.2.1.2, cross-checked against the real zstd C source
+        -- (ZSTD_decodeSequence). See lessons.md Lesson 96.
+        local ll_entry = dt_ll[state_ll + 1]
+        local ml_entry = dt_ml[state_ml + 1]
+        local of_entry = dt_of[state_of + 1]
+        local ll_code = ll_entry.sym
+        local ml_code = ml_entry.sym
+        local of_code = of_entry.sym
 
-        -- Step 2: Read extra bits to recover the exact field values.
         if ll_code >= #LL_CODES then
             error("zstd: invalid LL code " .. ll_code)
         end
@@ -1119,22 +1214,97 @@ local function decompress_block(data, start, bsize, out)
             error("zstd: of_code out of range: " .. of_code)
         end
 
+        -- ll_is_zero is needed below for the repeat-offset interpretation
+        -- (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        -- shifted by 1" rule) and is knowable right now, from the PEEKED
+        -- ll_code alone: LL code 0 is the only code with baseline 0 and 0
+        -- extra bits (see LL_CODES), so ll_code == 0 iff the eventual
+        -- decoded `ll` value (computed below, after extra bits are read) is
+        -- 0. No extra bits need to be read yet to know this.
+        local ll_is_zero = (ll_code == 0)
+
         local ll_info = LL_CODES[ll_code + 1]  -- 1-indexed
         local ml_info = ML_CODES[ml_code + 1]
 
-        local ll = ll_info[1] + br:read_bits(ll_info[2])
-        local ml = ml_info[1] + br:read_bits(ml_info[2])
-
-        -- Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3.
-        -- The "- 3" adjusts for ZStd's repeat-offset encoding baseline.
+        -- Step 2: read the VALUE extra bits, order OF, ML, LL (RFC 8878
+        -- §3.1.1.3.2.1.2 — "Decoding starts by reading the Number_of_Bits
+        -- required to decode offset. It does the same for Match_Length and
+        -- then for Literals_Length."). The NUMBER of bits read for the
+        -- offset field is always exactly `of_code`, regardless of whether
+        -- the resulting value ends up interpreted as an explicit offset or
+        -- a repeat-offset reference below (RFC 8878 / the reference decoder
+        -- never varies bit-consumption on ll_is_zero — only how the
+        -- resulting value maps to an actual offset changes).
         local of_raw = (1 << of_code) | br:read_bits(of_code)
-        if of_raw < 3 then
-            error(string.format(
-                "zstd: decoded offset underflow: of_raw=%d (of_code=%d)", of_raw, of_code))
-        end
-        local offset = of_raw - 3
+        local ml = ml_info[1] + br:read_bits(ml_info[2])
+        local ll = ll_info[1] + br:read_bits(ll_info[2])
 
-        -- Step 3: Emit `ll` literal bytes.
+        -- Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        -- the Repeated_Offset (R1/R2/R3) mechanism: `of_code >= 2` guarantees
+        -- of_raw = (1<<of_code)+extra >= 4, i.e. Offset_Value > 3 — an
+        -- ordinary explicit offset (raw_off - 3). `of_code <= 1` guarantees
+        -- of_raw in {1, 2, 3} — a repeat-offset reference into `rep`.
+        --
+        -- The repeat case collapses to one selector in [0, 3]:
+        --     selector = (ll_is_zero and 1 or 0) + of_raw - 1
+        --   0 -> reuse rep[1] unchanged (no rotation)
+        --   1 -> use rep[2] (rep[1],rep[2] swap; rep[3] untouched)
+        --   2 -> use rep[3] (full rotate: rep[1],rep[2],rep[3] <- new,old rep[1],old rep[2])
+        --   3 -> use rep[1]-1 (full rotate, same shape as selector 2)
+        -- This mapping is cross-checked against BOTH RFC 8878's prose
+        -- ("Repeat Offsets" — offset codes 1-3 select Repeated_Offset1/2/3
+        -- normally, but shift by one when Literals_Length is 0, with
+        -- Offset_Value 3 in that case meaning "Repeated_Offset1 - 1") and
+        -- the already-verified c/zstd reference fix (PR #9941,
+        -- decompress_block / lessons.md Lesson 98).
+        local offset
+        if of_code >= 2 then
+            offset = of_raw - 3
+            rep[3] = rep[2]
+            rep[2] = rep[1]
+            rep[1] = offset
+        else
+            local selector = (ll_is_zero and 1 or 0) + of_raw - 1
+            if selector == 0 then
+                offset = rep[1]
+                -- no rotation
+            elseif selector == 1 then
+                offset = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            elseif selector == 2 then
+                offset = rep[3]
+                rep[3] = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            else -- selector == 3
+                offset = (rep[1] > 0) and (rep[1] - 1) or 0
+                rep[3] = rep[2]
+                rep[2] = rep[1]
+                rep[1] = offset
+            end
+        end
+
+        -- Step 3: update FSE states (consumes bits), order LL, ML, OF (RFC
+        -- 8878 §3.1.1.3.2.1.2 — "Literals_Length_State is updated, followed
+        -- by Match_Length_State, and then Offset_State"), preparing the
+        -- states the NEXT sequence's peek (step 1) will use.
+        --
+        -- Per the reference decoder (ZSTD_decodeSequence): this update is
+        -- skipped entirely for the LAST sequence — there is no "next"
+        -- sequence to prepare a state for, and (symmetrically) the encoder
+        -- never flushed any bits for that non-existent transition (see
+        -- fse_init_state in encode_sequences_section). Performing this read
+        -- unconditionally consumes bits that were never written, corrupting
+        -- the position of every stream that follows. See lessons.md Lesson
+        -- 96.
+        if seq_i ~= n_seqs then
+            state_ll = fse_update_state(ll_entry, br)
+            state_ml = fse_update_state(ml_entry, br)
+            state_of = fse_update_state(of_entry, br)
+        end
+
+        -- Step 4: Emit `ll` literal bytes.
         local lit_end = lit_pos + ll - 1
         if lit_end > #lits then
             error(string.format(
@@ -1151,7 +1321,7 @@ local function decompress_block(data, start, bsize, out)
         end
         lit_pos = lit_end + 1
 
-        -- Step 4: Copy `ml` bytes from `offset` back in the output buffer.
+        -- Step 5: Copy `ml` bytes from `offset` back in the output buffer.
         -- Offset is 1-indexed from the END of the current output.
         -- Copy byte-by-byte to correctly handle overlapping matches
         -- (e.g., offset=1, ml=4 on [65] produces [65,65,65,65]).
@@ -1168,7 +1338,7 @@ local function decompress_block(data, start, bsize, out)
         end
     end
 
-    -- Step 5: Emit any remaining literals after the last sequence.
+    -- Step 6: Emit any remaining literals after the last sequence.
     -- Guard against decompression bombs: a crafted block could have a huge
     -- trailing-literals section. Check per byte to catch the limit exactly.
     for i = lit_pos, #lits do
@@ -1230,13 +1400,23 @@ function M.compress(data)
     out[3] = 0x2F
     out[4] = 0xFD
 
-    -- Frame Header Descriptor (FHD):
+    -- Frame Header Descriptor (FHD), RFC 8878 §3.1.1.1.1:
     --   bits [7:6] = FCS_Field_Size flag:  11 → 8-byte Frame_Content_Size
     --   bit  [5]   = Single_Segment_Flag:   1 → Window_Descriptor omitted
-    --   bit  [4]   = Content_Checksum_Flag: 0 → no checksum
-    --   bits [3:2] = reserved:              0
-    --   bits [1:0] = Dict_ID_Flag:          0 → no dictionary ID
+    --   bit  [4]   = Unused_bit:            0
+    --   bit  [3]   = Reserved_bit:          0
+    --   bit  [2]   = Content_Checksum_Flag: 0 → no checksum
+    --   bits [1:0] = Dictionary_ID_Flag:    0 → no dictionary ID
     -- → 0b1110_0000 = 0xE0
+    --
+    -- NOTE: bit 2 is Content_Checksum_Flag, NOT bit 4 (bit 4 is Unused_bit).
+    -- An earlier revision of this codec had this backwards; verified
+    -- empirically against the real `zstd` CLI (`zstd -c` emits FHD 0x64,
+    -- `zstd -c --no-check` emits 0x60 — the differing bit is bit 2) and
+    -- against RFC 8878 text. See lessons.md Lesson 95. We always emit 0
+    -- here (no checksum computed), so this codec's own output is byte-
+    -- identical either way — but decompress() below MUST use the correct
+    -- bit position to interpolate real zstd-produced (checksummed) frames.
     out[5] = 0xE0
 
     -- Frame_Content_Size (8 bytes LE): the uncompressed byte count.
@@ -1377,8 +1557,16 @@ function M.decompress(data)
     -- bit [5]: Single_Segment_Flag — when set, Window_Descriptor is omitted.
     local single_seg = (fhd >> 5) & 1
 
-    -- bit [4]: Content_Checksum_Flag — we skip validation but note its presence.
-    -- (unused in this decoder)
+    -- bit [2]: Content_Checksum_Flag — when set, a trailing 4-byte xxHash64
+    -- checksum of the decompressed content follows the last block's
+    -- payload, before end-of-frame. NOT bit 4 (that's Unused_bit) — verified
+    -- empirically against the real `zstd` CLI and against RFC 8878 §3.1.1.1.1.
+    -- See lessons.md Lesson 95. We don't compute/verify the checksum value
+    -- (no xxHash64 implementation here), but we MUST skip those 4 bytes
+    -- before the "reject trailing data" check below, or every real
+    -- checksummed frame produced by `zstd -c` (checksum is on by default)
+    -- would be rejected as malformed.
+    local checksum_flag = (fhd >> 2) & 1
 
     -- bits [1:0]: Dict_ID_Flag — number of dict-ID bytes (0, 1, 2, or 4).
     local dict_flag = fhd & 3
@@ -1411,6 +1599,13 @@ function M.decompress(data)
 
     -- ── Blocks ────────────────────────────────────────────────────────────
     local out = {}  -- output byte array, accumulated in-place
+
+    -- Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): FRAME-scoped —
+    -- default 1/4/8 "for the first block", then threaded (and mutated) by
+    -- decompress_block through every Compressed block's sequences for the
+    -- rest of the frame. Raw/RLE blocks don't touch them. See lessons.md
+    -- Lesson 98 and decompress_block's doc comment.
+    local rep = {1, 4, 8}
 
     while true do
         -- Each block begins with a 3-byte little-endian header.
@@ -1461,7 +1656,7 @@ function M.decompress(data)
                     "zstd: compressed block truncated: need %d bytes at pos %d",
                     bsize, pos))
             end
-            decompress_block(data, pos, bsize, out)
+            decompress_block(data, pos, bsize, out, rep)
             pos = pos + bsize
 
         else  -- btype == 3
@@ -1469,6 +1664,19 @@ function M.decompress(data)
         end
 
         if last then break end
+    end
+
+    -- Skip the trailing 4-byte Content_Checksum, if present (see the
+    -- checksum_flag comment above the Frame Header Descriptor parse). This
+    -- MUST happen before the "reject trailing data" check below, or every
+    -- real checksummed frame (the `zstd` CLI's default) would be rejected
+    -- as malformed. We don't verify the checksum value itself — no xxHash64
+    -- implementation here — only skip past it.
+    if checksum_flag == 1 then
+        if pos + 3 > #data then
+            error("zstd: truncated content checksum at pos " .. pos)
+        end
+        pos = pos + 4
     end
 
     -- Reject trailing bytes after the last block.

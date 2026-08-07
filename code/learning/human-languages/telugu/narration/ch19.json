@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ecd0a47d80ab2c07",
+  "lessons": [
+    {
+      "id": "TE-C19-vayasu",
+      "sequence": 460,
+      "title": "నీ వయసెంత? — matching Kannada's simple possessive exactly",
+      "headword": "నీ వయసెంత?",
+      "romanization": "",
+      "gloss": "how old are you? — literally \"your age how-much?\", matching Kannada's simple verbless possessive exactly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38cdddf1d35e0de1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu matches Kannada closely here — same Sanskrit word, same verbless grammar, just fused together by ordinary Telugu vowel sandhi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart - వయస్సు — the same Sanskrit \"vigor/age\" word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వయస్సు (vayasu) = \"age\" — the exact same Sanskrit वयस् (vayas, \"age, vigor, strength,\" PIE cousin of Latin vīs) you just met in Kannada."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fused by sandhi, still verbless",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నీ వయసెంత? — \"How old are you?\" — literally \"your age how-much?\" (nī vayas-enta? — from nī vayasu + enta, \"how much,\" fused by regular vowel sandhi into vayasenta.)"
+            },
+            {
+              "kind": "speech",
+              "text": "నా వయస్సు ఇరవై. — \"I am twenty years old.\" — literally \"my age [is] twenty.\" (nā vayasu iravai.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape as Kannada: a plain possessive (\"your/my age\") sitting next to the number, no verb at all. The only wrinkle is surface-level: everyday spoken Telugu often fuses vayasu + enta into one word, vayasenta, the same kind of vowel sandhi you'd see fusing any two Telugu words in fast speech — the underlying grammar is identical to Kannada's, just written closer together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vayasu\" — age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vayasu\" — age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nī vayasenta?\" — how old are you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nī vayasenta?\" — how old are you?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nā vayasu iravai\" — I am twenty, \"my age [is] twenty\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nā vayasu iravai\" — I am twenty, \"my age [is] twenty\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is Telugu's వయస్సు the same Sanskrit word as Kannada's vayassu? (Yes — both from vayas, PIE cousin of Latin vīs.) What happens to vayasu + enta in \"nī vayasenta?\"? (They fuse by ordinary vowel sandhi.) Does Telugu use a verb to state age, like Kannada? (No — same verbless possessive shape.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

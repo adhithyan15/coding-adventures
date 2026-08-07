@@ -1,0 +1,128 @@
+{
+  "job": "adj-curriculum-kindergarten-to-medical-school",
+  "automation_id": "adj-curriculum-loop",
+  "started": "2026-08-04",
+  "plan_ref": "code/specs/ADJ-STDLIB-COVERAGE.md#7-delivery-order",
+  "policy": {
+    "maximum_active_prs": 1,
+    "merge_authority": "auto-merge-after-required-checks",
+    "reprioritize_after_every_merge": true,
+    "delivery_scope": "adj-formula-stdlib and adj-facts-stdlib content, curriculum manifest entries, and the adj-lang symbolic/CAS-wiring rung",
+    "selection_rule": "manifest objective mappings and new K-12-to-medical curriculum libraries, sequenced per ADJ-STDLIB-COVERAGE.md Wave 0 (remainder) -> 2 -> CAS-wiring -> 3 -> 4",
+    "excluded_delivery_classes": [
+      "cas-provenance",
+      "process-containment",
+      "witness-plumbing",
+      "adj-verify-internals"
+    ],
+    "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
+  },
+  "active_pr": null,
+  "last_manifest_check": {
+    "objectives": 70,
+    "coverage_roots": 6,
+    "valid": true,
+    "checked_at": "2026-08-07"
+  },
+  "items": [
+    {
+      "id": "wave0-backfill-physics",
+      "title": "Manifest objectives for the 13 physics formula libraries",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9918,
+      "notes": "Landed together with wave0-backfill-mathematics in the same PR. State file was not updated after merge (loop was idle/unresumed); reconciled 2026-08-06."
+    },
+    {
+      "id": "wave0-backfill-mathematics",
+      "title": "Manifest objective for mathematics/geometry-formulas.adj",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9918,
+      "notes": "Confirmed via manifest.json: adj.math.geometry.basic_shapes objective present, libraries=[mathematics/geometry-formulas.adj]. Landed in PR #9918 alongside the physics backfill."
+    },
+    {
+      "id": "wave0-backfill-reference",
+      "title": "Manifest objectives for the 39 reference unit-conversion libraries",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9992,
+      "notes": "All 39/39 reference libraries now mapped, split across 3 PRs: #9990 (13: length/area/mass CCSS math + mass-density/linear-mass-density/acceleration/density-of-heat/dynamic-viscosity/energy/force/heat-flux-density/kinematic-viscosity/moment-of-force NGSS science), #9991 (7 electrical: capacitance/charge/conductance/current/inductance/potential/resistance, NGSS science; current/potential/resistance also prerequisite adj.science.physics.ohms_law), and this PR (19: si-prefixes CCSS math 3-5 + time/volume CCSS math 6-8 + 16 remaining NGSS science 9-12 - absorbed-dose/dose-equivalent/exposure/radioactivity/illuminance/luminance/magnetic-flux/magnetic-flux-density/power/pressure/specific-energy/specific-heat-capacity/speed/temperature-interval/thermal-conductivity/wave-number). Manifest now at 63 objectives (up from 24 at loop start)."
+    },
+    {
+      "id": "fl8-comparison-formulas",
+      "title": "CAS-wiring-adjacent language rung: citable boolean-comparison formulas",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9995,
+      "notes": "Discovered while scoping wave2-k2-math-cardinality-comparison: ADJ had no way to express a citable, queryable, parameterized 'is A greater than B' — `formula` bodies were arithmetic-only, and `constrain`/`check` (the language's only comparison surface) carries no provenance tail and isn't `?`-queryable. Researched the AST/evaluator/formula_audit.rs blast radius first (compiler-enforced exhaustive matches; confirmed the CAS-provenance agent's adj_stdlib_provenance.py verify only touches its own registered manifest, so an unmigrated comparison formula fails closed, never crashes CI) before implementing. Adds `formula_relation = expr [ relop expr ]` (grammar-additive, every existing formula still parses), `ExprAst::Compare`, 6 new `ComputeOp::Cmp*` variants (dimensionless 1/0 result, exact when operands are, mirrors `Sign`'s dimension-collapse). Spec'd in ADJ-FORMULA-LIBRARIES.md §3B (FL-8). Full test coverage (logic-engine + adj-lang unit/e2e + formula_source_map), clippy clean. Ships as its own PR ahead of the K-2 content PR that will actually use it (comparison.adj)."
+    },
+    {
+      "id": "wave2-k2-math-cardinality-comparison",
+      "title": "K-2 math: cardinality/sets, comparison, number lines",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9998,
+      "notes": "New content per ADJ-STDLIB-COVERAGE.md 5.1. Checked adj-ladder rung0 for harvestable material - none (rung0_arithmetic is generic MCQ word-problem benchmark items, not cardinality/comparison/number-line pedagogical content). Shipped 3 library pairs in code/specs/data/adj-formula-stdlib/mathematics/: number-sequence.adj (next/previous, composes arithmetic.adj's sum/difference, K.CC.A.1/A.2), comparison.adj (greater_than via FL-8, K.CC.C.6/C.7), cardinality.adj (total_cardinality composing sum, K.CC.B.4/B.5). All 3 citations WebFetch-verified live against MathWorld before writing (CountingNumber/Greater/CardinalNumber pages). Added 3 manifest.json objectives (adj.math.k2.*, band K-2, mathematics, ccss.math). Added a dedicated e2e test file (code/packages/rust/adj-lang-cli/tests/formula_k2_math_e2e.rs, 5 tests) actually executing each query file, not just structural checks. Also added the long-missing README.md/CHANGELOG.md at adj-formula-stdlib/ package root (flagged as a gap during Wave 0)."
+    },
+    {
+      "id": "wave2-elementary-place-value",
+      "title": "Elementary math: base-ten place value and word-problem schemas",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 9999,
+      "notes": "Next Wave 2 K-8 gap per ADJ-STDLIB-COVERAGE.md 5.1's elementary row: 'base-ten procedures, word-problem schemas' are named Major Gaps with nothing shipped yet (unlike fractions/decimals/percent, which arithmetic/ already covers: fraction.adj, percent.adj, average.adj). Shipped mathematics/place-value.adj: tens_and_ones_to_number(tens, ones) = sum(product(tens, 10), ones), composing arithmetic.adj (CCSS 1.NBT.B.2), cited to mathsisfun.com's positional-notation definition (trust consensus), WebFetch-verified live before writing. Scoped as COMPOSE-direction only (digits -> number); DECOMPOSE (number -> digits) needs floor/modulo division, not reachable from the plain-arithmetic surface grammar today (only `latex \"...\"` reaches ComputeOp::Floor/Mod) - see the new wave2-place-value-decompose item this discovered. Added manifest objective adj.math.k2.place_value and a dedicated e2e test (formula_place_value_e2e.rs, 2 tests, both executed against the real CLI)."
+    },
+    {
+      "id": "wave2-place-value-decompose",
+      "title": "Wire floor/mod into the plain-arithmetic surface grammar to unblock place-value decomposition",
+      "status": "done",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 10001,
+      "notes": "Confirmed the hypothesis: floor/mod needed NO grammar change, just two new recognized-by-name built-ins in lower.rs's expand_rec (RUNTIME_BUILTIN_FORMULAS), mapping directly onto the pre-existing ExprAst::Floor/ExprAst::Bin(ArithOp::Mod,..) nodes -- zero new exhaustive-match sites, much smaller than FL-8. Spec'd in ADJ-FORMULA-LIBRARIES.md 3C (FL-9). Extended mathematics/place-value.adj with tens_digit(n)=floor(n/10) and ones_digit(n)=mod(n,10), verified as algebraic inverses of the existing tens_and_ones_to_number (round-trip e2e test). No new manifest objective needed (same adj.math.k2.place_value objective/library file). Full test coverage (adj-lang unit/e2e including arity-error and reserved-name anti-drift tests, adj-lang-cli e2e), clippy clean. adj-lang bumped 0.72.0->0.73.0; adj-lang-cli NOT bumped (test-only addition, matching this repo's convention of only bumping on actual source changes)."
+    },
+    {
+      "id": "wave3-cas-wiring-rung0",
+      "title": "CAS-wiring rung-0 (ADJ-FORMULA-LIBRARIES 3D, FL-10): `symbolic ... for <var>`, bind-then-solve a single linear equation via symbolic-vm::Backend + cas-solve",
+      "status": "done",
+      "depends_on": ["wave2-place-value-decompose"],
+      "branch": "feat/adj-wave3-cas-solve-rung0",
+      "pr_number": 10015,
+      "notes": "MERGED 2026-08-06T23:05:12Z. User explicitly authorized adj-lang language changes ('if the language is lacking features that makes this kind of work difficult, add support to it') and confirmed proceeding autonomously ('you can make most of the decisions yourself... it's reversible'). Design researched via Explore + direct source reading before implementing: cas-solve has no public 'solve a plain linear equation, leaving other variables free' entry point (only solve_linear(a,b)/solve_linear_system(equations,variables), both requiring every non-target identifier already reduced to a number) -- so rung-0 is deliberately bind-then-solve (every parameter except the one named after `for` must already be observed). Mid-implementation the user corrected the initial design (which called cas_solve::solve_linear directly as a free function) with 'the CAS packages are not designed to be used directly, they are designed to be used through the Symbolic VM' -- confirmed via AskUserQuestion, then REDESIGNED to route through a new minimal symbolic_vm::Backend (crate::symbolic_backend::RungZeroBackend in adj-lang), mirroring macsyma-runtime's MacsymaBackend/solve_handler (the one existing example of this Backend/VM pattern in the repo), dispatching to cas_solve::solve_linear_system via symbolic_vm::VM::eval. Ships `physics/electricity.adj`'s Ohm's law both directions (existing forward `formula voltage(...)` + new `symbolic resistance_from_ohms_law(...) for resistance`). Also fixed a real pre-existing-shape bug the worked example surfaced: enforce_vocabulary's check_query only special-cased the `formulas` registry, so a `symbolic` application in any `use`/`dictionary`-scoped program was rejected as UndefinedTerm despite lowering correctly. Pre-push security review (2 rounds) found and fixed one MEDIUM: exact_rational_to_irnode's i64 narrowing accepted the i64::MIN boundary, which Frac::new/symbolic_ir::rat then negate with unchecked i64 arithmetic (overflow) -- fixed with a checked_i64 helper at both narrowing sites, regression test added, second review round clean. 14 new adj-lang unit tests + full existing suite green (247 lib tests total), clippy clean, adj_stdlib_report.py/adj_stdlib_manifest.py both exit 0. CI TOOK ~4.5 HOURS TO EVEN START on this branch (0 runs created despite `on: push: branches: ['**']` matching, across 3 pushes and a full account-wide Actions backlog drain) -- an empty retrigger commit did not help; it resolved on its own once the repo-wide backlog (from many concurrent agent sessions pushing simultaneously) fully cleared. If a future PR's checks show 'no checks reported' for an extended period even as `gh api .../actions/runs` shows the account-wide queue draining, this is now a confirmed (if unexplained) failure mode, not necessarily a code problem -- check `gh api repos/.../actions/workflows/<id>/runs?branch=<branch>` for total_count=0 to distinguish 'never triggered' from 'queued'. Rung-1 candidates (not started, all explicitly out of scope for rung-0): free (unbound) non-target variables, quadratic+/transcendental solving, and a real symbolic-identity provenance shape (StepKind::FromRewrite, currently reuses the plain formula DerivationNode::Op shape as an accepted rung-0 limitation)."
+    },
+    {
+      "id": "wave2-k8-measurement-data",
+      "title": "K-8 math: geometric measurement (square perimeter + solid volume) composed from existing formulas",
+      "status": "done",
+      "depends_on": [],
+      "branch": "feat/adj-wave2-k8-measurement",
+      "pr_number": 10019,
+      "notes": "MERGED 2026-08-07T00:15:04Z. Checked before implementing (per this item's own note): unit conversion is ALREADY covered by wave0-backfill-reference's adj.math.units.* objectives (length/area/mass/time/volume, band 6-8), and arithmetic/average.adj already provides mean_two/mean_three (fixed small-arity, composing sum+quotient) -- so 'data displays' (median/mode/range over an arbitrary-size dataset) is NOT achievable by simple composition today: it needs sorting/counting the engine doesn't have, and even a fixed-arity 'range' (max-min) needs DYADIC min/max wired into the plain-arithmetic surface grammar first (BinFn::Min/Max only reach the engine via the `latex \"...\"` escape today, same gap floor/mod had before FL-9) -- see the new wave2-k8-data-displays-min-max item this discovered. Scoped THIS item down to what geometry-formulas.adj (wave0-backfill-mathematics) was actually missing: square_perimeter(side) (the library's own header already cited MathWorld's 'square | 4a' row but had no clause for it) and a new volume-formulas.adj (cube_volume, rectangular_prism_volume) -- the measurement track's third dimension, distinct from reference/volume-conversions.adj (unit conversion, not computation from edge lengths). Both citations WebFetch-verified live (Cube.html V=a^3, Cuboid.html V=abc, Perimeter.html square row) before writing. New manifest objective adj.math.geometry.solid_volume (band 3-5, CCSS 5.MD.C). New e2e test formula_measurement_e2e.rs (3 tests). Full validation green, security review clean."
+    },
+    {
+      "id": "wave2-k8-data-displays-min-max",
+      "title": "Wire dyadic min/max into the plain-arithmetic surface grammar to unblock K-8 data-display formulas (e.g. range = max - min)",
+      "status": "done",
+      "depends_on": ["wave2-k8-measurement-data"],
+      "branch": "feat/adj-fl11-min-max",
+      "pr_number": 10023,
+      "notes": "MERGED 2026-08-07T01:46:16Z. PR #10023's macOS `build` job initially FAILED for real (not a platform cancellation): deep_operator_spine_trips_the_nesting_guard_not_the_stack overflowed the runner's ~2 MiB worker-thread stack a few frames short of FORMULA_MAX_NODE_DEPTH's guard, because adding two more near-duplicate `if name==\"max\"`/`\"min\"` blocks (each with their own `a`/`b` ExprAst locals) alongside the pre-existing `mod` block grew expand_rec's debug-build stack frame past a margin its own doc comment already flagged as tight -- passed on Linux/Windows, not macOS. Fixed by merging mod/max/min into ONE shared dispatch block (one `a`/`b` local pair instead of three), restoring the same per-call frame footprint `mod` alone had before this branch -- no behavior change, same 252 tests green. Second CI run fully green (macos-latest build passed). This is a NEW lesson for the loop: a content-neutral change to a shared recursive dispatcher (expand_rec) can trip a stack-margin guard on ONE platform only, even when the new code's logic is correct and all local tests pass on the dev machine -- worth checking lessons.md for. Spec'd as ADJ-FORMULA-LIBRARIES 3E (FL-11) before implementing, mirroring FL-9's exact template. Confirmed the hypothesis: RUNTIME_BUILTIN_FORMULAS gains 'max'/'min' (sorted position between floor and mod); two new `if name == \"max\"`/`if name == \"min\"` blocks in lower.rs's expand_rec, each checking args.len()==2 then mapping onto the pre-existing ExprAst::Call2(BinFn::Max/Min,...) node the latex frontend already reached -- zero new AST/engine work, no grammar change. min/max now reserved at EVERY arity (not just the one-parameter arity `agg` already reserved) since RUNTIME_BUILTIN_FORMULAS's ReservedFormulaName gate checks by name only -- this changed two existing test expectations (a_wrong_arity_call_cannot_silently_become_an_aggregation had to drop min/max from its loop since `formula min(a,b)=...` is now rejected at declaration time before ever reaching the aggregation-shadow call site it exercises; my own max_wrong_arity test had to use a non-identifier single argument `max(5)` rather than `max(a)`, since `agg` only matches a bare IDENT and would otherwise swallow the 1-arg case before it ever reached the Apply-based arity check). Shipped mathematics/data-displays.adj (range_two/range_three, MathWorld StatisticalRange.html's R=Y_N-Y_1, WebFetch-verified live before writing) as the first content library built on it, closing the ADJ-STDLIB-COVERAGE.md 5.1 'data displays' gap. New manifest objective adj.math.statistics.range (band 3-5). New e2e test formula_data_displays_e2e.rs (2 tests). adj-lang bumped 0.74.0->0.75.0. Full test suite green (252 adj-lang unit tests + all adj-lang-cli e2e), clippy clean, adj_stdlib_manifest.py (70 objectives, valid) and adj_stdlib_report.py (--fail-on-unreferenced-tests, exit 0) both clean, Python unittest suites (21 tests) green. Security review clean, no findings."
+    },
+    {
+      "id": "wave2-k8-word-problem-schemas",
+      "title": "K-8 math: word-problem schemas (TAKE FROM + COMPARE) as composed formula libraries, not just direct-recall arithmetic",
+      "status": "done",
+      "depends_on": ["wave2-k8-measurement-data"],
+      "branch": "feat/adj-wave2-k8-word-problems",
+      "pr_number": 10021,
+      "notes": "MERGED 2026-08-07T00:52:11Z. Per ADJ-STDLIB-COVERAGE.md 5.1, 'word-problem schemas' is a named Major Gap distinct from 'operation properties'. CCSS 1.OA.A.1 names four situation types (ADD TO, TAKE FROM, PUT TOGETHER/TAKE APART, COMPARE); checked before implementing and found ADD TO/PUT TOGETHER already has a citable home under a different name (cardinality.adj's total_cardinality, shipped in wave2-k2-math-cardinality-comparison) -- so scoped THIS item to the two NOT already covered: mathematics/word-problems.adj (new) with separate_result(start_amount, change_amount) for TAKE FROM (cited to MathWorld Subtraction.html -- the OPERATION framing, deliberately distinct from arithmetic.adj's own Difference.html citation, the RESULT framing, so the two formulas' primary citations aren't identical) and compare_difference(greater_amount, lesser_amount) for COMPARE (cited to Difference.html). Both compose arithmetic.adj's difference primitive. New manifest objective adj.math.k2.word_problem_schemas. New e2e test formula_word_problems_e2e.rs (2 tests). word-problems.query.adj placed at the stdlib package root (not next to the library) per the established cross-directory-import sandboxing pattern -- confirmed by testing (placing it in mathematics/ first and hitting the exact 'escapes the import root' error the pattern exists to avoid) before finalizing. Full validation green, security review clean."
+    }
+  ]
+}

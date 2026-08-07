@@ -467,7 +467,7 @@ mod tests {
     fn test_collect_cycle() {
         let mut gc = MarkAndSweepGC::new();
         let addr1 = gc.allocate(Box::new(ConsCell::new(0, 0)));
-        let addr2 = gc.allocate(Box::new(ConsCell::new(0, 0)));
+        let _addr2 = gc.allocate(Box::new(ConsCell::new(0, 0)));
 
         // Create a cycle: addr1.car -> addr2, addr2.car -> addr1
         // We can't easily mutate the objects in this design, but we can

@@ -1,5 +1,14 @@
 # Changelog — coding-adventures-wave (Lua)
 
+## Unreleased
+
+### Added
+
+- Add the source-compatible `wave.Wave` continuous PHY01 object API alongside
+  the existing sampled-wave helpers.
+- Validate finite parameters, angular-frequency overflow, and evaluation time;
+  reduce time and phase; and cover maximum-finite and subnormal boundaries.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

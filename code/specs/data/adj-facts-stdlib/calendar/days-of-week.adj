@@ -1,0 +1,50 @@
+% ============================================================================
+% days-of-week — the ISO weekday number for each day (adj-facts-stdlib, CALENDAR).
+% ============================================================================
+% A calendar facts library in the ADJ standard library, importable by any
+% program: the days of the week in order, with the ISO 8601 standard pinning that
+% order to NUMBERS — Monday is day 1, Sunday is day 7. Recall is a binding query:
+%
+%     ? iso_weekday(monday, $N)      % 1
+%     ? iso_weekday(sunday, $N)      % 7
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `iso_weekday(day, iso_number)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the number
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not a day of the week (e.g. `funday`). The query works in reverse too:
+%
+%     ? iso_weekday($Day, 1)         % monday — "which day is number 1?"
+%
+% Because the `iso_number` value is a NUMBER, a recalled weekday composes straight
+% into arithmetic (day-of-week offsets, "how many days until Friday", modular
+% week math): the concrete bridge from RECALL to COMPUTE.
+%
+% Provenance: the day→number pairs are the ISO 8601 week-date numbering, copied
+% from the citable description at the `locator`, which states verbatim that the
+% weekday number runs "from 1 through 7, beginning with Monday and ending with
+% Sunday." The PRIMARY definition is the ISO 8601 standard itself; because the
+% ISO page is paywalled (403 to fetch), it is cited here via its Wikipedia
+% summary — a SECONDARY, consensus source. So the trust tier is `trust consensus`
+% (not `authoritative`, which is reserved for a primary/citable authority such as
+% NIST, ISO, or a .gov standards body): the tier honestly reflects that the
+% shipped citation is a consensus encyclopedia summarizing the standard, not the
+% standard's own page. Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table iso_weekday {
+    columns day, iso_number
+
+    row (monday, 1)
+    row (tuesday, 2)
+    row (wednesday, 3)
+    row (thursday, 4)
+    row (friday, 5)
+    row (saturday, 6)
+    row (sunday, 7)
+
+    source "the weekday number, a digit d from 1 through 7, beginning with Monday and ending with Sunday"
+    locator "https://en.wikipedia.org/wiki/ISO_week_date"
+    trust consensus
+}

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "documentation": "Per-track LaTeX warning baselines for the Human Languages books. The books workflow scans each compiled book.log with code/scripts/scan_latex_log_warnings.py and fails a track only when it EXCEEDS the counts recorded here. A track recorded as null has never been measured: it is scanned and reported, never failed. null means 'unknown', NOT 'zero' -- these numbers can only come from a real XeLaTeX run over all 20 books, so they are never guessed.",
+  "bootstrap": "The first CI run after this file lands prints a copy-paste-ready 'tracks' block of the counts it actually measured into the job summary of the 'Scan book logs for LaTeX warnings' step. Paste that block over the 'tracks' object below to turn the gate on. Lower any number the summary later reports as 'under baseline'; never raise one without explaining why in the commit message.",
+  "warningClasses": {
+    "overfull": "Overfull \\hbox or \\vbox: text spills past the type block.",
+    "underfull": "Underfull \\hbox or \\vbox: stretched glue leaves loose lines.",
+    "missing_character": "A glyph the font does not contain was silently dropped.",
+    "hyperref_warning": "Package hyperref Warning, usually a broken or unsafe link target.",
+    "duplicate_destination": "Two PDF destinations share one name, so one link silently wins.",
+    "font_substitution": "LaTeX substituted a font shape the preamble asked for."
+  },
+  "tracks": {
+    "arabic": null,
+    "bengali": null,
+    "chinese": null,
+    "french": null,
+    "german": null,
+    "gujarati": null,
+    "hindi": null,
+    "italian": null,
+    "japanese": null,
+    "kannada": null,
+    "latin": null,
+    "malayalam": null,
+    "marathi": null,
+    "persian": null,
+    "portuguese": null,
+    "punjabi": null,
+    "russian": null,
+    "sanskrit": null,
+    "spanish": null,
+    "tamil": null,
+    "telugu": null,
+    "urdu": null
+  }
+}

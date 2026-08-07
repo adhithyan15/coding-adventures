@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-reduce-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the REDUCE symbolic-CAS frontend (R-2)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -1,0 +1,66 @@
+% ============================================================================
+% si-base-units — each SI base quantity → its base unit (adj-facts-stdlib, METROLOGY).
+% ============================================================================
+% The foundation the whole metric system is built on: the seven base quantities
+% and the SI unit that measures each. "What is the SI unit of mass?" → the
+% kilogram. Recall is a binding query — you name a base quantity and get back its
+% unit (and the unit's symbol), WITH the citation:
+%
+%     ? si_base_unit(mass, $Unit, $Symbol)          % kilogram, "kg"
+%     ? si_base_unit(electric_current, $U, $S)       % ampere,   "A"
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `si_base_unit(quantity, unit, symbol)` carrying the table's citation,
+% so the lookup is the ordinary SLD binding query — the engine returns the unit
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of the seven base quantities (it never invents a unit). The
+% relation runs both ways: `? si_base_unit($Q, second, $S)` recalls the quantity
+% the SECOND measures — time.
+%
+% Why a `table` and NOT seven prose sentences: this is exactly the shape the
+% reference data ships in — a published list, one base quantity per row with its
+% unit and symbol. The citable artifact IS the NIST "SI Units" page at the
+% `locator` below, and each quantity→unit→symbol triple here is read straight off
+% it. The whole table is defended by one provenance envelope rather than repeating
+% source/locator/trust on every row.
+%
+% Why the symbol is a STRING and the unit an ATOM: unit names (`meter`,
+% `kilogram`) are lowercase atoms that bind and compose like any other recalled
+% token; unit *symbols* are case-sensitive (`A` for ampere, `K` for kelvin,
+% `cd` for candela) and several are uppercase, so they are carried as string
+% literals — an uppercase bare token would read as a variable, not an atom.
+%
+% Provenance: the seven quantity→unit→symbol triples are taken VERBATIM from the
+% NIST Office of Weights and Measures "SI Units" page. The per-row values:
+%
+%   length              → meter    "m"
+%   mass                → kilogram "kg"
+%   time                → second   "s"
+%   electric_current    → ampere   "A"
+%   temperature         → kelvin   "K"
+%   amount_of_substance → mole     "mol"
+%   luminous_intensity  → candela  "cd"
+%
+% The `source` span below is that page's sentence stating the SI is built from
+% seven base units. `trust authoritative` — a primary standards reference,
+% re-fetchable at the `locator`. Nothing here is asserted from memory: every
+% quantity→unit→symbol triple is a row of the cited list, and only the seven base
+% quantities the page names are included. (See ../README.md; ADJ-TABLES.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table si_base_unit {
+    columns quantity, unit, symbol
+
+    row (length, meter, "m")
+    row (mass, kilogram, "kg")
+    row (time, second, "s")
+    row (electric_current, ampere, "A")
+    row (temperature, kelvin, "K")
+    row (amount_of_substance, mole, "mol")
+    row (luminous_intensity, candela, "cd")
+
+    source "The SI is made up of 7 base units that define the 22 derived units with special names and symbols."
+    locator "https://www.nist.gov/pml/owm/metric-si/si-units"
+    trust authoritative
+}

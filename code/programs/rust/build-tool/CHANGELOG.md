@@ -4,6 +4,57 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.4] - 2026-08-02
+
+### Fixed
+
+- Classify every canonical established, emerging, execution-target, domain,
+  and build-language bucket during discovery while retaining the shared
+  `dotnet` program host bucket, and exclude specification fixture trees from
+  the buildable package universe.
+- Reject duplicate qualified package identities with
+  `DUPLICATE_PACKAGE_IDENTITY`, sorted repository-relative paths, CLI exit code
+  2, and no checkout-path disclosure. Unit and real CLI coverage consume the
+  language-neutral discovery fixtures.
+
+## [0.2.3] - 2026-08-02
+
+### Fixed
+
+- Preserve a `programs` segment in discovered program identities and prefer
+  library packages when an ecosystem dependency alias is shared. This keeps
+  `code/packages/elixir/grammar_tools` distinct from its CLI program and
+  resolves the program's dependency to the library.
+- Reject genuine dependency self-edges with `DEPENDENCY_SELF_EDGE`, stable
+  package, dependency, and repository-relative manifest identities, CLI exit
+  code 2, and no checkout-path disclosure instead of panicking in the graph.
+  Resolver and CLI coverage consume the language-neutral Elixir fixtures.
+
+## [0.2.2] - 2026-08-02
+
+### Fixed
+
+- Decode Lua `.rockspec` metadata as strict UTF-8 before parsing dependencies.
+  Invalid bytes now fail closed with `METADATA_INVALID_UTF8`, stable package and
+  repository-relative manifest identity, CLI exit code 2, and no checkout-path
+  disclosure. Resolver and CLI coverage consume the shared positive and
+  invalid-byte conformance fixtures and require the exact expected edge set.
+
+## [0.2.1] - 2026-07-12
+
+### Fixed
+
+- **Clippy/dead-code cleanup for Rust 1.97**: the `-clippy` pass runs
+  `cargo clippy -- -D warnings` under the CI `stable` toolchain (now 1.97),
+  which surfaced new lints. Addressed `needless_late_init` (`cache.rs`),
+  `manual_is_multiple_of` and `question_mark` (`main.rs`), `collapsible_if`
+  (`glob_match.rs`), `unwrap_or_default` (`graph.rs`), and `manual_split_once`
+  (`resolver.rs`). Removed the never-read `BuildResult` fields `package_name`
+  (the results map is already keyed by name) and `return_code`, gated the
+  test-only `build_known_names` helper behind `#[cfg(test)]`, dropped an unused
+  test import, and annotated the intentionally many-argument `execute_builds`
+  orchestrator with `#[allow(clippy::too_many_arguments)]`.
+
 ## [0.2.0] - 2026-03-22
 
 ### Added

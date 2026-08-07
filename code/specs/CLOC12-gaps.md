@@ -2138,6 +2138,495 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.176 — static initialization blocks (`static { … }`): the third `ClassMember` variant (design)
+
+CLOC12.173/174 shipped the class **expression** / **declaration** with a
+methods-only body; CLOC12.175 added the **field** member (`ClassMember::Field`),
+making `ClassMember` a two-variant enum. Both the 173 and 175 closing notes named
+the same next deferral: *static-init blocks (`static { … }`)… a later additive
+`ClassMember` variant.* CLOC12.176 is that slice — the **static initialization
+block**, and the first class member whose body is a **statement list** rather than
+a key/value.
+
+A static block is `static { <statements> }` inside a class body — a block of
+statements that run **once, at class-definition time**, in the class's static
+scope. It has no name, no key, no parameter list, and no initializer — only a
+body. (ES2022.)
+
+### Model (ESTree-aligned, Rhino-informed)
+
+```rust
+// javascript-ast/src/expression.rs — a new variant of the `ClassMember` enum
+pub enum ClassMember {
+    Method(MethodDefinition),
+    Field(PropertyDefinition),
+    StaticBlock(BlockStatement),               // NEW — `static { … }`
+    // private members (`#x`) and decorators are later additive variants.
+}
+```
+
+**Why reuse `BlockStatement`, not a new struct.** A static block's body is
+*exactly* a `Vec<Statement>` — the same shape a `BlockStatement` (or a method's
+`function_body`) already carries. It has no other data (no name, no `static` flag
+— being a static block *is* the staticness, and there is no non-static form). So
+the variant wraps the existing `BlockStatement` directly, exactly as `Field`
+reused `PropertyKey` / `Expression` rather than re-modelling them. This matches
+the conformance target — ESTree's `StaticBlock` node is a `BlockStatement`-shaped
+body; Closure's Rhino uses a `CLASS_MEMBERS` child that is a block.
+
+### Emit (`closure-emitter`)
+
+Inside a class body a static block prints `static{<statements>}`:
+
+```text
+  class C { static { } }          → class C{static{}}
+  class C { static { x = 1 } }    → class C{static{x=1}}
+  class C { static { a(); b() } } → class C{static{a();b()}}
+```
+
+The `static` keyword is printed (no space before `{` in minified output — the
+`{` is a hard token boundary), then the block body via the same statement-list
+emitter a function body uses, then the closing `}`. Like a method (and unlike a
+field), a static block is **brace-terminated** — it needs **no** trailing `;`.
+Fields, methods, and static blocks interleave in a body with no separators beyond
+each member's own terminator.
+
+### Pass arms — the `ClassMember` blast radius (again)
+
+`ClassMember` becomes a **three-variant** enum. Every pass that matches it
+(`match member { Method | Field }`) goes non-exhaustive → the compiler forces a
+`StaticBlock` arm at each site (the per-crate build is the ground truth, per the
+174/175 lesson — and note `javascript-parser`'s **test** bindings, a transitive
+consumer CI's affected-graph builds, per the 175 lesson). Any now-refutable
+`let ClassMember::Method(m) = member;` / `Field` match likewise updates.
+
+The correct `StaticBlock` arm **recurses into the block's statements** exactly as
+the `Method` arm recurses into `m.value.body.body` — a static block's statements
+run at class-definition time in the class scope, so a candidate use / renameable
+reference inside one must still be counted / rewritten. A static block has **no
+key** (nothing for the property-renaming pass to rename) and **no binding name**
+(nothing for the variable-rename/inline decl-name passes to record) — only the
+statement body recurses.
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all `ClassMember` arms, ONE commit).**
+  `javascript-ast` (MINOR) adds `ClassMember::StaticBlock(BlockStatement)`;
+  `closure-emitter` (MINOR) adds the `StaticBlock` arm to `emit_class_tail`
+  printing `static{…}`; every pass crate whose `ClassMember` match went
+  non-exhaustive gets its `StaticBlock` arm (recursing the block statements like a
+  method body), and every now-refutable `let ClassMember::Method`/`Field` becomes
+  a `match`. Hand-constructed emitter unit tests (empty block, block with a
+  statement, block interleaved with a field/method).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  `convert_class_element` dispatches a `static_block` member node →
+  `ClassMember::StaticBlock`, converting its `statement*` children via the shared
+  statement converter (reused from `convert_function_body`). Dump the parse-tree
+  shape first. Add a `closurec` e2e fixture (`tests/diff/simple-static-block/`).
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_static_block_test.rs` mirroring upstream
+  `CodePrinterTest`'s static-block printing cases — hand-constructed AST.
+
+Private names (`#x`) and decorators remain deferred to their own additive slices,
+exactly as for the field and method surfaces.
+
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+**three-variant** enum (`Method` | `Field` | `StaticBlock`).
+
+- **`javascript-ast` 0.35.0** — `ClassMember::StaticBlock(BlockStatement)` (reusing
+  `BlockStatement` — a static block's body is exactly a `Vec<Statement>`); 3
+  roundtrip tests.
+- **`closure-emitter` 0.40.0** — `emit_static_block` printing `static{…}` (the
+  `static` keyword abuts `{`, body via the shared `emit_block_statement`, no
+  trailing `;`) wired into `emit_class_tail`; 4 emit tests.
+- **Pass crates (PATCH each), `StaticBlock` arm at every site the compiler flagged
+  non-exhaustive:** constant-fold 1, fold-control-flow 1, dce 2, scope-analyzer 2,
+  rename-properties 2, inline-variables 5, rename-globals 5, rename 4, **inline
+  13.** Each arm recurses the block's `Vec<Statement>` exactly as the `Method` arm
+  recurses `m.value.body.body`. Soundness-critical (inline / inline-variables):
+  a candidate use inside a static block runs at class-def time, so tally/count/
+  collect recurse the block statements *before* inline substitutes there. Scope:
+  scope-analyzer walks it as its own block scope; rename/rename-globals use the
+  class-inner map; `splice_*` splice into the block (its body IS a statement vec,
+  unlike a field value). A static block has **no key** (nothing to property-rename)
+  and **no binding name** (nothing for decl-name passes to record).
+
+`javascript-parser`'s bridge test bindings needed **no** change — they already use
+`let ClassMember::Method(m) = … else { panic! }` (let-else from the 175 fix), which
+a third variant falls through automatically. All 11 crates build + test green.
+
+## CLOC12.175 — class fields (`PropertyDefinition`): the first non-method class member (design)
+
+CLOC12.173/174 shipped the class **expression** and **declaration** with a body of
+**methods only** (`ClassMember::Method`). Both arcs' closing notes named the same
+deferral: *instance/static **fields** (`PropertyDefinition`)… arrive in later
+feature PRs, each an additive `ClassMember` variant.* CLOC12.175 is that slice —
+the **first non-method class member**, and the first time `ClassMember` becomes a
+multi-variant enum.
+
+A class field is `x = 1;` / `y;` / `static z = 2;` / `[k] = v;` inside a class
+body — a named slot with an optional initializer, no parameter list, no body.
+
+### Model (ESTree-aligned, Rhino-informed)
+
+```rust
+// javascript-ast/src/expression.rs — a new variant of the `ClassMember` enum
+pub enum ClassMember {
+    Method(MethodDefinition),
+    Field(PropertyDefinition),                 // NEW
+    // static { … } (static-block) is a later additive variant.
+}
+
+pub struct PropertyDefinition {
+    pub cv: Option<CvId>,
+    pub key: PropertyKey,          // reuse — same four shapes as a method key
+    pub value: Option<Expression>, // `x = <expr>` (Some) vs bare `x;` (None)
+    pub computed: bool,            // `[expr] = v` (mirrors MethodDefinition.computed)
+    #[serde(rename = "static")]
+    pub is_static: bool,           // `static x = 1;`
+}
+```
+
+**Why a separate `PropertyDefinition`, not reuse `MethodDefinition`.** A field has
+**no** `MethodKind` (it is never a constructor/getter/setter), **no** function
+`value` (its value is an *optional plain expression*, not a `FunctionExpression`),
+and no params/body. This matches the conformance target — Closure's Rhino uses a
+dedicated `MEMBER_FIELD_DEF` node, distinct from `MEMBER_FUNCTION_DEF`. `PropertyKey`
+(identifier / string / numeric / `Expression` for computed) *is* reused — a field
+key and a method key have the same four shapes.
+
+### Emit (`closure-emitter`)
+
+Inside a class body a field prints `[static ]key[=value];`:
+
+```text
+  class C { x = 1 }        → class C{x=1;}
+  class C { y }            → class C{y;}
+  class C { static z = 2 } → class C{static z=2;}
+  class C { [k] = v }      → class C{[k]=v;}
+```
+
+Two differences from a method member: a field **ends with `;`** (a method's `}`
+is self-terminating; a field has no closing brace so it needs the separator), and
+it has **no** parameter-list/body tail. The `static` prefix and computed-key
+bracketing reuse the existing `emit_class_member` machinery; the value (when
+present) emits at `PREC_ASSIGNMENT` (the RHS of `=`), exactly like an
+object-property value or a default. Fields and methods interleave in a body with
+no separators beyond the field's own `;`.
+
+### Pass arms — the `ClassMember` blast radius
+
+Today `ClassMember` is single-variant, so nearly every pass matches it as
+`match member { ClassMember::Method(m) => … }` or `let ClassMember::Method(m) =
+member;`. Adding `Field` makes:
+
+- every `match` **non-exhaustive** → the compiler forces a `Field` arm at each
+  site (the per-crate build-tool is the ground truth for which, per the 174
+  lesson — a compile error, not a green `grep`);
+- every `let ClassMember::Method(m) = member;` (an *irrefutable* let today,
+  including several written in the 174 pass arms) **refutable** → each must become
+  a `match`/`if let`.
+
+The correct `Field` arm **recurses into the field `value`** (a normal expression —
+fold it, resolve references in it, rewrite renamed uses in it) and into a
+computed key's expression, mirroring how the `Method` arm recurses into the method
+body. A field **key** is a property name: the property-renaming pass renames it
+exactly like a method key (no `constructor` special-case — a field is never the
+constructor), and the variable-renaming passes leave it untouched. Passes that
+only walk *executable* positions (dce's dead-code predicates, inline's call
+tally) treat a field like a method — its initializer is code that runs at
+construction, so a candidate use inside it must still be counted.
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all `ClassMember` arms, ONE commit).** `javascript-ast`
+  (MINOR) adds the `Field` variant + `PropertyDefinition`; `closure-emitter` (MINOR)
+  adds the `Field` arm to `emit_class_member`/`emit_class_tail` printing
+  `[static ]key[=value];`; every pass crate whose `ClassMember` match went
+  non-exhaustive gets its `Field` arm (mirroring the `Method` arm's recursion into
+  the value + computed key), and every now-refutable `let ClassMember::Method`
+  becomes a `match`. Hand-constructed emitter unit tests (bare field, `=value`,
+  `static`, computed key, field+method interleaved).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  convert the grammar's field `class_element` production → `ClassMember::Field`.
+  Dump the parse-tree shape first. Add a `closurec` e2e fixture
+  (`tests/diff/simple-class-field/`). Decline grammar-unsupported field shapes to
+  WHITESPACE_ONLY (never a miscompile).
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_class_field_test.rs` mirroring upstream
+  `CodePrinterTest`'s class-field printing cases — hand-constructed AST, so it also
+  covers computed / static / no-initializer shapes the grammar may not yet parse.
+
+Static-init blocks (`static { … }`), private names (`#x`), and decorators remain
+deferred to their own additive slices, exactly as for the method surface.
+
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+two-variant enum (`Method` | `Field`). Confirmed blast radius (per the per-crate
+build, the ground truth):
+
+- **`javascript-ast` 0.34.0** — `ClassMember::Field(PropertyDefinition)` +
+  `PropertyDefinition { cv, key: PropertyKey, value: Option<Expression>, computed,
+  is_static }`; 4 roundtrip tests (initialized / bare / static / computed-key,
+  the last using a `[a+b]` `BinaryExpression` key so it is unambiguously
+  `PropertyKey::Expression` rather than collapsing to `Identifier` under the
+  untagged serde — the same limitation methods already have).
+- **`closure-emitter` 0.39.0** — `emit_class_field` (printing `[static ]key[=value];`,
+  value at `PREC_ASSIGNMENT`) wired into the shared `emit_class_tail` member loop;
+  6 emit tests.
+- **Pass crates (PATCH each), `Field` arms added at every site the compiler
+  flagged non-exhaustive/refutable:** constant-fold (1), fold-control-flow (1),
+  dce (2), scope-analyzer (2), rename-properties (2), inline-variables (5),
+  rename-globals (5), rename (4: 2 decl + 2 expression handlers), **inline (13:**
+  the widest — the soundness-critical `tally`/`inline`/`mutated-params`/
+  `used-idents` sites recurse the initializer + computed key, the scope-aware
+  `substitute`/`rename` sites use the class-inner map, and `count_decl_names` +
+  both `splice_*_in_decl` correctly skip a field**).** All 11 crates build + test
+  green.
+
+The `Field` arm everywhere mirrors the `Method` arm's recursion but on
+`f.value: Option<Expression>` (+ the computed-key expression) rather than a
+statement body, exactly as this section specified. Bridge + conformance follow in
+PR2/PR3.
+
+### PR2 (DONE)
+
+Bridge-enable. The grammar already parses a field as a `class_field_declaration`
+child of `class_element`:
+
+```text
+class_field_declaration = [ static? , (property_name | PRIVATE_NAME) ,
+                            ( "=" assignment_expression )? , ";" ]
+```
+
+`convert_class_element` now dispatches that node to a new `convert_class_field`
+(→ `ClassMember::Field(PropertyDefinition)`), reusing `convert_property_key` for
+the key and `convert_expression` for the initializer. Confirmed against the actual
+runtime parse tree (dumped, not assumed): a field's `static` lives *inside*
+`class_field_declaration` (unlike a method's, which is hoisted to `class_element`),
+and the key node is the same `property_name` a method key uses.
+
+**Declines (all safe WHITESPACE_ONLY, never a miscompile):** a computed `[expr]`
+key (deferred, mirrors the method surface) and a private `#x` field (bare
+`PRIVATE_NAME` token, unmodelled). Works in both class-expression and
+class-declaration bodies (shared body conversion).
+
+- **`javascript-parser` 0.39.0** (MINOR) — `convert_class_field` + dispatch; 10
+  bridge tests (initialized / bare / static / string-key / interleaved field+method
+  / computed-decline / private-decline / declaration-position).
+- **`closurec` 0.234.14** (PATCH) — e2e fixture `tests/diff/simple-class-field/`:
+  `class C { x = 1 + 2; static s = 5 + 6; }` → `class C{x=3;static s=11;}` at
+  SIMPLE (both initializers fold — proving the pipeline descends into each field —
+  `static` survives, bare declaration emit). Version-synced `cli.spec.json` +
+  help fixture. All closurec tests green.
+
+Emit conformance port (PR3) remains.
+
+### PR3 (DONE)
+
+CodePrinter conformance port. New
+`tests/upstream/code_printer_class_field_test.rs` (registered as the
+`upstream_code_printer_class_field` `[[test]]`), the third class port, mirroring
+upstream Closure `CodePrinterTest`'s class-field printing cases. 14 active
+`#[test]`s, 0 `#[ignore]`, driving `emit_class_field` + the shared
+`emit_class_tail` `Field` arm from **hand-built AST** — so it covers shapes the
+grammar/bridge cannot yet parse (computed / numeric / string keys, a
+sequence initializer): `x=1;` / `y;` (bare) / `static z=2;` / `[k]=v;` /
+`static [k]=v;` / `0=1;` / quoted `"a-b"=1;` / the `PREC_ASSIGNMENT` wrap
+`x=(a,b);` / interleave `x=1;m(){}`, `m(){}x=1;`, `x=1;y;static z=2;`.
+`closure-emitter` 0.39.1 (PATCH — test-only, no emitter change).
+
+**CLOC12.175 arc COMPLETE** — the class-field surface is node (PR1) + bridge
+(PR2) + conformance (PR3) end-to-end. Remaining class members (private `#x`,
+`static { … }` static-init blocks, decorators) stay deferred to their own
+additive slices.
+
+## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
+
+CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).
+Its closing note flagged the remaining half explicitly: *"The bridge for a class
+**declaration** (a `ProgramItem`, not an `Expression`) is a separate future arc…
+The two share the member sub-AST once PR1 lands."* That arc is CLOC12.174, and the
+member sub-AST (`ClassMember` / `MethodDefinition` / `MethodKind`) now exists, so
+this is a **small, additive** arc — no new member modelling, only a new
+*declaration-position* node that reuses it.
+
+A class declaration is the **statement** form: `class C { … }` written where a
+statement is expected, binding the name `C` in the enclosing scope. It mirrors
+`FunctionDeclaration` (the `function f(){}` statement) exactly as `ClassExpression`
+mirrors `FunctionExpression`.
+
+### Model (ESTree-aligned)
+
+```rust
+// javascript-ast/src/declaration.rs — a new variant of the `Declaration` enum
+pub enum Declaration {
+    VariableDeclaration(VariableDeclaration),
+    FunctionDeclaration(FunctionDeclaration),
+    ClassDeclaration(ClassDeclaration),          // NEW
+}
+
+pub struct ClassDeclaration {
+    pub cv: Option<CvId>,
+    pub id: Identifier,                          // REQUIRED — a declaration always binds a name
+    pub super_class: Option<Box<Expression>>,    // `extends <expr>` heritage (reused shape)
+    pub body: Vec<ClassMember>,                  // reuse ClassMember from expression.rs
+}
+```
+
+**The one structural difference from `ClassExpression`: `id` is `Identifier`, not
+`Option<Identifier>`.** A class *expression* may be anonymous (`x = class {}`); a
+class *declaration* must name its binding (`class {}` in statement position is a
+syntax error), exactly as `FunctionDeclaration.id` is required where
+`FunctionExpression.id` is optional. `super_class` and `body` are byte-identical
+in shape to `ClassExpression` and reuse the same `ClassMember` / `MethodDefinition`
+/ `MethodKind` types (imported from `expression.rs`) — no new member modelling.
+
+### Emit (`closure-emitter`)
+
+`class <id>[ extends S]{members}` — the same body shape as `emit_class`, with three
+deliberate differences from a class *expression*, all mirroring the
+declaration/expression split already established for functions:
+
+1. **No precedence wrap and no statement-start parenthesisation.** A class
+   expression is tagged `PREC_UNARY` and `emit_expression_statement` wraps a
+   leading one (`(class{});`) because a statement-position `class` would otherwise
+   parse as a *declaration* — which is precisely what a `ClassDeclaration` **is**.
+   So the declaration form is emitted bare, with no `expr_prec` entry and no
+   wrap-set membership.
+2. **`id` always prints** (it is non-optional), with a `required_ws()` after
+   `class` exactly as `emit_function_declaration` does after `function`.
+3. **No trailing `;`.** `emit_function_declaration` appends a normalising `;`
+   after its `}` (gap-030 part B). A **class** declaration does *not* — upstream
+   Closure terminates a `ClassDeclaration` with its `}` alone (a class body is
+   self-delimiting and never subject to ASI hazards the way a bare
+   `function(){}` value is). PR3's conformance port validates this against
+   `CodePrinterTest`.
+
+Implementation reuses `emit_class_member` unchanged. The shared
+`[ extends S]{members}` tail is factored into a small helper used by **both**
+`emit_class` (after its optional-id head) and the new `emit_class_declaration`
+(after its required-id head), so the heritage-precedence + member-loop logic lives
+in one place.
+
+### Pass arms — the atomic-PR1 blast radius
+
+Adding a variant to the `Declaration` enum makes **every exhaustive `match` on
+`Declaration` fail to compile** until an arm is added — that is the point of the
+atomic PR1 (enum + emit + all arms in ONE commit, workspace green). The
+`Declaration` match sites are: `closure-emitter`, `closure-pass-constant-fold`,
+`closure-pass-dce`, `closure-pass-fold-control-flow`, `closure-pass-inline`,
+`closure-pass-inline-variables`, `closure-pass-rename`, `closure-pass-rename-globals`,
+`closure-pass-rename-properties`, `closure-pass-treeshake`,
+`closure-pass-remove-unused-vars`, `closure-scope-analyzer`, plus `bridge.rs` /
+`run.rs` (touched in PR2, not PR1). Each new arm **mirrors that crate's existing
+`Expression::ClassExpression` handling** — which already knows how to walk
+`super_class` and each method `value` (a nested function scope) — since 173 PR1
+added exactly that machinery. So the arm is "recurse into the heritage operand and
+each member body," reusing the same helper the ClassExpression arm calls. Rebuild
+/ transform arms delegate to an `#[inline(never)]` helper (frame-size DoS lesson,
+per 173). The declared *name* `C` is a binding a variable-renaming pass may rename
+(like `FunctionDeclaration.id`), unlike a method key (a property name) — the arm
+follows the `FunctionDeclaration` arm's treatment of `.id`, not the method-key
+treatment. Non-exhaustive matches with a catch-all (`treeshake` /
+`remove-unused-vars` may already absorb it) need no arm; the per-crate CI
+build-tool is the source of truth for which do (a compile error there — NOT a
+green `grep -c "test result: FAILED"`, the flawed check called out in 173 — is
+what proves the arm was needed).
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all pass arms, ONE commit).** `javascript-ast`
+  (MINOR) adds `ClassDeclaration` + the `Declaration::ClassDeclaration` variant;
+  `closure-emitter` (MINOR) adds `emit_class_declaration` + the shared class-tail
+  helper + the `Declaration::ClassDeclaration` emit arm; every pass crate that
+  matches `Declaration` exhaustively gets its mirror-of-FunctionDeclaration arm.
+  Hand-constructed emitter unit tests (named class, `extends`, one method,
+  `static`/`get`/`set`, computed key, `constructor` — asserting **no** trailing
+  `;` and **no** wrapping paren).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  convert the grammar's `class_declaration` node → `Declaration::ClassDeclaration`,
+  reusing the `convert_class_heritage` / `convert_class_element` /
+  `convert_method_definition` converters that 173 PR2 already built for the
+  expression form (only the top-level node kind and the required-`id` differ).
+  Dump the parse-tree shape first. Add a `closurec` e2e diff fixture
+  (`tests/diff/simple-class-decl/`). Same decline-to-WHITESPACE_ONLY safety for
+  the member shapes the grammar can't yet cleanly bridge (generator / async /
+  computed / multi-member), never a miscompile.
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_class_declaration_test.rs` mirroring upstream
+  `CodePrinterTest`'s class-**declaration** printing cases (statement position, no
+  wrap, no trailing `;`, heritage, members) — hand-constructed AST, so it also
+  covers the member shapes the grammar cannot yet parse.
+
+Serialised after 173 (shares the member sub-AST it introduced). Fields
+(`PropertyDefinition`) and static blocks remain deferred to their own additive
+slices, identical to the ClassExpression deferral.
+
+**PR1 (DONE).** `javascript-ast` 0.33.0 adds `ClassDeclaration` + the
+`Declaration::ClassDeclaration` variant exactly as modelled; `closure-emitter`
+0.38.0 adds `emit_class_declaration` + the shared `emit_class_tail` helper
+(factored out of `emit_class`), with 5 unit tests asserting the bare, no-`;`,
+no-wrap shape. The atomic pass-arm set turned out **larger than the design note's
+match-site list**: the note named 12 crates but only enumerated the ones with a
+central `fn *_declaration`; in fact `closure-pass-inline` (7 sites) and
+`closure-pass-rename` (5 sites) ALSO match `Declaration` exhaustively at many
+predicate/collect/rewrite helpers, and both needed arms — the per-crate CI
+build-tool (a compile error, the ground truth) is what surfaced them, exactly the
+lesson 173 recorded. Final arm-bearing crates: `constant-fold` 0.85.14, `dce`
+0.20.14, `fold-control-flow` 0.20.14, `inline` 0.25.14, `inline-variables`
+0.11.14, `rename` 0.14.14, `rename-globals` 0.10.14, `rename-properties` 0.12.14,
+`scope-analyzer` 0.12.14. `treeshake` / `remove-unused-vars` route through
+catch-alls (no arm). Each arm mirrors the crate's existing
+`Expression::ClassExpression` handling plus the required class-name binding;
+soundness-critical passes (`inline` tally/inline, `inline-variables`
+count-uses/propagate, `rename` collect/rewrite) recurse the heritage + every
+method body so a class use is never missed. Where a class-body walk was
+duplicated between the expression and declaration forms it was factored into a
+shared helper (`fold_class_body`, `classify_class_members` /
+`rewrite_class_members`). Reachable end-to-end once the PR2 bridge produces the
+node.
+
+**PR2 (DONE) — `javascript-parser` 0.38.0 + `closurec` 0.234.13.** The bridge's
+`convert_source_element` converts a top-level `class_declaration` →
+`Declaration::ClassDeclaration` via new `convert_class_declaration`, so a class
+declaration flows through the full pipeline instead of declining to
+WHITESPACE_ONLY. **The design held with one grammar-shape refinement found by
+dumping the parse tree:** at the `source_element` level the node is wrapped in
+`decorated_class_declaration` → `class_declaration` (the outer rule that would
+also carry `@decorator`s), so the source-element arm unwraps it (and declines a
+genuinely *decorated* form — a later slice). The inner `class_declaration` node's
+flat child shape is **identical to `class_expression`** (`class` / NAME / optional
+`class_heritage` / `class_body`) save the required name, so
+`convert_class_declaration` reuses `convert_class_heritage` /
+`convert_class_element` unchanged and DECLINES a nameless class rather than
+fabricate an empty id. Generator / async / computed / multi-member methods decline
+to WHITESPACE_ONLY exactly as for the expression form. 10 bridge unit tests
+(`class_decl_*`); `closurec` e2e fixture `tests/diff/simple-class-decl/`
+(`class C { m() { return 1 + 2 } }` → `class C{m(){return 3}}`) proves the class
+round-trips, the method body folds, and the declaration emits **bare** (no
+trailing `;`, no wrapping paren).
+
+**PR3 (DONE) — `closure-emitter` 0.38.1.** New upstream port
+`tests/upstream/code_printer_class_declaration_test.rs` (registered as `[[test]]
+upstream_code_printer_class_declaration`), the companion to the class-expression
+port. Isolates `emit_class_declaration` + the shared `emit_class_tail` helper from
+PR1. **20 active `#[test]`s, 0 `#[ignore]`** — the declaration emits bare (no wrap,
+no trailing `;`), the four `extends`-operand precedence cases (identifier / member
+/ call bare, conditional wrapped `extends (a?b:c)`), the member forms (method /
+params+body / `static` / `get` / `set` / `constructor` / stacked `static get` /
+generator `*m` / `async m` / computed `[k]`, `[0]`, `[a+b]` / two members
+back-to-back), and the full shape `class C extends B{m(){}}`. Inputs are
+hand-constructed AST, so the port also covers the generator / async / computed-key
+/ multi-member shapes the grammar cannot yet parse. Test-only change (no
+production edit); ATTRIBUTION.md updated. **This closes the CLOC12.174
+class-declaration arc.** Deferred to their own additive slices (as for the
+expression form): instance/static class **fields** (`PropertyDefinition`), static
+initialization blocks, private names, decorators.
+
 ## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
 
 `ClassExpression` is the next `Expression` node, and unlike every arc since
@@ -2271,6 +2760,51 @@ found during implementation:**
    produces the node; the arms give correct (not just compiling) behaviour when it
    does, so no optimisation-inside-class work is deferred beyond the deferred
    *node features* (fields / static blocks).
+
+**PR2 (DONE) — `javascript-parser` 0.37.0 + `closurec` 0.234.12.** The bridge's
+`convert_expression` now converts `class_expression` → `Expression::ClassExpression`
+via new `convert_class_expression` / `convert_class_heritage` /
+`convert_class_element` / `convert_method_definition` converters, so a class
+expression flows through the full pipeline instead of declining to
+WHITESPACE_ONLY. `tests/diff/simple-class/` (SIMPLE) proves the class round-trips
+and the method body + sibling arg fold; `tests/diff/advanced-class-constructor/`
+(ADVANCED) is the end-to-end regression for the PR1 `constructor` no-rename guard.
+**Three divergences from the plan above, found by dumping the parse tree:**
+
+1. **Heritage operand comes in two shapes.** `class_heritage` holds a bare
+   `NAME` token for `extends B` (→ `Identifier`) but a
+   `left_hand_side_expression` *node* for `extends ns.B` (→ `convert_expression`).
+   `extends <call>` (`mix(B)`) flattens to several ambiguous NAME tokens with no
+   clean operand node, so it DECLINES rather than mis-read the super-class.
+2. **`async` is a distinct node, not a leading token.** A generator `*m(){}`
+   puts `*` inside `method_definition`, but an `async` method parses as a
+   separate `async_method` node under `class_element`. So `convert_class_element`
+   declines any member node that is not a plain `method_definition` (a
+   node-kind check, not just a token scan) — otherwise the `async` would be
+   silently dropped, a miscompile. Generator and computed-`[k]()` methods
+   likewise decline (later slices). All declines fall back to WHITESPACE_ONLY —
+   never a miscompile.
+3. **Grammar requires `;` between members.** `class { m(){} n(){} }` (no
+   separator) is a *parse* error → WHITESPACE_ONLY fallback; single-member
+   classes parse and bridge cleanly. This is a grammar limitation, not a bridge
+   decision, and is the reason both e2e fixtures use single-member classes.
+
+16 bridge unit tests (`class_*`) cover the accepted forms and the declines.
+
+**PR3 (DONE) — `closure-emitter` 0.37.1.** New upstream port
+`tests/upstream/code_printer_class_test.rs` (registered as `[[test]]
+upstream_code_printer_class`), isolating `emit_class` + `emit_class_member` +
+the `PREC_UNARY` classification from PR1. **22 active `#[test]`s, 0
+`#[ignore]`** — the statement-start wrap (`(class{});`), anonymous/named
+surface, the four `extends`-operand precedence cases (identifier / member / call
+heritage bare, conditional heritage wrapped `extends (a?b:c)`), the member forms
+(empty / params+body / `static` / `get` / `set` / `constructor` / stacked
+`static get` / generator `*m` / `async m` / computed `[k]` / two members
+back-to-back), and the whole-node precedence cases (`(class{}).x`,
+`(class{})()`, `class{}+1`). Inputs are hand-constructed AST, so the port also
+covers the generator / async / computed-key / multi-member shapes the grammar
+cannot yet parse. Test-only change (no production edit); ATTRIBUTION.md updated.
+This closes the CLOC12.173 class-expression arc.
 
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 

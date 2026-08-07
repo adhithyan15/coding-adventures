@@ -594,7 +594,6 @@ fn diag_clr_fib_exec() {
     match run_pipeline_from_iir(iir, config) {
         Err(e) => {
             eprintln!("CLR compile FAILED: {:?}", e);
-            return;
         }
         Ok(artifact) => {
             eprintln!("CLR compile OK: {} methods", artifact.methods.len());

@@ -1,0 +1,465 @@
+{
+  "version": 1,
+  "language": "french",
+  "path": [
+    {
+      "id": "FR-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "FR-C01-salut"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-002",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C01-bien",
+        "FR-C01-bon"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-003",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "FR-C01-le-la"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-004",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "FR-C01-jour",
+        "FR-C01-bonjour",
+        "FR-C01-nuit"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-005",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "FR-C01-bonne-nuit"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "FR-C01-soir",
+        "FR-C01-bonsoir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FR-C02-je",
+        "FR-C02-appeler",
+        "FR-C02-me",
+        "FR-C02-je-mappelle",
+        "FR-C02-enchante",
+        "FR-C02-tu-vous"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-007-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-008",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C02-comment"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-009",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FR-C02-comment-vous-appelez-vous"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-010",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C03-aller",
+        "FR-C03-comment-ca-va",
+        "FR-C03-comme-ci-comme-ca"
+      ],
+      "before": [
+        "FR-EXT-010-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-011",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "FR-C03-merci",
+        "FR-C03-de-rien"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-012",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "FR-C04-au-revoir",
+        "FR-C04-a-plus-tard",
+        "FR-C04-a-bientot",
+        "FR-C04-a-demain"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-013",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "FR-C05-parler",
+        "FR-C05-habiter",
+        "FR-C06-nombres-1-5",
+        "FR-C06-nombres-6-10",
+        "FR-C07-jours-1",
+        "FR-C09-mois",
+        "FR-C09-saisons",
+        "FR-C10-parents",
+        "FR-C10-freres-soeurs",
+        "FR-C11-pain",
+        "FR-C11-eau-vin",
+        "FR-C12-nombres-11-16",
+        "FR-C12-nombres-17-20",
+        "FR-C13-noir-blanc",
+        "FR-C13-rouge-bleu",
+        "FR-C14-avoir",
+        "FR-C14-age"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-014",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C17-tete",
+        "FR-C17-main"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-015",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "FR-C18-oui",
+        "FR-C18-non"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-016",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "FR-C19-sil-vous-plait",
+        "FR-C20-je-suis-desole"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-017",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "FR-C21-le-temps"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-018",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "FR-C22-chien-chat",
+        "FR-C23-vert-jaune"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "FR-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "FR-PATH-011"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "FR-PATH-015"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "FR-PATH-007",
+        "FR-PATH-009"
+      ],
+      "omits": [
+        "QUESTION-WHAT",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "FR-PATH-002",
+        "FR-PATH-008",
+        "FR-PATH-010",
+        "FR-PATH-014"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [
+        "FR-PATH-016"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "FR-PATH-005",
+        "FR-PATH-012"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [
+        "FR-PATH-004",
+        "FR-PATH-006",
+        "FR-PATH-013",
+        "FR-PATH-017"
+      ],
+      "omits": [
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [
+        "FR-PATH-003",
+        "FR-PATH-018"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "FR-EXT-007-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C02-appeler"
+      ]
+    },
+    {
+      "id": "FR-EXT-010-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C03-aller"
+      ]
+    },
+    {
+      "id": "FR-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C05-parler",
+        "FR-C05-habiter",
+        "FR-C06-nombres-1-5",
+        "FR-C06-nombres-6-10",
+        "FR-C07-jours-1",
+        "FR-C09-mois",
+        "FR-C09-saisons",
+        "FR-C10-parents",
+        "FR-C10-freres-soeurs",
+        "FR-C11-pain",
+        "FR-C11-eau-vin",
+        "FR-C12-nombres-11-16",
+        "FR-C12-nombres-17-20",
+        "FR-C13-noir-blanc",
+        "FR-C13-rouge-bleu",
+        "FR-C14-avoir",
+        "FR-C14-age"
+      ]
+    },
+    {
+      "id": "FR-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C17-tete",
+        "FR-C17-main"
+      ]
+    },
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C21-le-temps"
+      ]
+    },
+    {
+      "id": "FR-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C22-chien-chat",
+        "FR-C23-vert-jaune"
+      ]
+    }
+  ]
+}

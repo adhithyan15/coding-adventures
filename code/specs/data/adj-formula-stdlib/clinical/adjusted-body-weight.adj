@@ -1,0 +1,99 @@
+% ============================================================================
+% adjusted-body-weight.adj — the adjusted body weight for drug dosing in obesity
+% (AdjBW = ideal body weight + 0.4 × (actual body weight − ideal body weight)) in the ADJ standard
+% library.
+% ============================================================================
+% The adjusted-body-weight entry of the *clinical* track — the dosing weight used for many drugs
+% (aminoglycosides, and others) in obese patients. Neither the actual body weight nor the ideal body
+% weight alone gives the right dose: adipose tissue is only PARTLY perfused and metabolically active, so
+% dosing on the full actual weight over-doses, while dosing on the ideal weight under-doses. The
+% adjusted body weight adds back a fixed FRACTION — a 0.4 (40%) correction factor — of the excess weight
+% above ideal. THE ADJUSTED BODY WEIGHT IS THE IDEAL BODY WEIGHT PLUS 0.4 TIMES THE ACTUAL BODY WEIGHT
+% MINUS THE IDEAL BODY WEIGHT — i.e. ideal body weight + 0.4 × (actual body weight − ideal body weight).
+% It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the actual body weight an adjusted value implies at a given ideal weight, and the
+% ideal body weight an adjusted/actual pair implies). As with every compute library, a consumer states
+% NO arithmetic: it `import`s this file, binds the ideal and actual body weights from its own
+% byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "adjusted-body-weight.adj"
+%     observe ideal_body_weight(70)    % "…IBW 70 kg…"        (span cited by the model)
+%     observe actual_body_weight(100)   % "…weight 100 kg…"    (span cited by the model)
+%     ? adjusted_body_weight(ideal_body_weight, actual_body_weight)
+%                                        % engine → 82 (kg), the adjusted (dosing) body weight
+%
+% The 0.4 correction factor is the EXACT constant of the cited formula (not a measurement); the formulas
+% are otherwise exact expressions over the parameters, so every value the engine returns is exact — 0.4
+% is exactly 2/5 and the complementary 0.6 (= 1 − 0.4) is exactly 3/5, so the products and the
+% back-solve stay in the exact rationals. They COMPOSE and invert cleanly around the worked case ideal
+% body weight = 70 kg, actual body weight = 100 kg (adjusted = 70 + 0.4 × (100 − 70) = 70 + 0.4 × 30 =
+% 70 + 12 = 82 kg): the `adjusted_body_weight` a consumer computes is exactly the value each inverse
+% formula back-solves to recover its own measured input (100, 70).
+%
+%   adjusted_body_weight(ideal_body_weight, actual_body_weight)
+%       = ideal_body_weight + 0.4 * (actual_body_weight - ideal_body_weight)                            % (adjusted, kg)
+%   actual_body_weight(adjusted_body_weight, ideal_body_weight)
+%       = (adjusted_body_weight - ideal_body_weight) / 0.4 + ideal_body_weight                          % (solved for actual)
+%   ideal_body_weight(adjusted_body_weight, actual_body_weight)
+%       = (adjusted_body_weight - 0.4 * actual_body_weight) / 0.6                                        % (solved for ideal)
+%
+% NOTE ON UNITS AND MODELLING: all three weights in the same mass unit (e.g. kilograms). The ideal body
+% weight is taken here as a bound INPUT — a consumer computes it from height and sex (e.g. by the Devine
+% formula the cited article also states) and binds it — and this library grounds the adjustment relation
+% itself, exactly as the page prints it. The 0.4 factor is the general dosing-weight correction; a few
+% drugs use a different factor, but the single equation grounded here is the one transcribed VERBATIM
+% from the cited page. The adjusted body weight only produces the dosing weight; it does not itself pick
+% the dose or the drug.
+%
+% All three formulas are defended by the SAME clause — the quoted adjusted-body-weight equation —
+% because that one statement (the adjusted body weight IS the ideal weight plus 0.4 of the actual minus
+% the ideal) sanctions the relation read every way. The quote is transcribed verbatim from the
+% peer-reviewed obese-dosing study on PubMed Central (NCBI), a primary, re-fetchable source, so each
+% `formula` carries the provenance envelope every shipped grounded clause carries; the linter rejects an
+% unsourced one. (See feedback_nothing_human_authored — the formula, including its 0.4 constant, is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `ideal_body_weight`, `actual_body_weight` and `adjusted_body_weight` each appear BOTH as a
+% derived result and as an input (of the other formulas), so each is a single dictionary term used in
+% both roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the
+% trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary adjusted_body_weight_vocab {
+    define ideal_body_weight     : finding  surface "ideal body weight", "IBW"                                  % kilograms
+    define actual_body_weight    : finding  surface "actual body weight", "total body weight", "ABW", "weight"  % kilograms
+    define adjusted_body_weight  : finding  surface "adjusted body weight", "AdjBW", "AjBW", "dosing weight"     % kilograms
+}
+
+% ----------------------------------------------------------------------------
+% The adjusted body weight, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the adjustment equation from the cited
+% obese-dosing study on PubMed Central (a quote is required on a shipped formula). Each is an exact
+% expression in the measured quantities and the cited 0.4 constant, so the engine returns each value
+% EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook adjusted_body_weight_laws {
+    use adjusted_body_weight_vocab
+
+    % Adjusted body weight — the ideal weight plus 0.4 of the actual minus the ideal.
+    formula adjusted_body_weight(ideal_body_weight, actual_body_weight) = ideal_body_weight + 0.4 * (actual_body_weight - ideal_body_weight)
+        source "AdjBW [IBW + 0.4 (ABW - IBW)]"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+
+    % Actual body weight — the same equation solved for the actual body weight. Defended by the SAME sentence.
+    formula actual_body_weight(adjusted_body_weight, ideal_body_weight) = (adjusted_body_weight - ideal_body_weight) / 0.4 + ideal_body_weight
+        source "AdjBW [IBW + 0.4 (ABW - IBW)]"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+
+    % Ideal body weight — the same equation solved for the ideal body weight. The SAME sentence, read
+    % the third way.
+    formula ideal_body_weight(adjusted_body_weight, actual_body_weight) = (adjusted_body_weight - 0.4 * actual_body_weight) / 0.6
+        source "AdjBW [IBW + 0.4 (ABW - IBW)]"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC6354309/"
+        trust authoritative
+}

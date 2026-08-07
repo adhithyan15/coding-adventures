@@ -1,0 +1,83 @@
+% ============================================================================
+% place-value.adj — a two-digit number AND its tens/ones digits (CCSS-M 1.NBT.B.2).
+% ============================================================================
+% "Understand that the two digits of a two-digit number represent amounts of
+% tens and ones" is the named "base-ten procedures" gap in
+% ADJ-STDLIB-COVERAGE.md 5.1's elementary row — the skill right after the K-2
+% counting/comparison/cardinality trio (`number-sequence.adj`, `comparison.adj`,
+% `cardinality.adj`): a two-digit number IS a composed quantity, tens
+% multiplied by their place value plus the ones. This library grounds BOTH
+% directions of that relationship:
+%
+%     import "place-value.adj"              % transitively imports arithmetic.adj
+%     observe tens(4)                       % "…4 tens…"      (span cited)
+%     observe ones(7)                       % "…7 ones…"      (span cited)
+%     ? tens_and_ones_to_number(tens, ones) % COMPOSE: engine → 47
+%
+%     observe n(47)                         % "…the number 47…" (span cited)
+%     ? tens_digit(n)                       % DECOMPOSE: engine → 4
+%     ? ones_digit(n)                       % DECOMPOSE: engine → 7
+%
+% COMPOSE (digits → number) states no bare arithmetic of its own — it CALLS
+% the cited `product`/`sum` primitives (RS-1 write-once-use-many): the tens
+% digit is multiplied by its place value (10, the definitional claim this
+% library grounds), then the ones digit is added. DECOMPOSE (number → digits)
+% is the algebraic inverse, via ADJ-FORMULA-LIBRARIES FL-9's `floor`/`mod`
+% built-ins (added specifically to unblock this): `tens_digit(n) = floor(n /
+% 10)` and `ones_digit(n) = mod(n, 10)` recover the same two digits
+% COMPOSE started from — `tens_and_ones_to_number(tens_digit(n),
+% ones_digit(n)) = n` for any two-digit `n`.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitives `product`/`sum`. The import is
+% RELATIVE to this file (same package, arithmetic/ sibling directory).
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `tens`/`ones` are the two observed digit counts (COMPOSE's
+% inputs); `n` is the observed two-digit number (DECOMPOSE's input). Rung-0
+% types each observable slot as `finding`; the `surface` synonyms let a
+% decomposer map everyday phrasing ("tens place", "ones place", "units")
+% onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary place_value_vocab {
+    define tens                       : finding  surface "tens", "tens digit", "tens place"
+    define ones                       : finding  surface "ones", "ones digit", "ones place", "units"
+    define tens_and_ones_to_number    : finding  surface "the number", "two-digit number", "value"
+    define n                          : finding  surface "the number", "n", "value"
+    define tens_digit                 : finding  surface "tens digit", "how many tens"
+    define ones_digit                 : finding  surface "ones digit", "how many ones"
+}
+
+% ----------------------------------------------------------------------------
+% COMPOSE. `tens_and_ones_to_number(tens, ones) = sum(product(tens, 10),
+% ones)` CALLS the cited `product`/`sum` primitives rather than restating
+% `*`/`+` bare — the citable claim is specifically that each digit's value is
+% that digit multiplied by its place value (10 for the tens place, one
+% position left of the ones place), and the number is their sum.
+%
+% DECOMPOSE. `tens_digit(n) = floor(n / 10)` and `ones_digit(n) = mod(n,
+% 10)` ground the SAME positional-notation claim read the other direction:
+% dividing by the place value and flooring recovers the higher digit;
+% the remainder after removing whole tens is the lower digit.
+% ----------------------------------------------------------------------------
+formulabook place_value {
+    use place_value_vocab
+
+    formula tens_and_ones_to_number(tens, ones) = sum(product(tens, 10), ones)
+        source "Where each digit in a number is multiplied by its place value, and the place value is larger by \"base\" times for each position going left."
+        locator "https://www.mathsisfun.com/definitions/positional-notation.html"
+        trust consensus
+
+    formula tens_digit(n) = floor(n / 10)
+        source "Where each digit in a number is multiplied by its place value, and the place value is larger by \"base\" times for each position going left."
+        locator "https://www.mathsisfun.com/definitions/positional-notation.html"
+        trust consensus
+
+    formula ones_digit(n) = mod(n, 10)
+        source "Where each digit in a number is multiplied by its place value, and the place value is larger by \"base\" times for each position going left."
+        locator "https://www.mathsisfun.com/definitions/positional-notation.html"
+        trust consensus
+}

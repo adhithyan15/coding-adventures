@@ -12,10 +12,10 @@
 //! At runtime, extra fields are written by the `vm-core` profiler:
 //!
 //! - `observed_slot`      — a `SlotState` holding the V8 Ignition-style
-//!                          feedback state machine (UNINIT → MONO → POLY → MEGA)
+//!   feedback state machine (UNINIT → MONO → POLY → MEGA)
 //! - `observed_type`      — the single observed type for `Monomorphic` slots,
-//!                          `"polymorphic"` for POLY/MEGA, or `None` before any
-//!                          observation
+//!   `"polymorphic"` for POLY/MEGA, or `None` before any
+//!   observation
 //! - `observation_count`  — total observations recorded
 //!
 //! A `deopt_anchor` marks the interpreter instruction index the JIT must revert

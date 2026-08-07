@@ -131,7 +131,7 @@ use coding_adventures_javascript_ast::{
     BlockStatement,
     CallExpression, ClassMember, Declaration, Expression, ExpressionStatement, ForInit,
     FunctionDeclaration,
-    FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
+    Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
     Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 
@@ -523,6 +523,15 @@ fn expr_node_count(expr: &Expression) -> usize {
                         ClassMember::Method(md) => {
                             md.value.params.len() + md.value.body.body.len()
                         }
+                        // A field weighs its initializer's node count (a bare
+                        // field `x;` weighs 0) — the same size heuristic applied
+                        // to any expression value.
+                        ClassMember::Field(fd) => {
+                            fd.value.as_ref().map_or(0, expr_node_count)
+                        }
+                        // A static-init block weighs one unit per body statement,
+                        // the same size heuristic a function body uses.
+                        ClassMember::StaticBlock(b) => b.body.len(),
                     })
                     .sum::<usize>()
         }
@@ -575,13 +584,23 @@ fn candidate_from_function(
         return None;
     }
 
+    // A default parameter (`function f(a = expr)`) can't be inlined by simple
+    // positional argument binding: when a call omits the argument or passes
+    // `undefined`, the default value applies — semantics a plain `const a = arg`
+    // substitution does not reproduce. Decline the whole candidate; the function
+    // is left intact for the other passes. (A rest param is fine — it binds a
+    // name with no default expression.)
+    if fd.params.iter().any(|p| p.default_value().is_some()) {
+        return None;
+    }
+
     // Parameter names must be distinct, or the substitution map would
     // be ambiguous. (`function f(a, a)` is a syntax error in strict
     // mode anyway, but we never assume the parser rejected it.)
     let mut params: Vec<String> = Vec::with_capacity(fd.params.len());
     let mut seen = HashSet::new();
     for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier();
         if !seen.insert(id.name.clone()) {
             return None;
         }
@@ -662,11 +681,49 @@ fn count_decl_names_decl(
         Declaration::FunctionDeclaration(fd) => {
             *out.entry(fd.id.name.clone()).or_insert(0) += 1;
             for p in &fd.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 *out.entry(id.name.clone()).or_insert(0) += 1;
             }
             for s in &fd.body.body {
                 count_decl_names_stmt(s, out, nodes_touched);
+            }
+        }
+        // A class declaration binds its name, and each method's params + locals
+        // are declared names — count all, mirroring the function arm. Counting
+        // method params keeps inline-collision detection conservative.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            *out.entry(cd.id.name.clone()).or_insert(0) += 1;
+            for member in &cd.body {
+                match member {
+                    // A method contributes its params + body-declared locals.
+                    ClassMember::Method(m) => {
+                        for p in &m.value.params {
+                            let id = p.binding_identifier();
+                            *out.entry(id.name.clone()).or_insert(0) += 1;
+                        }
+                        for s in &m.value.body.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                    // A field declares no statement-scope name — its key is a
+                    // property name, not a binding, and its initializer
+                    // introduces no declarations.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's inner statements declare their own
+                    // locals — count them conservatively (mirroring the method
+                    // body) so inline-collision detection stays sound.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                }
             }
         }
     }
@@ -700,6 +757,9 @@ fn count_decl_names_stmt(
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
+            TaggedStatement::WithStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -901,8 +961,13 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
-                out.insert(id.name.clone());
+                out.insert(p.binding_identifier().name.clone());
+                // A default's `right` reads names too (`a = SOME_NAME`); over-
+                // collect them so a fresh name the void splice mints can never
+                // collide with a name a nested default reads.
+                if let Some(def) = p.default_value() {
+                    collect_binding_idents_expr(def, out);
+                }
             }
         }
         // A class *value* binds its own name (if named) and each method
@@ -928,8 +993,33 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             out.insert(id.name.clone());
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
-                            out.insert(id.name.clone());
+                            out.insert(p.binding_identifier().name.clone());
+                            if let Some(def) = p.default_value() {
+                                collect_binding_idents_expr(def, out);
+                            }
+                        }
+                    }
+                    // A field's initializer is evaluated at construction; the
+                    // computed key is evaluated in the enclosing scope. Over-
+                    // collect any binding idents inside either so an inline
+                    // never captures or collides with them. The field KEY name
+                    // itself is a property name, not a binding.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_binding_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_binding_idents_expr(v, out);
+                        }
+                    }
+                    // A static-init block's statements run at construction; over-
+                    // collect every identifier they touch (via the broader
+                    // `collect_used_idents_stmt`) so an inline never captures or
+                    // collides with a static-block-local binding. Over-collecting
+                    // into this avoid-set only makes the pass more conservative.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_used_idents_stmt(s, out);
                         }
                     }
                 }
@@ -939,8 +1029,10 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // record them so an inline never captures or collides with them.
         Expression::ArrowFunctionExpression(ae) => {
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
-                out.insert(id.name.clone());
+                out.insert(p.binding_identifier().name.clone());
+                if let Some(def) = p.default_value() {
+                    collect_binding_idents_expr(def, out);
+                }
             }
         }
         // A template literal introduces NO boundary bindings; its quasis are
@@ -1003,6 +1095,48 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
                 tally_stmt(s, cand, t);
             }
         }
+        // Tally candidate uses inside a class declaration's heritage operand
+        // and method bodies — missing one would let the pass inline a callee
+        // that is still called from inside the class (a miscompile). Mirrors the
+        // `Expression::ClassExpression` arm of `tally_expr`.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                tally_expr(sup, cand, t);
+            }
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
+                    // SOUNDNESS: a candidate use inside a field initializer
+                    // (or a computed key) is a real use — miss it and the pass
+                    // would inline a callee still called at class construction.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            tally_expr(e, cand, t);
+                        }
+                        if let Some(v) = &f.value {
+                            tally_expr(v, cand, t);
+                        }
+                    }
+                    // SOUNDNESS: a candidate use inside a static-init block's
+                    // statements is a real use — they run at class construction.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -1025,6 +1159,10 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 tally_expr(&ws.test, cand, t);
+                tally_stmt(&ws.body, cand, t);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                tally_expr(&ws.object, cand, t);
                 tally_stmt(&ws.body, cand, t);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1284,6 +1422,24 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                             tally_stmt(s, cand, t);
                         }
                     }
+                    // SOUNDNESS: a candidate use inside a field initializer (or
+                    // a computed key) is a real use — count it, mirroring the
+                    // `ClassDeclaration` arm of `tally_decl`.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            tally_expr(e, cand, t);
+                        }
+                        if let Some(v) = &f.value {
+                            tally_expr(v, cand, t);
+                        }
+                    }
+                    // SOUNDNESS: candidate uses inside a static-init block's
+                    // statements count too — mirror `tally_decl`'s arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
                 }
             }
         }
@@ -1367,6 +1523,47 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_stmt(s, cand);
             }
         }
+        // Perform the inline substitution inside a class declaration's heritage
+        // operand and method bodies, kept in lockstep with `tally_decl` above.
+        // Mirrors the `Expression::ClassExpression` arm of `inline_in_expr`.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &mut cd.super_class {
+                changed |= inline_in_expr(sup, cand);
+            }
+            for member in &mut cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
+                    // Lockstep with `tally_decl`: substitute inside a field's
+                    // initializer and computed key, the same use positions that
+                    // arm counted.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            changed |= inline_in_expr(e, cand);
+                        }
+                        if let Some(v) = &mut f.value {
+                            changed |= inline_in_expr(v, cand);
+                        }
+                    }
+                    // Lockstep with `tally`: substitute inside the static-init
+                    // block's statements, the same positions that arm counted.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
+                }
+            }
+        }
     }
     changed
 }
@@ -1393,6 +1590,10 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
             }
             TaggedStatement::WhileStatement(ws) => {
                 changed |= inline_in_expr(&mut ws.test, cand);
+                changed |= inline_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                changed |= inline_in_expr(&mut ws.object, cand);
                 changed |= inline_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1656,6 +1857,23 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                             changed |= inline_in_stmt(s, cand);
                         }
                     }
+                    // Lockstep with `tally_expr`: substitute inside a field's
+                    // initializer and computed key.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            changed |= inline_in_expr(e, cand);
+                        }
+                        if let Some(v) = &mut f.value {
+                            changed |= inline_in_expr(v, cand);
+                        }
+                    }
+                    // Lockstep with `tally`: substitute inside the static-init
+                    // block's statements, the same positions that arm counted.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
                 }
             }
         }
@@ -1841,8 +2059,17 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                 inner.remove(&id.name);
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // A default parameter's `right` runs in the nested scope and can
+            // reference a substituted outer parameter (`return function(a = b){}`
+            // inside `f(a, b)`); substitute through it with the shadow-stripped
+            // `inner`, exactly like the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    substitute(def, &inner);
+                }
             }
             for s in &mut fe.body.body {
                 substitute_in_stmt(s, &inner);
@@ -1872,11 +2099,38 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                             inner.remove(&id.name);
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                substitute(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             substitute_in_stmt(s, &inner);
+                        }
+                    }
+                    // A field's initializer runs at construction with the
+                    // class's own name in scope (but no method params), so
+                    // substitute through it with `class_inner`. The computed
+                    // key is likewise an enclosing-scope sub-expression.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            substitute(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            substitute(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at construction with
+                    // the class's own name in scope (no method params) —
+                    // substitute through them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            substitute_in_stmt(s, &class_inner);
                         }
                     }
                 }
@@ -1888,8 +2142,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         Expression::ArrowFunctionExpression(ae) => {
             let mut inner = map.clone();
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    substitute(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -2104,6 +2364,17 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
     let add_decl = |d: &Declaration, out: &mut HashSet<String>| match d {
         Declaration::FunctionDeclaration(fd) => {
             out.insert(fd.id.name.clone());
+        }
+        // A top-level `class C {}` binds `C` in the program scope, exactly like
+        // a top-level function name.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            out.insert(cd.id.name.clone());
         }
         Declaration::VariableDeclaration(vd) => {
             for decl in &vd.declarations {
@@ -2321,6 +2592,25 @@ fn expr_collect_mutated_params(
                             stmt_collect_mutated_params(s, params, out);
                         }
                     }
+                    // A field's initializer (or computed key) can mutate an
+                    // outer param — recurse. Over-detection only makes the pass
+                    // decline to inline, never wrong.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            expr_collect_mutated_params(e, params, out);
+                        }
+                        if let Some(v) = &f.value {
+                            expr_collect_mutated_params(v, params, out);
+                        }
+                    }
+                    // A static-init block's statements can mutate an outer param
+                    // — recurse. Over-detection only makes the pass decline to
+                    // inline, never wrong.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            stmt_collect_mutated_params(s, params, out);
+                        }
+                    }
                 }
             }
         }
@@ -2399,11 +2689,18 @@ fn void_candidate_from_function(
         return None;
     }
 
+    // A default parameter can't be inlined by positional argument binding (an
+    // omitted/`undefined` argument triggers the default) — decline, exactly as
+    // the return-expression candidate builder does.
+    if fd.params.iter().any(|p| p.default_value().is_some()) {
+        return None;
+    }
+
     // Parameter names must be distinct (unambiguous substitution map).
     let mut params: Vec<String> = Vec::with_capacity(fd.params.len());
     let mut param_set: HashSet<String> = HashSet::new();
     for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier();
         if !param_set.insert(id.name.clone()) {
             return None;
         }
@@ -2564,7 +2861,7 @@ fn void_candidate_from_function(
 /// normal free-identifier walk.
 fn is_inlinable_if(is: &IfStatement) -> bool {
     is_inlinable_if_branch(&is.consequent)
-        && is.alternate.as_deref().map_or(true, is_inlinable_if_branch)
+        && is.alternate.as_deref().is_none_or(is_inlinable_if_branch)
 }
 
 /// One `if` branch: a bare `ExpressionStatement`, or a `BlockStatement`
@@ -2715,6 +3012,9 @@ fn splice_void_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 splice_void_in_slot(&mut ds.body, cand, avoid, nodes_touched)
             }
@@ -2823,6 +3123,40 @@ fn splice_void_in_decl(
         // A function body is a `Vec<Statement>` the call may live in.
         Declaration::FunctionDeclaration(fd) => {
             splice_void_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
+        }
+        // Each class method body is a `Vec<Statement>` a void call may live in
+        // — splice into every method, mirroring the function-body arm.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(_) => false,
+        Declaration::ExportDefaultDeclaration(_) => false,
+        Declaration::ExportAllDeclaration(_) => false,
+        Declaration::ClassDeclaration(cd) => {
+            let mut changed = false;
+            for member in &mut cd.body {
+                match member {
+                    // A method body is a `Vec<Statement>` a void call may live in.
+                    ClassMember::Method(m) => {
+                        changed |= splice_void_in_stmt_vec(
+                            &mut m.value.body.body,
+                            cand,
+                            avoid,
+                            nodes_touched,
+                        );
+                    }
+                    // A field's initializer is an expression (a value position),
+                    // so a void statement cannot be spliced there.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's body IS a `Vec<Statement>` — splice
+                    // into it like a method body.
+                    ClassMember::StaticBlock(b) => {
+                        changed |=
+                            splice_void_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched);
+                    }
+                }
+            }
+            changed
         }
         // Variable initializers are expressions — a call there is a value
         // position, declined by this slice.
@@ -3566,6 +3900,9 @@ fn splice_valued_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 splice_valued_in_stmt(&mut ds.body, cand, avoid, nodes_touched)
             }
@@ -3648,6 +3985,40 @@ fn splice_valued_in_decl(
     match decl {
         Declaration::FunctionDeclaration(fd) => {
             splice_valued_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
+        }
+        // Each class method body is a `Vec<Statement>` a valued call may live
+        // in — splice into every method, mirroring the function-body arm.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(_) => false,
+        Declaration::ExportDefaultDeclaration(_) => false,
+        Declaration::ExportAllDeclaration(_) => false,
+        Declaration::ClassDeclaration(cd) => {
+            let mut changed = false;
+            for member in &mut cd.body {
+                match member {
+                    // A method body is a `Vec<Statement>` a valued call may live in.
+                    ClassMember::Method(m) => {
+                        changed |= splice_valued_in_stmt_vec(
+                            &mut m.value.body.body,
+                            cand,
+                            avoid,
+                            nodes_touched,
+                        );
+                    }
+                    // A field's initializer is a value position — a valued call
+                    // cannot be spliced there.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's body IS a `Vec<Statement>` — splice
+                    // into it like a method body.
+                    ClassMember::StaticBlock(b) => {
+                        changed |=
+                            splice_valued_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched);
+                    }
+                }
+            }
+            changed
         }
         // A variable initializer is a value position; the call must be the
         // ENTIRE init (handled at the list level by `try_capture_in_stmt` /
@@ -3834,8 +4205,16 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 inner.remove(&id.name);
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // A default's `right` can reference an outer name being alpha-renamed
+            // (`(x = loc) => …` spliced where `loc` is renamed); rename it with
+            // the shadow-stripped `inner`, exactly like the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_in_expr(def, &inner);
+                }
             }
             for s in &mut fe.body.body {
                 rename_in_stmt(s, &inner);
@@ -3864,11 +4243,38 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                             inner.remove(&id.name);
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_in_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rename_in_stmt(s, &inner);
+                        }
+                    }
+                    // A field's initializer and computed key are renamed with
+                    // `class_inner` (the class's own name in scope, no method
+                    // params). The field KEY name is a property name, never a
+                    // renamed use.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rename_in_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rename_in_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements are alpha-renamed with
+                    // `class_inner` (the class's own name in scope, no method
+                    // params).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rename_in_stmt(s, &class_inner);
                         }
                     }
                 }
@@ -3880,8 +4286,14 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::ArrowFunctionExpression(ae) => {
             let mut inner = map.clone();
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_in_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -3976,6 +4388,48 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                 collect_used_idents_stmt(s, out);
             }
         }
+        // Collect identifiers used in a class declaration's heritage operand and
+        // method bodies, so an inline never mints a fresh name that collides
+        // with one referenced inside the class.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                collect_binding_idents_expr(sup, out);
+            }
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            collect_used_idents_stmt(s, out);
+                        }
+                    }
+                    // Over-collect identifiers referenced in a field's
+                    // initializer and computed key, so an inline never mints a
+                    // fresh name that collides with one used there.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_binding_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_binding_idents_expr(v, out);
+                        }
+                    }
+                    // Over-collect identifiers referenced in the static-init
+                    // block's statements, so an inline never mints a fresh name
+                    // that collides with one used there.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_used_idents_stmt(s, out);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -4000,6 +4454,10 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_binding_idents_expr(&ws.test, out);
+                collect_used_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_binding_idents_expr(&ws.object, out);
                 collect_used_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -4408,7 +4866,7 @@ mod tests {
         let _a: InlinePass = Default::default();
         let _b: InlinePass = InlinePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================
@@ -4427,7 +4885,7 @@ mod tests {
         // (now dead) declaration stays — its removal is a later pass.
         assert_eq!(
             inline_source("function double(x) { return x * 2; } log(double(7));"),
-            "function double(x){return x*2};log(7*2);"
+            "function double(x){return x*2}log(7*2);"
         );
     }
 
@@ -4437,7 +4895,7 @@ mod tests {
         // → `value`.
         assert_eq!(
             inline_source("function id(v) { return v; } print(id(value));"),
-            "function id(v){return v};print(value);"
+            "function id(v){return v}print(value);"
         );
     }
 
@@ -4445,7 +4903,7 @@ mod tests {
     fn inlines_two_param_function() {
         assert_eq!(
             inline_source("function add(a, b) { return a + b; } use(add(p, q));"),
-            "function add(a,b){return a+b};use(p+q);"
+            "function add(a,b){return a+b}use(p+q);"
         );
     }
 
@@ -4455,7 +4913,7 @@ mod tests {
         // `.x` property name must NOT be touched.
         assert_eq!(
             inline_source("function get(o) { return o.x; } use(get(obj));"),
-            "function get(o){return o.x};use(obj.x);"
+            "function get(o){return o.x}use(obj.x);"
         );
     }
 
@@ -4464,7 +4922,7 @@ mod tests {
         // A computed `o[i]` IS a use position — both params substitute.
         assert_eq!(
             inline_source("function at(o, i) { return o[i]; } use(at(arr, idx));"),
-            "function at(o,i){return o[i]};use(arr[idx]);"
+            "function at(o,i){return o[i]}use(arr[idx]);"
         );
     }
 
@@ -4473,7 +4931,7 @@ mod tests {
         // The call can be nested inside another call's arguments.
         assert_eq!(
             inline_source("function double(x) { return x * 2; } outer(inner(double(5)));"),
-            "function double(x){return x*2};outer(inner(5*2));"
+            "function double(x){return x*2}outer(inner(5*2));"
         );
     }
 
@@ -4484,7 +4942,7 @@ mod tests {
         // declaration is left for the downstream passes to remove.
         assert_eq!(
             inline_source("function d(x) { return x * 2; } a(d(1)); b(d(2));"),
-            "function d(x){return x*2};a(1*2);b(2*2);"
+            "function d(x){return x*2}a(1*2);b(2*2);"
         );
     }
 
@@ -4496,7 +4954,7 @@ mod tests {
         // WOULD still be inlined — see the single-use tests.)
         assert_eq!(
             inline_source("function cube(x) { return x * x * x; } a(cube(p)); b(cube(q));"),
-            "function cube(x){return x*x*x};a(cube(p));b(cube(q));"
+            "function cube(x){return x*x*x}a(cube(p));b(cube(q));"
         );
     }
 
@@ -4508,7 +4966,7 @@ mod tests {
         // net loss. We decline the whole function (uses != inlinable).
         assert_eq!(
             inline_source("function f(x) { return x * 2; } a(f(1)); b(f(2)); keep(f);"),
-            "function f(x){return x*2};a(f(1));b(f(2));keep(f);"
+            "function f(x){return x*2}a(f(1));b(f(2));keep(f);"
         );
     }
 
@@ -4519,7 +4977,7 @@ mod tests {
         // function is declined (no partial inlining).
         assert_eq!(
             inline_source("function d(x) { return x * 2; } a(d(1)); b(d(g()));"),
-            "function d(x){return x*2};a(d(1));b(d(g()));"
+            "function d(x){return x*2}a(d(1));b(d(g()));"
         );
     }
 
@@ -4529,7 +4987,7 @@ mod tests {
         // not a candidate — recursion is excluded by the capture guard.
         assert_eq!(
             inline_source("function f(x) { return f(x); } g(f(1));"),
-            "function f(x){return f(x)};g(f(1));"
+            "function f(x){return f(x)}g(f(1));"
         );
     }
 
@@ -4540,7 +4998,7 @@ mod tests {
         // `g`. Rejected.
         assert_eq!(
             inline_source("function f(x) { return x + g; } h(f(1));"),
-            "function f(x){return x+g};h(f(1));"
+            "function f(x){return x+g}h(f(1));"
         );
     }
 
@@ -4551,7 +5009,7 @@ mod tests {
         // either binding. Rejected by the shadow guard.
         assert_eq!(
             inline_source("function f(x) { return x * 2; } function uses(f) { return f(1); }"),
-            "function f(x){return x*2};function uses(f){return f(1)};"
+            "function f(x){return x*2}function uses(f){return f(1)};"
         );
     }
 
@@ -4561,7 +5019,7 @@ mod tests {
         // arity check fails, so the call is left intact.
         assert_eq!(
             inline_source("function add(a, b) { return a + b; } k(add(1));"),
-            "function add(a,b){return a+b};k(add(1));"
+            "function add(a,b){return a+b}k(add(1));"
         );
     }
 
@@ -4573,7 +5031,7 @@ mod tests {
         // plus `g` — but the simple-arg gate is the operative reason.)
         assert_eq!(
             inline_source("function f(x) { return x * 2; } m(f(g()));"),
-            "function f(x){return x*2};m(f(g()));"
+            "function f(x){return x*2}m(f(g()));"
         );
     }
 
@@ -4583,7 +5041,7 @@ mod tests {
         // called. There is no call to substitute, so nothing changes.
         assert_eq!(
             inline_source("function f(x) { return x * 2; } h(f);"),
-            "function f(x){return x*2};h(f);"
+            "function f(x){return x*2}h(f);"
         );
     }
 
@@ -4595,7 +5053,7 @@ mod tests {
         // candidate for either inliner.
         assert_eq!(
             inline_source("function f(x) { var t = x * 2; return t; } use(f(3));"),
-            "function f(x){var t=x*2;return t};use(f(3));"
+            "function f(x){var t=x*2;return t}use(f(3));"
         );
     }
 
@@ -4614,7 +5072,7 @@ mod tests {
             inline_source(
                 "function track(n, v) { const e = n+v; metrics.push(e); } track(a, b);"
             ),
-            "function track(n,v){const e=n+v;metrics.push(e)};const c=a+b;metrics.push(c);"
+            "function track(n,v){const e=n+v;metrics.push(e)}const c=a+b;metrics.push(c);"
         );
     }
 
@@ -4624,7 +5082,7 @@ mod tests {
         // body run with the argument substituted in.
         assert_eq!(
             inline_source("function log2(x) { console.log(x); console.log(x); } log2(v);"),
-            "function log2(x){console.log(x);console.log(x)};console.log(v);console.log(v);"
+            "function log2(x){console.log(x);console.log(x)}console.log(v);console.log(v);"
         );
     }
 
@@ -4635,7 +5093,7 @@ mod tests {
         // keeps them distinct — the soundness crux of statement splicing.
         assert_eq!(
             inline_source("function f(x) { const c = x; sink(c); } f(c);"),
-            "function f(x){const c=x;sink(c)};const a=c;sink(a);"
+            "function f(x){const c=x;sink(c)}const a=c;sink(a);"
         );
     }
 
@@ -4656,7 +5114,7 @@ mod tests {
         // first would be guarded by the condition.
         assert_eq!(
             inline_source("function f() { a(); b(); } if (c) f();"),
-            "function f(){a();b()};if(c){a();b()}"
+            "function f(){a();b()}if(c){a();b()}"
         );
     }
 
@@ -4666,7 +5124,7 @@ mod tests {
         // discarded statement call. This slice declines it.
         assert_eq!(
             inline_source("function f() { sink(1); } var x = f();"),
-            "function f(){sink(1)};var x=f();"
+            "function f(){sink(1)}var x=f();"
         );
     }
 
@@ -4678,7 +5136,7 @@ mod tests {
         // (nothing else references `b`). Previously this slice declined `var`.
         assert_eq!(
             inline_source("function f(x) { var t = x; sink(t); } f(a);"),
-            "function f(x){var t=x;sink(t)};var b=a;sink(b);"
+            "function f(x){var t=x;sink(t)}var b=a;sink(b);"
         );
     }
 
@@ -4690,7 +5148,7 @@ mod tests {
         // provably inert and dropped entirely; the rest splices as usual.
         assert_eq!(
             inline_source("function f(x) { sink(x); return 1; } f(a);"),
-            "function f(x){sink(x);return 1};sink(a);"
+            "function f(x){sink(x);return 1}sink(a);"
         );
     }
 
@@ -4699,7 +5157,7 @@ mod tests {
         // A bare `return;` is a no-op once the value is discarded — dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return; } f(a);"),
-            "function f(x){sink(x);return};sink(a);"
+            "function f(x){sink(x);return}sink(a);"
         );
     }
 
@@ -4709,7 +5167,7 @@ mod tests {
         // the read neither throws nor has a side effect; dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return x; } f(a);"),
-            "function f(x){sink(x);return x};sink(a);"
+            "function f(x){sink(x);return x}sink(a);"
         );
     }
 
@@ -4719,7 +5177,7 @@ mod tests {
         // but the call is KEPT as a statement (`setup();`) for its effect.
         assert_eq!(
             inline_source("function f(x) { log(x); return setup(); } f(a);"),
-            "function f(x){log(x);return setup()};log(a);setup();"
+            "function f(x){log(x);return setup()}log(a);setup();"
         );
     }
 
@@ -4730,7 +5188,7 @@ mod tests {
         // this, but the discarded-result statement splice can: `g();`.
         assert_eq!(
             inline_source("function f() { return setup(); } f();"),
-            "function f(){return setup()};setup();"
+            "function f(){return setup()}setup();"
         );
     }
 
@@ -4740,7 +5198,7 @@ mod tests {
         // if undeclared — so the read is preserved as `glob;`, not dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return glob; } f(a);"),
-            "function f(x){sink(x);return glob};sink(a);glob;"
+            "function f(x){sink(x);return glob}sink(a);glob;"
         );
     }
 
@@ -4751,7 +5209,7 @@ mod tests {
         // so the candidate is declined.
         assert_eq!(
             inline_source("function f(x) { return; sink(x); } f(a);"),
-            "function f(x){return;sink(x)};f(a);"
+            "function f(x){return;sink(x)}f(a);"
         );
     }
 
@@ -4761,7 +5219,7 @@ mod tests {
         // rebind it. Rejected.
         assert_eq!(
             inline_source("function f() { sink(arguments); } f();"),
-            "function f(){sink(arguments)};f();"
+            "function f(){sink(arguments)}f();"
         );
     }
 
@@ -4780,7 +5238,7 @@ mod tests {
         // remove-unused-vars / treeshake, not by this pass.)
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } f();"),
-            "const K=5;function f(){sink(K)};sink(K);"
+            "const K=5;function f(){sink(K)}sink(K);"
         );
     }
 
@@ -4793,11 +5251,9 @@ mod tests {
         // body.
         assert_eq!(
             inline_source(
-                "function dep(x) { trace(x); return x*2; } dep(0); \
-                 function f(p) { log(p); use(dep(p)); } f(5);"
+                "function dep(x) { trace(x); return x*2; } dep(0); function f(p) { log(p); use(dep(p)); } f(5);"
             ),
-            "function dep(x){trace(x);return x*2};dep(0);\
-             function f(p){log(p);use(dep(p))};log(5);use(dep(5));"
+            "function dep(x){trace(x);return x*2}dep(0);function f(p){log(p);use(dep(p))}log(5);use(dep(5));"
         );
     }
 
@@ -4815,10 +5271,9 @@ mod tests {
         // Slice B behaviour change.
         assert_eq!(
             inline_source(
-                "const K = 5; function f() { sink(K); } \
-                 function main() { f(); } main(); main();"
+                "const K = 5; function f() { sink(K); } function main() { f(); } main(); main();"
             ),
-            "const K=5;function f(){sink(K)};function main(){sink(K)};main();main();"
+            "const K=5;function f(){sink(K)}function main(){sink(K)}main();main();"
         );
     }
 
@@ -4828,7 +5283,7 @@ mod tests {
         // so the splice is sound there too.
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } { f(); }"),
-            "const K=5;function f(){sink(K)};{sink(K)}"
+            "const K=5;function f(){sink(K)}{sink(K)}"
         );
     }
 
@@ -4843,12 +5298,9 @@ mod tests {
         // so it is not itself inlined; `g` is multi-use so it stays.
         assert_eq!(
             inline_source(
-                "function dep() { keep(); return 1; } dep(); \
-                 function f() { log(0); use(dep); } \
-                 function g() { let dep = 99; f(); } g(); g();"
+                "function dep() { keep(); return 1; } dep(); function f() { log(0); use(dep); } function g() { let dep = 99; f(); } g(); g();"
             ),
-            "function dep(){keep();return 1};dep();\
-             function f(){log(0);use(dep)};function g(){let dep=99;f()};g();g();"
+            "function dep(){keep();return 1}dep();function f(){log(0);use(dep)}function g(){let dep=99;f()}g();g();"
         );
     }
 
@@ -4861,12 +5313,9 @@ mod tests {
         // exercised now that the uniqueness gate handles the single-decl case.
         assert_eq!(
             inline_source(
-                "function dep() { keep(); return 1; } dep(); \
-                 function f() { log(0); use(dep); } f(); \
-                 function other() { let dep = 5; return dep; } other(); other();"
+                "function dep() { keep(); return 1; } dep(); function f() { log(0); use(dep); } f(); function other() { let dep = 5; return dep; } other(); other();"
             ),
-            "function dep(){keep();return 1};dep();function f(){log(0);use(dep)};\
-             log(0);use(dep);function other(){let dep=5;return dep};other();other();"
+            "function dep(){keep();return 1}dep();function f(){log(0);use(dep)}log(0);use(dep);function other(){let dep=5;return dep}other();other();"
         );
     }
 
@@ -4881,12 +5330,9 @@ mod tests {
         // `g`'s nested `dep` (99) instead of the top-level one.
         assert_eq!(
             inline_source(
-                "function dep() { return 1; } dep(); \
-                 function f() { log(0); use(dep); } \
-                 function g() { function dep() { return 99; } f(); dep(); } g(); g();"
+                "function dep() { return 1; } dep(); function f() { log(0); use(dep); } function g() { function dep() { return 99; } f(); dep(); } g(); g();"
             ),
-            "function dep(){return 1};dep();function f(){log(0);use(dep)};\
-             function g(){function dep(){return 99};f();dep()};g();g();"
+            "function dep(){return 1}dep();function f(){log(0);use(dep)}function g(){function dep(){return 99}f();dep()}g();g();"
         );
     }
 
@@ -4900,11 +5346,9 @@ mod tests {
         // on `f`).
         assert_eq!(
             inline_source(
-                "function other(q) { trace(q); return q; } other(1); other(2); \
-                 function f() { sink(q); } f();"
+                "function other(q) { trace(q); return q; } other(1); other(2); function f() { sink(q); } f();"
             ),
-            "function other(q){trace(q);return q};other(1);other(2);\
-             function f(){sink(q)};f();"
+            "function other(q){trace(q);return q}other(1);other(2);function f(){sink(q)}f();"
         );
     }
 
@@ -4918,7 +5362,7 @@ mod tests {
         // declined this; PR-4a admits it.)
         assert_eq!(
             inline_source("function f(x) { sink(x); } f(g());"),
-            "function f(x){sink(x)};const a=g();sink(a);"
+            "function f(x){sink(x)}const a=g();sink(a);"
         );
     }
 
@@ -4928,7 +5372,7 @@ mod tests {
         // twice: the temp captures the read once, both uses read the temp.
         assert_eq!(
             inline_source("function f(p) { sink(p); use(p); } f(obj.x);"),
-            "function f(p){sink(p);use(p)};const a=obj.x;sink(a);use(a);"
+            "function f(p){sink(p);use(p)}const a=obj.x;sink(a);use(a);"
         );
     }
 
@@ -4938,7 +5382,7 @@ mod tests {
         // are hoisted in source order, preserving left-to-right evaluation.
         assert_eq!(
             inline_source("function f(p, q) { sink(p, q); } f(5, obj.x);"),
-            "function f(p,q){sink(p,q)};const a=5;const b=obj.x;sink(a,b);"
+            "function f(p,q){sink(p,q)}const a=5;const b=obj.x;sink(a,b);"
         );
     }
 
@@ -4948,7 +5392,7 @@ mod tests {
         // non-simple argument hoists the arg temp before the captured body.
         assert_eq!(
             inline_source("function f(p) { g(); return p + 1; } var x = f(obj.y);"),
-            "function f(p){g();return p+1};const b=obj.y;g();const a=b+1;var x=a;"
+            "function f(p){g();return p+1}const b=obj.y;g();const a=b+1;var x=a;"
         );
     }
 
@@ -4958,7 +5402,7 @@ mod tests {
         // preserved byte-for-byte — the no-churn guarantee.
         assert_eq!(
             inline_source("function f(p) { sink(p); use(p); } f(v);"),
-            "function f(p){sink(p);use(p)};sink(v);use(v);"
+            "function f(p){sink(p);use(p)}sink(v);use(v);"
         );
     }
 
@@ -4970,7 +5414,7 @@ mod tests {
         // verbatim with the parameter substituted in.
         assert_eq!(
             inline_source("function f(x) { if (x > 0) log(x); else warn(x); } f(v);"),
-            "function f(x){if(x>0)log(x);else warn(x);};if(v>0)log(v);else warn(v);"
+            "function f(x){if(x>0)log(x);else warn(x);}if(v>0)log(v);else warn(v);"
         );
     }
 
@@ -4979,7 +5423,7 @@ mod tests {
         // A block branch of expression statements is spliced as a block.
         assert_eq!(
             inline_source("function f(x) { if (x) { a(x); b(x); } } f(v);"),
-            "function f(x){if(x){a(x);b(x)}};if(v){a(v);b(v)}"
+            "function f(x){if(x){a(x);b(x)}}if(v){a(v);b(v)}"
         );
     }
 
@@ -4989,7 +5433,7 @@ mod tests {
         // and branch that read it are renamed consistently.
         assert_eq!(
             inline_source("function f(x) { const t = x > 0; if (t) sink(x); } f(v);"),
-            "function f(x){const t=x>0;if(t)sink(x);};const a=v>0;if(a)sink(v);"
+            "function f(x){const t=x>0;if(t)sink(x);}const a=v>0;if(a)sink(v);"
         );
     }
 
@@ -4999,7 +5443,7 @@ mod tests {
         // temp once, and the `if` reads the temp.
         assert_eq!(
             inline_source("function f(p) { if (p) sink(p); } f(g());"),
-            "function f(p){if(p)sink(p);};const a=g();if(a)sink(a);"
+            "function f(p){if(p)sink(p);}const a=g();if(a)sink(a);"
         );
     }
 
@@ -5009,7 +5453,7 @@ mod tests {
         // splice would mis-scope — the whole helper is declined.
         assert_eq!(
             inline_source("function f(x) { if (x) return; sink(x); } f(v);"),
-            "function f(x){if(x)return;sink(x)};f(v);"
+            "function f(x){if(x)return;sink(x)}f(v);"
         );
     }
 
@@ -5019,7 +5463,7 @@ mod tests {
         // name-based renamer cannot shadow-correctly — declined.
         assert_eq!(
             inline_source("function f(x) { if (x) { let t = 1; sink(t); } } f(v);"),
-            "function f(x){if(x){let t=1;sink(t)}};f(v);"
+            "function f(x){if(x){let t=1;sink(t)}}f(v);"
         );
     }
 
@@ -5029,7 +5473,7 @@ mod tests {
         // branch fails the restriction — declined (kept for a later slice).
         assert_eq!(
             inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
-            "function f(x){if(x){if(y)a();}};f(v);"
+            "function f(x){if(x){if(y)a();}}f(v);"
         );
     }
 
@@ -5042,7 +5486,7 @@ mod tests {
         // OUTER `if` (it must NOT capture the inner else-less `if`).
         assert_eq!(
             inline_source("function g(x) { if (x) a(x); } if (c) g(v); else other();"),
-            "function g(x){if(x)a(x);};if(c){if(v)a(v);}else other();"
+            "function g(x){if(x)a(x);}if(c){if(v)a(v);}else other();"
         );
     }
 
@@ -5052,7 +5496,7 @@ mod tests {
         // separate, budgeted concern (a non-goal for PR-1). Declined.
         assert_eq!(
             inline_source("function f(x) { sink(x); } f(a); f(b);"),
-            "function f(x){sink(x)};f(a);f(b);"
+            "function f(x){sink(x)}f(a);f(b);"
         );
     }
 
@@ -5064,7 +5508,7 @@ mod tests {
         // mis-rename. Defense in depth against a non-conformant parser.
         assert_eq!(
             inline_source("function f(x) { const x = 1; sink(x); } f(a);"),
-            "function f(x){const x=1;sink(x)};f(a);"
+            "function f(x){const x=1;sink(x)}f(a);"
         );
     }
 
@@ -5075,7 +5519,7 @@ mod tests {
         // invariant preserved.
         assert_eq!(
             inline_source("function f(x) { if (x) f(x); } g(f);"),
-            "function f(x){if(x)f(x);};g(f);"
+            "function f(x){if(x)f(x);}g(f);"
         );
     }
 
@@ -5093,8 +5537,7 @@ mod tests {
             inline_source(
                 "function compute(a) { const t = a+1; return t*2; } var x = compute(5);"
             ),
-            "function compute(a){const t=a+1;return t*2};\
-             const c=5+1;const b=c*2;var x=b;"
+            "function compute(a){const t=a+1;return t*2}const c=5+1;const b=c*2;var x=b;"
         );
     }
 
@@ -5104,7 +5547,7 @@ mod tests {
         // and runs before the binding; the returned value is captured.
         assert_eq!(
             inline_source("function make(a) { setup(a); return build(a); } var r = make(x);"),
-            "function make(a){setup(a);return build(a)};setup(x);const b=build(x);var r=b;"
+            "function make(a){setup(a);return build(a)}setup(x);const b=build(x);var r=b;"
         );
     }
 
@@ -5114,7 +5557,7 @@ mod tests {
         // tail `return a` (a parameter) is captured after substitution.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } let x = f(7);"),
-            "function f(a){g();return a};g();const b=7;let x=b;"
+            "function f(a){g();return a}g();const b=7;let x=b;"
         );
     }
 
@@ -5125,7 +5568,7 @@ mod tests {
         // read — declined.
         assert_eq!(
             inline_source("function f(p) { g(); return p; } var x = k + f(1);"),
-            "function f(p){g();return p};var x=k+f(1);"
+            "function f(p){g();return p}var x=k+f(1);"
         );
     }
 
@@ -5135,7 +5578,7 @@ mod tests {
         // declined (the call is not the initializer's top expression).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var x = h(f(2));"),
-            "function f(a){g();return a};var x=h(f(2));"
+            "function f(a){g();return a}var x=h(f(2));"
         );
     }
 
@@ -5146,7 +5589,7 @@ mod tests {
         // preserve that ordering — declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var x = f(1), y = 2;"),
-            "function f(a){g();return a};var x=f(1),y=2;"
+            "function f(a){g();return a}var x=f(1),y=2;"
         );
     }
 
@@ -5157,7 +5600,7 @@ mod tests {
         // `undefined`, which this slice does not synthesize — declined.
         assert_eq!(
             inline_source("function f(a) { g(); return; } var x = f(1);"),
-            "function f(a){g();return};var x=f(1);"
+            "function f(a){g();return}var x=f(1);"
         );
     }
 
@@ -5171,7 +5614,7 @@ mod tests {
         // caller's own `return 7` — no temp, the value flows straight out.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } function main() { return f(7); }"),
-            "function f(a){g();return a};function main(){g();return 7};"
+            "function f(a){g();return a}function main(){g();return 7};"
         );
     }
 
@@ -5184,11 +5627,9 @@ mod tests {
         // the caller's return value.
         assert_eq!(
             inline_source(
-                "function f(p) { const t = p+1; return t; } \
-                 function main() { return f(compute()); }"
+                "function f(p) { const t = p+1; return t; } function main() { return f(compute()); }"
             ),
-            "function f(p){const t=p+1;return t};\
-             function main(){const a=compute();const b=a+1;return b};"
+            "function f(p){const t=p+1;return t}function main(){const a=compute();const b=a+1;return b};"
         );
     }
 
@@ -5203,7 +5644,7 @@ mod tests {
             inline_source(
                 "function f(a) { g(); return a; } function main() { return cond&&f(7); }"
             ),
-            "function f(a){g();return a};function main(){return cond&&f(7)};"
+            "function f(a){g();return a}function main(){return cond&&f(7)};"
         );
     }
 
@@ -5216,7 +5657,7 @@ mod tests {
             inline_source(
                 "function f(a) { g(); return a; } function main() { return c ? f(7) : 0; }"
             ),
-            "function f(a){g();return a};function main(){return c?f(7):0};"
+            "function f(a){g();return a}function main(){return c?f(7):0};"
         );
     }
 
@@ -5228,7 +5669,7 @@ mod tests {
         // call is left intact rather than mis-spliced.
         assert_eq!(
             inline_source("function f(a) { g(); return; } function main() { return f(1); }"),
-            "function f(a){g();return};function main(){return f(1)};"
+            "function f(a){g();return}function main(){return f(1)};"
         );
     }
 
@@ -5244,7 +5685,7 @@ mod tests {
         // statements parse (CLOC17).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h; h = f(7);"),
-            "function f(a){g();return a};var h;g();h=7;"
+            "function f(a){g();return a}var h;g();h=7;"
         );
     }
 
@@ -5257,7 +5698,7 @@ mod tests {
         // assignment's right-hand side.
         assert_eq!(
             inline_source("function f(p) { const t = p + 1; return t; } var h; h = f(compute());"),
-            "function f(p){const t=p+1;return t};var h;const a=compute();const b=a+1;h=b;"
+            "function f(p){const t=p+1;return t}var h;const a=compute();const b=a+1;h=b;"
         );
     }
 
@@ -5269,7 +5710,7 @@ mod tests {
         // declined (the call is left intact).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h = 0; h += f(7);"),
-            "function f(a){g();return a};var h=0;h+=f(7);"
+            "function f(a){g();return a}var h=0;h+=f(7);"
         );
     }
 
@@ -5280,7 +5721,7 @@ mod tests {
         // `o` getter, or the body mutating `o`). Member targets are declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var o = {}; o.k = f(7);"),
-            "function f(a){g();return a};var o={};o.k=f(7);"
+            "function f(a){g();return a}var o={};o.k=f(7);"
         );
     }
 
@@ -5292,7 +5733,7 @@ mod tests {
         // declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h; h = f(7) + 1;"),
-            "function f(a){g();return a};var h;h=f(7)+1;"
+            "function f(a){g();return a}var h;h=f(7)+1;"
         );
     }
 
@@ -5304,7 +5745,7 @@ mod tests {
         // intact rather than mis-spliced.
         assert_eq!(
             inline_source("function f(a) { g(); return; } var h; h = f(1);"),
-            "function f(a){g();return};var h;h=f(1);"
+            "function f(a){g();return}var h;h=f(1);"
         );
     }
 
@@ -5326,7 +5767,7 @@ mod tests {
         // just `var g = 8;`.)
         assert_eq!(
             inline_source("function f(x) { x = x + 1; return x; } var g = f(7);"),
-            "function f(x){x=x+1;return x};let b=7;b=b+1;const a=b;var g=a;"
+            "function f(x){x=x+1;return x}let b=7;b=b+1;const a=b;var g=a;"
         );
     }
 
@@ -5336,7 +5777,7 @@ mod tests {
         // materialisation, with the compound operator preserved.
         assert_eq!(
             inline_source("function f(x) { x += 1; return x; } var g = f(7);"),
-            "function f(x){x+=1;return x};let b=7;b+=1;const a=b;var g=a;"
+            "function f(x){x+=1;return x}let b=7;b+=1;const a=b;var g=a;"
         );
     }
 
@@ -5349,7 +5790,7 @@ mod tests {
         // `c`.) `f(7)` returns 5, so `var g = 5`.
         assert_eq!(
             inline_source("function f(x) { var y; y = (x = 5); return y; } var g = f(7);"),
-            "function f(x){var y;y=x=5;return y};let b=7;var c;c=b=5;const a=c;var g=a;"
+            "function f(x){var y;y=x=5;return y}let b=7;var c;c=b=5;const a=c;var g=a;"
         );
     }
 
@@ -5362,7 +5803,7 @@ mod tests {
         // becomes `c = c + b`. `f(p(), 1)` ⇒ `g = 1 + p()`.
         assert_eq!(
             inline_source("function f(x, y) { y = y + x; return y; } var g = f(p(), 1);"),
-            "function f(x,y){y=y+x;return y};const b=p();let c=1;c=c+b;const a=c;var g=a;"
+            "function f(x,y){y=y+x;return y}const b=p();let c=1;c=c+b;const a=c;var g=a;"
         );
     }
 
@@ -5373,7 +5814,7 @@ mod tests {
         // reads of `x` in `x + x`.
         assert_eq!(
             inline_source("function f(x) { x = x + 1; return x + x; } var g = f(side());"),
-            "function f(x){x=x+1;return x+x};let b=side();b=b+1;const a=b+b;var g=a;"
+            "function f(x){x=x+1;return x+x}let b=side();b=b+1;const a=b+b;var g=a;"
         );
     }
 
@@ -5388,7 +5829,7 @@ mod tests {
         // temp to `var g = 7` in the full SIMPLE pipeline.)
         assert_eq!(
             inline_source("function f(x) { glob = x; return x; } var g = f(7);"),
-            "function f(x){glob=x;return x};glob=7;const a=7;var g=a;"
+            "function f(x){glob=x;return x}glob=7;const a=7;var g=a;"
         );
     }
 
@@ -5402,7 +5843,7 @@ mod tests {
         // hoisted `var b` is inert because `b` appears nowhere else.
         assert_eq!(
             inline_source("function f(x) { var t = x + 1; return t * 2; } var g = f(7);"),
-            "function f(x){var t=x+1;return t*2};var b=7+1;const a=b*2;var g=a;"
+            "function f(x){var t=x+1;return t*2}var b=7+1;const a=b*2;var g=a;"
         );
     }
 
@@ -5414,7 +5855,7 @@ mod tests {
         // guard above, which declines mutating a *parameter*.)
         assert_eq!(
             inline_source("function f(x) { var t = x; t = t + 1; return t; } var g = f(7);"),
-            "function f(x){var t=x;t=t+1;return t};var b=7;b=b+1;const a=b;var g=a;"
+            "function f(x){var t=x;t=t+1;return t}var b=7;b=b+1;const a=b;var g=a;"
         );
     }
 
@@ -5426,7 +5867,109 @@ mod tests {
         // `t` (declared `var t = 9` → kept as `var t=9`) is untouched.
         assert_eq!(
             inline_source("var t = 9; function f(x) { var t = x; return t; } var g = f(5);"),
-            "var t=9;function f(x){var t=x;return t};var b=5;const a=b;var g=a;"
+            "var t=9;function f(x){var t=x;return t}var b=5;const a=b;var g=a;"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — when the inliner splices a
+    // function body that contains a NESTED function/arrow value with a default
+    // parameter, the body-rewriters (`substitute` param→arg, `rename_in_expr`
+    // alpha-rename) must rewrite that nested default too — else a name it reads
+    // (an outer param being substituted, or an outer local being renamed) is
+    // left dangling. The bridge does not yet produce defaults (PR2), so these
+    // call the rewriters directly on hand-built AST.
+    // -------------------------------------------------------------------
+    #[test]
+    fn substitute_reaches_nested_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BlockStatement, Expression, FunctionExpression, FunctionParam,
+            Identifier, NumericLiteral, Statement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+        // `function(a = b){ return a; }` — the default reads `b`.
+        let mut expr = Expression::FunctionExpression(FunctionExpression {
+            cv: None,
+            id: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("a"),
+                right: Expression::Identifier(id("b")),
+            })],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("a"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        });
+
+        // Substituting `b -> 2` must reach the default `= b`.
+        let mut map = HashMap::new();
+        map.insert(
+            "b".to_string(),
+            Expression::NumericLiteral(NumericLiteral {
+                cv: None,
+                value: 2.0,
+                raw: "2".to_string(),
+            }),
+        );
+        substitute(&mut expr, &map);
+
+        let Expression::FunctionExpression(fe) = &expr else {
+            panic!("expected a function expression");
+        };
+        match fe.params[0].default_value() {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 2.0),
+            other => panic!("nested default `= b` was not substituted: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rename_in_expr_reaches_nested_arrow_default() {
+        use coding_adventures_javascript_ast::{
+            ArrowBody, ArrowFunctionExpression, AssignmentPattern, Expression, FunctionParam,
+            Identifier,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+        // `(x = loc) => x` — the default reads the outer local `loc`.
+        let mut expr = Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("x"),
+                right: Expression::Identifier(id("loc")),
+            })],
+            body: ArrowBody::Expression(Box::new(Expression::Identifier(id("x")))),
+            is_async: false,
+        });
+
+        // Alpha-renaming `loc -> _a` must reach the default `= loc`.
+        let mut map = HashMap::new();
+        map.insert("loc".to_string(), "_a".to_string());
+        rename_in_expr(&mut expr, &map);
+
+        let Expression::ArrowFunctionExpression(ae) = &expr else {
+            panic!("expected an arrow expression");
+        };
+        match ae.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, "_a",
+                "nested arrow default `= loc` was not alpha-renamed"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }

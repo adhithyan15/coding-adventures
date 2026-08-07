@@ -112,6 +112,12 @@ defmodule CodingAdventures.ZstdTest do
   # Repetitive text > 2× MAX_BLOCK_SIZE. Tests multi-block handling with
   # compressed blocks. Expect at least 50% compression.
 
+  # The pure-Elixir compressor walks 300 KB through match-finding and block
+  # encoding; on a heavily loaded CI runner this can exceed ExUnit's 60 s
+  # default. The work is bounded (single pass over a fixed 300 KB buffer), so a
+  # generous cap keeps the test meaningful without turning transient runner load
+  # into a red build.
+  @tag timeout: 300_000
   test "TC-8: 300 KB repetitive text round-trip with compression" do
     input = String.duplicate("the quick brown fox jumps over the lazy dog\n", 7000)
       |> binary_part(0, 300 * 1024)
@@ -122,12 +128,228 @@ defmodule CodingAdventures.ZstdTest do
       "300KB repetitive text: compressed #{byte_size(compressed)}, expected < #{threshold}"
   end
 
-  # ── TC-9: bad magic → {:error, _} ───────────────────────────────────────────
+  # ── TC-9: Cross-language / interoperability (real `zstd` CLI) ──────────────
+  #
+  # code/specs/CMP07-zstd.md designates TC-9 as cross-implementation
+  # round-trip against the real `zstd` CLI, in BOTH directions:
+  #
+  #   1. Compress with `Zstd.compress/1`, decompress with `zstd -d`.
+  #   2. Compress with `zstd`, decompress with `Zstd.decompress/1`.
+  #
+  # This is the ONLY kind of test that can catch a systematic, symmetric
+  # protocol deviation: a same-codebase round-trip test (`rt/1` above) is
+  # necessary but never sufficient, because if the encoder and decoder agree
+  # with each other on a WRONG convention, every internal round-trip still
+  # passes. That is exactly what happened here — three compounding bugs in
+  # the FSE sequences-section codec (a fabricated two-pass symbol-table
+  # spread, a wrong per-sequence field order, and an unconditional final
+  # state-transition flush that should have been skipped for the block's
+  # last sequence) survived undetected because this package had no
+  # independent, spec-conformant interop check. See lessons.md Lesson 96.
+  #
+  # `previously_broken_fse_repro/0` below is the minimal case from that bug
+  # report (`compress("ababababab" * 3)`, one sequence: ll=2, ml=28,
+  # offset=2) — it alone is enough to reproduce the "Data corruption
+  # detected" failure against a pre-fix build of this codec.
+  #
+  # Skipped (not failed) when the `zstd` binary isn't on PATH, since CI/dev
+  # environments vary — mirrors the approach taken in the java/zstd and
+  # rust/zstd ports of this same test.
+  #
+  # Repeat-offset inputs (where the SAME 8-byte pattern recurs at a FIXED
+  # distance, or a long constant-byte run) are now INCLUDED below — see the
+  # dedicated "repeat-offset" test group further down. They used to be
+  # deliberately avoided here on the theory that this codec's decoder
+  # couldn't resolve the real zstd Repeated_Offset (R1/R2/R3) mechanism
+  # (RFC 8878 §3.1.1.3.2.1.1). That theory was correct as a description of
+  # a real, independent gap — but it was NOT documented in
+  # code/specs/CMP07-zstd.md's "Educational Simplification" table (which
+  # lists no repeat-offset carve-out), and the decoder now implements the
+  # mechanism in full. See lessons.md Lesson 98 for how this class of gap
+  # was found (in `code/packages/c/zstd`, via PR #9941) and audited into
+  # every other language port, including this one.
+
+  defp zstd_cli_available? do
+    case System.cmd("zstd", ["--version"], stderr_to_stdout: true) do
+      {_, 0} -> true
+      _ -> false
+    end
+  rescue
+    ErlangError -> false
+  end
+
+  defp previously_broken_fse_repro, do: String.duplicate("ababababab", 3)
+
+  # Unique, hard-to-predict temp-file name: mixes a monotonic counter (for
+  # human-readable ordering) with 8 bytes of CSPRNG output, so a co-resident
+  # local user can't pre-guess the path and race it with a symlink between
+  # our File.write!/2 and the `zstd` CLI's read (or vice versa). This is
+  # belt-and-suspenders for test-only temp files with no sensitive content —
+  # not a defense against a privileged attacker.
+  defp unique_tmp_name(prefix) do
+    counter = :erlang.unique_integer([:positive])
+    rand = :crypto.strong_rand_bytes(8) |> Base.encode16(case: :lower)
+    "#{prefix}-#{counter}-#{rand}"
+  end
+
+  @tag :cli_interop
+  test "TC-9: CLI interoperability — compress ours, decompress with real `zstd -d`" do
+    if zstd_cli_available?() do
+      for input <- [
+            previously_broken_fse_repro(),
+            String.duplicate("the quick brown fox jumps over the lazy dog ", 25),
+            # ~9 KB of a repeating 6-byte cycle: comfortably pushes the
+            # single-block sequence count past 128, the exact boundary where
+            # Number_of_Sequences switches from its 1-byte to 2-byte wire
+            # form (RFC 8878 §3.1.1.3.1) — regression coverage for the
+            # sequence-count byte-order bug noted elsewhere in this file.
+            String.duplicate("ABCDEF", 1500) |> binary_part(0, 9000)
+          ] do
+        compressed = Zstd.compress(input)
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique_tmp_name("ex-zstd-tc9")}.zst")
+        File.write!(tmp_zst, compressed)
+
+        try do
+          {output, exit_code} = System.cmd("zstd", ["-d", "-q", "-c", tmp_zst], stderr_to_stdout: true)
+          assert exit_code == 0,
+            "real `zstd -d` failed to decode our compressed output (#{byte_size(input)} bytes): #{output}"
+          assert output == input,
+            "real `zstd -d` decoded our output but got different bytes back"
+        after
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping TC-9 interop test")
+    end
+  end
+
+  @tag :cli_interop
+  test "TC-9: CLI interoperability — compress with real `zstd`, decompress ours" do
+    if zstd_cli_available?() do
+      for input <- [
+            previously_broken_fse_repro(),
+            String.duplicate("the quick brown fox jumps over the lazy dog ", 25),
+            String.duplicate("ABCDEF", 1500) |> binary_part(0, 9000)
+          ] do
+        unique = unique_tmp_name("ex-zstd-tc9")
+        tmp_txt = Path.join(System.tmp_dir!(), "#{unique}.txt")
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique}.zst")
+        File.write!(tmp_txt, input)
+
+        try do
+          {_output, exit_code} = System.cmd("zstd", ["-q", "-f", "-o", tmp_zst, tmp_txt], stderr_to_stdout: true)
+          assert exit_code == 0, "real `zstd` CLI failed to compress the test input"
+
+          cli_compressed = File.read!(tmp_zst)
+          assert {:ok, ^input} = Zstd.decompress(cli_compressed),
+            "our decompress/1 failed to decode real `zstd`'s compressed output (#{byte_size(input)} bytes)"
+        after
+          File.rm(tmp_txt)
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping TC-9 interop test")
+    end
+  end
+
+  # ── Repeat-Offset (R1/R2/R3) interoperability (lessons.md Lesson 98) ───────
+  #
+  # RFC 8878 §3.1.1.3.2.1.1 defines a Repeated-Offset mechanism: Offset_Value
+  # <= 3 is not a literal distance but a reference into a 3-slot history of
+  # recently-used offsets (R1/R2/R3, default 1/4/8), letting the real `zstd`
+  # encoder spend ~2 bits instead of a full offset code whenever a match
+  # reuses a recent distance. Real `zstd` encoders use this CONSTANTLY —
+  # it's one of their principal entropy wins, especially for periodic or
+  # highly repetitive data (exactly what a compression test suite tends to
+  # contain).
+  #
+  # This package's OWN encoder never emits repeat-offset codes (an
+  # intentional educational simplification — see encode_sequences_section's
+  # module doc), so this codec's own compress()/decompress() round trip
+  # (`rt/1`, and TC-1..TC-8 above) NEVER exercises the decode-side
+  # Repeated-Offset path — nor did TC-9's original fixed corpus, which
+  # apparently never produced a real-`zstd`-encoded sequence with
+  # Offset_Value <= 3. That gap was invisible to every test in this suite
+  # until audited in via lessons.md Lesson 98 (the same audit that first
+  # found and fixed it in `code/packages/c/zstd`, PR #9941): a decoder that
+  # only understood the explicit-offset path would either crash (an
+  # out-of-bounds binary access from a negative `offset = of_raw - 3` when
+  # of_raw is 1..3) or emit wrong bytes, on any real-world `.zst` frame that
+  # happens to use repeat offsets.
+  #
+  # These inputs deliberately target that path: a fixed pattern recurring at
+  # a CONSTANT distance (spec CMP07-zstd.md's own TC-8 shape) and a long
+  # constant-byte run (the Lesson-98 minimal repro: real `zstd` compresses
+  # 4713 bytes of `'Z'` as a Compressed block with one sequence whose
+  # Offset_Value is 1 — "reuse Repeated_Offset1" — rather than the RLE block
+  # type this port's own encoder would choose for the same input).
+  @tag :cli_interop
+  test "repeat-offset: real `zstd`-compressed repeat-offset frames decode correctly" do
+    if zstd_cli_available?() do
+      pattern = "ABCDEFGH"
+      fixed_distance_repeat = pattern <> String.duplicate(String.duplicate("X", 128) <> pattern, 10)
+
+      for {name, input} <- [
+            {"constant-byte run (Lesson 98 minimal repro)", String.duplicate("Z", 4713)},
+            {"pattern at fixed distance (spec TC-8 shape)", fixed_distance_repeat},
+            {"short constant run", String.duplicate("q", 50)},
+            {"periodic 3-byte cycle", String.duplicate("xyz", 4000)}
+          ] do
+        unique = unique_tmp_name("ex-zstd-repoff")
+        tmp_txt = Path.join(System.tmp_dir!(), "#{unique}.txt")
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique}.zst")
+        File.write!(tmp_txt, input)
+
+        try do
+          {_output, exit_code} = System.cmd("zstd", ["-q", "-f", "-o", tmp_zst, tmp_txt], stderr_to_stdout: true)
+          assert exit_code == 0, "real `zstd` CLI failed to compress #{name}"
+
+          cli_compressed = File.read!(tmp_zst)
+          assert {:ok, ^input} = Zstd.decompress(cli_compressed),
+            "our decompress/1 failed to decode real `zstd`'s repeat-offset output for #{name} (#{byte_size(input)} bytes)"
+        after
+          File.rm(tmp_txt)
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping repeat-offset interop test")
+    end
+  end
+
+  # Same set of inputs, but round-tripped purely through THIS package's own
+  # compress/1 followed by decompress/1. This package's encoder never emits
+  # repeat-offset codes, so this direction alone would never have caught
+  # Lesson 98 — it's included for completeness/regression coverage of the
+  # ordinary explicit-offset path on the same inputs, not as evidence the
+  # repeat-offset decode path works (the CLI-interop test above is the one
+  # that actually proves that).
+  test "repeat-offset-shaped inputs still round-trip through our own encoder" do
+    pattern = "ABCDEFGH"
+    fixed_distance_repeat = pattern <> String.duplicate(String.duplicate("X", 128) <> pattern, 10)
+
+    for input <- [
+          String.duplicate("Z", 4713),
+          fixed_distance_repeat,
+          String.duplicate("q", 50),
+          String.duplicate("xyz", 4000)
+        ] do
+      assert rt(input) == input
+    end
+  end
+
+  # ── Error handling: bad magic → {:error, _} ─────────────────────────────────
   #
   # Any input that does not start with the ZStd magic 0xFD2FB528 must return
   # {:error, _}. We test several common cases.
+  #
+  # (Not one of the spec's 10 mandatory TCs — TC-9 is Cross-language /
+  # interoperability, above. An earlier revision of this file mislabelled
+  # this test "TC-9", which collided with the spec's numbering.)
 
-  test "TC-9: bad magic returns error" do
+  test "bad magic returns error" do
     assert {:error, msg} = Zstd.decompress("not a zstd frame")
     assert String.contains?(msg, "bad magic") or String.contains?(msg, "frame too short")
 

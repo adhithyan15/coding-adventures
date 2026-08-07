@@ -210,12 +210,15 @@ pub struct WasiConfig {
     pub env: Vec<String>,
 
     /// Optional callback invoked for every line written to stdout (fd 1).
+    #[allow(clippy::type_complexity)] // boxed host callback signature is intentional
     pub stdout_callback: Option<Box<dyn Fn(&str) + Send + Sync>>,
 
     /// Optional callback invoked for every line written to stderr (fd 2).
+    #[allow(clippy::type_complexity)] // boxed host callback signature is intentional
     pub stderr_callback: Option<Box<dyn Fn(&str) + Send + Sync>>,
 
     /// Optional callback invoked when stdin bytes are requested (fd 0).
+    #[allow(clippy::type_complexity)] // boxed host callback signature is intentional
     pub stdin_callback: Option<Box<dyn Fn(usize) -> Vec<u8> + Send + Sync>>,
 
     /// Injected clock.  Defaults to `SystemClock`.
@@ -249,6 +252,7 @@ impl Default for WasiConfig {
 /// execution). All other WASI functions return ENOSYS (52).
 pub struct WasiStub {
     /// Callback for stdout output.
+    #[allow(dead_code)] // retained as API surface / scaffolding
     stdout_callback: Box<dyn Fn(&str)>,
 }
 
@@ -1335,12 +1339,25 @@ impl WasmRuntime {
         // the front with filler slots for the function types (which are never
         // the target of a `struct.new`) and append the struct field counts.
         //
+        // `func_type_count` MUST be the number of entries in the **type section**
+        // (`module.types` — the encoder's *deduplicated* function types), NOT
+        // `instance.func_types.len()`, which is populated one-per-function and so
+        // over-counts whenever two functions share a signature. A Twig `record`
+        // emits a constructor + N same-shape accessors + a predicate, so several
+        // functions collapse to one function type: using the per-function count
+        // then padded the struct's field-count entry to the wrong (too-high) index,
+        // leaving the real `struct.new`/`struct.set` type index registered as a
+        // zero-field filler — the "struct.set: field 0 out of range" trap. Modules
+        // whose functions all have distinct types (e.g. a single-function cons
+        // program, or the list-op helpers) were unaffected because the two counts
+        // coincided there.
+        //
         // (This assumes struct types follow *all* function types — true for the
         // cons modules we emit today, which declare no host imports. A module
         // that interleaved imported-function types after the struct types would
         // need order-preserving type parsing; not yet emitted or consumed.)
         if !instance.module.struct_types.is_empty() {
-            let func_type_count = instance.func_types.len();
+            let func_type_count = instance.module.types.len();
             let mut struct_field_counts = vec![0u32; func_type_count];
             struct_field_counts.extend(
                 instance

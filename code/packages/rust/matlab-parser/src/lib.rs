@@ -20,6 +20,56 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 mod _grammar;
 
+/// Recursion-depth cap for the MATLAB [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep `(((…)))` nesting recurses once per
+/// `parse_rule` call and can overflow the *native* thread stack — an
+/// uncatchable process abort — before this crate's own `Result`-returning
+/// entry points ever get a chance to report anything).
+///
+/// # Why not the shared [`DEFAULT_MAX_RULE_DEPTH`] (128)
+///
+/// MATLAB's precedence cascade also loops back through the whole expression
+/// grammar for every layer of `(...)` grouping: `expr -> assignment ->
+/// logical_or -> logical_and -> bit_or -> bit_and -> comparison ->
+/// colon_expr -> additive -> multiplicative -> unary -> power -> postfix ->
+/// primary -> group -> expr` — 15 named-rule calls per source-nesting level.
+/// That is deeper than MACSYMA's 13-rule cascade and not far off Wolfram's
+/// 20, so blindly reusing 128 would be needlessly restrictive here too
+/// (measured: only ~7 real nesting levels at 128, vs 12 at the value chosen
+/// below).
+///
+/// # How this number was derived
+///
+/// Following the exact methodology behind `DEFAULT_MAX_RULE_DEPTH`: a
+/// throwaway, isolated subprocess (never run in-process — a genuine overflow
+/// aborts the whole process, so this must be explored somewhere a crash is
+/// safe) built `((((…0…)))) \n` with thousands of nesting levels through this
+/// crate's own `create_matlab_parser`, and binary-searched — on a worker
+/// thread with the **default ~2 MiB stack** (what a production caller's
+/// thread, and `cargo test`'s own per-test thread, actually get, no
+/// `stack_size` override) — for the `with_max_depth` value at which the parse
+/// stops overflowing and starts returning a clean `Err`. Result (debug build,
+/// this toolchain, stable across repeated trials): safe at 280, overflowing
+/// at 282 — a few ticks higher than Wolfram/MACSYMA's ~276-278 floor (this
+/// grammar's per-rule bodies are marginally cheaper to match through), but
+/// close enough that the same native-stack-cost-is-mostly-generic-engine-
+/// code reasoning applies. ~281 `parse_rule` frames is the hard ceiling this
+/// grammar can ever reach on a 2 MiB stack — about 18 real bracket-nesting
+/// levels at the absolute edge (zero margin).
+///
+/// 200 sits comfortably below that empirically confirmed crash floor (280
+/// safe / 282 crashing) — well over 25% headroom for a slightly larger frame
+/// size on a different toolchain or platform — while permitting 12 real
+/// nesting levels of legitimate `(...)` grouping (measured directly: 12
+/// parses cleanly, 13 trips the cap), comfortably beyond anything a
+/// hand-written MATLAB expression needs. It happens to match the cap chosen
+/// for `wolfram-parser` and `macsyma-parser` because all three grammars'
+/// native-stack crash floors turned out to be nearly identical when
+/// measured — not because the cap was copied without checking.
+const MAX_RULE_DEPTH: usize = 200;
+
 /// Rewrite each `end` keyword that occurs inside `( )`, `[ ]`, or `{ }` into a
 /// `NAME` token, leaving depth-0 `end`s (block terminators) untouched. Tracks
 /// the combined bracket depth across all three bracket kinds.
@@ -45,14 +95,17 @@ fn retag_index_end(tokens: Vec<Token>) -> Vec<Token> {
 }
 
 /// Build a [`GrammarParser`] for MATLAB source, with the `end`-retag hook
-/// installed.
+/// installed and the recursion-depth guard ([`MAX_RULE_DEPTH`]) enabled so
+/// pathologically deep nesting fails cleanly instead of overflowing the
+/// native stack.
 ///
 /// # Panics
 ///
 /// Panics if tokenization fails. Use [`try_parse_matlab`] for a `Result`.
 pub fn create_matlab_parser(source: &str) -> GrammarParser {
     let tokens = coding_adventures_matlab_lexer::tokenize_matlab(source);
-    let mut parser = GrammarParser::new(tokens, _grammar::parser_grammar());
+    let mut parser =
+        GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH);
     parser.add_pre_parse(Box::new(retag_index_end));
     parser
 }
@@ -79,7 +132,8 @@ pub fn parse_matlab(source: &str) -> GrammarASTNode {
 /// Parse MATLAB source, returning a `Result` instead of panicking.
 pub fn try_parse_matlab(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = coding_adventures_matlab_lexer::try_tokenize_matlab(source)?;
-    let mut parser = GrammarParser::new(tokens, _grammar::parser_grammar());
+    let mut parser =
+        GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH);
     parser.add_pre_parse(Box::new(retag_index_end));
     parser.parse().map_err(|e| e.to_string())
 }
@@ -245,5 +299,93 @@ mod tests {
     #[test]
     fn dangling_operator_is_an_error() {
         assert!(try_parse_matlab("y = 1 +\n").is_err());
+    }
+
+    // --- Recursion-depth guard (DoS hardening) --------------------------
+    //
+    // These three tests mirror the exact methodology used to validate
+    // `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` (see that file's own
+    // `test_deeply_nested_input_returns_error_not_overflow` /
+    // `test_nesting_up_to_cap_still_parses` /
+    // `test_opt_in_cap_trips_before_overflow_on_default_stack`), but exercise
+    // the REAL MATLAB grammar and the crate's actual `MAX_RULE_DEPTH` (200)
+    // rather than a synthetic toy grammar.
+
+    /// Build `n` nested parens around a `0`, e.g. `((0))\n` for `n == 2`.
+    fn nested_paren_source(n: usize) -> String {
+        format!("{}0{}\n", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must produce a recoverable error, not overflow the
+    /// native stack (an uncatchable process abort). We parse 5000 levels — far
+    /// past `MAX_RULE_DEPTH` — on a worker thread with a generous 32 MiB stack,
+    /// so the *guard* is what stops the recursion, not the stack running out.
+    ///
+    /// Note: unlike the synthetic single-rule grammar in `grammar_parser.rs`,
+    /// MATLAB's entry rule (`program = { statement_line }`) is a zero-or-more
+    /// repetition. When the single top-level statement fails deep inside
+    /// (because the depth cap refused to recurse further), the repetition
+    /// itself still succeeds trivially with *zero* statements matched, so the
+    /// `GrammarParseError` surfaced by `parse()` is the generic "unexpected
+    /// leftover token" message rather than the specific "nests deeper than
+    /// the supported limit" phrasing `grammar_parser.rs`'s tests see for a
+    /// grammar whose entry point IS the recursive rule. Either way the parse
+    /// still fails cleanly with a `Result::Err` instead of crashing, which is
+    /// the property under test here.
+    #[test]
+    fn test_deeply_nested_input_returns_error_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("matlab-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(|| {
+                let source = nested_paren_source(5000);
+                let result = try_parse_matlab(&source);
+                assert!(
+                    result.is_err(),
+                    "deeply-nested input must fail with an error, not parse or crash"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
+    /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still parses cleanly,
+    /// and one layer deeper cleanly trips the guard. These exact boundary
+    /// counts (12 legitimate levels) were found empirically by binary-
+    /// searching `create_matlab_parser` against increasing nesting counts at
+    /// the production cap — see `MAX_RULE_DEPTH`'s doc comment.
+    #[test]
+    fn test_nesting_up_to_cap_still_parses() {
+        let ok_source = nested_paren_source(12);
+        let ast = parse_matlab(&ok_source);
+        assert_eq!(ast.rule_name, "program");
+
+        let tripped_source = nested_paren_source(13);
+        assert!(
+            try_parse_matlab(&tripped_source).is_err(),
+            "one nesting level past the cap's measured limit must fail"
+        );
+    }
+
+    /// A caller relying on `MAX_RULE_DEPTH` must have the guard trip *before*
+    /// the native stack overflows on a default-stack thread — otherwise a
+    /// production caller (e.g. `matlab-runtime`, or `cargo test`'s own
+    /// per-test thread) would still crash. We parse far-too-deep input on a
+    /// worker thread with **no** `stack_size` override (the same ~2 MiB a
+    /// default thread gets). A clean `Err` (not a `join()` failure from a
+    /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below the native
+    /// overflow point on the default stack.
+    #[test]
+    fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let source = nested_paren_source(5000);
+            let result = try_parse_matlab(&source);
+            assert!(result.is_err(), "deeply-nested input must error, not crash");
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
     }
 }

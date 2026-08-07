@@ -53,7 +53,7 @@ use lang_aot::{
 #[cfg(target_os = "macos")]
 use lang_aot::compile_file_to_macos_executable;
 
-use lispy_runtime::LispyValue;
+use dynval_runtime::LispyValue;
 
 // ===========================================================================
 // EVALUATOR_BODY — McCarthy's 1960 EVAL, written in McCarthy Lisp.
@@ -307,7 +307,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     .trim()
     .to_string();
     let runtime_c = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../twig-aot/runtime/lispy_runtime.c");
+        .join("../twig-aot/runtime/dynval_runtime.c");
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "metacirc", &triple).ok()?;
     let dir = tmp_dir("llvm");
     let ll_path = dir.join("metacirc.ll");
@@ -373,6 +373,9 @@ fn metacircular_smoke_vm_evaluates_canonical_programs() {
 
 #[test]
 fn metacircular_eval_uniform_across_modern_backends() {
+    // Labelled table of backend runners; the inline `fn` pointer type is clearer
+    // here than a hoisted type alias.
+    #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
         ("VM", run_vm),
         ("JIT", run_jit),

@@ -162,8 +162,7 @@ fn detect_html_block_type(line: &str) -> Option<u8> {
     let s = line.trim_start();
 
     // Type 1: <script|pre|textarea|style followed by whitespace, >, or end
-    if s.starts_with('<') {
-        let rest = &s[1..];
+    if let Some(rest) = s.strip_prefix('<') {
         let tag_end = rest.find(|c: char| !c.is_alphanumeric()).unwrap_or(rest.len());
         let tag = rest[..tag_end].to_ascii_lowercase();
         if matches!(tag.as_str(), "script" | "pre" | "textarea" | "style") {
@@ -224,8 +223,7 @@ fn is_type7_html(s: &str) -> bool {
     let s = s.trim_end();
 
     // Closing tag: `</tagname\s*>` — whole line
-    if s.starts_with("</") {
-        let inner = &s[2..];
+    if let Some(inner) = s.strip_prefix("</") {
         if inner.is_empty() || !inner.starts_with(|c: char| c.is_ascii_alphabetic()) {
             return false;
         }
@@ -247,7 +245,7 @@ fn is_type7_html(s: &str) -> bool {
     let name_end = inner
         .find(|c: char| !c.is_ascii_alphanumeric() && c != '-')
         .unwrap_or(inner.len());
-    let tag_name = &inner[..name_end];
+    let _tag_name = &inner[..name_end];
 
     // The tag name must be followed only by: attributes, optional whitespace, `>` or `/>`
     // For `<http://foo.bar.baz>`, after the tag name "http" we get "://foo.bar.baz>"
@@ -270,7 +268,7 @@ fn parse_type7_attrs(s: &str) -> &str {
     let mut pos = s;
     loop {
         // Must start with at least one whitespace
-        let trimmed = pos.trim_start_matches(|c: char| c == ' ' || c == '\t');
+        let trimmed = pos.trim_start_matches([' ', '\t']);
         if trimmed.len() == pos.len() {
             // No leading whitespace — no more attributes
             break;
@@ -289,22 +287,20 @@ fn parse_type7_attrs(s: &str) -> &str {
 
         // Optional: `\s*=\s*VALUE`
         let after_eq = after_name.trim_start();
-        if after_eq.starts_with('=') {
-            let after_eq = &after_eq[1..].trim_start();
-            if after_eq.starts_with('"') {
+        if let Some(after_eq) = after_eq.strip_prefix('=') {
+            let after_eq = &after_eq.trim_start();
+            if let Some(rest) = after_eq.strip_prefix('"') {
                 // Double-quoted: "[^"\n]*"
-                let rest = &after_eq[1..];
-                if let Some(end) = rest.find(|c| c == '"' || c == '\n') {
+                if let Some(end) = rest.find(['"', '\n']) {
                     if rest.as_bytes()[end] == b'"' {
                         pos = &rest[end + 1..];
                         continue;
                     }
                 }
                 break; // unclosed or contains newline
-            } else if after_eq.starts_with('\'') {
+            } else if let Some(rest) = after_eq.strip_prefix('\'') {
                 // Single-quoted: '[^'\n]*'
-                let rest = &after_eq[1..];
-                if let Some(end) = rest.find(|c| c == '\'' || c == '\n') {
+                if let Some(end) = rest.find(['\'', '\n']) {
                     if rest.as_bytes()[end] == b'\'' {
                         pos = &rest[end + 1..];
                         continue;
@@ -423,7 +419,7 @@ fn parse_atx_heading(line: &str) -> Option<(u8, String)> {
     if trailing_hashes > 0 {
         let len = content_trim.len();
         let before_hashes = &content_trim[..len - trailing_hashes];
-        if before_hashes.is_empty() || before_hashes.ends_with(|c: char| c == ' ' || c == '\t') {
+        if before_hashes.is_empty() || before_hashes.ends_with([' ', '\t']) {
             content = before_hashes.trim_end().to_string();
         }
     }
@@ -471,6 +467,9 @@ pub struct ListMarker {
     pub marker: char,
     pub marker_len: usize, // bytes consumed by marker + spaces
     pub space_after: usize,
+    // Parsed for completeness of the list-marker record; not yet consumed by
+    // callers, kept so the struct mirrors the full marker syntax.
+    #[allow(dead_code)]
     pub indent: usize,
 }
 
@@ -668,7 +667,7 @@ fn parse_link_definition(text: &str) -> Option<ParsedLinkDef> {
     }
 
     // EOL check
-    let eol_start = pos;
+    let _eol_start = pos;
     while pos < bytes.len() && (bytes[pos] == b' ' || bytes[pos] == b'\t') { pos += 1; }
     if pos < bytes.len() && bytes[pos] == b'\n' {
         pos += 1;
@@ -730,10 +729,13 @@ impl BlockParser {
     }
 
     fn alloc_node(&mut self, kind: NodeKind, parent: NodeId) -> NodeId {
-        let id = self.arena.alloc(kind, Some(parent));
-        id
+        
+        self.arena.alloc(kind, Some(parent))
     }
 
+    // Helper retained alongside `alloc_node` for symmetry; not currently
+    // called but kept as part of the block-builder API surface.
+    #[allow(dead_code)]
     fn push_leaf(&mut self, container: NodeId, kind: NodeKind) -> NodeId {
         let id = self.alloc_node(kind, container);
         self.add_child_to_container(container, id);
@@ -779,7 +781,7 @@ impl BlockParser {
             NodeKind::IndentedCode { .. } => {
                 // Trim trailing blank lines
                 if let NodeKind::IndentedCode { lines } = &mut self.arena.get_mut(leaf_id).kind {
-                    while lines.last().map_or(false, |l: &String| l.trim().is_empty()) {
+                    while lines.last().is_some_and(|l: &String| l.trim().is_empty()) {
                         lines.pop();
                     }
                 }
@@ -790,19 +792,14 @@ impl BlockParser {
 
     fn finalize_paragraph_lines(&mut self, node_id: NodeId, lines: Vec<String>) {
         let mut text = lines.join("\n");
-        loop {
-            match parse_link_definition(&text) {
-                Some(def) => {
-                    if !self.link_refs.contains_key(&def.label) {
-                        self.link_refs.insert(def.label.clone(), LinkReference {
-                            destination: def.destination,
-                            title: def.title,
-                        });
-                    }
-                    text = text[def.chars_consumed..].to_string();
-                }
-                None => break,
+        while let Some(def) = parse_link_definition(&text) {
+            if !self.link_refs.contains_key(&def.label) {
+                self.link_refs.insert(def.label.clone(), LinkReference {
+                    destination: def.destination,
+                    title: def.title,
+                });
             }
+            text = text[def.chars_consumed..].to_string();
         }
 
         if text.trim().is_empty() {
@@ -821,6 +818,10 @@ impl BlockParser {
         }
     }
 
+    // A few running cursors (`container_idx`, `inner`) get a final write on a
+    // break path or are immediately re-assigned; the writes are harmless but
+    // clippy/rustc flag them as never-read. Kept as-is for control-flow clarity.
+    #[allow(unused_assignments)]
     pub fn process_line(&mut self, raw_line: &str) {
         let orig_blank = is_blank(raw_line);
         let mut line_content = raw_line.to_string();
@@ -869,10 +870,10 @@ impl BlockParser {
                         && !is_thematic_break(&line_content)
                         && parse_atx_heading(&line_content).is_none()
                         && !(indent_of(&line_content, line_base_col) < 4
-                            && line_content.trim_start().starts_with(|c| c == '`' || c == '~'))
+                            && line_content.trim_start().starts_with(['`', '~']))
                     {
                         let lm = parse_list_marker(&line_content);
-                        let lm_blank = lm.as_ref().map_or(false, |m| is_blank(&line_content[m.marker_len..]));
+                        let lm_blank = lm.as_ref().is_some_and(|m| is_blank(&line_content[m.marker_len..]));
                         if lm.is_none() || lm_blank {
                             new_containers.push(cont_id);
                             container_idx += 1;
@@ -899,7 +900,7 @@ impl BlockParser {
                         container_idx += 1;
                     } else if effective_blank {
                         let has_content = !self.arena.get(cont_id).children.is_empty()
-                            || self.current_leaf.map_or(false, |_| true);
+                            || self.current_leaf.is_some_and(|_| true);
                         if has_content {
                             new_containers.push(cont_id);
                             container_idx += 1;
@@ -912,7 +913,7 @@ impl BlockParser {
                         && !is_thematic_break(&line_content)
                         && parse_list_marker(&line_content).is_none()
                         && !(indent_of(&line_content, line_base_col) < 4
-                            && line_content.trim_start().starts_with(|c| c == '`' || c == '~'))
+                            && line_content.trim_start().starts_with(['`', '~']))
                         && parse_atx_heading(&line_content).is_none()
                     {
                         new_containers.push(cont_id);
@@ -930,11 +931,10 @@ impl BlockParser {
         // Pop containers that did not continue
         let new_depth = new_containers.len();
         let old_depth = self.open_containers.len();
-        if new_depth < old_depth {
-            if !lazy_paragraph_continuation {
+        if new_depth < old_depth
+            && !lazy_paragraph_continuation {
                 self.close_current_leaf();
             }
-        }
         self.open_containers = new_containers;
 
         let mut blank = orig_blank;
@@ -1021,7 +1021,7 @@ impl BlockParser {
             if blank { break; }
             let (lo, lm) = self.list_params(inner);
             let can_cont = parse_list_marker(&line_content)
-                .map_or(false, |m| m.ordered == lo && m.marker == lm && !is_thematic_break(&line_content));
+                .is_some_and(|m| m.ordered == lo && m.marker == lm && !is_thematic_break(&line_content));
             if can_cont { break; }
             self.open_containers.pop();
             // Finalize the list
@@ -1162,13 +1162,10 @@ impl BlockParser {
                             } else { vec![] };
                             // Check if paragraph content is entirely link definitions
                             let mut text = lines.join("\n");
-                            let mut all_defs = true;
-                            loop {
-                                match parse_link_definition(&text) {
-                                    Some(def) => { text = text[def.chars_consumed..].to_string(); }
-                                    None => { all_defs = text.trim().is_empty(); break; }
-                                }
+                            while let Some(def) = parse_link_definition(&text) {
+                                text = text[def.chars_consumed..].to_string();
                             }
+                            let all_defs = text.trim().is_empty();
                             if !all_defs {
                                 // Has real content — treat as setext heading
                                 let lines = if let NodeKind::Paragraph { lines } = &self.arena.get(leaf_id).kind {
@@ -1188,7 +1185,7 @@ impl BlockParser {
 
             // 5. HTML block
             if ind < 4 {
-                let is_in_para = self.current_leaf.map_or(false, |id| {
+                let is_in_para = self.current_leaf.is_some_and(|id| {
                     matches!(self.arena.get(id).kind, NodeKind::Paragraph { .. })
                 });
                 if let Some(html_type) = detect_html_block_type(&line_content) {
@@ -1264,18 +1261,14 @@ impl BlockParser {
             if ind < 4 {
                 if let Some(marker) = parse_list_marker(&line_content) {
                     let blank_start = is_blank(&line_content[marker.marker_len..]);
-                    let in_para = self.current_leaf.map_or(false, |id| {
+                    let in_para = self.current_leaf.is_some_and(|id| {
                         matches!(self.arena.get(id).kind, NodeKind::Paragraph { .. })
                     });
 
                     let can_interrupt = if in_para {
                         // Ordered lists starting != 1 cannot interrupt a paragraph
                         let cont_list = self.find_matching_list(&marker);
-                        if marker.ordered && marker.start != 1 && cont_list.is_none() {
-                            false
-                        } else {
-                            true
-                        }
+                        !(marker.ordered && marker.start != 1 && cont_list.is_none())
                     } else { true };
 
                     let empty_item_interrupts = blank_start && in_para;
@@ -1354,7 +1347,7 @@ impl BlockParser {
             }
 
             // 8. Indented code block
-            if ind >= 4 && !self.current_leaf.map_or(false, |id| matches!(self.arena.get(id).kind, NodeKind::Paragraph { .. })) {
+            if ind >= 4 && !self.current_leaf.is_some_and(|id| matches!(self.arena.get(id).kind, NodeKind::Paragraph { .. })) {
                 let (stripped, _) = strip_indent(&line_content, 4, line_base_col);
                 match self.current_leaf {
                     Some(leaf_id) if matches!(self.arena.get(leaf_id).kind, NodeKind::IndentedCode { .. }) => {
@@ -1392,22 +1385,17 @@ impl BlockParser {
         } // end 'block loop
     }
 
-    fn finalize_paragraph_as_setext(&mut self, leaf_id: NodeId, lines: Vec<String>, level: u8, inner: NodeId) {
+    fn finalize_paragraph_as_setext(&mut self, _leaf_id: NodeId, lines: Vec<String>, level: u8, inner: NodeId) {
         let mut text = lines.join("\n");
         // Extract link defs
-        loop {
-            match parse_link_definition(&text) {
-                Some(def) => {
-                    if !self.link_refs.contains_key(&def.label) {
-                        self.link_refs.insert(def.label.clone(), LinkReference {
-                            destination: def.destination,
-                            title: def.title,
-                        });
-                    }
-                    text = text[def.chars_consumed..].to_string();
-                }
-                None => break,
+        while let Some(def) = parse_link_definition(&text) {
+            if !self.link_refs.contains_key(&def.label) {
+                self.link_refs.insert(def.label.clone(), LinkReference {
+                    destination: def.destination,
+                    title: def.title,
+                });
             }
+            text = text[def.chars_consumed..].to_string();
         }
 
         // Remove the paragraph
@@ -1576,7 +1564,7 @@ impl BlockParser {
                 }
                 // Strip leading whitespace from each line
                 let content = lines.iter()
-                    .map(|l| l.trim_start_matches(|c: char| c == ' ' || c == '\t').to_string())
+                    .map(|l| l.trim_start_matches([' ', '\t']).to_string())
                     .collect::<Vec<_>>()
                     .join("\n");
                 Some(FinalBlock::Paragraph { raw_content: content })
@@ -1597,7 +1585,7 @@ impl BlockParser {
             }
             NodeKind::HtmlBlock { lines, .. } => {
                 let mut ls = lines.clone();
-                while ls.last().map_or(false, |l: &String| l.trim().is_empty()) {
+                while ls.last().is_some_and(|l: &String| l.trim().is_empty()) {
                     ls.pop();
                 }
                 let value = if ls.is_empty() { String::new() } else { format!("{}\n", ls.join("\n")) };
@@ -1656,7 +1644,7 @@ enum LeafTag { Paragraph, FencedCode, IndentedCode, HtmlBlock, Other }
 pub fn parse(input: &str) -> (Vec<FinalBlock>, LinkRefMap) {
     let normalized = input.replace("\r\n", "\n").replace('\r', "\n");
     let mut lines: Vec<&str> = normalized.split('\n').collect();
-    if lines.last().map_or(false, |l| l.is_empty()) {
+    if lines.last().is_some_and(|l| l.is_empty()) {
         lines.pop();
     }
 

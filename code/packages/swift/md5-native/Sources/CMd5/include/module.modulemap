@@ -1,0 +1,4 @@
+module CMd5 {
+    header "md5_c.h"
+    export *
+}

@@ -449,42 +449,37 @@ unsafe extern "C" fn py_kerning(_self: PyObjectPtr, args: PyObjectPtr) -> PyObje
 
 static mut MODULE_METHODS: [PyMethodDef; 6] = [
     PyMethodDef {
-        ml_name:  b"load\0".as_ptr() as *const c_char,
+        ml_name:  c"load".as_ptr(),
         ml_meth:  Some(py_load),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"load(data: bytes) -> capsule\n\nParse a font from bytes.\n\0"
-                      .as_ptr() as *const c_char,
+        ml_doc:   c"load(data: bytes) -> capsule\n\nParse a font from bytes.\n".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"font_metrics\0".as_ptr() as *const c_char,
+        ml_name:  c"font_metrics".as_ptr(),
         ml_meth:  Some(py_font_metrics),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"font_metrics(font) -> dict\n\nReturn font-level metrics.\n\0"
-                      .as_ptr() as *const c_char,
+        ml_doc:   c"font_metrics(font) -> dict\n\nReturn font-level metrics.\n".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"glyph_id\0".as_ptr() as *const c_char,
+        ml_name:  c"glyph_id".as_ptr(),
         ml_meth:  Some(py_glyph_id),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"glyph_id(font, codepoint: int) -> int | None\n\n\
-                    Map a Unicode codepoint to a glyph ID.\n\0"
-                      .as_ptr() as *const c_char,
+        ml_doc:   c"glyph_id(font, codepoint: int) -> int | None\n\n\
+                    Map a Unicode codepoint to a glyph ID.\n".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"glyph_metrics\0".as_ptr() as *const c_char,
+        ml_name:  c"glyph_metrics".as_ptr(),
         ml_meth:  Some(py_glyph_metrics),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"glyph_metrics(font, glyph_id: int) -> dict | None\n\n\
-                    Return per-glyph advance width and LSB.\n\0"
-                      .as_ptr() as *const c_char,
+        ml_doc:   c"glyph_metrics(font, glyph_id: int) -> dict | None\n\n\
+                    Return per-glyph advance width and LSB.\n".as_ptr(),
     },
     PyMethodDef {
-        ml_name:  b"kerning\0".as_ptr() as *const c_char,
+        ml_name:  c"kerning".as_ptr(),
         ml_meth:  Some(py_kerning),
         ml_flags: METH_VARARGS,
-        ml_doc:   b"kerning(font, left: int, right: int) -> int\n\n\
-                    Return kern value for a glyph pair (0 if not found).\n\0"
-                      .as_ptr() as *const c_char,
+        ml_doc:   c"kerning(font, left: int, right: int) -> int\n\n\
+                    Return kern value for a glyph pair (0 if not found).\n".as_ptr(),
     },
     // Sentinel — terminates the methods array
     PyMethodDef {
@@ -512,9 +507,8 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
         m_index: 0,
         m_copy: ptr::null_mut(),
     },
-    m_name: b"font_parser_native\0".as_ptr() as *const c_char,
-    m_doc:  b"Rust-backed font parser - zero-dependency OpenType/TrueType metrics.\0"
-                .as_ptr() as *const c_char,
+    m_name: c"font_parser_native".as_ptr(),
+    m_doc:  c"Rust-backed font parser - zero-dependency OpenType/TrueType metrics.".as_ptr(),
     m_size: -1, // -1 = module does not support sub-interpreter reinitialisation
     m_methods: &raw mut MODULE_METHODS as *mut PyMethodDef,
     m_slots: ptr::null_mut(),
@@ -533,6 +527,12 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
 // `#[no_mangle]` prevents Rust from mangling the symbol — Python's import
 // machinery looks for this exact symbol name via `dlsym` / `GetProcAddress`.
 
+/// # Safety
+///
+/// This is the CPython module entry point and must only be called by the CPython
+/// interpreter's import machinery on the main thread, exactly once, with a fully
+/// initialised interpreter. It dereferences the module-level `MODULE_DEF` static and
+/// returns a new reference owned by the interpreter.
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_font_parser_native() -> PyObjectPtr {
     PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION)

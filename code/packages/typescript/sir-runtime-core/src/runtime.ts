@@ -10,7 +10,7 @@
  *   value; `callBuiltin` looks one up by SIR name.
  */
 
-import { add, div, gt, lt, mul, sub } from "./arithmetic.js";
+import { add, div, gt, lt, mul, shiftLeft, sub } from "./arithmetic.js";
 import { car, cdr, cons, isPair } from "./pairs.js";
 import { Sym } from "./symbols.js";
 import { eq, isNull, isNumber, isSymbol, toDisplay } from "./values.js";
@@ -190,24 +190,35 @@ export function puts(...args: Val[]): null {
 
 // --- Builtin dispatch ------------------------------------------------------
 
-const builtins: Record<string, (...args: Val[]) => Val> = {
+// Built with a null prototype (matching the JS sibling backend's own
+// `Object.assign(Object.create(null), {...})` table) — `callBuiltin`/
+// `builtinClosure` index this by a SIR-NAME string, and a plain object
+// literal would resolve an inherited `Object.prototype` member
+// (`constructor`/`toString`/`hasOwnProperty`/`__defineGetter__`/…) for a
+// lookup miss instead of the intended `undefined`, letting it slip past
+// the `fn === undefined` guard and get INVOKED — a define-a-getter-on-
+// global-style gadget (the [[dynamic-dispatch-rce]] hazard this repo's
+// specs name explicitly). No call site here passes a non-literal name
+// today, but both functions are public API of a published package.
+const builtins: Record<string, (...args: Val[]) => Val> = Object.assign(Object.create(null), {
   "+": add,
+  "<<": shiftLeft,
   "-": sub,
   "*": mul,
   "/": div,
-  "=": (a, b) => eq(a!, b!),
-  "<": (a, b) => lt(a!, b!),
-  ">": (a, b) => gt(a!, b!),
-  cons: (a, b) => cons(a!, b!),
-  car: (p) => car(p!),
-  cdr: (p) => cdr(p!),
-  "null?": (v) => isNull(v!),
-  "pair?": (v) => isPair(v!),
-  "number?": (v) => isNumber(v!),
-  "symbol?": (v) => isSymbol(v!),
-  print: (v) => print(v!),
-  puts: (...args) => puts(...args),
-};
+  "=": (a: Val, b: Val) => eq(a!, b!),
+  "<": (a: Val, b: Val) => lt(a!, b!),
+  ">": (a: Val, b: Val) => gt(a!, b!),
+  cons: (a: Val, b: Val) => cons(a!, b!),
+  car: (p: Val) => car(p!),
+  cdr: (p: Val) => cdr(p!),
+  "null?": (v: Val) => isNull(v!),
+  "pair?": (v: Val) => isPair(v!),
+  "number?": (v: Val) => isNumber(v!),
+  "symbol?": (v: Val) => isSymbol(v!),
+  print: (v: Val) => print(v!),
+  puts: (...args: Val[]) => puts(...args),
+});
 
 /** Invoke a builtin by SIR name with a list of arguments. */
 export function callBuiltin(name: string, args: Val[]): Val {

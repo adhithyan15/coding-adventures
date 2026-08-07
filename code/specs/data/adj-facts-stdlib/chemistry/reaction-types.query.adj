@@ -1,0 +1,24 @@
+% ============================================================================
+% reaction-types.query.adj — a worked recall over the chemistry reaction-types
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how do you classify a
+% combustion reaction?": it states no chemistry fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `reaction_defining` rows and returns the defining token +
+% the table's source/locator/trust. The fourth query runs the relation BACKWARD
+% (bind the defining token `breaks_down`, recall its type — decomposition). A
+% word that is not one of the five basic reaction types abstains honestly — the
+% engine never invents a definition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli reaction-types.query.adj
+% ============================================================================
+
+import "reaction-types.adj"
+
+? reaction_defining(combination, $Defining)     % expect two_or_more_combine
+? reaction_defining(combustion, $Defining)      % expect reacts_with_oxygen
+? reaction_defining(double_replacement, $Defining) % expect ions_exchange_places
+? reaction_defining($Type, breaks_down)         % reverse bind — expect decomposition
+? reaction_defining(neutralization, $Defining)  % expect abstain — neutralization is not one of the five basic reaction types

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
+  "lessons": [
+    {
+      "id": "ML-C22-paccha-manja",
+      "sequence": 520,
+      "title": "പച്ച, മഞ്ഞ — matching Tamil twice over, by two different routes",
+      "headword": "പച്ച, മഞ്ഞ",
+      "romanization": "",
+      "gloss": "green and yellow — paccha matches Tamil's paccai almost exactly (the same pan-Dravidian pac- root already seen in Kannada and Telugu); manja is a completely separate native Dravidian root, a doublet of manjal (\"turmeric\"), matching Tamil's own mañcaḷ — a third, independent solution to this arc's recurring green/yellow puzzle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c30a3f461f13e7c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu's green and yellow turned out to be one word wearing two faces. Malayalam's green and yellow are a different story again — two completely separate native words, each one matching Tamil closely, just not matching each other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പച്ച (paccha, \"green\") comes from Proto-Dravidian pac- — matching Tamil's பச்சை (paccai) almost exactly, and the same root already seen in Kannada's hasiru and Telugu's pacca. No surprises here; this is the familiar family from the last two lessons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മഞ്ഞ (mañña, \"yellow\") and മഞ്ഞൾ (maññaḷ, \"turmeric\") are a native doublet pair. This is a completely different Dravidian root from pac-, matching Tamil's own turmeric/yellow pair, மஞ்சள் (mañcaḷ), closely. So here's the honest shape of this arc so far: Kannada split green and yellow into two unrelated families (native vs. Sanskrit loan); Telugu kept them as doublets of the same native root; and Malayalam keeps them as two separate native Dravidian roots, each one independently matching its Tamil counterpart. No single pattern holds across all three languages — the honest answer is that each solved \"green vs. yellow\" its own way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"പച്ച\" — green, matching Tamil paccai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"പച്ച\" — green, matching Tamil paccai]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"മഞ്ഞ\" — yellow, matching Tamil mañcaḷ, a separate root entirely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"മഞ്ഞ\" — yellow, matching Tamil mañcaḷ, a separate root entirely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — paccha and mañña are NOT doublets of each other, unlike Telugu's pacca/pasupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — paccha and mañña are NOT doublets of each other, unlike Telugu's pacca/pasupu]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does മഞ്ഞ (mañña, \"yellow\") share a root with പച്ച (paccha, \"green\")? (No — they are two separate native Dravidian roots.) What Tamil word does മഞ്ഞ closely match? (மஞ்சள், mañcaḷ, \"turmeric/yellow.\") Across Kannada, Telugu, and Malayalam, is there one single pattern for how green and yellow relate? (No — Kannada split them into native vs. Sanskrit-loan; Telugu made them doublets of one root; Malayalam keeps them as two separate native roots.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

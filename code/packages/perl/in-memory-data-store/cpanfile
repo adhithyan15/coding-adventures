@@ -1,0 +1,5 @@
+requires 'CodingAdventures::InMemoryDataStoreEngine', '>= 0.1.0';
+requires 'CodingAdventures::InMemoryDataStoreProtocol', '>= 0.1.0';
+requires 'CodingAdventures::RespProtocol', '>= 0.1.0';
+requires 'Exporter';
+requires 'Scalar::Util';

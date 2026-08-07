@@ -1,0 +1,952 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 2,
+  "title": "Chapter 2",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:bb5a242c96a6f6d0",
+  "lessons": [
+    {
+      "id": "SA-C02-anandah",
+      "sequence": null,
+      "title": "आनन्दः (ānandaḥ) — \"joy,\" and \"a joy to meet you\"",
+      "headword": "आनन्दः",
+      "romanization": "",
+      "gloss": "joy — and \"meeting you is a joy\"",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e8e0fd6673d824d6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close of an introduction — a word so full it names bliss itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आ (independent ā) + न + न्द (the conjunct nda) + ः (the visarga ḥ, the masculine-singular ending you met in Chapter 1) becomes आनन्दः (ānandaḥ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To say \"pleased to meet you,\" Sanskrit can say भवन्तं दृष्ट्वा आनन्दः (bhavantaṁ dṛṣṭvā ānandaḥ) — \"seeing you, [there is] joy.\" The key word आनन्दः (ānandaḥ, \"joy, bliss, delight\") is from आ- (ā-, \"fully\") + the root नन्द् (nand, \"to rejoice\"). It is one of Sanskrit's most beloved words — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and the name Ānanda, the Buddha's devoted disciple. So a simple greeting reaches for the word Indian thought uses for the deepest happiness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ānandaḥ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ānandaḥ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full phrase — bhavantaṁ dṛṣṭvā ānandaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full phrase — *bhavantaṁ dṛṣṭvā ānandaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where else ānanda appears (bliss; the name Ānanda)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where else *ānanda* appears (bliss; the name Ānanda)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ānandaḥ mean, and what is it built from? (\"Joy, bliss\"; ā- \"fully\" + nand \"to rejoice.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-asti",
+      "sequence": null,
+      "title": "अस्ति (asti) — \"is,\" the ancestor of is and est",
+      "headword": "अस्ति",
+      "romanization": "",
+      "gloss": "is",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9088728915fcc1e6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The little verb \"is\" — and here you meet it in the form that fathered half the \"to be\" words on earth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ (independent a) + स्ति (sti, the conjunct स् s + ति ti) becomes अस्ति (asti)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्ति (asti, \"is\") is the third-person singular of the root अस् (as-, \"to be\"), from Proto-Indo-European h₁es-. It is the source of the family's copula: English is, German ist, Latin est, Greek esti, and Hindi hai ( from asti directly). Unlike its Dravidian neighbours — Tamil and Bengali drop \"is\" in the present — Sanskrit keeps an explicit copula, and it is the very word Europe kept too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"asti\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"asti\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — asti / English is / Latin est / Greek esti / Hindi hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — *asti* / English *is* / Latin *est* / Greek *esti* / Hindi *hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est, Hindi hai.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-bhavan-tvam",
+      "sequence": null,
+      "title": "भवान् / त्वम् (bhavān / tvam) — \"you,\" respectful and familiar",
+      "headword": "भवान् / त्वम्",
+      "romanization": "",
+      "gloss": "you (respectful / familiar)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5f68b66f9b279a71",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask a name you need \"you\" — and Sanskrit's familiar one is the ancestor of English thou."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्वम् (tvam): त्व (the conjunct tva) + म् (bare m, closed by the halant). भवान् (bhavān): भ + वा + न्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्वम् (tvam, familiar \"you\") is from Proto-Indo-European tū — the direct ancestor of English archaic thou, Latin tū, French tu, and Hindi tū. भवान् (bhavān, respectful \"you\") is different: it is really a third-person honorific — \"your honour,\" from bhavat (\"being, gracious one\") — and so it takes a third-person verb (bhavān asti, \"your honour is\"), a politeness by grammatical distance. For a first meeting, use भवान्."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: politeness by grammatical person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where Hindi and Punjabi make respect plural (āp … haiṁ), Sanskrit makes it third-person: to be polite you address someone as though speaking about them — \"is your honour well?\" rather than \"are you well?\" Different trick, same courtesy."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tvam\" (familiar) and \"bhavān\" (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tvam\" (familiar) and \"bhavān\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin of tvam (thou)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin of *tvam* (**thou**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why bhavān takes a third-person verb (it means \"your honour\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *bhavān* takes a third-person verb (it means \"your honour\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" is respectful, and what English word is tvam cousin to? (Bhavān — literally \"your honour,\" taking a 3rd-person verb; tvam corresponds to archaic thou.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-kim",
+      "sequence": null,
+      "title": "किम् (kim) — \"what,\" the source of the question-words",
+      "headword": "किम्",
+      "romanization": "",
+      "gloss": "what",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4e40385ad96c7c3b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The question-word — and the fountainhead of a whole family of \"wh-\" words, east and west."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कि (ki, क + the i-sign) + म् (bare m, with the halant) becomes किम् (kim)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किम् (kim, \"what\") is from the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). It is the single seed from which both Europe's qu-/wh- words and India's k- words grew."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kim\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kim\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ka- family — kim, kaḥ, kadā, kutra, katham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ka- family — *kim, kaḥ, kadā, kutra, katham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its western children (English what, Latin quis)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its western children (English *what*, Latin *quis*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What PIE root is kim from, and its cousins? (kʷo-; English what, Latin quis, Hindi kyā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-mama",
+      "sequence": null,
+      "title": "मम (mama) — \"my,\" the ancestor of me and my",
+      "headword": "मम",
+      "romanization": "",
+      "gloss": "my",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:19cf8b63960c764f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that makes the name yours — and it is, quite literally, the grandparent of English my."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म (ma) + म (ma) becomes मम (mama). Two identical syllables."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मम (mama, \"my, of me\") is the genitive of अहम् (aham, \"I\"), on the first-person root ma-, from Proto-Indo-European me-. This is the source of the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are the same ancient word, one still in its old form, the other worn smooth by five thousand years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mama\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mama\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the m- family — mama / English me, my / Latin meus / Hindi merā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the m- family — *mama* / English *me*, *my* / Latin *meus* / Hindi *merā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is mama the genitive of, and its English cousins? (Aham, \"I\"; English me, my, mine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-mama-nama-asti",
+      "sequence": null,
+      "title": "मम नाम … अस्ति (mama nāma … asti) — \"my name is…\"",
+      "headword": "मम नाम … अस्ति",
+      "romanization": "",
+      "gloss": "my name is…",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cc63cf7c2cc9dfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three atoms you now own, assembled — and note that Sanskrit, unlike Tamil or Bengali, actually says the \"is.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मम (my) + नाम (name) + your name + अस्ति (is) = mama nāma … asti, \"my name is…\" Mama nāma Aruṇaḥ asti. becomes \"My name is Arun.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Sanskrit keeps the \"is\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम नाम … अस्ति, with an explicit asti (\"is\"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the \"full-dress\" Sanskrit sentence keeps it.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mama nāma … asti\" with your name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mama nāma … asti\" with your name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how this differs from Tamil/Bengali (Sanskrit keeps the \"is\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how this differs from Tamil/Bengali (Sanskrit keeps the \"is\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name in Sanskrit, and say what it keeps that Tamil and Bengali drop. (Mama nāma … asti; the copula asti, \"is.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-nama",
+      "sequence": null,
+      "title": "नाम (nāma) — \"name,\" the source of a word half the world shares",
+      "headword": "नाम",
+      "romanization": "",
+      "gloss": "name",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dd8f39ca044c965c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first word of the introduction — and, since this is Sanskrit, the source of the word half the world uses."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न (na) + ा (the long-ā sign) + म (ma) becomes नाम (nāma)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाम (nāma, \"name,\" neuter) is from the stem नामन् (nāman), from Proto-Indo-European h₃nómn̥. This is not a borrowing from anywhere — it is the ancestor: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. When you say Sanskrit nāma, you are standing near the headwaters of a word that flowed to both Europe and modern India."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāma\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāma\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its children, west and east — English name, Latin nōmen; Hindi nām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its children, west and east — English *name*, Latin *nōmen*; Hindi *nām*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What PIE root is nāma from, and name two of its descendants. (h₃nómn̥; any two of English name, Latin nōmen, Greek onoma, Hindi nām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C02-tava-nama-kim",
+      "sequence": null,
+      "title": "तव नाम किम्? (tava nāma kim?) — \"what's your name?\"",
+      "headword": "तव नाम किम्?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2a2ccc10d3a9ff8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the introduction around — ask, instead of tell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तव (tava, \"your,\" the genitive of tvam) + नाम (name) + किम् (what) becomes \"your name what?\" Here Sanskrit often drops the asti: tava nāma kim? stands complete, the question-word alone doing the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the respectful version",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tava (\"your\") is the familiar form, matching tvam. To a respected stranger, use the honorific: भवतः नाम किम्? (bhavataḥ nāma kim? — bhavataḥ, \"of your honour\"). Note mama / tava / bhavataḥ — \"my / your / your-honour's\" — all built the same way, as genitives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar question — tava nāma kim?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar question — *tava nāma kim?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful version — bhavataḥ nāma kim?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful version — *bhavataḥ nāma kim?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer it — mama nāma … asti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer it — *mama nāma … asti*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"what's your name?\" respectfully, and give the \"my/your\" pair. (Bhavataḥ nāma kim?; mama \"my\" / tava \"your.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

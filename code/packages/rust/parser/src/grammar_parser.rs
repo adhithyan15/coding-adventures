@@ -168,22 +168,34 @@ pub struct GrammarParser {
     /// Whether newlines are significant in this grammar.
     newlines_significant: bool,
 
-    /// Packrat memoization cache: "rule_idx,pos" -> MemoEntry.
-    memo: HashMap<String, MemoEntry>,
+    /// Packrat memoization cache: `(rule_idx, pos)` -> `MemoEntry`.
+    ///
+    /// Keyed by a plain `(usize, usize)` tuple, not a `format!`-allocated
+    /// string — every memo lookup happens on the hot path (once per rule
+    /// attempted at every token position, for every grammar in this repo
+    /// built on `GrammarParser`), so allocating and hashing a fresh string
+    /// just to look up an already-cached `(rule, pos)` pair was pure
+    /// overhead a tuple key avoids entirely (`usize` hashes and compares in
+    /// O(1) with no allocation).
+    memo: HashMap<(usize, usize), MemoEntry>,
 
     /// Furthest position reached during parsing.
     furthest_pos: usize,
 
     /// What was expected at the furthest position.
     furthest_expected: Vec<String>,
-    /// Set of (rule_index, pos) pairs currently being parsed.
+    /// Set of `(rule_index, pos)` pairs currently being parsed.
     /// Used to detect and break left recursion: if we try to parse a rule
     /// at a position where we're already inside that same rule (but haven't
     /// cached the result yet), we know it's left recursion and should fail.
-    in_progress: std::collections::HashSet<String>,
+    /// Same tuple-key rationale as [`Self::memo`] — no `format!` allocation
+    /// needed to test/insert/remove a `(usize, usize)` pair.
+    in_progress: std::collections::HashSet<(usize, usize)>,
 
     /// Pre-parse hooks: transform token list before parsing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    // Boxed-closure hook list; the type documents the hook signature inline.
+    #[allow(clippy::type_complexity)]
     pre_parse_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 
     /// Post-parse hooks: transform AST after parsing.
@@ -408,15 +420,23 @@ impl GrammarParser {
     }
 
     /// Record a failed expectation at the current position for error reporting.
+    ///
+    /// The membership check below compares `expected` against the existing
+    /// `&str`s directly (`s.as_str() == expected`) rather than allocating an
+    /// `expected.to_string()` up front just to ask "is this already here?" —
+    /// this function runs on every failed rule/token attempt across the
+    /// whole parse, so the previous `!v.contains(&expected.to_string())`
+    /// paid a `String` allocation on every single call, including the
+    /// overwhelmingly common case where the expectation was already recorded
+    /// and nothing new needs to be pushed at all.
     fn record_failure(&mut self, expected: &str) {
         if self.pos > self.furthest_pos {
             self.furthest_pos = self.pos;
             self.furthest_expected = vec![expected.to_string()];
-        } else if self.pos == self.furthest_pos {
-            if !self.furthest_expected.contains(&expected.to_string()) {
+        } else if self.pos == self.furthest_pos
+            && !self.furthest_expected.iter().any(|s| s.as_str() == expected) {
                 self.furthest_expected.push(expected.to_string());
             }
-        }
     }
 
     /// Parse the token stream according to the grammar.
@@ -567,14 +587,14 @@ impl GrammarParser {
     /// Try to match a named grammar rule with memoization. The depth guard
     /// lives in the [`Self::parse_rule`] wrapper; do not call this directly.
     fn parse_rule_inner(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
-        let rule = match self.rules.get(rule_name) {
-            Some(r) => r.clone(),
-            None => return None,
+        let rule = {
+            let r = self.rules.get(rule_name)?;
+            r.clone()
         };
 
         // Check memo cache.
         if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = format!("{},{}", idx, self.pos);
+            let key = (idx, self.pos);
             if let Some(entry) = self.memo.get(&key) {
                 let end_pos = entry.end_pos;
                 let ok = entry.ok;
@@ -601,7 +621,7 @@ impl GrammarParser {
             // break the cycle. This handles grammars with rules like:
             //   primary = ... | primary LBRACKET expression RBRACKET
             // where `primary` appears as the first element of an alternative.
-            if !self.in_progress.insert(key.clone()) {
+            if !self.in_progress.insert(key) {
                 // key was already present — left recursion detected
                 return None;
             }
@@ -644,7 +664,7 @@ impl GrammarParser {
 
         // Cache result and remove from in_progress set.
         if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = format!("{},{}", idx, start_pos);
+            let key = (idx, start_pos);
             self.in_progress.remove(&key);
             if let Some(ref result) = children {
                 self.memo.insert(key, MemoEntry {
@@ -769,7 +789,29 @@ impl GrammarParser {
                     }
                 }
 
-                if self.current().value == *value {
+                // A `Literal` element matches an OPERATOR/KEYWORD lexeme by
+                // its literal spelling -- the trick every grammar comment
+                // in this codebase describes as "the parser dispatches by
+                // value" for tokens the lexer leaves on a catch-all type
+                // (`<`, `<<`, `&&`, `and`, …). But `TokenType::String`
+                // carries arbitrary user-supplied STRING-LITERAL CONTENT,
+                // not a lexeme — its `value` is whatever text sat between
+                // the quotes. Without this guard, a Ruby program containing
+                // a string literal whose CONTENT happens to equal an
+                // operator spelling (e.g. `foo(1, "*")`, `x = "&&"`) gets
+                // that string token silently swallowed by an unrelated
+                // `Literal { value: "*" }` element (e.g. the splat marker
+                // in `call_arg`'s `[ "*" | "**" | "&" ] expression`),
+                // leaving the REST of that rule with nothing to match and
+                // producing a confusing parse failure (or, in a
+                // panic-on-parse-error caller, a hard crash) for a
+                // perfectly ordinary Ruby program. Excluding `String` here
+                // is a pure narrowing of what `Literal` can match: no
+                // grammar's `Literal` element is ever intended to match
+                // arbitrary string-literal content, so this can only fix
+                // previously-incorrect matches, never reject a
+                // previously-correct one.
+                if self.current().type_ != TokenType::String && self.current().value == *value {
                     let tok = self.current().clone();
                     self.pos += 1;
                     Some(vec![ASTNodeOrToken::Token(tok)])
@@ -1137,10 +1179,10 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         GrammarElement::TokenReference { name } => name == "NEWLINE",
         GrammarElement::RuleReference { name } => name == "NEWLINE",
         GrammarElement::Sequence { elements } => {
-            elements.iter().any(|e| element_references_newline(e))
+            elements.iter().any(element_references_newline)
         }
         GrammarElement::Alternation { choices } => {
-            choices.iter().any(|c| element_references_newline(c))
+            choices.iter().any(element_references_newline)
         }
         GrammarElement::Repetition { element: inner }
         | GrammarElement::Optional { element: inner }
@@ -1352,6 +1394,44 @@ mod tests {
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
         assert_eq!(result.rule_name, "greeting");
+    }
+
+    /// Bug fix: a `Literal` element matches an operator/keyword LEXEME by
+    /// its spelling -- the "dispatches by value" trick every grammar
+    /// comment describes for tokens the lexer leaves on a catch-all type
+    /// (`<`, `<<`, `&&`, `and`, …). But `TokenType::String` carries
+    /// arbitrary user-supplied string-LITERAL CONTENT, not a lexeme.
+    /// Before this fix, `Literal { value: "hello" }` matched a `String`
+    /// token whose CONTENT happened to be `"hello"` just as readily as a
+    /// `Name`-typed operator token spelled `hello` -- e.g. Ruby's
+    /// `foo(1, "*")` had its `"*"` STRING ARGUMENT silently swallowed by
+    /// `call_arg`'s `[ "*" | "**" | "&" ] expression` splat-marker
+    /// alternative, leaving the actual `expression` with nothing to
+    /// consume and producing a confusing parse failure for an ordinary
+    /// Ruby program.
+    #[test]
+    fn test_literal_does_not_match_a_string_token_with_the_same_content() {
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "greeting".to_string(),
+                body: GrammarElement::Literal {
+                    value: "hello".to_string(),
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        };
+        // A STRING token whose CONTENT is "hello" (e.g. Ruby source
+        // `"hello"`) must NOT satisfy a `Literal { value: "hello" }`
+        // element -- only a non-String token spelled `hello` (the
+        // catch-all-Name-typed operator/keyword case this element exists
+        // for) should.
+        let tokens = vec![tok(TokenType::String, "hello"), tok(TokenType::Eof, "")];
+        let mut parser = GrammarParser::new(tokens, grammar);
+        assert!(
+            parser.parse().is_err(),
+            "a String-typed token must not satisfy a Literal match on its content"
+        );
     }
 
     #[test]
@@ -1569,6 +1649,42 @@ mod tests {
         let err = parser.parse().unwrap_err();
         // The error should mention what was expected.
         assert!(err.message.contains("Expected") || err.message.contains("Unexpected"));
+    }
+
+    #[test]
+    fn test_furthest_failure_expectations_are_deduplicated() {
+        // Two alternatives that expect the exact same token type at the same
+        // furthest position (a contrived but valid grammar: NUMBER | NUMBER)
+        // both call `record_failure("NUMBER")` when a NAME token shows up
+        // instead. `record_failure`'s dedup check (`!v.iter().any(|s| s ==
+        // expected)`, changed from an allocate-then-`Vec::contains` check
+        // during a performance pass) must still record "NUMBER" only once,
+        // not once per failing alternative.
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "value".to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                        GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        };
+
+        let tokens = vec![tok(TokenType::Name, "x"), tok(TokenType::Eof, "")];
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let err = parser.parse().unwrap_err();
+        // "NUMBER" must appear exactly once in the message, not duplicated
+        // ("NUMBER or NUMBER") the way an un-deduplicated list would render.
+        assert_eq!(
+            err.message.matches("NUMBER").count(),
+            1,
+            "expected \"NUMBER\" to appear exactly once (deduplicated), got: {}",
+            err.message
+        );
     }
 
     // -----------------------------------------------------------------------

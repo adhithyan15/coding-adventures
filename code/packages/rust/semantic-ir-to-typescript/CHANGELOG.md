@@ -1,5 +1,260 @@
 # Changelog
 
+## 0.11.2 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "TypeScript backend: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs])` — a separate protocol from the `__method__("<<", recv, arg)`
+Collections dispatch. `<<` had no entry in the emitter's fast-path
+helper table, so it fell to `__Sir.callBuiltin`'s generic dispatch,
+which had no `"<<"` entry either — every Ruby program using `<<` as an
+operator failed at runtime.
+
+Added `"<<" => "__Sir.shiftLeft"` to the emitter's helper-name table
+(alongside `"+" => "__Sir.add"`). The actual polymorphic implementation
+lives in `@coding-adventures/sir-runtime-core` 0.2.0 (this backend's
+runtime package, not inlined here) — see that package's own CHANGELOG
+for the Array/String/number dispatch.
+
+This completes "C/Go/Rust/Ruby/Python/JS/TS backends: implement
+shift-operator runtime dispatch" — every backend now supports `<<`.
+
+`semantic-ir-to-typescript` 0.11.1 -> 0.11.2.
+
+## 0.11.1 — `is_ts_reserved` was missing `eval`/`arguments` (task #112, the direct TS sibling of task #110's JS fix)
+
+**Not a syntactic-keyword gap — a strict-mode contextual-reserved-word
+gap**, identical to the one just fixed in `semantic-ir-to-javascript`
+(task #110). `is_ts_reserved` (`emit.rs`) is the shared identifier-safety
+check every frontend that lowers to this backend (MATLAB, Octave, Wolfram,
+Macsyma, Maxima, APL, J, Derive, Reduce, Maple, Scilab, Q, Python, Ruby,
+JS, Twig, and more) goes through via `sanitize_ident`/`is_valid_ts_ident`
+before emitting a user-level identifier as a TypeScript binding. It
+already listed every syntactic keyword (`if`, `for`, `class`, …) plus a
+handful of contextual/type-level ones unsafe as bindings (`let`, `static`,
+`any`, `boolean`, `number`, `string`, `symbol`, `type`, `namespace`,
+`interface`, and the rest of the future-reserved-in-strict-mode set) —
+but not `eval` or `arguments`.
+
+Neither is a syntactic keyword; both are ordinary identifiers lexically.
+But TypeScript is a superset of JavaScript that compiles to (and, in
+ES-module contexts, is itself parsed under) strict-mode-equivalent
+semantics, and strict mode specifically forbids binding, assigning to, or
+otherwise declaring a variable, parameter, function, or class named
+`eval` or `arguments` — a compile-time error. A SIR module with a
+user-level name `eval` or `arguments` would previously have been emitted
+verbatim by `sanitize_ident` (since `is_ts_reserved` returned `false`),
+producing invalid/broken TypeScript output.
+
+Fixed by adding both to the existing `matches!` list in `is_ts_reserved`
+(same style and position as the JS sibling fix — appended after
+`"public"`; no restructuring). New unit test
+`is_ts_reserved_flags_strict_mode_contextual_words` (modeled directly on
+the JS sibling's `is_js_reserved_flags_strict_mode_contextual_words`)
+pins both as reserved, confirms `sanitize_ident` prefixes both with
+`_$`, and confirms ordinary look-alike identifiers (`value`, `evaluate`,
+`argument`) are untouched.
+
+## 0.11.0 — SIR22 "APL addendum" codegen: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`
+
+Closes the gap 0.10.0's own CHANGELOG entry (below) flagged as a "scope
+boundary, not silently swept away": `apl-to-semantic-ir` genuinely lowers
+APL's `/` (reduce), `\` (scan), `∘.` (outer product), `⍴` (shape/reshape),
+`⍳` (index-generator/index-of), and `,` (ravel/catenate) to these nine
+`Expr` variants, but this backend's `emit.rs` still `panic!`ed on all nine
+and `lib.rs` had a dedicated pre-`emit` tree-walk
+(`find_unimplemented_sir22_addendum_node`) to reject them cleanly instead.
+The blocker that kept this deferred at 0.10.0 — `sir-runtime-array` itself
+not implementing these nine — is now gone: that package's own SIR22-
+addendum port (mirroring the identical primitives `semantic-ir-to-javascript`
+already inlined) shipped ahead of this release, so this PR is purely
+*wiring up calls* into functions that already exist, exactly the
+"runtime lands before its codegen consumer" pattern the base cut (0.9.0/
+0.10.0) followed too.
+
+Unlike the JavaScript backend's identical fix, this crate imports the
+published npm package rather than inlining a copy of its logic — so there
+is no `runtime.rs` port to write here at all, only call-site wiring in
+`emit.rs` and capability-gate removal in `lib.rs`.
+
+### Added
+
+- **`emit.rs`**: nine real-codegen `match` arms replacing the previous
+  combined `panic!` arm, mirroring the existing `ArrayLit`/`Range`/`MatMul`/
+  `ElementwiseOp`/`Transpose`/`IndexGet` arms' style exactly — each recurses
+  into its operand(s) and emits a call into the corresponding
+  `__SirArray.*` function; `Reduce`/`Scan`/`OuterProduct` reuse
+  `elementwise_op_ts_name` for their `op` field exactly like `ElementwiseOp`
+  does. `Reshape`'s field order was checked directly against
+  `sir-runtime-array`'s `reshape(shapeArg, target)` (`shape.ts`) rather than
+  assumed: `semantic_ir::Expr::Reshape`'s own field order is `shape,
+  target`, which already matches — unlike `Expr::Range`'s `start, step,
+  stop` vs. `range`'s `start, stop, step` (which DOES reorder, see the
+  0.10.0 entry above), no argument reordering was needed at this call site.
+- **`lib.rs`**: removed `find_unimplemented_sir22_addendum_node` (the
+  dedicated tree-walk that rejected these nine node kinds before `emit`
+  could panic on them) and its `compile()` step-3b call site — no longer
+  needed now that real codegen exists. Doc comments and
+  `ACCEPTED_FEATURES` updated to describe the full SIR22 domain (base cut
+  + addendum) as accepted and implemented, not "base cut done, addendum
+  deferred."
+
+### Changed
+
+- The stale `rejects_reduce_node_cleanly_instead_of_panicking_in_emit`
+  regression test is now `compiles_reduce_node_instead_of_rejecting_it`,
+  asserting `compile()` SUCCEEDS with the exact expected
+  `__SirArray.reduce("Add", ...)` call shape, plus a new
+  `emits_all_nine_addendum_nodes_as_sir_array_calls` covering the other
+  seven node kinds' call shapes (`Reshape` gets its own dedicated
+  `emits_reshape_with_shape_before_target_argument_order`, using two
+  DISTINCT operands so a real argument-swap bug would fail the assertion
+  rather than pass by coincidence). These follow this crate's own
+  established structural-test convention for the SIR22 base cut — a
+  hand-crafted `Module` compiled and asserted against the emitted source
+  STRING — not a new real-node-execution harness: TypeScript source
+  carries type annotations `node` cannot run directly, and this crate's
+  existing `tests/run_with_node.rs` already covers that gap for other
+  constructs via a hand-rolled stripping-plus-inline-stub shim, which
+  would need `sir-runtime-array`'s full logic hand-ported into it (or a
+  real `tsc`/`ts-node` dependency) to cover these nine new calls too —
+  out of scope for this PR, same as it was out of scope for the base cut.
+
+### Verified
+
+- `cargo test -p semantic-ir-to-typescript`: 143 tests green (118 in
+  `src/lib.rs` + `src/emit.rs`/`src/runtime.rs` unit tests, 6 in
+  `tests/polymorphic_operators.rs`, 19 in `tests/run_with_node.rs`).
+- `cargo clippy -p semantic-ir-to-typescript --all-targets`: clean.
+- Every downstream frontend crate that carries this backend as a
+  dev-dependency re-verified green: `apl-to-semantic-ir`,
+  `javascript-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `matlab-to-semantic-ir`, `octave-to-semantic-ir`, `j-to-semantic-ir`,
+  `wolfram-to-semantic-ir`, `sir-conformance`. None needed source
+  changes — this PR only ADDS codegen for previously-panicking/rejected
+  node kinds, it does not change behavior for any node kind another
+  frontend already emits.
+- `cargo build --workspace`: no new failures introduced (the one
+  pre-existing, environment-specific failure — `uefi`'s duplicate
+  `panic_impl` lang item — is unrelated to this change and was present
+  before it).
+
+## 0.10.0 — SIR22 array/matrix codegen (HML01 Stream A, item 7 TS half)
+
+Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
+`Range`, `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`), and
+`IndexSet` (a `Stmt`) — replacing the deferred `panic!` placeholder these
+seven nodes had. Mirrors the SIR23 codegen's own imported-package treatment
+(0.9.0, above): targets the published `@coding-adventures/sir-runtime-array`
+npm package via `import * as __SirArray from "@coding-adventures/sir-runtime-array"`,
+rather than an inlined runtime — the same contrast the JavaScript backend's
+own SIR22 PR (0.36.0) draws with its inlined `__Sir.Array` port.
+
+- `runtime.rs` gains `RUNTIME_ARRAY`, the `__SirArray` import header, emitted
+  only when `emit::uses_array` finds `Feature::NDArrays`/`MatrixOps`/
+  `ArrayColumnMajor` on the module — a pure-numeric or pure-OOP module never
+  gains the dependency.
+- `emit.rs`: the seven base-cut arms emit real `__SirArray.*` calls,
+  matching the JS backend's call shapes exactly (down to `Expr::Range`'s
+  `start, step, stop` field order vs. `__SirArray.range(start, stop, step)`'s
+  `stop`-before-`step` parameter order, and the `elementwise_op_ts_name`/
+  `emit_index_arg`/`emit_index_args` helpers).
+- **Scope boundary, not silently swept away**: the SIR22 "APL addendum"
+  nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  `IndexOf`/`Ravel`/`Catenate`) remain deferred — `sir-runtime-array` itself
+  never implemented them, and porting `array_runtime::ops::{reduce,scan,outer}`
+  + `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/ravel/
+  catenate logic is a properly-scoped follow-up, not part of this PR. These
+  nine variants share `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor`
+  with the now-accepted base cut (the SIR22 addendum spec gives them no
+  flag of their own), and `apl-to-semantic-ir`'s real lowering emits
+  `Reduce`/`Scan`/`OuterProduct` for APL's `+/`/`+\`/`∘.×` operators today —
+  so without a fix, such a module would pass `accepts_features()` and panic
+  inside `emit`. Fixed with a new `find_unimplemented_sir22_addendum_node`
+  tree walk (using the `semantic_ir::Visitor` trait) wired into
+  `TypeScriptBackend::compile()` as an explicit step, mirroring the
+  identical check the JS backend already has and the existing `TailCalls`
+  belt-and-suspenders check just above it in this same `compile()` — a
+  module using any of these nine now fails cleanly with
+  `BackendErrorKind::UnsupportedFeature`, never a panic.
+- `lib.rs`: `Feature::NDArrays`, `Feature::MatrixOps`, and
+  `Feature::ArrayColumnMajor` join `ACCEPTED_FEATURES`.
+- **Consuming this package for the first time surfaced four latent bugs in
+  `sir-runtime-array` itself**, already found and fixed in the JS backend's
+  own inlined port of this same logic (its 0.36.0 CHANGELOG entry) but never
+  triggered in the TypeScript package before now, since nothing called it —
+  see that package's own 0.2.0 CHANGELOG entry for the full writeup (NaN
+  bypassing the linear `indexGet`/`indexSet` bounds check, `range()` silently
+  returning empty on a NaN bound, `set()`'s NaN-unsafe OR-form bounds check,
+  and `elementwise()` assuming both operands were already `NDArray` when
+  `matlab-to-semantic-ir`'s lowering can emit a bare scalar operand).
+- New tests: `accepts_nd_arrays_feature`/`accepts_matrix_ops_feature`
+  (capability acceptance), `non_array_module_omits_sir_runtime_array_import`/
+  `array_module_imports_sir_runtime_array` (import gating),
+  `rejects_reduce_node_cleanly_instead_of_panicking_in_emit` (the addendum
+  guard), `emits_array_lit_and_matmul_as_sir_array_calls`,
+  `emits_elementwise_op_with_pascal_case_op_name` (op-name casing),
+  `emits_range_with_stop_before_step_argument_order`,
+  `emits_index_set_as_a_statement_not_an_assignment`, and
+  `end_to_end_matlab_matmul_compiles_and_emits_expected_calls` (a real
+  MATLAB program through `matlab-to-semantic-ir`, mirroring
+  `end_to_end_wolfram_replace_all_compiles_and_emits_expected_calls`'s
+  precedent for SIR23). New dev-dependency: `matlab-to-semantic-ir`.
+
+## 0.9.0 — SIR23 symbolic/pattern codegen (HML01 Stream B, item 7)
+
+Real codegen for the SIR23 symbolic-expression + pattern/rewrite domain —
+previously deferred (panicking on `Expr::SymSymbol`/`SymRational`/`SymApply`/
+`SymPatternBlank`/`SymPatternNamed`/`SymRule`/`SymReplaceAll`, gated out at
+the capability check). A compiled Wolfram/Macsyma/Maxima program using
+pattern-matching or rewrite rules (`x /. a -> b`, `x //. rules`) now compiles
+to TypeScript that constructs/consumes a real term-tree value at runtime via
+the imported `@coding-adventures/sir-runtime-symbolic` package, bound as
+`__SirSym`:
+
+- `SymSymbol`/`SymRational` → `__SirSym.sym(...)`/`__SirSym.rational(...)`.
+- `SymApply { head, args }` → `__SirSym.apply(head, [args...])`, recursing
+  through `emit_sym_operand` — a child that is an `IntLit`/`FloatLit`/
+  `StrLit` (the three literal kinds SIR23 "reuses directly" rather than
+  defining new leaf nodes for) gets wrapped into the matching
+  `__SirSym.int`/`numberNode`/`stringNode` constructor, since a bare host
+  number/string is never a valid `IRNode` term; every other child (a nested
+  symbolic node, or a `VarRef`/call whose value is already a term by the
+  frontend's own convention) emits unchanged.
+- `SymPatternBlank`/`SymPatternNamed` → `__SirSym.blank()`/`blankTyped(...)`/
+  `named(...)`.
+- `SymRule { delayed }` → `__SirSym.rule(...)` (`->`) or `ruleDelayed(...)`
+  (`:>`).
+- `SymReplaceAll { repeated }` → `__SirSym.unwrap(__SirSym.replaceAll(...))`
+  (`/.`) or `unwrap(replaceRepeated(...))` (`//.`) — wrapped in `unwrap`
+  because both rewrite functions can return a `DepthLimitError`/
+  `RewriteCycleError` sentinel instead of a real term; a compiled
+  `SymReplaceAll` must evaluate to a term value or fail loudly, never
+  silently hand that sentinel to code expecting an `IRNode`.
+
+Accepts `Feature::SymbolicExpr`, `Feature::PatternMatching`, and
+`Feature::Rationals` (the last shared with SIR22, scoped exactly to
+`SymRational` — no other construct in this backend triggers it yet). The
+`@coding-adventures/sir-runtime-symbolic` import is gated by `uses_symbolic`
+(either feature), so a purely-numeric module never gains the dependency.
+
+Required a small, additive extension to `@coding-adventures/sir-runtime-symbolic`
+itself (0.1.0 → 0.2.0): re-exports of `symbolic-ir`'s leaf-term constructors
+(`sym`/`int`/`rational`/`numberNode`/`stringNode`, previously missing) and a
+new `unwrap(result)` helper for the depth/cycle-error-sentinel handling
+above.
+
+Tested with unit shape assertions for every new node kind (leaf constructors,
+literal wrapping, both pattern-blank forms, `rule` vs `ruleDelayed`,
+`replaceAll` vs `replaceRepeated`, the import gate) plus a real end-to-end
+test compiling actual Wolfram source (`x /. a -> b`) through
+`wolfram-to-semantic-ir` and this backend, not just hand-built `Module`s.
+
+The JavaScript backend (`semantic-ir-to-javascript`) still defers these nodes
+— it inlines its own runtime rather than importing packages, so SIR23 there
+needs a from-scratch inlined term-rewriting engine, not a straightforward
+import; tracked as follow-up work.
+
 ## 0.8.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Emits the display-convention selection (SIR display-convention spec) for the

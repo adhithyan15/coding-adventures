@@ -1684,7 +1684,7 @@ mod tests {
         assert!(
             matches!(&main.stmts[0], Stmt::ClassDef { .. }),
             "ordinary class must lower to ClassDef, got {:?}",
-            &main.stmts[0]
+            main.stmts[0]
         );
     }
 
@@ -3201,7 +3201,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag to false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3220,7 +3220,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag to true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3294,7 +3294,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3313,12 +3313,12 @@ mod tests {
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "a"),
                     "expected start StrLit \"a\"; got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "z"),
                     "expected end StrLit \"z\"; got {:?}",
-                    &args[1]
+                    args[1]
                 );
                 assert!(matches!(&args[2], Expr::BoolLit { value: false, .. }));
             }
@@ -3374,12 +3374,12 @@ mod tests {
                 assert!(
                     matches!(&args[1], Expr::NilLit { .. }),
                     "endless range end should be NilLit; got {:?}",
-                    &args[1]
+                    args[1]
                 );
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3398,7 +3398,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3447,13 +3447,13 @@ mod tests {
                 assert!(
                     matches!(&args[0], Expr::NilLit { .. }),
                     "beginless range start should be NilLit; got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3473,7 +3473,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3523,11 +3523,11 @@ mod tests {
                 assert_eq!(args.len(), 2, "expected [pattern, flags]");
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"),
-                    "expected pattern StrLit \"foo\"; got {:?}", &args[0]
+                    "expected pattern StrLit \"foo\"; got {:?}", args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()),
-                    "expected empty flags StrLit; got {:?}", &args[1]
+                    "expected empty flags StrLit; got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3547,7 +3547,7 @@ mod tests {
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "i"),
-                    "expected flags StrLit \"i\"; got {:?}", &args[1]
+                    "expected flags StrLit \"i\"; got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3592,7 +3592,7 @@ mod tests {
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "im"),
-                    "expected flags StrLit \"im\" (order preserved); got {:?}", &args[1]
+                    "expected flags StrLit \"im\" (order preserved); got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3679,7 +3679,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::VarRef { name, .. } if name == "b"),
-                    "expected bare VarRef pattern; got {:?}", &args[0]
+                    "expected bare VarRef pattern; got {:?}", args[0]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3696,7 +3696,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::StrConcat { .. }),
-                    "expected StrConcat pattern; got {:?}", &args[0]
+                    "expected StrConcat pattern; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "i"));
             }
@@ -3729,7 +3729,7 @@ mod tests {
                 assert_eq!(args.len(), 2);
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "hello"),
-                    "expected pattern StrLit \"hello\"; got {:?}", &args[0]
+                    "expected pattern StrLit \"hello\"; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
@@ -3752,7 +3752,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()),
-                    "expected empty pattern StrLit; got {:?}", &args[0]
+                    "expected empty pattern StrLit; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
@@ -6057,7 +6057,7 @@ mod tests {
                 Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
                 _ => None,
             })
-            .or_else(|| match &t.body.value {
+            .or(match &t.body.value {
                 e @ Expr::If { .. } => Some(e),
                 _ => None,
             })
@@ -7235,7 +7235,7 @@ b = "y"
                 assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "sum "));
                 assert!(
                     matches!(&parts[1], Expr::BuiltinCall { name, .. } if name == "+"),
-                    "expected real `+` call, got {:?}", &parts[1]
+                    "expected real `+` call, got {:?}", parts[1]
                 );
                 assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "\n"));
             }
@@ -7315,13 +7315,13 @@ b = "y"
                     matches!(&args[0], Expr::VarRef { name, scope, .. }
                         if name == "x" && *scope == Scope::Param),
                     "expected VarRef(x, Param), got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::VarRef { name, scope, .. }
                         if name == "y" && *scope == Scope::Param),
                     "expected VarRef(y, Param), got {:?}",
-                    &args[1]
+                    args[1]
                 );
             }
             other => panic!("expected +-BuiltinCall, got {:?}", other),
@@ -7390,7 +7390,7 @@ b = "y"
 
     /// Helper: extract the `Expr::If` from a top-level `case` statement
     /// — Phase 6u/7d lowers case to `Stmt::ExprStmt(Expr::If(...))`.
-    fn extract_case_if<'a>(b: &'a semantic_ir::Block) -> &'a Expr {
+    fn extract_case_if(b: &semantic_ir::Block) -> &Expr {
         // The case is typically the second statement (first is the
         // `x = ...` LetBinding from the test prelude).
         match &b.stmts[1] {
@@ -7702,11 +7702,11 @@ b = "y"
             .stmts
             .iter()
             .filter_map(|s| match s {
-                Stmt::LetBinding { name, value, .. }
-                    if matches!(value, Expr::SeqIndex { .. }) =>
-                {
-                    Some(name.as_str())
-                }
+                Stmt::LetBinding {
+                    name,
+                    value: Expr::SeqIndex { .. },
+                    ..
+                } => Some(name.as_str()),
                 _ => None,
             })
             .collect();
@@ -9349,6 +9349,328 @@ b = "y"
             result.is_ok(),
             "validator rejected inheritance module: {:?}",
             result.errors().collect::<Vec<_>>()
+        );
+    }
+
+    // Regression for a grammar bug: `<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have
+    // no dedicated lexer token type (`classify_op_token` in `ruby-lexer`
+    // deliberately leaves every operator lexeme without one on
+    // `TokenType::Name` — "the parser dispatches by value"), so `factor`'s
+    // bare `NAME` alternative could match one of THEM too. A bare statement
+    // like `x > 2` mis-parsed as `method_call_no_paren` — `x` as the callee,
+    // the `>` token swallowed whole as if it were an ordinary name-shaped
+    // argument — leaving `2` behind as an unrelated second statement, and
+    // lowering the malformed "argument" emitted a `DirectCall` to whatever
+    // that bare name resolved to (here, `x` itself), which the SIR validator
+    // correctly rejected as a call to an unknown function. Fixed by a
+    // negative-lookahead in `method_call_no_paren` (`ruby.grammar`) so it
+    // fails to match on these operators and `expression_stmt` (`comparison`/
+    // `logical_and`/`logical_or`) parses the whole expression correctly
+    // instead. `==` was accidentally already immune (its own dedicated
+    // `EqualsEquals` token type) — included below as a same-shape control
+    // case that must keep passing. (`<=>` is a SEPARATE, pre-existing,
+    // out-of-scope gap: it isn't in `comparison`'s operator set at all, so it
+    // was never supported as a bare statement or otherwise — not touched
+    // here.)
+    #[test]
+    fn bare_comparison_statement_validates() {
+        // The BARE (unwrapped) shape that originally triggered the bug — as
+        // opposed to `puts(x > 2)`, where the comparison is nested as a call
+        // ARGUMENT and always worked. `==` was accidentally already immune
+        // (see the module-level comment above) — included as a same-shape
+        // control case that must keep validating.
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||", "=="] {
+            let src = format!("x = 3\nx {op} 2\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "bare `x {op} 2` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bare_comparison_in_block_tail_position_validates() {
+        // The shape that originally surfaced the bug: a comparison as a
+        // block's IMPLICIT RETURN value (`select`/`any?`/etc.'s predicate).
+        for op in ["<", ">", "<=", ">=", "!="] {
+            let src = format!("puts [1, 2, 3].select {{ |x| x {op} 2 }}\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "`{{ |x| x {op} 2 }}` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bare_comparison_in_def_tail_position_validates() {
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||"] {
+            let src = format!("def f(x)\n  x {op} 2\nend\nputs f(3)\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "`def f(x); x {op} 2; end` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bitwise_operators_are_still_cleanly_unsupported_not_mis_parsed() {
+        // `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
+        // this Ruby subset at all (only used elsewhere: `**`/`&` as call-arg
+        // prefixes, `|` for block params, `^` for pin patterns) — so the fix
+        // deliberately does NOT guard them: there is no correct fallback
+        // parse to preserve for `x ^ 2`. This pins that they remain
+        // UNCHANGED (still lower as separate statements, same as before the
+        // fix), so a future contributor doesn't assume this fix silently
+        // added bitwise-operator support. (`<<` USED to be in this list —
+        // it's now a supported binary operator; see
+        // `shift_operator_lowers_to_a_single_builtin_call` below.)
+        for op in ["**", ">>", "^", "&", "|"] {
+            let src = format!("x = 3\nx {op} 2\n");
+            let m = lower(&src);
+            assert_eq!(
+                m.functions.iter().find(|f| f.name == "main").unwrap().body.stmts.len(),
+                2,
+                "`x {op} 2` is not a supported binary expression here; it should \
+                 still split into two statements (unchanged), not one: {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn shift_operator_lowers_to_a_builtin_call() {
+        let m = lower("y = x << 2");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "<<");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(<<, …)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn shift_binds_tighter_than_comparison_after_lowering() {
+        // `x << 1 == y` should lower as `(x << 1) == y`: the outer
+        // BuiltinCall is `==`, whose LHS is itself a `<<` BuiltinCall.
+        let m = lower("z = (x << 1 == y)");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name: outer, args, .. }, .. } => {
+                assert_eq!(outer, "==");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, .. } => assert_eq!(inner, "<<"),
+                    other => panic!("expected LHS = <<(x, 1), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(BuiltinCall(==, …)), got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Bug fix: bracket-index read/write lowering.
+    //
+    // Both `a[i]` (read) and `a[i] = v` (write) route through the SAME
+    // `__method__` dispatch every other Collections built-in uses --
+    // `__method__(recv, "[]", index)` / `__method__(recv, "[]=", index,
+    // value)` -- rather than a compile-time guess (Array vs Hash) from the
+    // INDEX's syntactic shape. An earlier version of this lowering used
+    // such a heuristic (string-literal key -> Map, else -> Seq, matching
+    // `python-to-semantic-ir`'s convention) but it mis-routes a Hash write
+    // with a non-string key (e.g. `h[2] = "b"` on an int-keyed Hash) to the
+    // Array path, which crashes at runtime. Dispatching on the RECEIVER's
+    // actual runtime tag instead can never mis-route, regardless of the
+    // index's type.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn bracket_index_read_lowers_to_method_dispatch() {
+        // A trailing `puts x` keeps `x = a[1]` from being tail-promoted into
+        // `body.value` (only the LAST top-level statement is ever promoted,
+        // and only when it's a bare `expression_stmt`/method call — see
+        // `lower_program`), so the assignment lands in `body.stmts` as an
+        // ordinary `LetBinding` we can inspect directly.
+        let m = lower("a = [1, 2, 3]\nx = a[1]\nputs x\n");
+        let main = main_body(&m);
+        let value = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "x" => Some(value),
+            _ => None,
+        }).expect("expected `x = ...` LetBinding");
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 3, "__method__(recv, \"[]\", index)");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]"));
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall for `a[1]`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_write_lowers_to_method_dispatch() {
+        let m = lower("a[0] = 9\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 4, "__method__(recv, \"[]=\", index, value)");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 0, .. }));
+                assert!(matches!(&args[3], Expr::IntLit { value: 9, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `a[0] = 9`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_write_with_non_string_key_is_not_a_seq_set() {
+        // The heuristic this replaced would have mis-routed this to
+        // `Stmt::SeqSet` (int key -> "must be an Array"), which crashes at
+        // runtime when `h` is actually a Hash. The `__method__` dispatch
+        // carries the index through untouched -- no type decision is made
+        // at lowering time at all.
+        let m = lower("h[2] = \"b\"\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        assert!(
+            !matches!(stmt, Stmt::SeqSet { .. }),
+            "must not lower to SeqSet -- the receiver's type is unknown at lowering time"
+        );
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall statement, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn chained_bracket_index_read_nests_method_dispatch() {
+        // `a[1][0]` -- the outer `__method__("[]", ...)` receives the
+        // inner `__method__("[]", ...)` as ITS receiver. A trailing `puts x`
+        // keeps `x = a[1][0]` out of the tail-promoted `body.value` slot
+        // (see the comment on `bracket_index_read_lowers_to_method_dispatch`).
+        let m = lower("a = [[1, 2], [3, 4]]\nx = a[1][0]\nputs x\n");
+        let main = main_body(&m);
+        let value = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "x" => Some(value),
+            _ => None,
+        }).expect("expected `x = ...` LetBinding");
+        match value {
+            Expr::BuiltinCall { name, args, .. } if name == "__method__" => {
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]"));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "[]"));
+                    }
+                    other => panic!("expected nested __method__ receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall for `a[1][0]`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_read_and_write_pass_sir_validator() {
+        // `[]=`'s receiver must already exist (bracket-assignment mutates,
+        // it can't create a binding), so `a`/`h` are declared first.
+        let m = lower(
+            "a = [[1, 2], [3, 4]]\nh = {}\na[0] = 9\nh[\"k\"] = 1\nputs a[0]\nputs h[\"k\"]\nputs a[1][0]\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected bracket-index program: {:?}", result);
+    }
+
+    // -------------------------------------------------------------------
+    // Widened `index_assignment` to a dotted/chained receiver -- see the
+    // grammar's `index_write_receiver_postfix` rule (in `ruby.grammar`)
+    // for the lookahead trick that separates the RECEIVER's postfixes
+    // from the FINAL write-target bracket.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn chained_bracket_index_write_uses_the_inner_bracket_as_receiver() {
+        // `a[0][1] = 3` -- the OUTER `__method__("[]=", ...)`'s receiver
+        // must be a NESTED `__method__("[]", a, 0)` (a READ of `a[0]`),
+        // not the bare `a` VarRef directly -- proving the first bracket
+        // was folded as a receiver postfix, not swallowed into the write.
+        let m = lower("a[0][1] = 3\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }), "write index is 1");
+                assert!(matches!(&args[3], Expr::IntLit { value: 3, .. }), "RHS value is 3");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "[]"));
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "a"));
+                        assert!(matches!(&inner_args[2], Expr::IntLit { value: 0, .. }), "receiver index is 0");
+                    }
+                    other => panic!("expected a nested __method__(\"[]\", a, 0) receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `a[0][1] = 3`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dotted_bracket_index_write_folds_the_dot_call_as_receiver() {
+        // `obj.data[0] = 3` -- the write's receiver must be a `__method__`
+        // dispatch to `"data"` (a plain 0-arg method call), NOT the bare
+        // `obj` VarRef -- proving `.data` was folded via the SAME
+        // `fold_one_dot_call` helper `apply_dot_chain` uses for reads.
+        let m = lower("obj.data[0] = 3\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "obj"));
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "data"));
+                        assert_eq!(inner_args.len(), 2, "0-arg method call: [recv, \"data\"]");
+                    }
+                    other => panic!("expected a nested __method__(obj, \"data\") receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `obj.data[0] = 3`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn chained_and_dotted_bracket_index_write_pass_sir_validator() {
+        let m = lower(
+            "a = [[1, 2], [3, 4]]\na[0][1] = 9\nclass Box\n  def data\n    [1, 2]\n  end\nend\nb = Box.new\nb.data[0] = 3\nputs a[0][1]\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected chained/dotted bracket-index write program: {:?}",
+            result
         );
     }
 }

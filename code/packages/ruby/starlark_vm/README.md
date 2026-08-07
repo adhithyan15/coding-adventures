@@ -47,6 +47,10 @@ result = CodingAdventures::StarlarkVM.execute_starlark("print(\"hello world\")\n
 result.output  # => ["hello world"]
 ```
 
+Functions support positional arguments, keyword arguments, and defaults.
+Each function captures its defining module's globals, which keeps nested
+`load()` calls deterministic while restoring the caller's globals afterward.
+
 ### Manual VM Setup
 
 ```ruby

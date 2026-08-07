@@ -40,6 +40,8 @@ use std::fmt;
 /// | `Rationals`                | a `SirType::Rational`                 |
 /// | `Complex`                  | a `SirType::Complex`                  |
 /// | `ArrayColumnMajor`         | any `ArrayLit`/matrix op — column-major storage convention |
+/// | `SymbolicExpr`             | a `SymSymbol` or `SymApply` node       |
+/// | `PatternMatching`          | a `SymPatternBlank`, `SymPatternNamed`, `SymRule`, or `SymReplaceAll` node |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -178,10 +180,12 @@ pub enum Feature {
     /// together.
     MatrixOps,
     /// The module uses an exact rational scalar (`SirType::Rational`).
-    /// Shared with the future SIR23 symbolic extension.
+    /// Shared with the SIR23 symbolic extension — an `Expr::SymRational`
+    /// node observes this same feature rather than a new one (see
+    /// `validator.rs`'s SIR23 `check_expr` arm).
     Rationals,
     /// The module uses a complex scalar (`SirType::Complex`).  Shared
-    /// with the future SIR23 symbolic extension.  Named `Complex` to
+    /// with the SIR23 symbolic extension.  Named `Complex` to
     /// match the `SirType::Complex` variant it gates (not to be
     /// confused with `SirType`'s own naming — this is a `Feature`).
     Complex,
@@ -194,6 +198,32 @@ pub enum Feature {
     /// buffer layout and must match the same `(r, c) → c * nrows + r`
     /// indexing formula.
     ArrayColumnMajor,
+    // ── SIR26 (integer conversions) ──────────────────────────────────
+    /// The module contains an `Expr::Convert` node — an integer
+    /// narrowing / reinterpretation to a target width+signedness (a C cast
+    /// or implicit conversion).  A backend accepting this renders the
+    /// two's-complement reduction (mask + sign-fold); a `Convert`'s target
+    /// type also implies `SizedIntegers`/`Unsigned` per SIR21.  See
+    /// [SIR26](../../../../specs/SIR26-integer-conversions.md).
+    Conversions,
+    // ── SIR23 (symbolic expression + pattern/rewrite IR extension) ───
+    /// The module uses a symbolic-expression node — `Expr::SymSymbol` (a
+    /// bare Wolfram-style symbol used as data) or `Expr::SymApply`
+    /// (`head[args…]` application as data, where `head` may itself be a
+    /// computed expression).  A backend that doesn't declare this in
+    /// `accepts_features()` cleanly rejects the module via the existing
+    /// capability-check mechanism (SIR10) — no new mechanism needed.
+    /// See [SIR23](../../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
+    SymbolicExpr,
+    /// The module uses pattern-matching or rewrite-rule vocabulary —
+    /// `Expr::SymPatternBlank` (`_`/`_h`), `Expr::SymPatternNamed`
+    /// (`x_`/`x_h`), `Expr::SymRule` (`->`/`:>`), or
+    /// `Expr::SymReplaceAll` (`/.`/`//.`).  Split out from
+    /// `SymbolicExpr` because a backend could in principle carry
+    /// symbolic *values* (via `SymSymbol`/`SymApply`) without
+    /// implementing the pattern matcher these nodes require — matching
+    /// how `MatrixOps` is split from `NDArrays` in SIR22.
+    PatternMatching,
 }
 
 impl Feature {
@@ -236,6 +266,9 @@ impl Feature {
         Feature::Rationals,
         Feature::Complex,
         Feature::ArrayColumnMajor,
+        Feature::Conversions,
+        Feature::SymbolicExpr,
+        Feature::PatternMatching,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -278,6 +311,9 @@ impl Feature {
             Feature::Rationals => "rationals",
             Feature::Complex => "complex",
             Feature::ArrayColumnMajor => "array-column-major",
+            Feature::Conversions => "conversions",
+            Feature::SymbolicExpr => "symbolic-expr",
+            Feature::PatternMatching => "pattern-matching",
         }
     }
 
@@ -324,7 +360,7 @@ impl FeatureManifest {
 
     /// `true` iff the feature is declared.
     pub fn contains(&self, feature: Feature) -> bool {
-        self.features.iter().any(|f| *f == feature)
+        self.features.contains(&feature)
     }
 
     /// Iterate declared features in insertion order.
@@ -386,6 +422,22 @@ mod tests {
             (Feature::Pointers, "pointers"),
             (Feature::Structs, "structs"),
             (Feature::Bignum, "bignum"),
+        ];
+        for (feat, name) in new {
+            assert_eq!(feat.name(), name);
+            assert_eq!(Feature::from_name(name), Some(feat));
+            assert!(Feature::ALL.contains(&feat), "{} missing from ALL", name);
+        }
+    }
+
+    #[test]
+    fn sir23_features_present_and_named() {
+        // SymbolicExpr / PatternMatching round-trip through name()/from_name()
+        // and are members of ALL, mirroring how the SIR21 T1b test above
+        // pins its own new flags.
+        let new = [
+            (Feature::SymbolicExpr, "symbolic-expr"),
+            (Feature::PatternMatching, "pattern-matching"),
         ];
         for (feat, name) in new {
             assert_eq!(feat.name(), name);

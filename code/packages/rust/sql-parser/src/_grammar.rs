@@ -58,26 +58,57 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"select_list"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
-                GrammarElement::Sequence { elements: vec![
-                    GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
-                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                            GrammarElement::Literal { value: r#","#.to_string() },
-                            GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
-                        ] }) },
-                ] },
+            // `select_list = select_item { "," select_item }`. A bare `*` is now a
+            // `select_item` alternative (see below), NOT a top-level whole-list
+            // alternative, so `*` can appear as ONE item in a comma list
+            // (`SELECT a, *`, `SELECT *, a`) — SQLite expands each `*` in place.
+            // Previously `*` was only accepted as the entire list, so a mixed list
+            // failed to parse.
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#","#.to_string() },
+                        GrammarElement::RuleReference { name: r#"select_item"#.to_string() },
+                    ] }) },
             ] },
             line_number: 22,
         },
         GrammarRule {
             name: r#"select_item"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
+            // `select_item = STAR | ( expr [ COLLATE name ] [ [ "AS" ] NAME ] )`.
+            // A bare `*` is the wildcard item — the planner emits a `*` placeholder
+            // that `expand_star_columns` turns into the table's columns in place,
+            // so `*` composes with other items in a comma list. STAR is tried
+            // first (ordered choice); `SELECT a` / `count(*)` fall through to the
+            // expr form because their first token is not a bare `*`.
+            body: GrammarElement::Alternation { choices: vec![
+              GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
+              GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // Optional `COLLATE name` suffix on a select-list expression, e.g.
+                // `SELECT DISTINCT b COLLATE NOCASE`. Same shape as ORDER BY's
+                // COLLATE tail (see `order_item`): `COLLATE` is matched by literal
+                // text (it is NOT a lexer keyword, so it — and the collation name
+                // after it — both arrive as NAME tokens), and the planner both
+                // validates the name and wraps the expression in the internal
+                // `__collate` builtin so DISTINCT folds on the collated key.
+                // Placed BEFORE the alias so `SELECT b COLLATE NOCASE AS x` parses.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"AS"#.to_string() },
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
+                // `select_item = expr [ COLLATE name ] [ [ "AS" ] NAME ]` — the AS
+                // keyword is OPTIONAL, so `SELECT a col1` (bare alias) parses the
+                // same as `SELECT a AS col1`. The alias NAME can never eat a
+                // following keyword (FROM/WHERE/…) because NAME only matches
+                // Name-type tokens, and it can't eat a comma, so `SELECT a, b` is
+                // safe. `extract_as_alias` skips the COLLATE tail (both tokens are
+                // Name-type) so the collation name is never mistaken for an alias.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
+              ] },
             ] },
             line_number: 23,
         },
@@ -85,8 +116,13 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"table_ref"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"table_name"#.to_string() },
+                // `table_ref = table_name [ [ "AS" ] NAME ]` — the AS keyword is
+                // OPTIONAL, so `FROM users u` aliases the table the same as
+                // `FROM users AS u` (SQLite accepts both). The alias NAME cannot
+                // eat a following keyword (JOIN/WHERE/ON/…) because NAME only
+                // matches Name-type tokens, so `FROM a JOIN b` is unaffected.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"AS"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
             ] },
@@ -106,11 +142,20 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"join_clause"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"join_type"#.to_string() },
+                // `join_type` is OPTIONAL: a bare `JOIN` (no INNER/LEFT/… prefix)
+                // is an INNER join, which the planner already defaults to when the
+                // `join_type` node is absent. Matches `sql.grammar` (`[ join_type ]`).
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"join_type"#.to_string() }) },
                 GrammarElement::Literal { value: r#"JOIN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
-                GrammarElement::Literal { value: r#"ON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // `ON expr` is OPTIONAL: a join with no condition is a Cartesian
+                // (cross) product — `FROM a JOIN b` and `FROM a CROSS JOIN b`. The
+                // planner returns `None` for a missing ON, and codegen emits every
+                // pair (no condition check) for an INNER join with no condition.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"ON"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                ] }) },
             ] },
             line_number: 28,
         },
@@ -148,9 +193,24 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"GROUP"#.to_string() },
                 GrammarElement::Literal { value: r#"BY"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                // Optional per-key `COLLATE name`, e.g. `GROUP BY b COLLATE NOCASE`.
+                // Same tail as ORDER BY (`order_item`); the planner
+                // (`plan_group_by_exprs`) pairs each COLLATE with the `column_ref`
+                // it directly follows and wraps that key in `__collate`, so
+                // grouping folds on the collated value while the emitted key row
+                // keeps its original text. `column_ref` itself stays COLLATE-free
+                // because it is also a general expression atom (used in `primary`).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
                         GrammarElement::Literal { value: r#","#.to_string() },
                         GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                            ] }) },
                     ] }) },
             ] },
             line_number: 33,
@@ -180,9 +240,29 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"order_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // Optional `COLLATE name` clause, BEFORE the ASC/DESC direction
+                // (per SQLite grammar: `expr COLLATE name ASC`). `COLLATE` is
+                // matched by literal text (it is not in the lexer keyword list,
+                // so it arrives as a NAME token that the literal matcher accepts
+                // case-insensitively); the name that follows (BINARY / NOCASE /
+                // RTRIM, or a user collation) is accepted as a generic NAME and
+                // validated in the planner. Absent → BINARY (byte order).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Literal { value: r#"ASC"#.to_string() },
                         GrammarElement::Literal { value: r#"DESC"#.to_string() },
+                    ] }) },
+                // Optional `NULLS FIRST` / `NULLS LAST`. FIRST/LAST are NOT
+                // reserved keywords (they are extremely common column names), so
+                // we accept a generic NAME here; the planner validates it is
+                // literally FIRST or LAST. Omitting the clause falls back to
+                // SQLite's defaults (NULLs first for ASC, last for DESC).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"NULLS"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
             ] },
             line_number: 36,
@@ -194,9 +274,21 @@ pub fn parser_grammar() -> ParserGrammar {
                 // Allow optional "-" before NUMBER to support LIMIT -1 (all rows).
                 GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"-"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"OFFSET"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                // The tail is either the standard `OFFSET n` or MySQL's
+                // `, n` shorthand. NOTE the argument order flips between them:
+                // `LIMIT count OFFSET off` vs `LIMIT off , count` — in the comma
+                // form the FIRST number is the OFFSET and the SECOND is the
+                // count (plan_limit does the swap). This matches SQLite, which
+                // accepts the comma form purely for MySQL compatibility.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"OFFSET"#.to_string() },
+                            GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#","#.to_string() },
+                            GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                        ] },
                     ] }) },
             ] },
             line_number: 37,
@@ -323,6 +415,18 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"DEFAULT"#.to_string() },
                         GrammarElement::RuleReference { name: r#"primary"#.to_string() },
                     ] }) },
+                // Column-level `COLLATE name` (e.g. `x TEXT COLLATE NOCASE`).
+                // `COLLATE` arrives as a NAME token — it is not a lexer keyword,
+                // so the literal matcher accepts it case-insensitively — and the
+                // following collation name (BINARY / NOCASE / RTRIM) is a generic
+                // NAME the planner validates. This mirrors the `order_item`
+                // COLLATE clause; the sequence is persisted on the column so a
+                // later bare `ORDER BY col` inherits it (see sql-planner
+                // `apply_col_constraint` / `resolve_column_collation`).
+                GrammarElement::Group { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
             ] },
             line_number: 57,
         },
@@ -380,46 +484,160 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"comparison"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand
+                            // (`col COLLATE NOCASE = 'x'`). It lives at the START
+                            // of THIS cmp_op alternative — not before the whole
+                            // alternation — so that a trailing `COLLATE` with no
+                            // following `cmp_op` (e.g. `ORDER BY name COLLATE
+                            // NOCASE`, where the order_item owns the COLLATE)
+                            // fails this alternative and backtracks, leaving the
+                            // COLLATE for the caller. The planner takes the FIRST
+                            // COLLATE token, so a left collation wins over a right
+                            // one — matching SQLite — and applies it to both sides.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::RuleReference { name: r#"cmp_op"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            // Optional `COLLATE name` on the right operand of a
+                            // comparison (`col = 'x' COLLATE NOCASE`). The planner
+                            // applies the collation to BOTH sides of the compare.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of a
+                            // BETWEEN range (`x COLLATE NOCASE BETWEEN a AND c`).
+                            // Kept inside the alternative (not hoisted) for the
+                            // same backtracking reason as the IN/cmp_op branches.
+                            // The planner wraps the value AND both bounds so the
+                            // `>= low AND <= high` range test honours the collation.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of an IN
+                            // list (`x COLLATE NOCASE IN (...)`). Like the cmp_op
+                            // branch, the COLLATE lives INSIDE this alternative —
+                            // not hoisted before the whole alternation — so a bare
+                            // trailing `COLLATE` (e.g. `ORDER BY x COLLATE NOCASE`)
+                            // fails this alternative, backtracks, and leaves the
+                            // token for the caller. The planner applies the
+                            // collation to the value AND every list element.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
                             GrammarElement::RuleReference { name: r#"value_list"#.to_string() },
                             GrammarElement::Literal { value: r#")"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
                             GrammarElement::RuleReference { name: r#"value_list"#.to_string() },
                             GrammarElement::Literal { value: r#")"#.to_string() },
                         ] },
+                        // `x LIKE pattern ESCAPE ch` — the ESCAPE variant is
+                        // listed BEFORE the plain `LIKE pattern` so the
+                        // backtracking parser prefers the longer match when an
+                        // `ESCAPE` clause is present, and falls back otherwise.
+                        //
+                        // Each LIKE/GLOB tail also accepts an optional leading
+                        // `[COLLATE NAME]` (`x COLLATE NOCASE LIKE 'a%'`). SQLite
+                        // PARSES this but the LIKE/GLOB operators IGNORE the
+                        // collation (they carry their own case-folding), so the
+                        // planner validates the name and discards it. The prefix
+                        // stays inside each alternative for the same backtracking
+                        // reason as the cmp_op/IN/BETWEEN branches.
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            GrammarElement::Literal { value: r#"ESCAPE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
+                            GrammarElement::Literal { value: r#"LIKE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            GrammarElement::Literal { value: r#"ESCAPE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"LIKE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        // `x GLOB pattern` — case-sensitive Unix-glob matching.
+                        // SQLite defines `X GLOB Y` as `glob(Y, X)`, so the
+                        // planner lowers this to the existing `glob` builtin
+                        // (args swapped); `NOT GLOB` wraps it in a logical NOT.
+                        // `[COLLATE NAME]` is accepted and ignored (see above).
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
+                            GrammarElement::Literal { value: r#"GLOB"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"GLOB"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
@@ -429,6 +647,39 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"NULL"#.to_string() },
+                        ] },
+                        // `x IS [NOT] DISTINCT FROM <expr>` — the standard-SQL
+                        // spelling of the null-safe compare. `IS NOT DISTINCT
+                        // FROM` is the null-safe *equality* (`x IS y`) and `IS
+                        // DISTINCT FROM` is its negation. Placed BEFORE the plain
+                        // `IS [NOT] <expr>` forms so ordered choice matches the
+                        // DISTINCT keyword first (the planner inverts the sense).
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"DISTINCT"#.to_string() },
+                            GrammarElement::Literal { value: r#"FROM"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"DISTINCT"#.to_string() },
+                            GrammarElement::Literal { value: r#"FROM"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        // `x IS NOT <expr>` / `x IS <expr>` — null-safe (in)equality.
+                        // These come AFTER the IS NULL / IS NOT NULL sequences so
+                        // ordered-choice matches the NULL forms first (NULL is
+                        // itself a valid `additive`); and `IS NOT <expr>` before
+                        // `IS <expr>` so the NOT form is tried first.
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                     ] }) },
             ] },
@@ -445,6 +696,27 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#">="#.to_string() },
             ] },
             line_number: 78,
+        },
+        GrammarRule {
+            // Bitwise operators `& | << >>` — one precedence level, left-
+            // associative, sitting BETWEEN additive and comparison (SQLite
+            // groups all four here). `5 | 3 & 2` = `(5|3)&2` = 2; `3+1<<2` =
+            // `(3+1)<<2` = 16. The generated rule mirrors the grammar source
+            // `bitwise = additive { ("&"|"|"|"<<"|">>") additive }`.
+            name: r#"bitwise"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::Literal { value: r#"&"#.to_string() },
+                                GrammarElement::Literal { value: r#"|"#.to_string() },
+                                GrammarElement::Literal { value: r#"<<"#.to_string() },
+                                GrammarElement::Literal { value: r#">>"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 79,
         },
         GrammarRule {
             name: r#"additive"#.to_string(),
@@ -478,9 +750,17 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"unary"#.to_string(),
+            // Prefix operators, per the grammar source `( "-" | "~" | "+" ) unary`:
+            // arithmetic negation `-`, bitwise complement `~`, and the no-op
+            // unary plus `+`. The planner maps `-`→Neg, `~`→BitNot, and treats
+            // `+x` as `x`.
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
-                    GrammarElement::Literal { value: r#"-"#.to_string() },
+                    GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                            GrammarElement::Literal { value: r#"-"#.to_string() },
+                            GrammarElement::Literal { value: r#"~"#.to_string() },
+                            GrammarElement::Literal { value: r#"+"#.to_string() },
+                        ] }) },
                     GrammarElement::RuleReference { name: r#"unary"#.to_string() },
                 ] },
                 GrammarElement::RuleReference { name: r#"primary"#.to_string() },
@@ -492,11 +772,66 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
+                // Blob literal `x'..'` (lexed as the `BLOB` token). The planner
+                // decodes the hex body into raw bytes (SqlValue::Blob).
+                GrammarElement::TokenReference { name: r#"BLOB"#.to_string() },
                 GrammarElement::Literal { value: r#"NULL"#.to_string() },
                 GrammarElement::Literal { value: r#"TRUE"#.to_string() },
                 GrammarElement::Literal { value: r#"FALSE"#.to_string() },
+                // `CAST(expr AS type)` — placed before `function_call` so the
+                // ordered-choice parser matches the AS-typed form first (a bare
+                // `foo(...)` fails the leading `CAST` literal and falls through
+                // to function_call). The type is a NAME token (INTEGER/REAL/…).
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"CAST"#.to_string() },
+                    GrammarElement::Literal { value: r#"("#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Literal { value: r#"AS"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::Literal { value: r#")"#.to_string() },
+                ] },
+                // `CASE [operand] WHEN cond THEN val … [ELSE val] END`. Two
+                // forms share one rule: the *searched* form (`CASE WHEN cond …`)
+                // and the *simple* form (`CASE operand WHEN value …`), told apart
+                // by the optional `operand` expr between `CASE` and the first
+                // `WHEN`. Because `WHEN` is a keyword and cannot start an `expr`,
+                // the optional operand never swallows the searched form's `WHEN`.
+                // One WHEN/THEN is mandatory; further ones repeat; ELSE is
+                // optional. All slots are full `expr`s. The planner desugars the
+                // simple form to the searched form (`operand = value`). Placed
+                // before function_call so the leading `CASE` literal matches here.
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"CASE"#.to_string() },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"expr"#.to_string() }) },
+                    GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                            GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"ELSE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Literal { value: r#"END"#.to_string() },
+                ] },
                 GrammarElement::RuleReference { name: r#"function_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                // Scalar subquery `( SELECT … )`. Placed BEFORE the plain
+                // `( expr )` form so ordered choice matches the subquery when the
+                // token after `(` is the `SELECT` keyword (which cannot start an
+                // `expr`); a non-SELECT `(` backtracks to `( expr )`. Parsing is
+                // wired here; the planner rejects it with a clear "not yet
+                // supported" error until the evaluation path lands.
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"("#.to_string() },
+                    GrammarElement::RuleReference { name: r#"select_stmt"#.to_string() },
+                    GrammarElement::Literal { value: r#")"#.to_string() },
+                ] },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::Literal { value: r#"("#.to_string() },
                     GrammarElement::RuleReference { name: r#"expr"#.to_string() },

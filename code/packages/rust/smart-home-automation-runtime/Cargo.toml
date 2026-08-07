@@ -1,0 +1,13 @@
+[package]
+name = "smart-home-automation-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic automation planning and execution for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }

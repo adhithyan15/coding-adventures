@@ -22,12 +22,23 @@
 # Language inference
 # -----------------
 #
-# We infer the language from the directory path. If the path contains
-# `packages/python/X` or `programs/python/X`, the language is "python".
-# Similarly for "ruby", "go", and "rust". The package name is
-# `{language}/{dir-name}`.
+# We infer the language only from the exact directory immediately below a
+# `packages` or `programs` component. Programs retain a `programs` identity
+# segment so they cannot collide with a library package of the same basename.
 
 module BuildTool
+  # Two or more discovered directories normalized to one graph identity.
+  class DuplicatePackageIdentityError < StandardError
+    attr_reader :code, :package, :paths
+
+    def initialize(package:, paths:)
+      @code = "DUPLICATE_PACKAGE_IDENTITY"
+      @package = package
+      @paths = paths.freeze
+      super("#{@code}: package=#{@package} paths=#{@paths.join(',')}")
+    end
+  end
+
   # --------------------------------------------------------------------------
   # Package -- A value object representing a discovered package.
   #
@@ -58,12 +69,12 @@ module BuildTool
   end
 
   module Discovery
-    # KNOWN_LANGUAGES lists the language directory names we look for when
-    # inferring which ecosystem a package belongs to. If a package lives
-    # under a directory with one of these names, we tag it accordingly.
+    # Canonical repository buckets understood by package discovery. The parity
+    # denominator is defined by package_parity_report.py; dotnet is retained as
+    # the shared host bucket for .NET programs.
     KNOWN_LANGUAGES = %w[
-      python ruby go rust typescript elixir lua perl swift haskell wasm
-      csharp fsharp dotnet java kotlin
+      csharp dart elixir fsharp go haskell java kotlin lua perl python ruby rust
+      swift typescript c cpp ocaml wasm mosaic twig starlark dotnet
     ].freeze
 
     # SKIP_DIRS is the set of directory names that should never be traversed
@@ -71,7 +82,8 @@ module BuildTool
     # (caches, dependencies, build artifacts) that would waste time to scan.
     SKIP_DIRS = Set.new(%w[
       .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
-      __pycache__ node_modules vendor dist build target .claude Pods .gradle gradle-build
+      __pycache__ node_modules vendor dist build target .claude specs Pods
+      .dart_tool .build .gradle gradle-build
     ]).freeze
 
     module_function
@@ -92,28 +104,41 @@ module BuildTool
 
     # infer_language -- Infer the programming language from the directory path.
     #
-    # We split the path into its component parts and look for a known language
-    # directory name. The first match wins. For example, a path like
-    # `/repo/code/packages/python/logic-gates` yields "python".
+    # The sole discriminator is the exact component immediately below a
+    # `packages` or `programs` component. Canonical-looking words elsewhere in
+    # the path do not change the result. The final boundary wins so temporary
+    # fixture roots nested beneath a checkout retain their own identity.
     #
     # @param path [Pathname] The package directory.
     # @return [String] The inferred language, or "unknown".
     def infer_language(path)
-      parts = path.to_s.split(File::SEPARATOR)
-      KNOWN_LANGUAGES.find { |lang| parts.include?(lang) } || "unknown"
+      parts = path.to_s.tr("\\", "/").split("/").reject(&:empty?)
+      language = "unknown"
+      parts.each_cons(2) do |kind, bucket|
+        next unless %w[packages programs].include?(kind)
+
+        language = KNOWN_LANGUAGES.include?(bucket) ? bucket : "unknown"
+      end
+      language
     end
 
     # infer_package_name -- Build a qualified package name.
     #
-    # The name follows the pattern `{language}/{directory-basename}`. For
-    # instance, if language is "python" and the directory is "logic-gates",
-    # the name becomes "python/logic-gates".
+    # Library names follow `{language}/{directory-basename}`. Program names use
+    # `{language}/programs/{directory-basename}` so package/program pairs remain
+    # distinct graph nodes.
     #
     # @param path [Pathname] The package directory.
     # @param language [String] The inferred language.
     # @return [String] The qualified package name.
     def infer_package_name(path, language)
-      "#{language}/#{path.basename}"
+      parts = path.to_s.tr("\\", "/").split("/").reject(&:empty?)
+      kind = nil
+      parts.each_cons(2) do |candidate, _bucket|
+        kind = candidate if %w[packages programs].include?(candidate)
+      end
+      infix = kind == "programs" ? "programs/" : ""
+      "#{language}/#{infix}#{path.basename}"
     end
 
     # get_build_file -- Return the appropriate BUILD file for the current platform.
@@ -195,7 +220,35 @@ module BuildTool
     def discover_packages(root)
       packages = []
       walk_dirs(root, packages)
-      packages.sort_by(&:name)
+      packages.sort_by! { |package| [package.name, package.path.to_s] }
+
+      duplicate = packages.group_by(&:name).find { |_name, group| group.length > 1 }
+      if duplicate
+        name, group = duplicate
+        paths = group.map { |package| repository_package_path(root, package.path) }.sort
+        raise DuplicatePackageIdentityError.new(package: name, paths: paths)
+      end
+
+      packages
+    end
+
+    # Convert a package directory to a stable repository-relative diagnostic.
+    # The final code/packages or code/programs boundary is authoritative so a
+    # nested temporary checkout cannot disclose its host prefix.
+    def repository_package_path(root, path)
+      parts = path.to_s.tr("\\", "/").split("/").reject(&:empty?)
+      canonical_start = nil
+      parts.each_index do |index|
+        next unless parts[index] == "code"
+        next unless %w[packages programs].include?(parts[index + 1])
+
+        canonical_start = index
+      end
+      return parts[canonical_start..].join("/") if canonical_start
+
+      path.relative_path_from(root).to_s.tr("\\", "/")
+    rescue ArgumentError
+      path.basename.to_s
     end
 
     # walk_dirs -- Recursively walk directories and collect packages.

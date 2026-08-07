@@ -1741,7 +1741,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "disallowed-processing-instruction-target"
       ]
     },
     {
@@ -1750,11 +1750,10 @@
       "input": "Before<?xml",
       "tokens": [
         "Text(data=Before)",
-        "Comment(data=?xml)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -3870,24 +3869,20 @@
       "description": "Simili processing instruction",
       "input": "<?namespace>",
       "tokens": [
-        "Comment(data=?namespace)",
+        "ProcessingInstruction(target=namespace, data=)",
         "EOF"
       ],
-      "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
-      ]
+      "diagnostics": []
     },
     {
       "id": "html5lib-smoke-308",
       "description": "A bogus comment stops at >, even if preceded by two dashes",
       "input": "<?foo-->",
       "tokens": [
-        "Comment(data=?foo--)",
+        "ProcessingInstruction(target=foo--, data=)",
         "EOF"
       ],
-      "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
-      ]
+      "diagnostics": []
     },
     {
       "id": "html5lib-smoke-309",
@@ -18317,11 +18312,10 @@
       "description": "<?",
       "input": "<?",
       "tokens": [
-        "Comment(data=?)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18333,7 +18327,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name",
+        "invalid-first-character-of-processing-instruction-target",
         "unexpected-null-character"
       ]
     },
@@ -18346,7 +18340,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18358,7 +18352,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18370,7 +18364,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18382,7 +18376,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18394,7 +18388,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18406,7 +18400,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name",
+        "invalid-first-character-of-processing-instruction-target",
         "unexpected-null-character"
       ]
     },
@@ -18419,7 +18413,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18431,7 +18425,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18443,7 +18437,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18455,7 +18449,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18467,7 +18461,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18479,7 +18473,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18491,7 +18485,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18503,7 +18497,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18515,7 +18509,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18527,7 +18521,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18539,7 +18533,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18551,7 +18545,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18563,7 +18557,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18575,7 +18569,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18583,11 +18577,10 @@
       "description": "<?A",
       "input": "<?A",
       "tokens": [
-        "Comment(data=?A)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18595,11 +18588,10 @@
       "description": "<?B",
       "input": "<?B",
       "tokens": [
-        "Comment(data=?B)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18607,11 +18599,10 @@
       "description": "<?Y",
       "input": "<?Y",
       "tokens": [
-        "Comment(data=?Y)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18619,11 +18610,10 @@
       "description": "<?Z",
       "input": "<?Z",
       "tokens": [
-        "Comment(data=?Z)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18635,7 +18625,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18643,11 +18633,10 @@
       "description": "<?a",
       "input": "<?a",
       "tokens": [
-        "Comment(data=?a)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18655,11 +18644,10 @@
       "description": "<?b",
       "input": "<?b",
       "tokens": [
-        "Comment(data=?b)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18667,11 +18655,10 @@
       "description": "<?y",
       "input": "<?y",
       "tokens": [
-        "Comment(data=?y)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18679,11 +18666,10 @@
       "description": "<?z",
       "input": "<?z",
       "tokens": [
-        "Comment(data=?z)",
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "eof-in-processing-instruction"
       ]
     },
     {
@@ -18695,7 +18681,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -18707,7 +18693,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -30933,7 +30919,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -30945,7 +30931,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {
@@ -30957,7 +30943,7 @@
         "EOF"
       ],
       "diagnostics": [
-        "unexpected-question-mark-instead-of-tag-name"
+        "invalid-first-character-of-processing-instruction-target"
       ]
     },
     {

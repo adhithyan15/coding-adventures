@@ -4,6 +4,10 @@
 //! that different parallel execution models produce correct results for
 //! the same computations.
 
+// Test configs are built field-by-field after `default()` for readability; the
+// struct-literal rewrite adds no behavioral value here.
+#![allow(clippy::field_reassign_with_default)]
+
 use gpu_core::opcodes::{fadd, fmul, halt, limm};
 use parallel_execution_engine::protocols::{ExecutionModel, ParallelExecutionEngine};
 use parallel_execution_engine::warp_engine::{WarpConfig, WarpEngine};

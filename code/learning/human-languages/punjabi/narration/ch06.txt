@@ -1,0 +1,85 @@
+Punjabi, chapter 6: Numbers One to Five.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ — one to five.
+
+Warm-up.
+[pause 2 seconds]
+Four of these are new. The fifth you have known since Chapter 5 — you just didn't know it was a number.
+
+You'll want to know: the five.
+[a table of 5 rows, read aloud]
+1. Punjabi: ਇੱਕ. said: ikk.
+2. Punjabi: ਦੋ. said: do.
+3. Punjabi: ਤਿੰਨ. said: tinn.
+4. Punjabi: ਚਾਰ. said: chār.
+5. Punjabi: ਪੰਜ. said: panj.
+This is Gurmukhi, not Devanagari — a related but distinct script. It does have a top line like Devanagari's, so words hang from a bar in the same way.
+Two marks worth telling apart, because they look similar and do different jobs:
+ੱ — the addak, on ikk. It doubles the following consonant.
+ੰ — the tippi, on tinn and panj. It marks a nasal.
+(So tinn's double n is not the addak's doing — that word is spelled with a nasal mark, and the doubling is in the pronunciation.)
+
+What you've built: ਪੰਜ as a number.
+Chapter 5 took the name ਪੰਜਾਬੀ (panjābī) apart for you: Persian ਪੰਜ panj, "five," plus ਆਬ āb, "water" — the language of the five rivers.
+You learned panj there as a piece of a place-name. Here it arrives as what it actually is: the number five, an ordinary word you will count with.
+The next prerequisite-ordered lesson explains an important twist: Punjabi's numeral and the Persian word reached the same panj shape independently.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ikk, do, tinn, chār, panj"]
+[pause 8 seconds for the answer]
+[your turn — say: the two marks — "addak doubles, tippi nasalises"]
+[pause 8 seconds for the answer]
+[your turn — say: the Ch. 5 callback — "panj + āb = five rivers"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to five in Punjabi. (Ikk, do, tinn, chār, panj.) What script is this? (Gurmukhi — related to Devanagari, and it has a top line too.) What does ੱ and ੰ each do? (Addak doubles the following consonant; tippi marks a nasal.) Chapter 5 told you panjābī means "of the five rivers." What has changed now? (Panj is a number you can count with, not just a piece of a name.) Next: learn why Punjabi and Persian both say panj.
+
+
+Lesson 2 of 2.
+Why two branches both arrived at panj — why Punjabi and Persian independently reached the same word-shape for five.
+
+Warm-up.
+[pause 2 seconds]
+Say “five” in Punjabi. (Panj.) Where did Chapter 5 first show that shape? (Inside Persian panj + āb, “five waters.”)
+
+What you've built: the surprising family comparison.
+[a table of 6 rows, read aloud]
+language: Sanskrit. “five”: pañca.
+language: Hindi. “five”: pāṁch.
+language: Bengali. “five”: pā̃ch.
+language: Gujarati. “five”: pā̃ch.
+language: Punjabi. “five”: panj.
+language: Persian. “five”: panj.
+The neighbours keep a -ch shape. Punjabi matches Persian -j, but the obvious borrowing story is wrong.
+
+The word, taken apart — Punjabi's numeral is homegrown.
+Punjabi panj is inherited from Sanskrit pañca. North-western Indo-Aryan regularly voiced a stop after a nasal, turning -ñc- into -nj-.
+Punjabi panjāh “fifty” (from Sanskrit pañcāśat) makes the rule visible; Hindi pacās shows the same source changing differently.
+
+The word, taken apart — Persian reached the shape separately.
+Persian independently voiced ancestral č to j: Iranian panč became panj. Two Indo-Iranian branches therefore reached the same shape separately:
+[a table of 2 rows, read aloud]
+branch: Punjabi. path: Sanskrit pañca becomes nasal-triggered -nj-.
+branch: Persian. path: Iranian panč becomes voiced panj.
+This is convergence, not borrowing. The place-name Punjab is Persian; Punjabi's look-alike numeral is inherited from Sanskrit.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Punjabi's path and proof — Sanskrit pañca becomes post-nasal -nj-; panjāh / pacās]
+[pause 8 seconds for the answer]
+[your turn — say: Persian's path and the conclusion — panč becomes panj independently; convergence, not borrowing]
+[pause 8 seconds for the answer]
+[your turn — say: Persian place-name, inherited Punjabi number]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Borrowed from Persian? (No: Punjabi panj inherits Sanskrit pañca.) What made -nj-? (A post-nasal stop voiced.) Evidence? (Panjāh / pacās.) Persian's path? (Its ancestral č voiced separately.) In Punjab, what is Persian? (The place-name; Punjabi's number is homegrown.)
+[question — say your answer, then pause 8 seconds]
+Was Punjabi panj borrowed from Persian?

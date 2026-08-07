@@ -148,9 +148,9 @@ pub fn parse(line: &str) -> Result<Message, ParseError> {
     let mut params: Vec<String> = Vec::new();
 
     while !rest.is_empty() {
-        if rest.starts_with(':') {
+        if let Some(trailing) = rest.strip_prefix(':') {
             // Trailing param — absorbs the rest of the line.
-            params.push(rest[1..].to_string());
+            params.push(trailing.to_string());
             break;
         }
 

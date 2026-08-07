@@ -1,0 +1,24 @@
+% ============================================================================
+% wave-properties.query.adj — a worked recall over the physics wave-properties
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does frequency
+% measure?": it states no physics fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `wave_property` rows and returns the definition + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the
+% definition `time_for_one_cycle`, recall its property — period). A word that is
+% not one of the four measurable wave properties abstains honestly — the engine
+% never invents a definition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wave-properties.query.adj
+% ============================================================================
+
+import "wave-properties.adj"
+
+? wave_property(wavelength, $Definition)   % expect distance_between_identical_parts
+? wave_property(frequency, $Definition)    % expect waves_per_second
+? wave_property(amplitude, $Definition)    % expect max_displacement_from_rest
+? wave_property($Property, time_for_one_cycle) % reverse bind — expect period
+? wave_property(color, $Definition)        % expect abstain — color is a perception that depends on wavelength, not itself a measurable property of the wave

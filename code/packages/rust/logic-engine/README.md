@@ -146,6 +146,27 @@ be derived is derived (and cited), not duplicated. The grounded `context-precede
 meta-rules + worked legal/medical examples live in `code/specs/data/context-precedence/`
 (`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3, §7).
 
+## Re-checking a proof (`verify`)
+
+`verify_proof(&Proof, &KnowledgeBase, &dyn SnapshotStore)` re-executes a proof
+rather than reading its claims as authority — the checkability invariant of
+`ADJ-REASON-MATH.md` §E.5. All seven `DerivationOrigin` variants are re-run: facts
+and rules must still unify, a negation's subgoal must still have an **empty** proof
+set (a *truncated* search is a failure, not an absence), and every log-odds
+contribution must reproduce from its clause.
+
+Each step gets two independent verdicts, because there are two different ways to be
+wrong: `LogicStatus` (did the inference go through?) and `QuoteStatus` (do the bytes
+say what it claims?). Keeping them apart is what makes the system able to name its
+most interesting failure — a *valid derivation from an invented fact*.
+
+Quote checking is **anchored** to the recorded byte offset in the pinned snapshot,
+never an unanchored search: on a long document a short phrase occurs somewhere with
+near-certainty, so searching would confirm the words exist, not that they support
+the clause. `SnapshotStore` is the seam through which a caller supplies snapshot
+bytes; a store with nothing yields `Unverified`, never a pass. Nothing in this
+module touches the network.
+
 ## Why Probability From Day One
 
 Real ProbLog engines (KU Leuven's ProbLog 2) are built on top of

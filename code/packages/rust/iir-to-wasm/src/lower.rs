@@ -146,7 +146,7 @@ use wasm_types::{
 use crate::codegen::{
     encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
     encode_f64_load, encode_f64_store, encode_i32_load, encode_i32_store, encode_i64_load,
-    encode_i64_store,
+    encode_i64_store, encode_memory_grow, encode_memory_size,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
@@ -155,7 +155,7 @@ use crate::codegen::{
     I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
-    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_LE_S, I64_LT_S,
+    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_GT_U, I64_LE_S, I64_LT_S,
     I64_MUL, I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB,
     I64_XOR, IF, LOOP, RETURN, UNREACHABLE,
 };
@@ -255,6 +255,23 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     // else the callee reads the first data byte as the length: `"HELLO"` → `'H'`=72.)
     let mut folding_str_dests: HashSet<&str> = HashSet::new();
     let mut call_arg_vars: HashSet<&str> = HashSet::new();
+    // E4d-BA-arr: str vars stored as the *value* of an `array_set` into an
+    // `array<str>` element.  Same rationale as `call_arg_vars` below — a folded
+    // literal handed to `array_set` must become a runtime-block handle, because
+    // `array_set` emits `local.get val` and stores that i32 into the element, but
+    // a folded literal's local is never assigned the block offset (its handle
+    // lives only in the compile-time `string_literals` table).  Left un-promoted,
+    // the element would store 0 and a later `array_get` + `print_str`/`str_concat`
+    // would read the module header as a bogus length and trap.
+    let mut array_set_val_vars: HashSet<&str> = HashSet::new();
+    // A string placed in a module global crosses a function boundary just like
+    // a call argument. The later global load has no per-function literal table,
+    // so the stored value must be a length-prefixed runtime handle.
+    let mut global_store_val_vars: HashSet<&str> = HashSet::new();
+    // A literal operand used with a runtime string must also have a runtime
+    // header. Keep each operation's operands together so fully folded literal
+    // algebra preserves its compact literal-data representation.
+    let mut string_operation_var_groups: Vec<Vec<&str>> = Vec::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
         let op = instr.op.as_str();
@@ -284,6 +301,27 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 }
             }
         }
+        // E4d-BA-arr: `array_set handle, idx, val` — the value (src[2]) is the
+        // string being stored into an element.
+        if op == "array_set" {
+            if let Some(Operand::Var(v)) = instr.srcs.get(2) {
+                array_set_val_vars.insert(v.as_str());
+            }
+        }
+        if op == "global_store" {
+            if let Some(Operand::Var(v)) = instr.srcs.get(1) {
+                global_store_val_vars.insert(v.as_str());
+            }
+        }
+        if matches!(op, "str_concat" | "str_eq" | "str_cmp") {
+            let mut vars = Vec::new();
+            for src in &instr.srcs {
+                if let Operand::Var(v) = src {
+                    vars.push(v.as_str());
+                }
+            }
+            string_operation_var_groups.push(vars);
+        }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
@@ -297,6 +335,27 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     for v in &call_arg_vars {
         if folding_str_dests.contains(v) {
             promoted.insert(v.to_string());
+        }
+    }
+    // E4d-BA-arr: likewise promote a folded literal stored into an `array<str>`
+    // element — `array_set` needs the runtime block handle in the val local.
+    for v in &array_set_val_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    for v in &global_store_val_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    for vars in &string_operation_var_groups {
+        if vars.iter().any(|v| !folding_str_dests.contains(v)) {
+            for v in vars {
+                if folding_str_dests.contains(v) {
+                    promoted.insert((*v).to_string());
+                }
+            }
         }
     }
     promoted
@@ -380,6 +439,12 @@ fn encode_i64_global_init(value: i64) -> Vec<u8> {
     bytes
 }
 
+fn encode_i32_global_init(value: i32) -> Vec<u8> {
+    let mut bytes = encode_i32_const(value);
+    bytes.push(END);
+    bytes
+}
+
 /// Emit `i32.wrap_i64` (0xA7) — truncate an i64 to i32 (drop the high 32 bits).
 ///
 /// The Brainfuck value model is uniformly `i64` after `lower_brainfuck_for_aot`
@@ -396,6 +461,15 @@ fn encode_i32_wrap_i64() -> Vec<u8> {
 /// zero-extended byte as i32, this widens it back to the i64 cell register.
 fn encode_i64_extend_i32_u() -> Vec<u8> {
     vec![0xADu8]
+}
+
+/// Emit `i64.extend_i32_s` (0xAC) — sign-extend an i32 to i64.
+///
+/// Used when a boxed `i31ref` (unboxed to a signed i32 by `i31.get_s`) rides an
+/// i64 register — E6d-2 dynamic arithmetic works uniformly in i64, so a boxed
+/// operand must sign-extend (a negative lisp integer stays negative).
+fn encode_i64_extend_i32_s() -> Vec<u8> {
+    vec![0xACu8]
 }
 
 fn encode_global_get(idx: u32) -> Vec<u8> {
@@ -508,29 +582,54 @@ impl std::error::Error for IIRWasmError {}
 // ---------------------------------------------------------------------------
 
 /// Configuration for the IIR → WASM lowering pass.
-///
-/// Currently only carries the module name (written into a WASM custom section
-/// or used for debugging).  Additional options (e.g. optimisation level,
-/// memory model) can be added here in future versions.
 #[derive(Debug, Clone)]
 pub struct IIRWasmConfig {
     /// The name embedded in the WASM module (used for identification).
     pub module_name: String,
+    /// The declared `max` (in 64 KiB pages) for a memory-using module's linear
+    /// memory — the ceiling `$__ensure_capacity`'s `memory.grow` calls can
+    /// reach before returning `-1` (OOM) and trapping. Clamped to the WASM
+    /// spec's absolute ceiling (`MAX_WASM_MEMORY_PAGES` = 65536 = 4 GiB)
+    /// regardless of what's configured here.
+    ///
+    /// Defaults far below the spec ceiling (see `DEFAULT_MAX_MEMORY_PAGES`):
+    /// this backend's bump allocator never frees (reclamation is a tracked
+    /// follow-up, not yet built — see `AOT00-T1x-wasm-linear-memory-growth.md`),
+    /// so an unbounded cap on a long-running or malicious/malformed IIR module
+    /// would let it monotonically grow linear memory toward 4 GiB of real
+    /// host-committed memory before ever trapping. A caller running trusted,
+    /// bounded programs (typical `lang-aot` test/build usage) can raise this;
+    /// a caller running untrusted input should keep it low.
+    pub max_memory_pages: u32,
 }
+
+/// The WASM spec's absolute linear-memory ceiling: 65536 pages × 64 KiB = 4 GiB.
+/// `wasm-execution`'s `LinearMemory::grow` already enforces this regardless of
+/// what a module declares; `max_memory_pages` is clamped to it too so a
+/// misconfigured caller can't declare something the spec itself would reject.
+const MAX_WASM_MEMORY_PAGES: u32 = 65536;
+
+/// Default `max_memory_pages`: 1024 pages = 64 MiB. Generous for any real
+/// test/build program (the largest program in this crate's own test suite
+/// reserves well under 1 MiB total) while still bounding a runaway
+/// allocation loop to a small fraction of the 4 GiB spec ceiling.
+const DEFAULT_MAX_MEMORY_PAGES: u32 = 1024;
 
 impl Default for IIRWasmConfig {
     fn default() -> Self {
         Self {
             module_name: "iir_module".to_string(),
+            max_memory_pages: DEFAULT_MAX_MEMORY_PAGES,
         }
     }
 }
 
 impl IIRWasmConfig {
-    /// Create a new config with the given module name.
+    /// Create a new config with the given module name (default memory cap).
     pub fn new(name: impl Into<String>) -> Self {
         Self {
             module_name: name.into(),
+            ..Self::default()
         }
     }
 }
@@ -598,17 +697,28 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
     }
 }
 
-/// The WASM value type + byte size for an E5 array element type hint. Only the
-/// 64-bit elements (`i64` / `f64`) are supported on this backend so far — the
-/// ALGOL frontend's `integer` and `real` arrays — so a narrower element produces
-/// a clear error rather than a silently wrong store width.
+/// The WASM value type + byte size for an E5 array element type hint. The
+/// 64-bit elements (`i64` / `f64`) back the ALGOL frontend's `integer` and
+/// `real` arrays; `bool` and the E4d-BA-arr `str` handle both use a four-byte
+/// `i32` cell. Any other element produces a clear error rather than a silently
+/// wrong store width.
 fn wasm_array_elem(elem: &str, fn_name: &str) -> Result<(ValueType, u32), IIRWasmError> {
-    match hint_to_value_type(elem) {
-        Some(ValueType::I64) => Ok((ValueType::I64, 8)),
-        Some(ValueType::F64) => Ok((ValueType::F64, 8)),
+    match elem {
+        "i64" | "u64" => Ok((ValueType::I64, 8)),
+        "f64" => Ok((ValueType::F64, 8)),
+        // A `bool` is represented by an i32 local on WASM. Keep each element a
+        // full i32 cell so ordinary `i32.load`/`i32.store` preserve adjacent
+        // elements rather than overlapping a compact byte stride.
+        "bool" => Ok((ValueType::I32, 4)),
+        // E4d-BA-arr: a `str` element is an E4-dyn runtime string handle — a
+        // 4-byte `i32` linear-memory offset (the same representation a `str`
+        // local uses via `hint_to_value_type`), so a string array is a flat
+        // block of i32 handles.  `array_get`/`array_set` select `i32.load`/
+        // `i32.store` for it (below).
+        "str" => Ok((ValueType::I32, 4)),
         _ => Err(IIRWasmError::UnsupportedType {
             function: fn_name.to_string(),
-            type_hint: format!("array element {elem:?} (only i64/f64 elements on WASM so far)"),
+            type_hint: format!("array element {elem:?} (only i64/f64/bool/str elements on WASM so far)"),
         }),
     }
 }
@@ -989,6 +1099,16 @@ fn emit_instr(
     // Function index of the in-module `$__str_eq` helper (present iff the module
     // has a `str_eq` that can't be folded — see `uses_str_eq_runtime`).
     str_eq_fn_idx: Option<u32>,
+    // Function index of the in-module `$__str_cmp` helper (present iff the module
+    // has a `str_cmp` that can't be folded — see `uses_str_cmp_runtime`).
+    str_cmp_fn_idx: Option<u32>,
+    // Function index of the in-module `$__ensure_capacity` helper (present iff
+    // the module uses linear memory — see `uses_memory`). Every bump-allocation
+    // site (`alloc_array`/`str_concat`/`str_slice`/`input_str`) calls it with
+    // the byte offset one past the last byte it's about to write, so linear
+    // memory grows via `memory.grow` instead of silently running off the end
+    // of the module's single declared page.
+    ensure_capacity_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -1145,6 +1265,28 @@ fn emit_instr(
                     }
                 })?;
 
+                // Ensure linear memory can hold the new block (header + both byte
+                // runs) BEFORE any write touches it: needed_end = bump + 4 + la + lb.
+                let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_concat runtime path without $__ensure_capacity helper \
+                             (internal error)"
+                            .to_string(),
+                    }
+                })?;
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_call(ensure_capacity));
+
                 // rd = new = i32.wrap(bump)  — the fresh block's base handle.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_wrap_i64());
@@ -1200,32 +1342,199 @@ fn emit_instr(
         }
 
         // ── str_slice → literal data-segment metadata ────────────────────────
+        // ── str_slice → literal slice metadata OR runtime bump-alloc + copy ──
+        //
+        // Literal fast path: `collect_module_features` already folded a
+        // literal-source / compile-time-index slice into the module string table,
+        // so the handle is that constant offset (mirrors `str_concat`).
+        //
+        // Runtime path (E4d-3b): a runtime-handle source and/or runtime indices
+        // have no compile-time answer, so build a fresh `[i32 len][bytes]` block —
+        // exactly like a runtime `str_concat`, but copying one operand's
+        // `[start, end)` run:
+        //   trap unless 0 ≤ start ≤ end ≤ len          ;; unsigned, per E4 §2.2
+        //   new  = bump                                ;; base of the sliced block
+        //   bump = bump + 4 + (end - start)            ;; reserve header + the run
+        //   mem[new]      = end - start                ;; the i32 length header
+        //   memory.copy(new+4, src_base + start, end - start)
+        // `src_base`/`len` come from the source's header at run time when it is a
+        // runtime handle, or from its compile-time literal offset/length when it is
+        // a folded literal reached only with runtime indices.
         "str_slice" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: "str_slice must have a dest".to_string(),
             })?;
             let rd = get_reg(dest)?;
-            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_slice missing module string table entry for {dest:?}"),
-            })?;
-            // Like `str_concat`: a folded slice handed to a callee needs its runtime
-            // block handle (with a real header), not the raw sliced-bytes offset.
-            if runtime_str_vars.contains(dest) {
-                let key = String::from_utf8_lossy(&lit.bytes);
-                let block_offset =
-                    runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+            if let Some(lit) = string_literals.get(dest) {
+                // Like `str_concat`: a folded slice handed to a callee needs its
+                // runtime block handle (with a real header), not the raw
+                // sliced-bytes offset.
+                if runtime_str_vars.contains(dest) {
+                    let key = String::from_utf8_lossy(&lit.bytes);
+                    let block_offset =
+                        runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                            IIRWasmError::InvalidOperand {
+                                function: fn_name.to_string(),
+                                detail: format!("str_slice missing runtime block for folded {dest:?}"),
+                            }
+                        })?;
+                    code.extend(encode_i32_const(block_offset as i32));
+                } else {
+                    code.extend(encode_i32_const(lit.offset as i32));
+                }
+                code.extend(encode_local_set(rd));
+            } else {
+                // Runtime slice.
+                let (src, start, end) = match instr.srcs.as_slice() {
+                    [Operand::Var(s), Operand::Var(a), Operand::Var(b)] => (s, a, b),
+                    _ => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "runtime str_slice requires srcs [Var(str), Var(start), Var(end)]"
+                                .to_string(),
+                        });
+                    }
+                };
+                let src_slot = get_reg(src)?;
+                let start_slot = get_reg(start)?;
+                let end_slot = get_reg(end)?;
+                let bump = *global_map.get(ARRAY_BUMP_GLOBAL).ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_slice (missing __array_bump global)".to_string(),
+                    }
+                })?;
+
+                // Reusable byte sequences that push a value onto the stack.  The
+                // index slots are widened i64 in the Brainfuck value model, so wrap
+                // to i32 (the memory-op width) exactly as `str_index` does.
+                let mut push_start = encode_local_get(start_slot);
+                if slot_is_i64(start_slot) { push_start.extend(encode_i32_wrap_i64()); }
+                let mut push_end = encode_local_get(end_slot);
+                if slot_is_i64(end_slot) { push_end.extend(encode_i32_wrap_i64()); }
+
+                // The source's length + bytes base.  A runtime handle (or any src
+                // without a compile-time literal) carries a `[i32 len][bytes]` block,
+                // so read the header; a folded literal reached with runtime indices
+                // has its offset/length known at compile time (its bytes sit raw in
+                // the data segment, no header).
+                let src_is_runtime =
+                    runtime_str_vars.contains(src) || !string_literals.contains_key(src);
+                let (push_src_len, push_src_base) = if src_is_runtime {
+                    let mut len_seq = encode_local_get(src_slot);
+                    len_seq.extend(encode_i32_load(0));
+                    let mut base_seq = encode_local_get(src_slot);
+                    base_seq.extend(encode_i32_const(4));
+                    base_seq.extend(encode_i32_add());
+                    (len_seq, base_seq)
+                } else {
+                    let lit = string_literals.get(src).ok_or_else(|| {
                         IIRWasmError::InvalidOperand {
                             function: fn_name.to_string(),
-                            detail: format!("str_slice missing runtime block for folded {dest:?}"),
+                            detail: format!("str_slice literal source {src:?} missing string table entry"),
                         }
                     })?;
-                code.extend(encode_i32_const(block_offset as i32));
-            } else {
-                code.extend(encode_i32_const(lit.offset as i32));
+                    (encode_i32_const(lit.len as i32), encode_i32_const(lit.offset as i32))
+                };
+
+                // i64 truncation guard: a computed index (e.g. a COBOL
+                // reference-modification start/length read from a numeric item) can
+                // exceed i32 range. The bounds check and `memory.copy` below operate
+                // on the i32-WRAPPED index, so a huge i64 whose low 32 bits land in
+                // [0, len] would otherwise slip past the wrapped check and splice the
+                // wrong run. Trap on the FULL i64 value first (`index >u len`, which
+                // also catches a negative index as a huge unsigned), so the wasm
+                // target agrees with the VM/oracle i64 bounds rule. i32 index slots
+                // can't truncate, so they skip this and rely on the wrapped check.
+                for &slot in &[start_slot, end_slot] {
+                    if slot_is_i64(slot) {
+                        code.extend(encode_local_get(slot));
+                        code.extend_from_slice(&push_src_len);
+                        code.extend(encode_i64_extend_i32_u());
+                        code.push(I64_GT_U);
+                        code.push(IF);
+                        code.push(BLOCK_EMPTY);
+                        code.push(UNREACHABLE);
+                        code.push(END);
+                    }
+                }
+
+                // Bounds: `unreachable` (trap) unless 0 ≤ start ≤ end ≤ len.  The
+                // compares are UNSIGNED, so a negative index (a huge unsigned) fails
+                // one of them — matching `str_index`'s trap rule and E4 §2.2.
+                // if start >u end { unreachable }
+                code.extend_from_slice(&push_start);
+                code.extend_from_slice(&push_end);
+                code.push(I32_GT_U);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+                // if end >u len { unreachable }
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_src_len);
+                code.push(I32_GT_U);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // Ensure linear memory can hold the new block (header + the run)
+                // BEFORE any write touches it: needed_end = bump + 4 + (end - start).
+                let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_slice runtime path without $__ensure_capacity helper \
+                             (internal error)"
+                            .to_string(),
+                    }
+                })?;
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_call(ensure_capacity));
+
+                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_local_set(rd));
+
+                // bump = bump + i64(4 + (end - start))  — reserve header + the run.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_global_set(bump));
+
+                // mem[new] = end - start  — write the i32 length header.
+                code.extend(encode_local_get(rd));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_i32_store(0));
+
+                // memory.copy(new+4, src_base + start, end - start)  — splice the run.
+                code.extend(encode_local_get(rd));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_src_base);
+                code.extend_from_slice(&push_start);
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_memory_copy());
             }
-            code.extend(encode_local_set(rd));
         }
 
         // ── str_index → bounds-checked literal byte load ───────────────────────
@@ -1251,41 +1560,90 @@ fn emit_instr(
             };
             let src_slot = get_reg(src)?;
             let idx_slot = get_reg(idx)?;
-            let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_index source {src:?} is not a direct str_const local"),
-            })?;
 
-            // Bounds: idx >=u len → unreachable. On i64 indices, a negative value
-            // becomes huge under the unsigned compare, matching E4's trap rule.
-            code.extend(encode_local_get(idx_slot));
-            if slot_is_i64(idx_slot) {
-                code.extend(encode_i64_const(lit.len as i64));
-                code.push(I64_GE_U);
-            } else {
-                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+            // A folded literal source (in the string table, not promoted to a
+            // runtime block) has its bytes sitting raw in the data segment — the
+            // slot holds that offset, and the length is known at compile time.  A
+            // runtime handle (a param, a call result, a runtime slice/concat — or a
+            // literal promoted to a real block) instead carries a `[i32 len][bytes]`
+            // block, so the length is read from the header and the bytes start at
+            // `handle + 4`.  This is the same source dispatch `str_slice` uses.
+            let src_is_runtime =
+                runtime_str_vars.contains(src) || !string_literals.contains_key(src);
+            if !src_is_runtime {
+                let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
                     function: fn_name.to_string(),
-                    detail: format!("str_index literal length {} does not fit i32", lit.len),
+                    detail: format!("str_index source {src:?} is not a direct str_const local"),
                 })?;
-                code.extend(encode_i32_const(len));
-                code.push(I32_GE_U);
-            }
-            code.push(IF);
-            code.push(BLOCK_EMPTY);
-            code.push(UNREACHABLE);
-            code.push(END);
 
-            code.extend(encode_local_get(src_slot));
-            code.extend(encode_local_get(idx_slot));
-            if slot_is_i64(idx_slot) {
-                code.extend(encode_i32_wrap_i64());
+                // Bounds: idx >=u len → unreachable. On i64 indices, a negative
+                // value becomes huge under the unsigned compare, matching E4's trap
+                // rule.
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i64_const(lit.len as i64));
+                    code.push(I64_GE_U);
+                } else {
+                    let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!("str_index literal length {} does not fit i32", lit.len),
+                    })?;
+                    code.extend(encode_i32_const(len));
+                    code.push(I32_GE_U);
+                }
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // byte = load8_u(offset + idx)  — the literal has no header.
+                code.extend(encode_local_get(src_slot));
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i32_wrap_i64());
+                }
+                code.extend(encode_i32_add());
+                code.extend(encode_i32_load8_u());
+                if slot_is_i64(rd) {
+                    code.extend(encode_i64_extend_i32_u());
+                }
+                code.extend(encode_local_set(rd));
+            } else {
+                // Runtime handle: read the header length, then load the byte from
+                // the block body.  Bounds: idx >=u len(= i32.load handle) → trap; a
+                // negative i64 index becomes a huge unsigned and trips the same
+                // compare (E4 §2.2).
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_local_get(src_slot));
+                    code.extend(encode_i32_load(0));
+                    code.extend(encode_i64_extend_i32_u());
+                    code.push(I64_GE_U);
+                } else {
+                    code.extend(encode_local_get(src_slot));
+                    code.extend(encode_i32_load(0));
+                    code.push(I32_GE_U);
+                }
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // byte = load8_u(handle + 4 + idx)  — skip the i32 length header.
+                code.extend(encode_local_get(src_slot));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i32_wrap_i64());
+                }
+                code.extend(encode_i32_add());
+                code.extend(encode_i32_load8_u());
+                if slot_is_i64(rd) {
+                    code.extend(encode_i64_extend_i32_u());
+                }
+                code.extend(encode_local_set(rd));
             }
-            code.extend(encode_i32_add());
-            code.extend(encode_i32_load8_u());
-            if slot_is_i64(rd) {
-                code.extend(encode_i64_extend_i32_u());
-            }
-            code.extend(encode_local_set(rd));
         }
 
         // ── str_len → literal byte count ─────────────────────────────────────
@@ -1399,7 +1757,14 @@ fn emit_instr(
             }
         }
 
-        // ── str_cmp → literal byte ordering ─────────────────────────────────
+        // ── str_cmp → literal byte ordering OR runtime `$__str_cmp` ──────────
+        //
+        // Mirrors `str_eq`: when BOTH operands fold to compile-time literals the
+        // ordering is a `-1`/`0`/`1` constant.  Otherwise at least one operand is a
+        // runtime string handle (a param, a call result, a branch-selected slot) —
+        // both slots hold i32 handles to `[i32 len][bytes]` blocks (a folded-literal
+        // operand was promoted to a runtime block in `collect_module_features`), so
+        // delegate to the self-contained in-module `$__str_cmp` helper.
         "str_cmp" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
@@ -1420,25 +1785,45 @@ fn emit_instr(
                     detail: "str_cmp requires srcs[1] = Operand::Var(str)".to_string(),
                 }),
             };
-            let left_lit = string_literals.get(left).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_cmp left source {left:?} is not a direct str_const local"),
-            })?;
-            let right_lit = string_literals.get(right).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_cmp right source {right:?} is not a direct str_const local"),
-            })?;
-            let value = match left_lit.bytes.cmp(&right_lit.bytes) {
-                Ordering::Less => -1,
-                Ordering::Equal => 0,
-                Ordering::Greater => 1,
-            };
-            if slot_is_i64(rd) {
-                code.extend(encode_i64_const(value));
-            } else {
-                code.extend(encode_i32_const(value as i32));
+            match (string_literals.get(left), string_literals.get(right)) {
+                // Both operands folded to compile-time literals — constant-fold the
+                // ordering to a `-1`/`0`/`1` immediate, no runtime work.
+                (Some(left_lit), Some(right_lit)) => {
+                    let value = match left_lit.bytes.cmp(&right_lit.bytes) {
+                        Ordering::Less => -1,
+                        Ordering::Equal => 0,
+                        Ordering::Greater => 1,
+                    };
+                    if slot_is_i64(rd) {
+                        code.extend(encode_i64_const(value));
+                    } else {
+                        code.extend(encode_i32_const(value as i32));
+                    }
+                    code.extend(encode_local_set(rd));
+                }
+                // At least one operand is a runtime string handle — delegate to the
+                // in-module `$__str_cmp(i32,i32) -> i32` helper.
+                _ => {
+                    let helper = str_cmp_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_cmp runtime path without $__str_cmp helper (internal error)"
+                            .to_string(),
+                    })?;
+                    let left_slot = get_reg(left)?;
+                    let right_slot = get_reg(right)?;
+                    code.extend(encode_local_get(left_slot));
+                    code.extend(encode_local_get(right_slot));
+                    code.extend(encode_call(helper));
+                    // The helper returns a SIGNED i32 (`-1`/`0`/`1`); widen to i64
+                    // with SIGN-extension (not the zero-extension `str_eq` uses for
+                    // its `0`/`1` result) so a `-1` stays `-1`, matching the folded
+                    // `encode_i64_const(-1)` path exactly.
+                    if slot_is_i64(rd) {
+                        code.extend(encode_i64_extend_i32_s());
+                    }
+                    code.extend(encode_local_set(rd));
+                }
             }
-            code.extend(encode_local_set(rd));
         }
 
         // ── print_str → call $__print_str(ptr, len) ──────────────────────────
@@ -1515,8 +1900,16 @@ fn emit_instr(
             })?;
             let rd = get_reg(dest)?;
 
-            // Special case: `const ref<LispyPair>` with no source = nil.
-            if ty.starts_with("ref<") && instr.srcs.is_empty() {
+            // Special case: a `ref<…>`-typed const is the Lisp `nil` — either with
+            // NO source, or with the `Int(0)` sentinel source that `make_nil` and
+            // the `list` desugar emit (`const 0 : ref<LispyPair>`). Both must become
+            // `ref.null`, not `i32.const 0`: otherwise `is_null`/`null?` (ref.is_null)
+            // never detects the list terminator and a cons-walk (`length`, …) runs
+            // past the end into `struct.get` on an i32 (E6d-3b).
+            let is_nil_const = ty.starts_with("ref<")
+                && (instr.srcs.is_empty()
+                    || matches!(instr.srcs.first(), Some(Operand::Int(0))));
+            if is_nil_const {
                 // ref.null none: typed null compatible with all nullable refs.
                 encode_gc_instruction(code, &GcInstruction::RefNull);
                 code.extend(encode_local_set(rd));
@@ -2478,6 +2871,12 @@ fn emit_instr(
             let src_reg = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
 
             code.extend(encode_local_get(src_reg));
+            // An `i31ref` payload is a 32-bit value. When the boxed source rides
+            // an i64 register (E6d-2 dynamic arithmetic works in i64), narrow it
+            // with `i32.wrap_i64` before `ref.i31`.
+            if slot_is_i64(src_reg) {
+                code.extend(encode_i32_wrap_i64());
+            }
             encode_gc_instruction(code, &GcInstruction::I31New);
             code.extend(encode_local_set(rd));
         }
@@ -2504,6 +2903,12 @@ fn emit_instr(
 
             code.extend(encode_local_get(src_reg));
             encode_gc_instruction(code, &GcInstruction::I31GetS);
+            // `i31.get_s` yields an i32. When the unboxed destination rides an
+            // i64 register (E6d-2 dynamic arithmetic works in i64), sign-extend
+            // it so the `local.set` types match.
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_s());
+            }
             code.extend(encode_local_set(rd));
         }
 
@@ -2884,6 +3289,27 @@ fn emit_instr(
             code.push(I64_ADD);
             code.push(I64_ADD);
             code.extend(encode_global_set(bump));
+            // Ensure linear memory can hold the whole block (header + all
+            // elements) BEFORE the header write below — later `array_set`
+            // stores land inside this same reserved region, so one check
+            // here covers them too. needed_end = handle + 8 + count*elemsize
+            // (rd already holds the pre-bump handle, so reuse it rather than
+            // re-reading the now-updated global).
+            let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "alloc_array without $__ensure_capacity helper (internal error)"
+                        .to_string(),
+                }
+            })?;
+            code.extend(encode_local_get(rd));
+            code.extend(encode_local_get(count_slot));
+            code.extend(encode_i64_const(elem_size as i64));
+            code.push(I64_MUL);
+            code.extend(encode_i64_const(8));
+            code.push(I64_ADD);
+            code.push(I64_ADD);
+            code.extend(encode_call(ensure_capacity));
             // mem[wrap(handle) + 0] = count   (i64 length header).
             code.extend(encode_local_get(rd));
             code.extend(encode_i32_wrap_i64());
@@ -2927,6 +3353,8 @@ fn emit_instr(
             code.push(I32_ADD);
             match vt {
                 ValueType::F64 => code.extend(encode_f64_load(8)),
+                // E4d-BA-arr: a `str` element is a 4-byte i32 handle.
+                ValueType::I32 => code.extend(encode_i32_load(8)),
                 _ => code.extend(encode_i64_load(8)),
             }
             code.extend(encode_local_set(rd));
@@ -2969,6 +3397,8 @@ fn emit_instr(
             code.extend(encode_local_get(val_slot));
             match vt {
                 ValueType::F64 => code.extend(encode_f64_store(8)),
+                // E4d-BA-arr: a `str` element is a 4-byte i32 handle.
+                ValueType::I32 => code.extend(encode_i32_store(8)),
                 _ => code.extend(encode_i64_store(8)),
             }
         }
@@ -3081,11 +3511,11 @@ fn emit_instr(
                 // the memory writes, so no `i32.store` here.
                 //   Shape: srcs[0]=Var("input_str"), dest=Some(varname)
                 "input_str" => {
-                    // Cap the line at 256 bytes: the module's linear memory is a
-                    // single fixed 64 KiB page (`min=max=1`), and each block is never
-                    // freed (bump-only), so a large MAX would exhaust the page after a
-                    // few reads. 256 covers a BASIC input line; a longer line is
-                    // truncated (V1 permissive contract).
+                    // Cap the line at 256 bytes — comfortably covers a BASIC input
+                    // line; a longer line is truncated (V1 permissive contract).
+                    // Each block is bump-only (never freed), but linear memory now
+                    // grows via `$__ensure_capacity` below, so repeated reads no
+                    // longer exhaust a fixed single page.
                     const INPUT_STR_MAX: i32 = 256;
                     let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                         function: fn_name.to_string(),
@@ -3100,6 +3530,21 @@ fn emit_instr(
                         function: fn_name.to_string(),
                         op: "call_builtin \"input_str\" (missing __array_bump global)".to_string(),
                     })?;
+                    // Ensure linear memory can hold the whole block (header + MAX
+                    // bytes) BEFORE the host writes into it below:
+                    // needed_end = bump + 4 + MAX.
+                    let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                        IIRWasmError::UnsupportedOp {
+                            function: fn_name.to_string(),
+                            op: "call_builtin \"input_str\" without $__ensure_capacity \
+                                 helper (internal error)"
+                                .to_string(),
+                        }
+                    })?;
+                    code.extend(encode_global_get(bump));
+                    code.extend(encode_i64_const((4 + INPUT_STR_MAX) as i64));
+                    code.push(I64_ADD);
+                    code.extend(encode_call(ensure_capacity));
                     // handle (dest, i32) = wrap(current bump).
                     code.extend(encode_global_get(bump));
                     code.extend(encode_i32_wrap_i64());
@@ -3286,6 +3731,10 @@ fn get_src_reg(
 ///
 /// `print_fn_idx` is `Some(0)` when the module imports `env.__print_i64`.
 /// Used by `io_out` instructions.
+// This is the core per-function lowering entry point; its parameters are the
+// full module-lowering context (type indices, maps, feature flags, injection
+// slots). Bundling them into a struct would only relocate the same 21 inputs.
+#[allow(clippy::too_many_arguments)]
 fn lower_function(
     fn_: &IIRFunction,
     fn_map: &HashMap<String, u32>,
@@ -3308,6 +3757,8 @@ fn lower_function(
     tan_fn_idx: Option<u32>,
     pow_fn_idx: Option<u32>,
     str_eq_fn_idx: Option<u32>,
+    str_cmp_fn_idx: Option<u32>,
+    ensure_capacity_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -3427,6 +3878,8 @@ fn lower_function(
                     tan_fn_idx,
                     pow_fn_idx,
                     str_eq_fn_idx,
+                    str_cmp_fn_idx,
+                    ensure_capacity_fn_idx,
                 )?;
             }
 
@@ -3498,6 +3951,8 @@ fn lower_function(
                 tan_fn_idx,
                 pow_fn_idx,
                 str_eq_fn_idx,
+                str_cmp_fn_idx,
+                ensure_capacity_fn_idx,
             )?;
         }
     }
@@ -3566,6 +4021,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///   position in the vec determines their WASM global section index.
 /// - `uses_io_out` — `true` if any instruction in any function has the
 ///   `"io_out"` opcode.  Triggers injection of the `env.__print_i64` import.
+///
 /// Features the WASM lowering must materialize as imports / sections.
 ///
 /// Populated by [`collect_module_features`] from a single pass over the
@@ -3574,7 +4030,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///
 /// | Field              | Trigger                                | What it injects |
 /// |--------------------|----------------------------------------|-----------------|
-/// | `global_names`     | `global_load` / `global_store`          | `Global` entries (one per name, i64, mutable) |
+/// | `global_names`     | `global_load` / `global_store`          | Mutable globals, i64 except `str` handles (i32) |
 /// | `uses_io_out`      | `io_out`                                | `env.__print_i64` import |
 /// | `uses_print_str`   | `print_str`                             | `env.__print_str` import + linear memory |
 /// | `uses_putchar`     | `call_builtin` with name `"putchar"`    | `env.putchar` import   |
@@ -3588,6 +4044,10 @@ struct ModuleFeatures {
     /// Deduplicated global names, in first-seen order.  Position in the
     /// vec = WASM global-section index.
     global_names: Vec<String>,
+    /// The subset of `global_names` which carries an IIR `str` handle. WASM
+    /// string handles are linear-memory offsets, so their global value type is
+    /// i32 rather than the historical i64 scalar default.
+    global_string_names: HashSet<String>,
     uses_io_out: bool,
     uses_print_str: bool,
     uses_putchar: bool,
@@ -3621,6 +4081,11 @@ struct ModuleFeatures {
     /// NOT a host import — it is emitted inside the module so the WASM is
     /// self-contained (mirrors the native/LLVM `__twig_str_eq` archive helper).
     uses_str_eq_runtime: bool,
+    /// `$__str_cmp(i32,i32)->i32` helper (a min-length prefix scan + length
+    /// tiebreak returning `-1`/`0`/`1`) that a runtime `str_cmp` `call`s.  Like
+    /// `$__str_eq`, string ordering is pure computation, so it is emitted inside
+    /// the module (mirrors the native/LLVM `__twig_str_cmp`).
+    uses_str_cmp_runtime: bool,
     /// Function-name -> string-local -> data-segment offset/length.
     string_literals: ModuleStringLiterals,
     /// Concatenated literal bytes for the active E4 string data segment.
@@ -3658,16 +4123,103 @@ fn lay_runtime_str_block(
 ) {
     let key = String::from_utf8_lossy(bytes).into_owned();
     let fn_blocks = runtime_str_blocks.entry(fn_name.to_string()).or_default();
-    if !fn_blocks.contains_key(&key) {
+    fn_blocks.entry(key).or_insert_with(|| {
         let block_offset = string_data.len() as u32;
         string_data.extend_from_slice(&len.to_le_bytes());
         string_data.extend_from_slice(bytes);
-        fn_blocks.insert(key, block_offset);
-    }
+        block_offset
+    });
     runtime_str_vars
         .entry(fn_name.to_string())
         .or_default()
         .insert(dest.to_string());
+}
+
+/// Build the self-contained in-module `$__ensure_capacity(needed_end: i64)`
+/// helper — grows linear memory with `memory.grow` whenever a bump-allocation
+/// site (`alloc_array`/`str_concat`/`str_slice`/`input_str`) is about to write
+/// past the currently-committed memory, instead of trapping or silently
+/// corrupting adjacent data. `needed_end` is the byte offset one past the
+/// last byte the caller is about to write.
+///
+/// ```text
+///   current_bytes = i64(memory.size()) * 65536
+///   if needed_end > current_bytes {
+///     delta_bytes = needed_end - current_bytes
+///     delta_pages = (delta_bytes + 65535) / 65536      ;; round up
+///     if i32(memory.grow(i32(delta_pages))) == -1 { unreachable }  ;; OOM
+///   }
+/// ```
+///
+/// Twig GC completion round (Part 3): this closes the confirmed bug where
+/// every bump-allocation site was capped at the module's single declared
+/// 64 KiB page (`Limits { min: 1, max: Some(1) }`) with no growth path at
+/// all — any program allocating more than ~64 KiB of array/string data
+/// would corrupt memory (writes silently landing past the linear memory
+/// `Vec`'s bounds check, per `wasm-execution`'s own bounds-checked
+/// `LinearMemory` — actually a clean trap there, but *only* because the
+/// interpreter bounds-checks; nothing in the emitted bytecode itself ever
+/// asked for more memory). `wasm-execution`'s `LinearMemory::grow`
+/// (already implemented, tested, and generic — this crate is simply the
+/// first to *emit* a `memory.grow` call site) resizes the backing `Vec`
+/// and enforces the same WASM-spec absolute ceiling (65536 pages / 4 GiB)
+/// `memory.grow`'s own return-`-1`-on-failure contract already covers, so
+/// the `unreachable` here is reached only on genuine, spec-legitimate
+/// exhaustion — not a bug in this helper.
+///
+/// Emitted once per module (gated by `uses_memory` — the same condition that
+/// injects the `__array_bump` global and the memory section itself, since
+/// every consumer of linear memory is exactly the set of ops that can need
+/// more of it) and appended after every IIR-defined function (and after
+/// `$__str_eq`/`$__str_cmp`, if present), so its index is
+/// `fn_idx_base + module.functions.len() + uses_str_eq_runtime as u32 +
+/// uses_str_cmp_runtime as u32`. One scratch local (`current_bytes` = local 1)
+/// is declared here; `needed_end` lives in the `FuncType` as local 0.
+fn build_ensure_capacity_helper() -> FunctionBody {
+    const NEEDED_END: u32 = 0;
+    const CURRENT_BYTES: u32 = 1;
+    let mut c: Vec<u8> = Vec::new();
+
+    // current_bytes = i64(memory.size()) * 65536
+    c.extend(encode_memory_size());
+    c.extend(encode_i64_extend_i32_u());
+    c.extend(encode_i64_const(65536));
+    c.push(I64_MUL);
+    c.extend(encode_local_set(CURRENT_BYTES));
+
+    // if needed_end > current_bytes { ... }
+    c.extend(encode_local_get(NEEDED_END));
+    c.extend(encode_local_get(CURRENT_BYTES));
+    c.push(I64_GT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+
+    // delta_pages = i32((needed_end - current_bytes + 65535) / 65536)
+    c.extend(encode_local_get(NEEDED_END));
+    c.extend(encode_local_get(CURRENT_BYTES));
+    c.push(I64_SUB);
+    c.extend(encode_i64_const(65535));
+    c.push(I64_ADD);
+    c.extend(encode_i64_const(65536));
+    c.push(I64_DIV_U);
+    c.extend(encode_i32_wrap_i64());
+
+    // memory.grow returns the *previous* page count, or -1 on failure.
+    c.extend(encode_memory_grow());
+    c.extend(encode_i32_const(-1));
+    c.push(I32_EQ);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.push(UNREACHABLE);
+    c.push(END); // end of the OOM-check `if`
+    c.push(END); // end of the `needed_end > current_bytes` `if`
+
+    c.push(END); // function end
+
+    FunctionBody {
+        locals: vec![ValueType::I64], // current_bytes
+        code: c,
+    }
 }
 
 /// Build the self-contained in-module `$__str_eq(a: i32, b: i32) -> i32` helper.
@@ -3775,6 +4327,155 @@ fn build_str_eq_helper() -> FunctionBody {
     }
 }
 
+/// Build the self-contained in-module `$__str_cmp(a: i32, b: i32) -> i32` helper.
+///
+/// `a` and `b` are handles to `[i32 len (LE)][bytes]` blocks in linear memory
+/// (the same runtime-string representation `$__str_eq` reads).  The helper
+/// returns the **lexicographic byte ordering** of the two strings as `-1` / `0` /
+/// `1` — byte-for-byte identical to the literal fast path's
+/// `left.bytes.cmp(&right.bytes)` (Rust slice ordering): scan the shared prefix
+/// byte by byte with an **unsigned** compare; the first differing byte decides;
+/// if one string is a prefix of the other, the shorter compares Less; equal
+/// length with every byte equal → `0`.
+///
+/// ```text
+///   n = min(mem[a], mem[b]); i = 0
+///   loop {
+///     if i < n {
+///       if mem8[a+4+i] != mem8[b+4+i] { return mem8[a+4+i] <u mem8[b+4+i] ? -1 : 1 }
+///       i = i + 1; continue
+///     }
+///   }                                   ;; shared prefix equal ⇒ length decides
+///   if mem[a] <u mem[b] { return -1 }
+///   if mem[a] >u mem[b] { return  1 }
+///   return 0
+/// ```
+///
+/// Emitted once per module (gated by `uses_str_cmp_runtime`) and appended after
+/// the `$__str_eq` helper, so its index is
+/// `fn_idx_base + module.functions.len() + (uses_str_eq_runtime as u32)`.  The two
+/// scratch locals (`n` = local 2, `i` = local 3) are declared here; `a`/`b` live
+/// in the `FuncType`.  In-module rather than a host import for the same reason as
+/// `$__str_eq`: string ordering is pure computation, so the emitted WASM stays
+/// self-contained (mirrors the native/LLVM `__twig_str_cmp` archive helper).
+fn build_str_cmp_helper() -> FunctionBody {
+    // Local indices: a = 0, b = 1 (params); n = 2, i = 3 (scratch, below).
+    const A: u32 = 0;
+    const B: u32 = 1;
+    const N: u32 = 2;
+    const I: u32 = 3;
+    let mut c: Vec<u8> = Vec::new();
+
+    // n = mem[a]; if mem[b] <u n { n = mem[b] }   — n = min(len(a), len(b)).
+    c.extend(encode_local_get(A));
+    c.extend(encode_i32_load(0));
+    c.extend(encode_local_set(N));
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_load(0));
+    c.extend(encode_local_get(N));
+    c.push(I32_LT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_load(0));
+    c.extend(encode_local_set(N));
+    c.push(END);
+
+    // i = 0.
+    c.extend(encode_i32_const(0));
+    c.extend(encode_local_set(I));
+
+    // loop { if i < n { on a byte mismatch return the sign; else i += 1; continue } }
+    // Falls through (no branch) once i == n, i.e. the shared prefix is equal.
+    c.push(LOOP);
+    c.push(BLOCK_EMPTY);
+    c.extend(encode_local_get(I));
+    c.extend(encode_local_get(N));
+    c.push(I32_LT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    // mem8[a + 4 + i]
+    c.extend(encode_local_get(A));
+    c.extend(encode_i32_const(4));
+    c.push(I32_ADD);
+    c.extend(encode_local_get(I));
+    c.push(I32_ADD);
+    c.extend(encode_i32_load8_u());
+    // mem8[b + 4 + i]
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_const(4));
+    c.push(I32_ADD);
+    c.extend(encode_local_get(I));
+    c.push(I32_ADD);
+    c.extend(encode_i32_load8_u());
+    c.push(I32_NE);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    // Bytes differ: return `ca <u cb ? -1 : 1` (recompute the two bytes — the
+    // mismatch path runs at most once, so the extra loads cost nothing in steady
+    // state and keep the helper free of further scratch locals).
+    c.extend(encode_local_get(A));
+    c.extend(encode_i32_const(4));
+    c.push(I32_ADD);
+    c.extend(encode_local_get(I));
+    c.push(I32_ADD);
+    c.extend(encode_i32_load8_u());
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_const(4));
+    c.push(I32_ADD);
+    c.extend(encode_local_get(I));
+    c.push(I32_ADD);
+    c.extend(encode_i32_load8_u());
+    c.push(I32_LT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.extend(encode_i32_const(-1));
+    c.push(RETURN);
+    c.push(END);
+    c.extend(encode_i32_const(1));
+    c.push(RETURN);
+    c.push(END); // end `if ca != cb`
+    // Bytes equal: i = i + 1; continue (branch to the enclosing loop, depth 1:
+    // inner `if i < n` = 0, loop = 1).
+    c.extend(encode_local_get(I));
+    c.extend(encode_i32_const(1));
+    c.push(I32_ADD);
+    c.extend(encode_local_set(I));
+    c.extend(encode_br(1));
+    c.push(END); // end `if i < n`
+    c.push(END); // end loop
+
+    // Shared prefix equal → the shorter string sorts first.
+    c.extend(encode_local_get(A));
+    c.extend(encode_i32_load(0));
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_load(0));
+    c.push(I32_LT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.extend(encode_i32_const(-1));
+    c.push(RETURN);
+    c.push(END);
+    c.extend(encode_local_get(A));
+    c.extend(encode_i32_load(0));
+    c.extend(encode_local_get(B));
+    c.extend(encode_i32_load(0));
+    c.push(I32_GT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.extend(encode_i32_const(1));
+    c.push(RETURN);
+    c.push(END);
+    // Equal length, every byte equal → 0.
+    c.extend(encode_i32_const(0));
+    c.push(END); // function end — implicit return of the i32 on the stack
+
+    FunctionBody {
+        locals: vec![ValueType::I32, ValueType::I32], // n, i
+        code: c,
+    }
+}
+
 fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     // Use a HashSet for O(1) deduplication checks, preserving first-seen order
     // in the Vec.  Without the set, deduplication would be O(M × N) where M is
@@ -3782,6 +4483,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     // quadratic for adversarially crafted modules with many globals.
     let mut global_names: Vec<String> = Vec::new();
     let mut global_names_seen: HashSet<String> = HashSet::new();
+    let mut global_string_names: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
     let mut uses_print_str = false;
     let mut uses_putchar = false;
@@ -3797,11 +4499,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_memory = false;
     let mut uses_f64_pow = false;
     let mut uses_str_eq_runtime = false;
+    let mut uses_str_cmp_runtime = false;
     let mut string_literals: ModuleStringLiterals = HashMap::new();
     let mut string_data: Vec<u8> = Vec::new();
     let mut runtime_str_vars: ModuleRuntimeStrVars = HashMap::new();
     let mut runtime_str_blocks: ModuleRuntimeStrBlocks = HashMap::new();
     for fn_ in &module.functions {
+        let reg_map = build_register_map(fn_);
+        let local_type_hints = infer_local_type_hints(fn_, &reg_map);
         let mut fn_ints: HashMap<String, i64> = HashMap::new();
         // E4-dyn (E4d-3): which of this function's string variables are chosen by
         // control flow (assigned in >1 basic block) and so must carry a runtime
@@ -3813,6 +4518,16 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let Some(Operand::Str(name)) = instr.srcs.first() {
                         if global_names_seen.insert(name.clone()) {
                             global_names.push(name.clone());
+                        }
+                        let is_string = instr.type_hint == "str" || matches!(
+                            instr.srcs.get(1),
+                            Some(Operand::Var(value)) if reg_map
+                                .get(value)
+                                .and_then(|index| local_type_hints.get(index))
+                                .is_some_and(|hint| hint == "str")
+                        );
+                        if is_string {
+                            global_string_names.insert(name.clone());
                         }
                     }
                 }
@@ -3879,6 +4594,49 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                 ))
                             })
                         else {
+                            // A non-foldable concatenation allocates a runtime
+                            // `[len][bytes]` block in linear memory. It may be
+                            // the only dynamic-memory user in the module, so
+                            // reserve the bump global here rather than relying
+                            // on an unrelated array or slice instruction.
+                            uses_memory = true;
+                            if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                                global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                            }
+                            // Runtime concatenation reads both operands through
+                            // length headers. Promote any folded literal before
+                            // continuing, such as the empty suffix generated
+                            // for `s := pick(1)`.
+                            if let Some(lit) = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(left))
+                                .cloned()
+                            {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks,
+                                    &mut runtime_str_vars,
+                                    &mut string_data,
+                                    &fn_.name,
+                                    left,
+                                    &lit.bytes,
+                                    lit.len,
+                                );
+                            }
+                            if let Some(lit) = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(right))
+                                .cloned()
+                            {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks,
+                                    &mut runtime_str_vars,
+                                    &mut string_data,
+                                    &fn_.name,
+                                    right,
+                                    &lit.bytes,
+                                    lit.len,
+                                );
+                            }
                             continue;
                         };
                         let mut bytes = left_lit.bytes;
@@ -3955,52 +4713,64 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         [Operand::Var(src), Operand::Var(start), Operand::Var(end)],
                     ) = (instr.dest.as_ref(), instr.srcs.as_slice())
                     {
-                        let Some(src_lit) = string_literals
-                            .get(&fn_.name)
-                            .and_then(|fn_strings| fn_strings.get(src))
-                        else {
-                            continue;
-                        };
-                        let (Some(start), Some(end)) =
-                            (fn_ints.get(start).copied(), fn_ints.get(end).copied())
-                        else {
-                            continue;
-                        };
-                        let (Ok(start), Ok(end)) =
-                            (usize::try_from(start), usize::try_from(end))
-                        else {
-                            continue;
-                        };
-                        if end < start || end > src_lit.bytes.len() {
-                            continue;
+                        // Try to constant-fold the slice: a literal source with
+                        // compile-time, in-bounds indices yields the sliced bytes at
+                        // compile time.  `folded` is `Some(bytes)` on success.
+                        let folded: Option<Vec<u8>> = (|| {
+                            let src_lit = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(src))?;
+                            let start = usize::try_from(fn_ints.get(start).copied()?).ok()?;
+                            let end = usize::try_from(fn_ints.get(end).copied()?).ok()?;
+                            if end < start || end > src_lit.bytes.len() {
+                                return None;
+                            }
+                            Some(src_lit.bytes[start..end].to_vec())
+                        })();
+                        match folded {
+                            Some(bytes) => {
+                                let offset = string_data.len() as u32;
+                                let len = bytes.len() as u32;
+                                string_data.extend_from_slice(&bytes);
+                                // Same promotion as `str_concat`: a folded slice passed
+                                // across a call boundary (e.g. `(strlen (substring …))`)
+                                // needs a real header, or the callee reads the first
+                                // sliced byte as the length.
+                                if fn_runtime_vars.contains(dest) {
+                                    lay_runtime_str_block(
+                                        &mut runtime_str_blocks,
+                                        &mut runtime_str_vars,
+                                        &mut string_data,
+                                        &fn_.name,
+                                        dest,
+                                        &bytes,
+                                        len,
+                                    );
+                                }
+                                string_literals
+                                    .entry(fn_.name.clone())
+                                    .or_default()
+                                    .insert(dest.clone(), WasmStringLiteral {
+                                        offset,
+                                        len,
+                                        bytes,
+                                    });
+                            }
+                            None => {
+                                // Runtime slice (a runtime-handle source and/or
+                                // runtime indices): the lowering bump-allocates a
+                                // fresh `[i32 len][bytes]` block and `memory.copy`s the
+                                // `[start, end)` run into it — exactly like a runtime
+                                // `str_concat` — so the module needs linear memory and
+                                // the `__array_bump` global.  (A pure runtime-slice
+                                // program has no array op, so this is where they get
+                                // injected for it.)
+                                uses_memory = true;
+                                if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                                    global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                                }
+                            }
                         }
-                        let bytes = src_lit.bytes[start..end].to_vec();
-                        let offset = string_data.len() as u32;
-                        let len = bytes.len() as u32;
-                        string_data.extend_from_slice(&bytes);
-                        // Same promotion as `str_concat`: a folded slice passed
-                        // across a call boundary (e.g. `(strlen (substring …))`)
-                        // needs a real header, or the callee reads the first sliced
-                        // byte as the length.
-                        if fn_runtime_vars.contains(dest) {
-                            lay_runtime_str_block(
-                                &mut runtime_str_blocks,
-                                &mut runtime_str_vars,
-                                &mut string_data,
-                                &fn_.name,
-                                dest,
-                                &bytes,
-                                len,
-                            );
-                        }
-                        string_literals
-                            .entry(fn_.name.clone())
-                            .or_default()
-                            .insert(dest.clone(), WasmStringLiteral {
-                                offset,
-                                len,
-                                bytes,
-                            });
                     }
                 }
                 // A `str_eq` folds to a compile-time constant only when BOTH
@@ -4019,6 +4789,35 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                             uses_str_eq_runtime = true;
                             uses_memory = true;
                             // Promote any folded-literal operand to a runtime block.
+                            if let Some(lit) = left_lit {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks, &mut runtime_str_vars,
+                                    &mut string_data, &fn_.name, left, &lit.bytes, lit.len,
+                                );
+                            }
+                            if let Some(lit) = right_lit {
+                                lay_runtime_str_block(
+                                    &mut runtime_str_blocks, &mut runtime_str_vars,
+                                    &mut string_data, &fn_.name, right, &lit.bytes, lit.len,
+                                );
+                            }
+                        }
+                    }
+                }
+                // `str_cmp` folds to a compile-time `-1`/`0`/`1` only when BOTH
+                // operands are folded literals.  Otherwise it needs the runtime
+                // `$__str_cmp` helper (a lexicographic byte compare over two
+                // `[i32 len][bytes]` blocks), and any folded-literal operand must
+                // be promoted to a runtime block so it too presents a real header.
+                // Identical shape to the `str_eq` arm above.
+                "str_cmp" => {
+                    if let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() {
+                        let fn_strings = string_literals.get(&fn_.name);
+                        let left_lit = fn_strings.and_then(|m| m.get(left)).cloned();
+                        let right_lit = fn_strings.and_then(|m| m.get(right)).cloned();
+                        if left_lit.is_none() || right_lit.is_none() {
+                            uses_str_cmp_runtime = true;
+                            uses_memory = true;
                             if let Some(lit) = left_lit {
                                 lay_runtime_str_block(
                                     &mut runtime_str_blocks, &mut runtime_str_vars,
@@ -4058,18 +4857,16 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         global_names.push(ARRAY_BUMP_GLOBAL.to_string());
                     }
                 }
-                // E4-dyn: a `str_concat` whose operands are runtime handles (not
-                // foldable literals) bump-allocates a fresh `[i32 len][bytes]` block
-                // and `memory.copy`s both operands in — so, like an array op, it needs
-                // linear memory + the `__array_bump` global. (A both-literal concat
-                // folds to a data-segment offset and never touches the bump pointer,
-                // so the injected global is simply unused there.)
-                "str_concat" => {
-                    uses_memory = true;
-                    if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
-                        global_names.push(ARRAY_BUMP_GLOBAL.to_string());
-                    }
-                }
+                // NOTE (clippy-cleanup): a second `"str_concat"` arm previously lived
+                // here to mark `uses_memory` / inject `__array_bump` for runtime
+                // (non-foldable) concats. It was unreachable — the earlier
+                // `"str_concat"` arm above already matches every str_concat and
+                // `continue`s on the non-foldable path — so this pre-pass never marked
+                // linear memory for a runtime str_concat. The dead arm is removed to
+                // silence `unreachable_patterns`; its behavior was already never taken,
+                // so removal is a no-op. FLAGGED as a likely latent bug: runtime
+                // str_concat may need the memory/global injection folded into the
+                // earlier arm's `else { continue }` branch.
                 "call_builtin" => {
                     // The builtin name is in srcs[0] as Var.
                     if let Some(Operand::Var(name)) = instr.srcs.first() {
@@ -4119,6 +4916,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     }
     ModuleFeatures {
         global_names,
+        global_string_names,
         uses_io_out,
         uses_print_str,
         uses_putchar,
@@ -4134,6 +4932,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_memory,
         uses_f64_pow,
         uses_str_eq_runtime,
+        uses_str_cmp_runtime,
         string_literals,
         string_data,
         runtime_str_vars,
@@ -4155,8 +4954,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
 ///    and assign consecutive WASM function indices (0, 1, 2, …).
 ///
 /// 4. **Lower each function** — for each `IIRFunction`:
-///    a. Build the WASM function type (`FuncType`) from the parameter types
-///       and return type.
+///    a. Build the WASM function type (`FuncType`) from the parameter types and return type.
 ///    b. Lower the function body to a `FunctionBody`.
 ///    c. Record an export so the function is callable from the host.
 ///
@@ -4169,7 +4967,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
 /// `wasm_module_encoder::encode_module` to produce raw `.wasm` bytes.
 pub fn lower_iir_to_wasm(
     module: &IIRModule,
-    _config: &IIRWasmConfig,
+    config: &IIRWasmConfig,
 ) -> Result<WasmModule, IIRWasmError> {
     // ── Step 1: Validate ─────────────────────────────────────────────────────
     let errors = validate_for_wasm(module);
@@ -4203,6 +5001,7 @@ pub fn lower_iir_to_wasm(
     // import count.
     let features = collect_module_features(module);
     let global_names = features.global_names.clone();
+    let global_string_names = features.global_string_names;
     let uses_io_out  = features.uses_io_out;
     let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
@@ -4218,6 +5017,7 @@ pub fn lower_iir_to_wasm(
     let uses_memory  = features.uses_memory;
     let uses_f64_pow = features.uses_f64_pow;
     let uses_str_eq_runtime = features.uses_str_eq_runtime;
+    let uses_str_cmp_runtime = features.uses_str_cmp_runtime;
     let string_literals = features.string_literals;
     let string_data = features.string_data;
     let runtime_str_vars = features.runtime_str_vars;
@@ -4303,6 +5103,33 @@ pub fn lower_iir_to_wasm(
     // the `str_eq` lowering can `call` it; the body/type/entry are added below.
     let str_eq_fn_idx: Option<u32> = if uses_str_eq_runtime {
         Some(fn_idx_base + module.functions.len() as u32)
+    } else {
+        None
+    };
+
+    // The `$__str_cmp` helper (if needed) is appended right after the `$__str_eq`
+    // helper, so its index is the next slot again — shifted by one when `$__str_eq`
+    // is also present.  Computed here so the `str_cmp` lowering can `call` it.
+    let str_cmp_fn_idx: Option<u32> = if uses_str_cmp_runtime {
+        Some(fn_idx_base + module.functions.len() as u32 + u32::from(uses_str_eq_runtime))
+    } else {
+        None
+    };
+
+    // The `$__ensure_capacity` helper (Twig GC completion round, Part 3) is
+    // appended right after `$__str_eq`/`$__str_cmp` (in that order, whichever
+    // are present) — gated on the same `uses_memory` condition that already
+    // triggers linear memory + the `__array_bump` global, since every
+    // bump-allocation site (`alloc_array`/`str_concat`/`str_slice`/
+    // `input_str`) needs to call it before writing past the current bump
+    // position.
+    let ensure_capacity_fn_idx: Option<u32> = if uses_memory {
+        Some(
+            fn_idx_base
+                + module.functions.len() as u32
+                + u32::from(uses_str_eq_runtime)
+                + u32::from(uses_str_cmp_runtime),
+        )
     } else {
         None
     };
@@ -4555,8 +5382,8 @@ pub fn lower_iir_to_wasm(
         });
     }
 
-    // Build WASM Global entries — one mutable i64 per named global,
-    // initialised to 0.
+    // Build WASM Global entries. Numeric/array globals keep the historical
+    // mutable i64 representation; `str` globals are i32 linear-memory handles.
     //
     // Binary init_expr for `i64.const 0; end`: `[0x42, 0x00, 0x0B]`
     //   0x42 = i64.const opcode
@@ -4566,10 +5393,16 @@ pub fn lower_iir_to_wasm(
         .iter()
         .map(|name| Global {
             global_type: GlobalType {
-                value_type: ValueType::I64,
+                value_type: if global_string_names.contains(name) {
+                    ValueType::I32
+                } else {
+                    ValueType::I64
+                },
                 mutable: true,
             },
-            init_expr: if name == ARRAY_BUMP_GLOBAL {
+            init_expr: if global_string_names.contains(name) {
+                encode_i32_global_init(0)
+            } else if name == ARRAY_BUMP_GLOBAL {
                 encode_i64_global_init(string_data.len() as i64)
             } else {
                 encode_i64_global_init(0)
@@ -4613,7 +5446,7 @@ pub fn lower_iir_to_wasm(
             input_i64_fn_idx, input_str_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
-            pow_fn_idx, str_eq_fn_idx,
+            pow_fn_idx, str_eq_fn_idx, str_cmp_fn_idx, ensure_capacity_fn_idx,
         )?;
         code.push(body);
     }
@@ -4633,6 +5466,33 @@ pub fn lower_iir_to_wasm(
         code.push(build_str_eq_helper());
     }
 
+    // Append the `$__str_cmp` helper directly after `$__str_eq`, matching the
+    // `str_cmp_fn_idx` computed above (which already accounts for whether the
+    // `$__str_eq` helper occupies the preceding slot).
+    if str_cmp_fn_idx.is_some() {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        functions.push(type_idx);
+        code.push(build_str_cmp_helper());
+    }
+
+    // Append the `$__ensure_capacity` helper directly after `$__str_eq`/
+    // `$__str_cmp` (matching `ensure_capacity_fn_idx`, computed above with the
+    // same ordering). One `i64` param (`needed_end`), no results — see
+    // `build_ensure_capacity_helper`'s doc comment for what it does.
+    if ensure_capacity_fn_idx.is_some() {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::I64],
+            results: vec![],
+        });
+        functions.push(type_idx);
+        code.push(build_ensure_capacity_helper());
+    }
+
     // ── Step 5: Assemble WasmModule ──────────────────────────────────────────
 
     // If the module uses $LispyPair, register the struct type.
@@ -4642,19 +5502,38 @@ pub fn lower_iir_to_wasm(
         vec![]
     };
 
-    // Brainfuck tape: a single 1-page linear memory.  Each WASM memory page is
-    // 64 KiB = 65,536 bytes, comfortably larger than Brainfuck's default 30,000
-    // -cell tape.  The memory is module-defined (not imported); a future
+    // Linear memory starts at a single 64 KiB page — enough for the
+    // Brainfuck tape's default 30,000 cells, small literal-string data
+    // segments, etc. — and is module-defined (not imported); a future
     // extension can add an `import` variant if the host wants to provide
-    // the buffer.  Modules that don't use `load_mem`/`store_mem` get no
-    // memory section, preserving binary compatibility with the existing
-    // non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
+    // the buffer. Modules that don't use `load_mem`/`store_mem`/dynamic
+    // string-and-array allocation get no memory section, preserving binary
+    // compatibility with the existing non-memory callers.
+    //
+    // `max` was previously hardcoded to `Some(1)` — the exact bug this round
+    // (Twig GC completion, Part 3) fixes: any bump-allocation
+    // (`alloc_array`/`str_concat`/`str_slice`/`input_str`) that outgrew the
+    // single page had nowhere to grow into. `$__ensure_capacity` now emits
+    // real `memory.grow` calls at every one of those sites, so the declared
+    // `max` must allow real growth — `config.max_memory_pages`, clamped to
+    // the WASM spec's absolute ceiling. This backend's allocator is
+    // bump-only and never frees (reclamation is a tracked follow-up, not yet
+    // built), so the cap stays a config-provided bound rather than
+    // unconditionally jumping to the full 4 GiB spec ceiling — a caller
+    // running untrusted or unbounded-loop input keeps a real backstop
+    // instead of relying solely on `wasm-execution`'s own OOM handling.
+    // `clamp` (not just `.min`): a misconfigured `max_memory_pages: 0` would
+    // otherwise declare `Limits { min: 1, max: Some(0) }` — spec-invalid
+    // (min > max) even though this crate's own encoder and `wasm-execution`
+    // both degrade safely (memory simply never grows). Flooring at 1 keeps
+    // every declared module spec-valid regardless of caller misconfiguration.
+    let max_memory_pages = config.max_memory_pages.clamp(1, MAX_WASM_MEMORY_PAGES);
     let memories: Vec<wasm_types::MemoryType> = if uses_memory
         || uses_print_str
         || !string_data.is_empty()
     {
         vec![wasm_types::MemoryType {
-            limits: wasm_types::Limits { min: 1, max: Some(1) },
+            limits: wasm_types::Limits { min: 1, max: Some(max_memory_pages) },
         }]
     } else {
         vec![]
@@ -4755,6 +5634,8 @@ mod tests {
         assert!(wm.code[0].code.contains(&0x41));
     }
 
+    // 3.14 is arbitrary float test input; not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn lower_f64_const_accepted() {
         // Float constants are valid in the WASM backend (unlike BEAM).
@@ -4886,5 +5767,42 @@ mod tests {
         let code = &wm.code[0].code;
         assert!(code.contains(&0x39), "f64.store for array<f64> element");
         assert!(code.contains(&0x2B), "f64.load for array<f64> element");
+    }
+
+    #[test]
+    fn str_array_uses_i32_element_store() {
+        // E4d-BA-arr: an `array<str>` element is a 4-byte i32 handle, so the
+        // element `array_set` emits `i32.store` (0x36) — not the i64.store an
+        // `array<i64>` element uses.  Lowering an `array<str>` at all is the
+        // regression guard: before E4d-BA-arr, `wasm_array_elem`/the validator
+        // rejected a `str` element outright.
+        let m = single_fn("main", vec![], "void", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()),
+                vec![Operand::Var("n".into())], "array<str>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("str_const", Some("s".into()),
+                vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()),
+                     Operand::Var("s".into())], "str"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        let code = &wm.code[0].code;
+        assert!(code.contains(&0x36), "i32.store for the array<str> element handle");
+    }
+
+    #[test]
+    fn str_array_elem_is_i32_4_bytes() {
+        assert_eq!(wasm_array_elem("str", "main").unwrap(), (ValueType::I32, 4));
+    }
+
+    #[test]
+    fn boolean_array_elem_is_i32_4_bytes() {
+        assert_eq!(wasm_array_elem("bool", "main").unwrap(), (ValueType::I32, 4));
     }
 }

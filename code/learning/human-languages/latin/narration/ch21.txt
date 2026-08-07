@@ -1,0 +1,92 @@
+Latin, chapter 21: Nice to Meet You.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+volup est convēnisse — the phrase Latin uses instead of a fixed idiom.
+
+Warm-up.
+[pause 2 seconds]
+Every modern language in this course has one fixed phrase for "nice to meet you." Latin, honestly, does not — but it has something better: a real line from a Roman comedy that does the job.
+
+Why it's said this way: volup est convēnisse — a genuinely attested phrase for the job.
+Plautus's comedy Miles Gloriosus (Act 2, Scene 3) gives us a real line that does exactly this work: "Tē, [name], volup est convēnisse" — literally "you, [name], [it] is-a-pleasure to-have-met," or naturally, "it's a pleasure to have met you, [name]." Break it down:
+volup — an old, indeclinable word for "pleasant, pleasing" (functioning here the way iuvat, "it pleases," would).
+est — "[it] is".
+convēnisse — the perfect infinitive of convenīre, "to come together, to meet" — "to have met".
+Put together: "to have met [you] is a pleasure." This is a genuine, attested line — not a modern reconstruction.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "volup est convēnisse" — "it's a pleasure to have met you"]
+[pause 8 seconds for the answer]
+[your turn — say: the pieces — volup (pleasant) + est (is) + convēnisse (to have met)]
+[pause 8 seconds for the answer]
+[your turn — say: the grammar — convēnisse is a perfect infinitive]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does Classical Latin have one single fixed idiom for "nice to meet you"? (No — Romans expressed the sentiment according to context.) What real, attested phrase can do the job, and where does it come from? ("Volup est convēnisse", literally "to have met [you] is a pleasure" — Plautus, Miles Gloriosus.) What kind of infinitive is convēnisse? (Perfect — "to have met.")
+
+
+Lesson 2 of 3.
+Useful phrase, honest context — the attested phrase greets a chance encounter between people who already know each other, so it is useful but not an exact first-introduction formula.
+
+Warm-up.
+[pause 2 seconds]
+Volup est convēnisse is genuinely Roman. Now place it in its scene so you know exactly what that evidence does—and does not—prove.
+
+Why it's said this way: A chance meeting, not a first introduction.
+In Miles Gloriosus, Sceledrus and Palaestrio are fellow slaves who already know one another. The line welcomes a chance encounter. It does not document a fixed formula that Romans always used when introduced to a stranger for the first time.
+The phrase still expresses the right sentiment: "to have met you is a pleasure." Use it as an attested way to do that conversational work, while remembering that Classical Latin has no single fixed counterpart to Spanish encantado or German freut mich.
+
+Why it's said this way: A grammatical modern alternative.
+Modern spoken-Latin guides may teach mihi pergrātum est tē convenīre: "it is very pleasing to me to meet you." Its grammar is sound, but the formula does not occur in surviving classical texts. It is useful modern Latin, not direct evidence of Roman conversational convention.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "volup est convēnisse" — classically attested]
+[pause 8 seconds for the answer]
+[your turn — say: its scene — a chance encounter between people already acquainted]
+[pause 8 seconds for the answer]
+[your turn — say: "mihi pergrātum est tē convenīre" — grammatical, but modern]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is the Plautine line a first-time introduction? (No — it is a chance encounter between acquaintances.) Is it still genuinely attested? (Yes.) Is mihi pergrātum est tē convenīre bad grammar? (No.) Is it classically attested? (No — it is a modern spoken-Latin formula.)
+
+
+Lesson 3 of 3.
+Practice — two meetings, each with the right words.
+
+Warm-up.
+[pause 2 seconds]
+English uses one formula for both meetings. Latin does not, and the chapter told you why. So you get two scenes, and the payoff is knowing which words go in which.
+
+The exchange — scene one: strangers, so trade names.
+A: Salvē! Quid tibi nōmen est? Be well! What is the name to you?
+B: Mihi nōmen est Mārcus. Quid tibi nōmen est? The name to me is Marcus.
+A: Mihi nōmen est Iūlia.
+B: Valē! A: Valē!
+Mārcus and Iūlia are only slots — put your own name there. Notice what is missing: no verb for "have," no verb for "be called." The dative tibi/mihi carries the possession by itself, and nōmen stays the subject.
+Scene two is the chance re-encounter — the situation Plautus actually wrote the line for:
+A: Salvē! Quid agis?
+B: Valeō. Volup est convēnisse! I fare well. It is a pleasure to have met [you].
+A: Valē!
+
+Guided Practice.
+[pause 1 second]
+[your turn — run: scene one with your own name in the slot]
+[pause 8 seconds for the answer]
+[your turn — choose: a stranger becomes names; someone you already know becomes volup est convēnisse]
+[pause 8 seconds for the answer]
+[your turn — choose: greeting several people at once becomes salvēte]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which case does mihi sit in, and what work does it do? (Dative; it owns the name without any verb.) Cicero would write puerō nōmen est Mārcus; who prefers Mārcō? (Livy and Sallust.) Is mihi pergrātum est tē convenīre good Latin, and is it Roman? (Good grammar; not attested — modern.)
+[question — say your answer, then pause 9 seconds]
+You have been asked quid tibi nomen est? Type the first three Latin words of your reply.

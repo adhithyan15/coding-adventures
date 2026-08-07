@@ -306,12 +306,21 @@ def sir_puts(*args: Any) -> None:
 
 _builtins: dict[str, Callable[..., Any]] = {
     "+": arithmetic.add,
+    "<<": arithmetic.shift_left,
     "-": arithmetic.sub,
     "*": arithmetic.mul,
     "/": arithmetic.div,
     "=": values.eq,
+    # `==` is a synonym for `=`; `!=`/`<=`/`>=` complete the comparison family
+    # the Ruby frontend lowers a comparison chain to.  Present here (not only in
+    # the emitter's direct-call map) so a first-class `:==` symbol reference
+    # dispatches too, and so the "known builtins" error message lists them.
+    "==": values.eq,
+    "!=": values.ne,
     "<": arithmetic.lt,
     ">": arithmetic.gt,
+    "<=": arithmetic.le,
+    ">=": arithmetic.ge,
     "cons": pairs.cons,
     "car": pairs.car,
     "cdr": pairs.cdr,

@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Made parallel filesystem-backend tests allocate distinct temporary roots even
+  when the platform clock returns the same timestamp.
+
 ### Added
 
+- Atomic create-if-absent writes under the backend write lock, verified through
+  the shared `storage-core` conformance suite.
 - `FsStorageBackendSummary`, `fs_storage_backend_summary()`, and
   `FsStorageBackend::surface_summary()` for payload-free inspection of
   STR-FILE record format, crash-safety, ciphertext opacity, lease, and

@@ -1,0 +1,24 @@
+% ============================================================================
+% simple-machines.query.adj — a worked recall over the physics simple-machines library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is an everyday
+% example of a lever?": it states no physics fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `simple_machine_example` rows and returns the example + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% example `seesaw`, recall the machine it is an instance of — the lever). A gear
+% is not one of the six simple machines, so a recall on it abstains honestly —
+% the engine never invents an example.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli simple-machines.query.adj
+% ============================================================================
+
+import "simple-machines.adj"
+
+? simple_machine_example(lever, $Ex)          % expect seesaw
+? simple_machine_example(inclined_plane, $Ex) % expect ramp
+? simple_machine_example(wheel_and_axle, $Ex) % expect bicycle
+? simple_machine_example(pulley, $Ex)         % expect elevator
+? simple_machine_example($M, seesaw)          % expect lever — reverse recall
+? simple_machine_example(gear, $Ex)           % expect abstain — a gear is not one of the six

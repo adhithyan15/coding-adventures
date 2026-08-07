@@ -1,0 +1,11 @@
+name: coding_adventures_bitset
+version: 0.1.0
+description: A compact, growable bitset backed by pure-Dart 64-bit BigInt words.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0

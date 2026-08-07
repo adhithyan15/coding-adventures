@@ -15,6 +15,12 @@ wave  (this package)
 
 The `wave` package is a consumer of `trig`, demonstrating how low-level math primitives compose into higher-level physics models.
 
+The complete PHY01 contract rejects non-finite parameters,
+angular-frequency overflow, and non-finite time. Methods revalidate the public
+fields, preserve exact zero amplitude, reduce time and phase before local trig,
+and keep all accepted binary64 results finite and amplitude-bounded, including
+positive subnormal frequencies with infinite represented periods.
+
 ## Usage
 
 ```rust

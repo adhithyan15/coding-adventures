@@ -1,0 +1,103 @@
+% ============================================================================
+% filtration-fraction.adj — the definition of the renal filtration fraction
+% (FF = glomerular filtration rate ÷ renal plasma flow) in the ADJ standard library.
+% ============================================================================
+% The filtration-fraction entry of the *clinical* track, a renal-physiology sibling of
+% `cockcroft_gault.adj` (which estimates the glomerular filtration rate this library consumes).
+% Where the hemodynamics libraries ground pressure differences and the cardiac-output library
+% grounds a product, this grounds a renal RATIO: THE FILTRATION FRACTION IS THE GLOMERULAR
+% FILTRATION RATE DIVIDED BY THE RENAL PLASMA FLOW — the portion of the plasma entering the
+% kidney (the renal plasma flow) that is filtered across the glomerulus into Bowman's space
+% (the glomerular filtration rate), normally about one fifth (0.2, i.e. 20%). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the glomerular filtration rate a filtration fraction implies for a given
+% renal plasma flow, and the renal plasma flow the other two imply). As with every compute
+% library, a consumer states NO arithmetic: it `import`s this file, binds the measured
+% quantities from its own byte-provenance decomposition, and asks the engine to APPLY the
+% cited definition on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY, carrying the definition's citation.
+%
+%     import "filtration-fraction.adj"
+%     observe glomerular_filtration_rate(120)   % "…GFR 120 mL/min…"  (span cited by the model)
+%     observe renal_plasma_flow(600)            % "…RPF 600 mL/min…"  (span cited by the model)
+%     ? filtration_fraction(glomerular_filtration_rate, renal_plasma_flow)
+%                                                 % engine → 0.2, carrying FF = GFR ÷ RPF
+%
+% All three formulas are EXACT over their parameters (a quotient and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert cleanly
+% around the worked case GFR = 120 mL/min, RPF = 600 mL/min (FF = 120 ÷ 600 = 0.2, a normal
+% filtration fraction): the `filtration_fraction` a consumer computes from the two flows is
+% exactly the `filtration_fraction` the `glomerular_filtration_rate` formula multiplies the
+% renal plasma flow by, to recover the 120 mL/min glomerular filtration rate, and exactly the
+% `filtration_fraction` the `renal_plasma_flow` formula divides the glomerular filtration rate
+% by to recover the 600 mL/min renal plasma flow.
+%
+%   filtration_fraction(glomerular_filtration_rate, renal_plasma_flow)
+%       = glomerular_filtration_rate / renal_plasma_flow   % FF = GFR ÷ RPF   (definition)
+%   glomerular_filtration_rate(filtration_fraction, renal_plasma_flow)
+%       = filtration_fraction * renal_plasma_flow          % GFR = FF × RPF   (same def, solved for GFR)
+%   renal_plasma_flow(glomerular_filtration_rate, filtration_fraction)
+%       = glomerular_filtration_rate / filtration_fraction % RPF = GFR ÷ FF   (same def, solved for RPF)
+%
+% NOTE ON UNITS: the two flows must be in the SAME unit (both millilitres per minute, as in
+% the worked case), and the filtration fraction comes out DIMENSIONLESS (a pure ratio, here
+% 0.2 = 20%); this library computes the exact value over whatever consistent flow unit it is
+% given.
+%
+% All three formulas are defended by the SAME definitional sentence — "This is the portion of
+% plasma entering the kidney (RPF) that ends up as filtrate (GFR). FF = GFR / RPF and is
+% approximately 20% for a healthy individual." — because that one definition (the filtration
+% fraction IS the glomerular filtration rate over the renal plasma flow) sanctions the relation
+% read every way (the FF from the two flows, the GFR from FF and RPF, or the RPF from GFR and
+% FF). The quote is transcribed verbatim from the StatPearls "Physiology, Glomerular Filtration
+% Rate" article on the NCBI Bookshelf, so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the definitional sentence is a verbatim span of the cited
+% page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable renal quantity the definition ranges over, and
+% each result is a derived quantity. `filtration_fraction`, `glomerular_filtration_rate` and
+% `renal_plasma_flow` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term; the trailing comment records
+% the intended unit.
+% ----------------------------------------------------------------------------
+dictionary filtration_fraction_vocab {
+    define glomerular_filtration_rate : finding  surface "glomerular filtration rate", "GFR"   % millilitres per minute (mL/min)
+    define renal_plasma_flow          : finding  surface "renal plasma flow", "RPF"            % millilitres per minute (mL/min)
+    define filtration_fraction        : finding  surface "filtration fraction", "FF"           % dimensionless ratio (fraction)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the definitional sentence from
+% StatPearls on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% quotient/product of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook filtration_fraction_laws {
+    use filtration_fraction_vocab
+
+    % Filtration fraction — the glomerular filtration rate over the renal plasma flow, i.e.
+    % FF = GFR ÷ RPF.
+    formula filtration_fraction(glomerular_filtration_rate, renal_plasma_flow) = glomerular_filtration_rate / renal_plasma_flow
+        source "This is the portion of plasma entering the kidney (RPF) that ends up as filtrate (GFR). FF = GFR / RPF and is approximately 20% for a healthy individual."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500032/"
+        trust authoritative
+
+    % Glomerular filtration rate — the same definition solved for the glomerular filtration
+    % rate a filtration fraction implies for a renal plasma flow (GFR = FF × RPF). Defended by
+    % the SAME definitional sentence, read the other way.
+    formula glomerular_filtration_rate(filtration_fraction, renal_plasma_flow) = filtration_fraction * renal_plasma_flow
+        source "This is the portion of plasma entering the kidney (RPF) that ends up as filtrate (GFR). FF = GFR / RPF and is approximately 20% for a healthy individual."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500032/"
+        trust authoritative
+
+    % Renal plasma flow — the same definition solved for the renal plasma flow the other two
+    % imply (RPF = GFR ÷ FF). Again the SAME definitional sentence, read the third way.
+    formula renal_plasma_flow(glomerular_filtration_rate, filtration_fraction) = glomerular_filtration_rate / filtration_fraction
+        source "This is the portion of plasma entering the kidney (RPF) that ends up as filtrate (GFR). FF = GFR / RPF and is approximately 20% for a healthy individual."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500032/"
+        trust authoritative
+}

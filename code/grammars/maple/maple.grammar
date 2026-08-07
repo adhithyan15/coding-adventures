@@ -1,0 +1,435 @@
+# @version 1
+
+# =============================================================================
+# maple.grammar — Parser grammar for Maple (a subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from maple-lexer (MP-2). See
+# code/specs/MA09-maple-language.md §3 for the full surface-grammar table this
+# grammar implements, and §1/§2 for why Maple — despite looking, on the
+# surface, like a close cousin of REDUCE (the same `:=` spelling, the same
+# `and`/`or`/`not` keywords) — genuinely is not "REDUCE again": three
+# aggregate literal types instead of one (this subset covers two, list `[...]`
+# and set `{...}`), and a `f(x) := expr` spelling that means something
+# narrower (a remember-table patch, MA09 §1) than REDUCE's/Derive's own
+# general-definition idiom of the identical shape.
+#
+# Token names (UPPERCASE) come from the Maple lexer
+# (code/grammars/maple/maple.tokens):
+#   NUMBER NAME                  literals and symbols
+#   ASSIGN (:=)                   Maple's one assignment/arrow-definition
+#                                  marker (Programming Guide §5.5)
+#   ARROW (->)                    the functional/arrow operator (Help page
+#                                  `operators/functional`) — this subset's
+#                                  general-purpose function-definition
+#                                  spelling; REDUCE's/Derive's `.grammar`
+#                                  files have no analogous token at all
+#   EQ (=)  NEQ (<>)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)
+#                                  relational (Programming Guide §3.10) — `=`
+#                                  is NEVER assignment, `:=` alone owns that
+#                                  role (same split every sibling CAS-family
+#                                  grammar in this repo already draws)
+#   PLUS MINUS TIMES SLASH CARET  arithmetic (Programming Guide §3.9); `^`
+#                                  ONLY — no `**` synonym exists in real Maple
+#                                  or in maple.tokens (MA09 §3)
+#   LPAREN RPAREN                 grouping AND function-call application AND
+#                                  the arrow-operator's own parenthesised
+#                                  parameter list
+#   LBRACKET RBRACKET             list literal `[a, b, c]` (ordered, MA09 §3)
+#   LBRACE RBRACE                 set literal `{a, b, c}` (unordered, MA09 §3)
+#   COMMA                         argument / list / set element separator
+#   SEMI COLON                    statement terminators — `;` displays the
+#                                  result, `:` suppresses it (Programming
+#                                  Guide §5.3); which one was used is an MP-4
+#                                  concern, invisible to this grammar, exactly
+#                                  as reduce.grammar treats its own SEMI/DOLLAR
+#                                  pair as interchangeable terminators
+#   "and"/"or"/"not"/"if"/"then"/"elif"/"else"/"end"/"fi"/"true"/"false"
+#                                  lowercase KEYWORD tokens (maple.tokens' own
+#                                  `keywords:` block — a shared KEYWORD token
+#                                  TYPE, disambiguated by VALUE, not per-word
+#                                  token types), matched here by literal
+#                                  spelling, the identical convention
+#                                  reduce.grammar already uses for its own
+#                                  `and`/`or`/`not`/`neq`/`if`/`then`/`else`
+#                                  word-operators (`GrammarElement::Literal`
+#                                  matches by the token's `.value`, regardless
+#                                  of its `.type_`, so this works unchanged).
+#
+# Precedence cascade (loosest binds first -> tightest binds last), MA09 §3's
+# own transcription of the real Maple Help page `operators/precedence` table,
+# pruned to the operators this grammar supports (MA09 §3's own note lists
+# every dropped tier in relative order: `assuming`, the general comma
+# sequence operator, `implies`, `xor`, `$` sequence-repetition, `..` range,
+# `mod`, `.`/non-commutative-multiplication and `intersect`/`union`/`minus`,
+# `!` factorial, `++`/`--`, custom `&`-operators, `::` type declaration, `||`
+# concatenation, `:-` module-member selection — none of which this subset's
+# surface uses, so none of them appear anywhere below):
+# ---------------------------------------------------------------
+#   assignment      :=                 (a STATEMENT, not an expression — see
+#                                        "Design decision: statements vs.
+#                                        expressions" below)
+#   arrow           ->                 (used ONLY as a Define right-hand side
+#                                        — see "Design decision: where the
+#                                        arrow binds" below — never a general
+#                                        expression operator)
+#   logical_or      or
+#   logical_and     and
+#   logical_not     not                (prefix)
+#   comparison      = <> < > <= >=     (flat, non-chaining — see "Design
+#                                        decision: the comparison tier" below)
+#   additive        + -
+#   multiplicative  * /                (explicit `*` REQUIRED — MA09 §3/§4;
+#                                        see "Design decision: no
+#                                        juxtaposition" below)
+#   unary           -                  (prefix; no unary `+`, matching MA09
+#                                        §3's own asymmetric listing)
+#   power           ^                  (right-associative; `^` ONLY, no `**`
+#                                        — MA09 §3, matching maple.tokens'
+#                                        own lack of a POW token)
+#   postfix         f(...)             (function/call application — a single
+#                                        call suffix, see "Design decision:
+#                                        one call suffix, not a chain" below)
+#   atom            literals, symbols, true/false, lists `[...]`,
+#                   sets `{...}`, `( ... )`
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Design decision: statements vs. expressions — `if` and `:=` never nest
+# inside an ordinary expression
+# -----------------------------------------------------------------------------
+# reduce.grammar's own `expr = if_expr | group_expr | assignment` puts REDUCE's
+# `if`/`<<...>>` ABOVE assignment specifically because MA08 §3 makes an
+# explicit, citable claim: `if` "returns whichever branch ran" and `<<...>>`
+# "evaluates to its last statement's value" — both are genuinely
+# value-producing REDUCE expressions, so REDUCE's grammar lets them appear
+# anywhere an `expr` is expected (an assignment's right-hand side, a call's
+# argument, nested inside each other).
+#
+# MA09 makes NO equivalent claim for Maple's `if` — and real Maple confirms
+# the opposite: Maple's own idiom for a conditional VALUE is the `piecewise`
+# library function (`piecewise(x>0, x, -x)`), an ORDINARY function call this
+# grammar's `postfix` production already parses for free, needing no
+# dedicated grammar support at all. You cannot write `x := if a then 1 else 2
+# end if` in real Maple the way you can write `x := if a then 1 else -1` in
+# REDUCE. This is corroborated structurally by MA09 §6's own citation list,
+# which places `if`/`:=` in the Programming Guide's Chapter 5 "Maple
+# Statements" (§5.5 "Assignments", §5.6 "Flow Control") — a chapter distinct
+# from Chapter 3 "Maple Expressions" (§3.9/§3.10/§3.11, which this grammar's
+# `expr` chain below implements) — exactly the split this grammar encodes as
+# two separate nonterminals that never call back into each other:
+#
+#   statement = if_expr | assignment          (Chapter 5 — "Maple Statements")
+#   expr      = logical_or -> ... -> atom      (Chapter 3 — "Maple Expressions")
+#
+# Neither `if_expr` nor `assignment` is reachable from anywhere inside `expr`
+# (contrast reduce.grammar, where `expr` — not a narrower `logical_or` — sits
+# at the very top specifically so `if_expr`/`assignment` ARE reachable from
+# every position `expr` appears). Consequences, both deliberate:
+#   - `x := if a then 1 else 2 end if;` is a SYNTAX ERROR here (contrast
+#     REDUCE's `x := if a>0 then 1 else -1;`, which is valid there).
+#   - `a := b := c;` is a SYNTAX ERROR here too (contrast REDUCE's manual
+#     §2.7 "a:=b:=c evaluates as a:=(b:=c)", explicitly cited by MA08 §3 —
+#     MA09 has no equivalent citation for chained Maple assignment, and every
+#     worked example in MA09 §3 is a single, non-chained `x := e`).
+# This is a disclosed, judgment-call divergence from reduce.grammar's
+# identical-looking `assignment` shape, not an oversight — flagged in
+# maple-parser's own CHANGELOG/README for a future maple-runtime (MP-4) to
+# rely on.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Design decision: where the arrow (`->`) binds
+# -----------------------------------------------------------------------------
+# MA09 §3 is explicit that `->` is "used only as a Define right-hand side in
+# this subset" — never a general expression operator. Two designs were
+# considered (see the MP-3 task brief): (a) a dedicated `arrow_def` production
+# tried as `assignment`'s first alternative, or (b) treat ARROW as an ordinary
+# low-precedence expression operator and restrict its placement at the
+# runtime/lowering layer instead.
+#
+# This grammar picks (a). `ARROW` appears in exactly ONE place in this entire
+# file — `arrow_def`'s own production below — which is reachable from exactly
+# one position: `assignment`'s first alternative, tried immediately after
+# `NAME ASSIGN`. No other rule anywhere in this grammar references `ARROW`,
+# so `->` cannot appear as a bare statement, nested inside arithmetic, as a
+# function argument, or anywhere else MA09 §3 doesn't sanction — the GRAMMAR
+# is the enforcement point, not a runtime check, matching this repo's stated
+# preference (this crate's own MP-3 brief: "err toward the grammar being the
+# enforcement point if that's cleanly expressible... the more common
+# convention in this repo's sibling grammars").
+#
+# No lookahead predicate is needed to make this deterministic: `NAME ASSIGN
+# ( arrow_def | expr )` tries `arrow_def` first (ordered choice); if the
+# name-or-parenthesised-name-list isn't followed by an `ARROW`, `arrow_def`'s
+# own `Sequence` fails at that exact point and the packrat engine backtracks
+# cleanly (restoring position) to try the `expr` alternative instead —
+# ordinary PEG ordered-choice, memoized per `(rule, pos)`, no ambiguity and no
+# combinatorial blowup. Concretely: `f := x;` (assigning a variable's value,
+# NOT a definition) tries `arrow_def`, matches the bare-NAME parameter form
+# `x`, then fails to find `ARROW` (sees `;` instead), backtracks, and
+# succeeds via the plain `expr` alternative instead.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Design decision: assignment's left-hand side is a bare NAME, not a general
+# call-shaped expression — deliberately NARROWER than reduce.grammar's own
+# `assignment = logical_or [ ASSIGN expr ]`
+# -----------------------------------------------------------------------------
+# reduce.grammar's `assignment` left-hand side is a full `logical_or` (which
+# bottoms out, through `postfix`, at a call shape `h(l, m)`) BECAUSE REDUCE's
+# `h(l, m) := e` genuinely IS its general procedure-definition idiom (MA08
+# §3, citing the manual's own `h(l,m) := x-2*y` example, "where h is an
+# operator"). Maple's identical-looking `f(x) := e` spelling means something
+# NARROWER and DIFFERENT: a remember-table specific-value patch onto an
+# ALREADY-EXISTING procedure/operator (MA09 §1, the `remember` Help page),
+# and MA09 §4 is explicit that this spelling is "deliberately EXCLUDED (not
+# merely deferred)... precisely because its surface spelling collides with
+# REDUCE's/Derive's own general-definition idiom... so no Maple program in
+# this subset can accidentally mean the narrower remember-table thing."
+#
+# Mirroring reduce.grammar's LHS shape here would let `f(x) := e` parse
+# STRUCTURALLY (as an `assignment` whose LHS happens to be a parsed call) —
+# pushing onto a future maple-runtime (MP-4) an interpretation question MA09
+# §4 already settled at the SPEC level: this spelling should not be
+# expressible at all in this subset. So this grammar's `assignment` left-hand
+# side is a bare `NAME` token, full stop:
+#
+#   assignment = NAME ASSIGN ( arrow_def | expr ) | expr ;
+#
+# `f(x) := e` therefore FAILS TO PARSE: after `NAME "f"`, the next token is
+# `LPAREN`, not `ASSIGN`, so `assignment`'s first alternative fails outright
+# (no backtracking needed — the very next token rules it out); `f(x)` alone
+# then parses fine as a plain `expr`-shaped statement via the second
+# alternative (an ordinary call), but the leftover `:= e` has nowhere left to
+# attach — `statement_line`'s own terminator check (`SEMI | COLON`) sees
+# `ASSIGN` instead and the whole statement fails cleanly. Confirmed by this
+# crate's own `remember_table_spelling_is_rejected` regression test.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Design decision: the comparison tier is flat and non-chaining
+# -----------------------------------------------------------------------------
+# MA09 §3 lists `=`/`<>`/`<`/`>`/`<=`/`>=` as one relative-precedence tier but
+# — like the real Maple Help page `operators/precedence` table it transcribes
+# — does not say whether chained comparisons (`a < b < c`) are themselves
+# meaningful or how each operator nests relative to its neighbours within the
+# tier. reduce.grammar's own `comparison` rule already resolves the identical
+# gap for REDUCE with one flat, non-chaining production (MA08 §3: "a
+# deliberate simplification for a first cut, not a verified claim about real
+# Reduce's exact grammar"); this grammar reuses that exact precedent rather
+# than re-deriving a fresh simplification, since MA09's own comparison row is
+# structurally the same kind of open question REDUCE's manual already left.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Design decision: no juxtaposition production exists anywhere in this file
+# -----------------------------------------------------------------------------
+# MA09 §3/§4 confirms explicit `*` is REQUIRED in real Maple — confirmed
+# genuinely absent, not a scope-narrowing choice here (the `arithop` Help
+# page's own worked examples always show `3*x*y`, never `3xy`, and Maple's
+# own "invalid product or quotient" error exists precisely because `3xy` is a
+# parse error there too). `multiplicative` below has exactly one production,
+# `unary { ( TIMES | SLASH ) unary }`, with no alternative anywhere that
+# admits two atoms placed back-to-back with no operator between them — so
+# `a b` (two bare names with nothing between them) is a syntax error by
+# construction: the first `atom` consumes `a`, then every tier's own
+# continuation (multiplicative's `{ (TIMES|SLASH) ... }`, additive's `{
+# (PLUS|MINUS) ... }`, comparison's `[ (EQ|...) ... ]`, logical_and's `{ "and"
+# ... }`, logical_or's `{ "or" ... }`) fails to match against `b` (a bare
+# NAME, none of those tokens), so parsing of that one statement stops after
+# `a`, leaving `b` unconsumed — which then fails the statement terminator
+# check. Confirmed by this crate's own
+# `bare_juxtaposed_names_with_no_operator_is_rejected` regression test,
+# mirroring reduce.grammar's identically-named, identically-motivated test.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Design decision: one call suffix, not a repeated chain
+# -----------------------------------------------------------------------------
+# reduce.grammar's `postfix = atom { LPAREN [ arglist ] RPAREN } ;` uses
+# REPEATED call suffixes specifically because REDUCE's own `a(5)`/`b(i, q)`
+# array-name-with-subscript reads share the identical call-shaped production
+# (MA08 §3) and REDUCE's manual mentions array names as a building block
+# generally enough that a repeated suffix was the safer, more literal
+# transcription. MA09 §3 documents no analogous array-subscript-read
+# convention for Maple at all — every worked example is a single `f(a, b)`
+# call — so this grammar uses a single OPTIONAL call suffix instead:
+#
+#   postfix = atom [ LPAREN [ arglist ] RPAREN ] ;
+#
+# a deliberately narrower, more spec-literal shape than the sibling's,
+# erring toward not inventing surface Maple never documents "for
+# completeness."
+# -----------------------------------------------------------------------------
+
+# A program is zero or more `;`/`:`-terminated statements, optionally
+# followed by ONE final statement with no terminator at all (so a source file
+# need not end with a trailing `;`/`:`).
+#
+# Why the optional tail sits OUTSIDE the repetition rather than folded into
+# `statement_line` as a third alternative: identical reasoning to
+# reduce.grammar's own `program` comment (which this grammar reuses verbatim
+# rather than re-deriving) — a bare, terminator-less `statement` alternative
+# INSIDE a repeated rule is silently re-triable on every iteration, not just
+# the final one, so `{ statement_line }` would greedily accept `a AND b;` as
+# THREE separate bare-statement iterations (`a`, then `AND`, then `b;`) —
+# `AND` uppercase lexes as an ordinary NAME (maple.tokens' keywords are
+# lowercase-only, MA09 §3), and no juxtaposition production exists anywhere
+# in this file (see "no juxtaposition" above), so three bare names in a row
+# with no operator between them must be a syntax error, not three separate
+# statements that happen to consume all the input. Moving the
+# terminator-less case to a single `[ statement ]` *outside* the repetition
+# means it can only ever match once, and only once `{ statement_line }` has
+# already failed to find a terminator for whatever comes next. Confirmed by
+# this crate's own `bare_juxtaposed_names_with_no_operator_is_rejected`
+# regression test.
+program = { statement_line } [ statement ] ;
+
+# Maple has no significant newline (maple.tokens' own header) — statements
+# end with `;` or `:` (Programming Guide §5.3); a lone terminator with no
+# statement before it is not part of this grammar's `statement_line`,
+# mirroring reduce.grammar's identical note.
+statement_line = statement ( SEMI | COLON ) ;
+
+# Chapter 5 "Maple Statements" — see "statements vs. expressions" above for
+# why this is a nonterminal wholly separate from `expr`.
+statement = if_expr | assignment ;
+
+# if b then s1 elif b2 then s2 else s3 end if | fi (MA09 §3; Programming
+# Guide §5.6 "Flow Control"; the `if` Help page confirms `fi` — "if" reversed
+# — is short for `end if`).
+#
+# maple-lexer emits `end` and `if` as two INDEPENDENT KEYWORD tokens (it does
+# not special-case the two-word sequence into one token — see that crate's
+# own lib.rs doc comment, "`end`/`fi` — two distinct tokens, not one"), so
+# this production is where the `end if` / `fi` composition actually happens:
+# an ordered choice between the two-token sequence `"end" "if"` and the
+# single token `"fi"`. This is fully deterministic with no ambiguity or
+# backtracking risk: `end`, `if`, and `fi` are three distinct KEYWORD VALUES,
+# so at the position where this alternative is tried, at most one of the two
+# choices can possibly match the current token — seeing `"end"` commits to
+# needing `"if"` immediately next (and it genuinely must follow — "end" not
+# followed by "if" is invalid Maple in this subset, since `proc`/`do` closers
+# are out of scope), seeing `"fi"` commits to the other choice, and seeing
+# neither is a syntax error. This mirrors reduce.grammar's own
+# "commit-early-on-leading-keyword" ordered-choice discipline.
+#
+# Genuinely NEW relative to every sibling CAS-family `if` in this repo:
+# because Maple requires an explicit close (`end if` or `fi`) for every
+# `if_expr`, there is NO dangling-else ambiguity here at all — contrast
+# reduce.grammar's `if_expr`, whose own doc comment has to explain how
+# ordinary recursive-descent order-of-attempt resolves `if a then if b then c
+# else d` in favour of attaching `else` to the innermost `if`. Here, a nested
+# `if_expr` inside a `then`/`elif`/`else` branch must run all the way to ITS
+# OWN `end if`/`fi` before the OUTER `if_expr`'s own `elif`/`else`/close is
+# ever reached — there is structurally only one place an outer `else` could
+# possibly attach, by construction, not by a resolution convention.
+#
+# Each `elif` desugars to a nested `If` IR node at MP-4 (a runtime concern,
+# not this grammar's); the flat `{ "elif" ... }` EBNF repetition here
+# preserves the whole elif chain, in order, as sibling children — no
+# information is lost that MP-4 would need to fold it right-to-left.
+#
+# Branches are `statement` (not the narrower `expr`) so an `if` can branch to
+# an assignment or a nested conditional (`if a then x := 1 else x := 2 end
+# if`) — matching MA09 §3's own generic `s1`/`s2`/`s3` labelling (which reads
+# as statement-shaped, not narrowly expression-shaped) — while an `if_expr`
+# itself is still never reachable FROM `expr` (see "statements vs.
+# expressions" above; a branch containing an `if` is still a *statement*
+# nested inside a *statement*, not an expression use).
+if_expr = "if" expr "then" statement
+          { "elif" expr "then" statement }
+          [ "else" statement ]
+          ( "end" "if" | "fi" ) ;
+
+# `x := e` (Programming Guide §5.5); `f := (x, y) -> e` / `f := x -> e` (the
+# arrow/functional operator, Help page `operators/functional`; MA09 §3). See
+# "where the arrow binds" and "assignment's left-hand side" above for why
+# this shape is deliberately narrower than reduce.grammar's own `assignment`.
+assignment = NAME ASSIGN ( arrow_def | expr )
+           | expr ;
+
+arrow_def = arrow_params ARROW expr ;
+
+# `f := (x, y) -> e` / `f := x -> e` — MA09 §3's own two worked spellings:
+# a single bare parameter needs no parentheses, two-or-more do. Zero
+# parameters (`() -> e`, a nullary constant function) falls out of the
+# optional inner list for free — not one of MA09 §3's own worked examples,
+# but not excluded by §4 either, and a natural, low-risk consequence of this
+# exact shape rather than a deliberately added production.
+arrow_params = NAME
+             | LPAREN [ NAME { COMMA NAME } ] RPAREN ;
+
+# The arithmetic/logical/comparison chain — MA09 §3's own precedence table,
+# transcribed one tier per rule below, Chapter 3 "Maple Expressions". Named
+# `expr` (rather than folding this alias directly into `logical_or`) purely
+# for readability and to match reduce.grammar's own top-level name; see
+# "statements vs. expressions" above for why `expr` itself never reaches
+# back to `if_expr` or `assignment`.
+expr = logical_or ;
+
+logical_or  = logical_and { "or" logical_and } ;
+logical_and = logical_not { "and" logical_not } ;
+logical_not = "not" logical_not | comparison ;
+
+# See "Design decision: the comparison tier is flat and non-chaining" above.
+comparison = additive [ ( EQ | NEQ | LESS | GREATER | LE | GE ) additive ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+
+# See "Design decision: no juxtaposition production exists anywhere in this
+# file" above.
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus only — MA09 §3 lists no unary `+`, matching REDUCE's/Derive's
+# identical asymmetry. Binds looser than power, so `-x^2` is `Neg[Pow[x,2]]`,
+# never `Pow[Neg[x],2]`.
+unary = MINUS unary | power ;
+
+# Right-associative: `a^b^c` = `a^(b^c)` (the optional continuation's own
+# right-hand side is `unary`, which falls through to `power` again absent a
+# leading `-`, mirroring reduce.grammar's identical `power`/`unary` mutual
+# reference). `^` ONLY, no `**` synonym — MA09 §3 confirms real Maple
+# documents none (unlike REDUCE's `^`/`**` pair), and maple.tokens has no
+# `POW` token at all, so writing `**` here would reference a token that does
+# not exist in this grammar's own vocabulary.
+power = postfix [ CARET unary ] ;
+
+# See "Design decision: one call suffix, not a repeated chain" above.
+postfix = atom [ LPAREN [ arglist ] RPAREN ] ;
+
+arglist = expr { COMMA expr } ;
+
+atom = NUMBER
+     | NAME
+     | "true"
+     | "false"
+     | list_literal
+     | set_literal
+     | group ;
+
+# `[a, b, c]` — list (ordered, duplicates kept — Programming Guide §4.3;
+# MA09 §3). Reuses the SAME `arglist` production a function call's own
+# argument list uses (mirroring reduce.grammar's identical list-literal
+# reuse), since both are just "comma-separated `expr`s." Empty `[]` falls out
+# of the optional inner `arglist` for free — not one of MA09 §3's worked
+# examples, but not excluded by §4 either.
+list_literal = LBRACKET [ arglist ] RBRACKET ;
+
+# `{a, b, c}` — set (unordered, duplicates removed at MP-4 — same §4.3, and
+# the `set` Help page's own worked example: `{x, y, y}` and `{y, x, y}` both
+# produce `{x, y}`; MA09 §3). This is the SAME bracket REDUCE uses for its
+# OWN list literal — same spelling, different meaning both times, the exact
+# family-resemblance trap MA09 §1 names by title. This grammar only assigns
+# the `LBRACE`/`RBRACE` tokens a STRUCTURE (a `set_literal` node, syntactically
+# distinct from `list_literal` purely by which bracket was used) — the
+# Set-vs-List *semantic* tag is what a future maple-runtime (MP-4) attaches
+# when it lowers this node to a `Set[...]` IRNode head (MA09 §5) rather than
+# `List[...]`; this grammar's job is only to keep the two shapes separate,
+# which it does simply by having two distinct rules. Empty `{}` falls out of
+# the optional inner `arglist` for free, same as the empty-list case above.
+set_literal = LBRACE [ arglist ] RBRACE ;
+
+group = LPAREN expr RPAREN ;

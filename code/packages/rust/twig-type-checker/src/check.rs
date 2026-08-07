@@ -1,3 +1,6 @@
+// The doc blocks use intentional ASCII alignment; allow the overindented-list
+// lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! Two-pass type-checking walker for Twig programs (TW05-B).
 //!
 //! ## Overview of the two passes
@@ -115,7 +118,7 @@ fn classify_define(def: &Define, env: &mut TypeEnv) {
                     lam.param_annotations
                         .get(i)
                         .and_then(|opt_ann| opt_ann.as_ref())
-                        .and_then(|ann| annotation_to_refined_type(ann))
+                        .and_then(annotation_to_refined_type)
                 })
                 .collect();
             env.register_fn_refinements(def.name.clone(), refinements);

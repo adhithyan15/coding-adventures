@@ -36,6 +36,7 @@
 
 pub mod assumptions;
 pub mod canonical;
+pub mod collect_terms;
 pub mod expand;
 pub mod exponentialize;
 pub mod heads;
@@ -47,6 +48,7 @@ pub mod simplifier;
 
 pub use assumptions::AssumptionContext;
 pub use canonical::canonical;
+pub use collect_terms::collect_terms;
 pub use expand::expand;
 pub use exponentialize::{demoivre, exponentialize};
 pub use logcontract::{logcontract, logexpand};

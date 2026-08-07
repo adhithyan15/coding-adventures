@@ -39,7 +39,7 @@ use coding_adventures_closure_pass_dce::DcePass;
 use coding_adventures_closure_pass_pipeline::{Pass, PassContext};
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, BlockStatement, BreakStatement, Declaration, EmptyStatement,
+    BlockStatement, BreakStatement, Declaration, EmptyStatement,
     Expression, ExpressionStatement, FunctionDeclaration, Identifier, IfStatement, NumericLiteral,
     Program, ProgramItem, ReturnStatement, SourceType, Statement, ThrowStatement, VarKind,
     VariableDeclaration, VariableDeclarator, WhileStatement,

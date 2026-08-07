@@ -1,0 +1,96 @@
+% ============================================================================
+% pf-ratio.adj — the definition of the PaO2/FiO2 (P/F) ratio
+% (P/F ratio = arterial oxygen partial pressure ÷ fraction of inspired oxygen) in the ADJ standard
+% library.
+% ============================================================================
+% The P/F-ratio entry of the *clinical* track — a critical-care oxygenation index, a ratio sibling of
+% the shipped cardiac-index.adj and ejection-fraction.adj. The P/F ratio grades the severity of
+% hypoxaemia and is the oxygenation criterion of the Berlin ARDS definition: THE P/F RATIO IS THE
+% ARTERIAL OXYGEN PARTIAL PRESSURE (PaO2) DIVIDED BY THE FRACTION OF INSPIRED OXYGEN (FiO2) — a normal
+% value is ~400–500, and ARDS is defined by a P/F ratio ≤ 300 (mild ≤ 300, moderate ≤ 200, severe
+% ≤ 100). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together with its two
+% exact rearrangements (the PaO2 a ratio implies at a given FiO2, and the FiO2 it implies at a given
+% PaO2). As with every compute library, a consumer states NO arithmetic: it `import`s this file, binds
+% the measured oxygen values from its own byte-provenance decomposition, and asks the engine to APPLY
+% the cited definition on the CPU. Zero math is performed by the model; the engine computes each value
+% EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "pf-ratio.adj"
+%     observe arterial_oxygen_partial_pressure(200)  % "…PaO2 200 mmHg…"     (span cited by the model)
+%     observe fraction_of_inspired_oxygen(0.5)        % "…FiO2 0.5 (50%)…"     (span cited by the model)
+%     ? pf_ratio(arterial_oxygen_partial_pressure, fraction_of_inspired_oxygen)
+%                                                      % engine → 400, carrying the P/F ratio
+%
+% All three formulas are EXACT over their parameters (a quotient or a product of the PaO2 and the
+% FiO2), so every value the engine returns is exact. They COMPOSE and invert cleanly around the worked
+% case PaO2 = 200 mmHg, FiO2 = 0.5 (P/F ratio = 200 ÷ 0.5 = 400 — a normal ratio): the `pf_ratio` a
+% consumer computes is exactly the value the `arterial_oxygen_partial_pressure` formula multiplies by
+% the FiO2 to recover 200, and exactly the value the `fraction_of_inspired_oxygen` formula divides the
+% PaO2 by to recover 0.5.
+%
+%   pf_ratio(arterial_oxygen_partial_pressure, fraction_of_inspired_oxygen)
+%       = arterial_oxygen_partial_pressure / fraction_of_inspired_oxygen   % P/F = PaO2 ÷ FiO2   (definition)
+%   arterial_oxygen_partial_pressure(pf_ratio, fraction_of_inspired_oxygen)
+%       = pf_ratio * fraction_of_inspired_oxygen                           % PaO2 = P/F × FiO2   (solved for PaO2)
+%   fraction_of_inspired_oxygen(arterial_oxygen_partial_pressure, pf_ratio)
+%       = arterial_oxygen_partial_pressure / pf_ratio                      % FiO2 = PaO2 ÷ P/F   (solved for FiO2)
+%
+% NOTE ON UNITS: the PaO2 is in millimetres of mercury (mmHg) and the FiO2 is the DECIMAL fraction of
+% inspired oxygen (0.21 for room air up to 1.0 for pure oxygen — NOT a percentage); the P/F ratio then
+% carries mmHg as its unit, and its diagnostic cut-offs (300/200/100) are quoted in mmHg. If a
+% consumer has FiO2 as a percentage it must be converted to the fraction first (that conversion is a
+% SEPARATE step); the engine computes the exact quotient over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "using the PaO2/FiO2 (P/F) ratio, where PaO2
+% represents the partial pressure of oxygen" — because that one definition (the P/F ratio IS the
+% PaO2-over-FiO2 quotient, the "/" being the division) sanctions the relation read every way (the
+% ratio from the two oxygen values, the PaO2 from the ratio and the FiO2, or the FiO2 from the PaO2
+% and the ratio). The quote is transcribed verbatim from the StatPearls "Fraction of Inspired Oxygen"
+% article on the NCBI Bookshelf, so each `formula` carries the provenance envelope every shipped
+% grounded clause carries; the linter rejects an unsourced one. (See feedback_nothing_human_authored —
+% the clause is a verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable oxygenation value the definition ranges over, and each
+% result is a derived quantity. `arterial_oxygen_partial_pressure`, `fraction_of_inspired_oxygen` and
+% `pf_ratio` each appear BOTH as a derived result and as an input (of the other formulas), so each is a
+% single dictionary term used in both roles. The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary pf_ratio_vocab {
+    define arterial_oxygen_partial_pressure : finding  surface "PaO2", "arterial oxygen partial pressure", "partial pressure of oxygen"  % millimetres of mercury (mmHg)
+    define fraction_of_inspired_oxygen      : finding  surface "FiO2", "fraction of inspired oxygen"                                     % decimal fraction (0.21–1.0)
+    define pf_ratio                         : finding  surface "P/F ratio", "PaO2/FiO2 ratio", "PF ratio"                                 % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the StatPearls
+% "Fraction of Inspired Oxygen" article on the NCBI Bookshelf (a quote is required on a shipped
+% formula). Each is an exact quotient or product of the PaO2 and the FiO2, so the engine returns each
+% value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook pf_ratio_laws {
+    use pf_ratio_vocab
+
+    % P/F ratio — the arterial oxygen partial pressure divided by the fraction of inspired oxygen.
+    formula pf_ratio(arterial_oxygen_partial_pressure, fraction_of_inspired_oxygen) = arterial_oxygen_partial_pressure / fraction_of_inspired_oxygen
+        source "using the PaO2/FiO2 (P/F) ratio, where PaO2 represents the partial pressure of oxygen"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560867/"
+        trust authoritative
+
+    % Arterial oxygen partial pressure — the same definition solved for the PaO2 a ratio implies at a
+    % given FiO2 (PaO2 = P/F × FiO2). Defended by the SAME clause.
+    formula arterial_oxygen_partial_pressure(pf_ratio, fraction_of_inspired_oxygen) = pf_ratio * fraction_of_inspired_oxygen
+        source "using the PaO2/FiO2 (P/F) ratio, where PaO2 represents the partial pressure of oxygen"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560867/"
+        trust authoritative
+
+    % Fraction of inspired oxygen — the same definition solved for the FiO2 (FiO2 = PaO2 ÷ P/F): the
+    % PaO2 divided by the ratio. The SAME clause, read the third way.
+    formula fraction_of_inspired_oxygen(arterial_oxygen_partial_pressure, pf_ratio) = arterial_oxygen_partial_pressure / pf_ratio
+        source "using the PaO2/FiO2 (P/F) ratio, where PaO2 represents the partial pressure of oxygen"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560867/"
+        trust authoritative
+}

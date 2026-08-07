@@ -1,1 +1,1 @@
-var a=[];var b=[];var c=[];var d=["a","b"];var e=Object.values({a:1});var f=Object.keys({1:"x"});var g=Object.keys([]);report(a,b,c,d,e,f,g);
+var a=[],b=[],c=[],d=["a","b"],e=Object.values({a:1}),f=Object.keys({1:"x"}),g=Object.keys([]);report(a,b,c,d,e,f,g);

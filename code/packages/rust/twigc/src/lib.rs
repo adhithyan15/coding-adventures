@@ -537,11 +537,9 @@ mod twigc_tests {
         let root = dir.join("main.tw");
         fs::write(&root, src).unwrap();
         let result = twigc_check(&root, &[]);
-        match result {
-            Err(TwigcError::Driver(ModuleDriverError::TypeErrors { .. })) => {
-                panic!("lenient mode must never produce TypeErrors from Phase 3.5");
-            }
-            _ => {} // Ok or any non-TypeErrors Err is acceptable
+        // Ok or any non-TypeErrors Err is acceptable; only TypeErrors is a failure.
+        if let Err(TwigcError::Driver(ModuleDriverError::TypeErrors { .. })) = result {
+            panic!("lenient mode must never produce TypeErrors from Phase 3.5");
         }
     }
 
@@ -607,7 +605,7 @@ mod twigc_tests {
             .stack_size(32 * 1024 * 1024)
             .spawn(move || {
                 let root = dir.join("compiler").join("main.tw");
-                twigc_run(&root, &[dir.clone()]).unwrap()
+                twigc_run(&root, std::slice::from_ref(&dir)).unwrap()
             })
             .expect("failed to spawn thread")
             .join()

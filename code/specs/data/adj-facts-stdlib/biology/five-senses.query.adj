@@ -1,0 +1,19 @@
+% ============================================================================
+% five-senses.query.adj — a worked recall over the five-senses library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what body part do you
+% see with?": it states no biology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `sense_organ` rows and returns the organ + the table's source/locator/trust.
+% A key that is not one of the five senses abstains honestly — the engine never
+% invents an organ.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli five-senses.query.adj
+% ============================================================================
+
+import "five-senses.adj"
+
+? sense_organ(sight, $Organ)       % expect eyes
+? sense_organ(taste, $Organ)       % expect tongue
+? sense_organ(balance, $Organ)     % expect abstain — balance is not one of the five senses

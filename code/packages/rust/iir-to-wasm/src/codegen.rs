@@ -218,6 +218,14 @@ pub const I64_GE_S: u8 = 0x59;
 /// i64 reinterpreted as unsigned is huge), exactly like LLVM's `icmp uge`.
 pub const I64_GE_U: u8 = 0x5A;
 
+/// `i64.gt_u` (0x56) — **unsigned** i64 >. Used by the runtime `str_slice`
+/// truncation guard: a computed i64 index is checked `index >u len` on its FULL
+/// i64 value *before* it is wrapped to i32 for the memory op, so a huge index
+/// (or a negative one, which is huge unsigned) traps instead of aliasing into
+/// range through the low 32 bits. (0x55 is `i64.gt_s`; the unsigned variant is
+/// always signed+1 in the WASM comparison-opcode block.)
+pub const I64_GT_U: u8 = 0x56;
+
 /// `i32.load` (0x28) — load an i32 from linear memory at `address + offset`,
 /// with an `align` hint. Used by the E4-dyn (E4d-3) runtime string block header:
 /// a branch-selected string carries an i32 **handle** = the offset of a
@@ -267,6 +275,22 @@ pub fn encode_f64_store(offset: u32) -> Vec<u8> {
     let mut b = vec![0x39u8, 0x00u8]; // f64.store, align = 0
     b.extend(encode_unsigned(offset as u64));
     b
+}
+
+/// `memory.size` (0x3F) — push the current size of linear memory, in 64 KiB
+/// pages, as an i32. The trailing `0x00` is the memory index (always 0 — this
+/// backend only ever declares one memory).
+pub fn encode_memory_size() -> Vec<u8> {
+    vec![0x3Fu8, 0x00u8]
+}
+
+/// `memory.grow` (0x40) — pop a page-count delta (i32), grow linear memory by
+/// that many pages, and push the *previous* size in pages (i32), or `-1`
+/// (`0xFFFFFFFF`) if the growth would exceed the memory's declared maximum or
+/// the WASM spec's absolute ceiling (65536 pages / 4 GiB). The trailing
+/// `0x00` is the memory index.
+pub fn encode_memory_grow() -> Vec<u8> {
+    vec![0x40u8, 0x00u8]
 }
 
 /// `i64.add` (0x7C) — i64 addition.
@@ -901,6 +925,12 @@ mod tests {
         assert_eq!(enc[4], 0x02);
         // default = 3
         assert_eq!(enc[5], 0x03);
+    }
+
+    #[test]
+    fn memory_size_and_grow_encode_opcode_plus_memidx() {
+        assert_eq!(encode_memory_size(), vec![0x3F, 0x00]);
+        assert_eq!(encode_memory_grow(), vec![0x40, 0x00]);
     }
 
     #[test]

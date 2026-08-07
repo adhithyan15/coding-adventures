@@ -13,10 +13,10 @@
 //! 5. **Heartbeat / unhealthy** — mark an executor unhealthy mid-test;
 //!    assert subsequent plans skip it.
 
-use compute_ir::{ExecutorId, PlacedOp, CPU_EXECUTOR};
+use compute_ir::{PlacedOp, CPU_EXECUTOR};
 use executor_protocol::BackendProfile;
 use matrix_ir::{DType, GraphBuilder, Op, Shape};
-use matrix_runtime::{plan, BackendProfile as _, Registry, Runtime, RuntimeError};
+use matrix_runtime::{plan, Registry, Runtime, RuntimeError};
 
 fn cpu_default() -> BackendProfile {
     BackendProfile {

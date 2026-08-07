@@ -60,6 +60,14 @@ func BCE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
 func CCE_Derivative(yTrue: Array<Float>, yPred: Array<Float>) -> Array<Float>
 ```
 
+The Dart package is named `coding_adventures_loss_functions` and uses the
+canonical cross-lane names `mse`, `mae`, `bce`, `cce`, `mseDerivative`,
+`maeDerivative`, `bceDerivative`, and `cceDerivative`. Descriptive
+`binaryCrossEntropy` and `categoricalCrossEntropy` aliases are also provided
+without replacing the canonical names. All inputs are `List<double>` and
+derivative results are newly allocated lists. The same validation, epsilon
+clamping, formulas, and reference vectors apply.
+
 ## Data Flow & Constraints
 
 1. Inputs must be exactly the same length. Mismatched lengths should throw/raise an Error.

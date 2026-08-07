@@ -74,11 +74,83 @@ type BuildResult struct {
 // We use os/exec with shell execution so that BUILD commands can use
 // shell features like pipes, redirects, and environment variables.
 // On Windows, we use "cmd /C"; on Unix, "sh -c".
-func runPackageBuild(pkg discovery.Package) BuildResult {
+func runPackageBuild(pkg discovery.Package, clippy bool) BuildResult {
 	start := time.Now()
+
+	return runCommands(pkg, clippyGatedCommands(pkg, clippy), start)
+}
+
+// clippyGatedCommands returns the command list to run for a package. For Rust
+// packages under the clippy gate it prepends a `cargo clippy --all-targets --
+// -D warnings` step, run from the crate directory so warnings are promoted to
+// errors *before* the BUILD commands execute. Non-Rust packages and the
+// un-gated path are returned unchanged.
+func clippyGatedCommands(pkg discovery.Package, clippy bool) []string {
+	if !clippy || pkg.Language != "rust" {
+		return pkg.BuildCommands
+	}
+	step, ok := clippyStepFor(pkg.BuildCommands)
+	if !ok {
+		return pkg.BuildCommands
+	}
+	return append([]string{step}, pkg.BuildCommands...)
+}
+
+// clippyStepFor derives the clippy command for a Rust package from its resolved
+// (platform-selected) BUILD commands, so that clippy runs *exactly where the
+// BUILD's own cargo invocation runs* — never on a platform where the crate is
+// deliberately skipped.
+//
+// Three shapes cover every Rust BUILD in the repo:
+//
+//   - Unconditional cargo (e.g. `cargo test -p bitset`): lint unconditionally.
+//   - Platform-guarded cargo (e.g. paint-metal's
+//     `if [ "$(uname)" = "Darwin" ]; then cargo test -p paint-metal ...; else echo SKIP; fi`):
+//     reuse the *same* condition, `if <cond>; then cargo clippy ...; fi`, so the
+//     crate is linted on its native platform and skipped elsewhere.
+//   - Pure skip (e.g. paint-vm-direct2d's `echo "SKIP: ... requires Windows"` on
+//     non-Windows): no cargo runs here, so no clippy step is emitted. On the
+//     crate's native platform its BUILD_windows resolves to unconditional cargo
+//     and the first shape applies.
+//
+// Returns (command, true) when a clippy step should run, or ("", false) when the
+// resolved BUILD does not compile the crate on this platform.
+func clippyStepFor(buildCommands []string) (string, bool) {
+	if len(buildCommands) == 0 {
+		return "", false
+	}
+	const clippy = "cargo clippy --all-targets -- -D warnings"
+	first := strings.TrimSpace(buildCommands[0])
+
+	// Platform-guarded: `if <cond>; then <body>; ...`. Reuse <cond> iff the
+	// guarded body actually runs cargo on the matching platform.
+	if strings.HasPrefix(first, "if ") {
+		if idx := strings.Index(first, "; then "); idx != -1 {
+			cond := first[len("if "):idx]
+			body := first[idx+len("; then "):]
+			if strings.Contains(body, "cargo ") {
+				return fmt.Sprintf("if %s; then %s; fi", cond, clippy), true
+			}
+		}
+		return "", false
+	}
+
+	// No cargo at all (e.g. a bare `echo SKIP`): nothing to lint here.
+	if !strings.Contains(first, "cargo ") {
+		return "", false
+	}
+
+	// Unconditional cargo build/test: lint unconditionally.
+	return clippy, true
+}
+
+// runCommands executes an explicit command list for a package sequentially,
+// stopping at the first failure. It is shared by the plain build path and the
+// clippy-gated path (which prepends a `cargo clippy` command).
+func runCommands(pkg discovery.Package, commands []string, start time.Time) BuildResult {
 	var allStdout, allStderr []string
 
-	for _, command := range pkg.BuildCommands {
+	for _, command := range commands {
 		cmd := shellCommand(command)
 		cmd.Dir = pkg.Path
 
@@ -164,6 +236,7 @@ func ExecuteBuilds(
 	maxJobs int,
 	affectedSet map[string]bool,
 	tracker *progress.Tracker,
+	clippy bool,
 ) map[string]BuildResult {
 	// Build a lookup from name to Package for quick access.
 	pkgByName := make(map[string]discovery.Package)
@@ -306,7 +379,7 @@ func ExecuteBuilds(
 				defer releaseResources()
 
 				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
-				result := runPackageBuild(p)
+				result := runPackageBuild(p, clippy)
 				tracker.Send(progress.Event{Type: progress.Finished, Name: p.Name, Status: result.Status})
 
 				resultsMu.Lock()

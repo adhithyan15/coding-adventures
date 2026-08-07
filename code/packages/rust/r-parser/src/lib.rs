@@ -34,14 +34,61 @@ use coding_adventures_r_lexer::{tokenize_r, try_tokenize_r};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 mod _grammar;
 
-/// Create a [`GrammarParser`] wired to the R grammar and the tokens of `source`.
+/// Recursion-depth cap for the R [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything). `r-repl` feeds this parser arbitrary, untrusted source at an
+/// interactive prompt, so this is a real, not theoretical, attack surface.
+///
+/// # Why not the shared [`DEFAULT_MAX_RULE_DEPTH`] (128)
+///
+/// R's precedence chain (`assignment -> comparison -> range -> pipe ->
+/// special -> additive -> multiplicative -> power -> unary -> postfix ->
+/// primary -> LPAREN expr RPAREN -> expr -> …`) re-enters roughly a dozen
+/// named rules for every one level of source nesting — measured directly
+/// (binary search, parsing `(((…1…)))` at increasing depth with an
+/// *uncapped* parser on a `std::thread::spawn` worker with the default
+/// ~2 MiB stack, in a **debug** build to match this crate's own `cargo test`
+/// conditions): 128 rule-frames only covers 8 real nesting levels before the
+/// cap would trip, which is not implausible for real R code (deeply chained
+/// function calls). `DEFAULT_MAX_RULE_DEPTH` would therefore be *safe*
+/// (never risks a crash) but reject legitimate, non-adversarial input — the
+/// same class of problem that gave `macsyma-parser` and `apl-parser`/
+/// `j-parser` their own bespoke values.
+///
+/// Measured native-stack floor (uncapped parser, parenthesised nesting,
+/// default-stack worker thread, debug build): parses safely up to **21
+/// levels**, crashes the process at **22**. In rule-frame terms this maps to
+/// a crash somewhere around rule-depth 298 (the cap itself, not real input
+/// depth, is what bounds `GrammarParser`'s recursion, so the same floor was
+/// re-measured directly against candidate `with_max_depth` values on the
+/// **same 5000-level adversarial input**: safe through 297, crashes at 298).
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 33% below that 297-rule-frame
+/// floor (comparable margin to `apl-parser`'s ~26.5% and `j-parser`'s ~30%),
+/// coincidentally the same value `macsyma-parser` measured for its own,
+/// similarly-shaped precedence chain. Measured real-input headroom at 200
+/// (using the *capped* parser, so no crash risk at all): a parenthesised
+/// nesting parses cleanly up to 14 levels (15 trips the cap) — comfortably
+/// past anything a hand-written R expression needs, and independently
+/// confirmed not to crash a default-stack thread even thousands of levels
+/// past the cap (see this crate's tests).
+const MAX_RULE_DEPTH: usize = 200;
+
+/// Create a [`GrammarParser`] wired to the R grammar and the tokens of
+/// `source`, with the recursion-depth guard ([`MAX_RULE_DEPTH`]) enabled so
+/// pathologically deep nesting fails cleanly instead of overflowing the
+/// native stack.
 ///
 /// # Panics
 ///
 /// Panics if tokenization fails. Use [`try_parse_r`] for a non-panicking path.
 pub fn create_r_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_r(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse R source text into a [`GrammarASTNode`] rooted at the `program` rule.
@@ -67,8 +114,69 @@ pub fn parse_r(source: &str) -> GrammarASTNode {
 pub fn try_parse_r(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_r(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+fn nested_paren_source(n: usize) -> String {
+    "(".repeat(n) + "1" + &")".repeat(n) + "\n"
+}
+
+/// Deeply-nested input must produce a recoverable error, not overflow the
+/// native stack. We parse 5000 levels — far past `MAX_RULE_DEPTH` — on a
+/// worker thread with a generous 32 MiB stack, so the *guard* is what stops
+/// the recursion, not the stack running out.
+#[test]
+fn test_deeply_nested_input_returns_error_not_overflow() {
+    let handle = std::thread::Builder::new()
+        .name("r-parser-depth-guard-regression".to_string())
+        .stack_size(32 * 1024 * 1024)
+        .spawn(|| {
+            let result = try_parse_r(&nested_paren_source(5000));
+            assert!(
+                result.is_err(),
+                "deeply-nested input must fail with an error, not parse or crash"
+            );
+        })
+        .expect("failed to spawn worker thread");
+    handle
+        .join()
+        .expect("depth guard must keep the worker thread from crashing");
+}
+
+/// Input that nests *exactly up to* `MAX_RULE_DEPTH` still parses cleanly,
+/// and one layer deeper cleanly trips the guard. These exact boundary counts
+/// (14 legitimate levels) were found empirically by binary-searching against
+/// increasing nesting counts at the production cap — see `MAX_RULE_DEPTH`'s
+/// doc comment.
+#[test]
+fn test_nesting_up_to_cap_still_parses() {
+    assert!(try_parse_r(&nested_paren_source(14)).is_ok(), "14 levels must stay under the cap");
+    assert!(
+        try_parse_r(&nested_paren_source(15)).is_err(),
+        "one nesting level past the cap's measured limit must fail"
+    );
+}
+
+/// A caller relying on `MAX_RULE_DEPTH` must have the guard trip *before*
+/// the native stack overflows on a default-stack thread — otherwise a
+/// production caller (e.g. `r-repl`, or `cargo test`'s own per-test thread)
+/// would still crash. We parse far-too-deep input on a worker thread with
+/// **no** `stack_size` override (the same ~2 MiB a default thread gets). A
+/// clean `Err` (not a `join()` failure from a crashed thread) proves
+/// `MAX_RULE_DEPTH` sits safely below the native overflow point on the
+/// default stack.
+#[test]
+fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+    let handle = std::thread::spawn(|| {
+        let result = try_parse_r(&nested_paren_source(5000));
+        assert!(result.is_err(), "deeply-nested input must error, not crash");
+    });
+    handle
+        .join()
+        .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
 }
 
 #[cfg(test)]

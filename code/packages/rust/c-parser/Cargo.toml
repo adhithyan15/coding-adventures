@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-c-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for the C integer-core subset (SIR27) — parses C source into a generic parse tree using the grammar-driven parser and the c.grammar file."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-c-lexer = { path = "../c-lexer" }

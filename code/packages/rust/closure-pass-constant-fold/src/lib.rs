@@ -90,17 +90,18 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
+    AssignmentTarget, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassExpression, ClassMember, MethodDefinition,
-    FunctionDeclaration, FunctionExpression, Identifier,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
+    AssignmentPattern, FunctionDeclaration, FunctionExpression, FunctionParam, Identifier,
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
-    DoWhileStatement, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 
@@ -322,6 +323,14 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
             test: fold_expression(&s.test, st),
             body: Box::new(fold_statement(&s.body, st)),
         }),
+        // `with (object) body` (CLOC12.187) — fold the object expression and the
+        // body, exactly like a `while` head. (Not yet reachable; the bridge
+        // still declines `with`.)
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: fold_expression(&s.object, st),
+            body: Box::new(fold_statement(&s.body, st)),
+        }),
         TaggedStatement::DoWhileStatement(s) => {
             TaggedStatement::DoWhileStatement(DoWhileStatement {
                 cv: s.cv.clone(),
@@ -446,6 +455,29 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
 // Declarations
 // =====================================================================
 
+/// Fold each parameter's default-value expression. A plain identifier and a
+/// rest element carry no sub-expression, so they clone verbatim; a default
+/// parameter (`a = 1 + 2`) holds live code — its `right` is folded (→ `a = 3`)
+/// through the same [`fold_expression`] path a function body uses. This is what
+/// makes `function f(a = 1 + 2){}` shrink to `function f(a = 3){}` instead of
+/// carrying the arithmetic to the output.
+fn fold_params(params: &[FunctionParam], st: &mut FoldState) -> Vec<FunctionParam> {
+    params
+        .iter()
+        .map(|p| match p {
+            FunctionParam::AssignmentPattern(ap) => {
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: ap.cv.clone(),
+                    left: ap.left.clone(),
+                    right: fold_expression(&ap.right, st),
+                })
+            }
+            // Plain identifier / rest element: no default expression to fold.
+            other => other.clone(),
+        })
+        .collect()
+}
+
 fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
     st.visit();
     match decl {
@@ -456,7 +488,7 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
             Declaration::FunctionDeclaration(FunctionDeclaration {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
-                params: f.params.clone(),
+                params: fold_params(&f.params, st),
                 body: BlockStatement {
                     cv: f.body.cv.clone(),
                     body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
@@ -465,7 +497,39 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
                 is_async: f.is_async,
             })
         }
+        // A class *declaration* (`class C { … }`) folds identically to a class
+        // *expression* inside its heritage + member bodies — only the outer node
+        // type and the required `id` differ. Both route through the shared
+        // `fold_class_body` helper.
+        Declaration::ClassDeclaration(c) => fold_class_declaration(c, st),
+        // An import declaration has no foldable body — its only payload is the
+        // bound names and the module specifier string. Preserve it verbatim.
+        Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
+        // Export declarations (CLOC12.189). PR1 keeps the node unreachable (no
+        // bridge yet); preserve each verbatim. The inner declaration of an
+        // `export const x = 1` is NOT folded here — descent lands with the
+        // bridge PR that makes the node reachable.
+        Declaration::ExportNamedDeclaration(e) => Declaration::ExportNamedDeclaration(e.clone()),
+        Declaration::ExportDefaultDeclaration(e) => {
+            Declaration::ExportDefaultDeclaration(e.clone())
+        }
+        Declaration::ExportAllDeclaration(e) => Declaration::ExportAllDeclaration(e.clone()),
     }
+}
+
+/// Fold a class *declaration* (`class C [extends S] { … }`): the `extends`
+/// operand and each method body, via the shared [`fold_class_body`] helper.
+/// Mirrors [`fold_class`] (the expression form); `#[inline(never)]` keeps its
+/// locals off the caller's frame (DoS lesson).
+#[inline(never)]
+fn fold_class_declaration(c: &ClassDeclaration, st: &mut FoldState) -> Declaration {
+    let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
+    Declaration::ClassDeclaration(ClassDeclaration {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class,
+        body,
+    })
 }
 
 fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> VariableDeclaration {
@@ -488,49 +552,190 @@ fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> Var
 // Expressions — the actual folding
 // =====================================================================
 
-/// Fold inside a class expression: the `extends` operand (an expression) and
-/// each method's body (statements). Kept `#[inline(never)]` so its locals do
-/// not inflate `fold_expression`'s frame — see the call site.
+/// Fold the shared `[extends S] { members }` tail of a class — the heritage
+/// operand (an expression) and each method's body (statements). Reused by both
+/// the class *expression* ([`fold_class`]) and the class *declaration*
+/// ([`fold_class_declaration`]), since the two node forms share their body
+/// shape and differ only in the outer node type + whether `id` is optional.
+/// Kept `#[inline(never)]` so its locals do not inflate the caller's frame —
+/// see the DoS lesson.
+#[inline(never)]
+fn fold_class_body(
+    super_class: &Option<Box<Expression>>,
+    body: &[ClassMember],
+    st: &mut FoldState,
+) -> (Option<Box<Expression>>, Vec<ClassMember>) {
+    let super_class = super_class
+        .as_ref()
+        .map(|s| Box::new(fold_expression(s, st)));
+    let body = body
+        .iter()
+        .map(|m| match m {
+            ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                cv: md.cv.clone(),
+                key: md.key.clone(),
+                kind: md.kind,
+                value: FunctionExpression {
+                    cv: md.value.cv.clone(),
+                    id: md.value.id.clone(),
+                    params: fold_params(&md.value.params, st),
+                    body: BlockStatement {
+                        cv: md.value.body.cv.clone(),
+                        body: md
+                            .value
+                            .body
+                            .body
+                            .iter()
+                            .map(|s| fold_statement(s, st))
+                            .collect(),
+                    },
+                    generator: md.value.generator,
+                    is_async: md.value.is_async,
+                },
+                computed: md.computed,
+                is_static: md.is_static,
+            }),
+            // A class field folds inside its initializer (a plain expression
+            // that runs at construction) — `x = 1 + 2` → `x = 3`. The key is
+            // cloned like a method key (not folded); the value is optional.
+            ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                cv: fd.cv.clone(),
+                key: fd.key.clone(),
+                value: fd.value.as_ref().map(|v| fold_expression(v, st)),
+                computed: fd.computed,
+                is_static: fd.is_static,
+            }),
+            // A static-init block folds inside each of its statements (they run
+            // at class-definition time) — mirroring the method-body fold. It has
+            // no key and no binding name; only the statement list is rebuilt.
+            ClassMember::StaticBlock(b) => ClassMember::StaticBlock(BlockStatement {
+                cv: b.cv.clone(),
+                body: b.body.iter().map(|s| fold_statement(s, st)).collect(),
+            }),
+        })
+        .collect();
+    (super_class, body)
+}
+
+/// Fold inside a class expression: delegates to [`fold_class_body`] for the
+/// heritage + method bodies. Kept `#[inline(never)]` so its locals do not
+/// inflate `fold_expression`'s frame — see the call site.
 #[inline(never)]
 fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
+    let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
     Expression::ClassExpression(ClassExpression {
         cv: c.cv.clone(),
         id: c.id.clone(),
-        super_class: c
-            .super_class
-            .as_ref()
-            .map(|s| Box::new(fold_expression(s, st))),
-        body: c
-            .body
-            .iter()
-            .map(|m| match m {
-                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
-                    cv: md.cv.clone(),
-                    key: md.key.clone(),
-                    kind: md.kind,
-                    value: FunctionExpression {
-                        cv: md.value.cv.clone(),
-                        id: md.value.id.clone(),
-                        params: md.value.params.clone(),
-                        body: BlockStatement {
-                            cv: md.value.body.cv.clone(),
-                            body: md
-                                .value
-                                .body
-                                .body
-                                .iter()
-                                .map(|s| fold_statement(s, st))
-                                .collect(),
-                        },
-                        generator: md.value.generator,
-                        is_async: md.value.is_async,
-                    },
-                    computed: md.computed,
-                    is_static: md.is_static,
-                }),
-            })
-            .collect(),
+        super_class,
+        body,
     })
+}
+
+/// Fold a `new` on a **standard built-in constructor** to its shorter
+/// equivalent, matching the reference Closure Compiler's
+/// `tryFoldStandardConstructors`. Returns `Ok(replacement)` when the fold fires,
+/// or `Err(arguments)` (handing the already-folded argument list back) so the
+/// caller can rebuild the `new` unchanged.
+///
+/// Gated to a **bare identifier** callee whose name is exactly `Object` or
+/// `Array` (a member callee like `obj.Array`, or any other name, is left alone).
+/// Like Closure at SIMPLE, this assumes those globals are not shadowed. Both are
+/// spec-safe: calling `Object`/`Array` as an ordinary function constructs the
+/// same value as `new` for every argument list.
+///
+/// ```text
+///   new Object(x)        →  Object(x)      (1+ args: drop `new`, keep the call)
+///   new Object()         →  {}             (no args: an empty object literal)
+///   new Array(x)         →  Array(x)       (exactly ONE arg is a *length* or a
+///                                           sole element — ambiguous, so the
+///                                           call form is kept, NOT `[x]`)
+///   new Array()          →  []             (no args: an empty array literal)
+///   new Array(a, b, …)   →  [a, b, …]      (2+ args: an array literal; spread
+///                                           args carry across as elements)
+/// ```
+///
+/// **`Error` and `RegExp` are intentionally NOT handled here.** `Error` is folded
+/// by its own arm (`new Error(…)` → `Error(…)`); `RegExp` is declined because
+/// `RegExp(r)` aliases an existing regex argument instead of copying it, so
+/// `new RegExp(x)` → `RegExp(x)` could be an observable change — a potential
+/// miscompile the reference compiler tolerates but we do not.
+fn fold_standard_constructor(
+    callee: &Expression,
+    arguments: Vec<Expression>,
+    cv: &Option<String>,
+    st: &mut FoldState,
+) -> Result<Expression, Vec<Expression>> {
+    let name = match callee {
+        Expression::Identifier(id) => id.name.as_str(),
+        _ => return Err(arguments),
+    };
+    match name {
+        // `Object` — no args → `{}`; otherwise drop `new` to a plain call.
+        "Object" if arguments.is_empty() => {
+            let new_cv = st.fork_cv(cv, "new Object()", "{}");
+            Ok(Expression::ObjectExpression(ObjectExpression {
+                cv: new_cv,
+                properties: vec![],
+            }))
+        }
+        "Object" => {
+            let new_cv = st.fork_cv(cv, "new Object(…)", "Object(…)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // `Array` — 0 args → `[]`; exactly 1 arg keeps the call (a lone argument
+        // is a *length*, so `Array(3)` ≠ `[3]`); 2+ args → an array literal.
+        "Array" if arguments.is_empty() => {
+            let new_cv = st.fork_cv(cv, "new Array()", "[]");
+            Ok(Expression::ArrayExpression(ArrayExpression {
+                cv: new_cv,
+                elements: vec![],
+            }))
+        }
+        "Array" if arguments.len() == 1 => {
+            let new_cv = st.fork_cv(cv, "new Array(x)", "Array(x)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // 2+ args WITH a spread: the array-literal form would be a MISCOMPILE.
+        // A spread of unknown runtime length can collapse the construction to a
+        // *single* runtime argument — the length form — so `new Array(5, ...[])`
+        // is `new Array(5)` (a length-5 array), whereas `[5, ...[]]` is `[5]`
+        // (length 1). The reference compiler folds it to `[a, ...xs]` anyway
+        // (unsound); we decline to the always-equivalent call form
+        // `Array(a, ...xs)` (`Array(args)` ≡ `new Array(args)` for every list).
+        // Matching Closure's array-literal spelling here is a byte-identity
+        // follow-up.
+        "Array"
+            if arguments
+                .iter()
+                .any(|a| matches!(a, Expression::SpreadElement(_))) =>
+        {
+            let new_cv = st.fork_cv(cv, "new Array(…, ...spread)", "Array(…, ...spread)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // 2+ plain (non-spread) args: the static count IS the element count, so
+        // an array literal is exactly equivalent.
+        "Array" => {
+            let new_cv = st.fork_cv(cv, "new Array(a,b,…)", "[a,b,…]");
+            let elements = arguments.into_iter().map(Some).collect();
+            Ok(Expression::ArrayExpression(ArrayExpression {
+                cv: new_cv,
+                elements,
+            }))
+        }
+        _ => Err(arguments),
+    }
 }
 
 fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
@@ -573,24 +778,70 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         }),
         Expression::ConditionalExpression(c) => fold_conditional(c, st),
 
-        // Recurse but don't collapse — these have runtime semantics.
-        Expression::AssignmentExpression(a) => {
-            Expression::AssignmentExpression(AssignmentExpression {
-                cv: a.cv.clone(),
-                operator: a.operator,
-                left: a.left.clone(),
-                right: Box::new(fold_expression(&a.right, st)),
-            })
-        }
+        // `x = …` — recurse into the right-hand side, and additionally contract
+        // the compound self-assignment shape `x = x OP E` → `x OP= E`. The body
+        // lives out-of-line (see `fold_assignment`) so its locals do not enlarge
+        // this hot recursion frame — same DoS-guard discipline as the optional
+        // and member arms above.
+        Expression::AssignmentExpression(a) => fold_assignment(a, st),
         Expression::CallExpression(c) => fold_call(c, st),
         // `new X(args)` constructs an object — a side-effecting operation, never
         // a constant. Recurse into the callee and each argument (they may hold
-        // foldable subexpressions) but preserve the construction itself.
-        Expression::NewExpression(n) => Expression::NewExpression(NewExpression {
-            cv: n.cv.clone(),
-            callee: Box::new(fold_expression(&n.callee, st)),
-            arguments: n.arguments.iter().map(|a| fold_expression(a, st)).collect(),
-        }),
+        // foldable subexpressions). A `new` on a *standard built-in constructor*
+        // then folds to its shorter equivalent: `Error` below, and
+        // `Object`/`Array` via [`fold_standard_constructor`]. Everything else
+        // preserves the `new`.
+        //
+        // **Standard-constructor `new`-drop (`new Error(…)` → `Error(…)`).**
+        // Closure rewrites `new Error(args)` to a plain call `Error(args)`,
+        // saving four bytes. Calling the built-in `Error` as an ordinary
+        // function constructs an Error object *identically* to `new`
+        // (ECMAScript §20.5.1.1: the `Error` constructor's [[Call]] and
+        // [[Construct]] paths converge — `Error(m)` and `new Error(m)` both
+        // yield a fresh Error with the same `.message`), so the drop is
+        // semantics-preserving for **every** argument list, including the
+        // no-arg form (`new Error` → `Error()`).
+        //
+        // Scope:
+        //   * `Object`/`Array` fold via [`fold_standard_constructor`], which
+        //     also collapses their no-arg forms to `{}` / `[]` literals (and
+        //     keeps `new Array(len)`'s single-arg *length* form as a call).
+        //   * `RegExp` is NOT folded: `RegExp(r)` returns its argument unchanged
+        //     when `r` is already a regex, whereas `new RegExp(r)` always makes
+        //     a fresh copy — so `new RegExp(x)` → `RegExp(x)` would be an
+        //     observable change (a potential miscompile). Closure does it
+        //     anyway; we decline to stay sound. (Follow-up.)
+        //   * The `Error` *subtypes* (`TypeError`, `RangeError`, …) are left
+        //     alone because the reference compiler does not fold them.
+        //
+        // Gated to a **bare `Error` identifier** callee: a member callee
+        // (`obj.Error`) or any other name is untouched. Like Closure at SIMPLE,
+        // this assumes the global `Error` binding is not shadowed.
+        Expression::NewExpression(n) => {
+            let callee = fold_expression(&n.callee, st);
+            let arguments: Vec<Expression> =
+                n.arguments.iter().map(|a| fold_expression(a, st)).collect();
+            // `new Error(...)` → `Error(...)` (bare-ident gate; see comment above).
+            if matches!(&callee, Expression::Identifier(id) if id.name == "Error") {
+                let new_cv = st.fork_cv(&n.cv, "new Error(…)", "Error(…)");
+                Expression::CallExpression(CallExpression {
+                    cv: new_cv,
+                    callee: Box::new(callee),
+                    arguments,
+                })
+            } else {
+                // `new Object(...)` / `new Array(...)` fold via the helper; any
+                // other callee preserves the `new`.
+                match fold_standard_constructor(&callee, arguments, &n.cv, st) {
+                    Ok(folded) => folded,
+                    Err(arguments) => Expression::NewExpression(NewExpression {
+                        cv: n.cv.clone(),
+                        callee: Box::new(callee),
+                        arguments,
+                    }),
+                }
+            }
+        }
         // `a, b, c` — fold each operand independently. We do NOT drop the
         // earlier operands even if they fold to a constant: they may carry side
         // effects, and dropping them would change behaviour (that is a separate
@@ -648,14 +899,66 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::OptionalMemberExpression(m) => fold_optional_member(m, st),
         Expression::OptionalCallExpression(c) => fold_optional_call(c, st),
         Expression::ChainExpression(c) => fold_chain(c, st),
-        Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
-            cv: a.cv.clone(),
-            elements: a
+        Expression::ArrayExpression(a) => {
+            // Fold every element first (so `...[1, 1 + 1]` becomes `...[1, 2]`),
+            // then flatten a spread of an array LITERAL in place:
+            //
+            //   [...[1, 2], 3]     ->  [1, 2, 3]
+            //   [0, ...[1, 2], 3]  ->  [0, 1, 2, 3]
+            //   [...[]]            ->  []
+            //
+            // matching the reference compiler at SIMPLE. A spread over an array
+            // literal produces exactly that array's elements, in order, so
+            // inlining them is behaviour-preserving.
+            //
+            // HOLE GUARD: spread uses the array ITERATOR, which yields
+            // `undefined` for an elision — `[...[1, , 3]]` is `[1, undefined, 3]`,
+            // observably different from `[1, , 3]` (a hole; testable via `in`).
+            // So we only inline when the inner literal is HOLE-FREE (every
+            // element `Some`); a spread whose argument has a hole, or is a string
+            // / identifier / call (`[..."ab"]`, `[...y]`), is left intact. Nested
+            // arrays inside the inner literal are spliced verbatim (only one
+            // spread level flattens per fold; the fixed-point pass handles
+            // `[...[...[1]]]`).
+            let folded: Vec<Option<Expression>> = a
                 .elements
                 .iter()
                 .map(|e| e.as_ref().map(|x| fold_expression(x, st)))
-                .collect(),
-        }),
+                .collect();
+
+            let has_inlinable_spread = folded.iter().any(|el| {
+                matches!(el, Some(Expression::SpreadElement(s))
+                    if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                        if inner.elements.iter().all(Option::is_some)))
+            });
+
+            if has_inlinable_spread {
+                let mut out: Vec<Option<Expression>> = Vec::with_capacity(folded.len());
+                for el in folded {
+                    match el {
+                        Some(Expression::SpreadElement(s))
+                            if matches!(s.argument.as_ref(), Expression::ArrayExpression(inner)
+                                if inner.elements.iter().all(Option::is_some)) =>
+                        {
+                            if let Expression::ArrayExpression(inner) = *s.argument {
+                                out.extend(inner.elements);
+                            }
+                        }
+                        other => out.push(other),
+                    }
+                }
+                let new_cv = st.fork_cv(&a.cv, "[...[…], …]", "[…, …]");
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: new_cv,
+                    elements: out,
+                })
+            } else {
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: a.cv.clone(),
+                    elements: folded,
+                })
+            }
+        }
         Expression::ObjectExpression(o) => Expression::ObjectExpression(ObjectExpression {
             cv: o.cv.clone(),
             properties: o
@@ -668,8 +971,63 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                         key: match &p.key {
                             // Identifier / literal keys: pass through.
                             PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            // A private name (`#x`) is only legal as a class-member
+                            // key, never in an object literal — but the match must
+                            // stay exhaustive, so pass it through unchanged.
+                            PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
-                            PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
+                            PropertyKey::NumericLiteral(n) => {
+                                // A numeric object key's property name is the
+                                // ECMAScript `ToString` of the value, so Closure
+                                // prints most numeric keys as a QUOTED string
+                                // (`{0.5:1}` → `{"0.5":1}`, `{1e21:0}` → `{"1e+21":0}`).
+                                // It keeps a key BARE (numeric) in exactly one case:
+                                // a non-negative integer strictly below 2^53
+                                // (`Number.MAX_SAFE_INTEGER + 1`). Oracle-verified
+                                // against the reference jar:
+                                //
+                                //   bare:   {0:_} {100:_} {4294967296:_} {1e15:_}
+                                //           {9007199254740991:_}   (all < 2^53 ints)
+                                //   quoted: {1.5:_}→"1.5"  {0.5:_}→"0.5"
+                                //           {1e-7:_}→"1e-7"  {1e-6:_}→"0.000001"
+                                //           {1e20:_}→"100000000000000000000"
+                                //           {1e21:_}→"1e+21"
+                                //           {9007199254740992:_}→"9007199254740992"
+                                //           (2^53 and up, and every non-integer)
+                                //
+                                // The bare-eligible integers are emitted numerically
+                                // by the printer, which independently minifies them
+                                // (`{4e9:_}` → `{4E9:_}`) — matching Closure, whose
+                                // own number printer does the same. Since 2^53 is the
+                                // safe-integer bound, every bare key round-trips
+                                // losslessly. `format_js_number` (now JS-`ToString`-
+                                // exact across the whole range) supplies the quoted
+                                // name, so a huge integer or an exponential-form value
+                                // gets its precise V8 spelling.
+                                //
+                                // A non-finite key can only be `+Infinity` (an
+                                // overflowing literal like `1e400`; `-Infinity`/`NaN`
+                                // are not valid numeric key literals). Closure leaves
+                                // it BARE as `Infinity`, so the `is_finite()` guard
+                                // routes it to the else arm (the printer emits
+                                // `Infinity`), matching the reference compiler.
+                                const TWO_POW_53: f64 = 9_007_199_254_740_992.0;
+                                let v = n.value;
+                                let bare_safe_integer =
+                                    v.fract() == 0.0 && (0.0..TWO_POW_53).contains(&v);
+                                if v.is_finite() && !bare_safe_integer {
+                                    let name = format_js_number(v);
+                                    let new_cv =
+                                        st.fork_cv(&p.cv, &format!("{{{name}:…}}"), &format!("{{\"{name}\":…}}"));
+                                    let mut key = property_key_for(&name);
+                                    if let PropertyKey::StringLiteral(s) = &mut key {
+                                        s.cv = new_cv;
+                                    }
+                                    key
+                                } else {
+                                    PropertyKey::NumericLiteral(n.clone())
+                                }
+                            }
                             PropertyKey::Expression(e) => {
                                 PropertyKey::Expression(Box::new(fold_expression(e, st)))
                             }
@@ -700,7 +1058,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             Expression::FunctionExpression(FunctionExpression {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
-                params: f.params.clone(),
+                params: fold_params(&f.params, st),
                 body: BlockStatement {
                     cv: f.body.cv.clone(),
                     body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
@@ -724,7 +1082,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::ArrowFunctionExpression(a) => {
             Expression::ArrowFunctionExpression(ArrowFunctionExpression {
                 cv: a.cv.clone(),
-                params: a.params.clone(),
+                params: fold_params(&a.params, st),
                 body: match &a.body {
                     ArrowBody::Block(b) => ArrowBody::Block(BlockStatement {
                         cv: b.cv.clone(),
@@ -741,11 +1099,271 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // `quasis` are fixed string segments with no sub-expressions to
         // fold. (Folding the *whole* template to a string literal when all
         // parts are constant is a future optimisation; here we only recurse.)
-        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
-            cv: t.cv.clone(),
-            quasis: t.quasis.clone(),
-            expressions: t.expressions.iter().map(|e| fold_expression(e, st)).collect(),
-        }),
+        Expression::TemplateLiteral(t) => fold_template_literal(t, st),
+    }
+}
+
+/// Contract a compound *self*-assignment: `x = x OP E` → `x OP= E`.
+///
+/// ## What this fold does
+///
+/// ```text
+///   x = x + 1     ──▶   x += 1
+///   n = n - 2     ──▶   n -= 2
+///   k = k * 2     ──▶   k *= 2
+///   a = a + b     ──▶   a += b
+///   s = s + "b"   ──▶   s += "b"
+/// ```
+///
+/// The reference Closure Compiler performs exactly this contraction at
+/// `SIMPLE`, and it is a pure size win: `x=x+1` (5 chars) becomes `x+=1`
+/// (4 chars) with identical run-time behaviour.
+///
+/// ## The exact rule (and why the shape matters)
+///
+/// We rewrite only when ALL of the following hold:
+///   1. the assignment operator is plain `=` (not already a compound form),
+///   2. the target is a **bare identifier** `x` (`AssignmentTarget::Identifier`),
+///   3. the right-hand side is a `BinaryExpression` whose **LEFT** operand is
+///      that same identifier `x` (compared by *name*), and
+///   4. the binary operator has a compound counterpart — the arithmetic and
+///      bitwise operators do (`+ - * / % ** << >> >>> & | ^`); the relational,
+///      equality, `in`, and `instanceof` operators do **not**.
+///
+/// The match is on the **left** operand only. `x = x + 1` folds, but
+/// `x = 1 + x` does **not**:
+///
+/// ```text
+///   x = x - 1   ≡   x -= 1        (target on the left — contractable)
+///   x = 1 - x   ≡   x -= ??       (NO — `1 - x` ≠ `x - 1` for non-commutative
+///                                  operators; there is no "reverse -=" form)
+/// ```
+///
+/// Even for a commutative operator (`+`, `*`) the reference compiler only
+/// contracts the left-operand shape, so mirroring that keeps us byte-identical.
+///
+/// ## Why identifier targets are always sound (and members are deferred)
+///
+/// For a bare identifier binding, evaluating the *reference* `x` has no
+/// user-observable side effect — so `x = x OP E` reads `x` once, computes, and
+/// writes `x` once, exactly as `x OP= E` does. The two forms are
+/// interchangeable.
+///
+/// This is **not** true for a member target like `o[f()]`: the expanded form
+/// `o[f()] = o[f()] OP E` evaluates the reference sub-expressions (here `f()`)
+/// *twice*, whereas `o[f()] OP= E` evaluates them *once*. Contracting a member
+/// target is therefore only sound once the object/property sub-expressions are
+/// proven side-effect-free — that is a deliberate follow-up (CLOC12.198b), and
+/// PR1 restricts itself to identifier targets.
+///
+/// Kept `#[inline(never)]` and out of the big `fold_expression` match so its
+/// locals do not inflate the shared recursive frame (the same DoS-guard
+/// discipline the member/optional/template arms follow — see lessons.md).
+#[inline(never)]
+/// Normalise an assignment **target** — the left-hand side of `=`. For a member
+/// target we fold the object (value position) and dot-normalise a computed
+/// string key exactly like [`fold_member`] does for a value-position member, so
+/// `o["foo"] = 1` → `o.foo = 1` and `a["b"]["c"] = 1` → `a.b.c = 1`. We do NOT
+/// route the target through `fold_member` itself: that would run the array-index
+/// / `.length` folds, which must not fire on an lvalue (`[1,2,3]["0"] = x` must
+/// stay an element write, not fold to the literal `1`). A bare-identifier target
+/// is returned unchanged.
+fn fold_assignment_target(t: &AssignmentTarget, st: &mut FoldState) -> AssignmentTarget {
+    let AssignmentTarget::MemberExpression(m) = t else {
+        return t.clone();
+    };
+    let object = fold_expression(&m.object, st);
+    if m.computed {
+        if let Expression::StringLiteral(s) = m.property.as_ref() {
+            if is_identifier_name(&s.value) && !is_es3_reserved_word(&s.value) {
+                let before = format!("member[\"{}\"] (assign target)", s.value);
+                let after = format!("member.{} (assign target)", s.value);
+                let new_cv = st.fork_cv(&m.cv, &before, &after);
+                return AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+                    cv: new_cv,
+                    object: Box::new(object),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: s.cv.clone(),
+                        name: s.value.clone(),
+                    })),
+                    computed: false,
+                }));
+            }
+        }
+    }
+    AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+        cv: m.cv.clone(),
+        object: Box::new(object),
+        property: m.property.clone(),
+        computed: m.computed,
+    }))
+}
+
+fn fold_assignment(a: &AssignmentExpression, st: &mut FoldState) -> Expression {
+    // Fold the right-hand side first, consistent with every other recursive
+    // arm; the contraction test below then runs on the folded RHS.
+    let right = fold_expression(&a.right, st);
+
+    // The contraction only applies to a plain `=` whose target is an identifier
+    // and whose RHS is `<that identifier> OP E` for a compound-capable OP.
+    if a.operator == AssignmentOperator::Eq {
+        if let AssignmentTarget::Identifier(target) = &a.left {
+            if let Expression::BinaryExpression(b) = &right {
+                if let Expression::Identifier(bin_left) = b.left.as_ref() {
+                    if bin_left.name == target.name {
+                        if let Some((compound, op_symbol)) =
+                            compound_assignment_operator(b.operator)
+                        {
+                            let parent = a.cv.clone();
+                            let before =
+                                format!("{0} = {0} {1} E", target.name, op_symbol);
+                            let after = format!("{0} {1}= E", target.name, op_symbol);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return Expression::AssignmentExpression(AssignmentExpression {
+                                cv: new_cv,
+                                operator: compound,
+                                // Reuse the original target node verbatim.
+                                left: a.left.clone(),
+                                // The compound form keeps only the binary's RIGHT
+                                // operand; the left operand is now implied by the
+                                // target.
+                                right: b.right.clone(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // No contraction: preserve the assignment, carrying the folded RHS and the
+    // (dot-normalised) target.
+    Expression::AssignmentExpression(AssignmentExpression {
+        cv: a.cv.clone(),
+        operator: a.operator,
+        left: fold_assignment_target(&a.left, st),
+        right: Box::new(right),
+    })
+}
+
+/// Map a [`BinaryOperator`] to its compound-[`AssignmentOperator`] counterpart
+/// and the operator's source symbol, or `None` when the operator has no
+/// compound assignment form.
+///
+/// | binary | compound | | binary | compound |
+/// |--------|----------|-|--------|----------|
+/// | `+`    | `+=`     | | `<<`   | `<<=`    |
+/// | `-`    | `-=`     | | `>>`   | `>>=`    |
+/// | `*`    | `*=`     | | `>>>`  | `>>>=`   |
+/// | `/`    | `/=`     | | `&`    | `&=`     |
+/// | `%`    | `%=`     | | `|`    | `|=`     |
+/// | `**`   | `**=`    | | `^`    | `^=`     |
+///
+/// The relational (`< <= > >=`), equality (`== != === !==`), `in`, and
+/// `instanceof` operators have no `OP=` form in JavaScript, so they return
+/// `None` and the caller declines the contraction.
+fn compound_assignment_operator(op: BinaryOperator) -> Option<(AssignmentOperator, &'static str)> {
+    use AssignmentOperator as A;
+    use BinaryOperator as B;
+    Some(match op {
+        B::Add => (A::AddEq, "+"),
+        B::Sub => (A::SubEq, "-"),
+        B::Mul => (A::MulEq, "*"),
+        B::Div => (A::DivEq, "/"),
+        B::Mod => (A::ModEq, "%"),
+        B::Exp => (A::ExpEq, "**"),
+        B::LeftShift => (A::LeftShiftEq, "<<"),
+        B::RightShift => (A::RightShiftEq, ">>"),
+        B::UnsignedRightShift => (A::UnsignedRightShiftEq, ">>>"),
+        B::BitAnd => (A::BitAndEq, "&"),
+        B::BitOr => (A::BitOrEq, "|"),
+        B::BitXor => (A::BitXorEq, "^"),
+        // No compound assignment form exists for these.
+        B::Eq
+        | B::NotEq
+        | B::StrictEq
+        | B::StrictNotEq
+        | B::Lt
+        | B::LtEq
+        | B::Gt
+        | B::GtEq
+        | B::In
+        | B::InstanceOf => return None,
+    })
+}
+
+/// Fold a template literal — recurse into its substitutions, then collapse the
+/// whole node to a string literal when every substitution is a stringifiable
+/// constant (CLOC12.197). Kept `#[inline(never)]` and out of the big
+/// `fold_expression` match so its several `Vec`/`String` locals do NOT inflate
+/// the shared recursive frame — that frame is walked once per AST depth level,
+/// so bloating it lowers the input-nesting depth the pass survives (the
+/// `deeply_nested_*` stack-safety tests pin this). See the DCE crate's identical
+/// `#[inline(never)]` helper convention.
+#[inline(never)]
+fn fold_template_literal(t: &TemplateLiteral, st: &mut FoldState) -> Expression {
+    // Recurse first so a substitution like `${1 + 2}` folds to `${3}`, and a
+    // nested template `${`b${1}c`}` folds to `${"b1c"}` — by the time we test
+    // the substitutions below they are already constants.
+    let expressions: Vec<Expression> =
+        t.expressions.iter().map(|e| fold_expression(e, st)).collect();
+
+    // When EVERY substitution is a stringifiable constant literal AND every
+    // quasi carries a cooked value, the whole template is a compile-time-known
+    // string: interleave the quasis' cooked text with each substitution's
+    // `ToString` form (`cooked₀ str(e₀) cooked₁ … cookedₙ`).
+    //
+    // Emitted as a plain string literal; no emitter work is needed because
+    // closurec's string emitter already matches the reference compiler's quote
+    // choice (single-quote when the value contains a `"`) and escaping (`\n`,
+    // `\t`, `\\`) byte-for-byte.
+    //
+    // A `cooked` of `None` (an escape legal only in a *tagged* template) or a
+    // non-const / BigInt / RegExp substitution makes the string not statically
+    // known, so we decline and keep the template.
+    let sub_strings: Option<Vec<String>> =
+        expressions.iter().map(stringify_const_operand).collect();
+    let cooked: Option<Vec<&str>> = t.quasis.iter().map(|q| q.cooked.as_deref()).collect();
+    if let (Some(subs), Some(cooked)) = (sub_strings, cooked) {
+        let mut result = String::new();
+        for (i, quasi) in cooked.iter().enumerate() {
+            result.push_str(quasi);
+            if let Some(s) = subs.get(i) {
+                result.push_str(s);
+            }
+        }
+        let parent = t.cv.clone();
+        let before = format!("template-literal[{} subs]", subs.len());
+        let after = format!("\"{result}\"");
+        let new_cv = st.fork_cv(&parent, &before, &after);
+        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+    }
+
+    Expression::TemplateLiteral(TemplateLiteral {
+        cv: t.cv.clone(),
+        quasis: t.quasis.clone(),
+        expressions,
+    })
+}
+
+/// The `ToString` form of a constant-literal template substitution, or `None`
+/// if the operand is not a constant we can stringify at compile time.
+///
+/// Matches JavaScript `String(x)` for the primitives that appear as folded
+/// constants: a number takes its shortest round-trip form (`3`, not `3.0`), a
+/// string is itself, `true`/`false`/`null`/`undefined` take their keyword text.
+/// A `BigInt` (its text would drop the `n`), a `RegExp`, or any non-literal
+/// (identifier, call, …) returns `None`, so the enclosing template declines to
+/// fold — exactly matching the reference compiler, which leaves
+/// `` `a${x}b` `` / `` `a${f()}b` `` intact.
+fn stringify_const_operand(e: &Expression) -> Option<String> {
+    match e {
+        Expression::NumericLiteral(n) => Some(format_js_number(n.value)),
+        Expression::StringLiteral(s) => Some(s.value.clone()),
+        Expression::BooleanLiteral(b) => Some(if b.value { "true" } else { "false" }.to_string()),
+        Expression::NullLiteral(_) => Some("null".to_string()),
+        Expression::UndefinedLiteral(_) => Some("undefined".to_string()),
+        _ => None,
     }
 }
 
@@ -2131,6 +2749,54 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Math.clz32(n) → numeric literal (0..32) ----
+                //
+                // `Math.clz32` (ECMAScript §21.3.2.11) counts the leading zero
+                // bits of `ToUint32(n)`. The result is always a small
+                // non-negative integer (`0..=32`) with an exact numeric-literal
+                // spelling, computed by pure modular arithmetic (`to_uint32`) —
+                // no libm — so it is bit-identical to the reference compiler:
+                // `clz32(0)` → 32, `clz32(1)` → 31, `clz32(-1)` → 0
+                // (`ToUint32(-1)` = 2³²-1). Only the bare global `Math` with one
+                // numeric-literal argument folds. (Unlike the single-argument
+                // block below, clz32 never yields `-0`, so a negative input that
+                // maps to a `0` result — `clz32(-1)` — must still fold, which is
+                // why it is handled here rather than under the shared `-0` gate.)
+                if obj.name == "Math" && prop.name == "clz32" && arguments.len() == 1 {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let result = to_uint32(n.value).leading_zeros() as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.clz32({})", n.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
+                // ---- Math.imul(a, b) → numeric literal (32-bit signed product) ----
+                //
+                // `Math.imul` (ECMAScript §21.3.2.19) multiplies
+                // `ToUint32(a) · ToUint32(b)` and keeps the low 32 bits
+                // reinterpreted as a signed int. Pure modular arithmetic — no
+                // libm — so bit-identical: `imul(3, 4)` → 12, `imul(-1, 5)` → -5
+                // (`ToUint32(-1)·5` low-32 = 2³²-5 → -5). Only the bare global
+                // `Math` with exactly two numeric-literal arguments folds. The
+                // result is always a finite 32-bit integer (never `-0`), so no
+                // extra gate is needed.
+                if obj.name == "Math" && prop.name == "imul" && arguments.len() == 2 {
+                    if let (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) =
+                        (&arguments[0], &arguments[1])
+                    {
+                        let result =
+                            (to_uint32(a.value).wrapping_mul(to_uint32(b.value)) as i32) as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.imul({}, {})", a.value, b.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
                 // ---- Math.abs/floor/ceil/round(n) → numeric literal ----
                 //
                 // The single-argument numeric `Math` methods (ECMAScript
@@ -2154,7 +2820,10 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 // finite literal inputs produce finite outputs, so the
                 // `is_finite` check is defense-in-depth.
                 if obj.name == "Math"
-                    && matches!(prop.name.as_str(), "abs" | "floor" | "ceil" | "round")
+                    && matches!(
+                        prop.name.as_str(),
+                        "abs" | "floor" | "ceil" | "round" | "trunc" | "sign"
+                    )
                     && arguments.len() == 1
                 {
                     if let Expression::NumericLiteral(n) = &arguments[0] {
@@ -2164,6 +2833,18 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             "floor" => x.floor(),
                             "ceil" => x.ceil(),
                             "round" => js_math_round(x),
+                            // `Math.trunc(x)` (ECMAScript 21.3.2.38) removes the
+                            // fractional part, rounding toward zero. Rust's
+                            // `f64::trunc` has the identical rule, including
+                            // `trunc(-0.5) == -0.0` — which the shared negative-
+                            // zero gate below then DECLINES, matching how the
+                            // handler already declines `Math.ceil(-0.5)`.
+                            "trunc" => x.trunc(),
+                            // `Math.sign(x)` (ECMAScript 21.3.2.34) yields -1/-0/+0/+1
+                            // (and NaN for NaN). We can't spell Rust's `signum`
+                            // here because it maps +-0 to +-1; see `js_math_sign`.
+                            // A `-0` result is likewise declined by the gate.
+                            "sign" => js_math_sign(x),
                             _ => unreachable!("matches! guard limits the method set"),
                         };
                         let neg_zero_result = result == 0.0
@@ -2174,6 +2855,58 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             let after = format_js_number(result);
                             let new_cv = st.fork_cv(&parent, &before, &after);
                             return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                        }
+                    }
+                }
+
+                // ---- Math.fround(n) → n, ONLY at a float32 fixed point ----
+                //
+                // `Math.fround(x)` (ECMAScript §21.3.2.19) rounds `x` to the
+                // nearest IEEE-754 *single-precision* (float32) value, then widens
+                // back to a double. That is EXACTLY Rust's `x as f32 as f64`, so
+                // the round-trip is bit-for-bit reproducible with no `powf`-style
+                // last-ULP hazard.
+                //
+                // The reference compiler folds `Math.fround(x)` ONLY when `x` is
+                // already an exact float32 — i.e. a *fixed point* of the round
+                // trip, where `fround(x) === x` and the fold changes nothing:
+                //
+                //   Math.fround(1.5)      → 1.5     (1.5 is exactly a float32)
+                //   Math.fround(-2.5)     → -2.5
+                //   Math.fround(0)        → 0
+                //   Math.fround(1.1)      → Math.fround(1.1)   (1.1 rounds — DECLINED)
+                //   Math.fround(16777217) → Math.fround(16777217)  (2^24+1 rounds)
+                //
+                // When `fround(x) !== x` the reference LEAVES the call intact (the
+                // rounded constant is no shorter and would change the printed
+                // value), so we mirror that by folding only the fixed point and
+                // declining everything else. The gate `x as f32 as f64 == x`
+                // captures exactly the exact-float32 doubles.
+                //
+                // Scope guards (each keeps us strictly inside the reference's
+                // behaviour and away from unspellable tokens):
+                //   * bare-global `Math.fround` callee, exactly ONE argument, and
+                //     that argument is a NUMERIC LITERAL (no ToNumber side effect);
+                //   * `x.is_finite()` — `NaN`/`Infinity` are identifiers, never
+                //     numeric literals, so they cannot reach here from source; the
+                //     guard is defense-in-depth against a pre-folded infinity;
+                //   * a `-0` fixed point is DECLINED (`-0` has no numeric-literal
+                //     token; declining is always safe), mirroring the negative-zero
+                //     care in the Math.abs/floor block above.
+                if obj.name == "Math"
+                    && prop.name == "fround"
+                    && arguments.len() == 1
+                {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let x = n.value;
+                        let is_float32_fixed_point = x.is_finite() && (x as f32 as f64) == x;
+                        let neg_zero = x == 0.0 && x.is_sign_negative();
+                        if is_float32_fixed_point && !neg_zero {
+                            let parent = c.cv.clone();
+                            let before = format!("Math.fround({x})");
+                            let after = format_js_number(x);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(x), new_cv);
                         }
                     }
                 }
@@ -3271,6 +4004,7 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
 ///   pieces all come from the source, so this is a defensive cap (and
 ///   `checked_add` stops the running length from overflowing) rather than a
 ///   true blowup vector, but it mirrors the `repeat`/`pad` guards.
+///
 /// Coerce a single `String.prototype.concat` argument to the string JS would
 /// pass to the concatenation, or `None` if it is not a compile-time constant we
 /// can coerce faithfully.
@@ -3652,6 +4386,7 @@ fn fold_string_replace(method: &str, haystack: &str, from: &str, to: &str) -> Op
 /// - Anything else (identifier objects like `s.length`, other properties like
 ///   `"x".charCodeAt`) falls through unchanged; we still recurse into the
 ///   object and property so nested constants inside them fold.
+///
 /// Fold `a?.b` / `a?.[k]`. Recurse into object and property so nested
 /// constants fold, but keep the optional-member node itself — we deliberately
 /// do NOT apply the `.length` / string-method folds to the `?.` variant, so the
@@ -3696,6 +4431,79 @@ fn fold_chain(c: &ChainExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Is evaluating `e` guaranteed to produce no observable side effect?
+///
+/// Used by the array-literal `.length` fold: dropping `[a, b, c]` (replacing it
+/// with `3`) is only legal when evaluating its elements runs nothing observable.
+/// This is deliberately **conservative** — it only ever answers `true` for
+/// expressions that are *definitely* pure. Under-answering (saying `false` for a
+/// pure expression) merely misses an optimization; over-answering would drop a
+/// real side effect, so the fall-through is `false`.
+///
+/// The classification mirrors what Closure folds for array `.length` (verified
+/// against the reference compiler): literals, a plain variable read, a property
+/// read (`x.y`), and pure operators over pure operands are free; a call, `new`,
+/// assignment, `++`/`--`, `await`/`yield`, a tagged template, a dynamic
+/// `import()`, a spread, an object literal (getters/spread), or a class
+/// expression (its `static{}` block runs at definition time) are not.
+fn is_side_effect_free(e: &Expression) -> bool {
+    match e {
+        // Inert leaves — no sub-expression, nothing to run.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::ThisExpression(_)
+        | Expression::Super(_)
+        | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
+        // Building a function / arrow *value* runs no code (the body is not
+        // executed). A CLASS expression is deliberately excluded — a `static {}`
+        // initializer runs at definition time.
+        | Expression::FunctionExpression(_)
+        | Expression::ArrowFunctionExpression(_)
+        // A property read is treated as free, matching Closure (which folds
+        // `[x.y].length`); a getter could in principle run, but Closure does not
+        // model that in this fold.
+        | Expression::MemberExpression(_)
+        | Expression::OptionalMemberExpression(_) => true,
+
+        // `delete x.y` mutates its target; every other unary operator (`-`, `+`,
+        // `!`, `~`, `typeof`, `void`) is pure over a pure operand.
+        Expression::UnaryExpression(u) => {
+            u.operator != UnaryOperator::Delete && is_side_effect_free(&u.argument)
+        }
+        Expression::BinaryExpression(b) => {
+            is_side_effect_free(&b.left) && is_side_effect_free(&b.right)
+        }
+        Expression::LogicalExpression(l) => {
+            is_side_effect_free(&l.left) && is_side_effect_free(&l.right)
+        }
+        Expression::ConditionalExpression(c) => {
+            is_side_effect_free(&c.test)
+                && is_side_effect_free(&c.consequent)
+                && is_side_effect_free(&c.alternate)
+        }
+        Expression::SequenceExpression(s) => s.expressions.iter().all(is_side_effect_free),
+        Expression::ChainExpression(c) => is_side_effect_free(&c.expression),
+        Expression::TemplateLiteral(t) => t.expressions.iter().all(is_side_effect_free),
+        // A hole (`None`) evaluates nothing; a present element must be free.
+        Expression::ArrayExpression(a) => a
+            .elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free)),
+
+        // Conservatively unsafe: Call / New / OptionalCall / Assignment / Update
+        // (++/--) / Await / Yield / TaggedTemplate / ImportExpression / Spread /
+        // ObjectExpression / ClassExpression. Never mark these free.
+        _ => false,
+    }
+}
+
 fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
     // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
     let object = fold_expression(&m.object, st);
@@ -3712,6 +4520,90 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
             }
         }
+        // `[e0, e1, …].length` → the element count (CLOC12.193). Two guards keep
+        // this byte-identical to Closure:
+        //   1. a spread element (`[...x]`) contributes an unknown number of
+        //      elements at runtime, so the length is not statically known —
+        //      decline;
+        //   2. an element with a side effect must not be dropped, since
+        //      evaluating the array literal runs it — decline unless every
+        //      present element is side-effect-free.
+        // Holes (`[,,]`) evaluate nothing yet still count toward the length
+        // (`[,,].length === 2`), so `elements.len()` is the right count.
+        if let (Expression::ArrayExpression(a), Expression::Identifier(id)) = (&object, &property) {
+            if id.name == "length" {
+                let has_spread = a
+                    .elements
+                    .iter()
+                    .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+                let all_free = a
+                    .elements
+                    .iter()
+                    .all(|el| el.as_ref().is_none_or(is_side_effect_free));
+                if !has_spread && all_free {
+                    let len = a.elements.len() as f64;
+                    let parent = m.cv.clone();
+                    let before = format!("array-literal[{}].length", a.elements.len());
+                    let after = format_js_number(len);
+                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+                }
+            }
+        }
+    } else {
+        // `[e0, e1, …][K]` → computed integer-index access into an array
+        // literal (CLOC12.196 in-bounds element pick + CLOC12.196b the
+        // out-of-bounds / hole `void 0` result). The whole truth table lives
+        // in `fold_array_index_access`; delegating keeps this hot, recursive
+        // `fold_member` frame small so deeply-nested expressions don't blow
+        // the stack (a fold body inlined here would bloat every frame on the
+        // recursion — see the frame-size lesson).
+        if let (Expression::ArrayExpression(a), Expression::NumericLiteral(k)) =
+            (&object, &property)
+        {
+            if let Some(folded) = fold_array_index_access(a, k, &m.cv, st) {
+                return folded;
+            }
+        }
+        // `[e0, e1, …]["K"]` — a computed STRING key. Closure coerces the key
+        // with JS `ToNumber` and applies the same index fold, so non-canonical
+        // spellings (`["01"]`, `["1.0"]`, `[" 1"]`, `["0x1"]`, `[""]`, …) all
+        // select their integer value's element; `["length"]` folds to the
+        // element count. The full truth table lives in
+        // `fold_array_string_key_access` (also `#[inline(never)]` to keep this
+        // recursive frame small).
+        if let (Expression::ArrayExpression(a), Expression::StringLiteral(s)) =
+            (&object, &property)
+        {
+            if let Some(folded) = fold_array_string_key_access(a, s, &m.cv, st) {
+                return folded;
+            }
+        }
+        // `obj["key"]` → `obj.key` — a computed member whose key is a string
+        // literal that is a valid, non-reserved ASCII identifier name folds to a
+        // dot member (CLOC12.199). The reference Closure Compiler prints
+        // `o["foo"]` as `o.foo`, `o["$x"]` as `o.$x`, `o["let"]` as `o.let`
+        // (`let` is not an ES3 keyword), etc. A key that is an ES3 **reserved
+        // word** (`o["class"]`, `o["static"]`, `o["delete"]`, `o["int"]`, …) or
+        // is not an ASCII identifier (`o["1a"]`, `o[""]`, `o["a b"]`, `o["é"]`)
+        // stays bracketed — matching Closure, which keeps ES3-unsafe keys
+        // quoted so the output parses under an ES3 target.
+        if let Expression::StringLiteral(s) = &property {
+            if is_identifier_name(&s.value) && !is_es3_reserved_word(&s.value) {
+                let before = format!("member[\"{}\"]", s.value);
+                let after = format!("member.{}", s.value);
+                let new_cv = st.fork_cv(&m.cv, &before, &after);
+                return Expression::MemberExpression(MemberExpression {
+                    cv: new_cv,
+                    object: Box::new(object),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: s.cv.clone(),
+                        name: s.value.clone(),
+                    })),
+                    computed: false,
+                });
+            }
+        }
     }
 
     Expression::MemberExpression(MemberExpression {
@@ -3722,9 +4614,245 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Is `s` an ECMAScript **ES3 reserved word** — a keyword or future-reserved
+/// word from the ES3 grammar (the set Closure's Rhino `TokenStream.isKeyword`
+/// uses to decide whether a property name must stay quoted / bracketed)?
+///
+/// Closure keeps a member key or object-property key bracketed when it is one of
+/// these, so `o["class"]` / `o["delete"]` / `o["int"]` do NOT become dot access
+/// even though ES5+ would permit it — the quoted form parses under an ES3
+/// target. Words added AFTER ES3 (`let`, `yield`, `await`, `async`, `static` is
+/// ES3-reserved, but `let`/`yield` are not) are deliberately absent, so
+/// `o["let"]` → `o.let` — matching Closure byte-for-byte.
+fn is_es3_reserved_word(s: &str) -> bool {
+    matches!(
+        s,
+        // ES3 keywords
+        "break" | "case" | "catch" | "continue" | "default" | "delete" | "do"
+            | "else" | "finally" | "for" | "function" | "if" | "in" | "instanceof"
+            | "new" | "return" | "switch" | "this" | "throw" | "try" | "typeof"
+            | "var" | "void" | "while" | "with" | "debugger"
+        // ES3 future-reserved words (includes the Java-flavoured set)
+            | "abstract" | "boolean" | "byte" | "char" | "class" | "const"
+            | "double" | "enum" | "export" | "extends" | "final" | "float"
+            | "goto" | "implements" | "import" | "int" | "interface" | "long"
+            | "native" | "package" | "private" | "protected" | "public"
+            | "short" | "static" | "super" | "synchronized" | "throws"
+            | "transient" | "volatile"
+        // ES3 literals
+            | "null" | "true" | "false"
+    )
+}
+
+/// Fold a computed integer-index access `[e0, e1, …][K]` into an array
+/// literal. Returns `Some(replacement)` when the access folds, `None` to
+/// decline (leaving the `MemberExpression` intact).
+///
+/// This is the union of two oracle-verified arcs:
+///
+/// * **CLOC12.196** — an *in-bounds* index whose element is **present**
+///   folds to that element (`[a, b, c][1]` → `b`).
+/// * **CLOC12.196b** — an *out-of-bounds* index (`K ≥ len` **or** `K < 0`)
+///   or an in-bounds **hole** reads as `undefined`, which Closure spells
+///   `void 0` (`[1,2,3][5]` / `[1,,3][1]` / `[1,2,3][-1]` → `void 0`).
+///
+/// Truth table (all rows require **no spread** and an **integer** `K`; a
+/// fractional index such as `[1,2,3][1.5]` is an ordinary absent-property
+/// read that Closure leaves intact, so it declines):
+///
+/// | array          | K    | result   | why                                  |
+/// |----------------|------|----------|--------------------------------------|
+/// | `[a,b,c]`      | `1`  | `b`      | in-bounds, element present           |
+/// | `[1,2,3]`      | `5`  | `void 0` | out of bounds (`K ≥ len`)            |
+/// | `[1,2]`        | `2`  | `void 0` | out of bounds (`K == len`)           |
+/// | `[]`           | `0`  | `void 0` | out of bounds (empty)                |
+/// | `[1,2,3]`      | `-1` | `void 0` | negative index (post-fold `-1`)      |
+/// | `[1,,3]`       | `1`  | `void 0` | in-bounds **hole** reads `undefined` |
+/// | `[1,2,3]`      | `1.5`| decline  | fractional index — not an element    |
+///
+/// **Side-effect discipline** differs between the two results, because it
+/// governs which elements may be dropped:
+///
+/// * A **present** in-bounds element is *preserved verbatim* — its own side
+///   effect still runs (`[a, b()][1]` → `b()`). Only the **other** elements
+///   must be side-effect-free, or dropping them would drop a side effect
+///   (`[a, b()][0]` declines).
+/// * A **`void 0`** result drops the *whole* array literal, so **every**
+///   element must be side-effect-free (`[f(),2][5]` declines even though the
+///   index is out of bounds).
+///
+/// Marked `#[inline(never)]`: `fold_member` is on the recursive
+/// `fold_expression` path, so inlining this body would enlarge every stack
+/// frame along a deeply-nested expression and shrink the nesting depth we can
+/// fold before overflowing (see the frame-size lesson).
+#[inline(never)]
+fn fold_array_index_access(
+    a: &ArrayExpression,
+    k: &NumericLiteral,
+    parent_cv: &Option<String>,
+    st: &mut FoldState,
+) -> Option<Expression> {
+    // A spread (`[...x]`) makes the runtime indices statically unknown.
+    let has_spread = a
+        .elements
+        .iter()
+        .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+    if has_spread {
+        return None;
+    }
+    // Only a finite INTEGER index selects (or misses) an array element. A
+    // fractional index is an ordinary property read Closure leaves intact.
+    // (Post-fold a negative index is a `NumericLiteral` with a negative
+    // `value` — `-1` folds `-1` — so the negative case flows through here.)
+    if !(k.value.is_finite() && k.value.fract() == 0.0) {
+        return None;
+    }
+
+    let len = a.elements.len();
+    // `void 0` drops the whole literal, so every element must be pure.
+    let all_free = || {
+        a.elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free))
+    };
+
+    if k.value >= 0.0 && (k.value as usize) < len {
+        // In bounds: `0 ≤ K < len`.
+        let idx = k.value as usize;
+        match &a.elements[idx] {
+            // Present element (CLOC12.196): fold to it, preserving its own
+            // side effect; only the OTHER elements must be side-effect-free.
+            Some(selected) => {
+                let others_free = a
+                    .elements
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| *i != idx)
+                    .all(|(_, el)| el.as_ref().is_none_or(is_side_effect_free));
+                if !others_free {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]");
+                let after = format!("element[{idx}]");
+                // Records the fold (and sets `changed`); the selected element
+                // keeps its own cv for span provenance.
+                let _new_cv = st.fork_cv(parent_cv, &before, &after);
+                Some(selected.clone())
+            }
+            // In-bounds HOLE (CLOC12.196b): reads as `undefined` → `void 0`.
+            None => {
+                if !all_free() {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]=hole");
+                let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+                Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+            }
+        }
+    } else {
+        // Out of bounds (CLOC12.196b): `K ≥ len` or `K < 0`. The absent index
+        // reads as `undefined` → `void 0`.
+        if !all_free() {
+            return None;
+        }
+        let before = format!("array-literal[{len}][{}]", format_js_number(k.value));
+        let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+        Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+    }
+}
+
+/// Fold a computed **string-key** access into an array literal:
+/// `[e0, e1, …]["K"]`. Returns `Some(replacement)` when it folds, `None` to
+/// decline (leaving the `MemberExpression` intact).
+///
+/// The reference Closure Compiler coerces the string key with the SAME full
+/// JS `ToNumber` used by `Number("…")` (`fold_number`), then applies the
+/// integer-index fold — so every spelling that `ToNumber` maps to an integer
+/// selects (or misses) the corresponding element, including the non-canonical
+/// ones. Verified byte-identical at `SIMPLE`:
+///
+/// | access                | ToNumber(key) | result   | why                     |
+/// |-----------------------|---------------|----------|-------------------------|
+/// | `[a,b,c]["0"]`        | `0`           | `a`      | in-bounds               |
+/// | `[a,b,c]["01"]`       | `1`           | `b`      | leading zero → `1`      |
+/// | `[a,b,c]["1.0"]`      | `1`           | `b`      | trailing `.0` → `1`     |
+/// | `[a,b,c][" 1"]`/`["1 "]`| `1`         | `b`      | whitespace trimmed      |
+/// | `[a,b,c]["0x1"]`      | `1`           | `b`      | hex literal → `1`       |
+/// | `[a,b,c]["1e0"]`      | `1`           | `b`      | exponent → `1`          |
+/// | `[a,b,c][""]`         | `0`           | `a`      | `ToNumber("")` is `+0`  |
+/// | `[a,b,c]["3"]`        | `3`           | `void 0` | out of bounds           |
+/// | `[a,b,c]["-1"]`       | `-1`          | `void 0` | negative                |
+/// | `[a,b,c]["1.5"]`      | `1.5`         | decline  | fractional — not index  |
+/// | `[a,b,c]["foo"]`      | `NaN`         | decline  | not numeric (see below) |
+/// | `[a,b,c]["length"]`   | —             | `3`      | the length property     |
+///
+/// Two keys need special handling because `fold_number` can't express them:
+///
+/// * `"length"` isn't an index — it's the length property — so it routes to the
+///   same element-count fold as `.length` (subject to the same no-spread /
+///   all-elements-pure guard).
+/// * A key whose `ToNumber` is `NaN` (`"foo"`) makes `fold_number` return
+///   `None`, so this declines. Closure instead rewrites `["foo"]` to `.foo`
+///   (a member-access *normalisation*, not an index fold); that transform is a
+///   separate slice, so declining here leaves the `["foo"]` access intact.
+///
+/// Marked `#[inline(never)]` for the same frame-size reason as
+/// [`fold_array_index_access`]: `fold_member` is on the recursive
+/// `fold_expression` path.
+#[inline(never)]
+fn fold_array_string_key_access(
+    a: &ArrayExpression,
+    s: &StringLiteral,
+    parent_cv: &Option<String>,
+    st: &mut FoldState,
+) -> Option<Expression> {
+    // `["length"]` — the length property, identical to `.length`. Same guards:
+    // a spread makes the count unknown, and every present element must be
+    // side-effect-free because folding drops the whole array literal.
+    if s.value == "length" {
+        let has_spread = a
+            .elements
+            .iter()
+            .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+        let all_free = a
+            .elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free));
+        if has_spread || !all_free {
+            return None;
+        }
+        let len = a.elements.len() as f64;
+        let before = format!("array-literal[{}][\"length\"]", a.elements.len());
+        let after = format_js_number(len);
+        let new_cv = st.fork_cv(parent_cv, &before, &after);
+        return Some(stamp_literal_cv(FoldedLiteral::Number(len), new_cv));
+    }
+
+    // Otherwise coerce the key with JS `ToNumber` (declines on `NaN`/`Infinity`/
+    // >2^53) and reuse the integer-index fold, which itself declines on a
+    // fractional index such as `ToNumber("1.5") == 1.5`.
+    let n = fold_number(&s.value)?;
+    let k = NumericLiteral {
+        cv: None,
+        value: n,
+        raw: format_js_number(n),
+    };
+    fold_array_index_access(a, &k, parent_cv, st)
+}
+
 // ---------------------------------------------------------------------
 // Binary
 // ---------------------------------------------------------------------
+
+/// The `f64` value of an expression that is a numeric literal, else `None`.
+/// (Unary-minus on a literal has already been folded to a `NumericLiteral` by
+/// the bottom-up walk, so `-1` arrives here as `NumericLiteral(-1.0)`.)
+fn numeric_literal_value(expr: &Expression) -> Option<f64> {
+    match expr {
+        Expression::NumericLiteral(n) => Some(n.value),
+        _ => None,
+    }
+}
 
 fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
     // First recurse into children. By the time we look at left/right
@@ -3736,6 +4864,55 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
     // Try to fold. If we can't, return a new BinaryExpression with the
     // (possibly folded) children.
     if let Some(value) = try_fold_binary_op(b.operator, &left, &right) {
+        // Division / modulo BY ZERO is never folded — matching the reference
+        // Closure Compiler, which keeps the source operation rather than emit
+        // the shadowable `Infinity`/`NaN` globals:
+        //
+        //   1/0  → Infinity   kept as `1/0`
+        //   -1/0 → -Infinity  kept as `-1/0`   (`-1` is a folded literal operand)
+        //   0/0  → NaN        kept as `0/0`
+        //   1%0  → NaN        kept as `1%0`
+        //
+        // The result of `x / 0` or `x % 0` is always non-finite (`±Infinity` or
+        // `NaN`), and folding to those literals is both LONGER than the source
+        // and unsound if `Infinity`/`NaN` is shadowed in scope — so Closure
+        // declines, and so do we. A NON-zero divisor still folds normally
+        // (`5/2`→`2.5`, `1/8`→`.125`, `6/3`→`2`).
+        if matches!(b.operator, BinaryOperator::Div | BinaryOperator::Mod)
+            && numeric_literal_value(&right) == Some(0.0)
+        {
+            return Expression::BinaryExpression(BinaryExpression {
+                cv: b.cv.clone(),
+                operator: b.operator,
+                left: Box::new(left),
+                right: Box::new(right),
+            });
+        }
+
+        // Long-fraction quotient: Closure keeps `a / b` UNFOLDED when the exact
+        // quotient needs more than seven digits after the decimal point — its
+        // numeric byte-cost heuristic (folding a repeating/precise fraction to a
+        // 16-digit literal costs more bytes than the `a/b` it replaces). The cut
+        // is on the FRACTIONAL-digit count of the result's shortest round-trip
+        // decimal, NOT the total length: `811/128`→`6.3359375` (7 frac digits)
+        // still folds even though it is longer than `811/128`, while
+        // `1/256`→`.00390625` (8 frac) and `1/3`→`.3333333333333333` (16) stay
+        // `1/256` / `1/3`. Integers and short fractions fold as before
+        // (`6/3`→`2`, `1/128`→`.0078125`). Oracle-verified against the reference
+        // jar. This applies to `/` only — `%` results are integers or short.
+        if b.operator == BinaryOperator::Div {
+            if let FoldedLiteral::Number(n) = &value {
+                if fractional_digit_count(*n) > 7 {
+                    return Expression::BinaryExpression(BinaryExpression {
+                        cv: b.cv.clone(),
+                        operator: b.operator,
+                        left: Box::new(left),
+                        right: Box::new(right),
+                    });
+                }
+            }
+        }
+
         let parent = b.cv.clone();
         let before = format!(
             "({}) {} ({})",
@@ -4646,6 +5823,50 @@ fn js_to_number(input: &str) -> f64 {
     normalised.parse::<f64>().unwrap_or(f64::NAN)
 }
 
+/// Render `n` exactly as JavaScript's `Number.prototype.toString()` (base 10)
+/// would — the ECMAScript `Number::toString` algorithm (ECMA-262 §6.1.6.1.20 /
+/// legacy §7.1.12.1). This is the string a number *becomes* when it is coerced:
+/// `String(n)`, a template substitution `` `${n}` ``, and — the reason this must
+/// be JS-exact — an object property key, since `{[n]: v}` stores `v` under the
+/// key `ToString(n)` (so `{1e21: 0}` is `{"1e+21": 0}`, quoted).
+///
+/// ## Why Rust's own formatting is not enough
+///
+/// Rust's `f64::to_string()` prints the shortest decimal that round-trips, but
+/// it chooses *positional vs. exponential* notation by different thresholds than
+/// JS, and the previous implementation here had two concrete bugs:
+///
+///   * `n as i64` **saturates**: an integral `1e20` (which is `< 1e21` but far
+///     above `i64::MAX ≈ 9.2e18`) clamped to `9223372036854775807` — a totally
+///     different number. Only `|n| < 2^63` is a lossless `i64`.
+///   * exponential-range values (`|n| ≥ 1e21`, or `|n| < 1e-6`) fell through to
+///     `n.to_string()`, whose spelling (`"1000000000000000000000"` vs JS
+///     `"1e+21"`) does not match V8.
+///
+/// ## The algorithm
+///
+/// Take the shortest round-tripping significant digits and their base-10
+/// exponent from Rust's `{:e}` (which normalises to `D` or `D.DDD…` × 10^E), so
+/// `digits` are those significant figures, `k = digits.len()`, and `point =
+/// E + 1` is ECMAScript's `n` (the count of digits to the left of the decimal
+/// point). Then the spec's four positional cases decide the spelling:
+///
+/// | condition                | form                                    |
+/// |--------------------------|-----------------------------------------|
+/// | `point > 21` or `≤ −6`   | exponential: `d[.ddd]e±(point−1)`       |
+/// | `point ≤ 0`              | `0.` + `−point` zeros + digits          |
+/// | `point ≥ k`              | digits + `point−k` trailing zeros       |
+/// | `0 < point < k`          | digits split by a point after `point`   |
+///
+/// The exponential sign is always explicit (`e+21`, `e-7`) — unlike the emitter's
+/// *code-literal* number rendering, which prints `1E21` (uppercase, no sign) to
+/// match Closure's `CodePrinter`. Those are deliberately different renderings for
+/// different jobs: a minified numeric literal in code vs. a coerced string value.
+///
+/// Worked examples (all cross-checked against V8's `String(n)`):
+/// `1e20`→`"100000000000000000000"`, `1e21`→`"1e+21"`, `1e-6`→`"0.000001"`,
+/// `1e-7`→`"1e-7"`, `123456789012345680000`→`"123456789012345680000"`,
+/// `5e-324`→`"5e-324"`, `-0`→`"0"` (JS drops the sign of `-0` in `ToString`).
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -4658,12 +5879,85 @@ fn format_js_number(n: f64) -> String {
         };
     }
     if n == 0.0 {
+        // Both `+0` and `-0`: `String(-0) === "0"` in JS (the sign is dropped by
+        // `ToString`, unlike a numeric literal in code). `n == 0.0` is `true` for
+        // both zeros, so this single branch covers them.
         return "0".to_string();
     }
-    if n.fract() == 0.0 && n.abs() < 1e21 {
-        return format!("{}", n as i64);
+
+    let negative = n < 0.0;
+    // `{:e}` gives the shortest round-tripping mantissa and a base-10 exponent:
+    // `format!("{:e}", 123456789012345680000f64)` → `"1.2345678901234568e20"`.
+    // The mantissa always has exactly one digit before the point.
+    let sci = format!("{:e}", n.abs());
+    let (mantissa, exp_str) = sci.split_once('e').expect("`{:e}` always yields an 'e'");
+    let exp: i32 = exp_str.parse().expect("`{:e}` exponent is a valid integer");
+    // Drop the point to get the raw significant digits; `point = exp + 1`.
+    let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+    let k = digits.len() as i32;
+    let point = exp + 1;
+
+    let body = if point > 21 || point <= -6 {
+        // Exponential: first digit, optional `.` + rest, then `e±(point-1)`.
+        let e = point - 1;
+        let sign = if e >= 0 { '+' } else { '-' };
+        let mantissa_out = if digits.len() > 1 {
+            format!("{}.{}", &digits[..1], &digits[1..])
+        } else {
+            digits.clone()
+        };
+        format!("{mantissa_out}e{sign}{}", e.abs())
+    } else if point <= 0 {
+        // Small magnitude in `(−6, 0]`: `0.` then `−point` leading zeros, digits.
+        format!("0.{}{}", "0".repeat((-point) as usize), digits)
+    } else if point >= k {
+        // Integral: all digits, then `point − k` trailing zeros to reach `point`.
+        format!("{}{}", digits, "0".repeat((point - k) as usize))
+    } else {
+        // Fraction with `point` digits before the decimal point.
+        let p = point as usize;
+        format!("{}.{}", &digits[..p], &digits[p..])
+    };
+
+    if negative {
+        format!("-{body}")
+    } else {
+        body
     }
-    n.to_string()
+}
+
+/// Count the digits after the decimal point in `n`'s shortest round-trip
+/// decimal — i.e. how many fractional places the *fixed-notation* form needs.
+/// Used by the division fold to mirror Closure's "keep `a/b` unfolded when the
+/// quotient has more than seven fractional digits" byte-cost heuristic.
+///
+/// The count is taken from [`format_js_number`] (JS-exact `ToString`) but
+/// normalized OUT of exponential notation, because the fold cares about the
+/// fixed decimal shape, not the printed one:
+///
+/// | value              | ToString              | fractional digits |
+/// |--------------------|-----------------------|-------------------|
+/// | `2`                | `"2"`                 | 0                 |
+/// | `6.3359375`        | `"6.3359375"`         | 7                 |
+/// | `0.00390625`       | `"0.00390625"`        | 8                 |
+/// | `9.5367…e-7`       | `"9.5367…e-7"`        | 13 + 7 = 20       |
+/// | `1e30`             | `"1e+30"`             | 0 (a big integer) |
+///
+/// A negative exponent `e-k` shifts the mantissa's own fractional digits `k`
+/// places further right (adding `k`); a non-negative exponent `e+k` moves the
+/// point right, cancelling up to `k` mantissa-fraction digits (never below 0).
+fn fractional_digit_count(n: f64) -> usize {
+    let s = format_js_number(n);
+    let (mantissa, exp) = match s.split_once(['e', 'E']) {
+        Some((m, e)) => (m, e.parse::<i32>().unwrap_or(0)),
+        None => (s.as_str(), 0),
+    };
+    let mantissa_frac = mantissa
+        .split_once('.')
+        .map(|(_, frac)| frac.len() as i32)
+        .unwrap_or(0);
+    // exp >= 0 cancels mantissa-fraction digits; exp < 0 adds |exp| of them.
+    (mantissa_frac - exp).max(0) as usize
 }
 
 // ---------------------------------------------------------------------
@@ -4716,6 +6010,37 @@ fn fold_logical(l: &LogicalExpression, st: &mut FoldState) -> Expression {
         // promoted); we don't re-stamp it. Contribution records the
         // collapse.
         return chosen;
+    }
+
+    // Left-associativity normalization: `a op (b op c)` → `(a op b) op c` for
+    // `&&` / `||`. Both operators are fully associative — the two groupings
+    // yield the same value, short-circuit at the same point, and evaluate `a`,
+    // `b`, `c` left-to-right in the same order — so the rewrite is behaviour
+    // preserving. The payoff is byte-identity with the reference compiler: a
+    // right-nested same-operator logical must be parenthesised on emit
+    // (`a&&(b&&c)`), whereas the left-nested form prints bare (`a&&b&&c`).
+    // Applied bottom-up under the pass's fixed-point iteration, a single
+    // re-association step per node fully flattens arbitrarily deep right nests
+    // (`a&&(b&&(c&&d))` → `a&&b&&c&&d`). `??` is intentionally excluded here (it
+    // cannot legally mix with `&&`/`||` without parens, and is a separate case).
+    let same_op_right_nest = matches!(l.operator, LogicalOperator::And | LogicalOperator::Or)
+        && matches!(&right, Expression::LogicalExpression(r) if r.operator == l.operator);
+    if same_op_right_nest {
+        let Expression::LogicalExpression(r) = right else { unreachable!() };
+        let new_cv = st.fork_cv(&l.cv, "a op (b op c)", "(a op b) op c");
+        // `(a op b)` — the new left-nested inner node (synthetic, no cv).
+        let inner = Expression::LogicalExpression(LogicalExpression {
+            cv: None,
+            operator: l.operator,
+            left: Box::new(left),
+            right: r.left,
+        });
+        return Expression::LogicalExpression(LogicalExpression {
+            cv: new_cv,
+            operator: l.operator,
+            left: Box::new(inner),
+            right: r.right,
+        });
     }
 
     Expression::LogicalExpression(LogicalExpression {
@@ -4897,6 +6222,43 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 });
             }
         }
+
+        // Idempotent double-negation collapse (upstream Closure's
+        // `PeepholeMinimizeConditions`): `!!!x` → `!x`. A `!` whose operand is
+        // itself a `!!y` (i.e. `Not(Not(y))`) drops that inner `!!` pair:
+        //
+        //   !!!x    →  !x        !!!!x   →  !!x       !!!!!x  →  !x
+        //   !!x     →  !!x  (KEPT — a lone `!!` is the canonical boolean coercion)
+        //
+        // Sound for ANY operand — a getter, a call, `a+b` — with no side-effect
+        // gate, because the operand is evaluated EXACTLY ONCE no matter how many
+        // `!` wrap it (`!` never re-evaluates its operand, and `ToBoolean`
+        // invokes no user coercion — unlike the `ToNumber`/`valueOf` reordering
+        // that makes bitwise re-association unsound). `!!!x` computes
+        // `¬¬¬ToBoolean(x)` = `¬ToBoolean(x)` = `!x`; three negations of a
+        // boolean equal one. Folding is bottom-up, so `!!!!x`'s inner `!!!x`
+        // collapses to `!x` first, then the outer `!` yields `!!x` — the
+        // even/odd cascade converges in a single pass, matching Closure
+        // byte-for-byte. A lone `!!y` is deliberately preserved: it is the
+        // minified spelling of `Boolean(y)` and dropping it would change the
+        // VALUE (`!!5` is `true`, `5` is `5`).
+        if let Expression::UnaryExpression(inner) = &arg {
+            if inner.operator == UnaryOperator::Not {
+                if let Expression::UnaryExpression(inner2) = &*inner.argument {
+                    if inner2.operator == UnaryOperator::Not {
+                        // `arg` is `!!y`; the whole `!(!!y)` collapses to `!y`.
+                        let parent = u.cv.clone();
+                        let new_cv = st.fork_cv(&parent, "!!!x", "!x");
+                        return Expression::UnaryExpression(UnaryExpression {
+                            cv: new_cv,
+                            operator: UnaryOperator::Not,
+                            prefix: true,
+                            argument: inner2.argument.clone(),
+                        });
+                    }
+                }
+            }
+        }
     }
 
     Expression::UnaryExpression(UnaryExpression {
@@ -4936,6 +6298,49 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
         let after = literal_label_for_expr(&chosen);
         let _new_cv = st.fork_cv(&parent, &before, &after);
         return chosen;
+    }
+
+    // Equal-branch collapse: `t ? X : X` → `X` when `t` is side-effect-free.
+    // Both arms are the SAME expression, so the selected value is `X` no matter
+    // which way `t` decides — the branch on `t` is dead. The ONE thing the
+    // rewrite must not silently drop is `t`'s own evaluation, so we require `t`
+    // to be side-effect-free (`is_side_effect_free`, the crate-wide contract:
+    // an identifier / literal / member read is free — a getter on `a.p` is not
+    // modelled, exactly as in `[a.p].length`; a call / assignment / `++` is
+    // NOT). This mirrors the reference Closure Compiler's `PeepholeFoldConstants`
+    // equal-branch case byte-for-byte (`a?b:b`→`b`, `a?1:1`→`1`, `a?b.c:b.c`→
+    // `b.c`, `a?b():b()`→`b()`).
+    //
+    // When `t` IS impure, Closure instead rewrites to the comma sequence
+    // `(t, X)` to preserve the effect (`f()?b:b`→`(f(),b)`, `(a=1)?b:b`→
+    // `(a=1,b)`): both arms yield `X`, so the value is `X` regardless of how `t`
+    // decides, but `t`'s own evaluation must still happen and must happen FIRST.
+    // A `SequenceExpression [t, X]` evaluates `t` then `X`, left to right, and
+    // yields `X` — identical to the ternary's evaluation order (`t` once, `X`
+    // once, no re-ordering, so no `valueOf`/`ToNumber` coercion hazard). The
+    // emitter parenthesises a sequence in argument / sub-expression position, so
+    // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
+    //
+    // Branch equality uses derived structural `==`. In the default pipeline
+    // every node carries `cv: None` (the bridge stamps `None`, and folding an
+    // identifier/literal mints nothing), so `a?b:b`'s two `b`s compare equal.
+    // Under `--correlation_vector` the two arms may carry distinct minted CVs;
+    // then `==` is `false` and we conservatively DECLINE — a sound miss, never
+    // a miscompile.
+    if consequent == alternate {
+        let parent = c.cv.clone();
+        if is_side_effect_free(&test) {
+            // Pure test: the branch on `t` is dead AND `t` has no effect, so the
+            // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
+            let _new_cv = st.fork_cv(&parent, "t ? X : X", "X");
+            return consequent;
+        }
+        // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
+        let new_cv = st.fork_cv(&parent, "t ? X : X", "(t,X)");
+        return Expression::SequenceExpression(SequenceExpression {
+            cv: new_cv,
+            expressions: vec![test, consequent],
+        });
     }
 
     Expression::ConditionalExpression(ConditionalExpression {
@@ -4992,6 +6397,34 @@ fn js_math_round(x: f64) -> f64 {
         x.floor() + 1.0
     } else {
         x.round()
+    }
+}
+
+/// Evaluate `Math.sign(x)` per ECMAScript §21.3.2.34. The result preserves the
+/// SIGN of a zero input (`sign(+0) == +0`, `sign(-0) == -0`) and is `NaN` for
+/// `NaN`; otherwise it is `+1` for a positive input and `-1` for a negative one.
+///
+/// Rust's `f64::signum` is deliberately NOT used: it maps `+0.0`→`+1.0` and
+/// `-0.0`→`-1.0`, which would corrupt the zero cases. Our callers only pass
+/// finite numeric literals (never `NaN`), and the caller's shared negative-zero
+/// gate then declines the `sign(-0) == -0` result — matching how the same
+/// handler already declines `Math.ceil(-0.5)` — so this stays a faithful,
+/// standalone model.
+///
+/// | x        | Math.sign(x) |
+/// |----------|--------------|
+/// | NaN      | NaN          |
+/// | +0 / -0  | +0 / -0      |
+/// | x > 0    | +1           |
+/// | x < 0    | -1           |
+fn js_math_sign(x: f64) -> f64 {
+    if x.is_nan() || x == 0.0 {
+        // NaN and both zeroes map to themselves (preserving the signed zero).
+        x
+    } else if x > 0.0 {
+        1.0
+    } else {
+        -1.0
     }
 }
 
@@ -5063,6 +6496,10 @@ fn fold_object_entries_pairs(properties: &[ObjectMember]) -> Option<Vec<Expressi
             PropertyKey::StringLiteral(s) => s.value.clone(),
             PropertyKey::NumericLiteral(n) => format_js_number(n.value),
             PropertyKey::Expression(_) => return None, // computed
+            // A private name is not a public property key — an object literal
+            // can never hold one, and `Object.keys/entries` would not enumerate
+            // it — so decline the fold (same as a computed key).
+            PropertyKey::PrivateName(_) => return None,
         };
         // A non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an
         // own property, so `Object.entries` would not enumerate it — decline.
@@ -5140,6 +6577,10 @@ fn fold_object_keys_names(properties: &[ObjectMember]) -> Option<Vec<Expression>
             PropertyKey::StringLiteral(s) => s.value.clone(),
             PropertyKey::NumericLiteral(n) => format_js_number(n.value),
             PropertyKey::Expression(_) => return None, // computed
+            // A private name is not a public property key — an object literal
+            // can never hold one, and `Object.keys/entries` would not enumerate
+            // it — so decline the fold (same as a computed key).
+            PropertyKey::PrivateName(_) => return None,
         };
         // NOTE (previously: a `contains('\\')` decline guarded against escapes).
         // A `PropertyKey::StringLiteral`'s `value` now holds the DECODED property
@@ -5217,6 +6658,10 @@ enum FoldedLiteral {
     Number(f64),
     String(String),
     Boolean(bool),
+    // Models the JS `null` value for completeness of the folded-literal domain.
+    // No current fold produces it (null-valued expressions are left for the
+    // runtime), but keeping the variant makes the value enum total.
+    #[allow(dead_code)]
     Null,
     /// `undefined`. Produced by:
     /// - `void <any-expression-without-side-effects>` fold (CLOC12.20 / gap-002).
@@ -5421,6 +6866,10 @@ fn unary_op_label(op: UnaryOperator) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    // These tests exercise constant-folding of `parseFloat`/number literals, so
+    // literals like `3.14` are deliberate test inputs/expected values, not
+    // approximations of std::f64::consts::PI to be replaced.
+    #![allow(clippy::approx_constant)]
     use super::*;
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
     use coding_adventures_javascript_ast::{statement::TaggedStatement, Identifier, SourceType};
@@ -5505,6 +6954,44 @@ mod tests {
         )])
     }
 
+    /// CLOC12.191 PR1: a default-parameter's `right` expression must fold. The
+    /// pass previously cloned parameter lists verbatim (rest-params carry only a
+    /// name); a default carries *live code*, so `function f(a = 2 + 3){}` has to
+    /// shrink to `function f(a = 5){}` — the same fold a function body gets.
+    #[test]
+    fn folds_default_parameter_expression() {
+        let default_expr = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, None)),
+            right: Box::new(num(3.0, None)),
+        });
+        let fd = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: default_expr,
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = untraced_program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(fd),
+        )]);
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "folding a default expression should mark the program changed");
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) = &out.body[0] else {
+            panic!("expected a function declaration back");
+        };
+        match f.params[0].default_value() {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 5.0),
+            other => panic!("expected the default to fold to 5; got {other:?}"),
+        }
+    }
+
     /// Extract the (folded) expression from a Program whose body is a
     /// single ExpressionStatement — for assertion convenience.
     fn extract_expr(prog: &Program) -> &Expression {
@@ -5520,15 +7007,32 @@ mod tests {
     // ------------------- deep-chain DoS regression -------------------
 
     /// A very deep left-nested operator chain — the shape the bridge builds
-    /// for flat source like `1+1+…+1` (tens of thousands of terms) — must fold
-    /// without overflowing the native stack. The bottom-up `fold_binary` walk
-    /// recurses once per operator; on the caller's ordinary ~2 MiB stack this
-    /// used to overflow (an uncatchable abort). The large-stack worker
-    /// (`FOLD_STACK_SIZE`) absorbs the recursion and still folds the whole
-    /// chain to a single number.
+    /// for flat source like `1+1+…+1` (thousands of terms) — must fold without
+    /// overflowing the native stack. The bottom-up `fold_binary` walk recurses
+    /// once per operator; on the caller's ordinary ~2 MiB stack this used to
+    /// overflow (an uncatchable abort). The large-stack worker
+    /// (`FOLD_STACK_SIZE`, 128 MiB) absorbs the recursion and still folds the
+    /// whole chain to a single number.
+    ///
+    /// ## Why `N = 6_000` and not more
+    ///
+    /// This is a *regression guard* that the worker exists and is used — NOT a
+    /// measurement of the maximum foldable depth. `N` only has to be deep enough
+    /// that folding on the caller's ~2 MiB stack WOULD overflow (each
+    /// `fold_binary` frame is several KiB, so a few thousand levels already blow
+    /// past 2 MiB by an order of magnitude), while sitting comfortably inside
+    /// the 128 MiB worker with room to spare. An earlier `N = 20_000` sat right
+    /// at the worker's edge (~6-7 KiB/frame × 20 000 ≈ the full 128 MiB), so on
+    /// CI runners — fatter debug frames, higher memory pressure under parallel
+    /// tests — it aborted nondeterministically (~2/3 of runs) even though it
+    /// passed locally. `6_000` keeps ~4× headroom under the worker while still
+    /// proving the property. (Truly bounding *production* recursion against a
+    /// hostile deep input is a separate, larger transform — a recursion-depth
+    /// limit that declines to fold rather than a bigger stack — tracked apart
+    /// from this test's reliability fix.)
     #[test]
     fn deeply_nested_binary_chain_folds_without_stack_overflow() {
-        const N: usize = 20_000;
+        const N: usize = 6_000;
         let mut expr = num(1.0, None);
         for _ in 0..N {
             expr = Expression::BinaryExpression(BinaryExpression {
@@ -5539,13 +7043,13 @@ mod tests {
             });
         }
         let prog = program_with_expr(expr, false);
-        // `fold_program` runs its recursion on the 64 MiB `FOLD_STACK_SIZE`
+        // `fold_program` runs its recursion on the 128 MiB `FOLD_STACK_SIZE`
         // worker, so this depth folds fine even though the test runs on cargo's
         // ~2 MiB thread. Without the worker, `fold_binary`'s per-operator
         // recursion overflows here — so a regression re-breaks this test. The
-        // 20 000-deep *input* AST's own recursive `Drop` would ALSO overflow
-        // this small thread (orthogonal), so we run the pass by reference and
-        // `forget` the input; the shallow folded output drops fine.
+        // deep *input* AST's own recursive `Drop` would ALSO overflow this small
+        // thread (orthogonal), so we run the pass by reference and `forget` the
+        // input; the shallow folded output drops fine.
         let pass = ConstantFoldPass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);
@@ -5562,6 +7066,63 @@ mod tests {
             other => panic!("expected a single folded number, got {other:?}"),
         }
         std::mem::forget(prog);
+    }
+
+    // ------------------- JS-exact Number::toString -------------------
+
+    /// `format_js_number` must reproduce V8's `String(n)` byte-for-byte. Every
+    /// expected value below was generated by running `String(n)` under Node
+    /// (V8), so this table is a direct conformance check against a real JS
+    /// engine — covering the positional/exponential boundaries (`1e20` vs
+    /// `1e21`, `1e-6` vs `1e-7`), the former `i64`-saturation range
+    /// (`[2^63, 1e21)`), sign handling, and the `-0 → "0"` coercion rule.
+    #[test]
+    fn format_js_number_matches_v8_tostring() {
+        let cases: &[(f64, &str)] = &[
+            // small integers and simple decimals — unchanged from before
+            (0.0, "0"),
+            (1.0, "1"),
+            (-1.0, "-1"),
+            (100.0, "100"),
+            (-100.0, "-100"),
+            (0.5, "0.5"),
+            (-0.5, "-0.5"),
+            (0.1, "0.1"),
+            (1.5, "1.5"),
+            (3.14159, "3.14159"),
+            (123000000.0, "123000000"),
+            (0.000123, "0.000123"),
+            // positional/exponential boundary at 10^21
+            (1e20, "100000000000000000000"),
+            (1e21, "1e+21"),
+            (1e22, "1e+22"),
+            (-1e21, "-1e+21"),
+            (1.5e21, "1.5e+21"),
+            (9.999999999999999e20, "999999999999999900000"),
+            // former i64-saturation range [2^63 ~ 9.2e18, 1e21): integral but
+            // far above i64::MAX, so `n as i64` used to clamp to garbage
+            (123456789012345680000.0, "123456789012345680000"),
+            (12345678901234567890.0, "12345678901234567000"),
+            // small-magnitude boundary at 10^-6 / 10^-7
+            (1e-5, "0.00001"),
+            (1e-6, "0.000001"),
+            (1e-7, "1e-7"),
+            (2.5e-10, "2.5e-10"),
+            // extremes of the f64 range
+            (5e-324, "5e-324"),
+            (1.7976931348623157e308, "1.7976931348623157e+308"),
+            (6.022e23, "6.022e+23"),
+            // non-finite
+            (f64::NAN, "NaN"),
+            (f64::INFINITY, "Infinity"),
+            (f64::NEG_INFINITY, "-Infinity"),
+        ];
+        for &(n, expected) in cases {
+            assert_eq!(format_js_number(n), expected, "String({n:?})");
+        }
+        // Negative zero: JS `String(-0)` drops the sign (a numeric *literal* in
+        // code keeps `-0`, but that is the emitter's separate job).
+        assert_eq!(format_js_number(-0.0), "0", "String(-0)");
     }
 
     // ------------------- metadata + identity tests -------------------
@@ -5582,6 +7143,188 @@ mod tests {
     #[test]
     fn cost_is_two_pass_units() {
         assert_eq!(ConstantFoldPass::new().cost(), 2);
+    }
+
+    // --------- standard-constructor `new`-drop (Error / Object / Array) ---------
+
+    fn new_expr(callee: Expression, args: Vec<Expression>) -> Expression {
+        // A traced `cv` so the fold records a provenance contribution (matching
+        // the bridge, which stamps every node) — `fork_cv` no-ops on `None`.
+        Expression::NewExpression(NewExpression {
+            cv: Some("new.1".to_string()),
+            callee: Box::new(callee),
+            arguments: args,
+        })
+    }
+    fn member_expr(object: Expression, prop: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(object),
+            property: Box::new(ident(prop)),
+            computed: false,
+        })
+    }
+
+    /// `new Error("x")` → `Error("x")` — the `new` is dropped to a plain call.
+    #[test]
+    fn new_error_with_arg_drops_new() {
+        let expr = new_expr(ident("Error"), vec![string("x", None)]);
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "folded"));
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Error"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected a plain call `Error(\"x\")`; got {other:?}"),
+        }
+    }
+
+    /// `new Error` (no args) → `Error()` — still a call, with an empty arg list.
+    #[test]
+    fn new_error_no_args_drops_new() {
+        let expr = new_expr(ident("Error"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Error"));
+                assert!(c.arguments.is_empty());
+            }
+            other => panic!("expected `Error()`; got {other:?}"),
+        }
+    }
+
+    /// `new TypeError(x)` is LEFT ALONE — the reference compiler folds only
+    /// `Error`, not its subtypes.
+    #[test]
+    fn new_typeerror_subtype_is_not_dropped() {
+        let expr = new_expr(ident("TypeError"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a subtype constructor must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new obj.Error(x)` is LEFT ALONE — the gate requires a BARE `Error`
+    /// identifier callee, not a member access.
+    #[test]
+    fn new_member_error_callee_is_not_dropped() {
+        let expr = new_expr(member_expr(ident("obj"), "Error"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a member `obj.Error` callee must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new Object(x)` → `Object(x)` — a plain call.
+    #[test]
+    fn new_object_with_arg_drops_to_call() {
+        let expr = new_expr(ident("Object"), vec![ident("x")]);
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "folded"));
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Object"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected `Object(x)`; got {other:?}"),
+        }
+    }
+
+    /// `new Object()` → `{}` — an empty object literal.
+    #[test]
+    fn new_object_no_args_to_empty_object_literal() {
+        let expr = new_expr(ident("Object"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ObjectExpression(o) => assert!(o.properties.is_empty()),
+            other => panic!("expected `{{}}`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(x)` → `Array(x)` — a lone argument is a length, so the call
+    /// form is kept (NOT `[x]`).
+    #[test]
+    fn new_array_one_arg_keeps_call() {
+        let expr = new_expr(ident("Array"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Array"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected `Array(x)`; got {other:?}"),
+        }
+    }
+
+    /// `new Array()` → `[]` — an empty array literal.
+    #[test]
+    fn new_array_no_args_to_empty_array_literal() {
+        let expr = new_expr(ident("Array"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(a.elements.is_empty()),
+            other => panic!("expected `[]`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(1, 2)` → `[1, 2]` — 2+ args become an array literal.
+    #[test]
+    fn new_array_multi_args_to_array_literal() {
+        let expr = new_expr(ident("Array"), vec![num(1.0, None), num(2.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2);
+                assert!(a.elements.iter().all(|e| e.is_some()));
+            }
+            other => panic!("expected `[1,2]`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(a, ...xs)` keeps the CALL form `Array(a, ...xs)` — NOT the
+    /// array literal `[a, ...xs]`, which would be a miscompile when the spread
+    /// expands to zero elements (`new Array(5, ...[])` is a length-5 array, but
+    /// `[5, ...[]]` is `[5]`). The call form is always equivalent.
+    #[test]
+    fn new_array_multi_args_with_spread_keeps_call() {
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("xs")),
+        });
+        let expr = new_expr(ident("Array"), vec![ident("a"), spread]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Array"));
+                assert_eq!(c.arguments.len(), 2);
+            }
+            other => panic!("expected the call form `Array(a,...xs)`; got {other:?}"),
+        }
+    }
+
+    /// `new obj.Array(x)` is LEFT ALONE — a member callee is not the global.
+    #[test]
+    fn new_member_array_callee_not_folded() {
+        let expr = new_expr(member_expr(ident("obj"), "Array"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a member `obj.Array` callee must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new Foo(x)` (a user constructor) is LEFT ALONE.
+    #[test]
+    fn new_user_ctor_not_folded() {
+        let expr = new_expr(ident("Foo"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a user constructor must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
     }
 
     #[test]
@@ -5655,6 +7398,111 @@ mod tests {
                 other => panic!("expected NumericLiteral; got {:?} for op {:?}", other, op),
             }
         }
+    }
+
+    #[test]
+    fn division_and_modulo_by_zero_are_not_folded() {
+        // `x / 0` and `x % 0` produce ±Infinity / NaN — Closure keeps the source
+        // op rather than emit the shadowable global, and so do we. The binary
+        // node must SURVIVE unfolded.
+        for (op, l, r) in [
+            (BinaryOperator::Div, 1.0, 0.0),   // 1/0  → Infinity  (kept)
+            (BinaryOperator::Div, -1.0, 0.0),  // -1/0 → -Infinity (kept)
+            (BinaryOperator::Div, 0.0, 0.0),   // 0/0  → NaN       (kept)
+            (BinaryOperator::Mod, 1.0, 0.0),   // 1%0  → NaN       (kept)
+        ] {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: op,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(0.0, None)),
+            });
+            let _ = r;
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            assert!(!changed, "{l} {op:?} 0 must NOT fold");
+            match extract_expr(&out) {
+                Expression::BinaryExpression(b) => {
+                    assert_eq!(b.operator, op);
+                    assert!(matches!(&*b.right, Expression::NumericLiteral(n) if n.value == 0.0));
+                }
+                other => panic!("expected the binary op to survive; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn division_by_nonzero_still_folds() {
+        // The guard is scoped to a ZERO divisor: `6/3`→2 and `5/2`→2.5 still fold.
+        for (l, r, expected) in [(6.0, 3.0, 2.0), (5.0, 2.0, 2.5), (1.0, 8.0, 0.125)] {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: BinaryOperator::Div,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(r, None)),
+            });
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            assert!(changed, "{l}/{r} should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expected, "{l}/{r}"),
+                other => panic!("expected NumericLiteral({expected}); got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn division_with_over_seven_fractional_digits_is_kept_unfolded() {
+        // Closure folds `a/b` only when the quotient has <= 7 fractional digits;
+        // otherwise it keeps the source `a/b` (byte-cost heuristic). Each row was
+        // checked against the reference jar. `folds == true` means the quotient
+        // becomes a NumericLiteral; `false` means the BinaryExpression survives.
+        let cases: &[(f64, f64, bool)] = &[
+            // <= 7 fractional digits — fold (even when longer than the source)
+            (6.0, 3.0, true),        // 2            (integer)
+            (1.0, 2.0, true),        // .5           (1)
+            (7.0, 8.0, true),        // .875         (3)
+            (1.0, 64.0, true),       // .015625      (6)
+            (1.0, 128.0, true),      // .0078125     (7)  boundary: still folds
+            (811.0, 128.0, true),    // 6.3359375    (7)  boundary, magnitude > 1
+            // > 7 fractional digits — keep unfolded
+            (1.0, 256.0, false),     // .00390625    (8)  boundary: kept
+            (1.0, 512.0, false),     // .001953125   (9)
+            (1.0, 1024.0, false),    // .0009765625  (10)
+            (1.0, 3.0, false),       // .3333…       (16, non-terminating)
+            (2.0, 3.0, false),       // .6666…       (16)
+            (1.0, 7.0, false),       // .142857…     (17)
+            (1.0, 1048576.0, false), // 9.53…e-7     (exponential, ~20)
+        ];
+        for &(l, r, folds) in cases {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: BinaryOperator::Div,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(r, None)),
+            });
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            match (folds, extract_expr(&out)) {
+                (true, Expression::NumericLiteral(n)) => {
+                    assert_eq!(n.value, l / r, "{l}/{r} folded to the wrong value");
+                    assert!(changed, "{l}/{r} should fold");
+                }
+                (false, Expression::BinaryExpression(be)) => {
+                    assert_eq!(be.operator, BinaryOperator::Div, "{l}/{r} kept as division");
+                }
+                (folds, other) => {
+                    panic!("{l}/{r}: expected folds={folds}; got {other:?}")
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn fractional_digit_count_normalizes_exponential_forms() {
+        assert_eq!(fractional_digit_count(2.0), 0);
+        assert_eq!(fractional_digit_count(6.3359375), 7);
+        assert_eq!(fractional_digit_count(0.00390625), 8);
+        assert_eq!(fractional_digit_count(1.0 / 3.0), 16);
+        assert_eq!(fractional_digit_count(1e30), 0); // "1e+30" → big integer, 0 frac
+        assert_eq!(fractional_digit_count(1.0 / 1048576.0), 20); // 9.53…e-7
     }
 
     #[test]
@@ -6215,6 +8063,99 @@ mod tests {
         }
     }
 
+    // ------------- idempotent double-negation collapse (!!!x → !x) -----
+
+    /// Prefix `!expr`.
+    fn not(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+
+    /// Count the `!` prefixes wrapping a leaf, returning `(count, leaf_name)`.
+    fn count_nots(mut e: &Expression) -> (usize, String) {
+        let mut n = 0;
+        while let Expression::UnaryExpression(u) = e {
+            assert_eq!(u.operator, UnaryOperator::Not, "expected only `!` chain");
+            n += 1;
+            e = &u.argument;
+        }
+        let name = match e {
+            Expression::Identifier(id) => id.name.clone(),
+            other => panic!("expected identifier leaf; got {other:?}"),
+        };
+        (n, name)
+    }
+
+    #[test]
+    fn triple_not_collapses_to_single() {
+        // !!!a → !a
+        let expr = not(not(not(ident("a"))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!a should collapse");
+        assert_eq!(count_nots(extract_expr(&out)), (1, "a".to_string()));
+    }
+
+    #[test]
+    fn double_not_is_preserved() {
+        // !!a is the canonical Boolean(a) coercion — must NOT collapse.
+        let expr = not(not(ident("a")));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "!!a must be preserved");
+        assert_eq!(count_nots(extract_expr(&out)), (2, "a".to_string()));
+    }
+
+    #[test]
+    fn quad_not_collapses_to_double() {
+        // !!!!a → !!a (even count keeps the boolean coercion)
+        let expr = not(not(not(not(ident("a")))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!!a should collapse to !!a");
+        assert_eq!(count_nots(extract_expr(&out)), (2, "a".to_string()));
+    }
+
+    #[test]
+    fn quint_not_collapses_to_single() {
+        // !!!!!a → !a
+        let expr = not(not(not(not(not(ident("a"))))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!!!a should collapse to !a");
+        assert_eq!(count_nots(extract_expr(&out)), (1, "a".to_string()));
+    }
+
+    #[test]
+    fn triple_not_over_impure_operand_still_collapses_once_evaluated() {
+        // !!!f() → !f(). Sound: `!` never re-evaluates its operand, so `f` is
+        // called exactly once in both forms; no side-effect gate is needed.
+        let expr = not(not(not(bare_call_local("f"))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!f() should collapse to !f()");
+        match extract_expr(&out) {
+            Expression::UnaryExpression(u) => {
+                assert_eq!(u.operator, UnaryOperator::Not);
+                assert!(
+                    matches!(&*u.argument, Expression::CallExpression(_)),
+                    "the single surviving `!` must wrap the call directly: {:?}",
+                    u.argument
+                );
+            }
+            other => panic!("expected `!f()`; got {other:?}"),
+        }
+    }
+
+    /// A bare `f()` call — local helper (the module's other `call0` builds a
+    /// method call, and `bare_call` lives in a different test section).
+    fn bare_call_local(callee: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(callee)),
+            arguments: vec![],
+        })
+    }
+
     #[test]
     fn fold_negate_and_plus() {
         let neg = Expression::UnaryExpression(UnaryExpression {
@@ -6355,6 +8296,758 @@ mod tests {
         }
     }
 
+    /// Build an array literal from a slice of optional elements (`None` = hole).
+    fn array_opt(elements: Vec<Option<Expression>>) -> Expression {
+        Expression::ArrayExpression(ArrayExpression {
+            cv: Some("arr.cv".to_string()),
+            elements,
+        })
+    }
+
+    /// CLOC12.193: `[e0, e1, …].length` folds to the element count when every
+    /// present element is side-effect-free and there is no spread. Truth table
+    /// verified against the reference Closure Compiler.
+    #[test]
+    fn fold_array_literal_length_when_pure() {
+        // `[1, 2, 3].length` → 3.
+        let m = member(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            "length",
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(changed, "[1,2,3].length should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {other:?}"),
+        }
+
+        // `[].length` → 0.
+        let m0 = member(array_opt(vec![]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m0, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {other:?}"),
+        }
+
+        // `[,,].length` → 2 — holes evaluate nothing but DO count toward length.
+        let mh = member(array_opt(vec![None, None]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(mh, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (holes count); got {other:?}"),
+        }
+
+        // `[a, b].length` → 2 — identifier elements are side-effect-free.
+        let mid = member(
+            array_opt(vec![Some(ident("a")), Some(ident("b"))]),
+            "length",
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(mid, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (identifiers are pure); got {other:?}"),
+        }
+    }
+
+    /// The array-`.length` fold must DECLINE when dropping the array would drop a
+    /// side effect (a call / an assignment) or when a spread makes the length
+    /// statically unknown — matching Closure, which keeps all three intact.
+    #[test]
+    fn array_literal_length_declines_on_side_effect_or_spread() {
+        use coding_adventures_javascript_ast::{AssignmentOperator, AssignmentTarget};
+        // `[g()].length` — the call must not be dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let m_call = member(array_opt(vec![Some(call)]), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m_call, true));
+        assert!(!changed, "[g()].length must not fold — the call has a side effect");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(_)),
+            "expected the member expression to survive"
+        );
+
+        // `[a = 1].length` — the assignment mutates `a`, so it must not be dropped.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(num(1.0, None)),
+        });
+        let m_assign = member(array_opt(vec![Some(assign)]), "length");
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_assign, true));
+        assert!(!changed, "[a=1].length must not fold — the assignment has a side effect");
+
+        // `[1, 2, ...x].length` — a spread makes the length statically unknown.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let m_spread = member(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            "length",
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
+        assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    /// `[...[1, 2], 3]` → `[1, 2, 3]` — a spread of a hole-free array literal
+    /// inlines its elements into the enclosing array literal.
+    #[test]
+    fn spread_of_array_literal_flattens() {
+        let inner = array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread), Some(num(3.0, None))]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                let vals: Vec<f64> = a
+                    .elements
+                    .iter()
+                    .map(|e| match e {
+                        Some(Expression::NumericLiteral(n)) => n.value,
+                        other => panic!("expected numeric element; got {other:?}"),
+                    })
+                    .collect();
+                assert_eq!(vals, vec![1.0, 2.0, 3.0]);
+            }
+            other => panic!("expected [1,2,3]; got {other:?}"),
+        }
+    }
+
+    /// `[...[1, , 3]]` — a spread whose inner literal has a HOLE is NOT inlined:
+    /// spread iterates and yields `undefined` for the hole, which is observably
+    /// different from a hole, so the spread is left intact.
+    #[test]
+    fn spread_of_array_literal_with_hole_declines() {
+        let inner = array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]);
+        let spread = Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(inner) });
+        let arr = array_opt(vec![Some(spread)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(arr, true));
+        assert!(!changed, "a hole-carrying inner literal must NOT be inlined");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(
+                matches!(a.elements.as_slice(), [Some(Expression::SpreadElement(_))]),
+                "the spread must survive intact; got {:?}",
+                a.elements
+            ),
+            other => panic!("expected an array with a surviving spread; got {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // CLOC12.198: compound self-assignment contraction (`x = x OP E` → `x OP= E`)
+    // -----------------------------------------------------------------
+
+    /// Build `<target> = <right>` — a plain `=` assignment to a bare identifier.
+    fn assign_eq(target: &str, right: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.1".to_string()),
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: target.to_string(),
+            }),
+            right: Box::new(right),
+        })
+    }
+
+    /// Every arithmetic / bitwise operator contracts: `x = x OP y` → `x OP= y`,
+    /// keeping only the binary's RIGHT operand. Verified byte-identical against
+    /// the reference Closure Compiler (`x=x+1`→`x+=1`, `x=x*2`→`x*=2`, …).
+    #[test]
+    fn contracts_compound_self_assignment_for_each_operator() {
+        use AssignmentOperator as A;
+        use BinaryOperator as B;
+        let cases = [
+            (B::Add, A::AddEq),
+            (B::Sub, A::SubEq),
+            (B::Mul, A::MulEq),
+            (B::Div, A::DivEq),
+            (B::Mod, A::ModEq),
+            (B::Exp, A::ExpEq),
+            (B::LeftShift, A::LeftShiftEq),
+            (B::RightShift, A::RightShiftEq),
+            (B::UnsignedRightShift, A::UnsignedRightShiftEq),
+            (B::BitAnd, A::BitAndEq),
+            (B::BitOr, A::BitOrEq),
+            (B::BitXor, A::BitXorEq),
+        ];
+        for (bin_op, want) in cases {
+            // `x = x <op> y`
+            let rhs = binary_with(bin_op, ident("x"), ident("y"));
+            let (out, _c, changed, _) = run_pass(program_with_expr(assign_eq("x", rhs), true));
+            assert!(changed, "{bin_op:?}: the contraction should mark the program changed");
+            match extract_expr(&out) {
+                Expression::AssignmentExpression(a) => {
+                    assert_eq!(a.operator, want, "{bin_op:?}: wrong compound operator");
+                    match &a.left {
+                        AssignmentTarget::Identifier(id) => {
+                            assert_eq!(id.name, "x", "{bin_op:?}: target must survive")
+                        }
+                        other => panic!("{bin_op:?}: expected identifier target; got {other:?}"),
+                    }
+                    // The compound form keeps only the binary's RIGHT operand.
+                    match a.right.as_ref() {
+                        Expression::Identifier(id) => {
+                            assert_eq!(id.name, "y", "{bin_op:?}: RHS must be the right operand")
+                        }
+                        other => panic!("{bin_op:?}: expected `y` as the RHS; got {other:?}"),
+                    }
+                }
+                other => panic!("{bin_op:?}: expected an assignment back; got {other:?}"),
+            }
+        }
+    }
+
+    /// The contraction DECLINES whenever the shape is not `target = target OP E`:
+    /// a different left identifier, the target on the binary's RIGHT operand
+    /// (`x = 1 + x` — unsound for `-`/`/`/… and never done by Closure), an
+    /// operator with no compound form (`==`), or an already-compound operator.
+    #[test]
+    fn compound_self_assignment_declines_off_pattern() {
+        // `x = y + 1` — a *different* identifier: not a self-assignment.
+        let e1 = assign_eq("x", binary_with(BinaryOperator::Add, ident("y"), num(1.0, None)));
+        let (o1, _, c1, _) = run_pass(program_with_expr(e1, true));
+        assert!(!c1, "x = y + 1 must not contract");
+        assert!(
+            matches!(extract_expr(&o1), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = y + 1 must stay a plain `=` assignment"
+        );
+
+        // `x = 1 + x` — the target is the binary's RIGHT operand, not its left.
+        let e2 = assign_eq("x", binary_with(BinaryOperator::Add, num(1.0, None), ident("x")));
+        let (o2, _, c2, _) = run_pass(program_with_expr(e2, true));
+        assert!(!c2, "x = 1 + x must not contract (target on the right)");
+        assert!(
+            matches!(extract_expr(&o2), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = 1 + x must stay a plain `=` assignment"
+        );
+
+        // `x = x == 1` — the comparison operator has no `OP=` form.
+        let e3 = assign_eq("x", binary_with(BinaryOperator::Eq, ident("x"), num(1.0, None)));
+        let (_o3, _, c3, _) = run_pass(program_with_expr(e3, true));
+        assert!(!c3, "x = x == 1 must not contract (no `==` compound form)");
+
+        // `x += x + 1` — the operator is already compound (not plain `=`).
+        let e4 = Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.4".to_string()),
+            operator: AssignmentOperator::AddEq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+            right: Box::new(binary_with(BinaryOperator::Add, ident("x"), num(1.0, None))),
+        });
+        let (_o4, _, c4, _) = run_pass(program_with_expr(e4, true));
+        assert!(!c4, "x += (x + 1) must not further contract");
+    }
+
+    /// A string self-concat contracts as well: `s = s + "b"` → `s += "b"`, and
+    /// the rewrite is CV-traced — the contracted node carries a forked CV id and
+    /// a `constant-fold` contribution is recorded.
+    #[test]
+    fn contracts_string_self_concat_and_traces_cv() {
+        let expr = assign_eq("s", binary_with(BinaryOperator::Add, ident("s"), string("b", None)));
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "s = s + \"b\" should contract");
+        match extract_expr(&out) {
+            Expression::AssignmentExpression(a) => {
+                assert_eq!(a.operator, AssignmentOperator::AddEq);
+                match a.right.as_ref() {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, "b"),
+                    other => panic!("expected the string \"b\" as RHS; got {other:?}"),
+                }
+                assert!(a.cv.is_some(), "the contracted node should carry a forked CV id");
+            }
+            other => panic!("expected an assignment back; got {other:?}"),
+        }
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.source == "constant-fold" && c.tag == "folded"),
+            "a constant-fold contribution should be recorded for the contraction"
+        );
+    }
+
+    /// Build a computed index access `object[k]` (an integer-literal index).
+    fn index(object: Expression, k: f64) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(num(k, None)),
+            computed: true,
+        })
+    }
+
+    /// CLOC12.196: `[e0, e1, …][K]` folds to the element at index `K` when `K` is
+    /// an in-bounds non-negative integer, the element is present, no spread
+    /// exists, and every *other* element is side-effect-free. Verified against
+    /// the reference Closure Compiler.
+    #[test]
+    fn fold_array_index_when_in_bounds_and_pure() {
+        // `[1, 2, 3][0]` → 1, `[1, 2, 3][1]` → 2, `[1, 2, 3][2]` → 3.
+        for (k, want) in [(0.0, 1.0), (1.0, 2.0), (2.0, 3.0)] {
+            let e = index(
+                array_opt(vec![
+                    Some(num(1.0, None)),
+                    Some(num(2.0, None)),
+                    Some(num(3.0, None)),
+                ]),
+                k,
+            );
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[1,2,3][{k}] should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, want, "[1,2,3][{k}]"),
+                other => panic!("expected {want}; got {other:?}"),
+            }
+        }
+
+        // `[a, b, c][1]` → `b` — identifier elements are side-effect-free.
+        let e = index(
+            array_opt(vec![Some(ident("a")), Some(ident("b")), Some(ident("c"))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::Identifier(id) => assert_eq!(id.name, "b"),
+            other => panic!("expected ident b; got {other:?}"),
+        }
+
+        // `[1, , 3][0]` → 1 — a hole ELSEWHERE (index 1) doesn't block index 0.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            0.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected 1; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_array_index_preserves_side_effect_in_selected_element() {
+        // `[a, g()][1]` → `g()` — the SELECTED element is preserved verbatim, so
+        // its call still runs; the other element `a` is pure and safely dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 1.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[a,g()][1] should fold to the (preserved) call");
+        assert!(
+            matches!(extract_expr(&out), Expression::CallExpression(_)),
+            "expected the selected call to survive"
+        );
+    }
+
+    #[test]
+    fn array_index_declines_on_side_effect_hole_oob_or_spread() {
+        // `[a, g()][0]` — selecting `a` would DROP `g()`, a side effect → decline.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 0.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[a,g()][0] must not fold — would drop the call g()");
+
+        // `[1, 2, ...x][0]` — a spread makes runtime indices unknown → decline.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            0.0,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,...x][0] must not fold — spread indices unknown");
+
+        // `[1, 2, 3][1.5]` — a fractional index is an ordinary absent-property
+        // read, not an element pick. Closure leaves it intact → decline.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            1.5,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,3][1.5] fractional index — must not fold");
+
+        // `[f(), 2][5]` — out of bounds, BUT the `void 0` result would drop the
+        // whole literal including the impure `f()` → decline (CLOC12.196b: every
+        // element must be side-effect-free for a `void 0` fold).
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(call), Some(num(2.0, None))]), 5.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[f(),2][5] must not fold — would drop the call f()");
+    }
+
+    #[test]
+    fn fold_array_index_out_of_bounds_to_void_0() {
+        // CLOC12.196b: an out-of-bounds index reads as `undefined`, which the
+        // emitter spells `void 0`. Verified against the Closure oracle:
+        //   [1,2,3][5]  [1,2][2]  [][0]  → void 0.
+        for (elems, k) in [
+            (vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(num(3.0, None))], 5.0),
+            (vec![Some(num(1.0, None)), Some(num(2.0, None))], 2.0),
+            (vec![], 0.0),
+        ] {
+            let e = index(array_opt(elems), k);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "out-of-bounds index {k} should fold to void 0");
+            assert!(
+                matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+                "expected void 0 (UndefinedLiteral) for out-of-bounds index {k}"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_index_negative_to_void_0() {
+        // CLOC12.196b: a negative index is never a valid array slot → `void 0`.
+        // Post-fold, `-1` is a NumericLiteral with value `-1.0`, so the OOB path
+        // handles it. Oracle: `[1,2,3][-1]` → `void 0`.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            -1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,2,3][-1] should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for negative index"
+        );
+    }
+
+    #[test]
+    fn fold_array_index_in_bounds_hole_to_void_0() {
+        // CLOC12.196b: an in-bounds slot that is a HOLE reads as `undefined`.
+        // Oracle: `[1,,3][1]` → `void 0`. The other present elements (1, 3) are
+        // side-effect-free, so dropping the literal is sound.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,,3][1] selects a hole — should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for in-bounds hole"
+        );
+    }
+
+    /// Build a computed STRING-key access `object["key"]`.
+    fn index_str(object: Expression, key: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(string(key, None)),
+            computed: true,
+        })
+    }
+
+    /// String-index fold: Closure coerces the string key with JS `ToNumber` and
+    /// applies the same index fold, so canonical AND non-canonical spellings
+    /// select their integer value's element. Verified against the reference
+    /// Closure Compiler at SIMPLE.
+    #[test]
+    fn fold_array_string_index_canonical_and_non_canonical() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        // key → selected element value.
+        for (key, want) in [
+            ("0", 10.0),
+            ("1", 20.0),
+            ("2", 30.0),
+            ("01", 20.0),   // leading zero → 1
+            ("1.0", 20.0),  // trailing .0 → 1
+            (" 1", 20.0),   // leading whitespace trimmed
+            ("1 ", 20.0),   // trailing whitespace trimmed
+            ("0x1", 20.0),  // hex → 1
+            ("1e0", 20.0),  // exponent → 1
+            ("", 10.0),     // ToNumber("") === +0
+        ] {
+            let e = index_str(arr(), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[10,20,30][{key:?}] should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => {
+                    assert_eq!(n.value, want, "[10,20,30][{key:?}] selected wrong element")
+                }
+                other => panic!("[10,20,30][{key:?}]: expected {want}; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_array_string_index_oob_and_negative_to_void_0() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        for key in ["3", "-1"] {
+            let e = index_str(arr(), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[10,20,30][{key:?}] should fold to void 0");
+            assert!(
+                matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+                "[10,20,30][{key:?}]: expected void 0"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_string_index_declines_on_fractional_and_non_numeric() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        // "1.5" coerces to 1.5 — a fractional index is an ordinary absent-property
+        // read, and "1.5" is not an identifier name, so it stays a bracketed
+        // computed member (declines both the index fold and the dot fold).
+        // Oracle: `[10,20,30]["1.5"]` → `[10,20,30]["1.5"]`.
+        let e = index_str(arr(), "1.5");
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[10,20,30][\"1.5\"] must NOT fold");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+            "[10,20,30][\"1.5\"]: the computed member access must be kept"
+        );
+
+        // "foo" is NaN as an index, but it IS a valid identifier name, so it now
+        // normalises to a dot member: `[10,20,30]["foo"]` → `[10,20,30].foo`.
+        let e = index_str(arr(), "foo");
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[10,20,30][\"foo\"] normalises to a dot member");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(m) if !m.computed),
+            "[10,20,30][\"foo\"]: expected a non-computed (dot) member"
+        );
+    }
+
+    #[test]
+    fn fold_array_string_key_length_to_element_count() {
+        // `[10,20,30]["length"]` → 3, the computed twin of the `.length` fold.
+        let e = index_str(
+            array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]),
+            "length",
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[10,20,30][\"length\"] should fold to 3");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {other:?}"),
+        }
+    }
+
+    /// A computed member whose key is a non-reserved ASCII identifier name folds
+    /// to a dot member: `o["foo"]` → `o.foo`. `let`/`yield` are NOT ES3 keywords,
+    /// so they dot too. Verified byte-identical against the reference compiler.
+    #[test]
+    fn fold_computed_string_key_to_dot() {
+        for key in ["foo", "$x", "_y", "a1", "let", "yield", "undefined", "NaN"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "o[{key:?}] should fold to a dot member");
+            match extract_expr(&out) {
+                Expression::MemberExpression(m) => {
+                    assert!(!m.computed, "o[{key:?}] must become a non-computed member");
+                    match m.property.as_ref() {
+                        Expression::Identifier(id) => assert_eq!(id.name, key),
+                        other => panic!("o[{key:?}]: property must be an Identifier; got {other:?}"),
+                    }
+                }
+                other => panic!("o[{key:?}]: expected a MemberExpression; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn computed_key_declines_on_es3_reserved_word() {
+        // ES3 keywords + future-reserved words stay bracketed (Closure keeps them
+        // ES3-safe): class / static / delete / int / boolean / enum / …
+        for key in ["class", "if", "static", "delete", "int", "boolean", "enum", "super", "true", "null"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(!changed, "o[{key:?}] (ES3 reserved) must stay bracketed");
+            assert!(
+                matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+                "o[{key:?}] must remain a computed member"
+            );
+        }
+    }
+
+    #[test]
+    fn computed_key_declines_on_non_identifier() {
+        for key in ["1a", "", "a b", "a-b", "a.b"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(!changed, "o[{key:?}] (not an identifier) must stay bracketed");
+            assert!(
+                matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+                "o[{key:?}] must remain a computed member"
+            );
+        }
+    }
+
+    /// An assignment TARGET dot-normalises too: `o["foo"] = 1` → `o.foo = 1`.
+    #[test]
+    fn computed_key_to_dot_in_assignment_target() {
+        use coding_adventures_javascript_ast::{AssignmentOperator, AssignmentTarget};
+        let target = AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+            cv: None,
+            object: Box::new(ident("o")),
+            property: Box::new(string("foo", None)),
+            computed: true,
+        }));
+        let e = Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.cv".to_string()),
+            operator: AssignmentOperator::Eq,
+            left: target,
+            right: Box::new(num(1.0, None)),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "o[\"foo\"]=1 target should dot-normalise");
+        match extract_expr(&out) {
+            Expression::AssignmentExpression(a) => match &a.left {
+                AssignmentTarget::MemberExpression(m) => {
+                    assert!(!m.computed, "target must become a non-computed member");
+                    assert!(
+                        matches!(m.property.as_ref(), Expression::Identifier(id) if id.name == "foo"),
+                        "target property must be Identifier(foo)"
+                    );
+                }
+                other => panic!("expected a member target; got {other:?}"),
+            },
+            other => panic!("expected an assignment; got {other:?}"),
+        }
+    }
+
+    /// Build a template literal from quasi cooked strings + substitution
+    /// expressions (`quasis.len() == exprs.len() + 1`). CLOC12.197 test helper.
+    fn template(quasis: &[&str], exprs: Vec<Expression>) -> Expression {
+        use coding_adventures_javascript_ast::{TemplateElement, TemplateLiteral};
+        let n = exprs.len();
+        let quasi_elems = quasis
+            .iter()
+            .enumerate()
+            .map(|(i, q)| TemplateElement {
+                cv: None,
+                raw: q.to_string(),
+                cooked: Some(q.to_string()),
+                tail: i == n,
+            })
+            .collect();
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: Some("tpl.cv".to_string()),
+            quasis: quasi_elems,
+            expressions: exprs,
+        })
+    }
+
+    /// CLOC12.197: `` `a${1}b` `` → `"a1b"` when every substitution is a
+    /// stringifiable constant literal. Truth table verified against the
+    /// reference Closure Compiler.
+    #[test]
+    fn fold_template_all_const_subs() {
+        // `\`a${1}b\`` → "a1b".
+        let t = template(&["a", "b"], vec![num(1.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed, "template with a const sub should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a1b"),
+            other => panic!("expected \"a1b\"; got {other:?}"),
+        }
+
+        // `\`${1}-${2}-${3}\`` → "1-2-3".
+        let t = template(
+            &["", "-", "-", ""],
+            vec![num(1.0, None), num(2.0, None), num(3.0, None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "1-2-3"),
+            other => panic!("expected \"1-2-3\"; got {other:?}"),
+        }
+
+        // string / bool / null substitutions stringify via `ToString`.
+        let t = template(
+            &["", "-", "-", ""],
+            vec![string("x", None), boolean(true, None), null(None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "x-true-null"),
+            other => panic!("expected \"x-true-null\"; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_template_no_substitutions() {
+        // `\`hello\`` → "hello".
+        let t = template(&["hello"], vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "hello"));
+
+        // `\`\`` → "".
+        let t = template(&[""], vec![]);
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value.is_empty()));
+    }
+
+    #[test]
+    fn fold_template_const_expr_sub_folds_first() {
+        // `\`a${1+2}b\`` — `1+2` folds to `3` first (recursion), then the
+        // template collapses → "a3b".
+        let sum = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(1.0, None)),
+            right: Box::new(num(2.0, None)),
+        });
+        let t = template(&["a", "b"], vec![sum]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "a3b"));
+    }
+
+    #[test]
+    fn template_declines_on_nonconst_substitution() {
+        // `\`a${x}b\`` — an identifier is not a compile-time constant → keep.
+        let t = template(&["a", "b"], vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed, "template with a non-const sub must not fold");
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
+
+        // `\`a${f()}b\`` — a call is not constant → keep.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let t = template(&["a", "b"], vec![call]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed);
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
+    }
+
     #[test]
     fn fold_string_length_counts_utf16_code_units_not_scalars() {
         // "💩" (U+1F4A9, an astral-plane char) is ONE Unicode scalar but TWO
@@ -6401,8 +9094,12 @@ mod tests {
     }
 
     #[test]
-    fn computed_string_length_does_not_fold() {
-        // `"abc"["length"]` is the computed form — deliberately left alone.
+    fn computed_string_length_normalizes_to_dot() {
+        // `"abc"["length"]` — the computed `["length"]` normalises to a `.length`
+        // dot member in THIS pass. The `.length` → `3` fold then fires on the
+        // pipeline's next fixpoint iteration (a bare member has no enclosing node
+        // to re-inspect it within a single pass, unlike the casing-in-a-call
+        // case above). End-to-end, closurec emits `3` — see the oracle e2e.
         let m = Expression::MemberExpression(MemberExpression {
             cv: Some("m.cv".to_string()),
             object: Box::new(string("abc", None)),
@@ -6410,11 +9107,17 @@ mod tests {
             computed: true,
         });
         let (out, _, changed, _) = run_pass(program_with_expr(m, true));
-        assert!(!changed, "computed \"abc\"[\"length\"] must not fold");
-        assert!(matches!(
-            extract_expr(&out),
-            Expression::MemberExpression(_)
-        ));
+        assert!(changed, "\"abc\"[\"length\"] normalises to a dot member");
+        match extract_expr(&out) {
+            Expression::MemberExpression(mm) => {
+                assert!(!mm.computed, "must become a non-computed member");
+                match mm.property.as_ref() {
+                    Expression::Identifier(id) => assert_eq!(id.name, "length"),
+                    other => panic!("property must be Identifier(length); got {other:?}"),
+                }
+            }
+            other => panic!("expected a MemberExpression; got {other:?}"),
+        }
     }
 
     // ------------------- string casing methods -----------------------
@@ -6491,8 +9194,11 @@ mod tests {
     }
 
     #[test]
-    fn computed_string_casing_does_not_fold() {
-        // `"abc"["toUpperCase"]()` is the computed form — left alone.
+    fn computed_string_casing_folds_via_dot_normalization() {
+        // `"abc"["toUpperCase"]()` — the computed key `["toUpperCase"]` first
+        // normalises to a dot member (`.toUpperCase`), which then lets the
+        // string-casing fold fire: `"abc".toUpperCase()` → `"ABC"`. Oracle:
+        // `"abc"["toUpperCase"]()` → `"ABC"`.
         let callee = Expression::MemberExpression(MemberExpression {
             cv: Some("m.cv".to_string()),
             object: Box::new(string("abc", None)),
@@ -6505,8 +9211,11 @@ mod tests {
             arguments: vec![],
         });
         let (out, _, changed, _) = run_pass(program_with_expr(up, true));
-        assert!(!changed, "computed casing call must not fold");
-        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(changed, "computed casing call now folds via dot normalization");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ABC"),
+            other => panic!("expected \"ABC\"; got {other:?}"),
+        }
     }
 
     #[test]
@@ -9207,6 +11916,125 @@ mod tests {
     }
 
     #[test]
+    fn noninteger_object_key_folds_to_quoted_string_key() {
+        // `{0.5: 1, 2: 3}` — the non-integer key `0.5` has property name
+        // ToString(0.5) = "0.5", so it becomes a QUOTED string key
+        // (`{"0.5": 1}`); the integer key `2` stays numeric (`{2: 3}`).
+        let o = object_lit(vec![
+            Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 0.5,
+                    raw: "0.5".to_string(),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            },
+            Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 2.0,
+                    raw: "2".to_string(),
+                }),
+                value: Box::new(num(3.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            },
+        ]);
+        let (out, _, changed, _) = run_pass(program_with_expr(o, true));
+        assert!(changed, "a non-integer numeric key should fold to a string key");
+        match extract_expr(&out) {
+            Expression::ObjectExpression(obj) => {
+                assert_eq!(obj.properties.len(), 2);
+                match &obj.properties[0] {
+                    ObjectMember::Property(p) => match &p.key {
+                        PropertyKey::StringLiteral(s) => assert_eq!(s.value, "0.5"),
+                        other => panic!("expected a StringLiteral key for 0.5, got {:?}", other),
+                    },
+                    other => panic!("expected a Property, got {:?}", other),
+                }
+                match &obj.properties[1] {
+                    ObjectMember::Property(p) => assert!(
+                        matches!(&p.key, PropertyKey::NumericLiteral(n) if n.value == 2.0),
+                        "the integer key 2 must stay numeric; got {:?}",
+                        p.key
+                    ),
+                    other => panic!("expected a Property, got {:?}", other),
+                }
+            }
+            other => panic!("expected an ObjectExpression; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn numeric_object_key_quoting_matches_closure_safe_integer_rule() {
+        // Closure keeps a numeric key BARE only when it is a non-negative
+        // integer strictly below 2^53; every other numeric key is QUOTED with
+        // its JS `ToString`. Each expectation here was captured from the
+        // reference jar (`{k:0}` under SIMPLE). `Some(name)` = quoted string key
+        // with that exact name; `None` = key stays a bare `NumericLiteral`.
+        let cases: &[(f64, Option<&str>)] = &[
+            // bare: non-negative integers below 2^53
+            (0.0, None),
+            (100.0, None),
+            (4_294_967_296.0, None),           // 2^32
+            (1e15, None),
+            (9_007_199_254_740_991.0, None),   // 2^53 - 1 (last bare)
+            // quoted: 2^53 and above (no longer a safe integer)
+            (9_007_199_254_740_992.0, Some("9007199254740992")), // 2^53
+            (1e16, Some("10000000000000000")),
+            (1e20, Some("100000000000000000000")),
+            (1e21, Some("1e+21")),
+            (123456789012345680000.0, Some("123456789012345680000")),
+            // quoted: every non-integer, incl. those outside [1e-6, 1e21)
+            (1.5, Some("1.5")),
+            (0.5, Some("0.5")),
+            (1e-6, Some("0.000001")),
+            (1e-7, Some("1e-7")),
+            // bare: +Infinity (overflow literal like 1e400) prints as `Infinity`
+            (f64::INFINITY, None),
+        ];
+        for &(value, expected) in cases {
+            let o = object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value,
+                    raw: format!("{value:?}"),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }]);
+            let (out, _, _, _) = run_pass(program_with_expr(o, true));
+            let Expression::ObjectExpression(obj) = extract_expr(&out) else {
+                panic!("expected an ObjectExpression for key {value:?}");
+            };
+            let ObjectMember::Property(p) = &obj.properties[0] else {
+                panic!("expected a Property for key {value:?}");
+            };
+            match (expected, &p.key) {
+                (Some(name), PropertyKey::StringLiteral(s)) => {
+                    assert_eq!(s.value, name, "quoted name for key {value:?}");
+                }
+                (None, PropertyKey::NumericLiteral(n)) => {
+                    assert_eq!(n.value, value, "bare numeric key for {value:?}");
+                }
+                (exp, got) => panic!("key {value:?}: expected {exp:?}, got {got:?}"),
+            }
+        }
+    }
+
+    #[test]
     fn fold_object_entries_duplicate_key_last_value_first_position() {
         // `{a: 1, b: 2, a: 3}` builds `{a: 3, b: 2}`, so entries are
         // `[["a", 3], ["b", 2]]` — key `a` keeps first position, takes last value.
@@ -10041,8 +12869,9 @@ mod tests {
 
     #[test]
     fn math_other_methods_do_not_fold() {
-        // pow is not among the modelled methods (max/min/abs/floor/ceil/round);
-        // e.g. Math.pow(2, 3) is left alone.
+        // pow is not among the modelled methods
+        // (max/min/abs/floor/ceil/round/trunc/sign); e.g. Math.pow(2, 3) is
+        // left alone. (Modelling pow is tracked separately.)
         let c = math_call("pow", vec![num(2.0, None), num(3.0, None)]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "Math.pow(2, 3) is not modelled and must not fold");
@@ -10076,6 +12905,139 @@ mod tests {
     }
 
     #[test]
+    fn fold_math_trunc_basic() {
+        // Math.trunc removes the fractional part, rounding toward zero.
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.9, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.1, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.9, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.1, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(7.0, None)])), 7.0);
+        // A positive fraction truncating to +0 is representable and folds.
+        assert_eq!(folded_number(math_call("trunc", vec![num(0.5, None)])), 0.0);
+    }
+
+    #[test]
+    fn fold_math_sign_basic() {
+        // Math.sign yields -1 / +1 for negative / positive, and preserves +0.
+        assert_eq!(folded_number(math_call("sign", vec![num(7.0, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.5, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-3.0, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-0.001, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.0, None)])), 0.0);
+    }
+
+    #[test]
+    fn math_trunc_sign_negative_zero_declines() {
+        // A -0 result has no faithful numeric-literal spelling, so both decline
+        // (consistent with the ceil/round -0 policy):
+        //   Math.trunc(-0.5) === -0   Math.sign(-0) === -0
+        let cases = [
+            math_call("trunc", vec![num(-0.5, None)]),
+            math_call("sign", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_fround_fixed_point() {
+        // Math.fround folds ONLY at a float32 fixed point (fround(x) === x), and
+        // then leaves the value unchanged. Every dyadic rational with a small
+        // enough denominator and exponent is exactly representable in float32.
+        assert_eq!(folded_number(math_call("fround", vec![num(1.5, None)])), 1.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(-2.5, None)])), -2.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.0, None)])), 0.0);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.5, None)])), 0.5);
+        assert_eq!(folded_number(math_call("fround", vec![num(0.25, None)])), 0.25);
+        // Any integer up to 2^24 is exactly a float32.
+        assert_eq!(
+            folded_number(math_call("fround", vec![num(16777216.0, None)])),
+            16777216.0
+        );
+    }
+
+    #[test]
+    fn fold_math_fround_declines_non_float32() {
+        // A double that is NOT already a float32 would be CHANGED by fround, so
+        // the reference (and we) leave the call intact.
+        let cases = [
+            math_call("fround", vec![num(1.1, None)]),        // rounds
+            math_call("fround", vec![num(0.1, None)]),        // rounds
+            math_call("fround", vec![num(16777217.0, None)]), // 2^24+1, rounds
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a non-float32 double must not fold via fround");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_fround_declines_negative_zero() {
+        // fround(-0) === -0, but -0 has no numeric-literal spelling, so decline
+        // (matching the Math.abs/floor negative-zero policy). `-0` also cannot
+        // reach here from source — it parses as unary minus on `0` — so this
+        // guards only a hypothetically pre-folded -0 literal.
+        let c = math_call("fround", vec![num(-0.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "a -0 fround fixed point must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_math_clz32_basic() {
+        // clz32 counts leading zero bits of ToUint32(n): 0..32.
+        assert_eq!(folded_number(math_call("clz32", vec![num(0.0, None)])), 32.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(1.0, None)])), 31.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(256.0, None)])), 23.0);
+        // ToUint32(-1) == 2^32-1 (top bit set) → 0 leading zeros; must still fold
+        // (a negative input with a 0 result is +0 here, NOT the -0 the unary
+        // fold's gate would decline).
+        assert_eq!(folded_number(math_call("clz32", vec![num(-1.0, None)])), 0.0);
+        // ToUint32 truncates toward zero: clz32(3.9) == clz32(3) == 30.
+        assert_eq!(folded_number(math_call("clz32", vec![num(3.9, None)])), 30.0);
+    }
+
+    #[test]
+    fn fold_math_imul_basic() {
+        // 32-bit signed multiply of ToUint32 operands.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(3.0, None), num(4.0, None)])),
+            12.0
+        );
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(-1.0, None), num(5.0, None)])),
+            -5.0
+        );
+        // 65536 * 65536 == 2^32, low 32 bits are 0.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(65536.0, None), num(65536.0, None)])),
+            0.0
+        );
+    }
+
+    #[test]
+    fn math_clz32_imul_non_literal_or_wrong_arity_declines() {
+        // Non-literal arg, and any arity other than clz32/1 and imul/2, decline.
+        let cases = [
+            math_call("clz32", vec![ident("x")]),
+            math_call("clz32", vec![]),
+            math_call("clz32", vec![num(1.0, None), num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None), ident("y")]),
+            math_call("imul", vec![num(2.0, None), num(3.0, None), num(4.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "clz32/imul must decline non-literal / wrong arity");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
     fn math_unary_negative_zero_result_does_not_fold() {
         // Results that are (or, from a negative input, would be) -0 have no
         // faithful numeric-literal spelling, so they DECLINE:
@@ -10098,7 +13060,7 @@ mod tests {
 
     #[test]
     fn math_unary_non_literal_or_wrong_arity_does_not_fold() {
-        for method in ["abs", "floor", "ceil", "round"] {
+        for method in ["abs", "floor", "ceil", "round", "trunc", "sign"] {
             // Non-literal argument.
             let c = math_call(method, vec![ident("x")]);
             let (out, _, changed, _) = run_pass(program_with_expr(c, true));
@@ -10794,7 +13756,7 @@ mod tests {
     fn repeat_fractional_count_does_not_fold() {
         // We don't model ToInteger coercion (`"ab".repeat(2.5)` → 2 in JS).
         let c = repeat_call("ab", 2.5);
-        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        let (_out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "fractional repeat count must not fold");
     }
 
@@ -11241,6 +14203,100 @@ mod tests {
 
     // ------------------- logical (short-circuit) ---------------------
 
+    fn logical(op: LogicalOperator, l: Expression, r: Expression) -> Expression {
+        Expression::LogicalExpression(LogicalExpression {
+            cv: Some("l.1".to_string()),
+            operator: op,
+            left: Box::new(l),
+            right: Box::new(r),
+        })
+    }
+
+    /// `a && (b && c)` re-associates left to `(a && b) && c` — the outer node's
+    /// left becomes a `&&` LogicalExpression and its right becomes the bare `c`.
+    #[test]
+    fn logical_and_right_nest_reassociates_left() {
+        let inner = logical(LogicalOperator::And, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::And, ident("a"), inner);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert_eq!(top.operator, LogicalOperator::And);
+                assert!(
+                    matches!(top.left.as_ref(), Expression::LogicalExpression(_)),
+                    "left should be the (a && b) node"
+                );
+                assert!(
+                    matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "c"),
+                    "right should be the bare `c`"
+                );
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a || (b || c)` re-associates the same way.
+    #[test]
+    fn logical_or_right_nest_reassociates_left() {
+        let inner = logical(LogicalOperator::Or, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::Or, ident("a"), inner);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert!(matches!(top.left.as_ref(), Expression::LogicalExpression(_)));
+                assert!(matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "c"));
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a && (b || c)` is LEFT ALONE — a mixed-operator right nest cannot
+    /// re-associate (different precedence/grouping), so the parens stay.
+    #[test]
+    fn logical_mixed_operator_right_nest_not_reassociated() {
+        let inner = logical(LogicalOperator::Or, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::And, ident("a"), inner);
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert_eq!(top.operator, LogicalOperator::And);
+                // Right stays the `||` node (not flattened into the `&&`).
+                match top.right.as_ref() {
+                    Expression::LogicalExpression(r) => {
+                        assert_eq!(r.operator, LogicalOperator::Or)
+                    }
+                    other => panic!("expected the `||` node preserved on the right; got {other:?}"),
+                }
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a && (b && (c && d))` fully flattens to `((a && b) && c) && d` under the
+    /// pass's fixed-point iteration (one re-association step per node).
+    #[test]
+    fn logical_deep_right_nest_fully_flattens() {
+        let cd = logical(LogicalOperator::And, ident("c"), ident("d"));
+        let bcd = logical(LogicalOperator::And, ident("b"), cd);
+        let expr = logical(LogicalOperator::And, ident("a"), bcd);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        // The top node's right must be the bare `d` (fully left-nested).
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert!(
+                    matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "d"),
+                    "fully-flattened top-right should be the bare `d`; got {:?}",
+                    top.right
+                );
+                assert!(matches!(top.left.as_ref(), Expression::LogicalExpression(_)));
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
     #[test]
     fn fold_logical_and_left_falsy_returns_left() {
         // `false && x → false`. The right operand (an unfoldable
@@ -11352,6 +14408,139 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
             other => panic!("expected 2; got {:?}", other),
         }
+    }
+
+    // ------------- ternary equal-branch collapse (t?X:X → X) ----------
+
+    /// `cond ? then : else` with the given CV, boxing each arm.
+    fn conditional(test: Expression, then: Expression, els: Expression) -> Expression {
+        Expression::ConditionalExpression(ConditionalExpression {
+            cv: Some("cond.cv".to_string()),
+            test: Box::new(test),
+            consequent: Box::new(then),
+            alternate: Box::new(els),
+        })
+    }
+
+    /// A side-effecting `f()` call — the canonical impure test operand.
+    fn bare_call(callee: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(callee)),
+            arguments: vec![],
+        })
+    }
+
+    #[test]
+    fn ternary_equal_identifier_branches_collapse_to_branch() {
+        // `a ? b : b` → `b` (test `a` is a side-effect-free identifier).
+        let expr = conditional(ident("a"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?b:b should collapse to b");
+        match extract_expr(&out) {
+            Expression::Identifier(id) => assert_eq!(id.name, "b"),
+            other => panic!("expected identifier b; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_equal_literal_branches_collapse() {
+        // `a ? 1 : 1` → `1`.
+        let expr = conditional(ident("a"), num(1.0, None), num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?1:1 should collapse to 1");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected 1; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_equal_member_branches_collapse_under_free_test() {
+        // `a ? b.c : b.c` → `b.c`. The test `a` is free; the (equal) member
+        // arms are evaluated exactly once either way.
+        let expr = conditional(
+            ident("a"),
+            member(ident("b"), "c"),
+            member(ident("b"), "c"),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?b.c:b.c should collapse to b.c");
+        match extract_expr(&out) {
+            Expression::MemberExpression(_) => {}
+            other => panic!("expected member b.c; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_member_test_still_collapses_free_by_contract() {
+        // `a.p ? b : b` → `b`. A member READ is side-effect-free under the
+        // crate-wide contract (matching Closure; a getter is not modelled), so
+        // the equal-branch collapse fires.
+        let expr = conditional(member(ident("a"), "p"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a.p?b:b should collapse (member test is free)");
+        assert!(matches!(extract_expr(&out), Expression::Identifier(id) if id.name == "b"));
+    }
+
+    #[test]
+    fn ternary_impure_test_collapses_to_comma_sequence() {
+        // `f() ? b : b` → `(f(), b)`. Both arms are `b`, so the value is `b`
+        // regardless of the test; the impure test `f()` is preserved by a comma
+        // sequence that evaluates `f()` first, then `b` (same order as the
+        // ternary). Matches Closure's `PeepholeFoldConstants`.
+        let expr = conditional(bare_call("f"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "f()?b:b should collapse to (f(),b)");
+        match extract_expr(&out) {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2, "expected [f(), b]");
+                assert!(
+                    matches!(&s.expressions[0], Expression::CallExpression(_)),
+                    "first element must be the preserved call f()"
+                );
+                assert!(
+                    matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"),
+                    "second element must be the branch value b"
+                );
+            }
+            other => panic!("expected a (f(),b) sequence; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_impure_assignment_test_collapses_to_comma_sequence() {
+        // `(a = c) ? b : b` → `(a = c, b)` — assignment is impure, so its effect
+        // is kept via the comma sequence.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(ident("c")),
+        });
+        let expr = conditional(assign, ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "(a=c)?b:b should collapse to (a=c,b)");
+        match extract_expr(&out) {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2);
+                assert!(matches!(&s.expressions[0], Expression::AssignmentExpression(_)));
+                assert!(matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"));
+            }
+            other => panic!("expected an (a=c,b) sequence; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_unequal_branches_not_collapsed() {
+        // `a ? b : c` (b ≠ c) is a real branch — never collapse.
+        let expr = conditional(ident("a"), ident("b"), ident("c"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a?b:c must not collapse");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::ConditionalExpression(_)
+        ));
     }
 
     // ------------------- doesn't over-fold ---------------------------

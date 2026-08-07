@@ -1,0 +1,125 @@
+% ============================================================================
+% mechanics-laws.adj — foundational physics laws for the ADJ compute stdlib.
+% ============================================================================
+% The FIRST entry of the SCIENCE track's physics layer (ADJ-FORMULA-LIBRARIES
+% §4): a handful of the laws every physics student memorizes, each shipped as an
+% importable, byte-provenanced, PARAMETERIZED `formula`. Where `clinical/bmi.adj`
+% ships a clinical definition and `arithmetic/*.adj` ship the four leaf
+% primitives, this ships the elementary LAWS OF NATURE a science/medicine agent
+% reasons from — F = ma, V = IR, ρ = m/V, v = d/t.
+%
+% The contract is the whole point of the ladder: THE MODEL DOES ZERO ARITHMETIC.
+% A consumer states no math. It `import`s this file, binds the variables from its
+% own byte-provenance decomposition of the input, and asks the engine to APPLY
+% the cited law on the CPU. The engine computes exactly, and the answer carries
+% the law's citation — so the derivation is auditable end to end:
+%
+%     import "mechanics-laws.adj"
+%     observe mass(2)                     % "…a 2 kg block…"   (span cited by the model)
+%     observe acceleration(3)             % "…accelerates at 3 m/s²…" (span cited)
+%     ? force(mass, acceleration)         % engine → 6 N, carrying NASA's F = m·a
+%
+% The laws (and their sources) live HERE; the numbers (and their spans) come from
+% the input. A science/medicine agent that needs "the net force on a 2 kg mass"
+% RECALLS which law applies and BINDS the numbers — it never re-derives F = ma.
+%
+% Each law is its OWN sourced formula: a shipped formula must carry a non-empty
+% `source` (the linter rejects an unsourced one), a real `locator`, and a `trust`
+% tier. Three of these four are grounded in primary .gov / state-education physics
+% references (NASA Glenn's Beginners' Guide to Aeronautics; the Alabama State
+% Department of Education physical-science course) → `authoritative`; Ohm's law
+% falls back to an encyclopedia (Wikipedia) for the clean V = IR product form →
+% `consensus`. Provenance travels per-formula, so the tiers differ by law.
+%
+% Run a worked consumer (from a directory it can resolve this import from):
+%     adj-lang-cli mechanics-laws.query.adj
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is an observable physical quantity a law ranges over.
+% rung-0's grammar types an observable slot as `finding` (dimensional typing of
+% formula parameters is a later rung — but the engine already INFERS and CHECKS
+% dimensions when a formula is APPLIED, so 2 kg × 3 m/s² reports newtons and a
+% unit mismatch is an error, not a silent coercion). The intended dimension of
+% each term is recorded in the trailing comment, and the `surface` synonyms let a
+% decomposer map everyday phrasing onto the canonical term.
+%
+%   Term          Dimension            Appears in
+%   ----          ---------            ----------
+%   mass          mass (kg)            force (F=ma), density (ρ=m/V)
+%   acceleration  length/time² (m/s²)  force (F=ma)
+%   force         mass·length/time² N  force  = mass × acceleration
+%   current       electric current A   voltage (V=IR)
+%   resistance    ohm  Ω               voltage (V=IR)
+%   voltage       volt V               voltage = current × resistance
+%   volume        length³ (m³)         density (ρ=m/V)
+%   density       mass/length³ kg/m³   density = mass / volume
+%   distance      length (m)           speed  (v=d/t)
+%   time          time (s)             speed  (v=d/t)
+%   speed         length/time (m/s)    speed  = distance / time
+% ----------------------------------------------------------------------------
+dictionary physics_vocab {
+    % --- mechanics: Newton's second law, F = m·a ---
+    define mass         : finding  surface "mass", "m"                                         % mass, e.g. kg
+    define acceleration : finding  surface "acceleration", "a", "rate of change of velocity"   % length / time²
+    define force        : finding  surface "force", "net force", "F"                           % mass · length / time² (newtons)
+
+    % --- electricity: Ohm's law, V = I·R ---
+    define current      : finding  surface "current", "electric current", "I"                  % electric current (amperes)
+    define resistance   : finding  surface "resistance", "R"                                   % ohms
+    define voltage      : finding  surface "voltage", "potential difference", "V", "EMF"       % volts
+
+    % --- matter: density, ρ = m/V ---
+    define volume       : finding  surface "volume", "V"                                       % length³
+    define density      : finding  surface "density", "mass density", "rho"                    % mass / length³
+
+    % --- kinematics: average speed, v = d/t ---
+    define distance     : finding  surface "distance", "displacement", "d", "path length"      % length
+    define time         : finding  surface "time", "elapsed time", "duration", "t"             % time
+    define speed        : finding  surface "speed", "average speed", "velocity", "v"           % length / time
+}
+
+% ----------------------------------------------------------------------------
+% The laws. Each `formula` is a named, importable, reusable `let` over its formal
+% parameters — the SAME expression grammar `let` uses, with the parameter leaves
+% bound at apply time. Every one carries the provenance envelope a grounded clause
+% requires: a verbatim definitional span from a citable reference, a resolvable
+% locator, and a trust tier. These are CLAIMS ABOUT THE WORLD ("force is the
+% product of mass and acceleration"), grounded exactly like a `relate` edge — not
+% asserted by fiat.
+% ----------------------------------------------------------------------------
+formulabook physics_laws {
+    use physics_vocab
+
+    % Newton's second law — the net force on a body is its mass times its
+    % acceleration.  F = m · a.  Source: NASA Glenn Research Center, Beginners'
+    % Guide to Aeronautics (primary .gov physics reference) → authoritative.
+    formula force(mass, acceleration) = mass * acceleration
+        source "The second law then reduces to the more familiar product of a mass and an acceleration: F = m · a"
+        locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
+        trust authoritative
+
+    % Ohm's law — the voltage across a conductor is the current through it times
+    % its resistance.  V = I · R.  The clean product form is quoted from an
+    % encyclopedia (Wikipedia), so this law falls back one tier → consensus.
+    formula voltage(current, resistance) = current * resistance
+        source "Ohm's law states that the electric current through a conductor between two points is directly proportional to the voltage across the two points ... one arrives at the three mathematical equations used to describe this relationship: V = IR or I = V/R or R = V/I"
+        locator "https://en.wikipedia.org/wiki/Ohm%27s_law"
+        trust consensus
+
+    % Density — the mass of a substance divided by the volume it occupies.
+    % ρ = m / V.  Source: NASA Glenn Research Center, Beginners' Guide to
+    % Aeronautics, Air Properties Definitions (primary .gov) → authoritative.
+    formula density(mass, volume) = mass / volume
+        source "When a gas is moving, it is convenient to use the density of a gas, which is the mass divided by the volume the gas occupies."
+        locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/air-properties-definitions/"
+        trust authoritative
+
+    % Average speed — the total distance travelled divided by the total time.
+    % v = d / t.  Source: Alabama State Department of Education, ACCESS physical
+    % science course (primary state-education .gov reference) → authoritative.
+    formula speed(distance, time) = distance / time
+        source "Average speed is the total distance traveled divided by the total time of travel."
+        locator "https://accessdl.state.al.us/AventaCourses/access_courses/physci_ua_v17/05_unit/05-02/05-02_learn_alt_speed.htm"
+        trust authoritative
+}

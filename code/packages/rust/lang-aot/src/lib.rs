@@ -72,6 +72,13 @@ pub enum Language {
     McCarthyLisp,
     /// ALGOL 60 — scalar integer/boolean subset over the shared IIR.
     Algol60,
+    /// FLOW-MATIC (B-0) — the control-flow + scalar-field slice via the
+    /// `flow-matic-iir-compiler` frontend; `main` returns an i64 exit code.
+    FlowMatic,
+    /// COBOL-60 — the `DISPLAY`/`MOVE`/`STOP RUN` slice over PICTURE-typed
+    /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
+    /// i64 exit code.
+    Cobol60,
 }
 
 impl fmt::Display for Language {
@@ -84,6 +91,8 @@ impl fmt::Display for Language {
             Language::Oct => write!(f, "oct"),
             Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
             Language::Algol60 => write!(f, "algol60"),
+            Language::FlowMatic => write!(f, "flow-matic"),
+            Language::Cobol60 => write!(f, "cobol60"),
         }
     }
 }
@@ -99,11 +108,14 @@ impl Language {
             "oct" => Ok(Self::Oct),
             "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
+            "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
+            "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
-                 (or algol / algol-60 / a60)")),
+                 (or algol / algol-60 / a60), flow-matic (or fm / b0), \
+                 cobol60 (or cobol / cobol-60 / cob)")),
         }
     }
 }
@@ -121,6 +133,8 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "oct" => Some(Language::Oct),
         "mcl" | "lisp" => Some(Language::McCarthyLisp),
         "algol" | "alg" | "a60" => Some(Language::Algol60),
+        "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
+        "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
         _ => None,
     }
 }
@@ -323,6 +337,20 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
+        Language::FlowMatic => {
+            flow_matic_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::Cobol60 => {
+            cobol_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
     }
 }
 
@@ -374,7 +402,7 @@ pub fn compile_file_to_llvm_ir(
 /// — like wasm/JVM/CLR/BEAM — a polymorphic scalar value must be given a concrete
 /// type before lowering; for a pure-integer McCarthy program that type is `i64`.
 /// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
-/// routed through `lispy_runtime.c`, W12b+) are left alone.
+/// routed through `dynval_runtime.c`, W12b+) are left alone.
 fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
     const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
     const LISP_BUILTINS: &[&str] = &[
@@ -408,10 +436,10 @@ fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
 /// reproducible target (`x86_64-unknown-linux-gnu`) — McCarthy W12a.
 ///
 /// The fifth `--emit` value model and the first **tagged-word** target (the
-/// LLVM/AOT/JIT family that links the shared `lispy_runtime.c`, as opposed to the
+/// LLVM/AOT/JIT family that links the shared `dynval_runtime.c`, as opposed to the
 /// managed object models of wasm/JVM/CLR or BEAM's native terms). This scalar
 /// run-foundation concretises `any`→`i64` and lowers to LLVM IR; the cons /
-/// predicate / symbol / lambda lowering (`call __twig_lispy_*`) is W12b+.
+/// predicate / symbol / lambda lowering (`call __dyn_*`) is W12b+.
 pub fn compile_source_to_llvm(
     language: Language,
     source: &str,
@@ -432,16 +460,32 @@ pub fn compile_source_to_llvm_with_target(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
+    // before the value-model passes (as the native twig-aot path does).
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The TAGGED-WORD lisp pipeline (McCarthy W12b) — the SAME passes the native
     // AOT path runs, NOT the managed structural pass. `lower_heap_builtins_runtime`
-    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "lispy_*"`;
-    // `intern_symbols` assigns each symbol a tagged immediate; `lower_lisp_repr`
-    // boxes integer literals to tagged words and inserts the final `lispy_unbox_int`
-    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
-    // `call @__twig_lispy_*` into `lispy_runtime.c`. A no-op for a scalar program.
+    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "dyn_*"`;
+    // `intern_symbols` assigns each symbol a tagged immediate; `lower_dyn_repr`
+    // boxes integer literals to tagged words and inserts the final `dyn_unbox_int`
+    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `dyn_*` to a
+    // `call @__dyn_*` into `dynval_runtime.c`. A no-op for a scalar program.
+    // E6d-7a-LLVM: closures on the LLVM column. The dispatcher's dynamic `=`
+    // index test needed the `iir-to-llvm` comparison-width fix (a `"bool"`-typed
+    // `cmp_eq` no longer emits `icmp i1` on an i64); with that landed, LLVM joins
+    // NativeAot + WASM. Runs before the runtime heap lowering (which lowers the
+    // `cons`/`car`/`cdr` this pass emits).
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_lisp_repr(&mut module);
+    iir_builtin_lowering::lower_dyn_repr(&mut module);
+    // E6d-2b: rewrite the generic `box`/`unbox` ops that `lower_dynamic_arith`
+    // emitted into `dyn_box_int`/`dyn_unbox_int` runtime calls — the tagged-i64
+    // (LLVM) representation, which `iir-to-llvm`'s `DYN_BUILTINS` table lowers to
+    // `call @__dyn_box_int` / `__dyn_unbox_int`. (The structural backends keep
+    // the generic ops; this runs only on the native/LLVM pipeline.)
+    iir_builtin_lowering::lower_box_unbox_to_runtime_calls(&mut module);
     // Concretise any residual scalar `any` (a pure-integer program never enters
     // the lisp passes above) to `i64`.
     concretize_scalar_any_for_llvm(&mut module);
@@ -457,7 +501,7 @@ pub fn compile_source_to_llvm_with_target(
 /// `iir-to-wasm` requires concrete types — it rejects `"any"` (a lisp
 /// `LispyValue`, which on the native path is just a tagged machine word but on
 /// WasmGC is `anyref`). For a function with **no heap / reference ops**
-/// (`alloc`/`field_*`/`is_null` or any `lispy_*`/`cons`/`car`/`cdr` builtin),
+/// (`alloc`/`field_*`/`is_null` or any `dyn_*`/`cons`/`car`/`cdr` builtin),
 /// every value is a machine integer, so `"any"` safely means `"i64"`. We do
 /// **not** touch functions that use the heap (cons cells, symbols) — those
 /// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
@@ -471,7 +515,7 @@ fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
         // Does this function touch the lisp heap / reference model? A function
         // with **lisp parameters** (a `LAMBDA`/`LABEL` — params typed `any` /
         // `symbol` / `ref<…>`) participates in the uniform-anyref boundary and is
-        // owned by `lower_lisp_repr_structural`, so skip it here too (it has
+        // owned by `lower_dyn_repr_structural`, so skip it here too (it has
         // already retyped them to `ref<…>` by the time this runs).
         let uses_lisp = func.params.iter().any(|(_, t)| {
             t == "any" || t == "symbol" || t.starts_with("ref<")
@@ -523,9 +567,23 @@ pub fn compile_source_to_wasm(
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: lower `call_builtin "global_get"/"global_set"` (a forward-referenced
+    // or closure-captured Twig `define`) to `global_load`/`global_store` — the
+    // typed-global ops the code-gen backends accept. The native `twig-aot`
+    // pipeline already runs this as step 0; the managed pipelines were missing it,
+    // so a dynamic global reached the backend as an unsupported `call_builtin`.
+    // A no-op for a module with no global builtins. Runs first (before the repr
+    // passes), matching twig-aot's ordering.
+    iir_builtin_lowering::lower_global_io(&mut module);
+    // E6d-7a: lower closures to the cons-heap form + a synthesized dispatcher
+    // BEFORE `lower_heap_builtins`, so the `cons`/`car`/`cdr` this pass emits are
+    // then lowered by it. WASM has no native closure model (JVM/CLR/native/LLVM
+    // do), so this is the WASM-only path; a no-op for a closure-free module.
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // Intern symbol literals to distinct integers in a reserved range, so each
     // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
     // them with `i32.eq` — `(EQ 'A 'A)` true, `(EQ 'A 'B)` false (LANG77 / W1).
@@ -537,7 +595,7 @@ pub fn compile_source_to_wasm(
     //   • pure-scalar functions → `concretize_scalar_any_for_wasm` retypes their
     //     `any` to `i64`.
     // Together they leave every value concretely typed (LANG77 / L3b-3a-3c).
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_wasm(&mut module);
 
     let config = iir_to_wasm::IIRWasmConfig::default();
@@ -633,16 +691,19 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         // instruction hints. A scalar helper such as Nib's `double(x: u8)` widens
         // its parameter to `i64`; if we retype the body to `i32` but leave the
         // parameter `i64`, the emitted method's signature is the inconsistent
-        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter — which
-        // a real `java` rejects with `VerifyError: Expecting to find integer on
-        // stack`. (The in-repo `jvm-simulator` is laxer and didn't catch it, so
-        // this only surfaced once a parameterized scalar program ran on real
-        // `java` in the LANG-MATRIX JVM column.) The lisp/`any`-param functions
-        // were already skipped by the `uses_lisp` guard above, so every parameter
-        // reaching here is a concrete scalar — safe to bring down to `i32`.
+        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter. Array
+        // formals need the same lockstep: an `array<i64>` descriptor must become
+        // `array<i32>` when its element accesses become `iaload`/`iastore`.
+        // Otherwise the signature accepts a `long[]` while the body expects an
+        // `int[]`, which a real JVM rejects during verification. The lisp/`any`
+        // parameters were already skipped by the `uses_lisp` guard above.
         for (_, ty) in &mut func.params {
             if to_i32(ty) {
                 *ty = "i32".to_string();
+            } else if let Some(elem) = interpreter_ir::opcodes::array_elem_type(ty) {
+                if to_i32(&elem) {
+                    *ty = interpreter_ir::opcodes::make_array_type("i32");
+                }
             }
         }
         for instr in &mut func.instructions {
@@ -706,9 +767,12 @@ pub fn compile_source_to_jvm_class(
     class_name: &str,
 ) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
     let mut module = compile_source_to_iir(language, source, class_name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_jvm(&mut module);
 
     let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
@@ -786,14 +850,17 @@ pub fn compile_source_to_cil_artifact(
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
     let mut module = compile_source_to_iir(language, source, name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The managed value-model pipeline — the same backend-agnostic structural
     // passes the wasm/JVM paths use. The CLR backend lowers `box`/`unbox`/
     // `alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cons cells
     // (where wasm uses `i31ref`/`$LispyPair` and the JVM `Integer`/`Object[]`).
     // A no-op for a module without cons/symbols (W6a scalar still flows through).
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
@@ -815,11 +882,14 @@ pub fn compile_source_to_cil_text(
     name: &str,
 ) -> Result<String, LangAotError> {
     let mut module = compile_source_to_iir(language, source, name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The same managed value-model pipeline the binary CIL path uses, so the
     // textual and binary emitters lower an identical program.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
@@ -880,6 +950,8 @@ pub fn compile_source_to_beam(
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
     // pass: `lower_heap_builtins` turns McCarthy `cons`/`car`/`cdr` into
     // `alloc ref<LispyPair>` + `field_store`/`field_load`, which `iir-to-beam`
@@ -887,6 +959,7 @@ pub fn compile_source_to_beam(
     // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
     // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
     // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,
     // and `EQ` on symbols becomes integer equality (`is_eq_exact`). We use the
@@ -1579,7 +1652,7 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 "store_mem" => {
                     let mut srcs = Vec::with_capacity(3);
                     srcs.push(Operand::Var(TAPE.to_string()));
-                    srcs.extend(instr.srcs.into_iter());
+                    srcs.extend(instr.srcs);
                     new_instrs.push(IIRInstr::new(
                         "store_byte",
                         None,
@@ -1698,6 +1771,34 @@ mod tests {
     }
 
     #[test]
+    fn jvm_concretization_narrows_array_formals_with_array_operations() {
+        let src = "begin integer array values[4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin a[4] := 40; a[5] := 2; fill := a[4] + a[5] end; \
+                   result := fill(values) end";
+        let mut module = compile_source_to_iir(Language::Algol60, src, "algol_array_param")
+            .expect("ALGOL array parameter program must compile");
+        concretize_scalar_any_for_jvm(&mut module);
+
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<i32>".to_string()),
+                ("__algol_array_param_a_lower".to_string(), "i32".to_string()),
+            ],
+            "the JVM method descriptor must use int[] with i32 indices"
+        );
+        let main = module.get_function("main").expect("main function exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "alloc_array" && instr.type_hint == "array<i32>"
+            }),
+            "the allocation must narrow to the same int[] descriptor"
+        );
+    }
+
+    #[test]
     fn mccarthy_lisp_compiles_to_iir() {
         // `lang-aot` routes McCarthy source through
         // `mccarthy-lisp-iir-compiler`.  We exercise a spread of the
@@ -1770,7 +1871,7 @@ mod tests {
                 "lowered module must contain store_byte; got {ops:?}");
 
         // Step 4: ret_void must be gone, replaced by `const __bf_ret = 0; ret`.
-        assert!(!ops.iter().any(|o| *o == "ret_void"),
+        assert!(!ops.contains(&"ret_void"),
                 "ret_void must be replaced by ret i64 0");
         assert_eq!(main.return_type, "i64",
                    "main return type must be i64 after lowering");

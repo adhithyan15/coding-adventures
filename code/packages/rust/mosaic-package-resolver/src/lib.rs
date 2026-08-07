@@ -126,6 +126,7 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostTable",
     "HostScroll",
     "HostDialog",
+    "HostSurface",
     "HostCheckbox",
     "HostRadio",
     "HostLink",
@@ -145,6 +146,20 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostTableBody",
     "HostTableFoot",
     "Col",
+    // UI35 — the drag-and-drop family. The kernel previously had no drag
+    // primitive at all, which made the defining gesture of board software
+    // ("drag a card to another column") inexpressible in a `.mll`.
+    // Composition cannot supply it: every backend has its own native drag
+    // system, and the keyboard-equivalent path, screen-reader
+    // announcements, and touch support that make dragging usable are
+    // per-platform concerns. Two primitives because a drag has two ends —
+    // a source and a sink — and a card is typically both. The drag payload
+    // is an opaque key + kind the kernel never interprets, and a drop
+    // reports `before | after | into` relative to the target, which is what
+    // lets one family express list reorder, cross-container moves, outline
+    // nesting, and calendar drops. See `code/specs/UI35-host-drag-drop.md`.
+    "HostDraggable",
+    "HostDropTarget",
 ];
 
 // ---------------------------------------------------------------------------
@@ -1285,13 +1300,14 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The twenty-six primitives — fifteen from UI29 §2.1, plus
+        // The twenty-seven primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
         // HostRadio added in UI29-2 (#3978), plus HostLink,
         // HostTooltip, and HostNumberInput added in UI29-4, plus the
         // five UI31 HostTable structural sub-tags (HostTableColGroup,
-        // HostTableHead, HostTableBody, HostTableFoot, Col).
-        let expected_26 = [
+        // HostTableHead, HostTableBody, HostTableFoot, Col), plus the
+        // typed HostSurface native composition boundary.
+        let expected_27 = [
             "Box",
             "Row",
             "Column",
@@ -1308,6 +1324,7 @@ version = "1"
             "HostTable",
             "HostScroll",
             "HostDialog",
+            "HostSurface",
             "HostCheckbox",
             "HostRadio",
             "HostLink",
@@ -1319,7 +1336,7 @@ version = "1"
             "HostTableFoot",
             "Col",
         ];
-        for name in &expected_26 {
+        for name in &expected_27 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
@@ -1332,6 +1349,28 @@ version = "1"
         sorted.sort();
         sorted.dedup();
         assert_eq!(sorted.len(), KERNEL_PRIMITIVES.len(), "no duplicates");
+    }
+
+    // ---- Test 11b: UI35 drag-and-drop family ----
+
+    /// The kernel gained no drag primitive until UI35, which is why a board's
+    /// defining gesture was inexpressible. Pinned separately from the UI29/UI31
+    /// roster so a refactor that drops one of the pair is caught here, and so
+    /// `resolve_tag` keeps classifying them as kernel rather than sending them
+    /// down the package-reference path.
+    #[test]
+    fn kernel_set_covers_ui35_drag_and_drop() {
+        for name in ["HostDraggable", "HostDropTarget"] {
+            assert!(
+                KERNEL_PRIMITIVES.contains(&name),
+                "UI35 kernel must include `{name}`"
+            );
+        }
+    }
+
+    #[test]
+    fn kernel_set_covers_host_surface() {
+        assert!(KERNEL_PRIMITIVES.contains(&"HostSurface"));
     }
 
     // ---- Test 12: package_path is absolute ----

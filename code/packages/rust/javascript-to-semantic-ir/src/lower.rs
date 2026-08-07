@@ -3463,6 +3463,8 @@ enum Lowered {
 /// a closure is treated as potentially effectful.
 fn expr_may_have_effects(expr: &Expr) -> bool {
     match expr {
+        // SIR26 conversion (not currently emitted here): pure iff its value is.
+        Expr::Convert { value, .. } => expr_may_have_effects(value),
         // Provably pure leaves.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -3530,12 +3532,51 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
                 })
         }
 
+        // SIR22 addendum: APL primitive operators — same "Pure" treatment
+        // as the base SIR22 nodes above (the spec's "Effects" section marks
+        // every one of these `Pure` too).
+        Expr::Reduce { target, .. } => expr_may_have_effects(target),
+        Expr::Scan { target, .. } => expr_may_have_effects(target),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::Shape { target, .. } => expr_may_have_effects(target),
+        Expr::Reshape { shape, target, .. } => {
+            expr_may_have_effects(shape) || expr_may_have_effects(target)
+        }
+        Expr::IndexGenerator { count, .. } => expr_may_have_effects(count),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => expr_may_have_effects(haystack) || expr_may_have_effects(needle),
+        Expr::Ravel { target, .. } => expr_may_have_effects(target),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+
         // Calls, closures, and intrinsics may do anything → keep.
         Expr::DirectCall { .. }
         | Expr::IndirectCall { .. }
         | Expr::BuiltinCall { .. }
         | Expr::MakeClosure { .. }
         | Expr::Intrinsic { .. } => true,
+
+        // SIR23 symbolic-expression/pattern nodes: the spec's "Effects"
+        // section marks every one of these `Pure` too — same treatment as
+        // the SIR22 array/matrix nodes above.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_may_have_effects(head) || args.iter().any(expr_may_have_effects)
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(expr_may_have_effects)
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_may_have_effects(pattern),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_may_have_effects(expr) || rules.iter().any(expr_may_have_effects)
+        }
     }
 }
 

@@ -145,6 +145,14 @@ unsafe fn write_pixels_to_out_buffer(
     std::mem::forget(data);
 }
 
+/// # Safety
+///
+/// `rects` must point to `rect_count` valid `paint_rect_instruction_t` values
+/// (or be null when `rect_count` is 0), and `out_buffer` must point to a valid,
+/// writable `paint_rgba8_buffer_t`. On success the buffer's `data` pointer owns
+/// a heap allocation that the caller must release with
+/// `paint_vm_metal_free_buffer_data`. Passing dangling or misaligned pointers is
+/// undefined behavior.
 #[no_mangle]
 pub unsafe extern "C" fn paint_vm_metal_render_rect_scene(
     width: u32,
@@ -185,6 +193,14 @@ pub unsafe extern "C" fn paint_vm_metal_render_rect_scene(
     1
 }
 
+/// # Safety
+///
+/// `rects` and `texts` must each point to `rect_count` / `text_count` valid
+/// instruction values (or be null when the corresponding count is 0), and
+/// `out_buffer` must point to a valid, writable `paint_rgba8_buffer_t`. On
+/// success the buffer's `data` pointer owns a heap allocation that the caller
+/// must release with `paint_vm_metal_free_buffer_data`. Passing dangling or
+/// misaligned pointers is undefined behavior.
 #[no_mangle]
 pub unsafe extern "C" fn paint_vm_metal_render_scene(
     width: u32,
@@ -221,6 +237,12 @@ pub unsafe extern "C" fn paint_vm_metal_render_scene(
     1
 }
 
+/// # Safety
+///
+/// `data`/`len` must be exactly the pointer and length previously produced in a
+/// `paint_rgba8_buffer_t` by one of the render functions in this module (or
+/// `data` may be null / `len` 0, in which case this is a no-op). The buffer must
+/// not have been freed already; double-freeing is undefined behavior.
 #[no_mangle]
 pub unsafe extern "C" fn paint_vm_metal_free_buffer_data(data: *mut u8, len: usize) {
     if data.is_null() || len == 0 {

@@ -738,7 +738,7 @@ fn validate_label(label: &[u8]) -> Result<(), DnsError> {
 
 fn validate_encoded_name_len(name: &DnsName) -> Result<(), DnsError> {
     let len = name.labels.iter().try_fold(1usize, |acc, label| {
-        let label_len = label.as_bytes().len();
+        let label_len = label.len();
         if label_len > MAX_LABEL_LEN {
             return Err(DnsError::LabelTooLong { length: label_len });
         }

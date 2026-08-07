@@ -18,6 +18,7 @@
 
 /// Holds all CPU state needed to resume after an interrupt.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub struct InterruptFrame {
     /// Saved program counter (where to resume).
     pub pc: u32,
@@ -29,16 +30,6 @@ pub struct InterruptFrame {
     pub mcause: u32,
 }
 
-impl Default for InterruptFrame {
-    fn default() -> Self {
-        Self {
-            pc: 0,
-            registers: [0; 32],
-            mstatus: 0,
-            mcause: 0,
-        }
-    }
-}
 
 /// Create an InterruptFrame from the current CPU state.
 ///

@@ -207,8 +207,8 @@ fn integer_gcd(mut a: u64, mut b: u64) -> u64 {
 fn poly_add(lhs: &[Rational], rhs: &[Rational]) -> Vec<Rational> {
     let len = lhs.len().max(rhs.len());
     let mut out = vec![Rational::ZERO; len];
-    for index in 0..len {
-        out[index] = lhs.get(index).copied().unwrap_or(Rational::ZERO)
+    for (index, out_elem) in out.iter_mut().enumerate() {
+        *out_elem = lhs.get(index).copied().unwrap_or(Rational::ZERO)
             + rhs.get(index).copied().unwrap_or(Rational::ZERO);
     }
     out
@@ -217,8 +217,8 @@ fn poly_add(lhs: &[Rational], rhs: &[Rational]) -> Vec<Rational> {
 fn poly_sub(lhs: &[Rational], rhs: &[Rational]) -> Vec<Rational> {
     let len = lhs.len().max(rhs.len());
     let mut out = vec![Rational::ZERO; len];
-    for index in 0..len {
-        out[index] = lhs.get(index).copied().unwrap_or(Rational::ZERO)
+    for (index, out_elem) in out.iter_mut().enumerate() {
+        *out_elem = lhs.get(index).copied().unwrap_or(Rational::ZERO)
             - rhs.get(index).copied().unwrap_or(Rational::ZERO);
     }
     out

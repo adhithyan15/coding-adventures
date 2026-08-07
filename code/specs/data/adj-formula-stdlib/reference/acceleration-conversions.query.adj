@@ -1,0 +1,22 @@
+% ============================================================================
+% acceleration-conversions.query.adj — a worked lookup over the acceleration table.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how many metres per
+% second squared is one g?" question: it states no conversion fact — it only `import`s
+% the grounded table and asks binding queries. The native adj-lang engine resolves each
+% `?` against the table's rows (lowered to
+% `acceleration_to_metres_per_second_squared` relations) and returns the binding + the
+% table's source/locator/trust. A unit not in the table abstains honestly — the engine
+% never invents a factor (notably the SI unit itself, the metre per second squared,
+% which has no customary-conversion row).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli acceleration-conversions.query.adj
+% ============================================================================
+
+import "acceleration-conversions.adj"
+
+? acceleration_to_metres_per_second_squared(free_fall_standard, $a)         % expect 9.80665
+? acceleration_to_metres_per_second_squared(foot_per_second_squared, $a)    % expect 0.3048
+? acceleration_to_metres_per_second_squared(gal, $a)                        % expect 0.01
+? acceleration_to_metres_per_second_squared(metre_per_second_squared, $a)   % expect abstain — SI unit, not a row

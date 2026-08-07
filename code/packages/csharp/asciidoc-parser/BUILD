@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.AsciidocParser.Tests/CodingAdventures.AsciidocParser.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.AsciidocParser]*"

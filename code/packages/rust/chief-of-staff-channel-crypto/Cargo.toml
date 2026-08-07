@@ -1,0 +1,15 @@
+[package]
+name = "chief-of-staff-channel-crypto"
+version = "0.1.0"
+edition = "2021"
+description = "D18 Chief of Staff encrypted channel key grants and message protection"
+license = "MIT"
+
+[dependencies]
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_hkdf = { path = "../hkdf" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_x25519 = { path = "../x25519" }
+coding_adventures_zeroize = { path = "../zeroize" }

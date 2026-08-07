@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.product",
+          "end": 71,
+          "quote": "The term \"product\" refers to the result of one or more multiplications.",
+          "quote_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 71,
+      "start": 0
+    }
+  ],
+  "source_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+  "source_size": 71
+}

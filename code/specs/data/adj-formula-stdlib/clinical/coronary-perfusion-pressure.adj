@@ -1,0 +1,106 @@
+% ============================================================================
+% coronary-perfusion-pressure.adj — the definition of coronary perfusion pressure
+% (CPP = aortic diastolic pressure − left ventricular end-diastolic pressure) in the ADJ
+% standard library.
+% ============================================================================
+% The coronary-perfusion-pressure entry of the *clinical* track, a cardiology sibling of the
+% NEURO/critical-care `cerebral-perfusion-pressure.adj`. Where `cerebral-perfusion-pressure.adj`
+% grounds the pressure driving blood into the brain (MAP − ICP), this grounds the pressure
+% driving blood into the HEART MUSCLE: CORONARY PERFUSION PRESSURE IS THE AORTIC DIASTOLIC
+% PRESSURE MINUS THE LEFT VENTRICULAR END-DIASTOLIC PRESSURE — the net pressure gradient across
+% the coronary bed during DIASTOLE (the left ventricle perfuses in diastole, because systolic
+% contraction squeezes its own intramural arteries shut). LVEDP is the back-pressure the
+% coronary flow works against; subtracting it from the aortic diastolic pressure gives the
+% pressure actually available to perfuse the myocardium (a CPP that falls — from hypotension, or
+% from a rising LVEDP in acute heart failure — starves the subendocardium first). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact
+% rearrangements (the aortic diastolic pressure a CPP implies for a given LVEDP, and the LVEDP
+% the other two imply). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured pressures from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited definition on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "coronary-perfusion-pressure.adj"
+%     observe aortic_diastolic_pressure(80)                 % "…aortic diastolic 80 mmHg…"  (span cited by the model)
+%     observe left_ventricular_end_diastolic_pressure(12)   % "…LVEDP 12 mmHg…"              (span cited by the model)
+%     ? coronary_perfusion_pressure(aortic_diastolic_pressure, left_ventricular_end_diastolic_pressure)
+%                                                              % engine → 68, carrying CPP = ADP − LVEDP
+%
+% All three formulas are EXACT over their parameters (a difference and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert cleanly
+% around the worked case aortic diastolic pressure = 80 mmHg, LVEDP = 12 mmHg (CPP = 80 − 12 =
+% 68 mmHg): the `coronary_perfusion_pressure` a consumer computes from the two pressures is
+% exactly the `coronary_perfusion_pressure` the `aortic_diastolic_pressure` formula adds the
+% LVEDP back to, to recover the 80 mmHg aortic diastolic pressure, and exactly the
+% `coronary_perfusion_pressure` the `left_ventricular_end_diastolic_pressure` formula subtracts
+% from the aortic diastolic pressure to recover the 12 mmHg LVEDP.
+%
+%   coronary_perfusion_pressure(aortic_diastolic_pressure, left_ventricular_end_diastolic_pressure)
+%       = aortic_diastolic_pressure - left_ventricular_end_diastolic_pressure   % CPP = ADP − LVEDP   (definition)
+%   aortic_diastolic_pressure(coronary_perfusion_pressure, left_ventricular_end_diastolic_pressure)
+%       = coronary_perfusion_pressure + left_ventricular_end_diastolic_pressure % ADP = CPP + LVEDP   (solved for ADP)
+%   left_ventricular_end_diastolic_pressure(aortic_diastolic_pressure, coronary_perfusion_pressure)
+%       = aortic_diastolic_pressure - coronary_perfusion_pressure               % LVEDP = ADP − CPP   (solved for LVEDP)
+%
+% NOTE ON UNITS: the two pressures must be in the SAME unit (both millimetres of mercury, as in
+% the worked case), and the coronary perfusion pressure comes out in that same unit; this library
+% computes the exact value over whatever consistent unit it is given. NOTE ON DIASTOLE: this uses
+% the AORTIC DIASTOLIC pressure (not the mean or systolic), because myocardial perfusion of the
+% left ventricle happens in diastole; the definition is the coronary counterpart of the cerebral
+% perfusion pressure in `cerebral-perfusion-pressure.adj`, which uses the MEAN arterial pressure.
+%
+% All three formulas are defended by the SAME equation — "CPP = ADP – LVEDP" — because that one
+% definition (coronary perfusion pressure IS the aortic diastolic minus the left ventricular
+% end-diastolic pressure) sanctions the relation read every way (the CPP from the two pressures,
+% the ADP from the CPP and LVEDP, or the LVEDP from the ADP and CPP). The quote is transcribed
+% verbatim from the StatPearls "Coronary Perfusion Pressure" article on the NCBI Bookshelf, so
+% each `formula` carries the provenance envelope every shipped grounded clause carries; the
+% linter rejects an unsourced one. (See feedback_nothing_human_authored — the equation is a
+% verbatim span of the cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable pressure the definition ranges over, and each
+% result is a derived quantity. `coronary_perfusion_pressure`, `aortic_diastolic_pressure` and
+% `left_ventricular_end_diastolic_pressure` each appear BOTH as a derived result and as an input
+% (of the other formulas), so each is a single dictionary term used in both roles. The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term; the trailing comment
+% records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary coronary_perfusion_pressure_vocab {
+    define aortic_diastolic_pressure               : finding  surface "aortic diastolic pressure", "ADP"                              % millimetres of mercury (mmHg)
+    define left_ventricular_end_diastolic_pressure : finding  surface "left ventricular end-diastolic pressure", "LVEDP"              % millimetres of mercury (mmHg)
+    define coronary_perfusion_pressure             : finding  surface "coronary perfusion pressure", "CPP"                            % millimetres of mercury (mmHg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the equation from StatPearls on the NCBI
+% Bookshelf (a quote is required on a shipped formula). Each is an exact difference/sum of
+% measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook coronary_perfusion_pressure_laws {
+    use coronary_perfusion_pressure_vocab
+
+    % Coronary perfusion pressure — the aortic diastolic pressure less the left ventricular
+    % end-diastolic pressure, i.e. CPP = ADP − LVEDP.
+    formula coronary_perfusion_pressure(aortic_diastolic_pressure, left_ventricular_end_diastolic_pressure) = aortic_diastolic_pressure - left_ventricular_end_diastolic_pressure
+        source "CPP = ADP – LVEDP"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551531/"
+        trust authoritative
+
+    % Aortic diastolic pressure — the same definition solved for the aortic diastolic pressure a
+    % coronary perfusion pressure implies for an LVEDP (ADP = CPP + LVEDP). Defended by the SAME
+    % equation, read the other way.
+    formula aortic_diastolic_pressure(coronary_perfusion_pressure, left_ventricular_end_diastolic_pressure) = coronary_perfusion_pressure + left_ventricular_end_diastolic_pressure
+        source "CPP = ADP – LVEDP"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551531/"
+        trust authoritative
+
+    % Left ventricular end-diastolic pressure — the same definition solved for the LVEDP the other
+    % two imply (LVEDP = ADP − CPP). Again the SAME equation, read the third way.
+    formula left_ventricular_end_diastolic_pressure(aortic_diastolic_pressure, coronary_perfusion_pressure) = aortic_diastolic_pressure - coronary_perfusion_pressure
+        source "CPP = ADP – LVEDP"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551531/"
+        trust authoritative
+}

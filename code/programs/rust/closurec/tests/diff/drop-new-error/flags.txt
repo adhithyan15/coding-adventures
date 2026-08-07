@@ -1,0 +1,4 @@
+--js
+tests/diff/drop-new-error/input/a.js
+--compilation_level
+SIMPLE

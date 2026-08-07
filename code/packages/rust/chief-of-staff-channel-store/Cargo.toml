@@ -1,0 +1,14 @@
+[package]
+name = "chief-of-staff-channel-store"
+version = "0.1.0"
+edition = "2021"
+description = "CAS-backed durable storage for D18 encrypted Chief of Staff channels"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+coding-adventures-json-value = { path = "../json-value" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }

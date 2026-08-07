@@ -69,6 +69,12 @@
 //! assert!(engine.halted());
 //! ```
 
+// The engine `*Config` structs are populated field-by-field after `default()`
+// throughout the setup code, which reads far more clearly than a single struct
+// literal for these hardware-descriptor configs. The mechanical rewrite adds no
+// behavioral value, so `field_reassign_with_default` is allowed crate-wide.
+#![allow(clippy::field_reassign_with_default)]
+
 pub mod protocols;
 pub mod warp_engine;
 pub mod wavefront_engine;

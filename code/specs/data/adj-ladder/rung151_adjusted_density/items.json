@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 151 \u2014 adjusted density from FIVE stated quantities (CONTINUING the five-quantity, two-term-denominator family). rung-149 put a three-term SUM over a two-term sum (a+b+c)/(d+e); rung-150 flipped the denominator to a difference (a+b+c)/(d\u2212e); rung-151 instead flips the NUMERATOR operation \u2014 a MIXED-OP three-term numerator over a two-term SUM (a+b\u2212c)/(d+e). From a net numerator (part_one + part_two \u2212 deduction) divided by a span total (span_one + span_two), compute the adjusted density ((part_one+part_two\u2212deduction)/(span_one+span_two)), the net numerator (part_one+part_two\u2212deduction), or the span total (span_one+span_two). Each item is a compute_dimensioned program (observe the five quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a MIXED-OP NUMERATOR OVER A TWO-TERM SUM (a+b\u2212c)/(d+e) (add the two parts, subtract the deduction, pool both spans FIRST, then divide the net by the span total). The mixed-sign numerator brings a slip the all-`+` numerator rung-149 could not test \u2014 the NUMERATOR SIGN ERROR, adding the deduction instead of subtracting it ((a+b+c)/(d+e), treating the deduction as a third part) \u2014 alongside the carried-over DROPPING a denominator term ((a+b\u2212c)/d). The panel puts the honest net numerator (a+b\u2212c) beside the sign-error slip ((a+b+c)/(d+e)) so the difference is exactly 'did you SUBTRACT the deduction, or add it?'. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the five observed quantities via +, \u2212, and / \u2014 no constant leaks, and neither the net numerator, the span total, nor the adjusted density ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. Because the numerator subtracts the deduction, the net numerator carries a positivity guard (part_one + part_two \u2212 deduction >= 2) so every figure stays strictly positive; the span total and the added slip are sums of positives and so are automatically positive. The five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r151ada-01",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 8 and 6 with a deduction of 2, spread across two spans of 2 and 3. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(8)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r151ada-02",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 8 and 6 with a deduction of 2, spread across two spans of 2 and 3. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(8)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r151ada-03",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 8 and 6 with a deduction of 2, spread across two spans of 2 and 3. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(8)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r151ada-04",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 11 and 9 with a deduction of 2, spread across two spans of 4 and 4. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(11)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r151ada-05",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 11 and 9 with a deduction of 2, spread across two spans of 4 and 4. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(11)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r151ada-06",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 11 and 9 with a deduction of 2, spread across two spans of 4 and 4. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(11)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r151ada-07",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 14 and 8 with a deduction of 2, spread across two spans of 5 and 5. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(14)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r151ada-08",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 14 and 8 with a deduction of 2, spread across two spans of 5 and 5. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(14)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r151ada-09",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 14 and 8 with a deduction of 2, spread across two spans of 5 and 5. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(14)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r151ada-10",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 10 and 6 with a deduction of 2, spread across two spans of 2 and 2. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(10)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(2)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r151ada-11",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 10 and 6 with a deduction of 2, spread across two spans of 2 and 2. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(10)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(2)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r151ada-12",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 10 and 6 with a deduction of 2, spread across two spans of 2 and 2. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(10)\nobserve part_two(6)\nobserve deduction(2)\nobserve span_one(2)\nobserve span_two(2)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r151ada-13",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 12 and 9 with a deduction of 2, spread across two spans of 5 and 4. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(12)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.111111111111111,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5555555555555554,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r151ada-14",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 12 and 9 with a deduction of 2, spread across two spans of 5 and 4. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(12)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.111111111111111,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5555555555555554,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r151ada-15",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 12 and 9 with a deduction of 2, spread across two spans of 5 and 4. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(12)\nobserve part_two(9)\nobserve deduction(2)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.111111111111111,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5555555555555554,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r151ada-16",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 16 and 8 with a deduction of 2, spread across two spans of 4 and 2. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(16)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r151ada-17",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 16 and 8 with a deduction of 2, spread across two spans of 4 and 2. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(16)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r151ada-18",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 16 and 8 with a deduction of 2, spread across two spans of 4 and 2. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(16)\nobserve part_two(8)\nobserve deduction(2)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r151ada-19",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 13 and 5 with a deduction of 2, spread across two spans of 6 and 5. What is the adjusted density (the net numerator divided by the span total)?",
+      "program": "observe part_one(13)\nobserve part_two(5)\nobserve deduction(2)\nobserve span_one(6)\nobserve span_two(5)\nlet answer = (part_one + part_two - deduction) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.8181818181818181,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4545454545454546,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r151ada-20",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 13 and 5 with a deduction of 2, spread across two spans of 6 and 5. What is the the net numerator (the two parts added and the deduction subtracted, the numerator that is divided by the span total)?",
+      "program": "observe part_one(13)\nobserve part_two(5)\nobserve deduction(2)\nobserve span_one(6)\nobserve span_two(5)\nlet answer = part_one + part_two - deduction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4545454545454546,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.8181818181818181,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r151ada-21",
+      "qtype": "adjusted_density",
+      "stem": "A coverage study records two parts of 13 and 5 with a deduction of 2, spread across two spans of 6 and 5. What is the the span total (the two spans added, the denominator the net numerator is divided by)?",
+      "program": "observe part_one(13)\nobserve part_two(5)\nobserve deduction(2)\nobserve span_one(6)\nobserve span_two(5)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.4545454545454546,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.8181818181818181,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

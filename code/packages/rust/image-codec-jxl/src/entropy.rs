@@ -285,7 +285,7 @@ mod tests {
 
     #[test]
     fn residuals_mixed() {
-        let r: Vec<i32> = (0..50).map(|i| i as i32 - 25).collect();
+        let r: Vec<i32> = (0..50).map(|i| i - 25).collect();
         rt_residuals(&r);
     }
 

@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-scilab-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `scilab` binary for the Scilab language (MA10 MA-10d)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-scilab-runtime = { path = "../scilab-runtime" }
+
+[[bin]]
+name = "scilab"
+path = "src/main.rs"

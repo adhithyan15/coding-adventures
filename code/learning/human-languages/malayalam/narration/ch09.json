@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 9,
+  "title": "Sorry",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:60ba9f3764eeac28",
+  "lessons": [
+    {
+      "id": "ML-C09-kshamikkanam",
+      "sequence": 370,
+      "title": "ക്ഷമിക്കണം (kṣamikkaṇaṁ) — (you) should forgive / sorry",
+      "headword": "ക്ഷമിക്കണം",
+      "romanization": "",
+      "gloss": "(you) should forgive / sorry (kṣamikkaṇaṁ — from kṣamikkuka \"to forgive,\" Sanskrit kṣama + necessitative -aṇaṁ)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13a530938d324359",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know ദയവായി and the necessitative ‑ണം ending mentioned there. Malayalam's \"sorry\" is that very ending, now carrying a forgiveness-verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷമ (kṣama) = \"forgiveness, patience\" — the Sanskrit noun."
+            },
+            {
+              "kind": "speech",
+              "text": "‑ഇക്കുക (‑ikkuka) = a verb-making suffix: kṣama + ‑ikkuka becomes ക്ഷമിക്കുക (kṣamikkuka), \"to forgive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "‑ണം (‑aṇaṁ) = the necessitative ending, \"must / should\" — literally kṣamikkaṇaṁ says \"[you] must forgive,\" used as a softened, polite request exactly the way English can soften a request into \"you should really forgive me\" without meaning it as an order."
+            },
+            {
+              "kind": "speech",
+              "text": "So ക്ഷമിക്കണം leans on obligation to be polite — a very different move from a plain imperative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam ക്ഷമിക്കണം kṣamikkaṇaṁ — Sanskrit kṣama + ‑ikkuka (verb) + ‑aṇaṁ (necessitative: \"must/should\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ಕ್ಷಮಿಸಿ kṣamisi — Sanskrit kṣamā + ‑isu (verb) + ‑i (imperative)."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu క్షమించండి kṣamin̄caṇḍi — Sanskrit kṣamā + ‑in̄cu (verb) + ‑aṇḍi (imperative)."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil மன்னிக்கவும் maṉṉikkavum — its own native root maṉṉi, not Sanskrit at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷമിക്കണം is a genuine, common way to ask forgiveness — but Malayalam speakers reach just as often for the plain imperative ക്ഷമിക്കൂ (kṣamikkū, using the ‑ൂ ending from the please lesson) or simply the borrowed English \"sorry.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kṣama\" — the Sanskrit noun, forgiveness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kṣama\" — the Sanskrit noun, forgiveness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb — \"kṣamikkuka,\" to forgive — then \"kṣamikkaṇaṁ,\" you should forgive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb — \"kṣamikkuka,\" to forgive — then \"kṣamikkaṇaṁ,\" you should forgive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plainer version — \"kṣamikkū,\" using the ‑ū ending you know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plainer version — \"kṣamikkū,\" using the ‑ū ending you know]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷമിക്കണം literally say, and why is that polite? (\"[You] must forgive\" — the necessitative ‑aṇaṁ softens an obligation into a request, same as ദയവായി's note on ‑aṇaṁ.) Which cousins also verb-ify kṣama? (Kannada and Telugu; Tamil uses its own root maṉṉi.) What's a plainer alternative? (Kṣamikkū, using the ‑ū ending, or borrowed English \"sorry.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

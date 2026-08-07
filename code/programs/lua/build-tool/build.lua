@@ -162,7 +162,15 @@ local function main()
 
     -- Step 3: Resolve dependencies.
     print("Resolving dependencies...")
-    local graph = Resolver.resolve_dependencies(packages)
+    local resolution_ok, graph = pcall(Resolver.resolve_dependencies, packages)
+    if not resolution_ok then
+        if Resolver.is_metadata_encoding_error(graph) then
+            io.stderr:write(tostring(graph) .. "\n")
+            os.exit(2)
+        end
+        io.stderr:write("Error: " .. tostring(graph) .. "\n")
+        os.exit(1)
+    end
 
     -- Step 4: Compute build levels.
     local ok, groups = pcall(function()

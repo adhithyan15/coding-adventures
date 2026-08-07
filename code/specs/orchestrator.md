@@ -195,11 +195,27 @@ human even in an autonomous deployment.
 
 ### Host Supervisor
 
-The orchestrator is a `Supervisor` (from `supervisor` crate) at the
-root of the OS-process tree. Every host is a `ChildKind::HostProcess`
-child. Strategies and restart policies are defined per-host in the
-agent package's `manifest.json` and copied into the corresponding
-`ChildSpec` at registration time:
+The orchestrator composes the durable service registry and deterministic
+reconciler with the concrete process adapter specified in
+[`process-host-supervisor.md`](process-host-supervisor.md). The adapter is the
+root of the owned OS-process tree: it re-verifies the signed package immediately
+before every spawn, creates one fresh UUID-v7 secure session, and reports
+readiness and heartbeat only after authenticated host-control messages.
+
+Restart policy remains durable registry intent interpreted by the reconciler;
+the process adapter does not invent a second policy engine. Host capability
+manifests are validated before registration and again as part of package
+verification before launch. The runnable orchestrator supplies its trusted
+package keyring, process configuration, monotonic clock, and long-lived X3DH
+identity to the adapter.
+
+The adapter owns and reaps every child it reports. It does not adopt cached
+registry PIDs, invoke a shell, or treat PID existence as authority. Graceful
+shutdown uses an authenticated `Terminate` record followed by a bounded
+hard-kill fallback.
+
+An earlier prototype described this integration through the generic
+`supervisor` crate and a `ChildSpec` like this:
 
 ```rust
 let host_spec = ChildSpec {
@@ -214,20 +230,31 @@ let host_spec = ChildSpec {
 };
 ```
 
-The supervisor's capability-inheritance check (defined in
-`supervisor.md`) ensures the host's manifest is a subset of the
-orchestrator's own. The orchestrator's manifest is broad
+The generic supervisor's capability-inheritance check (defined in
+`supervisor.md`) remains useful for in-process task trees. The orchestrator's
+manifest is broad
 (`supervise`, `proc:fork`, `proc:exec:*`, `vault:admin`,
 `fs:read:./agents/*`) because it spawns processes; hosts have
 narrower manifests appropriate to their job.
 
-When a host crashes, the supervisor's restart strategy decides what
-happens. The orchestrator does not invent its own logic — it consumes
-what `supervisor` provides.
+For D18 host processes, crash recovery is instead driven by the durable service
+registry's `RestartPolicy` through the service reconciler, so restart decisions
+survive orchestrator restarts and are not split across two authorities.
 
 ### Service Registry
 
-A registry of running hosts:
+The transport-independent daemon composition is specified in
+[`runnable-orchestrator-core.md`](runnable-orchestrator-core.md). It binds this
+registry to deterministic reconciliation, authoritative process supervision,
+and authorized channel-topology mutation while remaining keyless and
+payload-blind. WebSocket serving, CLI parsing, daemon installation, and loop
+scheduling remain outer adapters. The transport-independent RFC 6455 contract
+for that outer server is specified in
+[`websocket-core.md`](websocket-core.md). The first authenticated JSON control
+surface that binds that runtime to the runnable core is specified in
+[`chief-of-staff-daemon-api.md`](chief-of-staff-daemon-api.md).
+
+A durable registry of host intent plus the orchestrator's last observation:
 
 ```rust
 pub struct ServiceRegistry {
@@ -236,13 +263,17 @@ pub struct ServiceRegistry {
 
 pub struct HostEntry {
     pub host_name:        HostName,
-    pub package_path:     PathBuf,
+    pub package_path:     String,        // bounded portable UTF-8 path
     pub package_hash:     [u8; 32],     // SHA-256 of the signed package
-    pub pid:              u32,
+    pub restart_policy:   RestartPolicy,
+    pub desired_state:    DesiredState,
+    pub pid:              Option<u32>,
     pub status:           HostStatus,
-    pub started_at:       SystemTime,
-    pub last_heartbeat:   SystemTime,
-    pub channel_id:       ChannelId,    // the secure-host-channel for this host
+    pub started_at_ns:    Option<u64>,
+    pub last_heartbeat_ns: Option<u64>,
+    pub channel_id:       Option<ChannelId>, // current secure host channel
+    pub restart_count:    u32,
+    pub last_restart_ns:  Option<u64>,
 }
 
 pub enum HostStatus {
@@ -251,19 +282,29 @@ pub enum HostStatus {
     Restarting,
     Stopping,
     Stopped,
-    Quarantined { until: SystemTime, reason: String },
+    Crashed { exit_code: Option<i32> },
+    Quarantined { until_ns: u64, reason: String },
 }
 ```
 
-The registry is persisted to disk under the orchestrator's data
-directory (default `./.orchestrator/registry.json`) on every change
-and re-read at startup. Persistence uses atomic write (write to
-`registry.json.tmp`, fsync, rename) so a crash during write never
-leaves a corrupt registry.
+Each host is stored as one bounded, versioned record behind the repository-owned
+`StorageBackend` interface. Registration is create-if-absent, observation and
+intent changes use revision compare-and-swap, deletion is revision-guarded, and
+list order is the stable host-name key order. The default local-folder backend
+stores these records below the orchestrator data directory and supplies its
+crash-safe atomic-write contract; the registry does not implement a second
+bespoke JSON/TOML file writer.
+
+Persisting `restart_policy` and `desired_state` is required for reconstruction:
+a cached PID or `Running` status can be stale after a crash, while the durable
+intent still tells reconciliation whether the host should be relaunched.
 
 The registry is **not authoritative** about what is actually
 running; the supervisor's child set is. The registry is a cache for
-fast lookup and for reconstructing intent on restart.
+fast lookup and for reconstructing intent on restart. It also does not duplicate
+channel membership or ciphertext state: durable channel definitions remain the
+authority for channel topology, and this entry only caches the current secure
+host control-channel identifier.
 
 ### Trust Checker
 
@@ -466,15 +507,15 @@ config level — it is a runtime-only concept.
      (vault://orchestrator/trusted-keys/)
 
 3. Reconstruct from registry:
-   read ./.orchestrator/registry.json
-   for each entry:
+   list the service-registry namespace through StorageBackend
+   decode each bounded versioned host entry:
      if pid is alive AND package_hash matches what's on disk:
        reattach to the host process
        wait for the host to re-handshake on its existing channel
        mark as Running
      else:
        mark as Stopped
-       if restart_policy is Permanent or Transient:
+       if restart_policy is Always, or OnFailure after a failed exit:
          relaunch the host (same flow as a fresh launch)
 
 4. Start the audit log writer (a dedicated actor that appends to
@@ -599,7 +640,8 @@ shutdown(mode):
 
 ```
 .orchestrator/
-├── registry.json              service-registry snapshot
+├── storage/                   default local-folder StorageBackend root
+│   └── service-registry/      versioned host records (backend-owned layout)
 ├── audit.jsonl                append-only structured audit log
 ├── panic-log.jsonl            append-only panic-signal forensic log
 ├── orchestrator.toml          configuration (read-only after start)
@@ -608,9 +650,9 @@ shutdown(mode):
     └── ...
 ```
 
-`registry.json` and `audit.jsonl` are written via atomic
-write-then-rename; `panic-log.jsonl` is fsync-on-write to ensure
-no signal is ever lost in a crash. The pids directory exists for
+The default local-folder backend provides atomic record writes for the service
+registry; `audit.jsonl` uses atomic write-then-rename and `panic-log.jsonl` is
+fsync-on-write to ensure no signal is ever lost in a crash. The pids directory exists for
 external observability (a sysadmin can `cat .orchestrator/pids/*`
 to see what is running).
 
@@ -721,8 +763,9 @@ pub enum SignatureError {
 
 1. **Signature verification** — known good, unknown key, tampered
    signature, malformed package, key tier capping.
-2. **Registry persistence** — round-trip of every host status; atomic
-   write semantics (kill mid-write must leave a valid file).
+2. **Registry persistence** — round-trip of every host status and intent;
+   create-if-absent registration, revision-CAS updates/deletes, corrupt-record
+   rejection, and restart through a real local-folder backend.
 3. **Trust checker** — Tier 0 passes without challenge; Tier 1
    notify-and-auto-approve; Tier 2 biometric; Tier 3 hardware key;
    timeouts and denials propagate correctly.
@@ -757,7 +800,8 @@ pub enum SignatureError {
 
 13. **Audit log shape** — every supervision event produces a record
     matching the published JSON schema for AuditRecord.
-14. **Registry shape** — registry.json matches the published schema.
+14. **Registry shape** — every versioned host record obeys the bounded codec and
+    stable storage-key contract.
 
 ### Coverage Target
 

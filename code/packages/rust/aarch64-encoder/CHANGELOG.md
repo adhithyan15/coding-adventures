@@ -1,5 +1,31 @@
 # Changelog — `aarch64-encoder`
 
+## 0.7.0 — 2026-07-21 (GC stack-map registration — `ADR` + embedded data)
+
+### Added — `adr` / `adr_placeholder` / `emit_data_word`
+Primitives the twig-aot GC stack-map registration codegen (`__gc_init_stackmaps`)
+needs to point registers at constant tables and at cross-function code addresses:
+
+- **`adr(rd, label)`** — `ADR Xd, <label>`: load the **byte address** of a label
+  (PC-relative, ±1 MiB) in one instruction. Unlike `adrp_placeholder` (4 KiB page
+  granularity + a companion `ADD`), `ADR` reaches any byte, so it addresses a data
+  word embedded in the stream. Resolved at `finish()` via a new `BranchKind::AdrByte`
+  fix-up; a target beyond ±1 MiB yields `BranchOutOfRange { bits: 21 }`.
+- **`adr_placeholder(rd) -> usize`** — emit `ADR Xd, #0` and return its word index,
+  for a caller that patches the 21-bit byte displacement itself once a target offset
+  is known (the `ADR` analogue of `adrp_placeholder`). Because `ADR` is PC-relative in
+  *bytes*, an intra-section displacement is independent of the runtime base address —
+  the key property that lets a code address be baked without a load-time relocation
+  (an `ADRP` page immediate cannot, since `page()` does not commute with an unaligned
+  base).
+- **`emit_data_word(word) -> usize`** — append a raw little-endian `u32` data word
+  (a `u32`/`i32` table element), returning its word index. Not an instruction; only
+  safe where control flow cannot fall into it (after a `ret`, or reached only by
+  `adr`).
+
+Three unit tests pin the `ADR` encoding (`adr x3, .+8` = `0x10000043`), the
+zero-displacement case, and the ±1 MiB range error.
+
 ## 0.6.0 — 2026-06-28 (AL8-sqrt — `FSQRT Dd, Dn`)
 
 ### Added — `fsqrt`

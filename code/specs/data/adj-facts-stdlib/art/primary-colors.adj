@@ -1,0 +1,53 @@
+% ============================================================================
+% primary-colors — the three traditional (RYB) primary colors of paint
+% (adj-facts-stdlib, ART).
+% ============================================================================
+% One of the first art facts a child learns: with just three "primary" paints
+% you can mix every other color, but you cannot mix the three primaries
+% themselves from anything else. In the traditional artists' color wheel — the
+% RYB (red–yellow–blue) model — those three primaries are RED, YELLOW, and BLUE.
+% Recall is a membership binding query: is this color a primary?
+%
+%     ? primary_color(red, $Is)      % yes  (red is a primary)
+%     ? primary_color(green, $Is)    % abstain — green is a SECONDARY color
+%
+% WHICH color model (this matters — do not conflate two different "primaries"):
+%
+%     model                       primaries        used for
+%     --------------------------  ---------------  -----------------------------
+%     RYB (subtractive, paint)    red yellow blue  mixing PAINTS/PIGMENTS  <-- THIS TABLE
+%     RGB (additive, light)       red green blue   screens, colored LIGHT
+%     CMY (subtractive, print)    cyan magenta yel color PRINTING / inks
+%
+% This library encodes ONLY the traditional RYB paint primaries — the ones an
+% art class teaches. It is NOT the RGB primaries of light (which swap in green
+% for yellow and blue) and NOT the CMY primaries of printing. Green, orange, and
+% purple are SECONDARY colors (each mixed from two primaries), so a query for
+% them deliberately has no row and ABSTAINS — the engine never invents a "yes".
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `primary_color(color, is_primary)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% membership WITH its source, on the CPU, with zero model calls, and abstains on
+% any color not shipped as a row.
+%
+% Provenance: the Tate (the UK national art museum) Art Terms glossary entry for
+% "complementary colours" states verbatim (see `source`) that the "primaries are
+% red, yellow and blue." The citable artifact is that glossary page at the
+% `locator`. `trust authoritative` — Tate is a primary art-education museum
+% reference. Nothing here is asserted from memory; only the three colors the
+% cited span names as primary are shipped. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table primary_color {
+    columns color, is_primary
+
+    row (red, yes)
+    row (yellow, yes)
+    row (blue, yes)
+
+    source "primaries are red, yellow and blue"
+    locator "https://www.tate.org.uk/art/art-terms/c/complementary-colours"
+    trust authoritative
+}

@@ -1,0 +1,25 @@
+% ============================================================================
+% wave-number-conversions.query.adj — worked lookups over the NIST wave-number → reciprocal-metre table.
+% ============================================================================
+% The shape a consumer produces to convert a wave number given in the traditional CGS unit into SI:
+% it `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no factor
+% is stated by the consumer; the engine returns the cell WITH the table's NIST citation as its proof,
+% on the CPU.
+%
+%   ? wave_number_to_reciprocal_metre(kayser, $v)   % 100   (kayser = 1 E+02 m⁻¹, exact)
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "angstrom" is a LENGTH (wavelength) unit (it converts to
+% the metre), NOT a wave-number unit — and since wave number is the reciprocal of wavelength, this
+% abstain guards the wavelength-versus-wavenumber confusion directly:
+%
+%   ? wave_number_to_reciprocal_metre(angstrom, $v)   % abstains (angstrom is length → metre)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wave-number-conversions.query.adj
+% ============================================================================
+
+import "wave-number-conversions.adj"
+
+? wave_number_to_reciprocal_metre(kayser, $v)     % expect 100      (exact NIST SP 811 B.9 factor)
+? wave_number_to_reciprocal_metre(angstrom, $v)   % expect abstain  (length unit, wrong dimension)

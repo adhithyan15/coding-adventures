@@ -1,0 +1,77 @@
+% ============================================================================
+% traffic-lights — each steady traffic-signal COLOR and what it means to a
+% driver (adj-facts-stdlib, TRANSPORTATION).
+% ============================================================================
+% One of the very first rules a child learns about the road, and the first
+% thing a new driver studies: a steady traffic light shows one of three
+% colors, and each color tells the driver what to do. Red means stop, yellow
+% is a warning that red is coming, and green means you may go. Recall is a
+% binding query:
+%
+%     ? traffic_light_meaning(red, $Meaning)      % stop
+%     ? traffic_light_meaning(green, $Meaning)    % proceed
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `traffic_light_meaning(color, meaning)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the meaning WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the three steady signal colors.
+%
+% The three STEADY (not flashing) circular signal indications, as a truth
+% table over the colors shipped here:
+%
+%     color     meaning     what the driver does (a beginner's cue)
+%     --------  ---------   -------------------------------------------------
+%     red       stop        stop at the stop line / before the crosswalk
+%     yellow    warned      warned that the green is ending and red is next
+%     green     proceed     permitted to proceed (go straight / turn)
+%
+% Only these three colors are steady vehicular indications. A color that is
+% NOT a traffic-signal color — `blue`, `purple`, `orange` — is deliberately
+% NOT a row, so a meaning recall ABSTAINS on it rather than inventing a rule.
+% That honest-abstention property is what makes a recall table safe to build a
+% reasoner on. (Note: this library covers the STEADY circular indications; a
+% flashing yellow or a red/green ARROW carries a different, separate meaning
+% in the manual and is intentionally out of scope for this first table.)
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is copied from the FHWA MANUAL ON UNIFORM TRAFFIC CONTROL DEVICES
+% (MUTCD), 2009 Edition, Section 4D.04 "Meaning of Vehicular Signal
+% Indications" — the federal standard for U.S. traffic control devices, hence
+% `trust authoritative` (mutcd.fhwa.dot.gov is a `.gov` primary source).
+% Nothing here is asserted from memory. Because ADJ tables carry ONE shared
+% provenance envelope (per-row provenance is a documented future extension —
+% see ADJ-TABLES §6), the envelope below cites Section 4D.04 at its `locator`,
+% and the `source` quotes the RED indication verbatim. For full auditability,
+% here is the exact MUTCD span that grounds EACH row:
+%
+%   red    — "Vehicular traffic facing a steady CIRCULAR RED signal
+%             indication, unless entering the intersection to make another
+%             movement permitted by another signal indication, shall stop at a
+%             clearly marked stop line" → red means STOP.
+%
+%   yellow — "Vehicular traffic facing a steady CIRCULAR YELLOW signal
+%             indication is thereby warned that the related green movement ...
+%             is being terminated or that a steady red signal indication will
+%             be displayed immediately thereafter" → yellow means WARNED.
+%
+%   green  — "Vehicular traffic facing a CIRCULAR GREEN signal indication is
+%             permitted to proceed straight through or turn right or left or
+%             make a U-turn movement" → green means PROCEED.
+%
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table traffic_light_meaning {
+    columns color, meaning
+
+    row (red, stop)
+    row (yellow, warned)
+    row (green, proceed)
+
+    source "Vehicular traffic facing a steady CIRCULAR RED signal indication, unless entering the intersection to make another movement permitted by another signal indication, shall stop at a clearly marked stop line"
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part4/part4d.htm"
+    trust authoritative
+}

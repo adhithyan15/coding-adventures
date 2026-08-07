@@ -2,6 +2,24 @@
 
 All notable changes to the TypeScript build tool will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Normalize Git-diff package roots to repository-relative forward-slash paths
+  and make the Git integration fixtures shell-independent on Windows.
+- Emit build-plan package `rel_path` values with portable forward slashes on
+  Windows, backed by the shared plan fixture and a real CLI subprocess test.
+- Classify languages only from the canonical package/program bucket, preserve
+  `language/programs/name` identities, and exclude specification fixtures.
+- Reject residual duplicate qualified names with the stable
+  `DUPLICATE_PACKAGE_IDENTITY` diagnostic, sorted repository-relative paths,
+  and CLI exit code 2.
+- Decode Lua rockspec metadata as strict UTF-8 and fail closed with the portable
+  `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 for malformed input.
+- Consume the shared positive and invalid UTF-8 resolver fixtures, including a
+  real CLI subprocess test and a regression guard for valid literal U+FFFD text.
+
 ## [1.1.0] - 2026-03-22
 
 ### Added

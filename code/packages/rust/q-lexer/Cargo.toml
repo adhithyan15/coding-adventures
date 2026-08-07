@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-q-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Q (kdb+ scripting language) lexer backed by statically compiled grammar data"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

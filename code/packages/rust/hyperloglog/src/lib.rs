@@ -144,6 +144,12 @@ impl HyperLogLog {
         self.count()
     }
 
+    /// Returns `true` when the estimated cardinality is zero (no distinct items
+    /// have been observed yet). Provided alongside [`len`](Self::len).
+    pub fn is_empty(&self) -> bool {
+        self.count() == 0
+    }
+
     pub fn precision(&self) -> u8 {
         self.precision
     }

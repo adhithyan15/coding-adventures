@@ -1,0 +1,459 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "path": [
+    {
+      "id": "UR-PATH-001",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "UR-C01-salam"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-002",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "UR-C01-shukriya"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-004",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "UR-C02-mera-naam",
+        "UR-C03-aap-tum-tu",
+        "UR-C03-kya",
+        "UR-C03-aap-ka-naam-kya-hai",
+        "UR-C03-khushi-hui",
+        "UR-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-002-REGISTER",
+        "UR-EXT-003-SCRIPT",
+        "UR-EXT-004-GRAMMAR",
+        "UR-EXT-005-CULTURE",
+        "UR-EXT-006-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-005",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "UR-C04-kaise-kaisi",
+        "UR-C04-aap-kaise-hain",
+        "UR-C04-main-hun",
+        "UR-C04-thik",
+        "UR-C04-main-thik-hun",
+        "UR-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-007-GENDERED-HOW",
+        "UR-EXT-008-HONORIFIC-COPULA",
+        "UR-EXT-009-FIRST-PERSON-FRAME",
+        "UR-EXT-010-SCRIPT-BRIDGE",
+        "UR-EXT-011-WELLBEING-WORD-ORDER",
+        "UR-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-006",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "UR-C05-khuda",
+        "UR-C05-hafiz",
+        "UR-C05-khuda-hafiz",
+        "UR-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-013-KHUDA-PERSIAN-HISTORY",
+        "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+        "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+        "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
+      "after": []
+    }
+  ],
+  "spine": {
+    "SPINE-MEET-GREET": {
+      "segments": [
+        "UR-PATH-001"
+      ],
+      "omits": [
+        "GREETING-FORMAL",
+        "GREETING-PEACE",
+        "GREETING-WELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COURTESY-THANK": {
+      "segments": [
+        "UR-PATH-002"
+      ],
+      "omits": [
+        "COURTESY-THANKS-CASUAL",
+        "COURTESY-YOUREWELCOME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-RESPOND-BASIC": {
+      "segments": [
+        "UR-PATH-003"
+      ],
+      "omits": [
+        "RESPONSE-YESNO",
+        "RESPONSE-OKAY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-EXCHANGE-NAMES": {
+      "segments": [
+        "UR-PATH-004"
+      ],
+      "omits": [
+        "PRONOUN-I",
+        "PRONOUN-ME",
+        "PRONOUN-MY",
+        "WORD-NAME",
+        "WORD-IS"
+      ],
+      "relocates": {}
+    },
+    "SPINE-CHECK-WELLBEING": {
+      "segments": [
+        "UR-PATH-005"
+      ],
+      "omits": [
+        "WORD-GOOD",
+        "WORD-SOSO"
+      ],
+      "relocates": {}
+    },
+    "SPINE-POLITE-REQUEST-REPAIR": {
+      "segments": [],
+      "omits": [
+        "COURTESY-PLEASE",
+        "COURTESY-SORRY"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TAKE-LEAVE": {
+      "segments": [
+        "UR-PATH-006"
+      ],
+      "omits": [
+        "FAREWELL-CASUAL",
+        "FAREWELL-LATER",
+        "FAREWELL-SOON",
+        "FAREWELL-TOMORROW",
+        "GREETING-GOODNIGHT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TIME-OF-DAY": {
+      "segments": [],
+      "omits": [
+        "TIME-DAY",
+        "TIME-MORNING",
+        "TIME-AFTERNOON",
+        "TIME-EVENING",
+        "TIME-NIGHT",
+        "GREETING-DAY",
+        "GREETING-MORNING",
+        "GREETING-AFTERNOON",
+        "GREETING-EVENING"
+      ],
+      "relocates": {}
+    },
+    "SPINE-ASK-LOCATION": {
+      "segments": [],
+      "omits": [
+        "QUESTION-WHERE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-DEFINITE-REFERENCE": {
+      "segments": [],
+      "omits": [
+        "GRAMMAR-THE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-COUNT-ONE-TO-FIVE": {
+      "segments": [],
+      "omits": [
+        "NUMBER-ONE-TO-FIVE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-INFINITIVE",
+        "VERB-PRESENT-HABITUAL"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NEGATE-AND-ASK": {
+      "segments": [],
+      "omits": [
+        "VERB-NEGATE",
+        "QUESTION-POLAR"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-PAST": {
+      "segments": [],
+      "omits": [
+        "VERB-PAST"
+      ],
+      "relocates": {}
+    },
+    "SPINE-TALK-ABOUT-FUTURE": {
+      "segments": [],
+      "omits": [
+        "VERB-FUTURE"
+      ],
+      "relocates": {}
+    }
+  },
+  "extensions": [
+    {
+      "id": "UR-EXT-001-INLINE-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can recognize the first Urdu script pattern inside a greeting I already understand.",
+      "prerequisites": [],
+      "lessons": [
+        "UR-C01-salam"
+      ]
+    },
+    {
+      "id": "UR-EXT-002-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose āp for a respectful first meeting and distinguish it from tum and tū.",
+      "prerequisites": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-aap-tum-tu"
+      ]
+    },
+    {
+      "id": "UR-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read Urdu kyā and select ye's consonantal value from the learned word.",
+      "prerequisites": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-kya"
+      ]
+    },
+    {
+      "id": "UR-EXT-004-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can keep hai final and use the fixed āp kā nām frame to ask a name respectfully.",
+      "prerequisites": [
+        "UR-EXT-002-REGISTER",
+        "UR-EXT-003-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-aap-ka-naam-kya-hai"
+      ]
+    },
+    {
+      "id": "UR-EXT-005-CULTURE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "culture-pragmatics",
+      "canDo": "I can close a first introduction with the conventional respectful pleased-to-meet-you response.",
+      "prerequisites": [
+        "UR-EXT-004-GRAMMAR"
+      ],
+      "lessons": [
+        "UR-C03-khushi-hui"
+      ]
+    },
+    {
+      "id": "UR-EXT-006-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Urdu name exchange using only independently learned lines.",
+      "prerequisites": [
+        "UR-EXT-005-CULTURE"
+      ],
+      "lessons": [
+        "UR-C03-practice"
+      ]
+    },
+    {
+      "id": "UR-EXT-007-GENDERED-HOW",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can choose kaise or kaisī according to the person addressed while keeping respectful āp unchanged.",
+      "prerequisites": [
+        "UR-EXT-006-CONSOLIDATION"
+      ],
+      "lessons": [
+        "UR-C04-kaise-kaisi"
+      ]
+    },
+    {
+      "id": "UR-EXT-008-HONORIFIC-COPULA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can pair respectful āp with final haiṅ and keep the addressee agreement choice separate from politeness.",
+      "prerequisites": [
+        "UR-EXT-007-GENDERED-HOW"
+      ],
+      "lessons": [
+        "UR-C04-aap-kaise-hain"
+      ]
+    },
+    {
+      "id": "UR-EXT-009-FIRST-PERSON-FRAME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can open an Urdu answer with maiṅ and close it with hūṅ without learning the full copula table.",
+      "prerequisites": [
+        "UR-EXT-008-HONORIFIC-COPULA"
+      ],
+      "lessons": [
+        "UR-C04-main-hun"
+      ]
+    },
+    {
+      "id": "UR-EXT-010-SCRIPT-BRIDGE",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "script",
+      "canDo": "I can read Urdu ṭhīk and connect it to Hindi only after recognizing the Urdu retroflex and aspiration sequence.",
+      "prerequisites": [
+        "UR-EXT-009-FIRST-PERSON-FRAME"
+      ],
+      "lessons": [
+        "UR-C04-thik"
+      ]
+    },
+    {
+      "id": "UR-EXT-011-WELLBEING-WORD-ORDER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can place ṭhīk inside the maiṅ ... hūṅ frame and add known shukriyā after the completed clause.",
+      "prerequisites": [
+        "UR-EXT-010-SCRIPT-BRIDGE"
+      ],
+      "lessons": [
+        "UR-C04-main-thik-hun"
+      ]
+    },
+    {
+      "id": "UR-EXT-012-WELLBEING-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Urdu wellbeing exchange while choosing the addressed form deliberately.",
+      "prerequisites": [
+        "UR-EXT-011-WELLBEING-WORD-ORDER"
+      ],
+      "lessons": [
+        "UR-C04-practice"
+      ]
+    },
+    {
+      "id": "UR-EXT-013-KHUDA-PERSIAN-HISTORY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read Urdu khudā before using Persian history as a memory bridge rather than a substitute for the local form.",
+      "prerequisites": [
+        "UR-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "lessons": [
+        "UR-C05-khuda"
+      ]
+    },
+    {
+      "id": "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read hāfiz and use the Arabic guard-and-preserve root as a memory hook for protector.",
+      "prerequisites": [
+        "UR-EXT-013-KHUDA-PERSIAN-HISTORY"
+      ],
+      "lessons": [
+        "UR-C05-hafiz"
+      ]
+    },
+    {
+      "id": "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read spaced خدا حافظ, distinguish its Urdu spelling from Persian's joined form, and use it as a broadly polite close.",
+      "prerequisites": [
+        "UR-EXT-014-HAFIZ-ARABIC-ROOT"
+      ],
+      "lessons": [
+        "UR-C05-khuda-hafiz"
+      ]
+    },
+    {
+      "id": "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can open and close a short respectful Urdu interaction using only independently learned lines.",
+      "prerequisites": [
+        "UR-EXT-015-FAREWELL-SPACING-REGISTER"
+      ],
+      "lessons": [
+        "UR-C05-practice"
+      ]
+    }
+  ]
+}

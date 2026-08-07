@@ -40,6 +40,7 @@ package qrcode
 import (
 	"errors"
 	"fmt"
+	"sync"
 	"unicode/utf8"
 
 	barcode2d "github.com/adhithyan15/coding-adventures/code/packages/go/barcode-2d"
@@ -430,15 +431,16 @@ func rsEncode(data []byte, generator []byte) []byte {
 
 // generatorCache caches pre-built generators by ECC count to avoid rebuilding
 // the same polynomial repeatedly (each generator for a given n is always the same).
-var generatorCache = map[int][]byte{}
+var generatorCache sync.Map
 
 func getGenerator(n int) []byte {
-	if g, ok := generatorCache[n]; ok {
-		return g
+	if cached, ok := generatorCache.Load(n); ok {
+		return cached.([]byte)
 	}
-	g := buildQRGenerator(n)
-	generatorCache[n] = g
-	return g
+
+	generated := buildQRGenerator(n)
+	actual, _ := generatorCache.LoadOrStore(n, generated)
+	return actual.([]byte)
 }
 
 // ============================================================================

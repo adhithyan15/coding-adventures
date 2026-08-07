@@ -1,0 +1,97 @@
+// Sheet.mil — interface for the filterable/sortable/editable spreadsheet
+// view.
+//
+// Sheet wraps mosaic-pkg-grid's Grid with a toolbar (a filter box, a
+// sort-field Select, and a direction toggle) built from mosaic-pkg-
+// toolkit. It adds no rendering of its own beyond that toolbar — every
+// cell, row, and column comes straight from Grid.
+//
+// Fat engine, dumb UI (task-app-super-app.md §2.1): Sheet does not
+// filter, sort, or format anything itself. Filtering and sorting are
+// two plain inputs the host collects and folds into the `View` it
+// passes to task-core's `table(view)` projection on the next render —
+// the returned rows are already filtered, sorted, and formatted.
+// Editing follows the same shape as Grid: the host owns edit-row /
+// edit-col / edit-content and decides what an `onEditCommit` means.
+//
+// v1 shipped read-only: Grid's Cell is a Box (a generic container), and
+// mosaic-emit-react's connects-wiring could only dispatch a Box's onClick
+// void, no matter what the target emit declared — so onNavigate couldn't
+// actually carry (row, col) to any consumer. Fixed by
+// code/specs/UI37-generic-payload-dispatch.md (mosaic-emit-react resolves
+// a payload-carrying target emit's declared params from named props on the
+// same node) + mosaic-pkg-grid 0.2.3 (Cell.mil gains row/col slots,
+// Grid.mll supplies them at the call site). Editing is now real.
+//
+// Slot vocabulary
+// ---------------
+//
+//   Grid pass-through (identical contract to mosaic-pkg-grid's Grid —
+//   see Grid.mil for the full rationale; Sheet does not reinterpret
+//   any of these, it only forwards them):
+//
+//     viewport-rows, column-headers, column-widths, selected-row,
+//     selected-col, edit-row, edit-col, edit-content
+//
+//   Sheet's own toolbar state:
+//
+//     filter-text     the search box's current text. Host-owned; Sheet
+//                      only echoes it back into the box.
+//     sort-field       the currently-selected sort field's display
+//                      label, shown on the Select toggle (empty =
+//                      unsorted).
+//     sort-options     the list of sortable field labels (e.g. "Name",
+//                      "Deadline", "Priority") offered by the Select.
+//     sort-open        whether the sort-field Select's option list is
+//                      currently expanded. Host-owned, per Select's own
+//                      contract.
+//     sort-ascending   the current sort direction. Drives which of the
+//                      two direction-toggle buttons renders.
+//
+// Emit vocabulary
+// ---------------
+//
+//   Grid pass-through — fired verbatim from the wrapped Grid, payload
+//   shapes unchanged:
+//
+//     onNavigate, onFormulaChange, onEditCommit, onEditCancel
+//
+//   Sheet's own:
+//
+//     onFilterChange       fired on every keystroke in the filter box.
+//                           Payload is the new text.
+//     onSortFieldChange     fired when a sort-field option is chosen.
+//                           Payload is the chosen field's display label
+//                           (the host maps label back to a FieldRef —
+//                           it already owns that mapping, since it built
+//                           sort-options from the same source).
+//     onToggleSortOpen      fired when the Select toggle is clicked.
+//     onToggleSortDirection fired when the direction button is clicked.
+//                           No payload — the host flips its own bool.
+
+component Sheet {
+  slot viewport-rows  : list<list<text>> ;
+  slot column-headers : list<text> ;
+  slot column-widths  : list<number> ;
+  slot selected-row   : number ;
+  slot selected-col   : number ;
+  slot edit-row       : number ;
+  slot edit-col       : number ;
+  slot edit-content   : text ;
+
+  slot filter-text    : text ;
+  slot sort-field      : text ;
+  slot sort-options    : list<text> ;
+  slot sort-open        : bool ;
+  slot sort-ascending   : bool ;
+
+  emit onNavigate ( row : number , col : number ) ;
+  emit onFormulaChange ( value : text ) ;
+  emit onEditCommit ( value : text ) ;
+  emit onEditCancel ;
+
+  emit onFilterChange        ( value : text ) ;
+  emit onSortFieldChange     ( value : text ) ;
+  emit onToggleSortOpen ;
+  emit onToggleSortDirection ;
+}

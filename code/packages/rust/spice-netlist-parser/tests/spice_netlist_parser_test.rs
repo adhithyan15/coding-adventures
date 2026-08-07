@@ -1,6 +1,7 @@
 use spice_engine::{
-    ac_sweep, dc_op, dc_op_with_options, mc_dc, noise_ac, sens_dc, tf, transient_adaptive,
-    BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
+    ac_sweep, dc_op, dc_op_with_options, mc_dc, mosfet_from_model_card, noise_ac,
+    normalize_model_card, sens_dc, tf, transient_adaptive, BjtPolarity, Element, JfetPolarity,
+    McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
     berkeley_app_package_manifest, berkeley_app_package_manifest_json, build_analysis_plan,
@@ -837,6 +838,129 @@ fn rejects_unsupported_inductor_element_params() {
 }
 
 #[test]
+fn rejects_unsupported_mosfet_element_params() {
+    let error = parse_netlist(".model nch NMOS\nM1 d g s b nch WIDTH=1u").unwrap_err();
+
+    assert!(error.to_string().contains("unsupported MOSFET parameter"));
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_widths() {
+    for width in ["0", "-1u", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch W={width}")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET W must be finite and positive"));
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_lengths() {
+    for length in ["0", "-1u", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch L={length}")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET L must be finite and positive"));
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_drain_squares() {
+    for drain_squares in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model nch NMOS\nM1 d g s b nch NRD={drain_squares}"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET NRD must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch NRD=0").is_ok());
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_source_squares() {
+    for source_squares in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model nch NMOS\nM1 d g s b nch NRS={source_squares}"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET NRS must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch NRS=0").is_ok());
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_drain_areas() {
+    for drain_area in ["-1p", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch AD={drain_area}")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET AD must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch AD=0").is_ok());
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_source_areas() {
+    for source_area in ["-1p", "1e999"] {
+        let error = parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch AS={source_area}"))
+            .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET AS must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch AS=0").is_ok());
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_drain_perimeters() {
+    for drain_perimeter in ["-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model nch NMOS\nM1 d g s b nch PD={drain_perimeter}"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PD must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch PD=0").is_ok());
+}
+
+#[test]
+fn rejects_invalid_mosfet_instance_source_perimeters() {
+    for source_perimeter in ["-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model nch NMOS\nM1 d g s b nch PS={source_perimeter}"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PS must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch PS=0").is_ok());
+}
+
+#[test]
 fn parses_tf_transfer_function_analysis_cards() {
     let parsed = parse_netlist(
         r#"
@@ -1359,10 +1483,10 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
+.model nch NMOS(VTO=0.45 KP=250u UO=500 LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5e16 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
-M1 vdd gate out 0 nch W=4u L=200n
+M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
 Rload out 0 1k
 .op
 "#,
@@ -1387,12 +1511,34 @@ Rload out 0 1k
     assert_eq!(mosfet.mosfet_type, MosfetType::Nmos);
     assert_close(mosfet.params.vt0, 0.45);
     assert_close(mosfet.params.kp, 250.0e-6);
+    assert_close(mosfet.params.surface_mobility, 500.0);
     assert_close(mosfet.params.lambda, 0.02);
     assert_close(mosfet.params.gamma, 0.3);
     assert_close(mosfet.params.phi, 0.8);
     assert_close(mosfet.params.w, 4.0e-6);
     assert_close(mosfet.params.l, 200.0e-9);
-    assert_close(mosfet.params.n_sub, 1.5);
+    assert_close(mosfet.params.lateral_diffusion_length, 10.0e-9);
+    assert_close(mosfet.params.oxide_thickness, 20.0e-9);
+    assert_close(mosfet.params.drain_resistance, 10.0);
+    assert_close(mosfet.params.source_resistance, 20.0);
+    assert_close(mosfet.params.sheet_resistance, 250.0);
+    assert_close(mosfet.params.saturation_current, 4.0e-12);
+    assert_close(mosfet.params.saturation_current_density, 2.0e-3);
+    assert_close(mosfet.params.drain_squares, 2.0);
+    assert_close(mosfet.params.source_squares, 3.0);
+    assert_close(mosfet.params.drain_area, 3.0e-9);
+    assert_close(mosfet.params.source_area, 4.0e-9);
+    assert_close(mosfet.params.drain_perimeter, 6.0e-6);
+    assert_close(mosfet.params.source_perimeter, 7.0e-6);
+    assert_close(mosfet.params.bottom_junction_capacitance, 2.0e-3);
+    assert_close(mosfet.params.sidewall_junction_capacitance, 5.0e-6);
+    assert_close(mosfet.params.bulk_junction_potential, 0.9);
+    assert_close(mosfet.params.bulk_junction_grading_coefficient, 0.45);
+    assert_close(mosfet.params.sidewall_junction_grading_coefficient, 0.25);
+    assert_close(mosfet.params.forward_bias_depletion_coefficient, 0.4);
+    assert_close(mosfet.params.flicker_noise_coefficient, 1.0e-12);
+    assert_close(mosfet.params.flicker_noise_exponent, 1.2);
+    assert_close(mosfet.params.n_sub, 1.5e16);
     assert_close(mosfet.params.t_nom, 300.0);
     assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);
     assert_close(mosfet.params.gate_drain_overlap_capacitance, 4.0e-12);
@@ -1407,10 +1553,954 @@ Rload out 0 1k
 }
 
 #[test]
+fn derives_mosfet_transconductance_from_surface_mobility_and_oxide_thickness() {
+    let parsed = parse_netlist(".model mobile NMOS(TOX=100n UO=500)\nM1 d g s b mobile\n").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.surface_mobility, 500.0);
+    assert_close(mosfet.params.kp, 500.0 * 1.0e-4 * 3.453_133e-11 / 100.0e-9);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_oxide_thicknesses() {
+    for oxide_thickness in ["0", "-1n", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model mobile NMOS(TOX={oxide_thickness})\nM1 d g s b mobile"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET TOX must be finite and positive"));
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_surface_mobility_aliases() {
+    for alias in ["U0", "UO"] {
+        for surface_mobility in ["-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model mobile NMOS({alias}={surface_mobility})\nM1 d g s b mobile"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET U0 must be finite and non-negative"));
+        }
+    }
+}
+
+#[test]
+fn accepts_zero_mosfet_model_surface_mobility_aliases() {
+    for alias in ["U0", "UO"] {
+        let parsed =
+            parse_netlist(&format!(".model mobile NMOS({alias}=0)\nM1 d g s b mobile")).unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.surface_mobility, 0.0);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_transconductance() {
+    for transconductance in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model mobile NMOS(KP={transconductance})\nM1 d g s b mobile"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET KP must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_explicit_positive_mosfet_model_transconductance() {
+    let parsed =
+        parse_netlist(".model mobile NMOS(KP=250u TOX=100n U0=500)\nM1 d g s b mobile").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.kp, 250.0e-6);
+}
+
+#[test]
+fn rejects_non_finite_mosfet_model_threshold_aliases() {
+    for alias in ["VT0", "VTO", "VTH"] {
+        let error = parse_netlist(&format!(
+            ".model threshold NMOS({alias}=1e999)\nM1 d g s b threshold"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("MOSFET VT0 must be finite"));
+    }
+}
+
+#[test]
+fn preserves_finite_mosfet_model_threshold_aliases() {
+    for (alias, threshold_voltage) in [("VT0", "-0.7"), ("VTO", "0"), ("VTH", "0.7")] {
+        let parsed = parse_netlist(&format!(
+            ".model threshold NMOS({alias}={threshold_voltage})\nM1 d g s b threshold"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.vt0, threshold_voltage.parse().unwrap());
+    }
+}
+
+#[test]
+fn rejects_non_finite_mosfet_model_channel_length_modulation_aliases() {
+    for alias in ["LAMBDA", "LAM"] {
+        let error = parse_netlist(&format!(
+            ".model channel NMOS({alias}=1e999)\nM1 d g s b channel"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("MOSFET LAMBDA must be finite"));
+    }
+}
+
+#[test]
+fn preserves_finite_mosfet_model_channel_length_modulation_aliases() {
+    for (alias, channel_length_modulation) in [("LAMBDA", "-0.01"), ("LAM", "0.02")] {
+        let parsed = parse_netlist(&format!(
+            ".model channel NMOS({alias}={channel_length_modulation})\nM1 d g s b channel"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.lambda,
+            channel_length_modulation.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_bulk_potential() {
+    for bulk_potential in ["0", "-0.8", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bulk NMOS(PHI={bulk_potential})\nM1 d g s b bulk"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PHI must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_bulk_potential() {
+    let parsed = parse_netlist(".model bulk NMOS(PHI=0.8)\nM1 d g s b bulk").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.phi, 0.8);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_body_effect_coefficient() {
+    for body_effect_coefficient in ["-0.3", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model body NMOS(GAMMA={body_effect_coefficient})\nM1 d g s b body"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET GAMMA must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_body_effect_coefficient() {
+    for body_effect_coefficient in ["0", "0.3"] {
+        let parsed = parse_netlist(&format!(
+            ".model body NMOS(GAMMA={body_effect_coefficient})\nM1 d g s b body"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.gamma,
+            body_effect_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_bulk_junction_potential() {
+    for bulk_junction_potential in ["0", "-0.9", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model junction NMOS(PB={bulk_junction_potential})\nM1 d g s b junction"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PB must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_bulk_junction_potential() {
+    let parsed = parse_netlist(".model junction NMOS(PB=0.9)\nM1 d g s b junction").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.bulk_junction_potential, 0.9);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_bulk_junction_grading_coefficient() {
+    for grading_coefficient in ["-0.5", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model junction NMOS(MJ={grading_coefficient})\nM1 d g s b junction"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET MJ must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_bulk_junction_grading_coefficient() {
+    for grading_coefficient in ["0", "0.5"] {
+        let parsed = parse_netlist(&format!(
+            ".model junction NMOS(MJ={grading_coefficient})\nM1 d g s b junction"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.bulk_junction_grading_coefficient,
+            grading_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_depletion_coefficient() {
+    for depletion_coefficient in ["-0.1", "1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model depletion NMOS(FC={depletion_coefficient})\nM1 d g s b depletion"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET FC must be finite and in [0, 1)"));
+    }
+}
+
+#[test]
+fn preserves_mosfet_model_depletion_coefficient_in_range() {
+    for depletion_coefficient in ["0", "0.4", "0.999"] {
+        let parsed = parse_netlist(&format!(
+            ".model depletion NMOS(FC={depletion_coefficient})\nM1 d g s b depletion"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.forward_bias_depletion_coefficient,
+            depletion_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_sidewall_grading_coefficient() {
+    for grading_coefficient in ["-0.3", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model sidewall NMOS(MJSW={grading_coefficient})\nM1 d g s b sidewall"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET MJSW must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_sidewall_grading_coefficient() {
+    for grading_coefficient in ["0", "0.3"] {
+        let parsed = parse_netlist(&format!(
+            ".model sidewall NMOS(MJSW={grading_coefficient})\nM1 d g s b sidewall"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.sidewall_junction_grading_coefficient,
+            grading_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_bottom_junction_capacitance() {
+    for capacitance in ["-2p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model junction NMOS(CJ={capacitance})\nM1 d g s b junction"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CJ must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_bottom_junction_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("2p", 2.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model junction NMOS(CJ={capacitance})\nM1 d g s b junction"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.bottom_junction_capacitance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_sidewall_junction_capacitance() {
+    for capacitance in ["-3p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model sidewall NMOS(CJSW={capacitance})\nM1 d g s b sidewall"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CJSW must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_sidewall_junction_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("3p", 3.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model sidewall NMOS(CJSW={capacitance})\nM1 d g s b sidewall"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.sidewall_junction_capacitance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_source_bulk_capacitance_aliases() {
+    for alias in ["CBS", "CJS"] {
+        for capacitance in ["-4p", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model source NMOS({alias}={capacitance})\nM1 d g s b source"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET CBS must be finite and non-negative"));
+        }
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_source_bulk_capacitance_aliases() {
+    for alias in ["CBS", "CJS"] {
+        for (capacitance, expected) in [("0", 0.0), ("4p", 4.0e-12)] {
+            let parsed = parse_netlist(&format!(
+                ".model source NMOS({alias}={capacitance})\nM1 d g s b source"
+            ))
+            .unwrap();
+
+            let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+                panic!("expected MOSFET");
+            };
+            assert_close(mosfet.params.source_bulk_capacitance, expected);
+        }
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_drain_bulk_capacitance_aliases() {
+    for alias in ["CBD", "CJD"] {
+        for capacitance in ["-5p", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model drain NMOS({alias}={capacitance})\nM1 d g s b drain"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET CBD must be finite and non-negative"));
+        }
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_drain_bulk_capacitance_aliases() {
+    for alias in ["CBD", "CJD"] {
+        for (capacitance, expected) in [("0", 0.0), ("5p", 5.0e-12)] {
+            let parsed = parse_netlist(&format!(
+                ".model drain NMOS({alias}={capacitance})\nM1 d g s b drain"
+            ))
+            .unwrap();
+
+            let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+                panic!("expected MOSFET");
+            };
+            assert_close(mosfet.params.drain_bulk_capacitance, expected);
+        }
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_gate_source_overlap_capacitance() {
+    for capacitance in ["-6p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model overlap NMOS(CGSO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CGSO must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_gate_source_overlap_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("6p", 6.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model overlap NMOS(CGSO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.gate_source_overlap_capacitance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_gate_drain_overlap_capacitance() {
+    for capacitance in ["-7p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model overlap NMOS(CGDO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CGDO must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_gate_drain_overlap_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("7p", 7.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model overlap NMOS(CGDO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.gate_drain_overlap_capacitance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_gate_bulk_overlap_capacitance() {
+    for capacitance in ["-8p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model overlap NMOS(CGBO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CGBO must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_gate_bulk_overlap_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("8p", 8.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model overlap NMOS(CGBO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.gate_bulk_overlap_capacitance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_saturation_current() {
+    for saturation_current in ["0", "-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model leakage NMOS(IS={saturation_current})\nM1 d g s b leakage"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET IS must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_saturation_current() {
+    let parsed = parse_netlist(".model leakage NMOS(IS=1p)\nM1 d g s b leakage").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.saturation_current, 1.0e-12);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_saturation_current_density() {
+    for saturation_current_density in ["-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model leakage NMOS(JS={saturation_current_density})\nM1 d g s b leakage"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET JS must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_saturation_current_density() {
+    for (saturation_current_density, expected) in [("0", 0.0), ("2p", 2.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model leakage NMOS(JS={saturation_current_density})\nM1 d g s b leakage"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.saturation_current_density, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_widths() {
+    for width in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS(W={width})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET W must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_width() {
+    let parsed = parse_netlist(".model geometry NMOS(W=2u)\nM1 d g s b geometry").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.w, 2.0e-6);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_lengths() {
+    for length in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS(L={length})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET L must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_length() {
+    let parsed = parse_netlist(".model geometry NMOS(L=180n)\nM1 d g s b geometry").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.l, 180.0e-9);
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_lateral_diffusion_lengths() {
+    for params in ["LD=-1n", "LD=1e999", "L=100n LD=50n"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS({params})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET LD must be finite and non-negative with L - 2*LD > 0"));
+    }
+}
+
+#[test]
+fn preserves_valid_mosfet_model_lateral_diffusion_lengths() {
+    for (lateral_diffusion_length, expected) in [("0", 0.0), ("10n", 10.0e-9)] {
+        let parsed = parse_netlist(&format!(
+            ".model geometry NMOS(L=180n LD={lateral_diffusion_length})\nM1 d g s b geometry"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.lateral_diffusion_length, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_drain_resistances() {
+    for resistance in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model parasitic NMOS(RD={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET RD must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_drain_resistance() {
+    for (resistance, expected) in [("0", 0.0), ("10", 10.0)] {
+        let parsed = parse_netlist(&format!(
+            ".model parasitic NMOS(RD={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.drain_resistance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_source_resistances() {
+    for resistance in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model parasitic NMOS(RS={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET RS must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_source_resistance() {
+    for (resistance, expected) in [("0", 0.0), ("20", 20.0)] {
+        let parsed = parse_netlist(&format!(
+            ".model parasitic NMOS(RS={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.source_resistance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_sheet_resistances() {
+    for resistance in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model parasitic NMOS(RSH={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET RSH must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_sheet_resistance() {
+    for (resistance, expected) in [("0", 0.0), ("250", 250.0)] {
+        let parsed = parse_netlist(&format!(
+            ".model parasitic NMOS(RSH={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.sheet_resistance, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_flicker_noise_coefficients() {
+    for coefficient in ["-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model noise NMOS(KF={coefficient})\nM1 d g s b noise"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET KF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_flicker_noise_coefficient() {
+    for (coefficient, expected) in [("0", 0.0), ("1p", 1.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model noise NMOS(KF={coefficient})\nM1 d g s b noise"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.flicker_noise_coefficient, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_flicker_noise_exponents() {
+    for exponent in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model noise NMOS(AF={exponent})\nM1 d g s b noise"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET AF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_flicker_noise_exponent() {
+    for (exponent, expected) in [("0", 0.0), ("1.2", 1.2)] {
+        let parsed = parse_netlist(&format!(
+            ".model noise NMOS(AF={exponent})\nM1 d g s b noise"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.flicker_noise_exponent, expected);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_substrate_doping() {
+    for alias in ["N_SUB", "NSUB", "N"] {
+        for doping in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model substrate NMOS({alias}={doping})\nM1 d g s b substrate"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET N_SUB must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_substrate_doping_aliases() {
+    for alias in ["N_SUB", "NSUB", "N"] {
+        let parsed = parse_netlist(&format!(
+            ".model substrate NMOS({alias}=1.6)\nM1 d g s b substrate"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.n_sub, 1.6);
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_nominal_temperatures() {
+    for alias in ["T_NOM", "TNOM"] {
+        for temperature in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model temperature NMOS({alias}={temperature})\nM1 d g s b temperature"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET T_NOM must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_nominal_temperature_aliases() {
+    for alias in ["T_NOM", "TNOM"] {
+        let parsed = parse_netlist(&format!(
+            ".model temperature NMOS({alias}=325)\nM1 d g s b temperature"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.t_nom, 325.0);
+    }
+}
+
+#[test]
+fn rejects_unsupported_mosfet_model_levels() {
+    for level in ["0", "2", "1.000000000002", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model level NMOS(LEVEL={level})\nM1 d g s b level"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("only MOS LEVEL=1 model cards are supported"));
+    }
+}
+
+#[test]
+fn preserves_supported_and_implicit_mosfet_model_level_one() {
+    for parameters in ["LEVEL=1", "LEVEL=1.0000000000005", ""] {
+        let parsed = parse_netlist(&format!(
+            ".model level NMOS({parameters})\nM1 d g s b level"
+        ))
+        .unwrap();
+
+        assert!(matches!(parsed.circuit.elements()[0], Element::Mosfet(_)));
+    }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_electrostatic_default_inputs() {
+    for (parameter, reason) in [
+        ("NSS=-1", "MOSFET NSS must be finite and non-negative"),
+        ("NSS=1e999", "MOSFET NSS must be finite and non-negative"),
+        ("TPG=0.5", "MOSFET TPG must be -1, 0, or 1"),
+        ("TPG=1e999", "MOSFET TPG must be -1, 0, or 1"),
+    ] {
+        let error = parse_netlist(&format!(
+            ".model electrostatic NMOS({parameter})\nM1 d g s b electrostatic"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains(reason));
+    }
+}
+
+#[test]
+fn rejects_mosfet_model_substrate_doping_below_intrinsic_density_with_oxide() {
+    let error =
+        parse_netlist(".model electrostatic NMOS(NSUB=1e9 TOX=20n)\nM1 d g s b electrostatic")
+            .unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains("MOSFET NSUB must exceed the intrinsic carrier density"));
+}
+
+#[test]
+fn lowers_mosfet_model_electrostatic_defaults_through_shared_engine_semantics() {
+    let parsed = parse_netlist(
+        ".model electrostatic NMOS(NSUB=1e16 TOX=20n TNOM=325 NSS=1e11 TPG=-1)\n\
+         M1 d g s b electrostatic",
+    )
+    .unwrap();
+    let Element::Mosfet(actual) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+
+    let normalized = normalize_model_card(
+        "electrostatic",
+        "NMOS",
+        &[
+            ("NSUB", 1.0e16),
+            ("TOX", 20.0e-9),
+            ("TNOM", 325.0),
+            ("NSS", 1.0e11),
+            ("TPG", -1.0),
+        ],
+    )
+    .unwrap();
+    let expected = mosfet_from_model_card("M1", "d", "g", "s", "b", &normalized).unwrap();
+
+    assert_close(actual.params.vt0, expected.params.vt0);
+    assert_close(actual.params.gamma, expected.params.gamma);
+    assert_close(actual.params.phi, expected.params.phi);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
-.model pch PMOS(VT0=-0.5 KP=90u W=3u L=180n)
+.model pch PMOS(VTH=-0.5 KP=90u LAM=0.03 W=3u L=180n CJS=2p CJD=3p)
 Mpull out gate vdd vdd pch
 "#,
     )
@@ -1422,7 +2512,10 @@ Mpull out gate vdd vdd pch
     assert_eq!(mosfet.mosfet_type, MosfetType::Pmos);
     assert_close(mosfet.params.vt0, -0.5);
     assert_close(mosfet.params.kp, 90.0e-6);
+    assert_close(mosfet.params.lambda, 0.03);
     assert_close(mosfet.params.w, 3.0e-6);
+    assert_close(mosfet.params.source_bulk_capacitance, 2.0e-12);
+    assert_close(mosfet.params.drain_bulk_capacitance, 3.0e-12);
 }
 
 #[test]
@@ -3410,14 +4503,11 @@ C1 out 0 1p
         shell_dashboard_package.package_capability_id,
         "app-shell-dashboard-package-json"
     );
-    assert_eq!(
-        shell_dashboard_package
-            .package_manifest
-            .artifact_capabilities
-            .iter()
-            .any(|capability| capability == &shell_dashboard_package.package_capability_id),
-        true
-    );
+    assert!(shell_dashboard_package
+        .package_manifest
+        .artifact_capabilities
+        .iter()
+        .any(|capability| capability == &shell_dashboard_package.package_capability_id));
     assert_eq!(
         shell_dashboard_package.artifact_capability_count,
         shell_dashboard_package

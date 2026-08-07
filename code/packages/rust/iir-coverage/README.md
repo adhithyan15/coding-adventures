@@ -36,7 +36,7 @@ text — just the IR + the trace.
                           │   └─ instructions    │
                           └──────────┬───────────┘
                                      │
-       (vm-core / lispy-runtime / twig-vm executes,
+       (vm-core / dynval-runtime / twig-vm executes,
         records HashMap<fn, HashSet<ip>> trace)
                                      │
                                      ▼
@@ -189,7 +189,7 @@ cargo test -p iir-coverage
 
 ## Roadmap
 
-- **`vm-core` / `lispy-runtime` / `twig-vm` coverage hook** — populate
+- **`vm-core` / `dynval-runtime` / `twig-vm` coverage hook** — populate
   the `ExecutionTrace` from the dispatcher (matches LANG18 §"vm-core
   coverage API").
 - **`coverage-json`** — JSON exporter for tooling interop (cobertura,

@@ -1,0 +1,15 @@
+% Worked consumer for a ratio composed from the quotient primitive.
+import "ratio.adj"
+
+observe numerator(3)
+    quote "numerator is 3." at 0 snapshot "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7"
+    source "ratio input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt"
+    trust authoritative
+observe denominator(4)
+    quote "denominator is 4." at 16 snapshot "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7"
+    source "ratio input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt"
+    trust authoritative
+
+? ratio(numerator, denominator)  % expect 0.75

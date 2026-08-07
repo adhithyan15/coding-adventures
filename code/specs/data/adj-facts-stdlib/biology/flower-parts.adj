@@ -1,0 +1,110 @@
+% ============================================================================
+% flower-parts — the parts of a flower and the function / role the source
+% states for each one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A flower is not one undifferentiated bloom: it is an assembly of named parts,
+% and an elementary botany key names each part by the ONE thing it does. "The
+% petals attract pollinators; the sepals protect the bud; the stamen is the male
+% part; the pistil is the female part; the anthers carry the pollen; the stigma
+% traps the pollen; the ovary contains the ovules." Before you can reason about a
+% flower — identify it, pollinate it, or teach it — you must first know WHICH
+% part you are looking at and what that part is FOR. Recall is a binding query:
+%
+%     ? flower_part_function(petal, $Function)      % attract_pollinators
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `flower_part_function(part, function)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% function WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these flower parts (it never invents a function).
+%
+% Each flower part and the function / role the source states for it, as a little
+% truth table:
+%
+%     flower part   function / role the source states   a beginner's cue
+%     -----------   ---------------------------------   ---------------------------
+%     petal         attract_pollinators                 the bright part that lures bees
+%     sepal         protect                             the green leaf that guards the bud
+%     stamen        male                                the male reproductive part
+%     pistil        female                              the female reproductive part
+%     anther        carry_pollen                        the tip of the stamen, full of pollen
+%     stigma        traps_pollen                        the sticky top that catches pollen
+%     ovary         contains_ovules                     the base that holds the future seeds
+%
+% The query also runs BACKWARD — bind a function and recall the flower part:
+%
+%     ? flower_part_function($Part, male)   % stamen
+%
+% A word that is NOT one of these flower parts — `leaf`, `root`, `stem` — is
+% deliberately NOT a row, so a flower-part recall ABSTAINS on it rather than
+% inventing a function. (The leaf is a plant part, but not a part of the FLOWER.)
+% That honest-abstention property is what makes the table safe to build a
+% reasoner on: it answers exactly the part→function pairs it can ground, and only
+% those.
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% word the source EXPLICITLY uses for that part — never one the source does not
+% support. Where the source's phrase is more than one word (the petals "attract
+% pollinators"; the anthers "carry the pollen"; the ovary "contains the ovules"),
+% the atom joins the source's own words with underscores, so every value stays
+% literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→function pair
+% below was read out of a single fetched University of Illinois Extension page,
+% and any pair whose function could not be verified there was dropped). Each
+% pair, with the verbatim span that states it, from "The Great Plant Escape"
+% (University of Illinois Extension, a land-grant .edu-primary Cooperative
+% Extension botany teaching resource):
+%   https://web.extension.illinois.edu/gpe/case4/c4facts1a.html
+%
+%   petal → attract_pollinators
+%     "Petals attract pollinators and are usually the reason why we buy and
+%      enjoy flowers."
+%
+%   sepal → protect
+%     "Sepals help protect the developing bud."
+%
+%   stamen → male
+%     "The main flower parts are the male part called the stamen and the female
+%      part called the pistil."
+%
+%   pistil → female
+%     "The main flower parts are the male part called the stamen and the female
+%      part called the pistil."
+%
+%   anther → carry_pollen
+%     "The anthers carry the pollen."
+%
+%   stigma → traps_pollen
+%     "The stigma is the sticky surface at the top of the pistil; it traps and
+%      holds the pollen."
+%
+%   ovary → contains_ovules
+%     "The style leads down to the ovary that contains the ovules."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the Illinois Extension statement
+% that fixes the first row (petal → attract_pollinators). Every OTHER row's
+% verbatim span is listed above, so each function remains independently
+% checkable. The source is a University of Illinois Extension botany teaching
+% page (a .edu-primary Cooperative Extension resource), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table flower_part_function {
+    columns part, function
+
+    row (petal, attract_pollinators)
+    row (sepal, protect)
+    row (stamen, male)
+    row (pistil, female)
+    row (anther, carry_pollen)
+    row (stigma, traps_pollen)
+    row (ovary, contains_ovules)
+
+    source "Petals attract pollinators and are usually the reason why we buy and enjoy flowers."
+    locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    trust authoritative
+}

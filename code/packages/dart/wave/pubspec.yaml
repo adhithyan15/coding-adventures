@@ -1,0 +1,17 @@
+name: coding_adventures_wave
+description: >
+  PHY01 validated simple-harmonic waves built on the local first-principles
+  Dart trig package.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_trig:
+    path: ../trig
+
+dev_dependencies:
+  test: ^1.25.0

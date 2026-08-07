@@ -24,7 +24,6 @@
 //! Argument parsing is declarative via `cli-builder`.
 
 use std::fs;
-use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use cli_builder::types::ParserOutput;
@@ -33,13 +32,20 @@ use cli_builder::{load_spec_from_str, Parser};
 use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
-use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider};
-use logic_core::{atom, LogicVar, Term};
+use adj_lang::{
+    compile_with_imports, decide, run_state_machine, FormulaAbstention, ImportLimits,
+    LoweredRangeLookup, LoweredStateMachine, StateMachineOutcome, StateMachineRun, YieldValue,
+};
+use adj_lang_cli::{esc, payload, query_echo, sensitive_input, FsProvider};
+use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
-    enumerate_all, enumerate_governing, DerivationOrigin, DifferentialDecision, Fact, GovernStatus,
-    KnowledgeBase, LRAggregateResult, Proof, Provenance, TrustTier,
+    enumerate_all, enumerate_governing, numeric_exact_magnitude, DerivationOrigin,
+    DifferentialDecision, Fact, GovernStatus, GovernedResult, KnowledgeBase, LRAggregateResult,
+    LrAggregateWarning, Proof, Provenance, TrustTier,
 };
+
+mod explain;
 
 const SPEC: &str = r#"{
   "cli_builder_spec_version": "1.0",
@@ -48,25 +54,11 @@ const SPEC: &str = r#"{
   "version": "0.1.0",
   "arguments": [
     {"id": "program", "name": "PROGRAM", "description": "Path to a .adj program (rulebook + case)", "type": "string", "required": true}
+  ],
+  "flags": [
+    {"id": "explain", "long": "explain", "description": "Render a deterministic, human-readable explanation of the reasoning instead of the JSON trail (ADJ-REASON-MATH §E.8). Projection-only: no engine re-run.", "type": "boolean"}
   ]
 }"#;
-
-/// JSON-escape a string body.
-fn esc(s: &str) -> String {
-    let mut o = String::with_capacity(s.len() + 2);
-    for c in s.chars() {
-        match c {
-            '"' => o.push_str("\\\""),
-            '\\' => o.push_str("\\\\"),
-            '\n' => o.push_str("\\n"),
-            '\r' => o.push_str("\\r"),
-            '\t' => o.push_str("\\t"),
-            c if (c as u32) < 0x20 => o.push_str(&format!("\\u{:04x}", c as u32)),
-            c => o.push(c),
-        }
-    }
-    o
-}
 
 /// Emit an f64 as a JSON number, or `null` for non-finite (e.g. an infinite
 /// single-hypothesis margin) — JSON has no Infinity.
@@ -75,6 +67,231 @@ fn jnum(x: f64) -> String {
         format!("{}", x)
     } else {
         "null".to_string()
+    }
+}
+
+fn exact_operand_json(name: &str, exact: &Option<logic_engine::compute::ExactRational>) -> String {
+    exact.as_ref().map_or_else(String::new, |value| {
+        format!(
+            ",\"{}_exact\":{{\"num\":\"{}\",\"den\":\"{}\"}}",
+            name,
+            value.numerator(),
+            value.denominator()
+        )
+    })
+}
+
+/// Render a derived value's `"value"` field, **exact-first** (ADJ-EXACT-NUMBERS NX-4).
+///
+/// When a computation stayed inside exact rational arithmetic (NX-3) *and* the result has a
+/// finite base-10 expansion, we print ALL of its digits — the same policy NX-2 gave a stored
+/// `Number::Exact` recall binding. So a stored 39-digit π fed through a shipped `formula` renders
+/// its doubled value to all 39 fractional digits here, instead of the ~16 an `f64` carries.
+///
+/// The `f64` (`jnum`) is the labeled-lossy fallback, used only when there is no exact sidecar or
+/// when the value *repeats* (e.g. `1/3`), which no finite decimal can hold. The emitted digits
+/// remain a JSON number literal, so the field's type is unchanged for every existing consumer;
+/// only its precision grows for values that were previously truncated.
+fn value_json(d: &logic_engine::compute::Derived) -> String {
+    if !d.precision_loss {
+        if let Some(exact) = &d.exact {
+            if let Some(s) = exact.to_exact_decimal_string() {
+                return s;
+            }
+        }
+    }
+    jnum(d.value)
+}
+
+/// Render a compute derivation tree — **how** a `let`/formula value was
+/// actually calculated, step by arithmetic step.
+///
+/// # Why this matters more than it looks
+///
+/// The engine has always built this tree. It builds one for *every* `let` and
+/// every formula application, and until now it was **discarded at the JSON
+/// boundary**: the CLI printed the final number and its dimension, and the
+/// record of how that number came to be was dropped on the floor. So a reader
+/// could see `bmi = 22.86` and its citation, but could not see that it was
+/// `70 / (1.75 ^ 2)`, nor which observed facts supplied the 70 and the 1.75.
+///
+/// The leaves are the important part. A `Leaf` carries a real `FactId`, so it
+/// resolves to that fact's `source`/`locator`/`trust` — which means **an
+/// arithmetic result is traceable all the way down to bytes**, one operand at a
+/// time. That bridge already existed in the engine; this function is what
+/// finally lets anyone outside the process walk across it.
+///
+/// Node kinds, and what each asserts:
+/// - `leaf`   — asserts a fact (an observed magnitude), so it **quotes**.
+/// - `ref`    — points at another named derived value; its own tree explains it.
+/// - `lit`    — a constant written in the formula; asserts nothing new.
+/// - `op`     — arithmetic over operands; asserts nothing new, and is honest
+///   because its operands are (§E.3: a step that computes over already-cited
+///   inputs quotes nothing — its justification is its operands').
+fn derivation_tree_json(
+    node: &logic_engine::compute::DerivationNode,
+    kb: &KnowledgeBase,
+) -> String {
+    use logic_engine::compute::DerivationNode as D;
+    match node {
+        D::Leaf {
+            slot,
+            value,
+            fact_id,
+        } => {
+            let pv = kb
+                .fact(*fact_id)
+                .map(|f| prov(&f.provenance))
+                .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+            format!(
+                "{{\"node\":\"leaf\",\"slot\":\"{}\",\"value\":{},{}}}",
+                esc(slot),
+                jnum(*value),
+                pv
+            )
+        }
+        D::DerivedRef { name, value } => format!(
+            "{{\"node\":\"ref\",\"name\":\"{}\",\"value\":{}}}",
+            esc(name),
+            jnum(*value)
+        ),
+        D::Lit { value } => format!("{{\"node\":\"lit\",\"value\":{}}}", jnum(*value)),
+        D::Op {
+            op,
+            operands,
+            result,
+            real,
+        } => {
+            let kids: Vec<String> = operands
+                .iter()
+                .map(|o| derivation_tree_json(o, kb))
+                .collect();
+            // NUM-7: an additive audit companion, present only for a square root of an exact
+            // base. Absent for every other op, including a sqrt whose base had no exact sidecar.
+            let real_json = match real {
+                Some(rc) => format!(
+                    ",\"real\":{{\"precision_bits\":{},\"mode\":\"{}\",\"value\":\"{}\"}}",
+                    rc.value.precision_bits(),
+                    rounding_mode_name(rc.mode),
+                    esc(&rc
+                        .value
+                        .to_decimal_string()
+                        .unwrap_or_else(|| rc.value.to_f64().to_string())),
+                ),
+                None => String::new(),
+            };
+            format!(
+                "{{\"node\":\"op\",\"op\":\"{}\",\"value\":{},\"operands\":[{}]{}}}",
+                esc(op.symbol()),
+                jnum(*result),
+                kids.join(","),
+                real_json
+            )
+        }
+        // A `round_to(x, n)` narrowing (NUM-6a): the audit exposes the precision,
+        // the rounding mode, the rounded `value`, and the operand subtree it
+        // narrowed — so a checker can re-round the operand's exact value under the
+        // recorded mode and confirm the rendering (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::Round {
+            spec,
+            mode,
+            operand,
+            operand_exact: _,
+            result,
+        } => {
+            // The precision field names the KIND of narrowing: `places` for
+            // `round_to` (decimal places), `sig_figures` for `round_sig`.
+            let precision = match spec {
+                logic_engine::compute::RoundSpec::Places(p) => format!("\"places\":{p}"),
+                logic_engine::compute::RoundSpec::SigFigures(n) => {
+                    format!("\"sig_figures\":{n}")
+                }
+            };
+            format!(
+                "{{\"node\":\"round\",{},\"mode\":\"{}\",\"value\":{},\"operand\":{}}}",
+                precision,
+                rounding_mode_name(*mode),
+                jnum(*result),
+                derivation_tree_json(operand, kb)
+            )
+        }
+        // A `to_scientific(x, figures)` rendering (NUM-6c): the audit exposes the
+        // significant-figure count, the rounding mode, the `rendered` boundary string,
+        // the narrowed numeric `value`, and the operand subtree it narrowed — so a
+        // checker can re-narrow the operand's exact value to `figures` significant
+        // figures and confirm the rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToScientific {
+            figures,
+            mode,
+            rendered,
+            operand,
+            operand_exact: _,
+            result,
+        } => format!(
+            "{{\"node\":\"to_scientific\",\"figures\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            figures,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+        // A `to_percent(x, places)` rendering (NUM-6c): the audit exposes the decimal-place
+        // count, the rounding mode, the `rendered` `d.dd%` string, the narrowed numeric
+        // `value` (the fraction the percentage denotes), and the operand subtree — so a
+        // checker can re-scale and re-round the operand's exact value and confirm the
+        // rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToPercent {
+            places,
+            mode,
+            rendered,
+            operand,
+            operand_exact: _,
+            result,
+        } => format!(
+            "{{\"node\":\"to_percent\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+        // A `to_currency(x, code, places)` rendering (NUM-6c): the audit exposes the currency
+        // code, the decimal-place count, the rounding mode, the `rendered` `CODE d.dd` string,
+        // the narrowed numeric `value` (the rounded amount), and the operand subtree — so a
+        // checker can re-round the operand's exact value and confirm the rendered form
+        // (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToCurrency {
+            code,
+            places,
+            mode,
+            rendered,
+            operand,
+            operand_exact: _,
+            result,
+        } => format!(
+            "{{\"node\":\"to_currency\",\"code\":\"{}\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            esc(code),
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
+    }
+}
+
+/// The stable JSON spelling of a rounding mode for the audit trail — a checker
+/// keys off these, so they are fixed identifiers, not `Debug`.
+fn rounding_mode_name(mode: logic_engine::RoundingMode) -> &'static str {
+    use logic_engine::RoundingMode as M;
+    match mode {
+        M::Down => "down",
+        M::Up => "up",
+        M::Floor => "floor",
+        M::Ceiling => "ceiling",
+        M::HalfUp => "half_up",
+        M::HalfDown => "half_down",
+        M::HalfEven => "half_even",
     }
 }
 
@@ -98,7 +315,7 @@ fn derived_json(kb: &KnowledgeBase) -> String {
     // First-seen order, but the value/dim are the LATEST binding for that name.
     let mut order: Vec<&str> = Vec::new();
     for d in all {
-        if !order.iter().any(|n| *n == d.name.as_str()) {
+        if !order.contains(&d.name.as_str()) {
             order.push(d.name.as_str());
         }
     }
@@ -106,20 +323,116 @@ fn derived_json(kb: &KnowledgeBase) -> String {
         .iter()
         .filter_map(|name| kb.derived_for(name))
         .map(|d| {
-            let exact = match d.exact {
-                Some(r) => format!(",\"exact\":{{\"num\":{},\"den\":{}}}", r.num, r.den),
+            // The exact value is now an arbitrary-precision `BigRational` (NUM-5), so its
+            // numerator/denominator can exceed JSON's safe integer range — emit them as
+            // **strings** so no precision is lost at the boundary (the whole point of the exact
+            // channel). `BigInteger`'s `Display` is the plain decimal form.
+            let exact = match (&d.exact, d.precision_loss) {
+                (Some(r), false) => format!(
+                    ",\"exact\":{{\"num\":\"{}\",\"den\":\"{}\"}}",
+                    r.numerator(),
+                    r.denominator()
+                ),
+                _ => String::new(),
+            };
+            let precision_loss = if d.precision_loss {
+                ",\"precision_loss\":true"
+            } else {
+                ""
+            };
+            // A value produced by APPLYING a provenanced `formula`
+            // (ADJ-FORMULA-LIBRARIES rung-0) carries the formula's cited
+            // `source`/`locator`/`trust` — the audit channel proving WHY the
+            // formula is trusted, alongside the derivation tree proving HOW the
+            // number was computed. A plain `let` has no such library claim, so
+            // the field is omitted (output byte-for-byte unchanged there).
+            let provenance = match &d.provenance {
+                Some(p) => format!(",{}", prov(p)),
                 None => String::new(),
             };
+            // RS-4: the derivation tree the engine already built for this
+            // value. Previously computed and then dropped here — emitting it is
+            // what turns "the engine says 22.86" into "here is the arithmetic,
+            // and here is the observed fact behind each operand."
+            let derivation = format!(",\"derivation\":{}", derivation_tree_json(&d.tree, kb));
             format!(
-                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}}}",
+                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}{}{}}}",
                 esc(&d.name),
-                jnum(d.value),
+                value_json(d),
                 esc(&d.dim.tag()),
-                exact
+                exact,
+                precision_loss,
+                provenance,
+                derivation
             )
         })
         .collect();
     format!("[{}]", objs.join(","))
+}
+
+/// Render valid formula applications that declined to publish a value because
+/// a declared domain requirement failed or could not be resolved. The formula's
+/// provenance remains attached, while sensitive operand details follow the same
+/// redaction switch as query echoes.
+fn formula_abstention_json(abstention: &FormulaAbstention, kb: &KnowledgeBase) -> String {
+    let reason = if abstention.actual.is_some() {
+        "precondition_failed"
+    } else {
+        "precondition_unresolved"
+    };
+    let actual = if sensitive_input() {
+        "\"[redacted]\"".to_string()
+    } else {
+        abstention
+            .actual
+            .map(jnum)
+            .unwrap_or_else(|| "null".to_string())
+    };
+    let detail = match (&abstention.detail, sensitive_input()) {
+        (Some(_), true) => ",\"detail\":\"[redacted]\"".to_string(),
+        (Some(value), false) => format!(",\"detail\":\"{}\"", esc(value)),
+        (None, _) => String::new(),
+    };
+    let parameter = abstention
+        .parameter
+        .as_ref()
+        .map(|value| format!("\"{}\"", esc(value)))
+        .unwrap_or_else(|| "null".to_string());
+    format!(
+        "{{\"name\":\"{}\",\"formula\":\"{}\",\"outcome\":\"abstained\",\"reason\":\"{}\",\"precondition\":{{\"index\":{},\"predicate\":\"{}\",\"parameter\":{},\"actual\":{}{}}},\"inputs\":{},{}}}",
+        esc(&abstention.name),
+        esc(&abstention.formula),
+        reason,
+        abstention.precondition_index,
+        esc(&abstention.predicate),
+        parameter,
+        actual,
+        detail,
+        formula_input_citations_json(&abstention.fact_ids, kb),
+        prov(&abstention.provenance),
+    )
+}
+
+fn formula_input_citations_json(ids: &[logic_engine::FactId], kb: &KnowledgeBase) -> String {
+    let redact = sensitive_input();
+    let inputs = ids
+        .iter()
+        .filter_map(|id| kb.fact(*id))
+        .map(|fact| {
+            let term = if redact {
+                "[redacted]".to_string()
+            } else {
+                fact.term.to_string()
+            };
+            format!(
+                "{{\"fact_id\":{},\"term\":\"{}\",{}}}",
+                fact.id.0,
+                esc(&term),
+                prov(&fact.provenance)
+            )
+        })
+        .collect::<Vec<_>>();
+    format!("[{}]", inputs.join(","))
 }
 
 fn trust(t: &TrustTier) -> &'static str {
@@ -161,39 +474,287 @@ fn prov(p: &Provenance) -> String {
     )
 }
 
-fn sld_proof_json(proof: &Proof, kb: &KnowledgeBase) -> String {
+/// The provenance rendered for a step whose clause could not be resolved in the
+/// KB. This should not happen — a step names a clause the engine just used —
+/// but if it ever does, the trail must say "unattributed", never invent one.
+const UNRESOLVED_PROV: &str =
+    "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]";
+
+/// Render one proof as an **ordered, addressed, self-contained** list of
+/// reasoning steps — the `ReasoningTrace` of `ADJ-REASON-MATH.md` §E.
+///
+/// # What each of those three words buys you
+///
+/// - **Ordered.** `Proof.steps` is a preorder walk of the derivation, so
+///   `step` 0, 1, 2 … *is* the order the engine reasoned in. Contrast the
+///   `via_facts` list every other citation surface renders from: that one is
+///   sorted by fact id and deduplicated, which is why those surfaces can show
+///   you *which* sources were used but never *in what order* — a bag, not a
+///   narrative.
+/// - **Addressed.** Each step carries `step` (its index) and `depth` (its
+///   nesting). Parent = the nearest preceding step one level shallower, so a
+///   reader can rebuild the tree without re-deriving any rule's arity.
+/// - **Self-contained.** Each step inlines the *resolved* `source`/`locator`/
+///   `trust` of the clause it fired, not a `FactId` pointer. The trace can then
+///   travel — to a reviewer, to another machine, into an ADJ07 trail — and still
+///   be readable without the knowledge base that produced it.
+///
+/// # Why the match below has no wildcard arm
+///
+/// It is **total** over `DerivationOrigin`, deliberately. The previous renderer
+/// ended in `_ => {}`, which silently discarded every likelihood-ratio step:
+/// a probabilistic conclusion would render a short, tidy, *incomplete* trail,
+/// and nothing in the output marked the omission. A trail with a hole is worse
+/// than no trail, because it looks complete. Adding a variant to
+/// `DerivationOrigin` must now break this function's compilation — that failure
+/// is the feature.
+/// Render a typed **abstention reason** (`ADJ-REASON-MATH.md` §E.4).
+///
+/// # Why a boolean was not enough
+///
+/// Every abstention used to be the same value: `"abstained": true`. That
+/// collapses genuinely different situations into one, and two of them are
+/// *opposites*:
+///
+/// - **`below_table_domain`** — the question was well-formed and the source
+///   simply does not cover it. The table is being honest, and the caller now
+///   knows the domain it fell outside of.
+/// - **`non_numeric_key`** — the question was malformed. Nothing is wrong with
+///   the table; the caller is wrong.
+///
+/// Those emitted **byte-identical JSON**. No consumer could tell "your question
+/// is outside what this source covers" from "your question was invalid", which
+/// makes an abstention unactionable — you cannot tell whether to widen the
+/// source or fix the query.
+///
+/// `search_limit_exceeded` is the third and subtlest: the engine did not
+/// establish an absence at all, it *stopped looking*. Reporting that as
+/// "no grounded support" would be a claim about the world derived from a
+/// resource limit.
+///
+/// The rendered object is additive — `"abstained": true` is still emitted
+/// beside it, so existing consumers are untouched.
+fn abstention_json(reason: &AbstentionReason) -> String {
+    match reason {
+        AbstentionReason::NoGroundedSupport { goal } => format!(
+            "{{\"reason\":\"no_grounded_support\",\"goal\":\"{}\",\"explanation\":\"the knowledge base contains no derivation of this goal\"}}",
+            payload(goal)
+        ),
+        AbstentionReason::BelowTableDomain {
+            table,
+            key,
+            min_key,
+        } => format!(
+            "{{\"reason\":\"below_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"min_key\":\"{}\",\"explanation\":\"the query falls below the lowest breakpoint this source defines; the source does not cover it\"}}",
+            payload(table),
+            payload(key),
+            payload(min_key)
+        ),
+        AbstentionReason::AboveTableDomain {
+            table,
+            key,
+            max_key,
+        } => format!(
+            "{{\"reason\":\"above_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"max_key\":\"{}\",\"explanation\":\"the query falls above the highest breakpoint this source defines; interpolation would extrapolate past what the source measured\"}}",
+            payload(table),
+            payload(key),
+            payload(max_key)
+        ),
+        AbstentionReason::NonNumericKey { table, column, key } => format!(
+            "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
+            payload(table),
+            payload(column),
+            payload(key)
+        ),
+        AbstentionReason::AmbiguousBreakpoint { table, column, key } => format!(
+            "{{\"reason\":\"ambiguous_breakpoint\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"two rows of this relation share that breakpoint, so the interval has two differently-sourced answers; selecting either would drop the other's citation without a word\"}}",
+            payload(table),
+            payload(column),
+            payload(key)
+        ),
+        AbstentionReason::SearchLimitExceeded { goal } => format!(
+            "{{\"reason\":\"search_limit_exceeded\",\"goal\":\"{}\",\"explanation\":\"the proof search hit its depth or width limit and stopped; this is NOT evidence that no proof exists\"}}",
+            payload(goal)
+        ),
+    }
+}
+
+/// The typed reasons an ADJ query can decline to answer.
+///
+/// Closed on purpose: a new way to abstain must be named here and rendered,
+/// rather than quietly reusing a neighbouring reason or falling back to the
+/// bare boolean.
+enum AbstentionReason {
+    /// Nothing in the knowledge base derives the goal.
+    NoGroundedSupport { goal: String },
+    /// The key is below the table's lowest breakpoint — the source's domain
+    /// starts above it.
+    BelowTableDomain {
+        table: String,
+        key: String,
+        min_key: String,
+    },
+    /// The key is above the table's highest breakpoint (ADJ-TABLES RS-5d). An
+    /// `interpolated` lookup needs a breakpoint on *both* sides of the query; above
+    /// the last one there is nothing to interpolate toward, so — rather than
+    /// extrapolate past what the source measured — it abstains. (A `range` lookup
+    /// treats the top breakpoint as an open band and never hits this.)
+    AboveTableDomain {
+        table: String,
+        key: String,
+        max_key: String,
+    },
+    /// A range lookup was handed a key that is not a number.
+    NonNumericKey {
+        table: String,
+        column: String,
+        key: String,
+    },
+    /// The search stopped at a resolution limit. **Not** an absence.
+    SearchLimitExceeded { goal: String },
+    /// Two rows of the table relation share the breakpoint this lookup selected,
+    /// so the interval has two differently-sourced answers and no ground to
+    /// prefer either.
+    ///
+    /// The lowerer rejects a table DECLARATION that repeats a key, but the
+    /// runtime does not read the declaration — it enumerates every fact with the
+    /// table's functor and arity. A second `table` block of the same name, or a
+    /// `relate` fact colliding with the relation, contributes rows the
+    /// declaration-time check never saw. So the invariant is enforced HERE too,
+    /// over exactly the set selection walks. Picking one and dropping the other
+    /// would emit a fully-cited answer while contradicting, separately-sourced
+    /// evidence vanished.
+    AmbiguousBreakpoint {
+        table: String,
+        column: String,
+        key: String,
+    },
+}
+
+fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
     let mut steps = Vec::new();
-    for st in &proof.steps {
-        match &st.origin {
+    for (i, st) in proof.steps.iter().enumerate() {
+        // Every step is addressed the same way, whatever its kind.
+        let head = format!(
+            "\"step\":{},\"depth\":{},\"goal\":\"{}\"",
+            i,
+            st.depth,
+            esc(&format!("{}", st.goal))
+        );
+        let body = match &st.origin {
+            // ---- Deduction -------------------------------------------------
             DerivationOrigin::FromFact(id) => {
-                let pv = kb.fact(*id).map(|f| prov(&f.provenance)).unwrap_or_else(|| {
-                    "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
-                        .to_string()
-                });
-                steps.push(format!(
-                    "{{\"kind\":\"fact\",\"goal\":\"{}\",{}}}",
-                    esc(&format!("{}", st.goal)),
-                    pv
-                ));
+                let pv = kb
+                    .fact(*id)
+                    .map(|f| prov(&f.provenance))
+                    .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+                format!("\"kind\":\"fact\",{head},{pv}")
             }
             DerivationOrigin::FromRule(id) => {
                 let pv = kb
                     .find_rule_by_id(*id)
                     .map(|r| prov(&r.provenance))
-                    .unwrap_or_else(|| {
-                        "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
-                            .to_string()
-                    });
-                steps.push(format!(
-                    "{{\"kind\":\"rule\",\"goal\":\"{}\",{}}}",
-                    esc(&format!("{}", st.goal)),
-                    pv
-                ));
+                    .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+                format!("\"kind\":\"rule\",{head},{pv}")
             }
-            _ => {}
-        }
+            // ---- Negation as failure --------------------------------------
+            // No clause fired, so there is no citation to quote: what justified
+            // this step is the *absence* of any proof for `goal`. A re-checker
+            // verifies it by re-running that goal and asserting it still has
+            // none (§E.5).
+            DerivationOrigin::FromNegation { goal } => {
+                format!(
+                    "\"kind\":\"negation\",{head},\"absent_goal\":\"{}\",\"justification\":\"no proof exists for the negated goal\"",
+                    esc(&format!("{goal}"))
+                )
+            }
+            // ---- Probability (likelihood-ratio aggregation) ----------------
+            // These four were the ones the old wildcard dropped.
+            DerivationOrigin::FromPrior {
+                clause_id,
+                prior_logit,
+            } => {
+                format!(
+                    "\"kind\":\"prior\",{head},\"clause_id\":{},\"prior_logit\":{}",
+                    clause_id.0,
+                    jnum(*prior_logit)
+                )
+            }
+            DerivationOrigin::FromContribution {
+                clause_id,
+                evidence_fact_ids,
+                logit_delta,
+                ..
+            } => {
+                format!(
+                    "\"kind\":\"contribution\",{head},\"clause_id\":{},\"logit_delta\":{},\"evidence\":{}",
+                    clause_id.0,
+                    jnum(*logit_delta),
+                    fact_citations_json(evidence_fact_ids, kb)
+                )
+            }
+            DerivationOrigin::FromJointContribution {
+                clause_id,
+                evidence_fact_ids,
+                joint_logit_delta,
+                ..
+            } => {
+                format!(
+                    "\"kind\":\"interaction\",{head},\"clause_id\":{},\"logit_delta\":{},\"evidence\":{}",
+                    clause_id.0,
+                    jnum(*joint_logit_delta),
+                    fact_citations_json(evidence_fact_ids, kb)
+                )
+            }
+            // The literal comparison that fired is the provenance here: the
+            // reader sees `observed <op> threshold` and can recompute it. No
+            // number in this step came from a model.
+            DerivationOrigin::FromPredicateContribution {
+                clause_id,
+                slot,
+                observation_fact_id,
+                op,
+                threshold,
+                threshold_exact,
+                observed,
+                observed_exact,
+                logit_delta,
+            } => {
+                format!(
+                    "\"kind\":\"predicate\",{head},\"clause_id\":{},\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{}{},\"observed\":{}{},\"logit_delta\":{},\"observation\":{}",
+                    clause_id.0,
+                    esc(slot),
+                    esc(op.symbol()),
+                    jnum(*threshold),
+                    exact_operand_json("threshold", threshold_exact),
+                    jnum(*observed),
+                    exact_operand_json("observed", observed_exact),
+                    jnum(*logit_delta),
+                    observation_fact_id.map_or_else(
+                        || "[]".to_string(),
+                        |id| fact_citations_json(&[id], kb)
+                    )
+                )
+            }
+        };
+        steps.push(format!("{{{body}}}"));
     }
     format!("[{}]", steps.join(","))
+}
+
+/// Resolve a list of `FactId`s to their inline citations, in the order given.
+fn fact_citations_json(ids: &[logic_engine::FactId], kb: &KnowledgeBase) -> String {
+    let objs: Vec<String> = ids
+        .iter()
+        .map(|id| {
+            let pv = kb
+                .fact(*id)
+                .map(|f| prov(&f.provenance))
+                .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+            format!("{{{pv}}}")
+        })
+        .collect();
+    format!("[{}]", objs.join(","))
 }
 
 /// Serialize the proof DAG for one hypothesis: walk each step and join its
@@ -244,7 +805,7 @@ fn proof_json(
                         let evidence_proof = evidence_proof
                             .as_ref()
                             .map(|proof| {
-                                format!(",\"evidence_proof\":{}", sld_proof_json(proof, kb))
+                                format!(",\"evidence_proof\":{}", trace_steps_json(proof, kb))
                             })
                             .unwrap_or_default();
                         steps.push(format!(
@@ -276,7 +837,7 @@ fn proof_json(
                                 ",\"evidence_proofs\":[{}]",
                                 evidence_proofs
                                     .iter()
-                                    .map(|proof| sld_proof_json(proof, kb))
+                                    .map(|proof| trace_steps_json(proof, kb))
                                     .collect::<Vec<_>>()
                                     .join(",")
                             )
@@ -297,9 +858,12 @@ fn proof_json(
                 DerivationOrigin::FromPredicateContribution {
                     clause_id,
                     slot,
+                    observation_fact_id,
                     op,
                     threshold,
+                    threshold_exact,
                     observed,
+                    observed_exact,
                     logit_delta,
                 } => {
                     let pv = predicates
@@ -311,12 +875,18 @@ fn proof_json(
                                 .to_string()
                         });
                     steps.push(format!(
-                        "{{\"kind\":\"predicate\",\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{},\"observed\":{},\"logit\":{},{}}}",
+                        "{{\"kind\":\"predicate\",\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{}{},\"observed\":{}{},\"logit\":{},\"observation\":{},{}}}",
                         esc(slot),
                         esc(op.symbol()),
                         jnum(*threshold),
+                        exact_operand_json("threshold", threshold_exact),
                         jnum(*observed),
+                        exact_operand_json("observed", observed_exact),
                         jnum(*logit_delta),
+                        observation_fact_id.map_or_else(
+                            || "[]".to_string(),
+                            |id| fact_citations_json(&[id], kb)
+                        ),
                         pv
                     ));
                 }
@@ -325,6 +895,42 @@ fn proof_json(
         }
     }
     format!("[{}]", steps.join(","))
+}
+
+fn aggregate_warnings_json(warnings: &[LrAggregateWarning]) -> String {
+    let items = warnings
+        .iter()
+        .map(|warning| match warning {
+            LrAggregateWarning::NoPriorDeclared { conclusion } => format!(
+                "{{\"type\":\"no_prior_declared\",\"conclusion\":\"{}\"}}",
+                esc(&format!("{conclusion}"))
+            ),
+            LrAggregateWarning::NoContributionsActive { conclusion } => format!(
+                "{{\"type\":\"no_contributions_active\",\"conclusion\":\"{}\"}}",
+                esc(&format!("{conclusion}"))
+            ),
+            LrAggregateWarning::DegenerateContribution { clause_id } => format!(
+                "{{\"type\":\"degenerate_contribution\",\"clause_id\":\"{}\"}}",
+                esc(&format!("{clause_id:?}"))
+            ),
+            LrAggregateWarning::PredicatePrecisionLoss { clause_id, slot } => format!(
+                "{{\"type\":\"predicate_precision_loss\",\"clause_id\":\"{}\",\"slot\":\"{}\"}}",
+                esc(&format!("{clause_id:?}")),
+                esc(slot)
+            ),
+            LrAggregateWarning::PredicateEvaluationError {
+                clause_id,
+                slot,
+                detail,
+            } => format!(
+                "{{\"type\":\"predicate_evaluation_error\",\"clause_id\":\"{}\",\"slot\":\"{}\",\"detail\":\"{}\"}}",
+                esc(&format!("{clause_id:?}")),
+                esc(slot),
+                esc(detail)
+            ),
+        })
+        .collect::<Vec<_>>();
+    format!("[{}]", items.join(","))
 }
 
 /// Map the constraint-engine outcomes to `(status atom, certificate JSON)` pairs
@@ -384,49 +990,6 @@ fn status_certificates(
 /// - The resolved real path must stay within `root` (the directory of the
 ///   top-level program). A `../…` escape or a symlink pointing outside `root`
 ///   is refused — `import` cannot read arbitrary files on the host.
-struct FsProvider {
-    /// The sandbox root: canonicalized directory of the top-level program. No
-    /// import may resolve outside this subtree.
-    root: PathBuf,
-}
-
-impl FsProvider {
-    /// Canonicalize `p` and confirm it lies within the sandbox `root`.
-    fn checked_canonical(&self, p: &Path) -> Result<String, String> {
-        let abs = fs::canonicalize(p).map_err(|e| format!("{}: {e}", p.display()))?;
-        if !abs.starts_with(&self.root) {
-            return Err(format!(
-                "{} escapes the import root {}",
-                abs.display(),
-                self.root.display()
-            ));
-        }
-        Ok(abs.to_string_lossy().into_owned())
-    }
-}
-
-impl ImportProvider for FsProvider {
-    fn resolve(&self, importer: &str, literal: &str) -> Result<String, String> {
-        if Path::new(literal).is_absolute() {
-            return Err(format!("import path must be relative, got {literal:?}"));
-        }
-        // Reject NUL and other obviously hostile bytes before touching the FS.
-        if literal.contains('\0') {
-            return Err("import path contains a NUL byte".to_string());
-        }
-        let importer_dir = Path::new(importer)
-            .parent()
-            .ok_or_else(|| format!("importer {importer:?} has no parent directory"))?;
-        self.checked_canonical(&importer_dir.join(literal))
-    }
-
-    fn load(&self, canonical: &str) -> Result<String, String> {
-        // `canonical` came from `resolve`/the root, already inside `root`; read
-        // it. (Re-checking would re-canonicalize an already-canonical path.)
-        fs::read_to_string(canonical).map_err(|e| format!("{canonical}: {e}"))
-    }
-}
-
 fn main() -> ExitCode {
     let spec = load_spec_from_str(SPEC).expect("internal: invalid CLI spec");
     let parser = Parser::new(spec);
@@ -452,6 +1015,13 @@ fn main() -> ExitCode {
         .get("program")
         .and_then(|v| v.as_str())
         .unwrap_or("");
+
+    // §E.8: opt-in human-readable explanation instead of the JSON trail.
+    let explain = result
+        .flags
+        .get("explain")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
 
     // Resolve the program (and any `import`s) through the filesystem provider.
     // The sandbox root is the directory of the program file; no `import` may
@@ -529,16 +1099,38 @@ fn main() -> ExitCode {
 
     let diff = decide(&lowered);
 
+    // ADJ-STATEMACHINE RS-3c: run every `statemachine` the program declared. Each
+    // run is deterministic and TOTAL — it returns one typed outcome (Halted /
+    // StepBudgetExceeded / NonTerminating / Stuck) and never hangs (the declared
+    // step budget caps the loop). The driver reasons over a working CLONE of the
+    // KB, so a machine's `assert`s never leak into the rest of the program. Empty
+    // for a program with no `statemachine`, so all existing output stays
+    // byte-identical (the section is omitted below).
+    let state_machine_runs: Vec<(&LoweredStateMachine, StateMachineRun)> = lowered
+        .state_machines
+        .iter()
+        .map(|sm| (sm, run_state_machine(sm, &lowered.kb)))
+        .collect();
+
     let mut ranked: Vec<String> = Vec::new();
     for r in &diff.ranked {
         let proof = proof_json(&r.hypothesis, &lowered.kb, &r.result, &certs);
+        let warnings = if r.result.warnings.is_empty() {
+            String::new()
+        } else {
+            format!(
+                ",\"warnings\":{}",
+                aggregate_warnings_json(&r.result.warnings)
+            )
+        };
         ranked.push(format!(
-            "{{\"hypothesis\":\"{}\",\"posterior\":{},\"posterior_logit\":{},\"normalized_share\":{},\"proof\":{}}}",
+            "{{\"hypothesis\":\"{}\",\"posterior\":{},\"posterior_logit\":{},\"normalized_share\":{},\"proof\":{}{}}}",
             esc(&format!("{}", r.hypothesis)),
             jnum(r.posterior),
             jnum(r.posterior_logit),
             jnum(r.normalized_share),
-            proof
+            proof,
+            warnings
         ));
     }
 
@@ -553,6 +1145,16 @@ fn main() -> ExitCode {
                 jnum(*margin_logit)
             )
         }
+        DifferentialDecision::Indeterminate {
+            leader,
+            posterior,
+            reason,
+        } => format!(
+            "{{\"type\":\"indeterminate\",\"leader\":\"{}\",\"posterior\":{},\"reason\":\"{}\"}}",
+            esc(&format!("{}", leader)),
+            jnum(*posterior),
+            esc(reason)
+        ),
         DifferentialDecision::Kickback {
             leader, runner_up, margin_posterior, margin_logit, reason, ..
         } => format!(
@@ -567,7 +1169,16 @@ fn main() -> ExitCode {
 
     // The `"queries"` echo lists every query the program declared (ground +
     // binding), captured before the partition above.
-    let queries: Vec<String> = all_query_strs;
+    // Same gate as every other echo — the `queries` array would otherwise
+    // reprint in full exactly what the abstention object redacts.
+    let queries: Vec<String> = if sensitive_input() {
+        all_query_strs
+            .iter()
+            .map(|_| "\"[redacted]\"".to_string())
+            .collect()
+    } else {
+        all_query_strs
+    };
 
     // Relational recall: each binding query resolves to its bindings + the citing
     // edge's provenance (or abstains with an empty answer set). 0 answer-time
@@ -596,6 +1207,28 @@ fn main() -> ExitCode {
         format!(",\"governing\":[{}]", governing.join(","))
     };
 
+    // ADJ-TABLES RS-5c/RS-5d: table lookups. `mode range` reads the table as a step
+    // function (bracketed value + the matched breakpoint row's citation, or abstains
+    // below the domain); `mode interpolated` reads it as a piecewise-linear function
+    // (exact linear blend of the two bracketing rows, both citations, or abstains
+    // outside the domain). Both are 0 answer-time model calls — exact rational
+    // arithmetic over the CAS-grounded rows. Omitted when the program declares no
+    // `? lookup …`, so existing output is byte-for-byte unchanged.
+    let lookups: Vec<String> = lowered
+        .range_lookups
+        .iter()
+        .map(|rl| match rl.mode.as_str() {
+            "interpolated" => interpolated_lookup_json(rl, &lowered.kb),
+            "nearest" => nearest_lookup_json(rl, &lowered.kb),
+            _ => range_lookup_json(rl, &lowered.kb),
+        })
+        .collect();
+    let lookup_section = if lookups.is_empty() {
+        String::new()
+    } else {
+        format!(",\"lookups\":[{}]", lookups.join(","))
+    };
+
     // Render the constraint sections from the outcomes computed above (the
     // solvers are not re-run). Absent a constraint system / `check` / objective,
     // the respective key is omitted entirely.
@@ -622,8 +1255,68 @@ fn main() -> ExitCode {
         format!(",\"derived\":{}", derived)
     };
 
+    let formula_abstentions_section = if lowered.formula_abstentions.is_empty() {
+        String::new()
+    } else {
+        let abstentions = lowered
+            .formula_abstentions
+            .iter()
+            .map(|abstention| formula_abstention_json(abstention, &lowered.kb))
+            .collect::<Vec<_>>()
+            .join(",");
+        format!(",\"formula_abstentions\":[{abstentions}]")
+    };
+
+    // ADJ-STATEMACHINE RS-3c: the state-machine run section — each machine's typed
+    // outcome, its ordered provenanced steps, and the machine's own citation.
+    // Omitted (empty string) when the program declared no `statemachine`, so every
+    // existing program's output is byte-for-byte unchanged.
+    let state_machines_section = if state_machine_runs.is_empty() {
+        String::new()
+    } else {
+        let items: Vec<String> = state_machine_runs
+            .iter()
+            .map(|(sm, run)| state_machine_json(sm, run, &lowered.kb))
+            .collect();
+        format!(",\"state_machines\":[{}]", items.join(","))
+    };
+
+    // `--explain` (ADJ-REASON-MATH §E.8): render the human-readable view of the
+    // reasoning instead of the JSON trail. Projection-only — it reads the same
+    // `lowered.kb` the JSON above was built from and re-runs nothing. The JSON
+    // remains the primary, complete artifact (default output); `--explain` is the
+    // opt-in human view onto it.
+    if explain {
+        // ADJ-ARGUMENT-IR ADR-6: the SLD proof chain behind each binding query —
+        // the argument's premises → connective → conclusion. Re-resolve each
+        // binding query to the same proof DAG the `recall` section was built from
+        // (projection-only: `enumerate_all` is deterministic and side-effect
+        // free), so `--explain` can render the derivation as an argument. Empty
+        // for a program with no binding query, leaving all other output unchanged.
+        // AR-3 §4: resolve each binding query with `enumerate_governing` (not bare
+        // `enumerate_all`), so `--explain` sees the SAME dialectical resolution the
+        // `governing` JSON section reports — a rebutted conclusion tagged
+        // `Defeated`/its rival `Governing`. The `GovernedResult` carries both the
+        // proof DAG (the chains ADR-6 renders) and the per-answer status.
+        let argument_chains: Vec<(Term, GovernedResult)> = binding_queries
+            .iter()
+            .map(|q| (q.clone(), enumerate_governing(q, &lowered.kb)))
+            .collect();
+        println!(
+            "{}",
+            explain::explain(
+                &lowered.kb,
+                &diff,
+                &lowered.formula_abstentions,
+                &state_machine_runs,
+                &argument_chains,
+            )
+        );
+        return ExitCode::SUCCESS;
+    }
+
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
@@ -632,9 +1325,115 @@ fn main() -> ExitCode {
         optimize_section,
         recall_section,
         governing_section,
-        derived_section
+        lookup_section,
+        derived_section,
+        formula_abstentions_section,
+        state_machines_section
     );
     ExitCode::SUCCESS
+}
+
+/// Render one state-machine run (ADJ-STATEMACHINE RS-3c) as JSON: the machine's
+/// name, its typed outcome, the ordered provenanced steps, and the machine's own
+/// cited `source`/`locator`/`trust` envelope (which every transition inherits).
+fn state_machine_json(
+    sm: &LoweredStateMachine,
+    run: &StateMachineRun,
+    kb: &KnowledgeBase,
+) -> String {
+    let steps: Vec<String> = run
+        .steps
+        .iter()
+        .map(|st| {
+            let asserted: Vec<String> = st
+                .asserted
+                .iter()
+                .map(|a| format!("\"{}\"", esc(a)))
+                .collect();
+            format!(
+                "{{\"from_state\":\"{}\",\"guard\":\"{}\",\"target\":\"{}\",\"asserted\":[{}],{}}}",
+                esc(&st.from_state),
+                esc(&st.guard),
+                esc(&st.target),
+                asserted.join(","),
+                prov(&st.provenance)
+            )
+        })
+        .collect();
+    format!(
+        "{{\"name\":\"{}\",\"outcome\":{},\"steps\":[{}],{}}}",
+        esc(&sm.name),
+        state_machine_outcome_json(&run.outcome, kb),
+        steps.join(","),
+        prov(&sm.provenance)
+    )
+}
+
+/// Render a state-machine's typed terminal outcome (ADJ-STATEMACHINE §4) as JSON.
+/// The `type` field is the stable discriminant a checker keys off.
+fn state_machine_outcome_json(outcome: &StateMachineOutcome, kb: &KnowledgeBase) -> String {
+    match outcome {
+        StateMachineOutcome::Halted { state, result } => format!(
+            "{{\"type\":\"halted\",\"state\":\"{}\",\"result\":{}}}",
+            esc(state),
+            yield_json(result, kb)
+        ),
+        StateMachineOutcome::StepBudgetExceeded {
+            steps,
+            budget,
+            state,
+        } => format!(
+            "{{\"type\":\"step_budget_exceeded\",\"steps\":{},\"budget\":{},\"state\":\"{}\"}}",
+            steps,
+            budget,
+            esc(state)
+        ),
+        StateMachineOutcome::NonTerminating { state } => format!(
+            "{{\"type\":\"non_terminating\",\"state\":\"{}\"}}",
+            esc(state)
+        ),
+        StateMachineOutcome::Stuck { state } => {
+            format!("{{\"type\":\"stuck\",\"state\":\"{}\"}}", esc(state))
+        }
+        StateMachineOutcome::PrecisionLoss {
+            state,
+            phase,
+            expression,
+        } => format!(
+            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"phase\":\"{}\",\"expression\":\"{}\"}}",
+            esc(state),
+            phase.type_tag(),
+            esc(expression)
+        ),
+        StateMachineOutcome::ComputationError {
+            state,
+            phase,
+            failure,
+            detail,
+        } => format!(
+            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"failure\":\"{}\",\"detail\":\"{}\"}}",
+            esc(state),
+            phase.type_tag(),
+            failure.type_tag(),
+            esc(detail)
+        ),
+    }
+}
+
+/// Render a halt's yielded value (ADJ-STATEMACHINE §3). A numeric yield carries its
+/// exact-first value AND its derivation tree (byte-traceable exactly like a `let`);
+/// a symbolic yield (`at_target`) is the bare finding name.
+fn yield_json(y: &YieldValue, kb: &KnowledgeBase) -> String {
+    match y {
+        YieldValue::Numeric(d) => format!(
+            "{{\"kind\":\"numeric\",\"value\":{},\"derivation\":{}}}",
+            value_json(d),
+            derivation_tree_json(&d.tree, kb)
+        ),
+        YieldValue::Symbol(s) => {
+            format!("{{\"kind\":\"symbol\",\"symbol\":\"{}\"}}", esc(s))
+        }
+    }
 }
 
 /// True if a query goal contains a logic variable — i.e. it is a relational
@@ -694,18 +1493,593 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
             .filter_map(|fid| kb.fact(*fid))
             .map(|f| format!("{{{}}}", prov(&f.provenance)))
             .collect();
+        // RS-4: `citations` is a SET (sorted, deduped `via_facts`) — it answers
+        // "what did this rely on?" but cannot answer "in what order, and how?".
+        // `steps` is the ordered derivation. Both are emitted: existing consumers
+        // keep their field, auditors get the narrative.
         answers.push(format!(
-            "{{\"bindings\":{{{}}},\"citations\":[{}]}}",
+            "{{\"bindings\":{{{}}},\"citations\":[{}],\"steps\":{}}}",
             binds.join(","),
-            cites.join(",")
+            cites.join(","),
+            trace_steps_json(proof, kb)
         ));
     }
+    // An empty answer set is reported with the REASON it is empty. `truncated`
+    // is checked first: a search that stopped early established no absence, so
+    // calling it "no grounded support" would convert a resource limit into a
+    // claim about the knowledge base.
+    let abstention = if dag.proofs.is_empty() {
+        let goal = format!("{query}");
+        let reason = if dag.truncated {
+            AbstentionReason::SearchLimitExceeded { goal }
+        } else {
+            AbstentionReason::NoGroundedSupport { goal }
+        };
+        format!(",\"abstention\":{}", abstention_json(&reason))
+    } else {
+        String::new()
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}}}",
-        esc(&format!("{}", query)),
+        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}{}}}",
+        query_echo(&format!("{query}")),
         answers.join(","),
-        dag.proofs.is_empty()
+        dag.proofs.is_empty(),
+        abstention
     )
+}
+
+/// Whether more than one row of the enumerated relation carries `target` in the
+/// key column — i.e. whether the breakpoint a lookup SELECTED is shared.
+///
+/// Asked AFTER selection, about the key that actually won, and never about a
+/// running best. An earlier version set a flag whenever an incoming key tied the
+/// best-so-far, which made the answer depend on enumeration order: a duplicate at
+/// a key that ultimately LOST could abstain the query or not, depending only on
+/// which row the resolver reached first. That contradicted the reproducibility
+/// this code promises, and it is a false positive besides — a duplicate on a row
+/// that was not selected costs the answer nothing.
+///
+/// Deciding after the fact is order-independent by construction and costs one
+/// extra linear pass over an already-materialized proof list.
+fn breakpoint_is_shared(
+    dag: &logic_engine::ProofDAG,
+    key_var: &LogicVar,
+    target: &logic_engine::compute::ExactRational,
+) -> bool {
+    dag.proofs
+        .iter()
+        .filter_map(|proof| numeric_exact_magnitude(&proof.bindings.walk_var(key_var)))
+        .filter(|k| k.as_ratio() == target.as_ratio())
+        .count()
+        > 1
+}
+
+/// Resolve a RANGE / BRACKET lookup (ADJ-TABLES RS-5c) against the grounded
+/// table and render it as JSON. The table's rows are its facts, so enumerating
+/// `<table>($c0, …, $cn)` binds every column of every row **and** yields that
+/// row's citing fact (`via_facts`) — the same machinery exact recall uses. Among
+/// the rows whose key column is `<= key_value`, the tactic selects the one with
+/// the greatest key (the breakpoint the query falls in) and returns its value
+/// column WITH that row's citation. The comparison rides the exact `BigRational`
+/// order (`ExactRational::as_ratio()` — the identical total order the engine's
+/// `CmpOp` exact path uses), so there is no `f64` hop in the decision. A query
+/// below the smallest key has no key `<=` it and honestly **abstains** ("below
+/// the table's domain"), never a fabricated classification. 0 answer-time model
+/// calls — pure comparison over the CAS-grounded rows.
+fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    // Enumerate every row of the table by unifying an all-fresh-vars goal against
+    // the table relation. `cols[i]` is bound, per proof, to row i's cell in
+    // column i; the proof's `via_facts` is that row's citing fact.
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    // The query value, as an exact rational — the right-hand side of every
+    // breakpoint comparison.
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            // The lowerer guarantees a numeric literal, so this is unreachable in
+            // practice; abstain rather than panic if a non-numeric ever arrives.
+            return format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&AbstentionReason::NonNumericKey {
+                    table: rl.table.clone(),
+                    column: rl.key_col.clone(),
+                    key: format!("{}", rl.key_value),
+                })
+            );
+        }
+    };
+
+    // Among all rows, keep those whose key column is `<= q`, then pick the one
+    // with the GREATEST key — the breakpoint the query falls into. Comparison is
+    // exact (`BigRational::cmp`), never `f64`.
+    let mut best: Option<(&Proof, Term, Term, logic_engine::compute::ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // a non-numeric key cell is impossible post-lowering; skip defensively.
+        };
+        if k.as_ratio() > q.as_ratio() {
+            continue; // key is above the query — not a candidate breakpoint.
+        }
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let take = match &best {
+            None => true,
+            Some((_, _, _, best_k)) => k.as_ratio() > best_k.as_ratio(),
+        };
+        if take {
+            best = Some((proof, key_term, value_term, k));
+        }
+    }
+    // The selected breakpoint must identify ONE row. The declaration-time gate
+    // cannot guarantee that: it reads one `table` block, while enumeration reads
+    // every fact with this functor and arity — a second block of the same name or
+    // a colliding `relate` fact contributes rows it never saw.
+    if let Some((_, key_term, _, best_k)) = &best {
+        if breakpoint_is_shared(&dag, &cols[rl.key_index], best_k) {
+            return format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&AbstentionReason::AmbiguousBreakpoint {
+                    table: rl.table.clone(),
+                    column: rl.key_col.clone(),
+                    key: format!("{key_term}"),
+                })
+            );
+        }
+    }
+
+    match best {
+        Some((proof, key_term, value_term, _)) => {
+            let cites: Vec<String> = proof
+                .via_facts
+                .iter()
+                .filter_map(|fid| kb.fact(*fid))
+                .map(|f| format!("{{{}}}", prov(&f.provenance)))
+                .collect();
+            // The answer names the value column (the binding) AND the matched
+            // breakpoint key, so the audit shows WHICH bracket the query fell in.
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&format!("{value_term}")),
+                esc(&rl.key_col),
+                esc(&format!("{key_term}")),
+                cites.join(","),
+                trace_steps_json(proof, kb)
+            )
+        }
+        None => {
+            // No breakpoint is `<= q`, so the query sits BELOW the table's
+            // floor. Report the floor itself: an abstention that names the
+            // domain you fell outside is actionable ("this source starts at
+            // 0"), whereas a bare `true` leaves the caller guessing whether
+            // the table is wrong, the key is wrong, or the source simply does
+            // not reach that far.
+            //
+            // If the search truncated we cannot even claim that — we did not
+            // enumerate every row, so the floor we computed may not be the
+            // real one. That case reports the limit instead.
+            let min_key = dag
+                .proofs
+                .iter()
+                .filter_map(|pr| {
+                    let kt = pr.bindings.walk_var(&cols[rl.key_index]);
+                    numeric_exact_magnitude(&kt).map(|k| (kt, k))
+                })
+                .min_by(|(_, a), (_, b)| {
+                    a.as_ratio()
+                        .partial_cmp(b.as_ratio())
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                })
+                .map(|(kt, _)| format!("{kt}"))
+                .unwrap_or_else(|| "(empty table)".to_string());
+            let reason = if dag.truncated {
+                AbstentionReason::SearchLimitExceeded {
+                    goal: query_str.clone(),
+                }
+            } else {
+                AbstentionReason::BelowTableDomain {
+                    table: rl.table.clone(),
+                    key: format!("{}", rl.key_value),
+                    min_key,
+                }
+            };
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&reason)
+            )
+        }
+    }
+}
+
+/// Resolve a NEAREST lookup (ADJ-TABLES RS-5f) against the grounded table and render
+/// it as JSON. Where a `range` lookup returns the greatest key `<= q` (a step / floor)
+/// and `interpolated` blends between the two bracketing rows, `nearest` snaps the query
+/// to the single row whose key is CLOSEST to `q` — nearest-neighbour lookup. It returns
+/// that row's value cell VERBATIM (like `range`, and unlike `interpolated`, so the value
+/// column may hold a category label, not just a number), together with the matched key
+/// and that one row's citation.
+///
+/// This is the tactic for tables where neither flooring nor linear blending is right:
+/// snapping a measurement to the closest tabulated standard, nearest-rank selection, or
+/// a discrete lookup grid where the between-points region has no defined value. The key
+/// column must be numeric (enforced at lowering, shared with `range`/`interpolated`); the
+/// value column is returned as-is.
+///
+/// Distance is exact: `|k - q|` is computed as a `BigRational` (`sub` then `abs`), never
+/// via `f64`, and candidates are compared on that exact distance. **Ties break to the
+/// SMALLER key**, deterministically — if `q` sits exactly halfway between two keys, the
+/// lower key wins, so the answer is reproducible and never depends on row order.
+///
+/// Two honest edges:
+/// - **empty table**: with no rows there is no nearest key, so it abstains
+///   (`no_grounded_support`) rather than inventing one.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen the
+///   truly nearest row, so snapping to the closest row we *did* see could be wrong; it
+///   abstains with `search_limit_exceeded` instead of a possibly-non-nearest key.
+///
+/// 0 answer-time model calls — pure exact comparison over the CAS-grounded rows.
+fn nearest_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    // Enumerate every row (same all-fresh-vars unification as the other tactics).
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    // The query value, as an exact rational.
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            // The lowerer guarantees a numeric literal; abstain rather than panic.
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            });
+        }
+    };
+
+    // A truncated scan may have hidden the truly nearest row, so no row we saw can be
+    // claimed nearest — abstain rather than snap to a possibly-non-nearest key.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Among ALL rows, keep the one minimizing the exact distance `|k - q|`. Ties break
+    // to the SMALLER key so the choice is deterministic and order-independent.
+    let mut best: Option<(&Proof, Term, Term, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // a non-numeric key cell is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let take = match &best {
+            None => true,
+            Some((_, _, _, best_k)) => {
+                // `d_*` are exact `BigRational` distances; comparison is exact.
+                let d_new = k.as_ratio().sub(q.as_ratio()).abs();
+                let d_best = best_k.as_ratio().sub(q.as_ratio()).abs();
+                d_new < d_best || (d_new == d_best && k.as_ratio() < best_k.as_ratio())
+            }
+        };
+        if take {
+            best = Some((proof, key_term, value_term, k));
+        }
+    }
+
+    // A tie on the SELECTED KEY is not the tie `nearest` resolves. Two rows
+    // equidistant on opposite sides are a real choice, settled deterministically
+    // toward the smaller key. Two rows AT that key are one breakpoint with two
+    // differently-sourced answers, and snapping to either drops the other's
+    // citation.
+    if let Some((_, key_term, _, best_k)) = &best {
+        if breakpoint_is_shared(&dag, &cols[rl.key_index], best_k) {
+            return abstain(AbstentionReason::AmbiguousBreakpoint {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{key_term}"),
+            });
+        }
+    }
+
+    match best {
+        Some((proof, key_term, value_term, _)) => {
+            let cites: Vec<String> = proof
+                .via_facts
+                .iter()
+                .filter_map(|fid| kb.fact(*fid))
+                .map(|f| format!("{{{}}}", prov(&f.provenance)))
+                .collect();
+            // The answer names the value column (the binding) AND the matched key, so
+            // the audit shows WHICH row the query snapped to.
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&format!("{value_term}")),
+                esc(&rl.key_col),
+                esc(&format!("{key_term}")),
+                cites.join(","),
+                trace_steps_json(proof, kb)
+            )
+        }
+        // No rows at all — there is no nearest key to snap to.
+        None => abstain(AbstentionReason::NoGroundedSupport {
+            goal: query_str.clone(),
+        }),
+    }
+}
+
+/// Resolve an INTERPOLATED lookup (ADJ-TABLES RS-5d) against the grounded table and
+/// render it as JSON. Where a `range` lookup reads the table as a *step* function,
+/// `interpolated` reads it as a *piecewise-linear* one: it finds the two breakpoint
+/// rows that bracket the query — the greatest key `k0 <= q` and the smallest key
+/// `k1 >= q` — and returns the exact linear blend
+///
+/// ```text
+///     v = v0 + (v1 - v0) * (q - k0) / (k1 - k0)
+/// ```
+///
+/// with BOTH bracketing rows' citations riding along, so the interpolated answer is
+/// traceable to the two measured points it sits between (nomograms, growth charts,
+/// calibration curves). Every step is exact `BigRational` arithmetic — no `f64` hop —
+/// so a terminating blend renders all its digits and a repeating one renders as the
+/// reduced fraction, never a rounded float.
+///
+/// Three honest edges:
+/// - **exact hit** (`q` equals a breakpoint key, so `k0 == k1`): the blend is
+///   degenerate (`0/0`), so it is short-circuited to that row's value with its single
+///   citation — no fabricated division.
+/// - **below / above the domain**: interpolation needs a breakpoint on *both* sides;
+///   outside `[min, max]` it abstains (`below_table_domain` / `above_table_domain`)
+///   rather than extrapolate past what the source measured.
+/// - **truncated search**: if enumeration hit a resolution limit we may not have seen
+///   the true bracketing rows, so any interpolation could be wrong; we abstain with
+///   `search_limit_exceeded` instead of blending against a possibly-incomplete scan.
+///
+/// 0 answer-time model calls — pure exact arithmetic over the CAS-grounded rows.
+fn interpolated_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    use logic_engine::compute::ExactRational;
+
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    // Render an exact rational for a JSON string binding: prefer a terminating
+    // decimal (all digits), else the reduced fraction (still exact, never a float).
+    let render = |x: &ExactRational| -> String {
+        x.to_exact_decimal_string()
+            .unwrap_or_else(|| format!("{}/{}", x.numerator(), x.denominator()))
+    };
+    let cites_of = |proof: &Proof| -> Vec<String> {
+        proof
+            .via_facts
+            .iter()
+            .filter_map(|fid| kb.fact(*fid))
+            .map(|f| format!("{{{}}}", prov(&f.provenance)))
+            .collect()
+    };
+    let abstain = |reason: AbstentionReason| -> String {
+        format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+            query_echo(&query_str),
+            esc(&rl.mode),
+            abstention_json(&reason)
+        )
+    };
+
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            return abstain(AbstentionReason::NonNumericKey {
+                table: rl.table.clone(),
+                column: rl.key_col.clone(),
+                key: format!("{}", rl.key_value),
+            })
+        }
+    };
+
+    // A truncated scan may have missed the true bracketing rows, which would make
+    // any interpolation wrong — abstain rather than blend against a partial table.
+    if dag.truncated {
+        return abstain(AbstentionReason::SearchLimitExceeded {
+            goal: query_str.clone(),
+        });
+    }
+
+    // Scan every row once, keeping the tightest bracket on each side of `q`:
+    // `lower` = the row with the greatest key `<= q`; `upper` = the row with the
+    // smallest key `>= q`. Comparison and storage are exact.
+    let mut lower: Option<(&Proof, ExactRational, ExactRational)> = None;
+    let mut upper: Option<(&Proof, ExactRational, ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // non-numeric key is impossible post-lowering; skip defensively.
+        };
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let Some(v) = numeric_exact_magnitude(&value_term) else {
+            continue; // non-numeric value is impossible post-lowering (checked); skip.
+        };
+        if k.as_ratio() <= q.as_ratio() {
+            let take = match &lower {
+                None => true,
+                Some((_, lk, _)) => k.as_ratio() > lk.as_ratio(),
+            };
+            if take {
+                lower = Some((proof, k.clone(), v.clone()));
+            }
+        }
+        if k.as_ratio() >= q.as_ratio() {
+            let take = match &upper {
+                None => true,
+                Some((_, uk, _)) => k.as_ratio() < uk.as_ratio(),
+            };
+            if take {
+                upper = Some((proof, k, v));
+            }
+        }
+    }
+
+    // The min/max keys, for an out-of-domain abstention's audit payload.
+    let extremal = |pick_max: bool| -> String {
+        dag.proofs
+            .iter()
+            .filter_map(|pr| numeric_exact_magnitude(&pr.bindings.walk_var(&cols[rl.key_index])))
+            .fold(None, |acc: Option<ExactRational>, k| match acc {
+                None => Some(k),
+                Some(a) => {
+                    let keep = if pick_max {
+                        k.as_ratio() > a.as_ratio()
+                    } else {
+                        k.as_ratio() < a.as_ratio()
+                    };
+                    Some(if keep { k } else { a })
+                }
+            })
+            .map(|k| render(&k))
+            .unwrap_or_else(|| "(empty table)".to_string())
+    };
+
+    match (lower, upper) {
+        // Below the lowest breakpoint — nothing to interpolate down toward.
+        (None, _) => abstain(AbstentionReason::BelowTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            min_key: extremal(false),
+        }),
+        // Above the highest breakpoint — nothing to interpolate up toward.
+        (_, None) => abstain(AbstentionReason::AboveTableDomain {
+            table: rl.table.clone(),
+            key: format!("{}", rl.key_value),
+            max_key: extremal(true),
+        }),
+        (Some((lp, k0, v0)), Some((up, k1, v1))) => {
+            // BOTH bracket endpoints must identify one row each. This mode is the
+            // sharpest case of the shared-breakpoint problem: the dropped row's
+            // VALUE feeds the blend, so the emitted number itself changes with
+            // which row enumeration happened to reach first. The same knowledge
+            // base produced `150` or `599.5`, each fully cited and neither
+            // abstaining, depending only on declaration order.
+            for endpoint in [&k0, &k1] {
+                if breakpoint_is_shared(&dag, &cols[rl.key_index], endpoint) {
+                    return abstain(AbstentionReason::AmbiguousBreakpoint {
+                        table: rl.table.clone(),
+                        column: rl.key_col.clone(),
+                        key: render(endpoint),
+                    });
+                }
+            }
+            // Exact hit on a breakpoint (`k0 == k1 == q`): the blend is `0/0`, so
+            // return that row's value verbatim with its single citation.
+            if k0.as_ratio() == k1.as_ratio() {
+                let cites = cites_of(lp);
+                return format!(
+                    "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"exact\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
+                    query_echo(&query_str),
+                    esc(&rl.mode),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    esc(&rl.key_col),
+                    esc(&render(&q)),
+                    esc(&rl.key_col),
+                    esc(&render(&k0)),
+                    esc(&rl.value_col),
+                    esc(&render(&v0)),
+                    cites.join(","),
+                    trace_steps_json(lp, kb)
+                );
+            }
+            // Linear blend, all exact: v = v0 + (v1 - v0) * (q - k0) / (k1 - k0).
+            // The denominator is non-zero (k1 > k0 here), so every step is defined.
+            let blended = (|| {
+                let dv = v1.sub(&v0)?;
+                let dq = q.sub(&k0)?;
+                let dk = k1.sub(&k0)?;
+                let frac = dq.div(&dk)?;
+                let scaled = dv.mul(&frac)?;
+                v0.add(&scaled)
+            })();
+            let v = match blended {
+                Some(v) => v,
+                None => {
+                    // Exact arithmetic only fails on a zero denominator, already
+                    // excluded above; abstain rather than emit a wrong number.
+                    return abstain(AbstentionReason::SearchLimitExceeded {
+                        goal: query_str.clone(),
+                    });
+                }
+            };
+            let mut cites = cites_of(lp);
+            cites.extend(cites_of(up));
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"brackets\":{{\"lower\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"upper\":{{\"{}\":\"{}\",\"{}\":\"{}\"}}}},\"citations\":[{}]}}],\"abstained\":false}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&render(&v)),
+                esc(&rl.key_col),
+                esc(&render(&q)),
+                esc(&rl.key_col),
+                esc(&render(&k0)),
+                esc(&rl.value_col),
+                esc(&render(&v0)),
+                esc(&rl.key_col),
+                esc(&render(&k1)),
+                esc(&rl.value_col),
+                esc(&render(&v1)),
+                cites.join(",")
+            )
+        }
+    }
 }
 
 /// Render the ADJ73 *governance* of a binding query (defeasible precedence): every distinct
@@ -770,11 +2144,31 @@ fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
             )
         })
         .collect();
+    // `has_conflict()` answers "did I SEE a conflict?". On a truncated search
+    // that is not the same question as "is there one?" — reporting `false`
+    // there would be an affirmative claim reached by failing to find a rival,
+    // which proves nothing if the search gave up before looking. This is the
+    // same laundering PR-C removes from recall and lookup; leaving it in one
+    // renderer would have kept the hole open.
+    let (conflict, abstention) = match res.conflict_status() {
+        logic_engine::ConflictStatus::Conflict => ("true", String::new()),
+        logic_engine::ConflictStatus::NoConflict => ("false", String::new()),
+        logic_engine::ConflictStatus::Unknown => (
+            "null",
+            format!(
+                ",\"abstention\":{}",
+                abstention_json(&AbstentionReason::SearchLimitExceeded {
+                    goal: format!("{query}"),
+                })
+            ),
+        ),
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}}}",
-        esc(&format!("{}", query)),
+        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}{}}}",
+        query_echo(&format!("{query}")),
         answers.join(","),
-        res.has_conflict()
+        conflict,
+        abstention
     )
 }
 

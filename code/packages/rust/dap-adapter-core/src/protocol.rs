@@ -147,6 +147,9 @@ impl SeqCounter {
         SeqCounter { next: 1 }
     }
     /// Allocate the next sequence number.
+    // Allocates an ever-increasing seq id (never terminates); this is a
+    // counter, not an `Iterator::next` that yields `Option` and can finish.
+    #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> u64 {
         let n = self.next;
         self.next = self.next.saturating_add(1);

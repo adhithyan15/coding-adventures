@@ -251,6 +251,39 @@ mod tests {
         assert_eq!(pairs[0].1, "3.14");
     }
 
+    /// Hexadecimal integer literals `0x1F` / `0X10` lex as a single NUMBER token
+    /// carrying the original `0x…` text (the planner decodes the prefix). The
+    /// `HEX_INT` rule is aliased to `NUMBER`, so the emitted `type_` is `Number`.
+    /// Crucially the whole `0x1F` is one token — without the rule (which must sit
+    /// *before* `NUMBER`) the leading `0` alone would match and leave `x1F` as a
+    /// separate NAME.
+    ///
+    /// | Input                | type_  | value                |
+    /// |----------------------|--------|----------------------|
+    /// | "0x1F"               | Number | "0x1F"               |
+    /// | "0X10"               | Number | "0X10"               |
+    /// | "0xff"               | Number | "0xff"               |
+    /// | "0xFFFFFFFFFFFFFFFF" | Number | "0xFFFFFFFFFFFFFFFF" |
+    #[test]
+    fn test_number_hex() {
+        for input in &["0x1F", "0X10", "0xff", "0xFFFFFFFFFFFFFFFF"] {
+            let pairs = lex(input);
+            assert_eq!(pairs.len(), 1, "{input} should be a single token");
+            assert_eq!(pairs[0].0, TokenType::Number, "{input} type");
+            assert_eq!(pairs[0].1, *input, "{input} value preserved verbatim");
+        }
+    }
+
+    /// A bare `0` (no `x`) still lexes as an ordinary NUMBER — the `[xX]` in the
+    /// hex rule is mandatory, so it never swallows a plain zero.
+    #[test]
+    fn test_number_bare_zero_not_hex() {
+        let pairs = lex("0");
+        assert_eq!(pairs.len(), 1);
+        assert_eq!(pairs[0].0, TokenType::Number);
+        assert_eq!(pairs[0].1, "0");
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: STRING token (single-quoted, quotes stripped)
     // -----------------------------------------------------------------------
@@ -281,6 +314,23 @@ mod tests {
         assert_eq!(pairs.len(), 1);
         assert_eq!(pairs[0].0, TokenType::String);
         assert_eq!(pairs[0].1, "hello world");
+    }
+
+    /// A doubled single quote (`''`) is SQL's escape for a literal quote — it
+    /// does NOT terminate the string. `'it''s'` is a single STRING token; the
+    /// raw value keeps the `''` (the parser collapses it to one `'` when it
+    /// builds the string value).
+    #[test]
+    fn test_string_with_escaped_quote() {
+        let pairs = lex("'it''s'");
+        assert_eq!(pairs.len(), 1);
+        assert_eq!(pairs[0].0, TokenType::String);
+        assert_eq!(pairs[0].1, "it''s");
+        // Four quotes = a string containing one escaped quote.
+        let quad = lex("''''");
+        assert_eq!(quad.len(), 1);
+        assert_eq!(quad[0].0, TokenType::String);
+        assert_eq!(quad[0].1, "''");
     }
 
     // -----------------------------------------------------------------------
@@ -625,20 +675,20 @@ mod tests {
     // Test 21: Error path — non-existent grammar file
     // -----------------------------------------------------------------------
 
-    /// `create_sql_lexer_with_path` returns `Err` when the grammar file does
-    /// not exist. This exercises the error branch in the file-read logic.
-    ///
-    /// | Path                  | Result |
-    /// |-----------------------|--------|
-    /// | "/no/such/file.tokens"| Err(_) |
+    // `create_sql_lexer_with_path` returns `Err` when the grammar file does
+    // not exist. This exercises the error branch in the file-read logic.
+    //
+    // | Path                  | Result |
+    // |-----------------------|--------|
+    // | "/no/such/file.tokens"| Err(_) |
 
     // -----------------------------------------------------------------------
     // Test 22: Error path — tokenize_sql with bad grammar path
     // -----------------------------------------------------------------------
 
-    /// `tokenize_sql` uses the default grammar path. When the grammar path
-    /// is good, it returns `Ok`. This test ensures the `Err` variant of
-    /// the `Result` is exercised via the `create_sql_lexer_with_path` helper.
+    // `tokenize_sql` uses the default grammar path. When the grammar path
+    // is good, it returns `Ok`. This test ensures the `Err` variant of
+    // the `Result` is exercised via the `create_sql_lexer_with_path` helper.
 
     // -----------------------------------------------------------------------
     // Test 23: INSERT keywords
@@ -735,5 +785,24 @@ mod tests {
         let pairs = lex("*");
         assert_eq!(pairs.len(), 1);
         assert_eq!(pairs[0].0, TokenType::Star);
+    }
+
+    /// The bitwise operators `& | ~ << >>` each lex to a single token with the
+    /// expected value, and — crucially — maximal munch holds: `<<`/`>>` win over
+    /// `<`/`>`, and `||` (concat) still wins over a single `|`.
+    #[test]
+    fn test_bitwise_operator_tokens() {
+        for op in ["&", "|", "~", "<<", ">>"] {
+            let pairs = lex(op);
+            assert_eq!(pairs.len(), 1, "expected one token for {op:?}");
+            assert_eq!(pairs[0].1, op, "token value mismatch for {op:?}");
+        }
+        // Maximal munch: `<<`/`>>` are one token each, not two `<`/`>`.
+        assert_eq!(lex("<<").len(), 1);
+        assert_eq!(lex(">>").len(), 1);
+        // `||` still lexes as a single concat token, not two `|` bit-ors.
+        let concat = lex("||");
+        assert_eq!(concat.len(), 1, "|| must remain one token");
+        assert_eq!(concat[0].1, "||");
     }
 }

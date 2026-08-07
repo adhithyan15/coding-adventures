@@ -67,6 +67,10 @@ The compiler defines 46 opcodes covering all Starlark language features:
 | I/O | PRINT_VALUE |
 | VM Control | HALT |
 
+`CALL_FUNCTION_KW` carries `[positional_count, keyword_count]`; keyword names
+and values remain paired on the stack so mixed calls can be bound without
+guessing how many positional arguments preceded them.
+
 ## Dependencies
 
 - `coding_adventures_bytecode_compiler` -- GenericCompiler framework

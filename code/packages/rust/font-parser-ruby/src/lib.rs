@@ -340,6 +340,12 @@ unsafe fn unwrap_font(obj: VALUE) -> &'static fp::FontFile {
 // The name MUST be `Init_<lib_name>` where `<lib_name>` is the `.so`/`.bundle`
 // file name without the extension.
 
+/// # Safety
+///
+/// This is the Ruby C-extension entry point. It must only be invoked by the
+/// Ruby VM's `require` machinery (which calls `Init_<lib>` exactly once, on the
+/// main thread, with a fully initialized interpreter). Calling it manually, more
+/// than once, or without a live Ruby VM is undefined behaviour.
 #[no_mangle]
 pub unsafe extern "C" fn Init_font_parser_native() {
     // Define the module hierarchy: CodingAdventures::FontParserNative

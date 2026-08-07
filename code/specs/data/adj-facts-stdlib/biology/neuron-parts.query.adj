@@ -1,0 +1,22 @@
+% ============================================================================
+% neuron-parts.query.adj — a worked recall over the biology neuron-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a dendrite do?":
+% it states no neuroscience fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the
+% `neuron_part_function` rows and returns the function atom + the table's
+% source/locator/trust. The third query runs the relation BACKWARD (bind the
+% job, recall the part). A structure that is NOT one of the neuron parts in the
+% table (here `synapse`, the gap between neurons) abstains honestly — the engine
+% never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli neuron-parts.query.adj
+% ============================================================================
+
+import "neuron-parts.adj"
+
+? neuron_part_function(dendrites, $F)         % expect receive_signals
+? neuron_part_function(axon, $F)              % expect transmit_signals
+? neuron_part_function($P, speeds_signals)    % expect myelin_sheath — the reverse recall
+? neuron_part_function(synapse, $F)           % expect abstain — not a part of the neuron

@@ -420,8 +420,8 @@ fn build_hint_map(root: &AnnotatedNode) -> HashMap<(u32, u32), &'static str> {
     map
 }
 
-fn collect_hints<'a>(
-    node: &'a AnnotatedNode,
+fn collect_hints(
+    node: &AnnotatedNode,
     map: &mut HashMap<(u32, u32), &'static str>,
 ) {
     use type_declarations::AnnotatedChild;
@@ -531,6 +531,9 @@ mod tests {
             .instructions
     }
 
+    // Test helper kept alongside `main_instrs`/`fn_instrs`/`op_names`; not every
+    // helper is referenced by the current test set.
+    #[allow(dead_code)]
     fn function_names(src: &str) -> Vec<String> {
         module(src)
             .functions
@@ -651,12 +654,22 @@ mod tests {
     }
 
     #[test]
-    fn quoted_symbol_emits_make_symbol() {
+    fn quoted_symbol_emits_interned_const() {
+        // E6d-4: a quote literal `'foo` lowers to `const Var("foo") : symbol` —
+        // the interned-const form McCarthy Lisp emits — so it rides the shared
+        // `intern_symbols` / `intern_symbols_structural` passes on every backend
+        // (bit-equality `equal?`), instead of the runtime `make_symbol` string
+        // path the code-gen backends can't yet lower.
         let i = main_instrs("'foo");
-        // const "foo" + call_builtin make_symbol + ret
         assert_eq!(i[0].op, "const");
-        assert_eq!(i[1].op, "call_builtin");
-        assert_eq!(i[1].srcs[0], Operand::Var("make_symbol".into()));
+        assert_eq!(i[0].srcs[0], Operand::Var("foo".into()));
+        assert_eq!(i[0].type_hint, "symbol");
+        // No runtime make_symbol call for a compile-time-known quote literal.
+        assert!(
+            !i.iter().any(|x| x.op == "call_builtin"
+                && x.srcs.first() == Some(&Operand::Var("make_symbol".into()))),
+            "a quote literal must not emit runtime make_symbol",
+        );
     }
 
     // ---- Builtin calls --------------------------------------------------
@@ -982,11 +995,11 @@ mod tests {
         // srcs[0] must be an Operand::Str carrying the synthesised lambda name.
         assert!(
             matches!(&ac.srcs[0], Operand::Str(s) if s.starts_with("__lambda_")),
-            "alloc_closure srcs[0] must be Operand::Str(__lambda_N), got {:?}", &ac.srcs[0]
+            "alloc_closure srcs[0] must be Operand::Str(__lambda_N), got {:?}", ac.srcs[0]
         );
         assert_eq!(ac.type_hint, "closure", "alloc_closure type_hint must be 'closure'");
         // No preceding const instruction should materialise the fn_name.
-        let const_before = i.iter().rev().skip_while(|x| x.op != "alloc_closure").skip(1).next();
+        let const_before = i.iter().rev().skip_while(|x| x.op != "alloc_closure").nth(1);
         if let Some(prev) = const_before {
             assert_ne!(
                 prev.op, "const",
@@ -1021,7 +1034,7 @@ mod tests {
         // srcs[0] must be a Var (the closure handle register), not a Str or name-string.
         assert!(
             matches!(&cc.srcs[0], Operand::Var(_)),
-            "call_closure srcs[0] must be Operand::Var(handle), got {:?}", &cc.srcs[0]
+            "call_closure srcs[0] must be Operand::Var(handle), got {:?}", cc.srcs[0]
         );
     }
 

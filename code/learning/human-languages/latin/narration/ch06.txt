@@ -1,0 +1,60 @@
+Latin, chapter 6: Colours.
+2 lessons. All 2 can be done entirely by ear.
+
+
+Lesson 1 of 2.
+niger, albus — Latin's black and white, each with a shine-twin.
+
+Warm-up.
+[pause 2 seconds]
+You've seen niger already, hiding inside French noir and Spanish negro. Here's what those daughter languages left behind: Latin didn't have just one word for black, or just one for white — it had two of each, split by brightness, not just hue.
+
+You'll want to know: Two blacks, two whites.
+niger = "black" with a gleam — a shiny, lustrous black. This is the one that survives into Romance (noir, negro, nero).
+āter = "black" that's dull, matte, lightless — the flatter, duller black. (English keeps a fossil of it in atrocious and atrocity — something so dark/dreadful it's "black" in the āter sense.)
+albus = "white" that's plain, dull, matte — this is the one that mostly faded from Romance's everyday vocabulary (surviving in Spanish alba/French aube, "dawn," rather than as the everyday color word).
+candidus = "white" with a shine, a gleam, a glow — bright white. English keeps this one working hard: candid (originally "shining bright," then "morally bright/honest"), candidate (Romans running for office wore a bleached, gleaming-white toga, the toga candida), and candle.
+
+Why it's said this way: Be honest about what happened to the distinction.
+Romance languages mostly dropped this shine-vs-matte split and kept only one word per color (niger survived for black; albus and candidus both survive, but neither became the plain everyday "white" in most daughter languages — Spanish and French instead borrowed a Germanic word, blanco/ blanc, for their everyday white, as you may already have seen). So Latin's four color-words shrank to cover just two basic ideas — brightness stopped being how Latin-descended languages sort black and white.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "niger" — gleaming black — then "āter," dull black]
+[pause 8 seconds for the answer]
+[your turn — say: "albus" — dull white — then "candidus," shining white]
+[pause 8 seconds for the answer]
+[your turn — say: the English fossils — "atrocious" (āter), "candid, candidate" (candidus)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What distinguished Latin's two black words, and its two white words? (Brightness — niger "gleaming black" vs. āter "dull black"; candidus "shining white" vs. albus "dull white.") Which two English words come from candidus, and why does candidate mean what it does? (Candid and candidate — Roman office-seekers wore a bleached-white toga candida.) Did Romance keep this four-way split? (No — it settled on one plain word per color, and Spanish/French even borrowed a Germanic word for everyday white.)
+
+
+Lesson 2 of 2.
+ruber, caeruleus — a rock-solid red, and a shaky blue.
+
+Warm-up.
+[pause 2 seconds]
+One of these two words is about as old and stable a color-word as language gets. The other is a genuine puzzle — because Latin, like a surprising number of ancient languages, never quite settled on a clean word for "blue."
+
+The word, taken apart: ruber — ancient, and the parent of two Romance reds.
+ruber ("red") descends from PIE h₁rewdʰ-, a root so old it also gives English red, rust, ruddy, and German rot. Latin's own family used two everyday variants of this root — rubeus and russus — and Romance split them between languages: French rouge comes from rubeus; Spanish rojo comes from russus. Different Latin words, same ancient root, same color.
+
+The word, taken apart: caeruleus — Latin's shakiest color word.
+You might expect a clean Latin ancestor for "blue" the way ruber is for red. There isn't really one. Caeruleus is the closest word Latin had — and it's a much fuzzier idea than ruber: it covers the color of the sky and the sea (caeruleum mare, "the blue/dark sea"), but it can also shade toward dark green or simply "dark," depending on context. It isn't a fixed, single hue-word the way ruber clearly is.
+This isn't just a Latin quirk. Classicists and linguists have long noted that many ancient languages lacked a clean, stable basic word for blue — Ancient Greek is the most famous case (Homer's "wine-dark sea," never a simple "blue sea"). Across many language families, "blue" tends to be one of the last basic color words to settle into place, historically — sometimes splitting off late from words that also covered green, dark, or grey. Latin's caeruleus looks like part of that same broader pattern, though the exact reasons are still debated among linguists rather than fully settled.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ruber" — red — the ancient, PIE-rooted color word]
+[pause 8 seconds for the answer]
+[your turn — say: its two children — "rubeus becomes French rouge," "russus becomes Spanish rojo"]
+[pause 8 seconds for the answer]
+[your turn — say: "caeruleus" — sea/sky-colored — Latin's shakiest, least fixed color word]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What PIE root gives ruber, and what English words share it? (h₁rewdʰ- — red, rust, ruddy.) Which two Latin red-words split between French and Spanish, and which went where? (Rubeus becomes French rouge; russus becomes Spanish rojo.) Why is caeruleus a shakier word than ruber? (It covers sea/sky and can shade toward dark or green — it was never a single fixed "blue," a pattern linguists have noticed across many ancient languages, most famously Greek's "wine-dark sea.")

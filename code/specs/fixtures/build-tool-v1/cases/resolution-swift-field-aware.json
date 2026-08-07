@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/swift-field-aware",
+  "domain": "resolution",
+  "summary": "Swift resolution reads only local package path declarations and ignores aliases elsewhere in Package.swift.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/swift/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/swift/alpha/Package.swift",
+        "content_utf8": "// swift-tools-version: 6.0\nimport PackageDescription\n\n/* .package(path: \"../gamma\") is documentation, not a dependency. */\nlet ignoredExample = \".package(path: \\\"../gamma\\\")\"\nlet package = Package(\n    name: \"Gamma\",\n    products: [\n        .library(name: \"Alpha\", targets: [\"Alpha\"]),\n    ],\n    dependencies: [\n        .package(path: \"../beta-helper\"),\n        .package(path: \"../delta_name\"), // gamma is not local metadata\n        .package(url: \"https://example.invalid/gamma.git\", from: \"1.0.0\"),\n        // .package(path: \"../gamma\"),\n    ],\n    targets: [\n        .target(\n            name: \"Alpha\",\n            dependencies: [\n                .product(name: \"Gamma\", package: \"gamma\"),\n            ]\n        ),\n    ]\n)\n"
+      },
+      {
+        "path": "code/packages/swift/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/swift/beta-helper/Package.swift",
+        "content_utf8": "// swift-tools-version: 6.0\nimport PackageDescription\nlet package = Package(name: \"BetaHelper\")\n"
+      },
+      {
+        "path": "code/packages/swift/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/swift/delta_name/Package.swift",
+        "content_utf8": "// swift-tools-version: 6.0\nimport PackageDescription\nlet package = Package(name: \"DeltaName\")\n"
+      },
+      {
+        "path": "code/packages/swift/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/swift/gamma/Package.swift",
+        "content_utf8": "// swift-tools-version: 6.0\nimport PackageDescription\nlet package = Package(name: \"Gamma\")\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "swift"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/swift-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "swift/beta-helper",
+          "swift/alpha"
+        ],
+        [
+          "swift/delta_name",
+          "swift/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

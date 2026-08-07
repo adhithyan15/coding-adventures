@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "plan/future-version",
+  "domain": "plan",
+  "summary": "A future build-plan schema version is rejected without execution.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "plan_v1_read"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "plan",
+    "options": {
+      "mode": "read",
+      "plan": {
+        "schema_version": 2,
+        "packages": [],
+        "dependency_edges": [],
+        "languages_needed": {}
+      }
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "plan/future-version",
+    "domain": "plan",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {
+        "code": "PLAN_UNSUPPORTED_SCHEMA_VERSION",
+        "severity": "error"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

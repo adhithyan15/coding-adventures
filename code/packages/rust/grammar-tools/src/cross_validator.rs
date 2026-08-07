@@ -104,7 +104,7 @@ pub fn cross_validate(
     // A token counts as "used" if either its name or its alias is referenced.
     for defn in &token_grammar.definitions {
         let name_used = referenced_tokens.contains(&defn.name);
-        let alias_used = defn.alias.as_ref().map_or(false, |a| referenced_tokens.contains(a));
+        let alias_used = defn.alias.as_ref().is_some_and(|a| referenced_tokens.contains(a));
         if !name_used && !alias_used {
             issues.push(format!(
                 "Warning: Token '{}' (line {}) is defined but never used in the grammar",

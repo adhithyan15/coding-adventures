@@ -223,6 +223,8 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
 fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
     match expr {
         Expr::VarRef { name, .. } => names.contains(name),
+        // SIR26 conversion (not currently emitted by this frontend) — recurse.
+        Expr::Convert { value, .. } => expr_references_any_name(value, names),
 
         // Leaves: no children, no references possible.
         Expr::IntLit { .. }
@@ -316,6 +318,52 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
                 || indices
                     .iter()
                     .any(|idx| index_arg_references_any_name(idx, names))
+        }
+
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above — never produced by this frontend today, but
+        // walked structurally regardless.
+        Expr::Reduce { target, .. } => expr_references_any_name(target, names),
+        Expr::Scan { target, .. } => expr_references_any_name(target, names),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::Shape { target, .. } => expr_references_any_name(target, names),
+        Expr::Reshape { shape, target, .. } => {
+            expr_references_any_name(shape, names) || expr_references_any_name(target, names)
+        }
+        Expr::IndexGenerator { count, .. } => expr_references_any_name(count, names),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            expr_references_any_name(haystack, names) || expr_references_any_name(needle, names)
+        }
+        Expr::Ravel { target, .. } => expr_references_any_name(target, names),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+
+        // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
+        // above — the Ruby frontend never produces any symbolic-expression
+        // or pattern/rewrite node today, but every arm still recurses
+        // structurally so the swap-safety check keeps scanning every child
+        // `Expr` for `VarRef`s if a future lowering path starts emitting
+        // them.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_references_any_name(head, names)
+                || args.iter().any(|a| expr_references_any_name(a, names))
+        }
+        Expr::SymPatternBlank { head, .. } => head
+            .as_ref()
+            .is_some_and(|h| expr_references_any_name(h, names)),
+        Expr::SymPatternNamed { pattern, .. } => expr_references_any_name(pattern, names),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_references_any_name(expr, names)
+                || rules.iter().any(|r| expr_references_any_name(r, names))
         }
     }
 }
@@ -675,13 +723,12 @@ fn collect_max_numbered_block_param(node: &GrammarASTNode, max: &mut u8) {
                     }
                 }
             }
-            ASTNodeOrToken::Node(n) => {
+            ASTNodeOrToken::Node(n)
                 // Don't cross into a nested block — its `_N` refs are
                 // scoped to that block's own implicit parameters.
-                if n.rule_name != "block" {
+                if n.rule_name != "block" => {
                     collect_max_numbered_block_param(n, max);
                 }
-            }
             _ => {}
         }
     }
@@ -711,6 +758,7 @@ fn flatten_block_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) 
 ///   - NOT immediately preceded by `.` (else it's a method name:
 ///     `obj.it`), and
 ///   - NOT immediately followed by `(` (else it's a call: `it(x)`).
+///
 /// `it.foo`, `it + 1`, `puts(it)` all qualify (the `.`/`(` there are
 /// not adjacent in the disqualifying position).  This is a heuristic;
 /// an `it` used as a local (`it = …`) or parenless callee is a rare
@@ -1023,6 +1071,7 @@ impl Lowerer {
     fn lower_statement_inner(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
+            "index_assignment" => self.lower_index_assignment(node),
             "rightward_assignment" => self.lower_rightward_assignment(node),
             // Phase 23b (FC) — `defined?(x)` in statement position (the
             // grammar lists `defined_expression` in the statement
@@ -1151,10 +1200,10 @@ impl Lowerer {
             "method_with_block" => {
                 // Phase 6g
                 let expr = self.lower_method_with_block(node)?;
-                return Ok(Stmt::ExprStmt {
+                Ok(Stmt::ExprStmt {
                     expr,
                     span: self.span_of(node),
-                });
+                })
             }
             "modifier_statement" => {
                 // Phase 6q: trailing-modifier conditionals/loops.
@@ -1845,15 +1894,41 @@ impl Lowerer {
             //     which dispatches Range→membership, Regexp→match, else `==`.
             // The `case_eq` floor is `==`, so plain literals keep their old
             // behaviour.
-            let cmp = if matches!(
-                val,
+            let const_class_name = match &val {
                 Expr::VarRef {
+                    name,
                     scope: Scope::Const,
                     ..
-                }
-            ) {
+                } => Some(name.clone()),
+                _ => None,
+            };
+            let cmp = if let Some(class_name) = const_class_name {
                 self.features_used.insert(Feature::Classes);
-                // The synthetic `"is_a?"` method-name is a string literal.
+                // Both the synthetic `"is_a?"` method-name AND the CLASS NAME
+                // are string literals.  Surfacing the class as a `StrLit` of
+                // its name — rather than passing the `Const` `VarRef` through —
+                // is the same convention `lower_class_pattern` (Phase FC)
+                // already uses, and it is what makes `when SomeClass` portable:
+                // a bare constant reference is not lowerable by the Go or Rust
+                // backends (they accept a `Const` only as an exception class in
+                // `raise Foo`), and JavaScript emitted an undefined reference
+                // that blew up at run time — so `when Integer` used to work on
+                // Python alone.  The backends' `is_a?` all compare class NAMES,
+                // so the name is the honest thing to hand them.
+                //
+                // LIMITATION (pre-existing, but now SILENT rather than loud):
+                // this arm treats ANY `Const` as a class pattern, whereas
+                // Ruby's `when FOO` is `FOO === x` — for a non-class constant
+                // (`FOO = "root"`) that means `==`.  Such a `when` lowers to an
+                // `is_a?` against the constant's NAME and is therefore always
+                // false, a fail-open shape for a deny-list.  Before this lift
+                // it at least failed to COMPILE on Go/Rust; that accidental
+                // signal is gone, so it is called out here.  Likewise a
+                // namespaced `Foo::Bar` lifts to the qualified string, which
+                // will not match a class registered under its simple name.
+                // Telling a class constant from a value constant needs
+                // const-binding knowledge the lowerer does not have — the
+                // honest fix is a resolved constant table.
                 self.features_used.insert(Feature::Strings);
                 Expr::BuiltinCall {
                     name: "__method__".to_string(),
@@ -1863,7 +1938,10 @@ impl Lowerer {
                             value: "is_a?".to_string(),
                             span: span.clone(),
                         },
-                        val,
+                        Expr::StrLit {
+                            value: class_name,
+                            span: span.clone(),
+                        },
                     ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
@@ -3958,6 +4036,8 @@ impl Lowerer {
     /// `yield` inside a block literal belongs to the enclosing method).
     fn rewrite_yields_in_expr(expr: &mut Expr, block_scope: Scope) -> bool {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::rewrite_yields_in_expr(value, block_scope),
             Expr::BuiltinCall {
                 name,
                 args,
@@ -4142,6 +4222,69 @@ impl Lowerer {
                 let mut found = Self::rewrite_yields_in_expr(target, block_scope);
                 for idx in indices.iter_mut() {
                     found |= Self::rewrite_yields_in_index_arg(idx, block_scope);
+                }
+                found
+            }
+
+            // SIR22 addendum compile-compat stubs: same rationale as the
+            // base SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Scan { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::Shape { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Reshape { shape, target, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(shape, block_scope);
+                found |= Self::rewrite_yields_in_expr(target, block_scope);
+                found
+            }
+            Expr::IndexGenerator { count, .. } => Self::rewrite_yields_in_expr(count, block_scope),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(haystack, block_scope);
+                found |= Self::rewrite_yields_in_expr(needle, block_scope);
+                found
+            }
+            Expr::Ravel { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Catenate { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+
+            // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
+            // above — this frontend never emits any symbolic-expression or
+            // pattern/rewrite node today, but every arm still recurses into
+            // its children so a nested `yield` would still be found if such
+            // a node were ever produced.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+            Expr::SymApply { head, args, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(head, block_scope);
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
+                }
+                found
+            }
+            Expr::SymPatternBlank { head, .. } => head
+                .as_mut()
+                .map(|h| Self::rewrite_yields_in_expr(h, block_scope))
+                .unwrap_or(false),
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::rewrite_yields_in_expr(pattern, block_scope)
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(expr, block_scope);
+                for r in rules.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(r, block_scope);
                 }
                 found
             }
@@ -4658,6 +4801,8 @@ impl Lowerer {
 
     fn normalize_calls_in_expr(expr: &mut Expr, ctx: &BlockNormCtx) {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::normalize_calls_in_expr(value, ctx),
             // Phase Q10c — a bare, parenless reference to a known
             // block-taking method (`foo` with no `()`/args) reaches the
             // lowerer as `VarRef { scope: Local }` (the method-call parser
@@ -4815,6 +4960,61 @@ impl Lowerer {
                     Self::normalize_calls_in_index_arg(idx, ctx);
                 }
             }
+            // SIR22 addendum compile-compat stubs (never emitted by this
+            // frontend): recurse into every child `Expr`, matching the base
+            // SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Scan { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::Shape { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Reshape { shape, target, .. } => {
+                Self::normalize_calls_in_expr(shape, ctx);
+                Self::normalize_calls_in_expr(target, ctx);
+            }
+            Expr::IndexGenerator { count, .. } => Self::normalize_calls_in_expr(count, ctx),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                Self::normalize_calls_in_expr(haystack, ctx);
+                Self::normalize_calls_in_expr(needle, ctx);
+            }
+            Expr::Ravel { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Catenate { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            // SIR23 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the SIR22 stubs
+            // above, so a parenless block-method call nested inside one of
+            // these would still be normalized.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+            Expr::SymApply { head, args, .. } => {
+                Self::normalize_calls_in_expr(head, ctx);
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+            }
+            Expr::SymPatternBlank { head, .. } => {
+                if let Some(h) = head {
+                    Self::normalize_calls_in_expr(h, ctx);
+                }
+            }
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::normalize_calls_in_expr(pattern, ctx);
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                Self::normalize_calls_in_expr(expr, ctx);
+                for r in rules.iter_mut() {
+                    Self::normalize_calls_in_expr(r, ctx);
+                }
+            }
             // Atomic literals and a non-rewritten VarRef carry no
             // sub-expressions.
             Expr::IntLit { .. }
@@ -4948,6 +5148,8 @@ impl Lowerer {
 
     fn collect_bound_names_expr(expr: &Expr, out: &mut HashSet<String>) {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::collect_bound_names_expr(value, out),
             Expr::If {
                 cond,
                 then_branch,
@@ -5045,6 +5247,61 @@ impl Lowerer {
                 Self::collect_bound_names_expr(target, out);
                 for idx in indices {
                     Self::collect_bound_names_expr_in_index_arg(idx, out);
+                }
+            }
+            // SIR22 addendum compile-compat stubs (never emitted by this
+            // frontend): recurse into every child `Expr`, matching the base
+            // SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Scan { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::Shape { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Reshape { shape, target, .. } => {
+                Self::collect_bound_names_expr(shape, out);
+                Self::collect_bound_names_expr(target, out);
+            }
+            Expr::IndexGenerator { count, .. } => Self::collect_bound_names_expr(count, out),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                Self::collect_bound_names_expr(haystack, out);
+                Self::collect_bound_names_expr(needle, out);
+            }
+            Expr::Ravel { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Catenate { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            // SIR23 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the SIR22 stubs
+            // above, so a name bound inside a nested closure would still be
+            // collected.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+            Expr::SymApply { head, args, .. } => {
+                Self::collect_bound_names_expr(head, out);
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::SymPatternBlank { head, .. } => {
+                if let Some(h) = head {
+                    Self::collect_bound_names_expr(h, out);
+                }
+            }
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::collect_bound_names_expr(pattern, out);
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                Self::collect_bound_names_expr(expr, out);
+                for r in rules {
+                    Self::collect_bound_names_expr(r, out);
                 }
             }
             Expr::IntLit { .. }
@@ -5657,9 +5914,8 @@ impl Lowerer {
         // span covers the whole statement.  Keeping the binding so
         // the lookup helper stays useful for callers that need it
         // (e.g. error messages).
-        .map(|s| {
+        .inspect(|_s| {
             let _ = name_span;
-            s
         })
     }
 
@@ -6042,7 +6298,7 @@ impl Lowerer {
             }
 
             // Pass 2: assign each LHS from its temp.
-            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs.into_iter()) {
+            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -6067,7 +6323,7 @@ impl Lowerer {
             // Fast path: no LHS appears in any RHS, so the sequential
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
-            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
+            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -7659,6 +7915,12 @@ impl Lowerer {
             // Phase 6m — the comparison chain rule (renamed from the
             // old `expression`).  Same lowering as before.
             "comparison" => self.lower_comparison_chain(node),
+            // `<<` — inserted between `comparison` and `sum` (see the
+            // grammar's `shift` rule comment). Like comparison operators,
+            // `<<` has no dedicated `TokenType` (the lexer's catch-all
+            // leaves it on `Name`), so it's matched by lexeme, the same
+            // technique `lower_comparison_chain` uses just below.
+            "shift" => self.lower_shift_chain(node),
             "sum" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
@@ -7823,6 +8085,56 @@ impl Lowerer {
         }
         acc.ok_or_else(|| RubyLowerError {
             message: "comparison chain had no operands".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Lower the `shift` chain (`<<`) — a left-associative chain over
+    /// `sum` operands, modeled directly on `lower_comparison_chain`
+    /// (matches its single operator by LEXEME, since `<<` has no
+    /// dedicated `TokenType` either). Emits `BuiltinCall("<<", [lhs, rhs])`
+    /// — same op-name-keyed protocol `+`/`-`/`*`/`/` use, NOT the
+    /// `__method__` dispatch protocol Collections methods use, since `<<`
+    /// is a binary-operator EXPRESSION, not a dot-call.
+    fn lower_shift_chain(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        const SHIFT_OP: &str = "<<";
+        let mut acc: Option<Expr> = None;
+        let mut pending_op_span: Option<Span> = None;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(sub) => {
+                    let expr = self.lower_expression(sub)?;
+                    acc = Some(match (acc.take(), pending_op_span.take()) {
+                        (None, _) => expr,
+                        (Some(lhs), Some(op_span)) => Expr::BuiltinCall {
+                            name: SHIFT_OP.to_string(),
+                            args: vec![lhs, expr],
+                            effects: EffectSet::PURE,
+                            span: op_span,
+                        },
+                        (Some(lhs), None) => {
+                            return Err(RubyLowerError {
+                                message: "two consecutive sum sub-expressions without a `<<` \
+                                          operator between them"
+                                    .to_string(),
+                                line: sub.start_line.unwrap_or(0),
+                                column: sub.start_column.unwrap_or(0),
+                            }
+                            .also(lhs));
+                        }
+                    });
+                }
+                ASTNodeOrToken::Token(tok) => {
+                    if tok.value == SHIFT_OP {
+                        pending_op_span = Some(self.span_of_token(tok));
+                    }
+                    // Whitespace/newline tokens fall through silently.
+                }
+            }
+        }
+        acc.ok_or_else(|| RubyLowerError {
+            message: "shift chain had no operands".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })
@@ -8799,7 +9111,7 @@ impl Lowerer {
             _ => false,
         };
         if is_bare_name {
-            let scope = if self.current_params.contains(&trimmed.to_string()) {
+            let scope = if self.current_params.contains(trimmed) {
                 Scope::Param
             } else {
                 Scope::Local
@@ -9122,7 +9434,7 @@ impl Lowerer {
                             // the explicit-call form `__dir__()` is a
                             // deliberate follow-up slice.
                             if tok.value == "__dir__" && !self.declared_locals.contains("__dir__") {
-                                let dir = match self.file_name.rfind(|c| c == '/' || c == '\\') {
+                                let dir = match self.file_name.rfind(['/', '\\']) {
                                     Some(i) => self.file_name[..i].to_string(),
                                     None => ".".to_string(),
                                 };
@@ -9290,10 +9602,160 @@ impl Lowerer {
                 } else if sub.rule_name == "scope_resolution" {
                     // Phase 15d (FC) — `::Name` step.
                     recv = self.fold_one_scope_resolution(recv, sub)?;
+                } else if sub.rule_name == "index_suffix" {
+                    // Bug fix — `[expr]` postfix, e.g. `arr[i]` / `h[k]`.
+                    recv = self.fold_one_index_suffix(recv, sub)?;
                 }
             }
         }
         Ok(recv)
+    }
+
+    /// Lower a single `index_suffix` step (`[expr]`). Grammar shape:
+    ///     index_suffix = LBRACKET expression RBRACKET ;
+    ///
+    /// `[]` is REAL Ruby method syntax (`recv[k]` is sugar for
+    /// `recv.[](k)`) — so rather than guessing between `Expr::SeqIndex`
+    /// (Array) and `Expr::MapGet` (Hash) from the INDEX's syntactic shape
+    /// (a heuristic `python-to-semantic-ir` uses for the same ambiguity,
+    /// and this frontend's first draft copied — reverted after it mis-typed
+    /// a REAL, common case: a Hash with a non-string key, e.g.
+    /// `h[2] = "b"` on an int-keyed Hash, routes on the KEY's shape alone,
+    /// not the RECEIVER's actual runtime type), this lowers to the SAME
+    /// `__method__` envelope every other built-in/user method call already
+    /// uses. The runtime dispatcher then checks the RECEIVER's ACTUAL tag
+    /// (Array vs Hash) — genuinely polymorphic, not a guess, so it can
+    /// never mis-route regardless of the index's type.
+    fn fold_one_index_suffix(
+        &mut self,
+        base: Expr,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let expr_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_suffix missing index expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let index = self.lower_expression(expr_node)?;
+        let span = self.span_of(node);
+        self.features_used.insert(Feature::Strings);
+        Ok(Expr::BuiltinCall {
+            name: "__method__".to_string(),
+            args: vec![
+                base,
+                Expr::StrLit {
+                    value: "[]".to_string(),
+                    span: span.clone(),
+                },
+                index,
+            ],
+            effects: EffectSet::PURE,
+            span,
+        })
+    }
+
+    /// Lower an `index_assignment` statement (`recv[expr] = value`).
+    /// Grammar shape:
+    ///     index_write_receiver_postfix = dot_call | scope_resolution | index_suffix ;
+    ///     index_assignment = NAME { index_write_receiver_postfix &index_write_receiver_postfix } index_suffix EQUALS expression ;
+    ///
+    /// `recv[k] = v` is sugar for `recv.[]=(k, v)` — lowered to the SAME
+    /// `__method__` envelope `fold_one_index_suffix` uses for reads (see
+    /// its own doc comment for why this reuses method dispatch instead of
+    /// a compile-time Array-vs-Hash guess).
+    ///
+    /// Originally v0-scoped to a bare `NAME` receiver only; widened to a
+    /// dotted/chained receiver (`obj.data[i] = v`, `a[i][j] = v`) via the
+    /// grammar's `index_write_receiver_postfix` repetition (see that
+    /// rule's own doc comment for how the lookahead tells the RECEIVER's
+    /// postfixes apart from the FINAL write-target bracket). Each
+    /// `index_write_receiver_postfix` child here wraps exactly one
+    /// `dot_call`/`scope_resolution`/`index_suffix` grandchild — unwrapped
+    /// and folded via the SAME `fold_one_dot_call`/`fold_one_scope_
+    /// resolution`/`fold_one_index_suffix` helpers `apply_dot_chain` uses
+    /// for READ postfix chains, so a receiver like `obj.data` here lowers
+    /// identically to how `obj.data` would lower as a plain read
+    /// expression, just consumed as an intermediate `receiver` rather
+    /// than the statement's final value.
+    fn lower_index_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
+        let (name, name_span) = self.expect_first_name_token(node)?;
+        let scope = if self.current_params.contains(&name) {
+            Scope::Param
+        } else {
+            Scope::Local
+        };
+        let mut receiver = Expr::VarRef {
+            name,
+            scope,
+            span: name_span,
+        };
+        for child in &node.children {
+            let ASTNodeOrToken::Node(sub) = child else { continue };
+            if sub.rule_name != "index_write_receiver_postfix" {
+                continue;
+            }
+            let inner = self.first_node_child(sub).ok_or_else(|| RubyLowerError {
+                message: "index_write_receiver_postfix had no inner postfix".to_string(),
+                line: sub.start_line.unwrap_or(0),
+                column: sub.start_column.unwrap_or(0),
+            })?;
+            receiver = match inner.rule_name.as_str() {
+                "dot_call" => self.fold_one_dot_call(receiver, inner)?,
+                "scope_resolution" => self.fold_one_scope_resolution(receiver, inner)?,
+                "index_suffix" => self.fold_one_index_suffix(receiver, inner)?,
+                other => {
+                    return Err(RubyLowerError {
+                        message: format!("unexpected index_write_receiver_postfix shape `{other}`"),
+                        line: inner.start_line.unwrap_or(0),
+                        column: inner.start_column.unwrap_or(0),
+                    });
+                }
+            };
+        }
+        let index_suffix_node =
+            self.find_node_child(node, "index_suffix")
+                .ok_or_else(|| RubyLowerError {
+                    message: "index_assignment missing index_suffix".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+        let index_expr_node = self
+            .find_node_child(index_suffix_node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_assignment's index_suffix missing expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let index = self.lower_expression(index_expr_node)?;
+        let value_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_assignment missing RHS expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let value = self.lower_expression(value_node)?;
+        let span = self.span_of(node);
+        self.features_used.insert(Feature::Strings);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: vec![
+                    receiver,
+                    Expr::StrLit {
+                        value: "[]=".to_string(),
+                        span: span.clone(),
+                    },
+                    index,
+                    value,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// Lower a single `scope_resolution` step (`::Name`).  Grammar shape
@@ -9451,6 +9913,34 @@ impl Lowerer {
                 span,
             });
         }
+
+        // The reflection predicates take a CLASS as their argument, and every
+        // backend's `is_a?` compares class NAMES.  Lift a bare `Const`
+        // argument to a `StrLit` of its name here — the same convention
+        // `lower_class_pattern` (Phase FC) and `when SomeClass` use — so no
+        // backend needs general constant-reference support.  Without this,
+        // `x.is_a?(Integer)` was rejected at EMIT by the Go and Rust backends
+        // (they lower a `Const` only as an exception class in `raise Foo`) and
+        // produced an undefined reference at run time on JavaScript, leaving
+        // the whole family working on Python alone.
+        let is_reflection_predicate = matches!(
+            method_name.as_str(),
+            "is_a?" | "kind_of?" | "instance_of?"
+        );
+        let args = if is_reflection_predicate {
+            args.into_iter()
+                .map(|a| match a {
+                    Expr::VarRef {
+                        name,
+                        scope: Scope::Const,
+                        span,
+                    } => Expr::StrLit { value: name, span },
+                    other => other,
+                })
+                .collect()
+        } else {
+            args
+        };
 
         // Pack as BuiltinCall("__method__", [receiver, StrLit(method),
         // ...args]) — see apply_dot_chain doc for rationale.

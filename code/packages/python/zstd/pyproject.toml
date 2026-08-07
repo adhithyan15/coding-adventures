@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-zstd"
-version = "0.1.0"
+version = "0.1.2"
 description = "Zstandard (ZStd) compression algorithm (RFC 8878, CMP07) from scratch"
 readme = "README.md"
 requires-python = ">=3.12"

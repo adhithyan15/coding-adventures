@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 133 \u2014 elimination span from four stated quantities (a NEW panel: elimination, and the SUBTRACT twin of rung-131's sum-numerator over a rate). rung-131 put a sum over a rate (a+b)/(c/d); rung-133 flips the numerator's + to -: (a-b)/(c/d). From a net input (gross_input - lost_fraction) divided by a clearance rate (clearance_units/clearance_windows), compute the elimination span ((gross_input-lost_fraction)/(clearance_units/clearance_windows)), the net input (gross_input-lost_fraction), or the clearance rate (clearance_units/clearance_windows). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a DIFFERENCE NUMERATOR OVER A RATE (a-b)/(c/d) (net the input, form the rate, then divide the net by the rate, so (a-b)/(c/d) = ((a-b)*d)/c \u2014 dividing by a rate is multiplying by its reciprocal, invert the rate; the minus twin of rung-131's (a+b)/(c/d), mirroring how rung-129's (a-b/c)/d mirrors rung-128's (a+b/c)/d). The invert-and-multiply slips ride alongside as distractors. The harness matches the scalar to the printed options. The elimination span is a span (how much net input clears per unit of the clearance rate), framed as a SPAN so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via -, / and * \u2014 no constant leaks, and neither the net input, the clearance rate, nor the elimination span ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: multiplying the net input by the rate without inverting it ((a-b)*(c/d) = ((a-b)*c)/d, a wrong operation) and splitting the rate into two divisions so the reciprocal is lost ((a-b)/c/d = (a-b)/(c*d), a wrong operation). The core confusion tested is that (a-b)/(c/d) is ((a-b)*d)/c, not ((a-b)*c)/d and not (a-b)/(c*d). This rung SUBTRACTS in the numerator so positivity is NOT automatic; each table guards gross_input - lost_fraction >= 2 (keeping the net input, span, straight, and flat all positive), keeping the five family values pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r133esa-01",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 8 with a lost fraction of 2 removed, cleared at a rate of 2 units per 4 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(8)\nobserve lost_fraction(2)\nobserve clearance_units(2)\nobserve clearance_windows(4)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r133esa-02",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 8 with a lost fraction of 2 removed, cleared at a rate of 2 units per 4 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(8)\nobserve lost_fraction(2)\nobserve clearance_units(2)\nobserve clearance_windows(4)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r133esa-03",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 8 with a lost fraction of 2 removed, cleared at a rate of 2 units per 4 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(8)\nobserve lost_fraction(2)\nobserve clearance_units(2)\nobserve clearance_windows(4)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r133esa-04",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 11 with a lost fraction of 3 removed, cleared at a rate of 6 units per 2 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(11)\nobserve lost_fraction(3)\nobserve clearance_units(6)\nobserve clearance_windows(2)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r133esa-05",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 11 with a lost fraction of 3 removed, cleared at a rate of 6 units per 2 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(11)\nobserve lost_fraction(3)\nobserve clearance_units(6)\nobserve clearance_windows(2)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r133esa-06",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 11 with a lost fraction of 3 removed, cleared at a rate of 6 units per 2 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(11)\nobserve lost_fraction(3)\nobserve clearance_units(6)\nobserve clearance_windows(2)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r133esa-07",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 14 with a lost fraction of 4 removed, cleared at a rate of 3 units per 4 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(14)\nobserve lost_fraction(4)\nobserve clearance_units(3)\nobserve clearance_windows(4)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r133esa-08",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 14 with a lost fraction of 4 removed, cleared at a rate of 3 units per 4 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(14)\nobserve lost_fraction(4)\nobserve clearance_units(3)\nobserve clearance_windows(4)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r133esa-09",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 14 with a lost fraction of 4 removed, cleared at a rate of 3 units per 4 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(14)\nobserve lost_fraction(4)\nobserve clearance_units(3)\nobserve clearance_windows(4)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r133esa-10",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 16 with a lost fraction of 4 removed, cleared at a rate of 8 units per 4 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(16)\nobserve lost_fraction(4)\nobserve clearance_units(8)\nobserve clearance_windows(4)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r133esa-11",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 16 with a lost fraction of 4 removed, cleared at a rate of 8 units per 4 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(16)\nobserve lost_fraction(4)\nobserve clearance_units(8)\nobserve clearance_windows(4)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r133esa-12",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 16 with a lost fraction of 4 removed, cleared at a rate of 8 units per 4 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(16)\nobserve lost_fraction(4)\nobserve clearance_units(8)\nobserve clearance_windows(4)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r133esa-13",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 19 with a lost fraction of 5 removed, cleared at a rate of 8 units per 2 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(19)\nobserve lost_fraction(5)\nobserve clearance_units(8)\nobserve clearance_windows(2)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r133esa-14",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 19 with a lost fraction of 5 removed, cleared at a rate of 8 units per 2 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(19)\nobserve lost_fraction(5)\nobserve clearance_units(8)\nobserve clearance_windows(2)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r133esa-15",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 19 with a lost fraction of 5 removed, cleared at a rate of 8 units per 2 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(19)\nobserve lost_fraction(5)\nobserve clearance_units(8)\nobserve clearance_windows(2)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r133esa-16",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 12 with a lost fraction of 3 removed, cleared at a rate of 5 units per 2 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(12)\nobserve lost_fraction(3)\nobserve clearance_units(5)\nobserve clearance_windows(2)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r133esa-17",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 12 with a lost fraction of 3 removed, cleared at a rate of 5 units per 2 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(12)\nobserve lost_fraction(3)\nobserve clearance_units(5)\nobserve clearance_windows(2)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r133esa-18",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 12 with a lost fraction of 3 removed, cleared at a rate of 5 units per 2 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(12)\nobserve lost_fraction(3)\nobserve clearance_units(5)\nobserve clearance_windows(2)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r133esa-19",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 22 with a lost fraction of 6 removed, cleared at a rate of 3 units per 2 windows. What is the elimination span (the net input divided by the clearance rate)?",
+      "program": "observe gross_input(22)\nobserve lost_fraction(6)\nobserve clearance_units(3)\nobserve clearance_windows(2)\nlet answer = (gross_input - lost_fraction) / (clearance_units / clearance_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r133esa-20",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 22 with a lost fraction of 6 removed, cleared at a rate of 3 units per 2 windows. What is the the net input (the gross input minus the lost fraction, the numerator that is divided by the clearance rate)?",
+      "program": "observe gross_input(22)\nobserve lost_fraction(6)\nobserve clearance_units(3)\nobserve clearance_windows(2)\nlet answer = gross_input - lost_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r133esa-21",
+      "qtype": "elimination_span",
+      "stem": "An elimination study records a gross input of 22 with a lost fraction of 6 removed, cleared at a rate of 3 units per 2 windows. What is the the clearance rate (the clearance units spread over the clearance windows, the rate the net input is divided by)?",
+      "program": "observe gross_input(22)\nobserve lost_fraction(6)\nobserve clearance_units(3)\nobserve clearance_windows(2)\nlet answer = clearance_units / clearance_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

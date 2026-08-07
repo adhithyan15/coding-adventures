@@ -241,6 +241,9 @@ pub fn decode_bmp_dib(data: &[u8]) -> Result<(u32, u32, Vec<u8>), String> {
 // ── Row decoders ──────────────────────────────────────────────────────────────
 
 /// 1bpp row: each byte holds 8 pixels, MSB = leftmost pixel.
+// Row decoders take the source buffer, bit-offset cursor, palette, and geometry
+// as separate scalars; bundling them adds no clarity. Behavior-preserving allow.
+#[allow(clippy::too_many_arguments)]
 fn decode_row_1bpp(
     xor: &[u8],
     src_row: usize,
@@ -276,6 +279,9 @@ fn decode_row_1bpp(
 }
 
 /// 4bpp row: high nibble = left pixel, low nibble = right pixel.
+// Row decoders take the source buffer, bit-offset cursor, palette, and geometry
+// as separate scalars; bundling them adds no clarity. Behavior-preserving allow.
+#[allow(clippy::too_many_arguments)]
 fn decode_row_4bpp(
     xor: &[u8],
     src_row: usize,
@@ -305,6 +311,9 @@ fn decode_row_4bpp(
 }
 
 /// 8bpp row: one byte per pixel (palette index).
+// Row decoders take the source buffer, bit-offset cursor, palette, and geometry
+// as separate scalars; bundling them adds no clarity. Behavior-preserving allow.
+#[allow(clippy::too_many_arguments)]
 fn decode_row_8bpp(
     xor: &[u8],
     src_row: usize,
@@ -667,7 +676,7 @@ mod tests {
         dib.extend_from_slice(&256u32.to_le_bytes()); // biClrUsed = 256 (max for 8bpp)
         dib.extend_from_slice(&0u32.to_le_bytes());  // biClrImportant
         // 256 palette entries × 4 bytes = 1024 bytes
-        dib.extend(std::iter::repeat(0u8).take(256 * 4));
+        dib.extend(std::iter::repeat_n(0u8, 256 * 4));
         // 1 XOR pixel (8bpp, stride=4): palette index 0
         dib.extend_from_slice(&[0u8; 4]);
         // AND mask: 4 bytes

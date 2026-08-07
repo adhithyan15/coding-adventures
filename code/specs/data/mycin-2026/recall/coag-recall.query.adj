@@ -1,0 +1,5 @@
+% Worked binding queries over the coagulation recall library.
+import "coag-edges.adj"
+
+? factor_deficiency(hemophilia_a, $Factor)  % expect factor_viii
+? prolonged_test(factor_vii_deficiency, $Test)  % expect pt

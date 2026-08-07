@@ -177,6 +177,66 @@ func TestValidateBuildFilesFailsHiddenReference(t *testing.T) {
 	}
 }
 
+func TestValidateBuildFilesAllowsPerlTestDependencyClosure(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:     "perl/b",
+			relPath:  "code/packages/perl/b",
+			lang:     "perl",
+			commands: []string{`cd ../a`},
+		},
+		{
+			name:     "perl/c",
+			relPath:  "code/packages/perl/c",
+			lang:     "perl",
+			commands: []string{`cd ../a`, `cd ../b`},
+		},
+	})
+	writeBuildFile(t, pkgs[2].Path, "cpanfile", `
+on 'test' => sub {
+    requires 'coding-adventures-b';
+};
+`)
+
+	graph := graphWithEdges([2]string{"perl/a", "perl/b"})
+	graph.AddNode("perl/c")
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected Perl test dependency closure to be allowed, got %v", err)
+	}
+}
+
+func TestValidateBuildFilesRejectsPerlReferenceOutsideTestPhase(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:     "perl/b",
+			relPath:  "code/packages/perl/b",
+			lang:     "perl",
+			commands: []string{`cd ../a`},
+		},
+	})
+	writeBuildFile(t, pkgs[1].Path, "cpanfile", `requires 'coding-adventures-a';`)
+
+	graph := directedgraph.New()
+	graph.AddNode("perl/a")
+	graph.AddNode("perl/b")
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil || !strings.Contains(err.Error(), "undeclared local package refs: perl/a") {
+		t.Fatalf("expected top-level reference to require a runtime graph edge, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesSkipsUnknownLanguagePackages(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string
@@ -333,6 +393,80 @@ jobs:
 
 	if err := ValidateBuildFiles(pkgs, graph); err != nil {
 		t.Fatalf("expected CI validation to pass, got %v", err)
+	}
+}
+
+// A cpp package must force the CI workflow to bind and normalize needs_cpp on
+// the forced main full-build path. This locks in the ciManagedToolchainLanguages
+// entry added for the C/C++ multi-compiler lane (CCPP01 PR2).
+func TestValidateBuildFilesRequiresNeedsCppForCppPackages(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "cpp/static-vector", relPath: "code/packages/cpp/static-vector", lang: "cpp"},
+	})
+
+	repoRoot := inferRepoRoot(pkgs)
+	if repoRoot == "" {
+		t.Fatal("expected repo root inference to succeed")
+	}
+	ciDir := filepath.Join(repoRoot, ".github", "workflows")
+	if err := os.MkdirAll(ciDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	graph := directedgraph.New()
+	graph.AddNode("cpp/static-vector")
+
+	// Workflow missing the needs_cpp binding entirely → must fail and name cpp.
+	if err := os.WriteFile(filepath.Join(ciDir, "ci.yml"), []byte(`
+jobs:
+  detect:
+    outputs:
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
+    steps:
+      - name: Normalize toolchain requirements
+        id: toolchains
+        run: |
+          printf '%s\n' 'needs_swift=true' >> "$GITHUB_OUTPUT"
+  build:
+    steps:
+      - name: Full build on main merge
+        run: ./build-tool -root . -force -validate-build-files -language all
+`), 0644); err != nil {
+		t.Fatal(err)
+	}
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected CI validation failure for missing needs_cpp")
+	}
+	if !strings.Contains(err.Error(), "cpp") {
+		t.Fatalf("expected cpp to be named in the error, got %v", err)
+	}
+
+	// Workflow with the binding + forced main value → must pass.
+	if err := os.WriteFile(filepath.Join(ciDir, "ci.yml"), []byte(`
+jobs:
+  detect:
+    outputs:
+      needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
+    steps:
+      - name: Normalize toolchain requirements
+        id: toolchains
+        run: |
+          printf '%s\n' 'needs_cpp=true' >> "$GITHUB_OUTPUT"
+  build:
+    steps:
+      - name: Full build on main merge
+        run: ./build-tool -root . -force -validate-build-files -language all
+`), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected CI validation to pass with needs_cpp bound, got %v", err)
 	}
 }
 

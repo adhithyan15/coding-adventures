@@ -1,5 +1,41 @@
 # Changelog
 
+## [Unreleased] - reactive Compose native host bridge
+
+- Compose Desktop project shells now subscribe to optional host prop-change
+  callbacks, allowing native content-surface interactions to reproject chrome
+  without duplicating state in generated UI.
+- Compose shells include pinned JNA and JSON runtime dependencies for
+  package-owned native host adapters.
+
+## [Unreleased] - keep web test assets out of production
+
+- HTML and Web Component `.test.*` / `.spec.*` host assets are copied without
+  being injected as production page modules, matching the existing React host
+  asset rule.
+
+## [Unreleased] - runnable host-surface shell acceptance
+
+- Compose Desktop project shells now resolve `node` slots from an optional
+  in-process `MosaicHost` props map as composable lambdas.
+- Venture's exhaustive `Backend::ALL` gate now verifies both the generated
+  component mount and the runnable project-shell host-injection path for all
+  nine backends.
+
+## [Unreleased] - exhaustive Venture backend acceptance
+
+- Added `Backend::ALL` as the MIL/MLL/MSL package pipeline's backend source of
+  truth.
+- Venture's shared browser package now builds a project shell and proves a real
+  `HostSurface` mount across every listed backend, including Qt.
+
+## [Unreleased] - preserve XAML emitter support files
+
+XAML package builds now write emitter-owned C# support files, report them in
+`BuildResult.artifacts`, and include them in `MosaicPackage.props`. Generated
+ViewModels and value converters referenced by component XAML therefore travel
+through the same package pipeline as the component triple.
+
 ## [Unreleased] - theme axis for style resolution
 
 `BuildOptions` gains a `theme: Option<String>` field — the style (`.msl`)

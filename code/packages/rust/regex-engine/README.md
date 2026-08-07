@@ -34,8 +34,10 @@ Character classes and `\b` are **Unicode-aware by default** (matching `regex`);
 
 ## Match extents
 
-`is_match` (boolean) and `find` (the overall match extent) are implemented;
-capture groups and `replace_all` build on `find` in later changes. `find`
+`is_match` (boolean), `find` (the overall match extent), `captures` (per-group
+boundaries), the match iterators (`find_iter`/`captures_iter`), and `replace_all`
+are all implemented — the full surface Engram's search and media-tag replacement
+need. `find`
 resolves ambiguity leftmost-first with greedy quantifiers preferring more — the
 `regex` crate's default — and reports **byte** offsets.
 
@@ -76,6 +78,19 @@ assert!(ci.is_match("HELLO"));
 let m = Regex::new(r"\d+").unwrap().find("abc123def").unwrap();
 assert_eq!((m.start(), m.end(), m.as_str()), (3, 6, "123"));
 
+// `captures` reports each group; get(0) is the whole match, get(i) the i-th group.
+let caps = Regex::new(r"(\d+)-(\d+)").unwrap().captures("12-345").unwrap();
+assert_eq!(caps.get(1).unwrap().as_str(), "12");
+assert_eq!(caps.get(2).unwrap().as_str(), "345");
+
+// `replace_all` takes a closure (given each match's captures) or a `$N` string.
+let re = Regex::new(r"(\w+)@(\w+)").unwrap();
+assert_eq!(re.replace_all("a@b c@d", "$2.$1"), "b.a d.c");
+assert_eq!(
+    re.replace_all("a@b", |c: &regex_engine::Captures| c.get(1).unwrap().as_str().to_uppercase()),
+    "A",
+);
+
 // `escape` neutralizes metacharacters so a string matches literally — used when
 // building a pattern that interleaves user text with wildcard fragments.
 assert_eq!(escape("a.c"), r"a\.c");
@@ -90,7 +105,10 @@ Cross-checked against the live `regex` crate across **100k+ pairs in ASCII mode*
 (Unicode fold orbits) — zero `is_match` divergences. `find` is verified as a
 leftmost + valid match over **40k+ random cases** (full construct space, multibyte
 input) against `regex`'s anchored oracle, plus **35k+** `is_match` pairs across the
-same space — all exact.
+same space. `captures` is cross-checked over **72k+** existence checks and **39k+**
+full-group comparisons vs `regex` (group boundaries agree wherever the overall span
+does). `replace_all`/iteration is cross-checked over **84k+** match-sequence checks
+and **84k+** replaced-output comparisons — all exact.
 
 ## Testing
 

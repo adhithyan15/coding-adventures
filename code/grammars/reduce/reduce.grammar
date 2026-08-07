@@ -1,0 +1,244 @@
+# @version 1
+
+# =============================================================================
+# reduce.grammar — Parser grammar for Reduce (a subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from reduce-lexer (R-2). Every Reduce expression parses
+# down to ordinary infix/postfix operators over `head(args)`-shaped calls,
+# with a small statement layer (`:=`, `if/then/else`, `<< ... >>`) sitting on
+# top — the R-4 runtime lowers each rule into the canonical symbolic-ir head
+# (`Plus`/`Times`/`Power`/`Assign`/`Define`/`If`/`CompoundExpression`/`List`/
+# `Cons`/…). See code/specs/MA08-reduce-language.md §3 for the full surface
+# table this grammar implements.
+#
+# Token names (UPPERCASE) come from the Reduce lexer
+# (code/grammars/reduce/reduce.tokens):
+#   NUMBER NAME                 literals and symbols
+#   ASSIGN (:=)                  Reduce's one assignment/definition operator
+#   EQ (=)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)  "neq"   comparison (`=` is
+#                                  an equation, NEVER assignment — MA08 §3)
+#   PLUS MINUS TIMES SLASH CARET POW (`^`/`**`, same operator)   arithmetic
+#   LPAREN RPAREN                grouping AND function/procedure application
+#                                  F(...), per MA08 §3's single call-shaped
+#                                  production for both `f(a,b)` and `a(5)`
+#   LBRACE RBRACE                list literal `{a, b, c}` — curly braces, NOT
+#                                  Derive's square brackets (MA08 §1/§3)
+#   DOT                          cons (`a . {b, c}`)
+#   COMMA SEMI DOLLAR            argument/list separator, statement separator
+#                                  (`;`/`$` are interchangeable, MA08 §3)
+#   GROUP_OPEN/GROUP_CLOSE (`<<`/`>>`)   group-statement delimiters (MA08 §3)
+#   "and"/"or"/"not"/"neq"/"if"/"then"/"else"   lowercase KEYWORD tokens
+#                                  (reduce.tokens's own `keywords:` block —
+#                                  matched here by literal spelling, same
+#                                  convention as macsyma.grammar's/
+#                                  derive.grammar's own word-operator rules)
+#
+# Precedence cascade (loosest binds first -> tightest binds last), per MA08
+# §3's own transcription of the manual's `⟨infix operator⟩` production:
+# ---------------------------------------------------------------
+#   assignment      :=                 (right-associative, MA08 §3)
+#   logical_or      or
+#   logical_and     and
+#   logical_not     not                (prefix)
+#   comparison      = neq < > <= >=    (flat, non-chaining — MA08 §3's own
+#                                        explicit first-cut simplification)
+#   cons            .                  (right-associative — see "Design
+#                                        decision: where `.` (cons) binds"
+#                                        below; MA08 §3 leaves this tier
+#                                        UNSPECIFIED, so this is this crate's
+#                                        own documented first cut)
+#   additive        + -
+#   multiplicative  * /
+#   unary           -                  (prefix)
+#   power           ^ **               (right-associative; same operator,
+#                                        MA08 §3)
+#   postfix         f(...)             (function/procedure/array-subscript
+#                                        application — one production for all
+#                                        three per MA08 §3)
+#   atom            literals, symbols, lists `{...}`, `( ... )`
+#
+# Two control-flow forms sit ABOVE `assignment` (MA08 §3 explicitly says both
+# are "usable as an expression": `if` "returns whichever branch ran", and the
+# group statement "evaluates to its last statement's value") — mirroring
+# macsyma.grammar's own `expression = if_expr | for_expr | ... | assign` PEG
+# ordered-choice shape (see that file's header comment): each control-flow
+# alternative leads with a unique keyword/delimiter, so the parser commits
+# immediately after seeing it and never backtracks across alternatives.
+# `expr`'s fallthrough to `assignment` means every one of `if`'s branches,
+# `<<...>>`'s statements, an assignment's own right-hand side, and a call's
+# arguments can themselves be a nested `if`/group/assignment — matching MA08
+# §3's own claim that these are expression-shaped, not statement-only.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Design decision: where `.` (cons) binds
+# -----------------------------------------------------------------------------
+# MA08 §3 explicitly flags that the manual's own precedence table never
+# places `.` in the same `⟨infix operator⟩` production this subset otherwise
+# transcribes verbatim, and asks this crate to "pick a tier... and document
+# the choice" — the same kind of first-cut, disclosed simplification
+# derive.grammar's vector/matrix-row-counting note or macsyma.grammar's
+# if_expr-placement note already make elsewhere in this repo.
+#
+# This grammar binds `cons` looser than `additive` but tighter than
+# `comparison`. Rationale: `.` combines an already-fully-reduced scalar/list
+# value with another one (`a . {b, c}`, `1+2 . {3,4}` meaning `(1+2) . {3,4}`,
+# never `1 + (2 . {3,4})` — adding a number to a list is nonsensical, so `.`
+# must bind LOOSER than `+`/`-`/`*`/`/`/`^` so those all group first). Binding
+# it tighter than `and`/`or`/comparison (rather than, say, at the very
+# bottom next to assignment) keeps `a . {b} = c . {d}` parsing as an equation
+# between two cons expressions, the most natural reading. Right-associative
+# (`cons`'s own optional continuation references itself), matching cons's
+# natural Lisp-style right-nesting: `a . b . {c}` is `a . (b . {c})`.
+# -----------------------------------------------------------------------------
+
+# A program is zero or more `;`/`$`-terminated statements, optionally
+# followed by ONE final statement with no terminator at all (so a source
+# file need not end with a trailing `;`/`$`).
+#
+# Why the optional tail sits OUTSIDE the repetition rather than folded into
+# `statement_line` as a third alternative (`statement_line = statement (SEMI
+# | DOLLAR) | statement`, which would look like a natural generalisation of
+# macsyma.grammar's mandatory-terminator `statement = expression ( SEMI |
+# DOLLAR )`): a bare, terminator-less `statement` alternative INSIDE a
+# repeated rule is silently re-triable on every iteration, not just the
+# final one, so `{ statement_line }` would greedily accept `a AND b;` as
+# THREE separate bare-statement iterations (`a`, then `AND`, then `b;`) —
+# `AND` uppercase lexes as an ordinary NAME (reduce.tokens' keywords are
+# lowercase-only), and implicit multiplication by juxtaposition is out of
+# scope (MA08 §4), so three bare names in a row with no operator between
+# them must be a syntax error, not three separate statements that happen to
+# consume all the input. Moving the terminator-less case to a single
+# `[ statement ]` *outside* the repetition means it can only ever match
+# once, and only once `{ statement_line }` has already failed to find a
+# terminator for whatever comes next — exactly the "last statement, no
+# trailing terminator" case this is meant to support, and nothing broader.
+# Confirmed by this crate's own
+# `bare_juxtaposed_names_with_no_operator_is_rejected` regression test.
+program = { statement_line } [ statement ] ;
+
+# Reduce has no significant newline (reduce.tokens's own header) — statements
+# end with `;` or `$` (manual §5.1); a lone terminator with no statement
+# before it (a blank interactive-session line) is not part of this grammar's
+# `statement_line` — a run of terminators would need to appear between two
+# statements to matter here, and MA08's grammar has no such convention to
+# preserve (unlike derive.grammar's blank-`NEWLINE`-line case, which exists
+# only because Derive's own statement separator IS the newline).
+statement_line = statement ( SEMI | DOLLAR ) ;
+
+statement = expr ;
+
+# Ordered-choice (PEG) semantics guarantee an unambiguous parse: `if_expr`
+# commits on the `if` keyword, `group_expr` commits on `<<`, so `assignment`
+# is only ever tried once neither leading token is present — no ambiguity,
+# no backtracking across alternatives (mirrors macsyma.grammar's identical
+# `expression = if_expr | for_expr | ... | assign` reasoning).
+expr = if_expr
+     | group_expr
+     | assignment ;
+
+# `if b then s1 else s2` (MA08 §3) — right-associative per manual §5.3,
+# which this shape gives for free: the dangling-else case (`if a then if b
+# then c else d`) attaches `else` to the NEAREST still-open `if`, because the
+# inner `if_expr`'s own optional `[ "else" expr ]` is tried immediately after
+# its `then`-branch is parsed, before the outer `if_expr` ever gets a chance
+# to look for its own `else` — ordinary recursive-descent/PEG behaviour,
+# needs no special dangling-else handling. Both branches are `expr` (not a
+# narrower `statement`), so `if a then x:=1 else x:=2` and nested
+# `if`/`<<...>>` branches parse directly, matching MA08 §3's "usable as an
+# expression" claim; there is no dedicated `elseif` keyword (unlike
+# macsyma.grammar's `if_expr`) because the manual's own examples spell this
+# out as ordinary nested `if ... else if ... else ...`, not a distinct
+# elseif form (MA08 §3/§4 make no mention of one).
+if_expr = "if" expr "then" expr [ "else" expr ] ;
+
+# `<< s1; s2; ... >>` (MA08 §3, manual §5.2) — sequences statements where one
+# is expected, evaluating to the last one's value. This first cut does not
+# accept a trailing separator before `>>` (`<< a:=1; a+1; >>`) — not
+# confirmed as real Reduce syntax by the manual excerpts MA08 §6 cites, and
+# an easy incremental addition later if it turns out real Reduce allows it;
+# keeping the shape simple for a first cut, mirroring MA08 §4's own
+# "narrowly scoped, documented" convention.
+group_expr = GROUP_OPEN expr { ( SEMI | DOLLAR ) expr } GROUP_CLOSE ;
+
+# `:=` (MA08 §3) — right-associative (manual §2.7: "a:=b:=c evaluates as
+# a:=(b:=c)"), the loosest tier of the ordinary operator cascade. The
+# right-hand side is `expr` (not a narrower self-reference the way
+# derive.grammar's `assignment = logical_or [ ASSIGN assignment ]` uses) —
+# a deliberate, disclosed divergence from Derive's identical-looking shape:
+# Reduce's `if`/`<<...>>` are genuinely usable as expressions (MA08 §3, with
+# no Derive analogue), and the most natural place to consume that value is
+# exactly here, e.g. `x := if a>0 then 1 else -1`. This still parses `a :=
+# b := c` as `a := (b := c)`, since `expr` falls through to `assignment`
+# again when neither `if` nor `<<` leads — a strict generalisation of
+# Derive's shape, not a narrowing of it.
+#
+# `h(l, m) := e` (function/procedure definition, MA08 §3) reduces through
+# this SAME production (the left-hand side is parsed as an ordinary
+# `logical_or` that bottoms out at a `postfix` call `h(l, m)`) — the R-4
+# lowering, not this grammar, disambiguates plain variable assignment from
+# procedure definition by inspecting the parsed left-hand shape, mirroring
+# derive.grammar's identical `assignment`/`ASSIGN` comment almost verbatim.
+assignment = logical_or [ ASSIGN expr ] ;
+
+logical_or  = logical_and { "or" logical_and } ;
+logical_and = logical_not { "and" logical_not } ;
+logical_not = "not" logical_not | comparison ;
+
+# A single (non-chained) comparison — MA08 §3 explicitly treats the whole
+# `= neq < > <= >=` group as one flat, non-chaining tier (a disclosed
+# first-cut simplification, not a verified claim about real Reduce's exact
+# grammar), mirroring derive.grammar's/macsyma.grammar's identical
+# non-chaining `comparison` shape. `neq` is a lowercase KEYWORD token
+# (reduce.tokens's `keywords:` block), matched here by literal spelling
+# alongside the symbolic operators, the same convention `and`/`or`/`not`
+# already use above.
+comparison = cons [ ( EQ | "neq" | LESS | GREATER | LE | GE ) cons ] ;
+
+# See "Design decision: where `.` (cons) binds" above.
+cons = additive [ DOT cons ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus (MA08 §3 lists only unary `-`, no unary `+`, matching
+# derive.grammar's identical asymmetry). Binds looser than Power, so `-x^2`
+# is `Times[-1, Power[x, 2]]`.
+unary = MINUS unary | power ;
+
+# Exponentiation is right-associative: `a^b^c` = `a^(b^c)`. Both `^` and
+# `**` are accepted as the exact same operator (MA08 §3: "manual §2.7's own
+# precedence table lists them as one tier") — mirrors reduce.tokens's own
+# CARET/POW comment that the *parser*, not the lexer, is where the two
+# spellings collapse onto one production (the same convention reduce.tokens
+# already uses for its own SEMI/DOLLAR split).
+power = postfix [ ( CARET | POW ) unary ] ;
+
+# Function/procedure/array-subscript application — MA08 §3's single
+# call-shaped production covers `f(a, b)`, `h(l, m) := e`'s left-hand side,
+# and `a(5)`/`b(i, q)` (array-name-with-subscript reads the same as a call;
+# array *declaration*/indexed *write* are out of scope, MA08 §4) all at
+# once. `list(a, b, c)` (the function-call spelling of a list literal) and
+# the list accessors/constructors (`first`/`rest`/`part`/`append`/`reverse`)
+# fall out of this production for free — they are ordinary NAMEs followed by
+# a call, needing no dedicated grammar rule, mirroring how derive.grammar's
+# `postfix` needs no special case for `SIN`/`DIF`/etc.
+postfix = atom { LPAREN [ arglist ] RPAREN } ;
+
+arglist = expr { COMMA expr } ;
+
+atom = NUMBER
+     | NAME
+     | list_literal
+     | group ;
+
+# `{a, b, c}` (MA08 §3, manual §4.1) — curly braces, NOT Derive's square
+# brackets. Reduce's list is always flat (no row-separator/matrix-literal
+# shape the way derive.grammar's `vector`/`row` split needs — matrices are
+# out of scope entirely, MA08 §4), so one `arglist` reuse covers both a
+# function call's arguments and a list literal's elements.
+list_literal = LBRACE [ arglist ] RBRACE ;
+
+group = LPAREN expr RPAREN ;

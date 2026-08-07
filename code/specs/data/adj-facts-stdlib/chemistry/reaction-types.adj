@@ -1,0 +1,108 @@
+% ============================================================================
+% reaction-types — the five basic types of chemical reaction and the defining
+% token each one is described by (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% One of the first organizing ideas of introductory chemistry: the endless
+% variety of chemical equations sorts into just a handful of BASIC reaction
+% types, and each type is named by what happens to the atoms. "A combination
+% reaction combines two or more substances into one; a decomposition reaction
+% breaks a compound down into simpler substances; a single-replacement reaction
+% has one element replace another in a compound; a double-replacement reaction
+% swaps the ions of two compounds; a combustion reaction burns a substance in
+% oxygen." Before you can predict the products of an equation you must first
+% classify WHICH of these five types it is. Recall is a binding query:
+%
+%     ? reaction_defining(combustion, $Defining)   % reacts_with_oxygen
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `reaction_defining(type, defining)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% defining token WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these five reaction types (it never
+% invents a definition).
+%
+% Each of the five basic reaction types and the defining token the source
+% states for it, as a little truth table:
+%
+%     reaction type        defining token           a beginner's cue
+%     ------------------   ----------------------   -------------------------
+%     combination          two_or_more_combine      two+ substances → one new
+%     decomposition        breaks_down              one compound → simpler parts
+%     single_replacement   one_element_replaces     an element swaps into a compound
+%     double_replacement   ions_exchange_places     two compounds swap their ions
+%     combustion           reacts_with_oxygen       a substance burns in oxygen
+%
+% The query also runs BACKWARD — bind a defining token and recall its type:
+%
+%     ? reaction_defining($Type, breaks_down)   % decomposition
+%
+% A word that is NOT one of these five basic reaction types — `neutralization`,
+% `polymerization`, `rock` — is deliberately NOT a row, so a reaction-type
+% recall ABSTAINS on it rather than inventing a definition. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the type→defining pairs it can ground, and only those.
+%
+% The `defining` value of every row is a SINGLE lowercase atom, chosen to echo
+% the source's own words for that reaction type — never a definition the source
+% does not support. (The source says a compound "breaks down", so the atom is
+% `breaks_down`, not `breaks_apart`; it says the ions "exchange places", so the
+% atom is `ions_exchange_places` — every value stays literally checkable against
+% the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every type→defining pair
+% below was read out of a fetched LibreTexts "Classifying Chemical Reactions"
+% page, and any pair whose definition could not be verified there would have
+% been dropped). Each pair, with the source it was copied from and the verbatim
+% span that states it:
+%
+%   combination → two_or_more_combine
+%     "A combination reaction is a reaction in which two or more substances
+%      combine to form a single new substance."
+%
+%   decomposition → breaks_down
+%     "A decomposition reaction is a reaction in which a compound breaks down
+%      into two or more simpler substances."
+%
+%   single_replacement → one_element_replaces
+%     "A fourth type of reaction is the single replacement reaction, in which
+%      one element replaces a similar element in a compound."
+%
+%   double_replacement → ions_exchange_places
+%     "A double-replacement reaction (also called double-displacement reaction)
+%      is a reaction in which the positive and negative ions of two ionic
+%      compounds exchange places to form two new compounds."
+%
+%   combustion → reacts_with_oxygen
+%     "A combustion reaction is a reaction in which a substance reacts with
+%      oxygen gas, releasing energy in the form of light and heat."
+%
+% All five spans are on the same page:
+%   https://chem.libretexts.org/Courses/Anoka-Ramsey_Community_College/Introduction_to_Chemistry/07:_Chemical_Reactions/7.05:_Classifying_Chemical_Reactions
+%   (Chemistry LibreTexts — Anoka-Ramsey Community College, "Introduction to
+%    Chemistry", 7.05 Classifying Chemical Reactions.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the LibreTexts statement that
+% fixes the first row (combination → two_or_more_combine). Every OTHER row's
+% verbatim span is listed above, so each definition remains independently
+% checkable. LibreTexts is an openly-licensed college teaching resource (not a
+% primary U.S. `.gov`/`.edu` authority), so the honest trust tier is
+% `consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table reaction_defining {
+    columns type, defining
+
+    row (combination, two_or_more_combine)
+    row (decomposition, breaks_down)
+    row (single_replacement, one_element_replaces)
+    row (double_replacement, ions_exchange_places)
+    row (combustion, reacts_with_oxygen)
+
+    source "A combination reaction is a reaction in which two or more substances combine to form a single new substance."
+    locator "https://chem.libretexts.org/Courses/Anoka-Ramsey_Community_College/Introduction_to_Chemistry/07:_Chemical_Reactions/7.05:_Classifying_Chemical_Reactions"
+    trust consensus
+}

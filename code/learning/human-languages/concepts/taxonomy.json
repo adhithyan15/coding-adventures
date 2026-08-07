@@ -1,0 +1,576 @@
+{
+  "$schema": "./taxonomy.schema-notes.md",
+  "version": 1,
+  "note": "Canonical cross-language concept vocabulary for the Human Languages curriculum. See code/specs/HL01-concept-taxonomy-and-data-layer.md. Ids are stable slugs (never renumbered). 'core: true' = expected in every track once it declares parity:complete. 'retires' lists the pre-canonical concept_tags this id replaced during the HL01 normalization, kept for traceability.",
+  "concepts": {
+    "GREETING-HELLO": {
+      "family": "GREETING",
+      "gloss": "hello (neutral, said on meeting)",
+      "core": true,
+      "notes": "The default meeting greeting. Where a track taught two 'hello' words, the more formal/ceremonial one moves to GREETING-FORMAL (avē, namaskāraḥ, sat srī akāl)."
+    },
+    "GREETING-DAY": {
+      "family": "GREETING",
+      "gloss": "good day (general daytime greeting)",
+      "core": false,
+      "notes": "bonjour / Guten Tag / buongiorno / bom dia. Distinct from GREETING-MORNING and from the noun TIME-DAY."
+    },
+    "GREETING-MORNING": {
+      "family": "GREETING",
+      "gloss": "good morning",
+      "core": false
+    },
+    "GREETING-AFTERNOON": {
+      "family": "GREETING",
+      "gloss": "good afternoon",
+      "core": false
+    },
+    "GREETING-EVENING": {
+      "family": "GREETING",
+      "gloss": "good evening (said on meeting)",
+      "core": false
+    },
+    "GREETING-GOODNIGHT": {
+      "family": "GREETING",
+      "gloss": "good night (said on parting / before sleep)",
+      "core": false,
+      "retires": [
+        "GREETING-NIGHT"
+      ],
+      "notes": "Parting greeting, distinct from the meeting greeting GREETING-EVENING. Retires Spanish/Italian's older GREETING-NIGHT tag; where a track's 'noches/notte' word doubles as the evening noun, the noun is TIME-NIGHT."
+    },
+    "GREETING-FORMAL": {
+      "family": "GREETING",
+      "gloss": "a more formal / ceremonial greeting",
+      "core": false,
+      "notes": "as-salāmu ʿalaykum, namaskār/namaskāra, avē, sat srī akāl. The formal counterpart to GREETING-HELLO within a track."
+    },
+    "GREETING-PEACE": {
+      "family": "GREETING",
+      "gloss": "peace, used as a greeting (salām)",
+      "core": false
+    },
+    "GREETING-WELCOME": {
+      "family": "GREETING",
+      "gloss": "welcome (svāgatam)",
+      "core": false
+    },
+    "FAREWELL": {
+      "family": "GREETING",
+      "gloss": "goodbye / parting word",
+      "core": true,
+      "retires": [
+        "GREETING-GOODBYE"
+      ],
+      "notes": "Unifies the parting word across tracks (valē, āshi, alvidā, येतो/येते). The plain goodbye (adiós, au revoir, auf Wiedersehen); the time-specific 'see you …' partings are FAREWELL-LATER/TOMORROW/SOON."
+    },
+    "FAREWELL-LATER": {
+      "family": "GREETING",
+      "gloss": "see you later (a soon-ish parting)",
+      "core": false,
+      "notes": "hasta luego / à bientôt / bis später / a più tardi / até logo. Distinct from the plain FAREWELL."
+    },
+    "FAREWELL-TOMORROW": {
+      "family": "GREETING",
+      "gloss": "see you tomorrow",
+      "core": false,
+      "notes": "hasta mañana / à demain / bis morgen / a domani / até amanhã."
+    },
+    "FAREWELL-SOON": {
+      "family": "GREETING",
+      "gloss": "see you soon",
+      "core": false,
+      "notes": "hasta pronto / à bientôt / bis bald / a presto / até breve."
+    },
+    "FAREWELL-CASUAL": {
+      "family": "GREETING",
+      "gloss": "a casual / colloquial 'bye'",
+      "core": false,
+      "notes": "The informal parting distinct from the neutral FAREWELL: German tschüss, French salut/tchao, Italian ciao, Portuguese tchau."
+    },
+    "COURTESY-THANKS": {
+      "family": "COURTESY",
+      "gloss": "thank you (neutral / default register)",
+      "core": true,
+      "retires": [
+        "THANKS",
+        "GRATITUDE-THANKS",
+        "THANKS-FORMAL"
+      ],
+      "notes": "The default 'thank you'. Where a track teaches a second, more colloquial word (often Perso-Arabic), that one is COURTESY-THANKS-CASUAL."
+    },
+    "COURTESY-THANKS-CASUAL": {
+      "family": "COURTESY",
+      "gloss": "thanks (casual / colloquial register)",
+      "core": false,
+      "retires": [
+        "THANKS-CASUAL"
+      ],
+      "notes": "e.g. Hindi shukriyā, Punjabi shukrīā — the everyday, often Perso-Arabic-derived alternative to the Sanskritic COURTESY-THANKS."
+    },
+    "COURTESY-PLEASE": {
+      "family": "COURTESY",
+      "gloss": "please (and, in some languages, 'you're welcome')",
+      "core": false,
+      "notes": "Requesting-a-favour formula: Russian пожалуйста, French s'il vous plaît, Spanish por favor, German bitte. Several languages (Russian, German) use the same word to reply to thanks."
+    },
+    "COURTESY-SORRY": {
+      "family": "COURTESY",
+      "gloss": "sorry / excuse me (apology or attention-getting formula)",
+      "core": false,
+      "notes": "Apology/attention formula: Spanish lo siento (regret) vs. perdón (fault/attention), German Entschuldigung vs. es tut mir leid, Arabic āsif, Hindi māf kījiye. Many languages split this into two words — one for regret/sympathy, one for fault/forgiveness or getting someone's attention — track both where a language has the split."
+    },
+    "RESPONSE-YES": {
+      "family": "RESPONSE",
+      "gloss": "yes",
+      "core": true,
+      "notes": "Tracks that teach yes and no in a single lesson use RESPONSE-YESNO until that lesson is split during the parity pass."
+    },
+    "RESPONSE-NO": {
+      "family": "RESPONSE",
+      "gloss": "no",
+      "core": true
+    },
+    "RESPONSE-YESNO": {
+      "family": "RESPONSE",
+      "gloss": "yes / no (taught together in one lesson)",
+      "core": false,
+      "retires": [
+        "FUNCTION-YESNO"
+      ],
+      "notes": "A single lesson realizing both yes and no (ita/nōn, hāṇ/nahīṇ, hyã/nā, ām/na). Split into RESPONSE-YES + RESPONSE-NO when the track reaches parity."
+    },
+    "RESPONSE-OKAY": {
+      "family": "RESPONSE",
+      "gloss": "okay / alright",
+      "core": false,
+      "retires": [
+        "OKAY",
+        "FUNCTION-OKAY"
+      ]
+    },
+    "QUESTION-WHAT": {
+      "family": "QUESTION",
+      "gloss": "what",
+      "core": true,
+      "retires": [
+        "WHAT"
+      ]
+    },
+    "QUESTION-HOW": {
+      "family": "QUESTION",
+      "gloss": "how",
+      "core": false,
+      "retires": [
+        "HOW"
+      ]
+    },
+    "QUESTION-WHERE": {
+      "family": "QUESTION",
+      "gloss": "where",
+      "core": false,
+      "retires": [
+        "WHERE"
+      ]
+    },
+    "INTRO-MY-NAME-IS": {
+      "family": "INTRO",
+      "gloss": "\"my name is …\"",
+      "core": true,
+      "retires": [
+        "MY-NAME-IS"
+      ]
+    },
+    "INTRO-WHATS-YOUR-NAME": {
+      "family": "INTRO",
+      "gloss": "\"what's your name?\"",
+      "core": true,
+      "retires": [
+        "WHATS-YOUR-NAME"
+      ]
+    },
+    "INTRO-NICE-TO-MEET-YOU": {
+      "family": "INTRO",
+      "gloss": "pleased to meet you",
+      "core": true,
+      "retires": [
+        "PLEASED-TO-MEET"
+      ],
+      "notes": "Some tracks realize this with a bare 'joy/happiness' noun (khushī, magizhchi, santōṣa); that word is the realization."
+    },
+    "PRONOUN-I": {
+      "family": "PRONOUN",
+      "gloss": "I (first-person subject)",
+      "core": false
+    },
+    "PRONOUN-ME": {
+      "family": "PRONOUN",
+      "gloss": "me / myself (object / reflexive)",
+      "core": false
+    },
+    "PRONOUN-YOU": {
+      "family": "PRONOUN",
+      "gloss": "you (with informal / formal forms)",
+      "core": true
+    },
+    "PRONOUN-MY": {
+      "family": "PRONOUN",
+      "gloss": "my (first-person possessive)",
+      "core": false,
+      "retires": [
+        "MY"
+      ]
+    },
+    "TIME-DAY": {
+      "family": "TIME",
+      "gloss": "day (noun)",
+      "core": false,
+      "retires": [
+        "DIA",
+        "JOUR",
+        "TAG",
+        "DAY"
+      ]
+    },
+    "TIME-NIGHT": {
+      "family": "TIME",
+      "gloss": "night (noun)",
+      "core": false,
+      "retires": [
+        "NOCHE",
+        "NUIT",
+        "NACHT"
+      ]
+    },
+    "TIME-MORNING": {
+      "family": "TIME",
+      "gloss": "morning (noun)",
+      "core": false,
+      "retires": [
+        "MORGEN"
+      ]
+    },
+    "TIME-AFTERNOON": {
+      "family": "TIME",
+      "gloss": "afternoon (noun)",
+      "core": false,
+      "retires": [
+        "TARDE"
+      ]
+    },
+    "TIME-EVENING": {
+      "family": "TIME",
+      "gloss": "evening (noun)",
+      "core": false,
+      "retires": [
+        "ABEND",
+        "SOIR"
+      ]
+    },
+    "NUMBER-ONE-TO-FIVE": {
+      "family": "NUMBER",
+      "gloss": "the cardinal numbers one through five",
+      "core": false,
+      "notes": "A shared retrieval ability whose language-specific realizations may add script, sound-change, agreement, classifier, or etymology extensions."
+    },
+    "WORD-GOOD": {
+      "family": "WORD",
+      "gloss": "good (adjective)",
+      "core": false,
+      "retires": [
+        "BON",
+        "GOOD",
+        "GUT"
+      ]
+    },
+    "WORD-WELL": {
+      "family": "WORD",
+      "gloss": "well / fine (adverb)",
+      "core": false,
+      "retires": [
+        "BIEN"
+      ]
+    },
+    "WORD-NAME": {
+      "family": "WORD",
+      "gloss": "name (noun)",
+      "core": false,
+      "retires": [
+        "NAME"
+      ]
+    },
+    "WORD-IS": {
+      "family": "WORD",
+      "gloss": "is (copula, third person)",
+      "core": false,
+      "retires": [
+        "IS"
+      ]
+    },
+    "GRAMMAR-THE": {
+      "family": "GRAMMAR",
+      "gloss": "the (definite article / gender marker)",
+      "core": false,
+      "retires": [
+        "ARTICLES-EL-LA",
+        "ARTICLES-LE-LA",
+        "ARTICLES-DER-DIE-DAS",
+        "ARTICLE-GENDER",
+        "ARTICLE"
+      ],
+      "notes": "One join key for 'the'; the realization holds each language's specific forms (el/la, der/die/das, il/la/lo, o/a, al-)."
+    },
+    "COURTESY-YOUREWELCOME": {
+      "family": "COURTESY",
+      "gloss": "you're welcome (the standard reply to thanks)",
+      "core": false,
+      "retires": [
+        "YOURE-WELCOME",
+        "WELCOME-REPLY"
+      ],
+      "notes": "The reply that closes a thanks exchange (de nada, prego, bitte, не за что). Distinct from GREETING-WELCOME (svāgatam), which welcomes an arrival."
+    },
+    "STATE-HOW-ARE-YOU": {
+      "family": "STATE",
+      "gloss": "how are you? (asking after someone's state)",
+      "core": false,
+      "retires": [
+        "HOW-ARE-YOU",
+        "HOWAREYOU"
+      ],
+      "notes": "The realization holds each language's phrasing and register split (¿cómo está usted? / ¿cómo estás?). Builds on QUESTION-HOW plus the state verb."
+    },
+    "WORD-SOSO": {
+      "family": "WORD",
+      "gloss": "so-so / not bad (a middling answer to 'how are you?')",
+      "core": false,
+      "retires": [
+        "SO-SO",
+        "SOSO"
+      ],
+      "notes": "The neither-good-nor-bad reply (regular / más o menos, così così, comme ci comme ça)."
+    },
+    "VERB-INFINITIVE": {
+      "family": "VERB",
+      "gloss": "the dictionary form of a verb, and the stem inside it",
+      "core": true
+    },
+    "VERB-PRESENT-HABITUAL": {
+      "family": "VERB",
+      "gloss": "saying what someone does, in general",
+      "core": true
+    },
+    "VERB-NEGATE": {
+      "family": "VERB",
+      "gloss": "saying that something is not so",
+      "core": true
+    },
+    "QUESTION-POLAR": {
+      "family": "QUESTION",
+      "gloss": "a question answerable yes or no",
+      "core": true
+    },
+    "VERB-PAST": {
+      "family": "VERB",
+      "gloss": "saying what happened before now",
+      "core": true
+    },
+    "VERB-FUTURE": {
+      "family": "VERB",
+      "gloss": "saying what will happen, or what one intends",
+      "core": true
+    },
+    "VERB-WANT": {
+      "family": "VERB",
+      "gloss": "saying what one wants or needs",
+      "core": true
+    }
+  },
+  "namespaced": {
+    "note": "Language-local lexical/structural concepts do NOT appear here; they live only in lesson frontmatter as <LANG>-<NAME> (pattern ^[A-Z]{2}-[A-Z0-9-]+$). Current examples, for reference:",
+    "examples": {
+      "TA-CASE-DATIVE": "Tamil -ukku/-kku 'to/for' — the first case ending: Dravidian ADDS a suffix meaning ONE thing with the seam visible (peyarukku, vēlaikku), vs a Latin ending like -īs which FUSES case+number+declension AND is syncretic between dative and ablative, so it doesn't even fix which case. Pronoun stem changes first: nāṉ → enakku 'to me'",
+      "TA-DATIVE-SUBJECT": "enakku tamiḻ teriyum 'I know Tamil' = literally 'to-me Tamil is-known' — no nominative 'I'; the person sits in the dative (a DATIVE SUBJECT: it behaves as subject without being in the subject case) while the theme tamiḻ stays unmarked. Dravidian puts the EXPERIENCER in the dative because knowing/liking/wanting happen TO you; English keeps one fossil in 'methinks' (OE mē þyncþ, mē a true dative)",
+      "TE-CASE-DATIVE": "Telugu -ku/-ki 'to/for' — the first case ending; the two shapes are one suffix adjusting to the preceding vowel (pēruku, paniki). Pronoun: nēnu → nāku 'to me'. Agglutinative ADDING vs Latin FUSING (and -īs is dative-or-ablative, never pinned down)",
+      "TE-DATIVE-SUBJECT": "nāku telugu vaccu 'I know Telugu' = literally 'to-me Telugu COMES' — using vaccu, the very 'come' verb taught in Ch.4. No nominative 'I'; the experiencer sits in the dative",
+      "KA-CASE-DATIVE": "Kannada -ge/-ige/-kke 'to/for' — the first case ending (hesarige, kelasakke); pronoun nānu → nanage. All four sisters continue Proto-Dravidian *-k(k)u; Kannada VOICED the k between vowels and carried that into the dative where the others kept it hard, while the GEMINATE -kke resisted voicing and preserved the original — two shapes of one suffix on either side of a sound change",
+      "KA-DATIVE-SUBJECT": "nanage kannaḍa gottu 'I know Kannada' = literally 'to-me Kannada known'. No nominative 'I' — and gottu isn't even an action verb (a nominal predicate 'known'), so nothing in the sentence is DOING anything",
+      "ML-CASE-DATIVE": "Malayalam -ikku/-inu 'to/for' — one case, two shapes chosen by the noun's ending (jōlikku, pērinu); pronoun ñān → enikku 'to me'. Agglutinative ADDING vs Latin FUSING (and -īs is dative-or-ablative)",
+      "ML-DATIVE-SUBJECT": "enikku malayāḷam aṟiyām 'I know Malayalam' — aṟiyām is aṟiy- 'know' + the ABILITATIVE -ām, so literally 'to-me Malayalam is-knowable' (not a passive); no nominative 'I'. Note enikku ≈ Tamil enakku — Malayalam and Tamil separated most recently of the four, and it shows",
+      "SA-NUMBERS-1-5": "eka / dva / tri / catur / pañca, given in masculine AND NEUTER (ekam, dve, trīṇi, catvāri) because the modern languages mostly descend from the NEUTER — trīṇi and catvāri, not trayaḥ/catvāraḥ. The ANCHOR for the Indo-Aryan tracks: these are simultaneously the source of every modern Indic number and cousins of the English ones by descent, not borrowing (*dwóh₁→two, *tréyes→three, *kʷetwóres→four/quattuor/catvāri, *pénkʷe→five/quīnque/pañca; éka- and ūnus/one share a root but differ in suffix, *oy-ko- vs *óynos). The kʷ story goes THREE ways: Latin kept qu-, Indo-Iranian merged *kʷ into k and then palatalised it to c-, Germanic made it hw- (what, who). WARNING TAUGHT EXPLICITLY: the f- of FIVE is NOT from *kʷ — it is *p by Grimm's law (pater→father); and English four is irregular, its f- analogical to five. 'Two' is dvau because Sanskrit has a DUAL. pañca travelled: Punjab (Persian panj-āb), pentagon, and probably punch the drink (hedged — a puncheon-cask rival exists)",
+      "HI-NUMBERS-1-5": "ek / do / tīn / chār / pāṁch — Sanskrit worn down THROUGH THE PRAKRITS, where most of the erosion actually happened. Three and four descend from the NEUTER forms: trīṇi → Pkt tiṇṇi → tīn, catvāri → cattāri → chār (NOT masculine trayaḥ/catvāraḥ). The tīn chain is a two-step trade: the r is lost and ṇ doubles to compensate, then the double simplifies and the vowel lengthens. The cross-family payoff: this is EXACTLY the Latin→Spanish erosion the Romance tracks keep tracing, run on the other side of the world at the same time — quattuor→cuatro beside catvāri→chār, the same PIE word twice. pañca→pāṁch shows the nasal MIGRATING INTO THE VOWEL, which is what the chandrabindu ँ records",
+      "MR-NUMBERS-1-5": "ek / don / tīn / chār (said nearer tsār) / pāch — two spelling differences from Hindi, and they are DIFFERENT KINDS of thing. दोन don's -n is NOT a retention: Prakrit doṇṇi took its ending by ANALOGY from tiṇṇi 'three' (where the ṇ genuinely belongs to the word, ← neuter trīṇi; the DOUBLING is a Prakrit trade for the lost r, not itself ancient), so two was reshaped to rhyme with three and Hindi's do simply never picked it up — an INNOVATION, not a survival (cf. English four getting its f- from five). पाच vs पाँच IS a straightforward retention difference, with Hindi keeping Sanskrit pañca's nasal. Also flags a difference invisible in spelling: Marathi च before ā is nearer ts, so चार is tsār",
+      "BN-NUMBERS-1-5": "ek / dui / tin / chār / pā̃ch — দুই dui keeps a trace of the vowel following the old dv- that Hindi and Marathi flattened into do/don, hence two syllables where they have one. Its dui continues the DISYLLABIC Prakrit duve, not the dváu behind Hindi do — do not lump Bengali with the masculine side. Scoped honestly: Assamese, Odia and Nepali also have dui (Maithili has dū, NOT dui), so Bengali is unusual only among the four compared here; and the dv- cluster is gone from the everyday NUMERAL everywhere but alive in Sanskrit re-borrowings (Bengali দ্বার dvār 'door'). Notes that Ch.1's o-leaning inherent vowel is NOT demonstrable in these five, since এক opens with an independent vowel and none has a bare inherent-a syllable",
+      "GU-NUMBERS-1-5": "ek / be / traṇ / chār / pā̃ch — two numbers that don't match the neighbours. બે be continues Sanskrit's FEMININE/NEUTER dvé where HINDI AND MARATHI continue masculine dváu (Bengali dui is a third case, from the disyllabic Prakrit duve — do NOT lump it with dváu), with the d taking the LABIAL PLACE of the following v (dv → bb → b), not simply softening. ત્રણ traṇ shares its ṇ with tīn, so both descend from neuter trīṇi via Prakrit tiṇṇi — where the r was ALREADY LOST — meaning Gujarati's tr- is generally treated as RESTORED from Sanskrit rather than continuously inherited: traṇ looks older than tīn without being so. Also notes the script: Gujarati is Devanagari WITHOUT the shirorekhā",
+      "PA-NUMBERS-1-5": "ikk / do / tinn / chār / panj — in GURMUKHI (related to Devanagari, also top-lined). Distinguishes two easily confused marks: ੱ addak DOUBLES the following consonant (ikk), ੰ tippi marks a NASAL (tinn, panj). Built as a payoff to PA-C05, which already teaches panjābī = Persian panj 'five' + āb 'water' — here panj arrives as an ordinary numeral. THE KEY CORRECTION: Punjabi's panj is NOT the Persian word but its own inherited pañca, via the regular north-western Indo-Aryan voicing of a stop after a nasal (panjāh 'fifty' ← pañcāśat, against Hindi pacās with no j — a same-source contrast is what proves the rule; pandrāṁ 'fifteen' does NOT, since its -nd- is from daśa 'ten' and Hindi has pandrah too); Persian voiced its own č separately. So the -j/-ch match with Persian is CONVERGENCE, not borrowing — which is exactly why the Persian place-name sits so comfortably in Punjabi",
+      "AR-WORD-HAL": "ḥāl — 'state, condition' (← root ḥ-w-l 'to TURN/change', so a state is how things have turned; cf. ḥawla 'around', taḥwīl 'transformation', ḥawl 'a year' = one full turn — contrast Spanish estar ← stāre 'to STAND')",
+      "AR-PRAISE-GOD": "al-ḥamdu lillāh — 'praise be to God', the everyday reply to kayfa ḥāluka; al- + ḥamd + li- + allāh (itself al- + ilāh 'THE god', cousin of Hebrew El/Elohim). Root ḥ-m-d 'praise' also yields the names Aḥmad and Muḥammad ('the much-praised')",
+      "AR-PREP-WITH": "maʿa — 'with, accompanied by' (← Semitic *ʿimma, cousin of Hebrew ʿim, the salām/shalom pairing again). The one preposition so far that does NOT attach: contrast al-, bi-, li-, which all glue onto the next word. Distinct from bi- 'in/by means of' (bi-khayr = IN goodness)",
+      "AR-WORD-SALAMA": "salāma — 'safety, soundness' = Ch.1's salām poured into the faʿāla pattern, which turns a thing into the STATE of that thing (peace → being at peace); ة marks it feminine, as Arabic abstract nouns usually are; س is a sun letter so al-salāma is said as-salāma",
+      "ES-VERB-LLAMAR": "llamar — 'to call' (the Spanish naming verb)",
+      "ES-SE-LLAMA": "se llama — 'he/she calls himself' (3rd-person of llamar)",
+      "ES-WORD-MUCHO": "mucho — 'much / a lot'",
+      "ES-WORD-HASTA": "hasta — 'until / up to' (← Arabic ḥattā; a rare borrowed function word)",
+      "ES-VERB-ESTAR": "estar — 'to be' (temporary state / location; ← Latin stare 'to stand')",
+      "ES-VERB-HABLAR": "hablar — 'to speak' (← fabulārī; first regular -ar verb / present tense)",
+      "ES-VERB-TRABAJAR": "trabajar — 'to work' (← tripaliāre 'to torture' → travail/travel)",
+      "ES-VERB-ESTUDIAR": "estudiar — 'to study' (← studēre 'to be eager' → student)",
+      "ES-WORD-ESPANOL": "español — 'Spanish' (the language; ← Hispania)",
+      "ES-NUM-1-5": "uno/dos/tres/cuatro/cinco (1-5; ← ūnus/duo/trēs/quattuor/quīnque)",
+      "ES-NUM-6-10": "seis/siete/ocho/nueve/diez (6-10; siete/ocho/nueve/diez → September/October/November/December)",
+      "ES-VERB-TENER": "tener — 'to have' (irregular; ← tenēre 'to hold' → tenant/retain; tengo, e→ie)",
+      "ES-QUESTION-AGE": "¿cuántos años tienes? — age via tener ('have years'); años ← annus",
+      "ES-VERB-COMER": "comer — 'to eat' (first -er verb; ← comedere → edible)",
+      "ES-VERB-VIVIR": "vivir — 'to live' (first -ir verb; ← vīvere → vivid/survive)",
+      "ES-VERB-BEBER": "beber — 'to drink' (-er; ← bibere → beverage/imbibe)",
+      "ES-VERB-SER": "ser — 'to be' (identity/essence; ← esse (+ sedēre); suppletive soy/eres/es/somos/son, cousins of English is/am/are)",
+      "ES-SER-VS-ESTAR": "ser vs estar — the two 'to be' verbs (essence vs state); minimal pairs flip meaning (es/está aburrido, rico, verde, listo)",
+      "ES-ORIGIN-SER": "soy de… — origin/profession/nationality take ser (essence); de ← Latin dē; ¿De dónde eres?",
+      "ES-LOCATION-ESTAR": "está en… — physical location always takes estar (← stāre 'to stand'); en ← Latin in; ¿Dónde estás?",
+      "ES-VERB-IR": "ir — 'to go' (most suppletive: infinitive ← īre, present voy/vas/va/vamos/van ← vādere → invade/evade; go/went trick)",
+      "ES-NEAR-FUTURE": "ir a + infinitive — the 'going-to' future (voy a hablar = I'm going to speak); a ← ad; mirrors English/French",
+      "ES-POSSESSIVE": "mi/tu/su (+ mis/tus/sus) — possessives ← meus/tuus/suus → my/thy; agree in NUMBER not gender; tu 'your' vs tú 'you'",
+      "ES-VERB-QUERER": "querer — 'to want/love' (e→ie stem-changer: quiero/quieres…queremos; ← quaerere 'seek' → query/quest/conquer)",
+      "ES-VERB-PODER": "poder — 'to be able/can' (o→ue stem-changer: puedo/puedes…podemos; ← potēre → power/potent/possible; poder+inf)",
+      "ES-STEM-CHANGES": "e→ie & o→ue stem-changes — one sound-law (stressed short e/o broke: terra→tierra, porta→puerta); the 'boot' (all but nosotros)",
+      "ES-POSSESSIVE-OUR": "nuestro/vuestro — 'our/your-pl' (← noster/voster → Paternoster); agree in BOTH gender & number, unlike mi/tu/su",
+      "ES-VERB-HACER": "hacer — 'to do/make' (-go yo-form hago, like tengo; ← facere → fact/factory/perfect; f→h softening; weather: hace calor)",
+      "ES-VERB-DECIR": "decir — 'to say/tell' (doubly irregular: -go yo-form digo + e→i stem-change dices/dice; ← dīcere → dictate/diction/verdict)",
+      "ES-YO-GO": "the -go club — verbs whose yo-form grows a hard g (tengo/hago/digo/pongo/salgo/vengo); yo-only, a closed Latin-inherited set of high-frequency verbs",
+      "ES-VERB-PONER": "poner — 'to put/place' (-go yo-form pongo; ← pōnere → position/compose/deposit/postpone; poner la mesa 'set the table', ponerse 'put on/become')",
+      "ES-VERB-SALIR": "salir — 'to leave/go out' (-go yo-form salgo; ← salīre 'to leap' → salient/sally/salmon/somersault; la salida 'the exit')",
+      "ES-VERB-VENIR": "venir — 'to come' (doubly irregular: -go yo-form vengo + e→ie stem-change vienes/viene; ← venīre → adventure/event/convene; twin of tener)",
+      "ES-PRETERITE-SER-IR": "the preterite of ser AND ir — one shared set fui/fuiste/fue/fuimos/fueron (← Latin fuī, a 2nd 'be' root = English be/future); context decides: fui a=went, fui X=was",
+      "ES-PRETERITE-AR": "the regular -ar preterite — hablé/hablaste/habló/hablamos/hablaron (← Latin perfect -āvī; accent marks the final stress, hablo→habló; hablamos present=preterite)",
+      "ES-PRETERITE-ER-IR": "the regular -er/-ir preterite — comí/comiste/comió/comimos/comieron, viví/viviste/vivió (ONE shared set, unlike the present where -er/-ir differ; ← Latin perfect -ī/-istī/-it, -istī→-iste nearly intact; vivimos present=preterite but comemos≠comimos)",
+      "ES-PRETERITE-STRONG": "the strong preterites — tener→tuve, hacer→hice, estar→estuve (stress moves OFF the ending onto the stem, TUve/HIce, hence NO written accent, the reverse of hablé/habló; yo ending -e not -é; hizo c→z; ← Latin strong perfects tenuī/fēcī/stetī, inherited not rebuilt)",
+      "ES-IMPERFECT": "the imperfect — hablaba/hablabas/hablaba/hablábamos/hablaban and comía/vivía (the ongoing/habitual past; -er and -ir share ONE set a THIRD time). ← Latin -ābam / -ēbam, the b surviving whole in -aba but wearing away in -ēbam→-ía. Accents do two different jobs: hablábamos = stress 3 syllables back; comía = breaking the diphthong into co-mí-a. yo and él forms are IDENTICAL, so Spanish often un-drops yo here — a pro-drop exception",
+      "ES-IMPERFECT-IRREGULARS": "the only THREE irregular imperfects in the language — ser→era (← eram, same es- root as soy/es and English is/are), ir→iba (← ībam), ver→veía (barely irregular: keeps an -e- from older veer). PAYOFF: iba is the ONE tense where ir uses its OWN Latin verb īre — its present came from vādere and its preterite from fuī, so ir is stitched from THREE different Latin verbs",
+      "ES-FUTURE": "the future — hablaré/hablarás/hablará/hablaremos/hablarán, built on the WHOLE INFINITIVE (you don't strip -ar), one ending set for all three conjugations. Latin's own future (amābō) DIED and Romance replaced it with infinitive + habēre ('amāre habeō' = I have to love → I will love), which then FUSED into one word — so the endings -é/-ás/-á/-emos/-án are literally the present of haber (he/has/ha/hemos/han) worn down to a suffix. A compound tense that closed up into a simple one. Portuguese never finished the weld: falá-lo-ei still puts a pronoun INSIDE the join",
+      "ES-CONDITIONAL": "the conditional — hablaría, the SAME infinitive weld as the future but with the IMPERFECT of haber (había) instead of the present, which is exactly why its endings are the -ía/-ías/-íamos/-ían of the Ch.16 -er/-ir imperfect. Uses: hypothetical 'would', politeness (¿podrías?), and future-in-the-past (dijo que hablaría). Accent breaks the diphthong: hablar-í-a",
+      "ES-SUBJUNCTIVE-PRESENT": "the present subjunctive — hable/coma/viva, built NOT from the infinitive but from the YO FORM of the present: drop the -o and FLIP THE VOWEL (-ar takes -e, -er/-ir take -a, the two families swapping costumes; -er and -ir are identical here as they already were in the Ch.15 preterite and the Ch.16 imperfect). The payoff is that every irregular yo form is inherited FREE — the whole -go club of Ch.12-13 becomes tenga/diga/haga/ponga/salga/venga with zero new memorisation, and Ch.11's stem-changers give quiera/pueda (but plain-stem queramos/podamos, since the stem is unstressed there). FIVE taught verbs have no strippable -o in the yo form (soy, voy, sé, he, estoy): four are then unpredictable and learned outright — ser→sea, ir→vaya, saber→sepa, haber→haya — while estar is NOT, since removing the whole -oy leaves the ordinary stem est- (esté/estés/esté/estemos/estén). Estar's real irregularity is STRESS, not spelling: Spanish stresses the second-to-last syllable of a word ending in a vowel/-n/-s, which hablar obeys throughout (HA-ble, ha-BLE-mos, HA-blen), while esté/estés/estén stress the LAST syllable and so need a written accent — es-TE-mos obeys the default and takes none. The accents are the receipt for the broken default, not decoration. (dar has the same -oy tail and its stem shrinks the same way — dé/des/demos/den — but its lone accent is the qué/que DIACRITIC kind separating dé from the preposition de, not a stress mark; the verb isn't taught yet, though doy is listed beside soy/estoy in ES-C09/C10.) The 'no -o to strip' criterion is a MEMORY AID for the modern language, not history: sea/vaya/sepa/haya descend from sedeam/vādam/sapiam/habeam, and saber/haber plainly do have stems (sab-, hab-) elsewhere. Name ← Latin subiūnctīvus 'joined UNDERNEATH' (sub- + iungere), calquing Greek hypotaktikḗ 'subordinated' — it describes where the mood LIVES, not what it means; join/junction/conjunction descend from iungere, while yoke and yoga are COGNATES via PIE *yewg-, not derivatives",
+      "ES-SUBJUNCTIVE-TRIGGER": "quiero que… — the subjunctive appears when TWO DIFFERENT SUBJECTS are joined by que: Quiero hablar (one subject → infinitive) vs Quiero QUE HABLES (two → que + subjunctive). Contrast with reporting: Sé que hablas is indicative because knowing reports the world, while wanting tries to change it. THE ENGLISH TRAP: English says 'I want YOU TO SPEAK' (object + infinitive) and Spanish will not do this AFTER VERBS OF WANTING — there is no *quiero te hablar; the full clause is obligatory, and copying the English shape is the commonest learner error. (Spanish DOES allow object+infinitive after perception and causative verbs: te vi salir, me hizo hablar — so the ban is volition-specific, not general.) Second trigger: OJALÁ, which takes the subjunctive ALWAYS and needs no que and no main verb because the word IS the wish — from Andalusi Arabic law šāʾ Allāh 'if God should will', so the Allāh is still inside it. The SECOND Arabic function word in the course after hasta ← ḥattā (Ch.5): borrowing nouns is common, borrowing a word that FORCES A MOOD is not",
+      "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
+      "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
+      "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
+      "IT-VERB-LAVORARE": "lavorare — 'to work' (← labōrāre → labor/laboratory; NOT the tripalium 'torture' root)",
+      "IT-WORD-ITALIANO": "italiano — 'Italian' (the language; ← Italia)",
+      "IT-NUM-1-5": "uno/due/tre/quattro/cinque (1-5; ← ūnus…quīnque; Italian closest to Latin — cinque keeps -que)",
+      "IT-NUM-6-10": "sei/sette/otto/nove/dieci (6-10; septem/octō → -tt-: sette/otto; sette…dieci → settembre…dicembre)",
+      "IT-DAYS-WEEKDAYS": "lunedì/martedì/mercoledì/giovedì/venerdì (Mon-Fri; [planet] + dì ← diēs; accented -dì kept; = ES lunes/FR lundi)",
+      "IT-DAYS-WEEKEND": "sabato/domenica (Sat/Sun; ← Sabbatum / diēs Dominica 'Lord's day'; = ES sábado/domingo)",
+      "IT-TIME-HOUR": "ora (hour ← hōra ← Greek hṓrā; time via feminine article: è l'una / sono le due)",
+      "IT-TIME-NOON-MIDNIGHT": "mezzogiorno/mezzanotte (noon/midnight; mezzo/mezza ← medius + giorno/notte)",
+      "IT-MONTHS": "gennaio…dicembre (closest to Latin; marzo=Mars=martedì; settembre…dicembre = Latin 7-10; luglio/agosto = Julius/Augustus)",
+      "IT-SEASONS": "primavera/estate/autunno/inverno (primavera='prima vera' first green; stagione ← statiō 'a standing')",
+      "IT-FAMILY-PARENTS": "padre/madre (father/mother; closest to Latin pater/māter, -t-→-d-; padre = English loan; genitori 'parents' ← genitor 'begetter'; parenti=relatives false friend)",
+      "IT-FAMILY-SIBLINGS": "fratello/sorella (brother/sister; frāter/soror + diminutive -ello/-ella = 'little brother/sister'; → fraternal/sorority)",
+      "IT-FOOD-BREAD": "pane (bread; closest to Latin pānis; → companion 'one you share bread with', pantry; companatico = 'what you eat WITH bread')",
+      "IT-FOOD-DRINKS": "acqua/vino (water/wine; acqua KEPT Latin aqua whole, -cq- doubled, vs French eau; vino ← vīnum → wine/vine/vinegar)",
+      "IT-NUM-11-16": "undici…sedici (11-16; digit + -dici, and -dici is still visibly Latin decem = dieci — clearer than French's worn-down -ze)",
+      "IT-NUM-17-20": "diciassette…venti (17-20; at 17 the ORDER FLIPS — sedici 'six-ten' but diciassette 'ten-and-seven'; venti ← vīgintī)",
+      "IT-COLOUR-BLACK-WHITE": "nero, bianco — nero ← Latin niger (→ denigrate), but bianco ← Germanic *blank 'shining', likely via the LOMBARDS (→ Lombardia), displacing Latin albus, which survives in alba 'dawn' / albume",
+      "IT-COLOUR-RED-BLUE": "rosso, blu (+ azzurro) — rosso ← russus ← PIE *h₁rewdʰ-, cousin (not loan) of red/rot/rouge; blu is a SECOND Germanic loan (*blāo); azzurro ← Arabic lāzaward 'lapis lazuli' ← Persian lāžward, l- lost as if an article → English azure; gli Azzurri",
+      "IT-VERB-HAVE": "avere — 'to have' (ho/hai/ha/abbiamo/avete/hanno; ← habēre → habit/inhabit/exhibit/prohibit). Home of Italian's ONLY silent letter: the h in ho/hai/ha/hanno is never pronounced and exists purely to keep them apart in WRITING from o 'or', ai 'to the', a 'to', anno 'YEAR'",
+      "IT-AGE": "quanti anni hai? / ho venti anni — age via avere ('have years'), never essere; anno ← annus → annual/anniversary, with a held double n. The silent-h payoff lands here: hanno ('they have') and anno ('year') are homophones that co-occur in age sentences",
+      "IT-PAST-COMPOUND": "passato prossimo — avere + past participle (ho parlato; -are→-ato, -ere→-uto, -ire→-ito). Once literally 'I HAVE [a thing] spoken' (Latin habeō litterās scriptās), a possessive whose participle was an ADJECTIVE agreeing with the object — the fossil survives when the object precedes (le ho viste). Italian keeps the Latin -t- (parlato) that French wore away (parlé)",
+      "IT-PAST-SIMPLE-REGIONAL": "passato remoto — parlò ← Vulgar Latin perfect *parabolāvit, the direct inheritance (= ES habló, PT falou, FR il parla). Italian is the language caught MID-PROCESS: everyday speech in Sicily and much of the south, literary in the north — geography, not grammar, decides which past you use",
+      "IT-VERB-BE": "essere — 'to be' (sono/sei/è/siamo/siete/sono; the GRAVE ACCENT alone separates è 'is' from e 'and'). Latin's esse and stāre BOTH survived into Italian as living verbs — but essere's own participle didn't, so it borrowed stare's: both verbs' participle is STATO, and sono stato means equally 'I have been' and 'I have stayed'. Italian sits between its sisters — Spanish split the pair (ser/estar), French kept esse and absorbed stāre's whole ét- limb (été/étant/étais), Italian kept both verbs alive and let them OVERLAP",
+      "IT-PAST-PROSSIMO-ESSERE": "sono andato — the passato prossimo built on essere: verbs of MOTION and CHANGE OF STATE (andare/venire/arrivare/nascere/morire/diventare) take essere, not avere, and the participle AGREES WITH THE SUBJECT in all four endings (andato/-a/-i/-e; a woman says sono andata). Same adjective fossil as French: Anna è andata was once 'Anna IS gone-away', describing her. Introduces andare, itself suppletive across two stems — vad- (vado/vai/va/VANNO ← vādere 'stride') against and- (andiamo/andate/andare/andato, origin disputed, most likely ambitāre); note vanno goes with vado, so the split is NOT singular-vs-plural. Same trick as ES voy vs andar",
+      "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
+      "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
+      "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
+      "FR-VERB-HABITER": "habiter — 'to live/dwell' (← habitāre → habitat/inhabit)",
+      "FR-VERB-TRAVAILLER": "travailler — 'to work' (← tripaliāre → travail/travel; twin of ES trabajar)",
+      "FR-WORD-FRANCAIS": "français — 'French' (the language; ← Francia, land of the Franks)",
+      "FR-NUM-1-5": "un/deux/trois/quatre/cinq (1-5; ← ūnus…quīnque; un/une = a/an; cinq → English cinque)",
+      "FR-NUM-6-10": "six/sept/huit/neuf/dix (6-10; octō→huit erosion; dix→dime; sept…dix → septembre…décembre)",
+      "FR-DAYS-WEEKDAYS": "lundi/mardi/mercredi/jeudi/vendredi (Mon-Fri; [planet-god] + di ← diēs; mardi=Mars=English Tuesday/Tiw)",
+      "FR-DAYS-WEEKEND": "samedi/dimanche (Sat/Sun; samedi ← Sabbatum, dimanche ← diēs Dominica 'Lord's day'; di- moved to front)",
+      "FR-TIME-HOUR": "heure (hour ← hōra ← Greek hṓrā; silent h + liaison; il est deux heures)",
+      "FR-TIME-NOON-MIDNIGHT": "midi/minuit (noon/midnight ← medius diēs / media nox; mi- 'middle' + di/nuit)",
+      "FR-MONTHS": "janvier…décembre (Roman gods/emperors: janvier←Janus, mars←Mars=mardi, juillet←Julius; septembre…décembre = Latin 7-10)",
+      "FR-SEASONS": "printemps/été/automne/hiver (printemps='prime temps' first time; hiver ← hibernum → hibernate)",
+      "FR-FAMILY-PARENTS": "père/mère (father/mother ← pater/māter; same PIE as English father/mother via Grimm's law p→f/t→th; → paternal/maternal)",
+      "FR-FAMILY-SIBLINGS": "frère/sœur (brother/sister ← frāter/soror; → fraternal/friar, sorority; œ ligature spells soror worn down)",
+      "FR-FOOD-BREAD": "pain (bread ← pānis; nasal -ain; → companion 'one you share bread with', company, pantry)",
+      "FR-FOOD-DRINKS": "eau/vin (water/wine; eau ← aqua worn to a bare 'oh' — most eroded of all, vs English aquatic; vin ← vīnum → wine/vine/vinegar)",
+      "FR-NUM-11-16": "onze…seize (11-16; the six Latin fusions ūndecim…sēdecim; shared -ze = decem 'ten', the same ten as dix/décembre)",
+      "FR-NUM-17-20": "dix-sept…vingt (17-20; at 17 French GIVES UP fusing and goes transparent 'ten-seven', the order flipping too; vingt ← vīgintī → vigesimal)",
+      "FR-COLOUR-BLACK-WHITE": "noir, blanc — noir ← Latin niger, but blanc ← FRANKISH *blank 'shining', a Germanic word borrowed INTO Romance (the reverse of the usual flow); Latin albus survives only as aube 'dawn' / aubépine / album",
+      "FR-BODY-HEAD": "la tête — NOT from Latin caput but from testa 'earthenware pot, shell': Roman soldiers' slang for the skull displaced the proper word across Gaul and Italy, so a French speaker with a headache is saying 'my pot hurts'. caput survives in TWO LAYERS — inherited chef ('chief' = head), chapitre, cap 'headland', achever; and re-borrowed capital, capitaine, décapiter — just never for the head itself, the same inherited-vs-reborrowed doubling PT-BODY-HEAD teaches. The circumflex is a receipt for a lost s (testa → teste → tête), which is why English, borrowing from Old French BEFORE the s fell, still has TEST — originally the shallow pot an alchemist assayed metals in",
+      "FR-BODY-HAND": "la main — feminine despite the consonant ending (French gender is not predictable from the ending); the -ain nasal is Ch.11's pain. From Latin manus, the most productive hand in English: manual, manufacture ('made by hand' — now naming precisely what isn't), manuscript, maintain (Latin manū tenēre 'hold in the hand'), manage, manoeuvre",
+      "GE-BODY-HEAD": "der Kopf — originally a CUP or bowl — the same word as English CUP, both early borrowings of Late Latin CUPPA, so the WORD is not natively Germanic and it is the METAPHOR that was invented twice — which displaced the inherited das Haupt (← *haubudam, the Grimm's-law cognate of Latin caput and English head; the clean demonstration is k→h across caput/Haupt/head, since the later consonants involve a second shift). Haupt survives only in compounds: Hauptstadt, Hauptbahnhof, Hauptsache. THE PAYOFF: French tête ← testa 'pot' and German Kopf ← 'cup' are the SAME REPLACEMENT invented INDEPENDENTLY — heads look like bowls in any language — and both languages kept the old word for chiefs and capitals",
+      "GE-BODY-HAND": "die Hand — feminine, spelled exactly as English, with final -d DEVOICED to t (it returns in die Hände). Germanic *handuz, inherited straight into English (cf. Arm, Finger, Fuß, Herz). THE POINT OF THE LESSON IS A NON-CONNECTION: every Romance track here builds 'hand' on manus (main/mano/mão), and *handuz is NOT related to it — this course keeps finding links, and it matters to show where the families genuinely diverge. Latin manus reached German only as BORROWED vocabulary: Manuskript, Maniküre, manuell",
+      "IT-BODY-HEAD": "la testa — Latin testa 'earthenware pot' kept ALMOST unchanged (spelling identical, vowel opened), where French wore the same word down to tête: the conservative-sister pattern again (cf. acqua/eau in Ch.11, parlato keeping the -t- parlé lost in Ch.15). And unlike French, Italian ALSO kept caput alive as il capo 'boss, chief' (which English borrowed straight out of Italian), plus capitale/capitolo/capitano — so both the old head-word and its slang replacement are live",
+      "IT-BODY-HAND": "la mano — FEMININE while ending in -o, plural le mani, breaking the -o/-a TENDENCY (Ch.1 deliberately taught 'learn each noun WITH its article' rather than an ending rule, and this word shows why). Because Latin manus was FOURTH DECLENSION, a class whose nouns ended -us but could be feminine; Italian flattened five Latin declensions to THREE productive classes (-o/-i, -a/-e, and -e/-i as in notte/notti) and left this word stranded with its old gender and an ending that now looks misfiled. THE GENERAL LESSON: an 'irregular' word is usually a REGULAR word from a system that no longer exists. English took MANAGE from Italian maneggiare, to handle a HORSE",
+      "PT-BODY-HEAD": "a cabeça — the one that KEPT the Latin word: ← Late Latin capitia ← caput, where French/Italian replaced it with a pot (testa) and German with a cup (Kopf), independently. Five-way table: cabeça/cabeza keep 'head', tête/testa/Kopf are all vessels. Iberia did not sit the shift out entirely — it NARROWED the pot-word: Portuguese testa is the FOREHEAD. The ç marks a c said s before a/o/u. Also shows the inherited-vs-reborrowed DOUBLING: cabeça worn down by everyday use, capital/capítulo/capitão re-imported intact from written Latin — the same root entering the language twice",
+      "PT-BODY-HAND": "a mão — ← manus, with the intervocalic -n- DISSOLVED, nasalising the vowel — but the nasality only STAYED where a nasal diphthong resulted (mão, pão, where the til records it) and FADED again where a plain vowel was left (lua ← lūna, boa ← bona), so the table's own examples must not be presented as all alike. Spanish kept the -n- in all of them (mano, luna, pan), and this single change is much of why written PT and ES look alike and sound unalike. Feminine for the same reason as Italian's la mano: manus was fourth-declension feminine",
+      "FR-COLOUR-RED-BLUE": "rouge, bleu — rouge ← rubeus ← PIE *h₁rewdʰ-, a true cousin of English red / German rot; bleu is a SECOND Germanic loan (*blāo), which English then borrowed BACK from French as 'blue'; azur ← Arabic lāzaward. Bleu-blanc-rouge: two of three are loans",
+      "FR-VERB-HAVE": "avoir — 'to have' (j'ai/tu as/il a/nous avons/vous avez/ils ont; the three singular forms ai/as/a are HOMOPHONES). ← habēre, the SAME root as Ch.5's habiter (← habitāre, habēre's frequentative) and English habit/inhabit/exhibit/prohibit; habeō wore down to j'ai, a single vowel sound. Elision: j'ai not je ai",
+      "FR-AGE": "quel âge as-tu? / j'ai vingt ans — age via avoir ('have years'), never être, and ans is obligatory; an ← annus → annual/anniversary. Liaison wakes the silent t of vingt: vin-t-an",
+      "FR-PAST-COMPOUND": "passé composé — avoir + past participle (j'ai parlé; -er→-é ← -ātum, -ir→-i ← -ītum, -re→-u ← -ūtum; parler/parlé/parlez are HOMOPHONES). Once literally 'I HAVE [a thing] spoken' (Latin habeō litterās scriptās), a possessive whose participle was an ADJECTIVE agreeing with the object — which is exactly why it still agrees with a PRECEDING object (les lettres que j'ai écrites)",
+      "FR-PAST-SIMPLE-LITERARY": "passé simple — il parla ← Vulgar Latin perfect *parabolāvit, the direct inheritance (= ES habló, PT falou, IT parlò), but in French it survives ONLY in writing: recognise it, don't produce it. French, German and Italian all let (an AREAL change spread by contact across the Charlemagne Sprachbund, NOT three separate inventions) a have-compound push this simple past out of speech; Spanish and Portuguese kept theirs",
+      "FR-VERB-BE": "être — 'to be', the most irregular verb in French and SUPPLETIVE across three stems: es- for the present AND the infinitive (suis/es/est/sommes/êtes/sont, être ← *essere, all from Latin esse), fu- for the passé simple (je fus ← the old perfect fuī, PIE *bʰuH-), and ét- for EVERY form beginning ét- — the participle été, the present participle étant (← stantem) and the whole imperfect étais/était (← stābam) — all from stāre 'to STAND', precisely the verb Spanish kept separate as estar (ES-C04, contrasted in ES-C09). So French absorbed a WHOLE LIMB of stāre, not one stray form. Opposite solutions: Spanish keeps the two APART and makes you choose, French kept one verb and swallowed a large piece of the other. (stāre also left French words outside être — rester ← re-stāre, coûter ← constāre — just not a separate 'to be'.) Compare English go/went",
+      "FR-PAST-COMPOUND-ETRE": "je suis allé(e) — the passé composé built on être: verbs of MOTION and CHANGE OF STATE (aller/venir/partir/naître/mourir/rester) take être, PLUS all pronominal verbs (je me suis levé), and the participle AGREES WITH THE SUBJECT (elle est allée). Two caveats the bare rule hides: plain motion verbs like marcher/courir/nager take avoir, and monter/descendre/sortir/rentrer/passer switch to avoir when transitive (j'ai monté les valises). PRONOMINAL EXCEPTION: they take être but follow AVOIR's agreement — with a preceding DIRECT object, which is usually but not always the reflexive (elle s'est lavée BUT elle s'est lavé les mains, elles se sont parlé) — except ESSENTIALLY pronominal verbs (se souvenir, s'enfuir, s'évanouir), which have no non-reflexive form for the pronoun to be an object of and so agree with the subject: elles se sont souvenues. NOT a second agreement rule — the participle was an ADJECTIVE agreeing with whatever it described: under avoir that was a preceding object (les lettres que j'ai écrites), under être it is the subject, because elle est allée was once literally 'she IS gone'",
+      "DE-VERB-HEISSEN": "heißen — 'to be called'",
+      "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
+      "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
+      "GE-VERB-MACHEN": "machen — 'to make/do' (← makōn → make); 'Was machst du?'",
+      "GE-VERB-LERNEN": "lernen — 'to learn' (← liznōjan → learn/lore)",
+      "GE-WORD-DEUTSCH": "Deutsch — 'German' (the language; ← diutisc 'of the people' → English Dutch)",
+      "GE-NUM-1-5": "eins/zwei/drei/vier/fünf (1-5; Germanic twins of one…five, NOT Latin loans; Grimm's law p→f in fünf/five)",
+      "GE-NUM-6-10": "sechs/sieben/acht/neun/zehn (6-10; Germanic twins of six…ten; zehn↔ten↔decem d→t; acht↔eight/Nacht -cht-)",
+      "GE-DAYS-WEEKDAYS": "Montag/Dienstag/Mittwoch/Donnerstag/Freitag (Mon-Fri; Germanic gods = English days; Donnerstag=Thor=Thursday; Mittwoch 'mid-week' replaced Woden)",
+      "GE-DAYS-WEEKEND": "Samstag/Sonntag (Sat/Sun; Samstag ← Sabbat/shabbāt NOT Saturn = ES sábado; Sonntag = Sun's day = Sunday)",
+      "GE-TIME-HOUR": "Uhr (clock/o'clock ← Latin hōra — a LATIN LOAN, unlike native numbers/day-gods; es ist zwei Uhr)",
+      "GE-TIME-NOON-MIDNIGHT": "Mittag/Mitternacht (noon/midnight; NATIVE compounds Mitte+Tag / Mitte+Nacht, vs Latin-loaned Uhr)",
+      "GE-MONTHS": "Januar…Dezember (LATIN loans like Uhr — März←Mars=Dienstag's Tiw; September…Dezember = Latin 7-10; vs native numbers)",
+      "GE-SEASONS": "Frühling/Sommer/Herbst/Winter (NATIVE Germanic, unlike Latin months; Herbst = English HARVEST; Frühling ← früh 'early')",
+      "GE-FAMILY-PARENTS": "Vater/Mutter (father/mother; INHERITED Germanic, NOT Latin loans like the months; Grimm's law twins of English father/mother, V=f)",
+      "GE-FAMILY-SIBLINGS": "Bruder/Schwester (brother/sister; Germanic twins of English brother/sister; Geschwister 'siblings' via collective ge-)",
+      "GE-FOOD-BREAD": "Brot (bread; INHERITED Germanic twin of English bread, NOT Latin pānis; introduces the neuter das + capitalized nouns)",
+      "GE-FOOD-DRINKS": "Wasser/Wein (water/wine; Wasser NATIVE Germanic twin of water; but Wein is an ANCIENT Latin loan ← vīnum, borrowed with the vine — like English wine)",
+      "GE-NUM-11-12": "elf/zwölf (11-12; ← ainlif/twalif, -lif = 'leave' → 'ONE/TWO left over' after ten fingers; the exact inherited twins of English eleven/twelve)",
+      "GE-NUM-13-20": "dreizehn…zwanzig (13-20; digit + zehn with NO exceptions, mirroring English -teen which IS ten; zwanzig ← twaintig 'two tens'; German never breaks, unlike Romance)",
+      "GE-COLOUR-BLACK-WHITE": "schwarz, weiß — both NATIVE Germanic: schwarz ← *swartaz (English 'swarthy'; kin to Latin sordēs → sordid), weiß ← *hwītaz = English white (note ß after a long vowel; Swiss 'weiss'). German's own blank 'shiny' is the word Romance borrowed for WHITE (blanc/bianco/branco) — Germanic lending INTO Latin's daughters",
+      "GE-COLOUR-RED-BLUE": "rot, blau — rot ← *raudaz ← PIE *h₁rewdʰ-, cousin by DESCENT of Latin ruber → rouge/rosso; blau ← *blēwaz, the SECOND German colour word borrowed into Romance (bleu/blu), with English taking 'blue' from French rather than from Germanic",
+      "GE-VERB-HAVE": "haben — 'to have' (habe/hast/hat/haben/habt/haben; du hast + er hat DROP the b, exactly as English have→has). THE FALSE COGNATE: haben ← Germanic *habjaną ← PIE *kap- 'to seize', whose Latin child is capere (capture/captive) — while Latin habēre (→ avoir/avere) descends from *gʰabʰ-, whose English child is GIVE. Identical sound and sense, opposite ancestry",
+      "GE-AGE": "wie alt bist du? / ich bin zwanzig Jahre alt — the one everyday slot where German REFUSES haben: age takes sein, word-for-word the English sentence, siding with English against all four Romance sisters (which all 'have' their years). Jahr ← *jēra = year; alt ← *aldaz = old (Latin cousin alere 'nourish' → adult)",
+      "GE-PAST-COMPOUND": "Perfekt — haben + past participle (ich habe gesagt), where the weak participle is WRAPPED in a ge-…-t circumfix and the participle goes to the END of the clause (Ich habe gestern Deutsch gelernt). It translates as the plain past 'I said', not only 'I have said'. ge- ← Germanic *ga- 'completely', a perfective marker English dropped but fossilised in ENOUGH (OE genōg) and archaic yclept",
+      "GE-PAST-SIMPLE-WRITTEN": "Präteritum — ich sagte, the simple past, whose -te is the Germanic DENTAL preterite = English -ed (walked), a Germanic invention with no Latin equivalent. Retreating from speech (nearly gone in the south, better preserved in the north) but standard in narrative WRITING; war/hatte/modals resist everywhere",
+      "GE-VERB-BE": "sein — 'to be', not one verb but THREE PIE roots under one infinitive: ist/sind/seid ← *h₁es- (Latin est/sunt), bin/bist ← *bʰuH- 'grow, become' (English BE; Latin fuī — hence Spanish FUI, ES-C14, the same root landing in German's present and Spanish's past), war/waren ← *wes- 'dwell, remain' (English WAS/WERE). Carries the general law: the most-USED words are the most irregular, because analogy only regularises what you have to guess at",
+      "GE-PAST-PERFEKT-SEIN": "ich bin gegangen — the Perfekt built on sein: the same MOTION / CHANGE-OF-STATE split as French (gehen/kommen/fahren/werden), plus a learn-them set that isn't motion at all — sein, bleiben, gelingen, geschehen/passieren, begegnen. THE CONTRAST: in the perfect the German participle never agrees (sie ist gegangen, no ending) where French does (elle est allée); it does still inflect attributively (der angekommene Zug, ein geschriebener Brief), and OHG inflected it here too before German lost that. And the split is NOT inherited from Latin — the haben/sein perfect is a native Germanic development that grew up alongside Romance by areal contact, same Sprachbund as FR-PAST-SIMPLE-LITERARY. Split parallel, agreement not shared",
+      "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
+      "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
+      "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
+      "PT-VERB-TRABALHAR": "trabalhar — 'to work' (← tripaliāre → travail/travel; twin of Spanish trabajar)",
+      "PT-WORD-PORTUGUES": "português — 'Portuguese' (the language; ← Portus Cale)",
+      "PT-NUM-1-5": "um/dois/três/quatro/cinco (1-5; ← ūnus…quīnque; um nasal; GENDER kept on two: dois/duas ← duo/duae)",
+      "PT-NUM-6-10": "seis/sete/oito/nove/dez (6-10; ct→it shift octō→oito, noite/leite; sete…dez → setembro…dezembro)",
+      "PT-DAYS-WEEKDAYS": "segunda/terça/quarta/quinta/sexta(-feira) (Mon-Fri; UNIQUE numbered feira days ← fēria 'feast-day'; ordinals of dois…seis; Church dropped planet-gods)",
+      "PT-DAYS-WEEKEND": "sábado/domingo (Sat/Sun; ← Sabbatum / diēs Dominica; domingo counted 1st → Monday='segunda' 2nd)",
+      "PT-TIME-HOUR": "hora (hour ← hōra ← Greek hṓrā; horas explicit: é uma hora / são duas horas)",
+      "PT-TIME-NOON-MIDNIGHT": "meio-dia/meia-noite (noon/midnight; meio/meia ← medius; noite ← noctem shows ct→it like oito)",
+      "PT-MONTHS": "janeiro…dezembro (março=Mars; -eiro ending ← -arius like feira; setembro…dezembro = Latin 7-10 = sete/dez)",
+      "PT-SEASONS": "primavera/verão/outono/inverno (verão ← veranum ← vēr 'spring' — summer grew from spring!; outono ← autumnus au→ou)",
+      "PT-FAMILY-PARENTS": "pai/mãe (father/mother; most worn-down of the sisters — pater→pae→pai, māter→mãe nasal, -t- vanished; os pais 'parents' lit. 'the fathers'; o país=country)",
+      "PT-FAMILY-SIBLINGS": "irmão/irmã (brother/sister; NOT from frāter but germānus 'of the same stock' — frāter germānus 'full brother'; = ES hermano; cousins germane/German)",
+      "PT-FOOD-BREAD": "pão (bread ← pānis, worn to one nasal syllable pānis→pão — same erosion as pai; plural pães; → companion/pantry)",
+      "PT-FOOD-DRINKS": "água/vinho (water/wine; água KEPT aqua's body vs French eau; vinho ← vīnum with signature -nh- = Spanish ñ → wine/vine/vinegar)",
+      "PT-NUM-11-15": "onze…quinze (11-15; only FIVE fused teens — fewer than any sister; -ze = decem as in dez/dezembro; catorze keeps the c-)",
+      "PT-NUM-16-20": "dezesseis…vinte (16-20; PT breaks EARLIEST at 16, rebuilding as dez + e + seis = literally 'ten AND six', the 'and' still audible; vinte ← vīgintī)",
+      "PT-COLOUR-BLACK-WHITE": "preto, branco — PT keeps TWO blacks: literary negro ← niger, and everyday preto ← Latin pressus 'pressed, dense' (dense→thick→dark; cf. press/compress). branco ← Germanic *blank 'shining', with the Portuguese l→r swap (blanc→branco, plaza→praça); albus survives in alvorada/alva 'dawn'",
+      "PT-COLOUR-RED-BLUE": "vermelho, azul — vermelho ← vermiculus 'LITTLE WORM', the kermes scale insect crushed for scarlet dye, so the dye's name became the colour's (→ English vermilion; vermis → vermin); PT alone skips the ancient *h₁rewdʰ- red root (kept only in rubro/ruivo). azul ← Arabic lāzaward 'lapis lazuli' ← Persian lāžward, l- lost as if an article → azure — the al-Andalus thread reaching a basic colour",
+      "PT-VERB-HAVE": "ter — 'to have' (tenho/tens/tem/temos/têm; -nh- as in vinho; the CIRCUMFLEX alone separates tem 'he has' from têm 'they have'). THE IBERIAN SWAP: PT and ES alone took tenēre 'to HOLD' (→ tenant/retain/maintain/tenacious/tenure) for 'have', while FR/IT kept habēre — and PT's own habēre survivor, haver, was demoted to an auxiliary and to há 'there is'. The two verbs swapped jobs",
+      "PT-AGE": "quantos anos tens? / tenho vinte anos — age via ter, never ser; given ter ← tenēre this literally says 'I HOLD twenty years', the most physical version of the idiom. ano ← annus, where PT SIMPLIFIED the -nn- to n while Spanish PALATALIZED it to ñ (año) — one Latin word, two Iberian outcomes, and the origin of ñ itself",
+      "PT-PAST-SIMPLE": "pretérito perfeito — falei/falaste/falou/falámos/falaram ← Vulgar Latin perfect *fabulāvī (= ES hablé), ONE word, no auxiliary. The point isn't the endings but that Portuguese still USES it in daily speech: French exiled the same inherited tense to literature, German pushed it aside, northern Italy dropped it — PT and ES, at the western edge, kept it",
+      "PT-PAST-COMPOUND-ITERATIVE": "tenho falado — ter + participle, which does NOT mean 'I have spoken'. It means 'I have BEEN speaking' — repeatedly, over a recent stretch, possibly ongoing; one finished act is falei. Portuguese built the same have+participle machine as FR/IT but falei never vacated the plain-past slot, so with NO VACANCY the construction drifted to an iterative job. A very common English-speaker error in PT",
+      "PT-VERB-BE": "ser — 'to be' (essence), built from TWO Latin verbs but THREE stems: sou/és/é/somos/são and era ← esse, the preterite fui ← fuī (esse's OWN ancient perfect, already suppletive in Latin; PIE *bʰuH-, root of English be and German bin), and the INFINITIVE ser ← sedēre 'to SIT' (cf. sedentary, session, PT sede 'seat'). Headline fact: ser and IR share their whole preterite — fui/foste/foi/fomos/foram is both 'I was' and 'I went' (fui professor vs fui ao Brasil). Only IR borrowed: fuī was always ser's, while Latin īre's own perfect (iī/īvī) had eroded away. Shared IBERIAN inheritance (= ES fui, ES-C14), so ir's preterite costs the learner nothing. vós sois is taught struck through — dead outside northern dialect and church language; the living 2pl is vocês são",
+      "PT-BE-CONTRAST": "ser vs estar — the two 'to be' verbs, with estar's forms (estou/estás/está/estamos/estão; vocês estão, not vós estais) finally named after fourteen chapters of hearing Como está?. The sit/stand image is a MNEMONIC, not the cause: ser ← sedēre 'to SIT' against estar ← stāre 'to STAND', but the essence sense comes from esse — sedēre supplied mostly FORMS (infinitive, future, conditional), and what drove the split was stāre's own locative/resultative sense. Counterexample against 'temporary': ele ESTÁ morto. Minimal pairs are a distinction to USE: ela é bonita 'is beautiful' vs ela está bonita 'looks beautiful tonight'"
+    }
+  },
+  "practiceTags": {
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, CH14-PRACTICE, CH15-PRACTICE, CH16-PRACTICE, CH17-PRACTICE, CH18-PRACTICE, REVIEW."
+  }
+}

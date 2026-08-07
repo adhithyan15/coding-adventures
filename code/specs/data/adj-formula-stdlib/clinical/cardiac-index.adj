@@ -1,0 +1,100 @@
+% ============================================================================
+% cardiac-index.adj — the definition of the cardiac index
+% (cardiac index = cardiac output ÷ body surface area) in the ADJ standard library.
+% ============================================================================
+% The cardiac-index entry of the *clinical* track, a hemodynamics sibling of
+% `cardiac-output.adj` (which supplies the cardiac output this library indexes) and
+% `filtration-fraction.adj` (another physiological RATIO). Where the cardiac-output library
+% grounds a PRODUCT (cardiac output = heart rate × stroke volume), this grounds the RATIO that
+% NORMALISES that output for body size: THE CARDIAC INDEX IS THE CARDIAC OUTPUT DIVIDED BY THE
+% BODY SURFACE AREA — the same litres-per-minute of blood flow expressed per square metre of
+% the patient, so a small adult and a large adult with the same true cardiac reserve read the
+% same index (a normal cardiac index is about 2.5–4.0 L/min/m²). It ships as an importable,
+% byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements (the
+% cardiac output an index implies for a given body surface area, and the body surface area the
+% other two imply). As with every compute library, a consumer states NO arithmetic: it
+% `import`s this file, binds the measured quantities from its own byte-provenance decomposition,
+% and asks the engine to APPLY the cited definition on the CPU. Zero math is performed by the
+% model; the engine computes each value EXACTLY, carrying the definition's citation.
+%
+%     import "cardiac-index.adj"
+%     observe cardiac_output(6)          % "…cardiac output 6 L/min…"  (span cited by the model)
+%     observe body_surface_area(2)       % "…BSA 2 m²…"                (span cited by the model)
+%     ? cardiac_index(cardiac_output, body_surface_area)
+%                                         % engine → 3, carrying CI = CO ÷ BSA
+%
+% All three formulas are EXACT over their parameters (a quotient and two of its inverse
+% readings), so every value the engine returns is exact. The three COMPOSE and invert cleanly
+% around the worked case CO = 6 L/min, BSA = 2 m² (CI = 6 ÷ 2 = 3 L/min/m², a normal cardiac
+% index): the `cardiac_index` a consumer computes from output and body surface area is exactly
+% the `cardiac_index` the `cardiac_output` formula multiplies the body surface area by, to
+% recover the 6 L/min cardiac output, and exactly the `cardiac_index` the `body_surface_area`
+% formula divides the cardiac output by to recover the 2 m² body surface area.
+%
+%   cardiac_index(cardiac_output, body_surface_area)
+%       = cardiac_output / body_surface_area   % CI = CO ÷ BSA   (definition)
+%   cardiac_output(cardiac_index, body_surface_area)
+%       = cardiac_index * body_surface_area    % CO = CI × BSA   (same def, solved for CO)
+%   body_surface_area(cardiac_output, cardiac_index)
+%       = cardiac_output / cardiac_index       % BSA = CO ÷ CI   (same def, solved for BSA)
+%
+% NOTE ON UNITS: the cardiac output is in litres per minute (L/min) and the body surface area
+% in square metres (m²); the cardiac index comes out in litres per minute per square metre
+% (L/min/m², here 3). This library computes the exact value over whatever consistent units it
+% is given.
+%
+% All three formulas are defended by the SAME defining equation — "Cardiac index = cardiac
+% output/body surface area (BSA) = (heart rate x stroke volume)/BSA" — because that one
+% definition (the cardiac index IS the cardiac output over the body surface area) sanctions the
+% relation read every way (the index from output and area, the output from index and area, or
+% the area from output and index). The equation is transcribed verbatim from the StatPearls
+% "Physiology, Cardiac Index" article on the NCBI Bookshelf, so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced
+% one. (See feedback_nothing_human_authored — the defining equation is a verbatim span of the
+% cited page, not asserted from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable hemodynamic quantity the definition ranges over,
+% and each result is a derived quantity. `cardiac_index`, `cardiac_output` and
+% `body_surface_area` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are
+% the everyday names a decomposer maps onto the canonical term; the trailing comment records
+% the intended unit.
+% ----------------------------------------------------------------------------
+dictionary cardiac_index_vocab {
+    define cardiac_output     : finding  surface "cardiac output", "CO"          % litres per minute (L/min)
+    define body_surface_area  : finding  surface "body surface area", "BSA"      % square metres (m²)
+    define cardiac_index      : finding  surface "cardiac index", "CI"           % litres per minute per square metre (L/min/m²)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its
+% formal parameters, bound at apply time, and each carries the defining equation from StatPearls
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% quotient/product of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook cardiac_index_laws {
+    use cardiac_index_vocab
+
+    % Cardiac index — the cardiac output over the body surface area, i.e. CI = CO ÷ BSA.
+    formula cardiac_index(cardiac_output, body_surface_area) = cardiac_output / body_surface_area
+        source "Cardiac index = cardiac output/body surface area (BSA) = (heart rate x stroke volume)/BSA"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539905/"
+        trust authoritative
+
+    % Cardiac output — the same definition solved for the cardiac output an index implies for a
+    % body surface area (CO = CI × BSA). Defended by the SAME defining equation, read the other
+    % way.
+    formula cardiac_output(cardiac_index, body_surface_area) = cardiac_index * body_surface_area
+        source "Cardiac index = cardiac output/body surface area (BSA) = (heart rate x stroke volume)/BSA"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539905/"
+        trust authoritative
+
+    % Body surface area — the same definition solved for the body surface area the other two
+    % imply (BSA = CO ÷ CI). Again the SAME defining equation, read the third way.
+    formula body_surface_area(cardiac_output, cardiac_index) = cardiac_output / cardiac_index
+        source "Cardiac index = cardiac output/body surface area (BSA) = (heart rate x stroke volume)/BSA"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539905/"
+        trust authoritative
+}

@@ -1,5 +1,719 @@
 # Changelog
 
+## [0.75.0] - 2026-08-06 - `min(a, b)`/`max(a, b)` on the plain-arithmetic surface (FL-11)
+
+- `RUNTIME_BUILTIN_FORMULAS` gains `"max"`/`"min"`: a two-argument `max(a, b)`/`min(a, b)` call is
+  now recognised by name in `expand_rec`, the same recognized-by-name built-in mechanism FL-9's
+  `floor`/`mod` use, dispatched BEFORE the user-formula map is consulted. Each maps directly onto
+  the PRE-EXISTING `ExprAst::Call2(BinFn::Max/Min, …)` node — the same one the `latex "…"` frontend
+  already reached for `\max(a, b)`/`\min(a, b)` — so this is a new surface path to old machinery,
+  not a new `ExprAst`/`ComputeOp` variant or exhaustive-match site.
+- No grammar change. The plain grammar's `agg` production already claims the ONE-argument shape
+  (`max(slot)`/`min(slot)`, an aggregation over a slot's observed values) before `apply` is ever
+  tried, so this only ever fires for the TWO-argument shape `agg` cannot produce — no ambiguity
+  between the two `min`/`max` meanings to resolve.
+- `min`/`max` join the reserved-name set at every arity (not just the one-parameter arity `agg`
+  already reserved): `RUNTIME_BUILTIN_FORMULAS`'s existing `ReservedFormulaName` gate in
+  `validate_formula` now rejects `formula min(a, b) = …`/`formula max(a, b) = …` outright, the same
+  as it already rejects a two-parameter `formula mod(a, b) = …`.
+- New unit tests: `max_builtin_computes_the_larger_of_two_named_quantities`,
+  `min_builtin_picks_the_first_argument_when_it_is_smaller`, `max_wrong_arity_is_a_clean_error`,
+  `min_wrong_arity_is_a_clean_error`; `every_reserved_name_is_really_dispatched_by_the_runtime` and
+  the `RUNTIME_BUILTIN_FORMULAS` sortedness test extended to cover `max`/`min`.
+- `mod`/`max`/`min` share ONE `expand_rec` dispatch block (one `a`/`b` local pair) instead of three
+  near-duplicate ones, since all three take exactly two arguments and expand identically. Not just
+  tidiness: three separate blocks each contributed their own `ExprAst` locals to `expand_rec`'s
+  debug-build stack frame, and macOS CI caught the regression directly — `deep_operator_spine_
+  trips_the_nesting_guard_not_the_stack` (a test asserting `FORMULA_MAX_NODE_DEPTH`'s depth guard
+  trips before the native stack does) overflowed the runner's ~2 MiB worker-thread stack a few
+  frames short of the guard, passing on Linux/Windows but not macOS. Sharing the locals restores
+  the same per-call frame footprint `mod` alone had before this release.
+
+## [0.74.0] - 2026-08-06 - `symbolic … for <var>`: rung-0 of the CAS-wiring rung (FL-10)
+
+- New `symbolic <name>(<params>) { <lhs> == <rhs> } for <target>` construct, a sibling of
+  `formula` inside a `formulabook` (new `symbolic_decl` grammar rule; new `SymbolicDef` AST node;
+  new `symbolics: Vec<SymbolicDef>` field on `Statement::Formulabook`). Where a `formula` computes
+  ONE fixed output from its parameters, a `symbolic` clause solves its cited equation for
+  whichever variable the caller didn't already know: bind every declared parameter to a query
+  argument exactly like a `formula` application, then solve the resulting single-variable linear
+  equation for `target` through the SAME `Backend`/`VM` seam every CAS dialect in this workspace
+  uses — not a direct call into `cas-solve`'s solver functions. This closes the gap the rest of the
+  crate had left: `symbolic-vm`/`cas-solve`/`symbolic-ir` existed in the workspace with no adj-lang
+  caller; `adj-lang` now depends on all three.
+- New `crate::symbolic_backend::RungZeroBackend`, a minimal `symbolic_vm::Backend` mirroring
+  `macsyma-runtime`'s `MacsymaBackend`/`solve_handler` (the one existing example of this seam) but
+  scoped to rung-0's single capability: it registers exactly one handler, for the `Solve` head
+  (`cas_solve::SOLVE`), and holds no bindings or other state. The equation is translated to
+  `symbolic_ir::IRNode` (`lower.rs`'s new `expr_to_irnode`), wrapped `Solve(Equal(lhs, rhs),
+  target)`, and evaluated through `symbolic_vm::VM::eval`; the handler delegates the actual
+  linear-coefficient extraction and Gaussian elimination to `cas_solve::solve_linear_system`
+  (a 1×1 system is the fully-general degenerate case) and returns its `Rule(target, value)` node.
+- `expr_to_irnode` is a small, rung-0-scoped structural mirror of what `solve_linear_system`'s own
+  `linear_eval` accepts (`Add`/`Sub`/`Mul` over a `Symbol` target and numeric constants — it has no
+  `Div` case), restricted to `+ − × ÷` on the adj-lang side: a target-carrying `Div` is legal
+  because the divisor must be target-free (dividing by the unknown is nonlinear), so it is folded
+  to a constant and re-expressed as `Mul` by its reciprocal. A target-free sub-expression
+  short-circuits straight to `compute` (`eval_closed`, unchanged from the first cut of this rung),
+  so a bound side of the equation can be anything `compute` supports (a KB slot, `floor`, …) — only
+  the side actually carrying the target is restricted to linear shape.
+- Rung-0 is deliberately narrow and says so in `LowerError` variants: the target may not double as
+  a parameter (`SymbolicTargetIsParameter`); every identifier must resolve to a parameter or the
+  target (`SymbolicFreeVariable`); no nested `formula` application inside the equation
+  (`SymbolicApplicationUnsupported` — composition is explicitly future work); the
+  provenance-required lint (`SymbolicMissingProvenance`); bad/wrong-arity query arguments
+  (`SymbolicBadArgument`/`SymbolicArity`); a bound coefficient that didn't stay exact
+  (`SymbolicNotExact`); the target multiplied/divided by an expression that itself contains it, or
+  any node shape rung-0 doesn't linearize (`SymbolicNonLinear`); an `ExactRational`
+  arithmetic/`i64`-narrowing overflow guard (`SymbolicCoefficientOverflow`); the target already
+  independently bound at apply time (`SymbolicTargetAlreadyBound` — §3D step 1: the target is the
+  unknown being solved FOR, so a program that also `observe`s it is contradictory intent); and a
+  singular system — no solution, or every value satisfies it — which `solve_linear_system` cannot
+  tell apart (`SymbolicUnsolvable`, replacing the finer `SymbolicNoSolution`/`SymbolicIndeterminate`
+  split an earlier direct-`solve_linear` cut of this rung could distinguish but this API cannot).
+- The closed-vocabulary gate's `check_query` (`enforce_vocabulary`) only special-cased the
+  `formulas` map, so a `symbolic` application in any program using `use`/`dictionary` vocabulary
+  scoping was rejected as an `UndefinedTerm` — even though it had already lowered correctly — the
+  moment the later enforcement pass ran. `enforce_vocabulary` now also takes the `symbolics` map;
+  caught by the `electricity.adj` worked example (which only fails through the `use`-scoped path,
+  not a bare inline test), not by the initial in-crate unit tests.
+- `physics/electricity.adj`'s Ohm's law now carries both directions: the existing `formula
+  voltage(current, resistance)` alongside a new `symbolic resistance_from_ohms_law(voltage,
+  current) { voltage == current * resistance } for resistance` — the same cited law, solved for
+  the OTHER variable. `electricity.query.adj` solves for resistance BEFORE it is ever `observe`d
+  (the target may not already be bound), then round-trips the forward `formula` direction against
+  the resistance just recovered.
+
+## [0.73.0] - 2026-08-06 - floor/mod on the plain-arithmetic surface (FL-9)
+
+- `floor(x)` and `mod(a, b)` join `RUNTIME_BUILTIN_FORMULAS` as recognized-by-name built-ins in
+  `expand_rec`, the same mechanism `round_to`/`round_sig`/`to_scientific`/`to_percent`/
+  `to_currency` already use — no grammar change, since the plain surface's `factor` production
+  already includes `apply`. `floor(x)` maps onto the existing `ExprAst::Floor` node and `mod(a,
+  b)` onto the existing `ExprAst::Bin(ArithOp::Mod, …)` node (both already reachable from the
+  `latex "…"` frontend for `\lfloor x\rfloor`/`a \bmod b`) — purely a new surface path to
+  pre-existing machinery, so no new `ExprAst`/`ComputeOp` variant and no new exhaustive-match
+  site anywhere. The existing `RUNTIME_BUILTIN_FORMULAS` reserved-name collision check
+  (`LowerError::ReservedFormulaName`) covers both automatically. Unblocks base-ten place-value
+  decomposition (`tens_digit(n) = floor(n / 10)`, `ones_digit(n) = mod(n, 10)`) without needing
+  a `latex "…"` escape for one sub-expression.
+
+## [0.72.0] - 2026-08-06 - comparison formulas (FL-8) and replayable formula guard traces
+
+- `formula`'s final body expression (`formula_relation`) may now end in a single trailing
+  comparison (`a relop b`), reusing the same `relop` `constrain`/`sm_guard` already parse.
+  Every formula shipped before this rung still parses unchanged — the comparison is optional
+  and additive. A comparison formula carries the identical `source`/`locator`/`trust`/`quote`
+  provenance envelope as an arithmetic one and is applied/queried through the same `? name(args)`
+  path (`ExprAst::Compare`, lowered via `lower_rel_op` to the same `ComputeExpr::Bin` shape every
+  arithmetic op already uses — see the `logic-engine` changelog for the new `ComputeOp::Cmp*`
+  variants). Unblocks a citable, importable "is A greater than B" for the K-2 curriculum's
+  `compare` family (ADJ-FORMULA-LIBRARIES §3B) without a per-pair enumerated-table workaround.
+- `formula_source_map`'s per-formula body span now reads from `formula_relation` instead of the
+  old direct `expr` child, correctly covering a comparison's full `a > b` (not just `a`) — the
+  one call site (`adj-formula-inventory`'s byte-span inventory) that assumed the pre-FL-8 grammar
+  shape.
+- A table used as a `range`/`interpolated`/`nearest` lookup may no longer contain two rows
+  sharing a breakpoint in the key column (`LowerError::LookupDuplicateKey`, carrying both
+  row indices). `range` selects the greatest key `<= q`; with the key tied, that was
+  whichever row proof enumeration reached first, so the other row was dropped — along with
+  its own RS-5e per-row citation — with no ambiguity flag and no abstention. Verified before
+  the fix: a table with two rows keyed `10` answered `first_ten` and cited only that row,
+  while an equally-applicable `second_ten` row went unmentioned. Breakpoints are compared as
+  exact rationals, so `10` and `10.0` are one breakpoint.
+- Scoped to the key column of tables actually referenced by a lookup, so a categorical table
+  with repeated first-column values (an ordinary relation) is unaffected. `nearest` keeps its
+  documented deterministic tie-break, which resolves a genuine either-side tie rather than a
+  table defining two answers for one interval.
+- Two `table` blocks declaring the same name are now rejected (`LowerError::DuplicateTable`).
+  The registry kept the last block while every block's rows went into the KB, and a lookup
+  builds its goal — arity, key column position — from the winner alone. A shadowed block whose
+  `columns` differ therefore had its rows become *unreachable* rather than tied: wrong arity
+  fails to unify, and a reordered key column reads a non-numeric cell that selection skips. The
+  lookup then answered from a subset of the relation and cited it confidently. Reproduced: a
+  three-band table plus a one-row shadowing block with an extra column answered `rogue` at key
+  `0` for a query of 15 whose correct answer was `mid` at breakpoint `10`. This is also what
+  lets the selection-time breakpoint check assume the enumerated relation *is* the declared
+  table.
+- The declaration check is a diagnostic, not the guarantee — see the `adj-lang-cli` entry for
+  the selection-time abstention that actually holds the invariant. The duplicate scan sorts
+  once instead of searching pairwise; the nested version was O(n²) and re-ran a
+  `BigDecimal::to_rational()` allocation per comparison, taking ~8s on a 4000-row table (an
+  ordinary size for the calibration and growth-chart cases) once per lookup statement.
+
+- State-machine failures are structured (ADJ-STDLIB-COVERAGE §9d). `StateMachineOutcome`
+  now carries a typed `FailurePhase` (`TransitionGuard` / `ExitGuard` / `Yield`) instead of
+  a `phase: String`, and `ComputationError` carries a `ComputationFailure` discriminant
+  alongside the existing human `detail`. `PrecisionLoss` gained the same typed phase and
+  renamed `guard` to `expression`: a yield abstention previously reported itself by
+  prefixing the rendering with `"yield "` and placing it in a field named `guard`, so a
+  consumer telling a guard abstention from a yield one had to sniff that prefix.
+- `detail` keeps its exact previous wording, so a consumer that only prints it is
+  unaffected; one that branches now keys off `FailurePhase::type_tag()` /
+  `ComputationFailure::type_tag()`. The engine-to-outcome translation matches every
+  `ComputeError` variant with no wildcard arm, so a new engine variant breaks the build
+  here rather than collapsing into a generic string downstream.
+
+- An aggregation is now rejected when the program also declares a FORMULA of that name
+  (`LowerError::AggregationShadowsFormula`). `factor` lists `agg` before `apply`, so
+  `sum(a)` became an aggregation over the slot `a` regardless of what `sum` was declared
+  to be. Where the declared formula takes one parameter that was already caught at
+  declaration; where it takes two or more — as the shipped `formula sum(addend_one,
+  addend_two)` in `arithmetic.adj` does — the call was simply the wrong arity for it, and
+  silently aggregating returned a plausible wrong number (`sum(a)` with `a = 3` yielded
+  `3`) in place of the arity error, with any `requires` guard on that formula never
+  running. An aggregation whose name is NOT declared as a formula is unaffected and still
+  aggregates.
+- The check sits at the single construction site for `ComputeExpr::Agg`, so it is co-total
+  with the emitter by construction rather than by a separate walk that could miss a
+  position. `lower_expr`, `lower_sm_guard`, `apply_formula`, and `enforce_preconditions`
+  became fallible and now carry the formula map to reach it.
+
+- A `formulabook` may no longer declare a formula whose name is one of the five runtime
+  built-ins (`round_sig`, `round_to`, `to_currency`, `to_percent`, `to_scientific`), which
+  the `Apply` lowering answers by name *before* it consults the user formula map. Such a
+  definition was previously accepted and then never reached: the built-in reduced every
+  call while the declared body — and its `requires` guards — sat unreachable. A guarded
+  formula could therefore compile clean and produce an answer with its precondition never
+  evaluated, emitting no abstention and no execution trace. The collision is now the typed
+  `LowerError::ReservedFormulaName`.
+- The same hole exists one layer earlier, in the grammar: `factor` lists `agg` before
+  `apply`, so a one-identifier call of an aggregation keyword (`sum`, `count`, `min`,
+  `max`, `avg`) reduces to an `ExprAst::Agg` over a slot at parse time and never becomes an
+  application at all. A one-parameter `formula sum(x) … requires nonzero(x)` was therefore
+  unreachable and its guard unenforced. Such a declaration is now rejected with the same
+  error. The check is arity-aware — `agg` matches exactly one identifier argument, so the
+  shipped two-parameter `formula sum(addend_one, addend_two)` in `arithmetic.adj` is
+  reached normally and stays legal.
+- `RUNTIME_BUILTIN_FORMULAS` and `is_runtime_builtin_formula` are public, so an independent
+  checker replaying built-in-versus-user-formula precedence reads the same list the
+  dispatch enforces instead of maintaining its own copy.
+
+- Direct formula queries retain an ordered execution trace for every passed, failed, or unresolved
+  precondition, including its exact rational and `f64` value, substituted computation plan,
+  derivation tree, original scope, consumed `FactId`s, predicate identity, and provenance.
+- Guard traces flow through nested formula expansion, so an earlier successful outer guard remains
+  available when a later guard or nested callee fails. Withheld query bodies are recorded separately
+  from evaluated bodies and never publish a derived value.
+- Parser-derived source replay can bind formula parameters to query arguments independently of the
+  runtime trace, including nested formula calls and multi-step formula bodies.
+- Formula guard traces retain root-first stable computation IDs for derived operands. Source maps
+  also inventory exact top-level `let` declaration and expression byte spans, allowing downstream
+  witnesses to bind a computation plan to the authored binding without guessing from text. Import
+  resolution carries those parser-owned origins in merged statement order, including withheld and
+  same-named cross-file bindings, so lowering cannot shift a later computation onto earlier bytes.
+  Retained bindings also carry their source-lowered plan and result dimension for independent CAS
+  comparison against the emitted computation.
+
+## [0.71.0] - 2026-08-03 - executable formula preconditions
+
+- Formulas can declare ordered, generic `requires` predicates; the first closed execution
+  predicate is `nonzero(expr)`, validated for name, arity, and parameter scope.
+- Preconditions execute before formula bodies at direct queries, `let` bindings, nested formula
+  calls, and deferred predicate branches. A failed or unresolved guard publishes no value and
+  produces a structured formula abstention instead of a compile error.
+- Native expression literals retain exact decimal identity through guard validation. A literal
+  consumed by a guard rejects any value-changing `f64` conversion, while unrelated arguments and
+  unguarded formulas retain their existing behavior. A persistent precision-loss marker follows
+  narrowed literals through later derived references, while observed or exact derived rationals
+  keep using the engine's rational sidecar for composed requirements.
+- Successful observations and rebinding clear stale abstentions; consumed-fact traversal follows
+  each derivation's predecessor scope, and deferred branches publish their LHS only after both
+  sides succeed through a one-binding transactional overlay rather than cloning the full KB.
+- Nested formula or built-in applications inside requirement expressions are rejected explicitly
+  in this first slice instead of being misreported as unresolved inputs.
+- Authored decimal literals lower into exact engine IR, and state machines terminate with a typed
+  precision-loss outcome when a comparison guard cannot be decided without narrowing exact input.
+- Formula source maps retain exact UTF-8 declaration and argument spans for every precondition.
+  Duplicate formula exports and top-level arity mismatches now fail closed instead of depending
+  on import order or falling through as ordinary queries.
+- The expression-walker depth cap is 96; boxing the structured abstention control-flow payload
+  keeps Windows debug frames small enough for that bound. Validation walks are iterative, and
+  adversarial deep-spine, deep-guard, and exponential-expansion tests cover both limits.
+
+## [0.70.0] - 2026-08-02 - parser-backed formula source maps
+
+- `formula_source_map` inventories every parsed formulabook entry in source order and returns
+  the real typed `FormulaDef` beside exact half-open UTF-8 byte spans for its declaration and
+  final executable body.
+- The mapper pairs generic grammar-tree nodes with typed adapter output and fails closed on
+  formula-boundary, order, count, or name disagreement, so provenance tooling never falls back
+  to regex discovery.
+- Span recovery handles Unicode prefixes, multi-step formula bodies, and escaped quoted math
+  without normalizing or re-encoding the caller's bytes.
+
+## [0.69.0] - 2026-08-02 - byte-grounded observed inputs
+
+- `observe` declarations now accept the standard provenance annotations, including exact
+  `quote`, byte offset, and snapshot hash pins.
+- The lowerer attaches that provenance to the emitted fact, so formula verification can trace
+  every numeric input back to the bytes from which it was decomposed.
+- Formula application keeps every nested source envelope losslessly, rather than reducing inner
+  formula pins to display-only corroborations.
+- Unannotated observations remain source-compatible and retain their previous behavior.
+
+## [0.68.0] — 2026-07-30 — AR-3: attack edges compose INSIDE the `argument` block
+
+A paper's ATTACK edges — rebuttals and undercuts — can now live inside the pure `argument`
+block, so support **and** attack decompose into one construct (`ADJ-ARGUMENT-REBUTTAL.md` §5(b)).
+An `infer` gains two pieces of surface sugar, each desugaring to the already-proven substrate
+(zero new engine/logic code):
+
+- **`unless <defeater> { , <defeater> }`** (UNDERCUT) — each defeater lowers to a `not <term>`
+  body literal (negation-as-failure), so the step fires only while its warrant is not defeated.
+- **trailing `context: <name>`** (REBUT) — mirrors `rule`'s `context:` (ADJ73 PR-B). With a
+  `functional` thesis and a `context_order`, a rival `infer` in an outranking context defeats
+  this one and the engine **withdraws** the loser (`status: defeated`, `defeated_by: …`).
+
+Grammar: `arg_infer` gains an optional `arg_unless` node and a trailing `context: IDENT`; the AST
+`ArgInference` gains `unless: Vec<Term>` and `context: Option<String>`; the lowerer pushes the NAF
+literals and applies `Rule::with_context`. Worked in-block examples
+(`adj-argument-ir/rebuttal/{rebuttal,undercut}-inblock.adj`) prove the engine still withdraws the
+defeated conclusion and `adj-verify` byte-anchors both premises. The `--explain` "withdrawn /
+defeated-by" prose rendering remains a follow-up (the `governing` output already reports the
+`defeated`/`governing` status the CLI computes today).
+
+## [0.67.0] — 2026-07-30 — ADR-3: structural grounding gate for `argument` (must be sourced)
+
+The first, deterministic layer of the ADJ-ARGUMENT-IR §3 grounding gate: a shipped `argument`
+must be **sourced**. Every premise must cite the bytes it is read from, and every inference must
+cite its warrant — an un-cited element is now a clean `LowerError::ArgMissingProvenance` (argument
++ element name), the same "must be sourced" lint `table`/`statemachine`/`formula` already enforce.
+
+This is the precondition for the deterministic byte-ANCHOR (is that cite a verbatim slice of the
+pinned source?), which is delivered by the ADR-4 `adj-verify` argument pass reusing the existing
+`verify_quote`/`SnapshotStore` machinery; the *semantic* combined-bytes justification (ADJ61/62)
+and underdetermination (ADJ64) are model-in-the-loop layers that sit above the deterministic CLI.
+
+## [0.66.0] — 2026-07-30 — ADR-2: the `argument` surface (ADJ-ARGUMENT-IR)
+
+Adds the `argument { premise… infer… }` construct — a byte-grounded argument graph that
+**desugars away** into the existing substrate (`ADJ-ARGUMENT-IR.md` §2/§6): a premise → a
+provenanced ground `Fact`; an inference → a `Rule` whose body is the terms it cites `from`;
+the thesis is the derived head a trailing `? thesis(…)` queries. Because it lowers to facts +
+rules, the engine derives the thesis and (later) `--explain`/`adj-verify` operate for free — no
+argument-specific evaluator.
+
+- Grammar: `argument_decl`/`arg_premise`/`arg_infer`/`arg_ref` (IDENT-matched literals, like
+  `statemachine`/`table`); regenerated `_parser_grammar.rs`/`_lexer_grammar.rs`.
+- AST: `Statement::Argument` + `ArgPremise` + `ArgInference`.
+- Adapter: `adapt_argument` (+ `adapt_arg_premise`/`adapt_arg_inference`) faithfully carry the
+  structure; the `from` references are `arg_ref` nodes, cleanly separable from the name/connective
+  tokens.
+- Lower: the `Statement::Argument` arm desugars each premise to a `Fact` and each inference to a
+  `Rule`, resolving `from` references against earlier element names. Three new typed `LowerError`s
+  — `ArgUnknownPremiseKind` (kind ∉ {extracted, imported, inferred}), `ArgUnknownReference` (a
+  dangling `from`), `ArgDuplicateName` (a reused element name) — so the surface's invariants fail
+  cleanly, never a panic or a silently-dropped step.
+- Surface refinement (settled here, spec-sync'd): premises/inferences carry the standard
+  `{ source/locator/trust }` annotation envelope as their cite/warrant, rather than dedicated
+  `cite`/`warrant` keywords — one provenance surface, consistent with `relate`/`rule`.
+
+## [0.65.0] — 2026-07-30
+
+### Added — RS-3c: `statemachine` driver + typed outcomes (ADJ-STATEMACHINE §3–§4)
+
+A new `statemachine` module hosts the **driver** that runs the machines RS-3b lowered —
+the deterministic, total loop of ADJ-STATEMACHINE §3, its four typed terminal outcomes
+(§4), and the §3.1 cycle key. The types (`run_state_machine`, `StateMachineRun`,
+`StateMachineOutcome`, `RunStep`, `YieldValue`) are re-exported for the CLI to render.
+
+- **No new evaluator** (the §3 claim, made literal): a comparison guard reuses
+  `KnowledgeBase::observed_numeric` + `compute` + `CmpOp::eval_values` (the exact-first path
+  the predicate-gated contribution uses); a presence guard reuses `enumerate_all` ("has any
+  proof?"), with the bare atom `true` as the always-holds special case; an `assert` action
+  adds a `Fact::certain` to a **working clone** of the KB, so a machine's asserts never leak.
+- **Total by construction / cannot hang**: the loop is exit-check → `steps >= budget` →
+  cycle-check → first-guard-wins transition → apply asserts. The budget caps it at
+  `budget + 1` iterations even if cycle detection never fires; `seen` never grows past
+  `budget` keys. The cycle key is `(state, the sorted set of terms asserted so far)` — a
+  sound, deterministic fingerprint because asserts are monotone and the base KB is fixed.
+- A **yield** expression is evaluated with the ordinary `compute` evaluator: a numeric yield
+  carries its full derivation tree; a bare symbolic atom (`at_target`) whose slot has no
+  numeric binding is reported as a symbol (the engine's `UnknownSlot` is the signal).
+
+## [0.64.0] — 2026-07-30
+
+### Added — RS-3b: `statemachine` grammar + AST + adapter + lowering (ADJ-STATEMACHINE §2, §5)
+
+The native `statemachine` construct now parses, adapts, and lowers its STRUCTURE — the
+control-flow sibling of `table`/`formulabook` for long-horizon procedural reasoning
+(ADJ-STATEMACHINE RS-3b). **No driver / no execution yet** — that is RS-3c.
+
+- **Grammar** (already regenerated): `statemachine_decl` with `initial`, `state`/`transition`,
+  `exit when … yield …`, and `budget N steps`; guards are `( apply | IDENT ) [ relop expr ]`
+  and actions `assert term` (the RS-3b minimal subset). Keywords are IDENT-matched literals —
+  `.tokens` untouched.
+- **AST**: `Statement::StateMachine { name, uses, initial, states, exits, budget, annotations }`
+  plus `StateDef` / `TransitionDef` / `ExitDef` / `SmGuard` / `SmAction`. A guard's subject is
+  carried as an `ast::Term` (atom for a bare IDENT, compound for an `apply`).
+- **Adapter**: `adapt_statemachine` (+ `adapt_sm_state` / `_transition` / `_exit` / `_guard` /
+  `_action`), modelled on `adapt_table`, reusing `first_name_not` / `first_named_child` /
+  `collect_annotations` / `adapt_use` / `adapt_term` / `adapt_expr` and the same relop mapping
+  as `adapt_predicate`.
+- **Lowering**: each machine lowers to a validated, provenance-stamped `LoweredStateMachine`
+  (`LoweredState` / `LoweredTransition` / `LoweredExit` / `LoweredGuard` / `LoweredAction`),
+  exposed on `LoweredProgram::state_machines`. Guards/actions lower through the SAME
+  term/compute forms the rest of the language uses (`lower_term` / `lower_expr` /
+  `lower_cmp_op`) — no parallel evaluator. Five typed well-formedness errors: `SmMissingInitial`
+  (defensive — the grammar already requires `initial`, so an omitted clause is a parse error),
+  `SmMissingExit`, `SmBudgetNotPositive`, `SmUnknownState`, `SmMissingProvenance` (the shared
+  write gate — a shipped machine must be sourced).
+
+Purely additive; no existing behaviour changes. Covered end-to-end by
+`adj-lang-cli/tests/rs3b_statemachine_lower_e2e.rs` (a well-formed machine compiles clean; each
+malformed one yields its specific diagnostic).
+
+## [0.63.0] — 2026-07-24
+
+### Added — RS-5f: `mode nearest` table lookup (ADJ-TABLES §3.4)
+
+The lowering mode dispatch now accepts `nearest` alongside `range` and `interpolated`
+(all three are built tactics); an unrecognized mode is still `LowerError::LookupUnknownMode`.
+`nearest` snaps the query key to the closest tabulated key (nearest-neighbour). Like `range`
+(and unlike `interpolated`), it returns the value cell verbatim, so it requires only a numeric
+**key** column — the existing shared `LookupNonNumericKeyColumn` check — and does **not** impose
+the `interpolated`-only numeric-value-column requirement. Doc comments on `LookupUnknownMode`
+updated to list all three modes. Purely additive; no existing behaviour changes.
+
+## [0.62.0] — 2026-07-23
+
+### Added — RS-5d: `mode interpolated` table lookup (ADJ-TABLES §3.3)
+
+The `? lookup <table> <key> = <n> mode interpolated give <val>` tactic is now built — the
+piecewise-linear sibling of `mode range`. Lowering changes:
+
+- The mode dispatch accepts `interpolated` alongside `range` (both are built tactics); an
+  unrecognized mode is still `LowerError::LookupUnknownMode`. The reserved-mode error
+  `LookupModeUnsupported` is **retired** (it existed only to reject `interpolated`).
+- `interpolated` additionally validates that the **value** column is numeric in every row —
+  the new `LowerError::LookupNonNumericValueColumn` — because it computes on the value cells
+  (`v0 + (v1−v0)·(q−k0)/(k1−k0)`); you cannot linearly blend a category label. (`range` returns
+  the value cell verbatim and imposes no such check.)
+
+The lowered form is unchanged (`LoweredRangeLookup` carries the mode through); the interpolation
+arithmetic itself lives in the CLI's exact-rational tactic (see `adj-lang-cli` 0.23.0).
+
+## [0.61.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_currency(x, code [, places])` money rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let due  = to_currency(subtotal + tax, usd)      % → "USD 42.50"
+let yen  = to_currency(price, jpy, 0)            % → "JPY 1980"
+```
+
+- `to_currency` joins `round_to`/`round_sig`/`to_scientific`/`to_percent` as a built-in
+  recognised during `Apply` lowering (same native comma-list surface, no new grammar). It lowers
+  to the new `logic_engine::ComputeExpr::ToCurrency` node via a new `ExprAst::ToCurrency(expr,
+  code, places)` AST node, under the default half-even mode.
+- The **currency code** is the second argument, written as a **bare identifier** (`usd`) — it
+  parses as an `ExprAst::Ref` and is read directly at the intercept, never resolved as a slot or
+  expanded. Identifiers lex lowercase, so the code is normalized to the canonical uppercase
+  ISO-4217 form for the rendered string and the audit record (`usd` → `USD 42.50`). A
+  missing/non-identifier code (e.g. a number in the code slot) is a clean compile error.
+- The `places` third argument is **optional**: `to_currency(x, code)` uses the documented default
+  (`DEFAULT_CURRENCY_PLACES = 2`, the common minor-unit precision). A stated count must be a
+  non-negative integer literal (`≥ 0` — `to_currency(x, jpy, 0)`) within the cap
+  (`MAX_ROUND_PLACES = 100`); anything else, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node (cloning the code string), so it composes inside
+  formula bodies, `let`s, and predicate application positions exactly like the other precision ops.
+
+## [0.60.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_percent(x [, places])` percentage rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let share = to_percent(votes / total, 1)   % → "42.7%"
+let round = to_percent(part / whole)        % default 2 decimal places
+```
+
+- `to_percent` joins `round_to`/`round_sig`/`to_scientific` as a built-in recognised
+  during `Apply` lowering (same native comma-list surface, no new grammar). It lowers to
+  the new `logic_engine::ComputeExpr::ToPercent` node via a new `ExprAst::ToPercent(expr,
+  places)` AST node, under the default half-even mode.
+- The `places` argument is **optional**: `to_percent(x)` uses the documented default
+  (`DEFAULT_PERCENT_PLACES = 2`), resolved at lowering so the engine node always carries a
+  concrete count and the audit records what was used. A stated `to_percent(x, n)` requires
+  `n` a **non-negative** integer literal (`≥ 0` — zero places is meaningful, `"50%"`)
+  within the precision cap (`MAX_ROUND_PLACES = 100`). A non-integer, negative, oversized,
+  or non-literal `n`, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node, so it composes inside formula bodies,
+  `let`s, and predicate application positions exactly like the other precision ops.
+
+## [0.59.0] — 2026-07-22
+
+### Added — NUM-6c: the `to_scientific(x [, figures])` scientific-notation rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let reported = to_scientific(avogadro, 4)   % → "6.022e23"
+let quick    = to_scientific(measured)      % default 6 significant figures
+```
+
+- `to_scientific` joins `round_to`/`round_sig` as a built-in recognised during
+  `Apply` lowering (same native comma-list application surface, no new grammar). It
+  lowers to the new `logic_engine::ComputeExpr::ToScientific` node via a new
+  `ExprAst::ToScientific(expr, figures)` AST node, under the default half-even mode.
+- The `figures` argument is **optional**: `to_scientific(x)` uses the documented
+  default mantissa precision (`DEFAULT_SCI_FIGURES = 6`), resolved here at lowering so
+  the engine node always carries a concrete count and the audit records what was used.
+  A stated `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since
+  a scientific mantissa has at least one significant figure) within the precision cap
+  (`MAX_ROUND_PLACES = 100`). A non-integer, zero, negative, oversized, or non-literal
+  `n`, or the wrong argument count, is a clean compile error — never a silent format.
+- All the expression walkers (`collect_refs`, `charged_clone`, `expand_rec`,
+  `substitute_expr`) carry the new node, so it composes inside formula bodies, `let`s,
+  and predicate application positions exactly like `round_to`/`round_sig`.
+
+## [0.58.0] — 2026-07-22
+
+### Added — NUM-6b: the `round_sig(x, n)` significant-figures narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+```
+let reported = round_sig(measured / trials, 3)   % 3 significant figures
+```
+
+- `round_sig` joins `round_to` as a built-in recognised during `Apply` lowering
+  (same native comma-list application surface, no new grammar). Both now build a
+  `logic_engine::RoundSpec` — `Places` for `round_to`, `SigFigures` for `round_sig`
+  — carried by the shared `ExprAst::RoundTo` node and lowered to the engine's exact
+  `Round` eval.
+- `n` must be an integer literal within the DoS cap; **≥ 1** for `round_sig` (zero
+  significant figures is meaningless), ≥ 0 for `round_to`. Anything else is a clean
+  `FormulaBadArgument` compile error.
+
+## [0.57.0] — 2026-07-22
+
+### Added — NUM-6a: the `round_to(x, n)` precision narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+A formula body (or a `let`) can now round to a stated precision:
+
+```
+let dose_rounded = round_to(total / doses, 2)   % 10/3 → 3.33, exactly 333/100
+```
+
+- New `ExprAst::RoundTo(x, n)`, lowering to the engine's exact-path
+  `ComputeExpr::Round` (default half-even mode). Dimension-preserving.
+- Surface is the **native application** grammar — `round_to` is recognised as a
+  built-in during `Apply` lowering, *before* the user-formula lookup, so it reuses
+  the same comma-list call grammar as `quotient(a, b)` with **no new grammar and no
+  LaTeX change**. (The kickoff spec's LaTeX `\operatorname{round}(x, n)` form does
+  not parse a comma-separated argument list — the frontend splits on the top-level
+  comma — so §4.1 was updated to the native surface; see the spec's surface note.)
+- The precision `n` must be a **non-negative integer literal** ≤ 100 (a DoS cap);
+  a non-integer, negative, oversized, or non-literal `n` is a clean compile error
+  (`FormulaBadArgument`), never a silent mis-rounding.
+
+## [0.56.0] — 2026-07-21
+
+### Added — RS-4 PR-D4a: the `quote`/`at`/`snapshot` surface binding (ADJ-REASON-MATH §E.3.1)
+
+A grounded clause can now write a **pinned verbatim span** — the bytes that make `adj-verify`
+report `fully_verified`:
+
+```
+relate inhibits(aspirin, cyclooxygenase)
+    quote "Aspirin inhibits cyclooxygenase" at 0 snapshot "<64-hex sha256>"
+    source "Pharmacology reference"
+    trust authoritative
+```
+
+- **Grammar**: new `quote_annotation = "quote" STRING "at" NUMBER "snapshot" STRING`, added to the
+  `annotation` alternation (grammars regenerated).
+- **AST**: `Annotation::Quote { text, byte_offset, snapshot_hex }`.
+- **Lower**: the pin populates `Provenance::quote` (a `VerbatimSpan`) + `Provenance::snapshot`
+  (a `ContentHash`) via `with_quote`. It is **fail-closed** on well-formedness — a snapshot that is
+  not a 64-char SHA-256 hex, or a quote whose text has no visible content, is a compile error
+  (`LowerError::MalformedQuotePin`), never a half-built `Verbatim` span the verifier would reject.
+  A `quote` on a table row pins that row's own span. Duplicate `quote` is a `DuplicateAnnotation`.
+
+The `byte_offset` is emitted by the grounding spider at ingest, never hand- or model-authored
+(`feedback_no_byte_arithmetic_for_llm`). Reviewers read the `quote` text and `source` label; the
+machine owns the arithmetic.
+
+**Scoped as D4a** (per feedback_smaller_prs): this is the surface + fail-closed *well-formedness*
+lowering. The *anchored* compile-time check (does the text really sit at `byte_offset` in the named
+snapshot?) and the `adj-verify --snapshots` end-to-end path are D4b — the latter also fixes a latent
+cli-builder flag-parse hang discovered while wiring this up. Until D4b, `adj-verify` still enforces
+the anchored check at verify time, so a bad pin is caught; D4b moves that gate earlier, to compile.
+
+## [0.55.0] — 2026-07-18
+
+### Added — RS-5e: per-row provenance on a `table` (ADJ-TABLES)
+
+**A table row can now carry the span that defends *it*.** Until now a `table` had ONE
+`source`/`locator`/`trust` envelope, so every answer — in every band, from every row — quoted the
+same sentence. That is an accounting error, not a cosmetic one: the audit trail asserted a fact and
+cited a span that did not support it. The RS-5c range lookup made it glaring (the selected row is
+explicit in the audit), but exact lookup had always been mis-cited the same way.
+
+- **Grammar**: `table_row` gains an optional `[ LBRACE { annotation } RBRACE ]` block. The braces
+  are deliberate — a table's envelope is written *after* its rows, so a bare trailing annotation
+  would be ambiguous (last row's, or the table's?). `LBRACE` disambiguates. Regenerated
+  `_parser_grammar.rs`.
+- **AST**: `TableRow` gains `annotations: Vec<Annotation>`.
+- **Lower**: new `row_provenance()` folds a row's block **over** the envelope *field by field*, so a
+  row supplies only what differs — usually just its own `source` span — and inherits the shared
+  `locator`/`trust`. Corroborating `cites` are appended. Duplicate keys inside one row block stay a
+  clean `DuplicateAnnotation`.
+- **No renderer change was needed**, which is the elegant part: each row already lowered to its
+  **own** `Fact`, and every citation path (exact recall, range lookup, the proof DAG's `via_facts`)
+  already cites *the fact that produced the answer*. Giving that fact the row's provenance was the
+  entire fix.
+- **Backward compatible**: a row with no block inherits the whole envelope, exactly as before, so
+  every table authored pre-RS-5e is unchanged.
+
+## [0.54.0] — 2026-07-18
+
+### Added — RS-5c: range / bracket lookup over a `table` read as a step function (ADJ-TABLES)
+
+A `table` can now be queried as a **step function**, not only by exact key. The new surface
+`? lookup <table> <key_col> = <n> mode range give <value_col>` selects the breakpoint row whose
+key column is the greatest key `<= n` and returns its value column — the tactic for tax brackets,
+dose bands, and reference-range classification. This is the follow-up to RS-5b's exact lookup;
+range/interpolated were spec'd there and deferred, and this lands the range half.
+
+- **Grammar**: `query_decl` now folds a `lookup_expr` alternative
+  (`QUESTION ( lookup_expr | term )`), so the range form coexists with the exact binding query.
+  `lookup`/`mode`/`give` are IDENT-matched literals — **no new lexer tokens**. Regenerated
+  `_parser_grammar.rs` / `_lexer_grammar.rs`.
+- **AST**: new `Statement::RangeLookup { table, key_col, key_value, mode, value_col }`.
+- **Adapter**: `adapt_lookup` (positional Name-token binding, robust to a column literally named
+  `mode`/`give`) + `adapt_signed_number` (optional leading `MINUS`, folded exactly into the literal).
+- **Lower**: validates against the table registry and resolves the key/value columns to positional
+  indices — new `LookupUnknownTable` / `LookupUnknownColumn` / `LookupNonNumericKeyColumn`
+  (the key column must be numeric) / `LookupModeUnsupported` (`interpolated` is reserved for RS-5d)
+  / `LookupUnknownMode`. Emits the validated `LoweredRangeLookup` (now on `LoweredProgram`).
+- The `table` declaration is **unchanged** — a range table is an ordinary table read differently.
+
+## [0.53.0] — 2026-07-14
+
+### Added — NX-2: parse numeric literals to exact values (no silent f64 truncation)
+
+A written decimal literal is now stored **exactly as written** instead of being narrowed to `f64`
+at parse time (spec: `code/specs/ADJ-EXACT-NUMBERS.md`). Before this change a table cell or valued
+fact like π to 39 places bound at only ~16 significant digits; now every digit survives parse →
+store → query.
+
+- New AST node **`NumLit { Int(i64), Exact(BigDecimal) }`** with `to_f64_lossy()`. `Term::Num` and
+  `TableCell::Number` now carry a `NumLit` instead of an `f64`.
+- The adapter's two **ground-term** sites (a table cell and a valued-fact argument) parse the
+  NUMBER token via new `parse_numlit`: a whole number that fits `i64` becomes `Int` (keeping the
+  engine's small-integer fast paths), everything else is parsed with `BigDecimal::from_str` into
+  `Exact`. The two **compute-leaf** sites (`ExprAst::Lit`, inherently `f64`) keep their
+  `parse_finite` → `f64` path — the labeled-lossy boundary.
+- `lower_*` emit `Number::Int` / `Number::Exact` directly, never through `f64`.
+- Behavior note: a magnitude that overflows `f64` (`1e400`) is no longer rejected at parse — it is
+  a valid exact decimal now stored with full precision. A scale-amplification payload
+  (`1e-2000000000`) is still rejected by `BigDecimal`'s `MAX_SCALE` budget.
+- **DoS guard.** Because `.adj` source is untrusted and `BigDecimal` base-10 conversion is
+  `O(digits²)`, `parse_numlit` caps an exact literal's **byte length** (`MAX_NUMBER_TOKEN_LEN =
+  4096`, checked before the quadratic parse) and its **scale magnitude** (`MAX_NUMBER_TOKEN_SCALE =
+  4096`, so a tiny token like `1e-1000000` cannot force a ~1 MB render/`to_f64` string). Both sit
+  ~100× above any legitimate constant (π to 39 places is 41 bytes), so only hostile payloads are
+  rejected — restoring the implicit bound the old `f64` parse provided. Adversarial tests cover
+  both shapes.
+- Depends on `bignum-core` ≥ 0.5.0 and `logic-core` ≥ 0.2.1.
+
+## [0.52.0] — 2026-07-13
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`parse` built its `GrammarParser` with no recursion-depth cap, even though
+`adj-lang` is reachable via `adj-lang-cli` on arbitrary `.adj` files — a
+real, not theoretical, attack surface. Deeply-nested input, in any of this
+grammar's three *independent* recursive shapes (parenthesised arithmetic
+nesting via `factor → expr → term_expr → factor`, direct call nesting via
+`term`'s own self-recursion, or `rulebook { rulebook { … } }` nesting via
+`statement`'s own alternation including `rulebook_decl`), would recurse
+until it overflowed the native thread stack — an uncatchable process abort
+— before this crate's own `Result`-returning entry points ever got a
+chance to report anything. (The rulebook shape was missed in the first
+pass of this fix and caught by `/security-review` before merge.)
+
+All three shapes were independently measured (binary search, uncapped
+parser, the true default per-test-thread stack — no `RUST_MIN_STACK`
+override, no explicit `Builder::stack_size`, matching what `cargo test`
+and a production caller both actually get — debug build, adversarial
+5000-level input): paren nesting safe through 260 rule-frames, crashes at
+262; rulebook nesting safe through 245, crashes at 250; call nesting (the
+*binding*, lower floor) safe through 124, crashes at 126. Added a bespoke
+`MAX_RULE_DEPTH = 90` — about 27% below the binding 124-rule-frame floor —
+and wired it into `parse` via `.with_max_depth(...)`.
+
+- Added `MAX_RULE_DEPTH: usize = 90` and wired it into `parse`.
+- 9 new regression tests (3 per independent recursive shape): deep
+  adversarial input on an enlarged-stack thread returns a clean `Err`,
+  input at the measured real-nesting boundary (28 levels for paren
+  nesting, 44 for rulebook nesting, 86 for call nesting) still parses
+  while one level past it doesn't, and the cap trips before the native
+  stack would overflow even on a default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
+
+## [0.51.0] — native tabular data: the `table` construct (ADJ-TABLES RS-5)
+
+### Added
+
+- **`table` construct** — a first-class, importable, provenanced tabular relation, a sibling of
+  `dictionary`/`rulebook`/`formulabook`. Surface:
+  `table <name> { [use <dict>…] columns c1,… row (v1,…) … source "…" locator "…" trust <tier> }`.
+  `table`/`columns`/`row` are IDENT-matched literals (no new lexer keywords). Grammar: new
+  `table_decl`/`columns_decl`/`table_row`/`row_item` rules; AST: `Statement::Table` +
+  `TableRow`/`TableCell`; adapter: `adapt_table`/`adapt_row_item`.
+- **Rows lower to relations** — each `row (v1,…,vn)` lowers to a ground `logic_engine::Fact`
+  `name(v1,…,vn)` carrying the table's provenance, byte-identical to how a `relate` edge lowers. So
+  **exact lookup is the existing SLD binding query** (`? name(key, $V)`) with zero new engine code,
+  the answer names the table's citation as its proof, a missing key abstains, and a looked-up number
+  feeds a `let`/`formula` through the existing slot/`Ref` path. Cells map 1:1 onto the engine's three
+  ground term kinds (`Num`/`Atom`/`Str`).
+- **Guards** — `LowerError::TableArity` (a row whose cell count ≠ the declared `columns`),
+  `TableMissingProvenance` (a shipped table must be `source`d — the write gate shared with
+  `formula`/`relate`), and `TableNoColumns` (defensive).
+- Motivation and design in `code/specs/ADJ-TABLES.md`; the first shipped table,
+  `reference/length-conversions.adj` (NIST exact length→metre factors), demonstrates ingesting a
+  published table verbatim and citing it once. Range/bracket and interpolated lookup are staged
+  follow-ups (RS-5c/RS-5d).
+
+## [0.50.0] — multi-step formula bodies (ADJ-RULE-SUBSTRATE RS-2)
+
+### Added
+
+- **Multi-step `formula` bodies** — a formula may now be written as a block of named `let`-steps
+  followed by a final expression: `formula f(p…) { let s1 = e1  let s2 = e2  <body> }`. Each step
+  names an intermediate value; a later step and the final body may reference the parameters plus any
+  **earlier** step. Grammar: new `formula_body` (either the existing `= <expr>` sugar or the block form)
+  and `formula_step` rules; AST: `FormulaStep` + `FormulaDef.steps`. The lowerer folds the steps into a
+  single **effective body** by in-order substitution, so the RS-1 param-substitution and
+  formula-calls-formula expansion consume it unchanged (a multi-step body is surface sugar for the
+  equivalent nested single expression). Scope is validated strictly left-to-right — an undeclared or
+  forward step reference is a clean `LowerError::FormulaFreeVariable`. The size budget bounds an
+  adversarial step chain to `FormulaExpansionTooLarge`. The single-expression form is unchanged (purely
+  additive). Worked example: the shipped `clinical/cockcroft_gault.adj` (four named steps composing
+  `difference`/`product`/`quotient`). *(Per-step `DerivedRef` trace nodes — each step as its own audit
+  entry — are deferred to the RS-4 execution-trace renderer; RS-2 delivers the expressible, correct,
+  composing construct.)*
+
+## [Unreleased] — `formulabook` / `formula` — importable, provenanced, parameterized formulas (ADJ-FORMULA-LIBRARIES rung-0)
+
+### Added
+
+- **`formulabook <name> { use <dict>… formula… }`** and **`formula <name>(<params>) = <expr>`** — the
+  rung-0 substrate of the *compute* standard library (a sibling of `rulebook`). A `formula` is a named,
+  importable, reusable `let`: `<expr>` reuses the existing `let` expression grammar verbatim, and a leaf
+  naming a declared `<param>` is a **formal parameter**, bound at apply time. Each formula carries the
+  same `source "…" locator "…" trust <tier>` provenance envelope every grounded clause carries.
+- **Formula application** — a consumer's `? name(args)` whose functor names a registered formula (with
+  matching arity) is APPLIED, not treated as a hypothesis query: each parameter binds to its argument
+  (a like-named `observe`d slot or a number literal), the body is substituted, and the result is
+  evaluated through the **existing** `logic_engine::compute` (`ComputeExpr`) path and bound as a derived
+  value named after the formula — carrying the formula's cited provenance for the audit trail.
+- **Two validations**: parameter-scoping (`LowerError::FormulaFreeVariable` — a body identifier that is
+  not a declared parameter) and a provenance-required lint (`LowerError::FormulaMissingProvenance` — a
+  shipped formula must carry a non-empty `source`). Vocabulary enforcement now accepts a formula-application
+  query so the closed-vocabulary gate does not reject the new construct.
+- AST: `Statement::Formulabook { name, uses, formulas }` + `FormulaDef { name, params, body, annotations }`.
+
 ## [0.49.0] - 2026-07-03 — `constrain asciimath "…"` — a second frontend reaches the constraint surface
 
 ### Added

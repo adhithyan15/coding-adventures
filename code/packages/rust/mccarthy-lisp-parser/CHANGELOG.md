@@ -1,5 +1,34 @@
 # Changelog — mccarthy-lisp-parser
 
+## v0.3.0 — 2026-07-14 — recursion-depth guard on the GrammarParser itself (second layer of defense)
+
+* **Fix (DoS):** `create_mccarthy_parser_from_tokens` built its
+  `GrammarParser` with no recursion-depth cap. This crate already has a
+  `check_nesting_depth`/`MAX_PAREN_DEPTH` (64) pre-scan that rejects
+  excessive combined paren+quote nesting before the parser runs, but
+  **only `parse_to_cst`/`parse` call it** —
+  `create_mccarthy_parser_from_tokens` is a public entry point
+  (documented for editor/LSP integrations that already hold a token
+  stream) that bypasses the pre-scan entirely, so a caller invoking it
+  directly with adversarial tokens could still hit the same
+  native-stack-overflow DoS the pre-scan was meant to close.
+* Both of this grammar's independent recursive shapes were measured
+  (binary search, uncapped parser, the true default per-test-thread stack
+  — no `RUST_MIN_STACK` override, no explicit `Builder::stack_size`,
+  bypassing `check_nesting_depth` to measure the parser's own floor):
+  list nesting (the *binding*, lower floor) safe through 260 rule-frames,
+  crashes at 262; quote-chain safe through 280, crashes at 290. Added
+  `MAX_RULE_DEPTH = 180` — about 31% below the binding floor — and wired
+  it into `create_mccarthy_parser_from_tokens` via `.with_max_depth(...)`.
+* 6 new regression tests (3 per independent recursive shape), calling
+  `create_mccarthy_parser_from_tokens` directly (bypassing
+  `check_nesting_depth`) so they exercise the new guard specifically: deep
+  adversarial input on an enlarged-stack thread returns a clean `Err`,
+  input at the measured real-nesting boundary (59 levels for list
+  nesting, 88 for quote-chain) still parses while one level past it
+  doesn't, and the cap trips before the native stack would overflow even
+  on a default-stack thread.
+
 ## v0.2.1 — 2026-06-03 — iterative Drop (DoS hardening)
 
 * **Fix (DoS):** added an iterative `Drop` impl for `LispExpr`.  The

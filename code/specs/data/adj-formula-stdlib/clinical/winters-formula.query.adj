@@ -1,0 +1,26 @@
+% ============================================================================
+% winters-formula.query.adj — worked applications of Winter's formula.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an acid–base vignette into a measured serum
+% bicarbonate: it `import`s the grounded formulabook, `observe`s the value, and asks the engine to
+% APPLY Winter's formula. No arithmetic is stated by the consumer; the engine computes each value
+% EXACTLY (over exact rationals) and carries the article's citation as its proof, on the CPU, with zero
+% model calls.
+%
+% Worked case (HCO₃ = 10 mEq/L): expected PaCO₂ = 1.5 × 10 + 8 = 23 mm Hg. Each query fixes one of the
+% two quantities and asks the engine to recover the other; both answers are exact and COMPOSE (the
+% inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli winters-formula.query.adj
+% ============================================================================
+
+import "winters-formula.adj"
+
+% --- Winter's formula: the expected PaCO₂ a bicarbonate of 10 implies (expect 23). ------------------
+observe hco3(10)
+? expected_paco2(hco3)            % expect 23
+
+% --- Inverse: the bicarbonate an expected PaCO₂ of 23 implies (expect 10). --------------------------
+observe expected_paco2(23)
+? hco3(expected_paco2)            % expect 10

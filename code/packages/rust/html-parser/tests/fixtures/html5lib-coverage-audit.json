@@ -5,12 +5,16 @@
     "missing_sources": [],
     "normalized_cases": 7242,
     "normalized_skipped": 0,
-    "upstream_cases": 6806
+    "upstream_cases": 6806,
+    "upstream_revision": "224991ec10db04f056a89eed8b0bd8695fd2950e",
+    "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2485,
+    "local_cases": 2637,
     "missing": 0,
     "missing_sources": [],
-    "upstream_cases": 1778
+    "upstream_cases": 1934,
+    "upstream_revision": "82c3d9069cf2e93e5528a1f428fa122bd9af651d",
+    "upstream_source": "wpt/html/syntax/parsing/resources"
   }
 }

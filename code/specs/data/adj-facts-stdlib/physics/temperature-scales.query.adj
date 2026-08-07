@@ -1,0 +1,24 @@
+% ============================================================================
+% temperature-scales.query.adj — a worked recall over the physics
+% temperature-scales library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "at what temperature does
+% water boil on the Celsius scale?": it states no physics fact — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `temperature_reference_point` rows and returns the number
+% + the table's source/locator/trust. The fourth query runs the relation
+% BACKWARD (bind the value 100, recall the point that has it — water_boils_celsius).
+% The Fahrenheit freezing point of water is not fixed by this NIST page, so a
+% recall on it abstains honestly — the engine never invents a temperature.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli temperature-scales.query.adj
+% ============================================================================
+
+import "temperature-scales.adj"
+
+? temperature_reference_point(water_freezes_celsius, $V)   % expect 0
+? temperature_reference_point(water_boils_celsius, $V)     % expect 100
+? temperature_reference_point(zero_celsius_in_kelvin, $V)  % expect 273.15
+? temperature_reference_point($P, 100)                     % expect water_boils_celsius — reverse recall
+? temperature_reference_point(water_freezes_fahrenheit, $V) % expect abstain — this page fixes no Fahrenheit point

@@ -173,11 +173,72 @@ sequence of one-PR items run through the autonomous loop (§8).
   (`array-runtime` needs generalized reduce/scan/outer-product kernels
   first, tracked as item AR-2) before the lexer/parser/runtime land.)*
 - **Wave 5 — Reduce, Derive, Maple (subset).** More symbolic CAS on the shared
-  engine (Derive is small and historically charming).
+  engine (Derive is small and historically charming). *(Kickoff: see
+  [`MA07`](MA07-derive-language.md) for Derive — the design item fixing
+  language scope and the `:=`-assignment expression grammar, verified
+  against the Derive 6.1 online help rather than assumed from the family
+  resemblance to Macsyma/Wolfram, before the lexer/parser/runtime land.
+  See [`MA08`](MA08-reduce-language.md) for Reduce — one of the two
+  oldest CAS ever built (1968, alongside Macsyma), an Algol-surfaced
+  algebraic-mode language over a Lisp engine, verified against the current
+  REDUCE User's Manual. See [`MA09`](MA09-maple-language.md) for Maple —
+  Wave 5's third and final language: three distinct aggregate types
+  (expression sequences, lists, sets) sharing brackets that mean something
+  different in every sibling CAS already in this repo, and an `f(x) := e`
+  spelling that is *not* the general function definition Reduce's/Derive's
+  own identical-looking idiom is (real Maple's own remember-table
+  mechanism instead — the arrow operator `f := x -> e` is the general
+  form) — verified against the current Maplesoft online Help system
+  rather than assumed from family resemblance.)*
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
-  `array-runtime`.
+  `array-runtime`. *(Kickoff: see [`MA06`](MA06-j-language.md) for J — the
+  design item fixing language scope, the verb/adverb/conjunction grammar
+  (reusing APL's verb/noun split almost wholesale, plus one genuinely new
+  production for tacit hook/fork trains) before any lexer/parser/runtime
+  code lands. No substrate gap this time — array-runtime + AR-2, already
+  built for APL, cover J's in-scope value model unchanged. See
+  [`MA10`](MA10-scilab-language.md) for Scilab — Wave 6's second language,
+  and the one language in this survey's own table honestly marked
+  "MATLAB-like with syntax differences" rather than given its own one-line
+  characterization; checked directly against current help.scilab.org
+  documentation rather than assumed from that family resemblance, the
+  answer came out the *opposite* of Octave's: Scilab's `+` operator
+  concatenates strings where MATLAB's adds their character codes — a real
+  runtime-semantic divergence in shared syntax, not just a respelling — and
+  Scilab ships its own official MATLAB→Scilab translator (M2SCI) as
+  first-party evidence the two are not one language twice-spelled. So
+  Scilab gets its own `scilab-lexer`/`scilab-parser`/`scilab-runtime` (the
+  APL→J pattern), forking `matlab.grammar`'s shape at the grammar-source
+  level rather than reusing `matlab-runtime` as a crate dependency the way
+  `octave-runtime` does.)*
 - **Wave 7 — Axiom, Julia (subset).** The research-grade lifts (typed CAS;
-  multiple dispatch) — last, and only if warranted.
+  multiple dispatch) — last, and only if warranted. *(Axiom delivered: see
+  [`MA13`](MA13-axiom-language.md) for Axiom, Wave 7's first language — verified
+  directly against the original 1992 Jenks & Sutor Axiom book (via its
+  FriCAS-hosted, continuously-regenerated adaptation, since the language
+  itself — categories, domains, packages, type inference — is unchanged
+  across the post-2007 Axiom/OpenAxiom/FriCAS fork, which split over project
+  governance, not language design) rather than assumed from this table's own
+  one-line description. Unlike every prior symbolic-family kickoff
+  (Maxima/Wolfram/Derive/Reduce/Maple), the finding is that `symbolic-vm`'s
+  shared engine is reused unchanged for arithmetic but carries **no**
+  domain/category/type-tag concept at all — a real substrate gap, confined to
+  a new `axiom-runtime`-internal value layer, not a `symbolic-ir`/
+  `symbolic-vm`/`cas-*` change. The load-bearing scoping decision: a first cut
+  implements only the *interactive-language, consumer* view of Axiom's
+  category/domain system (`:` declare, `::` coerce, `has` query) over a
+  small, fixed, non-extensible table of built-in domains/categories, per the
+  book's own Chapters-0/1/2/5/6-vs-Chapters-11-13 structural split — deferring
+  whole the *library-language, producer* view (user-defined categories/
+  domains/packages via `Join` and conditional exports) that is Axiom's actual
+  reason for existing, exactly as MA11 deferred Q's own tables. Axiom's full
+  pipeline — `axiom-lexer`, `axiom-parser`, `axiom-runtime`/`axiom-repl`,
+  `axiom-to-semantic-ir`, and a real oracle-test diff against
+  `semantic-ir-to-javascript` (`:`/`::`/`has` now genuinely evaluate on the
+  compiled path too, not just the native one) — has since landed; see
+  [`HML01`](HML01-math-to-semantic-ir.md) §5's own "A SIXTH Stream B
+  frontend" writeup for the full account. Julia remains Wave 7's one
+  not-yet-started language.)*
 
 ### Item breakdown for the first three waves (illustrative)
 

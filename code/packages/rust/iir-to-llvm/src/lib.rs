@@ -80,7 +80,7 @@
 //! assert!(ll.contains("ret i64 42"));
 //! ```
 
-use interpreter_ir::opcodes::array_elem_type;
+use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -203,9 +203,14 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // (the C runtime's `LispyValue`), and the polymorphic `any` flows as the
         // same word. A lisp heap reference (`ref<LispyPair>`, and any future
         // `ref<Lispy…>`) is likewise carried as a tagged `i64` — the runtime owns
-        // the cell layout, the backend only moves words and calls `__twig_lispy_*`.
+        // the cell layout, the backend only moves words and calls `__dyn_*`.
         // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
         "any" => Ok("i64"),
+        // A lisp heap reference is carried as a tagged `i64`: `ref<LispyPair>`
+        // (a cons cell) and `ref<any>` (a `dyn_car`/`dyn_cdr` result, or a
+        // re-boxed `dyn_box_int` arithmetic result — E6d-2b) alike. The runtime
+        // owns the cell layout; the backend only moves words and calls `__dyn_*`.
+        "ref<any>" => Ok("i64"),
         t if t.starts_with("ref<Lispy") => Ok("i64"),
         // McCarthy W13 (F6): an interned symbol is a tagged 64-bit immediate.
         "symbol" => Ok("i64"),
@@ -217,6 +222,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // type_hint separately (`lower_str_*`); this only governs the LLVM value
         // type at those boundaries.
         "str" => Ok("i64"),
+        t if is_array_type(t) => Ok("ptr"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),
@@ -263,6 +269,13 @@ const SUPPORTED_OPS: &[&str] = &[
     // x86_64 / native AOT backend already supports (LANG76); we add the LLVM
     // lowering so Brainfuck — which builds an implicit byte tape — compiles.
     "alloc_bytes", "load_byte", "store_byte",
+    // E6d-6-LLVM — word-granular heap objects: the structural `alloc` /
+    // `field_store` / `field_load` / `is_null` ops a Twig record/union
+    // constructor + accessors emit (a `ref<LispyPair>` cons chain), matching the
+    // native backend (LANG77). `alloc [size]` calls `__twig_gc_alloc`; a field is
+    // a raw 64-bit word at index*8. Lets records/unions/`match` run on LLVM (they
+    // already run on native/WASM/JVM/CLR).
+    "alloc", "field_store", "field_load", "is_null",
     // LANG-FULL E5 — bounds-checked arrays (the *static* representation:
     // length-prefixed flat `calloc` block + an explicit compare/trap, vs the
     // JVM/CLR managed-array native check). `alloc_array` allocates `[i64 len]
@@ -286,9 +299,9 @@ const SUPPORTED_OPS: &[&str] = &[
     "f64_pow",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
-    // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
-    // and `print_str` calls the generic C runtime. Richer dynamic byte-string
-    // ops remain unsupported.
+    // `str_concat`, `str_slice`, `str_len`, and `str_eq` use literal metadata where
+    // possible; `str_cmp` also calls the generic C runtime for non-literal handles.
+    // Richer dynamic byte-string ops remain unsupported.
     "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "str_cmp",
     "print_str",
 ];
@@ -318,8 +331,14 @@ const SUPPORTED_OPS: &[&str] = &[
 /// `input_str` — BASIC's string `INPUT A$` (E4-dyn) — lowers to
 /// `@__twig_input_str()`, which reads a whole line and returns an i64 handle to a
 /// `[i64 len][bytes]` heap block (the runtime-string repr `print_str` reads).
+///
+/// `gc_live_bytes` (Twig GC completion round) — mirrors aarch64/x86_64-backend's
+/// identically-named diagnostic builtin — lowers to `@__twig_gc_live_bytes()`,
+/// exposing `FlatHeap::live_bytes` so a Twig program (or an end-to-end test) can
+/// observe the collector's live-byte total directly, rather than assuming it
+/// behaves the same as the native backends from reading source alone.
 const SUPPORTED_BUILTINS: &[&str] =
-    &["print_i64", "putchar", "getchar", "input_i64", "input_str"];
+    &["print_i64", "putchar", "getchar", "input_i64", "input_str", "gc_live_bytes"];
 
 #[derive(Debug, Clone)]
 struct LlvmStringLiteralDef {
@@ -334,41 +353,43 @@ struct LlvmStringLiteralRef {
 }
 
 /// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
-/// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
+/// `call`s into the shared C runtime (`twig-aot/runtime/dynval_runtime.c`), the
 /// same runtime the native AOT backend links. Each entry is
 /// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
-/// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
+/// so the signature is always `i64 (i64 × arity)`. The `dyn_*` IIR names are
 /// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
-/// `lower_lisp_repr`; they map to the runtime's `__twig_lispy_*` symbols.
+/// `lower_dyn_repr`; they map to the runtime's `__dyn_*` symbols.
 ///
 /// | iir name         | runtime symbol            | McCarthy primitive            |
 /// |------------------|---------------------------|-------------------------------|
-/// | `lispy_cons`     | `__twig_lispy_cons`       | `CONS` — build a pair `[a|b]`  |
-/// | `lispy_car`/`cdr`| `__twig_lispy_car`/`cdr`  | `CAR`/`CDR`                    |
-/// | `lispy_pair_p`   | `__twig_lispy_pair_p`     | `pair?` (→ `ATOM`)            |
-/// | `lispy_equal`    | `__twig_lispy_equal`      | `EQ`                          |
-/// | `lispy_not`      | `__twig_lispy_not`        | logical `not`                 |
-/// | `lispy_truthy`   | `__twig_lispy_truthy`     | `COND` clause test            |
-/// | `lispy_box_int`  | `__twig_lispy_box_int`    | int → tagged word             |
-/// | `lispy_unbox_int`| `__twig_lispy_unbox_int`  | tagged word → int (result)    |
-/// | `lispy_nil`      | `__twig_lispy_nil`        | `()` / nil                    |
-const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
-    ("lispy_cons", "__twig_lispy_cons", 2),
-    ("lispy_car", "__twig_lispy_car", 1),
-    ("lispy_cdr", "__twig_lispy_cdr", 1),
-    ("lispy_pair_p", "__twig_lispy_pair_p", 1),
-    ("lispy_equal", "__twig_lispy_equal", 2),
-    ("lispy_not", "__twig_lispy_not", 1),
-    ("lispy_truthy", "__twig_lispy_truthy", 1),
-    ("lispy_box_int", "__twig_lispy_box_int", 1),
-    ("lispy_unbox_int", "__twig_lispy_unbox_int", 1),
-    ("lispy_to_exit_code", "__twig_lispy_to_exit_code", 1),
-    ("lispy_nil", "__twig_lispy_nil", 0),
+/// | `dyn_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
+/// | `dyn_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
+/// | `dyn_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `dyn_null_p`   | `__dyn_null_p`     | `null?` (empty-list test)     |
+/// | `dyn_equal`    | `__dyn_equal`      | `EQ`                          |
+/// | `dyn_not`      | `__dyn_not`        | logical `not`                 |
+/// | `dyn_truthy`   | `__dyn_truthy`     | `COND` clause test            |
+/// | `dyn_box_int`  | `__dyn_box_int`    | int → tagged word             |
+/// | `dyn_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
+/// | `dyn_nil`      | `__dyn_nil`        | `()` / nil                    |
+const DYN_BUILTINS: &[(&str, &str, usize)] = &[
+    ("dyn_cons", "__dyn_cons", 2),
+    ("dyn_car", "__dyn_car", 1),
+    ("dyn_cdr", "__dyn_cdr", 1),
+    ("dyn_pair_p", "__dyn_pair_p", 1),
+    ("dyn_null_p", "__dyn_null_p", 1),
+    ("dyn_equal", "__dyn_equal", 2),
+    ("dyn_not", "__dyn_not", 1),
+    ("dyn_truthy", "__dyn_truthy", 1),
+    ("dyn_box_int", "__dyn_box_int", 1),
+    ("dyn_unbox_int", "__dyn_unbox_int", 1),
+    ("dyn_to_exit_code", "__dyn_to_exit_code", 1),
+    ("dyn_nil", "__dyn_nil", 0),
 ];
 
-/// Look up a `lispy_*` builtin by its IIR name.
-fn lispy_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
-    LISPY_BUILTINS.iter().find(|(n, _, _)| *n == name)
+/// Look up a `dyn_*` builtin by its IIR name.
+fn dyn_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
+    DYN_BUILTINS.iter().find(|(n, _, _)| *n == name)
 }
 
 /// Pre-flight validation for IIR → LLVM lowering.
@@ -724,6 +745,11 @@ pub fn lower_iir_to_llvm(
     // line, returns an i64 handle to a `[i64 len][bytes]` heap block).
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
+    let mut used_gc_alloc = false;
+    // Twig GC completion round: `call_builtin "gc_live_bytes"` (a diagnostic,
+    // mirroring aarch64/x86_64-backend's identically-named builtin) lowers to
+    // `@__twig_gc_live_bytes()` from the shared `gc-core-capi` archive.
+    let mut used_gc_live_bytes = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
@@ -740,6 +766,9 @@ pub fn lower_iir_to_llvm(
     // `@__twig_str_eq`. Set whenever any `str_eq` op appears; an unused declare is
     // legal LLVM (same rationale as `used_str_concat`).
     let mut used_str_eq = false;
+    // E4-dyn runtime lexical ordering over non-literal operands calls
+    // `@__twig_str_cmp`. The literal fast path still folds to -1/0/1.
+    let mut used_str_cmp = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -757,12 +786,15 @@ pub fn lower_iir_to_llvm(
     // BA-pow: `f64_pow` lowers to `call double @pow(double, double)` — libm.
     let mut used_f64_pow = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
-    // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
+    // first-seen order, so each gets exactly one `declare i64 @__dyn_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
     for f in &module.functions {
         for i in &f.instructions {
             if i.op == "alloc_bytes" {
                 used_alloc_bytes = true;
+            }
+            if i.op == "alloc" {
+                used_gc_alloc = true;
             }
             if i.op == "print_str" {
                 used_print_str = true;
@@ -778,6 +810,9 @@ pub fn lower_iir_to_llvm(
             }
             if i.op == "str_eq" {
                 used_str_eq = true;
+            }
+            if i.op == "str_cmp" {
+                used_str_cmp = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -798,8 +833,9 @@ pub fn lower_iir_to_llvm(
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
                         "input_str" => used_input_str = true,
+                        "gc_live_bytes" => used_gc_live_bytes = true,
                         _ => {
-                            if let Some(b) = lispy_builtin(name) {
+                            if let Some(b) = dyn_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
                                     used_lispy.push(b);
                                 }
@@ -848,10 +884,60 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_eq {
+        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
+        || used_gc_live_bytes {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
-            out.push_str("declare ptr @calloc(i64, i64)\n");
+            // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
+            // used to call raw `@calloc`, which is never freed and never
+            // traced — a genuine, permanent leak, confirmed by investigation
+            // to be the one remaining gap once `alloc`/`gc_alloc` (records/
+            // cons cells) were confirmed to already auto-collect via
+            // `__gc_alloc_kind`'s pre-allocation check. `@__twig_alloc_bytes`
+            // (twig_runtime.c, already used by aarch64/x86_64-backend for the
+            // identical op, and internally by this same runtime's own
+            // string-concat/-slice helpers) routes through that same
+            // GC-tracked allocator instead. `alloc_array` (LANG-FULL E5) also
+            // declares this — a scalar-element array (`array<i64>`/
+            // `array<f64>`) still allocates its backing block through this
+            // same no-ref allocator; see `@__twig_alloc_ref_array_bytes`
+            // below for the reference-element case and why the two must stay
+            // distinct rather than one allocator covering every element type.
+            out.push_str("declare i64 @__twig_alloc_bytes(i64)\n");
+        }
+        if used_arrays {
+            // Twig GC completion round (array reference-tracing fix,
+            // corrected after security review — see `elem_is_gc_reference`
+            // and `lower_alloc_array`'s doc comment for the full mechanism
+            // and why this is LLVM-only/conditional, not applied
+            // unconditionally or on the native backends). A `str`/`any`/
+            // `symbol`/`ref<T>` array element is itself a GC handle; a scalar
+            // (`i64`/`f64`) element is not. `alloc_array` picks its allocator
+            // per-array based on the *original* IIR element type: a
+            // reference-typed array calls this allocator, which registers
+            // under `__gc_register_ref_array_kind(NULL, 0, 8)` so every
+            // element slot is traced as a possible reference (`tail_from = 8`
+            // skips the length header) — otherwise a string/symbol reachable
+            // ONLY via an array element could be collected out from under a
+            // live array. A scalar-element array instead keeps calling the
+            // plain `@__twig_alloc_bytes` above, registered under the no-ref
+            // HeapKind — this is declared unconditionally whenever any array
+            // exists (a single module may contain both kinds of array), and
+            // an unused `declare` is harmless.
+            out.push_str("declare i64 @__twig_alloc_ref_array_bytes(i64)\n");
+        }
+        if used_gc_alloc {
+            // E6d-6-LLVM: the GC allocator (twig_gc.c), shared with the native
+            // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
+            out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
+        }
+        if used_gc_live_bytes {
+            // Twig GC completion round: exposes `FlatHeap::live_bytes` to Twig
+            // source as a diagnostic builtin, mirroring aarch64/x86_64-backend's
+            // identically-named `gc_live_bytes` — lets an end-to-end test prove
+            // `alloc`/`gc_alloc`'s auto-collection genuinely runs on LLVM,
+            // instead of assuming it from reading the allocator's C source.
+            out.push_str("declare i64 @__twig_gc_live_bytes()\n");
         }
         if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
@@ -897,6 +983,11 @@ pub fn lower_iir_to_llvm(
             // 1/0. Used when `str_eq` has a non-literal (runtime) operand.
             out.push_str("declare i64 @__twig_str_eq(i64, i64)\n");
         }
+        if used_str_cmp {
+            // `@__twig_str_cmp` (E4-dyn) is provided by `twig_runtime.c`: it compares
+            // length-prefixed byte strings and normalizes the result to -1/0/1.
+            out.push_str("declare i64 @__twig_str_cmp(i64, i64)\n");
+        }
     }
     if !used_lispy.is_empty() {
         out.push('\n');
@@ -934,23 +1025,34 @@ pub fn lower_iir_to_llvm(
     // symbol `@__twig_global_N`. Index-based (not name-based) so an arbitrary
     // source identifier can never produce an invalid or colliding LLVM symbol —
     // the same lazy-slot discipline the native `_twig_globals` backend uses.
-    // Each is `internal global i64 0` (zero-initialised, matching every other
-    // backend's never-written-global-reads-0 convention).
+    // Numeric scalars and string handles use `i64`; arrays use typed pointer
+    // globals so a captured handle remains a real LLVM pointer instead of being
+    // forced through a word slot.
     let globals = collect_global_syms(module);
+    let global_types = collect_global_types(module)?;
     if !globals.is_empty() {
         out.push('\n');
         // Emit in symbol order (0,1,2,…) for stable, readable output.
         let mut defs: Vec<(&String, &String)> = globals.iter().collect();
         defs.sort_by(|a, b| a.1.cmp(b.1));
-        for (_name, sym) in defs {
-            out.push_str(&format!("{sym} = internal global i64 0\n"));
+        for (name, sym) in defs {
+            let ty = global_types.get(name).copied().unwrap_or("i64");
+            let init = if ty == "ptr" { "null" } else { "0" };
+            out.push_str(&format!("{sym} = internal global {ty} {init}\n"));
         }
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
     for func in &module.functions {
         out.push('\n');
-        lower_function(func, &callee_sigs, &globals, &string_literals, &mut out)?;
+        lower_function(
+            func,
+            &callee_sigs,
+            &globals,
+            &global_types,
+            &string_literals,
+            &mut out,
+        )?;
     }
 
     Ok(out)
@@ -1131,6 +1233,51 @@ fn collect_global_syms(module: &IIRModule) -> HashMap<String, String> {
     map
 }
 
+/// Infer the storage type for each module global. Numeric scalars and string
+/// handles use the historical i64 word slot; array handles are pointers and
+/// must retain that type when a procedure captures an enclosing array.
+fn collect_global_types(
+    module: &IIRModule,
+) -> Result<HashMap<String, &'static str>, IIRLlvmError> {
+    let mut types = HashMap::new();
+    for func in &module.functions {
+        let mut registers: HashMap<&str, &'static str> = HashMap::new();
+        for (name, ty) in &func.params {
+            registers.insert(name, llvm_type_for(ty, &func.name)?);
+        }
+        for instr in &func.instructions {
+            if let Some(dest) = &instr.dest {
+                registers.insert(dest, llvm_type_for(&instr.type_hint, &func.name)?);
+            }
+            if !matches!(instr.op.as_str(), "global_load" | "global_store") {
+                continue;
+            }
+            let Some(Operand::Str(name)) = instr.srcs.first() else {
+                continue;
+            };
+            let ty = if instr.op == "global_load" {
+                llvm_type_for(&instr.type_hint, &func.name)?
+            } else {
+                match instr.srcs.get(1) {
+                    Some(Operand::Var(value)) => registers.get(value.as_str()).copied().unwrap_or("i64"),
+                    _ => "i64",
+                }
+            };
+            if let Some(previous) = types.insert(name.clone(), ty) {
+                if previous != ty {
+                    return Err(IIRLlvmError::InvalidOperand {
+                        function: func.name.clone(),
+                        detail: format!(
+                            "global {name:?} has incompatible LLVM storage types {previous} and {ty}"
+                        ),
+                    });
+                }
+            }
+        }
+    }
+    Ok(types)
+}
+
 /// A user-defined function's signature, captured at the start of module
 /// lowering so each `call` site knows the param types of its callee.
 struct FnSig {
@@ -1174,6 +1321,8 @@ struct FnState<'a> {
     /// (`@__twig_global_N`). Built once by `lower_iir_to_llvm` so the same name
     /// resolves to the same symbol across every function (LANG-FULL E6).
     globals: &'a HashMap<String, String>,
+    /// Module-wide map: global variable name → its LLVM storage type.
+    global_types: &'a HashMap<String, &'static str>,
     /// Module-wide map of source literal text → LLVM private constant metadata.
     string_literals: &'a HashMap<String, LlvmStringLiteralRef>,
     /// Is the current LLVM basic block still **open** (no terminator yet)?
@@ -1192,12 +1341,10 @@ struct FnState<'a> {
     /// (`alloca`): every assignment becomes a `store`, every read a `load`. This
     /// is the naive-frontend / `opt -mem2reg` pattern (McCarthy W12b-3, F5).
     slots: std::collections::HashSet<String>,
-    /// The LLVM stack-slot type for each promoted variable — `"i64"` for the
-    /// usual integer/word values, `"double"` for an `f64` variable (LANG-FULL
-    /// enabler E3). A slot's `alloca`/`load`/`store` all use this type so a
-    /// `real` local stores a `double` into a `double` slot instead of the old
-    /// invalid `store i64 <double>`. Any slot not present here defaults to
-    /// `i64`. (See [`collect_slot_types`].)
+    /// The LLVM stack-slot type for each promoted variable — `i64` for the
+    /// usual integer/word values, `i1` for booleans, and `double` for `f64`
+    /// values. A slot's `alloca`/`load`/`store` all use this type. Any slot not
+    /// present here defaults to `i64`. (See [`collect_slot_types`].)
     slot_types: std::collections::HashMap<String, &'static str>,
 }
 
@@ -1208,7 +1355,7 @@ impl FnState<'_> {
     }
 
     /// The LLVM type of a promoted variable's stack slot (`"i64"` by default,
-    /// `"double"` for an `f64` slot).
+    /// `"i1"` for a boolean slot, and `"double"` for an `f64` slot).
     fn slot_ty(&self, name: &str) -> &'static str {
         self.slot_types.get(name).copied().unwrap_or("i64")
     }
@@ -1229,12 +1376,13 @@ fn lower_function(
     func: &IIRFunction,
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
+    global_types: &HashMap<String, &'static str>,
     string_literals: &HashMap<String, LlvmStringLiteralRef>,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
     let ret_ty = llvm_type_for(&func.return_type, &func.name)?;
-    out.push_str(&format!("define {ret_ty} @{}(", func.name));
+    out.push_str(&format!("define {ret_ty} @{}(", llvm_fn_ident(&func.name)));
     for (i, (pname, pty)) in func.params.iter().enumerate() {
         if i > 0 {
             out.push_str(", ");
@@ -1286,7 +1434,8 @@ fn lower_function(
             continue;
         }
         let pllvm = llvm_type_for(pty, &func.name)?;
-        let init = if pllvm == "i64" {
+        let slot_ty = slot_types.get(pname).copied().unwrap_or("i64");
+        let init = if pllvm == slot_ty {
             format!("%{pname}")
         } else {
             // i1 / i8 / i16 / i32 → widen to the i64 slot.
@@ -1294,7 +1443,7 @@ fn lower_function(
             out.push_str(&format!("  {widened} = zext {pllvm} %{pname} to i64\n"));
             widened
         };
-        out.push_str(&format!("  store i64 {init}, ptr %{pname}.slot\n"));
+        out.push_str(&format!("  store {slot_ty} {init}, ptr %{pname}.slot\n"));
     }
 
     let mut state = FnState {
@@ -1306,6 +1455,7 @@ fn lower_function(
         fn_name: &func.name,
         callee_sigs,
         globals,
+        global_types,
         string_literals,
         block_open: true, // the entry block is open until its first terminator.
         slots,
@@ -1392,15 +1542,12 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
 
 /// Decide the LLVM stack-slot type for each promoted variable in `slots`.
 ///
-/// A slot is `"double"` if it ever holds an `f64` value — i.e. some
-/// instruction whose `dest` is that slot carries a float `type_hint` (a
-/// `const f64`, an `f64` arithmetic op, an `f64` `mov`, …). Otherwise it is the
-/// default `"i64"` word slot. (Float *parameters* are not promoted to slots —
-/// `param_slot_compatible` excludes them — so every slot we see here is a body
-/// local; a real local seeded with `const … : f64` then reassigned is the
-/// shape `ScalarType::Real` produces.) Enabler E3 (real arithmetic): without
-/// this, an `f64` variable was given an `i64` slot and `store i64 <double>`
-/// produced invalid IR that `clang` rejected.
+/// A slot is `"double"` if it ever holds an `f64` value, `"i1"` if it ever
+/// holds a boolean, and otherwise uses the default `"i64"` word type. A typed
+/// procedure's result variable has a seed plus an assignment and therefore
+/// becomes a slot even when its body has only one source-level assignment.
+/// (Float *parameters* are not promoted to slots — `param_slot_compatible`
+/// excludes them — so every float slot we see here is a body local.)
 fn collect_slot_types(
     func: &IIRFunction,
     slots: &std::collections::HashSet<String>,
@@ -1408,8 +1555,16 @@ fn collect_slot_types(
     let mut types = std::collections::HashMap::new();
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
-            if slots.contains(dest) && is_float_type(&instr.type_hint) {
-                types.insert(dest.clone(), "double");
+            if slots.contains(dest) {
+                match instr.type_hint.as_str() {
+                    "bool" | "i1" => {
+                        types.insert(dest.clone(), "i1");
+                    }
+                    ty if is_float_type(ty) => {
+                        types.insert(dest.clone(), "double");
+                    }
+                    _ => {}
+                }
             }
         }
     }
@@ -1417,11 +1572,9 @@ fn collect_slot_types(
 }
 
 /// Whether a parameter of IIR type `pty` can be promoted to a stack slot.
-/// Slots are `i64`, so only values that already flow as a 64-bit word qualify:
-/// every integer width, `bool`, `any`, `symbol`, and the lisp heap references.
-/// Floats/doubles do not fit the i64 slot model, so a reassigned float parameter
-/// is left as SSA (that path is a separate concern, tracked under enabler E3 —
-/// real arithmetic — and is no worse than before this change).
+/// Slots represent integers as `i64` and booleans as `i1`, so integer widths,
+/// `bool`, `any`, `symbol`, and lisp heap references qualify. Floats/doubles
+/// remain SSA for reassigned parameters (that path is a separate concern).
 fn param_slot_compatible(pty: &str) -> bool {
     matches!(
         pty,
@@ -1433,10 +1586,10 @@ fn param_slot_compatible(pty: &str) -> bool {
 /// Wrap [`lower_instr`] with the slot (`alloca`/`load`/`store`) protocol:
 ///
 /// 1. **Pre-load:** for every `Var` source operand that is a slot, emit
-///    `%t = load i64, ptr %v.slot` and temporarily rebind it in `env` so the
-///    instruction reads the loaded value.
+///    `%t = load <slot type>, ptr %v.slot` and temporarily rebind it in `env`
+///    (and `env_i1` for booleans) so the instruction reads the loaded value.
 /// 2. Lower the instruction normally.
-/// 3. **Post-store:** if `dest` is a slot, emit `store i64 <value>, ptr %v.slot`
+/// 3. **Post-store:** if `dest` is a slot, emit `store <slot type> <value>, ptr %v.slot`
 ///    (the value the instruction left in `env[dest]` — a literal for `const`/`mov`
 ///    or an SSA name for an emitted op) and then drop `env[dest]` so the variable
 ///    is only ever read back through its slot.
@@ -1454,15 +1607,20 @@ fn lower_instr_with_slots(
     }
 
     // 1. Pre-load slot source operands.
-    let mut saved: Vec<(String, Option<String>)> = Vec::new();
+    let mut saved: Vec<(String, Option<String>, Option<String>)> = Vec::new();
     for op in &instr.srcs {
         if let Operand::Var(name) = op {
             if state.slots.contains(name) {
                 let ty = state.slot_ty(name);
                 let fresh = state.fresh("ld");
                 out.push_str(&format!("  {fresh} = load {ty}, ptr %{name}.slot\n"));
-                let old = state.env.insert(name.clone(), fresh);
-                saved.push((name.clone(), old));
+                let old = state.env.insert(name.clone(), fresh.clone());
+                let old_i1 = if ty == "i1" {
+                    state.env_i1.insert(name.clone(), fresh)
+                } else {
+                    None
+                };
+                saved.push((name.clone(), old, old_i1));
             }
         }
     }
@@ -1510,19 +1668,29 @@ fn lower_instr_with_slots(
             }
         }
         state.env.remove(&fresh); // the fresh temp is not referenced again.
+        state.env_i1.remove(&fresh);
         state.env.remove(orig); // future reads of `orig` go through its slot load.
+        state.env_i1.remove(orig);
     } else {
         lower_instr(instr, state, out)?;
     }
 
     // 4. Restore the env bindings we overrode for the pre-loads.
-    for (name, old) in saved {
+    for (name, old, old_i1) in saved {
         match old {
             Some(v) => {
-                state.env.insert(name, v);
+                state.env.insert(name.clone(), v);
             }
             None => {
                 state.env.remove(&name);
+            }
+        }
+        match old_i1 {
+            Some(v) => {
+                state.env_i1.insert(name, v);
+            }
+            None => {
+                state.env_i1.remove(&name);
             }
         }
     }
@@ -1698,6 +1866,10 @@ fn lower_instr(
 
         // ── byte-tape memory (LLVM05 — LANG-MATRIX LM-L Brainfuck) ───────
         "alloc_bytes" => lower_alloc_bytes(instr, state, out),
+        "alloc" => lower_alloc(instr, state, out),
+        "field_store" => lower_field_store(instr, state, out),
+        "field_load" => lower_field_load(instr, state, out),
+        "is_null" => lower_is_null(instr, state, out),
         "load_byte" => lower_load_byte(instr, state, out),
         "store_byte" => lower_store_byte(instr, state, out),
         "alloc_array" => lower_alloc_array(instr, state, out),
@@ -1731,7 +1903,7 @@ fn lower_instr(
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state, out),
         "str_eq" => lower_str_eq(instr, state, out),
-        "str_cmp" => lower_str_cmp(instr, state),
+        "str_cmp" => lower_str_cmp(instr, state, out),
         "print_str" => lower_print_str(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
@@ -1930,18 +2102,32 @@ fn lower_str_concat(
     // to a fresh joined block. The result is a runtime string — stored ONLY in `env`,
     // with no `str_lens`/`str_values` entry — so `str_len`/`print_str` on it read the
     // length header at run time rather than folding a length that isn't known.
-    let left_handle = state.env.get(&left).cloned().ok_or_else(|| {
+    let left_operand = state.env.get(&left).cloned().ok_or_else(|| {
         IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
             name: left.clone(),
         }
     })?;
-    let right_handle = state.env.get(&right).cloned().ok_or_else(|| {
+    let left_handle = if left_operand.starts_with('@') {
+        let handle = state.fresh("scch");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {left_operand} to i64\n"));
+        handle
+    } else {
+        left_operand
+    };
+    let right_operand = state.env.get(&right).cloned().ok_or_else(|| {
         IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
             name: right.clone(),
         }
     })?;
+    let right_handle = if right_operand.starts_with('@') {
+        let handle = state.fresh("scch");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {right_operand} to i64\n"));
+        handle
+    } else {
+        right_operand
+    };
     let res = state.fresh("scc");
     out.push_str(&format!(
         "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle})\n"
@@ -2150,7 +2336,11 @@ fn lower_str_eq(
     Ok(())
 }
 
-fn lower_str_cmp(instr: &IIRInstr, state: &mut FnState) -> Result<(), IIRLlvmError> {
+fn lower_str_cmp(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_cmp", state.fn_name)?.to_string();
     let left = match instr.srcs.first() {
         Some(Operand::Var(s)) => s,
@@ -2170,24 +2360,58 @@ fn lower_str_cmp(instr: &IIRInstr, state: &mut FnState) -> Result<(), IIRLlvmErr
             });
         }
     };
-    let left_value = state.str_values.get(left).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
+    // Literal fast path: both operands are known byte strings, so fold to the
+    // shared signed ordering convention without a runtime call.
+    if let (Some(left_value), Some(right_value)) =
+        (state.str_values.get(left), state.str_values.get(right))
+    {
+        let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
+            Ordering::Less => "-1",
+            Ordering::Equal => "0",
+            Ordering::Greater => "1",
+        };
+        state.env.insert(dest, value.into());
+        return Ok(());
+    }
+
+    // Runtime path: params, call results, and branch-selected string locals are
+    // all i64 handles. A literal mixed with one of those values is represented by
+    // its global address and must be converted to the same handle form first.
+    let left_operand = state
+        .env
+        .get(left)
+        .cloned()
+        .ok_or_else(|| IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
-            detail: format!("str_cmp left source {left:?} is not a string literal value"),
-        }
-    })?;
-    let right_value = state.str_values.get(right).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_cmp right source {right:?} is not a string literal value"),
-        }
-    })?;
-    let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
-        Ordering::Less => "-1",
-        Ordering::Equal => "0",
-        Ordering::Greater => "1",
+            name: left.clone(),
+        })?;
+    let left_handle = if left_operand.starts_with('@') {
+        let handle = state.fresh("scmph");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {left_operand} to i64\n"));
+        handle
+    } else {
+        left_operand
     };
-    state.env.insert(dest, value.into());
+    let right_operand = state
+        .env
+        .get(right)
+        .cloned()
+        .ok_or_else(|| IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(),
+            name: right.clone(),
+        })?;
+    let right_handle = if right_operand.starts_with('@') {
+        let handle = state.fresh("scmph");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {right_operand} to i64\n"));
+        handle
+    } else {
+        right_operand
+    };
+    let result = state.fresh("scmp");
+    out.push_str(&format!(
+        "  {result} = call i64 @__twig_str_cmp(i64 {left_handle}, i64 {right_handle})\n"
+    ));
+    state.env.insert(dest, result);
     Ok(())
 }
 
@@ -2326,20 +2550,33 @@ fn emit_real_range_check(operand: &str, state: &mut FnState, out: &mut String) {
 /// Lower `alloc_bytes dest <- size` — allocate a `size`-byte, zero-filled tape.
 ///
 /// ```llvm
-/// %dest = call ptr @calloc(i64 <size>, i64 1)
+/// %raw  = call i64 @__twig_alloc_bytes(i64 <size>)
+/// %dest = inttoptr i64 %raw to ptr
 /// ```
 ///
-/// `calloc` zero-initialises (Brainfuck cells start at 0). `dest` (the tape
-/// base) is bound in `env` as an LLVM `ptr`; it is written exactly once by the
-/// `lower_brainfuck_for_aot` preamble, so it is never a promoted stack slot —
-/// later `load_byte`/`store_byte` read it straight from `env`.
+/// `@__twig_alloc_bytes` (`twig_runtime.c`) zero-initialises, same as the raw
+/// `@calloc` this used to call — but that raw `calloc` was a genuine,
+/// permanent leak (never freed, never traced): confirmed by investigation to
+/// be the one remaining Twig-GC gap on this backend once `alloc`/`gc_alloc`
+/// (records/cons cells) were confirmed to already auto-collect via
+/// `__gc_alloc_kind`'s pre-allocation check. `__twig_alloc_bytes` registers
+/// its blocks under a no-ref `HeapKind` (an empty field map — a Brainfuck
+/// tape holds no GC references, so nothing needs tracing), matching how this
+/// same runtime already allocates strings. Returns an i64 handle, like
+/// `@__twig_gc_alloc`; `inttoptr` recovers the `ptr` `load_byte`/`store_byte`
+/// expect in `env` — same shape `lower_field_store`/`lower_field_load` already
+/// use to turn `alloc`'s i64 handle back into a pointer.
+///
+/// `dest` (the tape base) is bound in `env` as an LLVM `ptr`; it is written
+/// exactly once by the `lower_brainfuck_for_aot` preamble, so it is never a
+/// promoted stack slot — later `load_byte`/`store_byte` read it straight from
+/// `env`.
 ///
 /// The `size` operand is a compile-time constant from `lower_brainfuck_for_aot`
 /// (30000); we emit it verbatim. A hostile hand-built IIR could pass a huge or
-/// negative literal, but that only makes `calloc` return null at runtime (a
-/// crash on first store, not a compile-time or memory-safety defect in this
-/// emitter), so no extra guard is warranted here — exactly the contract the
-/// native `alloc_bytes` lowering already relies on.
+/// negative literal, but `__twig_alloc_bytes` returns `0` (null) for `n <= 0`,
+/// same "crash on first store, not a compile-time or memory-safety defect in
+/// this emitter" contract the native `alloc_bytes` lowering already relies on.
 fn lower_alloc_bytes(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2347,9 +2584,124 @@ fn lower_alloc_bytes(
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "alloc_bytes", state.fn_name)?.to_string();
     let size = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
-    out.push_str(&format!("  %{dest} = call ptr @calloc(i64 {size}, i64 1)\n"));
+    let raw = state.fresh("abraw");
+    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_bytes(i64 {size})\n"));
+    out.push_str(&format!("  %{dest} = inttoptr i64 {raw} to ptr\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
+}
+
+// ── E6d-6-LLVM: word-granular heap objects (records / unions / closures) ──────
+//
+// A Twig record/union constructor erases (frontend) to a `ref<LispyPair>` cons
+// chain built with the structural `alloc` / `field_store` ops, and its
+// accessors read fields with `field_load`; `match` on a union tests the tag with
+// `is_null`/`=`. The native backend (LANG77) already runs these directly; these
+// four arms give LLVM the same word-granular heap model so records/unions/`match`
+// run on the LLVM column too. A heap object is a `__twig_gc_alloc`'d block; the
+// object handle and every field are raw 64-bit words (tagged `DynValue`s), so a
+// field is at byte offset `idx*8` — one `getelementptr i64, ptr, i64 <idx>`.
+
+/// `alloc [<size>] -> dest` — GC-allocate a heap object; dest is the i64 handle.
+/// `srcs[0]`, when present, is the compile-time payload size in bytes; default 16
+/// (a 2-word `LispyPair`), matching the native backend.
+fn lower_alloc(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "alloc", state.fn_name)?.to_string();
+    let size: i64 = match instr.srcs.first() {
+        Some(Operand::Int(n)) if *n > 0 => *n,
+        _ => 16,
+    };
+    out.push_str(&format!("  %{dest} = call i64 @__twig_gc_alloc(i64 {size})\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// `field_store ptr, idx, value` (no dest) — `[ptr + idx*8] = value`. `idx` is a
+/// compile-time field index; values are raw 64-bit words.
+fn lower_field_store(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "field_store must not have a dest".into(),
+        });
+    }
+    let ptr = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = field_index(instr, 1, state.fn_name)?;
+    let val = resolve_operand(instr.srcs.get(2), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("fsp");
+    out.push_str(&format!("  {p} = inttoptr i64 {ptr} to ptr\n"));
+    let ep = state.fresh("fsep");
+    out.push_str(&format!("  {ep} = getelementptr i64, ptr {p}, i64 {idx}\n"));
+    out.push_str(&format!("  store i64 {val}, ptr {ep}\n"));
+    Ok(())
+}
+
+/// `field_load ptr, idx -> dest` — `dest = [ptr + idx*8]` (a raw 64-bit word).
+fn lower_field_load(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "field_load", state.fn_name)?.to_string();
+    let ptr = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = field_index(instr, 1, state.fn_name)?;
+    let p = state.fresh("flp");
+    out.push_str(&format!("  {p} = inttoptr i64 {ptr} to ptr\n"));
+    let ep = state.fresh("flep");
+    out.push_str(&format!("  {ep} = getelementptr i64, ptr {p}, i64 {idx}\n"));
+    out.push_str(&format!("  %{dest} = load i64, ptr {ep}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// `is_null x -> dest` — `dest = (x == 0)` (the nil sentinel is the 0 word). The
+/// i1 form is kept in `env_i1` so a downstream `jmp_if_*` uses it directly.
+fn lower_is_null(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "is_null", state.fn_name)?.to_string();
+    let x = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let i1 = format!("%{dest}.i1");
+    out.push_str(&format!("  {i1} = icmp eq i64 {x}, 0\n"));
+    state.env_i1.insert(dest.clone(), i1.clone());
+    out.push_str(&format!("  %{dest} = zext i1 {i1} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// The LLVM global-identifier token for a function name, ready to follow `@`.
+///
+/// LLVM unquoted named values match `[-a-zA-Z$._][-a-zA-Z$._0-9]*`; a name with
+/// any other character (e.g. the Twig record accessor `point-x`'s `?`-suffixed
+/// union predicate `Some?`, or `list->vector`'s `>`) must be **quoted** —
+/// `@"Some?"`. A quoted identifier denotes the *same* symbol as the unquoted
+/// spelling when the characters are identical, so quoting conservatively (any
+/// name outside the safe set) is always sound; `"` and `\` inside the name are
+/// hex-escaped as LLVM requires. Emitted identically at the `define` site and at
+/// every `call` site so the reference always resolves.
+fn llvm_fn_ident(name: &str) -> String {
+    let safe = |c: char| c.is_ascii_alphanumeric() || matches!(c, '$' | '.' | '_' | '-');
+    let first_ok = name.chars().next().is_some_and(|c| !c.is_ascii_digit());
+    if first_ok && name.chars().all(safe) {
+        name.to_string()
+    } else {
+        let mut q = String::with_capacity(name.len() + 2);
+        q.push('"');
+        for c in name.chars() {
+            match c {
+                '"' => q.push_str("\\22"),
+                '\\' => q.push_str("\\5C"),
+                _ => q.push(c),
+            }
+        }
+        q.push('"');
+        q
+    }
+}
+
+/// A compile-time field index operand (`srcs[at]` = `Int(n)`, `n >= 0`).
+fn field_index(instr: &IIRInstr, at: usize, fn_name: &str) -> Result<i64, IIRLlvmError> {
+    match instr.srcs.get(at) {
+        Some(Operand::Int(n)) if *n >= 0 => Ok(*n),
+        _ => Err(IIRLlvmError::InvalidOperand {
+            function: fn_name.into(),
+            detail: format!("{}: srcs[{at}] must be a non-negative Int field index", instr.op),
+        }),
+    }
 }
 
 /// Lower `load_byte dest <- base, idx` — read one tape cell, zero-extended.
@@ -2441,14 +2793,38 @@ fn global_symbol<'a>(
     })
 }
 
-/// Lower `global_load dest <- "g"` — read the module global `g` (an `i64`).
+fn global_type(
+    instr: &IIRInstr,
+    state: &FnState,
+    op: &str,
+) -> Result<&'static str, IIRLlvmError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: format!("{op} expects a string-literal global name at srcs[0]"),
+            })
+        }
+    };
+    state
+        .global_types
+        .get(name)
+        .copied()
+        .ok_or_else(|| IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("{op}: global {name:?} has no collected storage type"),
+        })
+}
+
+/// Lower `global_load dest <- "g"` — read a typed module global `g`.
 ///
 /// ```llvm
-/// %dest = load i64, ptr @__twig_global_N
+/// %dest = load <global type>, ptr @__twig_global_N
 /// ```
 ///
-/// `dest` may be a promoted slot; the slot wrapper stores the `i64` we leave in
-/// `env[dest]`.
+/// `dest` may be a promoted slot; array captures bypass slot promotion and keep
+/// their typed pointer handle in `env[dest]`.
 fn lower_global_load(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2456,7 +2832,8 @@ fn lower_global_load(
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "global_load", state.fn_name)?.to_string();
     let sym = global_symbol(instr, state, "global_load")?.to_string();
-    out.push_str(&format!("  %{dest} = load i64, ptr {sym}\n"));
+    let ty = global_type(instr, state, "global_load")?;
+    out.push_str(&format!("  %{dest} = load {ty}, ptr {sym}\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
@@ -2464,7 +2841,7 @@ fn lower_global_load(
 /// Lower `global_store "g", val` (no dest) — write the module global `g`.
 ///
 /// ```llvm
-/// store i64 <val>, ptr @__twig_global_N
+/// store <global type> <val>, ptr @__twig_global_N
 /// ```
 fn lower_global_store(
     instr: &IIRInstr,
@@ -2478,8 +2855,17 @@ fn lower_global_store(
         });
     }
     let sym = global_symbol(instr, state, "global_store")?.to_string();
-    let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
-    out.push_str(&format!("  store i64 {val}, ptr {sym}\n"));
+    let ty = global_type(instr, state, "global_store")?;
+    let mut val = resolve_operand(instr.srcs.get(1), &state.env, ty, state.fn_name)?;
+    // `str_const` records a literal as an LLVM global pointer. A string global
+    // is an i64 handle, so materialize that pointer explicitly before storing;
+    // runtime strings already arrive as i64 registers and pass through intact.
+    if ty == "i64" && val.starts_with('@') {
+        let handle = state.fresh("global_str_handle");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {val} to i64\n"));
+        val = handle;
+    }
+    out.push_str(&format!("  store {ty} {val}, ptr {sym}\n"));
     Ok(())
 }
 
@@ -2526,22 +2912,84 @@ fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIR
 /// ```llvm
 /// %sz    = mul i64 <count>, <elemsize>
 /// %total = add i64 %sz, 8
-/// %base  = call ptr @calloc(i64 %total, i64 1)
+/// %raw   = call i64 @__twig_alloc_ref_array_bytes(i64 %total)   ; or @__twig_alloc_bytes for scalar T
+/// %base  = inttoptr i64 %raw to ptr
 /// store i64 <count>, ptr %base                 ; length header
 /// %dest  = getelementptr i8, ptr %base, i64 8  ; handle = payload
 /// ```
+///
+/// `dest`'s bounds-checked handle model (a `ptr` 8 bytes into the block, past
+/// the length header) is unchanged — `FlatHeap::find_header` resolves an
+/// *interior* address to its enclosing block, so this offset pointer stays a
+/// valid, collectible root exactly like a base-address one.
+///
+/// **Reference-tracing fix (was a real, pre-existing correctness gap, found
+/// by a security review during the `@calloc`→`@__twig_alloc_bytes` fix and
+/// tracked as a follow-up rather than silently assumed away):**
+/// `array_elem_llvm` maps `llvm_type_for`'s *LLVM* type, not the original IIR
+/// type — and `llvm_type_for` maps several heap-*handle* types (`"str"`,
+/// `"any"`, `"symbol"`, `"ref<Lispy...>"`) down to the same `"i64"` LLVM type
+/// plain integers use, so `array<str>`/`array<any>`/`array<symbol>` elements
+/// pass this function's checks (`algol-iir-compiler`'s `string array` feature
+/// already emits exactly this shape). Registering the array's block under
+/// `@__twig_alloc_bytes`'s no-ref `HeapKind` was only sound for genuinely
+/// scalar elements (`i1`/`i8`/`i16`/`i32`/`i64`/`float`/`double`) — for a
+/// heap-handle element type, the collector's precise tracer never scanned the
+/// array's payload for the handles stored inside it, so a string/symbol
+/// reachable *only* via an array element (no separate long-lived reference
+/// elsewhere) could be collected while the array still held a now-dangling
+/// handle.
+///
+/// Fixed by checking the *original IIR element type* (`elem`, before
+/// `array_elem_llvm` collapses it) via [`elem_is_gc_reference`] and calling
+/// `@__twig_alloc_ref_array_bytes` (`twig_runtime.c`) — registers under
+/// `__gc_register_ref_array_kind(NULL, 0, 8)`, `tail_from = 8` skipping the
+/// length header, tracing every element slot as a reference, the same
+/// primitive McCarthy Lisp's variable-length ref arrays already use — only
+/// when the element genuinely carries a reference; a scalar-element array
+/// keeps calling the original no-ref `@__twig_alloc_bytes`.
+///
+/// **This distinction is not just a micro-optimisation — it is required for
+/// soundness, found by a second security-review round on an earlier draft of
+/// this very fix.** This backend's collector also has a real, live, exposed
+/// *compacting* collector (`gc_collect_compacting`, callable directly from
+/// Twig source). Its mobility classifier treats every word of a
+/// ref-array-kind object's tail as a candidate reference edge; if a **scalar**
+/// array's element bits coincidentally equal some *other* live, movable
+/// object's exact base address, that unrelated object would be pulled into
+/// the "reachable via this array" set and, if actually relocated during
+/// compaction, the array's own scalar word would be silently **overwritten**
+/// with the object's new (forwarded) address by `fixup_ref_fields` — real
+/// data corruption, not mere harmless over-retention (over-retention *is*
+/// sound for the non-moving mark/sweep path alone, which is why an earlier
+/// draft of this fix mistakenly applied the reference-tracing allocator
+/// unconditionally). Restricting it to genuinely reference-typed elements
+/// avoids ever registering a scalar array under a kind the compactor may
+/// relocate through, so this corruption path cannot occur for `array<T>`
+/// where `T` is a real scalar. The native backends (`aarch64-backend`/
+/// `x86_64-backend`) do **not** get this precise fix: the AOT specialiser
+/// collapses `array<T>`'s element type to `any` before native codegen ever
+/// sees it, so there is no reliable way to conditionally select the
+/// reference-tracing allocator there without risking the same corruption on
+/// a genuinely scalar array — they keep calling `@__twig_alloc_bytes`
+/// unconditionally, same as before this round, leaving the narrower
+/// (dangling-reference, not corruption) bug in place for reference-typed
+/// arrays on those two backends until element-type information can be
+/// threaded through the specialiser. See
+/// `AOT00-T7-array-reference-tracing.md` for the full writeup.
 ///
 /// **Trust boundary (size overflow).** `count` is a *compiler-produced* operand
 /// (a constant or a bounded length expression from a frontend), not an
 /// end-user-controlled value, so the size `mul`/`add` is left as plain wrapping
 /// i64 arithmetic. A hostile *hand-built* IIR could pass `count ≈ 2⁶¹` so
-/// `count*elemsize + 8` wraps to a small `calloc` while the stored `len` stays
-/// huge — letting later in-bounds-looking indices overrun the undersized block at
-/// runtime. This is the same trust contract the existing `alloc_bytes` lowering
-/// already relies on (its `size` is likewise unchecked), and the array path is
-/// strictly *safer*: it adds the per-access bounds check `alloc_bytes` lacks. A
-/// future hardening could gate the size on `@llvm.umul.with.overflow.i64` and
-/// branch to the same trap; unneeded for the trusted-frontend threat model.
+/// `count*elemsize + 8` wraps to a small allocation while the stored `len`
+/// stays huge — letting later in-bounds-looking indices overrun the
+/// undersized block at runtime. This is the same trust contract the existing
+/// `alloc_bytes` lowering already relies on (its `size` is likewise
+/// unchecked), and the array path is strictly *safer*: it adds the per-access
+/// bounds check `alloc_bytes` lacks. A future hardening could gate the size
+/// on `@llvm.umul.with.overflow.i64` and branch to the same trap; unneeded
+/// for the trusted-frontend threat model.
 fn lower_alloc_array(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2553,17 +3001,35 @@ fn lower_alloc_array(
         detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
     })?;
     let (_, elem_size) = array_elem_llvm(&elem, state.fn_name)?;
+    let alloc_fn =
+        if elem_is_gc_reference(&elem) { "__twig_alloc_ref_array_bytes" } else { "__twig_alloc_bytes" };
     let count = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     let sz = state.fresh("asz");
     let total = state.fresh("atot");
+    let raw = state.fresh("araw");
     let base = state.fresh("abase");
     out.push_str(&format!("  {sz} = mul i64 {count}, {elem_size}\n"));
     out.push_str(&format!("  {total} = add i64 {sz}, 8\n"));
-    out.push_str(&format!("  {base} = call ptr @calloc(i64 {total}, i64 1)\n"));
+    out.push_str(&format!("  {raw} = call i64 @{alloc_fn}(i64 {total})\n"));
+    out.push_str(&format!("  {base} = inttoptr i64 {raw} to ptr\n"));
     out.push_str(&format!("  store i64 {count}, ptr {base}\n"));
     out.push_str(&format!("  %{dest} = getelementptr i8, ptr {base}, i64 8\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
+}
+
+/// Whether an `array<T>` element type `elem` (the *original* IIR type string,
+/// before `array_elem_llvm`/`llvm_type_for` collapse it to a plain LLVM
+/// type) itself carries a GC reference — a heap handle the collector must
+/// trace, not an inline scalar. Mirrors exactly the set `llvm_type_for`
+/// collapses to `"i64"` for non-scalar reasons: `"str"`, `"any"`,
+/// `"ref<any>"`, `"symbol"`, and any `"ref<Lispy...>"`. Used by
+/// `lower_alloc_array` to choose between the reference-tracing
+/// `@__twig_alloc_ref_array_bytes` and the plain no-ref `@__twig_alloc_bytes`
+/// — see that function's doc comment for why this distinction is required
+/// for soundness (not just precision) under the compacting collector.
+fn elem_is_gc_reference(elem: &str) -> bool {
+    matches!(elem, "str" | "any" | "ref<any>" | "symbol") || elem.starts_with("ref<Lispy")
 }
 
 /// Emit the bounds check shared by `array_get`/`array_set`: load the length from
@@ -2607,6 +3073,12 @@ fn lower_array_get(
     out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
     out.push_str(&format!("  %{dest} = load {elem_ty}, ptr {ep}\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
+    if elem_ty == "i1" {
+        // Boolean loads are already an LLVM `i1`. Keep the parallel boolean
+        // environment in sync so a following ALGOL `and`/`or` or branch uses
+        // the loaded bit directly instead of attempting `trunc i64 %value`.
+        state.env_i1.insert(dest.clone(), format!("%{dest}"));
+    }
     Ok(())
 }
 
@@ -2626,6 +3098,20 @@ fn lower_array_set(
     let handle = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
     let val = resolve_operand(instr.srcs.get(2), &state.env, elem_ty, state.fn_name)?;
+    // E4d-BA-arr: a folded `str` literal stored into an `array<str>` element is
+    // tracked as its `{i64 len,[N×i8]}` GLOBAL POINTER (`@__twig_str_N`), so
+    // storing it directly would emit `store i64 @global` — a `ptr` constant in an
+    // i64 slot (invalid IR). The literal's address IS a valid handle, so `ptrtoint`
+    // it to i64 first — the exact mirror of the call-arg (line ~3209) and `ret`
+    // guards. A runtime str element (branch-selected / read from another array_get)
+    // already carries an i64, so the guard is scoped to the `@__twig_str` global.
+    let val = if elem_ty == "i64" && val.starts_with("@__twig_str") {
+        let h = state.fresh("aeh");
+        out.push_str(&format!("  {h} = ptrtoint ptr {val} to i64\n"));
+        h
+    } else {
+        val
+    };
     emit_bounds_check(&handle, &idx, state, out);
     let ep = state.fresh("aep");
     out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
@@ -2819,11 +3305,34 @@ fn lower_cmp(
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, bare_op, state.fn_name)?.to_string();
-    let operand_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
-    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
-    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
-    let pred = llvm_cmp_predicate(bare_op, &instr.type_hint)?;
-    let icmp_or_fcmp = if is_float_type(&instr.type_hint) { "fcmp" } else { "icmp" };
+    // A comparison's type_hint is normally its **operand** type (`i64`/`f64`/…),
+    // and LLVM types the `icmp`/`fcmp` by it. But `lower_dynamic_arith` tags a
+    // dynamic `DynValue` comparison result `"bool"` even though its operands are
+    // the unboxed `i64`s — so a `"bool"` hint normally means "compare two `i64`s,
+    // yielding an i1", not "compare two i1s". Without this, LLVM emitted
+    // `icmp i1 %x` on a 64-bit `%x` (`'%x' defined with type 'i64' but expected
+    // 'i1'`), blocking dynamic comparisons — E6d-6 match/union tag tests and the
+    // E6d-7 closure dispatcher — on the LLVM column. (Numeric/E3 comparisons
+    // carry the real operand type; the `"i1"` hint is a distinct, legitimate
+    // "produce an i1, skip the zext" request — both are left untouched.)
+    let has_i1_source = instr.srcs.iter().any(|operand| match operand {
+        Operand::Var(name) => state.env_i1.contains_key(name),
+        _ => false,
+    });
+    let cmp_hint: &str = match instr.type_hint.as_str() {
+        // ALGOL boolean-array loads are real i1 values. Preserve that width
+        // through direct equality and `not` (which uses an i64 hint for scalar
+        // slot compatibility), rather than comparing an i1 register as i64.
+        "bool" if has_i1_source => "i1",
+        "bool" => "i64",
+        "i64" if has_i1_source => "i1",
+        other => other,
+    };
+    let operand_ty = llvm_type_for(cmp_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, cmp_hint, state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, cmp_hint, state.fn_name)?;
+    let pred = llvm_cmp_predicate(bare_op, cmp_hint)?;
+    let icmp_or_fcmp = if is_float_type(cmp_hint) { "fcmp" } else { "icmp" };
 
     // i1 form: always synthesized.  Lives in env_i1 for downstream jmp_if_*.
     let i1_name = format!("%{dest}.i1");
@@ -3028,7 +3537,7 @@ fn lower_jmp_if(
         } else if cond_ty == "void" {
             // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
             // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
-            // the condition is the `i64` 0/1 from `lispy_truthy`. Compare it
+            // the condition is the `i64` 0/1 from `dyn_truthy`. Compare it
             // against zero to get the `i1` — `trunc void …` would be invalid.
             let i1 = state.fresh("tobool");
             out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));
@@ -3216,15 +3725,24 @@ fn lower_call(
     let args_joined = arg_parts.join(", ");
 
     let ret_ty = sig.return_type;
+    let callee_ref = llvm_fn_ident(&callee);
     if let Some(dest) = &instr.dest {
         out.push_str(&format!(
-            "  %{dest} = call {ret_ty} @{callee}({args_joined})\n"
+            "  %{dest} = call {ret_ty} @{callee_ref}({args_joined})\n"
         ));
-        state.env.insert(dest.clone(), format!("%{dest}"));
+        let value = format!("%{dest}");
+        state.env.insert(dest.clone(), value.clone());
+        // A user-defined boolean procedure returns an LLVM `i1`, just like a
+        // boolean array read or comparison result. Keep the sidecar in sync so
+        // a following `not`/`and`/branch consumes that bit directly rather
+        // than trying to truncate it as an `i64` value.
+        if ret_ty == "i1" {
+            state.env_i1.insert(dest.clone(), value);
+        }
     } else {
         // Void return — no dest binding.  Per LLVM IR, a void `call` must
         // not be on the LHS of an assignment.
-        out.push_str(&format!("  call {ret_ty} @{callee}({args_joined})\n"));
+        out.push_str(&format!("  call {ret_ty} @{callee_ref}({args_joined})\n"));
     }
     Ok(())
 }
@@ -3263,7 +3781,7 @@ fn lower_call_builtin(
     // McCarthy W12b: a tagged-word lisp builtin lowers to a `call` into the C
     // runtime. Every arg + the result is an `i64` (tagged word); the dest gets a
     // fresh SSA name registered in the env so later instructions can use it.
-    if let Some((_iir_name, symbol, arity)) = lispy_builtin(&name) {
+    if let Some((_iir_name, symbol, arity)) = dyn_builtin(&name) {
         let dest = require_dest(instr, &name, state.fn_name)?.to_string();
         let mut args = Vec::with_capacity(*arity);
         for k in 0..*arity {
@@ -3359,6 +3877,19 @@ fn lower_call_builtin(
         "input_str" => {
             let dest = require_dest(instr, "input_str", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_input_str()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── gc_live_bytes() -> v — diagnostic builtin (Twig GC completion) ──
+        //
+        // `@__twig_gc_live_bytes()` (`gc-core-capi`'s `twig_compat`, already
+        // linked for `@__twig_gc_alloc`) returns `FlatHeap::live_bytes` as a
+        // plain i64 — straight into the dest register, no conversion needed.
+        //
+        //   srcs = [Var("gc_live_bytes")], dest = v  →  %v = call i64 @__twig_gc_live_bytes()
+        "gc_live_bytes" => {
+            let dest = require_dest(instr, "gc_live_bytes", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_live_bytes()\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }

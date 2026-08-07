@@ -184,6 +184,10 @@ fn test_threshold_voltage_invalid_vsb() {
 // Constants
 // ---------------------------------------------------------------------------
 
+// These assertions deliberately sanity-check compile-time physical constants;
+// clippy flags asserts on constant expressions, but that is exactly the intent
+// here (guarding the constant table against accidental edits).
+#[allow(clippy::assertions_on_constants)]
 #[test]
 fn test_constants_sanity() {
     assert!(K_BOLTZMANN > 1e-24 && K_BOLTZMANN < 1e-22);

@@ -70,9 +70,14 @@ concat directly into another scalar string slot, and
 through repeated E4 `str_concat`. `INPUT A$` (E4-dyn) reads a whole line from
 the host as a **runtime string** via `call_builtin "input_str"` — the compiler
 cannot fold it, so `PRINT A$` prints whatever stdin supplied; it is proven on
-the dynamic VM/JIT columns, with the static/managed columns' host read-a-line
-primitive to follow. Richer dynamic string storage and string arrays remain
-follow-ups. See [CHANGELOG.md](CHANGELOG.md) for the full table.
+**all seven backends** (native/LLVM/WASM/JVM/CLR/VM/JIT). **String arrays**
+(E4d-BA-arr) lower `DIM A$(n)` to an `array<str>` — the same E5 aggregate as a
+numeric array but carrying an E4-dyn string handle per element — so `A$(i) = s`
+is a `str`-typed `array_set` and `A$(i)` reads a `str`-typed `array_get` that
+feeds PRINT / `+` concat; part 1 runs on [Llvm, Wasm, Vm, Jit] with
+NativeAot/JVM/CLR (native element-size + managed reference arrays) to follow.
+Richer dynamic string expressions and string `READ`/`DATA` remain follow-ups.
+See [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
 single-line user functions, `DIM` arrays, `READ`/`DATA`/`RESTORE`, and

@@ -125,7 +125,7 @@ pub fn irfft_scalar(
             "irfft output length must be at least 1".into(),
         ));
     }
-    if half_spectrum.len() % 2 != 0 {
+    if !half_spectrum.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "irfft half-spectrum must have even length; got {}",
             half_spectrum.len()
@@ -152,7 +152,7 @@ pub fn irfft_scalar(
     // For even N: covers k = 1..N/2 (exclusive), leaving bin N/2
     //   (Nyquist) as-is — it was already in the half-spectrum.
     // For odd N: covers k = 1..(N - 1)/2 + 1 = 1..(N+1)/2.
-    let reflect_end = (n + 1) / 2;
+    let reflect_end = n.div_ceil(2);
     for k in 1..reflect_end {
         let src_re = full[2 * k];
         let src_im = full[2 * k + 1];

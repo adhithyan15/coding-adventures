@@ -1,0 +1,14 @@
+[package]
+name = "smart-home-zwave-host"
+version = "0.1.0"
+edition = "2021"
+description = "Production serial host for the normalized smart-home Z-Wave runtime"
+license = "MIT"
+
+[dependencies]
+serialport = { version = "4", default-features = false }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-zwave-integration = { path = "../smart-home-zwave-integration" }
+zwave-core = { path = "../zwave-core" }
+zwave-serial-api = { path = "../zwave-serial-api" }

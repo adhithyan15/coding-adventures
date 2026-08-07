@@ -4,6 +4,165 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.6] — 2026-08-02
+
+### Fixed
+
+- **CRITICAL — self-referential reassignment DoS, shared fix (no bypass
+  here).** A security audit found and directly reproduced (against the
+  `derive-repl` binary) an unbounded value-growth denial-of-service in
+  `symbolic-vm`'s shared `handlers::assign_handler`: `a = a * a` / `a = a
+  + a` (Wolfram's `Set`), repeated even a handful of times, doubles the
+  bound value's node count and/or nesting depth every step, reaching
+  millions of nodes from a few hundred bytes of source. Fixed at the
+  shared choke point (`symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`/
+  `MAX_BOUND_VALUE_DEPTH`, see that crate's own changelog for the full
+  mechanism). Verified `Set`/`SetDelayed` lower straight to
+  `symbolic_ir::ASSIGN` and evaluate through the shared `vm.eval`
+  (`eval_source`'s per-statement loop) — `WolframBackend::handler_for`
+  checks the W-5 builtin table first but has no entry for `Assign`, so it
+  always falls through to the shared handler — no crate-specific bypass,
+  so no code change was needed here, just proof of coverage. Added
+  regression tests reproducing the exact audited scenario end-to-end
+  through a real `WolframSession` (both the node-count-tripping `a = a *
+  a` shape and the depth-tripping `a = a + a` shape — the shared `Add`
+  handler's flatten-then-left-associate canonicalization makes that shape
+  independently dangerous, see `symbolic-vm`'s changelog), plus a
+  non-false-positive check that a handful of self-multiplications under
+  the caps still evaluates correctly.
+
+## [0.19.5] — 2026-07-17
+
+### Added (W-22 — `Integrate`, fifth `cas-*` head)
+
+- `Integrate[expr, x]` — the indefinite integral of `expr` with respect to
+  the symbol `x`: shape-specific closed forms (polynomial power rule,
+  elementary transcendentals, the Weierstrass trig-rational substitution,
+  incomplete-elliptic recognition, …) tried in sequence, falling back to a
+  generic tabular integration-by-parts sweep, exactly the same pipeline
+  Macsyma's own `integrate` already runs. Like `D`, the actual integration
+  logic lives directly in `symbolic-vm` itself: this wiring calls the new
+  `symbolic_vm::handlers::integrate_expr` — the exact indefinite-integral
+  pipeline `integrate_handler`'s own 2-argument branch runs, extracted into
+  a `pub` free function specifically for this reuse (see `symbolic-vm`'s
+  own changelog). No algorithm is reimplemented or duplicated; a parity
+  test pins both languages' call sites to agree on the same input, exactly
+  like `Simplify`/`Expand`/`Factor`/`D`'s own parity tests.
+- Like every W-5+ built-in, `Integrate` is an ordinary eager `Head[args]`
+  form requiring exactly two arguments, the second of which must be a bare
+  symbol; any other shape leaves the form unevaluated. Unlike `Factor`
+  (whose arity check lives inside `factor_handler` itself), this wrapper
+  does its own check — `integrate_handler`'s existing arity contract
+  panics on an argument count other than 2 or 4, which is right for
+  `symbolic-vm`'s own internal dispatch but wrong for Wolfram's fail-soft
+  contract, so `integrate_handler` (this crate's own wrapper) validates the
+  shape before ever calling through.
+- Scope note: only the indefinite (2-argument) form is wired under the
+  Wolfram name. The 4-argument definite-integral shape
+  `integrate_handler` also supports internally (this repo's flat
+  `Integrate[f, x, a, b]` convention for the complete-elliptic-integral
+  recognisers) is deliberately not exposed yet — real Wolfram spells a
+  definite integral `Integrate[f, {x, a, b}]`, bounds wrapped in a `List`,
+  a different shape needing its own `List`-destructuring wrapper as a
+  follow-up rather than a same-shape passthrough.
+
+## [0.19.4] — 2026-07-16
+
+### Added (W-22 — `D`, fourth `cas-*` head)
+
+- `D[expr, x]` — the symbolic derivative of `expr` with respect to the
+  symbol `x`: sum/product/quotient/power/chain rules plus the elementary
+  transcendental functions (`Sin`, `Cos`, `Exp`, `Log`, `Sqrt`, inverse and
+  hyperbolic trig), fully recursed and re-evaluated so constant folding and
+  nested rule output collapse into one final form (`D[x^3, x]` → `3 * x^2`,
+  not a half-reduced intermediate). Like `Factor`, the actual differentiation
+  logic lives directly in `symbolic-vm` itself: this wiring calls the new
+  `symbolic_vm::handlers::differentiate` — the exact pipeline Macsyma's own
+  `D` already runs, extracted into a `pub` free function specifically for
+  this reuse (see `symbolic-vm`'s own changelog). No algorithm is
+  reimplemented or duplicated; a parity test pins both languages' call sites
+  to agree on the same input, exactly like `Simplify`/`Expand`/`Factor`'s own
+  parity tests.
+- Like every W-5+ built-in, `D` is an ordinary eager `Head[args]` form
+  requiring exactly two arguments, the second of which must be a bare
+  symbol; any other shape leaves the form unevaluated. Unlike `Factor`
+  (whose arity check lives inside `factor_handler` itself), this wrapper
+  does its own check — `derivative_handler`'s existing arity contract
+  panics on the wrong count, which is right for `symbolic-vm`'s own internal
+  dispatch but wrong for Wolfram's fail-soft contract, so `d_handler`
+  validates the shape before ever calling through.
+
+## [0.19.3] — 2026-07-16
+
+### Changed
+
+- `Expand[...]` now collects like terms — `Expand[(x+1)^2]` returns
+  `1 + 2*x + x^2`, not the raw `1 + x + x + x*x` from before. No code
+  change in this crate: `expand_handler` delegates to
+  `cas_simplify::expand` unchanged, which gained a `collect_terms` pass
+  (see that crate's 0.5.0 CHANGELOG entry). Updated this crate's own
+  `expand_distributes_products_over_sums` test and the `expand_handler`
+  doc comment, which had pinned/described the old uncollected shape.
+
+## [0.19.2] — 2026-07-12
+
+### Added (W-22 — `Factor`, third `cas-*` head)
+
+- `Factor[expr]` — factors a univariate integer polynomial, or recognises
+  one of a handful of common multivariate patterns (perfect square/cube,
+  difference of squares, cubic identities, a common symbolic/integer term
+  to pull out, bivariate/n-variate Hensel lifting) — unevaluated if none
+  apply. Unlike `Simplify`/`Expand` (thin calls into the standalone
+  `cas-simplify` crate), `Factor`'s implementation lives directly in
+  `symbolic-vm` itself: this wiring calls
+  `symbolic_vm::handlers::factor_handler` directly — the exact function
+  Macsyma's own `factor` surface function already calls — made `pub`
+  specifically for this reuse (see `symbolic-vm`'s own changelog). No
+  algorithm is reimplemented or duplicated; a parity test pins both
+  languages' call sites to agree on the same input, exactly like
+  `Simplify`/`Expand`'s own parity tests.
+- Like every W-5+ built-in, `Factor` is an ordinary eager `Head[args]` form
+  requiring exactly one argument; any other arity leaves the form
+  unevaluated. That arity check lives inside `factor_handler` itself
+  (unlike `simplify_handler`/`expand_handler`, which must unwrap a single
+  expression argument themselves before calling a function that only takes
+  one bare expression), so this wiring needs no arity check of its own.
+- 5 new tests: basic univariate factoring, an unrecognised multivariate
+  form staying unevaluated, the Wolfram/Macsyma parity check, wrong-arity
+  fail-soft, and full parser→lower→backend dispatch.
+- Marks `Factor` delivered in `MA04-wolfram-language.md` §24.
+
+## [0.19.1] — 2026-07-11
+
+### Fixed (W-13 — quadratic set-op DoS)
+
+- `Union`/`Intersection`/`Complement`/`DeleteDuplicates`/`Tally` (W-13) each
+  called `contains_element` — an O(n) linear membership scan — once per
+  input element against a growing accumulator, making every one of these
+  heads worst-case O(n²) despite the existing `MAX_LIST_LENGTH` (1,000,000)
+  cap: a single input of ~1,000,000 genuinely distinct elements took
+  30-40+ minutes and 100-200% CPU to reach the cap (confirmed by direct
+  measurement — `union_over_cap_stays_unevaluated`/
+  `tally_over_cap_stays_unevaluated`, this crate's own pre-existing tests,
+  were the accidental discovery). `IRNode` carries an `f64` and so isn't
+  `Hash`-keyable, but it *is* totally ordered (`canonical_cmp`), so every
+  head now sorts once (O(n log n)) instead of scanning repeatedly:
+  `sorted_dedup` for `Union`, sorted two-pointer merges
+  (`sorted_intersect`/`sorted_difference`) for `Intersection`/`Complement`,
+  and a single grouping pass (`group_by_first_occurrence`) for the two
+  order-preserving heads, `DeleteDuplicates`/`Tally`. `MemberQ` is
+  unchanged — a single membership query was never the quadratic-blowup
+  source (that shape only exists when the same O(n) check runs once per
+  element of a *growing* accumulator).
+- Net effect: the entire `wolfram-runtime` test suite (332 tests,
+  including three new large-distinct-input regression tests for
+  `Intersection`/`Complement`/`DeleteDuplicates` alongside the pre-existing
+  `Union`/`Tally` ones) now runs in well under a second, down from
+  30-40+ minutes for the two slowest tests alone.
+- No observable output change for any input under the cap — every
+  existing correctness test (sort order, first-occurrence order, numeric
+  subtype distinctness, `NaN`-safety via `canonical_cmp`) passes unchanged.
+
 ## [0.19.0] — 2026-07-05
 
 The **W-22** deliverable (MA04 §2), second head: `Expand`. The blocker

@@ -42,12 +42,14 @@ own grammar files.
 
 This package is a thin wrapper around the generic grammar-driven lexer. It:
 
-1. Reads `code/grammars/dartmouth_basic.tokens` at initialization time
+1. Uses the token grammar embedded at compile time as native Go in
+   `grammar_data.go` (`TokenGrammarData`) — nothing is read from disk
 2. Passes the grammar to `GrammarLexer`, which compiles the regex patterns
 3. Registers two BASIC-specific post-tokenize hooks (see below)
 
-The grammar path is resolved at runtime using `runtime.Caller(0)` so tests and
-the build tool can run from any working directory.
+The grammar is compiled into `grammar_data.go` from
+`code/grammars/dartmouth_basic/dartmouth_basic.tokens` by `grammar-tools`, so the
+package builds standalone and needs no filesystem access at run time.
 
 ### Post-Tokenize Hook: relabelLineNumbers
 

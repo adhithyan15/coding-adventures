@@ -415,7 +415,7 @@ impl SealedStore {
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
-            &*kek,
+            &kek,
             &verifier_nonce,
             b"vault-verifier",
         );
@@ -492,7 +492,7 @@ impl SealedStore {
             )?;
             let decrypted = xchacha20_poly1305_aead_decrypt(
                 &entry.verifier_ct,
-                &*candidate,
+                &candidate,
                 &entry.verifier_nonce,
                 b"vault-verifier",
                 &entry.verifier_tag,
@@ -561,14 +561,14 @@ impl SealedStore {
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let aad = record_aad(namespace, key);
         let (ciphertext, body_tag) =
-            xchacha20_poly1305_aead_encrypt(plaintext, &*dek, &body_nonce, &aad);
+            xchacha20_poly1305_aead_encrypt(plaintext, &dek, &body_nonce, &aad);
 
         // Wrap the DEK under the KEK.
         let wrap_nonce: [u8; NONCE_LEN] =
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
         let (wrapped_dek, wrap_tag) =
-            xchacha20_poly1305_aead_encrypt(&*dek, &*unsealed.key, &wrap_nonce, &wrap_aad);
+            xchacha20_poly1305_aead_encrypt(&*dek, &unsealed.key, &wrap_nonce, &wrap_aad);
 
         let metadata = build_sealed_metadata(
             &body_nonce,
@@ -636,7 +636,7 @@ impl SealedStore {
         let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
         let dek = unwrap_dek(
             &sealed.wrapped_dek,
-            &*unsealed.key,
+            &unsealed.key,
             &sealed.wrap_nonce,
             &wrap_aad,
             &sealed.wrap_tag,
@@ -646,7 +646,7 @@ impl SealedStore {
 
         let plaintext = xchacha20_poly1305_aead_decrypt(
             &record.body,
-            &*dek,
+            &dek,
             &sealed.body_nonce,
             &sealed.body_aad,
             &sealed.body_tag,
@@ -832,7 +832,7 @@ impl SealedStore {
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
-            &*new_kek,
+            &new_kek,
             &verifier_nonce,
             b"vault-verifier",
         );
@@ -903,7 +903,7 @@ impl SealedStore {
                     let old_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &old_kek_id);
                     let dek = unwrap_dek(
                         &meta.wrapped_dek,
-                        &*old_kek,
+                        &old_kek,
                         &meta.wrap_nonce,
                         &old_wrap_aad,
                         &meta.wrap_tag,
@@ -917,7 +917,7 @@ impl SealedStore {
                     let new_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &new_kek_id);
                     let (new_wrapped_dek, new_wrap_tag) = xchacha20_poly1305_aead_encrypt(
                         &*dek,
-                        &*new_kek,
+                        &new_kek,
                         &new_wrap_nonce,
                         &new_wrap_aad,
                     );

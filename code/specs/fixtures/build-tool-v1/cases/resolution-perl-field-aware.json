@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "resolution/perl-field-aware",
+  "domain": "resolution",
+  "summary": "Perl resolution reads only top-level runtime requires declarations and authoritative package aliases.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/perl/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/perl/alpha/Makefile.PL",
+        "content_utf8": "use ExtUtils::MakeMaker;\nWriteMakefile(\n    NAME => 'CodingAdventures::Alpha',\n    ABSTRACT => 'Mentions CodingAdventures::Gamma without depending on it',\n    PREREQ_PM => { 'CodingAdventures::Gamma' => 0 },\n    TEST_REQUIRES => { 'CodingAdventures::Gamma' => 0 },\n);\n"
+      },
+      {
+        "path": "code/packages/perl/alpha/cpanfile",
+        "content_utf8": "requires 'CodingAdventures::Beta', '>= 0.01';\nrequires \"coding-adventures-delta_name\"; # CodingAdventures::Gamma stays a comment\non 'test' => sub {\n    requires 'CodingAdventures::Gamma';\n};\n# requires 'CodingAdventures::Gamma';\n"
+      },
+      {
+        "path": "code/packages/perl/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/perl/beta-helper/Makefile.PL",
+        "content_utf8": "use ExtUtils::MakeMaker;\nWriteMakefile(NAME => \"CodingAdventures::Beta\");\n"
+      },
+      {
+        "path": "code/packages/perl/beta-helper/cpanfile",
+        "content_utf8": "on 'test' => sub { requires 'Test2::V0'; };\n"
+      },
+      {
+        "path": "code/packages/perl/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/perl/delta_name/Makefile.PL",
+        "content_utf8": "use ExtUtils::MakeMaker;\nWriteMakefile(NAME => 'CodingAdventures::DeltaName');\n"
+      },
+      {
+        "path": "code/packages/perl/delta_name/cpanfile",
+        "content_utf8": "\n"
+      },
+      {
+        "path": "code/packages/perl/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/perl/gamma/Makefile.PL",
+        "content_utf8": "use ExtUtils::MakeMaker;\nWriteMakefile(NAME => 'CodingAdventures::Gamma');\n"
+      },
+      {
+        "path": "code/packages/perl/gamma/cpanfile",
+        "content_utf8": "\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "perl"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/perl-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "perl/beta-helper",
+          "perl/alpha"
+        ],
+        [
+          "perl/delta_name",
+          "perl/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

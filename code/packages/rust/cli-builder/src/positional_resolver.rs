@@ -242,11 +242,7 @@ fn resolve_with_variadic_refs(
     // When there's a shortage, push trailing start to end so trailing gets nothing.
     let trailing_start = if has_shortage {
         n
-    } else if n >= n_trailing {
-        n - n_trailing
-    } else {
-        0
-    };
+    } else { n.saturating_sub(n_trailing) };
 
     for (i, def) in trailing_defs.iter().enumerate() {
         let token_idx = trailing_start + i;
@@ -529,6 +525,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 here is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn test_coerce_float() {
         assert_eq!(coerce_value("3.14", "float", &[]).unwrap(), json!(3.14));
     }

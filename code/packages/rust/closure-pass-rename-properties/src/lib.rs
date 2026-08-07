@@ -79,12 +79,16 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{
+    program_contains_export_declaration, program_contains_import_declaration,
+    program_contains_with_statement,
+};
 use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, ClassMember, Declaration, Expression, ForInit, ObjectMember,
-    Program, ProgramItem, PropertyKey, Statement,
+    ArrowBody, AssignmentTarget, ClassMember, Declaration, Expression, ForInit, FunctionParam,
+    ObjectMember, Program, ProgramItem, PropertyKey, Statement,
 };
 
 /// `Pass::depends_on` value — empty. Property renaming is correct
@@ -774,6 +778,37 @@ impl Pass for RenamePropertiesPass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        // `with` soundness gate (CLOC12.187 PR2a). Inside `with (obj) …` a bare
+        // name like `foo` may be the property access `obj.foo` in disguise.
+        // Property renaming rewrites `.foo` member accesses and object-literal
+        // keys consistently, but it cannot see that a *bare* `foo` in a `with`
+        // body is really a property read — so renaming `foo` elsewhere would
+        // desynchronize from that disguised access. When the program contains a
+        // `with` we therefore decline to rename properties and return the input
+        // unchanged. `with` is rare (a strict-mode syntax error), so this costs
+        // little. See [`program_contains_with_statement`].
+        //
+        // The same bail covers ES-module `import` declarations (CLOC12.188 PR2):
+        // an imported name aliases a foreign module's export, and property
+        // renaming cannot know whether a bare name is really such an alias, so
+        // renaming would risk desynchronizing from the cross-module contract.
+        // See [`program_contains_import_declaration`]. It likewise covers
+        // `export` declarations (CLOC12.189 PR2) — an exported name is public
+        // surface other modules reference. See
+        // [`program_contains_export_declaration`].
+        if program_contains_with_statement(ctx.program)
+            || program_contains_import_declaration(ctx.program)
+            || program_contains_export_declaration(ctx.program)
+        {
+            return Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed: false,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            });
+        }
+
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1;
         let (changed, renames) =
@@ -1011,8 +1046,95 @@ fn classify_decl(decl: &Declaration, cls: &mut Classify, nodes_touched: &mut u32
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            classify_param_defaults(&fd.params, cls);
             for s in &fd.body.body {
                 classify_stmt(s, cls, nodes_touched);
+            }
+        }
+        // A class *declaration* classifies its members exactly like a class
+        // *expression* — the class name is a variable binding, not a property,
+        // so only the member keys + bodies matter.
+        Declaration::ClassDeclaration(cd) => classify_class_members(&cd.super_class, &cd.body, cls),
+        // An import declaration has no property accesses/keys to classify.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+    }
+}
+
+/// Classify the property names inside the shared `[extends S] { members }` tail
+/// of a class — reused by the class *expression* arm of [`classify_expr`] and
+/// the class *declaration* arm of [`classify_decl`], which share their body
+/// shape. Each non-computed method key is recorded as a property name (with the
+/// `constructor` keyword pinned as un-renameable), computed-key expressions are
+/// recursed, and each method body is classified. The class's own name is a
+/// variable, not a property, so it never enters here.
+fn classify_class_members(
+    super_class: &Option<Box<Expression>>,
+    body: &[ClassMember],
+    cls: &mut Classify,
+) {
+    if let Some(sup) = super_class {
+        classify_expr(sup, cls);
+    }
+    for member in body {
+        match member {
+            ClassMember::Method(m) => {
+                if !m.computed {
+                    match &m.key {
+                        // `constructor` is a class-semantic keyword-as-key, NOT
+                        // an ordinary property: renaming it would turn the
+                        // constructor into a plain prototype method and the
+                        // class would silently get an implicit ctor — `new C(x)`
+                        // would stop initialising (miscompile). Pin it via the
+                        // same channel as a quoted key so it is never eligible
+                        // for renaming anywhere.
+                        PropertyKey::Identifier(id) if id.name == "constructor" => {
+                            cls.see_quoted("constructor")
+                        }
+                        PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                        PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                        _ => {}
+                    }
+                } else if let PropertyKey::Expression(e) = &m.key {
+                    // A computed key `[expr]` is a dynamic access — no static
+                    // name recorded, but recurse for nested property accesses
+                    // inside the key expression.
+                    classify_expr(e, cls);
+                }
+                classify_param_defaults(&m.value.params, cls);
+                let mut nested = 0u32;
+                for s in &m.value.body.body {
+                    classify_stmt(s, cls, &mut nested);
+                }
+            }
+            // A class field's KEY is a renameable property name, exactly like a
+            // method key — but a field is NEVER the constructor, so there is no
+            // `constructor` pin here. A computed key + the initializer value
+            // may contain nested property accesses, so recurse both.
+            ClassMember::Field(f) => {
+                if !f.computed {
+                    match &f.key {
+                        PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                        PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                        _ => {}
+                    }
+                } else if let PropertyKey::Expression(e) = &f.key {
+                    classify_expr(e, cls);
+                }
+                if let Some(v) = &f.value {
+                    classify_expr(v, cls);
+                }
+            }
+            // A static-init block has NO key (nothing renameable as a property
+            // name), but its statements may contain property accesses — classify
+            // each, mirroring the method-body recursion.
+            ClassMember::StaticBlock(b) => {
+                let mut nested = 0u32;
+                for s in &b.body {
+                    classify_stmt(s, cls, &mut nested);
+                }
             }
         }
     }
@@ -1038,6 +1160,11 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
             }
             TaggedStatement::WhileStatement(ws) => {
                 classify_expr(&ws.test, cls);
+                classify_stmt(&ws.body, cls, nodes_touched);
+            }
+            // `with (o) body` (CLOC12.187) — classify the object and body.
+            TaggedStatement::WithStatement(ws) => {
+                classify_expr(&ws.object, cls);
                 classify_stmt(&ws.body, cls, nodes_touched);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1134,6 +1261,20 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
             | TaggedStatement::EmptyStatement(_)
             | TaggedStatement::DebuggerStatement(_) => {}
         },
+    }
+}
+
+/// Classify property accesses inside each parameter's default-value expression
+/// (`function f(a = o["x"]) {}`). A default is live code: a quoted access there
+/// must still DISABLE renaming of that property, exactly as one in a function
+/// body would — miss it and a later `rewrite` could rename `o.x` while the
+/// quoted default access keeps the old name (a miscompile). Plain and rest
+/// params have no default expression.
+fn classify_param_defaults(params: &[FunctionParam], cls: &mut Classify) {
+    for p in params {
+        if let Some(def) = p.default_value() {
+            classify_expr(def, cls);
+        }
     }
 }
 
@@ -1255,6 +1396,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         // `classify_expr` isn't threaded it, so a throwaway counter is
         // used for the nested walk.
         Expression::FunctionExpression(fe) => {
+            classify_param_defaults(&fe.params, cls);
             let mut nested = 0u32;
             for s in &fe.body.body {
                 classify_stmt(s, cls, &mut nested);
@@ -1275,56 +1417,23 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         //     property names.
         //
         // The `extends` operand is an ordinary expression — recurse into it.
-        Expression::ClassExpression(ce) => {
-            if let Some(sup) = &ce.super_class {
-                classify_expr(sup, cls);
-            }
-            for member in &ce.body {
-                match member {
-                    ClassMember::Method(m) => {
-                        if !m.computed {
-                            match &m.key {
-                                // `constructor` is a class-semantic keyword-as-key,
-                                // NOT an ordinary property: renaming it would turn
-                                // the constructor into a plain prototype method and
-                                // the class would silently get an implicit ctor —
-                                // `new C(x)` would stop initialising (miscompile).
-                                // Pin it via the same channel as a quoted key so it
-                                // is never eligible for renaming anywhere.
-                                PropertyKey::Identifier(id) if id.name == "constructor" => {
-                                    cls.see_quoted("constructor")
-                                }
-                                PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
-                                PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
-                                _ => {}
-                            }
-                        } else if let PropertyKey::Expression(e) = &m.key {
-                            // A computed key `[expr]` is a dynamic access — no
-                            // static name recorded, but recurse for nested
-                            // property accesses inside the key expression.
-                            classify_expr(e, cls);
-                        }
-                        let mut nested = 0u32;
-                        for s in &m.value.body.body {
-                            classify_stmt(s, cls, &mut nested);
-                        }
-                    }
-                }
-            }
-        }
+        Expression::ClassExpression(ce) => classify_class_members(&ce.super_class, &ce.body, cls),
         // Classify property accesses inside an arrow-value's body too —
         // a quoted `o["foo"]` written there must still disable renaming
         // of `foo`. Params are variable names, never property names, so
         // they don't touch the property namespace.
-        Expression::ArrowFunctionExpression(ae) => match &ae.body {
-            ArrowBody::Block(b) => {
-                let mut nested = 0u32;
-                for s in &b.body {
-                    classify_stmt(s, cls, &mut nested);
+        Expression::ArrowFunctionExpression(ae) => {
+            classify_param_defaults(&ae.params, cls);
+            match &ae.body {
+                ArrowBody::Block(b) => {
+                    let mut nested = 0u32;
+                    for s in &b.body {
+                        classify_stmt(s, cls, &mut nested);
+                    }
                 }
+                ArrowBody::Expression(e) => classify_expr(e, cls),
             }
-            ArrowBody::Expression(e) => classify_expr(e, cls),
-        },
+        }
         // Classify property accesses inside each `${…}` insert too. Quasis
         // are leaf strings — only the insert expressions can hold a member
         // access that touches the property namespace.
@@ -1385,8 +1494,87 @@ fn rewrite_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            rewrite_param_defaults(&mut fd.params, map);
             for s in &mut fd.body.body {
                 rewrite_stmt(s, map);
+            }
+        }
+        // A class *declaration* rewrites its members exactly like a class
+        // *expression* (the class name is a variable, untouched by property
+        // renaming) — same shared helper, kept in lockstep with `classify_decl`.
+        Declaration::ClassDeclaration(cd) => {
+            rewrite_class_members(&mut cd.super_class, &mut cd.body, map)
+        }
+        // An import declaration has no property accesses/keys to rewrite.
+        Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
+    }
+}
+
+/// Rewrite the property keys inside the shared `[extends S] { members }` tail of
+/// a class — the mirror of [`classify_class_members`], reused by both the class
+/// *expression* and *declaration* arms so the classification and the rewrite
+/// cover exactly the same positions. Renames each non-computed method key found
+/// in `map` (never `constructor`), recurses computed-key expressions, and
+/// rewrites each method body.
+fn rewrite_class_members(
+    super_class: &mut Option<Box<Expression>>,
+    body: &mut [ClassMember],
+    map: &HashMap<String, String>,
+) {
+    if let Some(sup) = super_class {
+        rewrite_expr(sup, map);
+    }
+    for member in body {
+        match member {
+            ClassMember::Method(m) => {
+                if m.computed {
+                    if let PropertyKey::Expression(e) = &mut m.key {
+                        rewrite_expr(e, map);
+                    }
+                } else if let PropertyKey::Identifier(id) = &mut m.key {
+                    // Never rewrite a `constructor` key (see classify: it is
+                    // `see_quoted`-pinned, so it is not in `map` anyway — this
+                    // guard is belt-and-braces against a future map that might
+                    // contain it, since renaming it is a construction-semantics
+                    // miscompile).
+                    if id.name != "constructor" {
+                        if let Some(new) = map.get(&id.name) {
+                            id.name = new.clone();
+                        }
+                    }
+                }
+                rewrite_param_defaults(&mut m.value.params, map);
+                for s in &mut m.value.body.body {
+                    rewrite_stmt(s, map);
+                }
+            }
+            // Rewrite a field key (a renameable property name, no `constructor`
+            // pin) and recurse the computed key + initializer, kept in lockstep
+            // with `classify_class_members`.
+            ClassMember::Field(f) => {
+                if f.computed {
+                    if let PropertyKey::Expression(e) = &mut f.key {
+                        rewrite_expr(e, map);
+                    }
+                } else if let PropertyKey::Identifier(id) = &mut f.key {
+                    if let Some(new) = map.get(&id.name) {
+                        id.name = new.clone();
+                    }
+                }
+                if let Some(v) = &mut f.value {
+                    rewrite_expr(v, map);
+                }
+            }
+            // A static-init block has no key to rewrite; its statements may
+            // contain property accesses — rewrite each, in lockstep with
+            // `classify_class_members`.
+            ClassMember::StaticBlock(b) => {
+                for s in &mut b.body {
+                    rewrite_stmt(s, map);
+                }
             }
         }
     }
@@ -1411,6 +1599,11 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 rewrite_expr(&mut ws.test, map);
+                rewrite_stmt(&mut ws.body, map);
+            }
+            // `with (o) body` (CLOC12.187) — rewrite property refs in object + body.
+            TaggedStatement::WithStatement(ws) => {
+                rewrite_expr(&mut ws.object, map);
                 rewrite_stmt(&mut ws.body, map);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1505,6 +1698,18 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             | TaggedStatement::EmptyStatement(_)
             | TaggedStatement::DebuggerStatement(_) => {}
         },
+    }
+}
+
+/// Rewrite renamed property accesses inside each parameter's default-value
+/// expression — the mirror of [`classify_param_defaults`], keeping the classify
+/// and rewrite walks over the same positions so a property renamed elsewhere is
+/// also renamed where a default reads it (`function f(a = o.x)` → `a = o.<new>`).
+fn rewrite_param_defaults(params: &mut [FunctionParam], map: &HashMap<String, String>) {
+    for p in params {
+        if let Some(def) = p.default_value_mut() {
+            rewrite_expr(def, map);
+        }
     }
 }
 
@@ -1614,6 +1819,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // Rewrite property accesses inside a function *value*'s body, the
         // mirror of classifying them above.
         Expression::FunctionExpression(fe) => {
+            rewrite_param_defaults(&mut fe.params, map);
             for s in &mut fe.body.body {
                 rewrite_stmt(s, map);
             }
@@ -1624,46 +1830,20 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `map`, so it is left alone); each method VALUE body is walked for
         // nested property accesses like a `FunctionExpression` body; and the
         // `extends` operand recurses as an ordinary expression.
-        Expression::ClassExpression(ce) => {
-            if let Some(sup) = &mut ce.super_class {
-                rewrite_expr(sup, map);
-            }
-            for member in &mut ce.body {
-                match member {
-                    ClassMember::Method(m) => {
-                        if m.computed {
-                            if let PropertyKey::Expression(e) = &mut m.key {
-                                rewrite_expr(e, map);
-                            }
-                        } else if let PropertyKey::Identifier(id) = &mut m.key {
-                            // Never rewrite a `constructor` key (see classify:
-                            // it is `see_quoted`-pinned, so it is not in `map`
-                            // anyway — this guard is belt-and-braces against a
-                            // future map that might contain it, since renaming
-                            // it is a construction-semantics miscompile).
-                            if id.name != "constructor" {
-                                if let Some(new) = map.get(&id.name) {
-                                    id.name = new.clone();
-                                }
-                            }
-                        }
-                        for s in &mut m.value.body.body {
-                            rewrite_stmt(s, map);
-                        }
-                    }
-                }
-            }
-        }
+        Expression::ClassExpression(ce) => rewrite_class_members(&mut ce.super_class, &mut ce.body, map),
         // Rewrite property accesses inside an arrow-value's body, the
         // mirror of classifying them above.
-        Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
-            ArrowBody::Block(b) => {
-                for s in &mut b.body {
-                    rewrite_stmt(s, map);
+        Expression::ArrowFunctionExpression(ae) => {
+            rewrite_param_defaults(&mut ae.params, map);
+            match &mut ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &mut b.body {
+                        rewrite_stmt(s, map);
+                    }
                 }
+                ArrowBody::Expression(e) => rewrite_expr(e, map),
             }
-            ArrowBody::Expression(e) => rewrite_expr(e, map),
-        },
+        }
         // Rewrite property accesses inside each `${…}` insert, the mirror of
         // classifying them above. Quasis are leaf strings — nothing to walk.
         Expression::TemplateLiteral(t) => {
@@ -2056,5 +2236,81 @@ mod tests {
         );
         assert!(out.contains(".innerHTML"));
         assert!(!out.contains("secretField"));
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate. Inside `with (obj) …` a bare
+    // `foo` may be `obj.foo` in disguise, so renaming the property `foo`
+    // elsewhere would desynchronize from that hidden access.
+    // RenamePropertiesPass must bail. The bridge does not yet produce `with`
+    // (PR2b), so the AST is hand-built.
+    // -------------------------------------------------------------------
+    #[test]
+    fn with_statement_disables_property_renaming() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, BlockStatement, Declaration, Expression, Identifier, NumericLiteral,
+            ObjectExpression, ObjectMember, ProgramItem, Property, PropertyKey, PropertyKind,
+            Statement, VarKind, VariableDeclaration, VariableDeclarator, WithStatement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var rec = { longProp: 1 };` — `longProp` is an object-literal key
+        // RenamePropertiesPass would normally shorten to `a`.
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![ObjectMember::Property(Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::Identifier(id("longProp")),
+                value: Box::new(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+                computed: false,
+                shorthand: false,
+                method: false,
+            })],
+        });
+        let vd = VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("rec")),
+                init: Some(obj),
+            }],
+        };
+        // `with (o) {}`
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(id("o")),
+            body: Box::new(Statement::block_statement(BlockStatement { cv: None, body: vec![] })),
+        });
+
+        let mut prog = program();
+        prog.body = vec![
+            ProgramItem::Statement(with),
+            ProgramItem::Declaration(Declaration::VariableDeclaration(vd)),
+        ];
+
+        let pass = RenamePropertiesPass::new(HashSet::new());
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename-properties");
+
+        assert!(!out.changed, "must not rename properties when a `with` is present");
+        assert_eq!(out.program, prog, "program must be returned unchanged");
+        assert!(out.contributions.is_empty());
     }
 }

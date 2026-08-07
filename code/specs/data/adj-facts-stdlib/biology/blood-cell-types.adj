@@ -1,0 +1,72 @@
+% ============================================================================
+% blood-cell-types — each main type of blood cell and its main job
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A middle-school biology facts library in the ADJ standard library — the kind
+% a science or medicine agent `import`s when it needs the most basic grounded
+% hematology fact: "red blood cells carry oxygen; white blood cells fight
+% infection; platelets do the clotting." Blood is made of three main kinds of
+% cell, and each kind carries out one main job. This is a small but real RUNG a
+% medicine agent reasons UP from: knowing what each blood cell does is the
+% foundation under anemia (too few oxygen-carrying red cells), infection (the
+% white cells that fight it), and bleeding/clotting disorders (the platelets
+% that stop a cut from bleeding). Before a medicine agent can reason about any
+% of those, it must first know — the way a middle-school student does — which
+% cell does what. Recall is a binding query:
+%
+%     ? blood_cell_function(red_blood_cells, $F)   % carry_oxygen
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `blood_cell_function(cell_type, function)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the function atom WITH its source, on the CPU, with zero model calls,
+% and abstains on something that is not one of the three blood cell types. The
+% query also runs BACKWARD — bind the job and recall the cell:
+%
+%     ? blood_cell_function($C, fight_infection)   % white_blood_cells
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful one-word (or short snake_case) paraphrase of the primary-function
+% text MedlinePlus states — never an interpretation the source does not support.
+% A recalled function atom therefore composes straight into downstream reasoning
+% (a medicine agent asking "which cell fights_infection?" gets the grounded
+% answer, not a guess) — the concrete bridge from biology RECALL to reasoning.
+%
+% Provenance: every cell-type name and its `function` atom is grounded in a
+% VERBATIM span from MedlinePlus (the U.S. National Library of Medicine / NIH,
+% a `.gov` primary reference). The `source` span below is the VERBATIM sentence
+% for the first data row (red_blood_cells), copied character-for-character from
+% the MedlinePlus "Blood" health-topic page (the `locator`). Each row's atom is
+% a faithful short paraphrase of that cell's own VERBATIM span, quoted here from
+% the same page so any reader can re-check it byte-for-byte:
+%
+%   red_blood_cells   → carry_oxygen      https://medlineplus.gov/blood.html
+%     "Red blood cells (RBC) deliver oxygen from your lungs to your tissues and
+%      organs."
+%   white_blood_cells → fight_infection   https://medlineplus.gov/blood.html
+%     "White blood cells (WBC) fight infection and are part of your immune
+%      system."
+%   platelets         → clotting          https://medlineplus.gov/blood.html
+%     "Platelets help blood to clot when you have a cut or wound."
+%
+% `trust authoritative` — MedlinePlus is a `.gov` service of the U.S. National
+% Library of Medicine (NIH), a primary/official reference (contrast the
+% `consensus` tier reserved for a secondary source such as an encyclopedia or
+% KidsHealth). Nothing here is asserted from memory; each pair was read out of
+% the fetched MedlinePlus page and any cell type whose function the page did not
+% state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table blood_cell_function {
+    columns cell_type, function
+
+    row (red_blood_cells, carry_oxygen)
+    row (white_blood_cells, fight_infection)
+    row (platelets, clotting)
+
+    source "Red blood cells (RBC) deliver oxygen from your lungs to your tissues and organs."
+    locator "https://medlineplus.gov/blood.html"
+    trust authoritative
+}

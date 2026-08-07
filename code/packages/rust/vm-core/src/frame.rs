@@ -3,12 +3,12 @@
 //! Each function call creates a fresh `VMFrame`.  The frame holds:
 //!
 //! - `fn_name`       — name of the function being executed (used to look up
-//!                     the `IIRFunction` in the module on each dispatch tick)
+//!   the `IIRFunction` in the module on each dispatch tick)
 //! - `ip`            — instruction pointer (index into the function's body)
 //! - `registers`     — flat register file, one slot per named variable
 //! - `name_to_reg`   — variable name → register index (built from params)
 //! - `return_dest`   — register index in the **caller** frame where the return
-//!                     value is stored (`None` for the root frame)
+//!   value is stored (`None` for the root frame)
 //!
 //! # Why `fn_name` instead of `&IIRFunction`
 //!

@@ -9,6 +9,7 @@
 //!   - `EQ` on two symbols reduces to the W7 `equal?` → `unbox.any; ceq`,
 //!   - `ATOM` on a symbol is the W7 `pair?`/`not` (a symbol is not a cons),
 //!   - `COND` on a symbol predicate is the W3b/W7 `jmp_if`.
+//!
 //! Everything below already existed (W6b boxing + W7 predicates); this slice
 //! only *verifies* it. The CLR thus reaches feature parity with wasm/JVM on
 //! symbols via pure structural-pass reuse — the reusable-primitives thesis.

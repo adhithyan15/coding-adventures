@@ -1,0 +1,29 @@
+% ============================================================================
+% corrected-reticulocyte-count.query.adj — worked applications of the corrected reticulocyte count.
+% ============================================================================
+% The shape a consumer produces once it has decomposed an anaemia work-up into a reticulocyte percentage, a
+% patient haematocrit, and a normal (reference) haematocrit: it `import`s the grounded formulabook,
+% `observe`s the three values, and asks the engine to APPLY the cited corrected-reticulocyte formula. No
+% arithmetic is stated by the consumer; the engine computes each value EXACTLY (over exact rationals) and
+% carries the article's citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (reticulocyte % = 4, patient haematocrit = 20 %, normal haematocrit = 40 %): corrected retic =
+% 4 × (20 / 40) = 4 × 0.5 = 2 %. Each query fixes two of the three inputs and asks the engine to recover
+% another quantity; every answer is exact and the inversions COMPOSE (each recovers exactly the worked
+% value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli corrected-reticulocyte-count.query.adj
+% ============================================================================
+
+import "corrected-reticulocyte-count.adj"
+
+% --- Corrected retic: the corrected percentage the raw retic and haematocrits imply (expect 2). ------
+observe reticulocyte_percent(4)
+observe patient_hematocrit(20)
+observe normal_hematocrit(40)
+? corrected_reticulocyte_count(reticulocyte_percent, patient_hematocrit, normal_hematocrit)   % expect 2
+
+% --- Inverse: the raw reticulocyte % a corrected count of 2 implies at the same haematocrits (expect 4). -
+observe corrected_reticulocyte_count(2)
+? reticulocyte_percent(corrected_reticulocyte_count, patient_hematocrit, normal_hematocrit)   % expect 4

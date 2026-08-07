@@ -23,6 +23,8 @@ fn end_to_end_typical_workflow() {
     assert_eq!(titled, "Hello World");
 }
 
+// `3.14` here is a two-decimal formatting example, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 #[test]
 fn text_value_round_trip() {
     // Round-tripping should preserve integers exactly through "0".

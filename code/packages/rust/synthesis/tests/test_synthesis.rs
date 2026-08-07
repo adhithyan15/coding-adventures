@@ -1,4 +1,4 @@
-use gate_netlist_format::{Direction, Level};
+use gate_netlist_format::Level;
 use hdl_ir::{ContAssign, Direction as HirDir, Expr, Hir, Module, Port, Ty};
 use synthesis::synthesize;
 

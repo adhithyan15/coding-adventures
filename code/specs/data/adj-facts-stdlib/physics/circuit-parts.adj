@@ -1,0 +1,114 @@
+% ============================================================================
+% circuit-parts — the basic parts of a simple electric circuit and the role /
+% function its source states each one performs (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of electricity, and a rung a PHYSICS agent reasons
+% UP from: a simple circuit is built out of a handful of basic parts, and each
+% part does ONE characteristic job. The battery provides the power; the wire
+% carries the current; the switch opens or closes the loop; the lamp turns the
+% electricity into light; the resistor slows the current down. Before you can
+% reason about WHY a bulb lights (or doesn't), you must first know what each
+% part is FOR. Recall is a binding query:
+%
+%     ? circuit_part_role(switch, $Role)      % opens_or_closes
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `circuit_part_role(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these basic parts (it never invents a role).
+%
+% Each basic circuit part and the role / function the source states for it, as
+% a little truth table:
+%
+%     part       role the source states           a beginner's cue
+%     --------   ----------------------------      -------------------------------
+%     battery    provides_dc_power                 the power source of the circuit
+%     wire       carries_current                   the conductor current flows down
+%     switch     opens_or_closes                   opens or closes the loop (on/off)
+%     lamp       converts_to_light                 turns electricity into light
+%     resistor   slows_current                     slows the flow of electricity
+%     motor      converts_to_motion                turns electricity into rotation
+%     led        gives_off_light                   gives off light when current flows
+%
+% The query also runs BACKWARD — bind a role and recall the part that does it:
+%
+%     ? circuit_part_role($Part, carries_current)   % wire
+%
+% A word that is NOT one of these basic parts — `capacitor`, `transistor`,
+% `rock` — is deliberately NOT a row, so a circuit-part recall ABSTAINS on it
+% rather than inventing a role. That honest-abstention property is what makes
+% the table safe to build a reasoner on: it answers exactly the part→role pairs
+% it can ground, and only those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to be a
+% role / function the source EXPLICITLY states for that part — never one the
+% source does not support. Where the everyday word differs from the source's
+% word (the source says the lamp "converts electrical energy into light", not
+% "glows"; the resistor "slows the flow of electricity", not "resists"), the
+% atom uses the source's own word, so every value stays literally checkable
+% against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of one fetched MIT K-12 Maker "Circuit Basics and Components"
+% teaching handout, and any pair whose role could not be verified there would
+% have been dropped). Each pair, with the verbatim span that states it:
+%
+%   battery → provides_dc_power
+%     "Battery: A device that converts chemical energy into electrical energy
+%      and provides direct current (DC) power."
+%
+%   wire → carries_current
+%     "Conductor: Any material, usually metal, that carries an electrical
+%      current, such as wire, alligator clips, or copper tape."
+%
+%   switch → opens_or_closes
+%     "This switch serves as an On/Off switch in a circuit. The handle moves
+%      side to side to open or close the circuit."
+%
+%   lamp → converts_to_light
+%     "Lamp: This traditional device converts electrical energy into light (and
+%      lots of heat) using a resistive filament."
+%
+%   resistor → slows_current
+%     "Resistor: Electronic component that slows the flow of electricity."
+%
+%   motor → converts_to_motion
+%     "There are many types of electric motors, but all convert electrical
+%      energy into rotary motion of an output shaft."
+%
+%   led → gives_off_light
+%     "LED: Light Emitting Diodes are components that give off light when
+%      current goes through in the correct direction, as indicated by the
+%      'arrow' in the symbol."
+%
+% All spans are the same primary source:
+%   http://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_basics_and_components.pdf
+%   (MIT K-12 Maker — "Circuit Basics and Components")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the statement that fixes the
+% first row (battery → provides_dc_power). Every OTHER row's verbatim span is
+% listed above, so each role remains independently checkable. The source is a
+% university (MIT) STEM-outreach teaching handout — a teaching summary, not a
+% primary standards reference — so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table circuit_part_role {
+    columns part, role
+
+    row (battery, provides_dc_power)
+    row (wire, carries_current)
+    row (switch, opens_or_closes)
+    row (lamp, converts_to_light)
+    row (resistor, slows_current)
+    row (motor, converts_to_motion)
+    row (led, gives_off_light)
+
+    source "Battery: A device that converts chemical energy into electrical energy and provides direct current (DC) power."
+    locator "http://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_basics_and_components.pdf"
+    trust consensus
+}

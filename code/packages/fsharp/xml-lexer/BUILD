@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.XmlLexer.Tests/CodingAdventures.XmlLexer.Tests.fsproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.XmlLexer.FSharp]*"

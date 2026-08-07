@@ -255,7 +255,12 @@ module BuildTool
       end
 
       # -- Step 2: Discover packages --------------------------------------------
-      packages = Discovery.discover_packages(code_root)
+      packages = begin
+        Discovery.discover_packages(code_root)
+      rescue DuplicatePackageIdentityError => e
+        $stderr.puts e.message
+        return 2
+      end
 
       if packages.empty?
         $stderr.puts "No packages found."
@@ -277,11 +282,16 @@ module BuildTool
         result = begin
           StarlarkEvaluator.evaluate_build_file(build_file.to_s, pkg.path.to_s, root.to_s)
         rescue StandardError => e
-          $stderr.puts "Warning: Starlark eval failed for #{pkg.name}: #{e.message}"
-          nil
+          $stderr.puts "Error: Starlark evaluation failed for #{pkg.name}: #{e.message}"
+          return 1
         end
 
-        if result && result.targets.any?
+        if result.targets.empty?
+          $stderr.puts "Error: Starlark evaluation failed for #{pkg.name}: no targets declared"
+          return 1
+        end
+
+        if result.targets.any?
           t = result.targets.first
           pkg = pkg.with(
             declared_srcs: t.srcs,
@@ -318,7 +328,12 @@ module BuildTool
       puts "Discovered #{packages.size} packages"
 
       # -- Step 4: Resolve dependencies -----------------------------------------
-      graph = Resolver.resolve_dependencies(packages)
+      graph = begin
+        Resolver.resolve_dependencies(packages)
+      rescue MetadataEncodingError => e
+        $stderr.puts e.message
+        return 2
+      end
 
       # -- Step 5: Git-diff change detection (default mode) ---------------------
       #

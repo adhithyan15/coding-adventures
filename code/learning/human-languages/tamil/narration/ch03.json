@@ -1,0 +1,882 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 3,
+  "title": "Chapter 3",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8ccf2dad23d346e7",
+  "lessons": [
+    {
+      "id": "TA-C03-eppadi",
+      "sequence": null,
+      "title": "எப்படி (eppaḍi) — \"how,\" another of the e- questions",
+      "headword": "எப்படி",
+      "romanization": "",
+      "gloss": "how",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:115a665d0b5ae3db",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met என்ன (eṉṉa, \"what\") in Chapter 2. Here is its sibling — and, like all of Tamil's question-words, it begins with e-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Tamil.) எ (e) + ப்ப (ppa, a doubled p) + டி (ḍi) becomes எப்படி (eppaḍi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எப்படி (eppaḍi, \"how\") is native Dravidian, built on the interrogative base எ- (e-) + paḍi (\"manner, way\") — literally \"in what manner.\" Notice the pattern: Tamil's questions nearly all start with this e- — eṉṉa (what), eppaḍi (how), eppōdu (when), eṅgē (where), ēṉ (why), and yār (who). Where Hindi and English gather their questions under k- / wh-, Tamil gathers its own under e- — a separate, older family, evolved on its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eppaḍi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eppaḍi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the e- question family — eṉṉa, eppaḍi, eppōdu, eṅgē, ēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the e- question family — *eṉṉa, eppaḍi, eppōdu, eṅgē, ēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it's built from (e- \"what\" + paḍi \"manner\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it's built from (*e-* \"what\" + *paḍi* \"manner\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What base do Tamil's question-words share, and how is it different from Hindi's? (The interrogative e-; it is native Dravidian, unrelated to Hindi's k- / English's wh-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C03-eppadi-irukkirirgal",
+      "sequence": null,
+      "title": "நீங்கள் எப்படி இருக்கிறீர்கள்? (nīṅgaḷ eppaḍi irukkiṟīrgaḷ?)",
+      "headword": "நீங்கள் எப்படி இருக்கிறீர்கள்?",
+      "romanization": "",
+      "gloss": "how are you? (respectful)",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:54b96e84af48f100",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday \"how are you?\" — and the first time Tamil actually needs a verb \"to be.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The new word is இருக்கிறீர்கள் (irukkiṟīrgaḷ): the verb stem இரு (iru)."
+            },
+            {
+              "kind": "speech",
+              "text": "க்கிற (present) + ீர்கள் (-īrgaḷ, \"you,\" respectful/plural). A long verb, but built of clean pieces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீங்கள் எப்படி இருக்கிறீர்கள்? = நீங்கள் (nīṅgaḷ, \"you,\" respectful) + எப்படி (eppaḍi, \"how\") + இருக்கிறீர்கள் (irukkiṟīrgaḷ, \"are/exist\") — \"you how are?\" The verb comes last, as in every Tamil sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is இரு (iru), \"to be, to exist, to stay\" — native Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: now the copula returns",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In Chapter 2 you learned Tamil drops \"is\" entirely: eṉ peyar Arun (\"my name Arun\"). That zero copula works for equations (X is Y). But \"how are you?\" is about a state — how you exist right now — and for that Tamil does use a verb: இரு (iru). So: no verb for \"my name is Arun,\" but a real verb for \"how are you.\" The verb ending -ீர்கள் (-īrgaḷ) already means \"you (respectful),\" so nīṅgaḷ can even be dropped."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful question — nīṅgaḷ eppaḍi irukkiṟīrgaḷ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful question — *nīṅgaḷ eppaḍi irukkiṟīrgaḷ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb and its meaning (iru — \"to be / exist / stay\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb and its meaning (*iru* — \"to be / exist / stay\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why here Tamil needs a verb but \"my name is Arun\" doesn't (state vs. equation)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why here Tamil needs a verb but \"my name is Arun\" doesn't (state vs. equation)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb does \"how are you?\" use, and why does this sentence need one when \"my name is Arun\" didn't? (Iru, \"to be/exist\"; because it describes a state, not an equation — the zero copula only covers X is Y.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C03-naan",
+      "sequence": null,
+      "title": "நான் (nāṉ) — \"I,\" the Dravidian first person",
+      "headword": "நான்",
+      "romanization": "",
+      "gloss": "I",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bf125d1e56b58ba0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To answer \"how are you?\" you first need \"I.\" In Chapter 2 you learned eṉ (\"my\"); here is its owner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ந (dental na) + ா (the long-ā sign) + ன் (the ṉ, a special Tamil n) becomes நான் (nāṉ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் (nāṉ, \"I\") from Proto-Dravidian yāṉ / nāṉ — a native first-person word, and (unlike Hindi's maiṁ, cousin of English me) not related to the European \"I/me\" family at all. Its possessive is the என் (eṉ, \"my\") you already met: nāṉ \"I,\" eṉ \"my\" — the same root, one standing, one leaning on a noun. Tamil's \"I\" is one of the clearest markers that Dravidian grew up entirely apart from the Indo-European world around it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"I\" you can drop",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil verbs carry the person in their ending — irukk-iṟēṉ already means \"I am\" — so nāṉ is often left out once it's clear. You will still learn it first, because the answer to eppaḍi irukkiṟīrgaḷ? begins with it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — nāṉ (I), eṉ (my)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *nāṉ* (I), *eṉ* (my)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is it related to English me? (No — Dravidian, a separate family)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is it related to English *me*? (No — Dravidian, a separate family)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is nāṉ's possessive, and is it cousin to English me? (Eṉ, \"my\"; no — it is native Dravidian, unrelated to the Indo-European pronouns.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C03-nalam",
+      "sequence": null,
+      "title": "நலம் (nalam) — \"well,\" and how to answer",
+      "headword": "நலம்",
+      "romanization": "",
+      "gloss": "well, wellness, good — and the reply \"நான் நலமாக இருக்கிறேன்\"",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7085a36204532448",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that answers \"how are you?\" — and a whole family of Tamil \"good\" grows from it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ந (na) + ல (la) + ம் (m) becomes நலம் (nalam)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நலம் (nalam, \"wellness, good, welfare\") is native Dravidian, from the root நல் (nal-, \"good\") — the same root behind நல்ல (nalla, \"good,\" an everyday adjective) and நன்றி (naṉṟi, \"thanks\" — literally \"goodness,\" which you met in Chapter 1). So \"thank you\" and \"I'm well\" in Tamil share a root: both are nal-, \"good.\" A purely Dravidian word, with no Sanskrit or European cousin — Tamil answering in its own voice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The reply",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Assemble it: நான் நலமாக இருக்கிறேன் (nāṉ nalamāga irukkiṟēṉ) — \"I am well.\" The piece nalam + -āga (\"in a … way\") makes the adverb nalamāga (\"well-ly\"); irukkiṟēṉ is \"I am/exist\" (the iru verb, first person). The whole exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "— nīṅgaḷ eppaḍi irukkiṟīrgaḷ? (\"How are you?\") — nāṉ nalamāga irukkiṟēṉ, naṉṟi. (\"I'm well, thank you.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Casually, Tamils shorten it to nallā irukkēṉ (\"I'm good\")."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nalam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nalam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full reply — nāṉ nalamāga irukkiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full reply — *nāṉ nalamāga irukkiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root it shares with \"thanks\" (nal- \"good,\" as in naṉṟi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root it shares with \"thanks\" (*nal-* \"good,\" as in *naṉṟi*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the full reply to \"how are you?\", and name the Chapter-1 word that shares nalam's root. (Nāṉ nalamāga irukkiṟēṉ; naṉṟi, \"thanks\" — both from nal-, \"good.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C03-paravayillai",
+      "sequence": null,
+      "title": "பரவாயில்லை (paravāyillai) — \"no problem\"",
+      "headword": "பரவாயில்லை",
+      "romanization": "",
+      "gloss": "it's okay / no problem / you're welcome",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:706b526524e2e1ab",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When someone thanks you — or apologises — this is the easy, gracious reply, and it hides one of the most Tamil words there is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two joined words: பரவாய் (paravāy, \"harm, worry\") + இல்லை (illai, \"is not\") becomes பரவாயில்லை (paravāyillai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரவாயில்லை literally means \"there is no harm\" — paravāy (\"harm, trouble\")."
+            },
+            {
+              "kind": "speech",
+              "text": "இல்லை (illai, \"is-not, there-is-not\"). It serves as \"it's okay / no worries / never mind / you're welcome.\" The key atom, இல்லை (illai), you already met in Chapter 1 — the Tamil word for negation and non-existence, the mirror of iru (\"to be\"). Where iru says \"it is,\" illai says \"it is not.\" This one word is shared, in almost the same shape, across Tamil, Kannada, and Malayalam (illa) — one of the deep bonds of the Dravidian south. (Telugu alone breaks away, using lēdu.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: இல்லை, the all-purpose \"no\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Illai negates existence and equations alike: nāṉ illai (\"it's not me\"), paṇam illai (\"there's no money\"). It is also, on its own, one way to say plain \"no.\" Learn iru / illai together — \"is\" and \"is-not\" — and you can already affirm or deny almost anything."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"paravāyillai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"paravāyillai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally means (\"there is no harm\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it literally means (\"there is no harm\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the iru / illai pair — \"is\" and \"is-not\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *iru* / *illai* pair — \"is\" and \"is-not\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does paravāyillai literally say, and which Dravidian languages share its illai? (\"There is no harm\"; Tamil, Kannada, Malayalam — Telugu uses lēdu instead.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C03-practice",
+      "sequence": null,
+      "title": "Chapter 3 — The how-are-you exchange",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 3 recap — the how-are-you exchange",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38559b2a97d4823f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The whole responding cycle, from atoms you now own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How are you?\" (respectful) — nīṅgaḷ eppaḍi irukkiṟīrgaḷ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How are you?\" (respectful) — *nīṅgaḷ eppaḍi irukkiṟīrgaḷ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm well, thank you.\" — nāṉ nalamāga irukkiṟēṉ, naṉṟi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm well, thank you.\" — *nāṉ nalamāga irukkiṟēṉ, naṉṟi.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"No problem / you're welcome.\" — paravāyillai.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"No problem / you're welcome.\" — *paravāyillai.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the casual version — nallā irukkēṉ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the casual version — *nallā irukkēṉ.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The atoms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the e- question-word for \"how\" (eppaḍi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the e- question-word for \"how\" (*eppaḍi*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I\" and the verb \"to be\" (nāṉ, iru)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I\" and the verb \"to be\" (*nāṉ*, *iru*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the \"is / is-not\" pair (iru / illai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the \"is / is-not\" pair (*iru* / *illai*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "eppaḍi from the interrogative e- (native Dravidian, not Hindi's k-)."
+            },
+            {
+              "kind": "speech",
+              "text": "nāṉ from Proto-Dravidian nāṉ (unrelated to English me); possessive eṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "nalam from nal- \"good\" — the same root as naṉṟi (\"thanks\")."
+            },
+            {
+              "kind": "speech",
+              "text": "iru / illai — \"to be\" and \"to be-not\"; illai shared with Kannada & Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Grammar you now hold",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when Tamil needs the verb iru and when it drops the copula (state vs. equation)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when Tamil needs the verb *iru* and when it drops the copula (state vs. equation)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A stranger asks nīṅgaḷ eppaḍi irukkiṟīrgaḷ? — give a full, polite reply, and answer their thanks. (Nāṉ nalamāga irukkiṟēṉ, naṉṟi — and to thanks, paravāyillai.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

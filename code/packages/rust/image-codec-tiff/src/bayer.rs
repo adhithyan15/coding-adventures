@@ -85,6 +85,8 @@ const B: u8 = 2;
 ///
 /// Border pixels use **edge replication**: when a neighbour would be outside
 /// the image, we use the closest in-bounds pixel instead.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 pub fn demosaic_bilinear(
     raw: &[u16],
     width: usize,
@@ -109,7 +111,7 @@ pub fn demosaic_bilinear(
             // Read a neighbour value, clamping coordinates to image bounds.
             // This implements edge replication: border pixels simply reflect
             // their own boundary row/column.
-            let get = |r: isize, c: isize| -> u16 {
+            let _get = |r: isize, c: isize| -> u16 {
                 let rr = r.clamp(0, (height as isize) - 1) as usize;
                 let cc = c.clamp(0, (width as isize) - 1) as usize;
                 raw[rr * width + cc]

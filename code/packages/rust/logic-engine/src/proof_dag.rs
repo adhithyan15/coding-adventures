@@ -67,6 +67,24 @@ pub enum DerivationOrigin {
         /// reason as `prior_logit`.
         logit_delta: f64,
     },
+    /// The step succeeded by **negation as failure**: the goal `not G`
+    /// held because `G` had *zero* proofs.
+    ///
+    /// This variant exists because an absence used to leave no trace at
+    /// all. A rule guarded by `not contraindicated(D)` would fire, and the
+    /// audit trail would show every positive step and stay **silent about
+    /// the check that actually licensed the conclusion** — the reader
+    /// could not tell "we confirmed no contraindication" from "nobody
+    /// looked." An audit trail that omits a load-bearing inference is not
+    /// a shorter trail, it is a wrong one.
+    ///
+    /// It carries no clause id because there is no clause: what justified
+    /// the step is the *empty* proof set for `goal`, which is exactly what
+    /// a re-checker re-runs to verify it (§E.5).
+    FromNegation {
+        /// The goal that was shown to have no proof.
+        goal: Term,
+    },
     /// The step applied a joint-evidence interaction term — synergy
     /// (positive delta) or explaining-away (negative delta) beyond
     /// the product of atomic LRs.
@@ -92,12 +110,18 @@ pub enum DerivationOrigin {
         clause_id: PredicateContributionClauseId,
         /// The valued slot whose observation was compared.
         slot: String,
+        /// The winning observed fact, when the slot came directly from input.
+        observation_fact_id: Option<FactId>,
         /// The comparison operator (`>=`, `<=`, `>`, `<`, `==`).
         op: CmpOp,
         /// The right-hand threshold the clause was written against.
         threshold: f64,
+        /// Exact threshold identity when the evaluator retained one.
+        threshold_exact: Option<crate::compute::ExactRational>,
         /// The observed numeric value read from the valued fact `slot(V)`.
         observed: f64,
+        /// Exact observation identity when the input carried one.
+        observed_exact: Option<crate::compute::ExactRational>,
         /// log(LR) applied because the predicate held. Inline.
         logit_delta: f64,
     },
@@ -110,6 +134,32 @@ pub struct ProofStep {
     pub goal: Term,
     /// What clause this step was derived from.
     pub origin: DerivationOrigin,
+    /// How deeply nested this step is. The root query's own step is at
+    /// depth 0; a rule's body steps are one deeper than the rule step
+    /// that introduced them.
+    ///
+    /// # Why a plain number is enough to rebuild the tree
+    ///
+    /// `steps` is a **preorder** walk (a rule's own step is pushed before
+    /// its body's steps — see `enumerate::solve`). Preorder plus depth is
+    /// a complete encoding of a tree: a step's parent is simply **the
+    /// nearest preceding step whose depth is one less**. That is the same
+    /// trick an indented outline uses — you never write "this line belongs
+    /// to that line", you just indent, and the nesting is unambiguous.
+    ///
+    /// ```text
+    ///   idx depth  step                      parent
+    ///    0    0    treat(X)      [rule]      —
+    ///    1    1      infected(X) [rule]      0
+    ///    2    2        culture(X)[fact]      1
+    ///    3    1      allergy(X)  [fact]      0     <- back out one level
+    /// ```
+    ///
+    /// Without this field the flat vector is ambiguous: you cannot tell
+    /// step 3 above from a second child of step 1 without re-deriving
+    /// every rule's body arity. That is why the audit trail could show a
+    /// list but never a *structure*.
+    pub depth: usize,
 }
 
 /// One complete proof of the root query.
@@ -153,12 +203,35 @@ pub struct Proof {
 pub struct ProofDAG {
     pub root_query: Term,
     pub proofs: Vec<Proof>,
+    /// The search **did not finish**: it hit a resolution limit and gave up.
+    ///
+    /// # Why an empty proof list is not enough
+    ///
+    /// Without this flag, "I found no proof" and "I stopped looking" are the
+    /// same value — an empty `proofs`. They are completely different claims.
+    /// The first is a statement about the knowledge base; the second is a
+    /// statement about *this run's budget*, and says nothing about the world.
+    ///
+    /// Conflating them lets a truncated search be laundered into an
+    /// affirmative claim one level up: `enumerate_governing` reports
+    /// "no conflict among the answers" by observing that it found no rival,
+    /// which is worthless if it stopped before looking. Anything that draws a
+    /// NEGATIVE conclusion from an empty result set must consult this first.
+    pub truncated: bool,
 }
 
 impl ProofDAG {
     /// `true` iff at least one proof of the root query exists.
     pub fn has_proof(&self) -> bool {
         !self.proofs.is_empty()
+    }
+
+    /// `true` iff the result set is empty **and** the search actually ran to
+    /// completion — i.e. the emptiness is evidence of absence, not a budget.
+    ///
+    /// This is the predicate to use before asserting anything negative.
+    pub fn is_conclusively_empty(&self) -> bool {
+        self.proofs.is_empty() && !self.truncated
     }
 
     /// The complete set of probabilistic facts referenced by any proof.
@@ -192,7 +265,7 @@ impl ProofDAG {
 pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
     let mut facts: Vec<FactId> = Vec::new();
     let mut rules: Vec<RuleId> = Vec::new();
-    for s in &steps[..] {
+    for s in steps {
         match &s.origin {
             DerivationOrigin::FromFact(f) => facts.push(*f),
             DerivationOrigin::FromRule(r) => rules.push(*r),
@@ -200,6 +273,11 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
             // Fact ids inline. If evidence was rule-derived, the nested
             // SLD proof carries the facts and rules that licensed it.
             DerivationOrigin::FromPrior { .. } => {}
+            // Negation-as-failure USED nothing — that is precisely what it
+            // established. Contributing a FactId here would claim the
+            // absent goal's clauses supported the conclusion, which is
+            // backwards.
+            DerivationOrigin::FromNegation { .. } => {}
             DerivationOrigin::FromContribution {
                 evidence_fact_ids,
                 evidence_proof,
@@ -227,7 +305,10 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
             // provenance carried inline on the step. They contribute no
             // probabilistic propositional variable to WMC, so they add no
             // FactId here.
-            DerivationOrigin::FromPredicateContribution { .. } => {}
+            DerivationOrigin::FromPredicateContribution {
+                observation_fact_id,
+                ..
+            } => facts.extend(observation_fact_id.iter().copied()),
         }
     }
     facts.sort();

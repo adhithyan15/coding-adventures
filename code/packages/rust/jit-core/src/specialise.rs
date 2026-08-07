@@ -403,7 +403,7 @@ pub fn literal_type(op: Option<&Operand>) -> String {
     }
 }
 
-/// Lift a slice of `Operand` into `Vec<CIROperand>`.
+// Lift a slice of `Operand` into `Vec<CIROperand>`.
 // ---------------------------------------------------------------------------
 // `call_builtin` operator lowering — same logic as `aot_core::specialise`,
 // but driven by runtime `observed_type` instead of static `inferred` types.
@@ -603,6 +603,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 is arbitrary float literal test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn literal_type_float() {
         assert_eq!(literal_type(Some(&Operand::Float(3.14))), "f64");
     }

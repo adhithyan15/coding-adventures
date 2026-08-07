@@ -1,0 +1,27 @@
+% ============================================================================
+% specific-heat-capacity-conversions.query.adj — worked lookups over the NIST specific-heat-capacity →
+% joule-per-kilogram-kelvin table.
+% ============================================================================
+% The shape a consumer produces to convert a specific heat capacity given in a non-SI unit into SI: it
+% `import`s the grounded table and asks the engine to bind the factor. No arithmetic and no factor is
+% stated by the consumer; the engine returns the cell WITH the table's NIST citation as its proof, on
+% the CPU.
+%
+%   ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_it_per_gram_celsius, $v)   % 4186.8
+%   ? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_th_per_gram_celsius, $v)   % 4184
+%
+% And the dimension guard: a unit of a DIFFERENT quantity has no row, so the lookup ABSTAINS rather
+% than mis-converting across dimensions. The "pound" is a MASS unit (it converts to the kilogram), NOT
+% a specific-heat-capacity unit — so it is caught rather than silently mis-converted:
+%
+%   ? specific_heat_capacity_to_joule_per_kilogram_kelvin(pound, $v)   % abstains (pound is mass → kilogram)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli specific-heat-capacity-conversions.query.adj
+% ============================================================================
+
+import "specific-heat-capacity-conversions.adj"
+
+? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_it_per_gram_celsius, $v)   % expect 4186.8  (exact NIST SP 811 B.9 factor)
+? specific_heat_capacity_to_joule_per_kilogram_kelvin(calorie_th_per_gram_celsius, $v)   % expect 4184    (exact NIST SP 811 B.9 factor)
+? specific_heat_capacity_to_joule_per_kilogram_kelvin(pound, $v)                         % expect abstain (mass unit, wrong dimension)

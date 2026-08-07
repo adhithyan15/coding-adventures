@@ -69,7 +69,10 @@ impl ConnectivityClass {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum DiscoveryMechanism {
     Mdns,
+    WsDiscovery,
     Ssdp,
+    UdpMulticast,
+    UdpBroadcast,
     Bluetooth,
     Usb,
     Dhcp,
@@ -110,7 +113,10 @@ pub enum PrimitiveFamily {
     NormalizedModel,
     DiscoveryIndex,
     Mdns,
+    WsDiscovery,
     Ssdp,
+    Udp,
+    Tcp,
     Dhcp,
     LocalHttp,
     WebSocket,
@@ -133,6 +139,7 @@ pub enum PrimitiveFamily {
     MqttCredentials,
     CameraMedia,
     EnergyTelemetry,
+    EnvironmentalTelemetry,
     CalculatedState,
     CommandMapping,
     CapabilityPolicy,
@@ -147,7 +154,10 @@ impl PrimitiveFamily {
             Self::NormalizedModel => "normalized_model",
             Self::DiscoveryIndex => "discovery_index",
             Self::Mdns => "mdns",
+            Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
+            Self::Udp => "udp",
+            Self::Tcp => "tcp",
             Self::Dhcp => "dhcp",
             Self::LocalHttp => "local_http",
             Self::WebSocket => "websocket",
@@ -170,6 +180,7 @@ impl PrimitiveFamily {
             Self::MqttCredentials => "mqtt_credentials",
             Self::CameraMedia => "camera_media",
             Self::EnergyTelemetry => "energy_telemetry",
+            Self::EnvironmentalTelemetry => "environmental_telemetry",
             Self::CalculatedState => "calculated_state",
             Self::CommandMapping => "command_mapping",
             Self::CapabilityPolicy => "capability_policy",
@@ -4247,7 +4258,7 @@ impl IntegrationMeshReadinessHandoffPackage {
     }
 
     fn release_ready(summary: &IntegrationMeshActionReadinessSummary) -> Option<Self> {
-        summary.release_ready.then(|| Self {
+        summary.release_ready.then_some(Self {
             sequence: 0,
             package_kind: IntegrationMeshReadinessHandoffKind::ReleaseReady,
             handoff_status: IntegrationMeshReadinessHandoffStatus::Ready,
@@ -35227,7 +35238,6 @@ impl IntegrationActivationBriefingSummary {
         let mut ready_items = 0;
         let mut review_status_items = 0;
         let mut blocked_status_items = 0;
-        let mut empty_items = 0;
         let mut summary = Self {
             total_items: 0,
             unique_integrations: 0,
@@ -35277,7 +35287,9 @@ impl IntegrationActivationBriefingSummary {
                 IntegrationActivationHealthStatus::Ready => ready_items += 1,
                 IntegrationActivationHealthStatus::NeedsReview => review_status_items += 1,
                 IntegrationActivationHealthStatus::Blocked => blocked_status_items += 1,
-                IntegrationActivationHealthStatus::Empty => empty_items += 1,
+                // `Empty` items need no separate tally: the overall status falls
+                // through to `Empty` whenever no other category is present.
+                IntegrationActivationHealthStatus::Empty => {}
             }
 
             match item.kind {
@@ -35348,9 +35360,9 @@ impl IntegrationActivationBriefingSummary {
             IntegrationActivationHealthStatus::NeedsReview
         } else if ready_items > 0 {
             IntegrationActivationHealthStatus::Ready
-        } else if empty_items > 0 {
-            IntegrationActivationHealthStatus::Empty
         } else {
+            // Both the `empty_items > 0` case and the fall-through default map to
+            // `Empty`, so they are collapsed into a single arm (behavior-identical).
             IntegrationActivationHealthStatus::Empty
         };
         summary
@@ -38712,6 +38724,9 @@ impl IntegrationActivationWatchtowerSummary {
 }
 
 impl IntegrationActivationSentinelAlert {
+    // Constructor gathers many independent rollup fields into the alert record;
+    // bundling them into a params struct would add churn without clarity.
+    #[allow(clippy::too_many_arguments)]
     fn from_rollups(
         sequence: usize,
         alert_kind: IntegrationActivationSentinelAlertKind,
@@ -38966,6 +38981,9 @@ impl IntegrationActivationSentinelSummary {
 }
 
 impl IntegrationActivationAuditRecord {
+    // Record constructor takes each audit field explicitly; a params struct would
+    // add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         record_kind: IntegrationActivationAuditRecordKind,
         record_id: String,
@@ -39329,6 +39347,9 @@ impl IntegrationActivationAuditSummary {
 }
 
 impl IntegrationActivationEscalationCase {
+    // Case constructor takes each escalation field explicitly; a params struct
+    // would add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         case_kind: IntegrationActivationEscalationCaseKind,
         source_id: String,
@@ -44656,9 +44677,21 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "mDNS",
             "Local DNS-SD discovery for LAN devices and bridges.",
         ),
+        PrimitiveFamily::WsDiscovery => (
+            "WS-Discovery",
+            "SOAP-over-UDP discovery for ONVIF cameras and other LAN devices.",
+        ),
         PrimitiveFamily::Ssdp => (
             "SSDP",
             "UPnP-style discovery for media and legacy LAN devices.",
+        ),
+        PrimitiveFamily::Udp => (
+            "UDP",
+            "Bounded UDP datagrams for vendor discovery, state, and command transports.",
+        ),
+        PrimitiveFamily::Tcp => (
+            "TCP",
+            "Bounded TCP streams for local line and frame-oriented protocols.",
         ),
         PrimitiveFamily::Dhcp => (
             "DHCP",
@@ -44729,6 +44762,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "Energy Telemetry",
             "Energy, climate, utility, and production measurements.",
         ),
+        PrimitiveFamily::EnvironmentalTelemetry => (
+            "Environmental Telemetry",
+            "Air quality, particulate, gas, temperature, and humidity measurements.",
+        ),
         PrimitiveFamily::CalculatedState => (
             "Calculated State",
             "Internal derived entities and dependency-driven state.",
@@ -44764,7 +44801,10 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::NormalizedModel,
         PrimitiveFamily::DiscoveryIndex,
         PrimitiveFamily::Mdns,
+        PrimitiveFamily::WsDiscovery,
         PrimitiveFamily::Ssdp,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::Tcp,
         PrimitiveFamily::Dhcp,
         PrimitiveFamily::LocalHttp,
         PrimitiveFamily::WebSocket,
@@ -44787,6 +44827,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::MqttCredentials,
         PrimitiveFamily::CameraMedia,
         PrimitiveFamily::EnergyTelemetry,
+        PrimitiveFamily::EnvironmentalTelemetry,
         PrimitiveFamily::CalculatedState,
         PrimitiveFamily::CommandMapping,
         PrimitiveFamily::CapabilityPolicy,
@@ -44851,11 +44892,21 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "MQTT",
             "MQTT broker integration for power-user devices, Tasmota, sensors, and bridge-style ecosystems.",
             ConnectivityClass::LocalPush,
-            ImplementationStatus::Specified,
+            ImplementationStatus::FirstPartyRuntime,
             1,
             ProtocolFamily::Mqtt,
-            &["smart_home.read", "smart_home.command.light", "smart_home.command.switch"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
+            &[
+                "smart_home.read",
+                "smart_home.command.light",
+                "smart_home.command.switch",
+                "smart_home.command.climate",
+            ],
+            &[
+                EntityKind::Light,
+                EntityKind::Switch,
+                EntityKind::Sensor,
+                EntityKind::Thermostat,
+            ],
             &[DiscoveryMechanism::Mqtt, DiscoveryMechanism::Manual],
             &[AuthMode::MqttCredentials],
             "mqtt",
@@ -44923,29 +44974,41 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         local_device_entry(
             "shelly",
             "Shelly",
-            "Local Shelly relay, switch, cover, sensor, and energy integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local Shelly Gen2 and Gen3 relay, light, input, sensor, and energy integration.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
-            &["smart_home.read", "smart_home.command.switch"],
-            &[EntityKind::Switch, EntityKind::Sensor],
+            &[
+                "smart_home.read",
+                "smart_home.command.light",
+                "smart_home.command.switch",
+            ],
+            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor, EntityKind::Input],
             &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
             &[AuthMode::None, AuthMode::UsernamePassword],
             "shelly",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("shelly".to_string())]),
         local_device_entry(
             "tplink",
             "TP-Link Smart Home",
-            "Local TP-Link and Kasa device integration for plugs, lights, switches, and cameras.",
+            "Credential-free legacy Kasa LAN integration for plugs, switches, and lights.",
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light", "smart_home.command.switch"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
-            &[DiscoveryMechanism::Manual, DiscoveryMechanism::Dhcp],
-            &[AuthMode::None, AuthMode::UsernamePassword],
+            &[EntityKind::Light, EntityKind::Switch],
+            &[
+                DiscoveryMechanism::UdpBroadcast,
+                DiscoveryMechanism::Manual,
+                DiscoveryMechanism::Dhcp,
+            ],
+            &[AuthMode::None],
             "tplink",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "kasa_legacy_lan".to_string(),
+        )]),
         virtual_alias(
             "tplink_tapo",
             "Tapo",
@@ -44954,45 +45017,80 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             2,
             "tplink_tapo",
         ),
+        {
+            let mut entry = local_device_entry(
+                "nanoleaf",
+                "Nanoleaf",
+                "Authenticated Nanoleaf local API integration for lights and panels.",
+                ConnectivityClass::LocalPolling,
+                ImplementationStatus::FirstPartyRuntime,
+                2,
+                &["smart_home.read", "smart_home.command.light"],
+                &[EntityKind::Light],
+                &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual],
+                &[AuthMode::LocalPairing, AuthMode::LocalToken],
+                "nanoleaf",
+            )
+            .with_protocols(vec![ProtocolFamily::Vendor(
+                "nanoleaf_local".to_string(),
+            )]);
+            entry.required_primitives.push(PrimitiveFamily::VaultLease);
+            entry
+        },
         local_device_entry(
             "wled",
             "WLED",
-            "Local WLED light and effect integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local WLED JSON API integration for master and segment lights.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light"],
             &[EntityKind::Light],
             &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual],
             &[AuthMode::None],
             "wled",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("wled".to_string())]),
         local_device_entry(
             "lifx",
             "LIFX",
-            "Local LIFX light integration.",
+            "Local LIFX LAN UDP discovery, state, and light control.",
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light"],
             &[EntityKind::Light],
-            &[DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
+            &[DiscoveryMechanism::UdpBroadcast, DiscoveryMechanism::Manual],
             &[AuthMode::None],
             "lifx",
-        ),
-        local_device_entry(
-            "govee_light_local",
-            "Govee Lights Local",
-            "Local LAN control path for Govee lights.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
-            2,
-            &["smart_home.read", "smart_home.command.light"],
-            &[EntityKind::Light],
-            &[DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
-            &[AuthMode::None],
-            "govee_light_local",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("lifx_lan".to_string())]),
+        {
+            let mut entry = base_entry(
+                "govee_light_local",
+                "Govee Lights Local",
+                "Local Govee LAN UDP discovery, state, and light control.",
+                IntegrationCategory::LocalDevice,
+                ConnectivityClass::LocalPolling,
+                ImplementationStatus::FirstPartyRuntime,
+                2,
+                "govee_light_local",
+            )
+            .with_capabilities(&["smart_home.read", "smart_home.command.light"])
+            .with_entities(&[EntityKind::Light])
+            .with_discovery(&[DiscoveryMechanism::UdpMulticast, DiscoveryMechanism::Manual])
+            .with_auth(&[AuthMode::None])
+            .with_protocols(vec![ProtocolFamily::Vendor("govee_lan".to_string())]);
+            entry.required_primitives = vec![
+                PrimitiveFamily::NormalizedModel,
+                PrimitiveFamily::DiscoveryIndex,
+                PrimitiveFamily::Udp,
+                PrimitiveFamily::CommandMapping,
+                PrimitiveFamily::CapabilityPolicy,
+                PrimitiveFamily::Supervision,
+            ];
+            entry
+        },
         bluetooth_entry(
             "switchbot",
             "SwitchBot Bluetooth",
@@ -45003,28 +45101,91 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Switch, EntityKind::Sensor, EntityKind::Lock, EntityKind::Input],
             "switchbot",
         ),
-        local_hub_entry(
+        base_entry(
             "unifi",
             "UniFi Network",
-            "Local UniFi controller integration for presence, network, and device telemetry.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
-            2,
-            &["smart_home.read", "smart_home.diagnostics"],
-            &[EntityKind::Sensor, EntityKind::NetworkDiagnostic],
-            &[DiscoveryMechanism::Manual],
-            &[AuthMode::ApiKey, AuthMode::UsernamePassword],
+            "Authenticated local UniFi Network application, site, and adopted-device health inspection.",
+            IntegrationCategory::LocalHub,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
             "unifi",
-        ),
-        media_entry(
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::NetworkDiagnostic])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::ApiKey])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "unifi_network_integration_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the official local /proxy/network/integration/v1 API over HTTPS; plain HTTP is loopback-test-only.",
+            "The Vault-backed API key is materialized only as X-API-Key inside the bounded transport and never enters normalized state or request-plan debug output.",
+            "Remote Site Manager, connected clients, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
+        ]),
+        base_entry(
             "sonos",
             "Sonos",
-            "Local Sonos speaker and media-player integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local Sonos ZonePlayer discovery and read-only player-state inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             "sonos",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("sonos_upnp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Current runtime support is polling-only; GENA subscriptions and media commands remain future work.",
+        ]),
+        base_entry(
+            "heos",
+            "HEOS",
+            "Local Denon and Marantz HEOS CLI player discovery, inspection, change events, and media control.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPush,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "heos",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.media"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("heos_cli".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
+        ]),
         media_entry(
             "cast",
             "Google Cast",
@@ -45037,21 +45198,256 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         camera_entry(
             "onvif",
             "ONVIF",
-            "Local ONVIF camera integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local ONVIF camera discovery, authenticated inspection, and privacy-gated media access.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             3,
             "onvif",
-        ),
-        camera_entry(
+        )
+        .with_capabilities(&["smart_home.read", "camera.snapshot", "camera.stream"])
+        .with_entities(&[EntityKind::Camera, EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::WsDiscovery, DiscoveryMechanism::Manual])
+        .with_protocols(vec![ProtocolFamily::Onvif])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::WsDiscovery,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CameraMedia,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ]),
+        base_entry(
+            "axis_vapix",
+            "Axis VAPIX",
+            "Challenge-authenticated local Axis camera and NVR discovery, inspection, and bounded PTZ control.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "axis_vapix",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("axis_vapix".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection requires certificate-verifying HTTPS and selects advertised Basic or Digest authentication; plain HTTP is accepted only for loopback transport tests.",
+            "Camera 1 PTZ is capability-probed, human-approved, queue-aware, and bounded with an explicit native stop.",
+            "Event streaming, snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
+        ]),
+        base_entry(
+            "blue_iris",
+            "Blue Iris",
+            "Authenticated local Blue Iris NVR inspection with verified manual recording and bounded PTZ control.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "blue_iris_json",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("blue_iris_json".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the documented JSON challenge-response login over local HTTPS; plain HTTP is test-only on loopback.",
+            "Credentials, challenge hashes, sessions, and the server license value remain outside normalized state and request-plan debug output.",
+            "Session permissions and camera capability gate readback-verified manual recording plus preset and bounded directional PTZ control.",
+            "Snapshots, clips, media transfer, broader camera configuration, and administrative changes remain separate permission-specific work.",
+        ]),
+        base_entry(
+            "frigate",
+            "Frigate",
+            "Authenticated local Frigate NVR and camera health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "frigate_http_api",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "frigate_http_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses Frigate's authenticated HTTPS port and secure cookie login; plain HTTP is test-only on loopback.",
+            "Credentials, login payloads, and JWT cookies remain inside the bounded transport and every successful inspection explicitly logs out.",
+            "Configuration, events, snapshots, recordings, exports, playback, and mutations remain separate host- or capability-specific work.",
+        ]),
+        base_entry(
+            "synology-surveillance",
+            "Synology Surveillance Station",
+            "Authenticated local Surveillance Station package and camera health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "synology_surveillance_webapi",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "synology_surveillance_webapi".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection discovers Web API paths and versions, then uses an isolated SID-format SurveillanceStation session over HTTPS; plain HTTP is test-only on loopback.",
+            "Credentials, SID values, SynoToken values, and login payloads remain inside the bounded transport and every successful login explicitly logs out.",
+            "OTP/device-token authentication, events, snapshots, recordings, playback, export, PTZ, external recording, and configuration remain separate lifecycle- or capability-specific work.",
+        ]),
+        base_entry(
+            "zoneminder",
+            "ZoneMinder",
+            "Authenticated local ZoneMinder host, API, and monitor health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "zoneminder",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "zoneminder_http_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the documented API 2.0 HTTPS login and short-lived JWT access-token flow; plain HTTP is loopback-test-only.",
+            "Credentials, refresh tokens, access tokens, login payloads, and token-bearing request targets remain inside the bounded transport.",
+            "Events, snapshots, streams, recordings, PTZ, monitor configuration, and token renewal remain separate lifecycle- or capability-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
-            "Reolink camera, doorbell, siren, and sensor hub integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             3,
             "reolink",
-        ),
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
+        .with_entities(&[EntityKind::Camera, EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("reolink_cgi".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Supported channels expose GetRecV20 state and authorized SetRecV20 recording enable/disable with readback verification.",
+            "Recording search/download, media transfer, PTZ, and push events remain separate work.",
+        ]),
+        base_entry(
+            "roku",
+            "Roku ECP",
+            "Local Roku player and TV discovery plus read-only device and application inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "roku",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("roku_ecp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "This runtime slice is read-only until D23 has a protocol-neutral media command contract.",
+        ]),
+        base_entry(
+            "wemo",
+            "Wemo UPnP",
+            "Local Wemo discovery, binary-state inspection, and light-switch control.",
+            IntegrationCategory::LocalDevice,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "wemo",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.light"])
+        .with_entities(&[EntityKind::Light, EntityKind::Switch])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("wemo_upnp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Wemo light switches use the D23 light command contract; generic outlets remain read-only until D23 has a switch command contract.",
+        ]),
         camera_entry(
             "ring",
             "Ring",
@@ -45072,24 +45468,125 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
             "tuya",
         ),
-        energy_entry(
+        base_entry(
             "enphase_envoy",
             "Enphase Envoy",
-            "Local solar and energy telemetry integration.",
+            "Authenticated local Enphase IQ Gateway meter inventory and aggregate energy telemetry.",
+            IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             4,
             "enphase_envoy",
-        ),
-        energy_entry(
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::LocalToken])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "enphase_iq_gateway_local_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Production inspection uses a pre-generated Vault-backed bearer token over HTTPS; plain HTTP is loopback-test-only.",
+            "Caller-supplied trust roots preserve certificate verification for IQ Gateways that use self-signed certificates.",
+            "Cloud token renewal, legacy authentication, inverter serials, live battery or relay topology, and controls remain separate policy-specific work.",
+        ]),
+        base_entry(
             "fronius",
             "Fronius",
-            "Local inverter and solar telemetry integration.",
+            "Local Fronius Solar API v1 site and inverter telemetry integration.",
+            IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             4,
             "fronius",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "fronius_solar_api_v1".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ]),
+        base_entry(
+            "homewizard_energy",
+            "HomeWizard Energy",
+            "Local HomeWizard Energy API v1 device and utility telemetry.",
+            IntegrationCategory::EnergyClimate,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            4,
+            "homewizard",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "homewizard_energy_api_v1".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ]),
+        base_entry(
+            "airgradient",
+            "AirGradient",
+            "Local AirGradient telemetry, indicator/display control, calibration, and typed non-credential configuration.",
+            IntegrationCategory::EnergyClimate,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            4,
+            "airgradient",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
+        .with_entities(&[EntityKind::Sensor, EntityKind::Light, EntityKind::Input])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "airgradient_local_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Cloud-only configuration is rejected locally; dual local/cloud control returns an explicit overwrite warning.",
+            "Typed local settings validate documented ranges and sensor-specific correction algorithms before transport I/O.",
+            "Credential-bearing MQTT and custom HTTP destinations remain blocked on Vault leasing and destination policy.",
+        ]),
         energy_entry(
             "tesla_powerwall",
             "Tesla Powerwall",
@@ -48591,37 +49088,6 @@ fn protocol_entry(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn local_hub_entry(
-    id: &'static str,
-    name: &'static str,
-    summary: &'static str,
-    connectivity: ConnectivityClass,
-    status: ImplementationStatus,
-    priority: u8,
-    capabilities: &[&'static str],
-    entities: &[EntityKind],
-    discovery: &[DiscoveryMechanism],
-    auth: &[AuthMode],
-    ha_domain: &'static str,
-) -> IntegrationCatalogEntry {
-    base_entry(
-        id,
-        name,
-        summary,
-        IntegrationCategory::LocalHub,
-        connectivity,
-        status,
-        priority,
-        ha_domain,
-    )
-    .with_capabilities(capabilities)
-    .with_entities(entities)
-    .with_discovery(discovery)
-    .with_auth(auth)
-    .with_primitives(&local_transport_primitives(connectivity, discovery, auth))
-}
-
-#[allow(clippy::too_many_arguments)]
 fn local_device_entry(
     id: &'static str,
     name: &'static str,
@@ -48840,10 +49306,10 @@ fn tasmota_entry() -> IntegrationCatalogEntry {
     base_entry(
         "tasmota",
         "Tasmota",
-        "MQTT-native Tasmota device integration.",
+        "Tasmota MQTT push and native local HTTP device integration.",
         IntegrationCategory::LocalDevice,
         ConnectivityClass::LocalPush,
-        ImplementationStatus::DelegatedToStandard,
+        ImplementationStatus::FirstPartyRuntime,
         1,
         "tasmota",
     )
@@ -48853,13 +49319,27 @@ fn tasmota_entry() -> IntegrationCatalogEntry {
         "smart_home.command.switch",
     ])
     .with_entities(&[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor])
-    .with_discovery(&[DiscoveryMechanism::Mqtt])
-    .with_auth(&[AuthMode::MqttCredentials])
+    .with_discovery(&[
+        DiscoveryMechanism::Mqtt,
+        DiscoveryMechanism::Mdns,
+        DiscoveryMechanism::Manual,
+    ])
+    .with_auth(&[
+        AuthMode::None,
+        AuthMode::UsernamePassword,
+        AuthMode::MqttCredentials,
+    ])
     .with_dependencies(&["mqtt"])
-    .with_protocols(vec![ProtocolFamily::Mqtt])
+    .with_protocols(vec![
+        ProtocolFamily::Mqtt,
+        ProtocolFamily::Vendor("tasmota_http".to_string()),
+    ])
     .with_primitives(&[
         PrimitiveFamily::Mqtt,
         PrimitiveFamily::MqttCredentials,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::VaultLease,
         PrimitiveFamily::CommandMapping,
         PrimitiveFamily::CapabilityPolicy,
         PrimitiveFamily::Supervision,
@@ -49044,6 +49524,14 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
             PrimitiveFamily::LocalHttp,
             PrimitiveFamily::ServerSentEvents,
             PrimitiveFamily::LocalPairing,
+        ],
+        ProtocolFamily::Onvif => &[
+            PrimitiveFamily::WsDiscovery,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CameraMedia,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Zigbee => &[
             PrimitiveFamily::Usb,
@@ -55009,7 +55497,11 @@ fn local_transport_primitives(
     for mechanism in discovery {
         let primitive = match mechanism {
             DiscoveryMechanism::Mdns => Some(PrimitiveFamily::Mdns),
+            DiscoveryMechanism::WsDiscovery => Some(PrimitiveFamily::WsDiscovery),
             DiscoveryMechanism::Ssdp => Some(PrimitiveFamily::Ssdp),
+            DiscoveryMechanism::UdpMulticast | DiscoveryMechanism::UdpBroadcast => {
+                Some(PrimitiveFamily::Udp)
+            }
             DiscoveryMechanism::Bluetooth => Some(PrimitiveFamily::BluetoothLowEnergy),
             DiscoveryMechanism::Usb => Some(PrimitiveFamily::Usb),
             DiscoveryMechanism::Dhcp => Some(PrimitiveFamily::Dhcp),
@@ -55935,6 +56427,9 @@ fn guardrail_verdict_rank(verdict: IntegrationActivationGuardrailVerdict) -> u8 
     }
 }
 
+// Helper forwards each alert field straight into `from_rollups`; a params struct
+// here would just duplicate that constructor's signature.
+#[allow(clippy::too_many_arguments)]
 fn push_activation_sentinel_alert(
     alerts: &mut Vec<IntegrationActivationSentinelAlert>,
     alert_kind: IntegrationActivationSentinelAlertKind,
@@ -58898,8 +59393,7 @@ mod tests {
 
     #[test]
     fn activation_sentinel_alerts_roll_up_activation_attention() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -58939,8 +59433,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
@@ -59018,8 +59511,7 @@ mod tests {
 
     #[test]
     fn activation_audit_records_join_sentinel_attention_to_evidence() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59059,8 +59551,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections =
@@ -59138,8 +59629,7 @@ mod tests {
 
     #[test]
     fn activation_runbook_entries_join_playbook_steps_to_audit_context() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59179,8 +59669,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
         let risks = activation_risk_from_candidates(&[], candidates.iter());
@@ -73423,10 +73912,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73498,9 +73985,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73636,10 +74121,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73727,9 +74210,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73889,10 +74370,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -74014,9 +74493,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -76611,13 +77088,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 false,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,
@@ -76740,13 +77215,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 true,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,
@@ -80595,6 +81068,703 @@ mod tests {
         assert!(camera_entries.iter().all(|entry| entry
             .required_primitives
             .contains(&PrimitiveFamily::CapabilityPolicy)));
+    }
+
+    #[test]
+    fn onvif_entry_exposes_executable_camera_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let onvif = find_entry(&catalog, &IntegrationId::trusted("onvif")).unwrap();
+
+        assert_eq!(onvif.implementation_status, ImplementationStatus::FirstPartyRuntime);
+        assert_eq!(onvif.supported_protocols, vec![ProtocolFamily::Onvif]);
+        assert!(onvif.target_entity_kinds.contains(&EntityKind::Camera));
+        assert!(onvif
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::WsDiscovery));
+        assert!(onvif
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn unifi_entry_exposes_local_api_key_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let unifi = find_entry(&catalog, &IntegrationId::trusted("unifi")).unwrap();
+
+        assert_eq!(
+            unifi.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(unifi.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            unifi.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "unifi_network_integration_api".to_string()
+            )]
+        );
+        assert_eq!(unifi.auth_modes, vec![AuthMode::ApiKey]);
+        assert_eq!(
+            unifi.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
+        assert!(unifi
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn reolink_entry_exposes_authenticated_cgi_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let reolink = find_entry(&catalog, &IntegrationId::trusted("reolink")).unwrap();
+
+        assert_eq!(
+            reolink.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(reolink.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            reolink.supported_protocols,
+            vec![ProtocolFamily::Vendor("reolink_cgi".to_string())]
+        );
+        assert_eq!(reolink.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert!(reolink
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.device")));
+        assert!(reolink.target_entity_kinds.contains(&EntityKind::Camera));
+        assert!(reolink.target_entity_kinds.contains(&EntityKind::Sensor));
+        assert!(reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn axis_entry_exposes_authenticated_vapix_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let axis = find_entry(&catalog, &IntegrationId::trusted("axis_vapix")).unwrap();
+
+        assert_eq!(
+            axis.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(axis.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            axis.supported_protocols,
+            vec![ProtocolFamily::Vendor("axis_vapix".to_string())]
+        );
+        assert_eq!(axis.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(axis.target_entity_kinds, vec![EntityKind::Camera]);
+        assert!(axis
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command")));
+        assert!(axis
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(axis
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(axis
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(axis
+            .notes
+            .iter()
+            .any(|note| note.contains("Basic or Digest")));
+        assert!(!axis
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn blue_iris_entry_exposes_authenticated_json_control_primitives() {
+        let catalog = first_party_catalog();
+        let blue_iris = find_entry(&catalog, &IntegrationId::trusted("blue_iris")).unwrap();
+
+        assert_eq!(
+            blue_iris.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(blue_iris.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            blue_iris.supported_protocols,
+            vec![ProtocolFamily::Vendor("blue_iris_json".to_string())]
+        );
+        assert_eq!(blue_iris.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert!(blue_iris
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.device")));
+        assert_eq!(blue_iris.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(blue_iris.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        assert!(blue_iris
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(blue_iris
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!blue_iris
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn frigate_entry_exposes_authenticated_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let frigate = find_entry(&catalog, &IntegrationId::trusted("frigate")).unwrap();
+
+        assert_eq!(
+            frigate.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(frigate.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            frigate.supported_protocols,
+            vec![ProtocolFamily::Vendor("frigate_http_api".to_string())]
+        );
+        assert_eq!(frigate.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(frigate.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            frigate.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert!(frigate
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(frigate
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(frigate
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!frigate
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn synology_surveillance_entry_exposes_discovered_session_primitives() {
+        let catalog = first_party_catalog();
+        let synology =
+            find_entry(&catalog, &IntegrationId::trusted("synology-surveillance")).unwrap();
+
+        assert_eq!(
+            synology.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(synology.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            synology.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "synology_surveillance_webapi".to_string()
+            )]
+        );
+        assert_eq!(synology.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(synology.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            synology.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert!(synology
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(synology
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(synology
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!synology
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn zoneminder_entry_exposes_api_v2_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let zoneminder = find_entry(&catalog, &IntegrationId::trusted("zoneminder")).unwrap();
+
+        assert_eq!(
+            zoneminder.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(zoneminder.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            zoneminder.supported_protocols,
+            vec![ProtocolFamily::Vendor("zoneminder_http_api".to_string())]
+        );
+        assert_eq!(zoneminder.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(zoneminder.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            zoneminder.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert_eq!(
+            zoneminder.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn roku_entry_exposes_ssdp_and_read_only_ecp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let roku = find_entry(&catalog, &IntegrationId::trusted("roku")).unwrap();
+
+        assert_eq!(
+            roku.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(roku.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            roku.supported_protocols,
+            vec![ProtocolFamily::Vendor("roku_ecp".to_string())]
+        );
+        assert_eq!(roku.auth_modes, vec![AuthMode::None]);
+        assert!(roku
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(roku.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(roku
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!roku
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.media")));
+    }
+
+    #[test]
+    fn sonos_entry_exposes_ssdp_and_read_only_upnp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let sonos = find_entry(&catalog, &IntegrationId::trusted("sonos")).unwrap();
+
+        assert_eq!(
+            sonos.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(sonos.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            sonos.supported_protocols,
+            vec![ProtocolFamily::Vendor("sonos_upnp".to_string())]
+        );
+        assert_eq!(sonos.auth_modes, vec![AuthMode::None]);
+        assert!(sonos
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(sonos
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!sonos
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.media")));
+    }
+
+    #[test]
+    fn wemo_entry_exposes_ssdp_upnp_and_bounded_light_control() {
+        let catalog = first_party_catalog();
+        let wemo = find_entry(&catalog, &IntegrationId::trusted("wemo")).unwrap();
+
+        assert_eq!(
+            wemo.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(wemo.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            wemo.supported_protocols,
+            vec![ProtocolFamily::Vendor("wemo_upnp".to_string())]
+        );
+        assert_eq!(wemo.auth_modes, vec![AuthMode::None]);
+        assert!(wemo
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(wemo.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(wemo
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
+        assert!(wemo
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.light")));
+    }
+
+    #[test]
+    fn shelly_entry_exposes_executable_local_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let shelly = find_entry(&catalog, &IntegrationId::trusted("shelly")).unwrap();
+
+        assert_eq!(
+            shelly.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            shelly.supported_protocols,
+            vec![ProtocolFamily::Vendor("shelly".to_string())]
+        );
+        assert!(shelly
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(shelly
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(shelly
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
+    }
+
+    #[test]
+    fn wled_entry_exposes_executable_local_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let wled = find_entry(&catalog, &IntegrationId::trusted("wled")).unwrap();
+
+        assert_eq!(
+            wled.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            wled.supported_protocols,
+            vec![ProtocolFamily::Vendor("wled".to_string())]
+        );
+        assert_eq!(wled.connectivity, ConnectivityClass::LocalPolling);
+        assert!(wled
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(wled
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(wled
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
+    }
+
+    #[test]
+    fn nanoleaf_entry_exposes_pairing_token_and_verified_command_primitives() {
+        let catalog = first_party_catalog();
+        let nanoleaf = find_entry(&catalog, &IntegrationId::trusted("nanoleaf")).unwrap();
+
+        assert_eq!(
+            nanoleaf.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            nanoleaf.supported_protocols,
+            vec![ProtocolFamily::Vendor("nanoleaf_local".to_string())]
+        );
+        assert_eq!(nanoleaf.connectivity, ConnectivityClass::LocalPolling);
+        assert!(nanoleaf
+            .auth_modes
+            .contains(&AuthMode::LocalPairing));
+        assert!(nanoleaf
+            .auth_modes
+            .contains(&AuthMode::LocalToken));
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::LocalPairing,
+            PrimitiveFamily::LocalToken,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::CommandMapping,
+        ] {
+            assert!(nanoleaf.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn heos_entry_exposes_ssdp_tcp_push_and_media_command_runtime() {
+        let catalog = first_party_catalog();
+        let heos = find_entry(&catalog, &IntegrationId::trusted("heos")).unwrap();
+
+        assert_eq!(
+            heos.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(heos.connectivity, ConnectivityClass::LocalPush);
+        assert_eq!(heos.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            heos.supported_protocols,
+            vec![ProtocolFamily::Vendor("heos_cli".to_string())]
+        );
+        assert_eq!(
+            heos.required_capabilities,
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.media"),
+            ]
+        );
+        for primitive in [
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(heos.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn tasmota_entry_exposes_mqtt_and_native_local_http_runtime_paths() {
+        let catalog = first_party_catalog();
+        let tasmota = find_entry(&catalog, &IntegrationId::trusted("tasmota")).unwrap();
+
+        assert_eq!(
+            tasmota.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert!(tasmota.supported_protocols.contains(&ProtocolFamily::Mqtt));
+        assert!(tasmota
+            .supported_protocols
+            .contains(&ProtocolFamily::Vendor("tasmota_http".to_string())));
+        assert!(tasmota
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(tasmota.auth_modes.contains(&AuthMode::UsernamePassword));
+        for primitive in [
+            PrimitiveFamily::Mqtt,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::CommandMapping,
+        ] {
+            assert!(tasmota.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn enphase_entry_exposes_authenticated_local_meter_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let enphase =
+            find_entry(&catalog, &IntegrationId::trusted("enphase_envoy")).unwrap();
+
+        assert_eq!(
+            enphase.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(enphase.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(enphase.auth_modes, vec![AuthMode::LocalToken]);
+        assert_eq!(
+            enphase.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "enphase_iq_gateway_local_api".to_string()
+            )]
+        );
+        assert_eq!(
+            enphase.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(
+            enphase.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        for primitive in [
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(enphase.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn fronius_entry_exposes_read_only_local_energy_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let fronius = find_entry(&catalog, &IntegrationId::trusted("fronius")).unwrap();
+
+        assert_eq!(
+            fronius.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(fronius.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(fronius.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            fronius.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "fronius_solar_api_v1".to_string()
+            )]
+        );
+        assert_eq!(
+            fronius.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(fronius.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn homewizard_entry_exposes_read_only_local_utility_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let homewizard = find_entry(
+            &catalog,
+            &IntegrationId::trusted("homewizard_energy"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            homewizard.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(homewizard.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(homewizard.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            homewizard.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "homewizard_energy_api_v1".to_string()
+            )]
+        );
+        assert_eq!(
+            homewizard.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(homewizard.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn airgradient_entry_exposes_authorized_local_environmental_runtime() {
+        let catalog = first_party_catalog();
+        let airgradient = find_entry(&catalog, &IntegrationId::trusted("airgradient")).unwrap();
+
+        assert_eq!(
+            airgradient.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(airgradient.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(airgradient.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            airgradient.supported_protocols,
+            vec![ProtocolFamily::Vendor("airgradient_local_api".to_string())]
+        );
+        assert_eq!(
+            airgradient.required_capabilities,
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.device")
+            ]
+        );
+        assert!(airgradient.target_entity_kinds.contains(&EntityKind::Input));
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(airgradient.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn govee_entry_exposes_executable_udp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let govee = find_entry(
+            &catalog,
+            &IntegrationId::trusted("govee_light_local"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            govee.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(govee.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            govee.supported_protocols,
+            vec![ProtocolFamily::Vendor("govee_lan".to_string())]
+        );
+        assert!(govee
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpMulticast));
+        assert!(govee.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::WebSocket));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+    }
+
+    #[test]
+    fn lifx_entry_exposes_executable_udp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let lifx = find_entry(&catalog, &IntegrationId::trusted("lifx")).unwrap();
+
+        assert_eq!(
+            lifx.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(lifx.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            lifx.supported_protocols,
+            vec![ProtocolFamily::Vendor("lifx_lan".to_string())]
+        );
+        assert!(lifx
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpBroadcast));
+        assert!(lifx.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(!lifx
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalToken));
+    }
+
+    #[test]
+    fn tplink_entry_exposes_executable_kasa_legacy_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let tplink = find_entry(&catalog, &IntegrationId::trusted("tplink")).unwrap();
+
+        assert_eq!(
+            tplink.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(tplink.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            tplink.supported_protocols,
+            vec![ProtocolFamily::Vendor("kasa_legacy_lan".to_string())]
+        );
+        assert!(tplink
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpBroadcast));
+        assert!(tplink.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert_eq!(tplink.auth_modes, vec![AuthMode::None]);
+        assert!(!tplink.target_entity_kinds.contains(&EntityKind::Camera));
     }
 
     #[test]

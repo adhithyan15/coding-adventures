@@ -181,14 +181,21 @@ runtime catalog** and emits every dispatch to it:
 
 Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `empty?`, `include?`, `index`, `push`/`append`, `<<`, `pop`, `shift`, `reverse`,
-`sort`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
-`reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`; **Hash** `keys`,
+`sort`, `min`/`max`/`minmax`/`sum`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
+`reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`,
+`each_slice`/`each_cons`, `chunk_while`/`slice_when`, `cycle`; **Hash** `keys`,
 `values`, `has_key?`/`key?`/`include?`/`member?`, `has_value?`/`value?`, `size`/
-`length`, `empty?`, `each`/`each_pair`, `map`, `select`/`filter`, `reject`;
+`length`, `empty?`, `each`/`each_pair`, `each_key`, `each_value`, `map`,
+`select`/`filter`, `reject`, `transform_values`, `transform_keys`, and the
+Enumerable aggregates `find`/`detect`, `any?`/`all?`/`none?`, `count`,
+`sort_by`, `min_by`/`max_by`, `group_by`, `partition`,
+`flat_map`/`collect_concat`, `reduce`/`inject`, `sum`, `to_h` (block +
+no-block), `each_with_index`, `each_with_object`;
 **String** `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/`lstrip`/
 `rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`, `chars`,
 `to_i`, `to_f`, `to_sym`; **Numeric** `abs`, `to_i`, `to_f`, `even?`, `odd?`,
-`zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `times`; **Symbol**
+`zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `round` (with optional
+`ndigits`), `divmod`, `fdiv`, `clamp`, `between?`, `times`; **Symbol**
 `to_s`, `to_sym`, `length`/`size`, `upcase`, `downcase`, `empty?`; **universal**
 `nil?`, `==`, `!=`, `class`, `to_s`, `itself`.
 

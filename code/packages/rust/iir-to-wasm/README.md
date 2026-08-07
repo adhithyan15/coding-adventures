@@ -63,7 +63,11 @@ through a deprecated intermediate.
   there is no managed runtime to bounds-check for it) then an `i64.load`/`i64.store`
   (or `f64`) at `wrap(handle)+idx*elemsize` offset 8; `array_len` reads the header.
   The wasm sibling of the LLVM `@calloc` + `icmp uge` + `llvm.trap` lowering. `i64`
-  and `f64` elements (the ALGOL `integer`/`real` arrays).
+  and `f64` elements (the ALGOL `integer`/`real` arrays), plus **`str` elements**
+  (v0.36.0 — E4d-BA-arr, BASIC `DIM A$(n)`): a 4-byte `i32` handle per element
+  (`i32.load`/`i32.store`, 4-byte stride), each an E4-dyn runtime string block
+  offset. A folded str literal stored via `array_set` is promoted to a runtime
+  block handle so the element holds a real offset rather than an uninitialised `0`.
 - **String literal foothold (v0.23.0 — LANG-FULL E4 / BA4)**: `str_const` writes
   printable ASCII literal bytes into a linear-memory data segment and stores the
   byte pointer in an `i32` local; `print_str` calls the host import
@@ -91,9 +95,39 @@ through a deprecated intermediate.
   `load` + `getelementptr … i64 8` runtime path (E4d-2), and lets
   `10 INPUT N … 30 LET A$="LO" … 50 LET A$="HI" … 60 PRINT A$` print the branch's
   string at run time. Single-assignment (and straight-line-reassigned) strings
-  keep the folded literal fast path unchanged. Runtime `str_len`/`str_concat`/
-  `str_slice`/`str_index`/`str_cmp` over promoted operands are still deferred
-  (E4d-3b).
+  keep the folded literal fast path unchanged. **Over runtime (non-folded)
+  operands** (E4d-3b): `str_len` reads the header length with `i32.load`;
+  `print_str` reads it to pass `(handle + 4, len)`; `str_concat` bump-allocates a
+  fresh `[i32 len][bytes]` block and `memory.copy`s both runs into it; `str_eq`
+  calls the self-contained in-module `$__str_eq(i32,i32)->i32` helper (a length
+  check + byte-compare loop); and **`str_cmp` (v0.39.0)** calls the sibling
+  `$__str_cmp(i32,i32)->i32` helper — a shared-prefix scan (`i32.load8_u`, unsigned)
+  with a length tiebreak returning `-1`/`0`/`1`, byte-identical to the folded
+  `left.bytes.cmp(&right.bytes)` path — sign-extended to `i64` when the result slot
+  is 64-bit; and **`str_slice` (v0.40.0)** bump-allocates a fresh `[i32 len]
+  [bytes]` block and `memory.copy`s the source's `[start, end)` run into it (the
+  same shape as runtime `str_concat`), with a bounds trap (`unreachable` unless
+  `0 ≤ start ≤ end ≤ len`, via unsigned compares) and `i32.wrap`ped index slots.
+  and **`str_index` (v0.41.0)** reads the source's header length for the bounds
+  trap (`idx >=u len` → `unreachable`) and loads the byte with `i32.load8_u(handle
+  + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
+  header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
+  surface**: every `str_*` op now has a runtime path over promoted operands.
+- **Growable linear memory (v0.45.0 — Twig GC completion, Part 3 stage 1)**:
+  every bump-allocation site (`alloc_array`, runtime `str_concat`, runtime
+  `str_slice`, `call_builtin "input_str"`) calls a shared, in-module
+  `$__ensure_capacity(needed_end: i64)` helper before writing, which emits a
+  real `memory.grow` when the requested offset would exceed the module's
+  current page count. The declared memory's `max` comes from
+  `IIRWasmConfig::max_memory_pages` (default `1024` pages = 64 MiB, clamped
+  to the WASM spec's `65536`-page ceiling), not the old hardcoded single
+  page — so a program whose string/array data crosses 64 KiB now grows
+  memory and keeps running instead of trapping on the first out-of-page
+  write. The cap stays configurable rather than jumping straight to the
+  full 4 GiB ceiling because this allocator never frees (reclamation — a
+  free-list allocator + a conservative collector over this same linear
+  memory — is a separate, larger follow-up); see
+  `AOT00-T1x-wasm-linear-memory-growth.md`.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 

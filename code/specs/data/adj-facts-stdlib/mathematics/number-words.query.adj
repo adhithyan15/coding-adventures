@@ -1,0 +1,21 @@
+% ============================================================================
+% number-words.query.adj — a worked recall over the mathematics number-words library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word do we say for 5?"
+% — it states no fact of its own, only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `number_word` rows and
+% returns the word (or, on a reverse query, the number) + the Cuemath
+% source/locator/trust. A number the source does not spell out abstains honestly —
+% the engine never invents a word.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli number-words.query.adj
+% ============================================================================
+
+import "number-words.adj"
+
+? number_word(1, $W)          % expect one   (the first counting number)
+? number_word(5, $W)          % expect five  (how we SAY 5)
+? number_word(10, $W)         % expect ten   (the last number this table ships)
+? number_word($N, five)       % expect 5     (reverse: which number is "five"?)
+? number_word(99, $W)         % expect abstain — beyond 1..10, not a shipped row

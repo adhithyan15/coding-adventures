@@ -5,6 +5,47 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the Ruby [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_ruby_parser` never called `with_max_depth` at all, leaving
+/// every caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `x = (((...1...)))`).
+///
+/// `ruby.grammar` is the richest grammar audited in this pass — 18
+/// distinct self-referential recursion shapes across three separate
+/// mutually-recursive families: statement/block nesting (`if`/`case`/
+/// `begin`/`def`/`class`/`module`/blocks/lambdas), expression/factor
+/// nesting (parens/calls/array & hash literals/unary chains/ternaries),
+/// and `case`/`in` structural pattern-matching nesting (array/hash/class
+/// patterns). **Not the shared engine's bare default** (see
+/// `csharp-parser`'s own identically-named constant for why a blind
+/// `DEFAULT_MAX_RULE_DEPTH` (128) is unsafe-for-usability on a rich
+/// general-purpose-language grammar). Measured directly instead (binary
+/// search over candidate `with_max_depth` values against a fixed
+/// 5000-level adversarial `x = (((...1...)))` input — ordinary
+/// parenthesised grouping, one representative expression/factor shape —
+/// on a default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **263**, crashes at **264**.
+///
+/// `MAX_RULE_DEPTH` is set to **180** — about 32% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `180`: plain
+/// parenthesised nesting parses cleanly to at least 10 levels — comfortably
+/// beyond ordinary hand-written nesting depth.
+///
+/// This is measured against only **one** of Ruby's 18 recursion shapes
+/// (ordinary paren grouping) — the other 17 (nested blocks, lambdas,
+/// exception handling, structural pattern matching, etc.) are an
+/// explicitly tracked follow-up, the way `css-parser`/`toml-parser`
+/// measured *every* shape in their own (much smaller) grammars. This pass
+/// at minimum replaces an unmeasured, silently-broken default with a
+/// properly-measured floor for one representative shape.
+const MAX_RULE_DEPTH: usize = 180;
+
 /// Default Ruby era for the parser.  Phase 6w bumped this from "1.8"
 /// (the lexer's default) to "3.0" so that era-gated lexer fusions
 /// — most importantly `->` (Op("->") fused via `fuse_lambda_arrow`,
@@ -23,7 +64,7 @@ pub fn create_ruby_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)
         .expect("ruby lexer: DEFAULT_RUBY_ERA is a recognised era");
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 pub fn parse_ruby(source: &str) -> GrammarASTNode {
@@ -1365,16 +1406,21 @@ mod tests {
         let ast = parse_ruby("5 < 10");
         // Phase 6m moved the comparison op chain from `expression`
         // down to the new `comparison` rule (the old expression body).
-        // Now `expression → logical_or → logical_and → logical_not →
-        // comparison → sum { CMP_OP sum }`.  Walk to the comparison.
+        // The `<<` phase later inserted a `shift` level BETWEEN
+        // `comparison` and `sum` (real Ruby: `<<` binds looser than `+`/`-`
+        // but tighter than comparison), so the chain is now
+        // `expression → logical_or → logical_and → logical_not →
+        // comparison → shift { CMP_OP shift } → sum { "<<" sum }`.  A bare
+        // `sum` with no `<<` passes through `shift` transparently, so
+        // `comparison`'s direct children are `shift` nodes, not `sum`.
         let cmp = find_descendant(&ast, "comparison")
             .expect("expected comparison subnode");
-        let sum_count = cmp
+        let shift_count = cmp
             .children
             .iter()
-            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "sum"))
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "shift"))
             .count();
-        assert_eq!(sum_count, 2);
+        assert_eq!(shift_count, 2);
         let has_lt = cmp
             .children
             .iter()
@@ -1430,19 +1476,30 @@ mod tests {
     #[test]
     fn test_parse_plus_has_lower_precedence_than_comparison() {
         let ast = parse_ruby("1 + 2 < 5");
-        // Phase 6m: comparison subnode wraps the two `sum`s.
+        // Phase 6m: comparison subnode wraps the two operands, now `shift`
+        // nodes (see the `shift`-level comment above) rather than `sum`
+        // directly. A bare `sum` (no `<<`) passes through `shift`
+        // transparently, so `sum` is still findable one level deeper.
         let cmp = find_descendant(&ast, "comparison")
             .expect("expected comparison subnode");
-        let sums: Vec<&GrammarASTNode> = cmp
+        let shifts: Vec<&GrammarASTNode> = cmp
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                ASTNodeOrToken::Node(n) if n.rule_name == "shift" => Some(n),
                 _ => None,
             })
             .collect();
-        assert_eq!(sums.len(), 2);
-        let lhs_has_plus = sums[0]
+        assert_eq!(shifts.len(), 2);
+        let lhs_sum = shifts[0]
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .expect("shift wraps a sum");
+        let lhs_has_plus = lhs_sum
             .children
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)));
@@ -1822,11 +1879,10 @@ mod tests {
         for c in &node.children {
             match c {
                 ASTNodeOrToken::Token(t) if t.value == value => return true,
-                ASTNodeOrToken::Node(sub) => {
-                    if tree_has_token_value(sub, value) {
+                ASTNodeOrToken::Node(sub)
+                    if tree_has_token_value(sub, value) => {
                         return true;
                     }
-                }
                 _ => {}
             }
         }
@@ -4980,6 +5036,355 @@ mod tests {
             find_descendant(&ast, "super_expr").is_some(),
             "expected super_expr"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("x = {}1{}", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn try_parse(src: &str) -> Result<GrammarASTNode, String> {
+        create_ruby_parser(src).parse().map_err(|e| e.to_string())
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = try_parse(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(try_parse(&nested_paren_source(10)).is_ok());
+    }
+
+    // -------------------------------------------------------------------
+    // Bug fix: a bare comparison/logical statement must parse as ONE
+    // statement, not split across a mis-parsed `method_call_no_paren` and a
+    // leftover operand.
+    //
+    // `<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have no dedicated lexer token
+    // type (`classify_op_token` in `ruby-lexer` deliberately leaves every
+    // operator lexeme without one on `TokenType::Name` — "the parser
+    // dispatches by value"). `factor`'s bare `NAME` alternative doesn't
+    // check a Name token's VALUE, so `method_call_no_paren = ( NAME | ... )
+    // expression { ... }` could match `x` as the callee and then swallow the
+    // operator token itself as an ordinary name-shaped "argument" — e.g.
+    // `x > 2` parsed as TWO statements (`x(>)` and a leftover `2`) instead of
+    // one (`x > 2`). Fixed by a negative lookahead in `method_call_no_paren`
+    // (`ruby.grammar`) for these operators, so the rule fails to match and
+    // `expression_stmt` correctly parses the whole comparison/logical chain.
+    // -------------------------------------------------------------------
+
+    /// `==` has its own dedicated `EqualsEquals` token type, so it was
+    /// accidentally already immune — included as a same-shape control case.
+    #[test]
+    fn test_bare_comparison_statement_parses_as_one_statement() {
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||", "=="] {
+            let ast = parse_ruby(&format!("x = 3\nx {op} 2\n"));
+            assert_program_root(&ast);
+            assert_eq!(
+                count_statements(&ast),
+                2,
+                "`x = 3` then `x {op} 2` should be exactly two statements, not \
+                 three (a mis-parsed call plus a leftover operand)"
+            );
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Bug fix (shared `parser` crate 0.4.3): `GrammarElement::Literal`
+    // matched a `String`-typed token by its CONTENT, not just an operator
+    // lexeme. `call_arg`'s `[ "*" | "**" | "&" ] expression` splat-marker
+    // alternative has a bare `"*"` `Literal` -- a Ruby STRING ARGUMENT
+    // whose content happened to be `"*"` (e.g. `foo(1, "*")`, or a padding
+    // character like `"hello".ljust(8, "*")`) had that STRING TOKEN
+    // silently swallowed as the splat marker, leaving `expression` with
+    // nothing to consume and crashing the parser (an internal panic, not
+    // even a graceful parse error). Fixed at the shared-engine level, not
+    // in this grammar: `Literal` now excludes `TokenType::String`.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn test_string_argument_matching_an_operator_lexeme_parses_correctly() {
+        for src in [
+            "foo(1, \"*\")\ndef foo(a, b)\n  puts b\nend\n",
+            "foo(1, \"**\")\ndef foo(a, b)\n  puts b\nend\n",
+            "foo(1, \"&\")\ndef foo(a, b)\n  puts b\nend\n",
+            "puts \"hello\".ljust(8, \"*\")\n",
+        ] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+        }
+    }
+
+    /// `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule at
+    /// all in this Ruby subset (only used elsewhere: `**`/`&` as call-arg
+    /// prefixes, `|` for block params, `^` for pin patterns) — so the fix
+    /// does NOT guard them; there is no correct fallback parse to preserve
+    /// for e.g. `x ^ 2`. This pins that they are UNCHANGED (still split
+    /// into three statements), so a future contributor doesn't assume this
+    /// fix silently added bitwise-operator support. (`<<` USED to be in
+    /// this list too — it's now a supported binary operator, see
+    /// `test_shift_operator_statement_parses_as_one_statement` below, which
+    /// is the `<<` analogue of `test_bare_comparison_statement_parses_as_
+    /// one_statement` just above.)
+    #[test]
+    fn test_unsupported_bitwise_operators_still_split_unchanged() {
+        for op in ["**", ">>", "^", "&", "|"] {
+            let ast = parse_ruby(&format!("x = 3\nx {op} 2\n"));
+            assert_program_root(&ast);
+            assert_eq!(
+                count_statements(&ast),
+                3,
+                "`x {op} 2` is not a supported binary expression here; it \
+                 should still split into three statements (unchanged)"
+            );
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // `<<` added as a binary operator, its own `shift` precedence level
+    // between `comparison` and `sum` (real Ruby: `<<` binds looser than
+    // `+`/`-`, tighter than comparison — `1 + 2 << 3` parses as
+    // `(1 + 2) << 3`). The lexer already fuses `<<` into one token (needed
+    // pre-existingly for heredoc-vs-operator disambiguation), so this is
+    // purely a grammar/lowering addition, not a lexer change.
+    // -------------------------------------------------------------------
+
+    /// The `<<` analogue of `test_bare_comparison_statement_parses_as_one_
+    /// statement`: a bare `x << 2` must parse as ONE statement via the new
+    /// `shift` rule, not mis-split by `method_call_no_paren` (which needed
+    /// its own `!"<<"` guard, the same fix class as `<`/`>`/`&&`/`||`).
+    #[test]
+    fn test_shift_operator_statement_parses_as_one_statement() {
+        let ast = parse_ruby("x = 3\nx << 2\n");
+        assert_program_root(&ast);
+        assert_eq!(
+            count_statements(&ast),
+            2,
+            "`x = 3` then `x << 2` should be exactly two statements, not \
+             three (a mis-parsed call plus a leftover operand)"
+        );
+    }
+
+    #[test]
+    fn test_shift_binds_looser_than_plus() {
+        // `1 + 2 << 3` should parse as `(1 + 2) << 3`: the outermost node
+        // is a `shift` wrapping two `sum` OPERANDS (not raw `factor`s) —
+        // if `+` bound looser than `<<`, the left operand would be a bare
+        // `1` instead.
+        let ast = parse_ruby("puts(1 + 2 << 3)");
+        let shift = find_descendant(&ast, "shift").expect("expected shift subnode");
+        let has_lt_lt = shift
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<<"));
+        assert!(has_lt_lt, "shift node carries the << token");
+        let sums: Vec<&GrammarASTNode> = shift
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(sums.len(), 2, "shift wraps exactly two sum operands");
+        let lhs_has_plus = sums[0].children.iter().any(
+            |c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)),
+        );
+        assert!(lhs_has_plus, "the left sum operand still carries the +");
+    }
+
+    #[test]
+    fn test_shift_binds_tighter_than_comparison() {
+        // `x << 1 == y` should parse as `(x << 1) == y`: `comparison`
+        // wraps two `shift` operands (not raw `sum`s) — the left one
+        // carries the `<<` token.
+        let ast = parse_ruby("puts(x << 1 == y)");
+        let cmp = find_descendant(&ast, "comparison").expect("expected comparison subnode");
+        let shifts: Vec<&GrammarASTNode> = cmp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "shift" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(shifts.len(), 2, "comparison wraps exactly two shift operands");
+        let lhs_has_lt_lt = shifts[0]
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<<"));
+        assert!(lhs_has_lt_lt, "the left shift operand carries the <<");
+    }
+
+    // -------------------------------------------------------------------
+    // Bug fix: bracket-index read/write (`a[i]`, `a[i] = v`) had no grammar
+    // rule at all. Reads only "worked" as a bare assignment RHS by accident
+    // (`x = g[1]` silently split into TWO statements: `x = g` then a
+    // dangling `[1]`, discovered via an AST-dump probe after an earlier,
+    // WRONG belief -- based on a substring-search probe -- that it worked
+    // correctly). Writes (`a[i] = v`) failed to parse at all ("Unexpected
+    // token: ="). Fixed by adding `index_suffix = LBRACKET expression
+    // RBRACKET` as a new postfix repetition in `factor` (covers reads,
+    // including chained `a[i][j]`), and `index_assignment = NAME
+    // index_suffix EQUALS expression` as a new statement alternative (v0
+    // scope: bare NAME receiver only, no dotted/chained LHS).
+    // -------------------------------------------------------------------
+
+    /// Recursively search for a node with the given `rule_name` anywhere in
+    /// the tree (depth-first, not just direct children) -- unlike
+    /// `count_statements`/`find_def_statement` above, which only look at
+    /// direct children of a known parent shape.
+    fn tree_contains_rule(node: &GrammarASTNode, rule: &str) -> bool {
+        if node.rule_name == rule {
+            return true;
+        }
+        node.children.iter().any(|c| match c {
+            ASTNodeOrToken::Node(n) => tree_contains_rule(n, rule),
+            ASTNodeOrToken::Token(_) => false,
+        })
+    }
+
+    #[test]
+    fn test_bracket_index_read_parses_as_one_statement() {
+        // Before the fix, `x = g[1]` silently split into TWO statements
+        // (`x = g`, then a dangling, unparsed `[1]`). It must now be ONE.
+        let ast = parse_ruby("x = g[1]\n");
+        assert_program_root(&ast);
+        assert_eq!(
+            count_statements(&ast),
+            1,
+            "`x = g[1]` must parse as exactly one statement, not split at `[`"
+        );
+        assert!(
+            tree_contains_rule(&ast, "index_suffix"),
+            "expected an `index_suffix` node somewhere in the tree"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_read_in_call_argument_position() {
+        // `puts(a[1])` and the no-paren form `puts a[1]` must both parse as
+        // one statement with an `index_suffix` inside the call argument.
+        for src in ["puts(a[1])\n", "puts a[1]\n"] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+            assert_eq!(count_statements(&ast), 1, "`{src}` should be one statement");
+            assert!(
+                tree_contains_rule(&ast, "index_suffix"),
+                "`{src}` should contain an `index_suffix` node"
+            );
+        }
+    }
+
+    #[test]
+    fn test_bracket_index_chains() {
+        // `a[1][0]` -- `factor`'s postfix repetition applies `index_suffix`
+        // more than once, so a chained read parses as one statement too.
+        let ast = parse_ruby("puts a[1][0]\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        assert!(tree_contains_rule(&ast, "index_suffix"));
+    }
+
+    #[test]
+    fn test_bracket_index_write_parses() {
+        // `a[0] = 9` failed to parse at all before the fix ("Unexpected
+        // token: ="). It must now parse as one `index_assignment` statement.
+        for src in ["a[0] = 9\n", "h[\"b\"] = 2\n", "h[2] = \"b\"\n", "h[:sym] = 1\n"] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+            assert_eq!(count_statements(&ast), 1, "`{src}` should be one statement");
+            assert!(
+                tree_contains_rule(&ast, "index_assignment"),
+                "`{src}` should contain an `index_assignment` node"
+            );
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Widened `index_assignment` to a dotted/chained receiver
+    // (`obj.data[i] = v`, `a[i][j] = v`) -- originally v0-scoped to a
+    // bare-NAME, single-bracket receiver only (see the grammar's
+    // `index_write_receiver_postfix` rule for the lookahead trick that
+    // tells the RECEIVER's postfixes apart from the FINAL write-target
+    // bracket, needed since this parser has no backtracking once a
+    // repetition commits).
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn test_bracket_index_write_with_chained_brackets() {
+        // `a[0][1] = 3` -- the FIRST `[0]` belongs to the receiver chain
+        // (wrapped in `index_write_receiver_postfix`), the SECOND `[1]` is
+        // the write target (the rule's own trailing, mandatory
+        // `index_suffix`).
+        let ast = parse_ruby("a[0][1] = 3\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        assert!(
+            tree_contains_rule(ia, "index_write_receiver_postfix"),
+            "the first bracket should be a receiver postfix, not the write target"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_write_with_dotted_receiver() {
+        // `obj.data[0] = 3` -- `.data` is a receiver postfix (a `dot_call`
+        // wrapped in `index_write_receiver_postfix`), `[0]` is the write
+        // target.
+        let ast = parse_ruby("obj.data[0] = 3\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        let postfix = find_descendant(ia, "index_write_receiver_postfix")
+            .expect("expected a receiver postfix");
+        assert!(
+            tree_contains_rule(postfix, "dot_call"),
+            "the receiver postfix should wrap a dot_call"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_write_single_bracket_still_has_no_receiver_postfix() {
+        // Regression: the ORIGINAL v0-scoped shape (no receiver postfixes
+        // at all) must still parse the same way after widening the
+        // grammar to admit the (now-optional) postfix chain.
+        let ast = parse_ruby("a[0] = 9\n");
+        assert_program_root(&ast);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        assert!(
+            !tree_contains_rule(ia, "index_write_receiver_postfix"),
+            "a single-bracket write has no receiver postfixes"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_write_is_not_confused_with_plain_assignment() {
+        // A plain assignment (`x = 1`) must NOT be mis-routed through the new
+        // `index_assignment` alternative -- it has no `[` at all, so the
+        // grammar's ordinary `assignment` rule must still handle it.
+        let ast = parse_ruby("x = 1\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        assert!(!tree_contains_rule(&ast, "index_assignment"));
     }
 }
 

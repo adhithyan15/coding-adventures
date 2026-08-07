@@ -1,0 +1,132 @@
+% ============================================================================
+% food-groups — which of USDA MyPlate's five food groups a common food belongs
+% to (adj-facts-stdlib, NUTRITION).
+% ============================================================================
+% A kindergarten-level nutrition facts library: sort an everyday food into one
+% of the FIVE food groups a child meets first on the USDA MyPlate — fruits,
+% vegetables, grains, protein, and dairy. "An apple is a fruit; a carrot is a
+% vegetable; bread is a grain; chicken is protein; milk is dairy." Recall is a
+% binding query:
+%
+%     ? food_group(apple, $Group)          % fruits
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `food_group(food, food_group)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the group
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% not in the table (it never guesses a group). The query also runs BACKWARD —
+% bind a group and recall every food shipped under it:
+%
+%     ? food_group($Food, dairy)           % milk ; cheese ; yogurt
+%
+% The five MyPlate food groups, as a plate a kindergartner can read:
+%
+%     group        example foods (all copied from MyPlate — see Provenance)
+%     ----------   --------------------------------------------------------
+%     fruits       apple, banana, orange, strawberries, grapes
+%     vegetables   broccoli, carrots, spinach, corn, tomatoes
+%     grains       bread, rice, pasta, oatmeal, tortillas
+%     protein      chicken, eggs, beans, nuts, seafood
+%     dairy        milk, cheese, yogurt
+%
+% The VALUE atom for each group is MyPlate's five-group naming reduced to a
+% single lowercase word: `fruits`, `vegetables`, `grains`, `protein`, `dairy`
+% (MyPlate titles these the Fruit Group, Vegetable Group, Grains Group, Protein
+% Foods, and Dairy Group). Every food shipped below is one MyPlate EXPLICITLY
+% lists under that group — a food MyPlate does not list is deliberately absent so
+% the recall ABSTAINS rather than inventing a group (see the `.query.adj`, which
+% asks about `rock` and gets no answer).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every food below was read
+% out of a fetched USDA MyPlate page, and any food that could not be verified
+% there would have been dropped). MyPlate reorganized its site under the new
+% Dietary Guidelines, so each per-group page was verified from its U.S. National
+% Archives / Internet Archive capture of the genuine `myplate.gov` page; the
+% citable artifact is the canonical USDA page at each `locator`, and the verbatim
+% span that defines each group is quoted here:
+%
+%   fruits → apple, banana, orange, strawberries, grapes
+%     https://www.myplate.gov/eat-healthy/fruits  (USDA MyPlate)
+%     "The Fruit Group includes all fruits and 100% fruit juice."
+%     (apple, banana, grapes, orange, strawberries all appear in the Fruit
+%      Group "What counts as a cup?" examples on that page.)
+%
+%   vegetables → broccoli, carrots, spinach, corn, tomatoes
+%     https://www.myplate.gov/eat-healthy/vegetables  (USDA MyPlate)
+%     "Any vegetable or 100% vegetable juice counts as part of the Vegetable
+%      Group."
+%     (broccoli and spinach are listed Dark-Green Vegetables; carrots and
+%      tomatoes are listed Red and Orange Vegetables; corn — "Corn, yellow or
+%      white" — is a listed Starchy Vegetable.)
+%
+%   grains → bread, rice, pasta, oatmeal, tortillas
+%     https://www.myplate.gov/eat-healthy/grains  (USDA MyPlate)
+%     "Foods made from wheat, rice, oats, cornmeal, barley, or another cereal
+%      grain is a grain product. Bread, pasta, breakfast cereals, grits, and
+%      tortillas are examples of grain products."
+%     (oatmeal is a listed whole-grain example; rice is named in the grain-
+%      product definition itself.)
+%
+%   protein → chicken, eggs, beans, nuts, seafood
+%     https://www.myplate.gov/eat-healthy/protein-foods  (USDA MyPlate)
+%     "Protein Foods include all foods made from seafood; meat, poultry, and
+%      eggs; beans, peas, and lentils; and nuts, seeds, and soy products."
+%     (chicken grounds the poultry example — MyPlate names "skinless chicken
+%      breasts" as a lean protein choice.)
+%
+%   dairy → milk, cheese, yogurt
+%     https://www.myplate.gov/eat-healthy/dairy  (USDA MyPlate)
+%     "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and
+%      fortified soy milk and yogurt."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the explicit Fruit Group
+% definition that fixes the first rows (fruits). Every OTHER group's per-fact
+% source and verbatim span is listed above, so each row remains independently
+% checkable. All five sources are the primary USDA MyPlate (`.gov`) pages, so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table food_group {
+    columns food, food_group
+
+    % --- fruits ---
+    row (apple, fruits)
+    row (banana, fruits)
+    row (orange, fruits)
+    row (strawberries, fruits)
+    row (grapes, fruits)
+
+    % --- vegetables ---
+    row (broccoli, vegetables)
+    row (carrots, vegetables)
+    row (spinach, vegetables)
+    row (corn, vegetables)
+    row (tomatoes, vegetables)
+
+    % --- grains ---
+    row (bread, grains)
+    row (rice, grains)
+    row (pasta, grains)
+    row (oatmeal, grains)
+    row (tortillas, grains)
+
+    % --- protein ---
+    row (chicken, protein)
+    row (eggs, protein)
+    row (beans, protein)
+    row (nuts, protein)
+    row (seafood, protein)
+
+    % --- dairy ---
+    row (milk, dairy)
+    row (cheese, dairy)
+    row (yogurt, dairy)
+
+    source "The Fruit Group includes all fruits and 100% fruit juice."
+    locator "https://www.myplate.gov/eat-healthy/fruits"
+    trust authoritative
+}

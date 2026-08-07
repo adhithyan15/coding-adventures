@@ -1,6 +1,6 @@
 //! [`Value`] — the dynamic value type stored in VM registers.
 //!
-//! Python's `Any` registry is replaced in Rust by a closed enum.  The five
+//! Python's `Any` registry is replaced in Rust by a closed enum.  The six
 //! variants cover every type the standard IIR opcode handlers produce:
 //!
 //! | Variant | IIR type strings | Notes |
@@ -8,12 +8,24 @@
 //! | `Int(i64)` | `"u8"` .. `"i64"` | Includes all unsigned widths |
 //! | `Float(f64)` | `"f64"`, `"f32"` | Single 64-bit slot |
 //! | `Bool(bool)` | `"bool"` | |
-//! | `Str(String)` | `"str"` | Heap-allocated |
+//! | `Str(String)` | `"str"` | Heap-allocated (plain Rust `String`, not GC-managed) |
+//! | `HeapRef(gc_core::HeapRef)` | `"ref<T>"` | A `gc_alloc`'d object on the shared `FlatHeap` collector |
 //! | `Null` | `"void"`, none | Default register value; ret_void result |
 //!
-//! Language frontends that need additional value kinds (cons cells, class
-//! instances, heap refs) may extend this in a wrapper enum without modifying
-//! vm-core itself.
+//! `HeapRef` is the one variant vm-core itself roots precisely at a
+//! `safepoint` (see `dispatch::run_safepoint`): every `Value::HeapRef` found
+//! in a register, global, memory slot, or array element is a live root into
+//! `gc-core`'s `FlatHeap`, the same collector engine the native-AOT backends
+//! share via `gc-core-capi`. E6d records/unions/closures/cons cells
+//! (`alloc`/`field_store`/`field_load`) allocate here — `alloc` is a direct
+//! alias for `gc_alloc`, so every Twig program that builds lisp/record/union
+//! data gets a real, collected heap. Only `alloc_array`/`array_get`/
+//! `array_set` (E5 arrays) still allocate on `ctx.arrays`, a separate, plain
+//! Rust bump arena that is never collected — arrays have no analogous real
+//! collector to reuse yet, a deliberate, separate gap, not an oversight.
+//!
+//! Language frontends that need additional value kinds beyond these six may
+//! extend this in a wrapper enum without modifying vm-core itself.
 //!
 //! # Arithmetic helpers
 //!
@@ -36,6 +48,7 @@
 
 /// The dynamic value stored in a VM register.
 #[derive(Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum Value {
     /// A signed integer covering all of u8 / u16 / u32 / u64 / i8..i64.
     ///
@@ -48,7 +61,14 @@ pub enum Value {
     Bool(bool),
     /// A heap-allocated string.
     Str(String),
+    /// A reference to an object allocated with `gc_alloc`, managed by the
+    /// shared `FlatHeap` collector (`gc-core`) — traced, reclaimed, and
+    /// relocated under compaction. `HeapRef::NULL` (address `0`) represents
+    /// the null reference; `is_truthy` and `gc_field_load`/`gc_field_store`
+    /// (see `dispatch.rs`) both treat it as such.
+    HeapRef(gc_core::HeapRef),
     /// The absence of a value — default register contents and `ret_void` result.
+    #[default]
     Null,
 }
 
@@ -90,6 +110,14 @@ impl Value {
         }
     }
 
+    /// Return the heap reference if this is `Value::HeapRef`, else `None`.
+    pub fn as_heap_ref(&self) -> Option<gc_core::HeapRef> {
+        match self {
+            Value::HeapRef(r) => Some(*r),
+            _ => None,
+        }
+    }
+
     // ------------------------------------------------------------------
     // Truth test (used by conditional branches)
     // ------------------------------------------------------------------
@@ -104,11 +132,12 @@ impl Value {
     /// `jmp_if_true` / `jmp_if_false` in the Python vm-core.
     pub fn is_truthy(&self) -> bool {
         match self {
-            Value::Bool(b)  => *b,
-            Value::Int(n)   => *n != 0,
-            Value::Float(f) => *f != 0.0,
-            Value::Str(s)   => !s.is_empty(),
-            Value::Null     => false,
+            Value::Bool(b)    => *b,
+            Value::Int(n)     => *n != 0,
+            Value::Float(f)   => *f != 0.0,
+            Value::Str(s)     => !s.is_empty(),
+            Value::HeapRef(r) => !r.is_null(),
+            Value::Null       => false,
         }
     }
 
@@ -145,27 +174,24 @@ impl Value {
                     "u64"
                 }
             }
-            Value::Float(_) => "f64",
-            Value::Str(_)   => "str",
-            Value::Null     => "any",
+            Value::Float(_)   => "f64",
+            Value::Str(_)     => "str",
+            Value::HeapRef(_) => "ref",
+            Value::Null       => "any",
         }
     }
 }
 
-impl Default for Value {
-    fn default() -> Self {
-        Value::Null
-    }
-}
 
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::Int(n)   => write!(f, "{n}"),
-            Value::Float(v) => write!(f, "{v}"),
-            Value::Bool(b)  => write!(f, "{b}"),
-            Value::Str(s)   => write!(f, "{s:?}"),
-            Value::Null     => write!(f, "null"),
+            Value::Int(n)     => write!(f, "{n}"),
+            Value::Float(v)   => write!(f, "{v}"),
+            Value::Bool(b)    => write!(f, "{b}"),
+            Value::Str(s)     => write!(f, "{s:?}"),
+            Value::HeapRef(r) => write!(f, "{r}"),
+            Value::Null       => write!(f, "null"),
         }
     }
 }
@@ -190,6 +216,16 @@ mod tests {
         assert!(!Value::Null.is_truthy());
         assert!(Value::Str("hi".into()).is_truthy());
         assert!(!Value::Str("".into()).is_truthy());
+        assert!(Value::HeapRef(gc_core::HeapRef::new(0x1000)).is_truthy());
+        assert!(!Value::HeapRef(gc_core::HeapRef::NULL).is_truthy());
+    }
+
+    #[test]
+    fn as_heap_ref_extracts_and_rejects_other_kinds() {
+        let r = gc_core::HeapRef::new(0x2000);
+        assert_eq!(Value::HeapRef(r).as_heap_ref(), Some(r));
+        assert_eq!(Value::Int(0x2000).as_heap_ref(), None);
+        assert_eq!(Value::Null.as_heap_ref(), None);
     }
 
     #[test]
@@ -202,6 +238,7 @@ mod tests {
         assert_eq!(Value::Float(1.0).iir_type_name(), "f64");
         assert_eq!(Value::Bool(true).iir_type_name(), "bool");
         assert_eq!(Value::Str("hi".into()).iir_type_name(), "str");
+        assert_eq!(Value::HeapRef(gc_core::HeapRef::new(0x1000)).iir_type_name(), "ref");
         assert_eq!(Value::Null.iir_type_name(), "any");
     }
 }

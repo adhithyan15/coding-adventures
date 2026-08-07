@@ -2,8 +2,8 @@
 
 ## Overview
 
-The HTTP/1.0 client is a thin orchestrator — roughly 100 lines of glue code that
-wires together five independent packages into a complete HTTP client. It does
+The HTTP/1.0 client is a thin orchestrator that wires together three
+independent packages into a complete HTTP client. It does
 almost nothing on its own. Instead, it sequences calls through a pipeline of
 single-purpose packages, each handling one layer of the problem:
 
@@ -12,9 +12,13 @@ single-purpose packages, each handling one layer of the problem:
 | 1    | url-parser (NET00)   | Parse URL into scheme, host, port, path |
 | 2    | tcp-client (NET01)   | Open a TCP socket to the server         |
 | 3    | *(inline)*           | Write the HTTP request line + headers   |
-| 4    | frame-extractor (NET02) | Extract header frame, then body      |
-| 5    | http1.0-lexer (NET03)   | Tokenize the raw response bytes      |
-| 6    | http1.0-parser (NET04)  | Build a structured HttpResponse      |
+| 4    | http1                    | Parse the response head and framing  |
+| 5    | tcp-client               | Read the bounded response body       |
+
+The current Rust implementation consolidates the original NET02–NET04 wire
+pipeline behind the shared `http1` and `http-core` contracts. The older
+component names below explain the educational decomposition; `http1-client`
+uses the current package boundaries.
 
 This is the unix-pipe philosophy made concrete: each package does one thing
 well, and the client simply connects them in sequence.
@@ -29,12 +33,11 @@ well, and the client simply connects them in sequence.
                            │
 ┌──────────────────────────▼───────────────────────────────────────────┐
 │                  HTTP/1.0 Client (NET05)                             │
-│          ~100 lines of orchestration glue                            │
+│        bounded synchronous orchestration                             │
 │                                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌───────────────┐  ┌────────┐  ┌─────┐│
-│  │url-parser│→ │tcp-client│→ │frame-extractor│→ │ lexer  │→ │parse││
-│  │  NET00   │  │  NET01   │  │    NET02      │  │ NET03  │  │NET04││
-│  └──────────┘  └──────────┘  └───────────────┘  └────────┘  └─────┘│
+│  │url-parser│ → │tcp-client│ → │ http1 + http-core │             │
+│  │  NET00   │   │  NET01   │   │ response framing  │             │
+│  └──────────┘   └──────────┘   └───────────────────┘             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -45,12 +48,11 @@ plumbing; this is the faucet.
 ### Dependency Tree
 
 ```
-http1.0-client (NET05)
+http1-client (NET05)
 ├── url-parser (NET00)
 ├── tcp-client (NET01)
-├── frame-extractor (NET02)
-├── http1.0-lexer (NET03)
-└── http1.0-parser (NET04)
+├── http1
+└── http-core
 ```
 
 ## Concepts
@@ -75,19 +77,16 @@ Step 3: Write request
         TcpConnection.write_all(b"GET /hypertext/WWW/TheProject.html HTTP/1.0\r\nHost: info.cern.ch\r\nUser-Agent: Venture/0.1\r\n\r\n")
         TcpConnection.shutdown_write() — signal we're done sending
 
-Step 4: frame-extractor (NET02)
-        Phase A: DelimiterStrategy("\r\n\r\n").extract(conn) → header bytes
-        Phase B: Parse Content-Length from raw headers, or fall back to ReadToEnd
-        Phase C: LengthPrefixedStrategy(len).extract(conn) → body bytes
-                 OR ReadToEndStrategy.extract(conn) → body bytes
+Step 4: tcp-client + http1
+        Read bounded header lines through the blank-line terminator
+        parse_response_head(&raw_head) → ResponseHead + BodyKind
 
-Step 5: http1.0-lexer (NET03)
-        lex_response(&raw_bytes) → Vec<HttpToken>
+Step 5: tcp-client
+        BodyKind::ContentLength(n) → read exactly n bounded bytes
+        BodyKind::UntilEof         → stream bounded chunks through clean EOF
+        BodyKind::None             → empty body
 
-Step 6: http1.0-parser (NET04)
-        parse_response(&tokens) → HttpResponse { status: 200, headers: [...], body: b"<html>..." }
-
-Step 7: Redirect following (if status is 301 or 302)
+Step 6: Redirect following (if status is 301 or 302)
         Extract Location header → resolve against base URL → go to Step 1
         Max 5 redirects to prevent infinite loops
 
@@ -140,48 +139,42 @@ Both include a `Location` header with the new URL. The client:
 3. Starts the pipeline over from Step 1 with the new URL
 4. Caps at 5 total redirects to prevent infinite loops
 
-### 5. Why This Is ~100 Lines
+### 5. Why This Stays Small
 
-All the complexity lives in the five dependency packages:
+Most complexity lives in the dependency packages:
 
 - URL parsing? NET00 handles it.
 - TCP sockets? NET01 handles it.
-- Framing (knowing where headers end and body begins)? NET02 handles it.
-- Tokenizing HTTP? NET03 handles it.
-- Building structured responses? NET04 handles it.
+- HTTP syntax and semantic response heads? `http1` and `http-core` handle it.
 
-The client just calls them in order. This is the payoff of the unix-pipe
-architecture: the integration layer is trivial because the components are
-well-defined.
+The client sequences those components and owns only transport policy: bounds,
+redirects, request metadata validation, and the HTTP/1.0 connection lifecycle.
 
 ## Public API
 
 ### Rust
 
 ```rust
-use std::time::Duration;
-
-/// An HTTP/1.0 client that orchestrates the NET00–NET04 pipeline.
+/// An HTTP/1.0 client that orchestrates the current NET00–NET05 packages.
 ///
 /// All configuration has sensible defaults. For most use cases, the
 /// free function `get()` is sufficient — you only need `HttpClient`
-/// if you want to customize timeouts, user-agent, or redirect limits.
+/// if you want to customize timeouts, bounds, user-agent, or redirects.
 pub struct HttpClient {
+    /// TCP connect/read/write options.
+    pub connect_options: tcp_client::ConnectOptions,
+
     /// Maximum number of redirects to follow before returning
     /// TooManyRedirects. Default: 5.
-    max_redirects: usize,
+    pub max_redirects: usize,
+
+    /// Hard response head and body bounds.
+    pub max_head_bytes: usize,
+    pub max_body_bytes: usize,
 
     /// The User-Agent header sent with every request.
     /// Default: "Venture/0.1".
-    user_agent: String,
-
-    /// How long to wait for the TCP connection to establish.
-    /// Default: 30 seconds.
-    connect_timeout: Duration,
-
-    /// How long to wait for data during response reading.
-    /// Default: 30 seconds.
-    read_timeout: Duration,
+    pub user_agent: String,
 }
 
 impl HttpClient {
@@ -191,7 +184,7 @@ impl HttpClient {
     /// Perform an HTTP/1.0 GET request.
     ///
     /// This runs the full pipeline: parse URL → connect → send request →
-    /// extract frames → lex → parse → follow redirects if needed.
+    /// parse a bounded response → follow redirects if needed.
     pub fn get(&self, url: &str) -> Result<HttpResponse, HttpClientError>;
 }
 
@@ -209,25 +202,23 @@ exactly what went wrong and at which pipeline stage:
 ```rust
 pub enum HttpClientError {
     /// URL parsing failed (NET00).
-    UrlError(url_parser::UrlError),
+    Url(url_parser::UrlError),
 
     /// TCP connection failed (NET01).
-    ConnectionError(tcp_client::ConnectionError),
+    Tcp(tcp_client::TcpError),
 
-    /// Frame extraction failed (NET02).
-    FrameError(frame_extractor::FrameError),
-
-    /// Lexing failed (NET03).
-    LexError(http1_lexer::LexError),
-
-    /// Parsing failed (NET04).
-    ParseError(http1_parser::ParseError),
+    /// HTTP response-head parsing failed.
+    Http(http1::Http1ParseError),
 
     /// Followed too many redirects (default limit: 5).
     TooManyRedirects { limit: usize },
 
     /// The URL scheme is not "http". HTTPS is out of scope for NET05.
     UnsupportedScheme(String),
+
+    /// A response exceeded the configured head or body bound.
+    ResponseHeadTooLarge { limit: usize },
+    ResponseBodyTooLarge { limit: usize },
 }
 ```
 
@@ -265,12 +256,12 @@ read-to-end fallback strategy.
 ### 6. Connection Refused
 
 Attempt to connect to a port with no listener. Verify the client returns
-`HttpClientError::ConnectionError`.
+`HttpClientError::Tcp`.
 
 ### 7. DNS Failure
 
 Attempt to connect to `"nonexistent.invalid"`. Verify the client returns
-`HttpClientError::ConnectionError` (DNS resolution is part of TCP connect).
+`HttpClientError::Tcp` (DNS resolution is part of TCP connect).
 
 ### 8. Large Response
 
@@ -289,9 +280,9 @@ network access) but runnable via `cargo test -- --ignored`.
 
 - HTTP/1.0 GET requests
 - Request line and header construction
-- Pipeline orchestration (NET00 → NET01 → NET02 → NET03 → NET04)
+- Pipeline orchestration (`url-parser` → `tcp-client` → `http1`)
 - Redirect following (301, 302) with configurable limit
-- Configurable timeouts and user-agent
+- Configurable timeouts, bounds, redirect limit, and user-agent
 - Error propagation from all pipeline stages
 
 ### Out of Scope

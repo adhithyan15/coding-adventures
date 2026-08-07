@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 155 \u2014 loaded coverage from FIVE stated quantities (a PRODUCT-PLUS-TERM numerator over a two-term PRODUCT, operator precedence). Rungs 153/154 divided a three-term SUM and a mixed-op numerator by a two-term product; rung-155 keeps the two-term product denominator but makes the numerator a PRODUCT-PLUS-TERM \u2014 two factors multiplied and an addon added, a loaded total (batch_size * batch_count + addon) divided by an AREA (grid_rows * grid_cols): a product-plus-term numerator over a two-term product (a*b+c)/(d*e). The multiplication binds tighter than the addition, so the numerator is (a*b)+c and NOT a*(b+c). From a loaded total (batch_size * batch_count + addon) divided by a grid area (grid_rows * grid_cols), compute the loaded coverage ((batch_size*batch_count+addon)/(grid_rows*grid_cols)), the loaded total (batch_size*batch_count+addon), or the grid area (grid_rows*grid_cols). Each item is a compute_dimensioned program (observe the five quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a PRODUCT-PLUS-TERM NUMERATOR OVER A TWO-TERM PRODUCT (a*b+c)/(d*e) (multiply the two factors FIRST, add the addon, multiply the two dimensions into an area, then divide the loaded total by the area). As on the over-a-product rungs, dividing by two factors in turn equals dividing by their product (x/d/e = x/(d*e)), so that is not a wrong distractor; the two slips on the panel are the WRONG DENOMINATOR OPERATION \u2014 adding the two dimensions instead of multiplying ((a*b+c)/(d+e), a perimeter-style total where an area belongs) \u2014 and the OPERATOR PRECEDENCE ERROR \u2014 adding the addon to the count before multiplying ((a*(b+c))/(d*e)) instead of multiplying first then adding. The rung sits at the crossing of its two questions: 'did you MULTIPLY the grid dimensions, or add them?' and 'did you do a*b FIRST then add c, or add b+c first then multiply?'. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the five observed quantities via +, *, and / \u2014 no constant leaks, and neither the loaded total, the grid area, nor the loaded coverage ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. This rung uses only +, *, and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed (and batch_size >= 2 keeps the precedence distractor distinct from the honest numerator) \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r155lca-01",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 4 with an addon of 2 spread across a grid of 2 rows by 5 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(3)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r155lca-02",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 4 with an addon of 2 spread across a grid of 2 rows by 5 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(3)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r155lca-03",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 4 with an addon of 2 spread across a grid of 2 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(3)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r155lca-04",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 5 with an addon of 2 spread across a grid of 2 rows by 3 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(4)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r155lca-05",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 5 with an addon of 2 spread across a grid of 2 rows by 3 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(4)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r155lca-06",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 5 with an addon of 2 spread across a grid of 2 rows by 3 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(4)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(3)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r155lca-07",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 6 with an addon of 2 spread across a grid of 2 rows by 4 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(3)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r155lca-08",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 6 with an addon of 2 spread across a grid of 2 rows by 4 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(3)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r155lca-09",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 3 by 6 with an addon of 2 spread across a grid of 2 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(3)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r155lca-10",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 4 with an addon of 2 spread across a grid of 3 rows by 5 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(4)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r155lca-11",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 4 with an addon of 2 spread across a grid of 3 rows by 5 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(4)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r155lca-12",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 4 by 4 with an addon of 2 spread across a grid of 3 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(4)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r155lca-13",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 5 with an addon of 2 spread across a grid of 4 rows by 5 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(5)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r155lca-14",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 5 with an addon of 2 spread across a grid of 4 rows by 5 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(5)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r155lca-15",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 5 with an addon of 2 spread across a grid of 4 rows by 5 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(5)\nobserve batch_count(5)\nobserve addon(2)\nobserve grid_rows(4)\nobserve grid_cols(5)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r155lca-16",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 6 by 4 with an addon of 2 spread across a grid of 3 rows by 4 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(6)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r155lca-17",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 6 by 4 with an addon of 2 spread across a grid of 3 rows by 4 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(6)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r155lca-18",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 6 by 4 with an addon of 2 spread across a grid of 3 rows by 4 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(6)\nobserve batch_count(4)\nobserve addon(2)\nobserve grid_rows(3)\nobserve grid_cols(4)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r155lca-19",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 6 with an addon of 2 spread across a grid of 2 rows by 7 cols. What is the loaded coverage (the loaded total divided by the grid area)?",
+      "program": "observe batch_size(5)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = (batch_size * batch_count + addon) / (grid_rows * grid_cols)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5555555555555554,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2857142857142856,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r155lca-20",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 6 with an addon of 2 spread across a grid of 2 rows by 7 cols. What is the the loaded total (the two factors multiplied then the addon added, the numerator that is divided by the grid area)?",
+      "program": "observe batch_size(5)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = batch_size * batch_count + addon\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.2857142857142856,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5555555555555554,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.857142857142857,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r155lca-21",
+      "qtype": "loaded_coverage",
+      "stem": "A coverage study records a batch of 5 by 6 with an addon of 2 spread across a grid of 2 rows by 7 cols. What is the the grid area (the grid rows times the grid cols, the denominator the loaded total is divided by)?",
+      "program": "observe batch_size(5)\nobserve batch_count(6)\nobserve addon(2)\nobserve grid_rows(2)\nobserve grid_cols(7)\nlet answer = grid_rows * grid_cols\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.2857142857142856,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.5555555555555554,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

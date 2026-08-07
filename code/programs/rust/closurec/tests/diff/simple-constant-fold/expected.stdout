@@ -1,1 +1,1 @@
-var sum=3;var product=12;var nested=14;report(sum,product,nested);
+var sum=3,product=12,nested=14;report(sum,product,nested);

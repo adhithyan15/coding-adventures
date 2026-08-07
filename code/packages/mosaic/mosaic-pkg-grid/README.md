@@ -95,6 +95,29 @@ The host pushes only the plain coordinate slots (`edit-row`,
 coordinates → per-cell booleans. Cell receives booleans, never
 coordinates.
 
+## v0.2.2 — Cell's click actually fires now
+
+`Cell.mil` always declared `emit onClick`, and every call site (including
+Grid.mll's own `Cell(onClick: emit: onNavigate, ...)`) supplied a handler —
+but `Cell.mll`'s `Box[cell]` never referenced `emit: onClick` in its own
+body, so the wiring went nowhere. A click on a cell did nothing, in any
+consuming app, from v0.1.0 through v0.2.1. Found and fixed while building
+`mosaic-pkg-sheet` — the first real application to drive this package
+through an actual emitter pipeline. See CHANGELOG.md for the fix.
+
+## v0.2.3 — `onNavigate` actually carries `(row, col)` now
+
+The v0.2.2 gap above ("a click fires, but without row/col — `Cell`'s root
+is a `Box`, and `mosaic-emit-react`'s connects-wiring only synthesizes a
+payload for `HostButton`/`HostInput`/`HostLink`") is closed:
+[UI37](../../../specs/UI37-generic-payload-dispatch.md) extended the React
+backend so a payload-carrying target emit's declared params resolve from
+named props on the same node — the same mechanism UI35's `drag-key`
+already uses. `Cell.mil` gained `row`/`col` slots and `onClick`'s declared
+`(row, col)` payload; `Grid.mll` supplies them at the `Cell` call site from
+its own loop bindings. `Grid`'s `onNavigate(row, col)` contract — declared
+since v0.1.0 — reaches a consumer for the first time.
+
 ## What's still out of scope (deferred to UI28-2 / v0.3.0)
 
 * **Sticky header.** Authors compose `HostScroll { Grid { ... } }`

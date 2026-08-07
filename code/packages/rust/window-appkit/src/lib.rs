@@ -13,26 +13,49 @@
 //! It is intentionally still small. The point is to prove the boundary between
 //! `window-core` and a native backend before adding richer event translation.
 
-use std::ffi::{c_int, c_ulong};
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
+use std::ffi::{c_int, c_schar, c_ulong};
 
 #[cfg(target_vendor = "apple")]
-use std::ffi::{c_void, CString};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    ffi::{c_void, CString},
+};
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    class, msg, msg_send_class, nsstring, object_getInstanceVariable, object_setInstanceVariable,
-    objc_allocateClassPair, objc_registerClassPair, release, sel, ClassPtr, CGPoint, CGRect, Id,
-    Sel, CGSize, NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE,
-    NS_WINDOW_STYLE_MASK_MINIATURIZABLE, NS_WINDOW_STYLE_MASK_RESIZABLE,
-    NS_WINDOW_STYLE_MASK_TITLED, NIL, class_addIvar, class_addMethod,
+    class, class_addIvar, class_addMethod, msg, msg_bool, msg_f64, msg_send_class, msg_usize,
+    nsstring, objc_allocateClassPair, objc_registerClassPair, object_getInstanceVariable,
+    object_setInstanceVariable, release, sel, CGPoint, CGRect, CGSize, ClassPtr, Id, Sel, NIL,
+    NS_BACKING_STORE_BUFFERED, NS_WINDOW_STYLE_MASK_CLOSABLE, NS_WINDOW_STYLE_MASK_MINIATURIZABLE,
+    NS_WINDOW_STYLE_MASK_RESIZABLE, NS_WINDOW_STYLE_MASK_TITLED,
 };
 use window_core::{
-    AppKitRenderTarget, LogicalSize, MountTarget, PhysicalSize, RenderTarget, SurfacePreference,
-    Window, WindowAttributes, WindowBackend, WindowError, WindowEvent, WindowId,
+    AppKitRenderTarget, ElementState, Key, LogicalSize, ModifiersState, MountTarget, NamedKey,
+    PhysicalSize, PointerButton, RenderTarget, SurfacePreference, Window, WindowAttributes,
+    WindowBackend, WindowError, WindowEvent, WindowId,
 };
 
 /// Crate version, kept explicit for examples and integration tests.
 pub const VERSION: &str = "0.1.0";
+
+#[cfg(target_vendor = "apple")]
+type AppKitEventHandler = Box<dyn FnMut(WindowEvent)>;
+
+#[cfg(target_vendor = "apple")]
+struct EventHandlerEntry {
+    window_id: WindowId,
+    callback: AppKitEventHandler,
+}
+
+#[cfg(target_vendor = "apple")]
+thread_local! {
+    static EVENT_HANDLERS: RefCell<HashMap<usize, EventHandlerEntry>> =
+        RefCell::new(HashMap::new());
+}
 
 /// Which AppKit-side surface family the renderer should expect.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -66,6 +89,38 @@ impl AppKitWindow {
             ns_window: self.ns_window,
             ns_view: self.ns_view,
             metal_layer: self.metal_layer,
+        }
+    }
+
+    /// Install the main-thread handler for normalized events from this view.
+    ///
+    /// AppKit invokes the handler synchronously from its normal application
+    /// run loop. The handler is replaced when this method is called again and
+    /// removed when the window closes.
+    pub fn set_event_handler<F>(&self, handler: F) -> Result<(), WindowError>
+    where
+        F: FnMut(WindowEvent) + 'static,
+    {
+        #[cfg(target_vendor = "apple")]
+        {
+            EVENT_HANDLERS.with(|handlers| {
+                handlers.borrow_mut().insert(
+                    self.ns_view,
+                    EventHandlerEntry {
+                        window_id: self.id,
+                        callback: Box::new(handler),
+                    },
+                );
+            });
+            Ok(())
+        }
+
+        #[cfg(not(target_vendor = "apple"))]
+        {
+            let _ = handler;
+            Err(WindowError::UnsupportedPlatform(
+                "AppKit windows are only available on Apple platforms",
+            ))
         }
     }
 }
@@ -316,11 +371,14 @@ impl AppKitBackend {
         msg!(window, "setTitle:", title_ns);
         objc_bridge::CFRelease(title_ns);
 
-        let view: Id = msg!(window, "contentView");
-        if view.is_null() {
+        let default_view: Id = msg!(window, "contentView");
+        if default_view.is_null() {
             release(window);
             return Err(WindowError::backend("NSWindow contentView returned nil"));
         }
+        let view = create_event_view(msg_send_bounds(default_view))?;
+        msg!(window, "setContentView:", view);
+        let _ = msg_bool!(window, "makeFirstResponder:", view);
 
         setup_window_delegate(window, app)?;
 
@@ -367,6 +425,262 @@ impl AppKitBackend {
             ns_view: view as usize,
             metal_layer,
         })
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn create_event_view(frame: CGRect) -> Result<Id, WindowError> {
+    let view_class = ensure_event_view_class()?;
+    let view: Id = msg!(view_class as Id, "alloc");
+    let view = msg!(view, "initWithFrame:", frame);
+    if view.is_null() {
+        return Err(WindowError::backend(
+            "WindowAppKitEventView allocation failed",
+        ));
+    }
+    Ok(view)
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn ensure_event_view_class() -> Result<ClassPtr, WindowError> {
+    let class_name = CString::new("WindowAppKitEventView").expect("static class name");
+    let existing = objc_bridge::objc_getClass(class_name.as_ptr());
+    if !existing.is_null() {
+        return Ok(existing);
+    }
+
+    let view_class = objc_allocateClassPair(class("NSView"), class_name.as_ptr(), 0);
+    if view_class.is_null() {
+        return Err(WindowError::backend(
+            "objc_allocateClassPair failed for WindowAppKitEventView",
+        ));
+    }
+
+    let event_method_types = CString::new("v@:@").expect("static method type");
+    class_addMethod(
+        view_class,
+        sel("scrollWheel:"),
+        scroll_wheel as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("mouseDown:"),
+        mouse_down as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("mouseUp:"),
+        mouse_up as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("keyDown:"),
+        key_down as *const _,
+        event_method_types.as_ptr(),
+    );
+    class_addMethod(
+        view_class,
+        sel("keyUp:"),
+        key_up as *const _,
+        event_method_types.as_ptr(),
+    );
+    let bool_method_types = CString::new("c@:").expect("static BOOL method type");
+    class_addMethod(
+        view_class,
+        sel("acceptsFirstResponder"),
+        accepts_first_responder as *const _,
+        bool_method_types.as_ptr(),
+    );
+    objc_registerClassPair(view_class);
+    Ok(view_class)
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn scroll_wheel(view: Id, _sel: Sel, event: Id) {
+    unsafe {
+        let precise = msg_bool!(event, "hasPreciseScrollingDeltas");
+        let line_scale = if precise { 1.0 } else { 40.0 };
+        let native_delta_x = msg_f64!(event, "scrollingDeltaX") * line_scale;
+        let native_delta_y = msg_f64!(event, "scrollingDeltaY") * line_scale;
+        dispatch_scroll_event(view, native_delta_x, native_delta_y);
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_scroll_event(view: Id, native_delta_x: f64, native_delta_y: f64) {
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            (entry.callback)(normalized_scroll_event(
+                entry.window_id,
+                native_delta_x,
+                native_delta_y,
+            ));
+        }
+    });
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn mouse_down(view: Id, _sel: Sel, event: Id) {
+    dispatch_pointer_button_event(view, event, ElementState::Pressed);
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn mouse_up(view: Id, _sel: Sel, event: Id) {
+    dispatch_pointer_button_event(view, event, ElementState::Released);
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_pointer_button_event(view: Id, event: Id, state: ElementState) {
+    let location = unsafe { msg_send_point(event, "locationInWindow") };
+    let view_height = unsafe { msg_send_bounds(view).size.height };
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            for event in normalized_pointer_button_events(
+                entry.window_id,
+                location.x,
+                location.y,
+                view_height,
+                PointerButton::Primary,
+                state,
+            ) {
+                (entry.callback)(event);
+            }
+        }
+    });
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn accepts_first_responder(_view: Id, _sel: Sel) -> c_schar {
+    1
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn key_down(view: Id, _sel: Sel, event: Id) {
+    dispatch_key_event(view, event, ElementState::Pressed);
+}
+
+#[cfg(target_vendor = "apple")]
+extern "C" fn key_up(view: Id, _sel: Sel, event: Id) {
+    dispatch_key_event(view, event, ElementState::Released);
+}
+
+#[cfg(target_vendor = "apple")]
+fn dispatch_key_event(view: Id, event: Id, state: ElementState) {
+    let key_code = unsafe { msg_usize!(event, "keyCode") };
+    let modifier_flags = unsafe { msg_usize!(event, "modifierFlags") };
+    EVENT_HANDLERS.with(|handlers| {
+        let mut handlers = handlers.borrow_mut();
+        if let Some(entry) = handlers.get_mut(&(view as usize)) {
+            if let Some(event) =
+                normalized_key_event(entry.window_id, key_code, modifier_flags, state)
+            {
+                (entry.callback)(event);
+            }
+        }
+    });
+}
+
+/// Translate AppKit's content-motion deltas into viewport scroll direction.
+pub fn normalized_scroll_event(
+    window_id: WindowId,
+    native_delta_x: f64,
+    native_delta_y: f64,
+) -> WindowEvent {
+    WindowEvent::Scroll {
+        window_id,
+        delta_x: invert_finite(native_delta_x),
+        delta_y: invert_finite(native_delta_y),
+    }
+}
+
+/// Translate an AppKit button event into top-left viewport coordinates.
+///
+/// AppKit reports content coordinates from the bottom-left. Emitting a
+/// `PointerMoved` event immediately before the button transition makes the
+/// shared button event useful without embedding duplicate coordinates in it.
+pub fn normalized_pointer_button_events(
+    window_id: WindowId,
+    native_x: f64,
+    native_y: f64,
+    view_height: f64,
+    button: PointerButton,
+    state: ElementState,
+) -> [WindowEvent; 2] {
+    let x = finite_or_zero(native_x);
+    let y = if native_y.is_finite() && view_height.is_finite() {
+        finite_or_zero(view_height.max(0.0) - native_y)
+    } else {
+        0.0
+    };
+    [
+        WindowEvent::PointerMoved { window_id, x, y },
+        WindowEvent::PointerButton {
+            window_id,
+            button,
+            state,
+        },
+    ]
+}
+
+/// Translate macOS virtual key codes for host-level navigation input.
+pub fn normalized_key_event(
+    window_id: WindowId,
+    key_code: usize,
+    modifier_flags: usize,
+    state: ElementState,
+) -> Option<WindowEvent> {
+    let key = match key_code {
+        0x35 => NamedKey::Escape,
+        0x24 => NamedKey::Enter,
+        0x30 => NamedKey::Tab,
+        0x33 => NamedKey::Backspace,
+        0x31 => NamedKey::Space,
+        0x7b => NamedKey::ArrowLeft,
+        0x7c => NamedKey::ArrowRight,
+        0x7e => NamedKey::ArrowUp,
+        0x7d => NamedKey::ArrowDown,
+        0x73 => NamedKey::Home,
+        0x77 => NamedKey::End,
+        0x74 => NamedKey::PageUp,
+        0x79 => NamedKey::PageDown,
+        _ => return None,
+    };
+    Some(WindowEvent::Key {
+        window_id,
+        key: Key::Named(key),
+        state,
+        modifiers: normalized_modifiers(modifier_flags),
+        text: None,
+    })
+}
+
+fn normalized_modifiers(flags: usize) -> ModifiersState {
+    ModifiersState {
+        shift: flags & (1 << 17) != 0,
+        control: flags & (1 << 18) != 0,
+        alt: flags & (1 << 19) != 0,
+        meta: flags & (1 << 20) != 0,
+    }
+}
+
+fn invert_finite(value: f64) -> f64 {
+    if value.is_finite() {
+        -value
+    } else {
+        0.0
+    }
+}
+
+fn finite_or_zero(value: f64) -> f64 {
+    if value.is_finite() {
+        value
+    } else {
+        0.0
     }
 }
 
@@ -433,6 +747,14 @@ unsafe fn msg_send_bounds(view: Id) -> objc_bridge::CGRect {
     fn_ptr(view, sel("bounds"))
 }
 
+/// Call a selector such as `[event locationInWindow]` that returns CGPoint.
+#[cfg(target_vendor = "apple")]
+unsafe fn msg_send_point(receiver: Id, selector: &str) -> objc_bridge::CGPoint {
+    use objc_bridge::{objc_msgSend, sel};
+    let fn_ptr: unsafe extern "C" fn(Id, objc_bridge::Sel) -> objc_bridge::CGPoint =
+        std::mem::transmute(objc_msgSend as *const ());
+    fn_ptr(receiver, sel(selector))
+}
 
 impl WindowBackend for AppKitBackend {
     type Window = AppKitWindow;
@@ -519,6 +841,14 @@ unsafe fn ensure_delegate_class() -> Result<ClassPtr, WindowError> {
 #[cfg(target_vendor = "apple")]
 extern "C" fn window_will_close(this: Id, _sel: Sel, _notification: Id) {
     unsafe {
+        let window: Id = msg!(_notification, "object");
+        if !window.is_null() {
+            let view: Id = msg!(window, "contentView");
+            EVENT_HANDLERS.with(|handlers| {
+                handlers.borrow_mut().remove(&(view as usize));
+            });
+        }
+
         let ivar_name = CString::new("_app").expect("static ivar name");
         let mut app_ptr: *mut c_void = std::ptr::null_mut();
         object_getInstanceVariable(this, ivar_name.as_ptr(), &mut app_ptr);
@@ -606,6 +936,95 @@ mod tests {
                 ns_view: 20,
                 metal_layer: None
             }
+        );
+    }
+
+    #[test]
+    fn appkit_scroll_deltas_follow_viewport_direction_and_sanitize_non_finite_values() {
+        assert_eq!(
+            normalized_scroll_event(WindowId(7), 2.5, -8.0),
+            WindowEvent::Scroll {
+                window_id: WindowId(7),
+                delta_x: -2.5,
+                delta_y: 8.0,
+            }
+        );
+        assert_eq!(
+            normalized_scroll_event(WindowId(7), f64::NAN, f64::INFINITY),
+            WindowEvent::Scroll {
+                window_id: WindowId(7),
+                delta_x: 0.0,
+                delta_y: 0.0,
+            }
+        );
+    }
+
+    #[test]
+    fn appkit_pointer_buttons_use_top_left_viewport_coordinates() {
+        assert_eq!(
+            normalized_pointer_button_events(
+                WindowId(7),
+                12.5,
+                150.0,
+                200.0,
+                PointerButton::Primary,
+                ElementState::Released,
+            ),
+            [
+                WindowEvent::PointerMoved {
+                    window_id: WindowId(7),
+                    x: 12.5,
+                    y: 50.0,
+                },
+                WindowEvent::PointerButton {
+                    window_id: WindowId(7),
+                    button: PointerButton::Primary,
+                    state: ElementState::Released,
+                },
+            ]
+        );
+        assert_eq!(
+            normalized_pointer_button_events(
+                WindowId(7),
+                f64::NAN,
+                f64::INFINITY,
+                f64::INFINITY,
+                PointerButton::Primary,
+                ElementState::Pressed,
+            )[0],
+            WindowEvent::PointerMoved {
+                window_id: WindowId(7),
+                x: 0.0,
+                y: 0.0,
+            }
+        );
+    }
+
+    #[test]
+    fn appkit_named_keys_and_modifiers_are_normalized() {
+        assert_eq!(
+            normalized_key_event(
+                WindowId(7),
+                0x7d,
+                (1 << 17) | (1 << 20),
+                ElementState::Pressed,
+            ),
+            Some(WindowEvent::Key {
+                window_id: WindowId(7),
+                key: Key::Named(NamedKey::ArrowDown),
+                state: ElementState::Pressed,
+                modifiers: ModifiersState {
+                    shift: true,
+                    control: false,
+                    alt: false,
+                    meta: true,
+                },
+                text: None,
+            })
+        );
+        assert_eq!(
+            normalized_key_event(WindowId(7), 0xffff, 0, ElementState::Pressed),
+            None
         );
     }
 }

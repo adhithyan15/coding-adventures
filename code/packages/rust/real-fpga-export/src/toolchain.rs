@@ -101,6 +101,9 @@ pub struct ToolchainResult {
 ///
 /// Returns `Err(String)` when a tool exits with a non-zero status or when a
 /// required tool is missing and `skip_missing = false`.
+// Each argument is a distinct toolchain input (design, top module, constraint
+// file, output paths, flags); a config struct would not clarify this call site.
+#[allow(clippy::too_many_arguments)]
 pub fn to_ice40(
     hir:          &Hir,
     top:          &str,

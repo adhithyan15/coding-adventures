@@ -327,7 +327,7 @@ fn resolve_operand(
     }
 
     // Numeric literals (decimal or hex)
-    if s.starts_with("0x") || s.starts_with("0X") || s.chars().next().map_or(false, |c| c.is_ascii_digit() || c == '-') {
+    if s.starts_with("0x") || s.starts_with("0X") || s.chars().next().is_some_and(|c| c.is_ascii_digit() || c == '-') {
         return parse_number(s);
     }
 
@@ -772,7 +772,7 @@ fn pass2(
             }
             // Pad forward with 0xFF (erased flash state)
             if org_addr > pc {
-                output.extend(std::iter::repeat(0xFF).take(org_addr - pc));
+                output.extend(std::iter::repeat_n(0xFF, org_addr - pc));
             }
             pc = org_addr;
             continue;

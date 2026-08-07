@@ -136,11 +136,10 @@ fn test_eval(node: IRNode) -> IRNode {
     match node {
         IRNode::Apply(a) => {
             let args: Vec<_> = a.args.into_iter().map(test_eval).collect();
-            if a.head == sym(ADD) {
-                if args.iter().all(|arg| matches!(arg, IRNode::Integer(_))) {
+            if a.head == sym(ADD)
+                && args.iter().all(|arg| matches!(arg, IRNode::Integer(_))) {
                     return int(args.iter().map(as_int).sum());
                 }
-            }
             if a.head == sym(SUB) && args.len() == 2 {
                 if let (IRNode::Integer(lhs), IRNode::Integer(rhs)) = (&args[0], &args[1]) {
                     return int(lhs - rhs);

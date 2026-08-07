@@ -258,9 +258,7 @@ pub fn smul32(a: u32, b: u32) -> (u32, u32) {
         if bb[i] == 1 {
             let shifted: Vec<u8> = {
                 let mut s = vec![0u8; 64];
-                for j in i..64 {
-                    s[j] = ab[j - i];
-                }
+                s[i..64].copy_from_slice(&ab[..64 - i]);
                 s
             };
             let r = ripple_carry_adder_with_carry(&acc, &shifted, 0);
@@ -292,7 +290,7 @@ pub fn udiv64(y: u32, rs1: u32, src2: u32) -> u32 {
     let divisor_bits = u64_to_bits(divisor);
     let mut remainder = u64_to_bits(0u64);
     let dividend_bits = u64_to_bits(dividend);
-    let mut quotient = vec![0u8; 64];
+    let mut quotient = [0u8; 64];
     for i in (0..64).rev() {
         // Shift remainder left by 1, bring in next dividend bit.
         for j in (1..64).rev() {
@@ -308,8 +306,8 @@ pub fn udiv64(y: u32, rs1: u32, src2: u32) -> u32 {
             remainder = r.sum;
         }
     }
-    let q = bits_to_u32(&quotient[..32]);
-    q
+    
+    bits_to_u32(&quotient[..32])
 }
 
 /// SDIV: signed 64÷32 → 32-bit quotient.

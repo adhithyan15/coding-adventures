@@ -3,11 +3,13 @@ package neuralnetwork
 import (
 	"fmt"
 	"math"
-	"sort"
+
+	multidirectedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/multi-directed-graph"
 )
 
-type PropertyValue any
-type PropertyBag map[string]PropertyValue
+type PropertyValue = multidirectedgraph.PropertyValue
+type PropertyBag = multidirectedgraph.PropertyBag
+type Edge = multidirectedgraph.Edge[string]
 
 type ActivationKind string
 
@@ -18,14 +20,6 @@ const (
 	None    ActivationKind = "none"
 )
 
-type Edge struct {
-	ID         string
-	From       string
-	To         string
-	Weight     float64
-	Properties PropertyBag
-}
-
 type WeightedInput struct {
 	From       string
 	Weight     float64
@@ -34,126 +28,50 @@ type WeightedInput struct {
 }
 
 type Graph struct {
-	graphProperties PropertyBag
-	nodes           []string
-	nodeProperties  map[string]PropertyBag
-	edges           []Edge
-	nextEdgeID      int
+	*multidirectedgraph.MultiDirectedGraph[string]
 }
 
 func NewGraph(name string) *Graph {
-	graph := &Graph{
-		graphProperties: PropertyBag{"nn.version": "0"},
-		nodes:           []string{},
-		nodeProperties:  map[string]PropertyBag{},
-		edges:           []Edge{},
-	}
+	graph := &Graph{MultiDirectedGraph: multidirectedgraph.New[string]()}
+	graph.SetGraphProperty("nn.version", "0")
 	if name != "" {
-		graph.graphProperties["nn.name"] = name
+		graph.SetGraphProperty("nn.name", name)
 	}
 	return graph
 }
 
-func (g *Graph) GraphProperties() PropertyBag {
-	return cloneBag(g.graphProperties)
-}
-
-func (g *Graph) AddNode(node string, properties PropertyBag) {
-	if _, ok := g.nodeProperties[node]; !ok {
-		g.nodes = append(g.nodes, node)
-		g.nodeProperties[node] = PropertyBag{}
-	}
-	for key, value := range properties {
-		g.nodeProperties[node][key] = value
-	}
-}
-
-func (g *Graph) Nodes() []string {
-	return append([]string(nil), g.nodes...)
-}
-
-func (g *Graph) NodeProperties(node string) PropertyBag {
-	return cloneBag(g.nodeProperties[node])
-}
-
 func (g *Graph) AddEdge(from, to string, weight float64, properties PropertyBag, edgeID string) string {
-	g.AddNode(from, nil)
-	g.AddNode(to, nil)
-	if edgeID == "" {
-		edgeID = fmt.Sprintf("e%d", g.nextEdgeID)
-		g.nextEdgeID++
+	id, err := g.MultiDirectedGraph.AddEdge(from, to, weight, properties, edgeID)
+	if err != nil {
+		panic(err)
 	}
-	merged := cloneBag(properties)
-	merged["weight"] = weight
-	g.edges = append(g.edges, Edge{
-		ID:         edgeID,
-		From:       from,
-		To:         to,
-		Weight:     weight,
-		Properties: merged,
-	})
-	return edgeID
+	return id
 }
 
-func (g *Graph) Edges() []Edge {
-	return append([]Edge(nil), g.edges...)
+// NodeProperties preserves the original neural-network facade while the
+// generic graph package exposes missing nodes as idiomatic Go errors.
+func (g *Graph) NodeProperties(node string) PropertyBag {
+	properties, err := g.MultiDirectedGraph.NodeProperties(node)
+	if err != nil {
+		panic(err)
+	}
+	return properties
 }
 
+// IncomingEdges preserves the original neural-network facade. Neural graph
+// nodes are authored through the helpers below, so a missing node is a
+// programmer error at this layer.
 func (g *Graph) IncomingEdges(node string) []Edge {
-	incoming := []Edge{}
-	for _, edge := range g.edges {
-		if edge.To == node {
-			incoming = append(incoming, edge)
-		}
+	edges, err := g.MultiDirectedGraph.IncomingEdges(node)
+	if err != nil {
+		panic(err)
 	}
-	return incoming
+	return edges
 }
 
 func (g *Graph) EdgeProperties(edgeID string) (PropertyBag, bool) {
-	for _, edge := range g.edges {
-		if edge.ID == edgeID {
-			return cloneBag(edge.Properties), true
-		}
-	}
-	return nil, false
-}
-
-func (g *Graph) TopologicalSort() ([]string, error) {
-	indegree := map[string]int{}
-	outgoing := map[string][]string{}
-	for _, node := range g.nodes {
-		indegree[node] = 0
-		outgoing[node] = []string{}
-	}
-	for _, edge := range g.edges {
-		indegree[edge.To]++
-		outgoing[edge.From] = append(outgoing[edge.From], edge.To)
-	}
-
-	ready := []string{}
-	for _, node := range g.nodes {
-		if indegree[node] == 0 {
-			ready = append(ready, node)
-		}
-	}
-	sort.Strings(ready)
-	order := []string{}
-	for len(ready) > 0 {
-		node := ready[0]
-		ready = ready[1:]
-		order = append(order, node)
-		for _, successor := range outgoing[node] {
-			indegree[successor]--
-			if indegree[successor] == 0 {
-				ready = append(ready, successor)
-				sort.Strings(ready)
-			}
-		}
-	}
-	if len(order) != len(g.nodes) {
-		return nil, fmt.Errorf("neural graph contains a cycle")
-	}
-	return order, nil
+	properties, err := g.MultiDirectedGraph.EdgeProperties(edgeID)
+	return properties, err == nil
 }
 
 type NeuralNetwork struct {
@@ -170,7 +88,9 @@ func (n *NeuralNetwork) Input(node string) *NeuralNetwork {
 }
 
 func (n *NeuralNetwork) Constant(node string, value float64, properties PropertyBag) *NeuralNetwork {
-	AddConstant(n.Graph, node, value, properties)
+	if err := AddConstant(n.Graph, node, value, properties); err != nil {
+		panic(err)
+	}
 	return n
 }
 

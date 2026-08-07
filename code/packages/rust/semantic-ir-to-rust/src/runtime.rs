@@ -37,6 +37,17 @@ pub const RUNTIME: &str = r##"mod __sir {
     #[derive(Clone)]
     pub enum Value {
         Int(i64),
+        // A raised/caught EXCEPTION, as a first-class value.
+        //
+        // `rescue Foo => e` used to bind the message STRING, so the rescued
+        // value was not an exception at all: `e.class` said `String`,
+        // `e.is_a?(StandardError)` was FALSE, and `e.message` raised
+        // NoMethodError.  A dedicated variant (rather than reusing a
+        // `SirInstance`) keeps the message a plain `String` — so display can
+        // never recurse through it — and keeps exceptions OUT of the
+        // never-freed instance table, so a `loop { begin … rescue => e … end }`
+        // stays O(1) in memory.
+        Exception(Rc<SirError>),
         // SIR16 floats.  Kept distinct from `Int` so the value model
         // never silently coerces — arithmetic promotes to `Float` only
         // when an operand is already a `Float` (see `any_float`).
@@ -230,17 +241,32 @@ pub const RUNTIME: &str = r##"mod __sir {
         match args.first() {
             // ── String concatenation ──────────────────────────────
             // `"a" + "b"` → `"ab"`.  Ruby's `String#+` requires a String
-            // right-hand operand (`"a" + 1` raises `TypeError`); typed
-            // rejection belongs to the sir-typed-runtime-errors cascade, so
-            // here we require every operand be a `Str` and concatenate their
-            // contents — a non-Str operand panics with a clear message rather
-            // than silently coercing to integer garbage.
+            // right-hand operand, so every operand must be a `Str` — never
+            // silently coerce to integer garbage.
+            //
+            // The rejection is a RESCUABLE `TypeError` (via `raise`), not a
+            // bare `panic!`.  A `panic!` payload is a `&str`, not a
+            // `SirError`, so `exc_from_payload` `resume_unwind`s it — NO
+            // `rescue`, not even a bare one, could catch it, and the program
+            // died with a host backtrace.  Ruby raises a plain rescuable
+            // `TypeError` here, and `"prefix " + e` (`e` a rescued exception)
+            // reaches this arm the moment exceptions became real values
+            // rather than message strings.
             Some(Value::Str(_)) => {
                 let mut out = String::new();
                 for a in &args {
                     match a {
                         Value::Str(s) => out.push_str(s),
-                        other => panic!("string + expects strings, got {}", format(other)),
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into String",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
                     }
                 }
                 Value::Str(Rc::from(out.as_str()))
@@ -255,7 +281,18 @@ pub const RUNTIME: &str = r##"mod __sir {
                 for a in &args {
                     match a {
                         Value::Seq(items) => out.extend(items.borrow().iter().cloned()),
-                        other => panic!("array + expects arrays, got {}", format(other)),
+                        // Rescuable `TypeError`, for the same reason as the
+                        // `Str` arm above — a `panic!` here was uncatchable.
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into Array",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
                     }
                 }
                 seq_lit(out)
@@ -275,6 +312,126 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 Value::Int(total)
             }
+        }
+    }
+
+    // ── polymorphic `<<` (Ruby's shift operator) ────────────────────
+    //
+    // `<<` -- Ruby's shift operator, polymorphic like `plus`:
+    //   Array   -- push each RHS operand IN PLACE, returns the (mutated)
+    //              receiver. Chains left-to-right: `a << 1 << 2` pushes
+    //              both (the frontend lowers a `<<` chain to ONE variadic
+    //              call, the same convention `plus` already folds over).
+    //   Integer -- bitwise shift; see `shift_left_i64` below, PORTED from
+    //              the C/Go backends' helper of the same name for
+    //              identical overflow/negative-amount semantics (no
+    //              bignum growth -- saturates at i64::MAX/i64::MIN rather
+    //              than wrapping).
+    //   String  -- concatenates and returns a NEW string, raising the
+    //              SAME rescuable `TypeError` `plus` raises for a
+    //              non-string operand (Ruby raises `TypeError` for `<<`
+    //              on an incompatible operand too, so this is not a new
+    //              divergence from `plus`).
+    pub fn shift_left(args: Vec<Value>) -> Value {
+        match args.first() {
+            Some(Value::Seq(items)) => {
+                for a in &args[1..] {
+                    items.borrow_mut().push(a.clone());
+                }
+                Value::Seq(Rc::clone(items))
+            }
+            Some(Value::Str(_)) => {
+                let mut out = String::new();
+                for a in &args {
+                    match a {
+                        Value::Str(s) => out.push_str(s),
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into String",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
+                    }
+                }
+                Value::Str(Rc::from(out.as_str()))
+            }
+            None => Value::Int(0),
+            Some(first) => {
+                let mut acc = as_i64(first);
+                for a in &args[1..] {
+                    acc = shift_left_i64(acc, shift_amount_arg(a));
+                }
+                Value::Int(acc)
+            }
+        }
+    }
+
+    // Extracts a shift-amount argument as a plain i64 -- an Integer passes
+    // through, a Float truncates toward zero via Rust's `as i64` cast
+    // (SATURATING and NaN-safe by language guarantee since Rust 1.45 --
+    // "if the source value is `NaN`... the result is 0; otherwise the
+    // result is clamped to the range of the target type", so no manual
+    // overflow guard is needed here unlike the C/Go backends' equivalent
+    // helper); anything else contributes a 0 shift.
+    fn shift_amount_arg(v: &Value) -> i64 {
+        match v {
+            Value::Int(n) => *n,
+            Value::Float(f) => *f as i64,
+            _ => 0,
+        }
+    }
+
+    // Bitwise-shifts `n` by `amount`, matching real Ruby's rules (ported
+    // from the C/Go backends' `shift_left_i64` -- see those for the full
+    // rationale):
+    //   - `amount == 0` or `n == 0`: identity.
+    //   - `amount < 0`: REVERSES direction -- a right shift by
+    //     `amount.unsigned_abs()` (`5 << -1 == 5 >> 1 == 2`).
+    //   - `amount > 0`: LEFT shift, SATURATES at i64::MAX/i64::MIN rather
+    //     than wrapping once the true mathematical result would not fit.
+    //   - A shift amount whose magnitude is >= 64 drains every bit:
+    //     saturates to 0/-1 (right) or i64::MAX/i64::MIN (left, `n != 0`).
+    // Rust's native `<<`/`>>` panic (in a debug build) or silently mask
+    // the shift amount mod 64 (in a release build) for a count >= the bit
+    // width, so every shift below is manually guarded to a checked,
+    // in-range amount before it ever reaches a native `<<`/`>>`.
+    fn shift_left_i64(n: i64, amount: i64) -> i64 {
+        if amount == 0 || n == 0 {
+            return n;
+        }
+        if amount < 0 {
+            let k = amount.unsigned_abs();
+            if k >= 64 {
+                return if n < 0 { -1 } else { 0 };
+            }
+            return n >> k;
+        }
+        let k = amount as u64;
+        let neg = n < 0;
+        if k >= 64 {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        let mag = n.unsigned_abs();
+        if (mag >> (64 - k)) != 0 {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        let shifted = mag << k;
+        let limit = if neg { i64::MAX as u64 + 1 } else { i64::MAX as u64 };
+        if shifted > limit {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        if neg {
+            if shifted == limit {
+                i64::MIN
+            } else {
+                -(shifted as i64)
+            }
+        } else {
+            shifted as i64
         }
     }
 
@@ -443,7 +600,17 @@ pub const RUNTIME: &str = r##"mod __sir {
                 // so `rescue ZeroDivisionError` catches it — Ruby parity.
                 raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
             }
-            acc /= d;
+            // Ruby `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`), unlike Rust's
+            // `/` which truncates toward zero (`-3`). The floored quotient is
+            // the truncated one minus one *exactly* when the remainder is
+            // non-zero and its sign differs from the divisor's — i.e. when a
+            // real division would land between two integers on the negative
+            // side. Matches the SIR21 §E3 oracle `DivOp::Floor` on every sign
+            // combination. (Float operands take the `any_float` branch above,
+            // which correctly true-divides — Ruby `Float#/`.)
+            let q = acc / d;
+            let r = acc % d;
+            acc = if r != 0 && ((r < 0) != (d < 0)) { q - 1 } else { q };
         }
         Value::Int(acc)
     }
@@ -470,6 +637,28 @@ pub const RUNTIME: &str = r##"mod __sir {
     }
     pub fn gt(a: Value, b: Value) -> Value {
         Value::Bool(num_lt(&b, &a))
+    }
+    // `!=`, `<=`, `>=` — the operator spellings the Ruby frontend lowers a
+    // comparison chain to (see `lower_comparison_chain`).  All three are
+    // defined in terms of the two primitives above (`num_lt`, `value_eq`) so
+    // they share one source of truth:
+    //   a != b  ⟺  not (a == b)
+    //   a <= b  ⟺  a < b  or  a == b
+    //   a >= b  ⟺  b < a  or  a == b
+    // `value_eq` equates cross-representation numbers (`1 == 1.0`), so
+    // `1 <= 1.0` is true; and because both `num_lt` and `value_eq` answer
+    // `false` for genuinely uncomparable operands, `le`/`ge` return `false`
+    // there rather than a meaningless order — upholding `num_lt`'s own
+    // never-panic-on-the-OO-surface contract. Matches the C backend's
+    // `_sir_le`/`_sir_ge`/`_sir_ne` on every numeric and string input.
+    pub fn ne(a: Value, b: Value) -> Value {
+        Value::Bool(!value_eq(&a, &b))
+    }
+    pub fn le(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&a, &b) || value_eq(&a, &b))
+    }
+    pub fn ge(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&b, &a) || value_eq(&a, &b))
     }
 
     // Ordered numeric comparison.  Both-int compares as i64 (no
@@ -666,6 +855,11 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else { "#t" }.to_string(),
             Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else { "#f" }.to_string(),
             Value::Nil => "nil".to_string(),
+            // An exception renders as its MESSAGE, matching Ruby's
+            // `Exception#to_s`, so `rescue => e; puts e` prints "boom".  The
+            // message is a plain `String`, so unlike an instance/seq/map this
+            // arm cannot recurse and needs no `visited` guard.
+            Value::Exception(e) => e.msg.clone(),
             // Defensive: a `Missing` sentinel should be consumed by a
             // defaulted param's prologue before any value is printed, so
             // this arm is normally unreachable.  Render a visible
@@ -1089,6 +1283,17 @@ pub const RUNTIME: &str = r##"mod __sir {
             // Ruby's default `==` is object identity, and two distinct
             // `Foo.new` objects are unequal even with identical ivars.
             (Value::Instance(x), Value::Instance(y)) => x == y,
+            // Two exception handles are equal when they are the SAME exception
+            // — the `Rc` a `rescue` binding allocated, shared by `Value::clone`.
+            // WITHOUT this arm the wildcard below made `e == e` FALSE, so
+            // `retry if e == @last_error` never fired and `seen.include?(e)`
+            // never deduped: the very defect shape this change exists to fix.
+            // Identity is also what the Go (interface pointer), JavaScript and
+            // Python backends give for free, so the four agree. (Ruby's own
+            // `Exception#==` additionally equates two DISTINCT exceptions with
+            // the same class and message; no backend does that today, and
+            // matching Ruby here alone would create a fresh divergence.)
+            (Value::Exception(x), Value::Exception(y)) => Rc::ptr_eq(x, y),
             _ => false,
         }
     }
@@ -1104,12 +1309,30 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn call_builtin_by_name(name: &str, args: Vec<Value>) -> Value {
         match name {
             "+" => plus(args),
+            "<<" => shift_left(args),
             "-" => minus(args),
             "*" => times(args),
             "/" => divide(args),
-            "=" => {
+            // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
+            // was UNIMPLEMENTED here, so any negative literal panicked with
+            // "unknown builtin: neg" (the JS/Python runtimes already had it).
+            // Negate tag-preservingly — a `Float` stays a `Float`; anything
+            // else negates as an `Int` (the same coercion `subtract` uses for
+            // its single-argument negation).
+            "neg" => match args.into_iter().next().unwrap_or(Value::Int(0)) {
+                Value::Float(f) => Value::Float(-f),
+                other => Value::Int(-as_i64(&other)),
+            },
+            // `==` is a synonym for `=`; both call `eq`.  This covers a
+            // first-class builtin reference (`:==` passed as a symbol) — the
+            // infix form is routed directly by the emitter.
+            "=" | "==" => {
                 let mut it = args.into_iter();
                 eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "!=" => {
+                let mut it = args.into_iter();
+                ne(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "case_eq" => {
                 let mut it = args.into_iter();
@@ -1122,6 +1345,14 @@ pub const RUNTIME: &str = r##"mod __sir {
             ">" => {
                 let mut it = args.into_iter();
                 gt(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "<=" => {
+                let mut it = args.into_iter();
+                le(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            ">=" => {
+                let mut it = args.into_iter();
+                ge(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "cons" => {
                 let mut it = args.into_iter();
@@ -1228,6 +1459,8 @@ pub const RUNTIME: &str = r##"mod __sir {
     fn ruby_class_name(v: &Value) -> String {
         match v {
             Value::Nil => "NilClass".to_string(),
+            // An exception reports the class it was raised as.
+            Value::Exception(e) => e.class.clone(),
             Value::Bool(true) => "TrueClass".to_string(),
             Value::Bool(false) => "FalseClass".to_string(),
             Value::Int(_) => "Integer".to_string(),
@@ -1432,8 +1665,99 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b @ Value::Closure(_)) => Some(apply_closure(b, vec![recv.clone()])),
                 _ => Some(recv.clone()),
             },
+            // Type reflection on ANY receiver: `7.class` → "Integer",
+            // `7.0.class` → "Float", `obj.class` → its own class tag.  This
+            // reuses `ruby_class_name`, which until now existed ONLY to build a
+            // `NoMethodError` message — so `.class` raised `NoMethodError`
+            // (surfacing as an unrescued panic) even though the mapping was
+            // sitting right there.
+            "class" => Some(Value::Str(Rc::from(ruby_class_name(recv).as_str()))),
+            // `Exception#message` — the message a `raise Foo, "msg"` carried.
+            // Only an exception instance answers; anything else falls through
+            // to its own catalog (and ultimately `NoMethodError`).
+            "message" => match recv {
+                Value::Exception(e) => Some(Value::Str(Rc::from(e.msg.as_str()))),
+                _ => None,
+            },
+            // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT
+            // class match.  The class argument arrives as a NAME — the frontend
+            // lowers a class pattern to its name string — so no constant-
+            // reference support is required here.
+            "is_a?" | "kind_of?" | "instance_of?" => {
+                let target = args.first().map(method_name).unwrap_or_default();
+                let actual = ruby_class_name(recv);
+                Some(Value::Bool(if name == "instance_of?" {
+                    actual == target
+                } else {
+                    value_is_a(recv, &actual, &target)
+                }))
+            }
             _ => None,
         }
+    }
+
+    // Ruby `is_a?`: the receiver's own class, a BUILT-IN ancestor (`Integer`
+    // and `Float` are `Numeric` and `Comparable`; `String` is `Comparable`),
+    // the universal `Object`/`BasicObject`, or — for a user instance — its
+    // superclass chain (the same cycle-guarded walk `rescue` matching uses)
+    // plus any module mixed in along that chain.
+    fn value_is_a(recv: &Value, actual: &str, target: &str) -> bool {
+        if actual == target || target == "Object" || target == "BasicObject" {
+            return true;
+        }
+        let builtin: &[&str] = match actual {
+            "Integer" | "Float" => &["Numeric", "Comparable"],
+            "String" => &["Comparable"],
+            _ => &[],
+        };
+        if builtin.contains(&target) {
+            return true;
+        }
+        // A user instance — or an EXCEPTION, whose class chains through the
+        // built-in hierarchy (`ArgumentError → StandardError → Exception`) —
+        // also matches its ancestors and any module mixed in along the chain.
+        if matches!(recv, Value::Instance(_) | Value::Exception(_)) {
+            return is_ancestor_or_self(actual, target)
+                || includes_module_transitively(actual, target);
+        }
+        false
+    }
+
+    // Does `owner` reach `target` through the modules mixed into it or into any
+    // of its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end`
+    // where `module M; include N; end` makes `c.is_a?(N)` true.
+    //
+    // Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
+    // depth is shaped by the source, so a recursive walk could exhaust the stack
+    // on a long chain.  `seen` expands each module at most once and `chain`
+    // guards a cyclic ancestry edge, so any graph terminates.
+    fn includes_module_transitively(owner: &str, target: &str) -> bool {
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut work: Vec<String> = vec![owner.to_string()];
+        while let Some(start) = work.pop() {
+            let mut cur = start;
+            let mut chain: std::collections::HashSet<String> = std::collections::HashSet::new();
+            loop {
+                if !chain.insert(cur.clone()) {
+                    break; // cyclic ancestry edge — stop this chain.
+                }
+                if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(&cur).cloned()) {
+                    for m in mods {
+                        if m == target {
+                            return true;
+                        }
+                        if seen.insert(m.clone()) {
+                            work.push(m);
+                        }
+                    }
+                }
+                match super_of(&cur) {
+                    Some(next) => cur = next,
+                    None => break,
+                }
+            }
+        }
+        false
     }
 
     // Does dispatch on `recv` resolve `name`?  Mirrors the Python reference's
@@ -1448,17 +1772,25 @@ pub const RUNTIME: &str = r##"mod __sir {
             name,
             "to_s" | "respond_to?" | "send" | "__send__" | "public_send" | "tap"
                 | "then" | "yield_self"
+                // Type reflection answers on every receiver (matching the Go
+                // and JavaScript backends).
+                | "class" | "is_a?" | "kind_of?" | "instance_of?"
         ) {
             return true;
         }
         match recv {
             // A user instance responds to any method its class (or an ancestor
             // / included module) defines — the SAME `resolve_instance_method`
-            // walk `dispatch_user_method` uses.
+            // walk `dispatch_user_method` uses.  An EXCEPTION instance also
+            // responds to `message`; a non-exception must NOT (keeping
+            // `respond_to?` honest in both directions).
             Value::Instance(id) => resolve_instance_method(&instance_class(*id), name).is_some(),
+            // An exception responds to `message`; nothing else does, so
+            // `respond_to?` stays honest in both directions.
+            Value::Exception(_) => name == "message",
             Value::Seq(_) => matches!(
                 name,
-                "length" | "size" | "first" | "last" | "[]" | "reverse" | "sort" | "join"
+                "length" | "size" | "first" | "last" | "[]" | "[]=" | "reverse" | "sort" | "join"
                     | "include?" | "push" | "append" | "pop" | "fetch" | "each" | "map"
                     | "collect" | "select" | "filter" | "reject" | "find" | "detect" | "any?"
                     | "all?" | "none?" | "reduce" | "inject" | "sort_by" | "min_by" | "max_by"
@@ -1466,23 +1798,37 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "drop_while" | "count" | "each_with_object" | "each_with_index"
                     // aggregate / reshape non-block methods (all dispatch in
                     // `array_method` above; previously under-reported here)
-                    | "min" | "max" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
+                    | "min" | "max" | "minmax" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
                     // more non-block Array methods
                     | "zip" | "rotate" | "to_h" | "tally"
                     | "take" | "drop" | "values_at"
+                    // consecutive-grouping family
+                    | "each_slice" | "each_cons" | "chunk_while" | "slice_when"
+                    | "cycle"
             ),
             Value::Map(_) => matches!(
                 name,
-                "keys" | "values" | "[]" | "size" | "length" | "has_key?" | "key?" | "include?"
-                    | "member?" | "fetch" | "each" | "each_pair" | "map" | "collect" | "select"
-                    | "filter"
+                "keys" | "values" | "[]" | "size" | "length" | "empty?" | "has_key?" | "key?"
+                    | "include?" | "member?" | "fetch" | "to_a" | "merge" | "dig" | "invert"
+                    | "store" | "[]=" | "delete" | "clear" | "each" | "each_pair" | "each_key"
+                    | "each_value" | "map" | "collect" | "select" | "filter" | "reject"
+                    | "transform_values" | "transform_keys"
+                    // Enumerable aggregates (Hash includes Enumerable)
+                    | "find" | "detect" | "any?" | "all?" | "none?" | "count"
+                    | "sort_by" | "min_by" | "max_by"
+                    // Enumerable breadth (block-taking reshape/fold)
+                    | "group_by" | "partition" | "flat_map" | "collect_concat"
+                    | "reduce" | "inject" | "sum"
+                    // Enumerable iteration / conversion
+                    | "to_h" | "each_with_index" | "each_with_object"
             ),
             Value::Str(_) => matches!(
                 name,
                 "length" | "size" | "upcase" | "downcase" | "capitalize" | "reverse" | "strip"
                     | "lstrip" | "rstrip" | "chomp" | "chars" | "bytes" | "split" | "include?"
                     | "start_with?" | "end_with?" | "index" | "replace" | "sub" | "gsub" | "to_i"
-                    | "to_f" | "to_sym" | "empty?"
+                    | "to_f" | "to_sym" | "empty?" | "tr" | "count" | "delete" | "squeeze"
+                    | "ljust" | "rjust" | "center" | "swapcase"
             ),
             Value::Sym(_) => matches!(
                 name,
@@ -1494,7 +1840,8 @@ pub const RUNTIME: &str = r##"mod __sir {
                     name,
                     "abs" | "to_i" | "to_int" | "to_f" | "even?" | "odd?" | "zero?"
                         | "positive?" | "negative?" | "succ" | "next" | "pred" | "floor"
-                        | "ceil" | "round" | "gcd" | "pow" | "**" | "digits" | "times"
+                        | "ceil" | "round" | "divmod" | "fdiv" | "clamp" | "between?"
+                        | "gcd" | "pow" | "**" | "digits" | "times"
                         | "upto" | "downto" | "step"
                 )
             }
@@ -1574,6 +1921,19 @@ pub const RUNTIME: &str = r##"mod __sir {
                 recv
             }
             "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
+            // `Array#[]=` — the OO-surface indexed write (`arr[i] = v`, as
+            // opposed to the SIR-native `SeqSet` statement). Delegates to the
+            // SAME `seq_set` primitive `SeqSet` lowers to, so the two paths
+            // share one strictness rule (`0 <= i < len`, panics outside —
+            // matching the Go/C/Rust `SeqSet` reference, no auto-grow).
+            // Bracket-index write lowers through `__method__` (this dispatch),
+            // matching how `[]`'s lenient read above is the OO-surface
+            // counterpart to `SeqIndex`.
+            "[]=" => {
+                let idx = pos.first().cloned().unwrap_or(Value::Nil);
+                let val = pos.get(1).cloned().unwrap_or(Value::Nil);
+                seq_set(&recv, &idx, val)
+            }
             // `Array#fetch(i)` is the STRICT indexed read: unlike `arr[i]`
             // (which returns `nil` out of bounds), a `fetch` past the end
             // (or a negative index past the front) raises `IndexError` in
@@ -1933,6 +2293,31 @@ pub const RUNTIME: &str = r##"mod __sir {
                     None => Value::Nil,
                 }
             }
+            // `minmax` (no block): the two-element array `[min, max]` computed
+            // in one pass via `num_lt`.  An empty array yields `[nil, nil]` (no
+            // smallest/largest element), matching the Python reference's
+            // `[None, None]`.  Snapshot first so no borrow is held across the
+            // scan (never-panic floor).
+            "minmax" => {
+                let snapshot = items_rc.borrow().clone();
+                let mut iter = snapshot.into_iter();
+                match iter.next() {
+                    Some(first) => {
+                        let mut lo = first.clone();
+                        let mut hi = first;
+                        for item in iter {
+                            if num_lt(&item, &lo) {
+                                lo = item.clone();
+                            }
+                            if num_lt(&hi, &item) {
+                                hi = item;
+                            }
+                        }
+                        seq_lit(vec![lo, hi])
+                    }
+                    None => seq_lit(vec![Value::Nil, Value::Nil]),
+                }
+            }
             // `sum`: numeric fold seeded at `0` (or the explicit seed arg,
             // matching Ruby `sum(init)` and the Python/TS reference's
             // `total = args[0] if args else 0`).  Each step reuses `plus`,
@@ -2142,6 +2527,139 @@ pub const RUNTIME: &str = r##"mod __sir {
                     .collect();
                 seq_lit(out)
             }
+            // `each_slice(n)` — consecutive sub-arrays of at most `n` elements
+            // (the last may be shorter).  `[1,2,3,4,5].each_slice(2)` →
+            // `[[1,2],[3,4],[5]]`.  Ruby raises `ArgumentError` for `n <= 0`; the
+            // never-panic floor yields `[]`.  `n` is read via a checked `Int`
+            // match (never `as_i64`, which panics on a non-Int arg).
+            "each_slice" => {
+                let n = match pos.first() {
+                    // Validate in the `usize` domain: a huge positive `n` that
+                    // truncates to 0 on a 32-bit target would otherwise loop
+                    // forever, so `try_from` rejects anything past `usize::MAX`.
+                    Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                        Ok(n) if n > 0 => n,
+                        _ => return seq_lit(vec![]),
+                    },
+                    _ => return seq_lit(vec![]),
+                };
+                let snapshot = items_rc.borrow().clone();
+                let mut out = Vec::new();
+                let mut i = 0;
+                while i < snapshot.len() {
+                    let end = (i + n).min(snapshot.len());
+                    out.push(seq_lit(snapshot[i..end].to_vec()));
+                    i += n;
+                }
+                seq_lit(out)
+            }
+            // `each_cons(n)` — every consecutive `n`-element sliding window.
+            // `[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`.  A window larger
+            // than the array (or `n <= 0`) yields `[]`.
+            "each_cons" => {
+                let n = match pos.first() {
+                    // Validate in the `usize` domain: a huge positive `n` that
+                    // truncates to 0 on a 32-bit target would otherwise loop
+                    // forever, so `try_from` rejects anything past `usize::MAX`.
+                    Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                        Ok(n) if n > 0 => n,
+                        _ => return seq_lit(vec![]),
+                    },
+                    _ => return seq_lit(vec![]),
+                };
+                let snapshot = items_rc.borrow().clone();
+                let mut out = Vec::new();
+                if snapshot.len() >= n {
+                    for i in 0..=(snapshot.len() - n) {
+                        out.push(seq_lit(snapshot[i..i + n].to_vec()));
+                    }
+                }
+                seq_lit(out)
+            }
+            // `chunk_while { |prev, cur| pred }` — runs of consecutive elements:
+            // the block is called on each ADJACENT pair; while it is truthy the
+            // run continues, and a falsy result starts a new run.
+            // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → `[[1,2],[4,5],[7]]`.
+            // An empty array yields `[]`; a single element yields `[[x]]`.  The
+            // entries are snapshotted first so a block that reentrantly mutates
+            // the receiver cannot double-borrow-panic (the never-panic floor).
+            "chunk_while" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    if snapshot.is_empty() {
+                        return seq_lit(vec![]);
+                    }
+                    let mut chunks: Vec<Vec<Value>> = vec![vec![snapshot[0].clone()]];
+                    for i in 1..snapshot.len() {
+                        let prev = snapshot[i - 1].clone();
+                        let cur = snapshot[i].clone();
+                        if truthy(&apply_closure(b, vec![prev, cur.clone()])) {
+                            chunks.last_mut().unwrap().push(cur);
+                        } else {
+                            chunks.push(vec![cur]);
+                        }
+                    }
+                    seq_lit(chunks.into_iter().map(seq_lit).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`:
+            // runs of consecutive elements, starting a NEW run BETWEEN an
+            // adjacent pair exactly WHERE the block is truthy (chunk_while starts
+            // a new run where the block is FALSY).
+            // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` →
+            // `[[1,2],[4],[9,10,11,12]]`.  An empty array yields `[]`; a single
+            // element yields `[[x]]`.  Entries are snapshotted first so a block
+            // that reentrantly mutates the receiver cannot double-borrow-panic.
+            "slice_when" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    if snapshot.is_empty() {
+                        return seq_lit(vec![]);
+                    }
+                    let mut slices: Vec<Vec<Value>> = vec![vec![snapshot[0].clone()]];
+                    for i in 1..snapshot.len() {
+                        let prev = snapshot[i - 1].clone();
+                        let cur = snapshot[i].clone();
+                        if truthy(&apply_closure(b, vec![prev, cur.clone()])) {
+                            slices.push(vec![cur]);
+                        } else {
+                            slices.last_mut().unwrap().push(cur);
+                        }
+                    }
+                    seq_lit(slices.into_iter().map(seq_lit).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `cycle(n) { |x| … }` — iterate the array `n` full passes in order,
+            // yielding each element on every pass; always returns nil.
+            // `[1,2,3].cycle(2)` yields `1,2,3,1,2,3`.  `n <= 0`, a negative
+            // count, an empty receiver, or a nil / non-integer count (Ruby's
+            // block-less Enumerator and infinite no-`n` forms) yields nothing
+            // rather than hanging.  As with `each_slice`, the count is validated
+            // in the `usize` domain so a huge positive `n` that would truncate
+            // to 0 on a 32-bit target is rejected rather than mis-looped.  The
+            // items are snapshotted before iterating so a block that mutates the
+            // receiver sees a stable sequence.
+            "cycle" => match &block {
+                Some(b) => {
+                    let n = match pos.first() {
+                        Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                            Ok(n) if n > 0 => n,
+                            _ => return Value::Nil,
+                        },
+                        _ => return Value::Nil,
+                    };
+                    let snapshot = items_rc.borrow().clone();
+                    for _ in 0..n {
+                        for item in &snapshot {
+                            apply_closure(b, vec![item.clone()]);
+                        }
+                    }
+                    Value::Nil
+                }
+                None => unknown_method(&recv, name),
+            },
             _ => no_method_error(&recv, name),
         }
     }
@@ -2232,6 +2750,473 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
                 }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#transform_values { |v| … }` — a NEW hash whose keys are
+            // copied verbatim and whose values are the block results.  The
+            // block yields ONE argument (the value); the keys are untouched, so
+            // they stay unique and a straight rebuild preserves insertion order.
+            // Non-mutating — `recv` is never edited in place.
+            "transform_values" => match &block {
+                Some(b) => {
+                    let out: Vec<(Value, Value)> = entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|(k, v)| (k, apply_closure(b, vec![v])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(out)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#transform_keys { |k| … }` — a NEW hash whose values are
+            // untouched and whose keys are the block results (yields ONE
+            // argument, the key).  Two source keys can map to the SAME new key;
+            // Ruby keeps the LAST such entry's value while holding the new key
+            // at its FIRST-seen position, so we overwrite an existing slot in
+            // place (`value_eq` match) and otherwise append.
+            "transform_keys" => match &block {
+                Some(b) => {
+                    let mut out: Vec<(Value, Value)> = Vec::new();
+                    for (k, v) in entries_rc.borrow().clone() {
+                        let nk = apply_closure(b, vec![k]);
+                        match out.iter_mut().find(|(ek, _)| value_eq(ek, &nk)) {
+                            Some(slot) => slot.1 = v,
+                            None => out.push((nk, v)),
+                        }
+                    }
+                    Value::Map(Rc::new(RefCell::new(out)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            "empty?" => Value::Bool(entries_rc.borrow().is_empty()),
+            // `Hash#to_a` — an Array of two-element `[key, value]` Arrays, in
+            // insertion order.
+            "to_a" => seq_lit(
+                entries_rc
+                    .borrow()
+                    .iter()
+                    .map(|(k, v)| seq_lit(vec![k.clone(), v.clone()]))
+                    .collect(),
+            ),
+            // `Hash#merge(other)` — a NEW hash with `other`'s entries overlaid on
+            // a copy of the receiver; on a key collision `other` WINS while the
+            // key holds its FIRST-seen position (Ruby / Python `{**a, **b}`
+            // semantics).  Non-`Map` args are ignored (no faithful merge source).
+            "merge" => {
+                let mut out: Vec<(Value, Value)> = entries_rc.borrow().clone();
+                if let Some(Value::Map(other)) = pos.first() {
+                    for (k, v) in other.borrow().iter() {
+                        match out.iter_mut().find(|(ek, _)| value_eq(ek, k)) {
+                            Some(slot) => slot.1 = v.clone(),
+                            None => out.push((k.clone(), v.clone())),
+                        }
+                    }
+                }
+                Value::Map(Rc::new(RefCell::new(out)))
+            }
+            // `Hash#dig(k, …)` — a NESTED lookup that walks one key per argument,
+            // returning `nil` the moment a level is missing (never raising).  A
+            // single argument degrades to a plain lookup; extra arguments recurse
+            // into a nested `Map` (by key) or `Seq` (by integer index, folding a
+            // negative index from the end once) — matching Go/JS.  A level that
+            // is neither stops the walk with `nil`.
+            "dig" => {
+                let mut cur = recv.clone();
+                for k in &pos {
+                    cur = match &cur {
+                        Value::Map(entries) => entries
+                            .borrow()
+                            .iter()
+                            .find(|(ek, _)| value_eq(ek, k))
+                            .map(|(_, v)| v.clone())
+                            .unwrap_or(Value::Nil),
+                        // `Array#dig` indexes by an Integer; a non-integer key
+                        // is a MISS (nil), never a panic — honouring the
+                        // never-panic floor and matching the JS backend (which
+                        // digs an Array only when the key is a number).
+                        Value::Seq(items) => match k {
+                            Value::Int(raw) => {
+                                let items = items.borrow();
+                                let len = items.len() as i64;
+                                let idx = if *raw < 0 { raw + len } else { *raw };
+                                if idx >= 0 && idx < len {
+                                    items[idx as usize].clone()
+                                } else {
+                                    Value::Nil
+                                }
+                            }
+                            _ => Value::Nil,
+                        },
+                        _ => Value::Nil,
+                    };
+                    if matches!(cur, Value::Nil) {
+                        return Value::Nil;
+                    }
+                }
+                cur
+            }
+            // `Hash#invert` — a NEW hash mapping each value back to its key.  Two
+            // equal values collapse onto one key; Ruby keeps the LAST pair's key
+            // at the value's FIRST-seen position (Python dict-comprehension rule).
+            "invert" => {
+                let mut out: Vec<(Value, Value)> = Vec::new();
+                for (k, v) in entries_rc.borrow().iter() {
+                    match out.iter_mut().find(|(ek, _)| value_eq(ek, v)) {
+                        Some(slot) => slot.1 = k.clone(),
+                        None => out.push((v.clone(), k.clone())),
+                    }
+                }
+                Value::Map(Rc::new(RefCell::new(out)))
+            }
+            // `Hash#store(k, v)` / `Hash#[]=` — MUTATES the receiver (overwrites
+            // an existing key in place, else appends) and returns the value.
+            "store" | "[]=" => {
+                let key = pos.first().cloned().unwrap_or(Value::Nil);
+                let val = pos.get(1).cloned().unwrap_or(Value::Nil);
+                {
+                    let mut entries = entries_rc.borrow_mut();
+                    match entries.iter_mut().find(|(ek, _)| value_eq(ek, &key)) {
+                        Some(slot) => slot.1 = val.clone(),
+                        None => entries.push((key, val.clone())),
+                    }
+                }
+                val
+            }
+            // `Hash#delete(k)` — MUTATES: removes the first entry whose key equals
+            // `k` and returns its value; a missing key yields `nil` (never raises).
+            "delete" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                let mut entries = entries_rc.borrow_mut();
+                match entries.iter().position(|(ek, _)| value_eq(ek, &needle)) {
+                    Some(i) => entries.remove(i).1,
+                    None => Value::Nil,
+                }
+            }
+            // `Hash#clear` — MUTATES, removing every pair, and returns the (now
+            // empty) receiver.
+            "clear" => {
+                entries_rc.borrow_mut().clear();
+                recv
+            }
+            // `Hash#reject { |k, v| … }` — a NEW hash of the pairs for which the
+            // block is FALSY (the complement of `select`).  Non-mutating.
+            // Each block arm SNAPSHOTS the entries into an owned `Vec` in a
+            // `let` binding *before* iterating, so the `RefCell` borrow is
+            // released prior to any `apply_closure` call.  A block that
+            // reentrantly mutates the SAME hash (`h.each_key { h.store(...) }`)
+            // therefore cannot trip a `BorrowMutError` panic — the never-panic
+            // floor holds even now that mutating Hash arms (`store`/`delete`/
+            // `clear`) exist.
+            "reject" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let kept: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .filter(|(k, v)| !truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#each_key { |k| … }` — yields ONE argument (the key) per entry
+            // and returns the receiver.
+            "each_key" => {
+                if let Some(b) = &block {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (k, _) in snapshot {
+                        apply_closure(b, vec![k]);
+                    }
+                }
+                recv
+            }
+            // `Hash#each_value { |v| … }` — yields ONE argument (the value) per
+            // entry and returns the receiver.
+            "each_value" => {
+                if let Some(b) = &block {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (_, v) in snapshot {
+                        apply_closure(b, vec![v]);
+                    }
+                }
+                recv
+            }
+            // ── Enumerable aggregates (Hash includes Enumerable) ───────
+            //
+            // Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as
+            // a sequence of `[key, value]` pairs: the block is yielded
+            // `(key, value)` (two arguments, matching `each`), and the "element"
+            // an aggregate returns is the two-element `[key, value]` Array
+            // (`seq_lit(vec![k, v])`).  Every arm SNAPSHOTS the entries into an
+            // owned `Vec` before iterating so no `RefCell` borrow is held across
+            // `apply_closure` — a block that reentrantly mutates the same hash
+            // cannot trip a `BorrowMutError` panic.
+            "find" | "detect" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    snapshot
+                        .into_iter()
+                        .find(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .map(|(k, v)| seq_lit(vec![k, v]))
+                        .unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
+            "any?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(!entries_rc.borrow().is_empty()),
+            },
+            "all?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().all(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(true),
+            },
+            "none?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        !snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(entries_rc.borrow().is_empty()),
+            },
+            "count" if block.is_some() => {
+                // `count { |k, v| pred }` — number of pairs with a truthy result.
+                let b = block.as_ref().unwrap();
+                let snapshot = entries_rc.borrow().clone();
+                let n = snapshot
+                    .into_iter()
+                    .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                    .count();
+                Value::Int(n as i64)
+            }
+            // `sort_by { |k, v| key }` — a NEW Array of `[k, v]` pairs sorted by
+            // the block key using the runtime's numeric ordering (`num_lt`),
+            // stable on ties.  Keys are computed once (Schwartzian).
+            "sort_by" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut keyed: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .map(|(k, v)| {
+                            (apply_closure(b, vec![k.clone(), v.clone()]), seq_lit(vec![k, v]))
+                        })
+                        .collect();
+                    keyed.sort_by(|(ka, _), (kb, _)| {
+                        if num_lt(ka, kb) {
+                            std::cmp::Ordering::Less
+                        } else if num_lt(kb, ka) {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    });
+                    seq_lit(keyed.into_iter().map(|(_, pair)| pair).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `min_by`/`max_by { |k, v| key }` — the `[k, v]` pair with the
+            // smallest / largest block key.  First pair wins a tie (strict `<`);
+            // an empty hash yields `nil`.
+            "min_by" | "max_by" => match &block {
+                Some(b) => {
+                    let want_min = name == "min_by";
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut best: Option<(Value, (Value, Value))> = None;
+                    for (k, v) in snapshot {
+                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let take = match &best {
+                            None => true,
+                            Some((bk, _)) => {
+                                if want_min {
+                                    num_lt(&key, bk)
+                                } else {
+                                    num_lt(bk, &key)
+                                }
+                            }
+                        };
+                        if take {
+                            best = Some((key, (k, v)));
+                        }
+                    }
+                    best.map(|(_, (k, v))| seq_lit(vec![k, v])).unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `group_by { |k, v| key }` — a Hash mapping each block key to the
+            // Array of the `[k, v]` pairs that produced it, in first-seen key
+            // order and insertion order.  (Hash includes Enumerable, so the
+            // element grouped is the two-element pair, matching Ruby.)
+            "group_by" => match &block {
+                Some(b) => {
+                    // Snapshot into an owned Vec FIRST so no `RefCell` borrow of
+                    // the receiver is held while the user block runs — a block
+                    // that reentrantly mutates the same hash cannot double-
+                    // borrow-panic (the never-panic floor).
+                    let snapshot = entries_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for (k, v) in snapshot {
+                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let bucket = match map_get(&acc, &key) {
+                            seq @ Value::Seq(_) => seq,
+                            _ => seq_lit(vec![]),
+                        };
+                        if let Value::Seq(inner) = &bucket {
+                            inner.borrow_mut().push(seq_lit(vec![k, v]));
+                        }
+                        map_set(&acc, key, bucket);
+                    }
+                    acc
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`,
+            // each a fresh Array of `[k, v]` pairs preserving insertion order.
+            "partition" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut yes = Vec::new();
+                    let mut no = Vec::new();
+                    for (k, v) in snapshot {
+                        if truthy(&apply_closure(b, vec![k.clone(), v.clone()])) {
+                            yes.push(seq_lit(vec![k, v]));
+                        } else {
+                            no.push(seq_lit(vec![k, v]));
+                        }
+                    }
+                    seq_lit(vec![seq_lit(yes), seq_lit(no)])
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `flat_map`/`collect_concat { |k, v| … }` — map each pair then
+            // concatenate one level: an Array result splices its elements, a
+            // scalar is appended as-is.
+            "flat_map" | "collect_concat" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut out = Vec::new();
+                    for (k, v) in snapshot {
+                        match apply_closure(b, vec![k, v]) {
+                            Value::Seq(inner) => out.extend(inner.borrow().clone()),
+                            other => out.push(other),
+                        }
+                    }
+                    seq_lit(out)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `reduce`/`inject` — Ruby's memo fold.  Unlike the two-arg `(k, v)`
+            // yield every other Enumerable method here uses, `reduce` follows
+            // Ruby's memo convention: the block receives `(memo, pair)` where
+            // `pair` is the `[k, v]` Array as ONE argument.  With an explicit
+            // seed the fold starts there over every pair; without one it seeds
+            // from the first pair (an empty seedless reduce is `nil`).
+            "reduce" | "inject" => {
+                let b = match &block {
+                    Some(b) => b,
+                    None => return unknown_method(&recv, name),
+                };
+                let snapshot = entries_rc.borrow().clone();
+                let pairs: Vec<Value> =
+                    snapshot.into_iter().map(|(k, v)| seq_lit(vec![k, v])).collect();
+                let (mut acc, rest): (Value, &[Value]) =
+                    if let Some(seed) = pos.into_iter().next() {
+                        (seed, &pairs[..])
+                    } else if let Some((head, tail)) = pairs.split_first() {
+                        (head.clone(), tail)
+                    } else {
+                        return Value::Nil;
+                    };
+                for pair in rest {
+                    acc = apply_closure(b, vec![acc, pair.clone()]);
+                }
+                acc
+            }
+            // `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the
+            // explicit seed arg, matching Ruby `sum(init)` and the Python/TS
+            // reference's `total = args[0] if args else 0`) over the block
+            // results.  Each step reuses the polymorphic `plus` helper, so
+            // integer-only inputs stay `Int` while any float promotes.
+            "sum" => match &block {
+                Some(b) => {
+                    let seed = pos.into_iter().next().unwrap_or(Value::Int(0));
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut acc = seed;
+                    for (k, v) in snapshot {
+                        acc = plus(vec![acc, apply_closure(b, vec![k, v])]);
+                    }
+                    acc
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#to_h` — WITHOUT a block, a shallow copy of the hash (a fresh
+            // `Map` so mutating it never aliases the receiver's entries).  WITH a
+            // block `{ |k, v| [new_k, new_v] }`, a NEW hash from the `[k, v]`
+            // pairs the block returns: the block is yielded the two args
+            // `(k, v)` (matching `each`), a non-pair result is skipped (the
+            // never-panic floor — Ruby raises TypeError, deferred to the
+            // typed-error cascade), and a later pair with a duplicate key wins
+            // (Ruby's rule, `map_set`).  The block form snapshots the entries
+            // first so a reentrant mutation cannot double-borrow-panic.
+            "to_h" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for (k, v) in snapshot {
+                        if let Value::Seq(pair) = apply_closure(b, vec![k, v]) {
+                            let items = pair.borrow();
+                            if items.len() == 2 {
+                                let nk = items[0].clone();
+                                let nv = items[1].clone();
+                                drop(items);
+                                map_set(&acc, nk, nv);
+                            }
+                        }
+                    }
+                    acc
+                }
+                None => map_lit(entries_rc.borrow().clone()),
+            },
+            // `each_with_index { |(k, v), i| … }` — yields each `[k, v]` pair
+            // with its 0-based index and returns the receiver.  Unlike the
+            // two-arg `(k, v)` yield of `each`, the element arrives as a single
+            // `[k, v]` pair (the second block param is the index), matching
+            // Ruby's Enumerable convention.
+            "each_with_index" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (i, (k, v)) in snapshot.into_iter().enumerate() {
+                        apply_closure(b, vec![seq_lit(vec![k, v]), Value::Int(i as i64)]);
+                    }
+                    recv
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `each_with_object(memo) { |(k, v), memo| … }` — yields each
+            // `[k, v]` pair with the memo object and returns the (mutated) memo.
+            // Like `each_with_index`, the element is the single `[k, v]` pair
+            // (the second block param is the memo).  With no memo argument the
+            // receiver is returned unchanged.
+            "each_with_object" => match &block {
+                Some(b) => match pos.into_iter().next() {
+                    Some(memo) => {
+                        let snapshot = entries_rc.borrow().clone();
+                        for (k, v) in snapshot {
+                            apply_closure(b, vec![seq_lit(vec![k, v]), memo.clone()]);
+                        }
+                        memo
+                    }
+                    None => recv,
+                },
                 None => unknown_method(&recv, name),
             },
             _ => no_method_error(&recv, name),
@@ -2399,8 +3384,165 @@ pub const RUNTIME: &str = r##"mod __sir {
             "to_f" => Value::Float(str_to_f(&s)),
             "to_sym" => intern(&s),
             "empty?" => Value::Bool(s.is_empty()),
+            "ljust" | "rjust" | "center" => {
+                // Ruby `String#ljust`/`#rjust`/`#center(width, pad = " ")`: pad to
+                // `width` CHARS (not bytes) using `pad` cyclically.  `width <= the
+                // current char length` returns the string unchanged; `center` puts
+                // any odd extra pad char on the RIGHT (Ruby's rule).  An empty pad
+                // degrades to a single space rather than raising, holding the
+                // never-raise floor.  Char-based (`chars().count()` / `str_pad`) so
+                // a multibyte receiver is never split mid-codepoint.
+                let width = args.first().map(as_i64).unwrap_or(0);
+                let pad = match args.get(1) {
+                    Some(Value::Str(p)) if !p.is_empty() => p.to_string(),
+                    _ => " ".to_string(),
+                };
+                let cur = s.chars().count() as i64;
+                if width <= cur {
+                    return Value::Str(s);
+                }
+                // Clamp the fill count to a DoS bound so a hostile width (e.g.
+                // `"".ljust(10**12)`) cannot drive an unbounded allocation — the
+                // same ceiling `String#*` guards, but degrade-not-panic here since
+                // justify is a formatting method.
+                const MAX_PAD: i64 = 100_000_000;
+                let total = (width - cur).min(MAX_PAD) as usize;
+                let result = match name {
+                    "ljust" => format!("{}{}", s, str_pad(&pad, total)),
+                    "rjust" => format!("{}{}", str_pad(&pad, total), s),
+                    _ => {
+                        // center: any odd extra pad char goes on the RIGHT.
+                        let left = total / 2;
+                        format!("{}{}{}", str_pad(&pad, left), s, str_pad(&pad, total - left))
+                    }
+                };
+                Value::Str(Rc::from(result.as_str()))
+            }
+            "swapcase" => {
+                // Ruby `String#swapcase`: flip the case of each ASCII letter
+                // (leaving non-letters and non-ASCII chars untouched), matching the
+                // Python/Go/JS/TS runtimes byte-for-byte.  Iterating `chars()` keeps
+                // a multibyte receiver intact.
+                let swapped: String = s
+                    .chars()
+                    .map(|c| {
+                        if c.is_ascii_uppercase() {
+                            c.to_ascii_lowercase()
+                        } else if c.is_ascii_lowercase() {
+                            c.to_ascii_uppercase()
+                        } else {
+                            c
+                        }
+                    })
+                    .collect();
+                Value::Str(Rc::from(swapped.as_str()))
+            }
+            "tr" => {
+                // Ruby `String#tr(from, to)`: position-wise char translation.  A
+                // shorter `to` repeats its last char; an empty `to` deletes
+                // matching chars; a repeated char in `from` keeps the last
+                // mapping.  Char-based so a multibyte receiver is never sliced
+                // mid-codepoint.  Literal only — the range (`"a-z"`) and negation
+                // (`"^abc"`) forms are a follow-up, matching the literal-only
+                // sub/gsub precedent here.
+                let from = match args.first() {
+                    Some(Value::Str(f)) => f.clone(),
+                    _ => return Value::Str(s.clone()),
+                };
+                let to = match args.get(1) {
+                    Some(Value::Str(t)) => t.clone(),
+                    _ => return Value::Str(s.clone()),
+                };
+                let to_chars: Vec<char> = to.chars().collect();
+                let mut table: HashMap<char, Option<char>> = HashMap::new();
+                for (i, c) in from.chars().enumerate() {
+                    if to_chars.is_empty() {
+                        table.insert(c, None);
+                    } else if i < to_chars.len() {
+                        table.insert(c, Some(to_chars[i]));
+                    } else {
+                        table.insert(c, Some(*to_chars.last().unwrap()));
+                    }
+                }
+                let out: String = s
+                    .chars()
+                    .filter_map(|c| match table.get(&c) {
+                        Some(Some(r)) => Some(*r),
+                        Some(None) => None,
+                        None => Some(c),
+                    })
+                    .collect();
+                Value::Str(Rc::from(out.as_str()))
+            }
+            "count" | "delete" | "squeeze" => {
+                // Char-set methods.  Each `set` argument is treated LITERALLY —
+                // the chars it contains (ranges/negation are a follow-up).
+                // `count` tallies chars of the receiver in the set; `delete`
+                // removes them; `squeeze` collapses consecutive runs (of set
+                // chars, or of ALL chars when no set is given).  Multiple set
+                // args intersect (Ruby's rule).  Char-based throughout.
+                let sets: Vec<std::collections::HashSet<char>> = args
+                    .iter()
+                    .filter_map(|a| {
+                        if let Value::Str(t) = a {
+                            Some(t.chars().collect())
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+                let in_all =
+                    |c: char| !sets.is_empty() && sets.iter().all(|set| set.contains(&c));
+                if name == "squeeze" && sets.is_empty() {
+                    let mut out = String::new();
+                    let mut last: Option<char> = None;
+                    for c in s.chars() {
+                        if last != Some(c) {
+                            out.push(c);
+                            last = Some(c);
+                        }
+                    }
+                    return Value::Str(Rc::from(out.as_str()));
+                }
+                match name {
+                    "count" => Value::Int(s.chars().filter(|c| in_all(*c)).count() as i64),
+                    "delete" => {
+                        let out: String = s.chars().filter(|c| !in_all(*c)).collect();
+                        Value::Str(Rc::from(out.as_str()))
+                    }
+                    _ => {
+                        let mut out = String::new();
+                        let mut last: Option<char> = None;
+                        for c in s.chars() {
+                            if last == Some(c) && in_all(c) {
+                                continue;
+                            }
+                            out.push(c);
+                            last = Some(c);
+                        }
+                        Value::Str(Rc::from(out.as_str()))
+                    }
+                }
+            }
             _ => no_method_error(&recv, name),
         }
+    }
+
+    // Build a padding string of exactly `n` CHARS by repeating `pad`
+    // cyclically (truncating the final repeat).  `n == 0` or an empty `pad`
+    // yields `""` — the `ljust`/`rjust`/`center` callers guarantee a non-empty
+    // pad, so the empty-pad guard is purely defensive.  Char-based so a
+    // multibyte pad (e.g. `"ab…"`) is never split mid-codepoint.
+    fn str_pad(pad: &str, n: usize) -> String {
+        if n == 0 || pad.is_empty() {
+            return String::new();
+        }
+        let pad_chars: Vec<char> = pad.chars().collect();
+        let mut out = String::with_capacity(n);
+        for i in 0..n {
+            out.push(pad_chars[i % pad_chars.len()]);
+        }
+        out
     }
 
     // Ruby `String#to_i`: parse the longest leading `[+-]?\d+` prefix,
@@ -2486,11 +3628,109 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(x) if x.is_finite() => Value::Int(x.ceil() as i64),
                 _ => Value::Int(0),
             },
-            "round" => match &recv {
-                Value::Int(_) => recv,
-                Value::Float(x) if x.is_finite() => Value::Int(ruby_round(*x)),
-                _ => Value::Int(0),
-            },
+            // `round` / `round(ndigits)` — half AWAY from zero (via `ruby_round`,
+            // matching the Python/Go reference: `2.5.round == 3`).  A positive
+            // `ndigits` on a Float rounds to that many decimals; `ndigits <= 0`
+            // rounds to a power of ten.  Rust's i64/f64 are FIXED width (no
+            // bignum), so the only guards are a place count past i64's ~18
+            // decimal digits (dwarfs the value ⇒ 0, Ruby parity) and a positive
+            // `ndigits` past Float precision / an overflowing scale-up (returns
+            // the value unchanged).
+            "round" => {
+                let ndigits = pos.first().map(as_i64_lenient).unwrap_or(0);
+                match &recv {
+                    Value::Int(iv) => {
+                        if ndigits >= 0 {
+                            recv
+                        } else if -ndigits > 18 {
+                            Value::Int(0)
+                        } else {
+                            Value::Int(round_int_to_multiple(*iv, pow10(-ndigits)))
+                        }
+                    }
+                    Value::Float(x) if x.is_finite() => {
+                        if ndigits <= 0 {
+                            if -ndigits > 18 {
+                                Value::Int(0)
+                            } else {
+                                Value::Int(round_int_to_multiple(ruby_round(*x), pow10(-ndigits)))
+                            }
+                        } else if ndigits > 17 {
+                            recv // already at full Float precision
+                        } else {
+                            let scale = 10f64.powi(ndigits as i32);
+                            let scaled = *x * scale;
+                            if scaled.is_finite() {
+                                Value::Float(ruby_round(scaled) as f64 / scale)
+                            } else {
+                                recv // overflow guard: no fractional part left
+                            }
+                        }
+                    }
+                    _ => Value::Int(0),
+                }
+            }
+            // `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+            // the divisor-signed remainder.  Division by zero raises a typed
+            // `ZeroDivisionError`.  Int/int uses exact integer math; a Float
+            // operand promotes to f64 (f64 division of nonzero/nonzero never
+            // panics).
+            "divmod" => {
+                let arg = pos.first().cloned().unwrap_or(Value::Int(0));
+                match (&recv, &arg) {
+                    (Value::Int(n), Value::Int(d)) => {
+                        if *d == 0 {
+                            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                        }
+                        let q = floor_div_i64(*n, *d);
+                        // `wrapping_sub`/`wrapping_mul`: for `n == i64::MIN` with a
+                        // non-dividing `d`, the FLOORED quotient rounds away from
+                        // zero so the true `q*d` exceeds i64 range; a checked `-`
+                        // would panic in debug.  The true remainder always fits
+                        // in i64, so wrapping recovers it exactly in both profiles.
+                        let r = n.wrapping_sub(q.wrapping_mul(*d));
+                        Value::Seq(Rc::new(RefCell::new(vec![Value::Int(q), Value::Int(r)])))
+                    }
+                    _ => {
+                        let df = as_f64_lenient(&arg);
+                        if df == 0.0 {
+                            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                        }
+                        let nf = as_f64_lenient(&recv);
+                        let q = (nf / df).floor();
+                        let r = nf - q * df;
+                        Value::Seq(Rc::new(RefCell::new(vec![Value::Float(q), Value::Float(r)])))
+                    }
+                }
+            }
+            // `fdiv(n)` — floating-point division that NEVER raises: dividing by
+            // zero yields `±Infinity`/`NaN` (f64 division already produces these
+            // rather than panicking), honouring the never-raise floor.
+            "fdiv" => {
+                let arg = pos.first().cloned().unwrap_or(Value::Int(0));
+                Value::Float(as_f64_lenient(&recv) / as_f64_lenient(&arg))
+            }
+            // `clamp(min, max)` — `min` if recv < min, `max` if recv > max, else
+            // recv.  Compared numerically (Range form deferred).
+            "clamp" => {
+                let lo = pos.first().cloned().unwrap_or(Value::Int(0));
+                let hi = pos.get(1).cloned().unwrap_or(Value::Int(0));
+                let rv = as_f64_lenient(&recv);
+                if rv < as_f64_lenient(&lo) {
+                    lo
+                } else if rv > as_f64_lenient(&hi) {
+                    hi
+                } else {
+                    recv
+                }
+            }
+            // `between?(min, max)` — `min <= recv <= max`.
+            "between?" => {
+                let lo = pos.first().map(|v| as_f64_lenient(v)).unwrap_or(0.0);
+                let hi = pos.get(1).map(|v| as_f64_lenient(v)).unwrap_or(0.0);
+                let rv = as_f64_lenient(&recv);
+                Value::Bool(rv >= lo && rv <= hi)
+            }
             // `gcd(other)` — the integer greatest common divisor, always
             // non-negative (Ruby: `(-12).gcd(8) == 4`).  Both receiver and
             // argument are truncated to i64 via the lenient coercion.
@@ -2622,6 +3862,65 @@ pub const RUNTIME: &str = r##"mod __sir {
             (x + 0.5).floor() as i64
         } else {
             (x - 0.5).ceil() as i64
+        }
+    }
+
+    // Ruby's integer division: the quotient FLOORED toward −∞ (`-7 / 2 == -4`),
+    // unlike Rust's truncating `/`.  Callers guarantee `b != 0`.
+    fn floor_div_i64(a: i64, b: i64) -> i64 {
+        // `wrapping_rem` (like `wrapping_div`) avoids the `i64::MIN % -1` panic —
+        // plain `%` traps on that case in BOTH debug and release, which would
+        // escape the typed-error floor.  It yields `0` there (the correct
+        // remainder), so the sign-correction branch is skipped and `q` (=
+        // `i64::MIN` from `wrapping_div`) is returned — Ruby parity.
+        let q = a.wrapping_div(b);
+        if (a.wrapping_rem(b) != 0) && ((a < 0) != (b < 0)) {
+            q - 1
+        } else {
+            q
+        }
+    }
+
+    // `10.pow(n)` for a small non-negative `n`.  Callers bound `n <= 18` (an i64
+    // holds ≤ ~9.2e18), so the result never overflows i64.
+    fn pow10(n: i64) -> i64 {
+        let mut result = 1i64;
+        let mut i = 0;
+        while i < n {
+            result = result.saturating_mul(10);
+            i += 1;
+        }
+        result
+    }
+
+    // Round `v` to the nearest multiple of `factor` (>= 1) half-AWAY-from-zero
+    // with ALL-INTEGER arithmetic (`Integer#round(-n)` / `Float#round(<=0)`
+    // parity).  Ruby's result is a bignum that may not fit i64; rather than
+    // return a two's-complement-wrapped (sign-flipped) garbage value, we DEGRADE
+    // to the un-rounded value when the rounded multiple would overflow i64 (the
+    // closest representable answer).  `i64::MIN` cannot be negated, so it takes
+    // the same degrade path.
+    fn round_int_to_multiple(v: i64, factor: i64) -> i64 {
+        if v == i64::MIN {
+            return v;
+        }
+        let neg = v < 0;
+        let mag = v.unsigned_abs();
+        let f = factor as u64;
+        let mut q = mag / f;
+        let rem = mag - q * f;
+        if rem.saturating_mul(2) >= f {
+            q += 1;
+        }
+        // Guard `q * factor` against i64 overflow.
+        if q > (i64::MAX as u64) / f {
+            return v; // rounded multiple overflows ⇒ degrade to the value
+        }
+        let magnitude = (q * f) as i64;
+        if neg {
+            -magnitude
+        } else {
+            magnitude
         }
     }
 
@@ -2878,13 +4177,36 @@ pub const RUNTIME: &str = r##"mod __sir {
             .any(|name| *name == "Exception" || is_ancestor_or_self(&exc.class, name))
     }
 
-    /// The message value a rescue binding (`rescue … => e`) sees — the
-    /// exception's message, re-wrapped as a `Value::Str`.  Ruby would bind an
-    /// exception *object* here; SIR v0 has no exception-object model, so the
-    /// message string is the honest stand-in (the same choice the TS backend
-    /// makes, where `=> e` binds the thrown value's message).
+    /// The value a rescue binding (`rescue Foo => e`) binds.
+    ///
+    /// This used to be the message STRING, which meant the rescued value was
+    /// not an exception at all: `e.class` reported `String`,
+    /// `e.is_a?(StandardError)` was FALSE, and `e.message` raised
+    /// `NoMethodError: undefined method 'message' for String`.  A
+    /// `rescue => e; retry unless e.is_a?(Recoverable)` guard therefore took
+    /// the wrong branch silently.
+    ///
+    /// It is now a real exception value: a dedicated `Value::Exception`
+    /// carrying an `Rc<SirError>` — the class tag and the message.  Two
+    /// rejected alternatives, recorded because each looked simpler:
+    ///
+    /// - *Reuse `Value::Instance`.*  Instances live in a table that is never
+    ///   freed, so `loop { begin … rescue => e … end }` would leak one entry
+    ///   per iteration — unbounded growth driven by a rescue in a loop.
+    /// - *Store the message as an ivar.*  Ivar values are `Value`s, so
+    ///   `format` would have to recurse into one; the plain `String` here
+    ///   cannot recurse, which is why `format`'s arm needs no `visited` guard.
+    ///
+    /// `class`, `is_a?`/`kind_of?` (the ancestry walk already knows
+    /// `ArgumentError → StandardError → Exception`), `message` and `==` each
+    /// gained an explicit arm — a wildcard match is why `==` would otherwise
+    /// have answered `false` for `e == e`.  Display still renders the MESSAGE
+    /// (see `format`), so `puts e` is unchanged.
     pub fn exc_value(exc: &SirError) -> Value {
-        Value::Str(Rc::from(exc.msg.as_str()))
+        Value::Exception(Rc::new(SirError {
+            class: exc.class.clone(),
+            msg: exc.msg.clone(),
+        }))
     }
 
     /// Raise a SIR exception of `class` with message `msg` by panicking with
@@ -3496,6 +4818,20 @@ mod tests {
     }
 
     #[test]
+    fn runtime_declares_the_comparison_family() {
+        // `!=`/`<=`/`>=` complete the operator-spelling comparison family the
+        // Ruby frontend lowers to; each is defined from `num_lt`/`value_eq`.
+        assert!(RUNTIME.contains("pub fn ne("));
+        assert!(RUNTIME.contains("pub fn le("));
+        assert!(RUNTIME.contains("pub fn ge("));
+        // And wired into the by-name dispatch (for a first-class `:==` symbol).
+        assert!(RUNTIME.contains("\"=\" | \"==\" =>"));
+        assert!(RUNTIME.contains("\"!=\" =>"));
+        assert!(RUNTIME.contains("\"<=\" =>"));
+        assert!(RUNTIME.contains("\">=\" =>"));
+    }
+
+    #[test]
     fn runtime_includes_all_builtins() {
         for op in &[
             "plus", "minus", "times", "divide", "eq", "lt", "gt",
@@ -3513,9 +4849,12 @@ mod tests {
         // sir-polymorphic-operators (PO5): `plus`/`times` dispatch on the
         // first operand's tag via an explicit `match` (String/Seq arms
         // ahead of the numeric fold), never reflection.
-        // `plus` gains the String-concat and Seq-concat arms.
-        assert!(RUNTIME.contains("string + expects strings"));
-        assert!(RUNTIME.contains("array + expects arrays"));
+        // `plus` gains the String-concat and Seq-concat arms.  A non-matching
+        // operand is a RESCUABLE `TypeError` (`raise`, not `panic!`, so a
+        // `rescue` can catch it — a bare panic `resume_unwind`s uncatchably).
+        assert!(RUNTIME.contains("no implicit conversion of "));
+        assert!(RUNTIME.contains("into String"));
+        assert!(RUNTIME.contains("into Array"));
         // `times` gains the binary String/Seq atom with the three arms
         // (string repeat, array repeat, array join).
         assert!(RUNTIME.contains("fn times_binary"));

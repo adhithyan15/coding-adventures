@@ -552,7 +552,7 @@ mod tests {
         // Each byte = 2 hex digits → 16 bytes = 32 characters
         assert_eq!(hex_string(b"").len(), 32);
         assert_eq!(hex_string(b"hello").len(), 32);
-        assert_eq!(hex_string(&vec![0xffu8; 64]).len(), 32);
+        assert_eq!(hex_string(&[0xffu8; 64]).len(), 32);
     }
 
     #[test]
@@ -631,38 +631,38 @@ mod tests {
     fn block_boundary_55() {
         // 55 bytes: fits in exactly one 64-byte block after padding
         // 55 + 1 (0x80) + 0 zeros + 8 (length) = 64 ✓
-        let d = sum_md5(&vec![0u8; 55]);
+        let d = sum_md5(&[0u8; 55]);
         assert_eq!(d.len(), 16);
-        assert_eq!(d, sum_md5(&vec![0u8; 55])); // deterministic
+        assert_eq!(d, sum_md5(&[0u8; 55])); // deterministic
     }
 
     #[test]
     fn block_boundary_56() {
         // 56 bytes: requires TWO 64-byte blocks after padding
         // 56 + 1 (0x80) = 57, need 56 mod 64 → must pad to 120 + 8 = 128
-        assert_eq!(sum_md5(&vec![0u8; 56]).len(), 16);
+        assert_eq!(sum_md5(&[0u8; 56]).len(), 16);
     }
 
     #[test]
     fn block_boundary_55_and_56_differ() {
         // The two messages are different so their digests must differ
-        assert_ne!(sum_md5(&vec![0u8; 55]), sum_md5(&vec![0u8; 56]));
+        assert_ne!(sum_md5(&[0u8; 55]), sum_md5(&[0u8; 56]));
     }
 
     #[test]
     fn block_boundary_63() {
-        assert_eq!(sum_md5(&vec![0u8; 63]).len(), 16);
+        assert_eq!(sum_md5(&[0u8; 63]).len(), 16);
     }
 
     #[test]
     fn block_boundary_64() {
         // 64 bytes exactly: the data fills one block, padding goes into a second
-        assert_eq!(sum_md5(&vec![0u8; 64]).len(), 16);
+        assert_eq!(sum_md5(&[0u8; 64]).len(), 16);
     }
 
     #[test]
     fn block_boundary_128() {
-        assert_eq!(sum_md5(&vec![0u8; 128]).len(), 16);
+        assert_eq!(sum_md5(&[0u8; 128]).len(), 16);
     }
 
     #[test]

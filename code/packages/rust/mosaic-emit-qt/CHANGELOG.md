@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - live native page-host attachment
+
+Generated Qt shells now register optional host-owned QML types before loading
+the component and call `MosaicHost::attach` after root creation. Project builds
+also copy colocated `venture_browser_qt` dynamic libraries beside the emitted
+executable, allowing one Mosaic-authored chrome tree to mount Venture's native
+page surface without handwritten Qt chrome.
+
+### Added - part-backed native control identity
+
+`HostButton` and `HostInput` now project their Mosaic part names through QML
+`objectName`, giving generated Qt shells a stable native interaction seam.
+Generated Mosaic event handlers now declare formal JavaScript parameters,
+removing Qt 6.11's deprecated implicit signal-parameter injection.
+
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now lowers to a styled Qt Quick
+`Rectangle` with a filling `Loader` bound to the host's QML `Component`.
+
+The generated Qt project shell now includes `QQuickItem` before assigning
+`QQuickView::rootObject()` to `QObject*`, fixing a real AppleClang build failure
+caused by Qt's forward declaration hiding the inheritance relationship.
+
 ### Changed - Qt project shells support host file dialogs
 
 Generated Qt project shells now use `QApplication` and link `Qt6::Widgets` in

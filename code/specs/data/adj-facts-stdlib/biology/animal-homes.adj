@@ -1,0 +1,88 @@
+% ============================================================================
+% animal-homes — each animal and the name of the home it lives in
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A first vocabulary fact a child learns about the living world: animals build
+% or live in homes, and each kind of home has its own NAME. "A bee lives in a
+% hive; a bird lives in a nest." Recall is a binding query:
+%
+%     ? animal_home(bee, $Home)      % hive
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `animal_home(animal, home)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the home's
+% name WITH its source, on the CPU, with zero model calls, and abstains on an
+% animal (or a non-animal like a `rock`) that is not in the table.
+%
+% Each animal and the name of its home, as a truth table:
+%
+%     animal    home     a beginner's cue
+%     -------   ------   ----------------------------------------------
+%     bee       hive     bees build a wax hive and live together in it
+%     bird      nest     a bird builds a nest to lay its eggs
+%     spider    web      a spider spins a silk web to live in and catch food
+%     rabbit    burrow   a rabbit digs a burrow (a tunnel) in the ground
+%     beaver    lodge    a beaver builds a lodge of sticks in the water
+%
+% The query also runs BACKWARD — bind the home and recall which animal:
+%
+%     ? animal_home($Animal, hive)   % bee
+%
+% Note that a word that is NOT one of these animals — `rock`, `car`, `dog` —
+% is deliberately NOT a row, so an animal-home recall ABSTAINS on it rather
+% than inventing a home. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the pairs it can
+% ground, and only those.
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is copied from WIKIPEDIA (en.wikipedia.org), the collaboratively
+% edited encyclopedia — hence `trust consensus` (NOT `authoritative`, which is
+% reserved for a primary/official .gov/.edu or standards source). Nothing here
+% is asserted from memory. Because ADJ tables carry ONE shared provenance
+% envelope (per-row provenance is a documented future extension — see
+% ADJ-TABLES §6), the envelope below cites the "Beehive" article at its
+% `locator`, and the `source` quotes that article's opening definition verbatim.
+% For full auditability, here is the exact Wikipedia span that grounds EACH row,
+% copied character-for-character, with the article it was read from:
+%
+%   bee → hive     — "A beehive is an enclosed structure in which honey bees
+%                     raise their young and produce honey as part of their
+%                     seasonal cycle."
+%                     https://en.wikipedia.org/wiki/Beehive
+%
+%   bird → nest    — "A bird nest is the spot in which a bird lays and incubates
+%                     its eggs and raises its young."
+%                     https://en.wikipedia.org/wiki/Bird_nest
+%
+%   spider → web   — "A spider web ... is a structure created by a spider out of
+%                     proteinaceous spider silk extruded from its spinnerets,
+%                     generally meant to catch its prey."
+%                     https://en.wikipedia.org/wiki/Spider_web
+%
+%   rabbit → burrow — "The European rabbit notably lives in extensive burrow
+%                     networks called warrens."
+%                     https://en.wikipedia.org/wiki/Rabbit
+%
+%   beaver → lodge — "Beavers make two types of lodges: bank lodges and
+%                     open-water lodges."
+%                     https://en.wikipedia.org/wiki/Beaver
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_home {
+    columns animal, home
+
+    row (bee, hive)
+    row (bird, nest)
+    row (spider, web)
+    row (rabbit, burrow)
+    row (beaver, lodge)
+
+    source "A beehive is an enclosed structure in which honey bees raise their young and produce honey as part of their seasonal cycle."
+    locator "https://en.wikipedia.org/wiki/Beehive"
+    trust consensus
+}

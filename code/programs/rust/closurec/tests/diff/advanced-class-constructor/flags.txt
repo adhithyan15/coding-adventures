@@ -1,0 +1,4 @@
+--js
+tests/diff/advanced-class-constructor/input/a.js
+--compilation_level
+ADVANCED

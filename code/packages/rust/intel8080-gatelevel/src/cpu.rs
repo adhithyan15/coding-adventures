@@ -458,25 +458,25 @@ impl GateLevelCpu {
                 let addr = self.regs.read_pair(PAIR_BC);
                 let v = self.memory[addr as usize];
                 self.regs.write(REG_A, v);
-                (format!("LDAX BC"), format!("A ← mem[BC={addr:#06X}] = {v:#04X}"))
+                ("LDAX BC".to_string(), format!("A ← mem[BC={addr:#06X}] = {v:#04X}"))
             }
             0x1A => {
                 let addr = self.regs.read_pair(PAIR_DE);
                 let v = self.memory[addr as usize];
                 self.regs.write(REG_A, v);
-                (format!("LDAX DE"), format!("A ← mem[DE={addr:#06X}] = {v:#04X}"))
+                ("LDAX DE".to_string(), format!("A ← mem[DE={addr:#06X}] = {v:#04X}"))
             }
             0x02 => {
                 let addr = self.regs.read_pair(PAIR_BC);
                 let a = self.regs.read(REG_A);
                 self.memory[addr as usize] = a;
-                (format!("STAX BC"), format!("mem[BC={addr:#06X}] ← A = {a:#04X}"))
+                ("STAX BC".to_string(), format!("mem[BC={addr:#06X}] ← A = {a:#04X}"))
             }
             0x12 => {
                 let addr = self.regs.read_pair(PAIR_DE);
                 let a = self.regs.read(REG_A);
                 self.memory[addr as usize] = a;
-                (format!("STAX DE"), format!("mem[DE={addr:#06X}] ← A = {a:#04X}"))
+                ("STAX DE".to_string(), format!("mem[DE={addr:#06X}] ← A = {a:#04X}"))
             }
 
             // ── INR r ─────────────────────────────────────────────────────────
@@ -656,7 +656,7 @@ impl GateLevelCpu {
             0xC9 => {
                 let addr = self.pop_u16();
                 self.pc.write(addr);
-                (format!("RET"), format!("PC ← {addr:#06X}"))
+                ("RET".to_string(), format!("PC ← {addr:#06X}"))
             }
 
             // ── Conditional RET: Ccc000 ──────────────────────────────────────

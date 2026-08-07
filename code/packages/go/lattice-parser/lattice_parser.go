@@ -61,11 +61,10 @@
 //   return_directive:      @return expr;
 //   use_directive:         @use "file" as alias;
 //
-// # Locating the Grammar File
+// # The Compiled-In Grammar
 //
-// The lattice.grammar file lives in code/grammars/ at the repository root.
-// We locate it using runtime.Caller(0) to find this source file, then
-// navigate up three levels to code/, then down into grammars/.
+// The parser grammar is embedded at compile time as native Go in
+// grammar_data.go (ParserGrammarData); nothing is read from disk at run time.
 //
 // Usage:
 //
@@ -78,52 +77,25 @@
 package latticeparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	latticelexer "github.com/adhithyan15/coding-adventures/code/packages/go/lattice-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
-// getGrammarPath computes the absolute path to the lattice.grammar file.
-//
-// We use runtime.Caller(0) to find this source file's directory at runtime,
-// then navigate up three levels to reach the code/ root directory,
-// then descend into grammars/.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    lattice.grammar     ← what we want
-//	  packages/
-//	    go/
-//	      lattice-parser/
-//	        lattice_parser.go  ← we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the path of this source file at compile time.
-	// We navigate up from it at runtime to find the grammar file.
-	_, filename, _, _ := runtime.Caller(0)
-	dir := filepath.Dir(filename)
-	root := filepath.Join(dir, "..", "..", "..", "grammars")
-	return filepath.Join(root, "lattice", "lattice.grammar")
-}
-
 // CreateLatticeParser tokenizes the Lattice source using the Lattice lexer,
-// loads the lattice.grammar file, and returns a configured GrammarParser
-// ready to produce an AST.
+// then returns a configured GrammarParser ready to produce an AST.
 //
 // The two-step process mirrors the Python reference implementation:
 //  1. lattice-lexer.TokenizeLatticeLexer(source) → []lexer.Token
-//  2. ParseParserGrammar(grammarText) + NewGrammarParser(tokens, grammar)
+//  2. NewGrammarParser(tokens, ParserGrammarData)
 //
 // The GrammarParser uses recursive descent with packrat memoization.
 // Packrat guarantees that no (rule, position) pair is parsed more than once,
 // giving O(n × rules) worst-case time — effectively linear for practical grammars.
 //
-// Returns an error if the grammar file cannot be read/parsed, or if the
-// lattice-lexer fails (bad grammar file path).
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The error
+// result is retained for API compatibility; it is non-nil only when lexing fails.
 func CreateLatticeParser(source string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the source using the Lattice lexer.
 	// This handles all Lattice and CSS tokens including $variables and
@@ -133,29 +105,7 @@ func CreateLatticeParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	return StartNew[*parser.GrammarParser]("latticeparser.CreateLatticeParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the parser grammar file from disk.
-			// This file defines the full Lattice/CSS syntax in EBNF-like notation.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar object.
-			// This extracts all rules with their names and bodies (sequences,
-			// alternations, repetitions, optionals, and literals).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the grammar-driven parser.
-			// The parser builds a rule lookup table and initializes its memoization
-			// cache. The first rule in the grammar ("stylesheet") becomes the entry
-			// point when Parse() is called.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseLattice is the main entry point: parse Lattice source text and return

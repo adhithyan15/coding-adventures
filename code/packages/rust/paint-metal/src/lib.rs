@@ -73,6 +73,9 @@
 // without pulling in the Apple-only FFI surface. At runtime on
 // non-Apple the panic makes the unsupported path loud.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 pub const VERSION: &str = "0.2.0";
 
 pub use paint_instructions::PixelContainer;
@@ -346,6 +349,7 @@ fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Ve
 }
 
 /// Emit a filled axis-aligned rectangle as two triangles (helper).
+#[allow(clippy::too_many_arguments)] // geometry + color + buffers; signature kept as-is
 fn emit_filled_rect(
     x: f32, y: f32, w: f32, h: f32,
     r: f32, g: f32, b: f32, a: f32,
@@ -868,11 +872,11 @@ unsafe fn setup_pipeline_color_attachment(desc: Id) {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
-    let byte_len = data.len() * std::mem::size_of::<f32>();
+    let byte_len = std::mem::size_of_val(data);
     // MTLResourceStorageModeShared = 0
     let buffer: Id = msg!(
         device, "newBufferWithBytes:length:options:",
-        data.as_ptr() as Id, byte_len as usize, 0usize
+        data.as_ptr() as Id, byte_len, 0usize
     );
     assert!(!buffer.is_null(), "Failed to create Metal buffer");
     buffer
@@ -1148,6 +1152,10 @@ mod glyph_run_overlay {
 // Live-drawable present (Apple only)
 // ---------------------------------------------------------------------------
 
+// `metal_layer` is a raw Objective-C `id` handle that we hand to the Metal
+// live-present path. This is an FFI boundary — the caller owns the CAMetalLayer
+// and upholds the pointer contract — so the safe wrapper is intentional.
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[cfg(target_vendor = "apple")]
 pub fn render_to_metal_layer(
     scene: &PaintScene,

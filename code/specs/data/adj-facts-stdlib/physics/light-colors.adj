@@ -1,0 +1,88 @@
+% ============================================================================
+% light-colors — the three ADDITIVE PRIMARY colors of light and what they
+% combine to make (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A foundational optics fact, and the light-side twin of the ART `primary-colors`
+% table (do NOT conflate the two — see the model table below). When you ADD
+% colored LIGHT — the way a screen or three overlapping spotlights do — there are
+% three primary colors: RED, GREEN, and BLUE. Overlap all three in equal measure
+% and you get WHITE light. So each additive primary is a color of light that
+% combines (with the other two) to make white. Recall is a binding query:
+%
+%     ? light_primary(red, $Makes)     % white
+%
+% WHICH color model (this matters — additive light is NOT the RYB paint model):
+%
+%     model                       primaries        combine all three to...
+%     --------------------------  ---------------  ------------------------------
+%     RGB (additive, LIGHT)       red green blue   WHITE light        <-- THIS TABLE
+%     RYB (subtractive, paint)    red yellow blue  a dark/near-black mix
+%     CMY (subtractive, print)    cyan magenta yel black (in theory)
+%
+% This library encodes ONLY the RGB additive primaries of LIGHT — the ones that
+% add up to white. It is NOT the traditional RYB paint primaries (see
+% ../art/primary-colors.adj, which swaps green for yellow) and NOT the CMY print
+% primaries. A color that is NOT one of the three additive primaries of light —
+% `yellow`, `cyan`, `purple` — deliberately has no row, so a light-primary recall
+% ABSTAINS on it rather than inventing an answer.
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `light_primary(color, combines_to)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% combined color WITH its source, on the CPU, with zero model calls, and abstains
+% on any color not shipped as a row.
+%
+% The three additive primaries of light and the color they combine to make, as a
+% little truth table:
+%
+%     primary color of light   overlap all three makes   a beginner's cue
+%     ----------------------   -----------------------   ----------------------
+%     red                      white                     a red pixel/spotlight
+%     green                    white                     a green pixel/spotlight
+%     blue                     white                     a blue pixel/spotlight
+%
+% The query also runs BACKWARD — bind the combined color and recall every
+% additive primary that makes it:
+%
+%     ? light_primary($Color, white)   % red ; green ; blue
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every color below was read
+% out of a fetched Georgia State University HyperPhysics optics page, and any row
+% that could not be verified there would have been dropped). The single span that
+% fixes all three rows, copied verbatim into `source`:
+%
+%   red / green / blue -> white
+%     http://hyperphysics.gsu.edu/hbase/vision/addcol.html
+%     (HyperPhysics, Department of Physics and Astronomy, Georgia State University)
+%     "The commonly used additive primary colors are red, green and blue, and if
+%      you overlap all three in effectively equal mixture, you get white light as
+%      shown at the center."
+%
+%   (A second span of the same primary university resource restates the primaries:
+%    http://hyperphysics.gsu.edu/hbase/vision/pricol2.html — "the standard additive
+%    primary colors are red, green and blue.")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single HyperPhysics span, which grounds all three rows
+% at once. HyperPhysics is a primary university (Georgia State) physics-department
+% teaching resource, so `trust authoritative`.
+%
+% Dropped (not grounded in the primary source used): the additive SECONDARY colors
+% (cyan, magenta, yellow, each from two primaries) are real, but the HyperPhysics
+% addcol/pricol2 spans fetched here name only the three primaries and white — so
+% no secondary row is shipped rather than grounding it in a weaker source.
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table light_primary {
+    columns color, combines_to
+
+    row (red, white)
+    row (green, white)
+    row (blue, white)
+
+    source "The commonly used additive primary colors are red, green and blue, and if you overlap all three in effectively equal mixture, you get white light as shown at the center."
+    locator "http://hyperphysics.gsu.edu/hbase/vision/addcol.html"
+    trust authoritative
+}

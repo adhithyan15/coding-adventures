@@ -334,7 +334,7 @@ mod tests {
         let opts = CpOptions::default();
         assert!(copy_file(&src, &dst_dir, &opts).is_ok());
 
-        let expected = Path::new(&dst_dir).join(format!("cp_test_src_into_dir"));
+        let expected = Path::new(&dst_dir).join("cp_test_src_into_dir");
         assert!(expected.exists());
 
         cleanup(&src);

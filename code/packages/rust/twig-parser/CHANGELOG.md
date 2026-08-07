@@ -1,5 +1,46 @@
 # Changelog — twig-parser
 
+## [0.7.0] — 2026-07-14
+
+### Fixed — recursion-depth guard on the GrammarParser itself (second layer of defense)
+
+`create_twig_parser_from_tokens` (and thus `create_twig_parser`) built its
+`GrammarParser` with no recursion-depth cap. This crate already has a
+`check_paren_depth`/`MAX_PAREN_DEPTH` (64) pre-scan that rejects excessive
+LPAREN nesting before the parser runs, but **only `parse_to_ast`/`parse`
+call it** — `create_twig_parser`/`create_twig_parser_from_tokens` are
+public entry points (documented for LSP-style callers that already have a
+token stream) that bypass the pre-scan entirely, so a caller invoking them
+directly with adversarial tokens could still hit the same
+native-stack-overflow DoS the pre-scan was meant to close.
+
+Both of this grammar's independent recursive shapes were measured (binary
+search, uncapped parser, the true default per-test-thread stack — no
+`RUST_MIN_STACK` override, no explicit `Builder::stack_size`, bypassing
+`check_paren_depth` to measure the parser's own floor): paren-application
+nesting (`expr -> compound -> apply -> expr`) safe through 280
+rule-frames, crashes at 290; type-annotation nesting (the *binding*, lower
+floor) safe through 170, crashes at 180. Added `MAX_RULE_DEPTH = 120` —
+about 29% below the binding floor — and wired it into
+`create_twig_parser_from_tokens` via `.with_max_depth(...)`.
+
+Note this cap is more conservative than `MAX_PAREN_DEPTH` for the
+paren-application shape specifically (accepts ~38 real nesting levels vs.
+`MAX_PAREN_DEPTH`'s 64) — both ceilings remain far beyond any hand-written
+Twig program's real nesting (single-digit-deep, per `MAX_PAREN_DEPTH`'s
+own doc comment), so this has no practical effect on legitimate input.
+
+- Added `MAX_RULE_DEPTH: usize = 120` and wired it into
+  `create_twig_parser_from_tokens`.
+- 6 new regression tests (3 per independent recursive shape), calling
+  `create_twig_parser_from_tokens` directly (bypassing `check_paren_depth`)
+  so they exercise the new guard specifically: deep adversarial input on
+  an enlarged-stack thread returns a clean `Err`, input at the measured
+  real-nesting boundary (38 levels for paren-application, 117 for
+  type-annotation) still parses while one level past it doesn't, and the
+  cap trips before the native stack would overflow even on a
+  default-stack thread.
+
 ## [0.6.0] — 2026-05-14 — LANG51 string literals + LANG52 let*
 
 ### Added

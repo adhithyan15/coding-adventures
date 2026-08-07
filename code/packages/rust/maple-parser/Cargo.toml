@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-maple-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for Maple (a subset, MP-3)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-maple-lexer = { path = "../maple-lexer" }

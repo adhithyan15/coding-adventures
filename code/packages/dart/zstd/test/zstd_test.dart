@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:coding_adventures_zstd/coding_adventures_zstd.dart';
@@ -13,6 +14,50 @@ Uint8List bytes(List<int> values) => Uint8List.fromList(values);
 /// Repeat a string [n] times and return as Uint8List.
 Uint8List strBytes(String s, int n) =>
     Uint8List.fromList(List.generate(s.length * n, (i) => s.codeUnitAt(i % s.length)));
+
+/// Checks whether the `zstd` CLI binary is reachable on PATH.
+///
+/// Returns `true` iff `zstd --version` runs and exits 0. Used to skip the
+/// CLI-interop tests gracefully in environments without the real `zstd`
+/// binary installed (CI/dev environments vary).
+bool _isZstdCliAvailable() {
+  try {
+    final r = Process.runSync('zstd', ['--version']);
+    return r.exitCode == 0;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Compress [original] with the REAL `zstd` CLI, then decompress the result
+/// with our own [decompress]. Returns the round-tripped bytes.
+///
+/// This is the "theirs → ours" direction of TC-9's cross-implementation
+/// check, factored out so multiple fixtures can reuse it (see the
+/// Repeated-Offset test group below). Our own [compress] never emits
+/// repeat-offset sequences (see [_encodeSequencesSection]'s doc comment in
+/// the library), so this direction — decoding bytes a real, unmodified
+/// `zstd` encoder produced — is the only way to exercise our decoder's
+/// Repeated_Offset (R1/R2/R3) handling at all.
+Uint8List _decodeViaRealZstdCli(Uint8List original) {
+  final tmpDir = Directory.systemTemp.createTempSync('zstd-dart-repoffset-');
+  try {
+    final inFile = File('${tmpDir.path}/in.bin');
+    inFile.writeAsBytesSync(original);
+    final result = Process.runSync(
+      'zstd',
+      ['-q', '-c', inFile.path],
+      stdoutEncoding: null,
+    );
+    if (result.exitCode != 0) {
+      fail('real `zstd` failed to compress the fixture: ${result.stderr}');
+    }
+    final compressed = Uint8List.fromList(result.stdout as List<int>);
+    return decompress(compressed);
+  } finally {
+    tmpDir.deleteSync(recursive: true);
+  }
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -129,10 +174,14 @@ void main() {
     expect(rt(data), equals(data));
   });
 
-  // ── TC-9: bad magic → throws ──────────────────────────────────────────────
+  // ── Edge: bad magic → throws ───────────────────────────────────────────────
   //
   // A frame with the wrong magic number must be rejected with a FormatException.
-  test('TC-9: bad magic throws FormatException', () {
+  //
+  // (This test used to be mislabelled "TC-9" even though it has nothing to do
+  // with the spec's TC-9 — Cross-language / interoperability — which was a
+  // stub. See the real "TC-9: CLI interoperability" tests below.)
+  test('Edge: bad magic throws FormatException', () {
     final garbage = bytes([
       0x00, 0x00, 0x00, 0x00, // wrong magic
       0xE0,                   // FHD
@@ -143,6 +192,247 @@ void main() {
       () => decompress(garbage),
       throwsA(isA<FormatException>()),
     );
+  });
+
+  // ── TC-9: Cross-language / interoperability (real `zstd` CLI) ─────────────
+  //
+  // Both directions must round-trip exactly against the REAL `zstd` binary:
+  //   1. Compress with ours, decompress with `zstd -d`.
+  //   2. Compress with `zstd`, decompress with ours.
+  //
+  // This is the test that actually proves the wire format is real RFC 8878,
+  // not just a self-consistent internal format — a codec whose encoder and
+  // decoder always agree with each other can still be silently wrong. This
+  // package had exactly that: the FSE sequences-section codec (table-spread
+  // algorithm, per-sequence field order, last-sequence state-init special
+  // case) was internally self-consistent but non-conformant, and every
+  // in-process round-trip test above passed regardless. Only a real
+  // cross-implementation check like this one catches that class of bug. See
+  // lessons.md Lesson 95/96. Skipped (not failed) when the `zstd` binary
+  // isn't on PATH.
+  test('TC-9: CLI interoperability — both directions round-trip exactly', () {
+    if (!_isZstdCliAvailable()) {
+      markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+      return;
+    }
+
+    const sentence = 'the quick brown fox jumps over the lazy dog ';
+    final original = strBytes(sentence, 25);
+
+    // Direction 1: compress with ours, decompress with real `zstd -d`.
+    final ourCompressed = compress(original);
+    final oursZst = Directory.systemTemp.createTempSync('zstd-dart-tc9-ours-');
+    final oursZstFile = File('${oursZst.path}/out.zst');
+    try {
+      oursZstFile.writeAsBytesSync(ourCompressed);
+      final result = Process.runSync(
+        'zstd',
+        ['-d', '-q', '-c', oursZstFile.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd -d` failed to decode our compressed output: '
+            '${result.stderr}',
+      );
+      expect(
+        Uint8List.fromList(result.stdout as List<int>),
+        equals(original),
+        reason: 'real `zstd -d` decoded our output to different bytes',
+      );
+    } finally {
+      oursZst.deleteSync(recursive: true);
+    }
+
+    // Direction 2: compress with real `zstd`, decompress with ours.
+    final theirsDir = Directory.systemTemp.createTempSync('zstd-dart-tc9-theirs-');
+    final theirsInput = File('${theirsDir.path}/in.txt');
+    try {
+      theirsInput.writeAsBytesSync(original);
+      final result = Process.runSync(
+        'zstd',
+        ['-q', '-c', theirsInput.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd` failed to compress the test input',
+      );
+      final theirCompressed = Uint8List.fromList(result.stdout as List<int>);
+      final decodedByUs = decompress(theirCompressed);
+      expect(
+        decodedByUs,
+        equals(original),
+        reason: 'our decompress() failed to decode real `zstd`\'s output',
+      );
+    } finally {
+      theirsDir.deleteSync(recursive: true);
+    }
+  });
+
+  // ── RT: CLI interop with a high sequence count ────────────────────────────
+  //
+  // Real `zstd` CLI interop on an input large enough to push our compressor's
+  // single-block sequence count past 128 — the exact boundary where the
+  // sequence-count wire encoding switches from its 1-byte form to its 2-byte
+  // form (RFC 8878 §3.1.1.3.1). Extra regression coverage for the FSE fix,
+  // beyond the spec's 10 mandatory TCs: many sequences means many FSE state
+  // transitions, so this exercises the corrected per-sequence field order and
+  // last-sequence special case far more heavily than a single-sequence input
+  // would.
+  test('RT: CLI interop — high sequence count (2-byte seq-count form)', () {
+    if (!_isZstdCliAvailable()) {
+      markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+      return;
+    }
+
+    const src = [0x41, 0x42, 0x43, 0x44, 0x45, 0x46]; // 'ABCDEF'
+    final original = bytes(List.generate(9000, (i) => src[i % src.length]));
+
+    final ourCompressed = compress(original);
+    final tmpDir = Directory.systemTemp.createTempSync('zstd-dart-rt-highseq-');
+    final zstFile = File('${tmpDir.path}/out.zst');
+    try {
+      zstFile.writeAsBytesSync(ourCompressed);
+      final result = Process.runSync(
+        'zstd',
+        ['-d', '-q', '-c', zstFile.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd -d` failed to decode our high-sequence-count '
+            'output (likely a sequence-count wire-format regression): '
+            '${result.stderr}',
+      );
+      expect(
+        Uint8List.fromList(result.stdout as List<int>),
+        equals(original),
+      );
+    } finally {
+      tmpDir.deleteSync(recursive: true);
+    }
+  });
+
+  // ── Repeated-Offset (R1/R2/R3) sequence decoding — real `zstd` CLI ────────
+  //
+  // RFC 8878 §3.1.1.3.2.1.1: a sequence's Offset_Value of 1, 2, or 3 is not
+  // a literal distance — it is a reference into a 3-slot history of
+  // recently-used offsets (R1/R2/R3, defaulting to {1, 4, 8} at the start
+  // of a frame). Real `zstd` encoders use this constantly, since re-using a
+  // recent distance costs far fewer bits than encoding it explicitly. This
+  // package's OWN encoder ([_encodeSequencesSection]) always writes an
+  // explicit offset (biased +3, so raw distances 1..3 land on Offset_Value
+  // 4..6 and never collide with a repeat-offset code) and so never emits
+  // Offset_Value 1/2/3 itself — meaning no in-process `compress`+`decompress`
+  // round trip (TC-1..TC-8, RT-*, etc. above) can ever exercise this path.
+  // Only real `zstd`-CLI-produced input can: see lessons.md (the entry
+  // documenting this gap, cross-referencing the already-CLI-verified
+  // `c/zstd` port's PR that fixed the identical decode gap).
+  //
+  // Before this fix, every fixture below threw `FormatException: decoded
+  // offset underflow` from the old `of_raw - 3` code path, which treated
+  // Offset_Value 1/2/3 as a (nonsensical, always-rejected) explicit offset
+  // instead of a repeat-offset reference.
+  group('Repeated-Offset (R1/R2/R3) — real zstd CLI interop', () {
+    test('constant-byte run (Offset_Value=1, default R1=1)', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // A run of one repeated byte: the very first match is at distance 1,
+      // which — because the offset-history default is R1=1 — real `zstd`
+      // encodes as a bare repeat-offset reference rather than an explicit
+      // offset. This was the exact minimal repro that first surfaced the
+      // gap: 4713 bytes of the same byte compress to a single Compressed
+      // block whose one sequence has Offset_Value=1.
+      final original = Uint8List(4713)..fillRange(0, 4713, 0x41);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
+
+    test(
+      'CMP07-zstd.md TC-8 fixture: pattern at a fixed repeated distance',
+      () {
+        if (!_isZstdCliAvailable()) {
+          markTestSkipped(
+            'zstd CLI not found on PATH — skipping interop test',
+          );
+          return;
+        }
+        // Straight from the spec's own "TC-8: Repeat-offset compression"
+        // (code/specs/CMP07-zstd.md): an 8-byte pattern reappears at the
+        // same 128-byte distance ten times in a row. Each reappearance
+        // after the first has a nonzero literal run (the 128 filler bytes)
+        // before it, so real `zstd` repeatedly re-uses R1 unchanged
+        // (selector 0 in the decoder's offset-resolution table) — multiple
+        // separate sequences, not just one, all referencing the same
+        // repeat-offset slot.
+        const pattern = [0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48];
+        final original = bytes([
+          ...pattern,
+          for (var i = 0; i < 10; i++) ...[
+            ...List.filled(128, 0x58), // 'X' * 128
+            ...pattern,
+          ],
+        ]);
+        expect(_decodeViaRealZstdCli(original), equals(original));
+      },
+    );
+
+    test('three interleaved repeat distances (stresses R1/R2/R3 rotation)', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // Three distinct patterns, each periodic at its OWN distance (3, 5,
+      // and 7 bytes), interleaved unit-by-unit. Note: this package's
+      // decoder only supports Raw_Literals (RFC 8878 §3.1.1.2.1 type 0) —
+      // real `zstd`'s Huffman-coded literals (type 2) are a separate,
+      // already-documented out-of-scope limitation (see
+      // _decodeLiteralsSection), not part of this repeat-offset fix. A
+      // small, low-entropy byte alphabet like this one keeps `zstd`'s own
+      // literal-type heuristic on the Raw side while still forcing R1 and
+      // R2 (and their swap) into use as the encoder alternates which
+      // pattern it is currently re-matching — a realistic way to exercise
+      // more of the offset-history state machine than a single-distance
+      // fixture can.
+      const a = [0x10, 0x11, 0x12]; // period-3 pattern
+      const b = [0x20, 0x21, 0x22, 0x23, 0x24]; // period-5 pattern
+      const c = [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36]; // period-7 pattern
+      final units = <int>[];
+      for (var i = 0; i < 300; i++) {
+        units.addAll(a);
+        units.addAll(b);
+        units.addAll(c);
+      }
+      final original = bytes(units);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
+
+    test('binary data with two interleaved repeat distances', () {
+      if (!_isZstdCliAvailable()) {
+        markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+        return;
+      }
+      // Two distinct short patterns, each periodic at its OWN distance,
+      // interleaved unit-by-unit. A real encoder tracking "most recently
+      // used" offsets will bounce between the two distances as it
+      // alternates which pattern it is currently re-matching, which is a
+      // realistic way to force R1 and R2 (and their swap) to both see use,
+      // beyond the single-distance fixtures above.
+      const a = [0x10, 0x11, 0x12, 0x13]; // period-4 pattern
+      const b = [0x20, 0x21, 0x22, 0x23, 0x24, 0x25]; // period-6 pattern
+      final units = <int>[];
+      for (var i = 0; i < 300; i++) {
+        units.addAll(a);
+        units.addAll(b);
+      }
+      final original = bytes(units);
+      expect(_decodeViaRealZstdCli(original), equals(original));
+    });
   });
 
   // ── Additional round-trip tests ────────────────────────────────────────────
@@ -189,7 +479,7 @@ void main() {
     expect(compress(data), equals(compress(data)));
   });
 
-  // ── Wire format decoding ──────────────────────────────────────────────────
+  // ── TC-10: Wire format — minimal raw-block frame ───────────────────────────
   //
   // Manually construct a minimal ZStd frame to verify the decoder reads the
   // RFC 8878 wire format correctly, independent of our encoder.
@@ -199,13 +489,16 @@ void main() {
   //   [4]     FHD = 0x20:
   //             bits [7:6] = 00 → FCS_flag = 0
   //             bit  [5]   = 1  → Single_Segment = 1 → FCS is 1 byte
-  //             bits [4:0] = 0  → no checksum, no dict
+  //             bit  [4]   = 0  → Unused_bit
+  //             bit  [3]   = 0  → Reserved_bit
+  //             bit  [2]   = 0  → Content_Checksum_Flag = 0 (no checksum)
+  //             bits [1:0] = 0  → Dictionary_ID_Flag = 0 (no dict)
   //   [5]     FCS = 5 (content size = 5 bytes)
   //   [6..8]  Block header: Last=1, Type=Raw(00), Size=5
   //             = (5 << 3) | 0 | 1 = 41 = 0x29
   //             = [0x29, 0x00, 0x00]
   //   [9..13] b'hello'
-  test('Wire format: hand-crafted raw-block frame decodes correctly', () {
+  test('TC-10: hand-crafted raw-block frame decodes correctly', () {
     final frame = bytes([
       0x28, 0xB5, 0x2F, 0xFD, // magic
       0x20,                   // FHD: Single_Segment=1, FCS=1 byte

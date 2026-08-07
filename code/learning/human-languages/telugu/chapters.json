@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-5 are absent on purpose — their lessons are still schema v1, carry no practises.knowledge, and have no core/book-generation.json target, so any payoff written for them would be invented rather than derived. That absence is real, measurable debt and must not be papered over with placeholders. No chapter from 6 on has a terminal practice/practice-mix lesson, so each payoff is the chapter's last lesson by sequence.",
+  "chapters": [
+    {
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:te-dative-case",
+      "canDo": "I can say that I know Telugu the way Telugu itself says it — \"to me Telugu comes,\" with no subject and the dative -ku.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C06-dative-subject",
+        "kind": "production",
+        "summary": "Say నాకు తెలుగు వచ్చు against నేను తెలుగు మాట్లాడతాను, then line up the four Dravidian datives -ku · -ukku · -ge · -ikku.",
+        "assesses": [
+          "TE-LEX-C06-DATIVE-KU-01",
+          "TE-GRAMMAR-C06-DATIVE-KU-02",
+          "TE-LEX-C06-DATIVE-SUBJECT-01",
+          "TE-GRAMMAR-C06-DATIVE-SUBJECT-02",
+          "TE-ETYMON-C06-DATIVE-SUBJECT-03"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:te-numbers-one-to-ten",
+      "canDo": "I can count from one to ten in Telugu, including the numbers that wander furthest from their Dravidian cousins.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "TE-C07-numbers-6-10",
+        "kind": "task",
+        "summary": "Count ఒకటి through పది, say the two Telugu builds fresh — enimidi and tommidi — and hear seven's three fates in ēḻu, ēḷu and ēḍu.",
+        "assesses": [
+          "TE-LEX-C07-NUMBERS-1-5-01",
+          "TE-ETYMON-C07-NUMBERS-1-5-02",
+          "TE-SCRIPT-C07-NUMBERS-1-5-03",
+          "TE-LEX-C07-NUMBERS-6-10-01",
+          "TE-ETYMON-C07-NUMBERS-6-10-02",
+          "TE-ETYMON-C07-NUMBERS-6-10-03"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:te-please",
+      "canDo": "I can say please in Telugu, and use the polite -aṇḍi verb ending speakers actually reach for.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C08-dayachesi",
+        "kind": "production",
+        "summary": "Build దయచేసి out of daya (\"compassion\") + cēsi (\"having done\"), then make the everyday polite request instead: కూర్చోండి, \"please sit.\"",
+        "assesses": [
+          "TE-LEX-C08-DAYACHESI-01",
+          "TE-ETYMON-C08-DAYACHESI-02",
+          "TE-PRAGMATICS-C08-DAYACHESI-03",
+          "TE-SCRIPT-C08-DAYACHESI-04"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:te-sorry",
+      "canDo": "I can apologise in Telugu and ask someone to forgive me, using the same respectful ending.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C09-kshaminchandi",
+        "kind": "production",
+        "summary": "Say క్షమించండి, unpack it as kṣamin̄cu plus the respectful -aṇḍi already met in kūrcōṇḍi, and trace it to Sanskrit kṣamā.",
+        "assesses": [
+          "TE-LEX-C08-DAYACHESI-01",
+          "TE-ETYMON-C08-DAYACHESI-02",
+          "TE-PRAGMATICS-C08-DAYACHESI-03",
+          "TE-SCRIPT-C08-DAYACHESI-04",
+          "TE-ETYMON-C09-KSHAMINCHANDI-01",
+          "TE-ETYMON-C09-KSHAMINCHANDI-02",
+          "TE-PRAGMATICS-C09-KSHAMINCHANDI-03"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:te-days-of-the-week",
+      "canDo": "I can name any day of the week in Telugu, including the Sunday that is counted rather than named for a planet.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C10-vaaram",
+        "kind": "task",
+        "summary": "Run Somavāram through Śanivāram, then name Sunday ఆదివారం, \"the first day\" — positional like Arabic's numbered days, not planetary.",
+        "assesses": [
+          "TE-ETYMON-C09-KSHAMINCHANDI-01",
+          "TE-ETYMON-C09-KSHAMINCHANDI-02",
+          "TE-PRAGMATICS-C09-KSHAMINCHANDI-03",
+          "TE-ETYMON-C10-VAARAM-01",
+          "TE-PRAGMATICS-C10-VAARAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:te-core-colours",
+      "canDo": "I can name four basic colours in Telugu — black, white, red, and blue.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TE-C11-rangulu",
+        "kind": "production",
+        "summary": "Say నలుపు, తెలుపు, ఎరుపు — Telugu's own three — then నీలం, the borrowed blue every language in this course now shares.",
+        "assesses": [
+          "TE-ETYMON-C10-VAARAM-01",
+          "TE-PRAGMATICS-C10-VAARAM-02",
+          "TE-LEX-C11-RANGULU-01",
+          "TE-ETYMON-C11-RANGULU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:te-family",
+      "canDo": "I can name my parents and my brothers and sisters in Telugu, choosing the right word for older or younger.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C12-kutumbam",
+        "kind": "production",
+        "summary": "Name నాన్న and అమ్మ, then the four age-graded siblings అన్న · తమ్ముడు · అక్క · చెల్లి, with చెల్లి being Telugu's own.",
+        "assesses": [
+          "TE-LEX-C11-RANGULU-01",
+          "TE-ETYMON-C11-RANGULU-02",
+          "TE-LEX-C12-KUTUMBAM-01",
+          "TE-ETYMON-C12-KUTUMBAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:te-head-and-hand",
+      "canDo": "I can name the head and the hand in Telugu.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C13-sharira-bhagalu",
+        "kind": "production",
+        "summary": "Say తల, plainly matching its cousins, and చెయ్యి — the same Dravidian root as kai, reshaped by sound change past easy recognition.",
+        "assesses": [
+          "TE-LEX-C12-KUTUMBAM-01",
+          "TE-ETYMON-C12-KUTUMBAM-02",
+          "TE-LEX-C13-SHARIRA-BHAGALU-01"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:te-seasons",
+      "canDo": "I can name the four seasons in Telugu, including the rains that anchor the year.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C14-rutuvulu",
+        "kind": "production",
+        "summary": "Say వేసవి (cousin of Kannada's bēsige), వానాకాలం and శీతాకాలం from native roots, then the doubly-Sanskrit వసంత ఋతువు.",
+        "assesses": [
+          "TE-LEX-C13-SHARIRA-BHAGALU-01",
+          "TE-LEX-C14-RUTUVULU-01",
+          "TE-PRAGMATICS-C14-RUTUVULU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:te-water-and-rice",
+      "canDo": "I can ask for water in Telugu and tell raw rice apart from cooked rice.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C15-neellu-biyyam",
+        "kind": "task",
+        "summary": "Say నీళ్ళు — matching Tamil and Kannada — then separate బియ్యం, Telugu's own word for raw rice, from అన్నం, the cooked rice on the plate.",
+        "assesses": [
+          "TE-LEX-C14-RUTUVULU-01",
+          "TE-PRAGMATICS-C14-RUTUVULU-02",
+          "TE-ETYMON-C15-NEELLU-BIYYAM-01",
+          "TE-ETYMON-C15-NEELLU-BIYYAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:te-traditional-months",
+      "canDo": "I can name the twelve traditional Telugu months and say when Ugadi, the new year, falls.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C16-nelalu",
+        "kind": "task",
+        "summary": "Recite Caitraṁ through Phālguṇaṁ, place Ugadi at Chaitra Śuddha Pādyami, and note the family split: Telugu and Kannada share Hindi's calendar, Tamil and Malayalam do not.",
+        "assesses": [
+          "TE-ETYMON-C15-NEELLU-BIYYAM-01",
+          "TE-ETYMON-C15-NEELLU-BIYYAM-02",
+          "TE-LEX-C16-NELALU-01",
+          "TE-ETYMON-C16-NELALU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:te-noon-and-midnight",
+      "canDo": "I can say noon and midnight in Telugu and explain why one is \"middle\" and the other \"half.\"",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C17-madhyaahnam-ardharaatri",
+        "kind": "production",
+        "summary": "Say మధ్యాహ్నం and అర్ధరాత్రి, then separate madhya (\"middle\") from ardha (\"half\") — two different Sanskrit roots where Kannada uses one.",
+        "assesses": [
+          "TE-LEX-C16-NELALU-01",
+          "TE-ETYMON-C16-NELALU-02",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:te-telling-time",
+      "canDo": "I can tell someone the time on the hour in Telugu, in the singular and the plural.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C18-ganta",
+        "kind": "task",
+        "summary": "Say గంట — hour, and also \"bell\" — then ఒక గంట for one o'clock and రెండు గంటలు for two, taking the plural -lu.",
+        "assesses": [
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+          "TE-LEX-C18-GANTA-01",
+          "TE-PRAGMATICS-C18-GANTA-02",
+          "TE-GRAMMAR-C18-GANTA-03"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:te-asking-age",
+      "canDo": "I can ask someone how old they are in Telugu and give my own age in return.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C19-vayasu",
+        "kind": "dialogue",
+        "summary": "Ask నీ వయసెంత? and answer నా వయసు ఇరవై — a complete verbless exchange about age.",
+        "assesses": [
+          "TE-LEX-C18-GANTA-01",
+          "TE-PRAGMATICS-C18-GANTA-02",
+          "TE-GRAMMAR-C18-GANTA-03",
+          "TE-ETYMON-C19-VAYASU-01",
+          "TE-GRAMMAR-C19-VAYASU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:te-numbers-and-weather",
+      "canDo": "I can say what the weather is doing in Telugu and count past ten up to twenty.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE",
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C20-vatavaranam",
+        "kind": "task",
+        "summary": "Say వాతావరణం — a pure Sanskrit vāta + āvaraṇa, \"the covering of air\" — and report the weather with వర్షం పడుతోంది, \"rain is falling.\"",
+        "assesses": [
+          "TE-LEX-C18-GANTA-01",
+          "TE-PRAGMATICS-C18-GANTA-02",
+          "TE-GRAMMAR-C18-GANTA-03",
+          "TE-ETYMON-C20-VATAVARANAM-01",
+          "TE-GRAMMAR-C20-VATAVARANAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:te-dog-and-cat",
+      "canDo": "I can name a dog and a cat in Telugu.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TE-C21-kukka-pilli",
+        "kind": "production",
+        "summary": "Say కుక్క, which genuinely breaks from the family's shared naayi root, and పిల్లి, most likely the Dravidian source behind Hindi's billī.",
+        "assesses": [
+          "TE-ETYMON-C20-PADAKONDU-IRAVAI-01",
+          "TE-ETYMON-C20-PADAKONDU-IRAVAI-02",
+          "TE-ETYMON-C21-KUKKA-PILLI-01",
+          "TE-ETYMON-C21-KUKKA-PILLI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:te-green-and-yellow",
+      "canDo": "I can name green and yellow in Telugu, on top of the four colours I already had.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TE-C22-pacha-pasupu",
+        "kind": "production",
+        "summary": "Say పచ్చ and పసుపు and show they are doublets of one Proto-Dravidian *pac- root — where Kannada's yellow broke away as a Sanskrit loan.",
+        "assesses": [
+          "TE-LEX-C11-RANGULU-01",
+          "TE-ETYMON-C11-RANGULU-02",
+          "TE-ETYMON-C21-KUKKA-PILLI-01",
+          "TE-ETYMON-C21-KUKKA-PILLI-02",
+          "TE-ETYMON-C22-PACHA-PASUPU-01",
+          "TE-ETYMON-C22-PACHA-PASUPU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:te-day",
+      "canDo": "I can say \"day\" in Telugu and choose between the everyday Persian loan and its formal Sanskrit alternate.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C23-roju",
+        "kind": "production",
+        "summary": "Say రోజు, a genuine Persian loan from rōz, and set it against the formal దినము — the mirror image of Kannada's plain dina.",
+        "assesses": [
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+          "TE-ETYMON-C23-ROJU-01",
+          "TE-PRAGMATICS-C23-ROJU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:te-night",
+      "canDo": "I can say \"night\" in Telugu and recognise it inside the midnight word I already knew.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C24-ratri",
+        "kind": "production",
+        "summary": "Say రాత్రి, find it again inside అర్ధరాత్రి, and note the three native words — rēyi, māpu, irulu — it pushed aside.",
+        "assesses": [
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+          "TE-ETYMON-C23-ROJU-01",
+          "TE-PRAGMATICS-C23-ROJU-02",
+          "TE-ETYMON-C24-RATRI-01",
+          "TE-ETYMON-C24-RATRI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:te-good-night",
+      "canDo": "I can wish someone good night in Telugu.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C25-shubha-ratri",
+        "kind": "dialogue",
+        "summary": "Say శుభ రాత్రి — \"auspicious night\" — pairing the రాత్రి already learned with śubha, while knowing many speakers code-switch to English here.",
+        "assesses": [
+          "TE-ETYMON-C24-RATRI-01",
+          "TE-ETYMON-C24-RATRI-02",
+          "TE-ETYMON-C25-SHUBHA-RATRI-01",
+          "TE-PRAGMATICS-C25-SHUBHA-RATRI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:te-morning",
+      "canDo": "I can say \"morning\" in Telugu with the same word that sits inside the morning greeting.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C26-udayam",
+        "kind": "production",
+        "summary": "Say ఉదయం, Telugu's broadest morning word, note the real native competitors poddu and vēkuva, and see that Kannada splits this job across two unrelated words.",
+        "assesses": [
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+          "TE-ETYMON-C23-ROJU-01",
+          "TE-PRAGMATICS-C23-ROJU-02",
+          "TE-ETYMON-C26-UDAYAM-01",
+          "TE-PRAGMATICS-C26-UDAYAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:te-evening",
+      "canDo": "I can say \"evening\" in Telugu.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C27-sayantram",
+        "kind": "production",
+        "summary": "Say సాయంత్రం, from sāyam plus a time-suffix, and follow its PIE *seh₁- root across to Latin sērus, French soir and Italian sera.",
+        "assesses": [
+          "TE-ETYMON-C26-UDAYAM-01",
+          "TE-PRAGMATICS-C26-UDAYAM-02",
+          "TE-ETYMON-C27-SAYANTRAM-01",
+          "TE-ETYMON-C27-SAYANTRAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:te-afternoon",
+      "canDo": "I can use Telugu's noon word to talk about the afternoon, and reach for the classical term when I need to be precise.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C28-madhyahnam-widened",
+        "kind": "production",
+        "summary": "Reuse మధ్యాహ్నం for the stretch between noon and evening, then contrast it with అపరాహ్నం, the more formal, more precise later-afternoon word.",
+        "assesses": [
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+          "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+          "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+          "TE-ETYMON-C27-SAYANTRAM-01",
+          "TE-ETYMON-C27-SAYANTRAM-02",
+          "TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01",
+          "TE-ETYMON-C28-MADHYAHNAM-WIDENED-02"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:te-good-morning",
+      "canDo": "I can wish someone good morning in Telugu.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C29-subhodayam",
+        "kind": "dialogue",
+        "summary": "Say శుభోదయం — śubha + ఉదయం — and weigh the single low-authority claim that it is out of trend against నమస్కారం, the safer everyday bet.",
+        "assesses": [
+          "TE-ETYMON-C26-UDAYAM-01",
+          "TE-PRAGMATICS-C26-UDAYAM-02",
+          "TE-ETYMON-C29-SUBHODAYAM-01",
+          "TE-PRAGMATICS-C29-SUBHODAYAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:te-good-evening",
+      "canDo": "I can wish someone good evening in Telugu.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C30-subha-sayantram",
+        "kind": "dialogue",
+        "summary": "Say శుభ సాయంత్రం, backed by two independent sources as genuinely common in both formal and casual speech, with నమస్కారం as an alternative rather than a replacement.",
+        "assesses": [
+          "TE-ETYMON-C27-SAYANTRAM-01",
+          "TE-ETYMON-C27-SAYANTRAM-02",
+          "TE-ETYMON-C30-SUBHA-SAYANTRAM-01",
+          "TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:te-good-afternoon",
+      "canDo": "I can wish someone good afternoon in Telugu and judge whether it fits the setting I am in.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "TE-C31-subha-madhyahnam-register",
+        "kind": "dialogue",
+        "summary": "Say శుభ మధ్యాహ్నం where the setting is formal or workplace-timed, and fall back on నమస్కారం, the time-independent everyday greeting.",
+        "assesses": [
+          "TE-LEX-C31-SUBHA-MADHYAHNAM-01",
+          "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-01",
+          "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02"
+        ]
+      }
+    }
+  ]
+}

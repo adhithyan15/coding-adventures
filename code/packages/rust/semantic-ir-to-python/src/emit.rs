@@ -415,6 +415,45 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
         }
+        // SIR22 addendum: APL primitive operators — not accepted by this
+        // backend either (same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // gating), but recurse faithfully regardless.
+        Expr::Reduce { target, .. } => expr_uses_builtin(target, name),
+        Expr::Scan { target, .. } => expr_uses_builtin(target, name),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Shape { target, .. } => expr_uses_builtin(target, name),
+        Expr::Reshape { shape, target, .. } => {
+            expr_uses_builtin(shape, name) || expr_uses_builtin(target, name)
+        }
+        Expr::IndexGenerator { count, .. } => expr_uses_builtin(count, name),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => expr_uses_builtin(haystack, name) || expr_uses_builtin(needle, name),
+        Expr::Ravel { target, .. } => expr_uses_builtin(target, name),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Convert { value, .. } => expr_uses_builtin(value, name),
+        // SIR23 symbolic-expression/pattern nodes are not accepted by this
+        // backend yet (see `ACCEPTED_FEATURES` in `lib.rs`), so a validated
+        // module never contains them in practice — same rationale as the
+        // SIR22 arms above; recurse into every sub-expression regardless.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_uses_builtin(head, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(|h| expr_uses_builtin(h, name))
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_uses_builtin(pattern, name),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_uses_builtin(expr, name) || rules.iter().any(|r| expr_uses_builtin(r, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -940,9 +979,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}_sir_oop_define_class({}, None)\n",
+                "{}_sir_oop_define_class({}, None)",
                 pad,
                 quote_py_string(name)
             );
@@ -971,13 +1010,13 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
-            let _ = write!(out, "{}try:\n", pad);
+            let _ = writeln!(out, "{}try:", pad);
             emit_stmt_list(out, body, indent + 1);
             if !rescues.is_empty() {
                 // Catch broadly (matching the TS backend's catch-all) so a
                 // native Python error can still be matched by `rescue
                 // StandardError`; the dispatch + re-raise is in the body.
-                let _ = write!(out, "{}except Exception as __exc:\n", pad);
+                let _ = writeln!(out, "{}except Exception as __exc:", pad);
                 let ipad = indent_str(indent + 1);
                 for (i, r) in rescues.iter().enumerate() {
                     let mut types = String::from("[");
@@ -989,27 +1028,27 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                     }
                     types.push(']');
                     let kw = if i == 0 { "if" } else { "elif" };
-                    let _ = write!(
+                    let _ = writeln!(
                         out,
-                        "{}{} _sir_exc_rescue_matches(__exc, {}):\n",
+                        "{}{} _sir_exc_rescue_matches(__exc, {}):",
                         ipad, kw, types
                     );
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
                         let bpad = indent_str(indent + 2);
-                        let _ = write!(out, "{}{} = __exc\n", bpad, sanitize_ident(bind));
+                        let _ = writeln!(out, "{}{} = __exc", bpad, sanitize_ident(bind));
                         emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false);
                     } else {
                         emit_stmt_list(out, &r.body, indent + 2);
                     }
                 }
                 // No clause matched → propagate the original exception.
-                let _ = write!(out, "{}else:\n", ipad);
+                let _ = writeln!(out, "{}else:", ipad);
                 let bpad = indent_str(indent + 2);
-                let _ = write!(out, "{}raise\n", bpad);
+                let _ = writeln!(out, "{}raise", bpad);
             }
             if let Some(ens) = ensure_body {
-                let _ = write!(out, "{}finally:\n", pad);
+                let _ = writeln!(out, "{}finally:", pad);
                 emit_stmt_list(out, ens, indent + 1);
             }
         }
@@ -1032,7 +1071,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
 /// block is non-empty.
 fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize) {
     if stmts.is_empty() {
-        let _ = write!(out, "{}pass\n", indent_str(indent));
+        let _ = writeln!(out, "{}pass", indent_str(indent));
         return;
     }
     for s in stmts {
@@ -1052,7 +1091,7 @@ fn emit_stmt_list_allow_only_value(
 ) {
     if stmts.is_empty() {
         if emit_pass_if_empty {
-            let _ = write!(out, "{}pass\n", indent_str(indent));
+            let _ = writeln!(out, "{}pass", indent_str(indent));
         }
         return;
     }
@@ -1061,7 +1100,7 @@ fn emit_stmt_list_allow_only_value(
     }
 }
 
-fn pick_global_set<'a>(e: &'a Expr) -> Option<(&'a str, &'a Expr)> {
+fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
     if let Expr::BuiltinCall { name, args, .. } = e {
         if name == "global_set" && args.len() == 2 {
             if let Expr::SymLit { name: gn, .. } = &args[0] {
@@ -1238,9 +1277,42 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        | Expr::IndexGet { .. }
+        // SIR22 addendum: APL primitive operators — same deferral rationale
+        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // features, not in `ACCEPTED_FEATURES` either).
+        | Expr::Reduce { .. }
+        | Expr::Scan { .. }
+        | Expr::OuterProduct { .. }
+        | Expr::Shape { .. }
+        | Expr::Reshape { .. }
+        | Expr::IndexGenerator { .. }
+        | Expr::IndexOf { .. }
+        | Expr::Ravel { .. }
+        | Expr::Catenate { .. }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module.
+        | Expr::Convert { .. } => {
             panic!(
-                "python backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "python backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
+        }
+        // SIR23 symbolic-expression/pattern nodes. This backend does not
+        // declare `Feature::SymbolicExpr`/`Feature::PatternMatching` in
+        // `ACCEPTED_FEATURES` (see `lib.rs`), so `Backend::check_module`
+        // rejects any module using these nodes before emission is ever
+        // reached — matching the SIR22/SIR26 guard above.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {
+            panic!(
+                "python backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );
@@ -1629,12 +1701,23 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     }
     let helper = match name {
         "+" => "_sir_plus",
+        "<<" => "_sir_shift_left",
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
         "=" => "_sir_eq",
         "<" => "_sir_lt",
         ">" => "_sir_gt",
+        // The Ruby frontend lowers `a == b` / `!=` / `<=` / `>=` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for `=`; the rest route to the matching runtime helpers.
+        // Without these, they fell to the `_sir_call_builtin` fallback, which
+        // has no `==`/`!=`/`<=`/`>=` in its dispatch table — so `puts(1 == 1)`
+        // raised `NameError: SIR builtin '==' is not implemented`.
+        "==" => "_sir_eq",
+        "!=" => "_sir_ne",
+        "<=" => "_sir_le",
+        ">=" => "_sir_ge",
         "cons" => "_sir_cons",
         "car" => "_sir_car",
         "cdr" => "_sir_cdr",
@@ -1814,7 +1897,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
     let name = fresh_block_name();
     let pad = indent_str(indent);
     let mut def = String::new();
-    let _ = write!(def, "{}def {}():\n", pad, name);
+    let _ = writeln!(def, "{}def {}():", pad, name);
     // Names re-bound (Assign{Local}) but bound in an enclosing scope must
     // be declared `nonlocal` so the assignment mutates the outer binding
     // rather than shadowing it.  Names introduced by a let / loop var in
@@ -1823,7 +1906,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
     for n in &nonlocals {
-        let _ = write!(def, "{}nonlocal {}\n", inner_pad, sanitize_ident(n));
+        let _ = writeln!(def, "{}nonlocal {}", inner_pad, sanitize_ident(n));
     }
     // Body statements, then `return <value>` — emitted via the normal
     // statement path so any further nested loops hoist correctly.
@@ -1855,7 +1938,7 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
     let pad = indent_str(indent);
     let has_value = !matches!(b.value, Expr::NilLit { .. });
     if b.stmts.is_empty() && !has_value {
-        let _ = write!(out, "{}pass\n", pad);
+        let _ = writeln!(out, "{}pass", pad);
         return;
     }
     for s in &b.stmts {
@@ -1976,11 +2059,11 @@ fn collect_nonlocals_block(
 // ---------------------------------------------------------------------------
 
 thread_local! {
-    static BLOCK_COUNTER: RefCell<usize> = RefCell::new(0);
+    static BLOCK_COUNTER: RefCell<usize> = const { RefCell::new(0) };
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
     /// Pending nested-`def` sources, awaiting flush before the current
     /// statement (see [`flush_hoist`]).
-    static HOIST: RefCell<Vec<String>> = RefCell::new(Vec::new());
+    static HOIST: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
 }
 
 fn fresh_block_name() -> String {
@@ -2083,8 +2166,19 @@ fn is_python_keyword(s: &str) -> bool {
             | "while"
             | "with"
             | "yield"
+            // Soft keywords (`keyword.softkwlist`): not syntactic keywords —
+            // freely usable as ordinary identifiers everywhere outside a
+            // narrow grammar position (`match`/`case` in a `match`
+            // statement since 3.10; `_` as a wildcard capture pattern since
+            // 3.10; `type` in a `type X = ...` alias statement since
+            // 3.12's PEP 695). This backend already treated `match`/`case`
+            // as unsafe defensively; `_` and `type` are the other two
+            // entries of the same official soft-keyword set and were
+            // missing.
             | "match"
             | "case"
+            | "_"
+            | "type"
     )
 }
 
@@ -2140,6 +2234,27 @@ mod tests {
     }
 
     #[test]
+    fn is_python_keyword_flags_remaining_soft_keywords() {
+        // `_` and `type` are the other two entries of Python's
+        // `keyword.softkwlist` (`_`, `case`, `match`, `type`) — this
+        // backend already treated `match`/`case` as unsafe; `_` and
+        // `type` were missing.
+        assert!(is_python_keyword("_"));
+        assert!(is_python_keyword("type"));
+        assert!(sanitize_ident("_").starts_with('_'));
+        assert_eq!(sanitize_ident("_"), "__");
+        assert_eq!(sanitize_ident("type"), "type_");
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_python_keyword("_x"));
+        assert!(!is_python_keyword("typing"));
+        assert!(!is_python_keyword("types"));
+        assert_eq!(sanitize_ident("_x"), "_x");
+        assert_eq!(sanitize_ident("typing"), "typing");
+    }
+
+    #[test]
     fn quote_py_string_basic() {
         assert_eq!(quote_py_string("hi"), r#""hi""#);
         assert_eq!(quote_py_string("a\"b\\c"), r#""a\"b\\c""#);
@@ -2155,7 +2270,7 @@ mod tests {
     fn sanitize_comment_strips_terminators() {
         let r = sanitize_comment("a\nb");
         assert!(!r.contains('\n'));
-        let r2 = sanitize_comment(&format!("x\u{2028}y\u{2029}z"));
+        let r2 = sanitize_comment("x\u{2028}y\u{2029}z");
         assert!(!r2.contains('\u{2028}'));
         assert!(!r2.contains('\u{2029}'));
     }

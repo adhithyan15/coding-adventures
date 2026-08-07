@@ -1213,7 +1213,7 @@ fn write_u32_le(out: &mut [u8], offset: usize, value: u32) {
 }
 
 fn ceil_div_u32(value: u32, divisor: u32) -> u32 {
-    value / divisor + u32::from(value % divisor != 0)
+    value / divisor + u32::from(!value.is_multiple_of(divisor))
 }
 
 fn validate_image_segments(segments: &[EspImageSegment<'_>]) -> Result<(), EspRomError> {

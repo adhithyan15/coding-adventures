@@ -1,0 +1,1 @@
+var nul="a\x00b",esc="a\u001bb",del="a\u007fb",bs="a\bb",vt="a\vb",ff="a\fb";sink(nul,esc,del,bs,vt,ff);

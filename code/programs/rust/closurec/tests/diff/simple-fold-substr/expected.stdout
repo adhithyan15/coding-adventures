@@ -1,1 +1,1 @@
-var a="bc";var b="bcde";var c="de";var d="";report(a,b,c,d);
+var a="bc",b="bcde",c="de",d="";report(a,b,c,d);

@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-apl-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-walking evaluator for the APL language over array-runtime"
+
+[dependencies]
+coding-adventures-apl-parser = { path = "../apl-parser" }
+array-runtime = { package = "coding-adventures-array-runtime", path = "../array-runtime" }
+parser = { path = "../parser" }

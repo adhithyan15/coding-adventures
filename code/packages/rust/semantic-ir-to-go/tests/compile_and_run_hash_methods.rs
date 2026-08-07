@@ -1,7 +1,8 @@
 //! End-to-end proof for the **Ruby `Hash` method catalog** in the Go
 //! backend — the newly-added `merge`, `to_a`, `dig`, `invert`, `delete`,
 //! `store`/`[]=`, `clear`, and the block methods `each_key` / `each_value`
-//! (plus the pre-existing `each_pair`), bringing the Go runtime to parity
+//! (plus the pre-existing `each_pair`) and the transforming block methods
+//! `transform_values` / `transform_keys`, bringing the Go runtime to parity
 //! with the Python/TS `sir-runtime-oop` catalogs.
 //!
 //! Like `compile_and_run_coll_methods.rs`, this hand-builds SIR modules that
@@ -133,6 +134,12 @@ fn catalog_module() -> Module {
         "x",
         builtin("print", vec![var_p("x")]),
     );
+    // `transform_values` replaces every value with the block result; a constant
+    // body makes the expected hash trivially predictable ({a: 99, b: 99}).
+    let const99 = lambda_fn("__lam_const99", "v", ilit(99));
+    // `transform_keys` collapses BOTH keys onto the single symbol `:z`; Ruby
+    // keeps the LAST colliding entry's value, so {a:1,b:2} → {z: 2}.
+    let const_z = lambda_fn("__lam_const_z", "k", sym("z"));
 
     let stmts = vec![
         // {a:1}.merge({b:2}) → {a: 1, b: 2}   (fresh hash, other appended)
@@ -187,6 +194,18 @@ fn catalog_module() -> Module {
             "each_key",
             vec![closure("__lam_print_x")],
         )),
+        // {a:1,b:2}.transform_values { 99 } → {a: 99, b: 99}   (keys untouched)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "transform_values",
+            vec![closure("__lam_const99")],
+        )),
+        // {a:1,b:2}.transform_keys { :z } → {z: 2}   (collision → last value wins)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "transform_keys",
+            vec![closure("__lam_const_z")],
+        )),
     ];
 
     let main = Function {
@@ -200,7 +219,7 @@ fn catalog_module() -> Module {
         span: s(),
     };
 
-    program(vec![print_x, main])
+    program(vec![print_x, const99, const_z, main])
 }
 
 fn go_available() -> bool {
@@ -261,6 +280,355 @@ fn hash_methods_compile_and_run() {
             "a",                // each_key yields a
             "b",                // each_key yields b
             "{a: 1, b: 2}",     // each_key returns self
+            "{a: 99, b: 99}",   // transform_values (keys untouched)
+            "{z: 2}",           // transform_keys (collision → last value wins)
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+/// Two-parameter lambda `fn_name(a, b) -> body`, for Hash Enumerable blocks
+/// which are yielded `(key, value)`.
+fn lambda_fn2(fn_name: &str, p1: &str, p2: &str, body: Expr) -> Function {
+    let mk = |name: &str| semantic_ir::Param {
+        name: name.into(),
+        kind: semantic_ir::ParamKind::Required,
+        sir_type: None,
+        default: None,
+        span: s(),
+    };
+    Function {
+        name: fn_name.into(),
+        params: vec![mk(p1), mk(p2)],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![], value: body, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+/// Demo for the Hash Enumerable aggregates (`find`/`any?`/`all?`/`none?`/
+/// `count`/`sort_by`/`min_by`/`max_by`).  Each block is yielded `(key, value)`;
+/// aggregates that return an "element" return the two-element `[key, value]`
+/// Array.  Expected values match the Python reference for the same ops.
+fn enum_module() -> Module {
+    // { |k, v| v } — the value, used as the sort/min/max key.
+    let by_val = lambda_fn2("__lam_val", "k", "v", var_p("v"));
+    // { |k, v| v.even? } — an even-value predicate.
+    let is_even = lambda_fn2("__lam_even", "k", "v", method(var_p("v"), "even?", vec![]));
+
+    let stmts = vec![
+        // {c:3,a:1,b:2}.sort_by { |k,v| v } → [[a, 1], [b, 2], [c, 3]]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "sort_by",
+            vec![closure("__lam_val")],
+        )),
+        // {c:3,a:1,b:2}.min_by { |k,v| v } → [a, 1]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "min_by",
+            vec![closure("__lam_val")],
+        )),
+        // {c:3,a:1,b:2}.max_by { |k,v| v } → [c, 3]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "max_by",
+            vec![closure("__lam_val")],
+        )),
+        // {a:1,b:2,c:3,d:4}.find { |k,v| v.even? } → [b, 2]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "find",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.count { |k,v| v.even? } → 2
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "count",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.any? { v.even? } → #t
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "any?",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.all? { v.even? } → #f
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "all?",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,c:3}.none? { v.even? } → #t  (no even values)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("c", 3)]),
+            "none?",
+            vec![closure("__lam_even")],
+        )),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![by_val, is_even, main])
+}
+
+#[test]
+fn hash_enumerable_aggregates_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&enum_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "enum");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[a, 1], [b, 2], [c, 3]]", // sort_by { v }
+            "[a, 1]",                   // min_by { v }
+            "[c, 3]",                   // max_by { v }
+            "[b, 2]",                   // find { even? } → first even-valued pair
+            "2",                        // count { even? }
+            "#t",                       // any? { even? }
+            "#f",                       // all? { even? }
+            "#t",                       // none? { even? } on all-odd values
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+/// Demo for the Hash Enumerable *breadth* batch (group_by / partition /
+/// flat_map / reduce / sum).  Block yields (key, value) — except `reduce`,
+/// which yields (memo, [key, value]).  Results carry `[key, value]` pairs.
+fn breadth_module() -> Module {
+    // { |k, v| v } — the value (sort/sum projection).
+    let by_val = lambda_fn2("__lam_val", "k", "v", var_p("v"));
+    // { |k, v| v.even? } — even-value predicate (group_by / partition).
+    let is_even = lambda_fn2("__lam_even", "k", "v", method(var_p("v"), "even?", vec![]));
+    // { |k, v| [k, v] } — echo the pair (flat_map, so it flattens to k, v, …).
+    let echo_pair = lambda_fn2(
+        "__lam_pair",
+        "k",
+        "v",
+        Expr::SeqLit { items: vec![var_p("k"), var_p("v")], span: s() },
+    );
+    // { |acc, pair| acc + pair[1] } — fold the values (reduce memo convention).
+    let add_val = lambda_fn2(
+        "__lam_addval",
+        "acc",
+        "pair",
+        builtin(
+            "+",
+            vec![
+                var_p("acc"),
+                Expr::SeqIndex {
+                    seq: Box::new(var_p("pair")),
+                    index: Box::new(ilit(1)),
+                    span: s(),
+                },
+            ],
+        ),
+    );
+
+    let stmts = vec![
+        // {a:1,b:2,c:3,d:4}.group_by { |k,v| v.even? }
+        //   → {#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "group_by",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.partition { |k,v| v.even? }
+        //   → [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "partition",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2}.flat_map { |k,v| [k, v] } → [a, 1, b, 2]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "flat_map",
+            vec![closure("__lam_pair")],
+        )),
+        // {a:1,b:2,c:3,d:4}.reduce(0) { |acc, (k,v)| acc + v } → 10
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "reduce",
+            vec![ilit(0), closure("__lam_addval")],
+        )),
+        // {a:1,b:2,c:3,d:4}.sum(100) { |k,v| v } → 110
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "sum",
+            vec![ilit(100), closure("__lam_val")],
+        )),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![by_val, is_even, echo_pair, add_val, main])
+}
+
+#[test]
+fn hash_enumerable_breadth_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&breadth_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "breadth");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "{#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}", // group_by { even? }
+            "[[[b, 2], [d, 4]], [[a, 1], [c, 3]]]",         // partition { even? }
+            "[a, 1, b, 2]",                                 // flat_map { [k, v] }
+            "10",                                           // reduce(0) { acc + v }
+            "110",                                          // sum(100) { v }
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+// ── Hash to_h / each_with_index / each_with_object ─────────────────────────
+//
+// Rounds out Hash's Enumerable iteration surface, mirroring the Python
+// reference (#8009).  `to_h` has a no-block (shallow copy) and a block (re-map)
+// form; `each_with_index`/`each_with_object` yield the `[k, v]` PAIR as a single
+// argument alongside the index/memo (Ruby's Enumerable convention — contrast
+// `each`'s two-arg `(k, v)` yield).
+fn to_h_module() -> Module {
+    // { |k, v| [k, v * 2] } — re-map each pair, doubling the value.
+    let dbl = lambda_fn2(
+        "__lam_dbl",
+        "k",
+        "v",
+        Expr::SeqLit {
+            items: vec![var_p("k"), builtin("*", vec![var_p("v"), ilit(2)])],
+            span: s(),
+        },
+    );
+    // { |pair, i| print [pair, i] } — observe the (pair, index) yield.
+    let print_pi = lambda_fn2(
+        "__lam_pi",
+        "pair",
+        "i",
+        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("i")], span: s() }]),
+    );
+    // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
+    let print_pm = lambda_fn2(
+        "__lam_pm",
+        "pair",
+        "memo",
+        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("memo")], span: s() }]),
+    );
+
+    let stmts = vec![
+        // {a:1,b:2}.to_h (no block) → a shallow copy: {a: 1, b: 2}
+        print_stmt(method(map_of(vec![("a", 1), ("b", 2)]), "to_h", vec![])),
+        // {a:1,b:2}.to_h { |k, v| [k, v * 2] } → {a: 2, b: 4}
+        print_stmt(method(map_of(vec![("a", 1), ("b", 2)]), "to_h", vec![closure("__lam_dbl")])),
+        // {a:1,b:2}.each_with_index { |pair, i| print [pair, i] }
+        //   → "[[a, 1], 0]", "[[b, 2], 1]", then the returned self "{a: 1, b: 2}"
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "each_with_index",
+            vec![closure("__lam_pi")],
+        )),
+        // {a:1,b:2}.each_with_object(0) { |pair, memo| print [pair, memo] }
+        //   → "[[a, 1], 0]", "[[b, 2], 0]", then the returned memo "0"
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "each_with_object",
+            vec![ilit(0), closure("__lam_pm")],
+        )),
+        // {a:1}.each_with_object { |pair, memo| … } with NO memo arg → returns
+        // the receiver unchanged (the block is never called): "{a: 1}"
+        print_stmt(method(map_of(vec![("a", 1)]), "each_with_object", vec![closure("__lam_pm")])),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![dbl, print_pi, print_pm, main])
+}
+
+#[test]
+fn hash_to_h_and_indexed_iteration_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&to_h_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "toh");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "{a: 1, b: 2}",   // to_h (no block) → shallow copy
+            "{a: 2, b: 4}",   // to_h { [k, v*2] } → re-mapped
+            "[[a, 1], 0]",    // each_with_index yields ([a,1], 0)
+            "[[b, 2], 1]",    // each_with_index yields ([b,2], 1)
+            "{a: 1, b: 2}",   // each_with_index returns self
+            "[[a, 1], 0]",    // each_with_object yields ([a,1], 0)
+            "[[b, 2], 0]",    // each_with_object yields ([b,2], 0)
+            "0",              // each_with_object returns the memo
+            "{a: 1}",         // each_with_object with no memo → returns self
         ],
         "unexpected stdout:\n{stdout}"
     );

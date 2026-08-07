@@ -1,0 +1,96 @@
+% ============================================================================
+% static-compliance.adj — static respiratory-system compliance
+% (Cstat = tidal volume / (plateau pressure − PEEP)) in the ADJ standard library.
+% ============================================================================
+% The static-compliance entry of the *clinical* track — the distensibility of the respiratory system
+% measured on a mechanical ventilator during an inspiratory hold, when there is no gas flow. With flow
+% stopped, the pressure the ventilator reads is the PLATEAU pressure, which reflects only the elastic recoil
+% of the lungs and chest wall (the resistive, flow-dependent component has dropped out). Static compliance is
+% the volume delivered per unit of that elastic distending pressure: the tidal volume divided by the
+% difference between the plateau pressure and the end-expiratory pressure (PEEP). A stiff (low-compliance)
+% lung — ARDS, pulmonary oedema, fibrosis — needs a large driving pressure for a small breath, so its
+% compliance is low; a floppy (high-compliance) lung — emphysema — moves a large breath for little pressure.
+% THE STATIC COMPLIANCE IS THE TIDAL VOLUME DIVIDED BY THE DRIVING PRESSURE (PLATEAU MINUS PEEP) — i.e.
+% Cstat = V / (Pplat − PEEP). It ships as an importable, byte-provenanced, PARAMETERIZED `formula`, together
+% with two exact rearrangements (the tidal volume a given compliance and driving pressure imply, and the
+% plateau pressure a given tidal volume and compliance imply). As with every compute library, a consumer
+% states NO arithmetic: it `import`s this file, binds the tidal volume, plateau pressure, and PEEP from its
+% own byte-provenance decomposition, and asks the engine to APPLY the cited formula on the CPU. Zero math is
+% performed by the model; the engine computes each value EXACTLY (over exact rationals), carrying the
+% formula's citation.
+%
+%     import "static-compliance.adj"
+%     observe tidal_volume(500)       % "…Vt 500 mL…"          (span cited by the model)
+%     observe plateau_pressure(20)     % "…plateau 20 cmH2O…"   (span cited by the model)
+%     observe peep(10)                 % "…PEEP 10 cmH2O…"      (span cited by the model)
+%     ? static_compliance(tidal_volume, plateau_pressure, peep)   % engine → 50 (mL/cmH2O)
+%
+% Structurally this is a QUOTIENT WHOSE DENOMINATOR IS A DIFFERENCE — the tidal volume over the driving
+% pressure — a shape distinct from the ratio, ratio-of-ratios, percentage-sum, product-over-constant,
+% chained-division, constant-scaled-difference, product-times-constant, three-way-product-over-divisor, and
+% product-of-a-ratio-and-a-value forms of the other clinical libraries. There is NO embedded constant: the
+% tidal volume, plateau pressure, and PEEP are all formal parameters bound at apply time, so every value the
+% engine returns is exact. The three formulas COMPOSE and invert cleanly around the worked case tidal
+% volume = 500 mL, plateau pressure = 20 cmH2O, PEEP = 10 cmH2O (Cstat = 500 / (20 − 10) = 500 / 10 = 50
+% mL/cmH2O): the `static_compliance` a consumer computes is exactly the value each inverse formula
+% back-solves to recover its own measured input (500, 20).
+%
+%   static_compliance(tidal_volume, plateau_pressure, peep) = tidal_volume / (plateau_pressure - peep)   % (mL/cmH2O)
+%   tidal_volume(static_compliance, plateau_pressure, peep) = static_compliance * (plateau_pressure - peep) % (solved for volume)
+%   plateau_pressure(static_compliance, tidal_volume, peep) = tidal_volume / static_compliance + peep       % (solved for plateau pressure)
+%
+% NOTE ON UNITS AND MODELLING: the tidal volume is in millilitres (mL), the plateau and end-expiratory
+% pressures in centimetres of water (cmH2O), and the resulting compliance in mL/cmH2O. The plateau pressure
+% must be measured during an inspiratory pause (no flow); using the peak inspiratory pressure instead would
+% mix in airway resistance and understate the compliance. This library only COMPUTES the static compliance;
+% obtaining a true plateau pressure and interpreting the number against the clinical picture is the
+% bedside clinician's task, stated by the cited source but applied by the reader.
+%
+% All three formulas are defended by the SAME clause — the quoted compliance equation — because that one
+% equation (V / (Pplat − PEEP)) sanctions the relation read every way. The quote is transcribed verbatim
+% from the StatPearls "Pulmonary Compliance" article on the NCBI Bookshelf, so each `formula` carries the
+% provenance envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the formula is a verbatim span of the cited page, not asserted from
+% memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `tidal_volume`, `plateau_pressure`, `peep` and `static_compliance` each appear BOTH as a
+% derived result and as an input (of the other formulas), so each is a single dictionary term used in both
+% roles. The `surface` lists are the everyday names a decomposer maps onto the canonical term; the trailing
+% comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary static_compliance_vocab {
+    define tidal_volume       : finding  surface "tidal volume", "V", "VT", "Vt"                         % mL
+    define plateau_pressure   : finding  surface "plateau pressure", "Pplat", "plateau", "P plateau"     % cmH2O
+    define peep               : finding  surface "PEEP", "end-expiratory pressure", "end expiratory pressure" % cmH2O
+    define static_compliance  : finding  surface "static compliance", "Cstat", "compliance", "Cstatic"    % mL/cmH2O
+}
+
+% ----------------------------------------------------------------------------
+% The static compliance, three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the compliance equation from the StatPearls "Pulmonary
+% Compliance" article on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact
+% expression in the measured values, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook static_compliance_laws {
+    use static_compliance_vocab
+
+    % Static compliance — tidal volume over the driving pressure (plateau minus PEEP).
+    formula static_compliance(tidal_volume, plateau_pressure, peep) = tidal_volume / (plateau_pressure - peep)
+        source "Cstat = V/(Pplat – PEEP)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538324/"
+        trust authoritative
+
+    % Tidal volume — the same equation solved for the volume. Defended by the SAME equation.
+    formula tidal_volume(static_compliance, plateau_pressure, peep) = static_compliance * (plateau_pressure - peep)
+        source "Cstat = V/(Pplat – PEEP)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538324/"
+        trust authoritative
+
+    % Plateau pressure — the same equation solved for the plateau pressure, the third reading of the one law.
+    formula plateau_pressure(static_compliance, tidal_volume, peep) = tidal_volume / static_compliance + peep
+        source "Cstat = V/(Pplat – PEEP)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538324/"
+        trust authoritative
+}

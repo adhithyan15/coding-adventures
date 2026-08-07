@@ -1,0 +1,97 @@
+% ============================================================================
+% osmolar-gap.adj — the definition of the osmol(ar) gap (measured osmolality − calculated
+% osmolality) in the ADJ standard library.
+% ============================================================================
+% The osmolar-gap entry of the *clinical* track — a toxicology/nephrology bedside index, the
+% osmolality sibling of the shipped anion-gap.adj. Where the anion gap is a difference among serum
+% cations and anions, the osmol gap is a difference between two osmolalities: THE OSMOL GAP IS THE
+% DIFFERENCE BETWEEN THE MEASURED SERUM OSMOLALITY AND THE CALCULATED SERUM OSMOLALITY — a screen
+% for unmeasured osmotically active particles. The calculated osmolality accounts only for the
+% commonly measured osmoles (sodium, glucose, urea, etc.); an elevated gap (> 10 mOsm/kg) means
+% something osmotically active is present that the calculation did not include, classically a toxic
+% alcohol (methanol, ethylene glycol, or isopropanol). It ships as an importable, byte-provenanced,
+% PARAMETERIZED `formula`, together with its two exact rearrangements (the measured osmolality a gap
+% implies for a given calculated value, and the calculated osmolality it implies for a given
+% measured value). As with every compute library, a consumer states NO arithmetic: it `import`s
+% this file, binds the two osmolalities from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited definition on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "osmolar-gap.adj"
+%     observe measured_osmolality(290)     % "…measured osm 290 mOsm/kg…"    (span cited by the model)
+%     observe calculated_osmolality(280)    % "…calculated osm 280 mOsm/kg…"  (span cited by the model)
+%     ? osmol_gap(measured_osmolality, calculated_osmolality)
+%                                           % engine → 10, carrying the osmol-gap difference
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case measured osmolality = 290 mOsm/kg,
+% calculated osmolality = 280 mOsm/kg (osmol gap = 290 − 280 = 10): the `osmol_gap` a consumer
+% computes is exactly the value the `measured_osmolality` formula adds back to the calculated value
+% to recover 290, and exactly the value the `calculated_osmolality` formula subtracts from the
+% measured value to recover 280.
+%
+%   osmol_gap(measured_osmolality, calculated_osmolality)
+%       = measured_osmolality - calculated_osmolality      % gap = measured − calculated  (definition)
+%   measured_osmolality(osmol_gap, calculated_osmolality)
+%       = osmol_gap + calculated_osmolality                % measured = gap + calculated  (solved for measured)
+%   calculated_osmolality(measured_osmolality, osmol_gap)
+%       = measured_osmolality - osmol_gap                  % calculated = measured − gap  (solved for calculated)
+%
+% NOTE ON UNITS AND SIGN: both osmolalities are in milliosmoles per kilogram, so the gap is in
+% mOsm/kg. The cited clause names the osmol gap as "the difference between the calculated and
+% measured osmolality"; this library uses the universal clinical sign convention gap = measured −
+% calculated, so an elevated (positive) gap flags unmeasured osmoles. The engine computes the exact
+% difference over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "The difference between the calculated and
+% measured osmolality is known as the osmol gap, also known as the osmolal or osmolar gap" —
+% because that one definition (the osmol gap IS the measured-minus-calculated osmolality difference)
+% sanctions the relation read every way. The quote is transcribed verbatim from a peer-reviewed
+% article archived on the NCBI Bookshelf, so each `formula` carries the provenance envelope every
+% shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the clause is a verbatim span of the cited page, not asserted
+% from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable osmolality the definition ranges over, and each result
+% is a derived quantity. `measured_osmolality`, `calculated_osmolality` and `osmol_gap` each appear
+% BOTH as a derived result and as an input (of the other formulas), so each is a single dictionary
+% term used in both roles. The `surface` lists are the everyday names a decomposer maps onto the
+% canonical term; the trailing comment records the intended unit.
+% ----------------------------------------------------------------------------
+dictionary osmolar_gap_vocab {
+    define measured_osmolality   : finding  surface "measured osmolality", "measured serum osmolality"       % milliosmoles per kilogram (mOsm/kg)
+    define calculated_osmolality : finding  surface "calculated osmolality", "calculated serum osmolality"   % milliosmoles per kilogram (mOsm/kg)
+    define osmol_gap             : finding  surface "osmol gap", "osmolal gap", "osmolar gap"                 % milliosmoles per kilogram (mOsm/kg)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the cited article
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact sum or
+% difference of measured osmolalities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook osmolar_gap_laws {
+    use osmolar_gap_vocab
+
+    % Osmol gap — the measured osmolality minus the calculated osmolality, i.e. gap = measured − calculated.
+    formula osmol_gap(measured_osmolality, calculated_osmolality) = measured_osmolality - calculated_osmolality
+        source "The difference between the calculated and measured osmolality is known as the osmol gap, also known as the osmolal or osmolar gap"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK589659/"
+        trust authoritative
+
+    % Measured osmolality — the same definition solved for the measured value a gap implies for a
+    % given calculated value (measured = gap + calculated). Defended by the SAME clause.
+    formula measured_osmolality(osmol_gap, calculated_osmolality) = osmol_gap + calculated_osmolality
+        source "The difference between the calculated and measured osmolality is known as the osmol gap, also known as the osmolal or osmolar gap"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK589659/"
+        trust authoritative
+
+    % Calculated osmolality — the same definition solved for the calculated value (calculated =
+    % measured − gap): the measured osmolality minus the osmol gap. The SAME clause, read the third way.
+    formula calculated_osmolality(measured_osmolality, osmol_gap) = measured_osmolality - osmol_gap
+        source "The difference between the calculated and measured osmolality is known as the osmol gap, also known as the osmolal or osmolar gap"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK589659/"
+        trust authoritative
+}

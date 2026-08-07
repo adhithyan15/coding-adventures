@@ -1,0 +1,3 @@
+# Core Perl modules only.
+requires 'Encode', '0';
+requires 'Scalar::Util', '0';

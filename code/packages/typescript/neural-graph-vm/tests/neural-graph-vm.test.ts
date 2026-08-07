@@ -75,6 +75,8 @@ interface FakeCommandBuffer {
 }
 
 class FakeGpuDevice {
+  destroyed = false;
+  failPipelineCreation = false;
   readonly queue = {
     writeBuffer: (
       buffer: FakeGpuBuffer,
@@ -113,6 +115,9 @@ class FakeGpuDevice {
   }
 
   createComputePipeline(descriptor: { readonly label?: string }): FakePipeline {
+    if (this.failPipelineCreation) {
+      throw new Error("pipeline creation failed");
+    }
     return { label: descriptor.label ?? "" };
   }
 
@@ -122,6 +127,10 @@ class FakeGpuDevice {
 
   createCommandEncoder(): FakeCommandEncoder {
     return new FakeCommandEncoder();
+  }
+
+  destroy(): void {
+    this.destroyed = true;
   }
 }
 
@@ -489,7 +498,8 @@ describe("neural graph vm", () => {
   });
 
   it("runs matrix plans through the WebGPU backend contract", async () => {
-    const backend = await WebGpuMatrixBackend.create(new FakeGpu());
+    const gpu = new FakeGpu();
+    const backend = await WebGpuMatrixBackend.create(gpu);
     const bytecode = compileNeuralGraphToBytecode(makeTinyWeightedSumGraph());
     const plan = compileBytecodeToMatrixPlan(bytecode);
     const result = await runNeuralMatrixForwardAsync(
@@ -504,6 +514,16 @@ describe("neural graph vm", () => {
       v1: [4, 8],
       v2: [8, 16],
     });
+    backend.destroy();
+    expect(gpu.device.destroyed).toBe(true);
+  });
+
+  it("destroys a WebGPU device when backend construction fails", async () => {
+    const gpu = new FakeGpu();
+    gpu.device.failPipelineCreation = true;
+
+    await expect(WebGpuMatrixBackend.create(gpu)).rejects.toThrow("pipeline creation failed");
+    expect(gpu.device.destroyed).toBe(true);
   });
 
   it("runs sigmoid networks and row conversion through the WebGPU backend", async () => {

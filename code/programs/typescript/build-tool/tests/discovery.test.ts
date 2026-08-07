@@ -15,7 +15,10 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
+  DuplicatePackageIdentityError,
   discoverPackages,
   readLines,
   inferLanguage,
@@ -42,6 +45,51 @@ function rmDir(dir: string): void {
 function writeFile(filepath: string, content: string): void {
   fs.mkdirSync(path.dirname(filepath), { recursive: true });
   fs.writeFileSync(filepath, content, "utf-8");
+}
+
+interface SharedDiscoveryFixture {
+  workspace: {
+    files: Array<{ path: string; content_utf8: string }>;
+  };
+  expected: {
+    outcome: "ok" | "error";
+    result: {
+      packages?: Array<{
+        language: string;
+        name: string;
+        rel_path: string;
+      }>;
+    };
+    diagnostics: Array<{
+      code: string;
+      path: string;
+      package: string;
+      details: { paths: string[] };
+    }>;
+  };
+  limits: { wall_time_ms: number };
+}
+
+const packageRoot = fileURLToPath(new URL("..", import.meta.url));
+const sharedFixtureRoot = fileURLToPath(
+  new URL("../../../../specs/fixtures/build-tool-v1/cases/", import.meta.url),
+);
+
+function loadSharedDiscoveryFixture(name: string): SharedDiscoveryFixture {
+  return JSON.parse(
+    fs.readFileSync(path.join(sharedFixtureRoot, name), "utf-8"),
+  ) as SharedDiscoveryFixture;
+}
+
+function materializeSharedDiscoveryFixture(
+  fixture: SharedDiscoveryFixture,
+): string {
+  const root = makeTempDir();
+  fs.mkdirSync(path.join(root, ".git"));
+  for (const file of fixture.workspace.files) {
+    writeFile(path.join(root, ...file.path.split("/")), file.content_utf8);
+  }
+  return root;
 }
 
 // ---------------------------------------------------------------------------
@@ -125,9 +173,12 @@ describe("inferLanguage", () => {
   });
 
   it("should return unknown for unrecognized paths", () => {
-    expect(inferLanguage("/repo/code/packages/haskell/something")).toBe(
-      "haskell",
-    );
+    expect(inferLanguage("/repo/code/packages/custom/haskell")).toBe("unknown");
+  });
+
+  it("should classify only the exact bucket below packages or programs", () => {
+    expect(inferLanguage("/repo/code/packages/custom/go")).toBe("unknown");
+    expect(inferLanguage("/repo/code/programs/ocaml/tool")).toBe("ocaml");
   });
 });
 
@@ -145,7 +196,16 @@ describe("inferPackageName", () => {
   it("should handle nested paths", () => {
     expect(
       inferPackageName("/a/b/c/programs/go/build-tool", "go"),
+    ).toBe("go/programs/build-tool");
+  });
+
+  it("should preserve package and program identities with the same basename", () => {
+    expect(
+      inferPackageName("/repo/code/packages/go/build-tool", "go"),
     ).toBe("go/build-tool");
+    expect(
+      inferPackageName("/repo/code/programs/go/build-tool", "go"),
+    ).toBe("go/programs/build-tool");
   });
 });
 
@@ -344,6 +404,88 @@ describe("discoverPackages", () => {
       "python",
       "ruby",
     ]);
+  });
+
+  it("consumes the shared canonical language-registry fixture", () => {
+    const fixture = loadSharedDiscoveryFixture(
+      "discovery-language-registry.json",
+    );
+    const root = materializeSharedDiscoveryFixture(fixture);
+    try {
+      const packages = discoverPackages(path.join(root, "code"), "linux");
+      const actual = packages.map((pkg) => ({
+        name: pkg.name,
+        language: pkg.language,
+        rel_path: path.relative(root, pkg.path).replaceAll("\\", "/"),
+      }));
+      const expected = fixture.expected.result.packages?.map((pkg) => ({
+        name: pkg.name,
+        language: pkg.language,
+        rel_path: pkg.rel_path,
+      }));
+      expect(actual).toEqual(expected);
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it("fails closed with the shared duplicate-identity diagnostic", () => {
+    const fixture = loadSharedDiscoveryFixture(
+      "discovery-duplicate-identity.json",
+    );
+    const root = materializeSharedDiscoveryFixture(fixture);
+    try {
+      let caught: unknown;
+      try {
+        discoverPackages(path.join(root, "code"), "linux");
+      } catch (error) {
+        caught = error;
+      }
+      const diagnostic = fixture.expected.diagnostics[0];
+      expect(caught).toBeInstanceOf(DuplicatePackageIdentityError);
+      const duplicate = caught as DuplicatePackageIdentityError;
+      expect(duplicate.code).toBe(diagnostic.code);
+      expect(duplicate.package).toBe(diagnostic.package);
+      expect(duplicate.paths).toEqual(diagnostic.details.paths);
+      expect(duplicate.paths[0]).toBe(diagnostic.path);
+      expect(duplicate.message).toBe(
+        `${diagnostic.code}: package=${diagnostic.package} paths=${diagnostic.details.paths.join(",")}`,
+      );
+      expect(duplicate.message).not.toContain(root);
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it("real CLI returns exit 2 for duplicate package identity", () => {
+    const fixture = loadSharedDiscoveryFixture(
+      "discovery-duplicate-identity.json",
+    );
+    const root = materializeSharedDiscoveryFixture(fixture);
+    try {
+      const tsxCli = path.join(
+        packageRoot,
+        "node_modules",
+        "tsx",
+        "dist",
+        "cli.mjs",
+      );
+      const entrypoint = path.join(packageRoot, "src", "index.ts");
+      const result = spawnSync(
+        process.execPath,
+        [tsxCli, entrypoint, "--root", root, "--force", "--dry-run"],
+        { encoding: "utf-8", timeout: fixture.limits.wall_time_ms },
+      );
+      const diagnostic = fixture.expected.diagnostics[0];
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(2);
+      expect(result.stderr).toBe(
+        `${diagnostic.code}: package=${diagnostic.package} paths=${diagnostic.details.paths.join(",")}\n`,
+      );
+      expect(result.stderr).not.toContain(root);
+    } finally {
+      rmDir(root);
+    }
   });
 });
 

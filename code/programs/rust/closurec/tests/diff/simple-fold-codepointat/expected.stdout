@@ -1,1 +1,1 @@
-var a=97;var b=128169;var c=56489;report(a,b,c);
+var a=97,b=128169,c=56489;report(a,b,c);

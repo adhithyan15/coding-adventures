@@ -1,0 +1,182 @@
+// Notes.dark.msl — default dark theme style for the Notes component.
+//
+// Same structure as Notes.light.msl, dark-theme token values matching the
+// rest of TaskApp (--surface:#252019 --ink:#f1ebe1 --ink-soft:#b3a99c
+// --ink-faint:#867c70 --line:#352e25 --line-soft:#2c2620 --honey:#eaa63f
+// --red:#e26a52 --red-tint:#3a221c).
+
+style Notes {
+  part notes-root {
+    gap : 12 ;
+  }
+
+  part notes-heading {
+    font-size   : 16 ;
+    font-weight : bold ;
+    color       : "#f1ebe1" ;
+  }
+
+  part notes-body {
+    gap : 16 ;
+  }
+
+  part notes-list {
+    width          : 220 ;
+    flex-shrink    : 0 ;
+    gap            : 4 ;
+    padding-right  : 12 ;
+    border-right-width : 1 ;
+    border-right-color : "#352e25" ;
+    border-right-style : "solid" ;
+  }
+
+  part notes-new {
+    width         : 100% ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius : 8 ;
+    border-width  : 0 ;
+    background    : "#eaa63f" ;
+    color         : "#1a1714" ;
+    font-size     : 13 ;
+    font-weight   : bold ;
+    state hover {
+      background: "#d4922f" ;
+    }
+  }
+
+  part notes-row-on {
+    width          : 100% ;
+    text-align     : "left" ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#252019" ;
+    color          : "#f1ebe1" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    box-shadow     : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
+  }
+
+  part notes-row-off {
+    width          : 100% ;
+    text-align     : "left" ;
+    padding-top    : 8 ;
+    padding-right  : 12 ;
+    padding-bottom : 8 ;
+    padding-left   : 12 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "transparent" ;
+    color          : "#b3a99c" ;
+    font-size      : 13 ;
+    state hover {
+      background: "#2c2620" ;
+      color: "#f1ebe1" ;
+    }
+  }
+
+  part notes-editor {
+    flex-grow : 1 ;
+    gap       : 10 ;
+  }
+
+  part notes-title-input {
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#1a1714" ;
+    color         : "#f1ebe1" ;
+    border-width  : 1 ;
+    border-color  : "#352e25" ;
+    font-size     : 14 ;
+    font-weight   : bold ;
+  }
+
+  part notes-body-input {
+    width         : 100% ;
+    min-height    : 200 ;
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#1a1714" ;
+    color         : "#f1ebe1" ;
+    border-width  : 1 ;
+    border-color  : "#352e25" ;
+    font-size     : 13 ;
+  }
+
+  part notes-task-input {
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#1a1714" ;
+    color         : "#b3a99c" ;
+    border-width  : 1 ;
+    border-color  : "#352e25" ;
+    font-size     : 13 ;
+  }
+
+  part notes-actions {
+    gap : 8 ;
+  }
+
+  part notes-save {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#eaa63f" ;
+    color          : "#1a1714" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    state hover {
+      background: "#d4922f" ;
+    }
+  }
+
+  part notes-delete {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "#3a221c" ;
+    color          : "#e26a52" ;
+    font-size      : 13 ;
+    font-weight    : bold ;
+    state hover {
+      background: "#472a22" ;
+    }
+  }
+
+  part notes-cancel {
+    padding-top    : 8 ;
+    padding-right  : 16 ;
+    padding-bottom : 8 ;
+    padding-left   : 16 ;
+    border-radius  : 8 ;
+    border-width   : 0 ;
+    background     : "transparent" ;
+    color          : "#b3a99c" ;
+    font-size      : 13 ;
+    state hover {
+      color: "#f1ebe1" ;
+    }
+  }
+
+  part notes-empty {
+    flex-grow  : 1 ;
+    align      : center ;
+  }
+
+  part notes-empty-hint {
+    font-size : 13 ;
+    color     : "#867c70" ;
+  }
+}

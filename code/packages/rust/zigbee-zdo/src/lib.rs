@@ -671,7 +671,7 @@ impl ZigbeeInterviewPlan {
         Self {
             network_address: summary.network_address,
             node_descriptor_complete: summary.node_descriptor.is_some(),
-            active_endpoints: active_endpoints.map(|endpoints| sorted_unique_endpoints(endpoints)),
+            active_endpoints: active_endpoints.map(sorted_unique_endpoints),
             simple_descriptor_endpoints,
         }
     }

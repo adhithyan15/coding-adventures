@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.NibWasmCompiler.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.NibWasmCompiler.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# Nib u4 expression compiler targeting WebAssembly</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="NibWasmCompiler.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../wasm-leb128/CodingAdventures.WasmLeb128.fsproj" />
+    <ProjectReference Include="../wasm-module-encoder/CodingAdventures.WasmModuleEncoder.fsproj" />
+    <ProjectReference Include="../wasm-types/CodingAdventures.WasmTypes.fsproj" />
+  </ItemGroup>
+</Project>

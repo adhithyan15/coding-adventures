@@ -1,3 +1,6 @@
+// The float literal is intentional end-to-end test input, not an approximation
+// of a std constant to be replaced.
+#![allow(clippy::approx_constant)]
 //! End-to-end integration test: Twig source → SIR → JavaScript → `node`.
 //!
 //! The whole point of this backend is *self-contained* JavaScript that
@@ -16,8 +19,8 @@ use std::process::Command;
 
 use semantic_ir::nodes::MapEntry;
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, RescueClause,
-    Scope, Span, Stmt,
+    Block, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, Metadata,
+    Module, RescueClause, Scope, Span, Stmt,
 };
 use semantic_ir_to_javascript::compile;
 
@@ -68,6 +71,21 @@ fn let_(name: &str, value: Expr) -> Stmt {
 /// Wrap a `main` function (the `stmts` run for effect, `value` is its
 /// return) into a complete, SIR16-flagged module ready for `compile`.
 fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Module {
+    module_with_lang_and_main(stmts, value, features, "handbuilt")
+}
+
+/// Like `module_with_main`, but tagged with an explicit `source_language`
+/// rather than always `"handbuilt"`. Needed to exercise the emitter's
+/// per-module display-convention substitutions (`SIR_DISPLAY_RUBY`,
+/// `SIR_DISPLAY_APL_HIGH_MINUS` — see `emit.rs::emit_module`), which key
+/// off `metadata.source_language` and so can never be turned on through
+/// `module_with_main`'s hardcoded `"handbuilt"` tag.
+fn module_with_lang_and_main(
+    stmts: Vec<Stmt>,
+    value: Expr,
+    features: &[Feature],
+    lang: &str,
+) -> Module {
     Module {
         name: "sir16".into(),
         manifest: FeatureManifest::from_features(features),
@@ -85,7 +103,7 @@ fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Modu
         }],
         globals: vec![],
         metadata: Metadata::new()
-            .with_source_language("handbuilt")
+            .with_source_language(lang)
             .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
         span: sp(),
     }
@@ -194,6 +212,609 @@ fn floats_arithmetic_promotion_prints_3_5() {
     );
     if let Some(stdout) = run_module(&module, "floats") {
         assert_eq!(stdout, "3.5");
+    }
+}
+
+/// Run a raw-JS `snippet` against the embedded `__Sir` runtime.  A compiled
+/// module ends with the top-level `const __Sir = (…)();` followed by
+/// `main();`, so appending JS after it can call the runtime helpers directly
+/// — the way to exercise runtime-level behaviour (here: the dormant
+/// tagged-float helpers) without a program that reaches them yet.  Returns
+/// `None` when Node is unavailable.
+fn run_runtime_snippet(snippet: &str, tag: &str) -> Option<String> {
+    run_runtime_snippet_lang(snippet, tag, "handbuilt")
+}
+
+/// Like `run_runtime_snippet`, but against a module tagged with an explicit
+/// `source_language` rather than always `"handbuilt"` — needed to turn on
+/// `SIR_DISPLAY_APL_HIGH_MINUS` (`true` only when `source_language` is
+/// exactly `"apl"`; see `emit.rs::emit_module`), which `run_runtime_snippet`
+/// itself can never do.
+fn run_runtime_snippet_lang(snippet: &str, tag: &str, lang: &str) -> Option<String> {
+    let module = module_with_lang_and_main(vec![], Expr::NilLit { span: sp() }, &[], lang);
+    let artifact = compile(&module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping runtime snippet `{tag}`");
+        return None;
+    }
+    let program = format!("{}\n{}\n", artifact.source, snippet);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_rt_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &program).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstderr: {}\nprogram:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        program,
+    );
+    let stdout = String::from_utf8(output.stdout).expect("utf8 stdout");
+    Some(stdout.trim_end_matches(['\n', '\r']).to_string())
+}
+
+#[test]
+fn tagged_float_helpers_behave() {
+    // Exercises the dormant tagged-float substrate directly (nothing emits
+    // boxed floats yet).  Confirms the invariant before the atomic flip:
+    //   - `floatToRubyString` restores the trailing `.0` (incl. `-0.0` and
+    //     exponent form), matching Ruby / the Rust/Go backends;
+    //   - only INTEGRAL floats box (`mkFloat(3.5) === 3.5` stays native);
+    //   - equal integral floats INTERN to one identity (Map/Set dedup);
+    //   - `isFloat`/`isNum`/`numOf` classify and unwrap correctly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.floatToRubyString(7));                 // 7.0
+o.push(F.floatToRubyString(-0));                // -0.0
+o.push(F.floatToRubyString(1e21));              // 1.0e+21
+o.push(String(F.isFloat(F.mkFloat(7))));        // true  (boxed integral float)
+o.push(String(F.isFloat(3.5)));                 // true  (non-integral native float)
+o.push(String(F.isFloat(7)));                   // false (integer)
+o.push(String(F.mkFloat(3.5) === 3.5));         // true  (non-integral stays native)
+o.push(String(F.mkFloat(7) === F.mkFloat(7)));  // true  (interned singleton)
+o.push(String(F.numOf(F.mkFloat(7))));          // 7
+o.push(String(F.isNum(F.mkFloat(7))));          // true
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "tagfloat") {
+        assert_eq!(
+            stdout,
+            "7.0|-0.0|1.0e+21|true|true|false|true|true|7|true",
+        );
+    }
+}
+
+/// `==`/`!=` are Ruby's VALUE equality — structural for composites, not JS
+/// reference identity. A prior review found `==` (once lowered) returned
+/// `false` for two equal arrays because the operator routed to a `numOf`-based
+/// helper. It now routes to `valEq`, so the JS backend agrees with the Python,
+/// Ruby, Go, C and Rust backends. Driven through `callMethod`/`callBuiltin`
+/// (the real dispatch), covering arrays, maps, cross int/float, symbols, and
+/// the exact-negation property of `!=`.
+#[test]
+fn value_equality_is_structural_for_composites() {
+    let snippet = r#"
+const F = __Sir; const o = [];
+const eq = (a, b) => F.builtins["=="](a, b);
+const ne = (a, b) => F.builtins["!="](a, b);
+o.push(String(eq([1, 2], [1, 2])));                 // true  (structural, not ref)
+o.push(String(eq([1, 2], [1, 3])));                 // false
+o.push(String(ne([1, 2], [1, 3])));                 // true  (exact negation)
+o.push(String(ne([1, 2], [1, 2])));                 // false
+o.push(String(eq([1, [2, 3]], [1, [2, 3]])));       // true  (nested / recursive)
+const m1 = new Map([["a", 1]]); const m2 = new Map([["a", 1]]);
+o.push(String(eq(m1, m2)));                          // true  (maps structural)
+o.push(String(eq(F.mkFloat(7), 7)));                // true  (7.0 == 7 by value)
+o.push(String(eq(F.intern("x"), F.intern("x"))));   // true  (symbols by name)
+o.push(String(eq(1, 1)));                            // true  (plain ints)
+o.push(String(eq("a", "a")));                        // true  (strings)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "structeq") {
+        assert_eq!(
+            stdout,
+            "true|false|true|false|true|true|true|true|true|true",
+        );
+    }
+}
+
+#[test]
+fn shift_left_polymorphic_dispatch() {
+    // `<<` — Ruby's shift operator, part of "JS/TS backend: implement
+    // shift-operator runtime dispatch". Before this fix `<<` had no entry
+    // in the `builtins` table at all, so ANY use of `<<` as an operator
+    // threw `TypeError: unknown builtin: <<`. Exercises every receiver
+    // arm directly against `__Sir.shiftLeft`/`__Sir.builtins["<<"]`.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.shiftLeft(5, 2)));                       // 20 (Integer left shift)
+o.push(String(F.shiftLeft(5, -1)));                       // 2  (negative amount reverses direction)
+o.push(String(F.shiftLeft(-8, -1)));                      // -4 (arithmetic right shift on a negative receiver)
+o.push(String(F.shiftLeft(0, 40)));                       // 0  (0 shifted by anything is 0)
+o.push(String(F.shiftLeft(1, 40)));                       // 1099511627776 -- proves NOT the native
+                                                            // Int32-masked `<<` (which would give the wrong answer)
+const a = [1, 2];
+const pushed = F.shiftLeft(a, 3);
+o.push(String(pushed === a));                             // true (mutates and returns the SAME receiver)
+o.push(JSON.stringify(a));                                // [1,2,3]
+o.push(F.shiftLeft("ab", "cd"));                           // abcd (new string)
+o.push(String(F.shiftLeft(5, 2.9)));                       // 20 (float amount truncates toward zero)
+o.push(String(F.builtins["<<"](5, 2)));                    // 20 (registered in the builtins table too)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "shiftleft") {
+        assert_eq!(
+            stdout,
+            "20|2|-4|0|1099511627776|true|[1,2,3]|abcd|20|20",
+        );
+    }
+}
+
+#[test]
+fn shift_left_operator_emits_through_the_polymorphic_fast_path() {
+    // Proves the EMITTER routes a real `BuiltinCall("<<", [lhs, rhs])` (the
+    // shape `ruby-to-semantic-ir` produces) through `__Sir.shiftLeft`, not
+    // native JS `<<` (which would be silently wrong for `1 << 40`) and not
+    // the generic `callBuiltin` indirection.
+    let module = module_with_main(
+        vec![print(bc("<<", vec![int(1), int(40)]))],
+        Expr::NilLit { span: sp() },
+        &[],
+    );
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains("__Sir.shiftLeft(1, 40)"),
+        "expected the 2-arg fast path to route through __Sir.shiftLeft; got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_module(&module, "shiftop") {
+        assert_eq!(stdout, "1099511627776");
+    }
+}
+
+#[test]
+fn numof_unwraps_scalar_ndarray_for_comparison_and_negation() {
+    // Regression test for the while-loop-accumulator bug found by
+    // `matlab-to-semantic-ir`'s oracle test (`tests/oracle.rs`, previously
+    // `known_bug_while_loop_accumulator_terminates_after_one_iteration`, now
+    // fixed): a rank-0 (scalar) SIR22 `NDArray` -- `{ shape: [], data: [x] }`,
+    // exactly what `__Sir.Array.elementwise` returns even for two plain-number
+    // operands (any variable-involving arithmetic takes this path, since the
+    // frontend's scalar heuristic only recognises *literal* chains as
+    // provably scalar) -- must compare/negate/subtract exactly like the
+    // plain number `x` it degenerately holds. Before this fix, `numOf` only
+    // unwrapped a tagged `SirFloat`; a scalar NDArray fell through as an
+    // opaque object, and a native `<`/`>`/`-` on it coerced through
+    // `ToPrimitive` to `NaN` -- `NaN < 10` is silently `false`, not an error,
+    // which is exactly why a `while n < 10 ... n = n + 1 ... end` loop whose
+    // `n` starts as a literal but is re-assigned via variable-involving
+    // arithmetic used to terminate after its first iteration instead of
+    // converging.
+    let snippet = r#"
+const F = __Sir; const o = [];
+const seven = F.Array.ndarray([], Float64Array.of(7));
+const ten = F.Array.ndarray([], Float64Array.of(10));
+o.push(String(F.numOf(seven)));       // 7  -- unwrapped to a plain number
+o.push(String(F.lt(seven, 10)));      // true  (7 < 10; used to be NaN < 10 = false)
+o.push(String(F.lt(ten, 7)));         // false (10 < 7)
+o.push(String(F.gt(seven, ten)));     // false (7 > 10)
+o.push(String(F.eq(seven, 7)));       // true  (value equality vs. the plain number)
+o.push(String(F.ne(seven, ten)));     // true
+o.push(String(F.neg(seven)));         // -7    (bare native `-` on the old object gave NaN)
+o.push(String(F.minus(ten, seven)));  // 3
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "ndarray_numof") {
+        assert_eq!(stdout, "7|true|false|false|true|true|-7|3");
+    }
+}
+
+// ── APL monadic scalar atoms (`- × ÷ ⌈ ⌊`): three bugs found by
+// `apl-to-semantic-ir/tests/oracle.rs`'s oracle harness, fixed here ──
+//
+// See `runtime.rs`'s `SIR_DISPLAY_APL_HIGH_MINUS` and `neg`/
+// `monadicScalarAtom` doc comments for the full root-cause writeups this
+// section's tests are regression coverage for.
+
+#[test]
+fn apl_monadic_neg_bare_and_boxed_scalar_uses_high_minus_only_for_apl_modules() {
+    // Bug #1: monadic `-` on a bare scalar (`-5`, lowered to a bare
+    // `neg(5)` call -- no NDArray involved at all) printed the right
+    // NUMBER with the WRONG GLYPH (ASCII `-5`, not APL's own high-minus
+    // `¯5`). Root cause: the glyph decision lives in `formatSeen`, not in
+    // `neg` itself -- ANY bare number or boxed `SirFloat` an APL program
+    // prints needs the same fix, which is why this snippet checks both a
+    // bare-IntLit-shaped operand (`neg(5)`) and a boxed-integral-float-
+    // literal-shaped one (`neg(mkFloat(3))`, mirroring how `-3.0` compiles)
+    // in one pass.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.format(F.neg(5)));            // bare IntLit-shaped operand
+o.push(F.format(F.neg(F.mkFloat(3))));  // boxed integral-float operand
+o.push(F.format(5));                    // a positive bare number: glyph is moot either way
+console.log(o.join("|"));
+"#;
+    // APL-sourced module: high-minus, no trailing `.0`.
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_scalar_apl", "apl") {
+        assert_eq!(stdout, "¯5|¯3|5");
+    }
+    // The IDENTICAL snippet against a non-APL module must be byte-for-byte
+    // UNCHANGED from before this fix (Ruby's own `SirFloat` trailing-`.0`
+    // convention, ASCII sign) -- this is the regression guard for every
+    // OTHER consumer of `neg` (Ruby/MATLAB/Python/JS all reach it the same
+    // way for a non-array operand).
+    if let Some(stdout) = run_runtime_snippet(snippet, "apl_neg_scalar_nonapl") {
+        assert_eq!(stdout, "-5|-3.0|5");
+    }
+}
+
+#[test]
+fn apl_monadic_neg_rank1_array_negates_elementwise_instead_of_nan() {
+    // Bug #2: monadic `-` on a genuine ARRAY (rank >= 1, e.g. `-1 2 ¯3`)
+    // silently computed `NaN` (native unary minus on a plain `{shape,
+    // data}` object coerces through `ToPrimitive`) instead of the
+    // correctly negated array. Matches `apl-runtime`'s own ground truth
+    // for `-1 2 ¯3` exactly: negate `[1, 2, -3]` -> `[-1, -2, 3]`, printed
+    // high-minus, space-separated.
+    let snippet = r#"
+const F = __Sir;
+const v = F.Array.ndarray([3], Float64Array.of(1, 2, -3));
+F.print(F.neg(v));
+"#;
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_array", "apl") {
+        assert_eq!(stdout, "¯1 ¯2 3");
+    }
+}
+
+#[test]
+fn apl_monadic_neg_rank0_ndarray_matches_matlab_ascii_convention_unchanged() {
+    // A rank-0 NDArray (e.g. from a nested dyadic op, `-(3+4)`) is NOT
+    // unique to APL -- `matlab-to-semantic-ir`'s `^`/`.^` unconditionally
+    // lower to `ElementwiseOp::Pow` even for two literals, so a plain
+    // MATLAB `2 ^ 2` reaches `neg` as the IDENTICAL rank-0 `{shape: [],
+    // data}` shape. `neg` must therefore keep unwrapping a rank-0 operand
+    // to a bare number (never boxing it) regardless of source language --
+    // only `formatSeen`'s `SIR_DISPLAY_APL_HIGH_MINUS` branch may pick the
+    // glyph. This is the regression guard for
+    // `matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power`
+    // case (`-2 ^ 2` must print ASCII `-4`, not `¯4`), reproduced here at
+    // the SIR level since this crate cannot depend on that frontend crate.
+    let matlab_module = module_with_lang_and_main(
+        vec![puts_(bc(
+            "neg",
+            vec![Expr::ElementwiseOp {
+                op: ElementwiseOpKind::Pow,
+                lhs: Box::new(int(2)),
+                rhs: Box::new(int(2)),
+                span: sp(),
+            }],
+        ))],
+        Expr::NilLit { span: sp() },
+        &[Feature::NDArrays, Feature::MatrixOps, Feature::ArrayColumnMajor],
+        "matlab",
+    );
+    if let Some(stdout) = run_module(&matlab_module, "matlab_neg_power_rank0") {
+        assert_eq!(stdout, "-4", "MATLAB's own ASCII convention must be unchanged");
+    }
+
+    // The identical rank-0 shape, printed through an APL-tagged module,
+    // must instead use high-minus -- proving the SAME `neg` function
+    // serves both conventions correctly, gated purely by source language.
+    let snippet = r#"
+const F = __Sir;
+const seven = F.Array.ndarray([], Float64Array.of(7));
+F.print(F.neg(seven));
+"#;
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_rank0", "apl") {
+        assert_eq!(stdout, "¯7");
+    }
+}
+
+#[test]
+fn apl_monadic_sign_recip_ceil_floor_builtins_work_on_scalar_and_array() {
+    // Bug #3: `sign`/`recip`/`ceil`/`floor` crashed with `TypeError:
+    // unknown builtin: <name>` for EVERY operand (these four names were
+    // documented but never registered in `runtime.rs`'s `builtins` table).
+    // Covers the two explicitly-called-out edge cases from
+    // `apl_runtime::eval::apply_monadic_scalar`/`apl_sign`: `sign(0) == 0`
+    // (NOT `f64::signum()`'s `1`-for-`+0` convention) and `recip(0) ==
+    // Infinity` (never an error/`NaN`) -- plus each of the four over a
+    // genuine rank-1 array, matching how `neg`/`ElementwiseOp` already
+    // treat "scalar or any-rank array" uniformly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.callBuiltin("sign", [5])));     // 1
+o.push(String(F.callBuiltin("sign", [-5])));    // -1
+o.push(String(F.callBuiltin("sign", [0])));     // 0 -- the sign(0) == 0 edge case
+o.push(String(F.callBuiltin("recip", [4])));    // 0.25
+o.push(String(F.callBuiltin("recip", [0])));    // Infinity -- the recip(0) edge case
+o.push(String(F.callBuiltin("ceil", [3.2])));   // 4
+o.push(String(F.callBuiltin("floor", [3.8])));  // 3
+const signArr = F.Array.ndarray([3], Float64Array.of(-2, 0, 3));
+o.push(F.Array.display(F.callBuiltin("sign", [signArr])));   // ¯1 0 1
+const recipArr = F.Array.ndarray([2], Float64Array.of(2, 4));
+o.push(F.Array.display(F.callBuiltin("recip", [recipArr]))); // 0.5 0.25
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "apl_monadic_builtins") {
+        assert_eq!(stdout, "1|-1|0|0.25|Infinity|4|3|¯1 0 1|0.5 0.25");
+    }
+}
+
+#[test]
+fn apl_monadic_sign_recip_ceil_floor_use_high_minus_via_print_when_apl_sourced() {
+    // Same four builtins, but through the FULL `print`/`formatSeen` path
+    // (not a direct `String(...)`/`Array.display` call) on an APL-tagged
+    // module, confirming their bare-scalar results respect
+    // `SIR_DISPLAY_APL_HIGH_MINUS` exactly like `neg`'s own scalar case
+    // does -- these values are never re-boxed through `mkFloat` (see
+    // `monadicScalarAtom`'s own comment for why that would be WRONG for
+    // APL specifically), so they only ever reach `formatSeen`'s bare-
+    // number branch, never the `SirFloat` one.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.format(F.callBuiltin("sign", [-5])));    // ¯1
+o.push(F.format(F.callBuiltin("recip", [-4])));   // ¯0.25
+o.push(F.format(F.callBuiltin("ceil", [-3.8])));  // ¯3 (Math.ceil(-3.8) === -3)
+o.push(F.format(F.callBuiltin("floor", [-3.2]))); // ¯4 (Math.floor(-3.2) === -4)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) =
+        run_runtime_snippet_lang(snippet, "apl_monadic_builtins_high_minus", "apl")
+    {
+        assert_eq!(stdout, "¯1|¯0.25|¯3|¯4");
+    }
+}
+
+#[test]
+fn matlab_truthy_passes_through_a_genuine_boolean_and_coerces_a_bare_number() {
+    // `matlab-to-semantic-ir` wraps every operand reaching a boolean
+    // context (`~`/`if`/`while`/`&&`/`||`) in `matlab_truthy`, UNCONDITIONALLY
+    // -- no static "is this already boolean?" shape check, because the first
+    // attempt at that check (caught by /security-review before push) could
+    // not see through a `VarRef` holding a *stored* comparison result, and
+    // silently mis-wrapped it in a `!= 0` comparison instead. `matlabTruthy`
+    // makes the boolean-vs-number call at RUNTIME instead, where the actual
+    // value (not its static shape) is known: pass a genuine JS boolean
+    // through unchanged, otherwise apply MATLAB's "nonzero is true" rule.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.matlabTruthy(true)));   // true  (genuine boolean passes through)
+o.push(String(F.matlabTruthy(false)));  // false (genuine boolean passes through)
+o.push(String(F.matlabTruthy(0)));      // false (bare zero: falsy)
+o.push(String(F.matlabTruthy(5)));      // true  (bare nonzero: truthy)
+o.push(String(F.matlabTruthy(-3)));     // true  (bare negative nonzero: truthy)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "matlab_truthy") {
+        assert_eq!(stdout, "true|false|false|true|true");
+    }
+}
+
+fn puts_(arg: Expr) -> Stmt {
+    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: sp() }
+}
+
+#[test]
+fn tagged_float_end_to_end_division_and_display() {
+    // The FULL emitter path: `FloatLit` → `__Sir.mkFloat(...)`, then division
+    // and display honour the Integer/Float tag.  This is the faithful fix for
+    // the SIR21 §E3 JS float-division gap — a boxed Float `7.0` true-divides
+    // (`3.5`) while Integers still floor, and `7.0` prints as `7.0`.
+    let module = module_with_main(
+        vec![
+            puts_(bc("/", vec![float(7.0), int(2)])), // Float#/  → 3.5
+            puts_(bc("/", vec![float(6.0), int(2)])), // Float#/  → 3.0 (boxed)
+            puts_(bc("/", vec![int(7), int(2)])),     // Integer#/ floors → 3
+            puts_(bc("/", vec![int(-7), int(2)])),    // Integer#/ floors → -4
+            puts_(float(7.0)),                         // display  → 7.0
+            puts_(float(3.5)),                         // display  → 3.5
+            puts_(bc("+", vec![float(3.5), float(3.5)])), // Float+Float → 7.0
+            puts_(bc("*", vec![float(2.0), float(3.0)])), // Float*Float → 6.0
+            puts_(bc("-", vec![float(7.0), int(1)])),  // Float-Int → 6.0
+            puts_(bc("neg", vec![float(7.0)])),        // -Float → -7.0
+            puts_(bc("+", vec![int(1), float(2.5)])),  // Int+Float → 3.5 (native)
+        ],
+        Expr::NilLit { span: sp() },
+        &[Feature::Floats],
+    );
+    if let Some(stdout) = run_module(&module, "tagfloate2e") {
+        assert_eq!(
+            stdout,
+            "3.5\n3.0\n3\n-4\n7.0\n3.5\n7.0\n6.0\n6.0\n-7.0\n3.5",
+        );
+    }
+}
+
+#[test]
+fn tagged_float_methods_and_collections() {
+    // Method dispatch + collection behaviour on tagged floats: type predicates,
+    // conversions, Ruby `==` across the Integer/Float split, and — the highest
+    // risk — Map-key / Set dedup, which the INTERNING of integral floats makes
+    // correct with no per-site edits (a boxed `7.0` is a distinct hash key from
+    // Integer `7` by `eql?`, and equal boxed floats dedup by identity).
+    let snippet = r#"
+const F = __Sir; const o = [];  // callMethod is variadic: callMethod(recv, name, ...args)
+o.push(String(F.callMethod(F.mkFloat(7), "float?")));        // true
+o.push(String(F.callMethod(7, "integer?")));                 // true
+o.push(String(F.callMethod(F.mkFloat(7), "integer?")));      // false
+o.push(F.format(F.callMethod(7, "to_f")));                   // 7.0
+o.push(F.format(F.callMethod(F.mkFloat(7), "to_i")));        // 7
+o.push(F.format(F.callMethod(F.mkFloat(7), "abs")));         // 7.0 (Float#abs → Float)
+o.push(F.format(F.callMethod(7, "fdiv", 2)));                // 3.5
+o.push(String(F.eq(F.mkFloat(7), 7)));                       // true  (7.0 == 7)
+o.push(String(F.callMethod([F.mkFloat(7)], "include?", 7))); // true ([7.0].include?(7))
+const m = new Map(); m.set(7, "int"); m.set(F.mkFloat(7), "flt");
+o.push(String(m.size) + ":" + m.get(7) + ":" + m.get(F.mkFloat(7))); // 2:int:flt
+o.push(F.format(F.callMethod([F.mkFloat(1), F.mkFloat(1), F.mkFloat(2)], "uniq")));
+o.push(F.format(F.callMethod([F.mkFloat(1), F.mkFloat(1), F.mkFloat(2)], "tally")));
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "tagfloatmeth") {
+        assert_eq!(
+            stdout,
+            "true|true|false|7.0|7|7.0|3.5|true|true|2:int:flt|[1.0, 2.0]|{1.0: 2, 2.0: 1}",
+        );
+    }
+}
+
+#[test]
+fn ruby_class_reflection_names_every_type() {
+    // `.class` on every runtime type, matching the Go backend's
+    // `_sir_ruby_class_name`. The Integer-vs-Float answer is only possible
+    // because numbers carry a tag — `7` and `7.0` are the same f64 in JS.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.callMethod(7, "class"));                  // Integer
+o.push(F.callMethod(F.mkFloat(7), "class"));       // Float  (tagged!)
+o.push(F.callMethod(3.5, "class"));                // Float  (non-integral native)
+o.push(F.callMethod("hi", "class"));               // String
+o.push(F.callMethod(F.intern("sym"), "class"));    // Symbol
+o.push(F.callMethod([1, 2], "class"));             // Array
+o.push(F.callMethod(new Map(), "class"));          // Hash
+o.push(F.callMethod(null, "class"));               // NilClass
+o.push(F.callMethod(true, "class"));               // TrueClass
+o.push(F.callMethod(false, "class"));              // FalseClass
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbclass") {
+        assert_eq!(
+            stdout,
+            "Integer|Float|Float|String|Symbol|Array|Hash|NilClass|TrueClass|FalseClass",
+        );
+    }
+}
+
+#[test]
+fn ruby_is_a_honours_ancestry_and_instance_of_is_exact() {
+    // `is_a?`/`kind_of?` walk ancestry; `instance_of?` is an EXACT match.
+    // Reached BOTH as a method and as the `is_a?` builtin (the form the Ruby
+    // frontend emits for `x.is_a?(Foo)` and for a `case/in Foo` pattern,
+    // passing the class as its NAME so no constant-reference support is
+    // needed). `respond_to?` reports them honestly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.callMethod(7, "is_a?", "Integer")));      // true  (exact)
+o.push(String(F.callMethod(7, "is_a?", "Numeric")));      // true  (ancestor)
+o.push(String(F.callMethod(7, "is_a?", "Comparable")));   // true  (ancestor)
+o.push(String(F.callMethod(7, "is_a?", "Object")));       // true  (universal)
+o.push(String(F.callMethod(7, "is_a?", "Float")));        // false
+o.push(String(F.callMethod(F.mkFloat(7), "is_a?", "Float")));   // true (tagged)
+o.push(String(F.callMethod(F.mkFloat(7), "is_a?", "Integer"))); // false
+o.push(String(F.callMethod(7, "kind_of?", "Numeric")));   // true (alias)
+o.push(String(F.callMethod(7, "instance_of?", "Integer")));// true  (exact)
+o.push(String(F.callMethod(7, "instance_of?", "Numeric")));// false (NOT ancestry)
+o.push(String(F.builtins["is_a?"](7, "Numeric")));        // true  (builtin form)
+o.push(String(F.builtins["instance_of?"](7, "Numeric"))); // false (builtin form)
+o.push(String(F.builtins["class"](F.mkFloat(7))));        // Float (builtin form)
+o.push(String(F.callMethod(7, "respond_to?", F.intern("class")))); // true
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbisa") {
+        assert_eq!(
+            stdout,
+            "true|true|true|true|false|true|false|true|true|false|true|false|Float|true",
+        );
+    }
+}
+
+#[test]
+fn ruby_reflection_covers_exceptions_modules_and_rejects_prototype_names() {
+    // Three edges a security review surfaced:
+    //  1. A caught exception is a `SirError`, NOT a `SirInstance` — it must
+    //     still report its own class and walk exception ancestry, or
+    //     `rescue => e; e.is_a?(StandardError)` silently takes the wrong branch.
+    //  2. Ruby's MRO is TRANSITIVE: `C` includes `M`, `M` includes `N` ⇒
+    //     `c.is_a?(N)` is true.
+    //  3. The `builtins` table is indexed by a source-derived name, so it must
+    //     be null-prototype — otherwise `builtins["toString"]` resolves an
+    //     inherited function and `callBuiltin` INVOKES it (a gadget).
+    let snippet = r#"
+const F = __Sir; const o = [];
+// (1) exceptions
+const e = new F.SirError("ArgumentError", "boom");
+o.push(F.callMethod(e, "class"));                              // ArgumentError
+o.push(String(F.callMethod(e, "is_a?", "ArgumentError")));     // true (exact)
+o.push(String(F.callMethod(e, "is_a?", "StandardError")));     // true (ancestry)
+o.push(String(F.callMethod(e, "is_a?", "TypeError")));         // false
+// (2) transitive module includes: C < M < N
+F.includeModule("C", "M"); F.includeModule("M", "N");
+const inst = new F.SirInstance("C");
+o.push(String(F.callMethod(inst, "class")));                   // C
+o.push(String(F.callMethod(inst, "is_a?", "M")));              // true (direct)
+o.push(String(F.callMethod(inst, "is_a?", "N")));              // true (transitive)
+o.push(String(F.callMethod(inst, "is_a?", "Q")));              // false
+// (3) prototype-name gadget is closed
+o.push(String(F.builtins["toString"]));                        // undefined
+o.push(String(F.builtins["__defineGetter__"]));                // undefined
+try { F.callBuiltin("constructor", []); o.push("INVOKED"); }
+catch (err) { o.push("raised"); }                              // raised
+// (4) a NATIVE JS error reflects as the class `rescue` catches it as, so
+//     reflection and rescue matching never disagree.
+const native = new TypeError("internal");
+o.push(F.callMethod(native, "class"));                         // StandardError
+o.push(String(F.callMethod(native, "is_a?", "StandardError"))); // true
+o.push(F.callMethod(native, "message"));                       // internal (NOT NoMethodError)
+o.push(String(F.callMethod(native, "respond_to?", "message"))); // true
+o.push(F.format(native));                                      // internal (message, not "TypeError: internal")
+// (5) a pathological include CHAIN must not exhaust the JS stack — BOTH the
+//     module walk behind `is_a?` and `resolveMethod`'s own module search are
+//     explicit worklists, not recursion.  Driven through `callMethod` (the
+//     REAL dispatch path, which consults `resolveMethod` first) — that path
+//     used to die with `RangeError: Maximum call stack size exceeded`.
+for (let i = 0; i < 20000; i++) { F.includeModule("D" + i, "D" + (i + 1)); }
+const deep = new F.SirInstance("D0");
+o.push(String(F.callMethod(deep, "is_a?", "D20000")));         // true, no overflow
+o.push(String(F.callMethod(deep, "is_a?", "Nope")));           // false, no overflow
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbrefledge") {
+        assert_eq!(
+            stdout,
+            "ArgumentError|true|true|false|C|true|true|false|undefined|undefined|raised|\
+             StandardError|true|internal|true|internal|true|false",
+        );
+    }
+}
+
+#[test]
+fn method_resolution_order_survives_the_iterative_module_search() {
+    // `resolveMethod`'s module search became an explicit stack (it used to
+    // recurse and blow the JS stack on a deep `include` chain). MRO order is
+    // the thing that MUST NOT change, so pin every ordering rule:
+    //   1. a class's OWN method beats any module it includes;
+    //   2. the most-recently-included module wins over an earlier one;
+    //   3. a module's own includes are searched depth-first, newest-first,
+    //      BEFORE moving on to an older sibling module;
+    //   4. the superclass chain is consulted only after the whole subclass
+    //      subtree (class + its modules) misses.
+    let snippet = r#"
+const F = __Sir; const o = [];
+const m = (tag) => new F.Closure(() => tag);
+// 1. own method beats an included module
+F.defMethod("K1", "who", m("own")); F.includeModule("K1", "MA"); F.defMethod("MA", "who", m("MA"));
+o.push(F.callMethod(new F.SirInstance("K1"), "who"));            // own
+// 2. newest include wins (MB included after MA)
+F.includeModule("K2", "MA"); F.includeModule("K2", "MB"); F.defMethod("MB", "who", m("MB"));
+o.push(F.callMethod(new F.SirInstance("K2"), "who"));            // MB
+// 3. depth-first: MC's OWN include (MD) is searched before older sibling MA.
+//    K3 includes MA then MC; MC includes MD; only MD and MA define `who`.
+F.includeModule("K3", "MA"); F.includeModule("K3", "MC");
+F.includeModule("MC", "MD"); F.defMethod("MD", "who", m("MD"));
+o.push(F.callMethod(new F.SirInstance("K3"), "who"));            // MD (not MA)
+// 4. superclass only after the whole subclass subtree misses
+F.registerAncestry({ K4: "K4Base" });
+F.includeModule("K4", "ME");                                      // ME defines nothing
+F.defMethod("K4Base", "who", m("base"));
+o.push(F.callMethod(new F.SirInstance("K4"), "who"));            // base
+// ...but a module on the SUBCLASS still beats the superclass.
+F.registerAncestry({ K5: "K5Base" });
+F.includeModule("K5", "MA"); F.defMethod("K5Base", "who", m("base5"));
+o.push(F.callMethod(new F.SirInstance("K5"), "who"));            // MA
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "mroorder") {
+        assert_eq!(stdout, "own|MB|MD|base|MA");
     }
 }
 
@@ -2239,11 +2860,26 @@ fn numeric_catalog_nonblock_methods() {
         print(method(float(2.5), "round", vec![])),   // 3
         print(method(int(5), "succ", vec![])),        // 6
         print(method(int(5), "pred", vec![])),        // 4
+        // numeric breadth (N1): round(ndigits) / divmod / fdiv / clamp / between?
+        print(method(float(3.14159), "round", vec![int(2)])), // 3.14
+        print(method(int(1250), "round", vec![int(-2)])),     // 1300 (half away)
+        print(method(int(13), "divmod", vec![int(4)])),       // [3, 1]
+        print(method(int(13), "divmod", vec![int(-4)])),      // [-4, -3]
+        print(method(int(7), "fdiv", vec![int(2)])),          // 3.5
+        print(method(int(1), "fdiv", vec![int(0)])),          // Infinity (never raises)
+        print(method(int(5), "clamp", vec![int(1), int(10)])),   // 5
+        print(method(int(-3), "clamp", vec![int(1), int(10)])),  // 1
+        print(method(int(99), "clamp", vec![int(1), int(10)])),  // 10
+        print(method(int(5), "between?", vec![int(1), int(10)])), // #t
+        print(method(int(0), "between?", vec![int(1), int(10)])), // #f
     ];
     let module =
         module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Floats, Feature::Strings]);
     if let Some(stdout) = run_module(&module, "numcatalog") {
-        assert_eq!(stdout, "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4");
+        assert_eq!(
+            stdout,
+            "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4\n3.14\n1300\n[3, 1]\n[-4, -3]\n3.5\nInfinity\n5\n1\n10\n#t\n#f"
+        );
     }
 }
 
@@ -2308,6 +2944,27 @@ fn string_justify_swapcase_methods() {
     }
 }
 
+// v0.23.0 char-set String methods: `tr`, `count`, `delete`, `squeeze`.  Each
+// `set`/`from`/`to` arg is a LITERAL code-point set (ranges/negation deferred);
+// all route through the explicit `stringMethod` switch (never `recv[name]`),
+// matching the Python/Go/Rust reference.
+#[test]
+fn string_charset_methods() {
+    let stmts = vec![
+        print(method(str_("hello"), "tr", vec![str_("el"), str_("ip")])),   // hippo
+        print(method(str_("hello"), "tr", vec![str_("aeiou"), str_("*")])), // h*ll*
+        print(method(str_("hello"), "tr", vec![str_("l"), str_("")])),      // heo (empty `to` deletes)
+        print(method(str_("hello"), "count", vec![str_("lo")])),            // 3
+        print(method(str_("hello"), "delete", vec![str_("aeiou")])),        // hll
+        print(method(str_("mississippi"), "squeeze", vec![])),              // misisipi
+        print(method(str_("aaabbbccc"), "squeeze", vec![str_("a")])),       // abbbccc
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "strcharset") {
+        assert_eq!(stdout, "hippo\nh*ll*\nheo\n3\nhll\nmisisipi\nabbbccc");
+    }
+}
+
 // v0.20.0 slice-selection Array methods: `take`, `drop`, `values_at`.  All are
 // index-clamped / bounds-guarded and route through the explicit `arrayMethod`
 // switch (never `recv[name]`).
@@ -2328,6 +2985,72 @@ fn array_take_drop_values_at_methods() {
         module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
     if let Some(stdout) = run_module(&module, "arrtakedrop") {
         assert_eq!(stdout, "[1, 2]\n[1, 2, 3]\n[3, 4, 5]\n[]\n[10, 30, 30]");
+    }
+}
+
+// v0.21.0 non-block Array catch-up: `flatten`, `compact`, `rotate`, `zip` — the
+// last of the reference (Go/Rust/Python/TS) non-block surface the JS backend was
+// missing.  All route through the explicit `arrayMethod` switch (never `recv[name]`
+// and never the depth-1 native `flat`).  Proven end-to-end under Node.
+#[test]
+fn array_flatten_compact_rotate_zip_methods() {
+    let nil = || Expr::NilLit { span: sp() };
+    let stmts = vec![
+        // flatten fully flattens nested Arrays (not the depth-1 native `flat`)
+        print(method(
+            seq(vec![int(1), seq(vec![int(2), seq(vec![int(3)])])]),
+            "flatten",
+            vec![],
+        )), // [1, 2, 3]
+        // compact drops every nil
+        print(method(
+            seq(vec![int(1), nil(), int(2), nil()]),
+            "compact",
+            vec![],
+        )), // [1, 2]
+        // rotate: default 1, explicit 2, negative rotates right
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![])), // [2, 3, 4, 1]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![int(2)])), // [3, 4, 1, 2]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![int(-1)])), // [4, 1, 2, 3]
+        // zip pads a shorter operand with nil, keeps receiver length
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "zip",
+            vec![seq(vec![int(4), int(5)])],
+        )), // [[1, 4], [2, 5], [3, nil]]
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "arrflattenrotate") {
+        assert_eq!(
+            stdout,
+            "[1, 2, 3]\n[1, 2]\n[2, 3, 4, 1]\n[3, 4, 1, 2]\n[4, 1, 2, 3]\n[[1, 4], [2, 5], [3, nil]]"
+        );
+    }
+}
+
+// v0.22.0 native-alias divergence fixes: `include?` and `index` now use Ruby
+// VALUE equality (`valEq`) via the explicit `arrayMethod` switch, not native
+// `Array#includes`/`indexOf` (which use identity and return `-1`).  So a nested
+// Array matches structurally, and a missing element yields `nil` (not `-1`).
+// `index` was previously ABSENT for arrays (NoMethodError).  Booleans render
+// `#t`/`#f` here because the module's source language is non-Ruby ("handbuilt").
+#[test]
+fn array_include_and_index_value_equality() {
+    let pair = |a, b| seq(vec![int(a), int(b)]);
+    let stmts = vec![
+        print(method(seq(vec![int(10), int(20), int(30)]), "include?", vec![int(20)])), // #t
+        print(method(seq(vec![int(10), int(20), int(30)]), "include?", vec![int(99)])), // #f
+        // structural: a nested Array matches by value, not identity
+        print(method(seq(vec![pair(1, 2), pair(3, 4)]), "include?", vec![pair(1, 2)])), // #t
+        print(method(seq(vec![int(10), int(20), int(30)]), "index", vec![int(20)])), // 1
+        print(method(seq(vec![int(10), int(20), int(30)]), "index", vec![int(99)])), // nil
+        print(method(seq(vec![pair(1, 2), pair(3, 4)]), "index", vec![pair(3, 4)])), // 1
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "arrincludeindex") {
+        assert_eq!(stdout, "#t\n#f\n#t\n1\nnil\n1");
     }
 }
 
@@ -2360,11 +3083,103 @@ fn hash_catalog_methods() {
         )), // [a, b, c]
         print(method(local("m"), "delete", vec![str_("a")])), // 1 (mutates m)
         print(method(local("m"), "keys", vec![])),            // [b]
+        // `[]=` (store alias): mutate, returns the stored value.
+        print(method(local("m"), "[]=", vec![str_("z"), int(9)])), // 9
+        // `fetch` present key → value; with a default arg on a missing key →
+        // the default (no raise).  (The missing-no-default KeyError path is
+        // proven separately in `t3_hash_fetch_missing_raises_key_error`.)
+        print(method(local("m"), "fetch", vec![str_("z")])), // 9
+        print(method(local("m"), "fetch", vec![str_("nope"), int(0)])), // 0
+        // `clear` empties the receiver and returns it (size 0 afterwards).
+        print(method(method(local("m"), "clear", vec![]), "size", vec![])), // 0
     ];
     let module =
         module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Maps, Feature::Strings]);
     if let Some(stdout) = run_module(&module, "hashcatalog") {
-        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]");
+        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]\n9\n9\n0\n0");
+    }
+}
+
+// ── Ruby Hash transforming block methods: transform_values/transform_keys ──
+//
+// Both are non-mutating and yield exactly ONE block argument per entry:
+//   * `transform_values { |v| … }` → new hash, keys copied verbatim (unique ⇒
+//     no collision), values replaced by the block result.
+//   * `transform_keys { |k| … }` → new hash, values untouched, keys replaced by
+//     the block result; two source keys colliding onto one new key keep the
+//     LAST value at the FIRST-seen position (native `Map.set` semantics).
+// Results are read back via `to_a` (a Map has no faithful `format`, but
+// `to_a` yields observable `[key, value]` Arrays), mirroring the Python
+// reference (#7909).
+#[test]
+fn hash_transform_values_and_keys() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs
+            .into_iter()
+            .map(|(k, v)| MapEntry { key: str_(k), value: v })
+            .collect(),
+        span: sp(),
+    };
+    let ab = || mk(vec![("a", int(1)), ("b", int(2))]);
+    let block_fns = vec![
+        // transform_values { |v| 99 } — constant body ⇒ predictable values.
+        func("__ht_v99", vec![param("v")], vec![], int(99)),
+        // transform_keys { |k| k } — identity ⇒ faithful, non-colliding copy.
+        func("__ht_kid", vec![param("k")], vec![], param_ref("k")),
+        // transform_keys { |k| "z" } — constant key ⇒ every entry collides.
+        func("__ht_kz", vec![param("k")], vec![], str_("z")),
+    ];
+    let stmts = vec![
+        // {a:1,b:2}.transform_values { 99 }.to_a → [[a, 99], [b, 99]]  (keys kept)
+        print(method(
+            method(ab(), "transform_values", vec![method_closure("__ht_v99")]),
+            "to_a",
+            vec![],
+        )),
+        // {a:1,b:2}.transform_keys { |k| k }.to_a → [[a, 1], [b, 2]]  (values kept)
+        print(method(
+            method(ab(), "transform_keys", vec![method_closure("__ht_kid")]),
+            "to_a",
+            vec![],
+        )),
+        // {a:1,b:2}.transform_keys { "z" }.to_a → [[z, 2]]  (collision → last wins)
+        print(method(
+            method(ab(), "transform_keys", vec![method_closure("__ht_kz")]),
+            "to_a",
+            vec![],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashtransform".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashtransform") {
+        assert_eq!(stdout, "[[a, 99], [b, 99]]\n[[a, 1], [b, 2]]\n[[z, 2]]");
     }
 }
 
@@ -2497,6 +3312,8 @@ fn array_catalog_module() -> Module {
         print(method(a1234(), "count", vec![method_closure("__ba_even")])),      // 2
         print(method(a312(), "min", vec![])),                                    // 1
         print(method(a312(), "max", vec![])),                                    // 3
+        print(method(a312(), "minmax", vec![])),                                 // [1, 3]
+        print(method(arr(vec![]), "minmax", vec![])),                            // [nil, nil]
         print(method(arr(vec![int(1), int(2), int(3)]), "sum", vec![])),         // 6
         print(method(arr(vec![int(1), int(1), int(2), int(3)]), "uniq", vec![])), // [1, 2, 3]
     ];
@@ -2538,7 +3355,534 @@ fn array_catalog_methods() {
         assert_eq!(
             stdout,
             "[1, 2, 3]\n[2, 4]\n[1, 3]\n10\n[1, 2, 3]\n[[2, 4], [1, 3]]\n\
-             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n6\n[1, 2, 3]"
+             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n[1, 3]\n[nil, nil]\n6\n[1, 2, 3]"
+        );
+    }
+}
+
+// ── Ruby Hash Enumerable aggregates (find/any?/all?/none?/count/sort_by/…) ──
+//
+// Ruby's Hash mixes in Enumerable, so these iterate the hash as [key, value]
+// pairs: the block is yielded (key, value) and the "element" an aggregate
+// returns is the two-element [key, value] Array.  Because these return plain JS
+// arrays (not a Map), they format directly — no `to_a` round-trip needed.
+#[test]
+fn hash_enumerable_aggregates() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let cab = || mk(vec![("c", int(3)), ("a", int(1)), ("b", int(2))]);
+    let abcd = || mk(vec![("a", int(1)), ("b", int(2)), ("c", int(3)), ("d", int(4))]);
+    let block_fns = vec![
+        // { |k, v| v } — the value, used as the sort/min/max key.
+        func("__he_val", vec![param("k"), param("v")], vec![], param_ref("v")),
+        // { |k, v| v.even? } — an even-value predicate.
+        func("__he_even", vec![param("k"), param("v")], vec![], method(param_ref("v"), "even?", vec![])),
+    ];
+    let stmts = vec![
+        // {c:3,a:1,b:2}.sort_by { |k,v| v } → [[a, 1], [b, 2], [c, 3]]
+        print(method(cab(), "sort_by", vec![method_closure("__he_val")])),
+        // {c:3,a:1,b:2}.min_by { |k,v| v } → [a, 1]
+        print(method(cab(), "min_by", vec![method_closure("__he_val")])),
+        // {c:3,a:1,b:2}.max_by { |k,v| v } → [c, 3]
+        print(method(cab(), "max_by", vec![method_closure("__he_val")])),
+        // {a:1,b:2,c:3,d:4}.find { |k,v| v.even? } → [b, 2]
+        print(method(abcd(), "find", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.count { |k,v| v.even? } → 2
+        print(method(abcd(), "count", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.any? { v.even? } → #t
+        print(method(abcd(), "any?", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.all? { v.even? } → #f
+        print(method(abcd(), "all?", vec![method_closure("__he_even")])),
+        // {a:1,c:3}.none? { v.even? } → #t  (no even values)
+        print(method(
+            mk(vec![("a", int(1)), ("c", int(3))]),
+            "none?",
+            vec![method_closure("__he_even")],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashenum".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashenum") {
+        assert_eq!(
+            stdout,
+            "[[a, 1], [b, 2], [c, 3]]\n[a, 1]\n[c, 3]\n[b, 2]\n2\n#t\n#f\n#t"
+        );
+    }
+}
+
+// ── Ruby Hash Enumerable breadth (group_by/partition/flat_map/reduce/sum) ──
+//
+// Same [key, value]-pair iteration as the aggregates: every method yields
+// (key, value) EXCEPT reduce/inject, which follow Ruby's memo convention and
+// yield (memo, [k, v]) — the pair as ONE argument.  Mirrors the Python (#7978),
+// Go (#7983), and Rust (#7989) references.
+#[test]
+fn hash_enumerable_breadth() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let abcd = || mk(vec![("a", int(1)), ("b", int(2)), ("c", int(3)), ("d", int(4))]);
+    let block_fns = vec![
+        // { |k, v| v.even? } — group/partition predicate.
+        func("__hb_even", vec![param("k"), param("v")], vec![], method(param_ref("v"), "even?", vec![])),
+        // { |k, v| [k, v] } — flat_map projection that splices the pair.
+        func("__hb_pair", vec![param("k"), param("v")], vec![], seq(vec![param_ref("k"), param_ref("v")])),
+        // { |k, v| v } — sum projection.
+        func("__hb_val", vec![param("k"), param("v")], vec![], param_ref("v")),
+        // { |acc, pair| acc + pair[1] } — reduce over (memo, [k, v]); the pair
+        // arrives as ONE arg, so the value is `pair[1]` via SeqIndex (never the
+        // array `[]` method — the Go/Rust mirror lesson).
+        func(
+            "__hb_add",
+            vec![param("acc"), param("pair")],
+            vec![],
+            bc("+", vec![
+                param_ref("acc"),
+                Expr::SeqIndex { seq: Box::new(param_ref("pair")), index: Box::new(int(1)), span: sp() },
+            ]),
+        ),
+    ];
+    let stmts = vec![
+        // {a:1,b:2,c:3,d:4}.group_by { |k,v| v.even? }
+        //   → {#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}  (first-seen keys)
+        print(method(abcd(), "group_by", vec![method_closure("__hb_even")])),
+        // .partition { |k,v| v.even? } → [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]
+        print(method(abcd(), "partition", vec![method_closure("__hb_even")])),
+        // {a:1,b:2}.flat_map { |k,v| [k,v] } → [a, 1, b, 2]  (one-level splice)
+        print(method(
+            mk(vec![("a", int(1)), ("b", int(2))]),
+            "flat_map",
+            vec![method_closure("__hb_pair")],
+        )),
+        // {a:1,b:2,c:3,d:4}.sum { |k,v| v } → 10  (seed defaults to 0)
+        print(method(abcd(), "sum", vec![method_closure("__hb_val")])),
+        // {a:1,b:2,c:3,d:4}.reduce(100) { |acc,pair| acc + pair[1] } → 110
+        print(method(abcd(), "reduce", vec![int(100), method_closure("__hb_add")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashbreadth".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashbreadth") {
+        assert_eq!(
+            stdout,
+            "{#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}\n\
+             [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]\n\
+             [a, 1, b, 2]\n\
+             10\n\
+             110"
+        );
+    }
+}
+
+// ── Ruby Hash to_h / each_with_index / each_with_object ────────────────────
+//
+// Rounds out Hash's Enumerable iteration surface, mirroring the Python (#8009),
+// Go (#8015), and Rust (#8020) references.  `to_h` has a no-block (shallow copy)
+// and a block (re-map) form; `each_with_index`/`each_with_object` yield the
+// [k, v] PAIR as a single argument alongside the index/memo (Ruby's Enumerable
+// convention — contrast `each`'s two-arg (k, v) yield).
+#[test]
+fn hash_to_h_and_indexed_iteration() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let ab = || mk(vec![("a", int(1)), ("b", int(2))]);
+    let block_fns = vec![
+        // { |k, v| [k, v * 2] } — re-map each pair, doubling the value.
+        func(
+            "__t_dbl",
+            vec![param("k"), param("v")],
+            vec![],
+            seq(vec![param_ref("k"), bc("*", vec![param_ref("v"), int(2)])]),
+        ),
+        // { |pair, i| print [pair, i] } — observe the (pair, index) yield.
+        func(
+            "__t_pi",
+            vec![param("pair"), param("i")],
+            vec![print(seq(vec![param_ref("pair"), param_ref("i")]))],
+            Expr::NilLit { span: sp() },
+        ),
+        // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
+        func(
+            "__t_pm",
+            vec![param("pair"), param("memo")],
+            vec![print(seq(vec![param_ref("pair"), param_ref("memo")]))],
+            Expr::NilLit { span: sp() },
+        ),
+    ];
+    let stmts = vec![
+        // {a:1,b:2}.to_h (no block) → a shallow copy: {a: 1, b: 2}
+        print(method(ab(), "to_h", vec![])),
+        // {a:1,b:2}.to_h { |k, v| [k, v * 2] } → {a: 2, b: 4}
+        print(method(ab(), "to_h", vec![method_closure("__t_dbl")])),
+        // {a:1,b:2}.each_with_index { |pair, i| print [pair, i] }
+        //   → "[[a, 1], 0]", "[[b, 2], 1]", then the returned self "{a: 1, b: 2}"
+        print(method(ab(), "each_with_index", vec![method_closure("__t_pi")])),
+        // {a:1,b:2}.each_with_object(0) { |pair, memo| print [pair, memo] }
+        //   → "[[a, 1], 0]", "[[b, 2], 0]", then the returned memo "0"
+        print(method(ab(), "each_with_object", vec![int(0), method_closure("__t_pm")])),
+        // {a:1}.each_with_object { |pair, memo| … } with NO memo arg → returns
+        // the receiver unchanged (the block is never called): "{a: 1}"
+        print(method(mk(vec![("a", int(1))]), "each_with_object", vec![method_closure("__t_pm")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashtoh".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashtoh") {
+        assert_eq!(
+            stdout,
+            "{a: 1, b: 2}\n\
+             {a: 2, b: 4}\n\
+             [[a, 1], 0]\n\
+             [[b, 2], 1]\n\
+             {a: 1, b: 2}\n\
+             [[a, 1], 0]\n\
+             [[b, 2], 0]\n\
+             0\n\
+             {a: 1}"
+        );
+    }
+}
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python (#8031), Go (#8036),
+// and Rust (#8042) references.  `each_slice`/`each_cons` are non-block (take an
+// int `n`); `chunk_while` is a block method (the block is called on each
+// ADJACENT pair).  All route through the explicit `arrayMethod` switch.
+#[test]
+fn array_each_slice_each_cons_chunk_while() {
+    // `{ |a, b| b - a == 1 }` — adjacent-pair predicate (JS equality builtin `=`).
+    let adj = func(
+        "__t_adj",
+        vec![param("a"), param("b")],
+        vec![],
+        bc("=", vec![bc("-", vec![param_ref("b"), param_ref("a")]), int(1)]),
+    );
+    let stmts = vec![
+        // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+        print(method(seq(vec![int(1), int(2), int(3), int(4), int(5)]), "each_slice", vec![int(2)])),
+        // [1,2,3].each_slice(0) → []  (never-throw floor)
+        print(method(seq(vec![int(1), int(2), int(3)]), "each_slice", vec![int(0)])),
+        // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "each_cons", vec![int(2)])),
+        // [1,2].each_cons(3) → []  (window larger than the array)
+        print(method(seq(vec![int(1), int(2)]), "each_cons", vec![int(3)])),
+        // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+        print(method(
+            seq(vec![int(1), int(2), int(4), int(5), int(7)]),
+            "chunk_while",
+            vec![method_closure("__t_adj")],
+        )),
+        // [].chunk_while { … } → []
+        print(method(seq(vec![]), "chunk_while", vec![method_closure("__t_adj")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrslice".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, adj],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrslice") {
+        assert_eq!(
+            stdout,
+            "[[1, 2], [3, 4], [5]]\n\
+             []\n\
+             [[1, 2], [2, 3], [3, 4]]\n\
+             []\n\
+             [[1, 2], [4, 5], [7]]\n\
+             []"
+        );
+    }
+}
+
+// ── Ruby Array#slice_when ──────────────────────────────────────────────────
+// `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070), Go (#8073), Rust (#8077).
+#[test]
+fn array_slice_when() {
+    // `{ |a, b| b - a > 1 }` — split on an upward gap greater than one.
+    let gap = func(
+        "__t_gap",
+        vec![param("a"), param("b")],
+        vec![],
+        bc(">", vec![bc("-", vec![param_ref("b"), param_ref("a")]), int(1)]),
+    );
+    let stmts = vec![
+        // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1, 2], [4], [9, 10, 11, 12]]
+        print(method(
+            seq(vec![int(1), int(2), int(4), int(9), int(10), int(11), int(12)]),
+            "slice_when",
+            vec![method_closure("__t_gap")],
+        )),
+        // [9].slice_when { … } → [[9]]  (single element)
+        print(method(seq(vec![int(9)]), "slice_when", vec![method_closure("__t_gap")])),
+        // [].slice_when { … } → []
+        print(method(seq(vec![]), "slice_when", vec![method_closure("__t_gap")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrslicewhen".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, gap],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrslicewhen") {
+        assert_eq!(
+            stdout,
+            "[[1, 2], [4], [9, 10, 11, 12]]\n\
+             [[9]]\n\
+             []"
+        );
+    }
+}
+
+// ── Ruby Array#cycle(n) ────────────────────────────────────────────────────
+// `cycle(n) { |x| … }` iterates the array n full passes in order, yielding each
+// element on every pass, and always returns nil.  n <= 0, a negative count, or
+// an empty receiver yields nothing.  Mirrors the Python reference (#8117), Go
+// (#8123), Rust (#8131): the block `print`s each yielded element, so the two
+// passes are observable, and the nil return is printed after each call.
+#[test]
+fn array_cycle() {
+    // `{ |x| print x }` — emit one line per yielded element.
+    let puts = func("__t_puts", vec![param("x")], vec![print(param_ref("x"))], Expr::NilLit { span: sp() });
+    let stmts = vec![
+        // [1,2,3].cycle(2) { |x| print x }  → 1 2 3 1 2 3, then nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(2), method_closure("__t_puts")],
+        )),
+        // [1,2,3].cycle(0) { … }  → no yields, nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(0), method_closure("__t_puts")],
+        )),
+        // [].cycle(5) { … }  → no yields, nil
+        print(method(seq(vec![]), "cycle", vec![int(5), method_closure("__t_puts")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrcycle".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, puts],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrcycle") {
+        assert_eq!(
+            stdout,
+            "1\n2\n3\n1\n2\n3\n\
+             nil\n\
+             nil\n\
+             nil"
+        );
+    }
+}
+
+// ── Ruby Array#tally ───────────────────────────────────────────────────────
+// `tally` counts occurrences into a Hash keyed in first-seen order — the JS
+// runtime realises it as an insertion-ordered `Map`, printed `{k: v}` (the same
+// shape `group_by` returns).  Mirrors the Go/Rust/Python references.
+#[test]
+fn array_tally() {
+    let stmts = vec![
+        // ["a","b","a","c","a"].tally → {a: 3, b: 1, c: 1}  (first-seen order)
+        print(method(
+            seq(vec![str_("a"), str_("b"), str_("a"), str_("c"), str_("a")]),
+            "tally",
+            vec![],
+        )),
+        // [1,1,2,3,3,3].tally → {1: 2, 2: 1, 3: 3}
+        print(method(
+            seq(vec![int(1), int(1), int(2), int(3), int(3), int(3)]),
+            "tally",
+            vec![],
+        )),
+        // [].tally → {}  (empty)
+        print(method(seq(vec![]), "tally", vec![])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrtally".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrtally") {
+        assert_eq!(
+            stdout,
+            "{a: 3, b: 1, c: 1}\n\
+             {1: 2, 2: 1, 3: 3}\n\
+             {}"
         );
     }
 }

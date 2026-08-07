@@ -131,6 +131,7 @@ use Backend::{Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 /// called from here (the module's own runner is McCarthy-specific dead code).
 #[path = "clr_support/mod.rs"]
 mod clr_support;
+mod common;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
@@ -150,6 +151,357 @@ const PROGRAMS: &[Prog] = &[
         lang: Language::Twig,
         ext: "twig",
         src: "(+ 10 20 12)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
+    // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
+    // The Twig frontend emits `call_builtin "cons"/"car" [any]`; the shared
+    // `iir-builtin-lowering` passes — `lower_heap_builtins` (cons→`alloc`+`field_store`;
+    // car→`field_load[0]`) then `lower_dyn_repr_structural` (use-site boxing to the
+    // uniform `ref<any>` value) — run for EVERY language, so Twig's first genuinely
+    // dynamic value lowers to the exact heap-object family McCarthy Lisp already runs
+    // on all five code-gen backends (WASM `anyref`+`$LispyPair`, JVM `Object[]`, CLR
+    // `object[]`, LLVM tagged-i64 + `__dyn_*` runtime, native).  The entry
+    // result (a boxed `42`) is unboxed to the process exit code.  The generic Vm/Jit
+    // columns run `vm-core` typed IIR, which has no `ref<any>`/`alloc`, so dynamic
+    // Twig is proven on the code-gen columns (which cross-check each other + the
+    // known result); `twig-vm` is the interpreter reference off-matrix.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cons 42 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-1: nested cons proves multi-cell pointer chasing.
+    // `(car (cdr (cons 1 (cons 42 0))))` = car(cdr(`(1 . (42 . 0))`)) =
+    // car(`(42 . 0)`) = 42 — two `cons` allocations, a `cdr` then a `car`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (cons 1 (cons 42 0))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-2: dynamic integer arithmetic over `any`, all 5 code-gen
+    // backends.** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
+    // `car`'s result is a `ref<any>` lisp value, not a machine int — which the
+    // typed backends have no opcode for. The shared `lower_dynamic_arith` pass
+    // expands it to `unbox (car …) → 41 ; add 41 1 → 42 ; box 42`.
+    //   • **Structural** (E6d-2a): WASM `i31ref` / JVM `Integer` / CLR
+    //     boxed-int32 lower the generic `unbox`/`add`/`box` ops directly, the
+    //     same way they lower `cons`.
+    //   • **Tagged-i64** (E6d-2b): NativeAot + LLVM have no `box`/`unbox` opcode —
+    //     a tagged word is `n<<3`. `lower_box_unbox_to_runtime_calls` rewrites the
+    //     generic ops to `dyn_box_int`/`dyn_unbox_int` runtime calls, which the
+    //     backends dispatch to `__dyn_box_int`/`__dyn_unbox_int` in
+    //     `dynval_runtime.c`. (The native AOT path also gains `lower_dynamic_arith`
+    //     here — `prepare_module_for_aot` did not run it before.)
+    // Exit 42 on every backend. `Vm`/`Jit` run typed `vm-core` IIR (`twig-vm` is
+    // the off-matrix dynamic reference).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ (car (cons 41 0)) 1)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
+    // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
+    // (cons c nil)))`. The shared `iir-builtin-lowering` `desugar_list_in_function`
+    // pass (at the head of `lower_heap_builtins` *and* `lower_heap_builtins_runtime`)
+    // expands `call_builtin "list"` into a nil `const` + a right-to-left `cons`
+    // chain, so the whole list rides the exact heap path E6d-1 proved — no new
+    // backend op, no allowlist entry (the `list` builtin is gone before the
+    // backend sees it). `(car (list 42 1 2))` reads the head element ⇒ 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (list 42 1 2))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-3a: `list` + `cdr` traversal reaches the second element.
+    // `(car (cdr (list 1 42 3)))` = car(cdr(`(1 42 3)`)) = car(`(42 3)`) = 42,
+    // proving the desugared cons chain links correctly across cells.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (list 1 42 3)))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
+    // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
+    // `length` *walks* the cons chain, so `iir-builtin-lowering::lower_list_ops`
+    // rewrites `call_builtin "length" lst` to a call to a synthesized recursive
+    // helper `__dyn_list_length(lst) = if null?(lst) then 0 else 1 + length(cdr(lst))`
+    // injected into the module. The helper is a *proper lisp function* (returns a
+    // boxed `ref<any>`; its `+` is the E6d-2 dynamic add), so it rides `null?`/`cdr`
+    // (E6d-1) + dynamic arithmetic (E6d-2) — nothing new lowers. This also required
+    // fixing the WASM nil const: `const 0 : ref<LispyPair>` now emits `ref.null`
+    // (it was `i32.const 0`, so `is_null` never detected the list terminator and the
+    // walk overran) — aligning WASM with CLR's existing `ldnull` for nil.
+    // `(+ (length (list 1 2 3)) 39)` = 3 + 39 = 42, proving `length` composes with
+    // dynamic arithmetic and returns a genuine lisp value.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ (length (list 1 2 3)) 39)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
+    // the direct regression guard for the WASM nil-const `ref.null` fix.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (list))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
+    // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
+    // rewrites `call_builtin "list-ref" lst n` to a call to a synthesized
+    // recursive helper `__dyn_list_ref(lst, n) = if n==0 then car(lst) else
+    // list-ref(cdr(lst), n-1)` injected into the module. The index is a boxed
+    // lisp value at the call boundary (the uniform-anyref convention boxes every
+    // lisp-call argument), so the helper unboxes it once; the index test/decrement
+    // are then typed `cmp_eq : bool` (feeding `jmp_if_false`) and `sub : i64`,
+    // re-boxed for the recursive call — nothing new lowers. The *return* is a
+    // `car` result (a lisp value). `(list-ref (list 10 20 42) 2)` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(list-ref (list 10 20 42) 2)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
+    // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
+    // rewrites `call_builtin "append" a b` to a synthesized recursive helper
+    // `__dyn_list_append(a, b) = if null?(a) then b else cons(car(a), append(cdr(a), b))`.
+    // Unlike `list-ref` there is no index — both args are lisp lists and every value
+    // it touches is already a reference, so no unbox/box; its one new op vs
+    // length/list-ref is the `cons` in the recursive arm (the E6d-1 heap builtin,
+    // lowered for the injected helper too). `(append (list 1 42) (list 3))` builds
+    // `(1 42 3)`; `(car (cdr …))` = 42, proving the rebuilt spine is a real cons chain.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (append (list 1 42) (list 3))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
+    // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
+    // *tail-recursive accumulator* helper:
+    //   reverse(a) = __dyn_list_reverse(a, nil)
+    //   __dyn_list_reverse(a, acc) = if null?(a) then acc
+    //                                else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+    // Consing each element onto the accumulator's front reverses the order. The
+    // call site seeds `acc` with a `const 0 : ref<LispyPair>` nil (the `list`-desugar
+    // sentinel); the recursion reuses null?/car/cdr/cons — nothing new lowers.
+    // `(reverse (list 1 2 42))` = `(42 2 1)`; `car` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (reverse (list 1 2 42)))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
+    // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
+    // cons pairs) for a key: `lower_list_ops` rewrites `call_builtin "assoc" key
+    // alist` to a synthesized recursive helper
+    //   __dyn_list_assoc(key, alist) = if null?(alist) then nil
+    //     else if key == car(car(alist)) then car(alist) else assoc(key, cdr(alist))
+    // V1 keys are integers: the key test unboxes both keys to i64 and compares with
+    // a typed `cmp_eq` (feeding jmp_if_false), since `equal?` lowers unevenly across
+    // the managed/runtime paths (symbol keys arrive with E6d-4). `(assoc 2 alist)`
+    // over `((1 . 10) (2 . 42) (3 . 30))` finds `(2 . 42)`; `cdr` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
+    // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
+    // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
+    // interned-const form McCarthy Lisp emits — instead of the runtime `make_symbol`
+    // string path. The shared `intern_symbols` (native) / `intern_symbols_structural`
+    // (managed) passes assign each distinct name one module-wide id in a reserved
+    // high range, so `equal?` on symbols is bit-equality with no new value type.
+    // `(equal? 'a 'a)` = #t → exit 1.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'a)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
+    // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'b)",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
+    // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
+    // (typed `alloc [ref<LispyPair>]` + `field_store`) and accessors `name-f(r)` =
+    // `car(cdr^i(r))` (typed `field_load`) — the E6d-1 heap substrate, so records
+    // ride the same proven cons/car/cdr path with no new value type. `(Point 42 7)`
+    // builds `(42 . (7 . nil))`; `(point-x …)` = `car` = 42, proving construction
+    // + field access round-trip end-to-end.
+    //
+    // Shipping this also fixed a latent WASM-runtime bug: struct field counts were
+    // registered by per-function count, over-counting when functions share a
+    // signature (a record emits a constructor + N same-shape accessors + a
+    // predicate), so the `$LispyPair` field-count landed at the wrong type index
+    // and every `struct.set` trapped "field 0 out of range" (wasm-runtime 0.4.0).
+    //
+    // **`Vm` + `Jit` too** (vm-core 0.17.0): the generic VM now runs the E6d heap
+    // ops (`alloc`/`field_store`/`field_load`) on its bounds-checked array heap, so
+    // records execute on the interpreter columns as well — all seven engines. (The
+    // union cells stay code-gen-only for now: `match` tests the nil sentinel via
+    // `is_null`, and on the generic VM a nil `Int(0)` is not yet distinguishable
+    // from the first object handle `0`; records never dereference nil, so they are
+    // sound. A nil-handle disambiguation for unions on the VM is a follow-up.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
+    // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-6: unions / `match` (TW6 part 2).** A `(union Name (Variant …) …)`
+    // erases to integer-tagged constructors (a cons `(tag . fields…)`) and `match`
+    // dispatches by comparing the scrutinee's tag (`car`) to each variant's integer
+    // tag, binding fields via `car(cdr^i)`. The tag compare uses the E6d-1 heap
+    // substrate + dynamic `=`; two fixes made it run on the managed backends: the
+    // match tag const is typed `i64` (not `any`, which caused a bogus `unbox`), and
+    // `dyn_repr_structural` branches a boxed-bool `jmp_if_false` on its raw truth
+    // value (a boxed `#f` is a non-nil i31, which the nil-truthiness wrap mis-read
+    // as true → every arm matched). `(match (Some 42) …)` binds `v = 42`.
+    //
+    // **E6d-6b — runs on the tagged backends too (NativeAot/Llvm).** `match` reads
+    // a variant's tag + fields back as *boxed* `DynValue`s (`field_load` result →
+    // dynamic `=` on the tag; the bound field flows into an `any` context that
+    // `unbox`es). The constructor `emit_union_def` now stores them boxed — a `box`
+    // op on the tag const and on each field before the `field_store`. On the tagged
+    // backends (`any` = raw i64) that `box` is the `n<<3` that makes the later
+    // `unbox` recover the value (previously a raw `42` gave `unbox(42)=5`, a raw tag
+    // `1` gave `unbox(1)=0` ⇒ `None` never matched); on the structural backends
+    // (`anyref`/`Integer`) `box` of an already-boxed field is the identity, so their
+    // round-trip is unchanged.
+    //
+    // **E6d-6c — completes the CLR column, so union `match` runs on ALL FIVE
+    // code-gen backends.** Two CLR-only fixes: (1) `iir-to-cil-bytecode` emits a
+    // special-char method name (`Some?`, `point-x`) as an ILAsm single-quoted
+    // identifier `'Some?'` (the CIL twin of iir-to-llvm's `llvm_fn_ident`) — the CIL
+    // grammar rejects `?`/`-` bare, so the union predicate previously would not even
+    // assemble; (2) the CLR `box` op is now the identity when its source is already
+    // a reference (`object`/`object[]`) — an E6d-6b union field arrives boxed at the
+    // call boundary, so `box System.Int32` on it boxed the *pointer* (`box(object
+    // 42)` → a truncated handle, not 42). Run-verified exit 42 on all five columns.
+    //
+    // **`Vm` + `Jit` too** (vm-core 0.18.0): the generic VM runs union `match` via
+    // the E6d heap ops (records PR) plus `box` (the identity there) and the dynamic
+    // `=`/`+`/`-`/`*` builtins the tag-test and arms use — so union `match` runs on
+    // **all seven engines**. (`match` here needs no `is_null`, so no nil-handle
+    // disambiguation is required; that is only for list `null?`.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
+    // actually discriminates — the boxed-bool branch takes the right arm, not
+    // always the first. `(match (None) ((Some v) v) ((None) 42))` = 42. This is the
+    // cell the raw-tag bug broke on the tagged backends (`unbox(raw 1)=0`); E6d-6b's
+    // boxed tag fixes it. Runs on all seven engines (Clr via E6d-6c, Vm/Jit above).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
+    // `g` that is *forward-referenced* (read inside `f` before its `define`) is
+    // emitted as `call_builtin "global_get"/"global_set"` (the dynamic `any`-typed
+    // global path, vs the typed-local-slot form a non-forward define gets). The
+    // shared `lower_global_io` pass rewrites those to `global_load`/`global_store`
+    // — the typed-global ops every backend accepts — but the managed pipelines
+    // (WASM/JVM/CLR/BEAM) + the LLVM pipeline never ran it (only native `twig-aot`
+    // did), so a dynamic global reached the backend as an unsupported `call_builtin`.
+    // Adding `lower_global_io` to those pipelines makes the set+get roundtrip work:
+    // `main` sets `g = 42` (`global_store`), `f` reads it (`global_load`), `(f)` = 42.
+    // (A dynamic global flowing into *dynamic arithmetic* still needs the global slot
+    // widened to a boxed `any` — a follow-up; here the roundtrip value is returned
+    // directly.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) g) (define g 42) (f)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
+    // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
+    // it → 42. JVM/CLR run it via `long[]`/`object[]` dispatch arrays; NativeAot/
+    // LLVM via the C runtime; **WASM** — which had no closure model — via
+    // `iir-builtin-lowering::lower_closures_to_heap` (E6d-7a): the closure lowers
+    // to a cons-chain `(box(idx) . (caps…))` and a synthesized `__dyn_call_closure`
+    // dispatcher (a `cmp_eq` chain over statically-known bodies → direct `call`),
+    // reusing the E6d-1 heap substrate — no new WasmGC `funcref`/`call_indirect`.
+    //
+    // **`Vm` + `Jit` too**: the same `lower_closures_to_heap` + `lower_heap_builtins`
+    // passes the code-gen pipelines run are applied on the VM/JIT compile path
+    // (`lower_dynamic_for_generic_engine`), so a closure lowers to the cons-chain
+    // object + dispatcher over ops the generic VM now runs (`alloc`/`field_load`/
+    // `box`/dynamic `=`/`+`). Closures run on **all seven engines**.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "((lambda (x) (+ x 1)) 41)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
+    // one that captures `x`; applying it threads the captured 40 + the arg 2.
+    // `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` → 42. Two lambda bodies get
+    // distinct dispatch indices in the synthesized dispatcher. Runs on all seven
+    // engines (Vm/Jit via the closure/heap passes on the generic-engine path).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -874,6 +1226,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- exponentiation is right-associative. `2 ^ 3 ^ 2` means
+    // `2 ^ (3 ^ 2)` = 512; dividing by 12 yields 42 (left association would
+    // instead produce 64 / 12 = 5). The literal-only exponent chain remains
+    // in the typed integer multiplication path on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := (2 ^ 3 ^ 2) div 12 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- runtime integer exponents use the existing `f64_pow` IIR
+    // operation after widening both operands. The first result is 2^3 = 8;
+    // the second is 2^-1 = 0.5. `entier(8 + 68 * 0.5)` returns 42, proving
+    // both a dynamic positive exponent and a reciprocal survive every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent, result; real positive, reciprocal; exponent := 3; positive := 2 ^ exponent; exponent := -1; reciprocal := 2 ^ exponent; result := entier(positive + 68 * reciprocal) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
     // calls named `print`/`output` as standard output procedures. The narrow
@@ -927,12 +1301,175 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — scalar string variables in the current AL4 foothold. A
-    // `string` scalar may be assigned from a literal, which emits `str_const`
-    // directly to the variable slot; `print(s)` is accepted only because that
-    // slot is literal-backed. This deliberately avoids dynamic string copies or
-    // captured string globals while still proving source-level string variables
-    // through the same E4 `print_str` path on all seven backends.
+    // ALGOL 60 — a runtime string procedure result can be copied into a
+    // scalar local, compared for equality, and printed. This drives a dynamic
+    // `str_concat` copy and `str_eq`, rather than only printing a call result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s = 'HI' then result := 42 else result := 0; \
+                  print(s) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a branch-selected string procedure result can feed lexical
+    // ordering after being copied to a scalar local. This takes the runtime
+    // `str_concat` handle through `str_cmp`, then compares that signed result
+    // against zero for the usual conditional branch. `HI < LO` returns 42 and
+    // prints HI on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  s := pick(1); \
+                  if s < 'LO' then result := 42 else result := 0; \
+                  print(s) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — string arrays reuse the shared E5 `array<str>` substrate.
+    // The element reads feed runtime lexical ordering before output, proving
+    // arrays carry real string values rather than a literal-only frontend path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[1:2]; integer result; \
+                  words[1] := 'HI'; words[2] := 'LO'; \
+                  if words[1] < words[2] then result := 42 else result := 0; \
+                  print(words[1]) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — runtime string procedure results remain valid `array<str>`
+    // elements. The array store/read boundary must preserve the runtime handle
+    // for lexical ordering and output, rather than relying on literal slots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: concat!(
+            "begin string array words[1:2]; integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "words[1] := pick(1); words[2] := pick(0); ",
+            "if words[1] < words[2] then result := 42 else result := 0; ",
+            "print(words[1]) end",
+        ),
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a branch-selected `string procedure` result can become the
+    // `string` value actual of a second typed procedure without becoming a
+    // literal-only string. `matches(pick(1))` crosses the `str` return and
+    // parameter boundary before the callee's equality test selects 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  integer procedure matches(s); value s; string s; \
+                    if s = 'HI' then matches := 42 else matches := 0; \
+                  result := matches(pick(1)) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — explicit empty argument lists for a zero-argument typed
+    // procedure in value position and a proper procedure in statement
+    // position. Both lower through the shared zero-argument IIR call ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; integer procedure answer; answer := 42; \
+                  procedure store; result := answer(); store() end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a proper procedure captures an enclosing array and retains
+    // its declaration-space lower bounds across a fresh procedure frame.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[4:5]; integer result; \
+                  procedure seed; begin values[4] := 40; values[5] := 2 end; \
+                  seed; result := values[4] + values[5] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a one-dimensional typed array formal is a descriptor-value
+    // parameter: its handle aliases the caller's elements and its declared
+    // lower bound crosses the call beside that handle. `invoke` captures
+    // `values`, so it also proves global descriptor reload before `fill` is
+    // called in a fresh frame. All seven backends receive `array<i64>, i64`
+    // parameters through the ordinary shared IIR call ABI. Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[4:5]; integer result; \
+                  integer procedure fill(a); value a; integer array a; \
+                    begin a[4] := 40; a[5] := 2; fill := a[4] + a[5] end; \
+                  procedure invoke; result := fill(values); \
+                  invoke end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
+    // in `fill2`. The call ABI carries the shared handle plus both lower bounds
+    // and the outer row-major stride: `array<i64>, i64, i64, i64`. `invoke`
+    // captures `values`, so it also proves that all four descriptor components
+    // are reloaded from module globals before crossing a fresh call frame. The
+    // non-zero lower bounds make an omitted or misordered descriptor component
+    // observably select the wrong cells. Exit 42 on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 4:5]; integer result; \
+                  integer procedure fill2(a); value a; integer array a; \
+                    begin a[-1,4] := 40; a[0,5] := 2; fill2 := a[-1,4] + a[0,5] end; \
+                  procedure invoke; result := fill2(values); \
+                  invoke end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a nested procedure captures a two-dimensional array formal.
+    // `fill` first publishes the actual's handle, lower bounds, and row-major
+    // stride; `seed` reloads that descriptor in its fresh sibling frame. The
+    // distinct nonzero lower bounds make all descriptor fields observable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 4:5]; integer result; \
+                  integer procedure fill(a); value a; integer array a; \
+                    begin procedure seed; begin a[-1,4] := 40; a[0,5] := 2 end; \
+                          seed(); fill := a[-1,4] + a[0,5] end; \
+                  result := fill(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a nested procedure captures an enclosing scalar value
+    // parameter. `total` publishes its incoming `seed` before `bump` runs in a
+    // fresh sibling frame; the nested assignment then feeds the outer result.
+    // This uses the shared typed global IIR ops, so it runs on all seven
+    // standard backends without a backend-specific closure representation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure total(seed); value seed; integer seed; \
+                    begin integer procedure bump; begin seed := seed + 2; bump := seed end; \
+                          total := bump() end; \
+                  result := total(40) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — scalar string variables on the direct literal fast path. A
+    // `string` scalar assigned from a literal emits `str_const` directly to its
+    // slot; the preceding row covers a runtime procedure-result copy.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -941,9 +1478,8 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — the implementation-defined `output` spelling follows the same
-    // AL4 path as `print`: a literal-backed string slot consumed by E4
-    // `print_str`. This row proves the alias rather than only the `print`
-    // spelling, without widening into dynamic strings.
+    // E4 path as `print`: a direct-literal string slot consumed by `print_str`.
+    // This row proves the alias rather than only the `print` spelling.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1146,6 +1682,57 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — integer procedure values compose across two typed calls. Two
+    // `scale` results become i64 actuals for `combine`, whose return becomes
+    // the enclosing block's result. This completes the scalar procedure-call
+    // composition coverage for the baseline integer ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure scale(x); value x; integer x; scale := x * 6; \
+               integer procedure combine(a,b); value a,b; integer a,b; combine := a + b; \
+               result := combine(scale(3), scale(4)) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a boolean procedure returns directly into a compound
+    // condition. The two `call` results must keep their `bool` IIR type through
+    // `not` and `and` before the normal `jmp_if_false` branch. This covers the
+    // i1/i32/bool return ABI rather than merely assigning a result to a scalar.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean procedure neg(p); value p; boolean p; \
+               neg := not p; if neg(false) and not neg(true) then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — boolean procedure values compose across two typed calls:
+    // `neg` results become the two actuals to `both`, then its bool result
+    // drives the branch. This exercises typed bool arguments and results at
+    // every call boundary, not only a single call feeding a condition.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean procedure neg(p); value p; boolean p; \
+               neg := not p; boolean procedure both(p,q); value p,q; boolean p,q; \
+               both := p and q; if both(neg(false), not neg(true)) then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a *proper procedure* (`procedure bump`) has no return value,
+    // so the frontend emits an IIR `void` sibling function and a no-destination
+    // `call` in statement position. This matrix cell keeps the body local so it
+    // isolates void call/return lowering across all backend columns.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; procedure bump(d); value d; integer d; \
+               d := d + 1; result := 40; bump(2); result := result + 2 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a procedure that *reads and writes a variable from the enclosing
     // block* (LANG-FULL enabler **E6**, layer 1 — typed module globals).
     // `counter` is declared in the outer block and accessed by both `incr` and the
@@ -1201,6 +1788,75 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an `own` array has the same static-lifetime rule as an own
+    // scalar, but its handle plus 1-based lower-bound metadata are initialized
+    // only on the first procedure invocation. The three calls observe memo[4]
+    // as 1, 2, then 3; their sum (6) proves the backing array was neither
+    // reallocated nor reset between frames.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer array memo[4:5]; memo[4] := memo[4] + d; bump := memo[4] end; \
+               result := bump(1) + bump(1) + bump(1) end",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — captured and `own` scalar strings. `setshared` stores a
+    // string in a block global from a proper procedure, while `remember`
+    // initializes an `own string` on its first call and reads it on its
+    // second. The three equality checks prove the typed global paths end-to-
+    // end on native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; string shared; \
+               procedure setshared; shared := 'C'; \
+               integer procedure remember(n); value n; integer n; \
+                  begin own string memo; if n = 1 then memo := 'A'; \
+                    if memo = 'A' then remember := 1 else remember := 0 end; \
+               setshared; result := 0; \
+               if shared = 'C' then result := result + 1; \
+               result := result + remember(1) + remember(2) end",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a captured string can be reassigned from a branch-selected
+    // string procedure result. `store(0)` writes LO, `store(1)` overwrites it
+    // with HI through the shared `str` global, and `matches(shared)` proves the
+    // final dynamic handle crosses the following string-parameter boundary.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; string shared; \
+               string procedure pick(n); value n; integer n; \
+                  if n > 0 then pick := 'HI' else pick := 'LO'; \
+               integer procedure matches(s); value s; string s; \
+                  if s = 'HI' then matches := 42 else matches := 0; \
+               procedure store(n); value n; integer n; shared := pick(n); \
+               store(0); store(1); result := matches(shared) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an `own string` retains its persistent global identity while
+    // successive calls replace it from branch-selected procedure results. The
+    // second call forwards the newer runtime handle through `matches`, so
+    // `remember(0) + remember(1)` is 0 + 42 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               string procedure pick(n); value n; integer n; \
+                  if n > 0 then pick := 'HI' else pick := 'LO'; \
+               integer procedure matches(s); value s; string s; \
+                  if s = 'HI' then matches := 42 else matches := 0; \
+               integer procedure remember(n); value n; integer n; \
+                  begin own string memo; memo := pick(n); remember := matches(memo) end; \
+               result := remember(0) + remember(1) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
@@ -1218,6 +1874,21 @@ const PROGRAMS: &[Prog] = &[
                goto s[i]; a1: result := 1; goto done; a2: result := 2; goto done; \
                a3: result := 49; done: end",
         expect: Expect::Exit(49),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a switch element is itself a full designational expression.
+    // The selected outer element first tests `chooseyes`, then dispatches
+    // through `inner[i]`; the nested index selects `no`, yielding 40 + 2. This
+    // exercises conditional and nested switch-list semantics on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, i; boolean chooseyes; switch inner := yes, no; \
+               switch outer := if chooseyes then inner[i] else fallback; \
+               chooseyes := true; i := 2; goto outer[1]; \
+               yes: result := 1; goto done; no: result := 40; goto done; \
+               fallback: result := 2; done: result := result + 2 end",
+        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
@@ -1282,8 +1953,13 @@ const PROGRAMS: &[Prog] = &[
     // instead of the operand width) — `clang` rejected that IR, so this cell was VM/
     // JIT/JVM/CLR only. Fixed in `algol-iir-compiler` (the guard now compares at
     // `i64`, like every other relation), and the `for`-loop sum-of-squares now
-    // compiles + runs via `clang` → exit 55. (NativeAot/WASM lower arrays but the
-    // for-loop path is the LLVM-specific cmp lowering this exercises.)
+    // compiles + runs via `clang` → exit 55. **NativeAot and WASM run it too**: the
+    // for-loop lowers to the same generic `alloc_array`/`array_get`/`array_set` +
+    // integer relation/branch ops the straight-line E5 cell (below) already proved on
+    // both — no backend-specific for-loop path exists, so once the LLVM guard-width
+    // bug was fixed there was nothing left blocking native/wasm. This cell now runs on
+    // all 7 backends (the loop is a pure control-flow composition over ops all backends
+    // already lower).
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1292,7 +1968,7 @@ const PROGRAMS: &[Prog] = &[
                result := 0; \
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
-        backends: &[Vm, Jit, Jvm, Clr, Llvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *straight-line* 1-D integer array (LANG-FULL E5, the **LLVM**
     // static-array proof — PR-4a). `A[1] := 40; A[3] := 2; result := A[1] + A[3]`
@@ -1332,19 +2008,20 @@ const PROGRAMS: &[Prog] = &[
     // `literal_string_slots`, so `print(s)` lowers to `print_str s` on all
     // backends — the same path ALGOL literal-string `print` uses (AL4).
     // The return value (implicitly 0, the integer default) is discarded.
-    // NativeAot, Llvm, and Wasm are excluded: all three backends resolve
-    // `print_str s` through a compile-time-known literal map (`strings`,
-    // `str_lens`, or the WASM string-local table); a function parameter `s`
-    // receives its value at runtime and is absent from those maps, so the
-    // backend cannot lower the `print_str` CIR op (no runtime string-pointer
-    // ABI — the calling convention would need to pass buf + len separately).
+    // NativeAot, Llvm, and Wasm run it too now: the E4-dyn runtime-string work
+    // (E4d-2b LLVM / E4d-3b WASM / E4d-4 native) gave `print_str` a RUNTIME path
+    // that reads the length from the `[len][bytes]` block header at run time for
+    // any string lacking a compile-time-length entry — which is exactly a string
+    // parameter `s` (it receives its i64/i32 handle at the call site and is absent
+    // from the `strings`/`str_lens`/string-local maps). The literal actual
+    // `'HELLO'` is passed as that handle across the shared `call`. All 7 backends.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer procedure echo(s); value s; string s; print(s); \
                echo('HELLO') end",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
     // The outer block declares `string msg`, initialises it with a literal, then
@@ -1352,9 +2029,11 @@ const PROGRAMS: &[Prog] = &[
     // slot (not just an inline literal) as a `str`-typed actual argument, and
     // the callee's `print(s)` still lowers to `print_str` on all managed
     // backends.
-    // NativeAot, Llvm, and Wasm excluded: same root cause as `echo` above —
-    // the callee's `s` parameter is not in any backend's compile-time string
-    // map, so none of those three backends can lower `print_str s`.
+    // NativeAot, Llvm, and Wasm run it too now (same E4-dyn runtime `print_str`
+    // path as `echo` above): the callee's `s` param carries a runtime string
+    // handle and `print_str` reads its header at run time. The extra wrinkle here
+    // — the actual is a *named* outer-block string slot `msg` (not an inline
+    // literal) — makes no difference: the call still passes `msg`'s handle. All 7.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1362,7 +2041,125 @@ const PROGRAMS: &[Prog] = &[
                integer procedure say(s); value s; string s; print(s); \
                msg := 'HI'; say(msg) end",
         expect: Expect::Stdout("HI"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a typed array
+    // value parameter rather than silently widening to integer storage. The
+    // non-unit lower bound proves the descriptor crosses the call and the normal
+    // ALGOL index translation still applies before `array_get` feeds boolean
+    // control flow. `true and not false` selects the observable 42 result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean array flags[-1:0]; integer result; \
+               procedure setflags(a); value a; boolean array a; \
+               begin a[-1] := true; a[0] := false end; \
+               setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a 2-D boolean array value formal keeps both lower bounds and
+    // the outer row-major stride. The distinct true/false checkerboard catches
+    // a descriptor that aliases a neighboring cell instead of the intended one.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 3-D boolean-array
+    // value formal. The checkerboard spans both row-major strides, so a stale
+    // or incomplete descriptor cannot accidentally select the correct cells.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean array flags[-1:0, 2:3, 5:6]; integer result; procedure setflags(a); value a; boolean array a; begin procedure populate; begin a[-1,2,5] := true; a[-1,3,6] := false; a[0,2,5] := false; a[0,3,6] := true end; populate(); if a[-1,2,5] and not a[-1,3,6] and not a[0,2,5] and a[0,3,6] then result := 42 else result := 0 end; setflags(flags) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 3-D real-array value
+    // formal. The four corners span both row-major strides, and the caller's
+    // floating-point sum must survive the descriptor-global boundary.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array values[-1:0, 2:3, 5:6]; integer result, total; procedure setvalues(a); value a; real array a; begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; setvalues(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 4-D integer-array
+    // value formal. Four non-unit lower bounds and all three row-major strides
+    // must survive the descriptor-global boundary for the corner sum to reach 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; procedure setvalues(a); value a; integer array a; begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; setvalues(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 2-D string-array
+    // value formal. This takes the dynamic `array<str>` handle plus both
+    // non-unit lower bounds and the outer stride through descriptor globals;
+    // the caller-visible lexical and equality checks prove the right strings
+    // reached the intended cells on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 3-D string-array
+    // value formal. Distinct non-unit lower bounds and both row-major strides
+    // must survive the descriptor-global boundary for every string cell to
+    // remain addressable in the caller's index space.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5, 7:8]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7] := 'HI'; a[-1,5,8] := 'NO'; a[0,4,7] := 'LO'; a[0,5,8] := 'OK' end; seed(); if a[-1,4,7] < a[0,4,7] and a[0,5,8] = 'OK' and a[-1,5,8] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure writes a captured 4-D string-array
+    // value formal. All descriptor fields must reach the nested function for
+    // lexical ordering, equality, and inequality to select the intended cells.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7,10] := 'HI'; a[-1,5,8,11] := 'NO'; a[0,4,7,10] := 'LO'; a[0,5,8,11] := 'OK' end; seed(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure forwards a captured 4-D string-array
+    // value formal to a sibling array formal. The forwarding call must reload
+    // the handle, four lower bounds, and all three row-major strides.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure forwards a captured 4-D real-array
+    // value formal to a sibling array formal. The forwarding call must reload
+    // the f64 handle, four lower bounds, and all three row-major strides.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- a nested procedure forwards a captured 4-D boolean-array
+    // value formal to a sibling array formal. The forwarding call must reload
+    // the bool handle, four lower bounds, and all three row-major strides.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
@@ -1476,6 +2273,37 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin real procedure scale(x); value x; real x; scale := x * 6.0; \
                integer result; result := entier(scale(7.0)) end",        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — real procedure values compose across two typed calls. Each
+    // `scale` result is an `f64` value actual for `combine`; its f64 return then
+    // reaches `entier`. This drives the complete real call ABI rather than a
+    // single call-result-to-builtin path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               real procedure scale(x); value x; real x; scale := x * 6.0; \
+               real procedure combine(a,b); value a,b; real a,b; combine := a + b; \
+               result := entier(combine(scale(3.0), scale(4.0))) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 -- integer-to-real promotion (LANG-FULL AL1). Integer values
+    // may flow wherever a real is required: direct real assignment, a real
+    // array element, a real value parameter, and a mixed real/integer
+    // comparison. Each conversion lowers to the shared `int_to_real` IIR op,
+    // so the program traverses VM, JIT, LLVM, WASM, JVM, CLR, and native AOT
+    // without target-specific lowering. `i = 7`; `values[4] := i`; `r := i`;
+    // `scale(r) = 42.0`; and `values[4] = i` is a mixed-width comparison.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; real r; real array values[4:4]; \
+               real procedure scale(x); value x; real x; scale := x * 6; \
+               i := 7; values[4] := i; r := i; \
+               if values[4] = i then result := entier(scale(r)) else result := 0 end",
+        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
@@ -2452,6 +3280,488 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK!"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
+    // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
+    // prefixed aggregate substrate carrying an E4-dyn runtime string *handle*
+    // per element instead of an `f64`.  `A$(0)`/`A$(1)` are assigned string
+    // literals through a `str`-typed `array_set`, and `PRINT A$(0) + A$(1)`
+    // reads them back through two `str`-typed `array_get`s and concatenates —
+    // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
+    // distinct and the handles survive a store→load round-trip through the
+    // aggregate.  Runs on **all seven backends**, each with its native
+    // representation of a `str` element:
+    //   • **VM/JIT** — a tagged `Value::Str` array element.
+    //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
+    //     E4d-BA-arr `wasm_array_elem` branch + folded-literal→array_set promotion).
+    //   • **LLVM** — an 8-byte i64 handle per element (`str`→`i64`); `array_set`
+    //     `ptrtoint`s a folded literal's global to the i64 handle.
+    //   • **NativeAot** — an 8-byte handle (address of the `[i64 len][bytes]` block);
+    //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
+    //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
+    //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+               40 PRINT A$(0) + A$(1)\n50 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
+    // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
+    // literal lowers to the shared E4 `str_const` + `print_str` op pair (then a
+    // `putchar('\n')` record terminator) — exactly the string-output substrate
+    // Dartmouth BASIC and ALGOL 60 already prove on every backend. So COBOL's
+    // first matrix cell is stdout on all seven columns with no COBOL-specific
+    // backend hooks. The source is carded into the fixed 80-column format
+    // (6 sequence columns + indicator, code from column 8). Stdout is trimmed,
+    // so the trailing newline is immaterial.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. HELLO.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     DISPLAY \"HELLO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — `MOVE` a numeric literal into a PICTURE-typed item, then
+    // `DISPLAY` the item (PL09 step 4). This is the cell that proves the
+    // *data model*: `01 N PIC 9(5)` is a fixed-width numeric field, so `MOVE 42`
+    // stores the zero-filled image `00042` (not `42`) and `DISPLAY N` shows those
+    // five digits. Because this rung has no arithmetic, the compiler formats the
+    // literal into its picture image at compile time (reusing cobol-runtime's own
+    // `move_into_numeric`) and emits it as one `str_const` — so, like the literal
+    // cell, it is the shared string-output substrate on all seven backends. The
+    // leading zeros survive stdout trimming (only surrounding whitespace is cut),
+    // so `00042` is positive proof the field reshaped the value.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9(5).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     MOVE 42 TO N.\n\
+               000000     DISPLAY N.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("00042"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — integer arithmetic (PL09 step 4, PR2). Numeric items are now
+    // scaled `i64` slots, so `ADD`/`MULTIPLY`/`SUBTRACT` lower to native `add` /
+    // `mul` / `sub` on the slot, the result reduced to the field (magnitude, low
+    // `int_digits` digits kept), and `DISPLAY` renders the slot through the
+    // fixed-width digit helper. Here R starts 0: `+7 = 7`, `×3 = 21`, `−1 = 20`,
+    // shown as the two-digit field `20`. This proves the value survives the
+    // store→load round-trip through the slot across three verbs, on every backend
+    // that runs the shared integer-arithmetic + digit-print substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     ADD 7 TO R.\n\
+               000000     MULTIPLY 3 BY R.\n\
+               000000     SUBTRACT 1 FROM R.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("20"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — scaled-decimal ADD (PL09 step 4, PR3). `R PIC 9(2)V99` holds a
+    // value scaled by 2, so it starts 1.50 (slot `150`). `ADD 2.25 TO R` aligns
+    // the implied point — the literal folds to `225` at the same scale — sums to
+    // `375`, and the receiver renders those four digits with no point: `0375`
+    // (= 3.75). This proves the implied-point alignment lowers to plain `i64`
+    // `add` on the scaled slots, on every backend running the shared substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2)V99 VALUE 1.5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     ADD 2.25 TO R.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0375"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — IF / ELSE with a relational condition (PL09 step 4, PR4). The
+    // condition lowers to a `cmp_gt` on the aligned values; `jmp_if_false` skips
+    // the then-branch to the else. Here N=5 > 3 → the then-branch runs, printing
+    // `BIG`. This proves the three-way branch (cmp / conditional jump / labels)
+    // lowers correctly on every backend that runs the shared control-flow + print
+    // substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("BIG"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — scaled DIVIDE with ROUNDED (PL09 step 4, PR3b). `20 / 3 =
+    // 6.666…`; carried to one guard digit past the `V99` receiver then rounded
+    // half away from zero → `6.67`, rendered as the four-digit field `0667`. This
+    // proves the dividend up-scale, integer division, and sign-aware rounding
+    // bias all lower to plain `i64` ops on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2)V99 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     DIVIDE 3 INTO 20 GIVING R ROUNDED.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0667"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — PERFORM … TIMES (PL09 step 4). The performed paragraph range is
+    // inlined at the call site with a counted loop around it: TICK runs 3 times,
+    // each ADDing 1 to COUNT and displaying it, so stdout is `123`. This proves
+    // paragraph labels + PERFORM's loop control lower to the shared jmp/label
+    // substrate on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  COUNT  PIC 9 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     PERFORM TICK 3 TIMES.\n\
+               000000     STOP RUN.\n\
+               000000 TICK.\n\
+               000000     ADD 1 TO COUNT.\n\
+               000000     DISPLAY COUNT.",
+        expect: Expect::Stdout("1\n2\n3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — COMPUTE with operator precedence (PL09 step 4). `A + B * C =
+    // 10 + (3*2) = 16`, stored into `9(4)V99` → `001600`. This proves the
+    // precedence cascade evaluates to plain scaled-i64 arithmetic (add over a
+    // multiply) on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(3) VALUE 10.\n\
+               000000 01  B  PIC 9(3) VALUE 3.\n\
+               000000 01  C  PIC 9(3) VALUE 2.\n\
+               000000 01  R  PIC 9(4)V99.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A + B * C.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("001600"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — signed numeric with trailing overpunch (PL09 step 4). `N PIC
+    // S9(2)` starts at 3; SUBTRACT 5 → -2; a signed receiver keeps the sign, and
+    // DISPLAY overpunches the units digit 2 as 'K' (negative) → `0K`. This proves
+    // signed slots + the overpunch print helper lower on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC S9(2) VALUE 3.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     SUBTRACT 5 FROM N.\n\
+               000000     DISPLAY N.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0K"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — character item MOVE + alphanumeric comparison (PL09 step 4).
+    // W = "ABCD" moved into V PIC X(2) truncates to "AB" (str_slice); the
+    // space-padded compare `W GREATER "AB"` is true → prints "AB". Proves the
+    // str_slice / str_cmp substrate lowers on every backend that runs strings.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  W  PIC X(4) VALUE \"ABCD\".\n\
+               000000 01  V  PIC X(2).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     MOVE W TO V.\n\
+               000000     IF W GREATER \"AB\" DISPLAY V.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("AB"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — COMPUTE exponentiation with a constant integer exponent (PL09
+    // step 4). `A ** 3 = 4**3 = 64`, stored into `9(6)` → `000064`. A literal
+    // exponent unrolls to a chain of plain `mul` ops (no new opcode, no strings),
+    // so it proves on every backend the other scaled-i64 arithmetic already does.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(2) VALUE 4.\n\
+               000000 01  R  PIC 9(6).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A ** 3.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("000064"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — nested COMPUTE division (PL09 step 4). `A / B + C = 10/3 + 2`;
+    // the oracle carries the division at a fixed scale-12 intermediate, so the
+    // quotient is 3.333… and the sum 5.333…, truncated into `9(4)V99` → `000533`.
+    // The scale-12 quotient is plain `const`/`mul`/`div` (no new opcode, no
+    // strings), so it proves on every backend the other scaled-i64 arithmetic does.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(3) VALUE 10.\n\
+               000000 01  B  PIC 9(3) VALUE 3.\n\
+               000000 01  C  PIC 9(3) VALUE 2.\n\
+               000000 01  R  PIC 9(4)V99.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A / B + C.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("000533"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — level-88 condition-name (PL09 step 4). `88 IS-OK VALUE 1` over
+    // `STATUS-CODE` (=1) makes `IF IS-OK` true → prints "OK". A condition-name
+    // lowers to a plain `const` + `cmp_eq` feeding the same branch structure a
+    // relational IF uses (no new opcode), so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  STATUS-CODE  PIC 9 VALUE 1.\n\
+               000000 88  IS-OK  VALUE 1.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF IS-OK DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — level-88 condition-name with multiple values and a THRU range
+    // (PL09 step 4). `88 COND VALUE 1 5 THRU 7 9` over N=6 → 6 is in 5 THRU 7, so
+    // `IF COND` prints "OK". This folds `cmp_eq` and `and(cmp_ge, cmp_le)` with
+    // `or` — the first COBOL program to emit the `and`/`or` bitwise ops, proving
+    // they lower on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 99 VALUE 6.\n\
+               000000 88  COND  VALUE 1 5 THRU 7 9.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF COND DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — SET a level-88 condition-name TRUE (PL09 step 4). `SET IS-DONE TO
+    // TRUE` stores 9 (`88 IS-DONE VALUE 9`) into STATUS-CODE (PIC 9), which then
+    // displays as `9`. Lowers to a plain `const` store into the variable's slot —
+    // no new opcode — so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  STATUS-CODE  PIC 9 VALUE 1.\n\
+               000000 88  IS-DONE  VALUE 9.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     SET IS-DONE TO TRUE.\n\
+               000000     DISPLAY STATUS-CODE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("9"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — symbolic relational operator (PL09 step 4). `IF N >= 5` on N=5
+    // holds (boundary), printing "GE". A symbol lowers to the same `cmp_*` a word
+    // relation does (`>=` ≡ `cmp_ge`), so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF N >= 5 DISPLAY \"GE\" ELSE DISPLAY \"LT\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("GE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — compound condition with AND/OR and parentheses (PL09 step 4).
+    // `(N > 1 OR N > 9) AND N < 8` on N=5 = (true OR false) AND true = true →
+    // prints "Y". Folds the leaf `cmp_*` booleans with bitwise `and`/`or`, proving
+    // the compound-condition lowering on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — NOT over a parenthesised condition (PL09 step 4). `NOT (N<3 OR
+    // N>9)` on N=5 = NOT (false OR false) = true → prints "Y". The negation inverts
+    // the group's boolean with `xor` (the first COBOL program to emit `xor`),
+    // proving it lowers on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — EVALUATE case statement (PL09 step 4). `EVALUATE N` on N=5 with
+    // `WHEN 1 / WHEN 5 / WHEN OTHER` matches the second WHEN → prints "FIVE". Lowers
+    // to a cmp_eq + jmp_if_false branch cascade (the ops IF uses, no new opcode),
+    // proving the case statement on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE N\n\
+               000000     WHEN 1 DISPLAY \"ONE\"\n\
+               000000     WHEN 5 DISPLAY \"FIVE\"\n\
+               000000     WHEN OTHER DISPLAY \"OTHER\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("FIVE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — EVALUATE with a multi-value / THRU-range WHEN (PL09 step 4).
+    // `EVALUATE N` on N=6 with `WHEN 1 5 THRU 7 9` matches (6 is in 5 THRU 7) →
+    // prints "Y". The WHEN OR-folds cmp_eq and and(cmp_ge, cmp_le) — the level-88
+    // ranges machinery, no new opcode — proving it on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 6.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE N\n\
+               000000     WHEN 1 5 THRU 7 9 DISPLAY \"Y\"\n\
+               000000     WHEN OTHER DISPLAY \"N\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — alphanumeric EVALUATE subject (PL09 step 4). `EVALUATE GRADE` on
+    // GRADE="B" with `WHEN "A" THRU "M"` (byte-lexical) matches → prints "FIRST".
+    // The character subject compares each WHEN with `str_cmp` (the op alphanumeric
+    // IF uses), folding a range with `and` — proving the str cascade on every
+    // backend that runs strings.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  GRADE  PIC X VALUE \"B\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE GRADE\n\
+               000000     WHEN \"A\" THRU \"M\" DISPLAY \"FIRST\"\n\
+               000000     WHEN OTHER DISPLAY \"REST\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("FIRST"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2618,11 +3928,22 @@ fn clang_ok() -> bool {
 /// `__print_str` backs the E4 string literal-output foothold. It is not
 /// language-specific: any IIR that references either symbol links it. Linked only
 /// when the emitted `.ll` actually references one of the symbols, so the bare
-/// expression-language programs still link a standalone `.ll`.
+/// expression-language programs still link a standalone `.ll`. Split from the five
+/// `__twig_input_*`/`__twig_str_*` functions below (Twig GC completion round) — they
+/// have no equivalent in `twig_runtime.c`, so this half is always safe to link
+/// alongside it; the other half duplicates `twig_runtime.c`'s own definitions.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
+    "#include <stdio.h>\n#include <stdint.h>\n\
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
-void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n\
+void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
+
+/// The standalone `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+/// `__twig_str_eq`/`__twig_str_cmp` substitute for `twig_runtime.c`'s own
+/// definitions of the identical five symbols — used only when `twig_runtime.c`
+/// itself isn't already being linked (see `uses_gc_runtime` in `run_llvm`),
+/// since linking both is a duplicate-symbol error.
+const MISC_IO_RUNTIME_C: &str =
+    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
 int64_t __twig_input_i64(void){char buf[64];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<63){buf[i++]=(char)c;}buf[i]=0;\
 long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n\
@@ -2642,7 +3963,13 @@ return (int64_t)(intptr_t)h;}\n\
 int64_t __twig_str_eq(int64_t a,int64_t b){\
 int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
 if(la!=lb)return 0;if(la<=0)return 1;\
-return memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)la)==0?1:0;}\n";
+return memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)la)==0?1:0;}\n\
+int64_t __twig_str_cmp(int64_t a,int64_t b){\
+int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
+if(la<0)la=0;if(lb<0)lb=0;int64_t n=la<lb?la:lb;\
+if(n>0){int c=memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)n);\
+if(c<0)return -1;if(c>0)return 1;}\
+return la<lb?-1:la>lb?1:0;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -2673,12 +4000,65 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let exe = dir.path().join("prog");
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
-    // Link the generic I/O runtime iff the program actually uses print or input.
-    if ll.contains("@__print_i64") || ll.contains("@__print_str")
-        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-        || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq") {
-        let rt_path = dir.path().join("rt.c");
+    // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
+    // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
+    // E6d-2b), OR a plain `__twig_gc_alloc`/`__twig_alloc_bytes`/
+    // `__twig_alloc_ref_array_bytes`/`__twig_gc_live_bytes` call with no
+    // `__dyn_*` alongside it — the shape introduced by routing
+    // `alloc_bytes`/`alloc_array` (Brainfuck's tape / LANG-FULL E5 arrays,
+    // including plain typed-language arrays like ALGOL's that never touch a
+    // `__dyn_*` primitive) through the same GC-tracked allocator records/cons
+    // cells already used (Twig GC completion round). `dynval_runtime.c`
+    // implements the tagged-word model and calls the conservative GC, which
+    // now lives in the `gc-core-capi` staticlib (twig_gc.c was retired in
+    // #118b-2b); `twig_runtime.c` supplies `__twig_alloc_bytes` itself, *and*
+    // its own `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+    // `__twig_str_eq`/`__twig_str_cmp` — the same five functions
+    // `PRINT_RUNTIME_C` below also defines a simpler standalone version of.
+    //
+    // `__twig_alloc_ref_array_bytes` (array reference-tracing fix, Twig GC
+    // completion round) is `alloc_array`'s new allocator — a fresh symbol
+    // `__twig_alloc_bytes`'s own check above never catches, so every ALGOL/
+    // Twig program using an array (which no longer emits `@__twig_alloc_bytes`
+    // at all) would silently link WITHOUT `twig_runtime.c` and fail with an
+    // undefined-symbol linker error, misreported by this harness as "did not
+    // complete" rather than a clear link failure. Found by running the full
+    // matrix after the array reference-tracing fix, not assumed.
+    let uses_gc_runtime = ll.contains("@__dyn_")
+        || ll.contains("@__twig_gc_alloc")
+        || ll.contains("@__twig_alloc_bytes")
+        || ll.contains("@__twig_alloc_ref_array_bytes")
+        || ll.contains("@__twig_gc_live_bytes");
+    if uses_gc_runtime {
+        let rt = |name: &str| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
+        };
+        cmd.arg("-x").arg("none")
+            .arg(rt("dynval_runtime.c"))
+            .args(common::gc_link_args())
+            .arg(rt("twig_runtime.c"));
+    }
+    // Link the generic print runtime iff the program actually prints — always
+    // safe to add alongside `twig_runtime.c` above, since `PRINT_RUNTIME_C`'s
+    // `__print_i64`/`__print_str` have no equivalent there.
+    if ll.contains("@__print_i64") || ll.contains("@__print_str") {
+        let rt_path = dir.path().join("print_rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
+        cmd.arg("-x").arg("c").arg(&rt_path);
+    }
+    // Link the *standalone* input/string-op runtime iff the program needs one
+    // of those five functions AND `twig_runtime.c` isn't already supplying
+    // them above — both define the identical symbols, so linking both is a
+    // duplicate-symbol error (found by investigation: any array/GC program
+    // that *also* prints used to trip this, once `alloc_bytes`/`alloc_array`
+    // started referencing `@__twig_alloc_bytes`).
+    if !uses_gc_runtime
+        && (ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
+            || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
+            || ll.contains("@__twig_str_cmp"))
+    {
+        let rt_path = dir.path().join("misc_io_rt.c");
+        std::fs::write(&rt_path, MISC_IO_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
     }
     let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
@@ -3335,10 +4715,10 @@ public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : 
 /// read the entry's real return descriptor and inject one of two launcher methods,
 /// keyed on the program's result kind:
 ///
-/// * **Expression language** (`Expect::Exit`) — print the entry method's result so
-///   the harness can read it back:
+/// * **Expression language** (`Expect::Exit`) — print the entry method's result to
+///   stderr so the harness can read it without consuming program-owned stdout:
 ///   ```text
-///     getstatic  System.out         // : PrintStream
+///     getstatic  System.err         // : PrintStream
 ///     invokestatic Main.main()<R>   // : the program's result
 ///     invokevirtual println(<R>)V   // print it  (<R> = I or J)
 ///     return
@@ -3387,7 +4767,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     let ret = entry_desc.rsplit(')').next()?.to_string();
 
     // Build the constant-pool entries the launcher references. Always a self-ref to
-    // `Main.main<entry_desc>`; for the print path also `System.out` and the matching
+    // `Main.main<entry_desc>`; for the value path also `System.err` and the matching
     // `println(<R>)V`.
     let (entry_ref, print_refs) = {
         let cp = &mut class.constant_pool;
@@ -3396,15 +4776,15 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         } else {
             let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
             let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
-            let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+            let err_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("err".into()));
             let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
-            let out_nat = cp_append(
+            let err_nat = cp_append(
                 cp,
-                JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
+                JvmConstantPoolEntry::NameAndType { name_index: err_utf8, descriptor_index: ps_desc },
             );
-            let out_fieldref = cp_append(
+            let err_fieldref = cp_append(
                 cp,
-                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
+                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: err_nat },
             );
             let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
             let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
@@ -3418,7 +4798,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
                 cp,
                 JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
             );
-            Some((out_fieldref, println_ref))
+            Some((err_fieldref, println_ref))
         };
         let main_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("Main".into()));
         let main_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: main_utf8 });
@@ -3437,11 +4817,11 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     };
     let [ent_hi, ent_lo] = entry_ref.to_be_bytes();
     let main_code = match print_refs {
-        Some((out_fieldref, println_ref)) => {
-            let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+        Some((err_fieldref, println_ref)) => {
+            let [err_hi, err_lo] = err_fieldref.to_be_bytes();
             let [pln_hi, pln_lo] = println_ref.to_be_bytes();
             vec![
-                0xB2, out_hi, out_lo, // getstatic System.out
+                0xB2, err_hi, err_lo, // getstatic System.err
                 0xB8, ent_hi, ent_lo, // invokestatic Main.main()<R>
                 0xB6, pln_hi, pln_lo, // invokevirtual println(<R>)V
                 0xB1, // return
@@ -3517,6 +4897,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     java.arg("-cp").arg(dir.path()).arg("Main");
     let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
     }
@@ -3524,9 +4905,9 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
         Some(RunResult::Completed { code: out.status.code(), stdout })
     } else {
-        // The launcher printed the entry method's result; parse it as the program's
-        // value (matching the exit-code convention of the other columns).
-        Some(RunResult::Completed { code: stdout.parse::<i32>().ok(), stdout: String::new() })
+        // The launcher printed the entry method's result to stderr; parse it as the
+        // program value while retaining the program's own stdout.
+        Some(RunResult::Completed { code: stderr.parse::<i32>().ok(), stdout })
     }
 }
 
@@ -3622,12 +5003,30 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
 /// other columns' convention); an I/O language's stdout is the captured buffer. `None`
 /// only if the program fails to compile or the VM errors — the VM is in-process, so a
 /// tagged cell always runs (no host gate).
+/// Apply the shared IIR-lowering passes the code-gen backends run, so the generic
+/// register VM / JIT execute the same **dynamic** Twig features they do.
+/// `lower_closures_to_heap` rewrites `alloc_closure`/`call_closure` to a cons-chain
+/// object + a synthesized dispatcher; `lower_heap_builtins` rewrites the
+/// `cons`/`car`/`cdr`/`null?` builtins to the structural `alloc`/`field_load`/
+/// `is_null` ops the VM runs; `lower_global_io` rewrites dynamic
+/// `global_get`/`global_set` to typed `global_load`/`global_store`. Without this the
+/// VM sees the raw frontend `alloc_closure`/`cons`-builtin IIR it cannot dispatch.
+/// The passes are no-ops on programs without those constructs (every non-Twig /
+/// non-dynamic cell), matching how the code-gen pipelines already run them for
+/// every language.
+fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
+    iir_builtin_lowering::lower_global_io(module);
+    iir_builtin_lowering::lower_closures_to_heap(module);
+    iir_builtin_lowering::lower_heap_builtins(module);
+}
+
 fn run_vm(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use vm_core::core::VMCore;
     use vm_core::value::Value;
 
     let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
     let mut vm = VMCore::new();
@@ -3746,6 +5145,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     use vm_core::value::Value;
 
     let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
     let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
@@ -3924,6 +5324,1072 @@ fn matrix_every_proven_cell_agrees() {
     eprintln!("lang-matrix: {ran} proven cells exercised");
 }
 
+/// Focused regression for the cross-backend runtime-string ordering path. The
+/// full matrix currently has an unrelated JVM/Twig failure before it reaches this
+/// late ALGOL row, so keep every standard backend independently visible here.
+/// Native AOT and real LLVM/clang must preserve the printed procedure result as
+/// well as the lexical branch's exit code.
+#[test]
+fn algol_runtime_string_ordering_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("s < 'LO'")
+                && program.src.contains("string procedure pick")
+        })
+        .expect("the ALGOL runtime string ordering program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(RunResult::Completed { code, stdout }) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime string ordering did not complete"
+            );
+            continue;
+        };
+        assert_eq!(
+            code,
+            Some(42),
+            "{backend:?} must take the runtime lexical-ordering branch"
+        );
+        if matches!(backend, NativeAot | Llvm) {
+            assert_eq!(
+                stdout,
+                "HI",
+                "{backend:?} must preserve the procedure-result string for output"
+            );
+        }
+    }
+}
+
+#[test]
+fn algol_string_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("string array words")
+                && program.src.contains("words[1] < words[2]")
+        })
+        .expect("the ALGOL string array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_string_procedure_results_survive_string_array_storage_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("words[1] := pick(1)")
+                && program.src.contains("string procedure pick")
+        })
+        .expect("the runtime string-to-array ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_multidimensional_string_array_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("string array words[-1:0, 4:5]")
+                && program.src.contains("procedure fill(a); value a; string array a")
+                && program.src.contains("procedure seed; begin a[-1,4] := 'HI'")
+        })
+        .expect("the nested multidimensional ALGOL string-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested multidimensional string-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_three_dimensional_string_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("string array words[-1:0, 4:5, 7:8]")
+                && program
+                    .src
+                    .contains("procedure fill(a); value a; string array a")
+                && program
+                    .src
+                    .contains("procedure seed; begin a[-1,4,7] := 'HI'")
+        })
+        .expect("the nested 3-D ALGOL string-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 3-D string-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_three_dimensional_boolean_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean array flags[-1:0, 2:3, 5:6]")
+                && program
+                    .src
+                    .contains("procedure setflags(a); value a; boolean array a")
+                && program
+                    .src
+                    .contains("procedure populate; begin a[-1,2,5] := true")
+        })
+        .expect("the nested 3-D ALGOL boolean-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 3-D boolean-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_three_dimensional_real_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array values[-1:0, 2:3, 5:6]")
+                && program
+                    .src
+                    .contains("procedure setvalues(a); value a; real array a")
+                && program
+                    .src
+                    .contains("procedure populate; begin a[-1,2,5] := 30.0")
+        })
+        .expect("the nested 3-D ALGOL real-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 3-D real-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_four_dimensional_integer_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("integer array values[-1:0, 2:3, 5:6, 8:9]")
+                && program
+                    .src
+                    .contains("procedure setvalues(a); value a; integer array a")
+                && program
+                    .src
+                    .contains("procedure populate; begin a[-1,2,5,8] := 30")
+        })
+        .expect("the nested 4-D ALGOL integer-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D integer-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_four_dimensional_string_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("string array words[-1:0, 4:5, 7:8, 10:11]")
+                && program
+                    .src
+                    .contains("procedure fill(a); value a; string array a")
+                && program
+                    .src
+                    .contains("procedure seed; begin a[-1,4,7,10] := 'HI'")
+        })
+        .expect("the nested 4-D ALGOL string-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D string-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_forwards_captured_four_dimensional_string_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("string array words[-1:0, 4:5, 7:8, 10:11]")
+                && program
+                    .src
+                    .contains("procedure seed(b); value b; string array b")
+                && program.src.contains("procedure invoke; seed(a)")
+        })
+        .expect("the nested 4-D ALGOL string-array forwarding program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D string-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_forwards_captured_four_dimensional_real_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("real array values[-1:0, 2:3, 5:6, 8:9]")
+                && program
+                    .src
+                    .contains("procedure seed(b); value b; real array b")
+                && program.src.contains("procedure invoke; seed(a)")
+        })
+        .expect("the nested 4-D ALGOL real-array forwarding program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D real-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_forwards_captured_four_dimensional_boolean_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("boolean array flags[-1:0, 2:3, 5:6, 8:9]")
+                && program
+                    .src
+                    .contains("procedure seed(b); value b; boolean array b")
+                && program.src.contains("procedure invoke; seed(a)")
+        })
+        .expect("the nested 4-D ALGOL boolean-array forwarding program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D boolean-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_power_chain_associates_right_to_left_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := (2 ^ 3 ^ 2) div 12")
+        })
+        .expect("the right-associative ALGOL power-chain program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but right-associative ALGOL exponentiation did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_integer_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer exponent, result; real positive, reciprocal")
+                && program.src.contains("positive := 2 ^ exponent")
+                && program.src.contains("reciprocal := 2 ^ exponent")
+        })
+        .expect("the runtime-exponent ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime integer exponent execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer array values[4:5]")
+                && program.src.contains("procedure seed")
+        })
+        .expect("the ALGOL captured array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_parameter_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill(a)")
+                && program.src.contains("integer array a")
+        })
+        .expect("the ALGOL array parameter program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure answer; answer := 42")
+                && program.src.contains("result := answer(); store()")
+        })
+        .expect("the ALGOL zero-argument procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_procedure_results_drive_control_flow_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean procedure neg(p)")
+                && program.src.contains("neg(false) and not neg(true)")
+        })
+        .expect("the ALGOL boolean procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but boolean procedure control flow did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean procedure both(p,q)")
+                && program.src.contains("both(neg(false), not neg(true))")
+        })
+        .expect("the ALGOL boolean procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but boolean procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_string_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure matches(s)")
+                && program.src.contains("matches(pick(1))")
+        })
+        .expect("the ALGOL string procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but string procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure combine(a,b)")
+                && program.src.contains("combine(scale(3.0), scale(4.0))")
+        })
+        .expect("the ALGOL real procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but real procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure combine(a,b)")
+                && program.src.contains("combine(scale(3), scale(4))")
+        })
+        .expect("the ALGOL integer procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but integer procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dynamic_captured_strings_reassign_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure matches(s); value s; string s")
+                && program.src.contains("procedure store(n); value n; integer n; shared := pick(n)")
+                && program.src.contains("store(0); store(1); result := matches(shared)")
+        })
+        .expect("the ALGOL dynamic captured-string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but dynamic captured-string execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dynamic_own_strings_reassign_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("own string memo; memo := pick(n)")
+                && program.src.contains("result := remember(0) + remember(1)")
+        })
+        .expect("the ALGOL dynamic own-string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but dynamic own-string execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill2(a)")
+                && program.src.contains("values[-1:0, 4:5]")
+                && program.src.contains("a[-1,4]")
+        })
+        .expect("the ALGOL multidimensional array parameter program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multidimensional array-parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_array_formal_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill(a)")
+                && program.src.contains("procedure seed; begin a[-1,4] := 40")
+                && program.src.contains("seed(); fill := a[-1,4] + a[0,5]")
+        })
+        .expect("the ALGOL array-formal capture program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested array-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_scalar_formal_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure total(seed)")
+                && program.src.contains("integer procedure bump")
+                && program.src.contains("seed := seed + 2")
+        })
+        .expect("the ALGOL scalar-formal capture program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested scalar-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean array flags[-1:0]")
+                && program.src.contains("procedure setflags(a)")
+        })
+        .expect("the ALGOL boolean-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but boolean-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multidimensional_boolean_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean array flags[-1:0, 2:3]")
+                && program.src.contains("a[-1,2] := true")
+        })
+        .expect("the multidimensional ALGOL boolean-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multidimensional boolean-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch inner := yes, no")
+                && program.src.contains("switch outer := if chooseyes then inner[i] else fallback")
+                && program.src.contains("goto outer[1]")
+        })
+        .expect("the ALGOL switch-designator program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but switch designator execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_numeric_promotion_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array values[4:4]")
+                && program.src.contains("values[4] := i")
+                && program.src.contains("real procedure scale(x)")
+        })
+        .expect("the ALGOL numeric-promotion program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but numeric-promotion execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_own_array_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("own integer array memo[4:5]")
+                && program.src.contains("procedure bump")
+        })
+        .expect("the ALGOL own array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but own array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_and_own_strings_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure setshared")
+                && program.src.contains("own string memo")
+        })
+        .expect("the ALGOL captured/own string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured/own strings did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
 /// Per-column floor: when a backend's toolchain IS present, every program tagged
 /// for that backend MUST actually run — a proven cell silently skipping is a
 /// regression, not a graceful absence.
@@ -4005,3 +6471,330 @@ fn proven_columns_do_not_silently_skip() {
 
 
 
+
+
+
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AOT00 T7 — conformance-at-scale: generative DIFFERENTIAL testing
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// The hand-written cells above each pin one (program, backend) result. This is
+// the complementary safety net the roadmap (AOT00 §5.2, track T7) sequences
+// next: GENERATE random well-formed programs and assert every available engine
+// AGREES. It is the mechanism that auto-detects the cross-backend disagreements
+// the E6d union work found one at a time — a tagged-vs-boxed mismatch would
+// surface here as "vm=X, llvm=Y" on some random program, with no cell authored
+// for it.
+//
+// Seed slice: random `u8` expression trees over `+ & | ^` (total — no
+// div-by-zero — and wrapping mod 256 identically on every engine). The in-process
+// VM is the reference oracle; every other engine present is cross-checked against
+// it. Fast in-process engines (WASM/JIT) run on EVERY program; the slower
+// toolchain engines (native/LLVM/CLR, one process spawn per program) run on a
+// deterministic sample so the test stays quick. Absent toolchains skip.
+
+/// Deterministic zero-dep PRNG (xorshift64) — reproducible, so any failure
+/// replays from the fixed seed.
+fn xorshift(state: &mut u64) -> u64 {
+    let mut x = *state;
+    x ^= x << 13;
+    x ^= x >> 7;
+    x ^= x << 17;
+    *state = x;
+    x
+}
+
+/// A random total `u8` expression: a literal, or `(a OP b)` over `+ & | ^`.
+/// Depth-capped so the emitted source stays small (no parser-depth blowup).
+fn gen_u8_expr(state: &mut u64, depth: usize) -> String {
+    if depth >= 4 || (depth > 0 && xorshift(state).is_multiple_of(3)) {
+        return (xorshift(state) % 256).to_string();
+    }
+    let op = ["+", "&", "|", "^"][(xorshift(state) % 4) as usize];
+    let a = gen_u8_expr(state, depth + 1);
+    let b = gen_u8_expr(state, depth + 1);
+    format!("({a} {op} {b})")
+}
+
+/// Process exit code from an engine's result (None if the engine was absent or
+/// the program trapped).
+fn exit_code(r: Option<RunResult>) -> Option<i32> {
+    match r {
+        Some(RunResult::Completed { code, .. }) => code,
+        _ => None,
+    }
+}
+
+#[test]
+fn t7_differential_random_u8_expressions_agree() {
+    const SEED: u64 = 0x9E37_79B9_7F4A_7C15;
+    const N: usize = 160;
+    const TOOLCHAIN_EVERY: usize = 10; // sample the slow (process-spawning) engines
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let expr = gen_u8_expr(&mut state, 0);
+        let src: &'static str =
+            Box::leak(format!("fn main() -> u8 {{ return {expr}; }}").into_boxed_str());
+        let p = Prog { lang: Language::Nib, ext: "nib", src, expect: Expect::Exit(0), backends: &[] };
+
+        // The observable is the `u8` program's LOW BYTE. Every engine that reports
+        // via a process exit code is already truncated to 8 bits by the OS
+        // (`300 & 0xFF = 44`); `run_clr` reports the launcher's printed `int32`
+        // (full width), so normalise every result to `& 0xFF` to compare the same
+        // observable. (That CLR's *un-narrowed* `u8` return is 300 not 44 — the
+        // declared width isn't masked before `ret`, only hidden by exit-code
+        // truncation elsewhere — is a real conformance finding this harness
+        // surfaced; tracked separately, out of scope for the low-byte differential.)
+        let obs = |r: Option<RunResult>| exit_code(r).map(|c| c & 0xFF);
+        let Some(want) = obs(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+
+        let mut engines: Vec<(&str, Option<i32>)> =
+            vec![("wasm", obs(run_wasm(&p))), ("jit", obs(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", obs(run_native(&p))));
+            engines.push(("llvm", obs(run_llvm(&p))));
+            engines.push(("clr", obs(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 differential disagreement [{engine}] on {src:?}: vm={want}, {engine}={got}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 differential: {cross_checks} cross-engine agreements over {N} random programs");
+    // WASM + JIT are always in-process → at least 2 checks per program.
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
+
+
+
+// ── AOT00 T7 — full-value differential over BASIC `PRINT` (stdout channel) ────
+//
+// The u8 differential above compares an 8-bit exit code — enough to catch a
+// low-byte disagreement, but blind to the upper bits (a u8 `200+100` reads 44 on
+// every engine only because the OS truncates the exit code; the full value 300 is
+// unobservable there). Dartmouth BASIC's `PRINT` reports the **full** integer on
+// stdout, so this differential compares whole `i64` values — negatives and large
+// products included — across every engine. Strictly stronger coverage: a
+// full-value disagreement (not just a low-byte one) fails loudly.
+
+/// A random total `i64` `PRINT` expression over `+ - *`. Literals are `0..=16`
+/// and depth is capped at 3 (≤ 8 leaves), so an all-`*` tree is at most
+/// `16^8 ≈ 4.3e9` — comfortably inside `i64`, never overflowing. No division, so
+/// it is total.
+fn gen_basic_expr(state: &mut u64, depth: usize) -> String {
+    if depth >= 3 || (depth > 0 && xorshift(state).is_multiple_of(3)) {
+        return (xorshift(state) % 17).to_string();
+    }
+    let op = ["+", "-", "*"][(xorshift(state) % 3) as usize];
+    let a = gen_basic_expr(state, depth + 1);
+    let b = gen_basic_expr(state, depth + 1);
+    format!("({a} {op} {b})")
+}
+
+/// The trimmed stdout of an engine's result (None if absent/trapped).
+fn stdout_of(r: Option<RunResult>) -> Option<String> {
+    match r {
+        Some(RunResult::Completed { stdout, .. }) => Some(stdout.trim().to_string()),
+        _ => None,
+    }
+}
+
+#[test]
+fn t7_differential_random_basic_print_agree() {
+    const SEED: u64 = 0x2545_F491_4F6C_DD1D;
+    const N: usize = 160;
+    const TOOLCHAIN_EVERY: usize = 10;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let expr = gen_basic_expr(&mut state, 0);
+        let src: &'static str =
+            Box::leak(format!("10 PRINT {expr}\n20 END\n").into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 full-value differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 BASIC-print differential: {cross_checks} full-value cross-engine agreements over {N} programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
+
+
+// ── AOT00 T7 — control-flow differential: BASIC `IF … THEN`/`GOTO` ───────────
+//
+// The two arithmetic differentials above exercise only straight-line evaluation.
+// This one exercises the **comparison ops + conditional branch + `GOTO`** codegen
+// — the paths where cross-backend disagreements are most likely (boolean
+// representation, branch-condition polarity: exactly the class of the E6d-6
+// boxed-bool `jmp_if_false` bug). A random comparison picks between two `PRINT`
+// arms, so the printed value witnesses *both* the comparison result and that the
+// right branch was taken, compared as a full `i64` across every engine.
+
+/// A random BASIC program: `IF <a> <relop> <b> THEN <print d> ELSE <print c>`,
+/// laid out with a `GOTO` (Dartmouth `IF` only takes a target line). `a`/`b`/`c`/`d`
+/// are the §3b `+ - *` expression trees; `<relop>` ranges over all six.
+fn gen_basic_if_program(state: &mut u64) -> String {
+    let relop = ["=", "<>", "<", ">", "<=", ">="][(xorshift(state) % 6) as usize];
+    let a = gen_basic_expr(state, 0);
+    let b = gen_basic_expr(state, 0);
+    let c = gen_basic_expr(state, 0);
+    let d = gen_basic_expr(state, 0);
+    format!("10 IF {a} {relop} {b} THEN 40\n20 PRINT {c}\n30 GOTO 50\n40 PRINT {d}\n50 END\n")
+}
+
+#[test]
+fn t7_differential_random_basic_conditionals_agree() {
+    const SEED: u64 = 0x1234_5678_9ABC_DEF1;
+    const N: usize = 120;
+    const TOOLCHAIN_EVERY: usize = 15;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let src: &'static str = Box::leak(gen_basic_if_program(&mut state).into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 conditional differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 conditional differential: {cross_checks} cross-engine agreements over {N} branch programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
+
+
+
+
+
+
+
+// ── AOT00 T7 — loop differential: BASIC `FOR … NEXT` accumulator ─────────────
+//
+// The arithmetic and `IF` differentials exercise straight-line and single-branch
+// code; neither touches a **loop back-edge** — a distinct codegen path (the loop
+// header/latch, the counter increment + bound test, a mutated accumulator across
+// iterations) and a classic source of cross-backend divergence (off-by-one bounds,
+// STEP handling, `NEXT` target). This generates `FOR I = 1 TO n` accumulator
+// programs and compares the printed sum across every engine.
+
+/// A random total loop-body expression over `+ - *`, whose leaves are the loop
+/// counter `I` or a literal `0..=6`. Depth ≤ 2 (≤ 4 leaves), and the driver caps
+/// the trip count, so the accumulated sum stays far inside `i64` — no overflow.
+fn gen_loop_body_expr(state: &mut u64, depth: usize) -> String {
+    if depth >= 2 || (depth > 0 && xorshift(state).is_multiple_of(3)) {
+        // Leaf: the counter `I` a third of the time, else a small literal.
+        return if xorshift(state).is_multiple_of(3) {
+            "I".to_string()
+        } else {
+            (xorshift(state) % 7).to_string()
+        };
+    }
+    let op = ["+", "-", "*"][(xorshift(state) % 3) as usize];
+    let a = gen_loop_body_expr(state, depth + 1);
+    let b = gen_loop_body_expr(state, depth + 1);
+    format!("({a} {op} {b})")
+}
+
+/// A random accumulator loop: `S := 0; for I in 1..=n { S := S + <body(I)> }; print S`.
+fn gen_basic_for_program(state: &mut u64) -> String {
+    let n = 2 + (xorshift(state) % 5); // trip count 2..=6
+    let body = gen_loop_body_expr(state, 0);
+    format!("10 LET S = 0\n20 FOR I = 1 TO {n}\n30 LET S = S + {body}\n40 NEXT I\n50 PRINT S\n60 END\n")
+}
+
+#[test]
+fn t7_differential_random_basic_loops_agree() {
+    const SEED: u64 = 0x9E37_79B9_1234_5678;
+    const N: usize = 120;
+    const TOOLCHAIN_EVERY: usize = 15;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let src: &'static str = Box::leak(gen_basic_for_program(&mut state).into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 loop differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 loop differential: {cross_checks} cross-engine agreements over {N} loop programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}

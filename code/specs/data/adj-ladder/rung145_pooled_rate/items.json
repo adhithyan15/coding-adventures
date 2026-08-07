@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 145 \u2014 pooled rate from four stated quantities (OPENS a NEW family beyond the compound-fraction matrix). Rungs 130-144 filled a four-numerator x four-denominator matrix in which both the numerator and the denominator were TWO-TERM. rung-145 steps up the ARITY axis to a THREE-TERM numerator over a lone denominator: (a+b+c)/d \u2014 three shift readings pooled and divided by one window. From a pooled total (shift_one + shift_two + shift_three) divided by a window, compute the pooled rate ((shift_one+shift_two+shift_three)/window), the pooled total (shift_one+shift_two+shift_three), or the partial total (shift_one+shift_two, a running subtotal of the first two shifts). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a THREE-TERM SUM OVER A LONE DIVISOR (a+b+c)/d (pool all three readings FIRST, then divide the pooled total by the window). The new three-term arity brings a slip the two-term rungs could not test \u2014 DROPPING a term, pooling only two of the three readings and dividing that ((a+b)/d, the 'forgot the third reading' slip) \u2014 alongside the universal INVERTING slip (d/(a+b+c), the reciprocal). The panel puts the honest running subtotal (a+b) beside the term-dropping slip ((a+b)/d) so the difference is exactly 'did you pool all three readings before dividing?'. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via + and / \u2014 no constant leaks (in particular the term COUNT three is never a literal; the pooling is spelled out as shift_one + shift_two + shift_three), and neither the pooled total, the partial total, nor the pooled rate ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. This rung uses only + and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r145psa-01",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 2, 4, and 6 pooled over a window of 4. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(2)\nobserve shift_two(4)\nobserve shift_three(6)\nobserve window(4)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r145psa-02",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 2, 4, and 6 pooled over a window of 4. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(2)\nobserve shift_two(4)\nobserve shift_three(6)\nobserve window(4)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r145psa-03",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 2, 4, and 6 pooled over a window of 4. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(2)\nobserve shift_two(4)\nobserve shift_three(6)\nobserve window(4)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r145psa-04",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 5, and 12 pooled over a window of 5. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(3)\nobserve shift_two(5)\nobserve shift_three(12)\nobserve window(5)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r145psa-05",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 5, and 12 pooled over a window of 5. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(3)\nobserve shift_two(5)\nobserve shift_three(12)\nobserve window(5)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r145psa-06",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 5, and 12 pooled over a window of 5. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(3)\nobserve shift_two(5)\nobserve shift_three(12)\nobserve window(5)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r145psa-07",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 4, 6, and 20 pooled over a window of 6. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(4)\nobserve shift_two(6)\nobserve shift_three(20)\nobserve window(6)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r145psa-08",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 4, 6, and 20 pooled over a window of 6. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(4)\nobserve shift_two(6)\nobserve shift_three(20)\nobserve window(6)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r145psa-09",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 4, 6, and 20 pooled over a window of 6. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(4)\nobserve shift_two(6)\nobserve shift_three(20)\nobserve window(6)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r145psa-10",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 9, and 12 pooled over a window of 4. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(3)\nobserve shift_two(9)\nobserve shift_three(12)\nobserve window(4)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r145psa-11",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 9, and 12 pooled over a window of 4. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(3)\nobserve shift_two(9)\nobserve shift_three(12)\nobserve window(4)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r145psa-12",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 3, 9, and 12 pooled over a window of 4. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(3)\nobserve shift_two(9)\nobserve shift_three(12)\nobserve window(4)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r145psa-13",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 5, 9, and 21 pooled over a window of 5. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(5)\nobserve shift_two(9)\nobserve shift_three(21)\nobserve window(5)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r145psa-14",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 5, 9, and 21 pooled over a window of 5. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(5)\nobserve shift_two(9)\nobserve shift_three(21)\nobserve window(5)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r145psa-15",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 5, 9, and 21 pooled over a window of 5. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(5)\nobserve shift_two(9)\nobserve shift_three(21)\nobserve window(5)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r145psa-16",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 6, 10, and 32 pooled over a window of 6. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(6)\nobserve shift_two(10)\nobserve shift_three(32)\nobserve window(6)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r145psa-17",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 6, 10, and 32 pooled over a window of 6. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(6)\nobserve shift_two(10)\nobserve shift_three(32)\nobserve window(6)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r145psa-18",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 6, 10, and 32 pooled over a window of 6. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(6)\nobserve shift_two(10)\nobserve shift_three(32)\nobserve window(6)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r145psa-19",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 7, 11, and 18 pooled over a window of 4. What is the pooled rate (the pooled total of all three shifts divided by the window)?",
+      "program": "observe shift_one(7)\nobserve shift_two(11)\nobserve shift_three(18)\nobserve window(4)\nlet answer = (shift_one + shift_two + shift_three) / window\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r145psa-20",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 7, 11, and 18 pooled over a window of 4. What is the the pooled total (all three shifts added, the numerator that is divided by the window)?",
+      "program": "observe shift_one(7)\nobserve shift_two(11)\nobserve shift_three(18)\nobserve window(4)\nlet answer = shift_one + shift_two + shift_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r145psa-21",
+      "qtype": "pooled_rate",
+      "stem": "A staffing study records three shift readings of 7, 11, and 18 pooled over a window of 4. What is the the partial total (the first two shifts added, a running subtotal before the third shift)?",
+      "program": "observe shift_one(7)\nobserve shift_two(11)\nobserve shift_three(18)\nobserve window(4)\nlet answer = shift_one + shift_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

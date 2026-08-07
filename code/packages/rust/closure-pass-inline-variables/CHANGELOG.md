@@ -2,6 +2,79 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.15.1] - 2026-07-19
+
+### Changed — test goldens updated for `closure-emitter` 0.55.0
+
+`closure-emitter` 0.55.0 terminates a top-level function/class declaration with
+`;` only when it is the last program item. This pass's emit-shape test goldens
+were regenerated to the new byte-identical-to-Closure output. No behaviour change
+in this crate — only the expected emitted strings moved.
+
+## [0.15.0] - 2026-07-14
+
+### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. Handles the new `FunctionParam::RestElement` variant via
+`binding_identifier()`, so a rest parameter (`...name`) is walked as an ordinary single-name binding
+(counted / looked up / renamed) rather than being unrepresentable. Additive; MINOR.
+
+## [0.14.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the inertness predicate reports not-inert and the count/propagate walks skip exports
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the inertness predicate reports not-inert and the count/propagate walks skip exports. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+inertness predicate reports an import is not inert (it has runtime effect), and
+the count/propagate walks skip it as a no-op.
+
+## [0.12.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in the decl-name counter, use counter,
+and const-propagation walk descend into the `with` object and body. Picks up
+javascript-ast 0.38.0.
+
+## [0.11.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 5 sites: count/propagate recurse the block's statements (SOUNDNESS: a candidate use inside a static block runs at class-def time and must be counted before the const is propagated there); a static block declares no class-body name.
+
+## [0.11.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` handling at
+every class member site: count/collect skip the field key (no statement-scope
+binding) but recurse the initializer and computed key, and propagate substitutes
+into the initializer in lockstep — so a candidate use inside a field initializer
+is counted before it can be propagated. Reachable once the CLOC12.175 PR2 bridge
+produces the node.
+
+## [0.11.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each exhaustive `Declaration` match site: `decl_is_inert` returns `false`
+(a class declaration runs code — its `extends` heritage is evaluated at the
+declaration site, unlike a hoisted function declaration); `count_decl_names_decl`
+counts the class name + method-body names; and `count_uses_decl` / `propagate_in_decl`
+recurse the heritage operand + method bodies in lockstep (missing a use would let
+a still-referenced const be inlined away — a miscompile). Reachable once the
+CLOC12.174 PR2 bridge produces the node.
+
 ## [0.11.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

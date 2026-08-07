@@ -14,6 +14,9 @@ Spec: [code/specs/UI07-layout-block.md](../../../specs/UI07-layout-block.md).
 Handles:
 - Block containers — stack children vertically with margin collapsing
   between adjacent siblings.
+- Atomic inline flow — consecutive `inline`, `inline-text`, and
+  `inline-replaced` children share line boxes, wrap as units, and honor
+  explicit `line-break` nodes.
 - Nested containers with padding on both outer and inner sides.
 - Text leaves — width/height resolved by the supplied measurer with
   wrap-at-max-width semantics.
@@ -22,18 +25,21 @@ Handles:
   / `min_height` / `max_height` clamping.
 
 Out of scope for v1 (per UI07):
-- Mixed block + inline children with anonymous-block promotion.
+- Text-run fragmentation at word boundaries and splitting one inline box
+  across multiple line boxes.
+- Baseline and `vertical-align` alignment within line boxes.
 - `float` / `clear` / absolute positioning.
 - RTL / bidirectional text.
 - CSS columns.
 - Parent-child margin collapse.
 
-The upstream `document-ast-to-layout` converter produces strictly
-block-or-leaf trees, so the missing inline-flow path is not a blocker
-for Markdown rendering.
+Nodes without `ext["block"]["display"]` remain block-level by default, so
+existing `document-ast-to-layout` output preserves its original geometry.
+`html-to-layout` supplies explicit display metadata for browser content.
 
 ## Tests
 
-14 unit tests cover single leaves, block stacking, margin collapsing,
+18 unit tests cover single leaves, block stacking, atomic inline placement and
+wrapping, margin collapsing,
 nested containers, size hints, min/max clamping, content passthrough,
 empty containers, and a realistic document shape.

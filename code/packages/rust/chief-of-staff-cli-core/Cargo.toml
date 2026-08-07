@@ -1,0 +1,13 @@
+[package]
+name = "chief-of-staff-cli-core"
+version = "0.1.0"
+edition = "2021"
+description = "Declarative operator command core for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+cli-builder = { path = "../cli-builder" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }

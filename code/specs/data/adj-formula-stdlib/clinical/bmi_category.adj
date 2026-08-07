@@ -1,0 +1,60 @@
+% ============================================================================
+% bmi_category.adj — a rulebook that BRANCHES ON A FORMULA (ADJ-RULE-SUBSTRATE RS-1).
+% ============================================================================
+% Where `bmi.adj` ships the *formula* (a computed value) and the FL-2/FL-3
+% libraries apply it, this ships a *rulebook* whose belief clause fires off the
+% formula directly: a `contributes … from bmi(body_mass, height) >= 30 to obese`
+% clause. RS-1 makes a formula application a first-class sub-expression, so the
+% rulebook can gate a verdict on a computed formula without an intermediate
+% `let` — the composition the ladder always named but never built.
+%
+%     import "bmi_category.adj"       % transitively imports bmi.adj
+%     observe body_mass(100)          % "…weighs 100 kg…"   (span cited by the model)
+%     observe height(1.7)             % "…height 1.70 m…"   (span cited by the model)
+%     ? obese                         % engine: bmi = 100/1.7² = 34.6 ≥ 30 → FIRES obese
+%
+% The engine computes BMI on the CPU, gates the WHO obesity threshold on it, and
+% renders BOTH citations in the audit trail: the BMI definition (why the number
+% is what it is) and the WHO threshold (why ≥ 30 means obesity). The library
+% declares the branch; the consumer supplies the numbers.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depend on the BMI formula. The import is RELATIVE to this file; a consumer that
+% imports `bmi_category.adj` gets `bmi` (and its `bmi_vocab`) transitively, so the
+% `bmi(body_mass, height)` application in the clause below resolves.
+% ----------------------------------------------------------------------------
+import "bmi.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary for the classification. `obese` is the hypothesis the rulebook
+% adjudicates; `body_mass` / `height` are already `define`d as findings in
+% `bmi.adj`'s `bmi_vocab`.
+% ----------------------------------------------------------------------------
+dictionary bmi_category_vocab {
+    define obese : hypothesis  surface "obesity", "obese", "class I+ obesity"
+}
+
+% ----------------------------------------------------------------------------
+% The classification rulebook. A modest base rate for obesity, then a saturating
+% deterministic branch: WHEN the CPU-computed BMI meets the WHO threshold, the
+% verdict fires. The gate is a FORMULA APPLICATION — the rulebook branches on a
+% formula, not on an already-observed slot.
+% ----------------------------------------------------------------------------
+rulebook bmi_classification {
+    use bmi_category_vocab
+
+    % A prior so the posterior is well-defined; the branch does the real work.
+    prior 0.1 for obese
+        source "Adult obesity prevalence is on the order of 10-40% across populations; 0.1 is a conservative base rate."
+        trust inferred
+
+    % BRANCH ON A FORMULA: fire `obese` when BMI ≥ 30. The comparison runs on the
+    % CPU at decision time over the CPU-computed BMI; the saturating LR makes it a
+    % deterministic classification. The clause cites WHO's obesity threshold; the
+    % computed BMI carries `bmi.adj`'s definition — the audit shows both.
+    contributes 1000000 from bmi(body_mass, height) >= 30 to obese
+        source "WHO: BMI greater than or equal to 30 is obesity."
+        locator "https://www.who.int/health-topics/obesity"
+        trust authoritative
+}

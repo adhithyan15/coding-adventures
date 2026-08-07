@@ -1,0 +1,98 @@
+% ============================================================================
+% volume-of-distribution.adj — the definition of the (apparent) volume of distribution
+% (Vd = amount of drug in the body ÷ plasma concentration) in the ADJ standard library.
+% ============================================================================
+% The volume-of-distribution entry of the *clinical* track — the first PHARMACOKINETICS library,
+% a bedside/dosing cousin of the shipped cockcroft_gault.adj (creatinine clearance). Where a
+% product library like rate-pressure-product MULTIPLIES two quantities, the volume of distribution
+% is DEFINED as a RATIO: THE VOLUME OF DISTRIBUTION IS THE AMOUNT OF DRUG IN THE BODY DIVIDED BY
+% THE PLASMA CONCENTRATION OF THE DRUG — a proportionality constant that relates the total amount
+% of drug in the body to the plasma concentration at a given time. It is "apparent" because it is
+% not a real anatomical volume: a drug that partitions heavily into tissue leaves little in plasma,
+% so the concentration is low and the computed volume can exceed total body water. It sets the
+% loading dose (a larger Vd needs more drug to reach a target concentration). It ships as an
+% importable, byte-provenanced, PARAMETERIZED `formula`, together with its two exact rearrangements
+% (the amount of drug a Vd implies for a given concentration, and the concentration it implies for
+% a given amount). As with every compute library, a consumer states NO arithmetic: it `import`s
+% this file, binds the measured quantities from its own byte-provenance decomposition, and asks the
+% engine to APPLY the cited definition on the CPU. Zero math is performed by the model; the engine
+% computes each value EXACTLY (over exact rationals), carrying the definition's citation.
+%
+%     import "volume-of-distribution.adj"
+%     observe amount_of_drug_in_body(200)   % "…200 mg in the body…"        (span cited by the model)
+%     observe plasma_concentration(5)        % "…plasma concentration 5 mg/L…" (span cited by the model)
+%     ? volume_of_distribution(amount_of_drug_in_body, plasma_concentration)
+%                                            % engine → 40, carrying Vd = amount ÷ Cp
+%
+% All three formulas are EXACT over their parameters, so every value the engine returns is exact.
+% They COMPOSE and invert cleanly around the worked case amount = 200 mg, plasma concentration =
+% 5 mg/L (Vd = 200 ÷ 5 = 40): the `volume_of_distribution` a consumer computes from the amount and
+% concentration is exactly the value the `amount_of_drug_in_body` formula multiplies by the
+% concentration to recover 200, and exactly the value the `plasma_concentration` formula divides
+% the amount by to recover 5.
+%
+%   volume_of_distribution(amount_of_drug_in_body, plasma_concentration)
+%       = amount_of_drug_in_body / plasma_concentration    % Vd = amount ÷ Cp   (definition)
+%   amount_of_drug_in_body(volume_of_distribution, plasma_concentration)
+%       = volume_of_distribution * plasma_concentration     % amount = Vd × Cp   (solved for amount)
+%   plasma_concentration(amount_of_drug_in_body, volume_of_distribution)
+%       = amount_of_drug_in_body / volume_of_distribution   % Cp = amount ÷ Vd   (solved for Cp)
+%
+% NOTE ON UNITS: the amount of drug in the body is in milligrams and the plasma concentration is in
+% milligrams per litre; the volume of distribution comes out in litres, and this library computes
+% the exact quotient over whatever consistent inputs it is given.
+%
+% All three formulas are defended by the SAME clause — "Vd=Amount of drug in the body/Plasma
+% concentration of the drug" — because that one definition (Vd IS the amount-over-concentration
+% ratio) sanctions the relation read every way. The quote is transcribed verbatim from a
+% peer-reviewed article archived on the NCBI Bookshelf, so each `formula` carries the provenance
+% envelope every shipped grounded clause carries; the linter rejects an unsourced one. (See
+% feedback_nothing_human_authored — the clause is a verbatim span of the cited page, not asserted
+% from memory.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable pharmacokinetic quantity the definition ranges over,
+% and each result is a derived quantity. `amount_of_drug_in_body`, `plasma_concentration` and
+% `volume_of_distribution` each appear BOTH as a derived result and as an input (of the other
+% formulas), so each is a single dictionary term used in both roles. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term; the trailing comment records the
+% intended unit.
+% ----------------------------------------------------------------------------
+dictionary volume_of_distribution_vocab {
+    define amount_of_drug_in_body  : finding  surface "amount of drug in the body", "amount of drug", "drug amount"        % milligrams (mg)
+    define plasma_concentration    : finding  surface "plasma concentration", "plasma drug concentration", "Cp"            % milligrams per litre (mg/L)
+    define volume_of_distribution  : finding  surface "volume of distribution", "apparent volume of distribution", "Vd"    % litres (L)
+}
+
+% ----------------------------------------------------------------------------
+% The definition, all three ways. Each is a named, importable, reusable formula over its formal
+% parameters, bound at apply time, and each carries the definitional clause from the cited article
+% on the NCBI Bookshelf (a quote is required on a shipped formula). Each is an exact quotient or
+% product of measured quantities, so the engine returns each value EXACTLY.
+% ----------------------------------------------------------------------------
+formulabook volume_of_distribution_laws {
+    use volume_of_distribution_vocab
+
+    % Volume of distribution — the amount of drug in the body divided by the plasma concentration,
+    % i.e. Vd = amount ÷ Cp.
+    formula volume_of_distribution(amount_of_drug_in_body, plasma_concentration) = amount_of_drug_in_body / plasma_concentration
+        source "Vd=Amount of drug in the body/Plasma concentration of the drug"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+
+    % Amount of drug in the body — the same definition solved for the amount a Vd implies for a
+    % given concentration (amount = Vd × Cp). Defended by the SAME clause.
+    formula amount_of_drug_in_body(volume_of_distribution, plasma_concentration) = volume_of_distribution * plasma_concentration
+        source "Vd=Amount of drug in the body/Plasma concentration of the drug"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+
+    % Plasma concentration — the same definition solved for the concentration (Cp = amount ÷ Vd):
+    % the amount of drug in the body divided by the volume of distribution. The SAME clause, read
+    % the third way.
+    formula plasma_concentration(amount_of_drug_in_body, volume_of_distribution) = amount_of_drug_in_body / volume_of_distribution
+        source "Vd=Amount of drug in the body/Plasma concentration of the drug"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545280/"
+        trust authoritative
+}

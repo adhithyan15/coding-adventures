@@ -43,14 +43,15 @@ module CodingAdventures
     #   param_names: ["name", "greeting"]
     #
     class StarlarkFunction
-      attr_reader :code, :defaults, :name, :param_count, :param_names
+      attr_reader :code, :defaults, :name, :param_count, :param_names, :globals
 
-      def initialize(code:, defaults: [], name: "<lambda>", param_count: 0, param_names: [])
+      def initialize(code:, defaults: [], name: "<lambda>", param_count: 0, param_names: [], globals: {})
         @code = code
         @defaults = defaults
         @name = name
         @param_count = param_count
         @param_names = param_names
+        @globals = globals
       end
 
       def to_s

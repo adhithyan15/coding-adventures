@@ -28,7 +28,6 @@
 // bugs. Both `Point` and `Rect` derive `Copy`, so they are stack-allocated
 // and cheap to copy — just 16 bytes and 32 bytes respectively.
 
-use trig;
 
 // ============================================================================
 // Point

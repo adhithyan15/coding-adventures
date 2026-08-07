@@ -12,6 +12,16 @@
 //! - **Predefined decode tables** (RFC 8878 Appendix B) so short frames
 //!   need no table description overhead.
 //!
+//! This crate's own encoder never emits **Repeated-Offset (R1/R2/R3)**
+//! sequence shortcuts (RFC 8878 §3.1.1.3.2.1.1) — an explicit educational
+//! simplification, since every offset it writes is coded in full. The
+//! *decoder*, however, fully understands them: real `zstd` encoders use
+//! repeat offsets constantly (one of their main entropy wins, especially
+//! for periodic or constant data), so a decoder that didn't accept them
+//! would fail to decode a large fraction of real-world `.zst` files despite
+//! passing every self-consistency test. See `decompress_block`'s doc
+//! comment below and lessons.md Lesson 98.
+//!
 //! # Frame layout (RFC 8878 §3)
 //!
 //! ```text
@@ -72,6 +82,31 @@ const MAGIC: u32 = 0xFD2FB528;
 /// ZStd allows blocks up to 128 KB. Larger inputs are split across multiple
 /// blocks. The spec maximum is actually `min(WindowSize, 128 KB)`.
 const MAX_BLOCK_SIZE: usize = 128 * 1024;
+
+/// Decompression-bomb guard: maximum total decompressed output size (256 MB).
+///
+/// A Compressed block's WIRE size is capped at [`MAX_BLOCK_SIZE`] (128 KB),
+/// but that says nothing about how large the block can EXPAND to: a single
+/// FSE-coded sequence's match length can be up to ~131 KB (ML code 52), and
+/// one 128 KB block can carry tens of thousands of sequences. This limit
+/// must therefore be checked incrementally, at every point output can grow
+/// — inside the per-sequence loop of [`decompress_block`], not only once per
+/// top-level block (Raw/RLE) as an earlier revision of this decoder did.
+const MAX_OUTPUT: usize = 256 * 1024 * 1024;
+
+/// Returns an error if adding `additional` more bytes to output (currently
+/// `current_size` bytes) would exceed [`MAX_OUTPUT`].
+///
+/// `additional` is always derived from bounded wire fields (`ll`/`ml`
+/// values, themselves at most ~131070 per RFC 8878's LL/ML code tables), so
+/// `current_size + additional` cannot overflow a `usize` before this check
+/// fires (`MAX_OUTPUT` itself is 2^28).
+fn check_output_budget(current_size: usize, additional: usize) -> Result<(), String> {
+    if current_size.saturating_add(additional) > MAX_OUTPUT {
+        return Err(format!("decompressed size exceeds limit of {MAX_OUTPUT} bytes"));
+    }
+    Ok(())
+}
 
 // ─── LL / ML / OF code tables (RFC 8878 §3.1.1.3) ────────────────────────────
 //
@@ -198,33 +233,39 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
     for (s, &c) in norm.iter().enumerate() {
         if c == -1 {
             tbl[high].sym = s as u8;
-            if high > 0 {
-                high -= 1;
-            }
+            high = high.saturating_sub(1);
             sym_next[s] = 1;
         }
     }
 
     // Phase 2: spread remaining symbols into the lower portion of the table.
-    // Two-pass approach: first symbols with count > 1, then count == 1.
-    // This matches the reference implementation's deterministic ordering.
+    //
+    // A SINGLE pass over symbols in ascending order `0..norm.len()`, placing
+    // each symbol's full count immediately when encountered — this is the
+    // real algorithm (`FSE_buildDTable_internal`'s low-probability branch,
+    // verified against the reference C source at
+    // `github.com/facebook/zstd/lib/decompress/fse_decompress.c`).
+    //
+    // An earlier revision of this codec used a fabricated TWO-PASS split
+    // (all symbols with count > 1 first, in ascending order, then all
+    // symbols with count == 1) — a plausible-looking but entirely invented
+    // convention with no basis in the reference algorithm. It produced a
+    // completely different (but internally self-consistent) table layout:
+    // our own decoder mirrored our own encoder, so every round-trip test
+    // against OURSELVES passed, yet the real `zstd` CLI rejected the output
+    // as corrupt. See lessons.md Lesson 96.
     let mut pos = 0usize;
-    for pass in 0..2u8 {
-        for (s, &c) in norm.iter().enumerate() {
-            if c <= 0 {
-                continue;
-            }
-            let cnt = c as usize;
-            if (pass == 0) != (cnt > 1) {
-                continue;
-            }
-            sym_next[s] = cnt as u16;
-            for _ in 0..cnt {
-                tbl[pos].sym = s as u8;
+    for (s, &c) in norm.iter().enumerate() {
+        if c <= 0 {
+            continue;
+        }
+        let cnt = c as usize;
+        sym_next[s] = cnt as u16;
+        for _ in 0..cnt {
+            tbl[pos].sym = s as u8;
+            pos = (pos + step) & (sz - 1);
+            while pos > high {
                 pos = (pos + step) & (sz - 1);
-                while pos > high {
-                    pos = (pos + step) & (sz - 1);
-                }
             }
         }
     }
@@ -239,8 +280,8 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
     // This ensures that when we reconstruct state = base + read(nb bits),
     // we land in the range [sz, 2*sz), which is the valid encoder state range.
     let mut sn = sym_next.clone();
-    for i in 0..sz {
-        let s = tbl[i].sym as usize;
+    for entry in tbl.iter_mut().take(sz) {
+        let s = entry.sym as usize;
         let ns = sn[s] as u32;
         sn[s] += 1;
         debug_assert!(ns > 0, "FSE: sym_next must be positive");
@@ -248,8 +289,8 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
         let nb = acc_log - (31 - ns.leading_zeros()) as u8;
         // base = ns * (1 << nb) - sz
         let base = ((ns << nb) as usize).wrapping_sub(sz) as u16;
-        tbl[i].nb = nb;
-        tbl[i].base = base;
+        entry.nb = nb;
+        entry.base = base;
     }
 
     tbl
@@ -320,23 +361,24 @@ fn build_encode_sym(norm: &[i16], acc_log: u8) -> (Vec<FseEe>, Vec<u16>) {
     for (s, &c) in norm.iter().enumerate() {
         if c == -1 {
             spread[idx_high] = s as u8;
-            if idx_high > 0 { idx_high -= 1; }
+            idx_high = idx_high.saturating_sub(1);
         }
     }
     let idx_limit = idx_high; // highest free slot
 
-    // Phase 2: spread remaining symbols using the step function
+    // Phase 2: spread remaining symbols using the step function.
+    //
+    // A SINGLE pass over symbols in ascending order — MUST mirror
+    // `build_decode_table`'s Phase 2 exactly (same reasoning: the real
+    // algorithm has no count>1-vs-count==1 split; see Lesson 96).
     let mut pos = 0usize;
-    for pass in 0..2u8 {
-        for (s, &c) in norm.iter().enumerate() {
-            if c <= 0 { continue; }
-            let cnt = c as usize;
-            if (pass == 0) != (cnt > 1) { continue; }
-            for _ in 0..cnt {
-                spread[pos] = s as u8;
-                pos = (pos + step as usize) & (sz as usize - 1);
-                while pos > idx_limit { pos = (pos + step as usize) & (sz as usize - 1); }
-            }
+    for (s, &c) in norm.iter().enumerate() {
+        if c <= 0 { continue; }
+        let cnt = c as usize;
+        for _ in 0..cnt {
+            spread[pos] = s as u8;
+            pos = (pos + step as usize) & (sz as usize - 1);
+            while pos > idx_limit { pos = (pos + step as usize) & (sz as usize - 1); }
         }
     }
 
@@ -352,8 +394,8 @@ fn build_encode_sym(norm: &[i16], acc_log: u8) -> (Vec<FseEe>, Vec<u16>) {
     let mut sym_occ = vec![0u32; norm.len()];
     let mut st = vec![0u16; sz as usize];
 
-    for i in 0..sz as usize {
-        let s = spread[i] as usize;
+    for (i, &sp) in spread.iter().enumerate().take(sz as usize) {
+        let s = sp as usize;
         let j = sym_occ[s] as usize;
         sym_occ[s] += 1;
         // Slot for this (sym, occurrence) pair
@@ -580,16 +622,66 @@ fn fse_encode_sym(
     *state = st[slot] as u32;
 }
 
-/// Decode one symbol from the backward bitstream, updating the FSE state.
+/// Initialise an FSE encoder state directly from a symbol, WITHOUT flushing
+/// any bits — the reverse-encoding-loop analogue of real zstd's
+/// `FSE_initCState2`.
 ///
-/// 1. Look up `de[state]` to get `sym`, `nb`, and `base`.
-/// 2. New state = `base + read(nb bits)`.
-fn fse_decode_sym(state: &mut u16, de: &[FseDe], br: &mut RevBitReader) -> u8 {
-    let e = de[*state as usize];
-    let sym = e.sym;
-    let next = e.base + br.read_bits(e.nb) as u16;
-    *state = next;
-    sym
+/// RFC 8878's decoder never performs a state-UPDATE read after the LAST
+/// sequence in a block (there is no "next" sequence whose peek needs a
+/// fresh state) — see the per-sequence loop in [`decompress_block`].
+/// Symmetrically, the ENCODER's first symbol processed in its reverse loop
+/// (which corresponds to that same last sequence) cannot derive its
+/// starting state via a normal [`fse_encode_sym`] flush (there is no
+/// bit-consuming update on the decode side to produce it) — it must be
+/// computed directly.
+///
+/// Formula (mirrors `FSE_initCState2` in the reference C implementation):
+/// `nb_bits_out = (delta_nb + (1<<15)) >> 16`,
+/// `value = (nb_bits_out << 16) - delta_nb`, then a table lookup exactly
+/// like [`fse_encode_sym`] but starting from that computed `value` instead
+/// of a live running state.
+///
+/// An earlier revision of this codec always flushed a transition for every
+/// sequence uniformly (no direct-init special case for the last sequence),
+/// writing bits a real decoder would never read and shifting the
+/// bit-alignment of everything that followed. See lessons.md Lesson 96.
+fn fse_init_state(sym: u8, ee: &[FseEe], st: &[u16]) -> u32 {
+    let e = &ee[sym as usize];
+    let delta_nb = e.delta_nb as u64;
+    let nb_bits_out = delta_nb.wrapping_add(1u64 << 15) >> 16;
+    let value = (nb_bits_out << 16).wrapping_sub(delta_nb);
+    let slot_i = (value >> nb_bits_out) as i64 + e.delta_fs as i64;
+    let slot = slot_i.max(0) as usize;
+    debug_assert!(slot < st.len(), "FSE init slot out of range: {slot} >= {}", st.len());
+    st[slot] as u32
+}
+
+/// Peek the symbol encoded at the current FSE decode state, WITHOUT
+/// consuming any bits.
+///
+/// The FSE state itself IS the decode-table index — `de[state]` is a bare
+/// table lookup that costs nothing. Only the subsequent state UPDATE
+/// ([`fse_update_state`]) reads bits. RFC 8878 §3.1.1.3.2.1.2 requires all
+/// three symbols (LL, ML, OF) to be peeked from their CURRENT states before
+/// any extra bits or state updates are read — see [`decompress_block`].
+fn fse_peek(state: u16, de: &[FseDe]) -> FseDe {
+    de[state as usize]
+}
+
+/// Consume `entry.nb` bits from the bitstream and compute the next FSE
+/// decode state from a previously peeked table entry.
+///
+/// New state = `entry.base + read(entry.nb bits)`.
+///
+/// Per the reference decoder (`ZSTD_decodeSequence`), this update is SKIPPED
+/// entirely for the LAST sequence in a block — there is no "next" sequence
+/// to prepare a state for, and the encoder never flushed any bits for that
+/// non-existent transition (see [`fse_init_state`]). Callers must guard the
+/// call to this function with `if i != n_seqs - 1`; performing it
+/// unconditionally consumes bits that were never written, corrupting the
+/// position of every read that follows. See lessons.md Lesson 96.
+fn fse_update_state(entry: FseDe, br: &mut RevBitReader) -> u16 {
+    entry.base + br.read_bits(entry.nb) as u16
 }
 
 // ─── LL/ML/OF code number computation ────────────────────────────────────────
@@ -788,45 +880,91 @@ fn decode_literals_section(data: &[u8]) -> Result<(Vec<u8>, usize), String> {
 // Mode 0 = Predefined, Mode 1 = RLE, Mode 2 = FSE_Compressed, Mode 3 = Repeat.
 // We always write 0x00 (all Predefined).
 //
-// The FSE bitstream is a backward bit-stream (reverse bit writer):
-//   - Sequences are encoded in REVERSE ORDER (last first).
-//   - For each sequence:
-//       OF extra bits, ML extra bits, LL extra bits  (in this order)
-//       then FSE symbol for OF, ML, LL              (in this order)
-//   - After all sequences, flush the final FSE states:
-//       (state_of - sz_of) as OF_ACC_LOG bits
-//       (state_ml - sz_ml) as ML_ACC_LOG bits
-//       (state_ll - sz_ll) as LL_ACC_LOG bits
+// The FSE bitstream is a backward bit-stream (reverse bit writer). Per RFC
+// 8878 §3.1.1.3.2.1.2, cross-checked against the real `zstd` CLI (TC-9) and
+// the reference C source (`ZSTD_decodeSequence` / `FSE_encodeSymbol` /
+// `FSE_initCState2` in `github.com/facebook/zstd`):
+//
+// A FORWARD-READING decoder processes each sequence as:
+//   1. PEEK all three symbols (LL, ML, OF) from their CURRENT states. This
+//      is a bare table lookup — the FSE state itself IS the decode-table
+//      index — and consumes NO bits.
+//   2. Read extra bits, in order OF, ML, LL.
+//   3. Update states (consumes bits), in order LL, ML, OF — preparing the
+//      states the NEXT sequence's peek will use. This step is SKIPPED for
+//      the LAST sequence in the block: there is no "next" sequence to
+//      prepare a state for.
+//
+// The very first states a forward decoder sees (used to peek the FIRST
+// sequence) are read up front, in order LL, OF, ML — note this is a
+// DIFFERENT order from the per-sequence update order above; RFC 8878 is
+// asymmetric here.
+//
+// Our encoder writes the mirror image of that, backwards (since the LAST
+// bits written are the FIRST bits a forward reader consumes) and with
+// sequences themselves processed in reverse order (last real sequence
+// first):
+//   - For the first-processed sequence (semantically the LAST real
+//     sequence): no incoming transition to flush — states are computed
+//     directly via `fse_init_state` (mirrors `FSE_initCState2`), writing NO
+//     bits.
+//   - For every other sequence: flush a state transition, order OF, ML, LL
+//     (write order; a forward decoder consumes this as update order LL, ML,
+//     OF after decoding the PREVIOUS — i.e. next-processed — sequence).
+//   - Then write extra bits, order LL, ML, OF (a forward decoder reads
+//     these as OF, ML, LL immediately after peeking symbols).
+//   - After all sequences, flush the initial states in write order ML, OF,
+//     LL, so a forward reader sees them in order LL, OF, ML.
 //   - Add sentinel and flush.
 //
-// The decoder does the mirror:
-//   1. Read LL_ACC_LOG bits → initial state_ll
-//   2. Read ML_ACC_LOG bits → initial state_ml
-//   3. Read OF_ACC_LOG bits → initial state_of
-//   4. For each sequence:
-//       decode LL symbol (state transition)
-//       decode OF symbol
-//       decode ML symbol
-//       read LL extra bits
-//       read ML extra bits
-//       read OF extra bits
-//   5. Apply sequence to output buffer.
+// An earlier revision of this codec (a) combined peek-and-update into one
+// step, getting the extras/updates relative order AND the OF/ML sub-order
+// wrong, and (b) always flushed a transition for every sequence instead of
+// special-casing the last one. Both are self-cancelling as long as encode
+// and decode agree on the (wrong) convention — every internal round-trip
+// test passed regardless — but the real `zstd` CLI rejected the output as
+// corrupt. See lessons.md Lesson 96.
 
+/// Encode the Number_of_Sequences field per RFC 8878 §3.1.1.3.1.
+///
+/// Encoding (verified against the real `zstd` CLI and the reference C
+/// source, `lib/compress/zstd_compress_sequences.c`):
+/// - `0`             : 1 byte = `0x00`
+/// - `1..=127`       : 1 byte = `count`
+/// - `128..=32511`   : 2 bytes; `byte0 = (count >> 8) | 0x80`, `byte1 = count & 0xFF`
+/// - `32512..`       : 3 bytes; `byte0 = 0xFF`, then `(count - 0x7F00)` as a
+///   little-endian `u16`
+///
+/// **The marker/high byte MUST come first on the wire, regardless of host
+/// endianness.** An earlier revision of this codec wrote the plain
+/// little-endian byte pair of `count | 0x8000` — i.e. the LOW byte first and
+/// the marker+high byte SECOND. That is a self-consistent round-trip (our
+/// own encoder paired with our own decoder always agreed with itself, so
+/// every internal test passed) but not the real wire format: any block with
+/// 128+ sequences decompressed fine with THIS implementation while being
+/// misparsed by the real `zstd` CLI or any other RFC 8878 decoder. See
+/// lessons.md's variable-length-integer/format-marker-byte lesson — a
+/// round-trip test on a self-consistent broken codec is blind to byte-order
+/// bugs by construction; only cross-implementation interop testing (TC-9)
+/// catches this class of bug.
 fn encode_seq_count(count: usize) -> Vec<u8> {
-    if count == 0 {
-        vec![0]
-    } else if count < 128 {
+    if count < 128 {
         vec![count as u8]
-    } else if count < 0x7FFF {
-        let v = (count as u16) | 0x8000;
-        v.to_le_bytes().to_vec()
+    } else if count < 0x7F00 {
+        // 128..=32511: byte0 = marker + high byte, byte1 = low byte.
+        let hi = ((count >> 8) as u8) | 0x80;
+        let lo = (count & 0xFF) as u8;
+        vec![hi, lo]
     } else {
-        // 3-byte encoding: first byte = 0xFF, next 2 bytes = count - 0x7F00
+        // 32512+: byte0 = 0xFF, next two bytes = (count - 0x7F00) as LE u16.
         let r = count - 0x7F00;
         vec![0xFF, (r & 0xFF) as u8, ((r >> 8) & 0xFF) as u8]
     }
 }
 
+/// Decode the Number_of_Sequences field. Mirrors [`encode_seq_count`].
+///
+/// Returns `(count, bytes_consumed)`.
 fn decode_seq_count(data: &[u8]) -> Result<(usize, usize), String> {
     if data.is_empty() {
         return Err("empty sequence count".into());
@@ -836,13 +974,13 @@ fn decode_seq_count(data: &[u8]) -> Result<(usize, usize), String> {
         // 1-byte encoding: value is in [0, 127]
         Ok((b0 as usize, 1))
     } else if b0 < 0xFF {
-        // 2-byte encoding: the pair is a LE u16 with the high bit set.
-        // The count = (u16 value) & 0x7FFF.
+        // 2-byte encoding: byte0 = marker + high byte, byte1 = low byte
+        // (RFC 8878 §3.1.1.3.1 — NOT a plain little-endian u16; see the
+        // Lesson-96-referenced comment on encode_seq_count).
         if data.len() < 2 {
             return Err("truncated sequence count".into());
         }
-        let v = u16::from_le_bytes([b0, data[1]]);
-        let count = (v & 0x7FFF) as usize;
+        let count = (((b0 & 0x7F) as usize) << 8) | (data[1] as usize);
         Ok((count, 2))
     } else {
         // 3-byte encoding: byte0=0xFF, then (count - 0x7F00) as LE u16
@@ -855,7 +993,12 @@ fn decode_seq_count(data: &[u8]) -> Result<(usize, usize), String> {
 }
 
 /// Encode the sequences section using predefined FSE tables.
+///
+/// Callers must pass a non-empty `seqs` slice — `compress_block` never calls
+/// this with an empty sequence list.
 fn encode_sequences_section(seqs: &[Seq]) -> Vec<u8> {
+    debug_assert!(!seqs.is_empty(), "encode_sequences_section requires at least one sequence");
+
     // Build encode tables (these are precomputed from the predefined distributions).
     let (ee_ll, st_ll) = build_encode_sym(&LL_NORM, LL_ACC_LOG);
     let (ee_ml, st_ml) = build_encode_sym(&ML_NORM, ML_ACC_LOG);
@@ -865,15 +1008,19 @@ fn encode_sequences_section(seqs: &[Seq]) -> Vec<u8> {
     let sz_ml = 1u32 << ML_ACC_LOG;
     let sz_of = 1u32 << OF_ACC_LOG;
 
-    // FSE encoder states start at table_size (= sz).
-    // The state range [sz, 2*sz) maps to slot range [0, sz).
+    // Placeholder initial values — always overwritten by `fse_init_state` in
+    // the first loop iteration (guaranteed by the non-empty-`seqs` contract
+    // above) before ever being read.
     let mut state_ll = sz_ll;
     let mut state_ml = sz_ml;
     let mut state_of = sz_of;
 
     let mut bw = RevBitWriter::new();
 
-    // Encode sequences in reverse order.
+    // Encode sequences in reverse order (last real sequence first). See the
+    // module-level comment above `encode_seq_count` for the full field-order
+    // derivation (RFC 8878 §3.1.1.3.2.1.2 / Lesson 96).
+    let mut first = true;
     for seq in seqs.iter().rev() {
         let ll_code = ll_to_code(seq.ll);
         let ml_code = ml_to_code(seq.ml);
@@ -887,31 +1034,41 @@ fn encode_sequences_section(seqs: &[Seq]) -> Vec<u8> {
             (31 - raw_off.leading_zeros()) as u8
         };
         let of_extra = raw_off - (1u32 << of_code);
-
-        // Write extra bits (OF, ML, LL in this order for backward stream).
-        bw.add_bits(of_extra as u64, of_code);
         let ml_extra = seq.ml - ML_CODES[ml_code].0;
-        bw.add_bits(ml_extra as u64, ML_CODES[ml_code].1);
         let ll_extra = seq.ll - LL_CODES[ll_code].0;
-        bw.add_bits(ll_extra as u64, LL_CODES[ll_code].1);
 
-        // FSE encode symbols in the order that the backward bitstream reverses
-        // to match the decoder's read order (LL first, OF second, ML third).
-        //
-        // Since the backward stream reverses write order, we write the REVERSE
-        // of the decode order: ML → OF → LL (LL is written last = at the top
-        // of the bitstream = read first by the decoder).
-        //
-        // Decode order: LL, OF, ML
-        // Encode order (reversed): ML, OF, LL
-        fse_encode_sym(&mut state_ml, ml_code as u8, &ee_ml, &st_ml, &mut bw);
-        fse_encode_sym(&mut state_of, of_code, &ee_of, &st_of, &mut bw);
-        fse_encode_sym(&mut state_ll, ll_code as u8, &ee_ll, &st_ll, &mut bw);
+        if !first {
+            // Transition state FROM "state used to peek the sequence
+            // processed in the PREVIOUS iteration" TO "state used to peek
+            // THIS sequence" — write order OF, ML, LL (a forward decoder
+            // consumes this as update order LL, ML, OF, right after
+            // decoding the sequence processed in the previous iteration).
+            fse_encode_sym(&mut state_of, of_code, &ee_of, &st_of, &mut bw);
+            fse_encode_sym(&mut state_ml, ml_code as u8, &ee_ml, &st_ml, &mut bw);
+            fse_encode_sym(&mut state_ll, ll_code as u8, &ee_ll, &st_ll, &mut bw);
+        } else {
+            // Last real sequence: no incoming transition to flush.
+            // Initialise state directly from the symbol (no bits written).
+            state_of = fse_init_state(of_code, &ee_of, &st_of);
+            state_ml = fse_init_state(ml_code as u8, &ee_ml, &st_ml);
+            state_ll = fse_init_state(ll_code as u8, &ee_ll, &st_ll);
+            first = false;
+        }
+
+        // Extra bits, write order LL, ML, OF (a forward decoder reads these
+        // in order OF, ML, LL immediately after peeking symbols).
+        bw.add_bits(ll_extra as u64, LL_CODES[ll_code].1);
+        bw.add_bits(ml_extra as u64, ML_CODES[ml_code].1);
+        bw.add_bits(of_extra as u64, of_code);
     }
 
-    // Flush final states (low acc_log bits of state - sz).
-    bw.add_bits((state_of - sz_of) as u64, OF_ACC_LOG);
+    // Flush initial states (the state used to peek the FIRST real sequence).
+    // A forward-reading decoder reads these FIRST, in order LL, OF, ML.
+    // Since these are the very LAST bits written overall, they become the
+    // FIRST bits a forward reader sees; to get read order [LL, OF, ML] we
+    // write the reverse: [ML, OF, LL].
     bw.add_bits((state_ml - sz_ml) as u64, ML_ACC_LOG);
+    bw.add_bits((state_of - sz_of) as u64, OF_ACC_LOG);
     bw.add_bits((state_ll - sz_ll) as u64, LL_ACC_LOG);
     bw.flush();
 
@@ -962,7 +1119,43 @@ fn compress_block(block: &[u8]) -> Option<Vec<u8>> {
 ///
 /// Reads the literals section, sequences section, and applies the sequences
 /// to the output buffer to reconstruct the original data.
-fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
+///
+/// `rep1`/`rep2`/`rep3` are the three Repeated_Offset registers (RFC 8878
+/// §3.1.1.3.2.1.1) — IN/OUT, because they are FRAME-scoped, not
+/// block-scoped: "For the first block, the starting offset history is
+/// populated with Repeated_Offset1=1, Repeated_Offset2=4,
+/// Repeated_Offset3=8" (RFC 8878), and every later Compressed block in the
+/// same frame continues from wherever the previous Compressed block's
+/// sequences left them. The caller ([`decompress`]) owns the three
+/// registers and threads them through every Compressed block in a frame
+/// (Raw/RLE blocks don't touch them).
+///
+/// WHY THIS DECODER NEEDS THIS EVEN THOUGH ITS OWN ENCODER NEVER EMITS
+/// REPEAT-OFFSET SEQUENCES: [`encode_sequences_section`] always writes an
+/// explicit offset code (`raw_off = offset + 3 >= 4` always, since the
+/// minimum LZ77 match offset is 1), so this crate's own compress()/
+/// decompress() round trip never touches the repeat-offset path — the "no
+/// repeat-offset shortcuts" simplification is entirely an ENCODER-side
+/// choice (see the module doc comment). But the real `zstd` CLI's encoder
+/// uses repeat offsets constantly (one of its main entropy wins, especially
+/// for periodic/repetitive data), so a decoder that only understands
+/// explicit offset codes will systematically fail to decode a large
+/// fraction of real-world `.zst` files — caught here by real CLI interop
+/// (see `tc11_repeat_offset_cli_interop_constant_byte`, which reproduces the
+/// exact repro found while building `code/packages/c/zstd`: 4713 bytes of a
+/// single repeated byte compresses to one Compressed block whose one
+/// sequence has Offset_Value=1, i.e. "reuse Repeated_Offset1"). Algorithm
+/// cross-checked against both RFC 8878 §3.1.1.3.2.1.1 and the literal
+/// reference C source (`ZSTD_decodeSequence` in `zstd_decompress_block.c`,
+/// fetched directly rather than recalled from memory) — see lessons.md
+/// Lesson 98.
+fn decompress_block(
+    data: &[u8],
+    out: &mut Vec<u8>,
+    rep1: &mut u32,
+    rep2: &mut u32,
+    rep3: &mut u32,
+) -> Result<(), String> {
     // ── Literals section ─────────────────────────────────────────────────
     let (lits, lit_consumed) = decode_literals_section(data)?;
     let mut pos = lit_consumed;
@@ -1009,24 +1202,31 @@ fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
     let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
     let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
 
-    // Initialise FSE states from the bitstream.
-    // The encoder wrote: state_ll, state_ml, state_of (each as acc_log bits),
-    // then sentinel-flushed. The decoder reads them in the same order.
+    // Initialise FSE states from the bitstream. RFC 8878 §3.1.1.3.2.1.2: the
+    // initial states are read in order LL, OF, ML (note: this is a
+    // DIFFERENT order from the per-sequence symbol decode below, which is
+    // OF, ML, LL for extras and LL, ML, OF for updates — the RFC is
+    // asymmetric here; verified against the real `zstd` CLI, see Lesson 96).
     let mut state_ll = br.read_bits(LL_ACC_LOG) as u16;
-    let mut state_ml = br.read_bits(ML_ACC_LOG) as u16;
     let mut state_of = br.read_bits(OF_ACC_LOG) as u16;
+    let mut state_ml = br.read_bits(ML_ACC_LOG) as u16;
 
     // Track position in the literals buffer.
     let mut lit_pos = 0usize;
 
     // Apply each sequence.
-    for _ in 0..n_seqs {
-        // Decode symbols (state transitions) — order: LL, OF, ML.
-        let ll_code = fse_decode_sym(&mut state_ll, &dt_ll, &mut br);
-        let of_code = fse_decode_sym(&mut state_of, &dt_of, &mut br);
-        let ml_code = fse_decode_sym(&mut state_ml, &dt_ml, &mut br);
+    for i in 0..n_seqs {
+        // Step 1 — PEEK symbols from the current states. This is a bare
+        // table lookup (table[state].sym) and consumes NO bits — the FSE
+        // state itself already IS the decode-table index. Only the
+        // subsequent state UPDATE (step 3 below) reads bits.
+        let ll_entry = fse_peek(state_ll, &dt_ll);
+        let ml_entry = fse_peek(state_ml, &dt_ml);
+        let of_entry = fse_peek(state_of, &dt_of);
+        let ll_code = ll_entry.sym;
+        let ml_code = ml_entry.sym;
+        let of_code = of_entry.sym;
 
-        // Read extra bits for each field.
         if ll_code as usize >= LL_CODES.len() {
             return Err(format!("invalid LL code {ll_code}"));
         }
@@ -1036,13 +1236,100 @@ fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
         let ll_info = LL_CODES[ll_code as usize];
         let ml_info = ML_CODES[ml_code as usize];
 
-        let ll = ll_info.0 + br.read_bits(ll_info.1) as u32;
-        let ml = ml_info.0 + br.read_bits(ml_info.1) as u32;
-        // Offset: raw = (1 << of_code) | extra_bits; offset = raw - 3
+        // `ll_is_zero` is needed for the repeat-offset interpretation below
+        // (RFC 8878's "when Literals_Length is 0, repeated offsets are
+        // shifted by 1" rule) and is knowable right now, from the PEEKED
+        // `ll_code` alone — LL code 0 is the only code with baseline 0 and 0
+        // extra bits, so `ll_code == 0` iff the eventual decoded `ll` value
+        // is 0. No extra bits need to be read yet to know this.
+        let ll_is_zero = ll_code == 0;
+
+        // Step 2 — read the VALUE extra bits, order OF, ML, LL (RFC 8878
+        // §3.1.1.3.2.1.2 — "Decoding starts by reading the Number_of_Bits
+        // required to decode offset. It does the same for Match_Length and
+        // then for Literals_Length."). The NUMBER of bits read for the
+        // offset field is always exactly `of_code` regardless of the
+        // repeat-offset interpretation below (the reference decoder never
+        // varies bit-consumption on `ll_is_zero` — only how the resulting
+        // value maps to an actual offset changes).
         let of_raw = (1u32 << of_code) | br.read_bits(of_code) as u32;
-        let offset = of_raw.checked_sub(3).ok_or_else(|| {
-            format!("decoded offset underflow: of_raw={of_raw}")
-        })?;
+        let ml = ml_info.0 + br.read_bits(ml_info.1) as u32;
+        let ll = ll_info.0 + br.read_bits(ll_info.1) as u32;
+
+        // Offset_Value -> actual offset (RFC 8878 §3.1.1.3.2.1.1), including
+        // the Repeated_Offset (R1/R2/R3) mechanism — see the doc comment on
+        // `decompress_block` and lessons.md Lesson 98.
+        //
+        // `of_code >= 2` guarantees `of_raw = (1<<of_code)+extra >= 4`, i.e.
+        // Offset_Value > 3: an ordinary explicit offset. `of_code <= 1`
+        // guarantees `of_raw` in `{1, 2, 3}`: a repeat-offset reference.
+        //
+        // The repeat case collapses to one selector in `[0, 3]`:
+        //     selector = ll_is_zero + of_raw - 1
+        // (cross-checked against both RFC 8878 prose and the reference
+        // decoder's `ofBase + ll0 + extra_bit` in `ZSTD_decodeSequence`):
+        //   0 -> reuse rep1 unchanged (no rotation)
+        //   1 -> use rep2 (rep1,rep2 swap; rep3 untouched)
+        //   2 -> use rep3 (full rotate: rep1,rep2,rep3 <- new,old_rep1,old_rep2)
+        //   3 -> use rep1-1 (full rotate, same shape as selector 2)
+        let offset = if of_code >= 2 {
+            let offset = of_raw - 3;
+            *rep3 = *rep2;
+            *rep2 = *rep1;
+            *rep1 = offset;
+            offset
+        } else {
+            let selector = ll_is_zero as u32 + of_raw - 1;
+            match selector {
+                0 => *rep1,
+                1 => {
+                    // rep1 <- old rep2, rep2 <- old rep1; the returned
+                    // offset is the new rep1 (== old rep2).
+                    std::mem::swap(rep1, rep2);
+                    *rep1
+                }
+                2 => {
+                    let offset = *rep3;
+                    *rep3 = *rep2;
+                    *rep2 = *rep1;
+                    *rep1 = offset;
+                    offset
+                }
+                _ => {
+                    // selector == 3: "rep1 - 1" — the RFC's special case for
+                    // when the ordinary rep1/rep2/rep3 slots would otherwise
+                    // collide with Literals_Length==0. Real zstd's decoder
+                    // saturates at 0 rather than underflowing (an offset of
+                    // 0 is then rejected below by the ordinary
+                    // offset-bounds check, same as any other malformed
+                    // offset would be).
+                    let offset = rep1.saturating_sub(1);
+                    *rep3 = *rep2;
+                    *rep2 = *rep1;
+                    *rep1 = offset;
+                    offset
+                }
+            }
+        };
+
+        // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
+        // 8878 §3.1.1.3.2.1.2 — "Literals_Length_State is updated, followed
+        // by Match_Length_State, and then Offset_State"), preparing the
+        // states the NEXT sequence's peek (step 1) will use.
+        //
+        // Per the reference decoder (`ZSTD_decodeSequence`): this update is
+        // skipped entirely for the LAST sequence — there is no "next"
+        // sequence to prepare a state for, and (symmetrically) the encoder
+        // never flushed any bits for that non-existent transition (see
+        // `fse_init_state` in `encode_sequences_section`). Performing this
+        // read unconditionally, as an earlier revision of this codec did,
+        // consumes bits that were never written, corrupting the position of
+        // every read that follows. See lessons.md Lesson 96.
+        if i != n_seqs - 1 {
+            state_ll = fse_update_state(ll_entry, &mut br);
+            state_ml = fse_update_state(ml_entry, &mut br);
+            state_of = fse_update_state(of_entry, &mut br);
+        }
 
         // Emit `ll` literal bytes from the literals buffer.
         let lit_end = lit_pos + ll as usize;
@@ -1052,6 +1339,7 @@ fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
                 lits.len()
             ));
         }
+        check_output_budget(out.len(), ll as usize)?;
         out.extend_from_slice(&lits[lit_pos..lit_end]);
         lit_pos = lit_end;
 
@@ -1065,14 +1353,17 @@ fn decompress_block(data: &[u8], out: &mut Vec<u8>) -> Result<(), String> {
                 out.len()
             ));
         }
+        // Decompression-bomb guard: see the doc comment on `check_output_budget`.
+        check_output_budget(out.len(), ml as usize)?;
         let copy_start = out.len() - offset as usize;
-        for i in 0..ml as usize {
-            let byte = out[copy_start + i];
+        for j in 0..ml as usize {
+            let byte = out[copy_start + j];
             out.push(byte);
         }
     }
 
     // Any remaining literals after the last sequence.
+    check_output_budget(out.len(), lits.len() - lit_pos)?;
     out.extend_from_slice(&lits[lit_pos..]);
 
     Ok(())
@@ -1106,8 +1397,9 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
     // Frame Header Descriptor (FHD):
     //   bit 7-6: FCS_Field_Size flag = 11 → 8-byte FCS
     //   bit 5:   Single_Segment_Flag = 1 (no Window_Descriptor follows)
-    //   bit 4:   Content_Checksum_Flag = 0
-    //   bit 3-2: reserved = 0
+    //   bit 4:   Unused_bit = 0
+    //   bit 3:   Reserved_bit = 0
+    //   bit 2:   Content_Checksum_Flag = 0 (we don't append a checksum)
     //   bit 1-0: Dict_ID_Flag = 0
     // = 0b1110_0000 = 0xE0
     out.push(0xE0);
@@ -1147,7 +1439,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
                 out.extend_from_slice(&compressed);
             } else {
                 // ── Raw block (fallback) ──────────────────────────────
-                let hdr = ((block.len() as u32) << 3) | (0b00 << 1) | (last as u32);
+                let hdr = ((block.len() as u32) << 3) | (last as u32);
                 out.extend_from_slice(&hdr.to_le_bytes()[..3]);
                 out.extend_from_slice(block);
             }
@@ -1208,9 +1500,17 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // Single_Segment_Flag: bit 5. When set, the window descriptor is omitted.
     let single_seg = (fhd >> 5) & 1;
 
-    // Content_Checksum_Flag: bit 4. When set, a 4-byte checksum follows the
-    // last block. We don't validate it, but we need to know it exists.
-    let _checksum_flag = (fhd >> 4) & 1;
+    // Content_Checksum_Flag: bit 2. When set, a 4-byte xxHash64 checksum
+    // follows the last block. We don't validate the checksum value, but we
+    // need to know it's there so we can skip past it correctly.
+    //
+    // This bit was previously (incorrectly) read from bit 4. Verified
+    // empirically against the real `zstd` CLI: `zstd -c file.txt`
+    // (checksum on by default) emits FHD byte 0x64; `zstd -c --no-check
+    // file.txt` emits FHD byte 0x60 — the differing bit is bit 2. RFC 8878
+    // §3.1.1.1 agrees: bit 4 is `Unused_bit`, bit 2 is `Content_Checksum_Flag`.
+    // See lessons.md Lesson 95.
+    let checksum_flag = (fhd >> 2) & 1;
 
     // Dict_ID_Flag: bits [1:0]. Indicates how many bytes the dict ID occupies.
     let dict_flag = fhd & 3;
@@ -1240,9 +1540,20 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     pos += fcs_bytes; // skip FCS
 
     // ── Blocks ───────────────────────────────────────────────────────────
-    // Guard against decompression bombs: cap total output at 256 MB.
-    const MAX_OUTPUT: usize = 256 * 1024 * 1024;
+    // Guard against decompression bombs: cap total output at MAX_OUTPUT.
+    // See the doc comment on `check_output_budget` for why Compressed
+    // blocks need this checked incrementally (inside `decompress_block`),
+    // not just once per Raw/RLE block here.
     let mut out = Vec::new();
+
+    // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
+    // default 1/4/8 "for the first block", then threaded unmodified through
+    // every Compressed block's sequences for the rest of the frame (Raw/RLE
+    // blocks don't touch them). See `decompress_block`'s doc comment and
+    // lessons.md Lesson 98.
+    let mut rep1: u32 = 1;
+    let mut rep2: u32 = 4;
+    let mut rep3: u32 = 8;
 
     loop {
         if pos + 3 > data.len() {
@@ -1263,9 +1574,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 if pos + bsize > data.len() {
                     return Err(format!("raw block truncated: need {bsize} bytes at pos {pos}"));
                 }
-                if out.len() + bsize > MAX_OUTPUT {
-                    return Err(format!("decompressed size exceeds limit of {MAX_OUTPUT} bytes"));
-                }
+                check_output_budget(out.len(), bsize)?;
                 out.extend_from_slice(&data[pos..pos + bsize]);
                 pos += bsize;
             }
@@ -1274,12 +1583,10 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 if pos >= data.len() {
                     return Err("RLE block missing byte".into());
                 }
-                if out.len() + bsize > MAX_OUTPUT {
-                    return Err(format!("decompressed size exceeds limit of {MAX_OUTPUT} bytes"));
-                }
+                check_output_budget(out.len(), bsize)?;
                 let byte = data[pos];
                 pos += 1;
-                out.extend(std::iter::repeat(byte).take(bsize));
+                out.extend(std::iter::repeat_n(byte, bsize));
             }
             2 => {
                 // Compressed block.
@@ -1288,7 +1595,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
                 let block_data = &data[pos..pos + bsize];
                 pos += bsize;
-                decompress_block(block_data, &mut out)?;
+                decompress_block(block_data, &mut out, &mut rep1, &mut rep2, &mut rep3)?;
             }
             3 => {
                 return Err("reserved block type 3".into());
@@ -1299,6 +1606,18 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         if last {
             break;
         }
+    }
+
+    // ── Content checksum ─────────────────────────────────────────────────
+    // If Content_Checksum_Flag was set, a 4-byte xxHash64 checksum of the
+    // decompressed content follows the last block. We don't verify the
+    // checksum value (no xxHash64 implementation in this crate), but we
+    // must skip past it so callers that inspect `data` past this point (or
+    // a future trailing-bytes-must-be-empty check) don't misinterpret it as
+    // corruption. Real `zstd` writes this by default (`zstd -c` without
+    // `--no-check`), so any real-world interop input is likely to have it.
+    if checksum_flag == 1 && pos + 4 > data.len() {
+        return Err("truncated content checksum".into());
     }
 
     Ok(out)
@@ -1404,6 +1723,17 @@ mod tests {
     }
 
     // ── TC-8: repeat-offset pattern ───────────────────────────────────────────
+    //
+    // NOTE on the name: per spec TC-8, this input is constructed so a
+    // repeat-offset-AWARE encoder could compress it efficiently — but this
+    // crate's own encoder never emits repeat-offset codes (see the crate
+    // doc comment / lessons.md Lesson 98), so this test only exercises our
+    // encoder's ordinary explicit-offset path, self round-tripped through
+    // our own decoder. It does NOT exercise repeat-offset DECODING at all.
+    // For a test that actually proves this decoder understands
+    // repeat-offset sequences (as emitted by a real repeat-offset-aware
+    // encoder), see `tc11_repeat_offset_cli_interop_constant_byte` /
+    // `_periodic` below, which decode real `zstd`-CLI output.
 
     #[test]
     fn tc8_repeat_offset() {
@@ -1425,14 +1755,236 @@ mod tests {
         );
     }
 
-    // ── TC-9: deterministic output ────────────────────────────────────────────
+    // ── Extra: deterministic output ───────────────────────────────────────────
+    // (Not one of the spec's numbered TCs — see TC-9 below for the real
+    // spec TC-9, cross-language interoperability.)
 
     #[test]
-    fn tc9_deterministic() {
+    fn determinism_reproducible_output() {
         // Compressing the same data twice must produce identical bytes.
         // This is required for reproducible builds and cache invalidation.
         let data = b"hello, ZStd world! ".repeat(50);
         assert_eq!(compress(data.as_slice()), compress(data.as_slice()));
+    }
+
+    // ── TC-9: Cross-language / interoperability ───────────────────────────────
+    //
+    // Per `code/specs/CMP07-zstd.md` TC-9: compress with the standard `zstd`
+    // CLI, decompress with ours, AND compress with ours, decompress with the
+    // standard `zstd -d` CLI — both directions must round-trip exactly.
+    //
+    // This is the test that actually proves the wire format is real RFC
+    // 8878, not just a self-consistent internal format. A codec whose
+    // encoder and decoder always agree with each other can still be
+    // silently wrong — see lessons.md Lesson 96 for three compounding bugs
+    // of exactly this shape (a fabricated FSE table-spread algorithm, wrong
+    // per-sequence field order, and a missing last-sequence update-skip)
+    // that survived this crate's entire history because this test simply
+    // didn't exist: every internal round-trip test, including a dedicated
+    // low-level "encode two sequences, decode them, check they match" unit
+    // test, passed regardless of which bugs were present, because both
+    // sides of the comparison were wrong in the identical way.
+    //
+    // Gracefully no-ops (rather than failing) when the `zstd` binary isn't
+    // on `PATH`, since CI/dev environments vary.
+
+    /// Checks whether the `zstd` CLI binary is reachable on `PATH`.
+    fn is_zstd_cli_available() -> bool {
+        std::process::Command::new("zstd")
+            .arg("--version")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+    }
+
+    /// Runs `zstd` with the given arguments, returning captured stdout.
+    /// Panics (failing the calling test) if the CLI exits non-zero.
+    fn run_zstd_capture_stdout(args: &[&str]) -> Vec<u8> {
+        let output = std::process::Command::new("zstd")
+            .args(args)
+            .output()
+            .expect("failed to spawn zstd CLI");
+        assert!(
+            output.status.success(),
+            "zstd CLI failed (args={args:?}): {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        output.stdout
+    }
+
+    /// Writes `data` to a fresh temp file and returns its path. The caller
+    /// is responsible for deleting it (tests use a `finally`-style cleanup
+    /// via a guard so the file is removed even if an assertion panics).
+    fn write_temp_file(prefix: &str, data: &[u8]) -> std::path::PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "zstd-rust-{prefix}-{}-{}",
+            std::process::id(),
+            data.len(),
+        ));
+        std::fs::write(&path, data).expect("failed to write temp file");
+        path
+    }
+
+    /// Deletes a temp file on drop, even if the test panics partway through
+    /// — mirrors the Java interop tests' `finally { Files.deleteIfExists }`.
+    struct TempFileGuard(std::path::PathBuf);
+    impl Drop for TempFileGuard {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_file(&self.0);
+        }
+    }
+
+    #[test]
+    fn tc9_cli_interop() {
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping TC-9 interop test");
+            return;
+        }
+
+        let text = "the quick brown fox jumps over the lazy dog ".repeat(25);
+        let original = text.as_bytes();
+
+        // ── Direction 1: compress with ours, decompress with `zstd -d` ────
+        let our_compressed = compress(original);
+        let ours_zst = write_temp_file("tc9-ours", &our_compressed);
+        let _guard1 = TempFileGuard(ours_zst.clone());
+        let decoded_by_cli = run_zstd_capture_stdout(&[
+            "-d",
+            "-q",
+            "-c",
+            ours_zst.to_str().unwrap(),
+        ]);
+        assert_eq!(
+            decoded_by_cli, original,
+            "real `zstd -d` failed to decode our compressed output"
+        );
+
+        // ── Direction 2: compress with `zstd`, decompress with ours ───────
+        let theirs_input = write_temp_file("tc9-theirs-input", original);
+        let _guard2 = TempFileGuard(theirs_input.clone());
+        let their_compressed =
+            run_zstd_capture_stdout(&["-q", "-c", theirs_input.to_str().unwrap()]);
+        let decoded_by_us =
+            decompress(&their_compressed).expect("our decompress() failed on real zstd output");
+        assert_eq!(
+            decoded_by_us, original,
+            "our decompress() failed to decode real `zstd`'s compressed output"
+        );
+    }
+
+    // ── Repeated-Offset (R1/R2/R3) decode interop ─────────────────────────────
+    //
+    // This crate's own encoder (`encode_sequences_section`, via
+    // `raw_off = seq.off + 3 >= 4` always) never emits an Offset_Value <= 3,
+    // so it never emits a repeat-offset code — an explicit "no repeat-offset
+    // shortcuts" educational simplification. That means TC-8 above (and any
+    // other self round-trip test in this file) NEVER exercises the
+    // repeat-offset DECODE path, no matter how repetitive its input is: our
+    // own round trip is blind to this by construction, same as it was blind
+    // to the FSE-codec bugs in Lesson 96 until real CLI interop (TC-9) was
+    // added. But the real `zstd` CLI's encoder uses repeat offsets
+    // constantly — they're one of its main entropy wins, especially for
+    // periodic/constant data — so a decoder that only understands explicit
+    // offset codes (`offset = of_raw - 3` unconditionally) will fail on a
+    // large fraction of real-world `.zst` files. See lessons.md Lesson 98
+    // (found while building `code/packages/c/zstd`, PR #9941) for the full
+    // writeup and the reference-C-source cross-check
+    // (`ZSTD_decodeSequence` in `zstd_decompress_block.c`).
+    #[test]
+    fn tc11_repeat_offset_cli_interop_constant_byte() {
+        // The exact Lesson 98 repro: 4713 bytes of a single repeated byte.
+        // Real `zstd` picks a Compressed block (not RLE) with one sequence:
+        // 2 literal bytes ("ZZ") + a match with Offset_Value=1 — "reuse
+        // Repeated_Offset1", whose default value (1) happens to already be
+        // the right distance for constant data, an unmistakable
+        // RLE-via-repeat-offset pattern.
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping interop test");
+            return;
+        }
+
+        let original = vec![b'Z'; 4713];
+        let theirs_input = write_temp_file("tc11-repoff-const-input", &original);
+        let _guard = TempFileGuard(theirs_input.clone());
+        let their_compressed =
+            run_zstd_capture_stdout(&["-q", "-c", theirs_input.to_str().unwrap()]);
+
+        let decoded_by_us = decompress(&their_compressed).expect(
+            "our decompress() failed on real zstd's repeat-offset output — \
+             this is Lesson 98's gap: offset codes 1-3 must be interpreted as \
+             Repeated_Offset (R1/R2/R3) references, not as of_raw - 3",
+        );
+        assert_eq!(
+            decoded_by_us, original,
+            "our decompress() decoded real zstd's repeat-offset output to the \
+             wrong bytes"
+        );
+    }
+
+    #[test]
+    fn tc11_repeat_offset_cli_interop_periodic() {
+        // A periodic pattern at a FIXED distance is the other classic
+        // repeat-offset trigger: after the first match establishes the
+        // distance, every subsequent match at that same distance is cheaper
+        // to encode as "reuse R1" than as a fresh explicit offset. Real
+        // `zstd`'s encoder is very likely to do exactly that here.
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping interop test");
+            return;
+        }
+
+        let pattern = b"ABCDEFGHIJ0123456789";
+        let mut original = Vec::new();
+        for _ in 0..300 {
+            original.extend_from_slice(pattern);
+        }
+        let theirs_input = write_temp_file("tc11-repoff-periodic-input", &original);
+        let _guard = TempFileGuard(theirs_input.clone());
+        let their_compressed =
+            run_zstd_capture_stdout(&["-q", "-c", theirs_input.to_str().unwrap()]);
+
+        let decoded_by_us = decompress(&their_compressed)
+            .expect("our decompress() failed on real zstd's periodic-pattern output");
+        assert_eq!(
+            decoded_by_us, original,
+            "our decompress() decoded real zstd's periodic-pattern output to \
+             the wrong bytes"
+        );
+    }
+
+    #[test]
+    fn rt_cli_interop_high_sequence_count() {
+        // Real `zstd` CLI interop on an input large enough to push our
+        // compressor's single-block sequence count past 128 — the exact
+        // boundary where the sequence-count wire encoding switches from its
+        // 1-byte form to its 2-byte form (RFC 8878 §3.1.1.3.1). A
+        // marker-byte-order bug in that 2-byte form (found and fixed
+        // alongside the FSE bugs during this same audit — see the doc
+        // comment on `encode_seq_count`) round-trips fine against ITSELF
+        // but silently produces a non-conformant frame, so only a real
+        // cross-implementation check like this one can catch it. Not one of
+        // the spec's numbered TCs; extra regression coverage for the fix.
+        if !is_zstd_cli_available() {
+            eprintln!("zstd CLI not found on PATH — skipping interop test");
+            return;
+        }
+
+        // A repeating 6-byte cycle across 9 KB gives LZSS plenty of short,
+        // distinct matches — comfortably more than 128 sequences in one
+        // block, while staying well under the 128 KB block cap.
+        let src = b"ABCDEF";
+        let original: Vec<u8> = src.iter().cloned().cycle().take(9000).collect();
+
+        let our_compressed = compress(&original);
+        let ours_zst = write_temp_file("rt-highseq", &our_compressed);
+        let _guard = TempFileGuard(ours_zst.clone());
+        let decoded_by_cli =
+            run_zstd_capture_stdout(&["-d", "-q", "-c", ours_zst.to_str().unwrap()]);
+        assert_eq!(
+            decoded_by_cli, original,
+            "real `zstd -d` failed to decode our high-sequence-count output \
+             (likely a sequence-count wire-format regression)"
+        );
     }
 
     // ── TC-10: manual minimal raw-block frame ─────────────────────────────────
@@ -1576,109 +2128,104 @@ mod tests {
         }
     }
 
+    /// Low-level decode of a sequences-section bitstream, mirroring the
+    /// corrected per-sequence loop in `decompress_block` exactly (peek all
+    /// three symbols first, read extras in order OF/ML/LL, then update
+    /// states in order LL/ML/OF — skipped for the last sequence). Used by
+    /// the isolated FSE-codec unit tests below so they exercise the SAME
+    /// order `decompress_block` uses, rather than a hand-rolled convention
+    /// that could silently drift from it (exactly the trap described in
+    /// lessons.md Lesson 96: an isolated low-level test that agrees with
+    /// itself proves nothing about wire conformance — only the CLI interop
+    /// tests below do that).
+    fn decode_seqs_for_test(bitstream: &[u8], n_seqs: usize) -> Vec<Seq> {
+        let dt_ll = build_decode_table(&LL_NORM, LL_ACC_LOG);
+        let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
+        let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
+
+        let mut br = RevBitReader::new(bitstream).unwrap();
+        let mut state_ll = br.read_bits(LL_ACC_LOG) as u16;
+        let mut state_of = br.read_bits(OF_ACC_LOG) as u16;
+        let mut state_ml = br.read_bits(ML_ACC_LOG) as u16;
+
+        let mut out = Vec::with_capacity(n_seqs);
+        for i in 0..n_seqs {
+            let ll_entry = fse_peek(state_ll, &dt_ll);
+            let ml_entry = fse_peek(state_ml, &dt_ml);
+            let of_entry = fse_peek(state_of, &dt_of);
+
+            let ll_info = LL_CODES[ll_entry.sym as usize];
+            let ml_info = ML_CODES[ml_entry.sym as usize];
+
+            let of_raw = (1u32 << of_entry.sym) | br.read_bits(of_entry.sym) as u32;
+            let ml = ml_info.0 + br.read_bits(ml_info.1) as u32;
+            let ll = ll_info.0 + br.read_bits(ll_info.1) as u32;
+            let off = of_raw - 3;
+
+            if i != n_seqs - 1 {
+                state_ll = fse_update_state(ll_entry, &mut br);
+                state_ml = fse_update_state(ml_entry, &mut br);
+                state_of = fse_update_state(of_entry, &mut br);
+            }
+
+            out.push(Seq { ll, ml, off });
+        }
+        out
+    }
+
     #[test]
     fn test_fse_two_sequence_roundtrip() {
-        // Test encoding and decoding two sequences to verify FSE state transitions.
+        // Test encoding and decoding two sequences to verify FSE state
+        // transitions, including the last-sequence update-skip (Lesson 96).
         let seqs = vec![
             Seq { ll: 2, ml: 4, off: 1 },
             Seq { ll: 0, ml: 3, off: 2 },
         ];
         let bitstream = encode_sequences_section(&seqs);
+        let decoded = decode_seqs_for_test(&bitstream, seqs.len());
 
-        let dt_ll = build_decode_table(&LL_NORM, LL_ACC_LOG);
-        let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
-        let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
-
-        let mut br = RevBitReader::new(&bitstream).unwrap();
-        let mut state_ll = br.read_bits(LL_ACC_LOG) as u16;
-        let mut state_ml = br.read_bits(ML_ACC_LOG) as u16;
-        let mut state_of = br.read_bits(OF_ACC_LOG) as u16;
-
-        for (i, expected) in seqs.iter().enumerate() {
-            let ll_code = fse_decode_sym(&mut state_ll, &dt_ll, &mut br);
-            let of_code = fse_decode_sym(&mut state_of, &dt_of, &mut br);
-            let ml_code = fse_decode_sym(&mut state_ml, &dt_ml, &mut br);
-
-            let ll_info = LL_CODES[ll_code as usize];
-            let ml_info = ML_CODES[ml_code as usize];
-            let ll_dec = ll_info.0 + br.read_bits(ll_info.1) as u32;
-            let ml_dec = ml_info.0 + br.read_bits(ml_info.1) as u32;
-            let of_raw = (1u32 << of_code) | br.read_bits(of_code) as u32;
-            let off_dec = of_raw - 3;
-
-            assert_eq!(ll_dec, expected.ll, "seq {i} LL");
-            assert_eq!(ml_dec, expected.ml, "seq {i} ML");
-            assert_eq!(off_dec, expected.off, "seq {i} OFF");
+        for (i, (expected, actual)) in seqs.iter().zip(decoded.iter()).enumerate() {
+            assert_eq!(actual.ll, expected.ll, "seq {i} LL");
+            assert_eq!(actual.ml, expected.ml, "seq {i} ML");
+            assert_eq!(actual.off, expected.off, "seq {i} OFF");
         }
     }
 
     #[test]
     fn test_fse_single_sequence_roundtrip() {
         // Encode a single sequence and verify that decoding it gives back
-        // the exact same (ll, ml, of) values. This isolates the FSE codec.
-        let seqs = vec![Seq { ll: 3, ml: 5, off: 2 }];
+        // the exact same (ll, ml, of) values. This isolates the FSE codec,
+        // including the direct `fse_init_state` path (there is no
+        // "previous" iteration for a single sequence, so this is the ONLY
+        // sequence and must use init, not a transition — Lesson 96).
+        let seqs = [Seq { ll: 3, ml: 5, off: 2 }];
+        let bitstream = encode_sequences_section(&seqs);
+        let decoded = decode_seqs_for_test(&bitstream, seqs.len());
 
-        // Build encode tables
-        let (ee_ll, st_ll) = build_encode_sym(&LL_NORM, LL_ACC_LOG);
-        let (ee_ml, st_ml) = build_encode_sym(&ML_NORM, ML_ACC_LOG);
-        let (ee_of, st_of) = build_encode_sym(&OF_NORM, OF_ACC_LOG);
+        assert_eq!(decoded[0].ll, 3, "LL");
+        assert_eq!(decoded[0].ml, 5, "ML");
+        assert_eq!(decoded[0].off, 2, "OFF");
+    }
 
-        let sz_ll = 1u32 << LL_ACC_LOG;
-        let sz_ml = 1u32 << ML_ACC_LOG;
-        let sz_of = 1u32 << OF_ACC_LOG;
+    #[test]
+    fn test_fse_many_sequence_roundtrip() {
+        // A longer sequence list exercises multiple non-last transitions
+        // (fse_encode_sym / fse_update_state) in addition to the single
+        // fse_init_state / last-sequence-skip case covered above.
+        let seqs = vec![
+            Seq { ll: 1, ml: 3, off: 1 },
+            Seq { ll: 5, ml: 10, off: 4 },
+            Seq { ll: 0, ml: 6, off: 2 },
+            Seq { ll: 12, ml: 40, off: 100 },
+            Seq { ll: 3, ml: 3, off: 1 },
+        ];
+        let bitstream = encode_sequences_section(&seqs);
+        let decoded = decode_seqs_for_test(&bitstream, seqs.len());
 
-        let mut state_ll = sz_ll;
-        let mut state_ml = sz_ml;
-        let mut state_of = sz_of;
-        let mut bw = RevBitWriter::new();
-
-        for seq in seqs.iter().rev() {
-            let ll_code = ll_to_code(seq.ll);
-            let ml_code = ml_to_code(seq.ml);
-            let raw_off = seq.off + 3;
-            let of_code = (31 - raw_off.leading_zeros()) as u8;
-            let of_extra = raw_off - (1u32 << of_code);
-
-            bw.add_bits(of_extra as u64, of_code);
-            let ml_extra = seq.ml - ML_CODES[ml_code].0;
-            bw.add_bits(ml_extra as u64, ML_CODES[ml_code].1);
-            let ll_extra = seq.ll - LL_CODES[ll_code].0;
-            bw.add_bits(ll_extra as u64, LL_CODES[ll_code].1);
-
-            fse_encode_sym(&mut state_of, of_code, &ee_of, &st_of, &mut bw);
-            fse_encode_sym(&mut state_ml, ml_code as u8, &ee_ml, &st_ml, &mut bw);
-            fse_encode_sym(&mut state_ll, ll_code as u8, &ee_ll, &st_ll, &mut bw);
+        for (i, (expected, actual)) in seqs.iter().zip(decoded.iter()).enumerate() {
+            assert_eq!(actual.ll, expected.ll, "seq {i} LL");
+            assert_eq!(actual.ml, expected.ml, "seq {i} ML");
+            assert_eq!(actual.off, expected.off, "seq {i} OFF");
         }
-
-        bw.add_bits((state_of - sz_of) as u64, OF_ACC_LOG);
-        bw.add_bits((state_ml - sz_ml) as u64, ML_ACC_LOG);
-        bw.add_bits((state_ll - sz_ll) as u64, LL_ACC_LOG);
-        bw.flush();
-        let bitstream = bw.finish();
-
-        // Decode
-        let dt_ll = build_decode_table(&LL_NORM, LL_ACC_LOG);
-        let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
-        let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
-
-        let mut br = RevBitReader::new(&bitstream).unwrap();
-        let mut state_ll_d = br.read_bits(LL_ACC_LOG) as u16;
-        let mut state_ml_d = br.read_bits(ML_ACC_LOG) as u16;
-        let mut state_of_d = br.read_bits(OF_ACC_LOG) as u16;
-
-        let ll_code_d = fse_decode_sym(&mut state_ll_d, &dt_ll, &mut br);
-        let of_code_d = fse_decode_sym(&mut state_of_d, &dt_of, &mut br);
-        let ml_code_d = fse_decode_sym(&mut state_ml_d, &dt_ml, &mut br);
-
-        let ll_info = LL_CODES[ll_code_d as usize];
-        let ml_info = ML_CODES[ml_code_d as usize];
-        let ll_dec = ll_info.0 + br.read_bits(ll_info.1) as u32;
-        let ml_dec = ml_info.0 + br.read_bits(ml_info.1) as u32;
-        let of_raw = (1u32 << of_code_d) | br.read_bits(of_code_d) as u32;
-        let off_dec = of_raw - 3;
-
-        assert_eq!(ll_dec, 3, "LL");
-        assert_eq!(ml_dec, 5, "ML");
-        assert_eq!(off_dec, 2, "OFF");
     }
 }

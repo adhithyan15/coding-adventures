@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 127 \u2014 bone-densitometry index from four stated quantities (a NEW panel: bone densitometry, and the SUBTRACT sibling of rung-126's add-a-quotient denominator). From a lone mineral load divided by an effective matrix (a matrix baseline with a per-cycle resorption_pool/remodel_cycles quotient subtracted from it), compute the density index (mineral_load/(matrix_baseline-resorption_pool/remodel_cycles)), the effective matrix (matrix_baseline-resorption_pool/remodel_cycles), or the per-cycle resorption (resorption_pool/remodel_cycles). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a LONE TERM OVER A SUBTRACT-A-QUOTIENT THREE-TERM DENOMINATOR a/(b-c/d) (divide the resorption pool by the remodel cycles, subtract that from the matrix baseline, then divide the mineral load by that whole effective matrix, so a/(b-c/d) = (a/(b-(c/d))); the minus twin of rung-126's a/(b+c/d), mirroring how rung-125 (b-c+d) mirrors rung-124 (b-c-d). The precedence-and-grouping slips ride alongside as distractors. The harness matches the scalar to the printed options. The density index is a rate (mineral load per unit of effective matrix), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via - and / \u2014 no constant leaks, and neither the effective matrix, the per-cycle quotient, nor the density index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the matrix baseline divides (a/b-c/d, evaluating (a/b)-(c/d), a wrong grouping) and subtracting before dividing the resorption (a/((b-c)/d) = a*d/(b-c), breaking the c/d-binds-first precedence, a wrong grouping). The core confusion tested is that a/(b-c/d) is (a/(b-(c/d))), not a/b-c/d and not a/((b-c)/d). This rung SUBTRACTS a quotient inside the denominator so positivity is NOT automatic; each table guards matrix_baseline - resorption_pool >= 2 (keeping b-c, the effective matrix b-c/d, and the misgrouped denom all positive) and mineral_load/matrix_baseline - resorption_pool/remodel_cycles > 0 (crossed positive), keeping the five family values pairwise distinct and all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r127dxa-01",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 54 divided by a matrix baseline of 10 minus a resorption pool of 6 over a remodel cycle count of 3. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(54)\nobserve matrix_baseline(10)\nobserve resorption_pool(6)\nobserve remodel_cycles(3)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4000000000000004,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r127dxa-02",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 54 divided by a matrix baseline of 10 minus a resorption pool of 6 over a remodel cycle count of 3. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(54)\nobserve matrix_baseline(10)\nobserve resorption_pool(6)\nobserve remodel_cycles(3)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4000000000000004,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r127dxa-03",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 54 divided by a matrix baseline of 10 minus a resorption pool of 6 over a remodel cycle count of 3. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(54)\nobserve matrix_baseline(10)\nobserve resorption_pool(6)\nobserve remodel_cycles(3)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4000000000000004,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r127dxa-04",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 52 divided by a matrix baseline of 9 minus a resorption pool of 5 over a remodel cycle count of 2. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(52)\nobserve matrix_baseline(9)\nobserve resorption_pool(5)\nobserve remodel_cycles(2)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.2777777777777777,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r127dxa-05",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 52 divided by a matrix baseline of 9 minus a resorption pool of 5 over a remodel cycle count of 2. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(52)\nobserve matrix_baseline(9)\nobserve resorption_pool(5)\nobserve remodel_cycles(2)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.2777777777777777,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r127dxa-06",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 52 divided by a matrix baseline of 9 minus a resorption pool of 5 over a remodel cycle count of 2. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(52)\nobserve matrix_baseline(9)\nobserve resorption_pool(5)\nobserve remodel_cycles(2)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2777777777777777,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r127dxa-07",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 45 divided by a matrix baseline of 13 minus a resorption pool of 9 over a remodel cycle count of 3. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(45)\nobserve matrix_baseline(13)\nobserve resorption_pool(9)\nobserve remodel_cycles(3)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4615384615384617,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r127dxa-08",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 45 divided by a matrix baseline of 13 minus a resorption pool of 9 over a remodel cycle count of 3. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(45)\nobserve matrix_baseline(13)\nobserve resorption_pool(9)\nobserve remodel_cycles(3)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4615384615384617,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r127dxa-09",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 45 divided by a matrix baseline of 13 minus a resorption pool of 9 over a remodel cycle count of 3. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(45)\nobserve matrix_baseline(13)\nobserve resorption_pool(9)\nobserve remodel_cycles(3)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4615384615384617,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r127dxa-10",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 33 divided by a matrix baseline of 7 minus a resorption pool of 3 over a remodel cycle count of 2. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(33)\nobserve matrix_baseline(7)\nobserve resorption_pool(3)\nobserve remodel_cycles(2)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r127dxa-11",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 33 divided by a matrix baseline of 7 minus a resorption pool of 3 over a remodel cycle count of 2. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(33)\nobserve matrix_baseline(7)\nobserve resorption_pool(3)\nobserve remodel_cycles(2)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r127dxa-12",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 33 divided by a matrix baseline of 7 minus a resorption pool of 3 over a remodel cycle count of 2. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(33)\nobserve matrix_baseline(7)\nobserve resorption_pool(3)\nobserve remodel_cycles(2)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2142857142857144,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r127dxa-13",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 77 divided by a matrix baseline of 11 minus a resorption pool of 8 over a remodel cycle count of 2. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(77)\nobserve matrix_baseline(11)\nobserve resorption_pool(8)\nobserve remodel_cycles(2)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 51.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r127dxa-14",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 77 divided by a matrix baseline of 11 minus a resorption pool of 8 over a remodel cycle count of 2. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(77)\nobserve matrix_baseline(11)\nobserve resorption_pool(8)\nobserve remodel_cycles(2)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 51.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r127dxa-15",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 77 divided by a matrix baseline of 11 minus a resorption pool of 8 over a remodel cycle count of 2. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(77)\nobserve matrix_baseline(11)\nobserve resorption_pool(8)\nobserve remodel_cycles(2)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 51.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r127dxa-16",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 95 divided by a matrix baseline of 13 minus a resorption pool of 7 over a remodel cycle count of 2. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(95)\nobserve matrix_baseline(13)\nobserve resorption_pool(7)\nobserve remodel_cycles(2)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8076923076923075,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r127dxa-17",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 95 divided by a matrix baseline of 13 minus a resorption pool of 7 over a remodel cycle count of 2. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(95)\nobserve matrix_baseline(13)\nobserve resorption_pool(7)\nobserve remodel_cycles(2)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8076923076923075,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r127dxa-18",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 95 divided by a matrix baseline of 13 minus a resorption pool of 7 over a remodel cycle count of 2. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(95)\nobserve matrix_baseline(13)\nobserve resorption_pool(7)\nobserve remodel_cycles(2)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8076923076923075,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r127dxa-19",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 99 divided by a matrix baseline of 16 minus a resorption pool of 10 over a remodel cycle count of 2. What is the density index (the mineral load divided by the effective matrix)?",
+      "program": "observe mineral_load(99)\nobserve matrix_baseline(16)\nobserve resorption_pool(10)\nobserve remodel_cycles(2)\nlet answer = mineral_load / (matrix_baseline - resorption_pool / remodel_cycles)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1875,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r127dxa-20",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 99 divided by a matrix baseline of 16 minus a resorption pool of 10 over a remodel cycle count of 2. What is the the effective matrix (the matrix baseline minus the per-cycle resorption, the divisor the mineral load is divided by)?",
+      "program": "observe mineral_load(99)\nobserve matrix_baseline(16)\nobserve resorption_pool(10)\nobserve remodel_cycles(2)\nlet answer = matrix_baseline - resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1875,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 33.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r127dxa-21",
+      "qtype": "density_index",
+      "stem": "A bone densitometry study records a mineral load of 99 divided by a matrix baseline of 16 minus a resorption pool of 10 over a remodel cycle count of 2. What is the the per-cycle resorption (the resorption pool spread over the remodel cycles, before it is subtracted from the matrix baseline)?",
+      "program": "observe mineral_load(99)\nobserve matrix_baseline(16)\nobserve resorption_pool(10)\nobserve remodel_cycles(2)\nlet answer = resorption_pool / remodel_cycles\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

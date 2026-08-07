@@ -1,41 +1,29 @@
 package excelparser
 
 import (
-	"path/filepath"
-	"runtime"
-
 	excellexer "github.com/adhithyan15/coding-adventures/code/packages/go/excel-lexer"
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "excel", "excel.grammar")
-}
-
+// CreateExcelParser tokenizes the Excel formula using the Excel lexer, then
+// returns a GrammarParser configured with the Excel parser grammar, ready to
+// produce an AST.
+//
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The parser is
+// wired with a pre-parse pass that normalizes NAME/NUMBER tokens adjacent to a
+// colon into COLUMN_REF/ROW_REF reference tokens. The error result is retained
+// for API compatibility; it is non-nil only when lexing fails.
 func CreateExcelParser(source string) (*parser.GrammarParser, error) {
 	tokens, err := excellexer.TokenizeExcelFormula(source)
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*parser.GrammarParser]("excelparser.CreateExcelParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			excelParser := parser.NewGrammarParser(tokens, grammar)
-			excelParser.AddPreParse(normalizeExcelReferenceTokens)
-			return rf.Generate(true, false, excelParser)
-		}).GetResult()
+	excelParser := parser.NewGrammarParser(tokens, ParserGrammarData)
+	excelParser.AddPreParse(normalizeExcelReferenceTokens)
+	return excelParser, nil
 }
 
 func previousSignificantToken(tokens []lexer.Token, index int) *lexer.Token {

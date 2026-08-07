@@ -43,6 +43,15 @@
 //! 3. Default ECC = 23%.
 //! 4. Auto-select compact vs full (force-compact option is v0.2.0).
 
+// This encoder works over a mutable 2D module grid (`&mut Vec<Vec<bool>>`) that
+// the drawing routines mutate in place, and it walks the ISO 24778 layer and
+// capacity tables with 1-based indices (`COMPACT_CAP[layers]`, `FULL_CAP[layers]`,
+// with layers starting at 1). Both patterns are intrinsic to the spec's data
+// model, so we allow ptr_arg and needless_range_loop crate-wide rather than
+// contort the grid type or the layer-indexed loops.
+#![allow(clippy::ptr_arg)]
+#![allow(clippy::needless_range_loop)]
+
 pub use barcode_2d::{Barcode2DError, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 pub use paint_instructions::PaintScene;
 
@@ -383,17 +392,17 @@ struct SymbolSpec {
 /// Returns `Err(AztecError::InputTooLong)` if no symbol fits.
 fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, AztecError> {
     // 20% overhead for bit stuffing.
-    let stuffed = (data_bit_count * 12 + 9) / 10; // ceil(x * 1.2)
+    let stuffed = (data_bit_count * 12).div_ceil(10); // ceil(x * 1.2)
 
     for layers in 1..=4 {
         let cap = &COMPACT_CAP[layers];
         let total_bytes = cap.max_bytes_8;
-        let ecc_cw = (min_ecc_pct as usize * total_bytes + 99) / 100; // ceil
+        let ecc_cw = (min_ecc_pct as usize * total_bytes).div_ceil(100); // ceil
         if ecc_cw >= total_bytes {
             continue;
         }
         let data_cw = total_bytes - ecc_cw;
-        if (stuffed + 7) / 8 <= data_cw {
+        if stuffed.div_ceil(8) <= data_cw {
             return Ok(SymbolSpec {
                 compact: true,
                 layers,
@@ -407,12 +416,12 @@ fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, 
     for layers in 1..=32 {
         let cap = &FULL_CAP[layers];
         let total_bytes = cap.max_bytes_8;
-        let ecc_cw = (min_ecc_pct as usize * total_bytes + 99) / 100; // ceil
+        let ecc_cw = (min_ecc_pct as usize * total_bytes).div_ceil(100); // ceil
         if ecc_cw >= total_bytes {
             continue;
         }
         let data_cw = total_bytes - ecc_cw;
-        if (stuffed + 7) / 8 <= data_cw {
+        if stuffed.div_ceil(8) <= data_cw {
             return Ok(SymbolSpec {
                 compact: false,
                 layers,
@@ -440,7 +449,7 @@ fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, 
 fn pad_to_bytes(bits: &[u8], target_bytes: usize) -> Vec<u8> {
     let mut out = bits.to_vec();
     // Byte-align
-    while out.len() % 8 != 0 {
+    while !out.len().is_multiple_of(8) {
         out.push(0);
     }
     // Pad to target length
@@ -481,7 +490,7 @@ fn stuff_bits(bits: &[u8]) -> Vec<u8> {
         stuffed.push(bit);
 
         if run_len == 4 {
-            let stuff_bit = (1 - bit) as u8;
+            let stuff_bit = 1 - bit;
             stuffed.push(stuff_bit);
             run_val = stuff_bit as i8;
             run_len = 1;
@@ -681,6 +690,10 @@ fn draw_orientation_and_mode_message(
 /// Place all data bits using the clockwise layer spiral.
 ///
 /// Fills the mode ring remaining positions first, then spirals outward.
+// The parameters are the grid + reservation mask + bit stream + geometry
+// (center, compact flag, dimensions) the spiral needs; bundling them would not
+// aid clarity.
+#[allow(clippy::too_many_arguments)]
 fn place_data_bits(
     modules: &mut Vec<Vec<bool>>,
     reserved: &mut Vec<Vec<bool>>,

@@ -77,6 +77,12 @@ pub struct DocumentManager {
     docs: HashMap<String, Document>,
 }
 
+impl Default for DocumentManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DocumentManager {
     /// Create an empty `DocumentManager`.
     pub fn new() -> Self {

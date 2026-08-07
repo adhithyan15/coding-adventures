@@ -192,3 +192,163 @@ fn multi_row_table_round_trips() {
     assert_eq!(tables[0].rows[1][0].text, "r1c0");
     assert_eq!(tables[0].rows[1][1].text, "r1c1");
 }
+
+// ===========================================================================
+// Formatting: styled runs (bold/italic/mono) + paragraph styles + styles.xml
+// ===========================================================================
+
+/// Render the body part as a string for XML-shape assertions.
+fn body_xml(doc: &Document) -> String {
+    String::from_utf8(document_xml(doc)).unwrap()
+}
+
+/// A plain paragraph emits NO `<w:rPr>` and NO `<w:pPr>` — byte-shape unchanged
+/// from the text-only writer.
+#[test]
+fn plain_paragraph_has_no_properties() {
+    let mut doc = Document::new();
+    doc.add_paragraph("hi");
+    let xml = body_xml(&doc);
+    assert!(
+        !xml.contains("<w:rPr>"),
+        "plain run must not carry run props: {xml}"
+    );
+    assert!(
+        !xml.contains("<w:pPr>"),
+        "plain paragraph must not carry para props: {xml}"
+    );
+    assert!(
+        !uses_styles(&doc),
+        "no styled paragraph ⇒ uses_styles false"
+    );
+}
+
+/// Bold / italic / monospace runs each emit the right `<w:rPr>` child.
+#[test]
+fn styled_runs_emit_run_properties() {
+    let mut doc = Document::new();
+    doc.add_styled_paragraph(
+        ParagraphStyle::Normal,
+        vec![
+            Run::plain("b").bold(),
+            Run::plain("i").italic(),
+            Run::plain("c").mono(),
+            Run::plain("bi").bold().italic(),
+        ],
+    );
+    let xml = body_xml(&doc);
+    assert!(xml.contains("<w:rPr><w:b/></w:rPr>"), "bold run: {xml}");
+    assert!(xml.contains("<w:rPr><w:i/></w:rPr>"), "italic run: {xml}");
+    assert!(xml.contains("w:ascii=\"Consolas\""), "mono run: {xml}");
+    assert!(
+        xml.contains("<w:rPr><w:b/><w:i/></w:rPr>"),
+        "bold+italic combine: {xml}"
+    );
+}
+
+/// A heading emits `<w:pStyle w:val="HeadingN"/>`; levels clamp into 1..=6.
+#[test]
+fn heading_emits_pstyle_and_clamps_level() {
+    let mut doc = Document::new();
+    doc.add_styled_paragraph(ParagraphStyle::Heading(2), vec![Run::plain("Title")]);
+    doc.add_styled_paragraph(ParagraphStyle::Heading(9), vec![Run::plain("Too deep")]);
+    doc.add_styled_paragraph(ParagraphStyle::Heading(0), vec![Run::plain("Too shallow")]);
+    let xml = body_xml(&doc);
+    assert!(xml.contains("<w:pStyle w:val=\"Heading2\"/>"), "{xml}");
+    assert!(
+        xml.contains("<w:pStyle w:val=\"Heading6\"/>"),
+        "9 clamps to 6: {xml}"
+    );
+    assert!(
+        xml.contains("<w:pStyle w:val=\"Heading1\"/>"),
+        "0 clamps to 1: {xml}"
+    );
+}
+
+/// Code / Quote / List styles map to their style ids.
+#[test]
+fn block_styles_map_to_ids() {
+    for (style, id) in [
+        (ParagraphStyle::Code, "Code"),
+        (ParagraphStyle::Quote, "Quote"),
+        (ParagraphStyle::List, "ListParagraph"),
+    ] {
+        let mut doc = Document::new();
+        doc.add_styled_paragraph(style, vec![Run::plain("x")]);
+        let xml = body_xml(&doc);
+        assert!(
+            xml.contains(&format!("<w:pStyle w:val=\"{id}\"/>")),
+            "{style:?}: {xml}"
+        );
+        assert!(uses_styles(&doc));
+    }
+}
+
+/// `styles.xml` is emitted as a real OPC part ONLY when a non-Normal style is
+/// used — verified by inflating the package with the independent `opc` reader —
+/// and its content defines every style the body references.
+#[test]
+fn styles_part_present_only_when_styled() {
+    use coding_adventures_opc::Package;
+
+    // An all-Normal document: no /word/styles.xml part.
+    let mut plain = Document::new();
+    plain.add_paragraph("just text");
+    let plain_pkg = Package::open(&write_docx(&plain)).expect("open plain package");
+    assert!(
+        !plain_pkg.has_part("/word/styles.xml"),
+        "unstyled doc must NOT contain styles.xml; parts = {:?}",
+        plain_pkg.part_names(),
+    );
+
+    // A styled document: /word/styles.xml is present and defines the styles.
+    let mut styled = Document::new();
+    styled.add_styled_paragraph(ParagraphStyle::Heading(1), vec![Run::plain("H")]);
+    let styled_pkg = Package::open(&write_docx(&styled)).expect("open styled package");
+    assert!(
+        styled_pkg.has_part("/word/styles.xml"),
+        "styled doc MUST contain styles.xml; parts = {:?}",
+        styled_pkg.part_names(),
+    );
+    let styles =
+        String::from_utf8(styled_pkg.read_part("/word/styles.xml").unwrap().to_vec()).unwrap();
+    for id in ["Heading1", "Heading6", "Code", "Quote", "ListParagraph"] {
+        assert!(
+            styles.contains(&format!("w:styleId=\"{id}\"")),
+            "styles.xml lacks {id}"
+        );
+    }
+}
+
+/// A styled document still opens in the reader and its run TEXT comes back intact
+/// — styling is additive, never breaking the round-trip contract. (Inter-run
+/// spacing uses the reader-supported trailing convention: `"bold "` carries the
+/// space, since the reader keeps a run's trailing whitespace. A run's *leading*
+/// whitespace is normalized away by the current reader — a documented reader
+/// limitation, tracked separately; the emitted `.docx` itself is correct.)
+#[test]
+fn styled_document_round_trips_text() {
+    let mut doc = Document::new();
+    doc.add_styled_paragraph(ParagraphStyle::Heading(1), vec![Run::plain("Chapter One")]);
+    doc.add_styled_paragraph(
+        ParagraphStyle::Normal,
+        vec![
+            Run::plain("A "),
+            Run::plain("bold ").bold(),
+            Run::plain("word."),
+        ],
+    );
+    let bytes = write_docx(&doc);
+    let read = open_docx(&bytes).expect("reader opens a styled .docx");
+    let text = read.text();
+    assert!(text.contains("Chapter One"), "heading text: {text:?}");
+    // The bold run's text survives the round trip and rejoins cleanly.
+    assert!(
+        text.contains("A bold word."),
+        "bold run text rejoined: {text:?}"
+    );
+    // The heading and the body are two distinct paragraphs.
+    let paras: Vec<_> = read.paragraphs().collect();
+    assert_eq!(paras.len(), 2, "heading + body paragraph");
+    assert_eq!(paras[0].text, "Chapter One");
+}

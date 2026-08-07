@@ -1,0 +1,23 @@
+opam-version: "2.0"
+name: "coding-adventures-my-pkg"
+version: "0.1.0"
+synopsis: "A test package"
+description: "A test package"
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "alcotest" {with-test & = "1.9.0"}
+  "bisect_ppx" {with-test & = "2.8.3"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]

@@ -352,6 +352,14 @@ impl Interpreter {
             [ri, ci] => {
                 let rows = dim_indices(ri, a.nrows(), "row")?;
                 let cols = dim_indices(ci, a.ncols(), "column")?;
+                // Each index vector's own length is bounded independently
+                // (by whatever constructed it) but nothing bounds their
+                // PRODUCT: `A(idx, idx)` with two independently-in-bounds
+                // index vectors can still request an astronomical result.
+                // Checked before `Vec::with_capacity`/`Array::from_shape`
+                // ever allocate. Security regression, mirrors
+                // scilab-runtime's fix.
+                crate::builtins::check_total_elements("indexing", rows.len(), cols.len())?;
                 let mut out = Vec::with_capacity(rows.len() * cols.len());
                 // Column-major output: iterate columns, then rows.
                 for &c in &cols {
@@ -634,6 +642,13 @@ fn hcat(cells: &[Array]) -> Result<Array, String> {
         if a.nrows() != nrows {
             return Err("horizontal concatenation: row counts must match".to_string());
         }
+        // `[A A]` repeated (e.g. `A = [A A];` many times) doubles the
+        // element count each time with no individually-large input --
+        // only the ACCUMULATED result grows exponentially. Checked
+        // incrementally, as the result is built, so the check fires
+        // before the oversized intermediate `cols`/`data` is ever
+        // allocated. Security regression, mirrors scilab-runtime's fix.
+        crate::builtins::check_total_elements("matrix literal", nrows, cols.len() + a.ncols())?;
         for c in 0..a.ncols() {
             cols.push((0..nrows).map(|r| a.get(r, c).unwrap()).collect());
         }
@@ -656,13 +671,19 @@ fn vcat(rows: &[Array]) -> Result<Array, String> {
         return Array::from_shape(vec![], vec![0, 0]);
     };
     let ncols = first.ncols();
-    let total_rows: usize = rows.iter().map(|a| a.nrows()).sum();
-    let mut data = vec![0.0; total_rows * ncols];
-    let mut row_off = 0;
+    let mut total_rows: usize = 0;
     for a in &rows {
         if a.ncols() != ncols {
             return Err("vertical concatenation: column counts must match".to_string());
         }
+        total_rows += a.nrows();
+        // See the matching comment in `hcat`: checked incrementally so the
+        // oversized `data` buffer is never allocated.
+        crate::builtins::check_total_elements("matrix literal", total_rows, ncols)?;
+    }
+    let mut data = vec![0.0; total_rows * ncols];
+    let mut row_off = 0;
+    for a in &rows {
         for c in 0..ncols {
             for r in 0..a.nrows() {
                 data[c * total_rows + (row_off + r)] = a.get(r, c).unwrap();

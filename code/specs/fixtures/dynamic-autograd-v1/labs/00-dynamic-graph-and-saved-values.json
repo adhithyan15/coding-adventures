@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "nn27-dynamic-graph-and-saved-values",
+  "title": "Executed graphs, reverse traversal, and immutable saved values",
+  "question": "Which operations actually enter the graph, and which forward values must backward preserve?",
+  "absolute_tolerance": 1e-8,
+  "operation": {
+    "kind": "dynamic-scalar-reverse-mode",
+    "graph_construction": "executed-operations-only",
+    "saved_value_policy": "immutable-forward-snapshots",
+    "backward_traversal": "reverse-topological",
+    "finite_difference_epsilon": 1e-5
+  },
+  "cases": [
+    {
+      "id": "multiply_add_square",
+      "title": "A complete scalar graph",
+      "inputs": [
+        { "id": "x", "value": 2, "requires_gradient": true },
+        { "id": "w", "value": 3, "requires_gradient": true },
+        { "id": "b", "value": 1, "requires_gradient": true }
+      ],
+      "steps": [
+        { "id": "m", "operation": "multiply", "inputs": ["x", "w"] },
+        { "id": "z", "operation": "add", "inputs": ["m", "b"] },
+        { "id": "loss", "operation": "square", "inputs": ["z"] }
+      ],
+      "output": "loss",
+      "mutations_after_forward": {},
+      "expected": {
+        "executed_node_ids": ["x", "w", "b", "m", "z", "loss"],
+        "executed_operations": { "x": "input", "w": "input", "b": "input", "m": "multiply", "z": "add", "loss": "square" },
+        "topological_order": ["x", "w", "m", "b", "z", "loss"],
+        "backward_order": ["loss", "z", "b", "m", "w", "x"],
+        "forward_values": { "x": 2, "w": 3, "b": 1, "m": 6, "z": 7, "loss": 49 },
+        "branch_choices": {},
+        "saved_values": {
+          "m": [{ "name": "left", "source_id": "x", "value": 2 }, { "name": "right", "source_id": "w", "value": 3 }],
+          "z": [],
+          "loss": [{ "name": "input", "source_id": "z", "value": 7 }]
+        },
+        "live_input_values": { "x": 2, "w": 3, "b": 1 },
+        "backward_steps": [
+          { "node_id": "loss", "operation": "square", "upstream_gradient": 1, "local_derivatives": [{ "parent_id": "z", "value": 14, "source": "saved:input" }], "parent_contributions": [{ "parent_id": "z", "value": 14 }] },
+          { "node_id": "z", "operation": "add", "upstream_gradient": 14, "local_derivatives": [{ "parent_id": "m", "value": 1, "source": "constant:1" }, { "parent_id": "b", "value": 1, "source": "constant:1" }], "parent_contributions": [{ "parent_id": "m", "value": 14 }, { "parent_id": "b", "value": 14 }] },
+          { "node_id": "m", "operation": "multiply", "upstream_gradient": 14, "local_derivatives": [{ "parent_id": "x", "value": 3, "source": "saved:right" }, { "parent_id": "w", "value": 2, "source": "saved:left" }], "parent_contributions": [{ "parent_id": "x", "value": 42 }, { "parent_id": "w", "value": 28 }] }
+        ],
+        "gradients": { "x": 42, "w": 28, "b": 14, "m": 14, "z": 14, "loss": 1 },
+        "finite_difference_gradients": { "x": 42, "w": 28, "b": 14 },
+        "max_gradient_absolute_error": 0
+      }
+    },
+    {
+      "id": "negative_branch",
+      "title": "Only the chosen branch enters the graph",
+      "inputs": [{ "id": "x", "value": -2, "requires_gradient": true }],
+      "steps": [
+        { "id": "abs_x", "operation": "branch_nonnegative", "inputs": ["x"] },
+        { "id": "loss", "operation": "square", "inputs": ["abs_x"] }
+      ],
+      "output": "loss",
+      "mutations_after_forward": {},
+      "expected": {
+        "executed_node_ids": ["x", "abs_x", "loss"],
+        "executed_operations": { "x": "input", "abs_x": "negate", "loss": "square" },
+        "topological_order": ["x", "abs_x", "loss"],
+        "backward_order": ["loss", "abs_x", "x"],
+        "forward_values": { "x": -2, "abs_x": 2, "loss": 4 },
+        "branch_choices": { "abs_x": "negative" },
+        "saved_values": { "abs_x": [], "loss": [{ "name": "input", "source_id": "abs_x", "value": 2 }] },
+        "live_input_values": { "x": -2 },
+        "backward_steps": [
+          { "node_id": "loss", "operation": "square", "upstream_gradient": 1, "local_derivatives": [{ "parent_id": "abs_x", "value": 4, "source": "saved:input" }], "parent_contributions": [{ "parent_id": "abs_x", "value": 4 }] },
+          { "node_id": "abs_x", "operation": "negate", "upstream_gradient": 4, "local_derivatives": [{ "parent_id": "x", "value": -1, "source": "constant:-1" }], "parent_contributions": [{ "parent_id": "x", "value": -4 }] }
+        ],
+        "gradients": { "x": -4, "abs_x": 4, "loss": 1 },
+        "finite_difference_gradients": { "x": -4 },
+        "max_gradient_absolute_error": 0
+      }
+    },
+    {
+      "id": "saved_snapshot",
+      "title": "Backward reads the forward snapshot",
+      "inputs": [
+        { "id": "x", "value": 2, "requires_gradient": true },
+        { "id": "w", "value": 3, "requires_gradient": true }
+      ],
+      "steps": [{ "id": "product", "operation": "multiply", "inputs": ["x", "w"] }],
+      "output": "product",
+      "mutations_after_forward": { "w": 100 },
+      "expected": {
+        "executed_node_ids": ["x", "w", "product"],
+        "executed_operations": { "x": "input", "w": "input", "product": "multiply" },
+        "topological_order": ["x", "w", "product"],
+        "backward_order": ["product", "w", "x"],
+        "forward_values": { "x": 2, "w": 3, "product": 6 },
+        "branch_choices": {},
+        "saved_values": { "product": [{ "name": "left", "source_id": "x", "value": 2 }, { "name": "right", "source_id": "w", "value": 3 }] },
+        "live_input_values": { "x": 2, "w": 100 },
+        "backward_steps": [
+          { "node_id": "product", "operation": "multiply", "upstream_gradient": 1, "local_derivatives": [{ "parent_id": "x", "value": 3, "source": "saved:right" }, { "parent_id": "w", "value": 2, "source": "saved:left" }], "parent_contributions": [{ "parent_id": "x", "value": 3 }, { "parent_id": "w", "value": 2 }] }
+        ],
+        "gradients": { "x": 3, "w": 2, "product": 1 },
+        "finite_difference_gradients": { "x": 3, "w": 2 },
+        "max_gradient_absolute_error": 0
+      }
+    }
+  ]
+}

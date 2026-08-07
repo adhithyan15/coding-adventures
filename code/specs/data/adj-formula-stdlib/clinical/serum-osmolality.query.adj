@@ -1,0 +1,29 @@
+% ============================================================================
+% serum-osmolality.query.adj — worked applications of the calculated serum osmolality.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a basic-metabolic-panel vignette into a sodium,
+% a glucose and a BUN: it `import`s the grounded formulabook, `observe`s the three values, and asks the
+% engine to APPLY the cited Dorwart and Chalmers formula. No arithmetic is stated by the consumer; the
+% engine computes each value EXACTLY (over exact rationals) and carries the article's citation as its
+% proof, on the CPU, with zero model calls.
+%
+% Worked case (sodium = 145, glucose = 90, BUN = 28): osmolality = 1.86 × 145 + 90/18 + 28/2.8 + 9 =
+% 269.7 + 5 + 10 + 9 = 293.7 mOsm/kg. Each query fixes the osmolality and two of the three measured
+% quantities and asks the engine to recover the third; every answer is exact and the four COMPOSE (each
+% inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli serum-osmolality.query.adj
+% ============================================================================
+
+import "serum-osmolality.adj"
+
+% --- Osmolality: the value sodium, glucose and BUN imply (expect 293.7). ----------------------------
+observe sodium(145)
+observe glucose(90)
+observe bun(28)
+? serum_osmolality(sodium, glucose, bun)   % expect 293.7
+
+% --- Inverse: the sodium an osmolality of 293.7 implies at glucose 90, BUN 28 (expect 145). ---------
+observe serum_osmolality(293.7)
+? sodium(serum_osmolality, glucose, bun)   % expect 145

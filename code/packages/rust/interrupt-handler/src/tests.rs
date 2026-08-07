@@ -339,8 +339,8 @@ fn test_controller_next_pending_empty() {
 #[test]
 fn test_context_roundtrip() {
     let mut regs = [0u32; 32];
-    for i in 0..32 {
-        regs[i] = (i as u32) * 100;
+    for (i, r) in regs.iter_mut().enumerate() {
+        *r = (i as u32) * 100;
     }
     let pc = 0x00080000u32;
     let mstatus = 0x00001800u32;
@@ -358,15 +358,15 @@ fn test_context_roundtrip() {
 #[test]
 fn test_context_all_registers() {
     let mut regs = [0u32; 32];
-    for i in 0..32 {
-        regs[i] = 0xDEAD0000 + i as u32;
+    for (i, r) in regs.iter_mut().enumerate() {
+        *r = 0xDEAD0000 + i as u32;
     }
 
     let frame = save_context(regs, 0, 0, 0);
     let (got_regs, _, _) = restore_context(&frame);
 
-    for i in 0..32 {
-        assert_eq!(got_regs[i], 0xDEAD0000 + i as u32);
+    for (i, &got) in got_regs.iter().enumerate() {
+        assert_eq!(got, 0xDEAD0000 + i as u32);
     }
 }
 

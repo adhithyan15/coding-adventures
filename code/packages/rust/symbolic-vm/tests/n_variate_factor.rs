@@ -1,6 +1,11 @@
 //! Pipeline tests for n-variate Hensel-lift factorisation — Track K2
 //! (Rust port of Python Track K1, PR #5590).
 //!
+// The recursive `walk` helper threads `vars` through purely for signature
+// symmetry with `var_idx`/`zero`; it is only re-forwarded in the recursive
+// call, which clippy::only_used_in_recursion flags. That is intentional here.
+#![allow(clippy::only_used_in_recursion)]
+//!
 //! Exercise the end-to-end `Factor(expr)` path through the VM: construct
 //! `Factor(...)` IR, evaluate on a SymbolicBackend, and verify the result
 //! by re-expanding the returned product back to a sparse-dict polynomial
@@ -74,6 +79,9 @@ fn expand_to_dict(node: &IRNode, vars: &[&str]) -> PolyDict {
         normalize(&mut out);
         out
     }
+    // `vars` is threaded through the recursion for symmetry with `var_idx`/`zero`
+    // and readability of the walk signature, even though this arm only forwards it.
+    #[allow(clippy::only_used_in_recursion)]
     fn walk(
         node: &IRNode,
         vars: &[&str],

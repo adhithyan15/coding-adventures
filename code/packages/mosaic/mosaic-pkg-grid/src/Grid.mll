@@ -138,6 +138,13 @@ layout Grid {
             // flow through after resolution.
             Cell (
               value:        ( v ) ,
+              // row/col (v0.2.3, UI37): ride along on onClick so the host
+              // can tell which cell was clicked. Same expression-in-slot-
+              // binding mechanism as is-editing/is-selected below — Cell
+              // never learns anything about Grid's internal loop, it just
+              // receives the two numbers.
+              row:          ( r ) ,
+              col:          ( c ) ,
               // edit-content forwards the host's live edit buffer
               // (the same buffer the FormulaBar drives) into every
               // cell.  Only the cell with `is-editing: true` will

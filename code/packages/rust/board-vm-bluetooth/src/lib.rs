@@ -1132,8 +1132,7 @@ fn map_protocol_error(error: ProtocolError) -> BluetoothTransportError {
 }
 
 fn unsupported_bluetooth_io_error() -> io::Error {
-    io::Error::new(
-        io::ErrorKind::Other,
+    io::Error::other(
         "Board VM Bluetooth backend is unsupported on this platform",
     )
 }

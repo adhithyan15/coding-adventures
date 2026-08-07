@@ -7,25 +7,34 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
+use smart_home_automation_runtime::{
+    AutomationDefinition, AutomationEvaluationReport, AutomationTriggerInput,
+    SmartHomeAutomationRuntime,
+};
 use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationOutcome, AuthorizationSubject, Bridge, BridgeId,
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
-    DeviceCommand, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health,
-    PrivilegeTier, Scene, SceneScope, SmartHomeTool, StateConfidence, StateDelta, StateSource,
-    Value, ValueKind,
+    DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, Entity, EntityId,
+    EntityKind, EventId, Health,
+    IntegrationId, MediaCommandType, PrivilegeTier, Scene, SceneScope, SmartHomeTool,
+    StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
+use smart_home_dashboard_core::NativeDashboardManifest;
 use smart_home_runtime::{
-    DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
+    DesiredEntityState, DesiredStateQuery, PairingSessionStatus, RuntimeAuthorizationDecisionQuery,
     RuntimeAuthorizationDecisionSort, RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind,
     RuntimeCapabilityGrantSort, RuntimeClearDesiredStateToolOutput,
     RuntimeClearDesiredStateToolRequest, RuntimeCommandResultQuery, RuntimeCommandResultRecord,
     RuntimeCommandResultSort, RuntimeCommandToolRequest, RuntimeError, RuntimeEvent,
     RuntimeEventCheckpoint, RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery,
-    RuntimeEventSort, RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
-    RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest, SmartHomeRuntime,
+    RuntimeEventSort, RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionQuery,
+    RuntimePairingSessionSort, RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort,
+    RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
+    SmartHomeRuntime,
 };
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -34,6 +43,13 @@ use web_core::{WebApp, WebRequest, WebResponse};
 pub const VERSION: &str = "0.1.0";
 
 const CONTROLLER_HANDOFF_PATH: &str = "/api/smart_home/controller_handoff";
+
+type RuntimeClock = Arc<dyn Fn() -> u64 + Send + Sync>;
+type RuntimeMutationPersistence =
+    Arc<dyn Fn(&SmartHomeRuntime, u64) -> Result<(), String> + Send + Sync>;
+type AutomationMutationPersistence = Arc<
+    dyn Fn(&SmartHomeRuntime, &SmartHomeAutomationRuntime, u64) -> Result<(), String> + Send + Sync,
+>;
 
 const DASHBOARD_HTML: &str = r##"<!doctype html>
 <html lang="en">
@@ -77,6 +93,29 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       background: #f9fbfa;
     }
 
+    .section-tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .section-tabs a {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 700;
+    }
+
+    .section-tabs a:hover,
+    .section-tabs a:focus-visible {
+      border-bottom-color: var(--teal);
+    }
+
     h1, h2, h3, p {
       margin: 0;
     }
@@ -107,13 +146,20 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       display: grid;
       gap: 12px;
       align-content: start;
+      min-width: 0;
     }
 
     .panel {
+      min-width: 0;
+      overflow-x: auto;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 14px;
+    }
+
+    .panel > * {
+      min-width: 0;
     }
 
     .toolbar, .row, .metric-grid {
@@ -121,6 +167,19 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
+    }
+
+    .row > div {
+      min-width: 0;
+    }
+
+    #checks .row > div {
+      flex: 1 1 180px;
+      min-width: 0;
+    }
+
+    h3, p, td {
+      overflow-wrap: anywhere;
     }
 
     .metric-grid {
@@ -255,6 +314,25 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       background: #fbfcfb;
     }
 
+    .manifest-dashboard + .manifest-dashboard {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .manifest-view {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(0, 3fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .manifest-view:last-child {
+      border-bottom: 0;
+    }
+
     .entity-card .actions {
       margin-top: 10px;
     }
@@ -309,6 +387,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       main {
         grid-template-columns: 1fr;
       }
+
+      .manifest-view {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -323,6 +405,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       <button id="refresh" class="primary" type="button">Refresh</button>
     </div>
   </header>
+  <nav class="section-tabs" aria-label="Dashboard sections">
+    <a href="#overview-panel">Overview</a>
+    <a href="#dashboards-panel">Dashboards</a>
+    <a href="#rooms-panel">Rooms</a>
+    <a href="#devices-panel">Devices</a>
+    <a href="#entities-panel">State</a>
+    <a href="#automations-panel">Automations</a>
+    <a href="#pairing-panel">Pairing</a>
+    <a href="#history-panel">History</a>
+    <a href="#commands-panel">Audit</a>
+  </nav>
   <main>
     <aside>
       <section class="panel">
@@ -343,11 +436,21 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       </section>
     </aside>
     <section>
-      <div class="panel">
+      <div id="overview-panel" class="panel">
         <h2>Home</h2>
         <div id="summary" class="metric-grid"></div>
       </div>
-      <div class="panel">
+      <div id="dashboards-panel" class="panel">
+        <div class="row" style="justify-content: space-between;">
+          <div>
+            <h2>Native Dashboards</h2>
+            <span id="dashboard-manifest-summary" class="muted"></span>
+          </div>
+          <button id="dashboard-view-all" type="button">All entities</button>
+        </div>
+        <div id="dashboard-manifests"></div>
+      </div>
+      <div id="filters-panel" class="panel">
         <div class="row" style="justify-content: space-between;">
           <h2>Filters</h2>
           <button id="reset-filters" type="button">Reset</button>
@@ -613,14 +716,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </label>
         </div>
       </div>
-      <div class="panel">
+      <div id="rooms-panel" class="panel">
         <div class="row">
           <h2>Rooms</h2>
           <span class="muted">Topology and coverage</span>
         </div>
         <div id="rooms" class="cards"></div>
       </div>
-      <div class="panel">
+      <div id="devices-panel" class="panel">
         <div class="row">
           <h2>Devices</h2>
           <span class="muted">Bridge inventory</span>
@@ -641,7 +744,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </div>
         <div id="scenes" class="cards"></div>
       </div>
-      <div class="panel">
+      <div id="entities-panel" class="panel">
         <div class="row">
           <h2>Entities</h2>
           <span id="state-count" class="muted"></span>
@@ -673,7 +776,38 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <tbody id="gaps"></tbody>
         </table>
       </div>
-      <div class="panel">
+      <div id="automations-panel" class="panel">
+        <div class="row">
+          <h2>Automations</h2>
+          <span id="automation-count" class="muted"></span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Trigger</th><th>Actions</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="automations"></tbody>
+        </table>
+        <h3 style="margin-top: 14px;">Automation Audit</h3>
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Outcome</th><th>Occurrence</th><th>Time</th></tr>
+          </thead>
+          <tbody id="automation-audit"></tbody>
+        </table>
+      </div>
+      <div id="pairing-panel" class="panel">
+        <div class="row">
+          <h2>Pairing</h2>
+          <span id="pairing-count" class="muted"></span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Session</th><th>Bridge</th><th>Status</th><th>Expires</th><th></th></tr>
+          </thead>
+          <tbody id="pairing-sessions"></tbody>
+        </table>
+      </div>
+      <div id="history-panel" class="panel">
         <h2>History</h2>
         <table>
           <thead>
@@ -691,7 +825,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <tbody id="events"></tbody>
         </table>
       </div>
-      <div class="panel">
+      <div id="commands-panel" class="panel">
         <h2>Commands</h2>
         <table>
           <thead>
@@ -737,6 +871,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
   <script>
     const els = {
       activity: document.querySelector("#activity"),
+      automationAudit: document.querySelector("#automation-audit"),
+      automationCount: document.querySelector("#automation-count"),
+      automations: document.querySelector("#automations"),
       authorizationDecisions: document.querySelector("#authorization-decisions"),
       bridges: document.querySelector("#bridges"),
       capabilities: document.querySelector("#capabilities"),
@@ -750,6 +887,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       detailTitle: document.querySelector("#detail-title"),
       desired: document.querySelector("#desired"),
       devices: document.querySelector("#devices"),
+      dashboardManifestSummary: document.querySelector("#dashboard-manifest-summary"),
+      dashboardManifests: document.querySelector("#dashboard-manifests"),
+      dashboardViewAll: document.querySelector("#dashboard-view-all"),
       entities: document.querySelector("#entities"),
       events: document.querySelector("#events"),
       filterActivityEntity: document.querySelector("#filter-activity-entity"),
@@ -804,6 +944,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       history: document.querySelector("#history"),
       location: document.querySelector("#location"),
       log: document.querySelector("#log"),
+      pairingCount: document.querySelector("#pairing-count"),
+      pairingSessions: document.querySelector("#pairing-sessions"),
       refresh: document.querySelector("#refresh"),
       resetFilters: document.querySelector("#reset-filters"),
       routes: document.querySelector("#routes"),
@@ -874,6 +1016,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["grant_scope", els.filterGrantScope],
       ["grant_principal", els.filterGrantPrincipal]
     ];
+
+    let selectedManifestView = new URLSearchParams(window.location.search).get("dashboard_view") || "";
+    let selectedManifestEntityIds = new Set();
 
     const ensureSelectOption = (control, value) => {
       if (!value || control.tagName !== "SELECT") {
@@ -980,6 +1125,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const roomMatchesFilters = (filters, room) => !filters.room || room.room_id === filters.room;
     const isCommandable = (entity) => (entity.capabilities || []).some((item) => item.commandable);
     const entityMatchesFilters = (filters, entity) => {
+      if (selectedManifestEntityIds.size > 0) {
+        const ids = [entity.entity_id, entity.home_assistant_entity_id].filter(Boolean);
+        if (!ids.some((id) => selectedManifestEntityIds.has(id))) {
+          return false;
+        }
+      }
       if (!matchesSearch(filters, entity)) {
         return false;
       }
@@ -996,6 +1147,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     const metric = (label, value) =>
       `<div class="metric"><strong>${value}</strong><span class="muted">${label}</span></div>`;
+
+    const escapeText = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
 
     const statusClass = (status) => `status ${String(status || "ok").toLowerCase()}`;
     const valueText = (value) => value === null || value === undefined ? "null" : JSON.stringify(value);
@@ -1266,6 +1424,102 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </span>
         </div>
       `).join("") || `<p class="muted">No routes</p>`;
+    };
+
+    const activateManifestView = (manifestData) => {
+      selectedManifestEntityIds.clear();
+      if (!selectedManifestView || !manifestData.manifest) {
+        return;
+      }
+      for (const dashboard of manifestData.manifest.dashboards || []) {
+        for (const view of dashboard.views || []) {
+          if (`${dashboard.dashboard_id}/${view.view_id}` !== selectedManifestView) {
+            continue;
+          }
+          for (const card of view.cards || []) {
+            for (const entityId of card.entity_ids || []) {
+              selectedManifestEntityIds.add(entityId);
+            }
+          }
+        }
+      }
+    };
+
+    const renderDashboardManifests = (manifestData) => {
+      const summary = manifestData.summary || {};
+      els.dashboardManifestSummary.textContent = manifestData.configured
+        ? `${summary.dashboards || 0} dashboards, ${summary.views || 0} views, ${summary.cards || 0} cards`
+        : "No migrated manifest configured";
+      els.dashboardViewAll.disabled = !selectedManifestView;
+      const manifest = manifestData.manifest;
+      if (!manifest) {
+        els.dashboardManifests.innerHTML = `<p class="muted">The controller is using the native operational overview.</p>`;
+        return;
+      }
+      els.dashboardManifests.innerHTML = (manifest.dashboards || []).map((dashboard) => `
+        <div class="manifest-dashboard">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${escapeText(dashboard.title)}</h3>
+            <span class="muted">${escapeText(dashboard.url_path)}</span>
+          </div>
+          ${(dashboard.views || []).map((view) => {
+            const viewKey = `${dashboard.dashboard_id}/${view.view_id}`;
+            const cards = view.cards || [];
+            const entityCount = new Set(cards.flatMap((card) => card.entity_ids || [])).size;
+            return `
+              <div class="manifest-view">
+                <strong>${escapeText(view.title)}</strong>
+                <span class="muted">${cards.length} cards, ${entityCount} entities</span>
+                <button type="button" data-manifest-view="${escapeText(viewKey)}"${selectedManifestView === viewKey ? " disabled" : ""}>${selectedManifestView === viewKey ? "Active" : "Open"}</button>
+              </div>
+            `;
+          }).join("") || `<p class="muted">No migrated views</p>`}
+        </div>
+      `).join("") || `<p class="muted">No migrated dashboards</p>`;
+    };
+
+    const renderAutomations = (automationData, auditData) => {
+      const definitions = automationData.definitions || [];
+      els.automationCount.textContent = `${definitions.length} definitions`;
+      els.automations.innerHTML = definitions.map((definition) => {
+        const trigger = definition.trigger || {};
+        const triggerText = trigger.kind === "schedule"
+          ? `Every ${trigger.every_ms} ms`
+          : `${trigger.event_type || "event"}${trigger.entity_id ? ` / ${trigger.entity_id}` : ""}`;
+        return `
+          <tr>
+            <td>${escapeText(definition.automation_id)}</td>
+            <td>${escapeText(triggerText)}</td>
+            <td>${(definition.actions || []).length}</td>
+            <td><span class="${statusClass(definition.enabled ? "ready" : "attention")}">${definition.enabled ? "enabled" : "disabled"}</span></td>
+            <td>${inspectButton("/api/smart_home/automations", "automation definitions")}</td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="5" class="muted">No automation definitions</td></tr>`;
+
+      const records = [...(auditData.records || [])].reverse().slice(0, 12);
+      els.automationAudit.innerHTML = records.map((record) => `
+        <tr>
+          <td>${escapeText(record.automation_id)}</td>
+          <td><span class="${statusClass(record.outcome)}">${escapeText(record.outcome)}</span></td>
+          <td>${escapeText(record.trigger_key)}</td>
+          <td>${escapeText(observedText(record.evaluated_at_ms))}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="4" class="muted">No automation audit records</td></tr>`;
+    };
+
+    const renderPairingSessions = (pairingData) => {
+      const sessions = pairingData.sessions || [];
+      els.pairingCount.textContent = `${pairingData.summary?.total_sessions || 0} sessions`;
+      els.pairingSessions.innerHTML = sessions.map((session) => `
+        <tr>
+          <td>${escapeText(session.session_id)}<br><span class="muted">${escapeText(session.requested_by)}</span></td>
+          <td>${escapeText(session.bridge_id)}<br><span class="muted">${escapeText(session.integration_id)}</span></td>
+          <td><span class="${statusClass(session.status === "completed" ? "ready" : session.status === "pending_user_presence" ? "attention" : session.status)}">${escapeText(session.status)}</span></td>
+          <td>${escapeText(observedText(session.expires_at_ms))}</td>
+          <td>${inspectButton(`/api/smart_home/pairing_sessions/${encodeURIComponent(session.session_id)}`, "pairing session")}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="5" class="muted">No pairing sessions</td></tr>`;
     };
 
     const renderRoomOptions = (inventory, selectedRoom) => {
@@ -1568,7 +1822,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           events,
           commandResults,
           authorizationDecisions,
-          capabilityGrants
+          capabilityGrants,
+          dashboardManifest,
+          automations,
+          automationAudit,
+          pairingSessions
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
@@ -1662,7 +1920,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             status: filters.grantStatus,
             scope: filters.grantScope,
             sort: "principal_id"
-          }))
+          })),
+          json("/api/smart_home/dashboard_manifest"),
+          json("/api/smart_home/automations"),
+          json("/api/smart_home/automation_audit"),
+          json("/api/smart_home/pairing_sessions?limit=12&sort=status_then_expires_at")
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -1673,6 +1935,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("Devices", summary.device_count),
           metric("Rooms", summary.room_count),
           metric("Scenes", summary.scene_count),
+          metric("Automations", automations.summary.definition_count),
+          metric("Pairing", pairingSessions.summary.total_sessions),
           metric("Active grants", capabilityGrants.summary.active_grants)
         ].join("");
         els.activity.innerHTML = [
@@ -1683,6 +1947,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("State gaps", bootstrap.state_gaps.summary.total_entities)
         ].join("");
         renderChecks(readiness);
+        activateManifestView(dashboardManifest);
+        renderDashboardManifests(dashboardManifest);
         renderServices(services);
         renderRoutes(routes);
         renderRoomOptions(rooms, filters.room);
@@ -1699,6 +1965,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderCommandResults(commandResults, filters);
         renderAuthorizationDecisions(authorizationDecisions, filters);
         renderCapabilityGrants(capabilityGrants, filters);
+        renderAutomations(automations, automationAudit);
+        renderPairingSessions(pairingSessions);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -1736,8 +2004,23 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const clearDesiredButton = event.target.closest("button[data-clear-desired]");
       const desiredButton = event.target.closest("button[data-desired-action]");
       const inspectDetailButton = event.target.closest("button[data-inspect-url]");
-      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton || inspectDetailButton;
+      const manifestViewButton = event.target.closest("button[data-manifest-view]");
+      const manifestAllButton = event.target.closest("#dashboard-view-all");
+      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton || inspectDetailButton || manifestViewButton || manifestAllButton;
       if (!button) {
+        return;
+      }
+      if (manifestViewButton || manifestAllButton) {
+        selectedManifestView = manifestViewButton?.dataset.manifestView || "";
+        const params = new URLSearchParams(window.location.search);
+        if (selectedManifestView) {
+          params.set("dashboard_view", selectedManifestView);
+        } else {
+          params.delete("dashboard_view");
+        }
+        const query = params.toString();
+        window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
+        await render();
         return;
       }
       button.disabled = true;
@@ -1946,10 +2229,14 @@ pub struct SmartHomePlatformService {
 #[derive(Clone)]
 pub struct SmartHomePlatformHttpRuntime {
     runtime: Arc<Mutex<SmartHomeRuntime>>,
+    automation_runtime: Option<Arc<Mutex<SmartHomeAutomationRuntime>>>,
+    dashboard_manifest: Option<Arc<NativeDashboardManifest>>,
     config: SmartHomePlatformHttpConfig,
     event_types: Vec<String>,
     principal_id: AgentId,
-    now_ms: u64,
+    clock: RuntimeClock,
+    mutation_persistence: Option<RuntimeMutationPersistence>,
+    automation_persistence: Option<AutomationMutationPersistence>,
 }
 
 impl SmartHomePlatformHttpRuntime {
@@ -1963,10 +2250,14 @@ impl SmartHomePlatformHttpRuntime {
     ) -> Self {
         Self {
             runtime,
+            automation_runtime: None,
+            dashboard_manifest: None,
             config,
             event_types: default_event_types(),
             principal_id: AgentId::trusted("agent:home-assistant-local-api"),
-            now_ms: 0,
+            clock: Arc::new(|| 0),
+            mutation_persistence: None,
+            automation_persistence: None,
         }
     }
 
@@ -1984,8 +2275,119 @@ impl SmartHomePlatformHttpRuntime {
     }
 
     pub fn with_now_ms(mut self, now_ms: u64) -> Self {
-        self.now_ms = now_ms;
+        self.clock = Arc::new(move || now_ms);
         self
+    }
+
+    /// Use a live clock for request timestamps and freshness projections.
+    pub fn with_clock(mut self, clock: impl Fn() -> u64 + Send + Sync + 'static) -> Self {
+        self.clock = Arc::new(clock);
+        self
+    }
+
+    /// Persist each accepted mutation before exposing it as successful.
+    ///
+    /// A failed persistence call restores the in-memory runtime to its
+    /// pre-request state and returns HTTP 503 to the caller.
+    pub fn with_mutation_persistence(
+        mut self,
+        persistence: impl Fn(&SmartHomeRuntime, u64) -> Result<(), String> + Send + Sync + 'static,
+    ) -> Self {
+        self.mutation_persistence = Some(Arc::new(persistence));
+        self
+    }
+
+    pub fn with_automation_runtime(
+        mut self,
+        automation_runtime: Arc<Mutex<SmartHomeAutomationRuntime>>,
+    ) -> Self {
+        self.automation_runtime = Some(automation_runtime);
+        self
+    }
+
+    pub fn with_dashboard_manifest(mut self, manifest: NativeDashboardManifest) -> Self {
+        self.dashboard_manifest = Some(Arc::new(manifest));
+        self
+    }
+
+    pub fn with_automation_persistence(
+        mut self,
+        persistence: impl Fn(&SmartHomeRuntime, &SmartHomeAutomationRuntime, u64) -> Result<(), String>
+            + Send
+            + Sync
+            + 'static,
+    ) -> Self {
+        self.automation_persistence = Some(Arc::new(persistence));
+        self
+    }
+
+    pub fn automation_runtime(&self) -> Option<Arc<Mutex<SmartHomeAutomationRuntime>>> {
+        self.automation_runtime.clone()
+    }
+
+    pub fn evaluate_automations(
+        &self,
+        input: AutomationTriggerInput,
+        dry_run: bool,
+    ) -> Result<AutomationEvaluationReport, String> {
+        let automation_runtime = self
+            .automation_runtime
+            .as_ref()
+            .ok_or_else(|| "automation runtime is not configured".to_string())?;
+        let mut runtime = self
+            .runtime
+            .lock()
+            .map_err(|_| "smart-home runtime mutex was poisoned".to_string())?;
+        let mut automations = automation_runtime
+            .lock()
+            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
+        let previous_runtime = runtime.clone();
+        let previous_automations = automations.clone();
+        let now_ms = self.now_ms();
+        let report = automations
+            .evaluate(
+                &mut runtime,
+                self.principal_id.clone(),
+                input,
+                dry_run,
+                now_ms,
+            )
+            .map_err(|error| error.to_string())?;
+        if !dry_run && !report.records.is_empty() {
+            if let Err(error) = self.persist_automation_mutation(&runtime, &automations, now_ms) {
+                *runtime = previous_runtime;
+                *automations = previous_automations;
+                return Err(error);
+            }
+        }
+        Ok(report)
+    }
+
+    pub fn upsert_automation_definition(
+        &self,
+        definition: AutomationDefinition,
+    ) -> Result<Option<AutomationDefinition>, String> {
+        let automation_runtime = self
+            .automation_runtime
+            .as_ref()
+            .ok_or_else(|| "automation runtime is not configured".to_string())?;
+        let runtime = self
+            .runtime
+            .lock()
+            .map_err(|_| "smart-home runtime mutex was poisoned".to_string())?;
+        let mut automations = automation_runtime
+            .lock()
+            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
+        let previous = automations.clone();
+        let replaced = automations
+            .upsert_definition(definition)
+            .map_err(|error| error.to_string())?;
+        if let Err(error) = self.persist_automation_mutation(&runtime, &automations, self.now_ms())
+        {
+            *automations = previous;
+            return Err(error);
+        }
+        Ok(replaced)
     }
 
     pub fn grant_local_full_access(
@@ -2020,8 +2422,43 @@ impl SmartHomePlatformHttpRuntime {
             &runtime,
             self.config.clone(),
             self.event_types.clone(),
-            self.now_ms,
+            self.now_ms(),
         )
+    }
+
+    fn now_ms(&self) -> u64 {
+        (self.clock)()
+    }
+
+    fn persist_mutation_or_restore(
+        &self,
+        runtime: &mut SmartHomeRuntime,
+        previous: SmartHomeRuntime,
+        saved_at_ms: u64,
+    ) -> Result<(), ApiError> {
+        let Some(persistence) = &self.mutation_persistence else {
+            return Ok(());
+        };
+        if let Err(error) = persistence(runtime, saved_at_ms) {
+            *runtime = previous;
+            return Err(ApiError::new(
+                503,
+                format!("could not persist smart-home runtime mutation: {error}"),
+            ));
+        }
+        Ok(())
+    }
+
+    fn persist_automation_mutation(
+        &self,
+        runtime: &SmartHomeRuntime,
+        automations: &SmartHomeAutomationRuntime,
+        saved_at_ms: u64,
+    ) -> Result<(), String> {
+        let Some(persistence) = &self.automation_persistence else {
+            return Ok(());
+        };
+        persistence(runtime, automations, saved_at_ms)
     }
 }
 
@@ -2206,6 +2643,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/dashboard_manifest", move |_| {
+            dashboard_manifest_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/bootstrap", move |_| {
             runtime_bootstrap_response(&runtime)
         });
@@ -2318,6 +2762,21 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         app.get("/api/smart_home/bridges/:bridge_id", move |request| {
             runtime_bridge_response(&runtime, request)
         });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/pairing_sessions", move |request| {
+            runtime_pairing_sessions_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/pairing_sessions/:session_id",
+            move |request| runtime_pairing_session_response(&runtime, request),
+        );
     }
 
     {
@@ -2461,12 +2920,143 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/automations", move |_| {
+            automation_definitions_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post("/api/smart_home/automations", move |request| {
+            upsert_automation_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/automation_audit", move |_| {
+            automation_audit_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.post("/api/smart_home/automations/evaluate", move |request| {
+            evaluate_automations_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.post("/api/services/:domain/:service", move |request| {
             service_call_response(&runtime, request)
         });
     }
 
     app
+}
+
+#[derive(Debug, Deserialize)]
+struct AutomationEvaluationRequest {
+    #[serde(default)]
+    dry_run: bool,
+    #[serde(default)]
+    event: Option<DeviceEvent>,
+}
+
+fn automation_definitions_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let Some(automations) = runtime.automation_runtime.as_ref() else {
+        return json_error(503, "automation runtime is not configured");
+    };
+    let automations = match automations.lock() {
+        Ok(automations) => automations,
+        Err(_) => return json_error(503, "automation runtime mutex was poisoned"),
+    };
+    let definitions = automations.definitions().collect::<Vec<_>>();
+    serialized_json_response(&serde_json::json!({
+        "summary": {
+            "definition_count": definitions.len(),
+            "enabled_count": definitions.iter().filter(|definition| definition.enabled).count(),
+            "audit_record_count": automations.audit_records().len(),
+        },
+        "definitions": definitions,
+    }))
+}
+
+fn automation_audit_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    let Some(automations) = runtime.automation_runtime.as_ref() else {
+        return json_error(503, "automation runtime is not configured");
+    };
+    let automations = match automations.lock() {
+        Ok(automations) => automations,
+        Err(_) => return json_error(503, "automation runtime mutex was poisoned"),
+    };
+    serialized_json_response(&serde_json::json!({
+        "summary": {
+            "record_count": automations.audit_records().len(),
+        },
+        "records": automations.audit_records(),
+    }))
+}
+
+fn upsert_automation_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let definition: AutomationDefinition = match serde_json::from_slice(request.body()) {
+        Ok(definition) => definition,
+        Err(error) => return json_error(400, format!("invalid automation JSON: {error}")),
+    };
+    let automation_id = definition.automation_id.clone();
+    match runtime.upsert_automation_definition(definition) {
+        Ok(replaced) => serialized_json_response(&serde_json::json!({
+            "automation_id": automation_id,
+            "replaced": replaced.is_some(),
+            "definitions": runtime
+                .automation_runtime
+                .as_ref()
+                .and_then(|automations| automations.lock().ok())
+                .map(|automations| automations.definitions().cloned().collect::<Vec<_>>())
+                .unwrap_or_default(),
+        })),
+        Err(error) if error.starts_with("invalid automation:") => json_error(400, error),
+        Err(error) => json_error(503, error),
+    }
+}
+
+fn evaluate_automations_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let request = if request.body().is_empty() {
+        AutomationEvaluationRequest {
+            dry_run: false,
+            event: None,
+        }
+    } else {
+        match serde_json::from_slice(request.body()) {
+            Ok(request) => request,
+            Err(error) => {
+                return json_error(400, format!("invalid automation evaluation JSON: {error}"));
+            }
+        }
+    };
+    let input = request
+        .event
+        .map(Box::new)
+        .map(AutomationTriggerInput::Event)
+        .unwrap_or(AutomationTriggerInput::Schedule);
+    match runtime.evaluate_automations(input, request.dry_run) {
+        Ok(report) => serialized_json_response(&report),
+        Err(error) => json_error(503, error),
+    }
+}
+
+fn serialized_json_response(value: &impl Serialize) -> WebResponse {
+    match serde_json::to_vec(value) {
+        Ok(body) => WebResponse::json(body),
+        Err(error) => json_error(500, format!("could not encode JSON response: {error}")),
+    }
 }
 
 pub fn platform_services(state: &SmartHomePlatformHttpState) -> Vec<SmartHomePlatformService> {
@@ -2952,6 +3542,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/dashboard_manifest",
+        category: "dashboard",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/bootstrap",
         category: "dashboard",
         surface: "smart_home",
@@ -3136,6 +3735,34 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         method: "GET",
         path: "/api/smart_home/bridges/:bridge_id",
         category: "bridges",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/pairing_sessions",
+        category: "pairing",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "bridge_id",
+            "expires_before_ms",
+            "expiring_at_ms",
+            "integration_id",
+            "limit",
+            "requested_by",
+            "session_id",
+            "sort",
+            "status",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/pairing_sessions/:session_id",
+        category: "pairing",
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
@@ -3364,6 +3991,42 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         runtime_authorized: false,
         query_params: &[],
     },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/automations",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/smart_home/automations",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/automation_audit",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "POST",
+        path: "/api/smart_home/automations/evaluate",
+        category: "automations",
+        surface: "smart_home",
+        mutates_runtime: true,
+        runtime_authorized: true,
+        query_params: &[],
+    },
 ];
 
 fn api_catalog_routes(request: &WebRequest) -> Result<Vec<&'static ApiRouteDescriptor>, ApiError> {
@@ -3386,16 +4049,12 @@ fn api_catalog_routes(request: &WebRequest) -> Result<Vec<&'static ApiRouteDescr
         .filter(|route| {
             method
                 .as_deref()
-                .map_or(true, |method| route.method == method)
+                .is_none_or(|method| route.method == method)
         })
-        .filter(|route| category.map_or(true, |category| route.category == category))
-        .filter(|route| {
-            surface.map_or(true, |surface| surface == "all" || route.surface == surface)
-        })
-        .filter(|route| mutating.map_or(true, |mutating| route.mutates_runtime == mutating))
-        .filter(|route| {
-            authorized.map_or(true, |authorized| route.runtime_authorized == authorized)
-        })
+        .filter(|route| category.is_none_or(|category| route.category == category))
+        .filter(|route| surface.is_none_or(|surface| surface == "all" || route.surface == surface))
+        .filter(|route| mutating.is_none_or(|mutating| route.mutates_runtime == mutating))
+        .filter(|route| authorized.is_none_or(|authorized| route.runtime_authorized == authorized))
         .collect())
 }
 
@@ -3436,7 +4095,7 @@ fn runtime_snapshot_response(runtime: &SmartHomePlatformHttpRuntime) -> WebRespo
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(
-        runtime_snapshot_json(&runtime_guard.read_snapshot_at(runtime.now_ms)).into_bytes(),
+        runtime_snapshot_json(&runtime_guard.read_snapshot_at(runtime.now_ms())).into_bytes(),
     )
 }
 
@@ -3470,6 +4129,27 @@ fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResp
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_dashboard_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn dashboard_manifest_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    match runtime.dashboard_manifest.as_deref() {
+        Some(manifest) => serialized_json_response(&serde_json::json!({
+            "configured": true,
+            "summary": manifest.summary(),
+            "manifest": manifest,
+        })),
+        None => serialized_json_response(&serde_json::json!({
+            "configured": false,
+            "summary": {
+                "dashboards": 0,
+                "views": 0,
+                "cards": 0,
+                "entity_references": 0,
+                "source_resources": 0,
+            },
+            "manifest": null,
+        })),
+    }
 }
 
 fn runtime_bootstrap_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
@@ -3515,11 +4195,13 @@ fn runtime_states_response(
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
-    let entities = match runtime_state_entities(&runtime_guard, request, runtime.now_ms) {
+    let entities = match runtime_state_entities(&runtime_guard, request, runtime.now_ms()) {
         Ok(entities) => entities,
         Err(error) => return api_error_response(error),
     };
-    WebResponse::json(states_registry_json(&entities, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(
+        states_registry_json(&entities, &runtime_guard, runtime.now_ms()).into_bytes(),
+    )
 }
 
 fn runtime_state_response(
@@ -3543,7 +4225,7 @@ fn runtime_state_response(
             return api_error_response(ApiError::not_found(format!("state `{target}` not found")));
         }
     };
-    WebResponse::json(state_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(state_registry_json(entity, &runtime_guard, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_services_response(
@@ -3594,7 +4276,7 @@ fn runtime_entities_response(
         Err(error) => return api_error_response(error),
     };
     WebResponse::json(
-        entities_registry_json(&entities, &runtime_guard, runtime.now_ms).into_bytes(),
+        entities_registry_json(&entities, &runtime_guard, runtime.now_ms()).into_bytes(),
     )
 }
 
@@ -3619,7 +4301,7 @@ fn runtime_entity_response(
             return api_error_response(ApiError::not_found(format!("entity `{target}` not found")));
         }
     };
-    WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(entity_registry_json(entity, &runtime_guard, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_capabilities_response(
@@ -3650,9 +4332,9 @@ fn runtime_capability_grants_response(
         Ok(query) => query,
         Err(error) => return api_error_response(error),
     };
-    let grants = runtime_guard.query_capability_grants_at(&query, runtime.now_ms);
-    let summary = runtime_guard.capability_grant_summary_at(&query, runtime.now_ms);
-    WebResponse::json(capability_grants_json(&grants, &summary, runtime.now_ms).into_bytes())
+    let grants = runtime_guard.query_capability_grants_at(&query, runtime.now_ms());
+    let summary = runtime_guard.capability_grant_summary_at(&query, runtime.now_ms());
+    WebResponse::json(capability_grants_json(&grants, &summary, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_capability_grant_response(
@@ -3675,7 +4357,7 @@ fn runtime_capability_grant_response(
             "capability grant `{grant_id}` not found"
         )));
     };
-    WebResponse::json(capability_grant_json(grant, runtime.now_ms).into_bytes())
+    WebResponse::json(capability_grant_json(grant, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_devices_response(
@@ -3690,7 +4372,9 @@ fn runtime_devices_response(
         Ok(devices) => devices,
         Err(error) => return api_error_response(error),
     };
-    WebResponse::json(devices_registry_json(&devices, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(
+        devices_registry_json(&devices, &runtime_guard, runtime.now_ms()).into_bytes(),
+    )
 }
 
 fn runtime_device_response(
@@ -3714,7 +4398,7 @@ fn runtime_device_response(
             return api_error_response(ApiError::not_found(format!("device `{target}` not found")));
         }
     };
-    WebResponse::json(device_registry_json(device, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(device_registry_json(device, &runtime_guard, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_bridges_response(
@@ -3729,7 +4413,9 @@ fn runtime_bridges_response(
         Ok(bridges) => bridges,
         Err(error) => return api_error_response(error),
     };
-    WebResponse::json(bridges_registry_json(&bridges, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(
+        bridges_registry_json(&bridges, &runtime_guard, runtime.now_ms()).into_bytes(),
+    )
 }
 
 fn runtime_bridge_response(
@@ -3753,7 +4439,73 @@ fn runtime_bridge_response(
             return api_error_response(ApiError::not_found(format!("bridge `{target}` not found")));
         }
     };
-    WebResponse::json(bridge_registry_json(bridge, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(bridge_registry_json(bridge, &runtime_guard, runtime.now_ms()).into_bytes())
+}
+
+fn runtime_pairing_sessions_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_pairing_session_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let sessions = runtime_guard.query_pairing_sessions(&query);
+    let summary = runtime_guard.pairing_session_inventory_summary_at(&query, runtime.now_ms());
+    serialized_json_response(&serde_json::json!({
+        "generated_at_ms": runtime.now_ms(),
+        "summary": {
+            "total_sessions": summary.total_sessions,
+            "pending_user_presence_sessions": summary.pending_user_presence_sessions,
+            "completed_sessions": summary.completed_sessions,
+            "expired_sessions": summary.expired_sessions,
+            "cancelled_sessions": summary.cancelled_sessions,
+            "expiring_sessions": summary.expiring_sessions,
+            "sessions_with_vault_ref": summary.sessions_with_vault_ref,
+        },
+        "sessions": sessions
+            .iter()
+            .map(|session| pairing_session_json(session))
+            .collect::<Vec<_>>(),
+    }))
+}
+
+fn runtime_pairing_session_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(session_id) = request.route_params.get("session_id") else {
+        return api_error_response(ApiError::bad_request("missing session_id"));
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let session_id = RuntimePairingSessionId::trusted(session_id);
+    let Some(session) = runtime_guard.pairing_session(&session_id) else {
+        return api_error_response(ApiError::not_found(format!(
+            "pairing session `{session_id}` not found"
+        )));
+    };
+    serialized_json_response(&pairing_session_json(session))
+}
+
+fn pairing_session_json(session: &RuntimePairingSession) -> JsonValue {
+    serde_json::json!({
+        "session_id": session.session_id,
+        "bridge_id": session.bridge_id,
+        "integration_id": session.integration_id,
+        "requested_by": session.requested_by,
+        "started_at_ms": session.started_at_ms,
+        "expires_at_ms": session.expires_at_ms,
+        "status": pairing_session_status_label(session.status),
+        "vault_ref": session.vault_ref,
+        "metadata": session.metadata,
+    })
 }
 
 fn runtime_rooms_response(
@@ -3768,7 +4520,7 @@ fn runtime_rooms_response(
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
-    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
+    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms());
     WebResponse::json(rooms_json(&rooms, &runtime_guard).into_bytes())
 }
 
@@ -3786,11 +4538,11 @@ fn runtime_room_response(
     let query = RuntimeRoomQuery::new()
         .for_room(room_id.as_str())
         .with_limit(1);
-    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms);
+    let rooms = runtime_guard.query_room_summaries_at(&query, runtime.now_ms());
     let Some(room) = rooms.first() else {
         return api_error_response(ApiError::not_found(format!("room `{room_id}` not found")));
     };
-    WebResponse::json(room_detail_json(room, &runtime_guard, runtime.now_ms).into_bytes())
+    WebResponse::json(room_detail_json(room, &runtime_guard, runtime.now_ms()).into_bytes())
 }
 
 fn runtime_scenes_response(
@@ -3988,7 +4740,7 @@ fn runtime_command_authorization_response(
         Ok(entity) => entity,
         Err(error) => return api_error_response(error),
     };
-    let command = match preview_command(&entity, command_type, &principal_id, runtime.now_ms) {
+    let command = match preview_command(&entity, command_type, &principal_id, runtime.now_ms()) {
         Ok(command) => command,
         Err(error) => return api_error_response(error),
     };
@@ -3999,13 +4751,13 @@ fn runtime_command_authorization_response(
         principal_id.clone(),
         SmartHomeTool::Command,
         grants.iter().copied(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let command_decision = AuthorizationDecision::for_command(
         principal_id.clone(),
         &command,
         grants.iter().copied(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     WebResponse::json(
         command_authorization_preview_json(&entity, &command, &tool_decision, &command_decision)
@@ -4046,7 +4798,7 @@ fn runtime_desired_state_authorization_response(
         principal_id,
         operation.tool(),
         grants.iter().copied(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     WebResponse::json(
         desired_state_authorization_preview_json(&entity, operation, &tool_decision).into_bytes(),
@@ -4072,7 +4824,7 @@ fn runtime_scene_authorization_response(
         &runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let scene = match state
         .scenes
@@ -4103,7 +4855,7 @@ fn runtime_scene_authorization_response(
         principal_id.clone(),
         SmartHomeTool::Command,
         grants.iter().copied(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
 
     let command_previews = match authorization_command_previews(
@@ -4111,7 +4863,7 @@ fn runtime_scene_authorization_response(
         &service_commands,
         &principal_id,
         &grants,
-        runtime.now_ms,
+        runtime.now_ms(),
     ) {
         Ok(command_previews) => command_previews,
         Err(error) => return api_error_response(error),
@@ -4150,7 +4902,7 @@ fn runtime_service_authorization_response(
         &runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let service_commands = match service_commands(&state, domain, service, &call) {
         Ok(commands) => commands,
@@ -4163,14 +4915,14 @@ fn runtime_service_authorization_response(
         principal_id.clone(),
         SmartHomeTool::Command,
         grants.iter().copied(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let command_previews = match authorization_command_previews(
         &runtime_guard,
         &service_commands,
         &principal_id,
         &grants,
-        runtime.now_ms,
+        runtime.now_ms(),
     ) {
         Ok(command_previews) => command_previews,
         Err(error) => return api_error_response(error),
@@ -4337,7 +5089,7 @@ fn runtime_health_json(
     runtime: &SmartHomePlatformHttpRuntime,
     runtime_guard: &SmartHomeRuntime,
 ) -> String {
-    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms());
     let topology = runtime_guard.topology_summary();
     let pending = snapshot.pending_work_summary();
     let stale_entities = runtime_guard
@@ -4347,7 +5099,7 @@ fn runtime_health_json(
             entity
                 .state
                 .as_ref()
-                .is_some_and(|snapshot| snapshot.is_stale_at(runtime.now_ms))
+                .is_some_and(|snapshot| snapshot.is_stale_at(runtime.now_ms()))
         })
         .count();
     let status = if pending.unhealthy_worker_count > 0
@@ -4371,7 +5123,7 @@ fn runtime_health_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"status\":{},\"live\":true,\"ready\":{},\"has_pending_work\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{},\"summary\":{{\"bridge_count\":{},\"online_bridges\":{},\"attention_bridges\":{},\"device_count\":{},\"online_devices\":{},\"attention_devices\":{},\"entity_count\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"stale_entities\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"event_backlog_count\":{},\"discovery_worker_due_count\":{},\"unhealthy_discovery_worker_count\":{},\"restart_due_count\":{},\"unhealthy_worker_count\":{},\"state_refresh_target_count\":{}}},\"checks\":{{\"registry\":{},\"event_bus\":{},\"discovery\":{},\"supervisor\":{},\"state\":{}}}}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         json_string(status),
         ready,
         snapshot.has_pending_work(),
@@ -4461,7 +5213,7 @@ fn runtime_readiness_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"status\":{},\"ready\":{},\"summary\":{{\"total_checks\":{},\"passing_checks\":{},\"attention_checks\":{},\"blocking_checks\":{}}},\"links\":{{\"health\":{},\"dashboard\":{},\"bootstrap\":{},\"controller_handoff\":{},\"smoke\":{},\"api\":{},\"state_gaps\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         json_string(status),
         blocking_checks == 0,
         checks.len(),
@@ -4490,7 +5242,7 @@ fn runtime_readiness_checks(
     runtime: &SmartHomePlatformHttpRuntime,
     runtime_guard: &SmartHomeRuntime,
 ) -> Vec<RuntimeReadinessCheck> {
-    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms());
     let topology = runtime_guard.topology_summary();
     let pending = snapshot.pending_work_summary();
 
@@ -4694,7 +5446,7 @@ fn runtime_controller_handoff_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_categories\":{},\"ready_categories\":{},\"attention_categories\":{},\"blocked_categories\":{},\"route_count\":{},\"smart_home_routes\":{},\"home_assistant_routes\":{},\"browser_routes\":{},\"runtime_authorized_routes\":{},\"readiness_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{},\"smoke_checks\":{}}},\"links\":{{\"self\":{},\"readiness\":{},\"bootstrap\":{},\"smoke\":{},\"smoke_script\":{},\"api\":{},\"dashboard\":{}}},\"handoff\":[{}]}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         json_string(VERSION),
         json_string(status),
         status == "ready",
@@ -4731,13 +5483,13 @@ fn runtime_controller_handoff_categories(
     runtime: &SmartHomePlatformHttpRuntime,
     runtime_guard: &SmartHomeRuntime,
 ) -> Vec<RuntimeControllerHandoffCategory> {
-    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms());
     let topology = runtime_guard.topology_summary();
     let state = SmartHomePlatformHttpState::from_runtime(
         runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let services = platform_services(&state);
     let smoke_checks = runtime_smoke_checks(runtime, runtime_guard);
@@ -4939,17 +5691,17 @@ fn runtime_dashboard_json(
         runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let state_summary = state.summary();
-    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms);
+    let snapshot = runtime_guard.read_snapshot_at(runtime.now_ms());
     let topology = runtime_guard.topology_summary();
     let pending = snapshot.pending_work_summary();
     let rooms = runtime_guard.query_room_summaries_at(
         &RuntimeRoomQuery::new()
             .sorted_by(RuntimeRoomSort::AttentionDesc)
             .with_limit(50),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let mut bridges = runtime_guard.registry().bridges().collect::<Vec<_>>();
     let mut devices = runtime_guard.registry().devices().collect::<Vec<_>>();
@@ -4972,7 +5724,7 @@ fn runtime_dashboard_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"config\":{},\"summary\":{{\"state_count\":{},\"known_state_count\":{},\"unknown_state_count\":{},\"stale_state_count\":{},\"optimistic_state_count\":{},\"service_count\":{},\"event_type_count\":{},\"bridge_count\":{},\"device_count\":{},\"entity_count\":{},\"room_count\":{},\"scene_count\":{},\"desired_state_count\":{},\"pending_work_total\":{},\"has_attention\":{},\"has_state_gaps\":{},\"has_pairing_candidates\":{}}},\"health\":{},\"runtime\":{},\"topology\":{{\"bridges\":{},\"devices\":{},\"entities\":{},\"scenes\":{},\"online_bridges\":{},\"attention_bridges\":{},\"online_devices\":{},\"attention_devices\":{},\"devices_with_room\":{},\"devices_without_room\":{},\"unique_rooms\":{},\"entities_with_state\":{},\"entities_without_state\":{},\"total_capabilities\":{},\"scene_actions\":{}}},\"bridges\":{},\"devices\":{},\"entities\":{},\"capabilities\":{},\"rooms\":{},\"desired_states\":{},\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         config_json(&state),
         state_summary.state_count,
         state_summary.known_state_count,
@@ -5008,9 +5760,9 @@ fn runtime_dashboard_json(
         topology.entities_without_state,
         topology.total_capabilities,
         topology.scene_actions,
-        bridges_registry_json(&bridges, runtime_guard, runtime.now_ms),
-        devices_registry_json(&devices, runtime_guard, runtime.now_ms),
-        entities_registry_json(&entities, runtime_guard, runtime.now_ms),
+        bridges_registry_json(&bridges, runtime_guard, runtime.now_ms()),
+        devices_registry_json(&devices, runtime_guard, runtime.now_ms()),
+        entities_registry_json(&entities, runtime_guard, runtime.now_ms()),
         capabilities_catalog_json(&capabilities),
         rooms_json(&rooms, runtime_guard),
         desired_states_json(&desired_states, runtime_guard),
@@ -5025,7 +5777,7 @@ fn runtime_bootstrap_json(
     runtime_guard: &SmartHomeRuntime,
 ) -> String {
     let routes = API_ROUTE_CATALOG.iter().collect::<Vec<_>>();
-    let state_gaps = runtime_state_gap_entities(runtime_guard, runtime.now_ms, 25);
+    let state_gaps = runtime_state_gap_entities(runtime_guard, runtime.now_ms(), 25);
     let event_query = RuntimeEventQuery::new()
         .sorted_by(RuntimeEventSort::SequenceDesc)
         .with_limit(25);
@@ -5039,7 +5791,7 @@ fn runtime_bootstrap_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"controller_handoff\":{},\"dashboard\":{},\"smoke\":{},\"smoke_script\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"scene_authorization\":{},\"service_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
         json_string(CONTROLLER_HANDOFF_PATH),
@@ -5059,7 +5811,7 @@ fn runtime_bootstrap_json(
         runtime_health_json(runtime, runtime_guard),
         runtime_dashboard_json(runtime, runtime_guard),
         api_catalog_json(&routes),
-        states_registry_json(&state_gaps, runtime_guard, runtime.now_ms),
+        states_registry_json(&state_gaps, runtime_guard, runtime.now_ms()),
         runtime_event_summary_json(&event_summary),
         command_result_summary_json(&command_summary),
         authorization_decision_summary_json(&authorization_summary),
@@ -5113,7 +5865,7 @@ fn runtime_smoke_json(
 
     format!(
         "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"script\":{},\"dashboard\":{},\"readiness\":{},\"controller_handoff\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"scene_authorization\":{},\"service_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
-        runtime.now_ms,
+        runtime.now_ms(),
         json_string(VERSION),
         json_string(status),
         blocking_checks == 0,
@@ -5238,7 +5990,7 @@ fn runtime_smoke_checks(
         runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        runtime.now_ms(),
     );
     let mut checks = vec![
         runtime_smoke_check(
@@ -5564,6 +6316,10 @@ fn smoke_scene_target(state: &SmartHomePlatformHttpState) -> Option<String> {
     state.scenes.first().map(home_assistant_scene_id)
 }
 
+// Each argument is a distinct field of a runtime smoke-check descriptor (id, label,
+// HTTP method/path, category, mutation/authorization flags, expected status); grouping
+// them into a struct would not improve clarity for this internal helper.
+#[allow(clippy::too_many_arguments)]
 fn runtime_smoke_check(
     check_id: &'static str,
     label: &'static str,
@@ -5654,10 +6410,7 @@ fn runtime_event_links_json(entry: &RuntimeEventLogEntry<'_>) -> String {
     let event = entry.event;
     let (entity, bridge, state_history_event, command_result, correlation_commands) = match event {
         RuntimeEvent::Device(event) => (
-            event
-                .entity_id
-                .as_ref()
-                .map(|entity_id| audit_entity_links_json(entity_id)),
+            event.entity_id.as_ref().map(audit_entity_links_json),
             Some(format!(
                 "/api/smart_home/bridges/{}",
                 url_component(event.bridge_id.as_str())
@@ -7480,6 +8233,39 @@ fn runtime_command_result_query(
     Ok(query)
 }
 
+fn runtime_pairing_session_query(
+    request: &WebRequest,
+) -> Result<RuntimePairingSessionQuery, ApiError> {
+    let mut query = RuntimePairingSessionQuery::new()
+        .with_limit(query_limit(request, 50, 500)?)
+        .sorted_by(RuntimePairingSessionSort::StatusThenExpiresAt);
+    if let Some(session_id) = query_string(request, "session_id") {
+        query = query.for_session(RuntimePairingSessionId::trusted(session_id));
+    }
+    if let Some(bridge_id) = query_string(request, "bridge_id") {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(integration_id) = query_string(request, "integration_id") {
+        query = query.for_integration(IntegrationId::trusted(integration_id));
+    }
+    if let Some(requested_by) = query_string(request, "requested_by") {
+        query = query.requested_by(AgentId::trusted(requested_by));
+    }
+    if let Some(status) = query_string(request, "status") {
+        query = query.with_status(pairing_session_status_from_label(status)?);
+    }
+    if let Some(expires_before_ms) = query_u64(request, "expires_before_ms")? {
+        query = query.expires_before(expires_before_ms);
+    }
+    if let Some(expiring_at_ms) = query_u64(request, "expiring_at_ms")? {
+        query = query.expiring_at(expiring_at_ms);
+    }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(pairing_session_sort_from_label(sort)?);
+    }
+    Ok(query)
+}
+
 fn runtime_authorization_decision_query(
     request: &WebRequest,
 ) -> Result<RuntimeAuthorizationDecisionQuery, ApiError> {
@@ -7906,7 +8692,7 @@ fn state_history_events<'a>(
     Ok(events)
 }
 
-fn history_entity_filter<'a>(request: &'a WebRequest) -> Option<&'a str> {
+fn history_entity_filter(request: &WebRequest) -> Option<&str> {
     query_string(request, "entity_id").or_else(|| query_string(request, "filter_entity_id"))
 }
 
@@ -8315,14 +9101,19 @@ fn set_desired_state_response(
         Err(error) => return api_error_response(error),
     };
 
+    let now_ms = runtime.now_ms();
+    let previous = runtime_guard.clone();
     let output = match runtime_guard.execute_set_desired_state_tool(
         runtime.principal_id.clone(),
         RuntimeSetDesiredStateToolRequest::new(desired_state),
-        runtime.now_ms,
+        now_ms,
     ) {
         Ok(output) => output,
         Err(error) => return api_error_response(runtime_error_to_api_error(error)),
     };
+    if let Err(error) = runtime.persist_mutation_or_restore(&mut runtime_guard, previous, now_ms) {
+        return api_error_response(error);
+    }
     let query = DesiredStateQuery::new().for_entity(entity.entity_id.clone());
     let desired_states = runtime_guard.query_desired_states(&query);
     WebResponse::json(set_desired_state_json(&output, &desired_states, &runtime_guard).into_bytes())
@@ -8345,14 +9136,19 @@ fn clear_desired_state_response(
         Err(error) => return api_error_response(error),
     };
 
+    let now_ms = runtime.now_ms();
+    let previous = runtime_guard.clone();
     let output = match runtime_guard.execute_clear_desired_state_tool(
         runtime.principal_id.clone(),
         RuntimeClearDesiredStateToolRequest::new(entity_id),
-        runtime.now_ms,
+        now_ms,
     ) {
         Ok(output) => output,
         Err(error) => return api_error_response(runtime_error_to_api_error(error)),
     };
+    if let Err(error) = runtime.persist_mutation_or_restore(&mut runtime_guard, previous, now_ms) {
+        return api_error_response(error);
+    }
     let query = DesiredStateQuery::new().for_entity(output.entity_id.clone());
     let desired_states = runtime_guard.query_desired_states(&query);
     WebResponse::json(
@@ -8632,17 +9428,19 @@ fn service_call_response(
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
+    let now_ms = runtime.now_ms();
     let before = SmartHomePlatformHttpState::from_runtime(
         &runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        now_ms,
     );
     let commands = match service_commands(&before, domain, service, &call) {
         Ok(commands) => commands,
         Err(error) => return api_error_response(error),
     };
 
+    let previous = runtime_guard.clone();
     let mut results = Vec::new();
     for command in commands {
         let mut request = RuntimeCommandToolRequest::new(
@@ -8657,13 +9455,19 @@ fn service_call_response(
             request = request.with_timeout_ms(timeout_ms);
         }
 
-        match runtime_guard.execute_command_tool(
-            runtime.principal_id.clone(),
-            request,
-            runtime.now_ms,
-        ) {
+        match runtime_guard.execute_command_tool(runtime.principal_id.clone(), request, now_ms) {
             Ok(result) => results.push(result),
-            Err(error) => return api_error_response(runtime_error_to_api_error(error)),
+            Err(error) => {
+                *runtime_guard = previous;
+                return api_error_response(runtime_error_to_api_error(error));
+            }
+        }
+    }
+    if !results.is_empty() {
+        if let Err(error) =
+            runtime.persist_mutation_or_restore(&mut runtime_guard, previous, now_ms)
+        {
+            return api_error_response(error);
         }
     }
 
@@ -8671,7 +9475,7 @@ fn service_call_response(
         &runtime_guard,
         runtime.config.clone(),
         runtime.event_types.clone(),
-        runtime.now_ms,
+        now_ms,
     );
     WebResponse::json(service_call_json(domain, service, &results, &after).into_bytes())
 }
@@ -9291,6 +10095,39 @@ fn query_limit(request: &WebRequest, default: usize, max: usize) -> Result<usize
     Ok(limit.min(max))
 }
 
+fn pairing_session_status_from_label(label: &str) -> Result<PairingSessionStatus, ApiError> {
+    match label {
+        "pending_user_presence" | "pending" => Ok(PairingSessionStatus::PendingUserPresence),
+        "completed" => Ok(PairingSessionStatus::Completed),
+        "expired" => Ok(PairingSessionStatus::Expired),
+        "cancelled" => Ok(PairingSessionStatus::Cancelled),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported pairing session status `{other}`"
+        ))),
+    }
+}
+
+fn pairing_session_status_label(status: PairingSessionStatus) -> &'static str {
+    match status {
+        PairingSessionStatus::PendingUserPresence => "pending_user_presence",
+        PairingSessionStatus::Completed => "completed",
+        PairingSessionStatus::Expired => "expired",
+        PairingSessionStatus::Cancelled => "cancelled",
+    }
+}
+
+fn pairing_session_sort_from_label(label: &str) -> Result<RuntimePairingSessionSort, ApiError> {
+    match label {
+        "session_id" => Ok(RuntimePairingSessionSort::SessionId),
+        "expires_at" => Ok(RuntimePairingSessionSort::ExpiresAt),
+        "started_at_desc" => Ok(RuntimePairingSessionSort::StartedAtDesc),
+        "status_then_expires_at" => Ok(RuntimePairingSessionSort::StatusThenExpiresAt),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported pairing session sort `{other}`"
+        ))),
+    }
+}
+
 fn command_status_label(status: CommandStatus) -> &'static str {
     match status {
         CommandStatus::Accepted => "accepted",
@@ -9422,6 +10259,56 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+        CommandType::Media(MediaCommandType::SetPlaybackState) => "media_set_playback_state",
+        CommandType::Media(MediaCommandType::PlayNext) => "media_play_next",
+        CommandType::Media(MediaCommandType::PlayPrevious) => "media_play_previous",
+        CommandType::Media(MediaCommandType::SetVolume) => "media_set_volume",
+        CommandType::Media(MediaCommandType::SetMute) => "media_set_mute",
+        CommandType::Media(MediaCommandType::SetGroup) => "media_set_group",
+        CommandType::Media(MediaCommandType::ClearQueue) => "media_clear_queue",
+        CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
+        CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
+        CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode) => {
+            "device_set_indicator_mode"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness) => {
+            "device_set_indicator_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            "device_set_display_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+            "sensor_calibrate"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit) => {
+            "device_set_temperature_unit"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard) => {
+            "device_set_particulate_display_standard"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays) => {
+            "device_set_automatic_co2_baseline_days"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets) => {
+            "device_set_gas_learning_offsets"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay) => {
+            "device_set_compensated_display"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::TestIndicator) => {
+            "device_test_indicator"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
+            "device_set_correction_profile"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
+            "camera_set_recording"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset) => {
+            "camera_recall_ptz_preset"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => "camera_move_ptz",
     }
 }
 
@@ -9435,6 +10322,58 @@ fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> 
         "recall_scene" => Ok(CommandType::RecallScene),
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        "media_set_playback_state" => Ok(CommandType::Media(MediaCommandType::SetPlaybackState)),
+        "media_play_next" => Ok(CommandType::Media(MediaCommandType::PlayNext)),
+        "media_play_previous" => Ok(CommandType::Media(MediaCommandType::PlayPrevious)),
+        "media_set_volume" => Ok(CommandType::Media(MediaCommandType::SetVolume)),
+        "media_set_mute" => Ok(CommandType::Media(MediaCommandType::SetMute)),
+        "media_set_group" => Ok(CommandType::Media(MediaCommandType::SetGroup)),
+        "media_clear_queue" => Ok(CommandType::Media(MediaCommandType::ClearQueue)),
+        "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
+        "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
+        "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
+        "device_set_indicator_mode" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorMode,
+        )),
+        "device_set_indicator_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorBrightness,
+        )),
+        "device_set_display_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetDisplayBrightness,
+        )),
+        "sensor_calibrate" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor,
+        )),
+        "device_set_temperature_unit" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetTemperatureUnit,
+        )),
+        "device_set_particulate_display_standard" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetParticulateDisplayStandard,
+        )),
+        "device_set_automatic_co2_baseline_days" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+        )),
+        "device_set_gas_learning_offsets" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetGasLearningOffsets,
+        )),
+        "device_set_compensated_display" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCompensatedDisplay,
+        )),
+        "device_test_indicator" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::TestIndicator,
+        )),
+        "device_set_correction_profile" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCorrectionProfile,
+        )),
+        "camera_set_recording" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCameraRecording,
+        )),
+        "camera_recall_ptz_preset" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::RecallCameraPtzPreset,
+        )),
+        "camera_move_ptz" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::MoveCameraPtz,
+        )),
         other => Err(ApiError::bad_request(format!(
             "unsupported command_type `{other}`"
         ))),
@@ -9499,6 +10438,8 @@ fn value_kind_label(kind: ValueKind) -> &'static str {
 fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
     match transport {
         BridgeTransport::LanHttp => "lan_http",
+        BridgeTransport::LanTcp => "lan_tcp",
+        BridgeTransport::LanUdp => "lan_udp",
         BridgeTransport::Mdns => "mdns",
         BridgeTransport::Serial => "serial",
         BridgeTransport::Ble => "ble",
@@ -9510,6 +10451,8 @@ fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
 fn bridge_transport_from_label(transport: &str) -> Result<BridgeTransport, ApiError> {
     match transport {
         "lan_http" | "lan-http" | "http" => Ok(BridgeTransport::LanHttp),
+        "lan_tcp" | "lan-tcp" | "tcp" => Ok(BridgeTransport::LanTcp),
+        "lan_udp" | "lan-udp" | "udp" => Ok(BridgeTransport::LanUdp),
         "mdns" => Ok(BridgeTransport::Mdns),
         "serial" => Ok(BridgeTransport::Serial),
         "ble" => Ok(BridgeTransport::Ble),
@@ -9678,6 +10621,7 @@ fn capability_allows_command(capability: &Capability) -> bool {
 
 fn entity_domain(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light",
         EntityKind::Switch => "switch",
@@ -9738,6 +10682,7 @@ fn object_id(value: &str) -> String {
 
 fn entity_kind_label(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light_group",
         EntityKind::Switch => "switch",
@@ -9754,6 +10699,7 @@ fn entity_kind_label(kind: EntityKind) -> &'static str {
 
 fn entity_kind_from_label(kind: &str) -> Result<EntityKind, ApiError> {
     match kind {
+        "camera" => Ok(EntityKind::Camera),
         "light" => Ok(EntityKind::Light),
         "light_group" => Ok(EntityKind::LightGroup),
         "switch" => Ok(EntityKind::Switch),
@@ -9929,17 +10875,37 @@ mod tests {
     use super::*;
     use embeddable_http_server::{HttpRequest, HttpServerOptions};
     use http_core::{Header, HttpVersion, RequestHead};
+    use smart_home_automation_runtime::{AutomationAction, AutomationTrigger};
     use smart_home_core::{BridgeId, DeviceId, EventId};
+    use smart_home_dashboard_core::{
+        NativeDashboard, NativeDashboardCard, NativeDashboardCardKind, NativeDashboardView,
+        DASHBOARD_MANIFEST_SCHEMA_VERSION,
+    };
+    use smart_home_runtime_store::SmartHomeRuntimeStore;
     use smart_home_testkit::hue_lighting_runtime;
+    use std::fs;
     use std::io::{BufRead, BufReader, Read, Write};
     use std::net::{SocketAddr, TcpStream};
+    use std::path::PathBuf;
     use std::sync::Arc;
     use std::thread;
-    use std::time::Duration;
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use storage_local_folder::LocalFolderStorageBackend;
     use tcp_runtime::{ConnectionId, TcpConnectionInfo};
     use web_core::WebServer;
 
     const DASHBOARD_PENDING_WRITE_BYTES: usize = 256 * 1024;
+
+    fn temp_root(name: &str) -> PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("test clock should be after unix epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "smart-home-platform-http-{}-{name}-{nanos}",
+            std::process::id()
+        ))
+    }
 
     fn dashboard_server_options() -> HttpServerOptions {
         let mut options = HttpServerOptions::default();
@@ -10101,6 +11067,36 @@ mod tests {
         }
     }
 
+    fn fixture_dashboard_manifest() -> NativeDashboardManifest {
+        NativeDashboardManifest {
+            schema_version: DASHBOARD_MANIFEST_SCHEMA_VERSION,
+            source_instance_id: "fixture-home-assistant".to_string(),
+            generated_at_ms: 5_000,
+            dashboards: vec![NativeDashboard {
+                dashboard_id: "overview".to_string(),
+                url_path: "lovelace".to_string(),
+                title: "Overview".to_string(),
+                icon: None,
+                require_admin: false,
+                show_in_sidebar: true,
+                views: vec![NativeDashboardView {
+                    view_id: "living-room".to_string(),
+                    title: "Living Room".to_string(),
+                    path: Some("living-room".to_string()),
+                    icon: None,
+                    cards: vec![NativeDashboardCard {
+                        card_id: "living-room-light".to_string(),
+                        kind: NativeDashboardCardKind::EntityControl,
+                        source_type: "light".to_string(),
+                        title: Some("Living Room Light".to_string()),
+                        entity_ids: vec!["entity-light-1".to_string()],
+                    }],
+                }],
+            }],
+            source_resources: Vec::new(),
+        }
+    }
+
     fn fixture_runtime_with_desired_state() -> SmartHomePlatformHttpRuntime {
         let mut runtime = hue_lighting_runtime();
         runtime
@@ -10182,6 +11178,12 @@ mod tests {
             assert!(body.contains("<title>Codex Home</title>"));
             assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
             assert!(body.contains("json(\"/api/smart_home/readiness\")"));
+            assert!(body.contains("json(\"/api/smart_home/dashboard_manifest\")"));
+            assert!(body.contains("json(\"/api/smart_home/automations\")"));
+            assert!(body.contains("/api/smart_home/pairing_sessions?limit=12"));
+            assert!(body.contains("id=\"dashboards-panel\""));
+            assert!(body.contains("id=\"automations-panel\""));
+            assert!(body.contains("id=\"pairing-panel\""));
             assert!(body.contains("data-dashboard-filter=\"search\""));
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
@@ -10386,6 +11388,69 @@ mod tests {
             assert!(body.contains("clear desired state response"));
             assert!(body.contains("desired ${desiredButton.dataset.desiredAction} response"));
         }
+    }
+
+    #[test]
+    fn runtime_web_app_serves_native_manifest_and_pairing_inventory() {
+        let mut d23 = hue_lighting_runtime();
+        let bridge = d23.registry().bridges().next().cloned().unwrap();
+        d23.start_pairing_session(smart_home_runtime::RuntimePairingSession::pending(
+            RuntimePairingSessionId::trusted("pairing-dashboard-1"),
+            &bridge,
+            AgentId::trusted("agent:operator"),
+            4_000,
+            8_000,
+            Vec::new(),
+        ))
+        .unwrap();
+        let runtime =
+            SmartHomePlatformHttpRuntime::new(d23, SmartHomePlatformHttpConfig::new("Codex Home"))
+                .with_now_ms(5_000)
+                .with_dashboard_manifest(fixture_dashboard_manifest());
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let manifest: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request("GET", "/api/smart_home/dashboard_manifest"))
+                .into(),
+        ))
+        .unwrap();
+        assert_eq!(manifest["configured"], true);
+        assert_eq!(manifest["summary"]["dashboards"], 1);
+        assert_eq!(manifest["summary"]["entity_references"], 1);
+        assert_eq!(
+            manifest["manifest"]["dashboards"][0]["views"][0]["title"],
+            "Living Room"
+        );
+
+        let pairing: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions?status=pending&sort=expires_at",
+            ))
+            .into(),
+        ))
+        .unwrap();
+        assert_eq!(pairing["summary"]["total_sessions"], 1);
+        assert_eq!(pairing["sessions"][0]["session_id"], "pairing-dashboard-1");
+        assert_eq!(pairing["sessions"][0]["status"], "pending_user_presence");
+
+        let detail: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions/pairing-dashboard-1",
+            ))
+            .into(),
+        ))
+        .unwrap();
+        assert_eq!(detail["bridge_id"], bridge.bridge_id.as_str());
+
+        let invalid: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions?status=unknown",
+            ))
+            .into();
+        assert_eq!(invalid.status, 400);
     }
 
     #[test]
@@ -11153,7 +12218,7 @@ mod tests {
                 >= 30
         );
         assert_eq!(handoff_json["summary"]["browser_routes"], 3);
-        assert_eq!(handoff_json["summary"]["runtime_authorized_routes"], 4);
+        assert_eq!(handoff_json["summary"]["runtime_authorized_routes"], 6);
         assert_eq!(handoff_json["summary"]["readiness_checks"], 8);
         assert_eq!(handoff_json["summary"]["smoke_checks"], 15);
     }
@@ -11430,7 +12495,7 @@ mod tests {
         );
         let mutating_json: JsonValue =
             serde_json::from_str(&mutating).expect("mutating API catalog response is JSON");
-        assert_eq!(mutating_json["route_count"], 4);
+        assert_eq!(mutating_json["route_count"], 6);
         for route in mutating_json["routes"]
             .as_array()
             .expect("mutating route list is an array")
@@ -11454,6 +12519,112 @@ mod tests {
             .handle(request("GET", "/api/smart_home/api?surface=unknown"))
             .into();
         assert_eq!(invalid_surface.status, 400);
+    }
+
+    #[test]
+    fn runtime_web_app_creates_previews_executes_and_audits_automation() {
+        let automations = Arc::new(Mutex::new(SmartHomeAutomationRuntime::new()));
+        let runtime = fixture_runtime(true).with_automation_runtime(Arc::clone(&automations));
+        let app = home_assistant_runtime_web_app(runtime);
+        let definition = serde_json::to_string(&schedule_automation_definition()).unwrap();
+
+        let created: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations",
+                &definition,
+            ))
+            .into();
+        assert_eq!(created.status, 200);
+        assert!(response_body(created).contains(r#""automation_id":"nightly-off""#));
+
+        let preview: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                r#"{"dry_run":true}"#,
+            ))
+            .into();
+        assert_eq!(preview.status, 200);
+        let preview = response_body(preview);
+        assert!(preview.contains(r#""outcome":"planned""#));
+        assert!(
+            preview.contains(r#""idempotency_key":"automation:nightly-off:schedule:5:action:0""#)
+        );
+        assert_eq!(automations.lock().unwrap().audit_records().len(), 0);
+
+        let executed: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+        assert_eq!(executed.status, 200);
+        assert!(response_body(executed).contains(r#""outcome":"executed""#));
+
+        let repeated: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+        assert_eq!(repeated.status, 200);
+        assert!(response_body(repeated).contains(r#""records":[]"#));
+
+        let audit = response_body(
+            app.handle(request("GET", "/api/smart_home/automation_audit"))
+                .into(),
+        );
+        assert!(audit.contains(r#""record_count":1"#));
+        assert!(audit.contains(r#""automation_id":"nightly-off""#));
+        assert!(audit.contains(r#""outcome":"executed""#));
+    }
+
+    #[test]
+    fn runtime_web_app_rolls_back_automation_when_persistence_fails() {
+        let mut automation_runtime = SmartHomeAutomationRuntime::new();
+        automation_runtime
+            .upsert_definition(schedule_automation_definition())
+            .unwrap();
+        let automations = Arc::new(Mutex::new(automation_runtime));
+        let runtime = fixture_runtime(true)
+            .with_automation_runtime(Arc::clone(&automations))
+            .with_automation_persistence(|_, _, _| Err("disk full".to_string()));
+        let before = runtime.snapshot();
+        let app = home_assistant_runtime_web_app(runtime.clone());
+
+        let response: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/automations/evaluate",
+                "{}",
+            ))
+            .into();
+
+        assert_eq!(response.status, 503);
+        assert!(response_body(response).contains("disk full"));
+        assert_eq!(runtime.snapshot(), before);
+        assert!(automations.lock().unwrap().audit_records().is_empty());
+    }
+
+    fn schedule_automation_definition() -> AutomationDefinition {
+        AutomationDefinition {
+            automation_id: "nightly-off".to_string(),
+            enabled: true,
+            trigger: AutomationTrigger::Schedule {
+                every_ms: 1_000,
+                offset_ms: 0,
+            },
+            conditions: Vec::new(),
+            actions: vec![AutomationAction::Command {
+                entity_id: EntityId::trusted("entity-light-1"),
+                command_type: CommandType::TurnOff,
+                arguments: Value::Null,
+                timeout_ms: None,
+            }],
+        }
     }
 
     #[test]
@@ -11931,6 +13102,120 @@ mod tests {
         );
         assert!(desired_states.contains(r#""total_desired_states":1"#));
         assert!(desired_states.contains(r#""total_desired_capabilities":2"#));
+    }
+
+    #[test]
+    fn runtime_web_app_persists_accepted_mutations_for_restart() {
+        let root = temp_root("durable-mutation");
+        let store = Arc::new(SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(
+            &root,
+        )));
+        let persistence_store = Arc::clone(&store);
+        let runtime = fixture_runtime(true).with_mutation_persistence(move |runtime, now_ms| {
+            persistence_store
+                .save(runtime, &[], now_ms)
+                .map(|_| ())
+                .map_err(|error| error.to_string())
+        });
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/desired_states/light.entity_light_1",
+                r#"{"desired_state":{"light.on_off":true}}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        drop(app);
+        drop(store);
+        let restarted_store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(&root));
+        let restored = restarted_store
+            .load()
+            .expect("load persisted runtime")
+            .expect("accepted mutation should create a durable snapshot");
+        let desired_states = restored.runtime.query_desired_states(
+            &DesiredStateQuery::new().for_entity(EntityId::trusted("entity-light-1")),
+        );
+        assert_eq!(restored.saved_at_ms, 5_000);
+        assert_eq!(desired_states.len(), 1);
+        assert_eq!(
+            desired_states[0].desired,
+            vec![StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(true),
+            }]
+        );
+
+        fs::remove_dir_all(root).expect("remove durable mutation test root");
+    }
+
+    #[test]
+    fn runtime_web_app_persists_service_command_audit_for_restart() {
+        let root = temp_root("durable-service");
+        let store = Arc::new(SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(
+            &root,
+        )));
+        let persistence_store = Arc::clone(&store);
+        let runtime = fixture_runtime(true).with_mutation_persistence(move |runtime, now_ms| {
+            persistence_store
+                .save(runtime, &[], now_ms)
+                .map(|_| ())
+                .map_err(|error| error.to_string())
+        });
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"light.entity_light_1"}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 200);
+
+        drop(app);
+        drop(store);
+        let restarted_store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(&root));
+        let restored = restarted_store
+            .load()
+            .expect("load persisted runtime")
+            .expect("accepted service call should create a durable snapshot");
+        let command_results = restored
+            .runtime
+            .query_command_results(&RuntimeCommandResultQuery::new());
+        assert_eq!(command_results.len(), 1);
+        assert_eq!(command_results[0].result.status, CommandStatus::Accepted);
+
+        fs::remove_dir_all(root).expect("remove durable service test root");
+    }
+
+    #[test]
+    fn runtime_web_app_rolls_back_when_mutation_persistence_fails() {
+        let runtime = fixture_runtime(true)
+            .with_mutation_persistence(|_, _| Err("storage offline".to_string()));
+        let shared_runtime = Arc::clone(&runtime.runtime);
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let response: web_core::WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/desired_states/light.entity_light_1",
+                r#"{"desired_state":{"light.on_off":true}}"#,
+            ))
+            .into();
+        assert_eq!(response.status, 503);
+        assert!(response_body(response).contains("storage offline"));
+
+        let runtime = shared_runtime
+            .lock()
+            .expect("smart-home runtime mutex should not be poisoned");
+        assert!(runtime
+            .query_desired_states(
+                &DesiredStateQuery::new().for_entity(EntityId::trusted("entity-light-1")),
+            )
+            .is_empty());
     }
 
     #[test]
@@ -12518,5 +13803,116 @@ mod tests {
             value_json(&value),
             r#"{"name":"Kitchen \"A\"","levels":[50]}"#
         );
+    }
+
+    #[test]
+    fn lan_udp_bridge_transport_round_trips_through_api_labels() {
+        assert_eq!(bridge_transport_label(BridgeTransport::LanUdp), "lan_udp");
+        assert_eq!(
+            bridge_transport_from_label("lan_udp").unwrap(),
+            BridgeTransport::LanUdp
+        );
+        assert_eq!(
+            bridge_transport_from_label("udp").unwrap(),
+            BridgeTransport::LanUdp
+        );
+    }
+
+    #[test]
+    fn lan_tcp_bridge_transport_round_trips_through_api_labels() {
+        assert_eq!(bridge_transport_label(BridgeTransport::LanTcp), "lan_tcp");
+        assert_eq!(
+            bridge_transport_from_label("lan_tcp").unwrap(),
+            BridgeTransport::LanTcp
+        );
+        assert_eq!(
+            bridge_transport_from_label("tcp").unwrap(),
+            BridgeTransport::LanTcp
+        );
+    }
+
+    #[test]
+    fn media_command_labels_round_trip_through_local_api_labels() {
+        let commands = [
+            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            ("media_play_next", MediaCommandType::PlayNext),
+            ("media_play_previous", MediaCommandType::PlayPrevious),
+            ("media_set_volume", MediaCommandType::SetVolume),
+            ("media_set_mute", MediaCommandType::SetMute),
+            ("media_set_group", MediaCommandType::SetGroup),
+            ("media_clear_queue", MediaCommandType::ClearQueue),
+            ("media_play_queue_item", MediaCommandType::PlayQueueItem),
+            ("media_remove_queue_item", MediaCommandType::RemoveQueueItem),
+            ("media_move_queue_item", MediaCommandType::MoveQueueItem),
+        ];
+        for (label, media_command) in commands {
+            let command = CommandType::Media(media_command);
+            assert_eq!(command_type_from_label(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
+    }
+
+    #[test]
+    fn device_control_command_labels_round_trip_through_local_api_labels() {
+        let commands = [
+            (
+                "device_set_indicator_mode",
+                DeviceControlCommandType::SetIndicatorMode,
+            ),
+            (
+                "device_set_indicator_brightness",
+                DeviceControlCommandType::SetIndicatorBrightness,
+            ),
+            (
+                "device_set_display_brightness",
+                DeviceControlCommandType::SetDisplayBrightness,
+            ),
+            (
+                "sensor_calibrate",
+                DeviceControlCommandType::CalibrateSensor,
+            ),
+            (
+                "device_set_temperature_unit",
+                DeviceControlCommandType::SetTemperatureUnit,
+            ),
+            (
+                "device_set_particulate_display_standard",
+                DeviceControlCommandType::SetParticulateDisplayStandard,
+            ),
+            (
+                "device_set_automatic_co2_baseline_days",
+                DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+            ),
+            (
+                "device_set_gas_learning_offsets",
+                DeviceControlCommandType::SetGasLearningOffsets,
+            ),
+            (
+                "device_set_compensated_display",
+                DeviceControlCommandType::SetCompensatedDisplay,
+            ),
+            (
+                "device_test_indicator",
+                DeviceControlCommandType::TestIndicator,
+            ),
+            (
+                "device_set_correction_profile",
+                DeviceControlCommandType::SetCorrectionProfile,
+            ),
+            (
+                "camera_set_recording",
+                DeviceControlCommandType::SetCameraRecording,
+            ),
+            (
+                "camera_recall_ptz_preset",
+                DeviceControlCommandType::RecallCameraPtzPreset,
+            ),
+            ("camera_move_ptz", DeviceControlCommandType::MoveCameraPtz),
+        ];
+        for (label, device_command) in commands {
+            let command = CommandType::DeviceControl(device_command);
+            assert_eq!(command_type_from_label(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
     }
 }

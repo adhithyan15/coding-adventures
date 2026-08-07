@@ -1,6 +1,6 @@
 [package]
 name = "grammar-lsp-bridge"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "LS02 PR A — Generic grammar-driven LSP bridge: implements ls00::LanguageBridge from .tokens + .grammar + LanguageSpec"
 

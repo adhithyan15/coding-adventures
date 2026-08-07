@@ -1,5 +1,37 @@
 # Changelog — twig-vm
 
+## [0.25.0] — 2026-07-14 (E6d-6b — `box` opcode: identity on the VM)
+
+The dispatcher now handles the `box` opcode. E6d-6b made the Twig union
+constructor (`emit_union_def`) emit a `box` on each variant tag + field so
+`match`'s later `unbox` round-trips on the tagged code-gen backends. That op is
+in the **frontend** IIR, so it now reaches the VM too — which previously raised
+`UnsupportedOpcode("box")`, breaking every `(union …)`/`match` program (the five
+`tw05d_smoke` union tests).
+
+On the VM `box` is the **identity** (a register copy): every `LispyValue` is
+already the boxed dynamic-value representation — an integer literal `3` is held as
+the tagged `LispyValue(24)` — so there is no unboxed register form to wrap. (On
+the tagged/structural code-gen backends the same op is a real `n<<3` / `ref.i31`
+wrap.) Records were unaffected (their constructor emits no `box`).
+
+## [0.24.2] — 2026-07-11 (DVAL01-2 — dyn_* builtin dispatch names)
+
+DVAL01-2: the dispatcher's references to the tagged-value builtin names move
+`lispy_*` → `dyn_*` (`src/{lib,operand,dispatch}.rs`), in lockstep with the
+IIR name rename. Pure rename — no dispatch behaviour change; the unsafe seam
+into `dynval-runtime` is untouched.
+
+## [0.24.1] — 2026-07-11 (DVAL01-1c — dependency renamed `lispy-runtime` → `dynval-runtime`)
+
+The shared tagged-value crate `lispy-runtime` is renamed to `dynval-runtime`
+(spec DVAL01 §3.2, de-lisping the generic dynamic-value substrate). twig-vm's
+`Cargo.toml` dependency and the `use dynval_runtime::{…}` imports in
+`src/{lib,operand,dispatch}.rs` move to the new name. Pure rename — no ABI,
+tag-layout, or dispatch behaviour change. twig-vm depends on the unsafe in
+this crate, so `code/scripts/miri-twig-vm.sh` was run locally before pushing (the
+canonical gate); CI's blocking Miri check now targets `-p dynval-runtime`.
+
 ## [0.24.0] — 2026-06-27 (LANG-FULL E4 — shared `str_const` compatibility)
 
 `twig-vm` now executes the shared E4 `str_const` opcode by allocating the same
@@ -901,7 +933,7 @@ Final structure:
   "main is broken" signal.  The workflow run record IS the
   regression marker.
 
-- **Local pre-push (`scripts/miri-twig-vm.sh`)**: canonical
+- **Local pre-push (`code/scripts/miri-twig-vm.sh`)**: canonical
   verification.  Runs the full Miri suite (lang-runtime-core +
   lispy-runtime + twig-vm) with the same flags as CI.
   Documented in `CLAUDE.md` and `lessons.md` as the

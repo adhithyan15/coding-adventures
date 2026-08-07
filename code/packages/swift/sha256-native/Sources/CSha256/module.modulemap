@@ -1,0 +1,4 @@
+module CSha256 {
+    header "include/sha256_c.h"
+    export *
+}

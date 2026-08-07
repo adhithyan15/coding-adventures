@@ -1,5 +1,5 @@
 {
-  "case_count": 380,
+  "case_count": 390,
   "cases": [
     {
       "axis": "paragraph-formatting-boundary",
@@ -2280,16 +2280,76 @@
       "id": "webkit02-dat-3",
       "reason": "paragraph boundaries with active formatting reconstruction",
       "source": "webkit02.dat:3"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-1",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:1"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-2",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:2"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-3",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:3"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-4",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:4"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-5",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:5"
+    },
+    {
+      "axis": "paragraph-form-boundary",
+      "id": "void-in-phrasing-dat-7",
+      "reason": "paragraph boundaries around form controls and interactive descendants",
+      "source": "void-in-phrasing.dat:7"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-8",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:8"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-9",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:9"
+    },
+    {
+      "axis": "paragraph-special-end-tag",
+      "id": "void-in-phrasing-dat-10",
+      "reason": "special paragraph and br end-tag recovery paths",
+      "source": "void-in-phrasing.dat:10"
+    },
+    {
+      "axis": "paragraph-basic-boundary",
+      "id": "html5test-com-dat-16",
+      "reason": "standalone paragraph starts, ends, and omitted-end-tag recovery",
+      "source": "html5test-com.dat:16"
     }
   ],
   "counts_by_axis": {
-    "paragraph-basic-boundary": 51,
+    "paragraph-basic-boundary": 52,
     "paragraph-block-boundary": 56,
-    "paragraph-form-boundary": 75,
+    "paragraph-form-boundary": 76,
     "paragraph-formatting-boundary": 73,
     "paragraph-fragment-context": 6,
     "paragraph-heading-boundary": 12,
-    "paragraph-special-end-tag": 25,
+    "paragraph-special-end-tag": 33,
     "paragraph-table-boundary": 48,
     "paragraph-text-mode-boundary": 34
   },

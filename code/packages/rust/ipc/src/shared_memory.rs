@@ -1,42 +1,42 @@
-/// Shared Memory -- zero-copy communication via a shared data region.
-///
-/// Pipes and message queues both **copy** data: the sender writes bytes into
-/// a kernel buffer, and the receiver copies them out. For large data transfers,
-/// this double-copy is expensive.
-///
-/// Shared memory eliminates copying entirely. Two (or more) processes map the
-/// **same physical pages** into their virtual address spaces. A write by one
-/// process is immediately visible to the others -- no system call, no copy,
-/// no kernel involvement after the initial setup.
-///
-/// ## How It Works (Real OS)
-///
-/// ```text
-///   Process A's address space       Process B's address space
-///   +-----------------------+       +-----------------------+
-///   | 0x8000: Shared Region |       | 0xC000: Shared Region |
-///   |   "Hello from A"     |  <--  |   "Hello from A"      |
-///   +-----------------------+       +-----------------------+
-///            |                                |
-///            +----------+--------------------+
-///                       |
-///                Physical Page Frame #42
-/// ```
-///
-/// Both virtual addresses map to the same physical page. When A writes
-/// "Hello from A", B can read it instantly -- same bytes in RAM.
-///
-/// ## Our Simulation
-///
-/// We simulate shared memory with a named region backed by a `Vec<u8>`.
-/// "Attaching" a process means recording its PID in a `HashSet`;
-/// reading and writing access the shared `Vec` directly.
-///
-/// ## WARNING: No Synchronization
-///
-/// Shared memory has NO built-in synchronization. If process A writes while
-/// process B reads, B may see partially-updated data. Real programs use
-/// semaphores, mutexes, or atomic operations to coordinate access.
+//! Shared Memory -- zero-copy communication via a shared data region.
+//!
+//! Pipes and message queues both **copy** data: the sender writes bytes into
+//! a kernel buffer, and the receiver copies them out. For large data transfers,
+//! this double-copy is expensive.
+//!
+//! Shared memory eliminates copying entirely. Two (or more) processes map the
+//! **same physical pages** into their virtual address spaces. A write by one
+//! process is immediately visible to the others -- no system call, no copy,
+//! no kernel involvement after the initial setup.
+//!
+//! ## How It Works (Real OS)
+//!
+//! ```text
+//!   Process A's address space       Process B's address space
+//!   +-----------------------+       +-----------------------+
+//!   | 0x8000: Shared Region |       | 0xC000: Shared Region |
+//!   |   "Hello from A"     |  <--  |   "Hello from A"      |
+//!   +-----------------------+       +-----------------------+
+//!            |                                |
+//!            +----------+--------------------+
+//!                       |
+//!                Physical Page Frame #42
+//! ```
+//!
+//! Both virtual addresses map to the same physical page. When A writes
+//! "Hello from A", B can read it instantly -- same bytes in RAM.
+//!
+//! ## Our Simulation
+//!
+//! We simulate shared memory with a named region backed by a `Vec<u8>`.
+//! "Attaching" a process means recording its PID in a `HashSet`;
+//! reading and writing access the shared `Vec` directly.
+//!
+//! ## WARNING: No Synchronization
+//!
+//! Shared memory has NO built-in synchronization. If process A writes while
+//! process B reads, B may see partially-updated data. Real programs use
+//! semaphores, mutexes, or atomic operations to coordinate access.
 
 use std::collections::HashSet;
 use crate::IpcError;

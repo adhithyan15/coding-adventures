@@ -280,6 +280,13 @@ class TestGrammarLexer < Minitest::Test
     assert_includes types, "DEDENT"
   end
 
+  def test_indentation_eof_terminates_statement_before_dedent
+    source = "if x:\n    y = 1\n"
+    types = GL.new(source, starlark_grammar).tokenize.map(&:type)
+
+    assert_equal [TT::NEWLINE, "DEDENT", TT::EOF], types.last(3)
+  end
+
   def test_indentation_nested
     source = "if x:\n    if y:\n        z = 1\n"
     tokens = GL.new(source, starlark_grammar).tokenize

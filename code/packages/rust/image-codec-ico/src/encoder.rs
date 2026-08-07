@@ -99,7 +99,7 @@ fn build_bmp_dib(pixels: &PixelContainer, width: usize, height: usize) -> Vec<u8
     let xor_size = xor_stride * height;
 
     // AND mask stride: ((width + 31) / 32) × 4 bytes.
-    let and_stride = ((width + 31) / 32) * 4;
+    let and_stride = width.div_ceil(32) * 4;
     let and_size = and_stride * height;
 
     let mut dib = Vec::with_capacity(40 + xor_size + and_size);
@@ -131,7 +131,7 @@ fn build_bmp_dib(pixels: &PixelContainer, width: usize, height: usize) -> Vec<u8
 
     // ── AND mask: all zeros (alpha from BGRA channel) ─────────────────────
     // A zero AND mask bit = opaque; alpha=0 in BGRA handles transparency.
-    dib.extend(std::iter::repeat(0u8).take(and_size));
+    dib.extend(std::iter::repeat_n(0u8, and_size));
 
     dib
 }
@@ -203,8 +203,8 @@ mod tests {
         let xor_size = 2 * 2 * 4; // 2×2 pixels × 4 bytes BGRA
         let and_start = 22 + 40 + xor_size;
         // AND mask for width=2: stride=4, 2 rows = 8 bytes, all zero.
-        for i in and_start..and_start + 8 {
-            assert_eq!(bytes[i], 0, "AND mask byte {} should be 0", i);
+        for (offset, &byte) in bytes[and_start..and_start + 8].iter().enumerate() {
+            assert_eq!(byte, 0, "AND mask byte {} should be 0", and_start + offset);
         }
     }
 }

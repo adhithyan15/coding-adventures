@@ -14,6 +14,9 @@ standard `math` module so this package stays connected to the repo's
 first-principles layering.
 """
 
+import math
+import sys
+
 from trig import PI, sin
 
 
@@ -21,6 +24,13 @@ class Wave:
     """A simple harmonic wave with amplitude, frequency, and phase."""
 
     def __init__(self, amplitude: float, frequency: float, phase: float = 0.0) -> None:
+        amplitude = float(amplitude)
+        frequency = float(frequency)
+        phase = float(phase)
+
+        if not all(math.isfinite(value) for value in (amplitude, frequency, phase)):
+            raise ValueError("Wave parameters must be finite")
+
         if amplitude < 0:
             raise ValueError(
                 f"Amplitude must be >= 0, got {amplitude}. "
@@ -32,6 +42,9 @@ class Wave:
                 f"Frequency must be > 0, got {frequency}. "
                 "A wave must oscillate to be a wave."
             )
+
+        if frequency > sys.float_info.max / (2.0 * PI):
+            raise ValueError("Angular frequency must be finite")
 
         self._amplitude = float(amplitude)
         self._frequency = float(frequency)
@@ -56,8 +69,19 @@ class Wave:
         return 2.0 * PI * self._frequency
 
     def evaluate(self, t: float) -> float:
-        theta = 2.0 * PI * self._frequency * t + self._phase
-        return self._amplitude * sin(theta)
+        t = float(t)
+        if not math.isfinite(t):
+            raise ValueError("Time must be finite")
+        if self._amplitude == 0.0:
+            return 0.0
+
+        two_pi = 2.0 * PI
+        period = self.period()
+        reduced_time = t if math.isinf(period) else math.fmod(t, period)
+        reduced_phase = math.fmod(self._phase, two_pi)
+        theta = two_pi * (self._frequency * reduced_time) + reduced_phase
+        unit = max(-1.0, min(1.0, sin(theta)))
+        return self._amplitude * unit
 
     def __repr__(self) -> str:
         return (

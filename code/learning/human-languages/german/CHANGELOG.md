@@ -1,0 +1,515 @@
+# Changelog
+
+## Chapter capability ledger — Chapters 17–23 (2026-08-06)
+
+- Added [`chapters.json`](./chapters.json), the track's HL05 capability ledger:
+  a first-person `canDo`, the shared-spine nodes realised, and a validated
+  payoff for each of the **seven** chapters that carry schema-v2 lessons.
+- Deliberately authored **only Chapters 17–23**. Chapters 1–16 are still schema
+  v1 and declare no `practises.knowledge`, so every payoff written for them
+  would have to assess atoms that do not exist. They are omitted rather than
+  stubbed: an absent entry is honest debt the gap report can count, a
+  placeholder is destroyed signal.
+- Every `payoff.assesses` list is a strict subset of the payoff lesson's own
+  `practises.knowledge`; no atom is invented, and none is padded to clear a
+  threshold.
+- **Chapter 17 fails the 0.5 representativeness floor at 4/12 = 0.33.** It runs
+  three word lessons deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal
+  consolidation lesson, so the payoff can only be the last lesson by
+  `sequence` and reaches just its own third of the chapter. The shortfall is
+  recorded in the ledger rather than hidden; the fix is a real
+  Kopf/Haupt/Hand practice lesson, not a longer `assesses` list.
+- Chapter 18 also lacks a terminal practice lesson but still reaches 5/8 = 0.63
+  because *nein* reassesses *ja*. Chapters 19–23 are single-lesson chapters and
+  assess everything they introduce (1.00).
+- Titles and labels are copied verbatim from `core/book-generation.json`, so the
+  `chapter-title-drift` gate holds through the HL-C04 inversion.
+
+## Warning-free 104-page book (2026-08-03)
+
+- Made intentionally short micro-lesson pages explicit with `\raggedbottom`,
+  removing eleven underfull vertical boxes without padding learner content.
+- Added concise running titles and a prose-only Chapter 12 bookmark, made the
+  Chapter 10 practice path breakable, and reflowed three dense explanations.
+- Replaced rigid legacy comparison tables with bounded paragraph columns while
+  preserving every vocabulary, grammar, register, and etymology comparison.
+- Shortened only the visible `Entschuldigung` heading and reflowed the canonical
+  `Kopf` recall; regenerated hashes keep the book and Language Ladder on the
+  same source while the full explanations remain intact.
+- A forced XeLaTeX build produces 104 pages with zero missing glyphs, overfull
+  or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX
+  warnings. All 104 rendered pages were inspected, and the outline retains the
+  Preface, pronunciation reference, and all twenty-three chapters.
+
+## Canonical Chapters 17–23 (2026-08-03)
+
+- Migrated the ten lessons in Chapters 17–23 to schema version 2 with typed
+  blocks, explicit shared-spine concepts, prerequisite-closed knowledge atoms,
+  and honest sub-five-minute duration contracts.
+- Repaired the missing shared-spine step between yes/no and sorry: a new
+  164-second `bitte` lesson assembles only previously learned words into
+  **Wasser, bitte**, while `Entschuldigung` moves from Chapter 19 to Chapter 20.
+- Generated seven LaTeX chapters from those canonical lessons and added
+  independent Language Ladder source-hash and lesson-count assertions, so the
+  app and downloadable book now consume one source of truth through Chapter 23.
+- Expanded the book from 84 to 104 pages. A forced XeLaTeX build has no missing
+  glyphs, duplicate destinations, LaTeX warnings, or leaked generator metadata;
+  all 104 rendered pages and the complete outline were inspected.
+- Recorded eighteen overfull boxes, one underfull horizontal box, eleven
+  underfull vertical boxes, and three Hyperref warnings for the focused HL-B21
+  cleanup tranche.
+
+## Sub-five-minute lesson remediation (2026-08-02)
+
+- All twenty-seven German duration violations are resolved. Twenty-two lessons
+  already computed below five minutes and now declare an honest four-minute
+  budget without changing their teaching content.
+- Five lessons that genuinely exceeded the limit become prerequisite-ordered
+  micro-sequences: informal wellbeing → formal *Ihnen* register → separate
+  casual/formal practice; Präteritum forms → its north/south areal map; the
+  *sein*-perfect auxiliary family → French/German agreement; *Kopf* as cup →
+  inherited *Haupt* and the Grimm's-law/container comparison.
+- The five new support lessons bring the German track to 86 lessons. Every new
+  or rewritten step computes between 147 and 244 seconds, with zero unknown
+  prerequisite ids.
+- A forced build still succeeds at 84 pages with no missing glyphs or duplicate
+  labels. Its existing seventeen overfull boxes, eleven underfull boxes, and
+  three Hyperref warnings are recorded separately in `HL-B21`; publishing the
+  canonical Chapters 17–23 is recorded in `HL-B20`.
+
+## The book catches up -- Chapters 3-16 typeset
+
+The lessons had run ahead of the published artifact: 61 authored lessons through
+Chapter 16, but the LaTeX book still stopped at Chapter 2 ("Introducing
+Yourself"). Because the CI book build only compiles what is wired into
+`book.tex`, the missing chapters were invisible to CI and the gap drifted
+silently. This closes it -- **fourteen new book chapters**, written from the
+existing `GE-C03`-`GE-C16` lessons and wired into `book.tex`:
+
+- **Ch3** How Are You (danke, bitte, gehen, wie geht es, es geht)
+- **Ch4** Farewells (auf Wiedersehen, tschuess, bis bald, bis morgen)
+- **Ch5** The First Verbs (wohnen, machen, lernen, ich lerne Deutsch)
+- **Ch6** Numbers One to Ten * **Ch7** The Days of the Week (and Mittwoch)
+- **Ch8** Telling the Time * **Ch9** Months and Seasons (Herbst/harvest)
+- **Ch10** Family * **Ch11** Bread, Water, Wine
+- **Ch12** Numbers Eleven to Twenty (elf/zwoelf, the "-lif = left over" story)
+- **Ch13** Colours * **Ch14** To Have, and How Old You Are (the habere false
+  cognate)
+- **Ch15** The Two Past Tenses (Perfekt, Praeteritum)
+- **Ch16** To Be, and the Past That Takes It (sein -- three ancient verbs in one
+  paradigm -- and the Perfekt built on it)
+
+Each chapter follows the established book conventions: one `\section` per lesson
+with a slug `\label`, the `cousinweb` / `culture` / `grammarlens` / `sounds` /
+`etymology` / `morphologybox` boxes, `booktabs` conjugation tables, and every
+atom traced to its root -- the German/English cognate webs are the spine.
+Content is faithful to the lessons -- no new etymologies introduced.
+Practice-section labels are chapter-qualified (`lesson:chN-practice`).
+
+The book grows to **84 pages**; compiles clean with XeLaTeX (0 errors, 0 missing
+characters, 0 undefined references, 0 duplicate labels) and was rasterized and
+visually QA'd -- the umlauts, the eszett, `fui` with macron, and the PIE
+superscripts all render correctly.
+
+## Chapter 17 — The body: a cup for a head, and a hand with no Latin cousin
+
+- **Chapter 17 authored** (`GE-C17-kopf`, `-kopf-haupt`, `-hand`) — the **body**, the theme the
+  parallel-track roadmaps name next.
+- **der Kopf** (`GE-C17-kopf`): *Kopf* did not originally mean "head." It meant a
+  **cup or bowl** — the same word as English **cup**, both early borrowings of
+  Late Latin ***cuppa*** — and it displaced the inherited **das Haupt**, the
+  Grimm's-law cognate of Latin *caput* and English *head*. The clean
+  demonstration there is **k→h** (*caput* / *Haupt* / *head*); the later
+  consonants involve a second shift, so the lesson takes k→h and leaves the rest.
+  *Haupt* survives in compounds: *Hauptstadt*, *Hauptbahnhof*, *Hauptsache*.
+  - **The chapter's best fact is a coincidence.** French replaced "head" with a
+    **pot** (*testa* → *tête*) and German with a **cup** (*cuppa* → *Kopf*), with
+    nobody coordinating — and **both** kept the old word for chiefs and capitals.
+    It is the **metaphor** that was invented twice, not the vocabulary: both
+    vessel-words trace back to Latin. Heads look like bowls in any language.
+  - *(Corrected here: #8746 fixed this formula in the lesson, roadmap and
+    taxonomy but missed the CHANGELOG, which kept a wrong `p→f/d` and called
+    \*kuppaz native Germanic. A claim lives in four places.)*
+  - Includes the **-pf** note: one sound, *p* released into *f*, with no English
+    equivalent.
+- **die Hand** (`GE-C17-hand`): the easy word, kept deliberately for what it
+  teaches about **absence of connection**. Germanic \**handuz*, inherited
+  straight into English (*Hand, Arm, Finger, Fuß, Herz*), with the **final-devoicing**
+  note — *Hand* ends in a *t* sound, and the *d* returns in *die Hände*.
+  - **Every Romance track in this course builds "hand" on *manus*** (*main*,
+    *mano*, *mão*), and \**handuz* **is not related to it**. The lesson says this
+    outright, because a curriculum that keeps finding connections can start to
+    imply everything connects. It doesn't — and this is where the two families
+    diverged early and completely.
+  - *Manus* did reach German, but only as **borrowed** learned vocabulary
+    (*Manuskript*, *Maniküre*, *manuell*), sitting beside the native word without
+    displacing it.
+
+## Chapter 16 — *sein*: three ancient verbs wearing one infinitive
+
+- **Chapter 16 authored** (`GE-C16-sein`, `-perfekt-sein`,
+  `-perfekt-sein-agreement`). Ch. 15 taught only
+  the *haben* half of the Perfekt because *sein* had never been taught. Fixed.
+- **sein** (`GE-C16-sein`): the present, plus *war/waren*, and then the reason
+  they look unrelated — they **are** unrelated. *sein* is assembled from **three
+  Proto-Indo-European roots**:
+  - *ist, sind, seid, sein* ← \**h₁es-* (Latin *est, sunt*; French *est, sont*)
+  - *bin, bist* ← \**bʰuH-* "grow, become" (English **be**; Latin *fuī*)
+  - *war, waren* ← \**wes-* "dwell, remain" (English **was, were**)
+  - The cross-track payoff: \**bʰuH-* is the root of **Spanish *fui***, taught in
+    ES-C14 as a *pretérito fuerte*. The **same** root surfaced in German's
+    **present** and Spanish's **past**.
+- The lesson also states the general law rather than leaving it as trivia: **the
+  most-used words are the most irregular**, because regularity spreads by
+  **analogy** and you never have to guess at "to be". Rare words get regularised;
+  common ones are protected fossils. This is the answer to "why is *sein* like
+  this" in every language at once.
+- **Perfekt with sein** (`GE-C16-perfekt-sein`): the **motion / change-of-state**
+  split, on *gehen* (Ch. 3), *kommen*, *fahren*, *werden*, plus the set that
+  breaks the pattern and must simply be learned — ***sein*** and ***bleiben***,
+  which are the *opposite* of change, along with *gelingen*, *geschehen* /
+  *passieren* and *begegnen*.
+  - **The contrast that matters: no agreement.** French makes the participle
+    agree with the subject (*elle est allé**e***); **in the perfect** German
+    makes it agree with **nothing** (*sie ist gegangen*, for every person and
+    gender). Scoped deliberately to the perfect, because German participles **do**
+    still inflect attributively (*der angekommen**e** Zug*, *ein geschrieben**er**
+    Brief* — chosen over *der gegangene Weg*, which only licenses attributively
+    via the marked transitive *einen Weg gehen* and reads stiff); Old High German
+    inflected them in the perfect too, and German lost that.
+  - **Corrected direction of influence.** German did **not** inherit this from
+    Latin. The *haben*- and *sein*-perfects are native Germanic developments that
+    grew up **alongside** the Romance ones through centuries of contact — the
+    same areal spread this repo already credits (in `FR-PAST-SIMPLE-LITERARY`)
+    for the simple past retreating in French, German and Italian together. Stated
+    as *split parallel, agreement not shared*.
+
+## Chapter 15 — The Perfekt, and the tense it pushed aside
+
+- **Chapter 15 authored** (`GE-C15-perfekt`, `-praeteritum`,
+  `-praeteritum-map`): the everyday past,
+  built on Ch.14's *haben* — reviewing Ch.5/14 via `reviews_of`.
+- **Perfekt** (`GE-C15-perfekt`): *haben* + past participle (*ich habe gesagt*),
+  with two things German does that English can't. First, the weak participle is
+  **wrapped** — a **ge-…-t circumfix**, not a suffix. Second, it goes to the **end
+  of the clause** (*Ich habe gestern Deutsch **gelernt*** — "I have yesterday German
+  learned"), which is simply ungrammatical in English. Plus the semantic note that
+  it means the **plain past** ("I said"), not only "I have said." Etymology: **ge-**
+  ← Germanic *\*ga-* "together, completely," a **perfective** marker — exactly what
+  a past participle is for. English had it as *y-* and dropped it, leaving two
+  fossils: **enough** (Old English *genōg*) and archaic *yclept*. So English once
+  wrapped its participles the same way; German never stopped.
+- **Präteritum** (`GE-C15-praeteritum`): *ich sagte* — the simple past, same
+  meaning as the *Perfekt* but a different register. Its **-te** is the Germanic
+  **dental preterite**, the identical machinery behind English **-ed** (*walked*)
+  and Dutch *-te* — a **Germanic invention** with no Latin equivalent, since Romance
+  builds its past from inherited perfect endings instead (*parla*, *habló*).
+  Register and geography: nearly gone from speech in the south, better preserved in
+  the north, standard in **narrative writing**, with *war*, *hatte* and the modals
+  resisting everywhere. Closes on the three-language table — **German, French and
+  Italian** each let a "have" compound displace their simple past — an AREAL change spread by contact, not three separate inventions.
+- Taxonomy: namespaced `GE-PAST-COMPOUND`, `GE-PAST-SIMPLE-WRITTEN`.
+
+## Chapter 14 — haben, and being your years
+
+- **Chapter 14 authored** (`GE-C14-haben`, `-alter`): the workhorse verb plus the
+  one everyday place German won't use it, reviewing Ch.5/9/10/12/13 via
+  `reviews_of`.
+- **haben** (`GE-C14-haben`): *habe/hast/hat/haben/habt/haben*, where *du hast*
+  and *er hat* **drop the b** — precisely as English *have* → *ha**s*** (and
+  archaic *hast*), one shortcut the two languages inherited together. The
+  showpiece is a **false cognate**: *haben* ← Germanic *\*habjaną* ← PIE *\*kap-*
+  "to **seize**," whose Latin child is ***capere*** (→ *capture, captive, capable,
+  accept*) — while Latin ***habēre*** (which gave French *avoir* and Italian
+  *avere*) descends from *\*gʰabʰ-*, whose English descendant is **give**. The two
+  words that look most alike and mean the same thing come from **opposite**
+  ancestries; German *haben* is kin to *capture*, Latin *habēre* to *give*.
+- **ich bin zwanzig Jahre alt** (`GE-C14-alter`): the one everyday slot where
+  German **refuses** *haben* — age takes **sein**, producing word-for-word the
+  English sentence, and shortening the same way (*ich bin zwanzig*). *Jahr* ←
+  *\*jēra* = **year**; *alt* ← *\*aldaz* = **old**, with the Latin cousin *alere*
+  "to nourish, grow" behind English *adult*. Closes on the five-language table:
+  **all four Romance sisters *have* their years; German sides with English and
+  *is* its years** — and does so even though it borrowed its month names from
+  Latin (Ch.9).
+- Sets up the *Perfekt*, which is built on *haben*.
+- Taxonomy: namespaced `GE-VERB-HAVE`, `GE-AGE`.
+
+## Chapter 13 — Colours
+
+- **Chapter 13 authored** (`GE-C13-schwarz-weiss`, `-rot-blau`): German as the
+  **lender** rather than the borrower, reviewing Ch.11/12 via `reviews_of`.
+- **schwarz & weiß** (`GE-C13-schwarz-weiss`): both **native Germanic**, no Latin
+  anywhere. *Schwarz* ← *swartaz*, whose English cousin survives as **swarthy**, and
+  which is kin to Latin *sordēs* ("dirt") → *sordid* — black and grubby from one
+  idea. *Weiß* ← *hwītaz* = **exactly** English *white*; includes the **ß** rule
+  (sharp *s* after a long vowel; Swiss spelling *weiss*). The showpiece: German's own
+  **blank** ("shiny, polished, bare") is the very word Romance **borrowed** for
+  **white** — *blanc/bianco/branco* — while German kept the original meaning. This
+  reverses the direction seen in Ch.11 (*Wein* ← *vīnum*, *Fenster* ← *fenestra*).
+- **rot & blau** (`GE-C13-rot-blau`): *rot* ← *raudaz* ← PIE ***h₁rewdʰ-***, so *rot*
+  and French *rouge* are related **by descent, not borrowing** — they split millennia
+  before either language existed. *Blau* ← *blēwaz* is the **second** German colour
+  word Romance took (*bleu*, *blu*), and English took **blue from French** rather
+  than from its own Germanic stock. Closes with a four-row table of which words
+  Romance borrowed and which it already had a cousin for.
+- Taxonomy: namespaced `GE-COLOUR-BLACK-WHITE`, `GE-COLOUR-RED-BLUE`.
+
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`GE-C12-elf-zwoelf`, `-zahlen-13-20`): the teens,
+  atom-first, reviewing Ch.6/Ch.11 via `reviews_of`.
+- **elf / zwölf** — the showpiece: ← *ainlif / twalif*, where **-lif** means "**to
+  leave, remain**," so they literally say "**one left over**" and "**two left
+  over**" — left over from your **ten fingers**. English *eleven/twelve* are not
+  merely similar but **the same inherited words**, which is why both languages share
+  the oddity. Extends the Germanic-twin thread from *Vater/father*, *Wasser/water*.
+- **dreizehn–zwanzig** — then the pattern turns perfectly regular: **digit + zehn**,
+  no exceptions, exactly mirroring English *-teen* (which **is** *ten*: *thir-teen* =
+  "three-ten"). *Sechzehn/siebzehn* clip a sound just as English clipped
+  *three→thir-*, *five→fif-*; *zwanzig* ← *twaintig* "two tens" (= English *-ty*).
+- **The contrast made explicit**: the Romance sisters all **break** their teens
+  pattern partway (PT at 16, FR/IT at 17); **German never breaks** — two leftovers,
+  then one clean rule to twenty, with English marching alongside the whole way.
+- Taxonomy: namespaced `GE-NUM-11-12`, `GE-NUM-13-20`.
+
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`GE-C11-brot`, `-wasser-wein`): the everyday table
+  trio, atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **Brot** ("bread") — **inherited Germanic**, the direct twin of English *bread*
+  (NOT the Latin *pānis* the Romance sisters use); introduces the **neuter das**
+  (completing *der/die/das*) and the rule that German **capitalizes all nouns**.
+- **Wasser / Wein** — the native-vs-borrowed pair: **Wasser** ("water," *w*=*v*) is
+  a native Germanic twin of *water*, but **Wein** ("wine," *ei*="eye") is an
+  **ancient Latin loan** ← *vīnum*, taken with the grapevine Rome carried north —
+  which is exactly why *Wein*, English *wine*, and *vīnum* all match (one loan, not
+  three cousins).
+- Taxonomy: namespaced `GE-FOOD-BREAD`, `GE-FOOD-DRINKS`.
+
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`GE-C10-eltern`, `-geschwister`): the immediate family,
+  atom-first, reviewing Ch.9/Ch.1 via `reviews_of` — and the **mirror image of the
+  months chapter**.
+- **der Vater / die Mutter** — taught as **inherited Germanic** words (NOT Latin
+  loans like the months), the Grimm's-law twins of English *father / mother*: the
+  *V* of *Vater* is pronounced *f*, and German/English agree (*f-*, *m-*) precisely
+  because both are Germanic, while French/Latin sit across Grimm's line. The
+  standout thread: **family is native where the calendar was borrowed**.
+- **der Bruder / die Schwester** — Germanic twins of *brother / sister*; plus
+  **die Geschwister** ("siblings"), built with the **collective ge-** prefix that
+  English lacks.
+- Taxonomy: namespaced `GE-FAMILY-PARENTS`, `GE-FAMILY-SIBLINGS`.
+
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`GE-C09-monate`, `-jahreszeiten`): the calendar year,
+  atom-first, reviewing Ch.6–8 via `reviews_of`.
+- **The native-vs-Latin split deepens** (numbers native, weekday-gods Germanic,
+  clock *Uhr* Latin — now): the **months are Latin loans** (Januar ← Janus, *März*
+  ← Mars = *Dienstag*'s Tiw, September–Dezember = Latin 7–10), reaching for Rome
+  just as *Uhr* did — while German's own numbers stay *sieben, acht, neun, zehn*.
+- **The seasons swing back to native Germanic**: *Frühling* ← *früh* "early" (the
+  early-season); *Sommer/Winter* = the plain twins of English *summer/winter*; and
+  the surprise, **Herbst = English harvest** — the same Germanic reaping-word, which
+  English narrowed to the *act* while taking Latin *autumn* for the season.
+- Taxonomy: namespaced `GE-MONTHS`, `GE-SEASONS`.
+
+## Chapter 8 — Time & the clock
+
+- **Chapter 8 authored** (`GE-C08-uhr`, `-mittag-mitternacht`): telling the time,
+  atom-first, reviewing Ch.6–7 via `reviews_of`.
+- **Uhr** — the **standout Latin loanword**: German's numbers are native (*eins,
+  zwei*) and its weekdays are Germanic gods (*Donnerstag*), but its *clock*-word
+  came from Latin **hōra** (the same *hōra* behind French *heure*, Italian *ora*,
+  English *hour*). Three layers of the day, three origins — native numbers,
+  Germanic day-gods, Latin clock. (Native *Stunde* = an hour's span; *Uhr* =
+  o'clock, no plural: *es ist zwei Uhr*.)
+- **Mittag / Mitternacht** — noon/midnight swing back to **native** compounds:
+  *Mitte* ("middle") + *Tag* ("day") / *Nacht* ("night," the *Nacht/night* twin
+  from the numbers). Same meaning as French *midi/minuit* (*medius diēs*), but
+  built from German's own words rather than borrowed.
+- Taxonomy: namespaced `GE-TIME-HOUR`, `GE-TIME-NOON-MIDNIGHT`.
+
+## Chapter 7 — Days of the week
+
+- **Chapter 7 authored** (`GE-C07-wochentage-1`, `-wochentage-2`): the seven days,
+  atom-first, reviewing Ch.6 via `reviews_of`.
+- **wochentage-1** (Montag–Freitag): like the numbers, German goes **Germanic** —
+  its weekdays are the **twins of the English days**, named for Germanic gods, not
+  Latin planets. *Donnerstag* (*Donner* "thunder" = Donar/**Thor**) = *Thursday*,
+  standing in for the Roman Jupiter; *Freitag* (Frigg) = *Friday*. The odd one,
+  **Mittwoch** "mid-week," is a religious edit — the Church replaced "Woden's day"
+  (which English kept as *Wednesday*), mirroring how Portuguese numbered its days.
+- **wochentage-2** (Samstag, Sonntag): the surprise that **Samstag is the Sabbath,
+  not Saturn** — *Sabbat* ← Greek *sábbaton* ← Hebrew *shabbāt*, reaching German
+  through the early Church, so *Samstag* and Spanish *sábado* share a root while
+  English alone keeps *Saturday* = Saturn; *Sonntag* = "Sun's day" = *Sunday* (a day
+  the Church left un-renamed, unlike Romance *domingo/dimanche*).
+- Taxonomy: namespaced `GE-DAYS-WEEKDAYS`, `GE-DAYS-WEEKEND`.
+
+## Chapter 6 — Numbers 1–10
+
+- **Chapter 6 authored** (`GE-C06-zahlen-1-5`, `-zahlen-6-10`): counting to ten,
+  atom-first, each ~5 min, reviewing Ch.5 via `reviews_of`.
+- **The distinctive German story**: unlike the Romance tracks, German numbers are
+  **not Latin loans** — they're German's own Germanic words and the **near-twins of
+  English one…ten**, with Latin as a *cousin* one sound-shift away. **Grimm's Law**
+  is the through-line: old *p* → Germanic *f* (*\*pénkʷe* → *fünf/five*, while Latin
+  kept *quīnque*); old *d* → *t* → German *z* (*decem → ten → zehn*); and the
+  *acht/eight* ~ *Nacht/night* *-cht-/-ght-* correspondence.
+- **The month names *are* Latin loans** (*September, Oktober…*), so the 7–10
+  calendar trick still shows even though *sieben/acht/neun/zehn* look nothing like
+  them — numbers homegrown, month labels imported.
+- Taxonomy: namespaced `GE-NUM-1-5`, `GE-NUM-6-10`.
+
+## Chapter 5 — The first verbs (sentences start to move)
+
+- **Chapter 5 authored** (`GE-C05-wohnen`, `-machen`, `-lernen`,
+  `-ich-lerne-deutsch`, `-practice`): German's first **grammar-engine** chapter,
+  parallel to French Ch.5 / Spanish Ch.6. Uses **regular (weak) verbs only** —
+  *sprechen* is irregular and deferred.
+- **The regular weak present tense** — drop *-en*, add *-e/-st/-t/-en/-t/-en*.
+  Taught on **wohnen** and cemented on **machen** and **lernen**. Unlike French,
+  **German endings are audible** (*wohne/wohnst/wohnt* differ).
+- **The pronoun rule completed across three languages**: Spanish **drops** *yo*
+  (the ending says who); French **keeps** *je* (endings silent); German **keeps**
+  *ich* — for yet another reason: its grammar needs an **overt subject**
+  (structure, not sound).
+- **Etymology, English-cousins-you-own**: *wohnen* ← *wonēn* (→ *wont*
+  "accustomed"); *machen* ← *makōn* (= English **make**; the High German *k*→*ch*
+  shift); *lernen* ← *liznōjan* (= **learn**; kin of *lore*); *Deutsch* ←
+  *diutisc* "of the people" (→ English **Dutch**, **Teutonic**). First
+  self-assembled sentence: **Ich lerne Deutsch**.
+- Taxonomy: namespaced `GE-VERB-WOHNEN/MACHEN/LERNEN`, `GE-WORD-DEUTSCH`
+  documented.
+
+## Writing nuances — the eszett, the umlauts, capital nouns
+
+- **First German `writing`-type lessons** (`GE-W01-eszett`, `GE-W02-umlauts`,
+  `GE-W03-capitalization`): orthography taught etymology-first, once enough
+  special-character words have accumulated (*heißen*, *weiß*, *Straße*).
+- **ß (eszett)**: a long-*s* + *s/z* ligature (hence "es-zett"), always a sharp
+  *s*; the rule **ß after long vowels, ss after short** (*Straße* vs *Fluss*) —
+  which doubles as a vowel-length cue; no word-initial/lowercase-only quirks
+  (ALL-CAPS → SS; Switzerland drops it).
+- **Umlauts ä/ö/ü**: the two dots as a **shrunken migrated *e*** (ASCII fallback
+  *ae/oe/ue*: *Müller = Mueller*); "um-laut" = around-sound (vowel fronting); and
+  the grammar it marks — plural/comparative/diminutive fronting (*Mann→Männer*,
+  *groß→größer*, *Hund→Hündchen*). Contrasted with the French tréma.
+- **Großschreibung**: German capitalizes **every noun**, mid-sentence and all —
+  a part-of-speech signal that disambiguates (*essen* "to eat" vs *das Essen*
+  "the food"), a living fossil of older European printing (English dropped it
+  ~1700s).
+- Uses the `writing` lesson type (no `concept_tag`) — no taxonomy change.
+
+## Chapter 4 — Farewells (completes the ES/FR/DE farewell trilogy)
+
+- **Chapter 4 authored** (`GE-C04-auf-wiedersehen`, `-tschuss`, `-bis-bald`,
+  `-bis-morgen`, `-practice`): closing a conversation, atom-first, reviewing
+  Chapter 3. Reuses the shared `FAREWELL` / `FAREWELL-SOON` / `FAREWELL-TOMORROW`
+  concepts and adds `FAREWELL-CASUAL`.
+- **auf Wiedersehen** = "on the seeing-again" (*sehen* = English *see*) — the
+  exact twin of French *au revoir*, both against Spanish *adiós* "to God".
+- **tschüss**, the best etymology in the chapter: *tschüss* ← Low German
+  *atschüs* ← Walloon *adjûs* ← French *adieu* — so the breeziest German bye is
+  secretly **"to God"**, a far-travelled cousin of *adiós* and *adieu*.
+- **The "bis …" family** mirrors Spanish *hasta* / French *à*: *bis bald* (soon —
+  *bald* ← Old High German "bold/quick", = English *bold*), *bis später* (later),
+  *bis morgen* (tomorrow — *Morgen* = English *morning/morrow*, the same
+  morning→tomorrow move as *mañana* / *demain*).
+- Taxonomy: `FAREWELL-CASUAL` added (canonical, `core:false`).
+
+## Chapter 3 — "Wie geht's?" (completes the how-are-you trilogy)
+
+- **Chapter 3 authored** (`GE-C03-danke`, `-bitte`, `-gehen`, `-wie-geht-es`,
+  `-wie-geht-register`, `-es-geht`, `-practice`, `-formal-practice`): the
+  "how are you?" exchange, atom-first, reviewing
+  Chapter 2. Third of a deliberate cross-language trilogy in this PR (Spanish
+  Ch.4 / French Ch.3 / German Ch.3), all sharing the canonical concepts
+  `STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`, `WORD-SOSO`.
+- **The etymologies English speakers already own**:
+  - *danke* ← *denken* "to think" — and English *thank* IS *think* (both from
+    Old English *þancian*/*þencan*), set against *merci* (reward) and *gracias*
+    (grace).
+  - *bitte* ← *bitten* "to ask/pray" — cognate of English *bid* and *bead* (a
+    bead was a prayer); the one word doing please / you're-welcome / here-you-go
+    / pardon.
+  - *gehen* IS English *go* (straight Germanic cognate); *es geht mir gut* = "it
+    goes well *to me*" — gently introduces the **dative** (*mir/dir/Ihnen*).
+  - *es geht* ("it goes," nothing added) as the understated shrug for "so-so."
+- **The trilogy's payoff**, stated in-lesson: German and French say wellbeing as
+  motion ("how does it **go**?"), Spanish as posture ("how are you
+  **standing**?" — *estar*).
+- Taxonomy: namespaced `DE-VERB-GEHEN` documented.
+
+## Chapter 2 — Introducing Yourself
+
+- New chapter built around the introduction dialogue (*Ich heiße Susanne. / Wie
+  heißen Sie? / Ich heiße David. / Freut mich.*), atom-first, one word per
+  lesson (`lessons/GE-C02-*`, `book/chapters/ch02-introductions.tex`):
+  - **ich** ("I" ← *\*ik* / PIE *\*eǵ*; cousin of Latin *ego*, English *I*).
+  - **heißen** ("to be called" ← *\*haitaną*; English archaic *hight*, *behest*)
+    — German names with a plain verb, no reflexive "myself."
+  - **ich heiße…** — **"my name is…"** ("I am called"), with literal *mein Name
+    ist* (*Name* ← *\*namô*, English *name* / Latin *nōmen*) as the alternative.
+  - **du / Sie** (familiar / formal "you") — *Sie* is the capitalized 3rd-person
+    plural "they" used as polite "you"; the third route to politeness beside
+    Spanish *usted* and French *vous*.
+  - **wie** ("how" ← *\*hwī* / PIE *\*kʷo-*; English *how/what/who*).
+  - **wie heißen Sie?** — **"what's your name?"** ("how are you called?");
+    verb-second word order; informal *wie heißt du?*.
+  - **freut mich** ("pleased to meet you" = "it gladdens me"; ← *froh*, "glad").
+    Its object pronoun **mich** ("me") is traced too — ← *\*mek* / PIE *\*me-*,
+    cousin of English *me/my/mine* and French *me* (every atom rooted, not
+    glossed).
+  - **practice** — the whole dialogue.
+- Book compiles clean with XeLaTeX.
+
+## Beginner-audience + parity pass
+
+Brought the German book fully to the Hindi/Spanish standard. Two things:
+
+**Stop assuming prior Spanish/French (HL00 Audience rule).** The books are for a
+true beginner whose only shared language is English; German leaned on the other
+tracks as knowledge already owned.
+- Preface: dropped "exactly as the Spanish book used the *-ct-→-ch-* rules" and
+  "Because the reader also knows Spanish (and is meeting French)"; states the
+  true-beginner framing and that every Spanish/French form is supplied in full.
+- `ch01-greetings.tex`: "German's version of the Spanish *-ct-→-ch-* rule" →
+  self-contained sound-law framing; "the same job *bueno/buena* and *bon/bonne*
+  did" → "the same job Romance adjectives do."
+- Practice lessons `GE-C01-gut` ("the rules you met in Spanish") and
+  `GE-C01-der-die-das` ("You've met gender in Spanish and French") de-assumed.
+
+**Filled the parity gaps the audit flagged.**
+- Added per-word **`sounds` boxes** (the book previously gave pronunciation only
+  inline): *hallo*, *gut*, *der/die/das*, *Tag*, *Morgen*, *Abend*, *Nacht* ---
+  including German final-devoicing (*Tag* → *tahk*, *Abend* → *AH-bent*) and the
+  *ach*-laut in *Nacht*.
+- Added noun **plurals**: *die Tage*, *die Morgen*, *die Abende*, *die Nächte*.
+- Book still compiles clean with XeLaTeX (14 pages).
+
+## Chapter 1 — Greetings (track bootstrapped)
+
+- New German track on the HL00 framework: one word per lesson, slug ids,
+  gender-before-nouns, atom-first, derivations shown, LaTeX book (CI
+  auto-discovers `german/book/`).
+- Chapter 1 (`lessons/GE-C01-*`), atom-first, with German's Germanic-roots
+  flavor:
+  - **hallo** (a *real* cousin of English "hello," unlike Spanish *hola*)
+  - **gut** ("good" *and* "well" ← Germanic *\*gōdaz* = English *good*;
+    introduces the **High German Consonant Shift** d→t as a recurring decoder)
+  - **der / die / das** ("the"; **three** genders — German kept the neuter;
+    ← Germanic *\*sa/\*sō/\*þat*, cousins of English *the/that*)
+  - **Tag** (← *\*dagaz* = English *day*; ≠ Latin *dies* behind *día/jour*)
+  - **Guten Tag** (assembled; the *-en* accusative ending)
+  - **Morgen** (← *\*murganaz* = *morning/tomorrow*) · **Guten Morgen**
+  - **Abend** (← *\*ābanþs* = English *eve*; contrast with Romance "late"
+    words) · **Guten Abend**
+  - **Nacht** (← PIE *\*nókʷts* — the four-way *Nacht/night/noche/nuit*
+    reunion; feminine) · **Gute Nacht** (feminine agreement, *-e* not *-en*)
+  - **practice**
+- Grounds each word against English (direct Germanic cousin), with Spanish and
+  French alongside for contrast. Book compiles clean with XeLaTeX (13 pages).

@@ -22,9 +22,38 @@
 -- External dependencies are silently skipped.
 
 local DirectedGraph = require("build_tool.directed_graph")
-local Discovery = require("build_tool.discovery")
 
 local Resolver = {}
+
+local MetadataEncodingError = {}
+MetadataEncodingError.__index = MetadataEncodingError
+
+function MetadataEncodingError.new(pkg, manifest)
+    return setmetatable({
+        code = "METADATA_INVALID_UTF8",
+        package = pkg.name,
+        manifest = manifest,
+        encoding = "UTF-8",
+    }, MetadataEncodingError)
+end
+
+function MetadataEncodingError:__tostring()
+    return string.format(
+        "%s: package=%s manifest=%s encoding=%s",
+        self.code,
+        self.package,
+        self.manifest,
+        self.encoding
+    )
+end
+
+--- Return whether a caught error is the stable metadata encoding error.
+---
+--- @param value any A value returned by pcall.
+--- @return boolean True when value is a MetadataEncodingError.
+function Resolver.is_metadata_encoding_error(value)
+    return getmetatable(value) == MetadataEncodingError
+end
 
 -- =========================================================================
 -- Helper: read a file's contents as a string.
@@ -70,6 +99,90 @@ local function normalize_path(path)
         return joined == "" and (prefix .. "/") or (prefix .. "/" .. joined)
     end
     return joined
+end
+
+local function repository_relative_manifest(path)
+    local normalized = normalize_path(path)
+    if normalized:sub(1, 5) == "code/" then
+        return normalized
+    end
+
+    local marker = normalized:find("/code/", 1, true)
+    if marker then
+        return normalized:sub(marker + 1)
+    end
+
+    return normalized:match("([^/]+)$") or normalized
+end
+
+local function is_continuation(byte)
+    return byte and byte >= 0x80 and byte <= 0xbf
+end
+
+--- Validate one byte string as strict UTF-8.
+---
+--- This rejects truncated sequences, continuation bytes in leading position,
+--- overlong forms, UTF-16 surrogate code points, and values above U+10FFFF.
+--- A literal U+FFFD remains valid because it is ordinary well-formed UTF-8.
+---
+--- @param text string Raw file bytes.
+--- @return boolean True when every byte belongs to a valid UTF-8 sequence.
+local function is_valid_utf8(text)
+    local index = 1
+    while index <= #text do
+        local first = text:byte(index)
+
+        if first <= 0x7f then
+            index = index + 1
+        elseif first >= 0xc2 and first <= 0xdf then
+            if not is_continuation(text:byte(index + 1)) then return false end
+            index = index + 2
+        elseif first >= 0xe0 and first <= 0xef then
+            local second = text:byte(index + 1)
+            local third = text:byte(index + 2)
+            if first == 0xe0 then
+                if not second or second < 0xa0 or second > 0xbf then return false end
+            elseif first == 0xed then
+                if not second or second < 0x80 or second > 0x9f then return false end
+            elseif not is_continuation(second) then
+                return false
+            end
+            if not is_continuation(third) then return false end
+            index = index + 3
+        elseif first >= 0xf0 and first <= 0xf4 then
+            local second = text:byte(index + 1)
+            local third = text:byte(index + 2)
+            local fourth = text:byte(index + 3)
+            if first == 0xf0 then
+                if not second or second < 0x90 or second > 0xbf then return false end
+            elseif first == 0xf4 then
+                if not second or second < 0x80 or second > 0x8f then return false end
+            elseif not is_continuation(second) then
+                return false
+            end
+            if not is_continuation(third) or not is_continuation(fourth) then
+                return false
+            end
+            index = index + 4
+        else
+            return false
+        end
+    end
+
+    return true
+end
+
+local function read_lua_metadata(path, pkg)
+    local file = io.open(path, "rb")
+    if not file then return nil end
+    local content = file:read("*a")
+    file:close()
+
+    if not is_valid_utf8(content) then
+        error(MetadataEncodingError.new(pkg, repository_relative_manifest(path)), 0)
+    end
+
+    return content
 end
 
 -- =========================================================================
@@ -438,7 +551,7 @@ local function parse_lua_deps(pkg, known_names)
     local rockspec_path = find_file_by_extension(pkg.path, "rockspec")
     if not rockspec_path then return {} end
 
-    local text = read_file(rockspec_path)
+    local text = read_lua_metadata(rockspec_path, pkg)
     if not text then return {} end
 
     local deps = {}

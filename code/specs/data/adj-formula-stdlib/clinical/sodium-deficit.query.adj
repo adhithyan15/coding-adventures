@@ -1,0 +1,29 @@
+% ============================================================================
+% sodium-deficit.query.adj — worked applications of the sodium deficit.
+% ============================================================================
+% The shape a consumer produces once it has decomposed a hyponatraemia vignette into a total body water,
+% a target sodium and the current sodium: it `import`s the grounded formulabook, `observe`s the three
+% values, and asks the engine to APPLY the cited deficit formula. No arithmetic is stated by the
+% consumer; the engine computes each value EXACTLY (over exact rationals) and carries the article's
+% citation as its proof, on the CPU, with zero model calls.
+%
+% Worked case (total body water = 42 L, i.e. a 70 kg man at 0.6 × weight; desired sodium = 140 mmol/L;
+% current sodium = 120 mmol/L): sodium deficit = 42 × (140 − 120) = 42 × 20 = 840 mmol. Each query fixes
+% three of the four quantities and asks the engine to recover the fourth; every answer is exact and the
+% four COMPOSE (each inversion recovers exactly the worked value).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sodium-deficit.query.adj
+% ============================================================================
+
+import "sodium-deficit.adj"
+
+% --- Deficit: the sodium deficit the TBW and the sodium gap imply (expect 840). ---------------------
+observe total_body_water(42)
+observe desired_sodium(140)
+observe current_sodium(120)
+? sodium_deficit(total_body_water, desired_sodium, current_sodium)   % expect 840
+
+% --- Inverse: the total body water a deficit of 840 implies at the same sodium gap (expect 42). -----
+observe sodium_deficit(840)
+? total_body_water(sodium_deficit, desired_sodium, current_sodium)   % expect 42

@@ -1,0 +1,23 @@
+% ============================================================================
+% leaf-parts.query.adj — a worked recall over the biology leaf-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the petiole?" or
+% "what do the stomata do?": it states no botany fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `leaf_part_role` rows and returns the role + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% role `stalk`, recall its leaf part — petiole). A word that is not one of these
+% leaf parts abstains honestly — the engine never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli leaf-parts.query.adj
+% ============================================================================
+
+import "leaf-parts.adj"
+
+? leaf_part_role(blade, $Role)      % expect flattened
+? leaf_part_role(stomata, $Role)    % expect gas_exchange
+? leaf_part_role(cuticle, $Role)    % expect prevents_water_loss
+? leaf_part_role(veins, $Role)      % expect xylem_and_phloem
+? leaf_part_role($Part, stalk)      % reverse bind — expect petiole
+? leaf_part_role(root, $Role)       % expect abstain — the root is a plant part, not a part of the leaf
