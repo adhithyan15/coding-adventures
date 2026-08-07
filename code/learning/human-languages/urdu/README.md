@@ -21,6 +21,25 @@ at once, which English never does — the participle agrees with gender and
 number, the copula with person, so *maiṅ jātā hūṅ* and *maiṅ jātī hūṅ* differ
 by who is speaking. All five lessons are fully drivable.
 
+Chapters 7 and 8 add eight more verbs in two four-lesson steps. Chapter 7 is
+the mind — **سوچنا** *sochnā*, **سمجھنا** *samajhnā*, **پڑھنا** *paṛhnā*,
+**لکھنا** *likhnā* — and its script thread is the *do-chashmī he* **ھ**, the
+letter that makes no sound of its own and only aspirates the letter to its
+right. Chapter 8 is what happens between people — **لینا** *lenā*, **پوچھنا**
+*pūchhnā*, **مدد کرنا** *madad karnā*, **پسند** *pasand* — and it needs no new
+letters, so it spends its weight on grammar and history instead: the conjunct
+verb that lets a borrowed noun become a verb without ever being conjugated, and
+the dative sentence **مجھے پڑھنا پسند ہے**, “to me, reading is pleasing,” where
+the thing liked is the subject and you are only the person it happens to.
+
+The two chapters are also where the track's Persian and Arabic layer becomes an
+argument rather than a note. **پوچھنا** *pūchhnā* and borrowed **پرسش**
+*pursish* are the same Indo-European root arriving by two roads, one inherited
+through India and one borrowed through Iran; **مدد** *madad* puts a second
+Arabic triliteral root beside Chapter 5's **ح-ف-ظ**; and *sochnā*'s inherited
+**سوچ** *soch* sits next to Arabic **فکر** *fikr*, both meaning a thought and,
+just as ordinarily, a worry.
+
 Later chapters will add wider agreement, postpositions, oblique forms, compound
 verbs, and more Nastaliq-aware shapes.
 
@@ -36,6 +55,6 @@ Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions ar
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
   script and sound facts on demand and labels the current Naskh fallback.
-- [`lessons/`](./lessons/) contains the twenty-five canonical short practice
+- [`lessons/`](./lessons/) contains the thirty-three canonical short practice
   lessons.
 
