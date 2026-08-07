@@ -9,6 +9,9 @@ Human Languages curriculum gap report
 ramp: 40 lessons above 3 new atoms (572 unmeasurable, 53% measurable); 25 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 119 lessons show another script (max 26 glyphs) — context, never charged to the budget
+order: 565 lessons with no declared sequence across 19 tracks; 271 prerequisites and 331 reviews pointing forward
+reinforcement: 746 of 1469 atoms never revisited (51%); missed windows R1 745, R2 1068, R3 649, R4 132
+forward references: 509 uses of material a later lesson teaches
 98 of 393 book chapters without an HL05 capability; 24 payoffs below the 0.5 representativeness floor; 3 tracks already clean
 
 Longest effective lessons:
