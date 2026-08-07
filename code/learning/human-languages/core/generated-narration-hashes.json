@@ -580,6 +580,25 @@
       "jsonHash": "fnv1a64:11e35b91d6707d85"
     },
     {
+      "language": "bengali",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:cd9b707ba1f2707e",
+      "lessonIds": [
+        "BN-C07-howa",
+        "BN-C07-jaowa",
+        "BN-C07-asha",
+        "BN-C07-khaowa",
+        "BN-C07-dekha",
+        "BN-C07-jana"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "bengali/narration/ch07.txt",
+      "json": "bengali/narration/ch07.json",
+      "textHash": "fnv1a64:26b748b466f6feed",
+      "jsonHash": "fnv1a64:66d25104e364d880"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:b740a5126cc6bad6",

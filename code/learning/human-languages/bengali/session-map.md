@@ -63,6 +63,23 @@ letters that word needs.
 | 29 | kaj-kora | কাজ করা | "to work" (noun + *kôrā*) ← √kṛ, the root of *nômoshkar* |
 | 30 | practice | (dialogue) | three verbs, one gender-free engine |
 
+## Chapter 6 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 31 | numbers-1-5 | এক দুই তিন চার পাঁচ | *dui* keeps the vowel Hindi *do* and Marathi *don* flattened |
+
+## Chapter 7 — The Core Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 32 | howa | হওয়া | "to be" ← √bhū → English *be, been, future*; আছ- has no future |
+| 33 | jaowa | যাওয়া | "to go" ← √yā; *jāsh / jāo / jān* — respect rides on the ending |
+| 34 | asha | আসা | "to come"; the আ- "hither" of Hindi *ānā*; **no gender, anywhere** |
+| 35 | khaowa | খাওয়া | "to eat" ← √khād; and Bengali drinks with it — *jôl khāwā* |
+| 36 | dekha | দেখা | "to see" ← √dṛś → **dragon**; vowel harmony, *dekhi* vs *dækhe* |
+| 37 | jana | জানা | "to know" ← √jñā → **know**; জানা facts vs চেনা people |
+
 ## Next
 
-Chapter 6 — postpositions (*-e, -te, -r, -ke*) and numbers 1–10.
+Chapter 8 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.

@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:3997fd45ae7a1734",
+  "sourceHash": "fnv1a64:ed58ec3e75f01ef6",
   "summary": {
-    "totalLessons": 1188,
-    "voice": 780,
+    "totalLessons": 1194,
+    "voice": 786,
     "sight": 355,
     "pen": 53,
-    "drivableLessons": 780,
+    "drivableLessons": 786,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 388,
-    "drivablePrefixTotal": 609,
-    "fullyDrivableChapters": 262,
+    "chapterCount": 389,
+    "drivablePrefixTotal": 615,
+    "fullyDrivableChapters": 263,
     "unstartableChapters": 92,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -528,12 +528,12 @@
     },
     {
       "language": "bengali",
-      "lessonCount": 31,
-      "voice": 7,
+      "lessonCount": 37,
+      "voice": 13,
       "sight": 24,
       "pen": 0,
-      "drivablePercent": 23,
-      "drivablePrefixTotal": 1,
+      "drivablePercent": 35,
+      "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
         "sight"
@@ -628,6 +628,27 @@
           "drivable": true,
           "drivableLessonIds": [
             "BN-C06-numbers-1-5"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "BN-C07-howa",
+            "BN-C07-jaowa",
+            "BN-C07-asha",
+            "BN-C07-khaowa",
+            "BN-C07-dekha",
+            "BN-C07-jana"
           ]
         }
       ]
@@ -8226,6 +8247,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:b90d02828e8f4352"
+    },
+    {
+      "id": "BN-C07-howa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:875d94baecd764c8"
+    },
+    {
+      "id": "BN-C07-jaowa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02aa3ee59e96b202"
+    },
+    {
+      "id": "BN-C07-asha",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:781996d54b057830"
+    },
+    {
+      "id": "BN-C07-khaowa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4af6db76d104a4ea"
+    },
+    {
+      "id": "BN-C07-dekha",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdbc818ec1394d03"
+    },
+    {
+      "id": "BN-C07-jana",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cee0df0ef154a25"
     },
     {
       "id": "ZH-C01-tones",

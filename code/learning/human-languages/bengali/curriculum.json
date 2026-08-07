@@ -119,6 +119,23 @@
         "BN-EXT-010-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "BN-PATH-011",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "BN-C07-howa",
+        "BN-C07-jaowa",
+        "BN-C07-asha",
+        "BN-C07-khaowa",
+        "BN-C07-dekha",
+        "BN-C07-jana"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-011-CORE-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -233,20 +250,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "BN-PATH-011"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -258,7 +272,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
@@ -343,6 +356,22 @@
       "prerequisites": [],
       "lessons": [
         "BN-C01-nomoshkar"
+      ]
+    },
+    {
+      "id": "BN-EXT-011-CORE-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Bengali verbs, put the right honorific ending on each, and name the two things a Bengali verb never asks — the speaker's gender, and which of two be-verbs will carry the future.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C07-howa",
+        "BN-C07-jaowa",
+        "BN-C07-asha",
+        "BN-C07-khaowa",
+        "BN-C07-dekha",
+        "BN-C07-jana"
       ]
     }
   ]

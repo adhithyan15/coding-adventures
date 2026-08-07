@@ -2097,6 +2097,15 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:bn-core-verbs",
+      "output": "bengali/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "title": "Numbers One to Five",

@@ -44,12 +44,25 @@ a gated reading course.
   o-leaning inherent vowel is **not** demonstrable in these five, since **এক**
   opens with an independent vowel. **Authored.**
 
+- **Ch. 7 — The Core Verbs** (`BN-C07-*`): হওয়া *hôwā* (two be-verbs, and আছ-
+  is unfinished — no future of its own, so *hôbe* or Ch. 5's থাকা carries it;
+  √bhū → English **be**, **been**, **future**) → যাওয়া *jāwā* (the honorific
+  ladder lives in the ending: *jāsh* / *jāo* / *jān*, and *se jāy* against
+  *tini jān*; PIE *\*yeh₂-* has **no** English descendant, said plainly) → আসা
+  *āsā* (**no grammatical gender anywhere** — one *āmi āsi* where Hindi splits
+  *ātā/ātī* and Marathi *yeto/yete*) → খাওয়া *khāwā* (Bengali eats its drinks:
+  *jôl khāwā*; √khād has no secure pedigree past Indo-Aryan, also said plainly)
+  → দেখা *dækhā* (vowel harmony: *dekhi* closed against *dækhe* open, with দে
+  spelled identically; √dṛś → **dragon**) → জানা *jānā* (জানা for facts, চেনা
+  for people — the *savoir*/*connaître* line; √jñā → **know**). The track's
+  first canonical spine verbs. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Postpositions (*-e, -te, -r, -ke*); numbers 1–10; the vowel-harmony in verbs |
-| 7+ | Verb tenses, family, food — always tracing the sound-shift back to Sanskrit |
+| 8 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
+| 9+ | Verb tenses (the past and future of these six), family, food — always tracing the sound-shift back to Sanskrit |
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of
