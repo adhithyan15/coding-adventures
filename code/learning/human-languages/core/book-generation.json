@@ -1945,6 +1945,22 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 33,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:ta-verbs-of-the-mind",
+      "output": "tamil/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ta-verbs-between-people",
+      "output": "tamil/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "title": "Numbers One to Ten",

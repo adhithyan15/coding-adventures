@@ -2853,6 +2853,30 @@
       "tex": "tamil/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:af591db5810ac6fb",
+      "lessonIds": [
+        "TA-C33-ninai",
+        "TA-C33-puri",
+        "TA-C33-padi",
+        "TA-C33-ezhutu"
+      ],
+      "tex": "tamil/book/chapters/ch33-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:2e2e5e869f303320",
+      "lessonIds": [
+        "TA-C34-edu",
+        "TA-C34-kel",
+        "TA-C34-utavu",
+        "TA-C34-pidi"
+      ],
+      "tex": "tamil/book/chapters/ch34-verbs-between-people.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:a0d2c6d28e4fa358",
