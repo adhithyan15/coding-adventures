@@ -394,13 +394,26 @@ describe("block-level modality", () => {
     expect(block.reasons).toEqual(expect.arrayContaining(["sight-cue", "wide-table"]));
   });
 
-  it("only the writing type is detachable — a script block is not", () => {
-    expect([...DETACHABLE_BLOCK_TYPES]).toEqual(["writing"]);
+  it("both writing and script are detachable — a table block is not", () => {
+    // `script` joined `writing`: HL00 makes the inline-letters section optional
+    // scaffolding, so a hands-free renderer may skip it. Detachable is about what a
+    // renderer may set aside, NOT about what the learner's hand must do — which is why
+    // adding it here no longer drags a lesson to `pen`.
+    expect([...DETACHABLE_BLOCK_TYPES]).toEqual(["writing", "script"]);
     const parsed = lesson({
       id: "HI-C01-s",
       body: "## Warm-up\n\nSay it.\n\n## Script — क\n\nA vertical bar.\n\n## Wrap-up Recall\n\nSay it.",
     });
-    expect(parsed.blocks.map(isDetachableBlock)).toEqual([false, false, false]);
+    // Warm-up and Wrap-up are load-bearing prose; the Script section is not.
+    expect(parsed.blocks.map(isDetachableBlock)).toEqual([false, true, false]);
+
+    // A table-bearing block is NOT detachable: the table is the content, so skipping it
+    // would silently drop what the lesson teaches rather than defer optional scaffolding.
+    const tabular = lesson({
+      id: "ES-C01-t",
+      body: "## Warm-up\n\nSay it.\n\n## Grammar Lens — forms\n\n| a | b |\n| - | - |\n| 1 | 2 |",
+    });
+    expect(tabular.blocks.map(isDetachableBlock)).toEqual([false, false]);
   });
 
   it("the full modality is pen and the core is voice — one lesson, two answers", () => {
@@ -602,8 +615,14 @@ describe("chapter and track rollups", () => {
     expect(track?.voice).toBe(2);
     expect(track?.sight).toBe(1);
     expect(track?.pen).toBe(1);
-    expect(track?.drivablePercent).toBe(50);
-    expect(track?.drivablePrefixTotal).toBe(2);
+    // 75, not 50. `drivablePercent` counts the CORE, and ES-C02-a's only obstacle is a
+    // detachable `## Script` section — so once that section is set aside the lesson is
+    // listenable, and three of the four lessons are. Only the `writing`-TYPE lesson
+    // (ES-C01-c) is genuinely lost to a driver: the whole lesson is the handwriting, so
+    // there is nothing separable to skip.
+    expect(track?.drivablePercent).toBe(75);
+    // ...and chapter 2 now starts by ear, which is the point of the split.
+    expect(track?.drivablePrefixTotal).toBe(3);
 
     const [first, second] = track?.chapters ?? [];
     expect(first).toMatchObject({
@@ -613,7 +632,9 @@ describe("chapter and track rollups", () => {
       firstNonVoiceLesson: "ES-C01-c",
       modalities: ["voice", "sight", "pen"],
     });
-    expect(second).toMatchObject({ chapter: 2, drivablePrefix: 0, firstNonVoiceLesson: "ES-C02-a" });
+    // Chapter 2 used to be prefix-0, blocked at its first lesson by the script section.
+    // That section detaches, so the chapter is startable and has no blocker at all.
+    expect(second).toMatchObject({ chapter: 2, drivablePrefix: 1, firstNonVoiceLesson: null });
   });
 
   it("leaves firstNonVoiceLesson null when a whole chapter is drivable", () => {
@@ -758,10 +779,11 @@ describe("the gap report", () => {
       ],
       books: { books: [] },
     });
-    // Chapter 3 is blocked by its script block. Chapter 4 is NOT: the override is
-    // unexplained and reported, but this PR gates nothing, so the authored `voice`
-    // still takes effect and the chapter stays drivable.
-    expect(report.summary.chaptersWithoutDrivablePrefix).toBe(1);
+    // NEITHER chapter is blocked now. Chapter 3's only obstacle is a `## Script`
+    // section, which detaches — a driver skips the glyphs and keeps the lesson — so it
+    // starts by ear. Chapter 4 was never blocked: its override is unexplained and
+    // reported, but nothing here gates, so the authored `voice` still takes effect.
+    expect(report.summary.chaptersWithoutDrivablePrefix).toBe(0);
     expect(report.summary.unexplainedModalityOverrides).toBe(1);
   });
 
@@ -783,7 +805,16 @@ describe("the gap report", () => {
       buildCurriculumGapReport({
         registry,
         lessons: [
-          lesson({ id: "ES-C05", chapter: 5, sequence: 10, body: "## Script — ñ\n\nA tilde." }),
+          // A four-column paradigm, NOT a script section: the lineariser refuses it and
+          // it is not detachable, so it genuinely blocks the chapter. The fixture used to
+          // be a `## Script` block, which stopped blocking once script became detachable —
+          // and this test is about whether a blocker gets NAMED, so it needs a real one.
+          lesson({
+            id: "ES-C05",
+            chapter: 5,
+            sequence: 10,
+            body: "## Warm-up\n\n| a | b | c | d |\n| - | - | - | - |\n| 1 | 2 | 3 | 4 |",
+          }),
           lesson({ id: "ES-C06", chapter: 6, sequence: 20, type: "writing", modality: "voice" }),
         ],
         books: { books: [] },
@@ -843,9 +874,19 @@ describe("corpus regression", () => {
     // than being a separately maintained number that could drift away from it.
     // (`drivableLessons` lives on the generated manifest's summary, not here --
     // ModalitySummary exposes the channel counts and the percentage.)
+    // The published percentage describes the DRIVING EDITION, which reads the core —
+    // the lesson minus the sections a hands-free renderer sets aside. It was equal to
+    // voice/total only while `writing` was the sole detachable type and no lesson had
+    // one; now that the inline-letters section detaches, core and whole legitimately
+    // differ and the percentage must follow the core or it would advertise the wrong
+    // book. Still derived, never separately maintained.
     expect(summary.drivablePercent).toBe(
-      Math.round((summary.voice / summary.totalLessons) * 100),
+      Math.round((summary.coreVoice / summary.totalLessons) * 100),
     );
+    // The whole-lesson partition still has to close.
+    expect(summary.voice + summary.sight + summary.pen).toBe(summary.totalLessons);
+    // And the core is never weaker than the whole: detaching can only help.
+    expect(summary.coreVoice).toBeGreaterThanOrEqual(summary.voice);
 
     // A corpus that derived as entirely one channel would mean the detector had
     // stopped detecting -- the failure mode a fixed number was really guarding.
@@ -891,11 +932,18 @@ describe("corpus regression", () => {
   //
   // When the first interspersed lesson lands, `lessonsWithWritingSegments` rises and
   // this equality breaks — which is the point. Record which track did it; never loosen.
-  it("pins the amendment as a no-op until the first writing segment is authored", () => {
+  it("pins the core as strictly better than the whole, with no writing segments yet", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
+    // Still zero: no track has authored a `## Writing:` section. This is the assertion
+    // that caught the conflation — while `writingSegments` filtered on `detachable`, this
+    // read 276 the moment a second type became detachable, reporting writing sections
+    // that teach no writing.
     expect(summary.lessonsWithWritingSegments).toBe(0);
-    expect(summary.coreVoice).toBe(summary.voice);
+    // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
+    // inline-letters sections detach, so the core of those lessons is listenable even
+    // though the lesson as printed needs eyes.
+    expect(summary.coreVoice).toBeGreaterThan(summary.voice);
     for (const entry of lessonModalities(lessons)) {
       // The invariant a hands-free view relies on: the core never asks for more
       // than the whole lesson does.

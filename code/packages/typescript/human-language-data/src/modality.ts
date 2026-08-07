@@ -190,6 +190,11 @@ export type ModalityReasonCode =
  */
 export const DETACHABLE_BLOCK_TYPES: ReadonlySet<LessonBodyBlock["type"]> = new Set([
   "writing",
+  // The inline-letters section. HL00 makes it optional scaffolding by design — "a reader
+  // who already knows the script skims that section" — and nothing later in the lesson
+  // depends on having read it, so a hands-free renderer may set it aside and still teach
+  // the word. The book prints it in full; only the driving edition skips it.
+  "script",
 ]);
 
 /** Whether one parsed block may be set aside by a hands-free renderer. */
@@ -253,8 +258,16 @@ export interface LessonModality {
   coreReasons: ModalityReasonCode[];
   /** Per-block requirements, in body order. */
   blocks: BlockModality[];
-  /** Titles of the detachable writing segments, in body order. */
+  /** Titles of the sections that teach the hand, in body order. Drive `pen`. */
   writingSegments: string[];
+  /**
+   * Titles of every section a hands-free renderer may set aside, in body order.
+   *
+   * A superset of {@link writingSegments}: an inline-letters `script` section is
+   * detachable (HL00 calls it optional scaffolding a fluent reader skims) but teaches
+   * no writing, so it belongs here and NOT there.
+   */
+  detachableSegments: string[];
   /** Rules that fired, in derivation order. */
   reasons: ModalityReasonCode[];
   /** Raw authored `modality:` value; null when the author left it derived. */
@@ -543,7 +556,24 @@ export function deriveLessonModality(
   const reasons: ModalityReasonCode[] = [];
 
   const blocks = lesson.blocks.map((block, index) => deriveBlockModality(block, index, options));
-  const writingSegments = blocks.filter((block) => block.detachable).map((block) => block.title);
+
+  // TWO DIFFERENT QUESTIONS, AND THEY WERE ONE VARIABLE UNTIL NOW.
+  //
+  //   writingSegments      sections that teach the HAND. They make a lesson `pen`.
+  //   detachableSegments   sections a hands-free renderer may SET ASIDE. They make the
+  //                        core differ from the whole, and say nothing about pen.
+  //
+  // Every writing segment is detachable, so while `writing` was the only detachable type
+  // the two lists were identical and one variable served both. The moment a second type
+  // became detachable the conflation bit: filtering on `detachable` and calling the
+  // result `writingSegments` made every inline-letters section claim a lesson needs a pen
+  // to READ a letter (`pen` 53 -> 309 corpus-wide, and 276 reported "writing segments"
+  // that teach no writing at all). Detachability is about what a renderer may skip;
+  // pen-ness is about what the learner's hand must do. They are now separate.
+  const writingSegments = blocks
+    .filter((block) => block.type === "writing")
+    .map((block) => block.title);
+  const detachableSegments = blocks.filter((block) => block.detachable).map((block) => block.title);
 
   // Rule 1 — a writing lesson teaches the hand. Nothing else can override that
   // downward, so we do not even look at the body. Note this is the lesson TYPE:
@@ -626,6 +656,7 @@ export function deriveLessonModality(
     coreReasons,
     blocks,
     writingSegments,
+    detachableSegments,
     reasons,
     authored,
     authoredReason,
