@@ -426,6 +426,13 @@
       "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 18,
+      "title": "Verbs at the Core",
+      "label": "ch:pt-core-verbs",
+      "output": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "title": "Head and Hand",
