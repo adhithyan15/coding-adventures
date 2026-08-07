@@ -50,6 +50,7 @@ pub mod nodes;
 pub mod op_select;
 pub mod span;
 pub mod text;
+pub mod type_env;
 pub mod types;
 pub mod validator;
 pub mod walker;
@@ -74,6 +75,7 @@ pub use nodes::{
 pub use op_select::{resolve_binary, resolve_numeric, BinaryLowering, NumericLowering};
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};
+pub use type_env::TypeEnv;
 pub use types::{IntSpec, IntWidth, Overflow, SirType};
 pub use validator::{validate, Severity, ValidationResult, ValidatorIssue};
 pub use walker::{

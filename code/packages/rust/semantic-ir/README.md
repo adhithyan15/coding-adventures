@@ -119,6 +119,11 @@ What's covered:
 - `op_select` — type-directed op selection (T3c): `resolve_binary(op, lhs, rhs)` chooses
   `IntArith`/`FloatArith`/`StrConcat`/`TypedCompare`/`RuntimeDispatch` for any binary operator
   from operand types (`resolve_numeric` is the numeric-only core; pure, no inference)
+- `type_env` — the T3c-3 prerequisite: `TypeEnv` resolves an `Expr::VarRef`'s statically-known
+  type by looking up the `Param`/`Capture`/`LetBinding`/`LetStarBinding` that declared its name
+  (`sir_type` lives on declaration sites, not on every `Expr`), so a backend emitter has a way to
+  get the `Option<&SirType>` operands `op_select` needs. Not yet consulted by any backend — inert
+  until a frontend supplies real `sir_type`s and a per-backend wiring PR calls it.
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

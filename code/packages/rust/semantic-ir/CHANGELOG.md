@@ -2,6 +2,34 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.24.0 — `type_env`: the SIR21 T3c-3 prerequisite
+
+Adds `type_env::TypeEnv` — a shared, reusable name→type lookup that gives a
+backend emitter a way to answer "what is this operand's statically-known
+type?" so it can consult `op_select::resolve_binary`/`resolve_numeric`
+(T3c-1/T3c-2, already done). This was the missing piece: `sir_type:
+Option<SirType>` lives on *declaration* sites only (`Param`, `Capture`,
+`Stmt::LetBinding`/`LetStarBinding`) — a bare `Expr::VarRef` carries no type
+of its own, and a literal carries no type field at all — so resolving an
+operand's type requires a name→declaration lookup, not a field read on the
+expression. `TypeEnv::from_function` seeds params/captures; `observe_stmt`
+updates it as a caller walks a block's statements in lexical order (matching
+`Local` scope's ordinary shadowing); `expr_type` resolves a `VarRef` in
+`Local`/`Param`/`Capture` scope or returns `None` (Dynamic) for everything
+else — no inference, matching `op_select`'s own discipline. Deliberately
+does **not** walk control flow itself (each backend already has its own
+block-walking loop with its own scoping rules); a caller updates the
+environment at the point it already visits each statement.
+
+**Not yet consulted by any backend** — no frontend populates `sir_type` on
+any node today, so wiring an emitter to build and consult a `TypeEnv` is
+currently inert (would resolve to `RuntimeDispatch` everywhere, identically
+to today). This slice exists so that wiring, when it lands per backend
+(SIR21 T3c-3 proper), has one correct, unit-tested primitive to call rather
+than six independent reimplementations. 9 new unit tests; zero behavior
+change; `cargo test`/`clippy` clean across `semantic-ir` and unaffected in
+every downstream crate (purely additive module + two new `pub` re-exports).
+
 ## 0.23.0 — SIR22 addendum: APL primitive Expr variants
 
 Extends [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) with the
