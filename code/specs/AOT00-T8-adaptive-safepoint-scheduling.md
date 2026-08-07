@@ -265,8 +265,11 @@ tracked separately; it is what would let an embedder responsibly call `__gc_set_
   exercised by inspection plus the already-thorough `should_collect_minor`/`should_compact`
   gc-core unit tests it calls — matching the existing precedent that `should_compact`'s wiring
   into `__gc_safepoint` also has no dedicated capi-level dispatch-integration test.
-- `cargo miri test -p gc-core -p gc-core-capi` (mandatory for this crate per repo convention —
-  every prior GC-ladder PR was Miri-clean).
+- `cargo miri test -p gc-core` — clean, 116/116 (the crate this PR substantively changes).
+  `cargo miri test -p gc-core-capi` fails independently of this PR: reproduced identically on
+  unmodified `origin/main` in `precise_walk::tests::all_unmapped_frames_become_conservative_regions`
+  (a Stacked-Borrows violation in a pre-existing synthetic-stack-walk test, `precise_walk.rs:176` —
+  a file this PR does not touch). Flagged as a separate follow-up rather than fixed here.
 
 ---
 
