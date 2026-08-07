@@ -9,9 +9,9 @@ Human Languages curriculum gap report
 ramp: 40 lessons above 3 new atoms (572 unmeasurable, 54% measurable); 25 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 119 lessons show another script (max 26 glyphs) — context, never charged to the budget
-order: 565 lessons with no declared sequence across 19 tracks; 271 prerequisites and 331 reviews pointing forward
+order: 515 lessons with no declared sequence across 19 tracks; 245 prerequisites and 300 reviews pointing forward
 reinforcement: 767 of 1519 atoms never revisited (50%); missed windows R1 766, R2 1107, R3 704, R4 131
-forward references: 517 uses of material a later lesson teaches
+forward references: 504 uses of material a later lesson teaches
 98 of 399 book chapters without an HL05 capability; 24 payoffs below the 0.5 representativeness floor; 3 tracks already clean
 
 Longest effective lessons:
@@ -38,7 +38,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   punjabi: 17 voice, 22 sight, 0 pen; 97% drivable; 7 chapters, 38 lessons reachable in chapter-prefix order; 21 rescued by a detachable writing segment
   russian: 16 voice, 7 sight, 5 pen; 79% drivable; 3 chapters, 21 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   sanskrit: 15 voice, 24 sight, 0 pen; 95% drivable; 7 chapters, 32 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
-  spanish: 129 voice, 18 sight, 7 pen; 84% drivable; 35 chapters, 109 lessons reachable in chapter-prefix order
+  spanish: 129 voice, 18 sight, 7 pen; 84% drivable; 35 chapters, 99 lessons reachable in chapter-prefix order
   tamil: 52 voice, 29 sight, 8 pen; 84% drivable; 32 chapters, 61 lessons reachable in chapter-prefix order; 23 rescued by a detachable writing segment
   telugu: 39 voice, 27 sight, 0 pen; 92% drivable; 32 chapters, 57 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
   urdu: 23 voice, 2 sight, 0 pen; 100% drivable; 6 chapters, 25 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment

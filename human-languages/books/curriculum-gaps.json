@@ -26,10 +26,10 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
-    "lessonsWithoutSequence": 565,
-    "forwardReviews": 331,
+    "lessonsWithoutSequence": 515,
+    "forwardReviews": 300,
     "atomsNeverRevisited": 767,
-    "forwardReferences": 517,
+    "forwardReferences": 504,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
@@ -11206,812 +11206,6 @@
         "lessonId": "ES-C07-vivir",
         "language": "spanish",
         "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "forward-review",
-        "other": "ES-C08-tener",
-        "detail": "reviews ES-C08-tener, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "forward-prerequisite",
-        "other": "ES-C08-tener",
-        "detail": "requires ES-C08-tener, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "forward-prerequisite",
-        "other": "ES-C08-numeros-1-5",
-        "detail": "requires ES-C08-numeros-1-5, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C08-numeros-1-5",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C08-numeros-6-10",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "forward-review",
-        "other": "ES-C08-tener",
-        "detail": "reviews ES-C08-tener, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "forward-prerequisite",
-        "other": "ES-C08-tener",
-        "detail": "requires ES-C08-tener, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C08-tener",
-        "language": "spanish",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C09-esta-en",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C09-esta-en",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-review",
-        "other": "ES-C09-ser-vs-estar",
-        "detail": "reviews ES-C09-ser-vs-estar, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C09-esta-en",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-prerequisite",
-        "other": "ES-C09-ser-vs-estar",
-        "detail": "requires ES-C09-ser-vs-estar, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-review",
-        "other": "ES-C09-ser-vs-estar",
-        "detail": "reviews ES-C09-ser-vs-estar, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-review",
-        "other": "ES-C09-soy-de",
-        "detail": "reviews ES-C09-soy-de, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-prerequisite",
-        "other": "ES-C09-ser",
-        "detail": "requires ES-C09-ser, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-prerequisite",
-        "other": "ES-C09-ser-vs-estar",
-        "detail": "requires ES-C09-ser-vs-estar, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "forward-prerequisite",
-        "other": "ES-C09-soy-de",
-        "detail": "requires ES-C09-soy-de, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C09-ser",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C09-ser-vs-estar",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C09-soy-de",
-        "language": "spanish",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C10-ir",
-        "language": "spanish",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C10-ir-a-futuro",
-        "language": "spanish",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C10-mi-tu-su",
-        "language": "spanish",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C10-practice",
-        "language": "spanish",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C11-nuestro",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C11-nuestro",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-review",
-        "other": "ES-C11-poder",
-        "detail": "reviews ES-C11-poder, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C11-poder",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C11-poder",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-review",
-        "other": "ES-C11-querer",
-        "detail": "reviews ES-C11-querer, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C11-poder",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-prerequisite",
-        "other": "ES-C11-querer",
-        "detail": "requires ES-C11-querer, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C11-practice",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C11-practice",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-review",
-        "other": "ES-C11-querer",
-        "detail": "reviews ES-C11-querer, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C11-practice",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-prerequisite",
-        "other": "ES-C11-querer",
-        "detail": "requires ES-C11-querer, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C11-practice",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "forward-prerequisite",
-        "other": "ES-C11-stem-changes",
-        "detail": "requires ES-C11-stem-changes, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C11-querer",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C11-stem-changes",
-        "language": "spanish",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C12-decir",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C12-decir",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "forward-review",
-        "other": "ES-C12-hacer",
-        "detail": "reviews ES-C12-hacer, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C12-decir",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "forward-prerequisite",
-        "other": "ES-C12-hacer",
-        "detail": "requires ES-C12-hacer, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C12-hacer",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C12-practice",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C12-practice",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "forward-review",
-        "other": "ES-C12-yo-go",
-        "detail": "reviews ES-C12-yo-go, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C12-practice",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "forward-prerequisite",
-        "other": "ES-C12-yo-go",
-        "detail": "requires ES-C12-yo-go, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C12-yo-go",
-        "language": "spanish",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C13-poner",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "forward-review",
-        "other": "ES-C13-salir",
-        "detail": "reviews ES-C13-salir, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "forward-review",
-        "other": "ES-C13-venir",
-        "detail": "reviews ES-C13-venir, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "forward-prerequisite",
-        "other": "ES-C13-salir",
-        "detail": "requires ES-C13-salir, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "forward-prerequisite",
-        "other": "ES-C13-venir",
-        "detail": "requires ES-C13-venir, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C13-salir",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C13-venir",
-        "language": "spanish",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C14-hablar-preterite",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C14-hablar-preterite",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "forward-review",
-        "other": "ES-C14-ser-ir-preterite",
-        "detail": "reviews ES-C14-ser-ir-preterite, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C14-hablar-preterite",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "forward-prerequisite",
-        "other": "ES-C14-ser-ir-preterite",
-        "detail": "requires ES-C14-ser-ir-preterite, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "forward-review",
-        "other": "ES-C14-ser-ir-preterite",
-        "detail": "reviews ES-C14-ser-ir-preterite, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "forward-prerequisite",
-        "other": "ES-C14-ser-ir-preterite",
-        "detail": "requires ES-C14-ser-ir-preterite, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C14-ser-ir-preterite",
-        "language": "spanish",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C15-comer-vivir-preterite",
-        "language": "spanish",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C15-practice",
-        "language": "spanish",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C15-practice",
-        "language": "spanish",
-        "chapter": 15,
-        "kind": "forward-review",
-        "other": "ES-C15-preterite-fuertes",
-        "detail": "reviews ES-C15-preterite-fuertes, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C15-practice",
-        "language": "spanish",
-        "chapter": 15,
-        "kind": "forward-prerequisite",
-        "other": "ES-C15-preterite-fuertes",
-        "detail": "requires ES-C15-preterite-fuertes, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C15-preterite-fuertes",
-        "language": "spanish",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C16-imperfecto",
-        "language": "spanish",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C16-practice",
-        "language": "spanish",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C16-practice",
-        "language": "spanish",
-        "chapter": 16,
-        "kind": "forward-review",
-        "other": "ES-C16-tres-irregulares",
-        "detail": "reviews ES-C16-tres-irregulares, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C16-practice",
-        "language": "spanish",
-        "chapter": 16,
-        "kind": "forward-prerequisite",
-        "other": "ES-C16-tres-irregulares",
-        "detail": "requires ES-C16-tres-irregulares, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C16-tres-irregulares",
-        "language": "spanish",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C17-condicional",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C17-condicional",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "forward-review",
-        "other": "ES-C17-futuro",
-        "detail": "reviews ES-C17-futuro, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C17-condicional",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "forward-prerequisite",
-        "other": "ES-C17-futuro",
-        "detail": "requires ES-C17-futuro, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C17-future-guessing",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C17-future-guessing",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "forward-review",
-        "other": "ES-C17-practice",
-        "detail": "reviews ES-C17-practice, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C17-future-guessing",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "forward-review",
-        "other": "ES-C17-futuro",
-        "detail": "reviews ES-C17-futuro, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C17-future-guessing",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "forward-prerequisite",
-        "other": "ES-C17-practice",
-        "detail": "requires ES-C17-practice, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C17-futuro",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C17-practice",
-        "language": "spanish",
-        "chapter": 17,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-inherited-subjunctive-stems",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-inherited-subjunctive-stems",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjuntivo",
-        "detail": "reviews ES-C18-subjuntivo, which the learner does not reach for another 8 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-inherited-subjunctive-stems",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-subjuntivo",
-        "detail": "requires ES-C18-subjuntivo, which comes 8 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-ojala",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-ojala",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-wanting-clause-trap",
-        "detail": "reviews ES-C18-wanting-clause-trap, which the learner does not reach for another 8 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-ojala",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-wanting-clause-trap",
-        "detail": "requires ES-C18-wanting-clause-trap, which comes 8 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjunctive-name",
-        "detail": "reviews ES-C18-subjunctive-name, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjuntivo",
-        "detail": "reviews ES-C18-subjuntivo, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-quiero-que",
-        "detail": "reviews ES-C18-quiero-que, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-subjunctive-name",
-        "detail": "requires ES-C18-subjunctive-name, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-practice-mood",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-practice-mood",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-practice-subjects",
-        "detail": "reviews ES-C18-practice-subjects, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-practice-mood",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-practice-subjects",
-        "detail": "requires ES-C18-practice-subjects, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-practice-subjects",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-practice-subjects",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-quiero-que",
-        "detail": "reviews ES-C18-quiero-que, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-practice-subjects",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-wanting-clause-trap",
-        "detail": "reviews ES-C18-wanting-clause-trap, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-quiero-que",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-quiero-que",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjunctive-name",
-        "detail": "reviews ES-C18-subjunctive-name, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-quiero-que",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjuntivo",
-        "detail": "reviews ES-C18-subjuntivo, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-quiero-que",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-subjunctive-name",
-        "detail": "requires ES-C18-subjunctive-name, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-subjunctive-name",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-subjunctive-name",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjunctive-outliers",
-        "detail": "reviews ES-C18-subjunctive-outliers, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-subjunctive-name",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-review",
-        "other": "ES-C18-subjuntivo",
-        "detail": "reviews ES-C18-subjuntivo, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C18-subjunctive-name",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "forward-prerequisite",
-        "other": "ES-C18-subjunctive-outliers",
-        "detail": "requires ES-C18-subjunctive-outliers, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C18-subjunctive-outliers",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-subjuntivo",
-        "language": "spanish",
-        "chapter": 18,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C18-wanting-clause-trap",
-        "language": "spanish",
-        "chapter": 18,
         "kind": "no-sequence",
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
@@ -27674,13 +26868,21 @@
       {
         "lessonId": "ES-C08-cuantos-anos",
         "language": "spanish",
-        "position": 63,
+        "position": 66,
         "word": "veinte",
         "taughtBy": "ES-C31-veinte",
-        "lessonsEarly": 78
+        "lessonsEarly": 75
       },
       {
-        "lessonId": "ES-C09-practice",
+        "lessonId": "ES-C08-numeros-6-10",
+        "language": "spanish",
+        "position": 64,
+        "word": "dieciséis",
+        "taughtBy": "ES-C31-dieciseis-diecinueve",
+        "lessonsEarly": 75
+      },
+      {
+        "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
         "position": 69,
         "word": "verde",
@@ -27696,38 +26898,6 @@
         "lessonsEarly": 74
       },
       {
-        "lessonId": "ES-C08-numeros-6-10",
-        "language": "spanish",
-        "position": 65,
-        "word": "dieciséis",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 74
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 66,
-        "word": "dieciséis",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 73
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 66,
-        "word": "diecinueve",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 73
-      },
-      {
-        "lessonId": "ES-C09-ser-vs-estar",
-        "language": "spanish",
-        "position": 71,
-        "word": "verde",
-        "taughtBy": "ES-C33-verde",
-        "lessonsEarly": 73
-      },
-      {
         "lessonId": "TA-C01-practice",
         "language": "tamil",
         "position": 12,
@@ -27741,6 +26911,30 @@
         "position": 57,
         "word": "agua",
         "taughtBy": "ES-C26-agua",
+        "lessonsEarly": 72
+      },
+      {
+        "lessonId": "ES-C08-practice",
+        "language": "spanish",
+        "position": 67,
+        "word": "dieciséis",
+        "taughtBy": "ES-C31-dieciseis-diecinueve",
+        "lessonsEarly": 72
+      },
+      {
+        "lessonId": "ES-C08-practice",
+        "language": "spanish",
+        "position": 67,
+        "word": "diecinueve",
+        "taughtBy": "ES-C31-dieciseis-diecinueve",
+        "lessonsEarly": 72
+      },
+      {
+        "lessonId": "ES-C09-practice",
+        "language": "spanish",
+        "position": 72,
+        "word": "verde",
+        "taughtBy": "ES-C33-verde",
         "lessonsEarly": 72
       },
       {
@@ -27776,14 +26970,6 @@
         "lessonsEarly": 58
       },
       {
-        "lessonId": "ES-C02-noche",
-        "language": "spanish",
-        "position": 9,
-        "word": "ocho",
-        "taughtBy": "ES-C08-numeros-6-10",
-        "lessonsEarly": 56
-      },
-      {
         "lessonId": "TA-C04-naalai",
         "language": "tamil",
         "position": 31,
@@ -27792,28 +26978,36 @@
         "lessonsEarly": 56
       },
       {
+        "lessonId": "ES-C02-noche",
+        "language": "spanish",
+        "position": 9,
+        "word": "ocho",
+        "taughtBy": "ES-C08-numeros-6-10",
+        "lessonsEarly": 55
+      },
+      {
         "lessonId": "ES-C12-hacer",
         "language": "spanish",
-        "position": 83,
+        "position": 82,
         "word": "hace calor",
         "taughtBy": "ES-C30-hace-calor",
-        "lessonsEarly": 53
+        "lessonsEarly": 54
       },
       {
         "lessonId": "ES-C12-hacer",
         "language": "spanish",
-        "position": 83,
+        "position": 82,
         "word": "hace frío",
         "taughtBy": "ES-C30-hace-calor",
-        "lessonsEarly": 53
+        "lessonsEarly": 54
       },
       {
         "lessonId": "ES-C12-hacer",
         "language": "spanish",
-        "position": 83,
+        "position": 82,
         "word": "hace sol",
         "taughtBy": "ES-C30-hace-calor",
-        "lessonsEarly": 53
+        "lessonsEarly": 54
       },
       {
         "lessonId": "TA-C04-po",
@@ -27824,20 +27018,20 @@
         "lessonsEarly": 53
       },
       {
-        "lessonId": "ES-C12-practice",
-        "language": "spanish",
-        "position": 84,
-        "word": "hace frío",
-        "taughtBy": "ES-C30-hace-calor",
-        "lessonsEarly": 52
-      },
-      {
         "lessonId": "TA-C04-poy-varugiren",
         "language": "tamil",
         "position": 33,
         "word": "வா",
         "taughtBy": "TA-C32-vaa",
         "lessonsEarly": 52
+      },
+      {
+        "lessonId": "ES-C12-practice",
+        "language": "spanish",
+        "position": 85,
+        "word": "hace frío",
+        "taughtBy": "ES-C30-hace-calor",
+        "lessonsEarly": 51
       },
       {
         "lessonId": "LA-C08-manus",
@@ -27854,14 +27048,6 @@
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 51
-      },
-      {
-        "lessonId": "ES-C07-vivir",
-        "language": "spanish",
-        "position": 62,
-        "word": "viva",
-        "taughtBy": "ES-C18-subjuntivo",
-        "lessonsEarly": 49
       },
       {
         "lessonId": "PT-C02-como",
@@ -27912,6 +27098,14 @@
         "lessonsEarly": 41
       },
       {
+        "lessonId": "ES-C07-vivir",
+        "language": "spanish",
+        "position": 62,
+        "word": "viva",
+        "taughtBy": "ES-C18-subjuntivo",
+        "lessonsEarly": 41
+      },
+      {
         "lessonId": "IT-C02-stare",
         "language": "italian",
         "position": 11,
@@ -27936,22 +27130,6 @@
         "lessonsEarly": 40
       },
       {
-        "lessonId": "ES-C04-como-esta",
-        "language": "spanish",
-        "position": 30,
-        "word": "ser",
-        "taughtBy": "ES-C09-ser",
-        "lessonsEarly": 40
-      },
-      {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "position": 91,
-        "word": "pan",
-        "taughtBy": "ES-C26-pan",
-        "lessonsEarly": 40
-      },
-      {
         "lessonId": "IT-C02-come-va",
         "language": "italian",
         "position": 14,
@@ -27968,6 +27146,14 @@
         "lessonsEarly": 39
       },
       {
+        "lessonId": "ES-C14-practice",
+        "language": "spanish",
+        "position": 92,
+        "word": "pan",
+        "taughtBy": "ES-C26-pan",
+        "lessonsEarly": 39
+      },
+      {
         "lessonId": "GE-W02-umlauts",
         "language": "german",
         "position": 35,
@@ -27981,6 +27167,14 @@
         "position": 6,
         "word": "لا",
         "taughtBy": "AR-C05-la",
+        "lessonsEarly": 38
+      },
+      {
+        "lessonId": "ES-C04-como-esta",
+        "language": "spanish",
+        "position": 30,
+        "word": "ser",
+        "taughtBy": "ES-C09-ser",
         "lessonsEarly": 38
       },
       {
@@ -28120,14 +27314,6 @@
         "lessonsEarly": 32
       },
       {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "position": 91,
-        "word": "madre",
-        "taughtBy": "ES-C23-padre-madre",
-        "lessonsEarly": 32
-      },
-      {
         "lessonId": "GE-C06-zahlen-1-5",
         "language": "german",
         "position": 42,
@@ -28144,12 +27330,12 @@
         "lessonsEarly": 31
       },
       {
-        "lessonId": "ES-C15-practice",
+        "lessonId": "ES-C14-practice",
         "language": "spanish",
-        "position": 94,
+        "position": 92,
         "word": "madre",
         "taughtBy": "ES-C23-padre-madre",
-        "lessonsEarly": 29
+        "lessonsEarly": 31
       },
       {
         "lessonId": "ES-C01-bien",
@@ -28160,20 +27346,20 @@
         "lessonsEarly": 28
       },
       {
+        "lessonId": "ES-C15-practice",
+        "language": "spanish",
+        "position": 95,
+        "word": "madre",
+        "taughtBy": "ES-C23-padre-madre",
+        "lessonsEarly": 28
+      },
+      {
         "lessonId": "FR-W01-accents",
         "language": "french",
         "position": 32,
         "word": "être",
         "taughtBy": "FR-C16-etre",
         "lessonsEarly": 28
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "position": 87,
-        "word": "sí",
-        "taughtBy": "ES-C19-si",
-        "lessonsEarly": 26
       },
       {
         "lessonId": "LA-C19-valeo-family",
@@ -28206,6 +27392,14 @@
         "word": "ver",
         "taughtBy": "PT-C18-ver",
         "lessonsEarly": 25
+      },
+      {
+        "lessonId": "ES-C13-practice",
+        "language": "spanish",
+        "position": 89,
+        "word": "sí",
+        "taughtBy": "ES-C19-si",
+        "lessonsEarly": 24
       },
       {
         "lessonId": "ES-C22-negro-blanco",
@@ -28288,14 +27482,6 @@
         "lessonsEarly": 20
       },
       {
-        "lessonId": "ES-C10-ir",
-        "language": "spanish",
-        "position": 73,
-        "word": "fui",
-        "taughtBy": "ES-C14-ser-ir-preterite",
-        "lessonsEarly": 19
-      },
-      {
         "lessonId": "ML-C01-practice",
         "language": "malayalam",
         "position": 4,
@@ -28325,6 +27511,14 @@
         "position": 1,
         "word": "cómo",
         "taughtBy": "ES-C03-como",
+        "lessonsEarly": 17
+      },
+      {
+        "lessonId": "ES-C10-ir",
+        "language": "spanish",
+        "position": 73,
+        "word": "fui",
+        "taughtBy": "ES-C14-ser-ir-preterite",
         "lessonsEarly": 17
       },
       {
@@ -28552,14 +27746,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "ES-C11-poder",
-        "language": "spanish",
-        "position": 78,
-        "word": "venir",
-        "taughtBy": "ES-C13-venir",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "FR-C01-practice",
         "language": "french",
         "position": 8,
@@ -28624,9 +27810,9 @@
         "lessonsEarly": 10
       },
       {
-        "lessonId": "ES-C11-practice",
+        "lessonId": "ES-C11-poder",
         "language": "spanish",
-        "position": 79,
+        "position": 78,
         "word": "venir",
         "taughtBy": "ES-C13-venir",
         "lessonsEarly": 10
@@ -28872,19 +28058,11 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "ES-C10-practice",
+        "lessonId": "ES-C11-practice",
         "language": "spanish",
-        "position": 76,
-        "word": "hacer",
-        "taughtBy": "ES-C12-hacer",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "ES-C18-ojala",
-        "language": "spanish",
-        "position": 104,
-        "word": "hable",
-        "taughtBy": "ES-C18-subjuntivo",
+        "position": 81,
+        "word": "venir",
+        "taughtBy": "ES-C13-venir",
         "lessonsEarly": 7
       },
       {
@@ -29000,27 +28178,11 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "ES-C18-practice",
+        "lessonId": "ES-C10-practice",
         "language": "spanish",
-        "position": 105,
-        "word": "hable",
-        "taughtBy": "ES-C18-subjuntivo",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "position": 105,
-        "word": "coma",
-        "taughtBy": "ES-C18-subjuntivo",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "ES-C18-practice",
-        "language": "spanish",
-        "position": 105,
-        "word": "viva",
-        "taughtBy": "ES-C18-subjuntivo",
+        "position": 76,
+        "word": "hacer",
+        "taughtBy": "ES-C12-hacer",
         "lessonsEarly": 6
       },
       {
@@ -29160,27 +28322,11 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "ES-C08-practice",
+        "lessonId": "ES-C10-mi-tu-su",
         "language": "spanish",
-        "position": 66,
-        "word": "ser vs estar",
-        "taughtBy": "ES-C09-ser-vs-estar",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 66,
-        "word": "vs estar",
-        "taughtBy": "ES-C09-ser-vs-estar",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "ES-C18-practice-mood",
-        "language": "spanish",
-        "position": 106,
-        "word": "hable",
-        "taughtBy": "ES-C18-subjuntivo",
+        "position": 75,
+        "word": "nuestro",
+        "taughtBy": "ES-C11-nuestro",
         "lessonsEarly": 5
       },
       {
@@ -29296,49 +28442,9 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "position": 60,
-        "word": "tres",
-        "taughtBy": "ES-C08-numeros-1-5",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "position": 63,
-        "word": "tener",
-        "taughtBy": "ES-C08-tener",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 66,
-        "word": "ser",
-        "taughtBy": "ES-C09-ser",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "ES-C09-practice",
-        "language": "spanish",
-        "position": 69,
-        "word": "ir",
-        "taughtBy": "ES-C10-ir",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "ES-C11-practice",
-        "language": "spanish",
-        "position": 79,
-        "word": "hacer",
-        "taughtBy": "ES-C12-hacer",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "ES-C12-yo-go",
         "language": "spanish",
-        "position": 85,
+        "position": 84,
         "word": "venir",
         "taughtBy": "ES-C13-venir",
         "lessonsEarly": 4
@@ -29552,9 +28658,17 @@
         "lessonsEarly": 3
       },
       {
+        "lessonId": "ES-C07-practice",
+        "language": "spanish",
+        "position": 60,
+        "word": "tres",
+        "taughtBy": "ES-C08-numeros-1-5",
+        "lessonsEarly": 3
+      },
+      {
         "lessonId": "ES-C12-yo-go",
         "language": "spanish",
-        "position": 85,
+        "position": 84,
         "word": "salir",
         "taughtBy": "ES-C13-salir",
         "lessonsEarly": 3
@@ -29864,59 +28978,35 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C08-numeros-6-10",
+        "lessonId": "ES-C08-practice",
         "language": "spanish",
-        "position": 65,
-        "word": "tener",
-        "taughtBy": "ES-C08-tener",
+        "position": 67,
+        "word": "ser vs estar",
+        "taughtBy": "ES-C09-ser-vs-estar",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C09-esta-en",
+        "lessonId": "ES-C08-practice",
         "language": "spanish",
-        "position": 68,
-        "word": "ser",
-        "taughtBy": "ES-C09-ser",
+        "position": 67,
+        "word": "vs estar",
+        "taughtBy": "ES-C09-ser-vs-estar",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C10-mi-tu-su",
+        "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
-        "position": 75,
-        "word": "nuestro",
-        "taughtBy": "ES-C11-nuestro",
+        "position": 69,
+        "word": "está en…",
+        "taughtBy": "ES-C09-esta-en",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C11-poder",
+        "lessonId": "ES-C12-yo-go",
         "language": "spanish",
-        "position": 78,
-        "word": "querer",
-        "taughtBy": "ES-C11-querer",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C13-poner",
-        "language": "spanish",
-        "position": 86,
-        "word": "salir",
-        "taughtBy": "ES-C13-salir",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C13-practice",
-        "language": "spanish",
-        "position": 87,
-        "word": "venir",
-        "taughtBy": "ES-C13-venir",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C14-hablar-preterite",
-        "language": "spanish",
-        "position": 90,
-        "word": "fui",
-        "taughtBy": "ES-C14-ser-ir-preterite",
+        "position": 84,
+        "word": "poner",
+        "taughtBy": "ES-C13-poner",
         "lessonsEarly": 2
       },
       {
@@ -30424,25 +29514,33 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C08-practice",
+        "lessonId": "ES-C08-numeros-6-10",
         "language": "spanish",
-        "position": 66,
+        "position": 64,
         "word": "tener",
         "taughtBy": "ES-C08-tener",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C09-practice",
+        "lessonId": "ES-C08-practice",
         "language": "spanish",
-        "position": 69,
+        "position": 67,
         "word": "ser",
         "taughtBy": "ES-C09-ser",
         "lessonsEarly": 1
       },
       {
+        "lessonId": "ES-C09-practice",
+        "language": "spanish",
+        "position": 72,
+        "word": "ir",
+        "taughtBy": "ES-C10-ir",
+        "lessonsEarly": 1
+      },
+      {
         "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
-        "position": 71,
+        "position": 69,
         "word": "soy de…",
         "taughtBy": "ES-C09-soy-de",
         "lessonsEarly": 1
@@ -30450,9 +29548,17 @@
       {
         "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
-        "position": 71,
+        "position": 69,
         "word": "de…",
         "taughtBy": "ES-C09-soy-de",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "ES-C09-soy-de",
+        "language": "spanish",
+        "position": 70,
+        "word": "está en…",
+        "taughtBy": "ES-C09-esta-en",
         "lessonsEarly": 1
       },
       {
@@ -30482,31 +29588,39 @@
       {
         "lessonId": "ES-C11-practice",
         "language": "spanish",
-        "position": 79,
-        "word": "querer",
-        "taughtBy": "ES-C11-querer",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C12-decir",
-        "language": "spanish",
-        "position": 82,
+        "position": 81,
         "word": "hacer",
         "taughtBy": "ES-C12-hacer",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C12-yo-go",
+        "lessonId": "ES-C11-querer",
         "language": "spanish",
-        "position": 85,
-        "word": "poner",
-        "taughtBy": "ES-C13-poner",
+        "position": 77,
+        "word": "poder",
+        "taughtBy": "ES-C11-poder",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C13-practice",
+        "lessonId": "ES-C11-stem-changes",
         "language": "spanish",
-        "position": 87,
+        "position": 79,
+        "word": "nuestro",
+        "taughtBy": "ES-C11-nuestro",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "ES-C12-hacer",
+        "language": "spanish",
+        "position": 82,
+        "word": "decir",
+        "taughtBy": "ES-C12-decir",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "ES-C13-poner",
+        "language": "spanish",
+        "position": 86,
         "word": "salir",
         "taughtBy": "ES-C13-salir",
         "lessonsEarly": 1
@@ -30514,41 +29628,17 @@
       {
         "lessonId": "ES-C13-salir",
         "language": "spanish",
-        "position": 88,
+        "position": 87,
         "word": "venir",
         "taughtBy": "ES-C13-venir",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C14-practice",
+        "lessonId": "ES-C14-ser-ir-preterite",
         "language": "spanish",
-        "position": 91,
-        "word": "fui",
-        "taughtBy": "ES-C14-ser-ir-preterite",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C15-practice",
-        "language": "spanish",
-        "position": 94,
-        "word": "tuve",
-        "taughtBy": "ES-C15-preterite-fuertes",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C15-practice",
-        "language": "spanish",
-        "position": 94,
-        "word": "hice",
-        "taughtBy": "ES-C15-preterite-fuertes",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C16-practice",
-        "language": "spanish",
-        "position": 97,
-        "word": "era",
-        "taughtBy": "ES-C16-tres-irregulares",
+        "position": 90,
+        "word": "hablé",
+        "taughtBy": "ES-C14-hablar-preterite",
         "lessonsEarly": 1
       },
       {
@@ -31992,12 +31082,12 @@
       {
         "language": "spanish",
         "lessonCount": 154,
-        "lessonsWithoutSequence": 56,
-        "forwardPrerequisites": 31,
-        "forwardReviews": 37,
+        "lessonsWithoutSequence": 6,
+        "forwardPrerequisites": 5,
+        "forwardReviews": 6,
         "atomsTaught": 199,
         "atomsNeverRevisited": 102,
-        "forwardReferences": 112
+        "forwardReferences": 99
       },
       {
         "language": "tamil",
@@ -32031,10 +31121,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 565,
+      "lessonsWithoutSequence": 515,
       "tracksWithUnorderedLessons": 19,
-      "forwardPrerequisites": 271,
-      "forwardReviews": 331,
+      "forwardPrerequisites": 245,
+      "forwardReviews": 300,
       "atomsTaught": 1519,
       "atomsNeverRevisited": 767,
       "neverRevisitedPercent": 50,
@@ -32044,7 +31134,7 @@
         "R3": 704,
         "R4": 131
       },
-      "forwardReferences": 517
+      "forwardReferences": 504
     }
   },
   "modality": {
@@ -36494,7 +35584,7 @@
         "pen": 7,
         "coreVoice": 129,
         "drivablePercent": 84,
-        "drivablePrefixTotal": 109,
+        "drivablePrefixTotal": 99,
         "chapters": [
           {
             "language": "spanish",
@@ -36626,8 +35716,8 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
-            "firstNonVoiceLesson": "ES-C09-esta-en"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ES-C09-ser-vs-estar"
           },
           {
             "language": "spanish",
@@ -36670,7 +35760,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "ES-C12-yo-go"
           },
           {
@@ -36715,7 +35805,7 @@
               "sight"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": "ES-C15-practice"
+            "firstNonVoiceLesson": "ES-C15-preterite-fuertes"
           },
           {
             "language": "spanish",
@@ -36729,7 +35819,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": "ES-C16-tres-irregulares"
           },
           {
@@ -36744,7 +35834,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "ES-C17-practice"
           },
           {
@@ -36759,7 +35849,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 8,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "ES-C18-subjuntivo"
           },
           {
