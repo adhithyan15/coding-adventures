@@ -248,7 +248,10 @@ describe("the real corpus", () => {
     // ticks DOWN a point. New content is not making this worse; it is slightly better
     // than what it joins. That is still 21 more atoms taught once and abandoned.
     expect(report.summary.atomsTaught).toBe(1599);
-    expect(report.summary.atomsNeverRevisited).toBe(757);
+    // HL09 step 3 wired 17 R1 windows in chapters 3-6, of which 12 move the "never"
+    // count — the other five already had a revisit further out. The absolute figures
+    // also move as main lands new lessons; the 17/12 split is what this PR did.
+    expect(report.summary.atomsNeverRevisited).toBe(745);
     expect(report.summary.neverRevisitedPercent).toBe(47);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -269,6 +272,14 @@ describe("the real corpus", () => {
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
     expect(report.summary.forwardReferences).toBe(506);
+
+    // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
+    // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
+    // change is accountable for is the 17. R2 moves only with new lessons, never from
+    // that work — closing a near window does not close a far one, and nothing yet
+    // addresses R2/R3/R4.
+    expect(report.summary.missedByWindow.R1).toBe(778);
+    expect(report.summary.missedByWindow.R2).toBe(1159);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -295,7 +306,7 @@ describe("the real corpus", () => {
       lessonsWithoutSequence: 6,
       forwardPrerequisites: 5,
       atomsTaught: 199,
-      atomsNeverRevisited: 102,
+      atomsNeverRevisited: 90,
     });
   });
 

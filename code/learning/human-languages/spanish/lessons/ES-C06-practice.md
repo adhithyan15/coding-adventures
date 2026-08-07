@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -68,7 +68,7 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 - **Hablo español** — your first self-assembled sentence (pro-drop, no article).
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE] -->
 
 [PAUSE 1s]
 - [YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]

@@ -17,7 +17,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT]
 practises:
-  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT]
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT, ES-SCRIPT-ACUTE-ACCENT]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -48,7 +48,7 @@ labels meaning and grammar. Other pairs will arrive only when you know both
 words, so this lesson asks you to hold one contrast, not memorize a list.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT, ES-SCRIPT-ACUTE-ACCENT] -->
 
 [PAUSE 1s]
 - [YOU SAY: “el” — the]

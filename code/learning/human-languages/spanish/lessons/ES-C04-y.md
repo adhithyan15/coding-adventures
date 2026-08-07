@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-Y, ES-PRAGMATICS-AND-YOU, ES-ETYMON-ET]
 practises:
-  knowledge: [ES-LEX-Y, ES-PRAGMATICS-AND-YOU, ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-ET]
+  knowledge: [ES-LEX-Y, ES-PRAGMATICS-AND-YOU, ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-ET, ES-LEX-REGULAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,7 +55,7 @@ Nothing else needs repeating. The little question hands the previous topic
 back to the other person.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-Y, ES-PRAGMATICS-AND-YOU, ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-ET] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-Y, ES-PRAGMATICS-AND-YOU, ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-ET, ES-LEX-REGULAR] -->
 
 [PAUSE 1s]
 - [YOU SAY: “Bien. ¿Y tú?” to a friend]

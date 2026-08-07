@@ -4930,7 +4930,7 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c33320f1373d714f",
+      "sourceHash": "fnv1a64:cca681cba079b8ff",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -4952,12 +4952,12 @@
       "text": "spanish/narration/ch03.txt",
       "json": "spanish/narration/ch03.json",
       "textHash": "fnv1a64:00bde6030183469f",
-      "jsonHash": "fnv1a64:c29d79f342b13592"
+      "jsonHash": "fnv1a64:edd728e368e918f8"
     },
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:725d6b137377bf9c",
+      "sourceHash": "fnv1a64:e141ae5a2efc8e27",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -4980,12 +4980,12 @@
       "text": "spanish/narration/ch04.txt",
       "json": "spanish/narration/ch04.json",
       "textHash": "fnv1a64:d77eae07976375e3",
-      "jsonHash": "fnv1a64:761156245d3e9a8e"
+      "jsonHash": "fnv1a64:e7a02136162d4108"
     },
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:cff622156693b783",
+      "sourceHash": "fnv1a64:ebc64822725a1f4d",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -5000,12 +5000,12 @@
       "text": "spanish/narration/ch05.txt",
       "json": "spanish/narration/ch05.json",
       "textHash": "fnv1a64:fc65d60a2f48a712",
-      "jsonHash": "fnv1a64:d72d4762f1592d9d"
+      "jsonHash": "fnv1a64:9f7999b03907342e"
     },
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4fe3507a54682e0b",
+      "sourceHash": "fnv1a64:ef479098b3b701b3",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",
@@ -5022,7 +5022,7 @@
       "text": "spanish/narration/ch06.txt",
       "json": "spanish/narration/ch06.json",
       "textHash": "fnv1a64:0fe1565dd6c60f60",
-      "jsonHash": "fnv1a64:f7ff2d8a3d1df76f"
+      "jsonHash": "fnv1a64:13a34b156dd2059c"
     },
     {
       "language": "spanish",

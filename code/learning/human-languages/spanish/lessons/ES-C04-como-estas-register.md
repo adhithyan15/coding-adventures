@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST]
 practises:
-  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST]
+  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-GRAMMAR-ESTAR-ESTA-ESTAS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,7 +49,7 @@ This is the same relationship contrast you drilled with **se llama / te
 llamas**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-GRAMMAR-ESTAR-ESTA-ESTAS] -->
 
 [PAUSE 1s]
 - [YOU SAY: to a doctor you just met — "¿Cómo está usted?"]

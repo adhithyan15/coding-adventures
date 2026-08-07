@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c33320f1373d714f",
+  "sourceHash": "fnv1a64:cca681cba079b8ff",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad8563efb4aff02e",
+      "sourceHash": "fnv1a64:15d4ae4f57ab020b",
       "notice": null,
       "blocks": [
         {
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e4c276351c8a68d",
+      "sourceHash": "fnv1a64:e1ccfd229de2a3fd",
       "notice": null,
       "blocks": [
         {
@@ -1417,7 +1417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8579507a71fa8de4",
+      "sourceHash": "fnv1a64:165a5c83e387b09c",
       "notice": null,
       "blocks": [
         {

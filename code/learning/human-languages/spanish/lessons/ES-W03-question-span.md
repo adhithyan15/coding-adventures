@@ -17,7 +17,7 @@ requires:
 introduces:
   knowledge: [ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
 practises:
-  knowledge: [ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION]
+  knowledge: [ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -51,7 +51,7 @@ This is why the opening mark is more than decoration. It tells the reader
 exactly where to begin and end a change in spoken melody.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION] -->
 
 [PAUSE 1s]
 - [YOU WRITE: “María, ¿cómo estás?”]
