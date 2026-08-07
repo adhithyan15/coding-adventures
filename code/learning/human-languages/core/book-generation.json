@@ -2160,6 +2160,15 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:sa-core-verbs",
+      "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "title": "Ask and Answer Names",

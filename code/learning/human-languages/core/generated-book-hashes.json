@@ -2057,6 +2057,20 @@
       "tex": "sanskrit/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+      "lessonIds": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "tex": "sanskrit/book/chapters/ch07-core-verbs.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:e2e55a440c95c8cb",

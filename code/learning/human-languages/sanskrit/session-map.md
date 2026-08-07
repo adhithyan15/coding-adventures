@@ -71,6 +71,17 @@ and the Sanskrit-specific marks (visarga, conjuncts) — that word needs.
 | 32 | number-cognates | *eka · dva · tri · catur · pañca* | Latin and English cousins; PIE *kʷ* outcomes; Grimm's law and analogical *four* |
 | 33 | pancha-travels | पञ्च | *Punjab*, Greek *pente*, and the qualified five-ingredient account of *punch* |
 
+## Chapter 7 — The Core Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 34 | asti | अस्ति · भवति | the two be-verbs; root **अस्** and **भू**; the dhātu and its gaṇa; \**es-*/\**bheu-* are both halves of English *be* |
+| 35 | gacchati | गच्छति | root **गम्**, stem *gaccha-* — unguessable, which is why roots are the index; ← \**gwem-* → *come*, *venue*, *advent* |
+| 36 | agacchati | आगच्छति | **आ-** "toward" on *gacchati*: the *upasarga* system, the same device behind **संस्कृत** |
+| 37 | khadati | खादति | the everyday eat-verb, root **खाद्** — *not* the cognate of English *eat*; that is **अद्**/**अत्ति** ← \**ed-* |
+| 38 | pashyati | पश्यति | present from **पश्** ← \**spek-* (*inspect*, *species*, *telescope*); the rest of the verb from **दृश्**, the root of Chapter 4's *darśana* |
+| 39 | janati | जानाति | root **ज्ञा** ← \**gno-* = English **know**; class 9 plants **-ना-** inside; the chapter's six verbs gathered up |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10, then introduce the eight cases one at a time.
