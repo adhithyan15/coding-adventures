@@ -148,7 +148,7 @@ A close read of Spanish chapters 1–8 found:
 - `ES-C08-tener` generalizes "all forms but *nosotros/vosotros*" — `vosotros`
   appears exactly once in eight chapters, unexplained, never taught.
 
-The mechanism is diagnosed in §7.2: chapters starved of reviewable material reach
+The mechanism is diagnosed in §7.3: chapters starved of reviewable material reach
 sideways for whatever they need. A forward-reference check is therefore both a
 defect gate **and** an early warning that reinforcement has failed upstream.
 
@@ -340,7 +340,46 @@ greetings never reappear. Chapter 5's three farewells never reappear — and whe
 Chapter 7 finally builds a café scene where *hasta luego* belongs, it reaches for
 *adiós*, which Chapter 5 taught for a different situation.
 
-### 7.2 The failure is causal, not cosmetic
+### 7.2 Measured: a chapter-end review cannot close R1
+
+*Added 2026-08-07, before any review lesson was authored, because it changes what
+building the scheduler means.*
+
+R1 is **n+1 … n+3**. A review lesson placed at the END of a chapter is therefore
+out of range for everything the chapter taught more than three lessons earlier.
+Measured on Spanish: **11 of 35 chapters hold more than four lessons** (median 4,
+max 15), so a terminal review cannot reach their opening material at all. The
+`practice-mix` lessons the corpus already has are exactly this shape, which is
+part of why they never closed a window.
+
+The second measurement settles what kind of problem this is. Of Spanish's 114
+R1 misses, **99 are never revisited at ANY distance** — only 15 are merely late.
+So this is not a scheduling problem to be fixed by moving reviews around. It is an
+absence.
+
+Two ways to close R1, and they are not equivalent:
+
+- **(a) Interleave dedicated `review` lessons every ~3 lessons.** Honest, but it
+  implies roughly **one review lesson per three teaching lessons** — about 50 new
+  lessons for Spanish alone, and ~2,600 at the 8,000-lesson target. It also
+  segregates retrieval into its own lesson type, which is the weaker form.
+- **(b) Make every teaching lesson practise the preceding one to three lessons'
+  atoms**, via `practises.knowledge`. This is what §4's lesson contract already
+  requires — "revisits at least one earlier atom, explicitly" — and it costs no new
+  lessons. Retrieval is **interleaved with new material** rather than quarantined,
+  which is the stronger form.
+
+**(b) is the rule; (a) is the exception.** Dedicated `review` lessons remain the
+right tool for the wider windows — R3 and R4 pull from far enough back that no
+single teaching lesson can carry them — and for atoms whose chapter has ended. But
+R1 and R2 must be closed by the teaching lessons themselves, or the corpus doubles
+in size to say what a `practises.knowledge` line already says.
+
+This also explains why `reviews_of` looked like reinforcement and was not: it was
+authored per-lesson, at exactly the cadence (b) needs, but pointed at lesson ids
+instead of atoms, so it closed nothing.
+
+### 7.3 The failure is causal, not cosmetic
 
 The reviewer's summary is worth keeping verbatim as the design principle:
 
@@ -353,7 +392,7 @@ and reach sideways for whatever they need — which is exactly why Chapter 7 dri
 Chapter 26's vocabulary (§4.1). Fix the scheduler and the forward references lose
 their cause.
 
-### 7.3 Why this is measured, not trusted
+### 7.4 Why this is measured, not trusted
 
 `reviews_of` exists on 144 of Spanish's 146 lessons, so the corpus *looks* like it
 reinforces. But `reviews_of` names **lesson ids** while atoms live in a different
@@ -440,7 +479,7 @@ This spec is the design. Implementation is a long series of small tranches:
 |---|---|---|
 | 1 | Measure order integrity, reinforcement windows, and forward references; publish all three in the gap report | Every track reports orphan atoms per window, lessons lacking `sequence`, and every use of untaught vocabulary |
 | 2 | Migrate Spanish chapters 7–8 to schema v2 and give all 56 sequence-less lessons a declared order | The ramp collapses exactly at the schema boundary: chapters 1–6 carry `sequence`/`spine_node`/atoms, chapters 7–8 carry none, so they are invisible to every tool that reads the knowledge graph. Chapter 7's order needs a **human decision** — `curriculum.json` says comer→beber→qué→vivir→dónde while the lesson prose and `reviews_of` say comer→vivir→beber→qué→dónde |
-| 3 | Build `type: review` lessons and extend `session-map.md` past chapter 3 | The lesson type HL00 defines and the corpus has **zero** of; the schedule is currently unverified for 30 of 33 chapters |
+| 3 | Close R1/R2 by wiring `practises.knowledge` on existing teaching lessons (§7.2), then add `review` lessons only for R3/R4 | 99 of Spanish's 114 R1 misses are never revisited at ANY distance, so this is an absence, not a scheduling error. A chapter-end review cannot reach R1 for 11 of 35 chapters. Extend `session-map.md` past chapter 3 as the schedule becomes real |
 | 4 | Close the functional holes: `sí`/`no`, `estoy`, `yo`, `un`/`una` | The learner can be asked a question and cannot decline; can ask "how are you?" and cannot answer |
 | 5 | Split `SPINE-SAY-WHAT-I-DO` (42 concepts) into rungs of ≤6 | No spine node holds more concepts than a chapter may introduce |
 | 6 | Close Spanish's R1 windows | Zero atoms miss the first revisit window |
