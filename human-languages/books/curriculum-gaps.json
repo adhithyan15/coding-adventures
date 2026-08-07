@@ -28,7 +28,7 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 515,
     "forwardReviews": 300,
-    "atomsNeverRevisited": 757,
+    "atomsNeverRevisited": 745,
     "forwardReferences": 506,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
@@ -12398,19 +12398,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-ETYMON-HATTA",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta",
-        "introducedAt": 42,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-HISPANIA",
         "language": "spanish",
         "introducedBy": "ES-C06-espanol",
@@ -12567,19 +12554,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-ETYMON-TU-THOU",
-        "language": "spanish",
-        "introducedBy": "ES-C03-tu-usted",
-        "introducedAt": 15,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-VUESTRA-MERCED",
         "language": "spanish",
         "introducedBy": "ES-C03-usted-origin",
@@ -12610,19 +12584,6 @@
         "language": "spanish",
         "introducedBy": "ES-W02-enye-formas",
         "introducedAt": 37,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-BARE-LANGUAGE",
-        "language": "spanish",
-        "introducedBy": "ES-C06-hablo-espanol",
-        "introducedAt": 55,
         "missed": [
           "R1",
           "R2",
@@ -12671,58 +12632,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-        "language": "spanish",
-        "introducedBy": "ES-C04-estar-estado",
-        "introducedAt": 29,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-FIRST-PERSON-VERB",
-        "language": "spanish",
-        "introducedBy": "ES-C03-llamar",
-        "introducedAt": 13,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-HASTA-ENDPOINT",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta-limits",
-        "introducedAt": 43,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-OBJECT-PRONOUN",
-        "language": "spanish",
-        "introducedBy": "ES-C03-me",
-        "introducedAt": 12,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-GRAMMAR-QUESTION-ACCENT",
         "language": "spanish",
         "introducedBy": "ES-C03-como-acento",
@@ -12740,19 +12649,6 @@
         "language": "spanish",
         "introducedBy": "ES-C03-me-llamo",
         "introducedAt": 14,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-        "language": "spanish",
-        "introducedBy": "ES-C03-se-llama",
-        "introducedAt": 21,
         "missed": [
           "R1",
           "R2",
@@ -12840,32 +12736,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-LEX-LUEGO",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta-luego",
-        "introducedAt": 44,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-LEX-MANANA",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta-manana",
-        "introducedAt": 45,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-PRONTO",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-pronto",
@@ -12892,36 +12762,10 @@
         "revisits": 0
       },
       {
-        "atom": "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
-        "language": "spanish",
-        "introducedBy": "ES-W03-inverted",
-        "introducedAt": 38,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ORTHOGRAPHY-PUNCTUATION-SPAN",
         "language": "spanish",
         "introducedBy": "ES-W03-question-span",
         "introducedAt": 39,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-PRAGMATICS-FINAL-FAREWELL",
-        "language": "spanish",
-        "introducedBy": "ES-C05-adios",
-        "introducedAt": 41,
         "missed": [
           "R1",
           "R2",
@@ -14138,6 +13982,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-HATTA",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta",
+        "introducedAt": 42,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-MANUS-03",
         "language": "spanish",
         "introducedBy": "ES-C24-mano",
@@ -14282,6 +14138,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-TU-THOU",
+        "language": "spanish",
+        "introducedBy": "ES-C03-tu-usted",
+        "introducedAt": 15,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-VERANO-03",
         "language": "spanish",
         "introducedBy": "ES-C25-las-estaciones",
@@ -14330,12 +14198,60 @@
         "revisits": 2
       },
       {
+        "atom": "ES-GRAMMAR-BARE-LANGUAGE",
+        "language": "spanish",
+        "introducedBy": "ES-C06-hablo-espanol",
+        "introducedAt": 55,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
+        "language": "spanish",
+        "introducedBy": "ES-C04-estar-estado",
+        "introducedAt": 29,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
         "language": "spanish",
         "introducedBy": "ES-C04-como-estas-register",
         "introducedAt": 31,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-FIRST-PERSON-VERB",
+        "language": "spanish",
+        "introducedBy": "ES-C03-llamar",
+        "introducedAt": 13,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-HASTA-ENDPOINT",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta-limits",
+        "introducedAt": 43,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -14366,24 +14282,24 @@
         "revisits": 0
       },
       {
-        "atom": "ES-GRAMMAR-PRO-DROP",
+        "atom": "ES-GRAMMAR-OBJECT-PRONOUN",
         "language": "spanish",
-        "introducedBy": "ES-C06-ar-presente",
-        "introducedAt": 51,
+        "introducedBy": "ES-C03-me",
+        "introducedAt": 12,
         "missed": [
-          "R1",
+          "R2",
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 1
       },
       {
-        "atom": "ES-LEX-ADIOS",
+        "atom": "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
         "language": "spanish",
-        "introducedBy": "ES-C05-adios",
-        "introducedAt": 41,
+        "introducedBy": "ES-C03-se-llama",
+        "introducedAt": 21,
         "missed": [
-          "R1",
+          "R2",
           "R3",
           "R4"
         ],
@@ -14514,6 +14430,30 @@
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-pronto",
         "introducedAt": 46,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-LUEGO",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta-luego",
+        "introducedAt": 44,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-MANANA",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta-manana",
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3",
@@ -14654,18 +14594,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-REGULAR",
-        "language": "spanish",
-        "introducedBy": "ES-C04-regular",
-        "introducedAt": 32,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-LEX-SE-LLAMA",
         "language": "spanish",
         "introducedBy": "ES-C03-se-llama",
@@ -14774,12 +14702,36 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+        "language": "spanish",
+        "introducedBy": "ES-W03-inverted",
+        "introducedAt": 38,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-PRAGMATICS-AND-YOU",
         "language": "spanish",
         "introducedBy": "ES-C04-y",
         "introducedAt": 33,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-PRAGMATICS-FINAL-FAREWELL",
+        "language": "spanish",
+        "introducedBy": "ES-C05-adios",
+        "introducedAt": 41,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -14798,18 +14750,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-SCRIPT-ACUTE-ACCENT",
-        "language": "spanish",
-        "introducedBy": "ES-W01-acento",
-        "introducedAt": 34,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-SCRIPT-INVERTED-EXCLAMATION",
         "language": "spanish",
         "introducedBy": "ES-W03-inverted",
@@ -14820,18 +14760,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-SCRIPT-INVERTED-QUESTION",
-        "language": "spanish",
-        "introducedBy": "ES-C03-como-acento",
-        "introducedAt": 19,
-        "missed": [
-          "R1",
-          "R2",
-          "R4"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-SOUND-ENYE",
@@ -17709,6 +17637,17 @@
         "revisits": 3
       },
       {
+        "atom": "ES-GRAMMAR-PRO-DROP",
+        "language": "spanish",
+        "introducedBy": "ES-C06-ar-presente",
+        "introducedAt": 51,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-GRAMMAR-STATE-LOCATION-ESTAR",
         "language": "spanish",
         "introducedBy": "ES-C04-estar-estado",
@@ -17751,6 +17690,17 @@
           "R2"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "ES-LEX-ADIOS",
+        "language": "spanish",
+        "introducedBy": "ES-C05-adios",
+        "introducedAt": 41,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-AGUA-01",
@@ -17973,6 +17923,17 @@
         "revisits": 0
       },
       {
+        "atom": "ES-LEX-REGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C04-regular",
+        "introducedAt": 32,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-ROJO-01",
         "language": "spanish",
         "introducedBy": "ES-C22-rojo",
@@ -18028,12 +17989,34 @@
         "revisits": 0
       },
       {
+        "atom": "ES-SCRIPT-ACUTE-ACCENT",
+        "language": "spanish",
+        "introducedBy": "ES-W01-acento",
+        "introducedAt": 34,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-SCRIPT-ENYE",
         "language": "spanish",
         "introducedBy": "ES-W02-enye",
         "introducedAt": 36,
         "missed": [
           "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-SCRIPT-INVERTED-QUESTION",
+        "language": "spanish",
+        "introducedBy": "ES-C03-como-acento",
+        "introducedAt": 19,
+        "missed": [
+          "R2",
           "R4"
         ],
         "revisits": 3
@@ -31572,7 +31555,7 @@
         "forwardPrerequisites": 5,
         "forwardReviews": 6,
         "atomsTaught": 199,
-        "atomsNeverRevisited": 102,
+        "atomsNeverRevisited": 90,
         "forwardReferences": 99
       },
       {
@@ -31612,10 +31595,10 @@
       "forwardPrerequisites": 245,
       "forwardReviews": 300,
       "atomsTaught": 1599,
-      "atomsNeverRevisited": 757,
+      "atomsNeverRevisited": 745,
       "neverRevisitedPercent": 47,
       "missedByWindow": {
-        "R1": 795,
+        "R1": 778,
         "R2": 1159,
         "R3": 711,
         "R4": 137
