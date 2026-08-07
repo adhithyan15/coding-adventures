@@ -1764,6 +1764,20 @@
       "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "marathi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:ff2ac4184c0d065b",
+      "lessonIds": [
+        "MR-C07-asne",
+        "MR-C07-jane",
+        "MR-C07-yene",
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
+      ],
+      "tex": "marathi/book/chapters/ch07-core-verbs.tex"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "sourceHash": "fnv1a64:6079d14592306807",

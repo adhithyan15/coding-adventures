@@ -2115,6 +2115,15 @@
       "scriptCommand": "mr"
     },
     {
+      "language": "marathi",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:mr-core-verbs",
+      "output": "marathi/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "title": "Numbers One to Five",

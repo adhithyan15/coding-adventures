@@ -3899,6 +3899,25 @@
       "jsonHash": "fnv1a64:2a6a0f899506091f"
     },
     {
+      "language": "marathi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:ff2ac4184c0d065b",
+      "lessonIds": [
+        "MR-C07-asne",
+        "MR-C07-jane",
+        "MR-C07-yene",
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "marathi/narration/ch07.txt",
+      "json": "marathi/narration/ch07.json",
+      "textHash": "fnv1a64:c79dbda6cd55e4da",
+      "jsonHash": "fnv1a64:2fc9e11dcb4afe37"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",

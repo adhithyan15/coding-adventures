@@ -132,6 +132,23 @@
         "MR-EXT-011-ETYMOLOGY"
       ],
       "after": []
+    },
+    {
+      "id": "MR-PATH-012",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C07-asne",
+        "MR-C07-jane",
+        "MR-C07-yene",
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-012-CORE-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -245,20 +262,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "MR-PATH-012"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -270,7 +284,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
@@ -355,6 +368,22 @@
       "prerequisites": [],
       "lessons": [
         "MR-C06-number-differences"
+      ]
+    },
+    {
+      "id": "MR-EXT-012-CORE-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use six everyday Marathi verbs, choose the present-tense ending that agrees with my subject's gender, close every sentence on the verb, and say that I know something the way Marathi actually says it.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C07-asne",
+        "MR-C07-jane",
+        "MR-C07-yene",
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
       ]
     },
     {
