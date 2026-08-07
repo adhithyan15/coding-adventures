@@ -429,6 +429,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
         features_used: FeatureManifest::new(),
         scopes: Vec::new(),
         function_names: HashSet::new(),
+        class_names: HashSet::new(),
         user_functions: Vec::new(),
         synthesised: Vec::new(),
         lambda_counter: 0,
@@ -441,7 +442,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
     // top-level synthesised functions, so their names are module-wide too.
     // Depth-bounded so an adversarially deep CST is a positioned error, not
     // a stack overflow.
-    collect_function_names(program, &mut lw.function_names, 0)?;
+    collect_function_names(program, &mut lw.function_names, &mut lw.class_names, 0)?;
 
     // ── Pass 2: lower bodies. ────────────────────────────────────────
     // `main` is the synthetic top-level scope frame (no params/captures);
@@ -574,6 +575,14 @@ struct FnScope {
     /// name with `captures`.  Each is the resolution of the captured name
     /// in the *enclosing* scope, computed when the capture is first seen.
     capture_values: Vec<CaptureValue>,
+    /// True only for a method body hoisted from a `class_declaration`'s
+    /// `method_definition` (OOP surface, SIR25 §2).  JS never declares
+    /// `this` as a formal parameter — it's implicitly bound by *how* a
+    /// function is called — so this flag is how a bare `this` inside a
+    /// method body is recognised and lowered to the SIR dispatch
+    /// envelope's `__self__` builtin (see `Lowerer::lower_leaf_token`)
+    /// instead of erroring as an unresolved/unsupported keyword.
+    in_method: bool,
 }
 
 impl FnScope {
@@ -584,6 +593,21 @@ impl FnScope {
             locals: HashSet::new(),
             is_closure,
             capture_values: Vec::new(),
+            in_method: false,
+        }
+    }
+
+    /// A frame for a method body: no captures (a method is hoisted like a
+    /// top-level function, not a closure over an enclosing scope — SIR25
+    /// §2.2), `in_method` set so a bare `this` resolves.
+    fn for_method(params: HashSet<String>) -> Self {
+        FnScope {
+            params,
+            captures: HashSet::new(),
+            locals: HashSet::new(),
+            is_closure: false,
+            capture_values: Vec::new(),
+            in_method: true,
         }
     }
 }
@@ -603,6 +627,10 @@ struct Lowerer {
     /// a call resolves to a `DirectCall` regardless of source order and
     /// recursion / mutual recursion works.
     function_names: HashSet<String>,
+    /// Every `class_declaration` name, collected in the same pass-1 walk
+    /// as `function_names` (OOP surface, SIR25 §2), so `new ClassName(...)`
+    /// resolves to construction regardless of source order.
+    class_names: HashSet<String>,
     /// User-written top-level `function` declarations, lowered.  Kept
     /// separate from `main` and from the synthesised closures so the
     /// module's function table and export list can be assembled in a
@@ -862,6 +890,16 @@ impl Lowerer {
                             }
                             stmts.push(*s);
                         }
+                        Lowered::Stmts(v) => {
+                            // Same flush rule as the single-Stmt case — a
+                            // class declaration is several statements, but
+                            // still never a value.
+                            if let Some(prev) = tail.take() {
+                                let span = prev.span().clone();
+                                stmts.push(Stmt::ExprStmt { expr: prev, span });
+                            }
+                            stmts.extend(v);
+                        }
                         Lowered::Expr(e) => {
                             // A new bare expression supersedes the prior one
                             // as the candidate tail value.  The prior one is
@@ -956,6 +994,10 @@ impl Lowerer {
             }),
             // ── M4: functions ───────────────────────────────────────
             "function_declaration" => self.lower_function_declaration(node, depth),
+            // ── OOP surface (SIR25 §2) ───────────────────────────────
+            "class_declaration" => self
+                .lower_class_declaration(node, depth)
+                .map(Lowered::Stmts),
             // A `return` outside a function body is invalid JS; inside one
             // it is handled positionally by `lower_function_body` (only the
             // tail statement may be a `return`).  Reaching it here means it
@@ -1431,6 +1473,14 @@ impl Lowerer {
                 stmts.push(*s);
                 Expr::NilLit { span: span.clone() }
             }
+            Lowered::Stmts(_) => {
+                // A `class` declaration as an unbraced single-statement
+                // loop/if body (`if (c) class Foo {}`) is invalid real
+                // JavaScript (ClassDeclaration isn't a valid unbraced
+                // Statement); reject rather than silently accept a shape
+                // no real JS engine would.
+                return Err(self.unsupported(body_stmt, "class_declaration as an unbraced body"));
+            }
             Lowered::Expr(e) => e,
         };
         Ok(Block { stmts, value, span })
@@ -1532,6 +1582,173 @@ impl Lowerer {
                 span: self.span_of(node),
             }))
         }
+    }
+
+    /// Lower a `class_declaration` to SIR's OOP surface (SIR25 §2): one
+    /// `Stmt::ClassDef { name, superclass, body: [] }` followed by one
+    /// `__def_method__` registration per method — the same "empty
+    /// ClassDef, methods hoisted to top-level and registered separately"
+    /// shape `ruby-to-semantic-ir` (and this crate's Python sibling)
+    /// already produce, so every backend that already implements the OOP
+    /// surface needs **zero** changes to run a JS-sourced class.
+    ///
+    /// CST (probed against `es2020`):
+    /// `class_declaration → [Keyword("class"), Name, class_heritage?,
+    /// class_body]`; `class_body → [LBrace, class_element*, RBrace]` where
+    /// each `class_element` wraps one `method_definition` (this grammar
+    /// requires a `;` after each method body, unlike real ECMAScript — a
+    /// quirk of the parser, not a v0 restriction of ours).
+    ///
+    /// v0 restrictions (each a positioned [`JsLowerError`], not a silent
+    /// drop): a non-bare-name `extends` target, and any `class_element`
+    /// that isn't a plain instance `method_definition` (no static methods,
+    /// no getters/setters, no class fields) — mirroring the staged
+    /// restrictions the Ruby/Python OOP surfaces used.
+    fn lower_class_declaration(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Vec<Stmt>, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let name = class_decl_name(node)
+            .ok_or_else(|| self.unsupported(node, "class_declaration (no name)"))?;
+        let superclass = self.class_superclass(node)?;
+        let body = child_node_named(node, "class_body")
+            .ok_or_else(|| self.unsupported(node, "class_declaration (no body)"))?;
+        let span = self.span_of(node);
+
+        self.features_used.add(Feature::Classes);
+
+        let mut stmts = vec![Stmt::ClassDef {
+            name: name.clone(),
+            superclass,
+            body: vec![],
+            span: span.clone(),
+        }];
+
+        for element in child_nodes(body) {
+            let method_def = child_node_named(element, "method_definition").ok_or_else(|| {
+                self.unsupported(element, "class_element (only plain methods are supported)")
+            })?;
+            stmts.push(self.lower_method_definition(&name, method_def, depth)?);
+        }
+
+        Ok(stmts)
+    }
+
+    /// Extract a `class_declaration`'s optional `extends` target as a bare
+    /// name. SIR's object model is single-inheritance only (SIR25 §2), and
+    /// `ClassDef.superclass` is a plain name slot, not an expression one —
+    /// a computed or dotted `extends` target (`extends ns.Base`, `extends
+    /// mixin(Base)`) is rejected rather than silently approximated.
+    fn class_superclass(&self, node: &GrammarASTNode) -> Result<Option<String>, JsLowerError> {
+        let Some(heritage) = child_node_named(node, "class_heritage") else {
+            return Ok(None);
+        };
+        let target = child_nodes(heritage)
+            .into_iter()
+            .next()
+            .ok_or_else(|| self.unsupported(heritage, "class_heritage (no target)"))?;
+        match single_leaf_token(target) {
+            Some(tok) if matches!(tok.type_, TokenType::Name) => Ok(Some(tok.value.clone())),
+            _ => Err(self.unsupported(heritage, "class_heritage (non-name base)")),
+        }
+    }
+
+    /// Lower one `method_definition` inside a `class_body`: hoist its body
+    /// to a top-level function (named `{Class}__{method}`, mirroring the
+    /// Ruby/Python OOP frontends' own hoisting convention), then return the
+    /// `__def_method__("Class", "method", MakeClosure(...))` registration
+    /// `Stmt` (SIR25 §2.2).
+    ///
+    /// `constructor` maps to the SIR method name `"initialize"` — not the
+    /// literal JS spelling — because every backend's `call_new` looks up
+    /// that exact name to decide whether to run a constructor; this is the
+    /// one place a JS spelling must be translated to SIR's convention
+    /// rather than passed through, mirroring exactly how the Python OOP
+    /// surface translates `__init__`.
+    ///
+    /// Unlike Python's `self`, JS never declares `this` as a formal
+    /// parameter (it's bound by *how* the function is called, not by its
+    /// signature) — so there is no leading parameter to strip here; the
+    /// method's own parameter list lowers unchanged, and [`FnScope::
+    /// for_method`] is what makes a bare `this` inside the body resolve
+    /// (see [`Lowerer::lower_leaf_token`]).
+    fn lower_method_definition(
+        &mut self,
+        class_name: &str,
+        method_def: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JsLowerError> {
+        let prop = child_node_named(method_def, "property_name")
+            .ok_or_else(|| self.unsupported(method_def, "method_definition (no name)"))?;
+        let js_name = single_leaf_token(prop)
+            .filter(|t| matches!(t.type_, TokenType::Name))
+            .map(|t| t.value.clone())
+            .ok_or_else(|| self.unsupported(prop, "property_name (not a plain name)"))?;
+        let sir_method_name = if js_name == "constructor" {
+            "initialize".to_string()
+        } else {
+            js_name.clone()
+        };
+
+        let params = self.formal_param_specs(method_def)?;
+        let body_node = child_node_named(method_def, "function_body");
+        let hoisted_name = format!("{class_name}__{js_name}");
+        let span = self.span_of(method_def);
+
+        self.scopes
+            .push(FnScope::for_method(params.iter().map(|p| p.name.clone()).collect()));
+        let params_result = self.lower_param_specs(&params, depth, &span);
+        let body_children: &[ASTNodeOrToken] =
+            body_node.map(|b| b.children.as_slice()).unwrap_or(&[]);
+        let body_result = self.lower_function_body(body_children, span.clone(), depth + 1);
+        self.scopes.pop();
+        let lowered_params = params_result?;
+        let body = body_result?;
+
+        let function = Function {
+            name: hoisted_name.clone(),
+            params: lowered_params,
+            return_type: None,
+            captures: Vec::new(),
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: span.clone(),
+        };
+        self.user_functions.push(function);
+
+        // `push_function`-equivalent inline (no shared helper here): a
+        // method never captures, but the validator observes `Closures`
+        // unconditionally for ANY `MakeClosure`, so declare it explicitly
+        // rather than relying on any capture-emptiness guard.
+        self.features_used.add(Feature::Closures);
+        self.features_used.add(Feature::Strings);
+        let closure = Expr::MakeClosure {
+            fn_name: hoisted_name,
+            captures: Vec::new(),
+            span: span.clone(),
+        };
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__def_method__".to_string(),
+                args: vec![
+                    Expr::StrLit {
+                        value: class_name.to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: sir_method_name,
+                        span: span.clone(),
+                    },
+                    closure,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// Lower an `arrow_function` to a [`MakeClosure`] over a synthesised
@@ -2104,6 +2321,13 @@ impl Lowerer {
                         }
                         stmts.push(*s);
                     }
+                    Lowered::Stmts(v) => {
+                        if let Some(prev) = tail.take() {
+                            let span = prev.span().clone();
+                            stmts.push(Stmt::ExprStmt { expr: prev, span });
+                        }
+                        stmts.extend(v);
+                    }
                     Lowered::Expr(e) => tail = Some(e),
                 }
                 continue;
@@ -2135,6 +2359,7 @@ impl Lowerer {
                 }
                 _ => match self.lower_source_element(n, depth)? {
                     Lowered::Stmt(s) => stmts.push(*s),
+                    Lowered::Stmts(v) => stmts.extend(v),
                     Lowered::Expr(e) => tail = Some(e),
                 },
             }
@@ -2674,6 +2899,21 @@ impl Lowerer {
                     }
                     _ => return Err(self.unsupported(member, "assignment to non-name property")),
                 };
+                // `this.x = v` writes an instance variable (OOP surface,
+                // SIR25 §2) — checked before the `length`-is-read-only
+                // rejection below, since an instance variable literally
+                // named `length` is an ordinary ivar write, not a
+                // sequence resize.
+                if is_self_ref(&recv) {
+                    self.features_used.add(Feature::InstanceVars);
+                    self.features_used.add(Feature::MutableBindings);
+                    return Ok(Stmt::Assign {
+                        name: format!("@{prop}"),
+                        scope: Scope::Instance,
+                        value,
+                        span,
+                    });
+                }
                 if prop == "length" {
                     return Err(JsLowerError {
                         message: "assignment to `.length` is deferred past M5 (no resize node)"
@@ -2855,6 +3095,15 @@ impl Lowerer {
             "array_literal" => self.lower_array_literal(node, depth),
             "object_literal" => self.lower_object_literal(node, depth),
             "member_expression" => self.lower_member_expression(node, depth),
+
+            // ── OOP surface (SIR25 §2): `new X(args).method(args)…` ──
+            // Only reaches here (rather than being peeled away as a
+            // transparent single-child wrapper by `lower_expression`)
+            // when at least one `.method(...)` is chained after `new
+            // X(args)` — see `lower_optional_chain_new`'s doc comment for
+            // why the chain steps live on THIS node instead of the inner
+            // `member_expression` (a probed grammar quirk).
+            "optional_chain_expression" => self.lower_optional_chain_new(node, depth),
 
             // ── M5: parenthesised expression ────────────────────────
             // `( expr )` — the parser wraps a grouping in a branching
@@ -3045,6 +3294,19 @@ impl Lowerer {
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<Expr, JsLowerError> {
+        // A bare `new Foo(args)` (OOP surface, SIR25 §2.1) is a DIFFERENT
+        // grammar shape than an ordinary member chain — its first child
+        // is the literal `new` keyword token, not a receiver node
+        // (probed empirically; see `lower_new_expression`'s doc comment
+        // for the exact shape, and `lower_optional_chain_new` for the
+        // `new Foo(args).method(args2)` chained case, which is a
+        // DIFFERENT node entirely — the parser hangs chain steps one
+        // level up, not on this node). Detect and delegate before the
+        // ordinary receiver/access-chain logic below, which has no
+        // handling for a leading keyword token.
+        if matches!(node.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "new") {
+            return self.lower_new_expression(node, depth);
+        }
         let span = self.span_of(node);
         // The receiver is the first child *node*; the trailing children are
         // a flat sequence of `.name` or `[index]` accesses applied left to
@@ -3076,7 +3338,19 @@ impl Lowerer {
                         }
                     };
                     i += 2;
-                    acc = if prop == "length" {
+                    acc = if is_self_ref(&acc) {
+                        // `this.x` reads an instance variable (OOP surface,
+                        // SIR25 §2) — checked before the `length`
+                        // special-case below, since an instance variable
+                        // literally named `length` must still read as an
+                        // ivar, not be coerced into `SeqLen`.
+                        self.features_used.add(Feature::InstanceVars);
+                        Expr::VarRef {
+                            name: format!("@{prop}"),
+                            scope: Scope::Instance,
+                            span: span.clone(),
+                        }
+                    } else if prop == "length" {
                         // The one dotted property that is a sequence op.
                         self.features_used.add(Feature::Sequences);
                         Expr::SeqLen {
@@ -3128,6 +3402,169 @@ impl Lowerer {
                 // Optional chaining `?.`, tagged templates, etc. are deferred.
                 _ => return Err(self.unsupported(node, "member_expression (unsupported access)")),
             }
+        }
+
+        Ok(acc)
+    }
+
+    /// Lower a bare `new ClassName(args)` (no chained method call) to
+    /// SIR's OOP surface (SIR25 §2.1).
+    ///
+    /// CST (probed against `es2020`): `member_expression[Keyword("new"),
+    /// member_expression(ClassName), arguments]` — exactly 3 children.
+    /// (A `new X(args).method(args2)` chain is a **different** CST shape
+    /// — the parser hangs the `.method(args2)` steps one level up, on an
+    /// enclosing `optional_chain_expression`, not on this node; see
+    /// [`Self::lower_optional_chain_new`] for that case. This function
+    /// only ever sees the bare, no-chain shape in practice, but still
+    /// tolerates trailing children defensively rather than assuming
+    /// `children.len() == 3` — a grammar detail this crate doesn't
+    /// control could change without warning.)
+    ///
+    /// `new ClassName(args)` → `BuiltinCall("__new__", [StrLit(ClassName),
+    /// ...args])` — the same envelope `ruby-to-semantic-ir` emits for
+    /// `ClassName.new(args)` and this crate's Python sibling for bare
+    /// `ClassName(args)`.
+    ///
+    /// v0 restriction (positioned [`JsLowerError`], not silent): the new
+    /// target must be a bare name that is a KNOWN class (`class_names`,
+    /// collected in the same pass-1 walk as `function_names` — resolves
+    /// regardless of source order).
+    fn lower_new_expression(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        let children = &node.children;
+
+        let target = match children.get(1) {
+            Some(ASTNodeOrToken::Node(n)) => n,
+            _ => return Err(self.unsupported(node, "new expression (no target)")),
+        };
+        let class_name = match single_leaf_token(target) {
+            Some(tok) if matches!(tok.type_, TokenType::Name) => tok.value.clone(),
+            _ => return Err(self.unsupported(node, "new expression (non-name target)")),
+        };
+        if !self.class_names.contains(&class_name) {
+            return Err(self.unsupported(node, "new on a name that is not a known class"));
+        }
+        let ctor_args_node = match children.get(2) {
+            Some(ASTNodeOrToken::Node(n)) if n.rule_name == "arguments" => n,
+            _ => return Err(self.unsupported(node, "new expression (no constructor arguments)")),
+        };
+        let ctor_args = self.lower_arguments(ctor_args_node, depth)?;
+
+        self.features_used.add(Feature::Strings);
+        let mut new_args = Vec::with_capacity(ctor_args.len() + 1);
+        new_args.push(Expr::StrLit {
+            value: class_name,
+            span: span.clone(),
+        });
+        new_args.extend(ctor_args);
+        let acc = Expr::BuiltinCall {
+            name: "__new__".to_string(),
+            args: new_args,
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+
+        if children.len() > 3 {
+            // Not observed in practice (see doc comment), but don't
+            // silently drop trailing children if this grammar detail
+            // ever changes underneath us.
+            return Err(self.unsupported(node, "new expression (unexpected trailing children)"));
+        }
+
+        Ok(acc)
+    }
+
+    /// Lower `new ClassName(args).method(args2)…` — the CST shape for a
+    /// `new`-expression with at least one method call chained after it.
+    ///
+    /// CST (probed against `es2020`): unlike the no-chain case (handled
+    /// by [`Self::lower_new_expression`]), the parser hangs the chained
+    /// `.method(args)` steps on THIS node (`optional_chain_expression`),
+    /// one level above the inner `new`-`member_expression`:
+    ///
+    /// ```text
+    /// optional_chain_expression[
+    ///   member_expression[Keyword("new"), member_expression(ClassName), arguments],
+    ///   (Dot, Name, arguments)+        -- one or more chained .method(args)
+    /// ]
+    /// ```
+    ///
+    /// `lower_expression`'s single-child-wrapper peel means this rule
+    /// only ever reaches [`Self::lower_branch`]'s dispatch (and thus this
+    /// function) when it has more than one child — i.e. when there IS a
+    /// chain to fold; the no-chain case is peeled away transparently and
+    /// its bare `member_expression` reaches [`Self::lower_member_expression`]
+    /// directly. Real optional chaining (`?.`) is not modelled by this
+    /// crate at all — any other multi-child `optional_chain_expression`
+    /// shape reaching here (one whose first child isn't a `new`-prefixed
+    /// `member_expression`) is a positioned error, not a silent guess.
+    fn lower_optional_chain_new(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        let inner = match node.children.first() {
+            Some(ASTNodeOrToken::Node(n))
+                if n.rule_name == "member_expression"
+                    && matches!(n.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "new") =>
+            {
+                n
+            }
+            _ => {
+                return Err(self.unsupported(
+                    node,
+                    "optional_chain_expression (only `new X(...).method(...)` chains are \
+                     supported; `?.` is not modelled)",
+                ))
+            }
+        };
+        let mut acc = self.lower_member_expression(inner, depth)?;
+
+        // Fold the chained `.method(args)` steps, exactly as
+        // `lower_call_expression` does for an ordinary call chain.
+        let mut i = 1;
+        while i < node.children.len() {
+            let is_dot = matches!(&node.children[i], ASTNodeOrToken::Token(t) if t.value == ".");
+            if !is_dot {
+                return Err(self.unsupported(
+                    node,
+                    "optional_chain_expression (unsupported trailing access)",
+                ));
+            }
+            let method_tok = match node.children.get(i + 1) {
+                Some(ASTNodeOrToken::Token(t)) if matches!(t.type_, TokenType::Name) => t,
+                _ => {
+                    return Err(self.unsupported(
+                        node,
+                        "optional_chain_expression (non-name method)",
+                    ))
+                }
+            };
+            let args_node = match node.children.get(i + 2) {
+                Some(ASTNodeOrToken::Node(n)) if n.rule_name == "arguments" => n,
+                _ => {
+                    return Err(self.unsupported(
+                        node,
+                        "optional_chain_expression (bare trailing attribute access is deferred)",
+                    ))
+                }
+            };
+            let step_args = self.lower_arguments(args_node, depth)?;
+            let name_span = self.span_of_token(method_tok);
+            acc = self.make_method_dispatch(
+                acc,
+                method_tok.value.clone(),
+                name_span,
+                step_args,
+                span.clone(),
+            )?;
+            i += 3;
         }
 
         Ok(acc)
@@ -3318,11 +3755,31 @@ impl Lowerer {
             // ── number ──────────────────────────────────────────────
             TokenType::Number => self.lower_number(&tok.value, span),
 
-            // ── keyword literals: true / false / null ───────────────
+            // ── keyword literals: true / false / null / this ────────
             TokenType::Keyword => match tok.value.as_str() {
                 "true" => Ok(Expr::BoolLit { value: true, span }),
                 "false" => Ok(Expr::BoolLit { value: false, span }),
                 "null" => Ok(Expr::NilLit { span }),
+                // A bare `this` inside a method body (OOP surface, SIR25
+                // §2.3) is the SIR dispatch envelope's implicit receiver.
+                // JS never declares `this` as a formal parameter — it's
+                // bound by *how* the function is called — so it can't
+                // resolve through the ordinary scope chain; `in_method` on
+                // the innermost frame (set only for a hoisted method body,
+                // see `FnScope::for_method`) is what makes this reachable.
+                // An arrow function nested inside a method lexically
+                // inherits `this` in real JS, but that frame is NOT
+                // `in_method` here (it's a closure frame) — deferred, same
+                // v0 restriction as everywhere else a not-yet-modelled
+                // shape stays out rather than silently mis-lowering.
+                "this" if self.scopes.last().is_some_and(|f| f.in_method) => {
+                    Ok(Expr::BuiltinCall {
+                        name: "__self__".to_string(),
+                        args: vec![],
+                        effects: EffectSet::PURE,
+                        span,
+                    })
+                }
                 other => Err(JsLowerError {
                     message: format!("keyword `{other}` is not a value expression supported in M2"),
                     line: tok.line,
@@ -3440,6 +3897,12 @@ impl Lowerer {
 enum Lowered {
     Stmt(Box<Stmt>),
     Expr(Expr),
+    /// A source statement that lowers to *several* IR statements — a
+    /// `class_declaration`, which expands to one `Stmt::ClassDef` plus one
+    /// `__def_method__` registration per method (OOP surface, SIR25 §2).
+    /// Never a value: a class declaration contributes nothing to a
+    /// block's trailing expression, matching every other bare statement.
+    Stmts(Vec<Stmt>),
 }
 
 // ---------------------------------------------------------------------------
@@ -3611,6 +4074,16 @@ fn single_child_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
 /// descending; it's used to classify an expression's "real" shape
 /// without lowering it (e.g. is the LHS of an `expression_statement` an
 /// assignment?).
+/// Is `expr` the SIR receiver value for the current method's implicit
+/// receiver (`BuiltinCall("__self__", [])`, per SIR25 §2.3 — how a bare
+/// `this` lowers, see `Lowerer::lower_leaf_token`)? Checking the *already
+/// lowered* expression's shape (rather than sniffing the raw grammar
+/// token) means the this-vs-other-receiver distinction for `this.x` /
+/// `this.x = v` needs no grammar-level special-casing at all.
+fn is_self_ref(expr: &Expr) -> bool {
+    matches!(expr, Expr::BuiltinCall { name, args, .. } if name == "__self__" && args.is_empty())
+}
+
 fn peel_to_branch(node: &GrammarASTNode) -> &GrammarASTNode {
     let mut cur = node;
     while let Some(next) = single_child_node(cur) {
@@ -3700,14 +4173,25 @@ fn function_decl_name(node: &GrammarASTNode) -> Option<String> {
     })
 }
 
-/// Pass-1 collector: gather **every** `function_declaration` name in the
-/// program — top-level *and* nested — into `out`.
+/// A `class_declaration`'s declared name (the `Name` token after the
+/// `class` keyword) — same shape/extraction as [`function_decl_name`].
+fn class_decl_name(node: &GrammarASTNode) -> Option<String> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+        _ => None,
+    })
+}
+
+/// Pass-1 collector: gather **every** `function_declaration` name (into
+/// `out`) and **every** `class_declaration` name (into `class_out`, OOP
+/// surface, SIR25 §2) in the program — top-level *and* nested.
 ///
-/// Both top-level and nested declarations end up as module-level
+/// Both top-level and nested `function`s end up as module-level
 /// `Function`s (nested ones are lifted), so every name must be globally
-/// resolvable for `DirectCall`s and (mutual) recursion.  We recurse through
-/// the whole CST so a declaration buried inside a block / loop / another
-/// function is still discovered.
+/// resolvable for `DirectCall`s and (mutual) recursion; class names need
+/// the same forward-reference support for `new ClassName(...)`. We recurse
+/// through the whole CST so a declaration buried inside a block / loop /
+/// another function is still discovered.
 ///
 /// This walk runs in [`compile`] *before* the depth-guarded lowering, so it
 /// carries its **own** [`MAX_STMT_DEPTH`] bound: a pathologically deep CST
@@ -3716,6 +4200,7 @@ fn function_decl_name(node: &GrammarASTNode) -> Option<String> {
 fn collect_function_names(
     node: &GrammarASTNode,
     out: &mut HashSet<String>,
+    class_out: &mut HashSet<String>,
     depth: usize,
 ) -> Result<(), JsLowerError> {
     if depth > MAX_STMT_DEPTH {
@@ -3730,13 +4215,24 @@ fn collect_function_names(
             out.insert(name);
         }
     }
+    if node.rule_name == "class_declaration" {
+        if let Some(name) = class_decl_name(node) {
+            class_out.insert(name);
+        }
+        // No further descent needed for name collection: a method's own
+        // hoisted function is never called by a bare name (it's dispatched
+        // by name string via `__method__`/`__new__`), so it needs no entry
+        // in `out`. We still fall through to the generic recursion below
+        // in case a FUTURE class-body shape (e.g. computed static
+        // initializers) nests further declarations — harmless no-op today.
+    }
     // Note: we deliberately do *not* descend into `arrow_function` bodies to
     // collect names — arrows have no declaration name, and a `function`
     // declaration nested inside an arrow body is still a declaration we want
     // to lift, so we keep descending into every child uniformly.
     for child in &node.children {
         if let ASTNodeOrToken::Node(n) = child {
-            collect_function_names(n, out, depth + 1)?;
+            collect_function_names(n, out, class_out, depth + 1)?;
         }
     }
     Ok(())
@@ -4038,6 +4534,7 @@ mod tests {
             features_used: FeatureManifest::new(),
             scopes: Vec::new(),
             function_names: HashSet::new(),
+            class_names: HashSet::new(),
             user_functions: Vec::new(),
             synthesised: Vec::new(),
             lambda_counter: 0,
@@ -4050,7 +4547,8 @@ mod tests {
         // must return a positioned error, not overflow the stack.
         let deep = nest_blocks(MAX_STMT_DEPTH + 64);
         let mut names = HashSet::new();
-        let err = collect_function_names(&deep, &mut names, 0)
+        let mut class_names = HashSet::new();
+        let err = collect_function_names(&deep, &mut names, &mut class_names, 0)
             .expect_err("deep tower must trip the pass-1 guard");
         assert!(
             err.message.contains("deeper than the supported limit"),
@@ -4075,7 +4573,9 @@ mod tests {
             })],
         );
         let mut names = HashSet::new();
-        collect_function_names(&shallow, &mut names, 0).expect("shallow input is fine");
+        let mut class_names = HashSet::new();
+        collect_function_names(&shallow, &mut names, &mut class_names, 0)
+            .expect("shallow input is fine");
         assert!(names.contains("f"));
     }
 

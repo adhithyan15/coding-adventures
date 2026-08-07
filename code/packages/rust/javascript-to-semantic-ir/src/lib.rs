@@ -1977,4 +1977,148 @@ mod tests {
             err.message
         );
     }
+
+    // ══════════════════════════════════════════════════════════════════
+    // OOP surface (SIR25 §2) — class / new / this / instance vars
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // Same shape ruby-to-semantic-ir (and this crate's Python sibling)
+    // emit (Stmt::ClassDef + __new__ + __def_method__ + __self__), so the
+    // `tests/e2e_node.rs` execution tests prove BOTH that this frontend
+    // lowers correctly AND that the existing JS backend/runtime -- built
+    // for Ruby-sourced OOP -- needs zero changes to run a JS-sourced
+    // class. That's the actual proof of language-agnosticism the SIR25
+    // arc set out for, not a claim.
+    //
+    // NOTE: this grammar requires a `;` after every method body inside a
+    // `class { ... }` (a parser quirk, not real ECMAScript, discovered
+    // while probing the CST) -- every source snippet below reflects that.
+
+    #[test]
+    fn empty_class_and_construction_lowers_to_new() {
+        let m = lower("class Dog {\n}\nnew Dog();\n");
+        assert!(m.manifest.contains(Feature::Classes));
+        let stmts = &main_block(&m).stmts;
+        assert!(
+            stmts.iter().any(|s| matches!(s, Stmt::ClassDef { name, superclass, body, .. }
+                if name == "Dog" && superclass.is_none() && body.is_empty())),
+            "expected an empty Dog ClassDef, got {stmts:?}"
+        );
+        match main_value(&m) {
+            Expr::BuiltinCall { name, args, .. } if name == "__new__" => {
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Dog"));
+            }
+            other => panic!("expected __new__ BuiltinCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn method_def_registers_via_def_method() {
+        let m = lower("class Dog {\n  speak() {\n    return \"woof\";\n  };\n}\n");
+        let stmts = &main_block(&m).stmts;
+        let reg = stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt {
+                    expr: Expr::BuiltinCall { name, args, .. },
+                    ..
+                } if name == "__def_method__" => Some(args),
+                _ => None,
+            })
+            .expect("a __def_method__ registration exists");
+        assert!(matches!(&reg[0], Expr::StrLit { value, .. } if value == "Dog"));
+        assert!(matches!(&reg[1], Expr::StrLit { value, .. } if value == "speak"));
+        let fn_name = match &reg[2] {
+            Expr::MakeClosure { fn_name, captures, .. } => {
+                assert!(captures.is_empty(), "a method never captures");
+                fn_name.clone()
+            }
+            other => panic!("expected MakeClosure, got {other:?}"),
+        };
+        assert!(func(&m, &fn_name).params.is_empty());
+    }
+
+    #[test]
+    fn constructor_registers_as_initialize() {
+        let m = lower(
+            "class Dog {\n  constructor(name) {\n    this.name = name;\n  };\n}\n",
+        );
+        let stmts = &main_block(&m).stmts;
+        let found = stmts.iter().any(|s| matches!(s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                if name == "__def_method__" && matches!(&args[1], Expr::StrLit{value,..} if value == "initialize")
+        ));
+        assert!(found, "`constructor` must register under the SIR name `initialize`");
+    }
+
+    #[test]
+    fn this_attr_read_and_write_are_instance_scoped() {
+        let m = lower(
+            "class Counter {\n  constructor() {\n    this.n = 0;\n  };\n  inc() {\n    this.n = this.n + 1;\n  };\n}\n",
+        );
+        assert!(m.manifest.contains(Feature::InstanceVars));
+        let inc = func(&m, "Counter__inc");
+        match &inc.body.stmts[0] {
+            Stmt::Assign { name, scope, value, .. } => {
+                assert_eq!(name, "@n");
+                assert_eq!(*scope, Scope::Instance);
+                match value {
+                    Expr::BuiltinCall { args, .. } => assert!(matches!(
+                        &args[0],
+                        Expr::VarRef { name, scope: Scope::Instance, .. } if name == "@n"
+                    )),
+                    other => panic!("expected a BuiltinCall(\"+\", ...), got {other:?}"),
+                }
+            }
+            other => panic!("expected Stmt::Assign, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn subclass_lowers_superclass_by_name() {
+        let m = lower("class Animal {\n}\nclass Dog extends Animal {\n}\n");
+        let stmts = &main_block(&m).stmts;
+        assert!(stmts.iter().any(|s| matches!(s,
+            Stmt::ClassDef { name, superclass: Some(sup), .. } if name == "Dog" && sup == "Animal"
+        )));
+    }
+
+    #[test]
+    fn non_name_extends_target_is_rejected() {
+        let err = compile_source(
+            "class Dog extends (getBase()) {\n}\n",
+            "t",
+        )
+        .expect_err("computed extends target rejected");
+        assert!(err.message.contains("class_heritage"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn new_on_non_class_name_is_rejected() {
+        let err = compile_source(
+            "function Dog() {}\nnew Dog();\n",
+            "t",
+        )
+        .expect_err("`new` on a plain function rejected (v0: classes only)");
+        assert!(err.message.contains("not a known class"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn this_outside_a_method_is_rejected() {
+        let err = compile_source("console.log(this);\n", "t")
+            .expect_err("bare `this` outside a method rejected");
+        assert!(err.message.contains("this"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn oop_modules_pass_the_validator() {
+        for src in [
+            "class Dog {\n}\nnew Dog();\n",
+            "class Dog {\n  speak() {\n    return \"woof\";\n  };\n}\nnew Dog().speak();\n",
+            "class Counter {\n  constructor() {\n    this.n = 0;\n  };\n  inc() {\n    this.n = this.n + 1;\n  };\n  value() {\n    return this.n;\n  };\n}\n",
+            "class Animal {\n  speak() {\n    return \"...\";\n  };\n}\nclass Dog extends Animal {\n}\nnew Dog().speak();\n",
+        ] {
+            assert_valid(&lower(src));
+        }
+    }
 }

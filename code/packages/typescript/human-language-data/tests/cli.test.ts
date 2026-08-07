@@ -17,14 +17,17 @@ describe("runValidate", () => {
 });
 
 describe("runCurriculumGapReport", () => {
-  // EXPLICIT TIMEOUT, and it is not decoration. This case builds the ENTIRE gap report
-  // twice — once as JSON, once as text — over the whole corpus, and the report gained a
-  // continuity section (HL09 step 1) on top of modality, levels, verbs, chapters and ramp.
-  // At 1,249 lessons it runs ~5.1s locally against vitest's 5,000ms default, so it was
-  // already over the line on CI's slower runner and would have failed for whichever
-  // content PR landed next, not this one specifically. The corpus only grows, so pin a
-  // budget with real headroom rather than leaving a test that fails by calendar.
-  it("prints JSON or text reports for the real curriculum", { timeout: 60_000 }, () => {
+  // 20s, not the 5s default: this builds the WHOLE gap report twice, and since
+  // HL09 that includes the continuity walk (~900ms per build on the real corpus,
+  // more on a cold runner). The cost is real and deliberate — order, reinforcement
+  // and forward references are properties of every lesson, so the walk cannot be
+  // input-gated the way `ramp` and `levels` are.
+  //
+  // The corpus only ever grows, so treat this budget as consumable: at 1,249 lessons
+  // the pair of builds is ~5.1s locally. It was ALREADY over the 5s default before any
+  // one PR pushed it there, which is why two sessions hit it independently on the same
+  // afternoon. When it next runs close, raise it — do not thin the report.
+  it("prints JSON or text reports for the real curriculum", { timeout: 20_000 }, () => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
