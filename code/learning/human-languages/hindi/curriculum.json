@@ -99,14 +99,23 @@
     },
     {
       "id": "HI-PATH-008",
-      "spine_node": "SPINE-CHECK-WELLBEING",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "HI-C03-hun",
-        "HI-C03-thik"
+        "HI-C03-hun"
       ],
       "before": [
         "HI-EXT-008-LANGUAGE-SPECIFIC"
       ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-027",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C03-thik"
+      ],
+      "before": [],
       "inline": [],
       "after": []
     },
@@ -124,6 +133,18 @@
       "inline": [
         "HI-EXT-009-LANGUAGE-SPECIFIC"
       ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-028",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C05-bolna",
+        "HI-C05-rahna",
+        "HI-C05-karna"
+      ],
+      "before": [],
+      "inline": [],
       "after": []
     },
     {
@@ -394,7 +415,7 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "HI-PATH-006",
-        "HI-PATH-008",
+        "HI-PATH-027",
         "HI-PATH-016"
       ],
       "omits": [
@@ -464,17 +485,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "HI-PATH-008",
+        "HI-PATH-028"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
-        "VERB-DO-MAKE",
         "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
-        "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
@@ -492,7 +513,6 @@
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
         "VERB-WALK",

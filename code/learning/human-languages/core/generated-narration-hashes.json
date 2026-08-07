@@ -1550,7 +1550,7 @@
     {
       "language": "hindi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:5daa0e43b0e9f05d",
+      "sourceHash": "fnv1a64:b67882f8655c637e",
       "lessonIds": [
         "HI-C03-aap-kaise-hain",
         "HI-C03-aapka-swagat-hai",
@@ -1565,7 +1565,7 @@
       "text": "hindi/narration/ch03.txt",
       "json": "hindi/narration/ch03.json",
       "textHash": "fnv1a64:eee65256308004a8",
-      "jsonHash": "fnv1a64:ef21ec8d03c96649"
+      "jsonHash": "fnv1a64:baa70296263bf8c7"
     },
     {
       "language": "hindi",
@@ -1589,7 +1589,7 @@
     {
       "language": "hindi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:12bcb2ada8e71c1f",
+      "sourceHash": "fnv1a64:8524e38a45a846be",
       "lessonIds": [
         "HI-C05-bolna",
         "HI-C05-bolta-hun",
@@ -1603,7 +1603,7 @@
       "text": "hindi/narration/ch05.txt",
       "json": "hindi/narration/ch05.json",
       "textHash": "fnv1a64:ddf43e013d62d725",
-      "jsonHash": "fnv1a64:d710e8d1e314eef1"
+      "jsonHash": "fnv1a64:d16ae24dcbf83cfc"
     },
     {
       "language": "hindi",
