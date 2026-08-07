@@ -4,7 +4,7 @@ chapter: 13
 type: word
 headword: venir
 gloss: to come — doubly irregular, vengo + e→ie, completing the -go club
-concept_tag: ES-VERB-VENIR
+concept_tag: VERB-COME
 prerequisites: [ES-C13-salir, ES-C11-querer]
 sounds: [g-hard, diphthong-ie]
 roots: [venire-latin]

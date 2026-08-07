@@ -4,7 +4,7 @@ chapter: 7
 type: word
 headword: comer
 gloss: to eat (your first -er verb)
-concept_tag: ES-VERB-COMER
+concept_tag: VERB-EAT
 prerequisites: [ES-C06-hablar]
 sounds: [r-tap, vowel-o]
 roots: [comedere-latin]

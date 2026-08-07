@@ -4,7 +4,7 @@ chapter: 10
 type: word
 headword: ir
 gloss: to go (the most irregular Spanish verb — three Latin verbs in one)
-concept_tag: ES-VERB-IR
+concept_tag: VERB-GO
 prerequisites: [ES-C09-ser, ES-C04-estar]
 sounds: [vowel-i, diphthong-oy]
 roots: [ire-vadere-latin]

@@ -213,15 +213,33 @@
       ]
     },
     {
+      "id": "ES-PATH-028",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C07-comer",
+        "ES-C07-beber"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
       "id": "ES-PATH-014",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
-        "ES-C07-comer",
         "ES-C07-que"
       ],
-      "before": [
-        "ES-EXT-014-LANGUAGE-SPECIFIC"
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C07-vivir"
       ],
+      "before": [],
       "inline": [],
       "after": []
     },
@@ -229,12 +247,9 @@
       "id": "ES-PATH-015",
       "spine_node": "SPINE-ASK-LOCATION",
       "lessons": [
-        "ES-C07-vivir",
         "ES-C07-donde"
       ],
-      "before": [
-        "ES-EXT-015-LANGUAGE-SPECIFIC"
-      ],
+      "before": [],
       "inline": [],
       "after": []
     },
@@ -243,13 +258,33 @@
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
         "ES-C08-numeros-1-5",
-        "ES-C08-numeros-6-10",
-        "ES-C08-tener",
-        "ES-C12-hacer"
+        "ES-C08-numeros-6-10"
       ],
       "before": [],
       "inline": [
         "ES-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C08-tener",
+        "ES-C09-ser",
+        "ES-C10-ir",
+        "ES-C11-querer",
+        "ES-C11-poder",
+        "ES-C12-hacer",
+        "ES-C12-decir",
+        "ES-C12-yo-go",
+        "ES-C13-poner",
+        "ES-C13-salir",
+        "ES-C13-venir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
@@ -528,17 +563,14 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-028",
+        "ES-PATH-029",
+        "ES-PATH-030"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
-        "VERB-SAY",
-        "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
@@ -547,17 +579,11 @@
         "VERB-LEARN",
         "VERB-READ",
         "VERB-WRITE",
-        "VERB-CAN",
         "VERB-GIVE",
         "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
-        "VERB-PUT",
-        "VERB-EAT",
-        "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-LIVE",
-        "VERB-WORK",
         "VERB-PLAY",
         "VERB-WALK",
         "VERB-RUN",
@@ -573,7 +599,10 @@
         "VERB-CLOSE",
         "VERB-LIKE-LOVE"
       ],
-      "relocates": {}
+      "relocates": {
+        "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",
+        "VERB-WORK": "SPINE-POLITE-REQUEST-REPAIR"
+      }
     },
     "SPINE-NEGATE-AND-ASK": {
       "segments": [],
@@ -851,28 +880,6 @@
       ]
     },
     {
-      "id": "ES-EXT-014-LANGUAGE-SPECIFIC",
-      "stage": "pre-A1",
-      "kind": "required",
-      "category": "language-specific",
-      "canDo": "I can use the additional Spanish material required at this point in the path.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C07-comer"
-      ]
-    },
-    {
-      "id": "ES-EXT-015-LANGUAGE-SPECIFIC",
-      "stage": "A1",
-      "kind": "required",
-      "category": "language-specific",
-      "canDo": "I can use the additional Spanish material required at this point in the path.",
-      "prerequisites": [],
-      "lessons": [
-        "ES-C07-vivir"
-      ]
-    },
-    {
       "id": "ES-EXT-016-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
@@ -881,9 +888,7 @@
       "prerequisites": [],
       "lessons": [
         "ES-C08-numeros-1-5",
-        "ES-C08-numeros-6-10",
-        "ES-C08-tener",
-        "ES-C12-hacer"
+        "ES-C08-numeros-6-10"
       ]
     },
     {
@@ -1014,6 +1019,19 @@
         "ES-C32-perro",
         "ES-C33-verde",
         "ES-C33-amarillo"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-querer",
+        "ES-C12-yo-go",
+        "ES-C13-salir"
       ]
     }
   ]

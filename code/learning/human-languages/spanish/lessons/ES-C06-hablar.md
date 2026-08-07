@@ -7,7 +7,7 @@ chapter: 6
 type: word
 headword: hablar
 gloss: to speak / to talk — at root, "to tell stories"
-concept_tag: ES-VERB-HABLAR
+concept_tag: VERB-SPEAK
 prerequisites: [ES-C06-por-favor]
 sounds: [silent-h, r-tap, v-b]
 roots: [fabulari-latin]

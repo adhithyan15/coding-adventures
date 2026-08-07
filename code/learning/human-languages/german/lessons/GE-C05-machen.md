@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: machen
 gloss: to make / to do (a second weak verb — same endings)
-concept_tag: GE-VERB-MACHEN
+concept_tag: VERB-DO-MAKE
 prerequisites: [GE-C05-wohnen]
 sounds: [ch-ach, vowel-a-german]
 roots: [makon-germanic]

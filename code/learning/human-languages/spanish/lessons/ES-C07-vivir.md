@@ -4,7 +4,7 @@ chapter: 7
 type: word
 headword: vivir
 gloss: to live (your first -ir verb)
-concept_tag: ES-VERB-VIVIR
+concept_tag: VERB-LIVE
 prerequisites: [ES-C07-comer]
 sounds: [v-b, r-tap]
 roots: [vivere-latin]

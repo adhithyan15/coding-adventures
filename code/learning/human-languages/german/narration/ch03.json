@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:65dc0d28eed56e84",
+  "sourceHash": "fnv1a64:9c052e4af0dd40f4",
   "lessons": [
     {
       "id": "GE-C03-bitte",
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f5debf915f23ce0",
+      "sourceHash": "fnv1a64:2a5f813dc0845297",
       "notice": null,
       "blocks": [
         {

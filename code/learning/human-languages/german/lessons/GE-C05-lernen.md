@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: lernen
 gloss: to learn (a third weak verb — the pattern is yours)
-concept_tag: GE-VERB-LERNEN
+concept_tag: VERB-LEARN
 prerequisites: [GE-C05-wohnen]
 sounds: [r-uvular-german]
 roots: [liznojan-germanic]

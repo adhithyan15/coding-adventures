@@ -4,7 +4,7 @@ chapter: 7
 type: word
 headword: beber
 gloss: to drink (another -er verb — cementing the pattern)
-concept_tag: ES-VERB-BEBER
+concept_tag: VERB-DRINK
 prerequisites: [ES-C07-comer]
 sounds: [v-b, r-tap]
 roots: [bibere-latin]

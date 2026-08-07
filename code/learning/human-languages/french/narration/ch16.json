@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Chapter 16",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:39265ac877f397ff",
+  "sourceHash": "fnv1a64:d8315d6d2e9e3429",
   "lessons": [
     {
       "id": "FR-C16-etre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c03aabc76bc918",
+      "sourceHash": "fnv1a64:2ad8553705ea5e8f",
       "notice": null,
       "blocks": [
         {

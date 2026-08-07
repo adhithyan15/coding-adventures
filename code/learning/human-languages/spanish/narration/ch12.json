@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Chapter 12",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d0e8994ddaf5883b",
+  "sourceHash": "fnv1a64:5f72f74488786bf2",
   "lessons": [
     {
       "id": "ES-C12-decir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab045c322463a363",
+      "sourceHash": "fnv1a64:b70e553d669e1c90",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:babb115768b0f09b",
+      "sourceHash": "fnv1a64:8af16bd2e1a9ced7",
       "notice": null,
       "blocks": [
         {

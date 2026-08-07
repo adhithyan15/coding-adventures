@@ -217,9 +217,9 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
-    expect(summary.byLevel["pre-A1"]).toBe(657);
-    expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(91);
+    expect(summary.byLevel["pre-A1"]).toBe(654);
+    expect(summary.byLevel.A1).toBe(297);
+    expect(summary.byLevel.A2).toBe(122);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -227,11 +227,11 @@ describe("corpus snapshot", () => {
 
     // 170 lessons sit in no realization-path segment, all of them schema-v1. They are the
     // reason `mappedPercent` is not 100, and mapping them is migration work, not a gate.
-    expect(summary.unmapped).toBe(170);
-    expect(summary.mappedPercent).toBe(86);
+    expect(summary.unmapped).toBe(152);
+    expect(summary.mappedPercent).toBe(88);
   });
 
-  it("shows fifteen tracks have reached A2, and only two have not reached A1", () => {
+  it("shows eighteen tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -243,6 +243,8 @@ describe("corpus snapshot", () => {
     ).toEqual([
       "arabic",
       "bengali",
+      "french",
+      "german",
       "gujarati",
       "kannada",
       "latin",
@@ -253,6 +255,7 @@ describe("corpus snapshot", () => {
       "punjabi",
       "russian",
       "sanskrit",
+      "spanish",
       "tamil",
       "telugu",
       "urdu",
@@ -269,7 +272,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(964);
+    expect(ramp).toHaveLength(951);
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

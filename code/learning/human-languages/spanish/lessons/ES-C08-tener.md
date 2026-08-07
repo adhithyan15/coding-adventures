@@ -4,7 +4,7 @@ chapter: 8
 type: word
 headword: tener
 gloss: to have (your first irregular / stem-changing verb)
-concept_tag: ES-VERB-TENER
+concept_tag: VERB-HAVE
 prerequisites: [ES-C06-hablar]
 sounds: [diphthong-ie, r-tap]
 roots: [tenere-latin]

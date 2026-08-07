@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Chapter 11",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da677dc4c1b0d05e",
+  "sourceHash": "fnv1a64:a4622dd6cae2c8a2",
   "lessons": [
     {
       "id": "ES-C11-nuestro",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:142a93616e523eef",
+      "sourceHash": "fnv1a64:fc28c84739b62d76",
       "notice": null,
       "blocks": [
         {

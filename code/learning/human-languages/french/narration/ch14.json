@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Chapter 14",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5d9fc699a891b8f4",
+  "sourceHash": "fnv1a64:a60c4c85228a0399",
   "lessons": [
     {
       "id": "FR-C14-age",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e1fce68257fb1f71",
+      "sourceHash": "fnv1a64:8e9f481dabe6b8c4",
       "notice": {
         "modality": "sight",
         "needs": [
