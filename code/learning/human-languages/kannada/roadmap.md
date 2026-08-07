@@ -60,6 +60,23 @@ order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
   Closes on the four-sister table — *-ge / -ukku / -ku / -ikku*, visibly one
   suffix. **Authored.**
 
+- **Ch. 32 — The Core Verbs**: ಇರು (*iru*, be) → ಹೋಗು (*hōgu*, go) → ಬಾ (*bā*,
+  come) → ತಿನ್ನು (*tinnu*, eat) → ನೋಡು (*nōḍu*, see) → ಗೊತ್ತು (*gottu*, known).
+  The track's first lessons under the **canonical** `VERB-*` tags, so Kannada
+  finally registers on the cross-language core-verb measurement. Built around
+  Kannada's two signatures: the **three-slot verb** (stem + tense + person, so
+  *iruttēne* is be + present + I and the last bead already means "I"), and the
+  **p → h law** — Kannada alone among the four Dravidian sisters softened old
+  word-initial *\*p-* to *h-*, which is why Tamil *pōgu / pattu / pāl / peyar*
+  answer Kannada *hōgu / hattu / hālu / hesaru* while Telugu and Malayalam keep
+  the *p*. Then the command form against the working stem (*bā* but *baru-*,
+  unlocking Ch. 4's ಹೋಗಿ ಬರುತ್ತೇನೆ) and Kannada's second initial-consonant
+  habit *\*v-* → *b-*; the tense bead, and the future everyday Kannada never
+  separated from the present; the person bead, gendered only in the third
+  person, beside the genuine four-way split in the everyday see-word; and the
+  closer — ಗೊತ್ತು is not a verb, has no person slot, and so pushes the knower
+  out into the dative. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |

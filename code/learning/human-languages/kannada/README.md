@@ -54,8 +54,17 @@ pieces taught before the whole; and a book you can read straight through.
 - **Chapters 23–31 — Dayparts and greetings**
   ([`lessons/KA-C{23..31}-*`](./lessons/)): day, night, morning, evening,
   afternoon, and their register-aware greetings.
+- **Chapter 32 — The Core Verbs** ([`lessons/KA-C32-*`](./lessons/)): ಇರು
+  (*iru*, be), ಹೋಗು (*hōgu*, go), ಬಾ (*bā*, come), ತಿನ್ನು (*tinnu*, eat), ನೋಡು
+  (*nōḍu*, see), ಗೊತ್ತು (*gottu*, known). One verb per lesson, one idea each:
+  the three-slot machine (stem + tense + person), the **p → h law** that
+  Kannada alone among the four Dravidian sisters carried out, the command form
+  against the stem the endings actually attach to (*bā* but *baru-*), the
+  tense bead and the future Kannada never separated, the person bead, and a
+  know-word with no beads at all. The track's first canonical verb coverage —
+  six of the shared spine's core forty. In the book.
 
-All thirty later lessons remain below five effective minutes.
+All thirty-six later lessons remain below five effective minutes.
 
 ---
 
@@ -74,7 +83,7 @@ someone the time on the hour in Kannada"), the shared spine nodes it realises,
 and the `payoff` lesson that proves the claim, with the exact knowledge atoms
 that payoff exercises.
 
-Chapters **6–31** are authored — twenty-six entries. Chapters **1–5 are absent
+Chapters **6–32** are authored — twenty-seven entries. Chapters **1–5 are absent
 on purpose**: their lessons are still schema v1 with no `practises.knowledge`
 and no `core/book-generation.json` target, so a payoff for them could only be
 invented. That absence is measurable debt, not a placeholder.

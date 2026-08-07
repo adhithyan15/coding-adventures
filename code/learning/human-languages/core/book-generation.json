@@ -940,6 +940,14 @@
       "scriptSet": "kannada-comparisons"
     },
     {
+      "language": "kannada",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ka-core-verbs",
+      "output": "kannada/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",
