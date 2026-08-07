@@ -4,22 +4,22 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:519a94fefb3cc1fb",
+  "sourceHash": "fnv1a64:abfa845dbcbdcdb7",
   "lessons": [
     {
       "id": "GU-C03-hun",
       "sequence": null,
       "title": "હું (hũ) — \"I\"",
       "headword": "હું",
-      "romanization": "હું",
+      "romanization": "",
       "gloss": "I",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:806b44e166aa90b1",
+      "sourceHash": "fnv1a64:11e76b7f4b053d5c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -145,15 +145,15 @@
       "sequence": null,
       "title": "કેમ (kem) — \"how,\" a proper k- question",
       "headword": "કેમ",
-      "romanization": "કેમ",
+      "romanization": "",
       "gloss": "how (also \"why\")",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6d24d1ed458a9ebc",
+      "sourceHash": "fnv1a64:bf5b7526a590d3e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -259,15 +259,15 @@
       "sequence": null,
       "title": "મજા (majā) — \"enjoyment,\" and how to answer",
       "headword": "મજા",
-      "romanization": "મજા",
+      "romanization": "",
       "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:303cb39547727116",
+      "sourceHash": "fnv1a64:a8f4832b1584963f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -393,15 +393,15 @@
       "sequence": null,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
-      "romanization": "(dialogue)",
+      "romanization": "",
       "gloss": "Chapter 3 recap — the how-are-you exchange",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f00495c27cccb5",
+      "sourceHash": "fnv1a64:2cbc0c298d7b79c6",
       "notice": null,
       "blocks": [
         {
@@ -563,15 +563,15 @@
       "sequence": null,
       "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
       "headword": "તમે કેમ છો?",
-      "romanization": "તમે કેમ છો?",
+      "romanization": "",
       "gloss": "how are you? (respectful)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b3f6d4232bf928d",
+      "sourceHash": "fnv1a64:e015921a087205c8",
       "notice": null,
       "blocks": [
         {
@@ -685,15 +685,15 @@
       "sequence": null,
       "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
       "headword": "વાંધો નહીં",
-      "romanization": "વાંધો નહીં",
+      "romanization": "",
       "gloss": "no problem / it's okay / you're welcome",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b56e87993b078b6e",
+      "sourceHash": "fnv1a64:4b281c51975b08c1",
       "notice": {
         "modality": "sight",
         "needs": [

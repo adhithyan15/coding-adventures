@@ -1,6 +1,7 @@
 import type { ParsedLesson } from "./parse.js";
 import { runChapterGates, type ChapterGateReport } from "./chapters.js";
 import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
+import { measureRamp, type RampReport } from "./ramp.js";
 import type {
   BookCorpus,
   ChapterPolicy,
@@ -104,6 +105,12 @@ export interface CurriculumGapReport {
      */
     /** HL-C10: lessons no spine node claims, so no level could be derived. */
     lessonsWithoutLevel: number | null;
+    /** HL08: lessons above `maxNewAtomsPerLesson`. Null when no policy was supplied. */
+    rampOverBudgetLessons: number | null;
+    /** HL08: lessons above `maxNewGlyphsPerLesson` — the decoding burden, newly counted. */
+    scriptRampOverBudgetLessons: number | null;
+    /** HL08: lessons opening more than one writing system at once. */
+    lessonsOpeningMultipleScripts: number | null;
     chaptersWithoutCapability: number | null;
     chapterPayoffsNotRepresentative: number | null;
     chapterGateCleanTracks: number | null;
@@ -144,6 +151,16 @@ export interface CurriculumGapReport {
    * report shape rather than seeing an empty section it cannot tell from "measured none".
    */
   levels?: LevelSummary;
+  /**
+   * HL08 gentle-ramp budgets — vocabulary atoms AND target-script glyphs.
+   *
+   * `measureRamp` existed and was called by nothing but its own unit test, so the
+   * budgets in `chapter-policy.json` were policy in the sense that a sign is policy.
+   * Absent when the caller supplied no policy, so a consumer that never passes one
+   * keeps its report shape rather than seeing a section measured against defaults
+   * nobody chose.
+   */
+  ramp?: RampReport;
   modality: ModalitySummary;
 }
 
@@ -451,6 +468,10 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       ? summarizeLevels(lessons, input.curricula, input.spine)
       : undefined;
 
+  // HL08 ramp budgets. Needs only the policy — every lesson carries its own atoms and
+  // its own script, so unlike the chapter gates this does not wait on the ledgers.
+  const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
+
   const chapterGates =
     input.trackChapters && input.chapterPolicy
       ? runChapterGates({
@@ -486,6 +507,9 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       mixedSchemaTracks: schemas.filter((track) => track.status === "mixed").length,
       version2SchemaTracks: schemas.filter((track) => track.status === "version-2").length,
       lessonsWithoutLevel: levels?.unmapped ?? null,
+      rampOverBudgetLessons: ramp?.summary.lessonViolations ?? null,
+      scriptRampOverBudgetLessons: ramp?.script.summary.lessonViolations ?? null,
+      lessonsOpeningMultipleScripts: ramp?.script.summary.systemViolations ?? null,
       chaptersWithoutCapability: chapterGates?.summary.chaptersWithoutCapability ?? null,
       chapterPayoffsNotRepresentative: chapterGates?.summary.payoffsNotRepresentative ?? null,
       chapterGateCleanTracks: chapterGates?.summary.cleanTracks ?? null,
@@ -502,6 +526,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     schemas: { tracks: schemas },
     chapters: chapterGates,
     levels,
+    ramp,
     modality,
   };
 }
@@ -523,6 +548,22 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           `levels: ${CEFR_LEVELS.filter((l) => report.levels!.byLevel[l] > 0)
             .map((l) => `${report.levels!.byLevel[l]} ${l}`)
             .join(", ")}; ${report.levels!.unmapped} unmapped (${report.levels!.mappedPercent}% placed)`,
+        ]
+      : []),
+    ...(report.ramp
+      ? [
+          `ramp: ${report.ramp.summary.lessonViolations} lessons above ${report.ramp.policy.maxNewAtomsPerLesson} new atoms ` +
+            `(${report.ramp.summary.unmeasurableLessons} unmeasurable, ${report.ramp.summary.measurablePercent}% measurable); ` +
+            `${report.ramp.summary.chapterViolations} chapters above ${report.ramp.policy.maxNewAtomsPerChapter}`,
+          `script ramp: ${report.ramp.script.summary.lessonViolations} lessons above ` +
+            `${report.ramp.script.policy.maxNewGlyphsPerLesson} new glyphs; ` +
+            `${report.ramp.script.summary.systemViolations} opening more than ` +
+            `${report.ramp.script.policy.maxNewScriptSystemsPerLesson} writing system at once` +
+            (report.ramp.script.summary.steepestLesson
+              ? `; steepest ${report.ramp.script.summary.steepestLesson.lessonId} at ${report.ramp.script.summary.steepestLesson.glyphs}`
+              : ""),
+          `cousin layer: ${report.ramp.script.summary.lessonsWithForeignScript} lessons show another script ` +
+            `(max ${report.ramp.script.summary.maxForeignGlyphsInALesson} glyphs) — context, never charged to the budget`,
         ]
       : []),
     ...(report.chapters

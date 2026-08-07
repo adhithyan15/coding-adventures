@@ -21,8 +21,141 @@
 // with a low violation count and a high unmeasurable count has not proved it is gentle; it
 // has proved it is unmigrated.
 
-import type { ChapterPolicy } from "./types.js";
+// ─────────────────────────────────────────────────────────────────────────────
+// THE SECOND RAMP: script.
+//
+// Everything above counts *atoms* — units of meaning. That is one of the two
+// burdens a lesson imposes, and the corpus had no measurement of the other.
+// Before a learner can mean anything by नमस्ते they have to decode it, and
+// decoding is a separate skill on a separate curve.
+//
+// The gap was not subtle. `HI-W01-shirorekha-na-ma` declares exactly ONE atom
+// and puts TWELVE new Devanagari glyphs on the page. It passes
+// `maxNewAtomsPerLesson: 3` comfortably. Sixty-one lessons are in that position;
+// thirty-eight of them declare zero atoms and so read as maximally gentle while
+// teaching up to a dozen new shapes.
+//
+// TARGET vs FOREIGN — the distinction that makes the number honest.
+//
+// A Kannada learner must eventually read every Kannada glyph. The Devanagari,
+// Tamil, Telugu and Malayalam in a cousin table is *context* — it says "your
+// language's word for thanks is the same word Hindi uses" to a reader who
+// happens to know Hindi, and it is meant to be skippable by everyone else.
+// Charging both to one budget is what makes `KA-C01-dhanyavada` look like a
+// 34-glyph cliff in Chapter 1. Its actual Kannada load is 7.
+//
+// So foreign glyphs are counted, reported, and never charged against the
+// budget. They are the cousin layer's footprint, useful to see and wrong to
+// penalise. What they DO justify is keeping that layer visually separable, so a
+// reader who does not know Hindi can skip it without skipping the lesson.
+//
+// ORDER MATTERS, so this walks lessons in reading order (chapter, then
+// sequence) per track and counts only what is genuinely new at that point. A
+// glyph taught in Chapter 1 is free in Chapter 30. That is what makes it a ramp
+// measurement rather than a density measurement.
+
+import type { ChapterPolicy, Script } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import { hasOwn } from "./constants.js";
+
+/**
+ * Which Unicode scripts make up each of the curriculum's script ids.
+ *
+ * Nearly all are one-to-one. `japanese` is the exception that motivates the
+ * whole `maxNewScriptSystemsPerLesson` rule: three writing systems behind one
+ * id, which is also why HL-C42 wants a track to be able to declare several.
+ * `perso-arabic` and `urdu-nastaliq` are Arabic script in different hands, so
+ * they resolve to the same Unicode script.
+ */
+const SCRIPT_SYSTEMS: Record<string, string[]> = {
+  latin: ["Latin"],
+  devanagari: ["Devanagari"],
+  bengali: ["Bengali"],
+  gurmukhi: ["Gurmukhi"],
+  gujarati: ["Gujarati"],
+  tamil: ["Tamil"],
+  telugu: ["Telugu"],
+  kannada: ["Kannada"],
+  malayalam: ["Malayalam"],
+  arabic: ["Arabic"],
+  "perso-arabic": ["Arabic"],
+  "urdu-nastaliq": ["Arabic"],
+  cyrillic: ["Cyrillic"],
+  hebrew: ["Hebrew"],
+  chinese: ["Han"],
+  japanese: ["Hiragana", "Katakana", "Han"],
+};
+
+/** Every Unicode script this curriculum can name, for classifying a stray glyph. */
+const ALL_SYSTEMS = [
+  ...new Set(Object.values(SCRIPT_SYSTEMS).flat()),
+].filter((system) => system !== "Latin");
+
+/**
+ * `Script_Extensions`, not `Script`, and the difference is load-bearing.
+ *
+ * Several characters a learner must decode are formally `Script=Common` because
+ * more than one script borrows them — Japanese's prolonged-sound mark ー
+ * (U+30FC) is the clearest case, shared by hiragana and katakana and therefore
+ * belonging to neither under the narrow property. `Script=Katakana` misses it;
+ * `Script_Extensions=Katakana` catches it. Matching on the narrow property
+ * undercounted コーヒー by exactly the mark that makes it a long vowel.
+ */
+const SYSTEM_MATCHERS: ReadonlyArray<readonly [string, RegExp]> = ALL_SYSTEMS.map((system) => {
+  try {
+    return [system, new RegExp(`\\p{Script_Extensions=${system}}`, "u")] as const;
+  } catch {
+    // These regexes are built at module load, and `index.ts` re-exports this file, so a
+    // bad name takes down every CLI in the package — book generation, narration,
+    // modality, validate — with a SyntaxError naming a regex rather than the map that
+    // caused it. The names that throw are exactly the plausible extensions: "Kanji",
+    // "Nastaliq", or a typo like "Devangari". Say which one and where.
+    throw new Error(
+      `SCRIPT_SYSTEMS names "${system}", which is not a Unicode script. ` +
+        `Use the script's Unicode name (e.g. "Han", not "Kanji"; "Arabic", not "Nastaliq").`,
+    );
+  }
+});
+
+/**
+ * The Unicode script a character belongs to, or null when it is not script at all.
+ *
+ * Punctuation, spaces, format characters and Latin are all "not script" here. Latin
+ * is excluded deliberately: romanization (`namaskāram`) rides alongside every
+ * non-Latin headword, and counting `ā` as a glyph to be learned would swamp the
+ * signal with the very thing that exists to make the script approachable.
+ *
+ * Two things are deliberately NOT excluded. Combining marks: a Devanagari mātrā is
+ * a shape the learner must read, and dropping it would undercount every abugida in
+ * the corpus. And digits: ०१२ and ۱۲۳ are `\p{N}`, but they are also glyphs nobody
+ * born to ASCII can already read, so a numbers lesson genuinely does teach script.
+ * Latin digits never reach the matchers, so no exclusion is needed for them.
+ */
+function systemOf(ch: string): string | null {
+  if (/[\s\p{P}\p{C}]/u.test(ch)) return null;
+  for (const [system, matcher] of SYSTEM_MATCHERS) {
+    if (matcher.test(ch)) return system;
+  }
+  return null;
+}
+
+/** Reading order within a track: chapter, then sequence, then id for stability. */
+function readingOrder(a: ParsedLesson, b: ParsedLesson): number {
+  const chapter = (lesson: ParsedLesson) =>
+    typeof lesson.realization.chapter === "number" && Number.isFinite(lesson.realization.chapter)
+      ? lesson.realization.chapter
+      : Number.MAX_SAFE_INTEGER;
+  const sequence = (lesson: ParsedLesson) => {
+    const raw = lesson.frontmatter.sequence;
+    const value = typeof raw === "number" ? raw : Number(raw);
+    return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  };
+  return (
+    chapter(a) - chapter(b) ||
+    sequence(a) - sequence(b) ||
+    a.realization.lessonId.localeCompare(b.realization.lessonId)
+  );
+}
 
 /** One lesson that introduces more than the budget allows. */
 export interface RampViolation {
@@ -56,11 +189,70 @@ export interface TrackRampCoverage {
   chapterViolations: number;
 }
 
+/** One lesson putting more new target-script glyphs on the page than the budget allows. */
+export interface ScriptRampViolation {
+  lessonId: string;
+  language: string;
+  chapter: number | null;
+  /** New glyphs of the track's OWN script, first seen in this lesson. */
+  glyphs: number;
+  /** The glyphs themselves, so a splitter can see what it is dividing. */
+  sample: string;
+  /** Writing systems opened here — >1 is its own violation. */
+  systems: string[];
+  budget: number;
+}
+
+/** One lesson opening more writing systems at once than the budget allows. */
+export interface ScriptSystemViolation {
+  lessonId: string;
+  language: string;
+  chapter: number | null;
+  systems: string[];
+  budget: number;
+}
+
+export interface TrackScriptRamp {
+  language: string;
+  /** The track's declared script id. */
+  script: Script;
+  /** Latin-script tracks carry no decoding burden and are measured but never flagged. */
+  latinScript: boolean;
+  lessonCount: number;
+  /** Distinct target-script glyphs the whole track ever shows. */
+  totalGlyphs: number;
+  lessonViolations: number;
+  systemViolations: number;
+  /** Lessons showing at least one glyph from a DIFFERENT script (cousin tables). */
+  lessonsWithForeignScript: number;
+}
+
+export interface ScriptRampReport {
+  policy: { maxNewGlyphsPerLesson: number; maxNewScriptSystemsPerLesson: number };
+  lessons: ScriptRampViolation[];
+  systems: ScriptSystemViolation[];
+  tracks: TrackScriptRamp[];
+  summary: {
+    /** Lessons above `maxNewGlyphsPerLesson` — the script burn-down list. */
+    lessonViolations: number;
+    /** Lessons opening more than one writing system at once. */
+    systemViolations: number;
+    /** Lessons carrying cousin-table glyphs. Context, never a violation. */
+    lessonsWithForeignScript: number;
+    /** Most foreign glyphs any one lesson shows, so the cousin layer's cost is visible. */
+    maxForeignGlyphsInALesson: number;
+    /** The steepest single lesson, where a burn-down starts. */
+    steepestLesson: ScriptRampViolation | null;
+  };
+}
+
 export interface RampReport {
   policy: { maxNewAtomsPerLesson: number; maxNewAtomsPerChapter: number };
   lessons: RampViolation[];
   chapters: ChapterRampViolation[];
   tracks: TrackRampCoverage[];
+  /** The script ramp — a second, independent curve. See the note at the top of this file. */
+  script: ScriptRampReport;
   summary: {
     /** Lessons above `maxNewAtomsPerLesson`. The HL-C18 burn-down list. */
     lessonViolations: number;
@@ -95,6 +287,137 @@ function introducedAtoms(lesson: ParsedLesson): string[] {
     for (const atom of block.knowledge?.introduces ?? []) atoms.add(atom);
   }
   return [...atoms];
+}
+
+/**
+ * Measure the script ramp: new target-script glyphs per lesson, in reading order.
+ *
+ * Defaults mirror `chapter-policy.json` so a policy file written before this
+ * existed still measures something rather than silently reporting zero — the
+ * failure mode that let the atom budgets sit unread for a whole release.
+ */
+export function measureScriptRamp(
+  lessons: ParsedLesson[],
+  policy: ChapterPolicy,
+): ScriptRampReport {
+  const perLesson = policy.maxNewGlyphsPerLesson ?? 3;
+  const perSystems = policy.maxNewScriptSystemsPerLesson ?? 1;
+
+  const violations: ScriptRampViolation[] = [];
+  const systemViolations: ScriptSystemViolation[] = [];
+  const tracks: TrackScriptRamp[] = [];
+  let maxForeign = 0;
+  let foreignLessons = 0;
+
+  const byTrack = new Map<string, ParsedLesson[]>();
+  for (const lesson of lessons) {
+    let group = byTrack.get(lesson.language);
+    if (!group) byTrack.set(lesson.language, (group = []));
+    group.push(lesson);
+  }
+
+  for (const [language, group] of [...byTrack].sort((a, b) => a[0].localeCompare(b[0]))) {
+    const script = group[0]!.script;
+    // `hasOwn`, not `?? ["Latin"]`. A track.json may declare any string as its script,
+    // and `SCRIPT_SYSTEMS["__proto__"]` returns Object.prototype — which is not nullish,
+    // so `??` never fires and `new Set(Object.prototype)` throws, taking the whole gap
+    // report down with it. Same for `constructor`, `toString`, `valueOf`. The package
+    // already exports `hasOwn` for exactly this; this lookup is the one that skipped it.
+    const target = new Set(hasOwn(SCRIPT_SYSTEMS, script) ? SCRIPT_SYSTEMS[script]! : ["Latin"]);
+    const latinScript = target.has("Latin");
+
+    const seenTarget = new Set<string>();
+    const seenForeign = new Set<string>();
+    const track: TrackScriptRamp = {
+      language,
+      script,
+      latinScript,
+      lessonCount: group.length,
+      totalGlyphs: 0,
+      lessonViolations: 0,
+      systemViolations: 0,
+      lessonsWithForeignScript: 0,
+    };
+
+    for (const lesson of [...group].sort(readingOrder)) {
+      const newTarget = new Set<string>();
+      const newForeign = new Set<string>();
+      const systems = new Set<string>();
+
+      for (const ch of new Set(lesson.body)) {
+        const system = systemOf(ch);
+        if (system === null) continue;
+        if (target.has(system)) {
+          if (latinScript || seenTarget.has(ch)) continue;
+          seenTarget.add(ch);
+          newTarget.add(ch);
+          systems.add(system);
+        } else if (!seenForeign.has(ch)) {
+          seenForeign.add(ch);
+          newForeign.add(ch);
+        }
+      }
+
+      if (newForeign.size > 0) {
+        foreignLessons += 1;
+        track.lessonsWithForeignScript += 1;
+        maxForeign = Math.max(maxForeign, newForeign.size);
+      }
+      track.totalGlyphs += newTarget.size;
+
+      const chapter =
+        typeof lesson.realization.chapter === "number" && Number.isFinite(lesson.realization.chapter)
+          ? lesson.realization.chapter
+          : null;
+      const orderedSystems = [...systems].sort();
+
+      if (newTarget.size > perLesson) {
+        violations.push({
+          lessonId: lesson.realization.lessonId,
+          language,
+          chapter,
+          glyphs: newTarget.size,
+          sample: [...newTarget].sort().join(""),
+          systems: orderedSystems,
+          budget: perLesson,
+        });
+        track.lessonViolations += 1;
+      }
+
+      if (orderedSystems.length > perSystems) {
+        systemViolations.push({
+          lessonId: lesson.realization.lessonId,
+          language,
+          chapter,
+          systems: orderedSystems,
+          budget: perSystems,
+        });
+        track.systemViolations += 1;
+      }
+    }
+
+    tracks.push(track);
+  }
+
+  // Steepest first, then by id, so the list is a stable work queue rather than a set.
+  violations.sort((a, b) => b.glyphs - a.glyphs || a.lessonId.localeCompare(b.lessonId));
+  systemViolations.sort(
+    (a, b) => b.systems.length - a.systems.length || a.lessonId.localeCompare(b.lessonId),
+  );
+
+  return {
+    policy: { maxNewGlyphsPerLesson: perLesson, maxNewScriptSystemsPerLesson: perSystems },
+    lessons: violations,
+    systems: systemViolations,
+    tracks,
+    summary: {
+      lessonViolations: violations.length,
+      systemViolations: systemViolations.length,
+      lessonsWithForeignScript: foreignLessons,
+      maxForeignGlyphsInALesson: maxForeign,
+      steepestLesson: violations[0] ?? null,
+    },
+  };
 }
 
 /** Measure the gentle-ramp budgets across the corpus. */
@@ -175,6 +498,7 @@ export function measureRamp(lessons: ParsedLesson[], policy: ChapterPolicy): Ram
     lessons: violations,
     chapters,
     tracks: [...tracks.values()].sort((a, b) => a.language.localeCompare(b.language)),
+    script: measureScriptRamp(lessons, policy),
     summary: {
       lessonViolations: violations.length,
       chapterViolations: chapters.length,

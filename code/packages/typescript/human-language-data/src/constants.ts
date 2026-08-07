@@ -19,6 +19,23 @@ export const LANGUAGE_SCRIPT: Record<string, Script> = {
   sanskrit: "devanagari",
   punjabi: "gurmukhi",
   bengali: "bengali",
+  // The three tracks below were missing, and the fallback silently resolved them to
+  // `latin` — a wrong answer that looks like a right one.
+  //
+  // Gujarati was the worked example in the comment above and never actually got an
+  // entry, so all 39 of its lessons resolved to `latin`: glyph-coverage validation
+  // looked its headwords up in the Latin inventory, and `romanization` fell back to
+  // the Gujarati headword itself, handing a voice assistant Gujarati script in the
+  // field a speech engine reads as Latin. The script ramp surfaced it — a track whose
+  // script is unknown reads as having no script to learn.
+  //
+  // Chinese and Japanese never hit that in production because both ship a `track.json`
+  // that the loader prefers. But a fallback that is wrong for some tracks is worse than
+  // no fallback: it fails only in the paths that skip the loader, which is exactly where
+  // a unit test lives. Completing the map costs nothing and removes the trap.
+  gujarati: "gujarati",
+  chinese: "chinese",
+  japanese: "japanese",
   tamil: "tamil",
   kannada: "kannada",
   telugu: "telugu",

@@ -4,22 +4,22 @@
   "chapter": 4,
   "title": "Chapter 4",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9d5823ce6f705cb4",
+  "sourceHash": "fnv1a64:a7cb2a54ee279339",
   "lessons": [
     {
       "id": "GU-C04-kaale",
       "sequence": null,
       "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
       "headword": "કાલે મળીશું",
-      "romanization": "કાલે મળીશું",
+      "romanization": "",
       "gloss": "see you tomorrow (and the કાલ puzzle)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f3ae78bb775a679b",
+      "sourceHash": "fnv1a64:1d688df2a4389d1a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -134,15 +134,15 @@
       "sequence": null,
       "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
       "headword": "મળીશું",
-      "romanization": "મળીશું",
+      "romanization": "",
       "gloss": "(we) will meet",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29a3baacaa084aec",
+      "sourceHash": "fnv1a64:00667abc9913b227",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -268,15 +268,15 @@
       "sequence": null,
       "title": "પાછા (pāchhā) — \"again, back\"",
       "headword": "પાછા",
-      "romanization": "પાછા",
+      "romanization": "",
       "gloss": "again, back",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f60f2bede52fd1e",
+      "sourceHash": "fnv1a64:ed7b37cea503d5c3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -382,15 +382,15 @@
       "sequence": null,
       "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
       "headword": "પાછા મળીશું",
-      "romanization": "પાછા મળીશું",
+      "romanization": "",
       "gloss": "we'll meet again (goodbye)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f245151fd5538775",
+      "sourceHash": "fnv1a64:722ed898b16425d4",
       "notice": null,
       "blocks": [
         {
@@ -485,15 +485,15 @@
       "sequence": null,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
-      "romanization": "(dialogue)",
+      "romanization": "",
       "gloss": "Chapter 4 recap — the farewells",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c080b0034a7e8c2",
+      "sourceHash": "fnv1a64:5f7441aa51718c15",
       "notice": null,
       "blocks": [
         {

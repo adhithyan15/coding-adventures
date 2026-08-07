@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cfdf1f54d8c2b941",
+  "sourceHash": "fnv1a64:0be661817755e933",
   "lessons": [
     {
       "id": "GU-C07-hovun",
@@ -13,13 +13,13 @@
       "headword": "હોવું",
       "romanization": "hovũ",
       "gloss": "to be — and the neuter ending that names every Gujarati verb",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef298f0a3ff2dd7d",
+      "sourceHash": "fnv1a64:074c898a263805b4",
       "notice": null,
       "blocks": [
         {
@@ -165,13 +165,13 @@
       "headword": "જવું",
       "romanization": "javũ",
       "gloss": "to go — and the Sanskrit y- that Prakrit turned into j-",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:528b94932b45e54c",
+      "sourceHash": "fnv1a64:ac22a70b3f014c43",
       "notice": null,
       "blocks": [
         {
@@ -354,13 +354,13 @@
       "headword": "આવવું",
       "romanization": "āvvũ",
       "gloss": "to come — from a root meaning “reach,” and a cousin of the word copula",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:295013173e636454",
+      "sourceHash": "fnv1a64:0a598e9332487ff5",
       "notice": null,
       "blocks": [
         {
@@ -527,13 +527,13 @@
       "headword": "ખાવું",
       "romanization": "khāvũ",
       "gloss": "to eat — the verb whose family reaches its Indian sisters and stops there",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc5f4ec3252f1232",
+      "sourceHash": "fnv1a64:b4e5c4ae025d4ddb",
       "notice": null,
       "blocks": [
         {
@@ -673,13 +673,13 @@
       "headword": "જોવું",
       "romanization": "jovũ",
       "gloss": "to see — one vowel sign away from “to go,” and an origin still argued over",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9479b5c8be53f39",
+      "sourceHash": "fnv1a64:123451e5d601e80a",
       "notice": null,
       "blocks": [
         {
@@ -838,13 +838,13 @@
       "headword": "જાણવું",
       "romanization": "jāṇvũ",
       "gloss": "to know — the word English has been carrying all along",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:983268fd3190a48d",
+      "sourceHash": "fnv1a64:0a53c84fae291b0a",
       "notice": null,
       "blocks": [
         {

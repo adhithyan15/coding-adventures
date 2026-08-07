@@ -4,22 +4,22 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8012e9dfcbaeaad7",
+  "sourceHash": "fnv1a64:21df006e01581a7f",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
       "sequence": null,
       "title": "બોલવું (bolvũ) — \"to speak,\" your first full verb",
       "headword": "બોલવું",
-      "romanization": "બોલવું",
+      "romanization": "",
       "gloss": "to speak",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a6494186f38b1670",
+      "sourceHash": "fnv1a64:a78b0a484e53552b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,15 +165,15 @@
       "sequence": null,
       "title": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) — \"I speak Gujarati\"",
       "headword": "હું ગુજરાતી બોલું છું",
-      "romanization": "હું ગુજરાતી બોલું છું",
+      "romanization": "",
       "gloss": "I speak Gujarati",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:becb16ef892b890c",
+      "sourceHash": "fnv1a64:dc39a148e0c32c27",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -299,15 +299,15 @@
       "sequence": null,
       "title": "કામ કરવું (kām karvũ) — \"to work\"",
       "headword": "કામ કરવું",
-      "romanization": "કામ કરવું",
+      "romanization": "",
       "gloss": "to work (lit. \"work-do\")",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2bb56f4b0ce16c2",
+      "sourceHash": "fnv1a64:bc64f6af5ca4e7a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -434,15 +434,15 @@
       "sequence": null,
       "title": "Chapter 5 — The first verbs",
       "headword": "(dialogue)",
-      "romanization": "(dialogue)",
+      "romanization": "",
       "gloss": "Chapter 5 recap — the first verbs",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:449b435eb5c743b6",
+      "sourceHash": "fnv1a64:930baab2a86c682d",
       "notice": null,
       "blocks": [
         {
@@ -604,15 +604,15 @@
       "sequence": null,
       "title": "રહેવું (rahevũ) — \"to live, to stay\"",
       "headword": "રહેવું",
-      "romanization": "રહેવું",
+      "romanization": "",
       "gloss": "to live, to stay",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38ff136f2541f6f9",
+      "sourceHash": "fnv1a64:0776c98caaa4da8c",
       "notice": {
         "modality": "sight",
         "needs": [

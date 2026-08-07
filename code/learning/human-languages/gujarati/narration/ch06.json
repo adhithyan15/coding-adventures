@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:952853fc84148cac",
+  "sourceHash": "fnv1a64:834feb5e4fa699a5",
   "lessons": [
     {
       "id": "GU-C06-numbers-1-5",
@@ -13,13 +13,13 @@
       "headword": "એક બે ત્રણ ચાર પાંચ",
       "romanization": "ek be traṇ chār pā̃ch",
       "gloss": "one to five — the two numbers that don't look like their neighbours'",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce2aca277bb3c6ba",
+      "sourceHash": "fnv1a64:efa63868bdf27365",
       "notice": null,
       "blocks": [
         {
@@ -148,13 +148,13 @@
       "headword": "બે · ત્રણ",
       "romanization": "be · traṇ",
       "gloss": "why Gujarati two begins with b and why three regained an r",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:775766c23caf743f",
+      "sourceHash": "fnv1a64:01b835a278e4ed28",
       "notice": null,
       "blocks": [
         {

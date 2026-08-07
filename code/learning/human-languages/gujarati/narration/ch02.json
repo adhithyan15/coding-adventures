@@ -4,22 +4,22 @@
   "chapter": 2,
   "title": "Chapter 2",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:84eae05a789c7889",
+  "sourceHash": "fnv1a64:b40428346fb84ab2",
   "lessons": [
     {
       "id": "GU-C02-anand",
       "sequence": null,
       "title": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — \"pleased to meet you\"",
       "headword": "તમને મળીને આનંદ થયો",
-      "romanization": "તમને મળીને આનંદ થયો",
+      "romanization": "",
       "gloss": "pleased to meet you (lit. \"meeting you, joy happened\")",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d464ae8af941057d",
+      "sourceHash": "fnv1a64:0ec28b57e91bb066",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -134,15 +134,15 @@
       "sequence": null,
       "title": "છે (chhe) — \"is,\" a copula all Gujarati's own",
       "headword": "છે",
-      "romanization": "છે",
+      "romanization": "",
       "gloss": "is (the copula)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:602b01069582a487",
+      "sourceHash": "fnv1a64:9421ea8c1eed68ca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -268,15 +268,15 @@
       "sequence": null,
       "title": "મારું (mārũ) — \"my,\" and gender again",
       "headword": "મારું",
-      "romanization": "મારું",
+      "romanization": "",
       "gloss": "my (neuter; also મારો m. / મારી f.)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d67b8ebaba84b5c4",
+      "sourceHash": "fnv1a64:69923e316ee556fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -418,15 +418,15 @@
       "sequence": null,
       "title": "મારું નામ … છે (mārũ nām … chhe) — \"my name is…\"",
       "headword": "મારું નામ … છે",
-      "romanization": "મારું નામ … છે",
+      "romanization": "",
       "gloss": "my name is…",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30d99ef7cafd7f66",
+      "sourceHash": "fnv1a64:131deb18a89b3213",
       "notice": null,
       "blocks": [
         {
@@ -523,15 +523,15 @@
       "sequence": null,
       "title": "નામ (nām) — \"name,\" a word older than Europe",
       "headword": "નામ",
-      "romanization": "નામ",
+      "romanization": "",
       "gloss": "name",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3af8f4bb9a8cc066",
+      "sourceHash": "fnv1a64:45c0fba6f08e5ec3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -637,15 +637,15 @@
       "sequence": null,
       "title": "Chapter 2 — The introduction exchange",
       "headword": "(dialogue)",
-      "romanization": "(dialogue)",
+      "romanization": "",
       "gloss": "Chapter 2 recap — the introduction exchange",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:246937fe74368dde",
+      "sourceHash": "fnv1a64:46d495762ef4f25d",
       "notice": null,
       "blocks": [
         {
@@ -807,15 +807,15 @@
       "sequence": null,
       "title": "શું (shũ) — \"what\"",
       "headword": "શું",
-      "romanization": "શું",
+      "romanization": "",
       "gloss": "what",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f579e4f44a6b2af",
+      "sourceHash": "fnv1a64:7b05173babb06dca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -930,15 +930,15 @@
       "sequence": null,
       "title": "તમારું નામ શું છે? (tamārũ nām shũ chhe?) — \"what's your name?\"",
       "headword": "તમારું નામ શું છે?",
-      "romanization": "તમારું નામ શું છે?",
+      "romanization": "",
       "gloss": "what's your name?",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6085acd1c0bd05de",
+      "sourceHash": "fnv1a64:05037cae388d1cb5",
       "notice": null,
       "blocks": [
         {
@@ -1044,15 +1044,15 @@
       "sequence": null,
       "title": "તું / તમે (tũ / tame) — \"you,\" familiar and respectful",
       "headword": "તું / તમે",
-      "romanization": "તું / તમે",
+      "romanization": "",
       "gloss": "you (familiar / respectful)",
-      "script": "latin",
+      "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:243b1dd19af26cfa",
+      "sourceHash": "fnv1a64:ddef50cd33aa95af",
       "notice": {
         "modality": "sight",
         "needs": [
