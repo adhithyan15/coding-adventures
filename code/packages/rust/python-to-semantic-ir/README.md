@@ -52,7 +52,7 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M5 (collections) + C2 (method calls)
+## Milestone status — M5 (collections) + C2 (method calls) + OOP surface (SIR25 §2)
 
 Top-level statements run inline in a synthesised `main` function whose
 block value is the program's final top-level expression (or `NilLit`
@@ -310,16 +310,48 @@ detects the trailing `Closure` and applies it as the block.
 `primary` — an attribute suffix (`.method`) immediately followed by a call
 suffix (`(args)`).  The suffix fold looks ahead one slot: an attribute
 followed by a call consumes both and dispatches; a bare attribute (no
-following call) stays deferred.
+following call) stays deferred — **except** `self.x` inside a method body,
+see OOP surface below.
+
+### OOP surface (SIR25 §2)
+
+`class Dog(Animal): def __init__(self, ...): ... def m(self, ...): ...`
+lowers to the SAME `Stmt::ClassDef` + `__new__`/`__def_method__`/`__self__`
+envelope `ruby-to-semantic-ir` emits — the OOP-capable backends need
+**zero** changes to run a Python-sourced class:
+
+| Python source | SIR lowering | Feature declared |
+|---|---|---|
+| `class Dog:` / `class Dog(Animal):` | `Stmt::ClassDef{name, superclass, body: []}` | `Classes` |
+| `Dog(args)` | `BuiltinCall("__new__", [StrLit("Dog"), ...args])` | `Strings` |
+| `def m(self, ...): ...` in a class body | hoisted top-level fn `Dog__m` (self stripped) + `BuiltinCall("__def_method__", [StrLit("Dog"), StrLit("m"), MakeClosure(...)])` | `Strings`, `Closures` |
+| `def __init__(self, ...):` | same, but registered under the SIR name `"initialize"` (not the literal spelling) | — |
+| bare `self` | `BuiltinCall("__self__", [])` | — |
+| `self.x` (read) | `Expr::VarRef{name: "@x", scope: Instance}` | `InstanceVars` |
+| `self.x = v` (write) | `Stmt::Assign{name: "@x", scope: Instance, value: v}` | `InstanceVars`, `MutableBindings` |
+
+Inheritance needs no extra frontend work beyond the superclass name on
+`ClassDef`: a subclass with no overriding method still dispatches to the
+parent's via the *backend's* ancestry walk (SIR25 §2.2) — `super()` calls
+are the one inheritance-adjacent piece still deferred (see below).
+
+v0 restrictions (each a positioned `PythonLowerError`, not a silent drop):
+decorated classes, more than one base class or a non-bare-name base,
+any class-body statement other than `def` or `pass`, a method missing a
+plain `self` first parameter, and a chained/non-`self` bare attribute
+(`self.x.y`, `other.x`) — all mirroring the staged restrictions
+`ruby-to-semantic-ir`'s own OOP slices used.
 
 ### Deferred (later milestones)
 
-Everything past M5 / C2 returns a clear positioned `PythonLowerError`:
+Everything past M5 / C2 / the OOP surface above returns a clear positioned
+`PythonLowerError`:
 
 - list / dict **comprehensions**, **slicing** (`xs[a:b]`), **tuple** /
-  **set** literals, and **attribute access as a value** (`obj.x` *not*
-  followed by a call — method **calls** land in C2, but an attribute
-  *read* has no v0 lowering)
+  **set** literals, and **attribute access as a value** on anything other
+  than `self` inside a method body (`obj.x` where `obj` isn't `self`, or
+  `self.x.y` chained — see OOP surface above for the `self.x` case that
+  *is* supported)
 - `*args` / `**kwargs` (positional-rest / keyword-rest params — `Rest` /
   `KwRest` are not yet modelled by this crate), multi-level capture chaining
   (capturing a variable two scopes up) — note **positional default
@@ -327,11 +359,11 @@ Everything past M5 / C2 returns a clear positioned `PythonLowerError`:
   (`def f(*, x)`, `f(x=1)`, KW8) are now supported; only the variadic
   rest forms remain deferred
 - tuple / multi-target `for` (`for k, v in …`), multi-target / chained
-  assignment, attribute targets, bitwise operators, the power operator
-  (`**`)
-- and the full SIR17 "out of scope" list (classes, exceptions,
-  generators, decorators, `with` / `try`, `async`, imports,
-  `global` / `nonlocal`, f-strings).
+  assignment, non-`self` attribute targets, bitwise operators, the power
+  operator (`**`)
+- `@classmethod`/class methods, class variables, `super()` calls, mixins
+  (`include`/`extend`), exceptions, generators, non-class decorators,
+  `with` / `try`, `async`, imports, `global` / `nonlocal`, f-strings.
 
 ## Testing & coverage
 

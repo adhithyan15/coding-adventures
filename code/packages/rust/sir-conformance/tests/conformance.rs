@@ -237,6 +237,49 @@ const CORPUS: &[Program] = &[
         source: "print(2 + 3 * 4)\n",
         expected: "14",
     },
+    // Python-sourced OOP surface (SIR25 §2, python-to-semantic-ir's new
+    // class/self/ivar lowering): the SAME semantics as `oop_method` above
+    // (a class, construction, an instance method call), sourced from
+    // Python instead of Ruby. Every backend that already runs the
+    // Ruby-sourced version needs ZERO changes to run this one — that is
+    // the concrete cross-frontend, cross-backend proof the SIR25 arc set
+    // out for, not just a claim in a spec.
+    Program {
+        name: "python_oop_method",
+        frontend: Frontend::Python,
+        source: "class Dog:\n    def speak(self):\n        return \"woof\"\n\nprint(Dog().speak())\n",
+        expected: "woof",
+    },
+    // Python-sourced instance state (mirrors `counter_state` above):
+    // `__init__` mapped to SIR's `initialize`, `self.n` read/write across
+    // two method calls on the same object.
+    Program {
+        name: "python_counter_state",
+        frontend: Frontend::Python,
+        source: "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n = self.n + 1\n    def value(self):\n        return self.n\n\nc = Counter()\nc.inc()\nc.inc()\nprint(c.value())\n",
+        expected: "2",
+    },
+    // Python-sourced single inheritance, no explicit `super()` (not yet
+    // supported by this frontend — deferred): a subclass with no
+    // overriding method still dispatches to the parent's, proving the
+    // BACKEND's ancestry-walk resolution (built for Ruby) works
+    // unchanged from a Python-sourced ClassDef too. A SINGLE `print`
+    // call (string-concatenating both results) deliberately avoids a
+    // separate, unrelated gap this corpus addition surfaced while
+    // developing it: Python's `print` doesn't add a newline on the C/Ruby
+    // backends when called more than once in a program (their `print`
+    // builtin faithfully mirrors real Ruby's `Kernel#print`, which never
+    // adds one — Python's own `print` always does; the two languages'
+    // `print` share a builtin *name* but not its semantics). See
+    // README.md "Gaps the corpus has surfaced" — tracked, not fixed here,
+    // since it's independent of the OOP/inheritance surface this program
+    // exists to prove.
+    Program {
+        name: "python_inheritance",
+        frontend: Frontend::Python,
+        source: "class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    def bark(self):\n        return \"woof\"\n\nd = Dog()\nprint(d.speak() + \"-\" + d.bark())\n",
+        expected: "...-woof",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.

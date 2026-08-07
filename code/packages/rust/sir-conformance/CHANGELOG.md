@@ -2,6 +2,23 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.24.0] - Python OOP surface corpus: cross-frontend, cross-backend proof
+
+Adds `python_oop_method`, `python_counter_state`, `python_inheritance` —
+the SAME semantics as the existing Ruby-sourced `oop_method`/
+`counter_state` programs (a class, construction, instance methods,
+instance state, single inheritance), sourced from Python
+(`python-to-semantic-ir` 0.9.0's new OOP declaration surface, SIR25 §2)
+instead. All three run and match across every backend that already runs
+the Ruby-sourced originals — the concrete proof the SIR25 arc set out
+for: a second frontend reaching the OOP surface needed zero backend
+changes. Found and documented (not fixed here, orthogonal to OOP): a
+cross-language `print` builtin-name collision — Python's `print` always
+newline-terminates, real Ruby's `Kernel#print` never does, and C/Ruby's
+`print` builtin faithfully mirrors the latter — see README "Gaps the
+corpus has surfaced". `python_inheritance` sidesteps it with a single
+`print` call.
+
 ## [0.23.0] - Frontend genericity: any registered frontend, not just Ruby
 
 Generalizes the harness beyond a hardcoded Ruby-source input path (per

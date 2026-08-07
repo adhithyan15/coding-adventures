@@ -80,6 +80,9 @@ across backends, a separate formatting concern). Current programs:
 | `numeric_abs_gcd` | Numeric methods (`abs`/`gcd`) | `5\n6` |
 | `symbol_upcase_length` | Symbol methods widened from String helpers | `HELLO\n5` |
 | `python_arithmetic` | frontend genericity smoke test — same case as `arithmetic`, sourced from **Python** | `14` |
+| `python_oop_method` | Python-sourced OOP surface (SIR25 §2) — same case as `oop_method`, sourced from **Python** | `woof` |
+| `python_counter_state` | Python-sourced instance state — same case as `counter_state`, sourced from **Python** | `2` |
+| `python_inheritance` | Python-sourced single inheritance, ancestry-walk dispatch with no explicit `super()` | `...-woof` |
 
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`
@@ -93,6 +96,24 @@ backends" bug. Programs that hit an **unfixed** gap are kept *out* of the corpus
 (with a pointer to `lessons.md`) so the suite stays green while the gap stays
 visible. Currently tracked:
 
+- **Python's `print` doesn't newline-terminate on C/Ruby** — discovered
+  while adding the first Python-sourced multi-`print` corpus program
+  (`python_inheritance`). Python's `print(x)` always appends a trailing
+  newline; Ruby's `Kernel#print` never does. Both share the SIR builtin
+  *name* `"print"` (Python's frontend reuses it, since it existed for
+  Ruby's own `print` already) but not its semantics — a genuine
+  cross-language name collision, the same shape as the `<<`
+  bitwise-vs-Array-push collision fixed in #9849. The C backend's
+  `_sir_print_v` and the Ruby backend faithfully mirror real Ruby's
+  no-newline `print` (correct for Ruby-sourced programs), so `print("a")`
+  then `print("b")` prints `"ab"` there instead of Python's `"a\nb"` —
+  Python/JS/Go/Rust's `print` already happens to newline-terminate, so
+  this is C/Ruby-only. Fix belongs in `python-to-semantic-ir`: emit a
+  Python-specific newline-terminated builtin rather than reusing Ruby's
+  `"print"` (reusing `"puts"` is NOT a fix — Ruby's `puts` has its own
+  array-unpacking rule Python's `print` doesn't share). `python_inheritance`
+  sidesteps this with a single `print` call (string-concatenating both
+  results) since the gap is orthogonal to what that program tests.
 - **Array/hash index writes AND reads** (`a[i]`, `a[i] = v`, `h[k]`) — the
   frontend parses and lowers both correctly now (PR #9686 fixed the
   PARSER-precedence gap this section used to describe), but only the C

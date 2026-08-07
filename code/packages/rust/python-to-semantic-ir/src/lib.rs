@@ -2344,4 +2344,250 @@ print(total)
             assert_eq!(out, "12", "sum of doubled [1,2,3] should be 12");
         }
     }
+
+    // ══════════════════════════════════════════════════════════════════
+    // OOP surface (SIR25 §2) — class / new / self / instance vars
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // Same shape ruby-to-semantic-ir emits (Stmt::ClassDef + __new__ +
+    // __def_method__ + __self__), so `run_roundtrip` here proves BOTH
+    // that this frontend lowers correctly AND that the existing Python
+    // backend/runtime — built for Ruby-sourced OOP — needs zero changes
+    // to run a Python-sourced class. That's the actual proof of
+    // language-agnosticism the SIR25 arc set out for, not a claim.
+
+    #[test]
+    fn empty_class_and_construction_lowers_to_new() {
+        let m = lower("class Dog:\n    pass\n\nDog()\n");
+        assert!(m.manifest.contains(Feature::Classes));
+        let stmts = main_stmts(&m);
+        assert!(
+            stmts
+                .iter()
+                .any(|s| matches!(s, Stmt::ClassDef { name, superclass, body, .. }
+                    if name == "Dog" && superclass.is_none() && body.is_empty())),
+            "expected an empty Dog ClassDef, got {stmts:?}"
+        );
+        match main_value(&m) {
+            Expr::BuiltinCall { name, args, .. } if name == "__new__" => {
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Dog"));
+            }
+            other => panic!("expected __new__ BuiltinCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn method_def_registers_via_def_method() {
+        let m = lower("class Dog:\n    def speak(self):\n        return \"woof\"\n");
+        let stmts = main_stmts(&m);
+        let reg = stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt {
+                    expr:
+                        Expr::BuiltinCall {
+                            name, args, ..
+                        },
+                    ..
+                } if name == "__def_method__" => Some(args),
+                _ => None,
+            })
+            .expect("a __def_method__ registration exists");
+        assert!(matches!(&reg[0], Expr::StrLit { value, .. } if value == "Dog"));
+        assert!(matches!(&reg[1], Expr::StrLit { value, .. } if value == "speak"));
+        let fn_name = match &reg[2] {
+            Expr::MakeClosure { fn_name, captures, .. } => {
+                assert!(captures.is_empty(), "a method never captures");
+                fn_name.clone()
+            }
+            other => panic!("expected MakeClosure, got {other:?}"),
+        };
+        // `self` is stripped -- the hoisted function has zero exposed params.
+        assert!(func(&m, &fn_name).params.is_empty());
+    }
+
+    #[test]
+    fn init_registers_as_initialize() {
+        let m = lower("class Dog:\n    def __init__(self, name):\n        self.name = name\n");
+        let stmts = main_stmts(&m);
+        let found = stmts.iter().any(|s| matches!(s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                if name == "__def_method__" && matches!(&args[1], Expr::StrLit{value,..} if value == "initialize")
+        ));
+        assert!(found, "__init__ must register under the SIR name `initialize`, not `__init__`");
+    }
+
+    #[test]
+    fn self_attr_read_and_write_are_instance_scoped() {
+        let m = lower(
+            "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n = self.n + 1\n",
+        );
+        assert!(m.manifest.contains(Feature::InstanceVars));
+        let inc = func(&m, "Counter__inc");
+        match &inc.body.stmts[0] {
+            Stmt::Assign { name, scope, value, .. } => {
+                assert_eq!(name, "@n");
+                assert_eq!(*scope, Scope::Instance);
+                // RHS reads @n + 1: the read side must ALSO be Instance-scoped.
+                match value {
+                    Expr::BuiltinCall { args, .. } => assert!(matches!(
+                        &args[0],
+                        Expr::VarRef { name, scope: Scope::Instance, .. } if name == "@n"
+                    )),
+                    other => panic!("expected a BuiltinCall(\"+\", ...), got {other:?}"),
+                }
+            }
+            other => panic!("expected Stmt::Assign, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn subclass_lowers_superclass_by_name() {
+        let m = lower("class Animal:\n    pass\n\nclass Dog(Animal):\n    pass\n");
+        let stmts = main_stmts(&m);
+        assert!(stmts.iter().any(|s| matches!(s,
+            Stmt::ClassDef { name, superclass: Some(sup), .. } if name == "Dog" && sup == "Animal"
+        )));
+    }
+
+    #[test]
+    fn multiple_base_classes_are_rejected() {
+        let err = compile_source("class Foo(A, B):\n    pass\n", "t")
+            .expect_err("multiple bases rejected");
+        assert!(err.message.contains("base classes"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn keyword_base_class_argument_is_rejected() {
+        let err = compile_source("class Foo(metaclass=Meta):\n    pass\n", "t")
+            .expect_err("keyword base-class argument rejected");
+        assert!(err.message.contains("keyword base-class"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn empty_parens_class_has_no_superclass() {
+        // `class Foo():` (explicit empty parens) must be indistinguishable
+        // from `class Foo:` -- both have zero base-class arguments.
+        let m = lower("class Foo():\n    pass\n");
+        assert!(main_stmts(&m).iter().any(|s| matches!(s,
+            Stmt::ClassDef { name, superclass: None, .. } if name == "Foo"
+        )));
+    }
+
+    #[test]
+    fn decorated_class_is_rejected() {
+        let err = compile_source("@deco\nclass Foo:\n    pass\n", "t")
+            .expect_err("decorated class rejected");
+        assert!(err.message.contains("decorated class"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn class_level_assignment_is_rejected() {
+        let err = compile_source("class Foo:\n    x = 1\n", "t")
+            .expect_err("non-def class body content rejected");
+        assert!(
+            err.message.contains("class body statement other than `def`"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn method_without_self_param_is_rejected() {
+        let err = compile_source("class Foo:\n    def m():\n        return 1\n", "t")
+            .expect_err("self-less method rejected (static/class methods deferred)");
+        assert!(err.message.contains("no `self` parameter"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn bare_attribute_on_non_self_receiver_still_deferred_inside_a_method() {
+        // `self` gets the ivar special-case; any OTHER receiver inside a
+        // method body must still defer, exactly like at module level.
+        let err = compile_source(
+            "class Foo:\n    def m(self, other):\n        return other.x\n",
+            "t",
+        )
+        .expect_err("bare attribute on a non-self receiver stays deferred");
+        assert!(err.message.contains("attribute access as a value"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn oop_modules_pass_the_validator() {
+        for src in [
+            "class Dog:\n    pass\n\nDog()\n",
+            "class Dog:\n    def speak(self):\n        return \"woof\"\n\nDog().speak()\n",
+            "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n = self.n + 1\n    def value(self):\n        return self.n\n",
+            "class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    pass\n\nDog().speak()\n",
+        ] {
+            let m = lower(src);
+            let r = semantic_ir::validate(&m);
+            assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
+    }
+
+    #[test]
+    fn e2e_oop_method_dispatch() {
+        // Mirrors sir-conformance's Ruby-sourced `oop_method` case exactly
+        // (class, `.new`-equivalent construction, an instance method call)
+        // -- same source semantics, Python spelling, run through the SAME
+        // Python backend/runtime the Ruby-sourced version already proves.
+        let src = "\
+class Dog:
+    def speak(self):
+        return \"woof\"
+
+print(Dog().speak())
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "woof");
+        }
+    }
+
+    #[test]
+    fn e2e_counter_state() {
+        // Mirrors sir-conformance's Ruby-sourced `counter_state` case:
+        // instance state mutated across method calls on the same object.
+        let src = "\
+class Counter:
+    def __init__(self):
+        self.n = 0
+    def inc(self):
+        self.n = self.n + 1
+    def value(self):
+        return self.n
+
+c = Counter()
+c.inc()
+c.inc()
+print(c.value())
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "2");
+        }
+    }
+
+    #[test]
+    fn e2e_inheritance_without_override() {
+        // A subclass with NO overriding `speak` still dispatches to the
+        // parent's method -- proves ancestry-walk inheritance works from
+        // this frontend with zero `super()` support needed for the common
+        // "inherit, don't override" case (explicit `super()` calls are a
+        // separate, deferred milestone).
+        let src = "\
+class Animal:
+    def speak(self):
+        return \"...\"
+
+class Dog(Animal):
+    def bark(self):
+        return \"woof\"
+
+d = Dog()
+print(d.speak())
+print(d.bark())
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "...\nwoof");
+        }
+    }
 }
