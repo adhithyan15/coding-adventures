@@ -154,6 +154,33 @@ French.
   (Ch. 11) — and **Spanish kept them all** (*mano, luna, pan*), which is much of
   why written Portuguese and Spanish look alike and sound unalike. Feminine for
   the same reason as Italian's *la mano*. **Authored.**
+- **Ch. 18 — Verbs at the Core: nine verbs, seven concepts**: the track's first
+  realisation of the shared spine's canonical `VERB-*` set, and the reason
+  `SPINE-SAY-WHAT-I-DO` stops being omitted whole. ***ser* / *estar***
+  (`PT-C18-ser-estar`) — one lesson, because they are one concept, and the place
+  to name where Portuguese draws the Romance line its **own** way: marital
+  status sits under *ser* (*sou casado*) where Spanish puts it under *estar*,
+  and *ficar* ("to stay, to end up") quietly handles where a town is. Roots:
+  *esse*, whose inherited relatives are English **is** and **am**, against
+  *stāre* "to stand" → *state/status/estate/circumstance*; *estar* is **not**
+  English *stare* → ***ter* / *haver*** (`PT-C18-ter-haver`): Ch. 14 named the
+  Iberian swap; this one uses what is left. **Há** ("there is", and "ago"),
+  **ter que** for obligation, and the divergence that matters — Portuguese built
+  its compound past on ***ter***, Spanish kept ***haber***. *Habēre*'s English
+  family (*habit, inhabit, exhibit, prohibit, able, debt*) is enormous, and
+  English **have** is not in it → ***ir*** (`PT-C18-ir`): two letters, three
+  ancestors — *īre* for the infinitive, *vādere* for *vou/vais/vai*, and *esse*'s
+  old perfect for *fui*, the row Ch. 16 already showed *ir* borrowing. *Īre*
+  gives *exit, transit, initial, ambition, perish* — and **preterite** itself →
+  ***vir*** (`PT-C18-vir`): short for the same reason *mão* is short, the
+  intervocalic ***-n-* dissolved**; *vem* against *vêm* repeats Ch. 14's
+  circumflex trick → ***dizer*** (`PT-C18-dizer`): *dict-* everywhere in English,
+  and *iūdex*, "he who speaks the law," → **judge** → ***ver*** (`PT-C18-ver`):
+  the widest cousin web in the chapter, plus **vimos**, which is "we saw" here
+  and "we come" for *vir* → ***saber* / *conhecer*** (`PT-C18-saber-conhecer`):
+  the second one-English-verb-two-Portuguese-ones pair, and the chapter's payoff.
+  *Sapere* meant "**to taste**" first, and Portuguese kept both senses in one
+  verb — *sabe bem* is still "it tastes good". **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

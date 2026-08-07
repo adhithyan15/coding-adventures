@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "portuguese",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-17 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-17 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-18 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-18 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
   "chapters": [
     {
       "chapter": 2,
@@ -361,6 +361,36 @@
           "PT-LEX-MAO-02",
           "PT-ETYMON-MAO-03",
           "PT-GRAMMAR-MAO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Verbs at the Core",
+      "label": "ch:pt-core-verbs",
+      "canDo": "I can say I am, I have, I go, I come, I say, I see and I know in Portuguese, pick the right member of its two be-verbs and its two know-verbs, and name the English words each verb left behind.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "PT-C18-saber-conhecer",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set: after saber and conhecer the reader produces all nine first-person forms in one run - sou, estou, tenho, vou, venho, digo, vejo, sei, conheco - and re-derives the roots behind estar and ter.",
+        "assesses": [
+          "PT-LEX-SER-ESTAR-02",
+          "PT-ETYMON-SER-ESTAR-03",
+          "PT-LEX-TER-HAVER-02",
+          "PT-ETYMON-TER-HAVER-03",
+          "PT-LEX-IR-02",
+          "PT-ETYMON-IR-03",
+          "PT-LEX-VIR-02",
+          "PT-ETYMON-VIR-03",
+          "PT-LEX-DIZER-02",
+          "PT-ETYMON-DIZER-03",
+          "PT-LEX-VER-02",
+          "PT-ETYMON-VER-03",
+          "PT-LEX-SABER-CONHECER-02",
+          "PT-ETYMON-SABER-CONHECER-03"
         ]
       }
     }
