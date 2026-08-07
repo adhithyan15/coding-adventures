@@ -57,11 +57,44 @@ never does. Etymology runs deep here (*jānnā* ← *jñā-*, cousin of English
 *bollaï*), and the Persian layer is placed beside the Indo-Aryan core rather
 than above it. One new letter only: **ب**, taught against already-read **پ**.
 
-## Chapter 7 — People and simple identity *(planned)*
+## Chapter 7 — Four verbs of the mind *(authored)*
+
+**سوچنا** *sochnā* → **سمجھنا** *samajhnā* → **پڑھنا** *paṛhnā* → **لکھنا**
+*likhnā*. Think, understand, read, write — all four inherited Indo-Aryan, all
+four running Chapter 6's frame unchanged, so the chapter's real cost is four
+words and three letters. The script thread is the *do-chashmī he* **ھ**: not a
+sound of its own but an aspiration mark on the letter to its right, already met
+inside **ٹھیک** *ṭhīk* and now doing the same job in **جھ**, **ڑھ**, and
+**کھ**. **چ** arrives as **ج** with three dots instead of one, and **ڑ** as
+**ر** wearing the same retroflex mark that sits on **ٹ**. Etymology runs from
+grieving (*śuc-*) to waking (*budh-*, and so *Buddha*) to reciting (*paṭh-*,
+alive in **نماز پڑھنا**), and stops honestly where *śuc-* and *paṭh-* have no
+English cousin. **لکھنا** closes the chapter with no new shape at all, and
+names the register split: the deed is inherited, while **قلم** *qalam*,
+**کتاب** *kitāb*, and **نستعلیق** *nastaʿlīq* are all borrowed.
+
+## Chapter 8 — Four verbs between people *(authored)*
+
+**لینا** *lenā* → **پوچھنا** *pūchhnā* → **مدد کرنا** *madad karnā* →
+**پسند** *pasand*. Take, ask, help, like — no new letters, so the weight is
+grammar and history. **لینا** gives **ی** its third value, a long *e*.
+**پوچھنا** is the chapter's Urdu-only payoff: Sanskrit *pṛcchati* and Persian
+*porsīdan* are the same Indo-European root reaching Urdu by two different
+roads, one inherited and one borrowed, so **پوچھنا** and **پرسش** *pursish*
+are cousins that met again inside the same language. **مدد کرنا** teaches the
+conjunct verb — a borrowed noun plus native *karnā*, the device that let Urdu
+absorb centuries of Persian and Arabic without ever conjugating a foreign word
+— and puts a second Arabic triliteral root, **م-د-د**, beside **ح-ف-ظ** from
+Chapter 5. **پسند** takes the subject away: **مجھے پڑھنا پسند ہے** is “to me,
+reading is pleasing,” with the liked thing as subject and the liker in the
+dative — the sixth language in this course to build liking that way.
+
+## Chapter 9 — People and simple identity *(planned)*
 
 - extend **میں ... ہوں** *maiṅ ... hūṅ* from state to identity;
 - add further masculine and feminine agreement one contrast at a time;
 - contrast **ہے** *hai*, **ہیں** *haiṅ*, and **ہوں** *hūṅ* without a paradigm dump;
+- generalize **مجھے** *mujhe* into the wider oblique-plus-postposition system;
 - introduce more retroflex and aspirated letters only when useful words need them.
 
 ## Part II onward *(sketch)*

@@ -3203,6 +3203,30 @@
         "UR-C06-janna"
       ],
       "tex": "urdu/book/chapters/ch06-core-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "tex": "urdu/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:997aec13e461f1b3",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "tex": "urdu/book/chapters/ch08-social-verbs.tex"
     }
   ]
 }

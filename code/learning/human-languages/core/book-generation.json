@@ -2407,6 +2407,24 @@
       "scriptCommand": "ur"
     },
     {
+      "language": "urdu",
+      "chapter": 7,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:ur-mind-verbs",
+      "output": "urdu/book/chapters/ch07-mind-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "title": "Four Verbs Between People",
+      "label": "ch:ur-social-verbs",
+      "output": "urdu/book/chapters/ch08-social-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "title": "Nǐ Hǎo — Hello, Character by Character",

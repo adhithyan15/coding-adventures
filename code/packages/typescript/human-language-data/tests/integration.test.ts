@@ -108,7 +108,10 @@ describe("real curriculum", () => {
         ?.chapters.map((chapter) => chapter.chapter),
       // 5 -> 6: Chapter 6 is the Urdu track's first verb chapter (HL core verbs),
       // so this is the first Urdu chapter whose spine node is A2 rather than A1.
-    ).toEqual([1, 2, 3, 4, 5, 6]);
+      // 6 -> 8: chapters 7 and 8 are the eight-verb tranche — think/understand/read/write
+      // and take/ask/help/like — split into two four-lesson chapters so neither exceeds
+      // the 12-atom chapter budget, both filed under SPINE-SAY-WHAT-I-DO like chapter 6.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -213,6 +216,8 @@ describe("real curriculum", () => {
       "UR-C05-khuda-hafiz-goodbye",
       "UR-C05-khuda-meaning",
       "UR-C05-practice-final-line",
+      "UR-C07-likhna-four-stems",
+      "UR-C08-pasand-dative",
       // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
       // corpus total moves from 51 to 57.
       "ZH-C01-hao-components",

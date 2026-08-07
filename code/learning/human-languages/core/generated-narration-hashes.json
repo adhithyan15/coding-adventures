@@ -6723,6 +6723,40 @@
       "json": "urdu/narration/ch06.json",
       "textHash": "fnv1a64:ddde1e5f5fcb8c9f",
       "jsonHash": "fnv1a64:d392cba52a248c15"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch07.txt",
+      "json": "urdu/narration/ch07.json",
+      "textHash": "fnv1a64:3e017a5b0b4e6325",
+      "jsonHash": "fnv1a64:9eaa17fdb4518cd0"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:997aec13e461f1b3",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch08.txt",
+      "json": "urdu/narration/ch08.json",
+      "textHash": "fnv1a64:89bfe5828747af1d",
+      "jsonHash": "fnv1a64:807f0572154bf8d0"
     }
   ],
   "findings": []
