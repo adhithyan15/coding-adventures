@@ -51,7 +51,11 @@ defmodule CodingAdventures.XmlLexerTest do
       names = Enum.map(grammar.definitions, & &1.name)
       assert "TEXT" in names
       assert "ENTITY_REF" in names
-      assert "CHAR_REF" in names
+      # CHAR_REF is defined as two rules (CHAR_REF_HEX, CHAR_REF_DEC) both
+      # aliased to the CHAR_REF token, rather than one rule with a top-level
+      # "A|B" pattern -- see xml.tokens' portability note.
+      assert "CHAR_REF_HEX" in names
+      assert "CHAR_REF_DEC" in names
       assert "COMMENT_START" in names
       assert "CDATA_START" in names
       assert "PI_START" in names
@@ -207,10 +211,15 @@ defmodule CodingAdventures.XmlLexerTest do
       assert texts == ["  spaces  and\ttabs  "]
     end
 
+    # xml.tokens encodes "up to -->" without lookaround (see that file's
+    # comment group), so each embedded "-" ends a bulk COMMENT_TEXT run
+    # and starts a new one: several COMMENT_TEXT-kind tokens come back
+    # instead of one. Concatenating them reassembles the original text.
     test "comment with dashes" do
       pairs = token_pairs("<!-- a-b-c -->")
       texts = for {"COMMENT_TEXT", v} <- pairs, do: v
-      assert texts == [" a-b-c "]
+      assert texts == [" a", "-", "b", "-", "c "]
+      assert Enum.join(texts) == " a-b-c "
     end
 
     test "comment between elements" do
@@ -247,10 +256,13 @@ defmodule CodingAdventures.XmlLexerTest do
       assert texts == ["  hello\n  world  "]
     end
 
+    # Same multi-token splitting as "comment with dashes", for the same
+    # lookaround-free encoding reason (see xml.tokens' cdata group).
     test "CDATA with single bracket" do
       pairs = token_pairs("<![CDATA[a]b]]>")
       texts = for {"CDATA_TEXT", v} <- pairs, do: v
-      assert texts == ["a]b"]
+      assert texts == ["a", "]", "b"]
+      assert Enum.join(texts) == "a]b"
     end
   end
 
@@ -275,6 +287,20 @@ defmodule CodingAdventures.XmlLexerTest do
       assert List.first(types) == "PI_START"
       assert Enum.at(types, 1) == "PI_TARGET"
       assert List.last(types) == "PI_END"
+    end
+
+    # A lone "?" in a PI body followed by more letters must not have those
+    # letters re-tokenized as a second PI_TARGET. PI_TARGET lives in a
+    # separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and the
+    # on-token callback swaps from "pi" to "pi_body" the instant PI_TARGET
+    # matches, so PI_TARGET's pattern is never offered again for the rest
+    # of the body (see xml.tokens' pi/pi_body groups).
+    test "PI body with bare question mark is not retokenized as target" do
+      pairs = token_pairs("<?t a?b?>")
+      target_count = Enum.count(pairs, fn {t, _} -> t == "PI_TARGET" end)
+      assert target_count == 1
+      text = for {"PI_TEXT", v} <- pairs, do: v
+      assert Enum.join(text) == " a?b"
     end
   end
 

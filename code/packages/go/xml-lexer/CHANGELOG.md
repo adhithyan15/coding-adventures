@@ -2,6 +2,29 @@
 
 All notable changes to the xml-lexer package will be documented in this file.
 
+## [0.2.1] - 2026-08-07
+
+### Fixed
+
+- **Removed the `rewriteGroup`/`goCompatibleGrammar` runtime pattern-rewrite
+  machinery.** It rewrote the embedded grammar's `COMMENT_TEXT`/`CDATA_TEXT`/
+  `PI_TEXT` patterns to Go-`regexp`-compatible equivalents (Go's `regexp`
+  package has no lookaround) every time a lexer was created. The canonical
+  `code/grammars/xml/xml.tokens` these patterns are compiled from is now
+  itself lookaround-free (see `coding-adventures-xml-parser`'s CHANGELOG for
+  the full rationale), so the rewrite is unnecessary — `CreateXmlLexer` now
+  uses `TokenGrammarData` directly. `mergeAdjacentTokens`/`TokenizeXml`'s
+  merge-back-to-one-token behavior is unchanged and still needed, since the
+  lookaround-free encoding still produces multiple adjacent tokens per
+  comment/CDATA run internally.
+- **Fixed a latent PI-body mis-tokenization bug**: `<?t a?b?>` had the `b`
+  after the bare `?` wrongly re-tokenized as a second `PI_TARGET` instead of
+  `PI_TEXT`, because the old single `pi` group offered `PI_TARGET`'s pattern
+  for the whole PI body, not just the first token. `XmlOnToken` now swaps
+  from the `pi` group to a new `pi_body` group the instant `PI_TARGET`
+  matches, so its pattern is never re-offered. Covered by
+  `TestPIBodyWithBareQuestionMarkNotRetokenizedAsTarget`.
+
 ## [0.2.0] - 2026-07-13
 
 ### Changed

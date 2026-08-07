@@ -39,7 +39,16 @@ public struct XMLLexer: Sendable {
         case "PI_START":
             ctx.pushGroup("pi")
             ctx.setSkipEnabled(false)
-            
+
+        // PI_TARGET is only ever the first token in a PI. Swap (not push)
+        // from "pi" to "pi_body": once matched, the rest of the body must
+        // never be re-offered PI_TARGET's pattern (see xml.tokens' pi/
+        // pi_body groups). PI_END's single popGroup() below still returns
+        // straight past this swap.
+        case "PI_TARGET":
+            ctx.popGroup()
+            ctx.pushGroup("pi_body")
+
         case "PI_END":
             ctx.popGroup()
             ctx.setSkipEnabled(true)

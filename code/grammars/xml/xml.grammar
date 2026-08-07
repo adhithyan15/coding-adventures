@@ -13,7 +13,7 @@
 #
 # Format: rule_name = definition ;
 #
-#   UPPERCASE names reference tokens from xml_rust.tokens
+#   UPPERCASE names reference tokens from xml.tokens
 #   lowercase names reference other grammar rules (may be recursive)
 #
 # Notation:
@@ -86,16 +86,22 @@ attribute = TAG_NAME ATTR_EQUALS ATTR_VALUE ;
 # ---------------------------------------------------------------------------
 content = element | comment | cdata | pi | CHAR_REF | ENTITY_REF | TEXT ;
 
-# comment — `<!-- ... -->`. The COMMENT_TEXT is optional so that the empty
-# comment `<!---->` parses.
-comment = COMMENT_START [ COMMENT_TEXT ] COMMENT_END ;
+# comment — `<!-- ... -->`. COMMENT_TEXT repeats (zero or more, not just
+# zero-or-one): the lexer's lookaround-free encoding of "any run up to -->"
+# (see xml.tokens) can split one comment's body across several COMMENT_TEXT
+# tokens, e.g. around an embedded "-". Zero matches parses the empty
+# comment `<!---->`; the AST builder concatenates however many it sees.
+comment = COMMENT_START { COMMENT_TEXT } COMMENT_END ;
 
-# cdata — `<![CDATA[ ... ]]>`. CDATA_TEXT is optional so an empty section
-# `<![CDATA[]]>` parses. Its contents are verbatim (never entity-decoded).
-cdata = CDATA_START [ CDATA_TEXT ] CDATA_END ;
+# cdata — `<![CDATA[ ... ]]>`. Same repetition reasoning as comment, for the
+# same lookaround-free-encoding reason (see xml.tokens). Zero matches parses
+# the empty section `<![CDATA[]]>`. Contents are verbatim (never
+# entity-decoded).
+cdata = CDATA_START { CDATA_TEXT } CDATA_END ;
 
 # pi — a processing instruction `<?target ... ?>`. The XML declaration
 # `<?xml version="1.0"?>` is lexed as a PI with target "xml"; the AST builder
 # recognises that target and lifts version / encoding onto the document
-# rather than storing it as a node. PI_TEXT is optional (`<?target?>`).
-pi = PI_START PI_TARGET [ PI_TEXT ] PI_END ;
+# rather than storing it as a node. PI_TEXT repeats for the same reason as
+# COMMENT_TEXT/CDATA_TEXT above; zero matches parses `<?target?>`.
+pi = PI_START PI_TARGET { PI_TEXT } PI_END ;
