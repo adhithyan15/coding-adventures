@@ -4,22 +4,22 @@
   "chapter": 11,
   "title": "Chapter 11",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a4622dd6cae2c8a2",
+  "sourceHash": "fnv1a64:1845998478b152fa",
   "lessons": [
     {
-      "id": "ES-C11-nuestro",
-      "sequence": null,
-      "title": "nuestro — \"our,\" the possessive that agrees fully",
-      "headword": "nuestro",
-      "romanization": "nuestro",
-      "gloss": "our (and vuestro, \"your\"-plural) — the possessive that agrees fully",
+      "id": "ES-C11-querer",
+      "sequence": 552,
+      "title": "querer — \"to want,\" and the e becomes ie crack again",
+      "headword": "querer",
+      "romanization": "querer",
+      "gloss": "to want (and to love) — a stem-changing verb, e becomes ie",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e999d3414412ed9e",
+      "sourceHash": "fnv1a64:5431d0644d171e4a",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "In Chapter 10 you met mi/tu/su — possessives that change only for number (mis, tus, sus). nuestro (\"our\") is different: it agrees in both gender and number, like an ordinary -o/-a adjective. It's the fullest-flexing of the possessives."
+              "text": "Back in Chapter 8, tener cracked its stem: tienes, with the vowel breaking e becomes ie. That wasn't a one-off — it's a whole class of Spanish verbs. Here's the most useful of them: querer, \"to want\" (and, of a person, \"to love\")."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "nuestro comes from Latin noster, \"our.\" You've heard it without knowing: the Paternoster is the \"Our Father,\" and a nostrum is literally \"our thing\" (a quack's secret remedy). Its partner vuestro (\"your,\" to a group) is from voster/vester."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice the stem-change fossil: noster becomes nuestro shows the same o becomes ue break you just learned (short stressed o becomes ue). The possessive cracks exactly like puerta and puedo."
+              "text": "diphthong-ie — the stem breaks to -ie- under stress: quiero = KYE-ro."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: four forms, agreeing like -o/-a",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Where mi had two forms (mi/mis), nuestro has four — masculine/feminine × singular/plural:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "masc. singular: nuestro libro. plural: nuestros libros.",
-                "fem. singular: nuestra casa. plural: nuestras casas."
-              ]
+              "text": "querer comes from Latin quaerere, \"to seek, to ask, to want.\" Seeking and wanting are the same impulse at the root — and that root is a treasure-house of English:"
             },
             {
               "kind": "speech",
-              "text": "So it's nuestro coche (\"our car,\" masc.) but nuestra casa (\"our house,\" fem.) — you match the noun in both gender and number, just like bueno/buena/buenos/buenas. vuestro does the same (vuestro/vuestra/vuestros/vuestras)."
+              "text": "query, quest, question — a seeking."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: inquire (in- \"into\"), require (re- \"back\"), acquire (ad- \"toward\"), conquer (con- \"thoroughly seek/win\"), exquisite (\"sought out\"), quorum (\"of whom\" the seeking needs enough)."
+            },
+            {
+              "kind": "speech",
+              "text": "So when you say quiero, you're using the same \"seek\" root as question and conquer."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the e becomes ie stem-change (the \"boot\")",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "querer is a stem-changing verb: when the stem vowel e is stressed, it breaks to ie — exactly the pattern tener showed you."
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, quiero, (e becomes ie).",
+                "tú, quieres, (e becomes ie).",
+                "él/ella/usted, quiere, (e becomes ie).",
+                "nosotros, queremos, (plain e — unstressed).",
+                "ellos/ustedes, quieren, (e becomes ie)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only queremos keeps the plain e, because there the stress falls on the ending, not the stem. Shade in the forms that change — yo/tú/él…/ellos — and they draw a boot shape around the nosotros/vosotros gap. That \"boot\" is the signature of every stem-changer."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,34 +115,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nuestro, nuestra, nuestros, nuestras\" — the full set",
+              "instruction": "\"querer\" then the set — \"quiero, quieres, quiere, queremos, quieren\" — hear the ie crack in, and drop out for queremos",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nuestro, nuestra, nuestros, nuestras\" — the full set]"
+              "source": "[YOU SAY: \"querer\" then the set — \"quiero, quieres, quiere, queremos, quieren\" — hear the *ie* crack in, and drop out for *queremos*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "match a noun — \"nuestro coche, nuestra casa, nuestros amigos\"",
+              "instruction": "\"Quiero un café\" (\"I want a coffee\"); \"Quiero café, por favor\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: match a noun — \"nuestro coche, nuestra casa, nuestros amigos\"]"
+              "source": "[YOU SAY: \"Quiero un café\" (\"I want a coffee\"); \"Quiero café, por favor\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nuestro\" then \"Paternoster / nostrum\" — the noster \"our\" family",
+              "instruction": "\"querer\" then English \"query, quest, conquer\" — the seek-family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nuestro\" then \"Paternoster / nostrum\" — the *noster* \"our\" family]"
+              "source": "[YOU SAY: \"querer\" then English \"query, quest, conquer\" — the seek-family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -136,7 +154,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is nuestro from, and one English echo? (noster \"our\"; Paternoster / nostrum.) How does nuestro differ from mi/tu/su? (It agrees in gender and number — four forms — not just number.) Give \"our house\" and \"our car.\" (Nuestra casa; nuestro coche.) Next: practice — pull the chapter together."
+              "text": "What Latin verb is querer from, and two English cousins? (quaerere \"to seek\"; query/quest/conquer.) Give its five present forms. (Quiero, quieres, quiere, queremos, quieren.) Which form keeps the plain e, and why? (Queremos — the stress is on the ending, not the stem.) Next: poder, with a different crack, o becomes ue."
             }
           ]
         }
@@ -144,7 +162,7 @@
     },
     {
       "id": "ES-C11-poder",
-      "sequence": null,
+      "sequence": 554,
       "title": "poder — \"to be able,\" and the o becomes ue crack",
       "headword": "poder",
       "romanization": "poder",
@@ -155,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc28c84739b62d76",
+      "sourceHash": "fnv1a64:2d66abfcc957b70d",
       "notice": null,
       "blocks": [
         {
@@ -316,8 +334,295 @@
       ]
     },
     {
+      "id": "ES-C11-stem-changes",
+      "sequence": 556,
+      "title": "e becomes ie and o becomes ue — one rule, two vowels",
+      "headword": "e→ie, o→ue",
+      "romanization": "e→ie, o→ue",
+      "gloss": "the stem-change patterns, side by side — the \"boot\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7b9e4b8437c58d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You've now seen both stem-changes: querer becomes quiero (e becomes ie) and poder becomes puedo (o becomes ue). They aren't two random quirks — they're one sound-law, and knowing it turns a \"memorize each verb\" chore into a pattern you can predict."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The rule: stressed short vowels broke",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In the leap from Latin to Spanish, a short, stressed e broke into ie, and a short, stressed o broke into ue. It happened in ordinary nouns too, not just verbs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin",
+                "Spanish",
+                "break"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Latin: terra. Spanish: tierra (\"earth\"). break: e becomes ie.",
+                "Latin: septem. Spanish: siete (\"seven\"). break: e becomes ie.",
+                "Latin: porta. Spanish: puerta (\"door\"). break: o becomes ue.",
+                "Latin: novem. Spanish: nueve (\"nine\"). break: o becomes ue."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "(You already met siete and nueve in the numbers — now you know why they have that glide.) In verbs, the stem vowel is stressed in the \"boot\" forms and unstressed in nosotros/vosotros — so it breaks in the boot and stays plain outside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The boot, for both patterns",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "e becomes ie (querer)",
+                "o becomes ue (poder)"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo. e becomes ie (querer): quiero. o becomes ue (poder): puedo.",
+                "tú. e becomes ie (querer): quieres. o becomes ue (poder): puedes.",
+                "él/ella/ud. e becomes ie (querer): quiere. o becomes ue (poder): puede.",
+                "nosotros. e becomes ie (querer): queremos. o becomes ue (poder): podemos.",
+                "ellos/uds. e becomes ie (querer): quieren. o becomes ue (poder): pueden."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape both times: the four \"corner\" forms crack, the nosotros form stays plain — the boot. tener ( becomes tienes), from Chapter 8, was your first taste; now you own the whole rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairs — \"querer/quiero (e becomes ie), poder/puedo (o becomes ue)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairs — \"querer/quiero (e→ie), poder/puedo (o→ue)\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun echoes — \"terra becomes tierra, porta becomes puerta\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun echoes — \"terra→tierra, porta→puerta\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conjugate both boots, noticing queremos/podemos stay plain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conjugate both boots, noticing *queremos*/*podemos* stay plain]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What single sound-law lies behind e becomes ie and o becomes ue? (Short stressed Latin e and o broke into ie and ue.) Which persons crack, and which stays plain? (The \"boot\" — all but nosotros/vosotros.) Give a noun that shows each break. (tierra from terra; puerta from porta.) Next: nuestro — \"our.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-nuestro",
+      "sequence": 558,
+      "title": "nuestro — \"our,\" the possessive that agrees fully",
+      "headword": "nuestro",
+      "romanization": "nuestro",
+      "gloss": "our (and vuestro, \"your\"-plural) — the possessive that agrees fully",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a0ac7c6de92c18d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In Chapter 10 you met mi/tu/su — possessives that change only for number (mis, tus, sus). nuestro (\"our\") is different: it agrees in both gender and number, like an ordinary -o/-a adjective. It's the fullest-flexing of the possessives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nuestro comes from Latin noster, \"our.\" You've heard it without knowing: the Paternoster is the \"Our Father,\" and a nostrum is literally \"our thing\" (a quack's secret remedy). Its partner vuestro (\"your,\" to a group) is from voster/vester."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the stem-change fossil: noster becomes nuestro shows the same o becomes ue break you just learned (short stressed o becomes ue). The possessive cracks exactly like puerta and puedo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four forms, agreeing like -o/-a",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where mi had two forms (mi/mis), nuestro has four — masculine/feminine × singular/plural:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "singular",
+                "plural"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "masc. singular: nuestro libro. plural: nuestros libros.",
+                "fem. singular: nuestra casa. plural: nuestras casas."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So it's nuestro coche (\"our car,\" masc.) but nuestra casa (\"our house,\" fem.) — you match the noun in both gender and number, just like bueno/buena/buenos/buenas. vuestro does the same (vuestro/vuestra/vuestros/vuestras)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nuestro, nuestra, nuestros, nuestras\" — the full set",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nuestro, nuestra, nuestros, nuestras\" — the full set]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "match a noun — \"nuestro coche, nuestra casa, nuestros amigos\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: match a noun — \"nuestro coche, nuestra casa, nuestros amigos\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nuestro\" then \"Paternoster / nostrum\" — the noster \"our\" family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nuestro\" then \"Paternoster / nostrum\" — the *noster* \"our\" family]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word is nuestro from, and one English echo? (noster \"our\"; Paternoster / nostrum.) How does nuestro differ from mi/tu/su? (It agrees in gender and number — four forms — not just number.) Give \"our house\" and \"our car.\" (Nuestra casa; nuestro coche.) Next: practice — pull the chapter together."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C11-practice",
-      "sequence": null,
+      "sequence": 560,
       "title": "Practice — querer, poder, and the boot",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -328,7 +633,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7036de4d6ec16687",
+      "sourceHash": "fnv1a64:76a65b2d1bd68da7",
       "notice": null,
       "blocks": [
         {
@@ -493,311 +798,6 @@
             {
               "kind": "speech",
               "text": "Give the yo of querer and poder. (Quiero, puedo.) Which form of each stays plain, and why? (Queremos/podemos — the stress is on the ending.) How does nuestro agree, versus mi/tu/su? (Gender and number — four forms.) Next chapter carries the grammar forward — the course now runs on rules."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-querer",
-      "sequence": null,
-      "title": "querer — \"to want,\" and the e becomes ie crack again",
-      "headword": "querer",
-      "romanization": "querer",
-      "gloss": "to want (and to love) — a stem-changing verb, e becomes ie",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:36fd4b2201539f9f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Back in Chapter 8, tener cracked its stem: tienes, with the vowel breaking e becomes ie. That wasn't a one-off — it's a whole class of Spanish verbs. Here's the most useful of them: querer, \"to want\" (and, of a person, \"to love\")."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-ie — the stem breaks to -ie- under stress: quiero = KYE-ro."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "querer comes from Latin quaerere, \"to seek, to ask, to want.\" Seeking and wanting are the same impulse at the root — and that root is a treasure-house of English:"
-            },
-            {
-              "kind": "speech",
-              "text": "query, quest, question — a seeking."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: inquire (in- \"into\"), require (re- \"back\"), acquire (ad- \"toward\"), conquer (con- \"thoroughly seek/win\"), exquisite (\"sought out\"), quorum (\"of whom\" the seeking needs enough)."
-            },
-            {
-              "kind": "speech",
-              "text": "So when you say quiero, you're using the same \"seek\" root as question and conquer."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the e becomes ie stem-change (the \"boot\")",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "querer is a stem-changing verb: when the stem vowel e is stressed, it breaks to ie — exactly the pattern tener showed you."
-            },
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, quiero, (e becomes ie).",
-                "tú, quieres, (e becomes ie).",
-                "él/ella/usted, quiere, (e becomes ie).",
-                "nosotros, queremos, (plain e — unstressed).",
-                "ellos/ustedes, quieren, (e becomes ie)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only queremos keeps the plain e, because there the stress falls on the ending, not the stem. Shade in the forms that change — yo/tú/él…/ellos — and they draw a boot shape around the nosotros/vosotros gap. That \"boot\" is the signature of every stem-changer."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"querer\" then the set — \"quiero, quieres, quiere, queremos, quieren\" — hear the ie crack in, and drop out for queremos",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"querer\" then the set — \"quiero, quieres, quiere, queremos, quieren\" — hear the *ie* crack in, and drop out for *queremos*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Quiero un café\" (\"I want a coffee\"); \"Quiero café, por favor\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Quiero un café\" (\"I want a coffee\"); \"Quiero café, por favor\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"querer\" then English \"query, quest, conquer\" — the seek-family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"querer\" then English \"query, quest, conquer\" — the seek-family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is querer from, and two English cousins? (quaerere \"to seek\"; query/quest/conquer.) Give its five present forms. (Quiero, quieres, quiere, queremos, quieren.) Which form keeps the plain e, and why? (Queremos — the stress is on the ending, not the stem.) Next: poder, with a different crack, o becomes ue."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-stem-changes",
-      "sequence": null,
-      "title": "e becomes ie and o becomes ue — one rule, two vowels",
-      "headword": "e→ie, o→ue",
-      "romanization": "e→ie, o→ue",
-      "gloss": "the stem-change patterns, side by side — the \"boot\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:5d977c3e12affbb0",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You've now seen both stem-changes: querer becomes quiero (e becomes ie) and poder becomes puedo (o becomes ue). They aren't two random quirks — they're one sound-law, and knowing it turns a \"memorize each verb\" chore into a pattern you can predict."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The rule: stressed short vowels broke",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "In the leap from Latin to Spanish, a short, stressed e broke into ie, and a short, stressed o broke into ue. It happened in ordinary nouns too, not just verbs:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin",
-                "Spanish",
-                "break"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "Latin: terra. Spanish: tierra (\"earth\"). break: e becomes ie.",
-                "Latin: septem. Spanish: siete (\"seven\"). break: e becomes ie.",
-                "Latin: porta. Spanish: puerta (\"door\"). break: o becomes ue.",
-                "Latin: novem. Spanish: nueve (\"nine\"). break: o becomes ue."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "(You already met siete and nueve in the numbers — now you know why they have that glide.) In verbs, the stem vowel is stressed in the \"boot\" forms and unstressed in nosotros/vosotros — so it breaks in the boot and stays plain outside it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The boot, for both patterns",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "e becomes ie (querer)",
-                "o becomes ue (poder)"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo. e becomes ie (querer): quiero. o becomes ue (poder): puedo.",
-                "tú. e becomes ie (querer): quieres. o becomes ue (poder): puedes.",
-                "él/ella/ud. e becomes ie (querer): quiere. o becomes ue (poder): puede.",
-                "nosotros. e becomes ie (querer): queremos. o becomes ue (poder): podemos.",
-                "ellos/uds. e becomes ie (querer): quieren. o becomes ue (poder): pueden."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Same shape both times: the four \"corner\" forms crack, the nosotros form stays plain — the boot. tener ( becomes tienes), from Chapter 8, was your first taste; now you own the whole rule."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pairs — \"querer/quiero (e becomes ie), poder/puedo (o becomes ue)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pairs — \"querer/quiero (e→ie), poder/puedo (o→ue)\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the noun echoes — \"terra becomes tierra, porta becomes puerta\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the noun echoes — \"terra→tierra, porta→puerta\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "conjugate both boots, noticing queremos/podemos stay plain",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate both boots, noticing *queremos*/*podemos* stay plain]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What single sound-law lies behind e becomes ie and o becomes ue? (Short stressed Latin e and o broke into ie and ue.) Which persons crack, and which stays plain? (The \"boot\" — all but nosotros/vosotros.) Give a noun that shows each break. (tierra from terra; puerta from porta.) Next: nuestro — \"our.\""
             }
           ]
         }

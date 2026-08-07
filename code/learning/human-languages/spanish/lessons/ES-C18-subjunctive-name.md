@@ -1,6 +1,7 @@
 ---
 id: ES-C18-subjunctive-name
 chapter: 18
+sequence: 610
 type: etymology
 headword: subjuntivo
 gloss: joined underneath — a mood named for its grammatical position in a subordinate clause

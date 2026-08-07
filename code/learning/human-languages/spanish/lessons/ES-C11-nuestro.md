@@ -1,6 +1,7 @@
 ---
 id: ES-C11-nuestro
 chapter: 11
+sequence: 558
 type: word
 headword: nuestro
 gloss: our (and vuestro, "your"-plural) — the possessive that agrees fully

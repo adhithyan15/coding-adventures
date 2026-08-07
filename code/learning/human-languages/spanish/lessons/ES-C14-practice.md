@@ -1,6 +1,7 @@
 ---
 id: ES-C14-practice
 chapter: 14
+sequence: 582
 type: practice-mix
 headword: (practice)
 gloss: past vs present — fui, hablé, and the forms that look the same

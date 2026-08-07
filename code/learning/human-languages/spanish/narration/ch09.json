@@ -3,12 +3,503 @@
   "language": "spanish",
   "chapter": 9,
   "title": "Chapter 9",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0f128ec69fedf560",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a145296a95911d1d",
   "lessons": [
     {
+      "id": "ES-C09-ser",
+      "sequence": 534,
+      "title": "ser — \"to be,\" the essential kind",
+      "headword": "ser",
+      "romanization": "ser",
+      "gloss": "to be (identity — permanent, essential)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06810f2823517346",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Back in Chapter 4 you met estar — the temporary to-be ( from stāre, \"to stand\"): how you are right now, and where. It always came with a promise: Spanish has two be-verbs, and here's the other. ser is the permanent one — what a thing essentially is. It's also your second irregular verb, and its irregularity is spectacular."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "r-tap — ser ends in one soft tap of the tongue: SER."
+            },
+            {
+              "kind": "speech",
+              "text": "No propping e here (unlike es-tar): ser already starts with its own vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ser comes from Latin esse, \"to be\" — the plainest, oldest verb there is. (Vulgar Latin actually rebuilt the infinitive as essere, and even folded in a second verb, sedēre \"to sit,\" which is why a few forms look like they wandered in from elsewhere.) That root es- reaches deep into English:"
+            },
+            {
+              "kind": "speech",
+              "text": "essence, essential, entity, is, am, are — all the way down, this is the PIE root h₁es- \"to be.\" When you say es, you are saying a cousin of English is."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: present (prae-esse, \"to be before/at hand\"), absent (ab-esse, \"to be away\"), interest (inter-esse, \"to be between\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So ser isn't just a word to memorize — it's the same ancient \"be\" that English carries in is / am / are."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the most irregular verb in Spanish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ser is suppletive — its forms come from different Latin words fused into one verb, so you can't derive them from the infinitive. You simply learn them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "Latin source"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: soy. Latin source: from sum (\"I am\"); the -y is the same odd tail as in estoy/voy/doy.",
+                "person: tú. form: eres. Latin source: from eris (\"you will be\" — a future form drafted into the present!)",
+                "person: él/ella/usted. form: es. Latin source: from est — literally cognate with English is.",
+                "person: nosotros. form: somos. Latin source: from sumus.",
+                "person: ellos/ustedes. form: son. Latin source: from sunt — cognate with English are-in-plural."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say them as a set: soy, eres, es, somos, son. Notice how es and son sit right next to English is and (Latin) sunt — you already half-knew this verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ser\" — SER, one tap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ser\" — *SER*, one tap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"soy, eres, es, somos, son\" — the whole suppletive set, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"soy, eres, es, somos, son\" — the whole suppletive set, twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"es\" then English \"is\"; \"son\" then Latin \"sunt\" — hear the family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"es\" then English \"is\"; \"son\" then Latin \"sunt\" — hear the family]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb is ser from, and one English cousin? (esse — essence / essential / present.) Why can't you predict its forms? (It's suppletive — built from sum, eris, est, sumus, sunt.) Give all five present forms. (Soy, eres, es, somos, son.) Next: the big one — when to use ser and when estar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-ser-vs-estar",
+      "sequence": 536,
+      "title": "ser vs estar — essence vs state",
+      "headword": "ser vs estar",
+      "romanization": "ser vs estar",
+      "gloss": "the two \"to be\" verbs, contrasted — essence vs state",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:2e697cd43b1008d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The rule, from the roots"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The rule, from the roots until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the lesson every Spanish learner waits for and dreads. Two verbs, one English word (\"to be\"). But the choice isn't arbitrary — it's written into the etymology you already learned. Get the roots, and the rule follows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The rule, from the roots",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met both verbs by their Latin sources. That's the whole key:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 2,
+              "headers": [
+                "verb",
+                "root",
+                "picture",
+                "used for"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, root, picture, used for. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "The mnemonic writes itself: ser = essence, estar = estado (Spanish for \"state,\" the very word estar built). Permanent, defining truth becomes ser. Passing state or where-you-are becomes estar."
+            },
+            {
+              "kind": "speech",
+              "text": "Soy alto. — \"I am tall.\" (a defining trait becomes ser)."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy cansado. — \"I am tired.\" (a passing state becomes estar)."
+            },
+            {
+              "kind": "speech",
+              "text": "Es médico. — \"She is a doctor.\" (identity becomes ser)."
+            },
+            {
+              "kind": "speech",
+              "text": "Está en casa. — \"She is at home.\" (location becomes estar, always)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: minimal pairs that FLIP the meaning",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the proof that the split is real, not decoration. Swap ser for estar on the same adjective and the meaning changes — because essence and state are genuinely different claims:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "with ser (essence)",
+                "with estar (state)"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "with ser (essence): es aburrido — \"he is boring\" (his nature). with estar (state): está aburrido — \"he is bored\" (right now).",
+                "with ser (essence): es listo — \"she is clever\" (a trait). with estar (state): está lista — \"she is ready\" (this moment).",
+                "with ser (essence): es rico — \"he is rich\" (wealth). with estar (state): está rico — \"it tastes delicious\" (this dish, now).",
+                "with ser (essence): es verde — \"it is green\" (its colour). with estar (state): está verde — \"it's unripe\" (its current state)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same adjective, two verbs, two worlds. A boring person is (ser) boring; a bored person merely stands (estar) bored today. This is why Spanish keeps two verbs English merged into one — it can say things English needs extra words for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mnemonic — \"ser = essence, estar = estado (state)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mnemonic — \"ser = essence, estar = estado (state)\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each minimal pair aloud — \"es aburrido / está aburrido,\" and gloss each: \"is boring / is bored\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each minimal pair aloud — \"es aburrido / está aburrido,\" and gloss each: \"is boring / is bored\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sort five quick ones — tall (ser), tired (estar), a doctor (ser), at home (estar), from Spain (ser)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sort five quick ones — tall (ser), tired (estar), a doctor (ser), at home (estar), from Spain (ser)]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ser = who/what it IS; estar = how/where it IS right now.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb for a permanent trait, which for a passing state? (ser / estar.) What does está aburrido mean vs es aburrido? (\"is bored\" vs \"is boring.\") Give the estar reading of está rico. (\"it tastes delicious.\") Next: the two workhorses of the split — soy de… (origin) and está en… (location)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-soy-de",
+      "sequence": 538,
+      "title": "soy de… — saying where you're from",
+      "headword": "soy de…",
+      "romanization": "soy de…",
+      "gloss": "\"I'm from…\" — origin and identity take ser",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d827a379647bb01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have ser. Now aim it. Where you're from and what you do are treated as essence in Spanish — they define you — so both take ser, not estar. This is where the split starts paying rent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The little word: de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de = \"from / of,\" straight from Latin dē (\"down from, about\"). It's one of the most common words in Spanish, and its English children are everywhere as the prefix de-: deduct, depart, descend, describe — all carry the \"from / down-from\" of dē."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The pattern: soy de + place",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Origin is a permanent fact about you, so it's ser + de:"
+            },
+            {
+              "kind": "speech",
+              "text": "Soy de México. — \"I'm from Mexico.\" Eres de España. — \"You're from Spain.\" Es de Colombia. — \"She's from Colombia.\""
+            },
+            {
+              "kind": "speech",
+              "text": "And to ask it, Spanish fronts the de:"
+            },
+            {
+              "kind": "speech",
+              "text": "¿De dónde eres? — literally \"From where are-you?\" (dónde, \"where,\" you met in Ch.7; here it rides with de to mean from where.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Note it is eres, not estás — even though dónde usually pairs with estar for location. Origin isn't where you are standing; it's what you are. Essence becomes ser."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Same verb, your identity: profession and nationality",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because these define you, they're ser too — and they take no article:"
+            },
+            {
+              "kind": "speech",
+              "text": "Soy profesor. — \"I'm a teacher.\" (no un — Spanish drops it with bare professions) Soy español. — \"I'm Spanish.\" (there's español again, from Ch.6, from Hispania) Somos estudiantes. — \"We're students.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Soy de…\" + your city — soy deh …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Soy de…\" + your city — *soy deh …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask and answer — \"¿De dónde eres? — Soy de México.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask and answer — \"¿De dónde eres? — Soy de México.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "identity with ser — \"Soy profesor,\" \"Soy español\" (no un/una)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: identity with ser — \"Soy profesor,\" \"Soy español\" (no *un*/*una*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which be-verb for where you're from, and why? (ser — origin is an essence, not a location you stand in.) What does de mean, and one English cousin? (\"from/of\"; depart/deduct.) How do you ask \"where are you from\"? (¿De dónde eres?) Next: the other workhorse — está en…, location, which is pure estar."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C09-esta-en",
-      "sequence": null,
+      "sequence": 540,
       "title": "está en… — saying where something is",
       "headword": "está en…",
       "romanization": "está en…",
@@ -19,7 +510,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4ef4d041e2fb8044",
+      "sourceHash": "fnv1a64:c4741a1391c9dd4e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -170,7 +661,7 @@
     },
     {
       "id": "ES-C09-practice",
-      "sequence": null,
+      "sequence": 542,
       "title": "Practice — ser or estar?",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -181,7 +672,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8670e97fe19667a6",
+      "sourceHash": "fnv1a64:bb563dc466711e9c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -373,497 +864,6 @@
             {
               "kind": "speech",
               "text": "Name the rule in three words. (Essence becomes ser; state becomes estar.) Give the five forms of ser. (Soy, eres, es, somos, son.) What flips between es rico and está rico? (\"is rich\" becomes \"tastes delicious.\") Next chapter: the near future — ir a + infinitive, \"going to…\" — and possessives."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-ser",
-      "sequence": null,
-      "title": "ser — \"to be,\" the essential kind",
-      "headword": "ser",
-      "romanization": "ser",
-      "gloss": "to be (identity — permanent, essential)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a82cd4ab00b99923",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Back in Chapter 4 you met estar — the temporary to-be ( from stāre, \"to stand\"): how you are right now, and where. It always came with a promise: Spanish has two be-verbs, and here's the other. ser is the permanent one — what a thing essentially is. It's also your second irregular verb, and its irregularity is spectacular."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-tap — ser ends in one soft tap of the tongue: SER."
-            },
-            {
-              "kind": "speech",
-              "text": "No propping e here (unlike es-tar): ser already starts with its own vowel."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ser comes from Latin esse, \"to be\" — the plainest, oldest verb there is. (Vulgar Latin actually rebuilt the infinitive as essere, and even folded in a second verb, sedēre \"to sit,\" which is why a few forms look like they wandered in from elsewhere.) That root es- reaches deep into English:"
-            },
-            {
-              "kind": "speech",
-              "text": "essence, essential, entity, is, am, are — all the way down, this is the PIE root h₁es- \"to be.\" When you say es, you are saying a cousin of English is."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: present (prae-esse, \"to be before/at hand\"), absent (ab-esse, \"to be away\"), interest (inter-esse, \"to be between\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So ser isn't just a word to memorize — it's the same ancient \"be\" that English carries in is / am / are."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the most irregular verb in Spanish",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ser is suppletive — its forms come from different Latin words fused into one verb, so you can't derive them from the infinitive. You simply learn them:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "Latin source"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: soy. Latin source: from sum (\"I am\"); the -y is the same odd tail as in estoy/voy/doy.",
-                "person: tú. form: eres. Latin source: from eris (\"you will be\" — a future form drafted into the present!)",
-                "person: él/ella/usted. form: es. Latin source: from est — literally cognate with English is.",
-                "person: nosotros. form: somos. Latin source: from sumus.",
-                "person: ellos/ustedes. form: son. Latin source: from sunt — cognate with English are-in-plural."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say them as a set: soy, eres, es, somos, son. Notice how es and son sit right next to English is and (Latin) sunt — you already half-knew this verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ser\" — SER, one tap",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ser\" — *SER*, one tap]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"soy, eres, es, somos, son\" — the whole suppletive set, twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"soy, eres, es, somos, son\" — the whole suppletive set, twice]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"es\" then English \"is\"; \"son\" then Latin \"sunt\" — hear the family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"es\" then English \"is\"; \"son\" then Latin \"sunt\" — hear the family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is ser from, and one English cousin? (esse — essence / essential / present.) Why can't you predict its forms? (It's suppletive — built from sum, eris, est, sumus, sunt.) Give all five present forms. (Soy, eres, es, somos, son.) Next: the big one — when to use ser and when estar."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-ser-vs-estar",
-      "sequence": null,
-      "title": "ser vs estar — essence vs state",
-      "headword": "ser vs estar",
-      "romanization": "ser vs estar",
-      "gloss": "the two \"to be\" verbs, contrasted — essence vs state",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:0b147a09ef97b4b9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The rule, from the roots"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The rule, from the roots until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This is the lesson every Spanish learner waits for and dreads. Two verbs, one English word (\"to be\"). But the choice isn't arbitrary — it's written into the etymology you already learned. Get the roots, and the rule follows."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The rule, from the roots",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You met both verbs by their Latin sources. That's the whole key:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "verb",
-                "root",
-                "picture",
-                "used for"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, root, picture, used for. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "The mnemonic writes itself: ser = essence, estar = estado (Spanish for \"state,\" the very word estar built). Permanent, defining truth becomes ser. Passing state or where-you-are becomes estar."
-            },
-            {
-              "kind": "speech",
-              "text": "Soy alto. — \"I am tall.\" (a defining trait becomes ser)."
-            },
-            {
-              "kind": "speech",
-              "text": "Estoy cansado. — \"I am tired.\" (a passing state becomes estar)."
-            },
-            {
-              "kind": "speech",
-              "text": "Es médico. — \"She is a doctor.\" (identity becomes ser)."
-            },
-            {
-              "kind": "speech",
-              "text": "Está en casa. — \"She is at home.\" (location becomes estar, always)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: minimal pairs that FLIP the meaning",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here's the proof that the split is real, not decoration. Swap ser for estar on the same adjective and the meaning changes — because essence and state are genuinely different claims:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "with ser (essence)",
-                "with estar (state)"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "with ser (essence): es aburrido — \"he is boring\" (his nature). with estar (state): está aburrido — \"he is bored\" (right now).",
-                "with ser (essence): es listo — \"she is clever\" (a trait). with estar (state): está lista — \"she is ready\" (this moment).",
-                "with ser (essence): es rico — \"he is rich\" (wealth). with estar (state): está rico — \"it tastes delicious\" (this dish, now).",
-                "with ser (essence): es verde — \"it is green\" (its colour). with estar (state): está verde — \"it's unripe\" (its current state)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Same adjective, two verbs, two worlds. A boring person is (ser) boring; a bored person merely stands (estar) bored today. This is why Spanish keeps two verbs English merged into one — it can say things English needs extra words for."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the mnemonic — \"ser = essence, estar = estado (state)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the mnemonic — \"ser = essence, estar = estado (state)\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "each minimal pair aloud — \"es aburrido / está aburrido,\" and gloss each: \"is boring / is bored\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: each minimal pair aloud — \"es aburrido / está aburrido,\" and gloss each: \"is boring / is bored\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sort five quick ones — tall (ser), tired (estar), a doctor (ser), at home (estar), from Spain (ser)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sort five quick ones — tall (ser), tired (estar), a doctor (ser), at home (estar), from Spain (ser)]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ser = who/what it IS; estar = how/where it IS right now.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which verb for a permanent trait, which for a passing state? (ser / estar.) What does está aburrido mean vs es aburrido? (\"is bored\" vs \"is boring.\") Give the estar reading of está rico. (\"it tastes delicious.\") Next: the two workhorses of the split — soy de… (origin) and está en… (location)."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-soy-de",
-      "sequence": null,
-      "title": "soy de… — saying where you're from",
-      "headword": "soy de…",
-      "romanization": "soy de…",
-      "gloss": "\"I'm from…\" — origin and identity take ser",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e104e762179e9172",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have ser. Now aim it. Where you're from and what you do are treated as essence in Spanish — they define you — so both take ser, not estar. This is where the split starts paying rent."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The little word: de",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "de = \"from / of,\" straight from Latin dē (\"down from, about\"). It's one of the most common words in Spanish, and its English children are everywhere as the prefix de-: deduct, depart, descend, describe — all carry the \"from / down-from\" of dē."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The pattern: soy de + place",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Origin is a permanent fact about you, so it's ser + de:"
-            },
-            {
-              "kind": "speech",
-              "text": "Soy de México. — \"I'm from Mexico.\" Eres de España. — \"You're from Spain.\" Es de Colombia. — \"She's from Colombia.\""
-            },
-            {
-              "kind": "speech",
-              "text": "And to ask it, Spanish fronts the de:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿De dónde eres? — literally \"From where are-you?\" (dónde, \"where,\" you met in Ch.7; here it rides with de to mean from where.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Note it is eres, not estás — even though dónde usually pairs with estar for location. Origin isn't where you are standing; it's what you are. Essence becomes ser."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Same verb, your identity: profession and nationality",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Because these define you, they're ser too — and they take no article:"
-            },
-            {
-              "kind": "speech",
-              "text": "Soy profesor. — \"I'm a teacher.\" (no un — Spanish drops it with bare professions) Soy español. — \"I'm Spanish.\" (there's español again, from Ch.6, from Hispania) Somos estudiantes. — \"We're students.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Soy de…\" + your city — soy deh …",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Soy de…\" + your city — *soy deh …*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask and answer — \"¿De dónde eres? — Soy de México.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask and answer — \"¿De dónde eres? — Soy de México.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "identity with ser — \"Soy profesor,\" \"Soy español\" (no un/una)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: identity with ser — \"Soy profesor,\" \"Soy español\" (no *un*/*una*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which be-verb for where you're from, and why? (ser — origin is an essence, not a location you stand in.) What does de mean, and one English cousin? (\"from/of\"; depart/deduct.) How do you ask \"where are you from\"? (¿De dónde eres?) Next: the other workhorse — está en…, location, which is pure estar."
             }
           ]
         }

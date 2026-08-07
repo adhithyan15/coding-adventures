@@ -1,6 +1,7 @@
 ---
 id: ES-C15-preterite-fuertes
 chapter: 15
+sequence: 586
 type: word
 headword: tuve, hice, estuve
 gloss: the strong preterites — where the stress moves off the ending and the accent disappears

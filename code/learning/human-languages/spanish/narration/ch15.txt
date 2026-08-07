@@ -43,6 +43,47 @@ Give the five -er/-ir preterite endings. (-í, -iste, -ió, -imos, -ieron.) What
 
 
 Lesson 2 of 3.
+tuve, hice, estuve — the strong preterites.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Three of them, all verbs you know and The accent rule, inverted until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Everything so far pushed the stress to the end: hablÉ, comÍ, comIÓ. Now meet the verbs that do the opposite. They pull the stress back into the stem — and so they lose their accent marks entirely. Spanish calls them pretéritos fuertes, "strong" preterites: strong because the stem carries the weight.
+
+Three of them, all verbs you know.
+The stem changes, then one shared set of endings: -e, -iste, -o, -imos, -ieron.
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, tener becomes tuv-, hacer becomes hic-, estar becomes estuv-. Come back and look at it when you have stopped.
+
+The accent rule, inverted.
+Compare the yo and él forms across the three families:
+There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: family, yo, él/ella, stressed syllable, accent?. Come back and look at it when you have stopped.
+Say them out loud back to back: hablÓ … TUvo. The written accent isn't decoration — it's telling you where the stress went. No accent on a strong preterite because the stress never left the stem.
+Note the yo ending too: -e, not -é (tuve, not tuvé).
+
+One spelling swerve.
+Hacer gives hizo, not hico — Spanish swaps c becomes z before o to keep the sound the same. The letter changes so the pronunciation won't.
+
+Why these are irregular.
+Because they're old. Latin had two ways to build a perfect, and these verbs kept the "strong" one, inherited whole rather than rebuilt: tenuī becomes tuve, fēcī becomes hice, stetī/stāre becomes estuve. The regular -ar/-er/-ir patterns are the tidy replacements that spread later; the strong verbs are the most-used ones, worn smooth by frequency and never re-made. Notice tuv- and estuv- even share the same -uv- shape.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tuve, tuviste, tuvo, tuvimos, tuvieron"]
+[pause 8 seconds for the answer]
+[your turn — say: "hice, hiciste, hizo" — hear the z]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast pair — "hablÓ … TUvo"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ayer estuve en casa" ("Yesterday I was at home")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why "strong"? (The stem carries the stress.) So why no accent marks? (Because the stress never reaches the ending — the accent only ever marked that.) What's the yo ending? (-e, not -é.) Why hizo and not hico? (c becomes z before o, to protect the sound.) Where do they come from? (Latin's strong perfects — tenuī, fēcī — inherited, not rebuilt.) Next: all three families side by side.
+
+
+Lesson 3 of 3.
 Practice — three families, one question.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The whole map until you have stopped, and I will say so again when we reach it.
@@ -84,44 +125,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which two rows are identical? (-er and -ir.) Which forms take a written accent? (Yo and él/ella of the regular verbs only.) What single test separates regular from strong? (Where the stress lands — ending vs stem.) Which form means both "I was" and "I went"? (Fui.) Which nosotros forms are tense-ambiguous? (Hablamos, vivimos — but not comimos.) Next chapter: talking about the past that kept going — the imperfect.
-
-
-Lesson 3 of 3.
-tuve, hice, estuve — the strong preterites.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Three of them, all verbs you know and The accent rule, inverted until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Everything so far pushed the stress to the end: hablÉ, comÍ, comIÓ. Now meet the verbs that do the opposite. They pull the stress back into the stem — and so they lose their accent marks entirely. Spanish calls them pretéritos fuertes, "strong" preterites: strong because the stem carries the weight.
-
-Three of them, all verbs you know.
-The stem changes, then one shared set of endings: -e, -iste, -o, -imos, -ieron.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, tener becomes tuv-, hacer becomes hic-, estar becomes estuv-. Come back and look at it when you have stopped.
-
-The accent rule, inverted.
-Compare the yo and él forms across the three families:
-There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: family, yo, él/ella, stressed syllable, accent?. Come back and look at it when you have stopped.
-Say them out loud back to back: hablÓ … TUvo. The written accent isn't decoration — it's telling you where the stress went. No accent on a strong preterite because the stress never left the stem.
-Note the yo ending too: -e, not -é (tuve, not tuvé).
-
-One spelling swerve.
-Hacer gives hizo, not hico — Spanish swaps c becomes z before o to keep the sound the same. The letter changes so the pronunciation won't.
-
-Why these are irregular.
-Because they're old. Latin had two ways to build a perfect, and these verbs kept the "strong" one, inherited whole rather than rebuilt: tenuī becomes tuve, fēcī becomes hice, stetī/stāre becomes estuve. The regular -ar/-er/-ir patterns are the tidy replacements that spread later; the strong verbs are the most-used ones, worn smooth by frequency and never re-made. Notice tuv- and estuv- even share the same -uv- shape.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tuve, tuviste, tuvo, tuvimos, tuvieron"]
-[pause 8 seconds for the answer]
-[your turn — say: "hice, hiciste, hizo" — hear the z]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast pair — "hablÓ … TUvo"]
-[pause 8 seconds for the answer]
-[your turn — say: "Ayer estuve en casa" ("Yesterday I was at home")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why "strong"? (The stem carries the stress.) So why no accent marks? (Because the stress never reaches the ending — the accent only ever marked that.) What's the yo ending? (-e, not -é.) Why hizo and not hico? (c becomes z before o, to protect the sound.) Where do they come from? (Latin's strong perfects — tenuī, fēcī — inherited, not rebuilt.) Next: all three families side by side.

@@ -1,5 +1,5 @@
 Spanish, chapter 16: Chapter 16.
-3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 3.
@@ -50,6 +50,48 @@ What does the imperfect express? (A past action going on or habitual — "was do
 
 
 Lesson 2 of 3.
+era, iba, veía — all three of them.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The complete list until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 15 handed you a pile of strong preterites to memorise. Here is the compensation: the imperfect has three irregular verbs. Not three families — three verbs, in the whole language.
+
+The complete list.
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, ser becomes era, ir becomes iba, ver becomes veía. Come back and look at it when you have stopped.
+That is the entire irregular inventory. Every other verb in Spanish — thousands of them — takes the regular endings from the last lesson.
+Ver barely counts: it just keeps an extra -e- from its older form veer, then conjugates normally (ve- + -ía).
+
+ir's third Latin verb.
+Now the best thing in the chapter. Track where ir's tenses come from:
+[a table of 3 rows, read aloud]
+tense: present. form: voy, vas, va. from Latin verb: vādere "to advance" (Ch. 10).
+tense: preterite. form: fui, fuiste, fue. from Latin verb: fuī, from esse (Ch. 14).
+tense: imperfect. form: iba, ibas, iba. from Latin verb: īre — its own infinitive.
+Spanish ir is stitched together from three different Latin verbs, and the imperfect is the one place the original īre survives conjugated. The infinitive ir and the imperfect iba are the last two pieces of the real verb; everything else was borrowed from elsewhere.
+
+era.
+era from Latin eram, from the same es- root as ser, soy, es — and as English is and are (Chapter 9). So ser uses that ancient root in the present and the imperfect, but jumps to fuī in the preterite: era vs fue.
+Note the accents: éramos, íbamos — stress three syllables back, exactly like hablábamos.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "era, eras, era, éramos, eran"]
+[pause 8 seconds for the answer]
+[your turn — say: "iba, ibas, iba, íbamos, iban"]
+[pause 8 seconds for the answer]
+[your turn — say: "Cuando era niño, iba a la escuela" ("When I was a child, I used to go to school")]
+[pause 8 seconds for the answer]
+[your turn — say: the three sources — "voy from vādere, fui from fuī, iba from īre"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many irregular imperfects are there? (Three — ser, ir, ver.) Which one hardly counts, and why? (Ver — it just keeps an extra -e- from veer.) Where does iba come from? (Latin īre — ir's own verb, and the only tense that kept it.) So how many Latin verbs is ir built from? (Three — vādere, fuī, īre.) Which two forms take a written accent? (Éramos, íbamos — stress three back.) Next: choosing between the two pasts.
+
+
+Lesson 3 of 3.
 Practice — two pasts, one choice.
 
 Warm-up.
@@ -101,45 +143,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Preterite or imperfect for a habit? (Imperfect.) Which tense sets the background, and which interrupts it? (Imperfect sets, preterite interrupts.) What's the difference between conocía and conocí? ("I knew someone" vs "I met them.") How many irregular imperfects were there? (Three.) Give the one-word test. ("Line or point?") Next chapter: talking about what will happen.
-
-
-Lesson 3 of 3.
-era, iba, veía — all three of them.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The complete list until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Chapter 15 handed you a pile of strong preterites to memorise. Here is the compensation: the imperfect has three irregular verbs. Not three families — three verbs, in the whole language.
-
-The complete list.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, ser becomes era, ir becomes iba, ver becomes veía. Come back and look at it when you have stopped.
-That is the entire irregular inventory. Every other verb in Spanish — thousands of them — takes the regular endings from the last lesson.
-Ver barely counts: it just keeps an extra -e- from its older form veer, then conjugates normally (ve- + -ía).
-
-ir's third Latin verb.
-Now the best thing in the chapter. Track where ir's tenses come from:
-[a table of 3 rows, read aloud]
-tense: present. form: voy, vas, va. from Latin verb: vādere "to advance" (Ch. 10).
-tense: preterite. form: fui, fuiste, fue. from Latin verb: fuī, from esse (Ch. 14).
-tense: imperfect. form: iba, ibas, iba. from Latin verb: īre — its own infinitive.
-Spanish ir is stitched together from three different Latin verbs, and the imperfect is the one place the original īre survives conjugated. The infinitive ir and the imperfect iba are the last two pieces of the real verb; everything else was borrowed from elsewhere.
-
-era.
-era from Latin eram, from the same es- root as ser, soy, es — and as English is and are (Chapter 9). So ser uses that ancient root in the present and the imperfect, but jumps to fuī in the preterite: era vs fue.
-Note the accents: éramos, íbamos — stress three syllables back, exactly like hablábamos.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "era, eras, era, éramos, eran"]
-[pause 8 seconds for the answer]
-[your turn — say: "iba, ibas, iba, íbamos, iban"]
-[pause 8 seconds for the answer]
-[your turn — say: "Cuando era niño, iba a la escuela" ("When I was a child, I used to go to school")]
-[pause 8 seconds for the answer]
-[your turn — say: the three sources — "voy from vādere, fui from fuī, iba from īre"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How many irregular imperfects are there? (Three — ser, ir, ver.) Which one hardly counts, and why? (Ver — it just keeps an extra -e- from veer.) Where does iba come from? (Latin īre — ir's own verb, and the only tense that kept it.) So how many Latin verbs is ir built from? (Three — vādere, fuī, īre.) Which two forms take a written accent? (Éramos, íbamos — stress three back.) Next: choosing between the two pasts.

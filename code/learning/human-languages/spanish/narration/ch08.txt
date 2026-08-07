@@ -3,37 +3,6 @@ Spanish, chapter 8: Chapter 8.
 
 
 Lesson 1 of 5.
-¿Cuántos años tienes? — "how old are you?"
-
-Warm-up.
-[pause 2 seconds]
-With tener and your numbers, you can ask and give age — and Spanish does it in a way English doesn't: you don't be a number of years old, you have them.
-
-The phrase, taken apart.
-¿Cuántos años tienes? = "How old are you?" literally: "How many years do you have?"
-cuántos = "how many," from Latin quantus, "how much/great" becomes English quantity, quantum, quantify. (It's the qu- question family — qué, cómo, dónde, cuántos.) It agrees: cuántos años (masc. pl.).
-años = "years," from Latin annus — and look, the ñ is back (the doubled-nn of annus becomes añ, your writing lesson). annus also gives English annual, anniversary, biennial.
-tienes = "you have" (the tener you just learned).
-Age is had, not been.
-This is a real difference to internalize: Spanish counts age with tener ("have"), not ser/estar ("be").
-— ¿Cuántos años tienes? — Tengo veinte años. ("I have twenty years.")
-Saying "soy veinte" ("I am twenty") is simply wrong in Spanish. You possess your years; you don't equal them. (French and Italian do the same — j'ai vingt ans, ho vent'anni, all "I have.")
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "¿Cuántos años tienes?" — KWAN-tos AN-yos TYE-nes]
-[pause 8 seconds for the answer]
-[your turn — say: answer — "Tengo ___ años" with your own number]
-[pause 8 seconds for the answer]
-[your turn — say: never "soy ___"; always "tengo ___ años" — age is had]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does ¿Cuántos años tienes? literally ask? ("How many years do you have?") Which verb gives age in Spanish — ser or tener? (tener — you have your years.) What letter does años bring back, and from what? (The ñ, from Latin annus's doubled nn.) Next: put counting and age together in practice.
-
-
-Lesson 2 of 5.
 uno, dos, tres, cuatro, cinco — counting to five.
 
 Warm-up.
@@ -70,7 +39,7 @@ Wrap-up Recall.
 Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) What English word is cinco the cousin of, and why does it look different? (Quintet — Latin quīnque's qu- became Spanish c-.) What two things does un/una mean? ("One" and "a/an.") Next: 6–10.
 
 
-Lesson 3 of 5.
+Lesson 2 of 5.
 seis, siete, ocho, nueve, diez — and the calendar's secret.
 
 Warm-up.
@@ -109,45 +78,7 @@ Wrap-up Recall.
 Give 6–10. (Seis, siete, ocho, nueve, diez.) Why is December Latin for "ten"? (The Roman year started in March, so the 10th month was December.) How do you make 16, and what English word matches? (diez y seis becomes dieciséis; sixteen.) Next: the verb for having — tener.
 
 
-Lesson 4 of 5.
-Practice — numbers, having, and age.
-
-Warm-up.
-[pause 2 seconds]
-Two new powers this chapter: you can count and you can talk about what you have (including your years). Drill the numbers and the irregular tener until both are automatic.
-
-Count and conjugate.
-[pause 1 second]
-Count up: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
-tener, all forms: tengo, tienes, tiene, tenemos, tienen (mind the tengo and the e becomes ie crack).
-
-Say something real.
-— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Y cuántos años tienes? — Tengo veintiuno. ¿Y tú? — Tengo diecinueve. — Un café, por favor. ¿Cuánto es? — Dos euros.
-
-What you've built this chapter.
-numbers 1–10 ( from ūnus … decem; cinco/quintet, diez/December), and the teen fusion diez y seis becomes dieciséis (= sixteen).
-tener — "to have" ( from tenēre "hold"; tenant/retain/contain), your first irregular / stem-changing verb: tengo, and e becomes ie (tienes).
-¿Cuántos años tienes? — age with tener ("have your years," not "be"); años from annus (the ñ).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: count 1–10 up and back down]
-[pause 8 seconds for the answer]
-[your turn — say: conjugate tener through all five forms]
-[pause 8 seconds for the answer]
-[your turn — say: ask and answer age about yourself and a friend — "Tengo … años"]
-[pause 8 seconds for the answer]
-[your turn — say: order "dos cafés, por favor" and ask "¿Cuánto es?"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"¿Cuántos años tienes? — Tengo … años."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Count to five. (Uno … cinco.) Give the yo and tú of tener, and name its two irregularities. (Tengo / tienes; the -go yo-form and the e becomes ie stem-change.) How does Spanish give age? (With tener — "I have X years.") Next chapter: ser vs estar head-on — the two "to be" verbs, sorted for good.
-
-
-Lesson 5 of 5.
+Lesson 3 of 5.
 tener — "to have," your first irregular verb.
 
 Warm-up.
@@ -186,3 +117,72 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What Latin verb is tener from, and its English cousins? (tenēre, "to hold" — tenant, retain, contain.) Its two irregularities? (The -go yo-form tengo; the e becomes ie stem-change tienes/tiene/tienen.) Which form keeps the plain e? (tenemos — it's unstressed.) Next: use it to give your age.
+
+
+Lesson 4 of 5.
+¿Cuántos años tienes? — "how old are you?"
+
+Warm-up.
+[pause 2 seconds]
+With tener and your numbers, you can ask and give age — and Spanish does it in a way English doesn't: you don't be a number of years old, you have them.
+
+The phrase, taken apart.
+¿Cuántos años tienes? = "How old are you?" literally: "How many years do you have?"
+cuántos = "how many," from Latin quantus, "how much/great" becomes English quantity, quantum, quantify. (It's the qu- question family — qué, cómo, dónde, cuántos.) It agrees: cuántos años (masc. pl.).
+años = "years," from Latin annus — and look, the ñ is back (the doubled-nn of annus becomes añ, your writing lesson). annus also gives English annual, anniversary, biennial.
+tienes = "you have" (the tener you just learned).
+Age is had, not been.
+This is a real difference to internalize: Spanish counts age with tener ("have"), not ser/estar ("be").
+— ¿Cuántos años tienes? — Tengo veinte años. ("I have twenty years.")
+Saying "soy veinte" ("I am twenty") is simply wrong in Spanish. You possess your years; you don't equal them. (French and Italian do the same — j'ai vingt ans, ho vent'anni, all "I have.")
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿Cuántos años tienes?" — KWAN-tos AN-yos TYE-nes]
+[pause 8 seconds for the answer]
+[your turn — say: answer — "Tengo ___ años" with your own number]
+[pause 8 seconds for the answer]
+[your turn — say: never "soy ___"; always "tengo ___ años" — age is had]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ¿Cuántos años tienes? literally ask? ("How many years do you have?") Which verb gives age in Spanish — ser or tener? (tener — you have your years.) What letter does años bring back, and from what? (The ñ, from Latin annus's doubled nn.) Next: put counting and age together in practice.
+
+
+Lesson 5 of 5.
+Practice — numbers, having, and age.
+
+Warm-up.
+[pause 2 seconds]
+Two new powers this chapter: you can count and you can talk about what you have (including your years). Drill the numbers and the irregular tener until both are automatic.
+
+Count and conjugate.
+[pause 1 second]
+Count up: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
+tener, all forms: tengo, tienes, tiene, tenemos, tienen (mind the tengo and the e becomes ie crack).
+
+Say something real.
+— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Y cuántos años tienes? — Tengo veintiuno. ¿Y tú? — Tengo diecinueve. — Un café, por favor. ¿Cuánto es? — Dos euros.
+
+What you've built this chapter.
+numbers 1–10 ( from ūnus … decem; cinco/quintet, diez/December), and the teen fusion diez y seis becomes dieciséis (= sixteen).
+tener — "to have" ( from tenēre "hold"; tenant/retain/contain), your first irregular / stem-changing verb: tengo, and e becomes ie (tienes).
+¿Cuántos años tienes? — age with tener ("have your years," not "be"); años from annus (the ñ).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: count 1–10 up and back down]
+[pause 8 seconds for the answer]
+[your turn — say: conjugate tener through all five forms]
+[pause 8 seconds for the answer]
+[your turn — say: ask and answer age about yourself and a friend — "Tengo … años"]
+[pause 8 seconds for the answer]
+[your turn — say: order "dos cafés, por favor" and ask "¿Cuánto es?"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"¿Cuántos años tienes? — Tengo … años."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to five. (Uno … cinco.) Give the yo and tú of tener, and name its two irregularities. (Tengo / tienes; the -go yo-form and the e becomes ie stem-change.) How does Spanish give age? (With tener — "I have X years.") Next chapter: ser vs estar head-on — the two "to be" verbs, sorted for good.

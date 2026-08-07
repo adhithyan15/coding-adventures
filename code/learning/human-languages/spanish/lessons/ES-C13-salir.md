@@ -1,6 +1,7 @@
 ---
 id: ES-C13-salir
 chapter: 13
+sequence: 572
 type: word
 headword: salir
 gloss: to leave / to go out — a -go yo-form, salgo, from a root that means "to leap"

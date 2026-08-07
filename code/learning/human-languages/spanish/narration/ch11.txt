@@ -3,35 +3,43 @@ Spanish, chapter 11: Chapter 11.
 
 
 Lesson 1 of 5.
-nuestro — "our," the possessive that agrees fully.
+querer — "to want," and the e becomes ie crack again.
 
 Warm-up.
 [pause 2 seconds]
-In Chapter 10 you met mi/tu/su — possessives that change only for number (mis, tus, sus). nuestro ("our") is different: it agrees in both gender and number, like an ordinary -o/-a adjective. It's the fullest-flexing of the possessives.
+Back in Chapter 8, tener cracked its stem: tienes, with the vowel breaking e becomes ie. That wasn't a one-off — it's a whole class of Spanish verbs. Here's the most useful of them: querer, "to want" (and, of a person, "to love").
+
+Sounds you'll need.
+diphthong-ie — the stem breaks to -ie- under stress: quiero = KYE-ro.
 
 The word, taken apart.
-nuestro comes from Latin noster, "our." You've heard it without knowing: the Paternoster is the "Our Father," and a nostrum is literally "our thing" (a quack's secret remedy). Its partner vuestro ("your," to a group) is from voster/vester.
-Notice the stem-change fossil: noster becomes nuestro shows the same o becomes ue break you just learned (short stressed o becomes ue). The possessive cracks exactly like puerta and puedo.
+querer comes from Latin quaerere, "to seek, to ask, to want." Seeking and wanting are the same impulse at the root — and that root is a treasure-house of English:
+query, quest, question — a seeking.
+with prefixes: inquire (in- "into"), require (re- "back"), acquire (ad- "toward"), conquer (con- "thoroughly seek/win"), exquisite ("sought out"), quorum ("of whom" the seeking needs enough).
+So when you say quiero, you're using the same "seek" root as question and conquer.
 
-Grammar Lens: four forms, agreeing like -o/-a.
-Where mi had two forms (mi/mis), nuestro has four — masculine/feminine × singular/plural:
-[a table of 2 rows, read aloud]
-masc. singular: nuestro libro. plural: nuestros libros.
-fem. singular: nuestra casa. plural: nuestras casas.
-So it's nuestro coche ("our car," masc.) but nuestra casa ("our house," fem.) — you match the noun in both gender and number, just like bueno/buena/buenos/buenas. vuestro does the same (vuestro/vuestra/vuestros/vuestras).
+Grammar Lens: the e becomes ie stem-change (the "boot").
+querer is a stem-changing verb: when the stem vowel e is stressed, it breaks to ie — exactly the pattern tener showed you.
+[a table of 5 rows, read aloud]
+yo, quiero, (e becomes ie).
+tú, quieres, (e becomes ie).
+él/ella/usted, quiere, (e becomes ie).
+nosotros, queremos, (plain e — unstressed).
+ellos/ustedes, quieren, (e becomes ie).
+Only queremos keeps the plain e, because there the stress falls on the ending, not the stem. Shade in the forms that change — yo/tú/él…/ellos — and they draw a boot shape around the nosotros/vosotros gap. That "boot" is the signature of every stem-changer.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "nuestro, nuestra, nuestros, nuestras" — the full set]
+[your turn — say: "querer" then the set — "quiero, quieres, quiere, queremos, quieren" — hear the ie crack in, and drop out for queremos]
 [pause 8 seconds for the answer]
-[your turn — say: match a noun — "nuestro coche, nuestra casa, nuestros amigos"]
+[your turn — say: "Quiero un café" ("I want a coffee"); "Quiero café, por favor"]
 [pause 8 seconds for the answer]
-[your turn — say: "nuestro" then "Paternoster / nostrum" — the noster "our" family]
+[your turn — say: "querer" then English "query, quest, conquer" — the seek-family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is nuestro from, and one English echo? (noster "our"; Paternoster / nostrum.) How does nuestro differ from mi/tu/su? (It agrees in gender and number — four forms — not just number.) Give "our house" and "our car." (Nuestra casa; nuestro coche.) Next: practice — pull the chapter together.
+What Latin verb is querer from, and two English cousins? (quaerere "to seek"; query/quest/conquer.) Give its five present forms. (Quiero, quieres, quiere, queremos, quieren.) Which form keeps the plain e, and why? (Queremos — the stress is on the ending, not the stem.) Next: poder, with a different crack, o becomes ue.
 
 
 Lesson 2 of 5.
@@ -80,6 +88,77 @@ What Latin verb is poder from, and its English twin? (potēre "to be able"; powe
 
 
 Lesson 3 of 5.
+e becomes ie and o becomes ue — one rule, two vowels.
+
+Warm-up.
+[pause 2 seconds]
+You've now seen both stem-changes: querer becomes quiero (e becomes ie) and poder becomes puedo (o becomes ue). They aren't two random quirks — they're one sound-law, and knowing it turns a "memorize each verb" chore into a pattern you can predict.
+
+The rule: stressed short vowels broke.
+In the leap from Latin to Spanish, a short, stressed e broke into ie, and a short, stressed o broke into ue. It happened in ordinary nouns too, not just verbs:
+[a table of 4 rows, read aloud]
+Latin: terra. Spanish: tierra ("earth"). break: e becomes ie.
+Latin: septem. Spanish: siete ("seven"). break: e becomes ie.
+Latin: porta. Spanish: puerta ("door"). break: o becomes ue.
+Latin: novem. Spanish: nueve ("nine"). break: o becomes ue.
+(You already met siete and nueve in the numbers — now you know why they have that glide.) In verbs, the stem vowel is stressed in the "boot" forms and unstressed in nosotros/vosotros — so it breaks in the boot and stays plain outside it.
+
+The boot, for both patterns.
+[a table of 5 rows, read aloud]
+yo. e becomes ie (querer): quiero. o becomes ue (poder): puedo.
+tú. e becomes ie (querer): quieres. o becomes ue (poder): puedes.
+él/ella/ud. e becomes ie (querer): quiere. o becomes ue (poder): puede.
+nosotros. e becomes ie (querer): queremos. o becomes ue (poder): podemos.
+ellos/uds. e becomes ie (querer): quieren. o becomes ue (poder): pueden.
+Same shape both times: the four "corner" forms crack, the nosotros form stays plain — the boot. tener ( becomes tienes), from Chapter 8, was your first taste; now you own the whole rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pairs — "querer/quiero (e becomes ie), poder/puedo (o becomes ue)"]
+[pause 8 seconds for the answer]
+[your turn — say: the noun echoes — "terra becomes tierra, porta becomes puerta"]
+[pause 8 seconds for the answer]
+[your turn — say: conjugate both boots, noticing queremos/podemos stay plain]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What single sound-law lies behind e becomes ie and o becomes ue? (Short stressed Latin e and o broke into ie and ue.) Which persons crack, and which stays plain? (The "boot" — all but nosotros/vosotros.) Give a noun that shows each break. (tierra from terra; puerta from porta.) Next: nuestro — "our."
+
+
+Lesson 4 of 5.
+nuestro — "our," the possessive that agrees fully.
+
+Warm-up.
+[pause 2 seconds]
+In Chapter 10 you met mi/tu/su — possessives that change only for number (mis, tus, sus). nuestro ("our") is different: it agrees in both gender and number, like an ordinary -o/-a adjective. It's the fullest-flexing of the possessives.
+
+The word, taken apart.
+nuestro comes from Latin noster, "our." You've heard it without knowing: the Paternoster is the "Our Father," and a nostrum is literally "our thing" (a quack's secret remedy). Its partner vuestro ("your," to a group) is from voster/vester.
+Notice the stem-change fossil: noster becomes nuestro shows the same o becomes ue break you just learned (short stressed o becomes ue). The possessive cracks exactly like puerta and puedo.
+
+Grammar Lens: four forms, agreeing like -o/-a.
+Where mi had two forms (mi/mis), nuestro has four — masculine/feminine × singular/plural:
+[a table of 2 rows, read aloud]
+masc. singular: nuestro libro. plural: nuestros libros.
+fem. singular: nuestra casa. plural: nuestras casas.
+So it's nuestro coche ("our car," masc.) but nuestra casa ("our house," fem.) — you match the noun in both gender and number, just like bueno/buena/buenos/buenas. vuestro does the same (vuestro/vuestra/vuestros/vuestras).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nuestro, nuestra, nuestros, nuestras" — the full set]
+[pause 8 seconds for the answer]
+[your turn — say: match a noun — "nuestro coche, nuestra casa, nuestros amigos"]
+[pause 8 seconds for the answer]
+[your turn — say: "nuestro" then "Paternoster / nostrum" — the noster "our" family]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin word is nuestro from, and one English echo? (noster "our"; Paternoster / nostrum.) How does nuestro differ from mi/tu/su? (It agrees in gender and number — four forms — not just number.) Give "our house" and "our car." (Nuestra casa; nuestro coche.) Next: practice — pull the chapter together.
+
+
+Lesson 5 of 5.
 Practice — querer, poder, and the boot.
 
 Warm-up.
@@ -120,82 +199,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give the yo of querer and poder. (Quiero, puedo.) Which form of each stays plain, and why? (Queremos/podemos — the stress is on the ending.) How does nuestro agree, versus mi/tu/su? (Gender and number — four forms.) Next chapter carries the grammar forward — the course now runs on rules.
-
-
-Lesson 4 of 5.
-querer — "to want," and the e becomes ie crack again.
-
-Warm-up.
-[pause 2 seconds]
-Back in Chapter 8, tener cracked its stem: tienes, with the vowel breaking e becomes ie. That wasn't a one-off — it's a whole class of Spanish verbs. Here's the most useful of them: querer, "to want" (and, of a person, "to love").
-
-Sounds you'll need.
-diphthong-ie — the stem breaks to -ie- under stress: quiero = KYE-ro.
-
-The word, taken apart.
-querer comes from Latin quaerere, "to seek, to ask, to want." Seeking and wanting are the same impulse at the root — and that root is a treasure-house of English:
-query, quest, question — a seeking.
-with prefixes: inquire (in- "into"), require (re- "back"), acquire (ad- "toward"), conquer (con- "thoroughly seek/win"), exquisite ("sought out"), quorum ("of whom" the seeking needs enough).
-So when you say quiero, you're using the same "seek" root as question and conquer.
-
-Grammar Lens: the e becomes ie stem-change (the "boot").
-querer is a stem-changing verb: when the stem vowel e is stressed, it breaks to ie — exactly the pattern tener showed you.
-[a table of 5 rows, read aloud]
-yo, quiero, (e becomes ie).
-tú, quieres, (e becomes ie).
-él/ella/usted, quiere, (e becomes ie).
-nosotros, queremos, (plain e — unstressed).
-ellos/ustedes, quieren, (e becomes ie).
-Only queremos keeps the plain e, because there the stress falls on the ending, not the stem. Shade in the forms that change — yo/tú/él…/ellos — and they draw a boot shape around the nosotros/vosotros gap. That "boot" is the signature of every stem-changer.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "querer" then the set — "quiero, quieres, quiere, queremos, quieren" — hear the ie crack in, and drop out for queremos]
-[pause 8 seconds for the answer]
-[your turn — say: "Quiero un café" ("I want a coffee"); "Quiero café, por favor"]
-[pause 8 seconds for the answer]
-[your turn — say: "querer" then English "query, quest, conquer" — the seek-family]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin verb is querer from, and two English cousins? (quaerere "to seek"; query/quest/conquer.) Give its five present forms. (Quiero, quieres, quiere, queremos, quieren.) Which form keeps the plain e, and why? (Queremos — the stress is on the ending, not the stem.) Next: poder, with a different crack, o becomes ue.
-
-
-Lesson 5 of 5.
-e becomes ie and o becomes ue — one rule, two vowels.
-
-Warm-up.
-[pause 2 seconds]
-You've now seen both stem-changes: querer becomes quiero (e becomes ie) and poder becomes puedo (o becomes ue). They aren't two random quirks — they're one sound-law, and knowing it turns a "memorize each verb" chore into a pattern you can predict.
-
-The rule: stressed short vowels broke.
-In the leap from Latin to Spanish, a short, stressed e broke into ie, and a short, stressed o broke into ue. It happened in ordinary nouns too, not just verbs:
-[a table of 4 rows, read aloud]
-Latin: terra. Spanish: tierra ("earth"). break: e becomes ie.
-Latin: septem. Spanish: siete ("seven"). break: e becomes ie.
-Latin: porta. Spanish: puerta ("door"). break: o becomes ue.
-Latin: novem. Spanish: nueve ("nine"). break: o becomes ue.
-(You already met siete and nueve in the numbers — now you know why they have that glide.) In verbs, the stem vowel is stressed in the "boot" forms and unstressed in nosotros/vosotros — so it breaks in the boot and stays plain outside it.
-
-The boot, for both patterns.
-[a table of 5 rows, read aloud]
-yo. e becomes ie (querer): quiero. o becomes ue (poder): puedo.
-tú. e becomes ie (querer): quieres. o becomes ue (poder): puedes.
-él/ella/ud. e becomes ie (querer): quiere. o becomes ue (poder): puede.
-nosotros. e becomes ie (querer): queremos. o becomes ue (poder): podemos.
-ellos/uds. e becomes ie (querer): quieren. o becomes ue (poder): pueden.
-Same shape both times: the four "corner" forms crack, the nosotros form stays plain — the boot. tener ( becomes tienes), from Chapter 8, was your first taste; now you own the whole rule.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the pairs — "querer/quiero (e becomes ie), poder/puedo (o becomes ue)"]
-[pause 8 seconds for the answer]
-[your turn — say: the noun echoes — "terra becomes tierra, porta becomes puerta"]
-[pause 8 seconds for the answer]
-[your turn — say: conjugate both boots, noticing queremos/podemos stay plain]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What single sound-law lies behind e becomes ie and o becomes ue? (Short stressed Latin e and o broke into ie and ue.) Which persons crack, and which stays plain? (The "boot" — all but nosotros/vosotros.) Give a noun that shows each break. (tierra from terra; puerta from porta.) Next: nuestro — "our."

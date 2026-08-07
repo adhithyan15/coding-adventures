@@ -1,6 +1,7 @@
 ---
 id: ES-C17-practice
 chapter: 17
+sequence: 600
 type: practice-mix
 headword: (practice)
 gloss: the ten irregular stems that serve both future and conditional

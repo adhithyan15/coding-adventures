@@ -1,6 +1,7 @@
 ---
 id: ES-C11-stem-changes
 chapter: 11
+sequence: 556
 type: phrase
 headword: e→ie, o→ue
 gloss: the stem-change patterns, side by side — the "boot"

@@ -3,12 +3,179 @@
   "language": "spanish",
   "chapter": 18,
   "title": "Chapter 18",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:4a7227413ea2a976",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:056b353dce315e5a",
   "lessons": [
     {
+      "id": "ES-C18-subjuntivo",
+      "sequence": 604,
+      "title": "hable, coma, viva — the subjunctive",
+      "headword": "hable, coma, viva",
+      "romanization": "hable, coma, viva",
+      "gloss": "the regular present subjunctive — built from the yo form, with the vowel flipped",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:256303072a07e4d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Building it: take the yo form and flip the vowel"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Building it: take the yo form and flip the vowel until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every tense so far — hablo, hablé, hablaba, hablaré, hablaría — has belonged to one mood, the indicative: the mood of assertion. It states how things are, and it keeps stating even when it guesses (Chapter 17's Serán las tres, \"it must be three,\" is still an assertion — a confident one about an unknown)."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has another mood for what is not asserted at all: things wanted, doubted, feared, hoped for. That is the subjunctive, and the good news is that you have already learned most of it without knowing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Building it: take the yo form and flip the vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Not from the infinitive. From the yo form of the present."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the yo form: hablo, como, vivo."
+            },
+            {
+              "kind": "speech",
+              "text": "Drop the -o: habl-, com-, viv-."
+            },
+            {
+              "kind": "speech",
+              "text": "Add the opposite vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Opposite\" is the whole trick:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb type",
+                "present takes…",
+                "subjunctive takes…"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "verb type: -ar. present takes…: -a- (hablas). subjunctive takes…: -e- (hables).",
+                "verb type: -er / -ir. present takes…: -e- / -i- (comes). subjunctive takes…: -a- (comas)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two families swap costumes."
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "hablar",
+                "comer",
+                "vivir"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, hablar, comer, vivir. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Note -er and -ir are identical here — as they already were in the Ch. 15 preterite and the Ch. 16 imperfect. Outside the present tense, those two conjugations keep merging."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the recipe — \"yo form, drop the -o, flip the vowel\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the recipe — \"**yo** form, drop the **-o**, **flip the vowel**\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hable, hables, hable, hablemos, hablen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hable, hables, hable, hablemos, hablen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"coma, comas, coma, comamos, coman\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"coma, comas, coma, comamos, coman\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you build the subjunctive from? (The yo form of the present — not the infinitive.) What happens to the vowel? (It flips: -ar verbs take -e, -er/-ir take -a.) Give comer. (Coma, comas, coma, comamos, coman.) What happens to the -go club? (It transfers whole — tenga, diga, haga, ponga, salga, venga; the next step makes that inheritance explicit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C18-inherited-subjunctive-stems",
-      "sequence": null,
+      "sequence": 606,
       "title": "tenga, diga, quiera — old irregularities come free",
       "headword": "tenga, diga, haga; quiera, pueda",
       "romanization": "tenga, diga, haga; quiera, pueda",
@@ -19,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9f520e222f1fcf5",
+      "sourceHash": "fnv1a64:9406fc796546d74a",
       "notice": null,
       "blocks": [
         {
@@ -161,286 +328,80 @@
       ]
     },
     {
-      "id": "ES-C18-ojala",
-      "sequence": null,
-      "title": "ojalá — a wish borrowed whole",
-      "headword": "ojalá",
-      "romanization": "ojalá",
-      "gloss": "a wish-word borrowed from Andalusi Arabic that triggers the subjunctive without que or a main verb",
+      "id": "ES-C18-subjunctive-outliers",
+      "sequence": 608,
+      "title": "sea, vaya, sepa, haya; esté — where the shortcut stops",
+      "headword": "sea, vaya, sepa, haya; esté",
+      "romanization": "sea, vaya, sepa, haya; esté",
+      "gloss": "four forms must be learned outright, while estar keeps a regular stem with exceptional stress",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cf6dfd274eb1199",
+      "sourceHash": "fnv1a64:87910704c052914f",
       "notice": null,
       "blocks": [
         {
           "index": 0,
           "type": "unknown",
-          "title": "A trigger by itself",
+          "title": "Four forms to learn",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ojalá hable español. — I hope he speaks Spanish. / May he speak Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "Ojalá takes the subjunctive without que or a separate main verb. The word itself expresses the wish, so there is no factual assertion to put in the indicative."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "From Andalusi Arabic",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The standard account derives ojalá from Andalusi Arabic law šāʾ Allāh, \"if God should will.\" The Allāh remains audible in the second half."
-            },
-            {
-              "kind": "speech",
-              "text": "Chapter 5 gave you another Arabic function word: hasta, from ḥattā. Borrowing nouns such as azúcar, aceite, and álgebra is ordinary. Borrowing grammatical tools is rarer. Spanish borrowed both a preposition and a word that selects a whole mood."
-            },
-            {
-              "kind": "speech",
-              "text": "English \"God willing\" expresses the same idea, and English has now borrowed Arabic inshallah directly as well."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ojalá hable\" — may he speak",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ojalá hable\" — may he speak]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ojalá venga\" — I hope she comes",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ojalá venga\" — I hope she comes]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hasta / ojalá\" — two Arabic function words",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hasta / ojalá\" — two Arabic function words]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does ojalá require que? (No.) Which mood follows it? (The subjunctive.) What is its source phrase? (Andalusi Arabic law šāʾ Allāh, \"if God should will.\") Which other Arabic function word have you learned? (Hasta.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-practice",
-      "sequence": null,
-      "title": "Chapter 18 practice — fact or wish?",
-      "headword": "Chapter 18 practice",
-      "romanization": "Chapter 18 practice",
-      "gloss": "drilling the vowel flip and inherited stems",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0b4796f64dd3be91",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two skills to drill, in order: build the form, then decide whether you need it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Drill 1 — the vowel flip",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Give the yo subjunctive. Recipe: yo form becomes drop -o becomes flip the vowel."
+              "text": "The drop-o recipe cannot start from soy, voy, sé, he:"
             },
             {
               "kind": "table",
               "headers": [
                 "verb",
                 "yo form",
-                "becomes subjunctive"
+                "subjunctive"
               ],
               "columns": 3,
-              "rowCount": 10,
+              "rowCount": 4,
               "utterances": [
-                "verb: hablar. yo form: hablo. becomes subjunctive: hable.",
-                "verb: estudiar. yo form: estudio. becomes subjunctive: estudie.",
-                "verb: comer. yo form: como. becomes subjunctive: coma.",
-                "verb: beber. yo form: bebo. becomes subjunctive: beba.",
-                "verb: vivir. yo form: vivo. becomes subjunctive: viva.",
-                "verb: tener. yo form: tengo. becomes subjunctive: tenga.",
-                "verb: hacer. yo form: hago. becomes subjunctive: haga.",
-                "verb: venir. yo form: vengo. becomes subjunctive: venga.",
-                "verb: querer. yo form: quiero. becomes subjunctive: quiera.",
-                "verb: poder. yo form: puedo. becomes subjunctive: pueda."
+                "verb: ser. yo form: soy. subjunctive: sea.",
+                "verb: ir. yo form: voy. subjunctive: vaya.",
+                "verb: saber. yo form: sé. subjunctive: sepa.",
+                "verb: haber. yo form: he. subjunctive: haya."
               ]
             },
             {
               "kind": "speech",
-              "text": "The last four are the point: you never learned a new stem. The -go and the diphthong were already in the yo form."
-            },
-            {
-              "kind": "speech",
-              "text": "Then the four with no -o to strip, which you learn outright: ser becomes sea, ir becomes vaya, saber becomes sepa, haber becomes haya."
-            },
-            {
-              "kind": "speech",
-              "text": "And estar, which looks like it belongs with them and doesn't: estoy has no strippable -o either, but take off the whole -oy and the stem est- is completely ordinary — esté, estés, esté, estemos, estén."
-            },
-            {
-              "kind": "speech",
-              "text": "Its oddity is stress, not spelling. Spanish stresses the second-to-last syllable of a word ending in a vowel, -n or -s — hablar obeys that throughout (HA-ble, ha-BLE-mos, HA-blen). Estar doesn't: es-TÉ, es-TÉS, es-TÉN all land on the last syllable, so each needs a written accent. Only es-TE-mos falls where Spanish expects, and it takes none."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recite the recipe. (Yo form, drop the -o, flip the vowel.) Which earlier irregulars come along free? (The -go club of Ch. 12–13 and Ch. 11's stem-changers.) What's the two-subject test? (If the second verb has Ch. 11's stem-changers.) Which yo forms leave no -o to strip, and which of them is still predictable? (Soy, voy, sé, he, estoy — and estoy is the predictable one, est- + normal endings.) Where does estar's irregularity actually live? (In the stress — es-TÉ lands on the last syllable, breaking Spanish's second-to-last default, which is what the accent records.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-practice-mood",
-      "sequence": null,
-      "title": "Practice — fact or wish?",
-      "headword": "fact or wish?",
-      "romanization": "fact or wish?",
-      "gloss": "choosing indicative versus subjunctive and hearing the opposite-vowel contrast",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f384b514f5543593",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Report or reach",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Report the world with the indicative; reach for a different world with the subjunctive."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 6,
-              "utterances": [
-                "Sé que comes aquí., I know you eat here. (fact).",
-                "Quiero que comas aquí., I want you to eat here. (wish).",
-                "Sé que está aquí., I know he is here. (fact).",
-                "Ojalá esté aquí., I hope he is here. (wish).",
-                "Dice que viene., She says she is coming. (report).",
-                "Quiero que venga., I want her to come. (wish)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Ojalá needs no que and no main verb. It is the wish."
+              "text": "Learn those four. Sea also recalls a fact from Chapter 9: forms of Latin sedēre, \"to sit,\" joined the history of ser. It descends from Latin sedeam."
             }
           ]
         },
         {
           "index": 1,
           "type": "unknown",
-          "title": "Hear the flip",
+          "title": "estar — regular stem, exceptional stress",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "indicative",
-                "subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "indicative: habla. subjunctive: hable.",
-                "indicative: come. subjunctive: coma.",
-                "indicative: trabaja. subjunctive: trabaje.",
-                "indicative: vive. subjunctive: viva."
-              ]
+              "kind": "speech",
+              "text": "Remove all of -oy from estoy and the ordinary stem est- remains: esté, estés, esté, estemos, estén."
             },
             {
               "kind": "speech",
-              "text": "Also distinguish hable from hablé, and trabaje from trabajé. The written accent separates present subjunctive from \"I\" preterite."
+              "text": "The accents record final stress that breaks Spanish's default:"
+            },
+            {
+              "kind": "speech",
+              "text": "es-TÉ, es-TÉS, es-TÉN — accent required."
+            },
+            {
+              "kind": "speech",
+              "text": "es-TE-mos — default second-to-last stress, no accent."
+            },
+            {
+              "kind": "speech",
+              "text": "Dar similarly shrinks doy to d-: dé, des, dé, demos, den. The accent on one-syllable dé distinguishes the verb from preposition de; it does not move stress."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat \"no -o to strip\" as a modern memory aid, not a historical cause. Sea, vaya, sepa, haya descend from Latin sedeam, vādam, sapiam, habeam."
             }
           ]
         },
@@ -458,29 +419,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sé que comes / quiero que comas\"",
+              "instruction": "\"sea, vaya, sepa, haya\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sé que comes / quiero que comas\"]"
+              "source": "[YOU SAY: \"sea, vaya, sepa, haya\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"dice que viene / quiero que venga\"",
+              "instruction": "\"esté, estés, esté, estemos, estén\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"dice que viene / quiero que venga\"]"
+              "source": "[YOU SAY: \"esté, estés, esté, estemos, estén\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hable / hablé\"",
+              "instruction": "\"dé\" the verb versus \"de\" the preposition",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hable / hablé\"]"
+              "source": "[YOU SAY: \"dé\" the verb versus \"de\" the preposition]"
             }
           ]
         },
@@ -497,57 +458,44 @@
             },
             {
               "kind": "speech",
-              "text": "Why is sé que comes indicative? (It reports a fact.) What does ojalá need before its subjunctive? (Nothing.) What does the accent distinguish in hable/hablé? (Present subjunctive from first-person preterite.)"
+              "text": "Which four forms are learned outright? (Sea, vaya, sepa, haya.) What is regular about estar? (Its est- stem and endings.) Why does esté need an accent but estemos does not? (Final stress breaks the default; second-to-last stress obeys it.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C18-practice-subjects",
-      "sequence": null,
-      "title": "Practice — one subject or two?",
-      "headword": "one subject or two?",
-      "romanization": "one subject or two?",
-      "gloss": "choosing infinitive versus que plus subjunctive after wanting",
+      "id": "ES-C18-subjunctive-name",
+      "sequence": 610,
+      "title": "subjuntivo — \"joined underneath\"",
+      "headword": "subjuntivo",
+      "romanization": "subjuntivo",
+      "gloss": "joined underneath — a mood named for its grammatical position in a subordinate clause",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f996e725c8d0a48e",
+      "sourceHash": "fnv1a64:40f17ef5d07b402a",
       "notice": null,
       "blocks": [
         {
           "index": 0,
           "type": "unknown",
-          "title": "The test",
+          "title": "The name describes its grammar",
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the second verb have a different subject?"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 6,
-              "utterances": [
-                "I want to eat., Quiero comer. (same becomes infinitive).",
-                "I want you to eat., Quiero que comas. (two becomes clause).",
-                "We want to live here., Queremos vivir aquí.",
-                "We want them to live here., Queremos que vivan aquí.",
-                "She wants to work., Quiere trabajar.",
-                "She wants me to work., Quiere que yo trabaje."
-              ]
+              "text": "Latin subiūnctīvus means \"joined underneath\": sub- (under) + iungere (join). English join, junction, and conjunction descend from that Latin verb."
             },
             {
               "kind": "speech",
-              "text": "Say each pair back to back. English changes quietly from \"to eat\" to \"you to eat.\" Spanish marks the new subject with que and a conjugated verb."
+              "text": "English yoke and Sanskrit yoga are cousins rather than descendants. All three branches reach Proto-Indo-European yewg-, \"join\": a yoke joins oxen; yoga names a yoking; a conjunction joins clauses."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's term translated Greek hypotaktikḗ, \"subordinated.\" The name describes where the mood lives: in a clause hanging under a main clause. It does not claim that every subjunctive sentence has one single meaning."
             }
           ]
         },
@@ -565,29 +513,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"quiero comer / quiero que comas\"",
+              "instruction": "\"sub-\" — underneath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"quiero comer / quiero que comas\"]"
+              "source": "[YOU SAY: \"sub-\" — underneath]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"queremos vivir / queremos que vivan\"",
+              "instruction": "\"iungere\" — to join",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"queremos vivir / queremos que vivan\"]"
+              "source": "[YOU SAY: \"iungere\" — to join]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"quiere trabajar / quiere que yo trabaje\"",
+              "instruction": "\"subjunctive\" — joined underneath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"quiere trabajar / quiere que yo trabaje\"]"
+              "source": "[YOU SAY: \"subjunctive\" — joined underneath]"
             }
           ]
         },
@@ -604,7 +552,7 @@
             },
             {
               "kind": "speech",
-              "text": "Same subject after querer: which form? (Infinitive.) Different subject? (Que + subjunctive.) Translate \"I want to eat\" and \"I want you to eat.\" (Quiero comer / Quiero que comas.)"
+              "text": "What does subjunctive literally mean? (Joined underneath.) Which English words descend from iungere? (Join, junction, conjunction.) Which two are older cousins? (Yoke and yoga.) What does the name describe? (The mood's grammatical position.)"
             }
           ]
         }
@@ -612,7 +560,7 @@
     },
     {
       "id": "ES-C18-quiero-que",
-      "sequence": null,
+      "sequence": 612,
       "title": "quiero que… — making the subjunctive appear",
       "headword": "quiero que…",
       "romanization": "quiero que…",
@@ -623,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3d46f22a51c12bc",
+      "sourceHash": "fnv1a64:5a5c6b962d384dee",
       "notice": null,
       "blocks": [
         {
@@ -783,406 +731,8 @@
       ]
     },
     {
-      "id": "ES-C18-subjunctive-name",
-      "sequence": null,
-      "title": "subjuntivo — \"joined underneath\"",
-      "headword": "subjuntivo",
-      "romanization": "subjuntivo",
-      "gloss": "joined underneath — a mood named for its grammatical position in a subordinate clause",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f781972d2354b9c4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "The name describes its grammar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin subiūnctīvus means \"joined underneath\": sub- (under) + iungere (join). English join, junction, and conjunction descend from that Latin verb."
-            },
-            {
-              "kind": "speech",
-              "text": "English yoke and Sanskrit yoga are cousins rather than descendants. All three branches reach Proto-Indo-European yewg-, \"join\": a yoke joins oxen; yoga names a yoking; a conjunction joins clauses."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin's term translated Greek hypotaktikḗ, \"subordinated.\" The name describes where the mood lives: in a clause hanging under a main clause. It does not claim that every subjunctive sentence has one single meaning."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sub-\" — underneath",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sub-\" — underneath]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"iungere\" — to join",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"iungere\" — to join]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"subjunctive\" — joined underneath",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"subjunctive\" — joined underneath]"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does subjunctive literally mean? (Joined underneath.) Which English words descend from iungere? (Join, junction, conjunction.) Which two are older cousins? (Yoke and yoga.) What does the name describe? (The mood's grammatical position.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-subjunctive-outliers",
-      "sequence": null,
-      "title": "sea, vaya, sepa, haya; esté — where the shortcut stops",
-      "headword": "sea, vaya, sepa, haya; esté",
-      "romanization": "sea, vaya, sepa, haya; esté",
-      "gloss": "four forms must be learned outright, while estar keeps a regular stem with exceptional stress",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:291d73d20167b954",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Four forms to learn",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The drop-o recipe cannot start from soy, voy, sé, he:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "yo form",
-                "subjunctive"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "verb: ser. yo form: soy. subjunctive: sea.",
-                "verb: ir. yo form: voy. subjunctive: vaya.",
-                "verb: saber. yo form: sé. subjunctive: sepa.",
-                "verb: haber. yo form: he. subjunctive: haya."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Learn those four. Sea also recalls a fact from Chapter 9: forms of Latin sedēre, \"to sit,\" joined the history of ser. It descends from Latin sedeam."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "estar — regular stem, exceptional stress",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Remove all of -oy from estoy and the ordinary stem est- remains: esté, estés, esté, estemos, estén."
-            },
-            {
-              "kind": "speech",
-              "text": "The accents record final stress that breaks Spanish's default:"
-            },
-            {
-              "kind": "speech",
-              "text": "es-TÉ, es-TÉS, es-TÉN — accent required."
-            },
-            {
-              "kind": "speech",
-              "text": "es-TE-mos — default second-to-last stress, no accent."
-            },
-            {
-              "kind": "speech",
-              "text": "Dar similarly shrinks doy to d-: dé, des, dé, demos, den. The accent on one-syllable dé distinguishes the verb from preposition de; it does not move stress."
-            },
-            {
-              "kind": "speech",
-              "text": "Treat \"no -o to strip\" as a modern memory aid, not a historical cause. Sea, vaya, sepa, haya descend from Latin sedeam, vādam, sapiam, habeam."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sea, vaya, sepa, haya\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sea, vaya, sepa, haya\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"esté, estés, esté, estemos, estén\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"esté, estés, esté, estemos, estén\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dé\" the verb versus \"de\" the preposition",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dé\" the verb versus \"de\" the preposition]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which four forms are learned outright? (Sea, vaya, sepa, haya.) What is regular about estar? (Its est- stem and endings.) Why does esté need an accent but estemos does not? (Final stress breaks the default; second-to-last stress obeys it.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-subjuntivo",
-      "sequence": null,
-      "title": "hable, coma, viva — the subjunctive",
-      "headword": "hable, coma, viva",
-      "romanization": "hable, coma, viva",
-      "gloss": "the regular present subjunctive — built from the yo form, with the vowel flipped",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:834a8361455e9a07",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Building it: take the yo form and flip the vowel"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Building it: take the yo form and flip the vowel until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Every tense so far — hablo, hablé, hablaba, hablaré, hablaría — has belonged to one mood, the indicative: the mood of assertion. It states how things are, and it keeps stating even when it guesses (Chapter 17's Serán las tres, \"it must be three,\" is still an assertion — a confident one about an unknown)."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish has another mood for what is not asserted at all: things wanted, doubted, feared, hoped for. That is the subjunctive, and the good news is that you have already learned most of it without knowing."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Building it: take the yo form and flip the vowel",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Not from the infinitive. From the yo form of the present."
-            },
-            {
-              "kind": "speech",
-              "text": "Take the yo form: hablo, como, vivo."
-            },
-            {
-              "kind": "speech",
-              "text": "Drop the -o: habl-, com-, viv-."
-            },
-            {
-              "kind": "speech",
-              "text": "Add the opposite vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "\"Opposite\" is the whole trick:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "verb type",
-                "present takes…",
-                "subjunctive takes…"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "verb type: -ar. present takes…: -a- (hablas). subjunctive takes…: -e- (hables).",
-                "verb type: -er / -ir. present takes…: -e- / -i- (comes). subjunctive takes…: -a- (comas)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The two families swap costumes."
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "",
-                "hablar",
-                "comer",
-                "vivir"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, hablar, comer, vivir. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Note -er and -ir are identical here — as they already were in the Ch. 15 preterite and the Ch. 16 imperfect. Outside the present tense, those two conjugations keep merging."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the recipe — \"yo form, drop the -o, flip the vowel\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the recipe — \"**yo** form, drop the **-o**, **flip the vowel**\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hable, hables, hable, hablemos, hablen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hable, hables, hable, hablemos, hablen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"coma, comas, coma, comamos, coman\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"coma, comas, coma, comamos, coman\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do you build the subjunctive from? (The yo form of the present — not the infinitive.) What happens to the vowel? (It flips: -ar verbs take -e, -er/-ir take -a.) Give comer. (Coma, comas, coma, comamos, coman.) What happens to the -go club? (It transfers whole — tenga, diga, haga, ponga, salga, venga; the next step makes that inheritance explicit.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "ES-C18-wanting-clause-trap",
-      "sequence": null,
+      "sequence": 614,
       "title": "quiero que hables — do not smuggle in a subject",
       "headword": "quiero que hables / quiero hablarte",
       "romanization": "quiero que hables / quiero hablarte",
@@ -1193,7 +743,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56bb68cc8d8dff47",
+      "sourceHash": "fnv1a64:2eedce6d8fb2c565",
       "notice": null,
       "blocks": [
         {
@@ -1285,6 +835,456 @@
             {
               "kind": "speech",
               "text": "How does Spanish say \"I want you to speak\"? (Quiero que hables.) Why is quiero hablarte different? (It has one subject; te is an object.) Name one verb family that permits object plus infinitive. (Perception or causation.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-ojala",
+      "sequence": 616,
+      "title": "ojalá — a wish borrowed whole",
+      "headword": "ojalá",
+      "romanization": "ojalá",
+      "gloss": "a wish-word borrowed from Andalusi Arabic that triggers the subjunctive without que or a main verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a5cbefcd831a467",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "A trigger by itself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá hable español. — I hope he speaks Spanish. / May he speak Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá takes the subjunctive without que or a separate main verb. The word itself expresses the wish, so there is no factual assertion to put in the indicative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "From Andalusi Arabic",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The standard account derives ojalá from Andalusi Arabic law šāʾ Allāh, \"if God should will.\" The Allāh remains audible in the second half."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 5 gave you another Arabic function word: hasta, from ḥattā. Borrowing nouns such as azúcar, aceite, and álgebra is ordinary. Borrowing grammatical tools is rarer. Spanish borrowed both a preposition and a word that selects a whole mood."
+            },
+            {
+              "kind": "speech",
+              "text": "English \"God willing\" expresses the same idea, and English has now borrowed Arabic inshallah directly as well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ojalá hable\" — may he speak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ojalá hable\" — may he speak]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ojalá venga\" — I hope she comes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ojalá venga\" — I hope she comes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hasta / ojalá\" — two Arabic function words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hasta / ojalá\" — two Arabic function words]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does ojalá require que? (No.) Which mood follows it? (The subjunctive.) What is its source phrase? (Andalusi Arabic law šāʾ Allāh, \"if God should will.\") Which other Arabic function word have you learned? (Hasta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice",
+      "sequence": 618,
+      "title": "Chapter 18 practice — fact or wish?",
+      "headword": "Chapter 18 practice",
+      "romanization": "Chapter 18 practice",
+      "gloss": "drilling the vowel flip and inherited stems",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d42894546917da8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two skills to drill, in order: build the form, then decide whether you need it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Drill 1 — the vowel flip",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Give the yo subjunctive. Recipe: yo form becomes drop -o becomes flip the vowel."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo form",
+                "becomes subjunctive"
+              ],
+              "columns": 3,
+              "rowCount": 10,
+              "utterances": [
+                "verb: hablar. yo form: hablo. becomes subjunctive: hable.",
+                "verb: estudiar. yo form: estudio. becomes subjunctive: estudie.",
+                "verb: comer. yo form: como. becomes subjunctive: coma.",
+                "verb: beber. yo form: bebo. becomes subjunctive: beba.",
+                "verb: vivir. yo form: vivo. becomes subjunctive: viva.",
+                "verb: tener. yo form: tengo. becomes subjunctive: tenga.",
+                "verb: hacer. yo form: hago. becomes subjunctive: haga.",
+                "verb: venir. yo form: vengo. becomes subjunctive: venga.",
+                "verb: querer. yo form: quiero. becomes subjunctive: quiera.",
+                "verb: poder. yo form: puedo. becomes subjunctive: pueda."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last four are the point: you never learned a new stem. The -go and the diphthong were already in the yo form."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the four with no -o to strip, which you learn outright: ser becomes sea, ir becomes vaya, saber becomes sepa, haber becomes haya."
+            },
+            {
+              "kind": "speech",
+              "text": "And estar, which looks like it belongs with them and doesn't: estoy has no strippable -o either, but take off the whole -oy and the stem est- is completely ordinary — esté, estés, esté, estemos, estén."
+            },
+            {
+              "kind": "speech",
+              "text": "Its oddity is stress, not spelling. Spanish stresses the second-to-last syllable of a word ending in a vowel, -n or -s — hablar obeys that throughout (HA-ble, ha-BLE-mos, HA-blen). Estar doesn't: es-TÉ, es-TÉS, es-TÉN all land on the last syllable, so each needs a written accent. Only es-TE-mos falls where Spanish expects, and it takes none."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recite the recipe. (Yo form, drop the -o, flip the vowel.) Which earlier irregulars come along free? (The -go club of Ch. 12–13 and Ch. 11's stem-changers.) What's the two-subject test? (If the second verb has Ch. 11's stem-changers.) Which yo forms leave no -o to strip, and which of them is still predictable? (Soy, voy, sé, he, estoy — and estoy is the predictable one, est- + normal endings.) Where does estar's irregularity actually live? (In the stress — es-TÉ lands on the last syllable, breaking Spanish's second-to-last default, which is what the accent records.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice-subjects",
+      "sequence": 620,
+      "title": "Practice — one subject or two?",
+      "headword": "one subject or two?",
+      "romanization": "one subject or two?",
+      "gloss": "choosing infinitive versus que plus subjunctive after wanting",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e009f00a2d88fe2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "The test",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does the second verb have a different subject?"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "I want to eat., Quiero comer. (same becomes infinitive).",
+                "I want you to eat., Quiero que comas. (two becomes clause).",
+                "We want to live here., Queremos vivir aquí.",
+                "We want them to live here., Queremos que vivan aquí.",
+                "She wants to work., Quiere trabajar.",
+                "She wants me to work., Quiere que yo trabaje."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say each pair back to back. English changes quietly from \"to eat\" to \"you to eat.\" Spanish marks the new subject with que and a conjugated verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quiero comer / quiero que comas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quiero comer / quiero que comas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"queremos vivir / queremos que vivan\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"queremos vivir / queremos que vivan\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quiere trabajar / quiere que yo trabaje\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quiere trabajar / quiere que yo trabaje\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same subject after querer: which form? (Infinitive.) Different subject? (Que + subjunctive.) Translate \"I want to eat\" and \"I want you to eat.\" (Quiero comer / Quiero que comas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice-mood",
+      "sequence": 622,
+      "title": "Practice — fact or wish?",
+      "headword": "fact or wish?",
+      "romanization": "fact or wish?",
+      "gloss": "choosing indicative versus subjunctive and hearing the opposite-vowel contrast",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bdbd831a0781532",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "Report or reach",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Report the world with the indicative; reach for a different world with the subjunctive."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "Sé que comes aquí., I know you eat here. (fact).",
+                "Quiero que comas aquí., I want you to eat here. (wish).",
+                "Sé que está aquí., I know he is here. (fact).",
+                "Ojalá esté aquí., I hope he is here. (wish).",
+                "Dice que viene., She says she is coming. (report).",
+                "Quiero que venga., I want her to come. (wish)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá needs no que and no main verb. It is the wish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Hear the flip",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "indicative",
+                "subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "indicative: habla. subjunctive: hable.",
+                "indicative: come. subjunctive: coma.",
+                "indicative: trabaja. subjunctive: trabaje.",
+                "indicative: vive. subjunctive: viva."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Also distinguish hable from hablé, and trabaje from trabajé. The written accent separates present subjunctive from \"I\" preterite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sé que comes / quiero que comas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sé que comes / quiero que comas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dice que viene / quiero que venga\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dice que viene / quiero que venga\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hable / hablé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hable / hablé\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is sé que comes indicative? (It reports a fact.) What does ojalá need before its subjunctive? (Nothing.) What does the accent distinguish in hable/hablé? (Present subjunctive from first-person preterite.)"
             }
           ]
         }

@@ -1,6 +1,7 @@
 ---
 id: ES-C14-ser-ir-preterite
 chapter: 14
+sequence: 578
 type: word
 headword: fui
 gloss: the preterite (past) — and the astonishing fact that "I was" and "I went" are the same word

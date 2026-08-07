@@ -724,7 +724,12 @@ describe("corpus regression", () => {
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 655,
+      // 655 before HL09 step 2 gave 50 Spanish lessons a declared `sequence`. A
+      // chapter's drivable prefix is "how far you get by ear from its START", so it
+      // depends on ORDER — and the old alphabetical fallback happened to put
+      // eyes-needed lessons later than they really come. The real order is 10 worse,
+      // which is the measurement becoming honest, not the corpus regressing.
+      drivablePrefixTotal: 645,
       fullyDrivableChapters: 270,
       unstartableChapters: 90,
       overriddenLessons: 0,

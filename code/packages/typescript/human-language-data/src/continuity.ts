@@ -229,7 +229,7 @@ function emphasisedRuns(body: string): string {
   for (const match of body.matchAll(/\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`/g)) {
     runs.push(match[1] ?? match[2] ?? match[3] ?? "");
   }
-  return runs.join("   ").toLowerCase();
+  return runs.join("   ").toLowerCase();
 }
 
 /** Measure order integrity, reinforcement windows, and forward references. */

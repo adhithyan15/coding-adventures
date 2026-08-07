@@ -1,6 +1,7 @@
 ---
 id: ES-C08-practice
 chapter: 8
+sequence: 532
 type: practice-mix
 headword: (practice)
 gloss: counting, having, and telling your age

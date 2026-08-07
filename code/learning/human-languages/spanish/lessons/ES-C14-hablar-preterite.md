@@ -1,6 +1,7 @@
 ---
 id: ES-C14-hablar-preterite
 chapter: 14
+sequence: 580
 type: word
 headword: hablé
 gloss: the regular -ar preterite — hablé, hablaste, habló — and why the accent matters

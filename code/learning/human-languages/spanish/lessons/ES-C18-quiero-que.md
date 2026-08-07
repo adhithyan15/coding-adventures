@@ -1,6 +1,7 @@
 ---
 id: ES-C18-quiero-que
 chapter: 18
+sequence: 612
 type: phrase
 headword: quiero que…
 gloss: "what triggers the subjunctive — one subject wanting another to act"

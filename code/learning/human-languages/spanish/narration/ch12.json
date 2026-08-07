@@ -3,174 +3,12 @@
   "language": "spanish",
   "chapter": 12,
   "title": "Chapter 12",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5f72f74488786bf2",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1e748551bb813072",
   "lessons": [
     {
-      "id": "ES-C12-decir",
-      "sequence": null,
-      "title": "decir — \"to say,\" the verb with two irregularities at once",
-      "headword": "decir",
-      "romanization": "decir",
-      "gloss": "to say / to tell — doubly irregular, digo + e becomes i",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b70e553d669e1c90",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "decir (\"to say / to tell\") is the trickiest verb yet — and the most instructive, because it stacks two patterns you already know onto one word: the -go yo-form from hacer/tener, and a stem-change from Chapter 11. Learn decir and the whole system clicks together."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-none-i — here the stressed stem e does not break to ie; instead it closes to i: digo, dices, dice. A third kind of stem-change."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "decir comes from Latin dīcere, \"to say, to tell, to point out\" — and its root dic-/dict- (\"say\") runs straight through English:"
-            },
-            {
-              "kind": "speech",
-              "text": "dictate, diction, dictionary, dictaphone — all about saying."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: predict (\"say beforehand\"), contradict (\"say against\"), verdict (\"a true saying\"), indicate (\"point out\"), dedicate, edict, index."
-            },
-            {
-              "kind": "speech",
-              "text": "So decir is the \"say\" root behind dictionary itself — the book of what words say."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: two irregularities stacked",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(1) The -go yo-form. Like hago and tengo, the yo-form grows a g: digo."
-            },
-            {
-              "kind": "speech",
-              "text": "(2) The e becomes i stem-change. In the stressed forms, the stem e closes to i — not the ie of querer, but a tighter shift to plain i:"
-            },
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, digo, (-go form; stem also becomes i).",
-                "tú, dices, (e becomes i).",
-                "él/ella/usted, dice, (e becomes i).",
-                "nosotros, decimos, (plain e — unstressed).",
-                "ellos/ustedes, dicen, (e becomes i)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The boot shape returns: decimos alone keeps the plain e, because the stress falls on the ending. Everything inside the boot shifts to i; the yo corner also carries the -go."
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday payoff: ¿Cómo se dice…? — \"How do you say…?\", the single most useful question a learner owns. And dime (\"tell me\")."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"decir\" then the set — \"digo, dices, dice, decimos, dicen\" — the g in digo, the i through the boot, the plain e in decimos",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"decir\" then the set — \"**digo**, dices, dice, decimos, dicen\" — the *g* in *digo*, the *i* through the boot, the plain *e* in *decimos*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"decir\" then English \"dictate, predict, verdict\" — the say-family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"decir\" then English \"dictate, predict, verdict\" — the say-family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is decir from, and three English cousins? (dīcere; dictate/diction/predict/verdict — any three.) Name its two irregularities. (The -go yo-form digo, and the e becomes i stem-change.) Which form keeps the plain e, and why? (decimos — stress on the ending, outside the boot.) How do you ask \"How do you say…?\" (¿Cómo se dice…?) Next: the whole -go family, side by side."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "ES-C12-hacer",
-      "sequence": null,
+      "sequence": 562,
       "title": "hacer — \"to do / to make,\" and the yo-form that grows a g",
       "headword": "hacer",
       "romanization": "hacer",
@@ -181,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8af16bd2e1a9ced7",
+      "sourceHash": "fnv1a64:4eaa4375ddf5ddc9",
       "notice": null,
       "blocks": [
         {
@@ -332,8 +170,310 @@
       ]
     },
     {
+      "id": "ES-C12-decir",
+      "sequence": 564,
+      "title": "decir — \"to say,\" the verb with two irregularities at once",
+      "headword": "decir",
+      "romanization": "decir",
+      "gloss": "to say / to tell — doubly irregular, digo + e becomes i",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72edb388d5667454",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "decir (\"to say / to tell\") is the trickiest verb yet — and the most instructive, because it stacks two patterns you already know onto one word: the -go yo-form from hacer/tener, and a stem-change from Chapter 11. Learn decir and the whole system clicks together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-none-i — here the stressed stem e does not break to ie; instead it closes to i: digo, dices, dice. A third kind of stem-change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "decir comes from Latin dīcere, \"to say, to tell, to point out\" — and its root dic-/dict- (\"say\") runs straight through English:"
+            },
+            {
+              "kind": "speech",
+              "text": "dictate, diction, dictionary, dictaphone — all about saying."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: predict (\"say beforehand\"), contradict (\"say against\"), verdict (\"a true saying\"), indicate (\"point out\"), dedicate, edict, index."
+            },
+            {
+              "kind": "speech",
+              "text": "So decir is the \"say\" root behind dictionary itself — the book of what words say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two irregularities stacked",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(1) The -go yo-form. Like hago and tengo, the yo-form grows a g: digo."
+            },
+            {
+              "kind": "speech",
+              "text": "(2) The e becomes i stem-change. In the stressed forms, the stem e closes to i — not the ie of querer, but a tighter shift to plain i:"
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, digo, (-go form; stem also becomes i).",
+                "tú, dices, (e becomes i).",
+                "él/ella/usted, dice, (e becomes i).",
+                "nosotros, decimos, (plain e — unstressed).",
+                "ellos/ustedes, dicen, (e becomes i)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The boot shape returns: decimos alone keeps the plain e, because the stress falls on the ending. Everything inside the boot shifts to i; the yo corner also carries the -go."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday payoff: ¿Cómo se dice…? — \"How do you say…?\", the single most useful question a learner owns. And dime (\"tell me\")."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"decir\" then the set — \"digo, dices, dice, decimos, dicen\" — the g in digo, the i through the boot, the plain e in decimos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"decir\" then the set — \"**digo**, dices, dice, decimos, dicen\" — the *g* in *digo*, the *i* through the boot, the plain *e* in *decimos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"decir\" then English \"dictate, predict, verdict\" — the say-family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"decir\" then English \"dictate, predict, verdict\" — the say-family]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb is decir from, and three English cousins? (dīcere; dictate/diction/predict/verdict — any three.) Name its two irregularities. (The -go yo-form digo, and the e becomes i stem-change.) Which form keeps the plain e, and why? (decimos — stress on the ending, outside the boot.) How do you ask \"How do you say…?\" (¿Cómo se dice…?) Next: the whole -go family, side by side."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C12-yo-go",
+      "sequence": 566,
+      "title": "The \"-go\" club — one irregular corner, many verbs",
+      "headword": "-go",
+      "romanization": "-go",
+      "gloss": "the \"-go\" verbs — a small club whose yo-form ends in -go",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:676f366bba630168",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The pattern"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The pattern until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have now met three verbs whose yo-form ends in a surprising -go: tener becomes tengo, hacer becomes hago, decir becomes digo. That is not three coincidences — it is a club. Learn the membership and you never have to re-learn the shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The pattern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most Spanish verbs build a tidy yo-form (hablo, como, vivo). But a small set of very common verbs grow a hard g in the yo-form only — the rest of the present tense behaves normally. You have two members already; here is the core club:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 6,
+              "headers": [
+                "verb",
+                "meaning",
+                "yo-form",
+                "you've met it?"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, meaning, yo-form, you've met it?. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Three you know, three to come — and every one follows the same rule: -go in the yo-form, regular elsewhere (with any stem-change stacked on top, as in digo)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Why the g? (a Latin fossil)",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The g is an inheritance. Latin's first-person forms and old sound-laws left a velar (a back-of-the-mouth g/k) clinging to these particular verbs; Spanish regularized it into a clean -go. You do not need the history to use them — but it explains why the club is closed and old: these are among the most-used verbs in the language, and the oldest, most-used words are exactly the ones that keep their irregularities (like English am/was, go/went)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three you know — \"tengo, hago, digo\" — feel the shared -go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three you know — \"**tengo, hago, digo**\" — feel the shared *-go*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three to come — \"pongo, salgo, vengo\" — same ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three to come — \"**pongo, salgo, vengo**\" — same ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the -go is yo-only",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the *-go* is *yo*-only]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do tengo, hago, and digo share, and in which form only? (A -go ending, in the yo-form only.) Name three more members of the club. (pongo, salgo, vengo — from poner, salir, venir.) Are these verbs irregular everywhere? (No — just the yo-form; the rest is regular, plus any stem-change.) Why is the club old and closed? (These are the most-used, oldest verbs — the ones that keep their fossils.) Next: practice — put hacer, decir, and the -go club to work."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C12-practice",
-      "sequence": null,
+      "sequence": 568,
       "title": "Practice — hacer, decir, and the -go club",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -344,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1004de0cf5190d97",
+      "sourceHash": "fnv1a64:5cd89031d88c7419",
       "notice": null,
       "blocks": [
         {
@@ -500,146 +640,6 @@
             {
               "kind": "speech",
               "text": "Give the yo-forms of hacer, decir, and tener. (hago, digo, tengo — the -go club.) In decir, which form escapes the e becomes i boot, and why? (decimos — stress on the ending.) How does Spanish say \"it's hot\"? (Hace calor.) You can now do, make, and say in Spanish — and you have seen that its most irregular verbs are its most-used, oldest words."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C12-yo-go",
-      "sequence": null,
-      "title": "The \"-go\" club — one irregular corner, many verbs",
-      "headword": "-go",
-      "romanization": "-go",
-      "gloss": "the \"-go\" verbs — a small club whose yo-form ends in -go",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:ca7f98d41616fea8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The pattern"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The pattern until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have now met three verbs whose yo-form ends in a surprising -go: tener becomes tengo, hacer becomes hago, decir becomes digo. That is not three coincidences — it is a club. Learn the membership and you never have to re-learn the shape."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The pattern",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Most Spanish verbs build a tidy yo-form (hablo, como, vivo). But a small set of very common verbs grow a hard g in the yo-form only — the rest of the present tense behaves normally. You have two members already; here is the core club:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
-              "headers": [
-                "verb",
-                "meaning",
-                "yo-form",
-                "you've met it?"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, meaning, yo-form, you've met it?. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Three you know, three to come — and every one follows the same rule: -go in the yo-form, regular elsewhere (with any stem-change stacked on top, as in digo)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Why the g? (a Latin fossil)",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The g is an inheritance. Latin's first-person forms and old sound-laws left a velar (a back-of-the-mouth g/k) clinging to these particular verbs; Spanish regularized it into a clean -go. You do not need the history to use them — but it explains why the club is closed and old: these are among the most-used verbs in the language, and the oldest, most-used words are exactly the ones that keep their irregularities (like English am/was, go/went)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three you know — \"tengo, hago, digo\" — feel the shared -go",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three you know — \"**tengo, hago, digo**\" — feel the shared *-go*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three to come — \"pongo, salgo, vengo\" — same ending",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three to come — \"**pongo, salgo, vengo**\" — same ending]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the -go is yo-only",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the *-go* is *yo*-only]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do tengo, hago, and digo share, and in which form only? (A -go ending, in the yo-form only.) Name three more members of the club. (pongo, salgo, vengo — from poner, salir, venir.) Are these verbs irregular everywhere? (No — just the yo-form; the rest is regular, plus any stem-change.) Why is the club old and closed? (These are the most-used, oldest verbs — the ones that keep their fossils.) Next: practice — put hacer, decir, and the -go club to work."
             }
           ]
         }

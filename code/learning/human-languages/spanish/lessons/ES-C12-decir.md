@@ -1,6 +1,7 @@
 ---
 id: ES-C12-decir
 chapter: 12
+sequence: 564
 type: word
 headword: decir
 gloss: to say / to tell — doubly irregular, digo + e→i

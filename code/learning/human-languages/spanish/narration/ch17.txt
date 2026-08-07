@@ -1,87 +1,8 @@
 Spanish, chapter 17: Chapter 17.
-4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 4.
-hablaría — the same weld, one tense over.
-
-Warm-up.
-[pause 2 seconds]
-If you understood the last lesson, this one is nearly free. Same machine, one part swapped.
-
-The forms.
-Whole infinitive again, new endings:
-[a table of 5 rows, read aloud]
-yo, hablaría.
-tú, hablarías.
-él/ella/usted, hablaría.
-nosotros, hablaríamos.
-ellos/ustedes, hablarían.
-Look hard at those endings. You already know them. They are exactly the -er/-ir imperfect endings from Chapter 16: comía, comías, comíamos, comían.
-
-Why they're the same.
-Because they are the same. The future welded the infinitive to the present of haber; the conditional welds it to the imperfect of haber:
-[a table of 2 rows, read aloud]
-tense: future. infinitive +: haber present (he, has, ha…) result: hablaré.
-tense: conditional. infinitive +: haber imperfect (había, habías…) result: hablaría.
-(Strictly, what fused was the older, shorter avía — which is why you get hablaría and not hablarhabía. The modern había is the same word, un-worn.)
-One trick, two tenses of the same auxiliary. That is the whole chapter.
-And the accent does the job Chapter 16 taught: it breaks the diphthong, so hablar-í-a is separate syllables.
-
-What it's for.
-[a table of 3 rows, read aloud]
-use: would — hypothetical. example: Hablaría con él. "I would speak with him."
-use: politeness — softening. example: ¿Podrías ayudarme? "Could you help me?"
-use: future-in-the-past. example: Dijo que hablaría. "He said he would speak."
-That last one is neat: from a point in the past, the conditional is the future. Which makes sense if you remember the imperfect is inside it.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hablaría, hablarías, hablaría, hablaríamos, hablarían"]
-[pause 8 seconds for the answer]
-[your turn — say: the echo — "comía … hablaría" — same endings]
-[pause 8 seconds for the answer]
-[your turn — say: "Me gustaría…" ("I would like…") — the politest thing in Spanish]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "hablar + he … hablar + ía"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What do the conditional endings attach to? (The whole infinitive, as in the future.) Where have you seen -ía/-ías/-íamos before? (The Ch.16 imperfect of -er/-ir verbs.) Why are they identical? (Because the conditional is the infinitive + the imperfect of haber.) So what's the one-line summary of this chapter? (Infinitive + haber — present gives the future, imperfect gives the conditional.) Next: the nine verbs that bend the infinitive first.
-
-
-Lesson 2 of 4.
-serán las tres — future form, present guess.
-
-Guessing now.
-Spanish uses the future to express a present conjecture:
-[a table of 3 rows, read aloud]
-Spanish: ¿Dónde estará Juan? natural meaning: Where can Juan be? (now).
-Spanish: Serán las tres. natural meaning: It must be three o'clock.
-Spanish: ¿Quién será? natural meaning: Who could that be?
-The verb's form is future, but the uncertain situation is present.
-
-Guessing about the past.
-The conditional moves the same conjecture backward:
-Serían las tres cuando llegó. — It must have been three when he arrived.
-These tenses grew from constructions with haber, "have." The semantic path from "have to" toward obligation and likelihood helps the guessing use feel less arbitrary.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "¿Dónde estará?" — where can he be?]
-[pause 8 seconds for the answer]
-[your turn — say: "Serán las tres" — it must be three]
-[pause 8 seconds for the answer]
-[your turn — say: "Serían las tres" — it must have been three]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Does serán las tres necessarily refer to later? (No — it can guess the time now.) Which form guesses about the past? (Conditional: serían.) What older meaning helps connect future form to likelihood? (The construction with haber, "have to.")
-
-
-Lesson 3 of 4.
 hablaré — the future, welded shut.
 
 Warm-up.
@@ -137,7 +58,56 @@ Wrap-up Recall.
 What do you add the future endings to? (The whole infinitive — you don't strip it.) What happened to Latin's own future? (It died; Romance replaced it with a phrase.) What was that phrase? (Infinitive + habēre, "I have to speak.") So what are the endings really? (The present of haber, fused on.) Which language still shows the seam? (Portuguese — falá-lo-ei.) Next: the same trick, with a different tense of haber.
 
 
-Lesson 4 of 4.
+Lesson 2 of 4.
+hablaría — the same weld, one tense over.
+
+Warm-up.
+[pause 2 seconds]
+If you understood the last lesson, this one is nearly free. Same machine, one part swapped.
+
+The forms.
+Whole infinitive again, new endings:
+[a table of 5 rows, read aloud]
+yo, hablaría.
+tú, hablarías.
+él/ella/usted, hablaría.
+nosotros, hablaríamos.
+ellos/ustedes, hablarían.
+Look hard at those endings. You already know them. They are exactly the -er/-ir imperfect endings from Chapter 16: comía, comías, comíamos, comían.
+
+Why they're the same.
+Because they are the same. The future welded the infinitive to the present of haber; the conditional welds it to the imperfect of haber:
+[a table of 2 rows, read aloud]
+tense: future. infinitive +: haber present (he, has, ha…) result: hablaré.
+tense: conditional. infinitive +: haber imperfect (había, habías…) result: hablaría.
+(Strictly, what fused was the older, shorter avía — which is why you get hablaría and not hablarhabía. The modern había is the same word, un-worn.)
+One trick, two tenses of the same auxiliary. That is the whole chapter.
+And the accent does the job Chapter 16 taught: it breaks the diphthong, so hablar-í-a is separate syllables.
+
+What it's for.
+[a table of 3 rows, read aloud]
+use: would — hypothetical. example: Hablaría con él. "I would speak with him."
+use: politeness — softening. example: ¿Podrías ayudarme? "Could you help me?"
+use: future-in-the-past. example: Dijo que hablaría. "He said he would speak."
+That last one is neat: from a point in the past, the conditional is the future. Which makes sense if you remember the imperfect is inside it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hablaría, hablarías, hablaría, hablaríamos, hablarían"]
+[pause 8 seconds for the answer]
+[your turn — say: the echo — "comía … hablaría" — same endings]
+[pause 8 seconds for the answer]
+[your turn — say: "Me gustaría…" ("I would like…") — the politest thing in Spanish]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "hablar + he … hablar + ía"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do the conditional endings attach to? (The whole infinitive, as in the future.) Where have you seen -ía/-ías/-íamos before? (The Ch.16 imperfect of -er/-ir verbs.) Why are they identical? (Because the conditional is the infinitive + the imperfect of haber.) So what's the one-line summary of this chapter? (Infinitive + haber — present gives the future, imperfect gives the conditional.) Next: the nine verbs that bend the infinitive first.
+
+
+Lesson 3 of 4.
 Practice — ten stems, two tenses.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the section called The ten, in three families until you have stopped, and I will say so again when we reach it.
@@ -174,3 +144,33 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Do the irregulars change the endings or the stem? (The stem only.) Why does tener become tendr-? (Dropping the vowel squeezed -n'r- together, and a d wedged in to fix it — medieval Spanish also tried terné.) How do the -go club verbs fare here? (All six are irregular — four take the -dr-, and hacer/decir chop instead.) Which two verbs chop hardest? (Decir becomes diré, hacer becomes haré.) Do irregular stems change the endings? (No.)
+
+
+Lesson 4 of 4.
+serán las tres — future form, present guess.
+
+Guessing now.
+Spanish uses the future to express a present conjecture:
+[a table of 3 rows, read aloud]
+Spanish: ¿Dónde estará Juan? natural meaning: Where can Juan be? (now).
+Spanish: Serán las tres. natural meaning: It must be three o'clock.
+Spanish: ¿Quién será? natural meaning: Who could that be?
+The verb's form is future, but the uncertain situation is present.
+
+Guessing about the past.
+The conditional moves the same conjecture backward:
+Serían las tres cuando llegó. — It must have been three when he arrived.
+These tenses grew from constructions with haber, "have." The semantic path from "have to" toward obligation and likelihood helps the guessing use feel less arbitrary.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿Dónde estará?" — where can he be?]
+[pause 8 seconds for the answer]
+[your turn — say: "Serán las tres" — it must be three]
+[pause 8 seconds for the answer]
+[your turn — say: "Serían las tres" — it must have been three]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does serán las tres necessarily refer to later? (No — it can guess the time now.) Which form guesses about the past? (Conditional: serían.) What older meaning helps connect future form to likelihood? (The construction with haber, "have to.")

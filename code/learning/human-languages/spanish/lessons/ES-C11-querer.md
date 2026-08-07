@@ -1,6 +1,7 @@
 ---
 id: ES-C11-querer
 chapter: 11
+sequence: 552
 type: word
 headword: querer
 gloss: to want (and to love) — a stem-changing verb, e→ie

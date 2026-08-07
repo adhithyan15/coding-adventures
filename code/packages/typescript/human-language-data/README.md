@@ -116,15 +116,19 @@ import { measureContinuity, loadEverything } from "@coding-adventures/human-lang
 const { lessons } = loadEverything();
 const c = measureContinuity(lessons);
 
-c.summary.lessonsWithoutSequence;   // 565 — no declared reading order at all
+c.summary.lessonsWithoutSequence;   // 515 — no declared reading order at all
 c.summary.atomsNeverRevisited;      // 746 of 1469 (51%) taught once, never again
 c.summary.missedByWindow;           // { R1: 745, R2: 1068, R3: 649, R4: 132 }
-c.summary.forwardReferences;        // 509 uses of material a later lesson teaches
+c.summary.forwardReferences;        // 496 uses of material a later lesson teaches
 ```
 
-Order comes first: 565 lessons carry no `sequence`, so their order exists only in
+Order comes first: 515 lessons carry no `sequence`, so their order exists only in
 hand-typed LaTeX (French: **64 of 73**). A ramp whose order is unknown cannot be
 verified, so every other number is provisional until that reaches zero.
+
+Spanish is the worked example. Declaring the real order for 50 of its lessons cut
+its forward prerequisites from **31 to 5** — 26 of the 31 were never real, just
+artifacts of an alphabetical fallback sorting `beber` before `comer`.
 
 Reinforcement reads `practises.knowledge`, **never `reviews_of`** — which 144 of
 Spanish's 146 lessons set and which cannot close a window, because it names lesson

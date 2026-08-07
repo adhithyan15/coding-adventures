@@ -1,6 +1,7 @@
 ---
 id: ES-C11-poder
 chapter: 11
+sequence: 554
 type: word
 headword: poder
 gloss: to be able / can — a stem-changing verb, o→ue
