@@ -96,6 +96,34 @@ reading course.
   *pāṁch* shows a nasal **migrating into the vowel**,
   which is what the chandrabindu **ँ** records. **Authored.**
 
+- **Ch. 34 — Four Verbs of the Mind** (`HI-C34-*`): *sochnā* → *samajhnā* →
+  *paṛhnā* → *likhnā*, one verb per lesson. The chapter's thread is that not one
+  of Hindi's mind-verbs began as a mind-verb. *sochnā* ← **शोचति** *śocati*, "to
+  burn, to grieve" — and the noun **सोच** still means *thought* **and** *worry*;
+  *samajhnā* ← *sam-* "fully" + **बुध्** *budh-* "to wake," which is the root of
+  **Buddha** and of English **bode/forebode/forbid**; *paṛhnā* ← **पठति**
+  *paṭhati*, "to **recite aloud**," which is why one verb still means *read* and
+  *study*; *likhnā* ← **लिखति** *likhati*, "to **scratch**" — the same picture
+  Latin *scrībere*, Greek *gráphein* and Old English *wrītan* each arrived at
+  from **four separate roots**. Where the trail stops, the lesson says so:
+  *śuc-* has no secure English cousin and *paṭh-* has no secure Indo-European
+  ancestry at all. **Authored.**
+- **Ch. 35 — Taking, Asking, Helping — and Liking** (`HI-C35-*`): *lenā* →
+  *pūchnā* → *madad karnā* → *pasand*. *lenā* ← **लभते** *labhate* with the
+  *-bh-* eroded away, and the book-borrowed **लाभ** *lābh* sitting beside it with
+  the consonant intact — one Sanskrit verb at two ages. *pūchnā* ← **पृच्छति**
+  *pṛcchati* on \**prek-*, which is the verb English kept as **pray**,
+  **prayer** and **precarious**, its inherited cousin *frignan* having died out.
+  *madad karnā* opens the **conjunct verb**: Arabic *madad* ("a hand extended,"
+  root *m-d-d*) plus native *karnā*, the machine that let Hindi absorb centuries
+  of Persian and Arabic vocabulary without conjugating a single foreign verb —
+  and the machine the learner had already used twice in *kām karnā* and *māf
+  kījiye*. The payoff is **पसंद**, which is **not a verb**: *mujhe roṭī pasand
+  hai* is "to me, bread is pleasing," the liker in the dative and the thing
+  liked as subject — the same inversion Spanish reached in *me gusta* and
+  Italian in *mi piace*, in another family, with no borrowing either way.
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |

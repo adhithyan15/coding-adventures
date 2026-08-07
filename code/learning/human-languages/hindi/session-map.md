@@ -68,6 +68,27 @@ in the service of real greetings.
 | 32 | karna | करना | "to do" ← √kṛ — the root of *karma*, *namaskār*, *Sanskrit* |
 | 33 | practice | (dialogue) | three verbs, one engine — sentences about yourself |
 
+## Chapters 34–35 — the second verb tranche
+
+Eight core verbs, one per session-slot, chained so each is a prerequisite of the
+next. Every session also re-practises at least one atom from an **earlier**
+chapter; the right-hand column names it, because that reach-back is the point.
+
+| Lesson | Introduces | Reaches back to |
+|---|---|---|
+| sochna | *śocati* "to grieve" → *sochnā*; the noun *soch* | नहीं (Ch. 7) — *maiṁ nahīṁ sochtā* |
+| samajhna | *sam-* + *budh-* "to wake"; **Buddha**, *bode/forbid* | नहीं + माफ़ कीजिए (Ch. 7, 9) — "Sorry, I don't understand" |
+| padhna | *paṭhati* "to recite aloud"; read = study; the flap ढ़ | एक–दस (Ch. 6, 21) recited aloud; the nuqtā of माफ़ (Ch. 9) |
+| likhna | *likhati* "to scratch"; four families, one picture | the preposed ि (W03) and मेरा नाम (W04) |
+| lena | *labhate* worn down; *lābh* preserved; *lambánein* | पानी and रोटी (Ch. 15) — *maiṁ pānī letā hūṁ* |
+| puchna | *pṛcchati* ← \**prek-*; **pray**, **precarious** | उम्र and कितने साल के हो (Ch. 19) |
+| madad | Arabic *m-d-d* "to extend"; the conjunct verb | माफ़ कीजिए (Ch. 9), काम करना (Ch. 5), उम्र (Ch. 19) |
+| pasand | Persian *pasandīdan*; the dative *mujhe*; the inversion | रोटी (Ch. 15), कुत्ता (Ch. 23), शाम (Ch. 29) |
+
+All thirteen of those earlier atoms had **never** been practised again anywhere
+in the corpus before this tranche. That is the HL09 §7 job these two chapters
+were built to do, alongside teaching the verbs.
+
 ## Next
 
 Chapter 6 — postpositions (*ko, se, meṁ, par*) and the ergative *ne*.

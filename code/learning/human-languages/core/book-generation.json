@@ -1697,6 +1697,22 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:hi-verbs-of-the-mind",
+      "output": "hindi/book/chapters/ch34-verbs-of-the-mind.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and Liking",
+      "label": "ch:hi-pasand",
+      "output": "hindi/book/chapters/ch35-pasand.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "title": "Dative Case and Dative Subjects",
