@@ -6,6 +6,10 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ### Added — every generated chapter opens by saying what the reader will be able to do (HL-C49)
 
+- **Russian chapter 3 is the one generated chapter with no opening**, because it has
+  no HL05 capability entry at all. A chapter with no `canDo` gets no opening rather
+  than an invented one; the gap is capability debt the gap report already counts, and
+  the test names it so it shrinks visibly instead of hiding behind a number.
 - **288 of 407 chapters opened on a bare title** — `\chapter{}`, `\label{}`, straight
   into the first lesson section. Nothing told the reader why they were there. All
   **302 generated chapters** now carry a short opening, and **all 302 had the data

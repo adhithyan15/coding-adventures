@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { generatedBookOutputs } from "../src/book-cli.js";
+import { loadTrackChapters } from "../src/loader.js";
 import { renderBookChapter } from "../src/book.js";
 import { loadLessons } from "../src/loader.js";
 
@@ -12,12 +13,37 @@ const generated = [...generatedBookOutputs().entries()]
   .map(([, tex]) => tex);
 
 describe("the chapter opening", () => {
-  it("is present on every generated chapter", () => {
+  it("is present on every generated chapter that has a capability", () => {
     // 288 of 407 chapters used to open on a bare title: \chapter{}, \label{}, then
     // straight into the first lesson. Nothing told the reader why they were here.
-    expect(generated.length).toBe(302);
-    const without = generated.filter((tex) => !tex.includes("\\begin{chapteropening}"));
-    expect(without).toHaveLength(0);
+    //
+    // The count is asserted as a FLOOR, not an equality: main lands new generated
+    // targets regularly, and pinning the exact number just breaks this test on
+    // somebody else's unrelated chapter.
+    expect(generated.length).toBeGreaterThanOrEqual(311);
+
+    // A chapter with no HL05 capability gets no opening rather than an invented one,
+    // so the gap is capability debt the gap report already counts — not a rendering
+    // bug. Asserted by NAME so it shrinks visibly instead of hiding behind a number.
+    const chapters = loadTrackChapters();
+    const hasCapability = (language: string, chapter: number) =>
+      Boolean(
+        chapters
+          .find((t) => t.language === language)
+          ?.chapters.find((c) => c.chapter === chapter)?.canDo,
+      );
+    const withoutOpening = [...generatedBookOutputs().entries()]
+      .filter(([path]) => path.endsWith(".tex"))
+      .filter(([, tex]) => !tex.includes("\\begin{chapteropening}"))
+      .map(([path]) => path);
+
+    for (const path of withoutOpening) {
+      const match = /^([^/]+)\/book\/chapters\/ch(\d+)-/.exec(path);
+      expect(match).not.toBeNull();
+      expect(hasCapability(match![1]!, Number(match![2]))).toBe(false);
+    }
+    // Russian chapter 3 is the whole of the debt today.
+    expect(withoutOpening).toEqual(["russian/book/chapters/ch03-first-verbs.tex"]);
   });
 
   it("never points at another track of this course", () => {
