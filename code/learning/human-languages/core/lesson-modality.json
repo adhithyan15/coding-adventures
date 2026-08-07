@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:6abc1ae729596ffb",
+  "sourceHash": "fnv1a64:1c5eb4fcacfca5b4",
   "summary": {
     "totalLessons": 1212,
     "voice": 811,
@@ -4785,12 +4785,12 @@
     },
     {
       "language": "punjabi",
-      "lessonCount": 33,
-      "voice": 11,
+      "lessonCount": 39,
+      "voice": 17,
       "sight": 22,
       "pen": 0,
-      "drivablePercent": 33,
-      "drivablePrefixTotal": 2,
+      "drivablePercent": 44,
+      "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
         "sight"
@@ -4887,6 +4887,27 @@
             "PA-C06-numbers-1-5",
             "PA-C06-panj-convergence"
           ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PA-C07-hona",
+            "PA-C07-jana",
+            "PA-C07-auna",
+            "PA-C07-khana",
+            "PA-C07-vekhna",
+            "PA-C07-janna"
+          ]
         }
       ]
     },
@@ -4969,12 +4990,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 39,
-      "voice": 15,
+      "lessonCount": 33,
+      "voice": 9,
       "sight": 24,
       "pen": 0,
-      "drivablePercent": 38,
-      "drivablePrefixTotal": 6,
+      "drivablePercent": 27,
+      "drivablePrefixTotal": 0,
       "modalities": [
         "voice",
         "sight"
@@ -5069,27 +5090,6 @@
           "firstNonVoiceLesson": "SA-C06-numbers-1-5",
           "drivable": false,
           "drivableLessonIds": []
-        },
-        {
-          "chapter": 7,
-          "lessonCount": 6,
-          "voice": 6,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 6,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "SA-C07-asti",
-            "SA-C07-gacchati",
-            "SA-C07-agacchati",
-            "SA-C07-khadati",
-            "SA-C07-pashyati",
-            "SA-C07-janati"
-          ]
         }
       ]
     },
@@ -17582,6 +17582,84 @@
       "sourceHash": "fnv1a64:ffa41e7a4b0fb099"
     },
     {
+      "id": "PA-C07-hona",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b885be04f89dedf2"
+    },
+    {
+      "id": "PA-C07-jana",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:454611cabf72ba2e"
+    },
+    {
+      "id": "PA-C07-auna",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02948358822be42d"
+    },
+    {
+      "id": "PA-C07-khana",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:399aa141195ccd0f"
+    },
+    {
+      "id": "PA-C07-vekhna",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:206f10ac6c1ebf37"
+    },
+    {
+      "id": "PA-C07-janna",
+      "language": "punjabi",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:720de68e6041f13e"
+    },
+    {
       "id": "RU-C01-da",
       "language": "russian",
       "chapter": 1,
@@ -18376,84 +18454,6 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:b9ff587c9b04cf7a"
-    },
-    {
-      "id": "SA-C07-asti",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 370,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:acba716e7ca6b5c4"
-    },
-    {
-      "id": "SA-C07-gacchati",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 380,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:625c2624967f0670"
-    },
-    {
-      "id": "SA-C07-agacchati",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 390,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cb62d733b276b4c5"
-    },
-    {
-      "id": "SA-C07-khadati",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 400,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:684286f6f5882df7"
-    },
-    {
-      "id": "SA-C07-pashyati",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 410,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7f8841a36a6c95f0"
-    },
-    {
-      "id": "SA-C07-janati",
-      "language": "sanskrit",
-      "chapter": 7,
-      "sequence": 420,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:96cb8ccb4a739c4c"
     },
     {
       "id": "ES-C01-hola",

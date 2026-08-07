@@ -4450,6 +4450,25 @@
       "jsonHash": "fnv1a64:106331c68cd48720"
     },
     {
+      "language": "punjabi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "lessonIds": [
+        "PA-C07-hona",
+        "PA-C07-jana",
+        "PA-C07-auna",
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-C07-janna"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "punjabi/narration/ch07.txt",
+      "json": "punjabi/narration/ch07.json",
+      "textHash": "fnv1a64:b16894133401a7ea",
+      "jsonHash": "fnv1a64:44878e06b7f35c71"
+    },
+    {
       "language": "russian",
       "chapter": 1,
       "sourceHash": "fnv1a64:666276e1d698f4d5",

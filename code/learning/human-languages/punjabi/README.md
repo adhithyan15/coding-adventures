@@ -9,8 +9,10 @@ before the whole; and a book you can read straight through.
 - **Gurmukhi, taught inline.** Punjabi is **Indo-Aryan** (like Hindi, Marathi,
   Bengali), written in **Gurmukhi** — "from the mouth of the Guru," the script
   the Sikh Gurus shaped for their scriptures. A vendored Noto Sans Gurmukhi
-  font renders it; each word lesson has a *"The letters in this word"* section,
-  and a reader who already reads Gurmukhi simply skims it. No reading course.
+  font renders it; each word lesson spells out exactly the letters that word
+  needs — the older lessons under a *"The letters in this word"* heading, the
+  schema-v2 ones inside *"You'll want to know first — one word"* — and a reader
+  who already reads Gurmukhi simply skims it. No reading course.
 - **Two vocabularies, front and centre.** The recurring thread is Punjab's
   place on the road between Persia and India: "thank you" is both the
   Sanskritic **dhannavād** and the Perso-Arabic **shukrīā**, and the script
@@ -41,8 +43,18 @@ before the whole; and a book you can read straight through.
   counting-and-Gurmukhi lesson followed by a prerequisite-ordered explanation
   of why native Punjabi *panj* and Persian *panj* are convergence, not
   borrowing.
+- **Chapter 7 — Six Verbs at the Core** ([`lessons/PA-C07-*`](./lessons/)):
+  hoṇā, jāṇā, āuṇā, khāṇā, vekhṇā, jāṇnā — the six commonest verbs, each named
+  by the **-ਣਾ/-ਨਾ** infinitive and stripped to its stem, and each carrying one
+  idea: "to be" is two ancient verbs braided (*bhū-* and *as-*, exactly as
+  English braids *be* with *is*); every Sanskrit *y-* became a Punjabi *j-*;
+  "come" is "go" with *ā-* "toward" glued on, and that *go* is English *come*;
+  **tone** — the lost breathy consonants left a pitch behind (*kòṛā* horse
+  against *koṛā* whip); "see" is built on the word for the **eye**; and "know"
+  is one held *n* away from "go" and the same word as English *know*. All six
+  are voice-only lessons. In the book.
 
-Chapters 1–6 are in the book.
+Chapters 1–7 are in the book.
 
 ---
 
@@ -62,6 +74,13 @@ first-person can-do sentence and the lesson that pays it off.
   borrowed from the Persian panj in Punjab."* Payoff:
   [`PA-C06-panj-convergence`](./lessons/PA-C06-panj-convergence.md), a task — run
   the convergence argument, with *panjāh* against Hindi *pacās* as the evidence.
+- **Chapter 7** — *"I can name six everyday Punjabi verbs by the -ਣਾ/-ਨਾ ending,
+  strip that ending to reach the stem, trace each one to its Sanskrit and
+  Indo-European root, and explain how the lost breathy consonants left Punjabi
+  with a tone no other major Indo-Aryan language has."* Payoff:
+  [`PA-C07-janna`](./lessons/PA-C07-janna.md), a production — hold the doubled
+  *n* that keeps *jāṇnā* apart from *jāṇā*, separate the two **ਜ** that came
+  from different Sanskrit sounds, and run all six stems.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -73,8 +92,10 @@ gap report is meant to surface; the entries land as those chapters migrate.
 Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
 (`../../_fonts/NotoSansGurmukhi-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
-Latin romanization. A forced six-chapter build is warning-free, and the
-handwritten section bookmarks retain readable Gurmukhi plus romanization.
+Latin romanization. A forced seven-chapter build is warning-free — zero
+overfull, underfull, missing-character, Hyperref, duplicate-destination, and
+font-substitution warnings — and the handwritten section bookmarks retain
+readable Gurmukhi plus romanization.
 
 ## Files
 

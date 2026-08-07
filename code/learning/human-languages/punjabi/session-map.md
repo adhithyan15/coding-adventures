@@ -71,6 +71,17 @@ word needs.
 | 32 | numbers-1-5 | ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ | retrieve the five forms; distinguish addak from tippi; reuse *panj* from *panjābī* |
 | 33 | panj-convergence | ਪੰਜ · *panj* | Punjabi *pañca → panj* and Persian *panč → panj* converge independently |
 
+## Chapter 7 — Six Verbs at the Core
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 34 | hona | ਹੋਣਾ | "to be" ← *bhavati* / *bhū-* → English *be*; braided with *hai* ← *asti* → *is* |
+| 35 | jana | ਜਾਣਾ | "to go" ← *yāti*; every Sanskrit *y-* became a Punjabi *j-* (*jog*, *javān*, *Jamnā*) |
+| 36 | auna | ਆਉਣਾ | "to come" = *ā-* "toward" + *gam-* "go" ← PIE *gʷem- → English *come* |
+| 37 | khana | ਖਾਣਾ | "to eat" ← *khādati*; **tone** — ਘ lost its breath and left a pitch (*kòṛā* / *koṛā*) |
+| 38 | vekhna | ਵੇਖਣਾ | "to see" ← *prekṣate* / *īkṣ-* ← *akṣi* "eye" → English *eye*, *optic*, *window* |
+| 39 | janna | ਜਾਣਨਾ | **payoff** — "to know" ← *jñā-* → English *know*; one held *n* from *jāṇā* |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*).
