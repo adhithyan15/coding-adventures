@@ -334,6 +334,25 @@
         "LA-EXT-025-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "LA-PATH-026",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo",
+        "LA-C38-capio",
+        "LA-C38-rogo",
+        "LA-C38-adiuvo",
+        "LA-C38-amo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -461,7 +480,8 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "LA-PATH-025"
+        "LA-PATH-025",
+        "LA-PATH-026"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -469,13 +489,8 @@
         "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -490,14 +505,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -811,6 +823,24 @@
         "LA-C37-video",
         "LA-C37-scio",
         "LA-C37-do"
+      ]
+    },
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of eight further Latin verbs — thinking, reading, understanding, writing, taking, asking, helping, loving — and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo",
+        "LA-C38-capio",
+        "LA-C38-rogo",
+        "LA-C38-adiuvo",
+        "LA-C38-amo"
       ]
     }
   ]

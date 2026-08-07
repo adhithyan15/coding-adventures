@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:10bf9af0e3ac3dd0",
+  "sourceHash": "fnv1a64:ee25b80ae41e6909",
   "summary": {
-    "totalLessons": 1225,
-    "voice": 824,
+    "totalLessons": 1233,
+    "voice": 832,
     "sight": 348,
     "pen": 53,
-    "drivableLessons": 824,
+    "drivableLessons": 832,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 394,
-    "drivablePrefixTotal": 655,
-    "fullyDrivableChapters": 270,
+    "chapterCount": 395,
+    "drivablePrefixTotal": 663,
+    "fullyDrivableChapters": 271,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -3059,12 +3059,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 65,
-      "voice": 62,
+      "lessonCount": 73,
+      "voice": 70,
       "sight": 3,
       "pen": 0,
-      "drivablePercent": 95,
-      "drivablePrefixTotal": 61,
+      "drivablePercent": 96,
+      "drivablePrefixTotal": 69,
       "modalities": [
         "voice",
         "sight"
@@ -3683,6 +3683,29 @@
             "LA-C37-video",
             "LA-C37-scio",
             "LA-C37-do"
+          ]
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 8,
+          "voice": 8,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 8,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C38-cogito",
+            "LA-C38-lego",
+            "LA-C38-intellego",
+            "LA-C38-scribo",
+            "LA-C38-capio",
+            "LA-C38-rogo",
+            "LA-C38-adiuvo",
+            "LA-C38-amo"
           ]
         }
       ]
@@ -14656,6 +14679,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:051856f3e9c81534"
+    },
+    {
+      "id": "LA-C38-cogito",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f212bec0682b367"
+    },
+    {
+      "id": "LA-C38-lego",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5511be9ba3c46d1"
+    },
+    {
+      "id": "LA-C38-intellego",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:825bf0ef0ce282f8"
+    },
+    {
+      "id": "LA-C38-scribo",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb6a6643febcff9d"
+    },
+    {
+      "id": "LA-C38-capio",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:040101b6e1b02f24"
+    },
+    {
+      "id": "LA-C38-rogo",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a419ac146654915"
+    },
+    {
+      "id": "LA-C38-adiuvo",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e48fb1acd6b7efe"
+    },
+    {
+      "id": "LA-C38-amo",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26ac9f9a94e98d35"
     },
     {
       "id": "ML-C01-athe",

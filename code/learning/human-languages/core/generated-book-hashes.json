@@ -1527,6 +1527,22 @@
       "tex": "latin/book/chapters/ch37-core-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:339acd2f7d003a60",
+      "lessonIds": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo",
+        "LA-C38-capio",
+        "LA-C38-rogo",
+        "LA-C38-adiuvo",
+        "LA-C38-amo"
+      ],
+      "tex": "latin/book/chapters/ch38-more-core-verbs.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:a395cc73dc812086",

@@ -1,5 +1,52 @@
 # Changelog
 
+## Eight more verbs — Chapter 38
+
+- Adds a **second verb tranche**, one canonical concept per lesson:
+  `LA-C38-cogito` (VERB-THINK), `LA-C38-lego` (VERB-READ), `LA-C38-intellego`
+  (VERB-UNDERSTAND), `LA-C38-scribo` (VERB-WRITE), `LA-C38-capio` (VERB-TAKE),
+  `LA-C38-rogo` (VERB-ASK), `LA-C38-adiuvo` (VERB-HELP), and `LA-C38-amo`
+  (VERB-LIKE-LOVE).
+- **These eight concepts were taught by no track anywhere in the corpus.** Of
+  the taxonomy's forty core verbs, twenty-three were unrealized in every one of
+  the twenty-two tracks before this chapter; this closes eight of them and
+  leaves fifteen still universally missing. Latin now realizes 16 of 40 — the
+  deepest verb coverage in the corpus.
+- **This is where Latin's English dividend is largest.** *Legō* first meant "to
+  gather," which is why it is behind *legible*, *lecture*, *lesson*, *collect*,
+  *select*, *elect*, *neglect*, and *elegant*, and why its Greek twin supplies
+  every *-logy*. *Intellegō* is literally *inter* + *legō*, "to pick out from
+  among" — and the classical spelling with *e* beside the later spelling with
+  *i* is exactly why English carries both *intellect* and *intelligent*.
+  *Scrībō* rests on a root meaning "to scratch," because a Roman writing a note
+  scratched wax. *Capiō* gives *capture*, *accept*, *receive*, *deceive*,
+  *conceive*, *concept*, *chase* and *catch*.
+- **The false friends are named, not avoided.** English *read*, *write*,
+  *think*, *ask* and *help* are all Germanic and unrelated to the Latin verbs
+  that translate them. *Capital* and *captain* come from *caput* ("head"), not
+  from *capiō*. *Juvenile* comes from *iuvenis* ("young"), not from *iuvō* ("to
+  help"). *Amen* is Hebrew. Where the trail is uncertain the lesson says so:
+  the link from *lēx* ("law") to *legere* is marked **debated**, *rogāre*'s
+  descent from the root behind *rēx* is marked **the standard account rather
+  than a certainty**, and *amāre* is given **no** reconstructed root at all,
+  because it has none — it is taken as a nursery word, and inventing an
+  ancestor would have been worse than admitting the gap.
+- **Chapter 37's conventions carried forward unchanged.** One verb per lesson;
+  six present-tense forms as a spoken bullet list, never a paradigm grid; no
+  table anywhere. All eight lessons derive as `voice`, so chapter 38 is fully
+  drivable end to end, and effective durations are 266–282 s against the 300 s
+  ceiling.
+- Registers the eight in [`curriculum.json`](./curriculum.json) as a second
+  `SPINE-SAY-WHAT-I-DO` segment, `LA-PATH-026`, with the matching
+  `LA-EXT-026-LANGUAGE-SPECIFIC` extension node, and drops the eight concepts
+  from that node's `omits` ledger. The chapter's capability entry lands in
+  [`chapters.json`](./chapters.json); its payoff is `LA-C38-amo`, which closes
+  the set by producing all eight first-person and all eight third-person forms.
+- The Latin book compiles with XeLaTeX at 138 pages with **zero** `Missing
+  character` warnings and no new overfull or underfull boxes; PIE roots that
+  would need a glyph Latin Modern lacks are cited in plain ASCII
+  (`*ag-`, `*leg-`, `*reg-`) rather than with a palatal-g diacritic.
+
 ## Eight core verbs — Chapter 37
 
 - Adds the track's first eight **verb** lessons, one canonical concept each:

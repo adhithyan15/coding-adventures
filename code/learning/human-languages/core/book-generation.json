@@ -2095,6 +2095,13 @@
       "output": "latin/book/chapters/ch37-core-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 38,
+      "title": "Eight More Verbs",
+      "label": "ch:la-more-core-verbs",
+      "output": "latin/book/chapters/ch38-more-core-verbs.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
