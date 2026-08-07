@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 10023,
   "last_manifest_check": {
     "objectives": 67,
     "coverage_roots": 6,
@@ -109,11 +109,11 @@
     {
       "id": "wave2-k8-data-displays-min-max",
       "title": "Wire dyadic min/max into the plain-arithmetic surface grammar to unblock K-8 data-display formulas (e.g. range = max - min)",
-      "status": "pending",
+      "status": "shipped_pending_ci",
       "depends_on": ["wave2-k8-measurement-data"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered while scoping wave2-k8-measurement-data: `min(a,b)`/`max(a,b)` as a TWO-argument dyadic operation only reaches the engine via the `latex \"...\"` escape (adapter.rs's MathExpr::Bin(BinOp::Mul,...) special-casing for `operator_name_is(lhs,\"min\"/\"max\")`) -- the plain surface grammar's bare `min(x)`/`max(x)` is a DIFFERENT thing, a single-argument AGGREGATION over a slot's multiple observations (`agg` production), not 'the smaller/larger of two named values'. This is the EXACT same shape of gap FL-9 (floor/mod) closed: the ComputeOp/BinFn already exists (BinFn::Min/Max -> ComputeOp::Min2/Max2, used today only via the latex path) and needs zero new AST/engine work -- just add 'min'/'max' (2-arg form) to RUNTIME_BUILTIN_FORMULAS in lower.rs's expand_rec, mapping onto the pre-existing ExprAst::Call2(BinFn::Min/Max,...) node. Unblocks a citable `range_two(a,b) = max(a,b) - min(a,b)` (and range_three via the same associative-fold trick average.adj's mean_three already uses) as a genuine K-8 'measures of spread' data-display formula, composed entirely from existing primitives. Spec as ADJ-FORMULA-LIBRARIES FL-11 before implementing, per repo's specs-first standard."
+      "branch": "feat/adj-fl11-min-max",
+      "pr_number": 10023,
+      "notes": "PR #10023 open, auto-merge armed. Spec'd as ADJ-FORMULA-LIBRARIES 3E (FL-11) before implementing, mirroring FL-9's exact template. Confirmed the hypothesis: RUNTIME_BUILTIN_FORMULAS gains 'max'/'min' (sorted position between floor and mod); two new `if name == \"max\"`/`if name == \"min\"` blocks in lower.rs's expand_rec, each checking args.len()==2 then mapping onto the pre-existing ExprAst::Call2(BinFn::Max/Min,...) node the latex frontend already reached -- zero new AST/engine work, no grammar change. min/max now reserved at EVERY arity (not just the one-parameter arity `agg` already reserved) since RUNTIME_BUILTIN_FORMULAS's ReservedFormulaName gate checks by name only -- this changed two existing test expectations (a_wrong_arity_call_cannot_silently_become_an_aggregation had to drop min/max from its loop since `formula min(a,b)=...` is now rejected at declaration time before ever reaching the aggregation-shadow call site it exercises; my own max_wrong_arity test had to use a non-identifier single argument `max(5)` rather than `max(a)`, since `agg` only matches a bare IDENT and would otherwise swallow the 1-arg case before it ever reached the Apply-based arity check). Shipped mathematics/data-displays.adj (range_two/range_three, MathWorld StatisticalRange.html's R=Y_N-Y_1, WebFetch-verified live before writing) as the first content library built on it, closing the ADJ-STDLIB-COVERAGE.md 5.1 'data displays' gap. New manifest objective adj.math.statistics.range (band 3-5). New e2e test formula_data_displays_e2e.rs (2 tests). adj-lang bumped 0.74.0->0.75.0. Full test suite green (252 adj-lang unit tests + all adj-lang-cli e2e), clippy clean, adj_stdlib_manifest.py (70 objectives, valid) and adj_stdlib_report.py (--fail-on-unreferenced-tests, exit 0) both clean, Python unittest suites (21 tests) green. Security review clean, no findings."
     },
     {
       "id": "wave2-k8-word-problem-schemas",
