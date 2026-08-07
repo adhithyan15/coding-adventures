@@ -387,6 +387,51 @@ both the equation IR and its solved-back `Rule`/`Integer`/`Rational` result need
 in `adj-lang` itself; `cas-solve` does not re-export it. These are the first crates `adj-lang`
 depends on outside its existing `logic-engine`/parsing-frontend family.
 
+## 3E. FL-11 — `min(a, b)`/`max(a, b)` on the plain-arithmetic surface
+
+**Status: shipped.** ADJ-STDLIB-COVERAGE.md 5.1's elementary-math gap table names "data displays"
+(a K-8 measures-of-spread concept — how far apart two counted quantities are, e.g. `range = max -
+min`) as a Major Gap. `BinFn::Min`/`BinFn::Max` and their engine ops `ComputeOp::Min2`/`Max2`
+already exist — used today by the `latex "…"` frontend for `\min(a, b)`/`\max(a, b)` — but neither
+was reachable from the **plain** (non-LaTeX) arithmetic surface a `formula` body normally uses.
+Critically, this is a DIFFERENT gap than FL-9's: the plain grammar's `factor` production lists
+`agg` (aggregation: `min(slot)`/`max(slot)`, the largest/smallest OBSERVED value of one slot
+across repeated `observe`s) before `apply`, so a bare `min(x)`/`max(x)` with ONE argument already
+parses — just to the wrong node (`ExprAst::Agg`, not a comparison of two named values). The gap is
+specifically the TWO-argument form, "the smaller/larger of these two named quantities" — `agg`
+only ever matches one identifier, so `min(a, b)` (two arguments) already falls through to `apply`
+today; it simply has no built-in registered to receive it.
+
+**The fix, additive, no grammar change:** `min`/`max` join `RUNTIME_BUILTIN_FORMULAS`
+(`code/packages/rust/adj-lang/src/lower.rs`) — the same recognized-by-name built-in mechanism
+FL-9's `floor`/`mod` use. `expand_rec` recognizes the name **before** consulting the user-formula
+map and maps it directly onto the existing node:
+
+```adj
+formula range_two(a, b) = max(a, b) - min(a, b)
+```
+
+`min(a, b)`/`max(a, b)` each take exactly two arguments and lower to
+`ExprAst::Call2(BinFn::Min, a, b)`/`ExprAst::Call2(BinFn::Max, a, b)` — the same pre-existing node
+the `latex "…"` frontend already reaches for `\min`/`\max` — so no new `ExprAst`/`ComputeOp`
+variant, no new exhaustive-match site, and no change to `plan_expr`'s JSON export or the
+CAS-provenance replay surface. `RUNTIME_BUILTIN_FORMULAS`'s existing reserved-name collision check
+(`LowerError::ReservedFormulaName`) covers `min`/`max` automatically; the ARITY-based aggregation
+collision (a one-parameter `formula min(x) = …`/`formula max(x) = …`, which the grammar's `agg`
+production would swallow the same way it already swallows a one-parameter `sum`/`count`/`avg`) is
+covered by the EXISTING arity-aware check in `validate_formula`, since `agg_op_from_keyword`
+already recognizes `"min"`/`"max"` as aggregation keywords — no new code needed there either, only
+the new dispatch entry in `expand_rec`.
+
+**What this does NOT attempt:** `min`/`max` with more than two arguments (an n-ary fold, the way
+`average.adj`'s `mean_three` chains two `sum` calls) — a formula author wanting a three-value
+minimum composes it explicitly (`min(min(a, b), c)`), the same associative-fold pattern
+`mean_three`/`total_cardinality` already establish for `sum`. This mirrors FL-9's own scope
+discipline: wire the narrow capability actually needed, not a general n-ary primitive nothing yet
+requires.
+
+---
+
 **One gap this rung's implementation surfaced that the design above did not anticipate:**
 `adj-lang`'s closed-vocabulary gate (`enforce_vocabulary`'s `check_query`, MYCIN-2026 M1/M2) special-
 cased the `formulas` registry so a `? bmi(...)`-shaped formula application isn't rejected as an

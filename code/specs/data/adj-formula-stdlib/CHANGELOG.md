@@ -39,3 +39,10 @@ landed and why, not a semver-tracked API.
   names the SITUATION so a consumer can pick the right formula from how a word problem is worded,
   not just from seeing a minus sign. See
   `code/packages/rust/adj-lang-cli/tests/formula_word_problems_e2e.rs`.
+- `mathematics/data-displays.adj` (new) — `range_two(a, b)` and `range_three(a, b, c)`, the
+  statistical range (largest minus smallest, MathWorld's `R = Y_N - Y_1`) of two or three counted
+  or measured values. The first content library built on ADJ-FORMULA-LIBRARIES FL-11, which wires
+  the two-argument `min(a, b)`/`max(a, b)` form onto the plain-arithmetic surface grammar (they
+  were previously reachable only via the `latex "…"` escape). `range_three` composes `max`/`min`
+  twice each (associatively), the same fold `average.adj`'s `mean_three` uses for `sum`. See
+  `code/packages/rust/adj-lang-cli/tests/formula_data_displays_e2e.rs`.
