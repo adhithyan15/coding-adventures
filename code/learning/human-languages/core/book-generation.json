@@ -1049,6 +1049,22 @@
       "scriptSet": "kannada-comparisons"
     },
     {
+      "language": "kannada",
+      "chapter": 33,
+      "title": "Four Verbs of Mind and Page",
+      "label": "ch:ka-mind-verbs",
+      "output": "kannada/book/chapters/ch33-mind-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ka-social-verbs",
+      "output": "kannada/book/chapters/ch34-social-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",

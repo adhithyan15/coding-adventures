@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:1d4e72b4870daab2",
   "summary": {
-    "totalLessons": 1345,
-    "voice": 893,
+    "totalLessons": 1353,
+    "voice": 901,
     "sight": 399,
     "pen": 53,
-    "drivableLessons": 893,
-    "drivablePercent": 66,
+    "drivableLessons": 901,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 424,
-    "drivablePrefixTotal": 710,
-    "fullyDrivableChapters": 285,
+    "chapterCount": 426,
+    "drivablePrefixTotal": 718,
+    "fullyDrivableChapters": 287,
     "unstartableChapters": 102,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -2741,12 +2741,12 @@
     },
     {
       "language": "kannada",
-      "lessonCount": 66,
-      "voice": 38,
+      "lessonCount": 74,
+      "voice": 46,
       "sight": 28,
       "pen": 0,
-      "drivablePercent": 58,
-      "drivablePrefixTotal": 30,
+      "drivablePercent": 62,
+      "drivablePrefixTotal": 38,
       "modalities": [
         "voice",
         "sight"
@@ -3257,6 +3257,44 @@
             "KA-C32-tinnu",
             "KA-C32-noodu",
             "KA-C32-gottu"
+          ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C33-yocisu",
+            "KA-C33-artha-maadiko",
+            "KA-C33-oodu",
+            "KA-C33-bare"
+          ]
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C34-tegeduko",
+            "KA-C34-keelu",
+            "KA-C34-sahaya-maadu",
+            "KA-C34-ishta"
           ]
         }
       ]
@@ -14932,6 +14970,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:fd7c9f20c9d9b7c0"
+    },
+    {
+      "id": "KA-C33-yocisu",
+      "language": "kannada",
+      "chapter": 33,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:915fe318d5be9557"
+    },
+    {
+      "id": "KA-C33-artha-maadiko",
+      "language": "kannada",
+      "chapter": 33,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c47bae7fdbedecd"
+    },
+    {
+      "id": "KA-C33-oodu",
+      "language": "kannada",
+      "chapter": 33,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34fd767aa7d17da1"
+    },
+    {
+      "id": "KA-C33-bare",
+      "language": "kannada",
+      "chapter": 33,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35c3f21bb2c8ecf8"
+    },
+    {
+      "id": "KA-C34-tegeduko",
+      "language": "kannada",
+      "chapter": 34,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73aa8e5bb7cc81ca"
+    },
+    {
+      "id": "KA-C34-keelu",
+      "language": "kannada",
+      "chapter": 34,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d78f84abda939af4"
+    },
+    {
+      "id": "KA-C34-sahaya-maadu",
+      "language": "kannada",
+      "chapter": 34,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14f730987ba4e2f4"
+    },
+    {
+      "id": "KA-C34-ishta",
+      "language": "kannada",
+      "chapter": 34,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdd0ec6159882e0b"
     },
     {
       "id": "LA-C01-salve",

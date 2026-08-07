@@ -578,6 +578,70 @@
           "KA-GRAMMAR-C32-GOTTU-02"
         ]
       }
+    },
+    {
+      "chapter": 33,
+      "title": "Four Verbs of Mind and Page",
+      "label": "ch:ka-mind-verbs",
+      "canDo": "I can say I think, I understand, I read and I write in Kannada, name the suffix that turns a Sanskrit noun into a Kannada verb, use the ending that hands an action back to its doer, and give both of the front-of-the-word sound laws that separate Kannada from Tamil.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "KA-C33-bare",
+        "kind": "production",
+        "summary": "Say ನಾನು ಕನ್ನಡ ಬರೆಯುತ್ತೇನೆ, keep it apart from ಬರುತ್ತೇನೆ one vowel away, explain the glide a vowel-final stem needs, take bare back to the Dravidian line-drawing root behind Tamil வரை, set the v → b law beside the p → h law, and count this chapter’s four verbs onto Chapter 32’s six to reach hattu.",
+        "assesses": [
+          "KA-LEX-C33-BARE-01",
+          "KA-ETYMON-C33-BARE-02",
+          "KA-GRAMMAR-C33-BARE-03",
+          "KA-LEX-C33-OODU-01",
+          "KA-ETYMON-C33-OODU-02",
+          "KA-LEX-C33-ARTHA-MAADIKO-01",
+          "KA-GRAMMAR-C33-ARTHA-MAADIKO-02",
+          "KA-LEX-C33-YOCISU-01",
+          "KA-ETYMON-C33-YOCISU-02",
+          "KA-ETYMON-C33-YOCISU-03",
+          "KA-LEX-C32-BAA-01",
+          "KA-LEX-C32-TINNU-01",
+          "KA-GRAMMAR-C32-NOODU-02",
+          "KA-LEX-C07-NUMBERS-6-10-01",
+          "KA-ETYMON-C07-NUMBERS-6-10-02",
+          "KA-ETYMON-C22-HASIRU-HALADI-01",
+          "KA-LEX-C20-HAVAMANA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ka-social-verbs",
+      "canDo": "I can say I take, I ask and I help in Kannada, say I like Kannada in a sentence with no verb in it, place it beside the two other dative sentences I have built, and show that the frame it uses was Kannada’s own before any Sanskrit word moved into it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "KA-C34-ishta",
+        "kind": "production",
+        "summary": "Say ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ and unpack it as “to me, Kannada, a liking” with no verb at all; line it up against ನನಗೆ ಗೊತ್ತು and ನನಗೆ ಬೇಕು; show that the inherited bēku takes the same dative and answers Tamil vēṇṭum by the v → b law; and trace iṣṭa to the Indo-European root behind English ask, unrelated to the kēḷu of the same chapter.",
+        "assesses": [
+          "KA-LEX-C34-ISHTA-01",
+          "KA-GRAMMAR-C34-ISHTA-02",
+          "KA-ETYMON-C34-ISHTA-03",
+          "KA-LEX-C34-SAHAYA-MAADU-01",
+          "KA-ETYMON-C34-SAHAYA-MAADU-02",
+          "KA-LEX-C34-KEELU-01",
+          "KA-GRAMMAR-C34-KEELU-02",
+          "KA-ETYMON-C34-KEELU-03",
+          "KA-LEX-C34-TEGEDUKO-01",
+          "KA-ETYMON-C34-TEGEDUKO-02",
+          "KA-LEX-C06-DATIVE-SUBJECT-01",
+          "KA-GRAMMAR-C06-DATIVE-SUBJECT-02",
+          "KA-GRAMMAR-C06-DATIVE-SUBJECT-03",
+          "KA-LEX-C32-GOTTU-01",
+          "KA-GRAMMAR-C32-GOTTU-02"
+        ]
+      }
     }
   ]
 }

@@ -2996,6 +2996,40 @@
       "jsonHash": "fnv1a64:950214a506c25e67"
     },
     {
+      "language": "kannada",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:d64825d81777f48f",
+      "lessonIds": [
+        "KA-C33-yocisu",
+        "KA-C33-artha-maadiko",
+        "KA-C33-oodu",
+        "KA-C33-bare"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch33.txt",
+      "json": "kannada/narration/ch33.json",
+      "textHash": "fnv1a64:41bdfc6bacaa1735",
+      "jsonHash": "fnv1a64:74ac8a3121b49b6c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:17e95e59572a3322",
+      "lessonIds": [
+        "KA-C34-tegeduko",
+        "KA-C34-keelu",
+        "KA-C34-sahaya-maadu",
+        "KA-C34-ishta"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch34.txt",
+      "json": "kannada/narration/ch34.json",
+      "textHash": "fnv1a64:4ae01157cb33786f",
+      "jsonHash": "fnv1a64:a1fd4c56249c12d9"
+    },
+    {
       "language": "latin",
       "chapter": 1,
       "sourceHash": "fnv1a64:c50a5183e8d9432d",

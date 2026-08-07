@@ -63,8 +63,21 @@ pieces taught before the whole; and a book you can read straight through.
   tense bead and the future Kannada never separated, the person bead, and a
   know-word with no beads at all. The track's first canonical verb coverage —
   six of the shared spine's core forty. In the book.
+- **Chapter 33 — Four Verbs of Mind and Page** ([`lessons/KA-C33-*`](./lessons/)):
+  ಯೋಚಿಸು (*yōcisu*, think), ಅರ್ಥಮಾಡಿಕೊ (*arthamāḍiko*, understand), ಓದು (*ōdu*,
+  read), ಬರೆ (*bare*, write). The **‑ಇಸು** suffix that turns a Sanskrit noun
+  into a Kannada verb, the reflexive **‑ಕೊ** that hands an action back to its
+  doer, the glide a vowel-final stem needs, and both front-of-the-word sound
+  laws side by side — *p* → *h* and *v* → *b*. In the book.
+- **Chapter 34 — Four Verbs Between People** ([`lessons/KA-C34-*`](./lessons/)):
+  ತೆಗೆದುಕೊ (*tegeduko*, take), ಕೇಳು (*kēḷu*, ask **and** hear), ಸಹಾಯ ಮಾಡು
+  (*sahāya māḍu*, help), **ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ** (*iṣṭa*, like). Closes on the
+  dative-subject frame, showing that the frame is inherited even though the
+  word filling it is Sanskrit. In the book.
 
-All thirty-six later lessons remain below five effective minutes.
+Kannada now covers **fourteen** of the shared spine's core forty verbs.
+
+All forty-four later lessons remain below five effective minutes.
 
 ---
 
@@ -83,7 +96,7 @@ someone the time on the hour in Kannada"), the shared spine nodes it realises,
 and the `payoff` lesson that proves the claim, with the exact knowledge atoms
 that payoff exercises.
 
-Chapters **6–32** are authored — twenty-seven entries. Chapters **1–5 are absent
+Chapters **6–34** are authored — twenty-nine entries. Chapters **1–5 are absent
 on purpose**: their lessons are still schema v1 with no `practises.knowledge`
 and no `core/book-generation.json` target, so a payoff for them could only be
 invented. That absence is measurable debt, not a placeholder.
