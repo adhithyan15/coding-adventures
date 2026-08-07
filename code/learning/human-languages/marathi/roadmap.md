@@ -51,15 +51,38 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
   knower, *malā māhīt āhe*, with **माहीत** marked as the Persian/Arabic
   Deccan-layer loan it is beside inherited **जाणणे** (*jñā-*, cousin of *know*).
   All six lessons are `voice` — the chapter is fully drivable. **Authored.**
+- **Ch. 8 — The Mind and the Page** (`MR-C08-vichar-karne` → `MR-C08-samajne` →
+  `MR-C08-vachne` → `MR-C08-lihine`): four verbs whose roots all meant something
+  physical first. *car-* "to turn" (← *\*kʷelh₁-*, behind **wheel**, **cycle**),
+  *budh-* "to wake" (which named the **Buddha**), *vac-* "to speak" (Latin
+  *vōx* → **voice**), *likh-* "to scratch" — the last with its external PIE
+  cousins reported as **disputed**, and the lesson resting on the true parallel
+  to Latin *scrībere* and English *write* instead of inventing one. **समजणे**
+  takes the dative, so *malā marāṭhī samajte* joins *malā marāṭhī yete*.
+  **Authored.**
+- **Ch. 9 — Taking, Asking, Helping, Liking** (`MR-C09-ghene` →
+  `MR-C09-vicharne` → `MR-C09-madat-karne` → `MR-C09-avadne`): **घेणे** is the
+  verb inside Chapter 4's *kāḷjī ghyā*, on Vedic **ग्रभ्** *grabh-* = English
+  **grab**; **विचारणे** is Chapter 8's **विचार** with *-णे*, so thinking and
+  asking are one word; **मदत** is Arabic through Persian, the **माहीत** layer,
+  spelled with a final **त** where Hindi and Urdu write **द**; and **आवडणे** is
+  **native**, with no securely established Sanskrit ancestor, where Hindi and
+  Urdu borrowed Persian *pasand*. *Malā marāṭhī āvaḍte* makes three sentences on
+  one frame, beside **प्रेम करणे** (← *\*preyH-*, cousin of **friend** and
+  **free**), where you *are* the subject. **Authored.**
+
+Chapters 8 and 9 carry a `## The letters in this word` section each, which
+derives as `sight` at full modality — but that section is detachable, so every
+lesson is `coreVoice` and both chapters stay fully drivable.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
-| 8 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
-| 9 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
-| 10+ | More of `SPINE-SAY-WHAT-I-DO` (*karṇe*, *deṇe*, *gheṇe*, *sāṅgṇe*), then negation and questions, past and future tenses (where gender returns on the verb) — always with the Hindi/Dravidian contrast thread |
+| 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
+| 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
+| 12+ | The rest of `SPINE-SAY-WHAT-I-DO` (*deṇe*, *sāṅgṇe*, *aikṇe*, *shikṇe*), then negation and questions, past and future tenses (where gender returns on the verb) — always with the Hindi/Dravidian contrast thread |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is

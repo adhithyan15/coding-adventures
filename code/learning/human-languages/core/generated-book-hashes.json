@@ -1974,6 +1974,30 @@
       "tex": "marathi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c7935a25fd2daf52",
+      "lessonIds": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "tex": "marathi/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0d8a362e6a162877",
+      "lessonIds": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "tex": "marathi/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "sourceHash": "fnv1a64:6079d14592306807",

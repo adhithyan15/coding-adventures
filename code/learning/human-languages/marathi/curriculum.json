@@ -149,6 +149,36 @@
         "MR-EXT-012-CORE-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "MR-PATH-013",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-013-MIND-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-014",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-014-DOING-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -263,7 +293,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "MR-PATH-012"
+        "MR-PATH-012",
+        "MR-PATH-013",
+        "MR-PATH-014"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -273,14 +305,9 @@
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -294,14 +321,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -384,6 +408,34 @@
         "MR-C07-khane",
         "MR-C07-pahne",
         "MR-C07-mahit-asne"
+      ]
+    },
+    {
+      "id": "MR-EXT-013-MIND-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Marathi, and tell which of those four Marathi treats as something that happens to me rather than something I do.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ]
+    },
+    {
+      "id": "MR-EXT-014-DOING-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a new verb by putting करणे behind a noun, and say why liking puts me in the dative while loving does not.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
       ]
     },
     {

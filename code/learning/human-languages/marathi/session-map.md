@@ -1,4 +1,4 @@
-# Session Map — Marathi Chapters 1–6
+# Session Map — Marathi Chapters 1–9
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -6,7 +6,8 @@ authoritative order.
 
 **There is no reading course.** Devanagari is learned *through* the words: each
 lesson's *"The letters in this word"* section introduces exactly the letters that
-word needs.
+word needs. (Chapter 7 names that section *"Sounds you'll need"*; the two are the
+same job under two headings, and the canonical one is the former.)
 
 ## Chapter 1 — Greetings
 
@@ -84,8 +85,26 @@ word needs.
 | 40 | pahne | पाहणे | "to see" ← *prapaśyati*; *paś-* ← *\*spek-* → *spectacle, inspect, spy* |
 | 41 | mahit-asne | माहीत असणे | "to know"; *malā māhīt āhe* — the knower is dative; **माहीत** a Persian loan beside inherited जाणणे |
 
+## Chapter 8 — The Mind and the Page
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 42 | vichar-karne | विचार करणे | "to think"; वि- + *car-* "to turn" ← *\*kʷelh₁-* → *wheel, cycle*; said *vitsār* |
+| 43 | samajne | समजणे | "to understand"; ← *sambudhyate*, root *budh-* "to wake" — the **Buddha**'s root; dative like *yete* |
+| 44 | vachne | वाचणे | "to read"; ← *vācayati*, causative of *vac-* "to speak" ← *\*wekʷ-* → *voice, vocal, invoke* |
+| 45 | lihine | लिहिणे | "to write"; ← *likhati*, root sense "to scratch," beside *scrībere* and *write*; **payoff** |
+
+## Chapter 9 — Taking, Asking, Helping, Liking
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 46 | ghene | घेणे | "to take"; the verb inside *kāḷjī ghyā*; ← *grah-*, Vedic *grabh* = English **grab** |
+| 47 | vicharne | विचारणे | "to ask"; **विचार** + *-णे* — thinking and asking are one word in Marathi |
+| 48 | madat-karne | मदत करणे | "to help"; Arabic *madad* "a thing extended," through Persian; Marathi **मदत** vs Hindi **मदद** |
+| 49 | avadne | आवडणे | "to like"; *malā marāṭhī āvaḍte* — native, not Persian *pasand*; beside प्रेम करणे ← *\*preyH-* → *friend, free*; **payoff** |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10 and Devanagari digits १२३, then family and
-food, then more of the core verbs, negation and questions, and the tenses where
-gender returns on the verb.
+food, then the rest of the core verbs, negation and questions, and the tenses
+where gender returns on the verb.

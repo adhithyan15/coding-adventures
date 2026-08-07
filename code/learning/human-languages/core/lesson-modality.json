@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7008963528341b17",
+  "sourceHash": "fnv1a64:f9f7bfee9a1dcb12",
   "summary": {
-    "totalLessons": 1313,
+    "totalLessons": 1321,
     "voice": 884,
-    "sight": 376,
+    "sight": 384,
     "pen": 53,
     "drivableLessons": 884,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 416,
+    "chapterCount": 418,
     "drivablePrefixTotal": 702,
     "fullyDrivableChapters": 283,
-    "unstartableChapters": 96,
+    "unstartableChapters": 98,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -4456,11 +4456,11 @@
     },
     {
       "language": "marathi",
-      "lessonCount": 41,
+      "lessonCount": 49,
       "voice": 21,
-      "sight": 20,
+      "sight": 28,
       "pen": 0,
-      "drivablePercent": 51,
+      "drivablePercent": 43,
       "drivablePrefixTotal": 9,
       "modalities": [
         "voice",
@@ -4581,6 +4581,34 @@
             "MR-C07-pahne",
             "MR-C07-mahit-asne"
           ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "MR-C08-vichar-karne",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "MR-C09-ghene",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -17203,6 +17231,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:e85044dedb2058a5"
+    },
+    {
+      "id": "MR-C08-vichar-karne",
+      "language": "marathi",
+      "chapter": 8,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6c23c65f9fe81a6b"
+    },
+    {
+      "id": "MR-C08-samajne",
+      "language": "marathi",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e0b2f29fcd872001"
+    },
+    {
+      "id": "MR-C08-vachne",
+      "language": "marathi",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:81b2b18e933000a0"
+    },
+    {
+      "id": "MR-C08-lihine",
+      "language": "marathi",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:991573d7718cd4cd"
+    },
+    {
+      "id": "MR-C09-ghene",
+      "language": "marathi",
+      "chapter": 9,
+      "sequence": 460,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:299d9bbccfef9e23"
+    },
+    {
+      "id": "MR-C09-vicharne",
+      "language": "marathi",
+      "chapter": 9,
+      "sequence": 470,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5a822ee9bd20957b"
+    },
+    {
+      "id": "MR-C09-madat-karne",
+      "language": "marathi",
+      "chapter": 9,
+      "sequence": 480,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bbc7db2efcf7b1a5"
+    },
+    {
+      "id": "MR-C09-avadne",
+      "language": "marathi",
+      "chapter": 9,
+      "sequence": 490,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9ae117caacb14423"
     },
     {
       "id": "FA-C01-bale",
