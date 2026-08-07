@@ -14,7 +14,7 @@ against — native or interpreted alike — instead of each carrying its own.
 | `GcProfile` / `GcCycleStats` | Per-cycle metrics: allocation rate, survival ratio, pause time, fragmentation |
 | `GcPolicy` | Trait for algorithm-switch / tuning strategies |
 | `DefaultPolicy` | Never recommends a switch; for tests and short programs |
-| `AdaptivePolicy` | Recommends a switch based on profiling heuristics; backs `FlatHeap::should_compact` |
+| `AdaptivePolicy` | Recommends a switch based on profiling heuristics; backs `FlatHeap::should_compact`/`should_collect_minor` |
 | `GcAlgorithm` | Enum of GC algorithms `AdaptivePolicy` can recommend |
 | `StackMapBuilder` | Producer side of the precise-root stack-map format for native code generators |
 
@@ -46,10 +46,23 @@ strictly additive over conservative fallback. **All rungs are implemented:**
    object for one cycle.
 2. **Precise interior tracing** — a registered `kind`'s ref-field map
    (`register_kind`) is followed exactly; non-ref fields pin nothing.
-3. **Generational** (`collect_minor_region`) — young/old split, a
-   remembered-set write barrier, young-only minor collections, tenuring
-   after N survivals with an immediate promotion-barrier rebuild (closing a
-   reviewer-caught use-after-free window on the promoted edge).
+3. **Generational** (`collect_minor` / `collect_minor_region` /
+   `collect_minor_mixed`) — young/old split, a remembered-set write barrier,
+   young-only minor collections, tenuring after N survivals with an
+   immediate promotion-barrier rebuild (closing a reviewer-caught
+   use-after-free window on the promoted edge). Reachable automatically via
+   `FlatHeap::should_collect_minor` (backed by `AdaptivePolicy`'s
+   survival-ratio signal, capped by `max_minor_streak` so a sustained
+   low-survival workload can't starve the old generation of collection
+   forever — `AOT00-T8-adaptive-safepoint-scheduling.md`) — **gated behind
+   `FlatHeap::set_auto_minor(true)`, off by default.** A minor collection's
+   soundness rests entirely on the remembered set being complete, which
+   requires *every* old→young reference store to go through `write_barrier`;
+   `gc-core` can't verify that a given embedder's compiled output actually
+   does (a security-review finding: the native-AOT/LLVM code generators
+   don't emit it on `field_store` today, only `vm-core`'s interpreter loop
+   does). Enabling `auto_minor` without real barrier coverage is a real
+   use-after-free, not an imprecision — see the field's own doc comment.
 4. **Precise roots** (`collect_precise` / `collect_mixed`) —
    `StackMapRecord`/`StackMapTable` describe exactly which slots hold
    references at each safepoint, so stack-integer false roots disappear for

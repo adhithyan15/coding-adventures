@@ -92,12 +92,20 @@ int64_t __gc_collect_region(const uint8_t *base, int64_t len);
  * whatever the machine is holding. Returns objects freed. Single-threaded. */
 int64_t __gc_collect(void);
 
-/* Paced collect: run __gc_collect ONLY if the live set has reached the heap's
+/* Paced collect: run a collection ONLY if the live set has reached the heap's
  * adaptive threshold; otherwise do nothing. Returns objects freed (0 if no
  * collection ran). Drop-in for twig_gc.c's __twig_gc_safepoint — the native
  * backend calls it at loop back-edges and function entries, and it collects
  * only under memory pressure so a tight allocation loop can't starve the GC.
- * __gc_alloc also runs this same paced collect before allocating. */
+ * __gc_alloc also runs this same paced collect before allocating.
+ *
+ * Which collection kind runs is the adaptive policy's call (AOT00-T8): minor
+ * (__gc_collect_minor_precise) when __gc_set_auto_minor(1) has attested barrier
+ * coverage AND the survival-ratio signal recommends it AND the minor-streak cap
+ * hasn't been hit; else compacting (__gc_collect_compacting) when the fragmentation
+ * signal recommends it; else a plain precise collect (__gc_collect_precise). Always
+ * safe to call regardless of which kind runs — with no attestation (the default),
+ * this behaves exactly as it did before AOT00-T8. */
 int64_t __gc_safepoint(void);
 
 /* Generational write barrier: call whenever the mutator stores a heap reference
@@ -128,6 +136,29 @@ void __gc_set_tenure_age(int64_t threshold);
 
 /* The current generational tenuring age (see __gc_set_tenure_age). */
 int64_t __gc_tenure_age(void);
+
+/* Set the cap on consecutive paced minor collections (AOT00-T8) — how many
+ * __gc_safepoint calls in a row may run a minor collection before one is forced to
+ * be full, bounding how stale old-generation garbage can get under a sustained
+ * low-survival-ratio workload. Clamped to 1..=UINT32_MAX (0/negative -> 1). Default
+ * 8. Safe at any time. */
+void __gc_set_max_minor_streak(int64_t cap);
+
+/* The current minor-streak cap (see __gc_set_max_minor_streak). */
+int64_t __gc_max_minor_streak(void);
+
+/* Attest that EVERY reference store this embedder's compiled output performs is
+ * covered by __gc_write_barrier, and thereby allow __gc_safepoint to run automatic
+ * minor collections. OFF BY DEFAULT. A minor collection's correctness depends
+ * entirely on the remembered set being complete: if the code generator does not call
+ * __gc_write_barrier on every old->young reference store, calling this with a
+ * nonzero `on` lets __gc_safepoint free a still-referenced young object — a real
+ * use-after-free, not a leak. Do not call this without verifying that. */
+void __gc_set_auto_minor(int64_t on);
+
+/* Whether automatic minor scheduling is attested-safe (see __gc_set_auto_minor).
+ * Returns 0/1. */
+int64_t __gc_is_auto_minor(void);
 
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
@@ -169,6 +200,21 @@ int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
  * scan, never a missed root. Returns objects freed. Same threading contract as
  * __gc_collect. (For precision the image must be built with frame pointers.) */
 int64_t __gc_collect_precise(void);
+
+/* Minor (young-generation-only) collection rooted PRECISELY at this thread's stack
+ * (AOT00-T8) — the generational analogue of __gc_collect_precise, using the SAME
+ * frame-pointer walk (precise slots for stack-mapped frames, conservative regions for
+ * the rest). Reclaims only young garbage; old objects are never scanned or freed (see
+ * __gc_collect_minor). With no maps registered it degrades to exactly
+ * __gc_collect_minor. Returns objects freed. Same threading contract as
+ * __gc_collect_precise.
+ *
+ * UNLIKE __gc_safepoint, this is always directly callable regardless of
+ * __gc_set_auto_minor — the attestation gate applies only to __gc_safepoint's
+ * AUTOMATIC choice to run a minor cycle, not to this explicit entry. Calling this
+ * directly still requires every old->young reference store to have gone through
+ * __gc_write_barrier; the caller (not gc-core) is responsible for that. */
+int64_t __gc_collect_minor_precise(void);
 
 /* Full **moving/compacting** collection rooted PRECISELY at this thread's stack — the
  * relocating analogue of __gc_collect_precise (spec AOT00-T3-moving-collector.md §5). The

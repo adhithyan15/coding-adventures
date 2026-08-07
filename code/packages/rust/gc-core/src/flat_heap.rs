@@ -257,6 +257,36 @@ pub struct FlatHeap {
     /// sweep pause is bounded exactly like the mark. `None` unless a stepped sweep is under
     /// way. [`Self::incremental_finish`] drains any remainder and consumes it.
     sweep_state: Option<SweepState>,
+    /// Consecutive **minor** collections run since the last full collection (AOT00-T8).
+    /// Incremented by [`Self::minor_finish`]; reset to `0` by every full-collect entry
+    /// (`collect_region`/`collect_precise`/`collect_mixed`/`collect_compacting`). Consulted by
+    /// [`Self::should_collect_minor`] to bound how long old-generation garbage can go
+    /// unreclaimed: a minor collection never scans or frees the old generation, so if the
+    /// adaptive policy's survival-ratio signal stayed low forever, always honoring it would
+    /// starve the old generation of collection entirely.
+    minor_streak: u32,
+    /// Cap on [`Self::minor_streak`] before [`Self::should_collect_minor`] forces a full
+    /// collection regardless of the policy signal. Default [`DEFAULT_MAX_MINOR_STREAK`];
+    /// tunable via [`Self::set_max_minor_streak`], mirroring [`Self::set_tenure_age`].
+    max_minor_streak: u32,
+    /// **Barrier-coverage attestation** (AOT00-T8): whether [`Self::should_collect_minor`]
+    /// is allowed to recommend a minor collection at all. Default **`false`**.
+    ///
+    /// A minor collection's soundness rests entirely on the remembered set being
+    /// *complete* — every old→young reference store must have gone through
+    /// [`Self::write_barrier`], or a minor cycle can free a young object that is only
+    /// reachable through an unrecorded old→young edge (a real use-after-free, not a
+    /// leak). `gc-core` cannot verify that a given embedder's compiled field-store
+    /// lowering actually calls the barrier — the two are enforced in entirely separate
+    /// crates (a code generator vs. this one). Defaulting to `false` means
+    /// `should_collect_minor` never fires, and every existing automatic collection site
+    /// (`gc-core-capi`'s `__gc_safepoint`) keeps its exact pre-AOT00-T8 behavior, until
+    /// the embedder calls [`Self::set_auto_minor`] to attest that every reference store
+    /// its compiled output performs is barrier-covered. (`vm-core`'s interpreter loop is
+    /// barrier-covered — see `handle_gc_field_store` — and can safely opt in; the
+    /// native-AOT/LLVM code generators do not emit the barrier on `field_store` today,
+    /// so they must not.)
+    auto_minor: bool,
 }
 
 /// The resumable state of an incremental sweep — the sweep-phase analogue of the mark's
@@ -296,6 +326,13 @@ enum SweepVisit {
 /// (existing consumers and tests are unchanged); aging is opt-in via
 /// [`FlatHeap::set_tenure_age`] and can become the default in a later tuning pass.
 pub const DEFAULT_TENURE_AGE: u8 = 1;
+
+/// Default [`FlatHeap::max_minor_streak`] (AOT00-T8): how many consecutive paced minor
+/// collections `should_collect_minor` allows before forcing a full collect. `8` is a
+/// starting heuristic (analogous to [`INITIAL_THRESHOLD`]'s doubling/halving constant) —
+/// generous enough that a genuinely young-heavy workload gets real minor-GC throughput,
+/// small enough that old-generation garbage is never more than 8 paced cycles stale.
+pub const DEFAULT_MAX_MINOR_STREAK: u32 = 8;
 
 /// Debug-assert message for the four stop-the-world `collect*` entries: none may run
 /// *between* an [`FlatHeap::incremental_start`] and its [`FlatHeap::incremental_finish`].
@@ -415,6 +452,9 @@ impl FlatHeap {
             mark_roots: Vec::new(),
             mark_regions: Vec::new(),
             sweep_state: None,
+            minor_streak: 0,
+            max_minor_streak: DEFAULT_MAX_MINOR_STREAK,
+            auto_minor: false,
         }
     }
 
@@ -432,6 +472,34 @@ impl FlatHeap {
     /// The current tenuring threshold (see [`Self::set_tenure_age`]).
     pub fn tenure_age(&self) -> u8 {
         self.tenure_age
+    }
+
+    /// Set the cap on consecutive paced minor collections (AOT00-T8; see
+    /// [`Self::should_collect_minor`]). Clamped to a minimum of `1` — `0` would make
+    /// `should_collect_minor` never fire, silently disabling automatic generational
+    /// scheduling rather than just tuning it.
+    pub fn set_max_minor_streak(&mut self, cap: u32) {
+        self.max_minor_streak = cap.max(1);
+    }
+
+    /// The current minor-streak cap (see [`Self::set_max_minor_streak`]).
+    pub fn max_minor_streak(&self) -> u32 {
+        self.max_minor_streak
+    }
+
+    /// **Attest that every reference store this embedder's compiled output performs is
+    /// covered by [`Self::write_barrier`]**, and thereby allow [`Self::should_collect_minor`]
+    /// to recommend automatic minor collections (see the field's own doc comment for the
+    /// full soundness argument). Off by default. Call this only after confirming your
+    /// code generator's field-store lowering calls the barrier on every old→young store —
+    /// getting this wrong is a real use-after-free, not a leak or a perf regression.
+    pub fn set_auto_minor(&mut self, on: bool) {
+        self.auto_minor = on;
+    }
+
+    /// Whether automatic minor scheduling is attested-safe (see [`Self::set_auto_minor`]).
+    pub fn auto_minor(&self) -> bool {
+        self.auto_minor
     }
 
     /// Allocate `n` zeroed bytes and return a **real pointer** to the payload.
@@ -670,6 +738,39 @@ impl FlatHeap {
         )
     }
 
+    /// Whether the *next* paced collection should be a **minor** (young-generation-only)
+    /// collection instead of a full one, per [`AdaptivePolicy`]'s survival-ratio signal —
+    /// the generational analogue of [`Self::should_compact`], and the other half of the
+    /// same "one place this decision lives" contract (AOT00-T8).
+    ///
+    /// Three conditions must all hold:
+    /// 0. [`Self::auto_minor`] is `true` — the embedder has attested every reference store
+    ///    its compiled output performs is barrier-covered (see that field's doc comment
+    ///    for why this gate exists: an unattested caller enabling minor collections here
+    ///    would be a real use-after-free, not just an imprecision). **Off by default**, so
+    ///    this method — and therefore every automatic collection site that consults it —
+    ///    is a no-op until an embedder opts in.
+    /// 1. `AdaptivePolicy` recommends [`GcAlgorithm::Generational`] as its single top-priority
+    ///    decision (so, like `should_compact`, this correctly answers `false` when a
+    ///    higher-priority Incremental signal fired instead — the same deferral, one rung up).
+    /// 2. [`Self::minor_streak`] hasn't reached [`Self::max_minor_streak`]. A minor collection
+    ///    never scans or frees the old generation (see [`Self::collect_minor`]), and the EMA
+    ///    survival ratio driving condition 1 can stay low indefinitely — so without this cap,
+    ///    sustained low survival would recommend `Generational` forever and a caller that
+    ///    always honored it would never run a full collection again, leaking the old
+    ///    generation without bound. The cap forces a full collect at least every
+    ///    `max_minor_streak` paced cycles, exactly bounding how stale old-generation garbage
+    ///    can get. Pure policy, like its sibling: names no roots, runs no collection.
+    pub fn should_collect_minor(&self) -> bool {
+        if !self.auto_minor || self.minor_streak >= self.max_minor_streak {
+            return false;
+        }
+        matches!(
+            AdaptivePolicy::default().evaluate(&self.profile),
+            PolicyDecision::SuggestSwitch(GcAlgorithm::Generational, _)
+        )
+    }
+
     /// Re-tune the threshold after a cycle, given the live bytes *before* it.
     ///
     /// The heuristic (ported verbatim from `twig_gc.c`): if **more than half** the
@@ -742,6 +843,7 @@ impl FlatHeap {
     /// extra cycle; it never frees a live one.
     pub fn collect(&mut self, roots: &[usize]) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -808,6 +910,7 @@ impl FlatHeap {
     /// scanning starts at `base` and a sub-8-byte tail is ignored.
     pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -929,12 +1032,13 @@ impl FlatHeap {
     pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
+        let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // Roots — mark only the young objects they reach (old are live).
         for &r in roots {
             self.mark_word(r, &mut work, true);
         }
-        self.minor_finish(before, work)
+        self.minor_finish(before, prev_live, work)
     }
 
     /// A **minor** collection rooted at a **raw memory region** — the stack-scan
@@ -949,17 +1053,71 @@ impl FlatHeap {
     pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
+        let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // SAFETY: caller guarantees `[base, base+len)` is readable.
         self.mark_region(base, len, &mut work, true);
-        self.minor_finish(before, work)
+        self.minor_finish(before, prev_live, work)
+    }
+
+    /// A **minor** collection rooted from **both** exact root slots *and* raw
+    /// conservative regions in one cycle (AOT00-T8) — the young-generation analogue of
+    /// [`Self::collect_mixed`], for exactly the same reason `collect_mixed` exists
+    /// alongside `collect_precise`/`collect_region`: a real precise stack walk
+    /// (`crate::frame_root_slots` via `gc-core-capi`'s `build_precise_roots`) produces a
+    /// *mix* of exact slots (stack-mapped frames) and whole conservative spans (unmapped
+    /// frames), and both must be marked in the same pass and reclaimed by the same sweep.
+    /// Neither existing minor entry matches that shape: [`Self::collect_minor`] takes
+    /// root *values* (a plain slice a caller like `vm-core` already assembled, not
+    /// addresses to dereference), and [`Self::collect_minor_region`] takes one raw span
+    /// only. This is the strict generalisation of both, exactly as `collect_mixed` is of
+    /// `collect_precise`/`collect_region`: `collect_minor_mixed(slots, &[])` traces the
+    /// same set as looping `mark_word` over `slots` values would if they were pre-read,
+    /// and `collect_minor_mixed(&[], &[(base, len)])` is `collect_minor_region(base, len)`.
+    ///
+    /// # Safety
+    /// Every address in `root_slots` must be readable (each names a live stack /
+    /// register-spill slot; read `unaligned`), and every `(base, len)` region must be
+    /// readable — the same contract as [`Self::collect_mixed`].
+    pub unsafe fn collect_minor_mixed(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> GcCycleStats {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // Exact slots first (precise frames): read the one word at each address.
+        for &slot in root_slots {
+            // SAFETY: caller guarantees each `slot` address is readable; the word
+            // there is a candidate root. `read_unaligned` tolerates sub-alignment.
+            let word = unsafe { ptr::read_unaligned(slot as *const usize) };
+            self.mark_word(word, &mut work, true);
+        }
+        // Then whole regions (unmapped frames): every aligned word is a candidate.
+        for &(base, len) in regions {
+            // SAFETY: caller guarantees `[base, base+len)` is readable.
+            self.mark_region(base, len, &mut work, true);
+        }
+        self.minor_finish(before, prev_live, work)
     }
 
     /// Shared tail of a minor cycle: scan the remembered old→young parents, drain
-    /// the young worklist, sweep the young generation, and build the stats. Both
-    /// [`Self::collect_minor`] and [`Self::collect_minor_region`] call this after
-    /// their (slice- vs region-sourced) root mark.
-    fn minor_finish(&mut self, before: usize, mut work: Vec<*mut FlatHeader>) -> GcCycleStats {
+    /// the young worklist, sweep the young generation, re-tune the pacing threshold, and
+    /// build the stats. [`Self::collect_minor`], [`Self::collect_minor_region`], and
+    /// [`Self::collect_minor_mixed`] all call this after their (value-, region-, or
+    /// mixed-sourced) root mark. `prev_live` is `self.live_bytes` as it stood *before* the
+    /// mark (captured by the caller, mirroring every full-collect entry) — needed by
+    /// [`Self::adapt_threshold`] so a minor cycle re-tunes pacing exactly like a full one
+    /// does, instead of leaving `should_collect` pinned true (and re-walking the stack on
+    /// every subsequent safepoint) until a full collect finally happens to run.
+    fn minor_finish(
+        &mut self,
+        before: usize,
+        prev_live: usize,
+        mut work: Vec<*mut FlatHeader>,
+    ) -> GcCycleStats {
         // Remembered old parents — scan each for the young children it holds.
         // Snapshot the addresses first so the immutable scan can't alias the set.
         // Each entry is a live old object (a full collect clears the set; a minor
@@ -977,6 +1135,11 @@ impl FlatHeap {
         // Sweep the young generation only; age/promote survivors.
         let (freed, survived, live, promoted) = self.sweep(true);
         self.live_bytes = live;
+        // Re-tune pacing exactly as a full collect does (AOT00-T8): without this, a
+        // heap sitting over threshold after a minor cycle would stay `should_collect()
+        // == true`, re-walking the stack at every subsequent safepoint until a full
+        // collect eventually runs and adapts it — this keeps that in step.
+        self.adapt_threshold(prev_live);
         // The remembered set is intentionally *kept*: a minor cycle frees no old
         // object, so no entry dangles. Entries whose young child was promoted are
         // now old→old — stale but harmless (the next minor scan finds no young
@@ -995,6 +1158,9 @@ impl FlatHeap {
         };
         self.profile.record_cycle(&stats);
         self.collection_count += 1;
+        // A minor cycle never scans/frees the old generation — see should_collect_minor's
+        // doc for why this is bounded, not left to grow unchecked (AOT00-T8).
+        self.minor_streak = self.minor_streak.saturating_add(1);
         stats
     }
 
@@ -1050,6 +1216,7 @@ impl FlatHeap {
     /// [`Self::collect_region`] places on its `[base, base + len)` span.
     pub unsafe fn collect_precise(&mut self, root_slots: &[usize]) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -1129,6 +1296,7 @@ impl FlatHeap {
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -1358,6 +1526,7 @@ impl FlatHeap {
     pub unsafe fn incremental_finish(&mut self) -> GcCycleStats {
         debug_assert!(self.mark_in_progress, "incremental_finish outside a mark phase");
         debug_assert!(self.mark_worklist.is_empty(), "marking not complete — step to done first");
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
 
         let (freed, survived, before, prev_live) = if let Some(mut st) = self.sweep_state.take() {
             // A stepped sweep is under way. Drain any remaining blocks monolithically so finish
@@ -1981,6 +2150,7 @@ impl FlatHeap {
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -2695,6 +2865,153 @@ mod tests {
         // deferral `should_compact`'s doc comment describes.
         heap.profile.max_pause_ns = 20_000_000;
         assert!(!heap.should_compact(), "pause-time signal outranks fragmentation");
+    }
+
+    // ── Adaptive safepoint scheduling — generational enactment (AOT00-T8) ─────
+
+    /// `should_collect_minor` is a hard `false` until the embedder attests barrier
+    /// coverage via `set_auto_minor(true)` — even with every other condition (enough
+    /// cycles, low survival ratio) satisfied. This is the fix for the security-review
+    /// finding that automatic minor scheduling is unsound for a producer (native-AOT/LLVM)
+    /// that doesn't emit `write_barrier` on its heap stores; see `auto_minor`'s own doc
+    /// comment on the `FlatHeap` struct.
+    #[test]
+    fn should_collect_minor_is_false_until_auto_minor_is_attested() {
+        let mut heap = FlatHeap::new();
+        assert!(!heap.auto_minor(), "off by default");
+
+        heap.profile.total_collections = 10;
+        heap.profile.ema_survival_ratio = 0.01; // otherwise a clean Generational recommendation
+        assert!(!heap.should_collect_minor(), "unattested: false regardless of the policy signal");
+
+        heap.set_auto_minor(true);
+        assert!(heap.auto_minor());
+        assert!(heap.should_collect_minor(), "attested: the policy signal is now honored");
+    }
+
+    #[test]
+    fn should_collect_minor_follows_adaptive_policy_survival_signal() {
+        let mut heap = FlatHeap::new();
+        heap.set_auto_minor(true); // attest barrier coverage — see the gate test above
+
+        // Too few cycles: gated exactly like should_compact.
+        heap.profile.total_collections = 4;
+        heap.profile.ema_survival_ratio = 0.01;
+        assert!(!heap.should_collect_minor(), "too few cycles to advise yet");
+
+        // Enough cycles, but survival ratio above the 0.15 threshold.
+        heap.profile.total_collections = 10;
+        heap.profile.ema_survival_ratio = 0.50;
+        assert!(!heap.should_collect_minor(), "survival ratio too high to warrant generational");
+
+        // Enough cycles, survival ratio below threshold, no higher-priority
+        // (pause-time) signal preempting it.
+        heap.profile.ema_survival_ratio = 0.01;
+        assert!(heap.should_collect_minor(), "low survival ratio with no higher-priority signal");
+
+        // A higher-priority signal (max pause > 10ms) takes precedence over
+        // the survival-ratio signal, per AdaptivePolicy's own priority order —
+        // mirrors should_compact's own pause-outranks-fragmentation case.
+        heap.profile.max_pause_ns = 20_000_000;
+        assert!(!heap.should_collect_minor(), "pause-time signal outranks generational");
+    }
+
+    /// When both the generational (low survival) and compacting (high fragmentation)
+    /// signals would fire, `should_collect_minor` wins — Generational outranks
+    /// Compacting in `AdaptivePolicy`'s own priority order, and `AdaptivePolicy::evaluate`
+    /// returns only its single top recommendation, so the two predicates are naturally
+    /// mutually exclusive.
+    #[test]
+    fn should_collect_minor_outranks_should_compact() {
+        let mut heap = FlatHeap::new();
+        heap.set_auto_minor(true);
+        heap.profile.total_collections = 10;
+        heap.profile.ema_survival_ratio = 0.01; // generational signal
+        heap.profile.last_fragmentation = 0.90; // compacting signal, also firing
+        assert!(heap.should_collect_minor(), "generational outranks compacting");
+        assert!(!heap.should_compact(), "should_compact defers to the higher-priority signal");
+    }
+
+    /// A sustained low-survival profile would recommend `Generational` forever — the
+    /// starvation hazard AOT00-T8 §2 describes. `minor_streak` bounds it: once it reaches
+    /// `max_minor_streak`, `should_collect_minor` forces a full collect regardless of the
+    /// policy signal.
+    #[test]
+    fn should_collect_minor_streak_cap_forces_full_collect() {
+        let mut heap = FlatHeap::new();
+        heap.set_auto_minor(true);
+        assert_eq!(heap.max_minor_streak(), DEFAULT_MAX_MINOR_STREAK);
+        heap.profile.total_collections = 10;
+        heap.profile.ema_survival_ratio = 0.01; // sustained low survival
+
+        heap.set_max_minor_streak(3);
+        assert_eq!(heap.max_minor_streak(), 3);
+
+        heap.minor_streak = 2;
+        assert!(heap.should_collect_minor(), "under the cap: policy signal still honored");
+        heap.minor_streak = 3;
+        assert!(!heap.should_collect_minor(), "at the cap: forced to a full collect");
+        heap.minor_streak = 4;
+        assert!(!heap.should_collect_minor(), "past the cap: still forced");
+    }
+
+    /// `set_max_minor_streak` clamps to a minimum of 1 — a `0` cap would make
+    /// `should_collect_minor` never fire, silently disabling the feature rather than
+    /// just tuning it (mirrors `set_tenure_age`'s `0` → `1` clamp).
+    #[test]
+    fn set_max_minor_streak_clamps_to_one() {
+        let mut heap = FlatHeap::new();
+        heap.set_max_minor_streak(0);
+        assert_eq!(heap.max_minor_streak(), 1);
+    }
+
+    /// Real collections (not just direct field pokes) drive the streak correctly: a
+    /// minor collection increments it, and any full collection resets it to 0 — proven
+    /// against `collect_minor` and `collect` (`collect_precise`/`collect_mixed`/
+    /// `collect_compacting`/`collect_region`/`incremental_finish` share the same reset,
+    /// added at each of their entry points).
+    #[test]
+    fn minor_streak_increments_on_minor_and_resets_on_full_collect() {
+        let mut heap = FlatHeap::new();
+        let _ = heap.collect_minor(&[]);
+        let _ = heap.collect_minor(&[]);
+        assert_eq!(heap.minor_streak, 2);
+
+        let _ = heap.collect(&[]);
+        assert_eq!(heap.minor_streak, 0, "a full collect resets the streak");
+    }
+
+    /// `collect_minor_mixed` is the young-only analogue of `collect_mixed`: it traces
+    /// exact root slots plus conservative regions in one pass, but — unlike
+    /// `collect_mixed` — never reaps the old generation. An old object unreachable from
+    /// anything survives (old objects are never swept by a minor cycle); a young
+    /// look-alike-free object not named by any root/region is reclaimed.
+    #[test]
+    fn collect_minor_mixed_traces_slots_and_regions_young_only() {
+        let mut heap = FlatHeap::new();
+        let old_garbage = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[old_garbage]); // promote to old; unrooted from here on
+
+        let a = heap.alloc(16, 0) as usize; // rooted via a slot
+        let b = heap.alloc(16, 0) as usize; // rooted via a region
+        let garbage = heap.alloc(16, 0) as usize; // young, unrooted
+
+        let frame_a: [usize; 1] = [a];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut slots = Vec::new();
+        frame_root_slots(frame_a.as_ptr() as usize, &rec, &mut slots);
+        let frame_b: [usize; 1] = [b];
+        let region = (frame_b.as_ptr() as *const u8, std::mem::size_of_val(&frame_b));
+
+        let stats = unsafe { heap.collect_minor_mixed(&slots, &[region]) };
+        assert_eq!(stats.freed, 1, "only the unrooted young object is freed");
+        assert!(!heap.find_header(a).is_null(), "slot-rooted young survivor kept");
+        assert!(!heap.find_header(b).is_null(), "region-rooted young survivor kept");
+        assert!(heap.find_header(garbage).is_null(), "unrooted young garbage reclaimed");
+        assert!(
+            !heap.find_header(old_garbage).is_null(),
+            "old garbage untouched — a minor cycle never sweeps the old generation"
+        );
     }
 
     /// Retention-heavy cycle (> half survived) doubles the threshold.

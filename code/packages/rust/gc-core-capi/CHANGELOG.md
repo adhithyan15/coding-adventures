@@ -2,6 +2,37 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.0 - 2026-08-06 — `__gc_safepoint` gains an (opt-in) automatic generational path (AOT00-T8)
+
+- **`__gc_collect_minor_precise()`** — new C ABI entry, the minor-generation analogue of
+  `__gc_collect_precise`: same frame-pointer walk (precise slots for stack-mapped frames,
+  conservative regions for the rest), but drives `gc_core::FlatHeap::collect_minor_mixed`
+  instead of `collect_mixed`, so it never scans or frees the old generation. Degrades to
+  exactly `__gc_collect_minor` with no stack maps registered. Always directly callable.
+- **`__gc_safepoint`** now also checks `gc_core::FlatHeap::should_collect_minor` — the
+  `Generational` half of `AdaptivePolicy`'s recommendations, previously advisory-only at
+  every automatic collection site. Priority (matching `AdaptivePolicy`'s own): minor, then
+  compacting (`should_compact`, unchanged), then a plain precise collect.
+- **`__gc_set_auto_minor(on)` / `__gc_is_auto_minor()`** — C ABI for `gc-core`'s new
+  barrier-coverage attestation gate. **Off by default**, and this default is load-bearing:
+  a security review of the first draft found that `__gc_safepoint`'s automatic callers —
+  the native-AOT/LLVM backends emit `safepoint` at every loop back-edge and function
+  entry — do not emit `__gc_write_barrier` on their `field_store` lowering (only
+  `vm-core`'s interpreter does), so an unconditional minor path would have been a real
+  use-after-free for ordinary AOT-compiled programs. `__gc_safepoint` is therefore
+  byte-for-byte unchanged from 0.23.0's behavior — precise + compacting only — until an
+  embedder calls `__gc_set_auto_minor(1)` after confirming its own barrier coverage. No
+  producer does yet (tracked as follow-up work in the spec).
+- **`__gc_set_max_minor_streak(cap)` / `__gc_max_minor_streak()`** — C ABI for
+  `gc-core`'s minor-streak cap (bounds consecutive automatic minor collections, once
+  attested, so a sustained low-survival-ratio workload can't starve the old generation of
+  collection forever — a leak, orthogonal to the use-after-free above). Clamped to
+  `1..=u32::MAX`; default `8`. Mirrors `__gc_set_tenure_age`/`__gc_tenure_age`.
+- No change to any existing symbol's ABI or default behavior below the collection
+  threshold, or above it while unattested — `__gc_safepoint` is still a no-op until
+  `should_collect` fires, and every other entry point is untouched.
+- See `code/specs/AOT00-T8-adaptive-safepoint-scheduling.md`, especially §2b.
+
 ## 0.23.0 - 2026-08-02 — `__gc_safepoint` upgrades to precise + automatic compaction
 
 - **`__gc_safepoint`** no longer runs the fully-conservative `__gc_collect`
