@@ -93,11 +93,57 @@ No new letters beyond **г**, no tables, and every lesson is `voice` — the who
 chapter is drivable, which is the first time that has been true of a Russian
 chapter end to end.
 
-Known debt, recorded rather than hidden: Chapter 3 has **no LaTeX chapter and no
-HL05 ledger entry**, because Russian's book chapters are handwritten and none
-was authored for it. The lessons are canonical; the book is behind them.
+Chapter 3 now has a LaTeX chapter, **generated** from these lessons rather than
+hand-written — the first generated chapter in the Russian book. It still has no
+HL05 ledger entry: with no consolidation lesson, its only candidate payoff
+(`RU-C03-idti`) reaches 5 of the chapter's 19 atoms, a representativeness of
+0.26 against the 0.50 floor. That debt is recorded rather than papered over.
 
-## Chapter 4 — Having, and what things are *(planned)*
+## Chapter 4 — Verbs of the mind and the page *(authored)*
+
+**думать** "to think" ← the noun **дума**, "a thought", and the State **Дума**;
+the standard account makes *дума* an early Gothic borrowing from *dōms*
+"judgement", so English **doom** and **deem** are relatives by contact rather
+than by descent, and the lesson says which kind of link that is. Grammatically
+it opens the fact that governs every Russian verb: verbs travel in **pairs**,
+*думать · подумать*, doing against deed-done → **понимать** "to understand" ←
+\**h₁em-* "take" (Latin *emere* → *exempt, redeem, example*), so the word
+literally says *take hold of*, exactly as **comprehend** and **grasp** do;
+grammatically it shows a pair built by reshaping a stem (*понимать · понять*)
+and hands over ***я не понимаю*** → **читать** "to read", on the Slavic root
+that also gave **число** "number" and **честь** "honour" — and with **no secure
+English cousin**, which the lesson says outright rather than inventing one;
+grammatically it explains why Russian has no separate *I am reading*: **быть**
+has no present tense to build one with → **писать** "to write" ← \**peyḱ-* "to
+cut, scratch", the root of Latin *pingere* and so of **paint, picture,
+pigment**; it teaches the letter **ш** the track has been reading since *живёшь*
+without naming, and it flags the **stress trap** — *pisát'* is *to write*,
+*písat'* is a child's word for urinating, and beginners hit it constantly.
+
+## Chapter 5 — Taking, asking, helping, loving *(authored)*
+
+**брать** "to take" ← \**bʰer-* "to carry" — English **bear, birth, burden**,
+Latin *ferre* (*transfer, refer*), Greek *phérein* (*metaphor*); its finished
+partner **взять** is **suppletive**, a different word entirely, the same trick
+that gives *идти* its past *шёл* and English *go* its *went* — and *взять* turns
+out to sit on the very root behind *понимать*. **Брат** "brother" is flagged as
+the false friend it is → **спрашивать** "to ask (a question)" ← \**preḱ-*
+"to ask", which became Latin *precārī* and so English **pray, prayer,
+precarious**, and German *fragen*; the ordinary pair *спрашивать · спросить*
+after the strange one → **помогать** "to help", built on **мочь** "to be able" ←
+\**magʰ-*, English **may, might, dismay** and Greek *mēkhanḗ* → *machine*; its
+partner **помочь** ends in **-чь** rather than **-ть** → **любить** "to love,
+and to like" ← \**leubʰ-*, which is English **love** itself, plus **lief**,
+**believe** and *by your leave*; it teaches the **л** that appears in *люблю*
+and nowhere else in the verb, and it closes the chapter by putting every verb
+the track owns after *люблю* as a bare infinitive.
+
+Aspect is **named and not finished** in these two chapters. Every one of the
+eight verbs is imperfective, every lesson gives its perfective partner by name,
+and what a pair does to a whole sentence is deferred to a chapter of its own —
+the honest ramp for the hardest thing about Russian verbs.
+
+## Chapter 6 — Having, and what things are *(planned)*
 
 - **это** sentences ("this is…"), and **быть** in past and future in their own
   right rather than as a footnote to the present.
@@ -111,8 +157,8 @@ was authored for it. The lessons are canonical; the book is behind them.
 Cases introduced one at a time on real need (accusative for objects → prepositional
 for location → genitive for "of"/negation), the rest of the **-ешь / -ишь**
 conjugations now that Chapter 3 has named the split, aspect
-(imperfective/perfective) previewed through everyday verbs — with the
-идти/ходить pair already in hand — more core verbs against the shared `VERB-*`
+(imperfective/perfective) taught properly, now that chapters 4-5 have named the
+pair on sixteen verbs and the идти/ходить split is already in hand — more core verbs against the shared `VERB-*`
 list, everyday vocabulary (food, city, time), building toward B1 "normal
 day-to-day conversation."
 

@@ -47,7 +47,7 @@ pronounced as two sounds — Russians say *it-TEE*, with the stress at the end.
 
 The endings are ones you already have:
 
-> **Я иду́.** — *ya idú* — **I'm going.**
+> **Я иду.** — *ya idú* — **I'm going.**
 >
 > **Ты идёшь.** — *ty idyósh* — **you're going.**
 
@@ -59,9 +59,9 @@ not with *говорить*.
 
 Russian keeps a **second** verb for the same activity:
 
-> **Я иду́** — I am on my way, **now**, in one direction.
+> **Я иду** — I am on my way, **now**, in one direction.
 >
-> **Я хожу́** — *ya khazhú* — I go, **as a habit**, back and forth.
+> **Я хожу** — *ya khazhú* — I go, **as a habit**, back and forth.
 
 That is not a tense difference. They are two separate verbs, and Russian makes
 you choose one before you can open your mouth.

@@ -1473,6 +1473,22 @@
       "scriptSet": "arabic-main"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "title": "Understanding, Reading, Writing",
+      "label": "ch:ar-understanding-reading-writing",
+      "output": "arabic/book/chapters/ch31-understanding-reading-writing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "title": "Taking, Thinking, Helping, Loving",
+      "label": "ch:ar-taking-thinking-helping-loving",
+      "output": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -1929,6 +1945,22 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 33,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:ta-verbs-of-the-mind",
+      "output": "tamil/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ta-verbs-between-people",
+      "output": "tamil/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "title": "Numbers One to Ten",
@@ -2213,6 +2245,24 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:bn-mind-and-page",
+      "output": "bengali/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:bn-conjunct-verbs",
+      "output": "bengali/book/chapters/ch09-conjunct-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -2372,6 +2422,33 @@
       "label": "ch:ja-three-scripts",
       "output": "japanese/book/chapters/ch01-three-scripts.tex",
       "scriptSet": "japanese-main"
+    },
+    {
+      "language": "russian",
+      "chapter": 3,
+      "title": "Six Verbs, and the One You Never Say",
+      "label": "ch:russian-first-verbs",
+      "output": "russian/book/chapters/ch03-first-verbs.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "title": "Verbs of the Mind and the Page",
+      "label": "ch:russian-verbs-of-the-mind",
+      "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:russian-verbs-of-the-hand",
+      "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
     }
   ],
   "handwritten": [

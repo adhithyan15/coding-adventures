@@ -93,6 +93,36 @@
         "RU-EXT-007-CORE-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "RU-PATH-008",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-008-MIND-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-009",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-009-HAND-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -210,7 +240,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "RU-PATH-007"
+        "RU-PATH-007",
+        "RU-PATH-008",
+        "RU-PATH-009"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -220,14 +252,9 @@
         "VERB-COME",
         "VERB-SAY",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -241,14 +268,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -341,6 +365,34 @@
       "prerequisites": [],
       "lessons": [
         "RU-C01-privet"
+      ]
+    },
+    {
+      "id": "RU-EXT-008-MIND-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I think, understand, read and write in Russian, and name the finished partner every one of those verbs travels with.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ]
+    },
+    {
+      "id": "RU-EXT-009-HAND-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
       ]
     }
   ]

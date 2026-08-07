@@ -29,7 +29,10 @@ function realReport() {
 }
 
 describe("the gate that would have caught the A2 claim", () => {
-  it("separates what a track TOUCHES from what it has ATTAINED", () => {
+  // Explicit budget: `realReport()` builds the entire gap report over the whole corpus.
+  // At 1,313 lessons that runs past vitest's 5,000 ms default under full-suite parallel
+  // load, while passing in isolation — so a per-file run will not reproduce it.
+  it("separates what a track TOUCHES from what it has ATTAINED", { timeout: 30_000 }, () => {
     const gate = realReport().levelGate!;
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
 

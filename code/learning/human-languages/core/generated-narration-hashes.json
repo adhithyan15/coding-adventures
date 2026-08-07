@@ -471,6 +471,40 @@
       "jsonHash": "fnv1a64:713202450160efc6"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch31.txt",
+      "json": "arabic/narration/ch31.json",
+      "textHash": "fnv1a64:bdcaceaef3e7a7d8",
+      "jsonHash": "fnv1a64:bb16e528e936f72c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch32.txt",
+      "json": "arabic/narration/ch32.json",
+      "textHash": "fnv1a64:3ca7e79f4affb56d",
+      "jsonHash": "fnv1a64:5fbad3ebf5b3dc89"
+    },
+    {
       "language": "bengali",
       "chapter": 1,
       "sourceHash": "fnv1a64:4d5d139533791964",
@@ -597,6 +631,40 @@
       "json": "bengali/narration/ch07.json",
       "textHash": "fnv1a64:26b748b466f6feed",
       "jsonHash": "fnv1a64:66d25104e364d880"
+    },
+    {
+      "language": "bengali",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:db0e24b2e41cd84b",
+      "lessonIds": [
+        "BN-C08-bhaba",
+        "BN-C08-bojha",
+        "BN-C08-pora",
+        "BN-C08-lekha"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch08.txt",
+      "json": "bengali/narration/ch08.json",
+      "textHash": "fnv1a64:b82b6ec3905b4ac3",
+      "jsonHash": "fnv1a64:436c312f61d57d06"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:87c66f64ea563bde",
+      "lessonIds": [
+        "BN-C09-neowa",
+        "BN-C09-jijnasa-kora",
+        "BN-C09-sahajjo-kora",
+        "BN-C09-bhalo-laga"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch09.txt",
+      "json": "bengali/narration/ch09.json",
+      "textHash": "fnv1a64:ebf1670e1f25eeb0",
+      "jsonHash": "fnv1a64:09eb129fb72c95b7"
     },
     {
       "language": "chinese",
@@ -4743,7 +4811,7 @@
     {
       "language": "russian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:db2b416ba4e0b8f9",
+      "sourceHash": "fnv1a64:d2fa252939f19e6f",
       "lessonIds": [
         "RU-C03-byt",
         "RU-C03-zhit",
@@ -4756,8 +4824,42 @@
       "drivablePrefix": 6,
       "text": "russian/narration/ch03.txt",
       "json": "russian/narration/ch03.json",
-      "textHash": "fnv1a64:505407b8a1fc6797",
-      "jsonHash": "fnv1a64:d7f5efd69186e60e"
+      "textHash": "fnv1a64:26e2130882173b36",
+      "jsonHash": "fnv1a64:3539c96c585e851f"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:01b832ff24f65733",
+      "lessonIds": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "russian/narration/ch04.txt",
+      "json": "russian/narration/ch04.json",
+      "textHash": "fnv1a64:f2db03f1baeb0f40",
+      "jsonHash": "fnv1a64:6bb8668802b4545a"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+      "lessonIds": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "russian/narration/ch05.txt",
+      "json": "russian/narration/ch05.json",
+      "textHash": "fnv1a64:8317a203aa3b3696",
+      "jsonHash": "fnv1a64:2682acb694d46961"
     },
     {
       "language": "sanskrit",
@@ -6002,6 +6104,40 @@
       "json": "tamil/narration/ch32.json",
       "textHash": "fnv1a64:38557cf06f796458",
       "jsonHash": "fnv1a64:abadf3ea1b02b4e9"
+    },
+    {
+      "language": "tamil",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:af591db5810ac6fb",
+      "lessonIds": [
+        "TA-C33-ninai",
+        "TA-C33-puri",
+        "TA-C33-padi",
+        "TA-C33-ezhutu"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "tamil/narration/ch33.txt",
+      "json": "tamil/narration/ch33.json",
+      "textHash": "fnv1a64:d5d28e2aea496fd2",
+      "jsonHash": "fnv1a64:8e67d492e194f01a"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:2e2e5e869f303320",
+      "lessonIds": [
+        "TA-C34-edu",
+        "TA-C34-kel",
+        "TA-C34-utavu",
+        "TA-C34-pidi"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "tamil/narration/ch34.txt",
+      "json": "tamil/narration/ch34.json",
+      "textHash": "fnv1a64:36d980fd07602035",
+      "jsonHash": "fnv1a64:595f29450881bd12"
     },
     {
       "language": "telugu",

@@ -278,6 +278,30 @@
       "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "tex": "arabic/book/chapters/ch31-understanding-reading-writing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "tex": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:28baeae54e13a2dc",
@@ -299,6 +323,30 @@
         "BN-C07-jana"
       ],
       "tex": "bengali/book/chapters/ch07-core-verbs.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:db0e24b2e41cd84b",
+      "lessonIds": [
+        "BN-C08-bhaba",
+        "BN-C08-bojha",
+        "BN-C08-pora",
+        "BN-C08-lekha"
+      ],
+      "tex": "bengali/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:87c66f64ea563bde",
+      "lessonIds": [
+        "BN-C09-neowa",
+        "BN-C09-jijnasa-kora",
+        "BN-C09-sahajjo-kora",
+        "BN-C09-bhalo-laga"
+      ],
+      "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
     },
     {
       "language": "chinese",
@@ -2219,6 +2267,44 @@
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "russian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:d2fa252939f19e6f",
+      "lessonIds": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
+      ],
+      "tex": "russian/book/chapters/ch03-first-verbs.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:01b832ff24f65733",
+      "lessonIds": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "tex": "russian/book/chapters/ch04-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+      "lessonIds": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f46cbe023b464e1",
@@ -2789,6 +2875,30 @@
         "TA-C32-teri"
       ],
       "tex": "tamil/book/chapters/ch32-core-verbs.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:af591db5810ac6fb",
+      "lessonIds": [
+        "TA-C33-ninai",
+        "TA-C33-puri",
+        "TA-C33-padi",
+        "TA-C33-ezhutu"
+      ],
+      "tex": "tamil/book/chapters/ch33-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:2e2e5e869f303320",
+      "lessonIds": [
+        "TA-C34-edu",
+        "TA-C34-kel",
+        "TA-C34-utavu",
+        "TA-C34-pidi"
+      ],
+      "tex": "tamil/book/chapters/ch34-verbs-between-people.tex"
     },
     {
       "language": "telugu",

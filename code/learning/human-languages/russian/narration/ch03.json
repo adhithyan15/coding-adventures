@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:db2b416ba4e0b8f9",
+  "sourceHash": "fnv1a64:d2fa252939f19e6f",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e041f674887b95cc",
+      "sourceHash": "fnv1a64:465d68c6c09ddaf8",
       "notice": null,
       "blocks": [
         {
@@ -563,11 +563,11 @@
             },
             {
               "kind": "speech",
-              "text": "ты зна́ешь — ty znáyesh — you know."
+              "text": "ты знаешь — ty znáyesh — you know."
             },
             {
               "kind": "speech",
-              "text": "ты говори́шь — ty gavarísh — you speak."
+              "text": "ты говоришь — ty gavarísh — you speak."
             },
             {
               "kind": "speech",
@@ -631,11 +631,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two families — \"зна́ешь … говори́шь\"",
+              "instruction": "the two families — \"знаешь … говоришь\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two families — \"зна́ешь … говори́шь\"]"
+              "source": "[YOU SAY: the two families — \"знаешь … говоришь\"]"
             }
           ]
         },
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6012735dbd137abe",
+      "sourceHash": "fnv1a64:b18ddd600f40a6a6",
       "notice": null,
       "blocks": [
         {
@@ -714,7 +714,7 @@
             },
             {
               "kind": "speech",
-              "text": "ты ви́дишь — ty vídish — you see."
+              "text": "ты видишь — ty vídish — you see."
             },
             {
               "kind": "speech",
@@ -733,7 +733,7 @@
             },
             {
               "kind": "speech",
-              "text": "Я ви́жу. — ya vízhu — I see."
+              "text": "Я вижу. — ya vízhu — I see."
             },
             {
               "kind": "speech",
@@ -853,7 +853,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6894e3657dbb8585",
+      "sourceHash": "fnv1a64:e19ec69e198f3e9d",
       "notice": null,
       "blocks": [
         {
@@ -892,7 +892,7 @@
             },
             {
               "kind": "speech",
-              "text": "Я иду́. — ya idú — I'm going. Ты идёшь. — ty idyósh — you're going."
+              "text": "Я иду. — ya idú — I'm going. Ты идёшь. — ty idyósh — you're going."
             },
             {
               "kind": "speech",
@@ -911,7 +911,7 @@
             },
             {
               "kind": "speech",
-              "text": "Я иду́ — I am on my way, now, in one direction. Я хожу́ — ya khazhú — I go, as a habit, back and forth."
+              "text": "Я иду — I am on my way, now, in one direction. Я хожу — ya khazhú — I go, as a habit, back and forth."
             },
             {
               "kind": "speech",

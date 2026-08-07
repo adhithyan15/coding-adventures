@@ -75,3 +75,39 @@ on the read-now-draw-later list — the writing track has taught в р с н б 
 Because the six verbs form one prerequisite chain, S13 is the only session that
 introduces two lessons; it is also the shortest pair, and both sit near four
 minutes.
+## Chapter 4 — Verbs of the mind and the page
+
+Every lesson here is `voice`-cored, so every session below is drivable. The
+chapter's own new letter, **ш**, sits in a detachable script block: a driver
+skips it and still learns the word.
+
+| Session | New | Resurfaced | Note |
+|---|---|---|---|
+| **S17** | думать | идти *(N+1)*, видеть *(N+3)*, говорить *(N+3)* | the **pair** named for the first time; *подумать* beside *думать* |
+| **S18** | понимать | думать *(N+1)*, видеть *(N+3)*, знать *(N+7)* | *я не понимаю* brings **не** back after four lessons |
+| **S19** | читать | понимать *(N+1)*, думать *(N+3)*, быть *(N+7)* | why there is no *I am reading*: **быть** has no present |
+| **S20** | писать | читать *(N+1)*, понимать *(N+3)*, думать *(N+3)* | **ш** named at last; the *pisát' / písat'* stress trap |
+
+## Chapter 5 — Taking, asking, helping, loving
+
+| Session | New | Resurfaced | Note |
+|---|---|---|---|
+| **S21** | брать | писать *(N+1)*, читать *(N+3)*, понимать *(N+3)*, идти *(N+5)* | suppletion twice: *брать · взять* and *идти → шёл* |
+| **S22** | спрашивать | брать *(N+1)*, писать *(N+3)*, как вас зовут *(N+14)*, ты/вы *(N+17)* | the Chapter-2 question finally gets its verb |
+| **S23** | помогать | спрашивать *(N+1)*, брать *(N+3)*, говорить *(N+9)*, жить *(N+11)* | **г** and *o*-reduction re-met inside *помогаю* |
+| **S24** | любить | помогать *(N+1)*, спрашивать *(N+3)*, видеть *(N+9)*, and every verb of both chapters | *я люблю читать / писать / помогать / жить* |
+
+### Schedule check
+
+These two chapters are where the track's reinforcement was actually built. Each
+lesson's `practises.knowledge` names atoms from the **one to three lessons
+immediately before it**, which is what closes R1 (*n+1 … n+3*) — a chapter-end
+recap cannot, because it is out of range for anything the chapter taught more
+than three lessons earlier. The two payoffs then reach back several chapters:
+`RU-C04-писать` rescues **я**-is-not-*R* from Chapter 2, and `RU-C05-любить`
+rescues the **д → ж** swap from Chapter 3 alongside *жить*, *читать* and
+*писать*.
+
+Measured over the whole track: **3 of 55 atoms are never revisited**, and all
+three belong to the final lesson, which has nothing after it. Before these two
+chapters the count was **21 of 34**.

@@ -228,7 +228,13 @@ describe("forward references", () => {
 });
 
 describe("the real corpus", () => {
-  it("pins what nothing had measured", () => {
+  // Explicit budget: this walks the WHOLE corpus for order, reinforcement windows and
+  // forward references, and at 1,313 lessons it runs past vitest's 5,000 ms default under
+  // full-suite parallel load (it passes comfortably in isolation, which is why a
+  // per-file run will not reproduce the failure). Third test in this package to need
+  // this — see `cli.test.ts` and `level-gate.test.ts`. The corpus only grows, so raise
+  // the budget when it next runs close; never thin the walk to fit the clock.
+  it("pins what nothing had measured", { timeout: 30_000 }, () => {
     const { lessons } = loadEverything();
     const report = measureContinuity(lessons);
 
@@ -242,17 +248,25 @@ describe("the real corpus", () => {
     expect(report.summary.forwardReviews).toBe(300);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
-    // re-emphasizes what was learnt previously". Half of it is taught once.
-    // The second verb tranche (HL-C43) then added 24 lessons teaching 50 atoms, of which
-    // 21 are never revisited — 42%, against the corpus's 51% — so the headline share
-    // ticks DOWN a point. New content is not making this worse; it is slightly better
-    // than what it joins. That is still 21 more atoms taught once and abandoned.
-    expect(report.summary.atomsTaught).toBe(1599);
-    // HL09 step 3 wired 17 R1 windows in chapters 3-6, of which 12 move the "never"
-    // count — the other five already had a revisit further out. The absolute figures
-    // also move as main lands new lessons; the 17/12 split is what this PR did.
-    expect(report.summary.atomsNeverRevisited).toBe(745);
-    expect(report.summary.neverRevisitedPercent).toBe(47);
+    // re-emphasizes what was learnt previously". It shipped with HALF taught once.
+    //
+    // This number is now moving the right way, and it took three different things:
+    //   - HL09 step 3 wired 17 R1 windows in Spanish chapters 3-6 (12 moved "never").
+    //   - HL-C43 (wave 6) added 24 lessons and 21 more orphans — content outrunning
+    //     reinforcement, which is exactly how 51% happened in the first place.
+    //   - HL-C44/C45 (waves 7-8) required every tranche to reach back at two cadences:
+    //     `practises.knowledge` on the preceding 1-3 lessons (closes R1/R2 at zero new
+    //     lessons, because a chapter-END payoff is out of R1 range), plus a payoff
+    //     reaching several chapters back (rescues atoms never revisited at ANY distance).
+    //
+    // Wave 8 alone taught 72 new atoms while the orphan count FELL BY 49. Per track:
+    // Russian 21 of 34 orphans -> 3 of 55 (every one rescued; the survivors are its final
+    // lesson's own, structurally unreachable), Bengali 12 of 18 -> 4 of 35, Tamil 53% ->
+    // 38%, Arabic four ch28-30 atoms off zero. Adding vocabulary and reducing orphans at
+    // the same time is the whole point; a corpus that only grows is not a course.
+    expect(report.summary.atomsTaught).toBe(1671);
+    expect(report.summary.atomsNeverRevisited).toBe(708);
+    expect(report.summary.neverRevisitedPercent).toBe(42);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -278,8 +292,8 @@ describe("the real corpus", () => {
     // change is accountable for is the 17. R2 moves only with new lessons, never from
     // that work — closing a near window does not close a far one, and nothing yet
     // addresses R2/R3/R4.
-    expect(report.summary.missedByWindow.R1).toBe(778);
-    expect(report.summary.missedByWindow.R2).toBe(1159);
+    expect(report.summary.missedByWindow.R1).toBe(780);
+    expect(report.summary.missedByWindow.R2).toBe(1173);
   });
 
   it("shows what a declared reading order was worth", () => {

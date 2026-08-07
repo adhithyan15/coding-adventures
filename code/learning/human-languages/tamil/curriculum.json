@@ -387,6 +387,32 @@
         "TA-EXT-028-CORE-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TA-C33-ninai",
+        "TA-C33-puri",
+        "TA-C33-padi",
+        "TA-C33-ezhutu"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-030",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TA-C34-edu",
+        "TA-C34-kel",
+        "TA-C34-utavu",
+        "TA-C34-pidi"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -511,7 +537,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "TA-PATH-028"
+        "TA-PATH-028",
+        "TA-PATH-029",
+        "TA-PATH-030"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -521,14 +549,9 @@
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -542,14 +565,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
