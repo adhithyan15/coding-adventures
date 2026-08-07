@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5f66eeb5566cb2fa",
+  "sourceHash": "fnv1a64:2b4458b82ca7f348",
   "summary": {
     "totalLessons": 1233,
     "voice": 832,
@@ -3059,12 +3059,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 73,
-      "voice": 70,
+      "lessonCount": 65,
+      "voice": 62,
       "sight": 3,
       "pen": 0,
-      "drivablePercent": 96,
-      "drivablePrefixTotal": 69,
+      "drivablePercent": 95,
+      "drivablePrefixTotal": 61,
       "modalities": [
         "voice",
         "sight"
@@ -3683,44 +3683,6 @@
             "LA-C37-video",
             "LA-C37-scio",
             "LA-C37-do"
-          ]
-        },
-        {
-          "chapter": 38,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "LA-C38-cogito",
-            "LA-C38-lego",
-            "LA-C38-intellego",
-            "LA-C38-scribo"
-          ]
-        },
-        {
-          "chapter": 39,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "LA-C39-capio",
-            "LA-C39-rogo",
-            "LA-C39-adiuvo",
-            "LA-C39-amo"
           ]
         }
       ]
@@ -4510,12 +4472,12 @@
     },
     {
       "language": "portuguese",
-      "lessonCount": 66,
-      "voice": 57,
+      "lessonCount": 74,
+      "voice": 65,
       "sight": 9,
       "pen": 0,
-      "drivablePercent": 86,
-      "drivablePrefixTotal": 51,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 59,
       "modalities": [
         "voice",
         "sight"
@@ -4839,6 +4801,44 @@
             "PT-C18-dizer",
             "PT-C18-ver",
             "PT-C18-saber-conhecer"
+          ]
+        },
+        {
+          "chapter": 19,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C19-pensar",
+            "PT-C19-entender-compreender",
+            "PT-C19-ler",
+            "PT-C19-escrever"
+          ]
+        },
+        {
+          "chapter": 20,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C20-tomar-pegar",
+            "PT-C20-perguntar",
+            "PT-C20-ajudar",
+            "PT-C20-gostar"
           ]
         }
       ]
@@ -14696,110 +14696,6 @@
       "sourceHash": "fnv1a64:051856f3e9c81534"
     },
     {
-      "id": "LA-C38-cogito",
-      "language": "latin",
-      "chapter": 38,
-      "sequence": 720,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8f212bec0682b367"
-    },
-    {
-      "id": "LA-C38-lego",
-      "language": "latin",
-      "chapter": 38,
-      "sequence": 730,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b5511be9ba3c46d1"
-    },
-    {
-      "id": "LA-C38-intellego",
-      "language": "latin",
-      "chapter": 38,
-      "sequence": 740,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:825bf0ef0ce282f8"
-    },
-    {
-      "id": "LA-C38-scribo",
-      "language": "latin",
-      "chapter": 38,
-      "sequence": 750,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a0c57712692fe5f1"
-    },
-    {
-      "id": "LA-C39-capio",
-      "language": "latin",
-      "chapter": 39,
-      "sequence": 760,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4d8ae3b70ae202db"
-    },
-    {
-      "id": "LA-C39-rogo",
-      "language": "latin",
-      "chapter": 39,
-      "sequence": 770,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1fb29952282581ed"
-    },
-    {
-      "id": "LA-C39-adiuvo",
-      "language": "latin",
-      "chapter": 39,
-      "sequence": 780,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:257e966cc6befa30"
-    },
-    {
-      "id": "LA-C39-amo",
-      "language": "latin",
-      "chapter": 39,
-      "sequence": 790,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c051a21f677da1d1"
-    },
-    {
       "id": "ML-C01-athe",
       "language": "malayalam",
       "chapter": 1,
@@ -17426,6 +17322,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:00842329cad02770"
+    },
+    {
+      "id": "PT-C19-pensar",
+      "language": "portuguese",
+      "chapter": 19,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:022d6eed8b617498"
+    },
+    {
+      "id": "PT-C19-entender-compreender",
+      "language": "portuguese",
+      "chapter": 19,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da9952c537a9bc43"
+    },
+    {
+      "id": "PT-C19-ler",
+      "language": "portuguese",
+      "chapter": 19,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcda58e3866b4830"
+    },
+    {
+      "id": "PT-C19-escrever",
+      "language": "portuguese",
+      "chapter": 19,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:331c29072a3b115c"
+    },
+    {
+      "id": "PT-C20-tomar-pegar",
+      "language": "portuguese",
+      "chapter": 20,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79c7eb13ce008985"
+    },
+    {
+      "id": "PT-C20-perguntar",
+      "language": "portuguese",
+      "chapter": 20,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1ae2563d664e109"
+    },
+    {
+      "id": "PT-C20-ajudar",
+      "language": "portuguese",
+      "chapter": 20,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd54d3307eb823b6"
+    },
+    {
+      "id": "PT-C20-gostar",
+      "language": "portuguese",
+      "chapter": 20,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:346e56012ffc6875"
     },
     {
       "id": "PA-C01-dhanvaad",

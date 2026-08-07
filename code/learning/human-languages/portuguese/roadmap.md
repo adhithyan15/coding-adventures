@@ -181,6 +181,51 @@ French.
   the second one-English-verb-two-Portuguese-ones pair, and the chapter's payoff.
   *Sapere* meant "**to taste**" first, and Portuguese kept both senses in one
   verb — *sabe bem* is still "it tastes good". **Authored.**
+- **Ch. 19 — Verbs of the Mind: four verbs nobody had taught**: the first half
+  of the second core-verb tranche, and every one of its four concepts was
+  unrealised in **every** track of the corpus before it. ***pensar***
+  (`PT-C19-pensar`) ← *pēnsāre*, "to **weigh out**," built on *pendere*, "to
+  hang," because a Roman weighed by hanging: *pensive*, *ponder*, and the whole
+  paying half (*pension*, *compensate*, *expense*) and hanging half (*pendulum*,
+  *pendant*, *depend*); plus *pensar **em***, and *achar* ← *afflāre* for the
+  everyday Brazilian "I think" → ***entender* / *compreender***
+  (`PT-C19-entender-compreender`): one **stretches toward** the thing
+  (*intendere* → *intend/intense/extend/tendon*), the other **seizes it
+  together** (*comprehendere* → *comprehend/apprehend/prison/surprise*).
+  *Não entendo* is the sentence a beginner needs first; English *understand* is
+  in neither family → ***ler*** (`PT-C19-ler`): irregular, and irregular for a
+  reason already taught — *legere* lost its intervocalic ***-g-*** just as
+  *manus* lost its *-n-* in Ch. 17, and the circumflex on *lê* records the
+  collapse. *Leio, lês, lê, lemos, leem* is the same row as *ver* and *crer*.
+  The root meant "to **gather, pick, choose**" first: *collect, select, elect,
+  intellect, legend* — and *lesson* → ***escrever*** (`PT-C19-escrever`), the
+  chapter's payoff: ← *scrībere*, "to **scratch**," participle *escrito* =
+  *scriptum* = *script*; and the decoding rule that pays off everywhere, the
+  **propped-up e-** in front of Latin *sc-/sp-/st-* (*escola*, ***estar***,
+  *esperar*). Closes by running the chapter's four in the *eu* form. **Authored.**
+- **Ch. 20 — Taking, Asking, Helping, Liking: four more nobody had taught**: the
+  second half of the tranche. ***tomar* / *pegar*** (`PT-C20-tomar-pegar`):
+  "take" split by destination — into your hand (*pegar* ← *picāre*, "to coat
+  with **pitch**," still sticky in *pegajoso*) or into you (*tomar*, whose Latin
+  source is **genuinely unknown** and is flagged as such rather than guessed) →
+  ***perguntar*** (`PT-C20-perguntar`) ← *percontārī* = *per-* + *contus*, "to
+  **sound the water with a pole**"; and its neighbour *pedir*, "to ask **for**,"
+  ← *petere* → *appetite, compete, impetus*. Also the honest note that this root
+  left English almost nothing → ***ajudar*** (`PT-C20-ajudar`) ← *adiūtāre* →
+  *aid, aide, adjutant, adjuvant*, with Latin *i*-before-a-vowel hardening into
+  the soft Portuguese ***j*** of *hoje*, *já*, *janeiro* → ***gostar de***
+  (`PT-C20-gostar`), the chapter's payoff and the tranche's signature: ←
+  *gustāre*, "**to taste**," which is why the ***de*** can never be dropped —
+  *gustāre de* was to take a taste **of** a thing. The *de + o = do* fusions come
+  with it. Portuguese now holds **two** verbs that stopped meaning "to taste":
+  *saber* (Ch. 18) and *gostar*. Spanish escaped the same problem by inverting
+  the sentence (*me gusta el café*) — supplied in full as contrast, assumed
+  nowhere. **Authored.**
+
+  The tranche is **two** chapters, not one, on purpose: eight lessons together
+  introduce 17 knowledge atoms against `core/chapter-policy.json`'s advisory
+  budget of 12, where four-lesson chapters land at 8 and 9. Page count is never
+  a cost here, and a gentler ramp is worth a chapter break.
 
 ## Planned (mirrors the Spanish theme sequence)
 

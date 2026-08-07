@@ -25,6 +25,22 @@ uniquely agrees with the **speaker**, not the listener.
   *estar*, *ter* and *haver*, *ir*, *vir*, *dizer*, *ver*, and *saber* and
   *conhecer*. This is the track's first realisation of the canonical
   `VERB-*` concepts, so `SPINE-SAY-WHAT-I-DO` stops being wholly omitted.
+- **Chapter 19 — Verbs of the Mind** ([`lessons/PT-C19-*`](./lessons/)):
+  *pensar*, *entender/compreender*, *ler*, *escrever*. *Ler* is the irregular
+  one — *leio, lês, lê, lemos, leem*, the same broken row as *ver*, and broken
+  because *legere* lost its *-g-* between vowels just as *manus* lost its *-n-*
+  in Chapter 17.
+- **Chapter 20 — Taking, Asking, Helping, Liking**
+  ([`lessons/PT-C20-*`](./lessons/)): *tomar/pegar*, *perguntar*, *ajudar*,
+  *gostar*. The signature is ***gostar de***: Portuguese likes *of* a thing,
+  because *gustāre* took a taste *of* it, and the preposition never left.
+
+  Between them these two chapters realise eight core verbs **no track in the
+  corpus taught before**, taking Portuguese to **15 of the core 40**. They are
+  one authored tranche deliberately filed as two chapters: eight lessons in one
+  chapter would introduce 17 knowledge atoms against the advisory budget of 12,
+  and four-lesson chapters land at 8 and 9. Page count is not a cost; a gentler
+  ramp is the point.
 
 ## Book
 
@@ -47,14 +63,14 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–18** are authored, which is every Portuguese chapter that owns a
+Chapters **2–20** are authored, which is every Portuguese chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05
 gap report exists to measure. That absence is tracked debt.
 
 Chapters 2–5 end in a terminal `practice-mix`, which is the payoff. Chapters
-6–18 have none, so the payoff is the chapter's last lesson by sequence — the one
+6–20 have none, so the payoff is the chapter's last lesson by sequence — the one
 carrying its recombination and wrap-up recall. Chapter 2 carries *two*
 `practice-mix` lessons; the terminal one, `PT-C02-formal-practice`, is the
 payoff, and its narrow practice set is a known representativeness risk (see
