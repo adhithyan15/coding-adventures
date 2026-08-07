@@ -4359,6 +4359,27 @@
       "jsonHash": "fnv1a64:fdd755c82574998f"
     },
     {
+      "language": "portuguese",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:8b916500c9f2d55b",
+      "lessonIds": [
+        "PT-C19-pensar",
+        "PT-C19-entender-compreender",
+        "PT-C19-ler",
+        "PT-C19-escrever",
+        "PT-C19-tomar-pegar",
+        "PT-C19-perguntar",
+        "PT-C19-ajudar",
+        "PT-C19-gostar"
+      ],
+      "voiceLessons": 8,
+      "drivablePrefix": 8,
+      "text": "portuguese/narration/ch19.txt",
+      "json": "portuguese/narration/ch19.json",
+      "textHash": "fnv1a64:ae444c9acbb8613e",
+      "jsonHash": "fnv1a64:e0c131b2f064c378"
+    },
+    {
       "language": "punjabi",
       "chapter": 1,
       "sourceHash": "fnv1a64:03685e752baf67fe",

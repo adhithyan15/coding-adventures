@@ -25,6 +25,13 @@ uniquely agrees with the **speaker**, not the listener.
   *estar*, *ter* and *haver*, *ir*, *vir*, *dizer*, *ver*, and *saber* and
   *conhecer*. This is the track's first realisation of the canonical
   `VERB-*` concepts, so `SPINE-SAY-WHAT-I-DO` stops being wholly omitted.
+- **Chapter 19 — More Verbs at the Core** ([`lessons/PT-C19-*`](./lessons/)):
+  eight more of the shared spine's core verbs, none of them taught anywhere in
+  the corpus before — *pensar*, *entender/compreender*, *ler*, *escrever*,
+  *tomar/pegar*, *perguntar*, *ajudar*, *gostar*. The chapter's own signature is
+  ***gostar de***: Portuguese likes *of* a thing, because *gustāre* took a taste
+  *of* it, and the preposition never left. Portuguese now covers **15 of the
+  core 40** verbs.
 
 ## Book
 
@@ -47,14 +54,14 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–18** are authored, which is every Portuguese chapter that owns a
+Chapters **2–19** are authored, which is every Portuguese chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05
 gap report exists to measure. That absence is tracked debt.
 
 Chapters 2–5 end in a terminal `practice-mix`, which is the payoff. Chapters
-6–18 have none, so the payoff is the chapter's last lesson by sequence — the one
+6–19 have none, so the payoff is the chapter's last lesson by sequence — the one
 carrying its recombination and wrap-up recall. Chapter 2 carries *two*
 `practice-mix` lessons; the terminal one, `PT-C02-formal-practice`, is the
 payoff, and its narrow practice set is a known representativeness risk (see

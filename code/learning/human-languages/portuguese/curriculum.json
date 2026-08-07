@@ -299,6 +299,25 @@
         "PT-EXT-022-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "PT-PATH-023",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PT-C19-pensar",
+        "PT-C19-entender-compreender",
+        "PT-C19-ler",
+        "PT-C19-escrever",
+        "PT-C19-tomar-pegar",
+        "PT-C19-perguntar",
+        "PT-C19-ajudar",
+        "PT-C19-gostar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-023-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -426,7 +445,8 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "PT-PATH-022"
+        "PT-PATH-022",
+        "PT-PATH-023"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -434,14 +454,9 @@
         "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -456,14 +471,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -741,6 +753,23 @@
         "PT-C18-dizer",
         "PT-C18-ver",
         "PT-C18-saber-conhecer"
+      ]
+    },
+    {
+      "id": "PT-EXT-023-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "canDo": "I can say that I think, understand, read, write, take, ask, help and like in Portuguese, keep de attached to gostar, and trace each verb back to the Latin picture it came from.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C19-pensar",
+        "PT-C19-entender-compreender",
+        "PT-C19-ler",
+        "PT-C19-escrever",
+        "PT-C19-tomar-pegar",
+        "PT-C19-perguntar",
+        "PT-C19-ajudar",
+        "PT-C19-gostar"
       ]
     }
   ]

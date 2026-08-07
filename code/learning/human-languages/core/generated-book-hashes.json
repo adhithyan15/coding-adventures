@@ -2051,6 +2051,22 @@
       "tex": "portuguese/book/chapters/ch18-core-verbs.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:8b916500c9f2d55b",
+      "lessonIds": [
+        "PT-C19-pensar",
+        "PT-C19-entender-compreender",
+        "PT-C19-ler",
+        "PT-C19-escrever",
+        "PT-C19-tomar-pegar",
+        "PT-C19-perguntar",
+        "PT-C19-ajudar",
+        "PT-C19-gostar"
+      ],
+      "tex": "portuguese/book/chapters/ch19-more-core-verbs.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:b77ab588fd68bcd5",
