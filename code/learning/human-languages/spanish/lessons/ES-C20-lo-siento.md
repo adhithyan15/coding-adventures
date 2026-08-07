@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C20-lo-siento
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 660
+sequence: 1300
 chapter: 20
 type: phrase
 headword: lo siento

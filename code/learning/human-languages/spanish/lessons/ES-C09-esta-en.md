@@ -1,7 +1,7 @@
 ---
 id: ES-C09-esta-en
 chapter: 9
-sequence: 540
+sequence: 860
 type: phrase
 headword: está en…
 gloss: "is in/at…" — location always takes estar

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C19-si
 spine_node: SPINE-RESPOND-BASIC
-sequence: 640
+sequence: 1280
 chapter: 19
 type: word
 headword: sí

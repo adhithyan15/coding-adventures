@@ -4,11 +4,11 @@
   "chapter": 21,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9f1f17a520fa7add",
+  "sourceHash": "fnv1a64:cbada3c250a98194",
   "lessons": [
     {
       "id": "ES-C21-lunes-viernes",
-      "sequence": 670,
+      "sequence": 1320,
       "title": "lunes to viernes — the planets of the week, worn down",
       "headword": "lunes, martes, miércoles, jueves, viernes",
       "romanization": "lunes, martes, miércoles, jueves, viernes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:71d96a3f4b87cafa",
+      "sourceHash": "fnv1a64:2daae3fceeab7c1f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -153,7 +153,7 @@
     },
     {
       "id": "ES-C21-sabado-domingo",
-      "sequence": 680,
+      "sequence": 1330,
       "title": "sábado and domingo — the week's religious edge",
       "headword": "sábado, domingo",
       "romanization": "sábado, domingo",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:f271345272c76bb1",
+      "sourceHash": "fnv1a64:539054e0683b301c",
       "notice": {
         "modality": "sight",
         "needs": [

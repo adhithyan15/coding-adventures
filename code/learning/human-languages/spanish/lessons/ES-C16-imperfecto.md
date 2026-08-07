@@ -1,7 +1,7 @@
 ---
 id: ES-C16-imperfecto
 chapter: 16
-sequence: 590
+sequence: 1110
 type: word
 headword: hablaba, comía
 gloss: the imperfect — the past that kept going, and the most regular tense in Spanish

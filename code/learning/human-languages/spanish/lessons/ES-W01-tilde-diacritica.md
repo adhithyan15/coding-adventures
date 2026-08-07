@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-W01-tilde-diacritica
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 330
+sequence: 360
 chapter: 4
 type: writing
 headword: "el / él"

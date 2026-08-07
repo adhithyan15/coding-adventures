@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C30-hace-calor
 spine_node: SPINE-TIME-OF-DAY
-sequence: 813
+sequence: 1510
 chapter: 30
 type: phrase
 headword: hace calor, hace frío, hace sol

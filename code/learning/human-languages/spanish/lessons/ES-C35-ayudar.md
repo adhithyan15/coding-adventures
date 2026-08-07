@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-ayudar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 880
+sequence: 1670
 chapter: 35
 type: word
 headword: ayudar

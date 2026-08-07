@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-como-se-llama
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 210
+sequence: 230
 chapter: 3
 type: word
 headword: ¿cómo se llama usted?

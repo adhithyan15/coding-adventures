@@ -2178,7 +2178,7 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:42fbffb8f2c9ee65",
+      "sourceHash": "fnv1a64:c33320f1373d714f",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -2200,7 +2200,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:5410c6a8b2635804",
+      "sourceHash": "fnv1a64:725d6b137377bf9c",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -2223,7 +2223,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:9914574b6e231c0f",
+      "sourceHash": "fnv1a64:cff622156693b783",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -2238,7 +2238,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4450428fd5374b11",
+      "sourceHash": "fnv1a64:4fe3507a54682e0b",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",
@@ -2255,7 +2255,7 @@
     {
       "language": "spanish",
       "chapter": 19,
-      "sourceHash": "fnv1a64:348146303665aa93",
+      "sourceHash": "fnv1a64:26065bd139568e43",
       "lessonIds": [
         "ES-C19-si",
         "ES-C19-no"
@@ -2265,7 +2265,7 @@
     {
       "language": "spanish",
       "chapter": 20,
-      "sourceHash": "fnv1a64:ff8b8576d2795748",
+      "sourceHash": "fnv1a64:eb8a28c91366131e",
       "lessonIds": [
         "ES-C20-lo-siento",
         "ES-C20-perdon"
@@ -2275,7 +2275,7 @@
     {
       "language": "spanish",
       "chapter": 21,
-      "sourceHash": "fnv1a64:9f1f17a520fa7add",
+      "sourceHash": "fnv1a64:cbada3c250a98194",
       "lessonIds": [
         "ES-C21-lunes-viernes",
         "ES-C21-sabado-domingo"
@@ -2285,7 +2285,7 @@
     {
       "language": "spanish",
       "chapter": 22,
-      "sourceHash": "fnv1a64:8bfd3dca44e35355",
+      "sourceHash": "fnv1a64:7ce9af6cb50c3202",
       "lessonIds": [
         "ES-C22-negro-blanco",
         "ES-C22-blanco-germanico",
@@ -2297,7 +2297,7 @@
     {
       "language": "spanish",
       "chapter": 23,
-      "sourceHash": "fnv1a64:65f7e89fb2452174",
+      "sourceHash": "fnv1a64:55d2e4bd397961e0",
       "lessonIds": [
         "ES-C23-padre-madre",
         "ES-C23-hermano-hermana",
@@ -2308,7 +2308,7 @@
     {
       "language": "spanish",
       "chapter": 24,
-      "sourceHash": "fnv1a64:cb85e3f2de32dd93",
+      "sourceHash": "fnv1a64:d9335133eebe69c2",
       "lessonIds": [
         "ES-C24-cabeza",
         "ES-C24-mano"
@@ -2318,7 +2318,7 @@
     {
       "language": "spanish",
       "chapter": 25,
-      "sourceHash": "fnv1a64:b76c71606e7c1944",
+      "sourceHash": "fnv1a64:ce540eb8329698ee",
       "lessonIds": [
         "ES-C25-las-estaciones"
       ],
@@ -2327,7 +2327,7 @@
     {
       "language": "spanish",
       "chapter": 26,
-      "sourceHash": "fnv1a64:7d92244aefd55f9c",
+      "sourceHash": "fnv1a64:adcb64dbcc088e9f",
       "lessonIds": [
         "ES-C26-agua",
         "ES-C26-vino",
@@ -2338,7 +2338,7 @@
     {
       "language": "spanish",
       "chapter": 27,
-      "sourceHash": "fnv1a64:3c0241436ecab0b0",
+      "sourceHash": "fnv1a64:1221fb0b96f61360",
       "lessonIds": [
         "ES-C27-los-meses"
       ],
@@ -2347,7 +2347,7 @@
     {
       "language": "spanish",
       "chapter": 28,
-      "sourceHash": "fnv1a64:67c5930a2b05b153",
+      "sourceHash": "fnv1a64:ab0e2305d98d0480",
       "lessonIds": [
         "ES-C28-mediodia-medianoche"
       ],
@@ -2356,7 +2356,7 @@
     {
       "language": "spanish",
       "chapter": 29,
-      "sourceHash": "fnv1a64:ba45be8faf01ca69",
+      "sourceHash": "fnv1a64:2a23e6b112a7d818",
       "lessonIds": [
         "ES-C29-la-hora"
       ],
@@ -2365,7 +2365,7 @@
     {
       "language": "spanish",
       "chapter": 30,
-      "sourceHash": "fnv1a64:87388bb3aea1cfc8",
+      "sourceHash": "fnv1a64:6148ab69b50fe394",
       "lessonIds": [
         "ES-C30-el-tiempo",
         "ES-C30-hace-calor",
@@ -2376,7 +2376,7 @@
     {
       "language": "spanish",
       "chapter": 31,
-      "sourceHash": "fnv1a64:b65e81d19628893e",
+      "sourceHash": "fnv1a64:96d1c45d4a4ca6a3",
       "lessonIds": [
         "ES-C31-once-quince",
         "ES-C31-dieciseis-diecinueve",
@@ -2388,7 +2388,7 @@
     {
       "language": "spanish",
       "chapter": 32,
-      "sourceHash": "fnv1a64:e38a946a84daf051",
+      "sourceHash": "fnv1a64:d1283505847604c8",
       "lessonIds": [
         "ES-C32-gato",
         "ES-C32-perro"
@@ -2398,7 +2398,7 @@
     {
       "language": "spanish",
       "chapter": 33,
-      "sourceHash": "fnv1a64:9997a29a09400b47",
+      "sourceHash": "fnv1a64:1193d6388479368f",
       "lessonIds": [
         "ES-C33-verde",
         "ES-C33-amarillo"
@@ -2408,7 +2408,7 @@
     {
       "language": "spanish",
       "chapter": 34,
-      "sourceHash": "fnv1a64:bc65a341cf39fbb6",
+      "sourceHash": "fnv1a64:64748b10c5f453b4",
       "lessonIds": [
         "ES-C34-pensar",
         "ES-C34-entender",
@@ -2420,7 +2420,7 @@
     {
       "language": "spanish",
       "chapter": 35,
-      "sourceHash": "fnv1a64:28a0602c608252cb",
+      "sourceHash": "fnv1a64:e3c93cbb0c057188",
       "lessonIds": [
         "ES-C35-tomar",
         "ES-C35-preguntar",

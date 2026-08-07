@@ -4,11 +4,11 @@
   "chapter": 19,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:348146303665aa93",
+  "sourceHash": "fnv1a64:26065bd139568e43",
   "lessons": [
     {
       "id": "ES-C19-si",
-      "sequence": 640,
+      "sequence": 1280,
       "title": "sí — yes",
       "headword": "sí",
       "romanization": "sí",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df0f47319db22908",
+      "sourceHash": "fnv1a64:b17f3a4bbf08b693",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
     },
     {
       "id": "ES-C19-no",
-      "sequence": 650,
+      "sequence": 1290,
       "title": "no — no / not",
       "headword": "no",
       "romanization": "no",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41b35806ec2b71a5",
+      "sourceHash": "fnv1a64:d9bf248186007d54",
       "notice": null,
       "blocks": [
         {

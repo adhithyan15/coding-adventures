@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-W03-inverted
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 350
+sequence: 390
 chapter: 4
 type: writing
 headword: "¿ ¡"

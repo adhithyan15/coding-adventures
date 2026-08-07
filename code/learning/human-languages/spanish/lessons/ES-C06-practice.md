@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-practice
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 510
+sequence: 570
 chapter: 6
 type: practice-mix
 headword: (practice)

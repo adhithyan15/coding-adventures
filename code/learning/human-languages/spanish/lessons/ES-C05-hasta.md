@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-hasta
 spine_node: SPINE-TAKE-LEAVE
-sequence: 390
+sequence: 430
 chapter: 5
 type: word
 headword: hasta

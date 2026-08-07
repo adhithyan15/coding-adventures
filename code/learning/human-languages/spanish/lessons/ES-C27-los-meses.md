@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C27-los-meses
 spine_node: SPINE-TIME-OF-DAY
-sequence: 780
+sequence: 1470
 chapter: 27
 type: word
 headword: los meses

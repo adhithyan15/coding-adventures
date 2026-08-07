@@ -1,7 +1,7 @@
 ---
 id: ES-C18-practice-subjects
 chapter: 18
-sequence: 620
+sequence: 1260
 type: practice-mix
 headword: one subject or two?
 gloss: choosing infinitive versus que plus subjunctive after wanting

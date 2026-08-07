@@ -1,7 +1,7 @@
 ---
 id: ES-C18-practice-mood
 chapter: 18
-sequence: 622
+sequence: 1270
 type: practice-mix
 headword: fact or wish?
 gloss: choosing indicative versus subjunctive and hearing the opposite-vowel contrast

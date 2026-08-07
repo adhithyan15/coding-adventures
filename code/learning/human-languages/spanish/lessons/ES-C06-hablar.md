@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 470
+sequence: 510
 chapter: 6
 type: word
 headword: hablar

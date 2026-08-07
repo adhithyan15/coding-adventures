@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C22-rojo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 700
+sequence: 1360
 chapter: 22
 type: word
 headword: rojo

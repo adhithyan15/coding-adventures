@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-gusto
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 230
+sequence: 250
 chapter: 3
 type: word
 headword: mucho gusto

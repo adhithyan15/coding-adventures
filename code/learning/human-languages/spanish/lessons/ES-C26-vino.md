@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C26-vino
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 765
+sequence: 1450
 chapter: 26
 type: word
 headword: el vino

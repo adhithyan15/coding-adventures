@@ -4,11 +4,11 @@
   "chapter": 9,
   "title": "Chapter 9",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a145296a95911d1d",
+  "sourceHash": "fnv1a64:31ecfffb1213f2bb",
   "lessons": [
     {
       "id": "ES-C09-ser",
-      "sequence": 534,
+      "sequence": 830,
       "title": "ser — \"to be,\" the essential kind",
       "headword": "ser",
       "romanization": "ser",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06810f2823517346",
+      "sourceHash": "fnv1a64:f6c1102f99e48dfb",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
     },
     {
       "id": "ES-C09-ser-vs-estar",
-      "sequence": 536,
+      "sequence": 840,
       "title": "ser vs estar — essence vs state",
       "headword": "ser vs estar",
       "romanization": "ser vs estar",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:2e697cd43b1008d8",
+      "sourceHash": "fnv1a64:079927285e2d7c12",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -354,7 +354,7 @@
     },
     {
       "id": "ES-C09-soy-de",
-      "sequence": 538,
+      "sequence": 850,
       "title": "soy de… — saying where you're from",
       "headword": "soy de…",
       "romanization": "soy de…",
@@ -365,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d827a379647bb01",
+      "sourceHash": "fnv1a64:7d7dc85d231765fe",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +499,7 @@
     },
     {
       "id": "ES-C09-esta-en",
-      "sequence": 540,
+      "sequence": 860,
       "title": "está en… — saying where something is",
       "headword": "está en…",
       "romanization": "está en…",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c4741a1391c9dd4e",
+      "sourceHash": "fnv1a64:e1ee931ddaf78a6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -661,7 +661,7 @@
     },
     {
       "id": "ES-C09-practice",
-      "sequence": 542,
+      "sequence": 870,
       "title": "Practice — ser or estar?",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -672,7 +672,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bb563dc466711e9c",
+      "sourceHash": "fnv1a64:1a1ac8d5f28b64da",
       "notice": {
         "modality": "sight",
         "needs": [

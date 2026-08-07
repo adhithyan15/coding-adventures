@@ -1,7 +1,7 @@
 ---
 id: ES-C15-comer-vivir-preterite
 chapter: 15
-sequence: 584
+sequence: 1080
 type: word
 headword: comí, viví
 gloss: the regular -er/-ir preterite — where two conjugations collapse into one

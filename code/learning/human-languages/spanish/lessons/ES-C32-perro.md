@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C32-perro
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 835
+sequence: 1580
 chapter: 32
 type: word
 headword: perro

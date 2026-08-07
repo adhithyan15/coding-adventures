@@ -4,11 +4,11 @@
   "chapter": 8,
   "title": "Chapter 8",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f96b7bbd0ab4daba",
+  "sourceHash": "fnv1a64:04ed5b71dcd6ef10",
   "lessons": [
     {
       "id": "ES-C08-numeros-1-5",
-      "sequence": 524,
+      "sequence": 780,
       "title": "uno, dos, tres, cuatro, cinco — counting to five",
       "headword": "uno, dos, tres, cuatro, cinco",
       "romanization": "uno, dos, tres, cuatro, cinco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0ad0f4bf00e9dd5",
+      "sourceHash": "fnv1a64:b46d43b715b1eab9",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
     },
     {
       "id": "ES-C08-numeros-6-10",
-      "sequence": 526,
+      "sequence": 790,
       "title": "seis, siete, ocho, nueve, diez — and the calendar's secret",
       "headword": "seis, siete, ocho, nueve, diez",
       "romanization": "seis, siete, ocho, nueve, diez",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31bbfdae30ea5829",
+      "sourceHash": "fnv1a64:ed0886a860ddd794",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
     },
     {
       "id": "ES-C08-tener",
-      "sequence": 528,
+      "sequence": 800,
       "title": "tener — \"to have,\" your first irregular verb",
       "headword": "tener",
       "romanization": "tener",
@@ -319,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7ac3ca77bc32f7f",
+      "sourceHash": "fnv1a64:41443319609fc232",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +466,7 @@
     },
     {
       "id": "ES-C08-cuantos-anos",
-      "sequence": 530,
+      "sequence": 810,
       "title": "¿Cuántos años tienes? — \"how old are you?\"",
       "headword": "¿Cuántos años tienes?",
       "romanization": "¿Cuántos años tienes?",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcb5f16ab501160a",
+      "sourceHash": "fnv1a64:c8e8c4495c46b9fb",
       "notice": null,
       "blocks": [
         {
@@ -597,7 +597,7 @@
     },
     {
       "id": "ES-C08-practice",
-      "sequence": 532,
+      "sequence": 820,
       "title": "Practice — numbers, having, and age",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -608,7 +608,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c650d67ce5cb460",
+      "sourceHash": "fnv1a64:933eafd23ceb4124",
       "notice": null,
       "blocks": [
         {

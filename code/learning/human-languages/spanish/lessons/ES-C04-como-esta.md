@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-como-esta
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 280
+sequence: 310
 chapter: 4
 type: phrase
 headword: ¿cómo está usted?

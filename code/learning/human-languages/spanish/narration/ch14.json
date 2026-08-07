@@ -4,11 +4,11 @@
   "chapter": 14,
   "title": "Chapter 14",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7b5d1287654f2e62",
+  "sourceHash": "fnv1a64:a39884d4aea7bb13",
   "lessons": [
     {
       "id": "ES-C14-ser-ir-preterite",
-      "sequence": 578,
+      "sequence": 1050,
       "title": "fui — the past tense arrives, and two verbs become one",
       "headword": "fui",
       "romanization": "fui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cb98853f54215d7",
+      "sourceHash": "fnv1a64:4f976b4d96ae28b3",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
     },
     {
       "id": "ES-C14-hablar-preterite",
-      "sequence": 580,
+      "sequence": 1060,
       "title": "hablé — the regular past, built on an accent",
       "headword": "hablé",
       "romanization": "hablé",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d2ac9cf71ade02",
+      "sourceHash": "fnv1a64:cd3da96c84d6e042",
       "notice": null,
       "blocks": [
         {
@@ -314,7 +314,7 @@
     },
     {
       "id": "ES-C14-practice",
-      "sequence": 582,
+      "sequence": 1070,
       "title": "Practice — the preterite, past against present",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eefb1d965f836b28",
+      "sourceHash": "fnv1a64:15ba2316d6c80667",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 ---
 id: ES-C10-ir-a-futuro
 chapter: 10
-sequence: 546
+sequence: 890
 type: phrase
 headword: voy a + infinitive
 gloss: the near future — "I'm going to…"

@@ -1,7 +1,7 @@
 ---
 id: ES-C08-numeros-1-5
 chapter: 8
-sequence: 524
+sequence: 780
 type: word
 headword: uno, dos, tres, cuatro, cinco
 gloss: the numbers 1–5

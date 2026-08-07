@@ -1,7 +1,7 @@
 ---
 id: ES-C16-tres-irregulares
 chapter: 16
-sequence: 592
+sequence: 1120
 type: word
 headword: era, iba, veía
 gloss: the only three irregular imperfects in the entire language

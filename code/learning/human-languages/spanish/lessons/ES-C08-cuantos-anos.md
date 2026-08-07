@@ -1,7 +1,7 @@
 ---
 id: ES-C08-cuantos-anos
 chapter: 8
-sequence: 530
+sequence: 810
 type: phrase
 headword: ¿Cuántos años tienes?
 gloss: how old are you? (literally "how many years do you have?")

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-ar-presente
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 475
+sequence: 520
 chapter: 6
 type: word
 headword: hablo, hablas, habla

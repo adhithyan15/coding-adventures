@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-por-favor
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 460
+sequence: 500
 chapter: 6
 type: phrase
 headword: por favor

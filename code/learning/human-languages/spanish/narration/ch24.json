@@ -4,11 +4,11 @@
   "chapter": 24,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cb85e3f2de32dd93",
+  "sourceHash": "fnv1a64:d9335133eebe69c2",
   "lessons": [
     {
       "id": "ES-C24-cabeza",
-      "sequence": 730,
+      "sequence": 1410,
       "title": "la cabeza — \"the head\"",
       "headword": "la cabeza",
       "romanization": "la cabeza",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca9e2018cf8fbe1",
+      "sourceHash": "fnv1a64:1d23fe41ce429e33",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
     },
     {
       "id": "ES-C24-mano",
-      "sequence": 740,
+      "sequence": 1420,
       "title": "la mano — \"the hand\"",
       "headword": "la mano",
       "romanization": "la mano",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ebd83a6bc67002a",
+      "sourceHash": "fnv1a64:c30685b9a391edd2",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-trabajar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 480
+sequence: 530
 chapter: 6
 type: word
 headword: trabajar

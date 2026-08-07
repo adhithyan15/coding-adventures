@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-entender
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 855
+sequence: 1620
 chapter: 34
 type: word
 headword: entender

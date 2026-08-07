@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-gustar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 885
+sequence: 1680
 chapter: 35
 type: word
 headword: gustar

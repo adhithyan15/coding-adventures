@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-como
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 180
+sequence: 190
 chapter: 3
 type: word
 headword: cómo

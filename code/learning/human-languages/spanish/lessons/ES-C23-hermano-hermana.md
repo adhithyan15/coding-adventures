@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C23-hermano-hermana
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 720
+sequence: 1390
 chapter: 23
 type: word
 headword: el hermano, la hermana

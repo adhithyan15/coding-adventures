@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C21-sabado-domingo
 spine_node: SPINE-TIME-OF-DAY
-sequence: 680
+sequence: 1330
 chapter: 21
 type: word
 headword: sábado, domingo

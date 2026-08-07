@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-hasta-luego
 spine_node: SPINE-TAKE-LEAVE
-sequence: 410
+sequence: 450
 chapter: 5
 type: phrase
 headword: hasta luego

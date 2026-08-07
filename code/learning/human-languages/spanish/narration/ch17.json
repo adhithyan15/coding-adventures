@@ -4,11 +4,11 @@
   "chapter": 17,
   "title": "Chapter 17",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e4705d94e1f467da",
+  "sourceHash": "fnv1a64:987d104372c450ad",
   "lessons": [
     {
       "id": "ES-C17-futuro",
-      "sequence": 596,
+      "sequence": 1140,
       "title": "hablaré — the future, welded shut",
       "headword": "hablaré",
       "romanization": "hablaré",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a1bea9375fca1f7",
+      "sourceHash": "fnv1a64:75f5252fcaca8439",
       "notice": null,
       "blocks": [
         {
@@ -220,7 +220,7 @@
     },
     {
       "id": "ES-C17-condicional",
-      "sequence": 598,
+      "sequence": 1150,
       "title": "hablaría — the same weld, one tense over",
       "headword": "hablaría",
       "romanization": "hablaría",
@@ -231,7 +231,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b700b8e082384c9b",
+      "sourceHash": "fnv1a64:6938e0da50515712",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
     },
     {
       "id": "ES-C17-practice",
-      "sequence": 600,
+      "sequence": 1160,
       "title": "Practice — ten stems, two tenses",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -425,7 +425,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:2b4102bf168727e5",
+      "sourceHash": "fnv1a64:e9f899c42d6b76bd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -597,7 +597,7 @@
     },
     {
       "id": "ES-C17-future-guessing",
-      "sequence": 602,
+      "sequence": 1170,
       "title": "serán las tres — future form, present guess",
       "headword": "serán las tres",
       "romanization": "serán las tres",
@@ -608,7 +608,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5527b162c3ab4fe8",
+      "sourceHash": "fnv1a64:a530fffb868e2f93",
       "notice": null,
       "blocks": [
         {

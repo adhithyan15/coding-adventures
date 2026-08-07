@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-hasta-limits
 spine_node: SPINE-TAKE-LEAVE
-sequence: 400
+sequence: 440
 chapter: 5
 type: grammar
 headword: hasta aquí / hasta la noche

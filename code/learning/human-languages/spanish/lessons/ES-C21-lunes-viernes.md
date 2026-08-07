@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C21-lunes-viernes
 spine_node: SPINE-TIME-OF-DAY
-sequence: 670
+sequence: 1320
 chapter: 21
 type: word
 headword: lunes, martes, miércoles, jueves, viernes

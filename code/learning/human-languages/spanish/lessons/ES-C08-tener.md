@@ -1,7 +1,7 @@
 ---
 id: ES-C08-tener
 chapter: 8
-sequence: 528
+sequence: 800
 type: word
 headword: tener
 gloss: to have (your first irregular / stem-changing verb)

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C30-llueve
 spine_node: SPINE-TIME-OF-DAY
-sequence: 816
+sequence: 1520
 chapter: 30
 type: phrase
 headword: llueve

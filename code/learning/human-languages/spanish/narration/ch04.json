@@ -4,11 +4,11 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:5410c6a8b2635804",
+  "sourceHash": "fnv1a64:725d6b137377bf9c",
   "lessons": [
     {
       "id": "ES-C04-gracias",
-      "sequence": 250,
+      "sequence": 270,
       "title": "gracias — \"thank you,\" and a whole family of English words",
       "headword": "gracias",
       "romanization": "gracias",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3969444c81af8bce",
+      "sourceHash": "fnv1a64:f5e3fa74cf594ffc",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
     },
     {
       "id": "ES-C04-de-nada",
-      "sequence": 260,
+      "sequence": 280,
       "title": "de nada — \"you're welcome,\" or \"it was nothing\"",
       "headword": "de nada",
       "romanization": "de nada",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e5c913f2118ae08",
+      "sourceHash": "fnv1a64:3b8ebf50aed6457a",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +281,7 @@
     },
     {
       "id": "ES-C04-estar",
-      "sequence": 270,
+      "sequence": 290,
       "title": "estar — \"to be,\" the standing kind",
       "headword": "estar",
       "romanization": "estar",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c48ba479e91735af",
+      "sourceHash": "fnv1a64:a0b65487b5a73d41",
       "notice": null,
       "blocks": [
         {
@@ -410,7 +410,7 @@
     },
     {
       "id": "ES-C04-estar-estado",
-      "sequence": 275,
+      "sequence": 300,
       "title": "estás / está — the two forms, and what they are for",
       "headword": "estás / está",
       "romanization": "estás / está",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c75d3f1d85a3378b",
+      "sourceHash": "fnv1a64:ad2c2ef9af54d91e",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +565,7 @@
     },
     {
       "id": "ES-C04-como-esta",
-      "sequence": 280,
+      "sequence": 310,
       "title": "¿cómo está usted? — \"how are you?\"",
       "headword": "¿cómo está usted?",
       "romanization": "¿cómo está usted?",
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1b2bd3bf645f43d",
+      "sourceHash": "fnv1a64:4b38ddebc1627ccf",
       "notice": null,
       "blocks": [
         {
@@ -675,7 +675,7 @@
     },
     {
       "id": "ES-C04-como-estas-register",
-      "sequence": 290,
+      "sequence": 320,
       "title": "¿cómo está usted? / ¿cómo estás? — choose the register",
       "headword": "¿cómo está usted? / ¿cómo estás?",
       "romanization": "¿cómo está usted? / ¿cómo estás?",
@@ -686,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ac43b43f055da36",
+      "sourceHash": "fnv1a64:ec2185a3c64d23ae",
       "notice": null,
       "blocks": [
         {
@@ -800,7 +800,7 @@
     },
     {
       "id": "ES-C04-regular",
-      "sequence": 300,
+      "sequence": 330,
       "title": "regular / más o menos — the honest \"so-so\"",
       "headword": "regular",
       "romanization": "regular",
@@ -811,7 +811,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f76e8eda46d6c3b",
+      "sourceHash": "fnv1a64:9041b6c5d8c595ae",
       "notice": null,
       "blocks": [
         {
@@ -965,7 +965,7 @@
     },
     {
       "id": "ES-C04-y",
-      "sequence": 310,
+      "sequence": 340,
       "title": "y / ¿y tú? — pass the question back",
       "headword": "y / ¿y tú?",
       "romanization": "y / ¿y tú?",
@@ -976,7 +976,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a061efc60a36db8d",
+      "sourceHash": "fnv1a64:bf5cf5002e53d936",
       "notice": null,
       "blocks": [
         {
@@ -1091,7 +1091,7 @@
     },
     {
       "id": "ES-W01-acento",
-      "sequence": 320,
+      "sequence": 350,
       "title": "á é í ó ú — the acute accent, and the two jobs it does",
       "headword": "á é í ó ú",
       "romanization": "á é í ó ú",
@@ -1103,7 +1103,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:baf8f0bf2acd2bcd",
+      "sourceHash": "fnv1a64:0a154ad329459672",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1228,7 +1228,7 @@
     },
     {
       "id": "ES-W01-tilde-diacritica",
-      "sequence": 330,
+      "sequence": 360,
       "title": "el or él? — the accent as a meaning label",
       "headword": "el / él",
       "romanization": "el / él",
@@ -1239,7 +1239,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:dc1796509ac801d3",
+      "sourceHash": "fnv1a64:fcfbb52aee30c7f8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1356,7 +1356,7 @@
     },
     {
       "id": "ES-W02-enye",
-      "sequence": 340,
+      "sequence": 370,
       "title": "ñ — the letter that remembers a doubled n",
       "headword": "ñ",
       "romanization": "ñ",
@@ -1368,7 +1368,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:54a1f5e3da8c51f6",
+      "sourceHash": "fnv1a64:f9ec537631d2b099",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1503,7 +1503,7 @@
     },
     {
       "id": "ES-W02-enye-formas",
-      "sequence": 345,
+      "sequence": 380,
       "title": "mañana, español — the ñ in the words you are about to need",
       "headword": "mañana, español",
       "romanization": "mañana, español",
@@ -1515,7 +1515,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:50764998caf80a44",
+      "sourceHash": "fnv1a64:f42bf3408df4a291",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1631,7 +1631,7 @@
     },
     {
       "id": "ES-W03-inverted",
-      "sequence": 350,
+      "sequence": 390,
       "title": "¿ ¡ — the marks that open a question",
       "headword": "¿ ¡",
       "romanization": "¿ ¡",
@@ -1643,7 +1643,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f2bf58f0935c07cd",
+      "sourceHash": "fnv1a64:4b185ff5be127741",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1759,7 +1759,7 @@
     },
     {
       "id": "ES-W03-question-span",
-      "sequence": 360,
+      "sequence": 400,
       "title": "Where does ¿ begin? — bracket the spoken span",
       "headword": "Roberto, ¿cómo estás?",
       "romanization": "Roberto, ¿cómo estás?",
@@ -1771,7 +1771,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99b94711b2c0d896",
+      "sourceHash": "fnv1a64:5df9c6a05264f0ad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1909,7 +1909,7 @@
     },
     {
       "id": "ES-C04-practice",
-      "sequence": 370,
+      "sequence": 410,
       "title": "Practice — \"how are you?\", start to finish",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -1920,7 +1920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4755fc6507f6e1a2",
+      "sourceHash": "fnv1a64:95b7ff61b4e942fd",
       "notice": null,
       "blocks": [
         {

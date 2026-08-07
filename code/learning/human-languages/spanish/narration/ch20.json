@@ -4,11 +4,11 @@
   "chapter": 20,
   "title": "Lo Siento",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ff8b8576d2795748",
+  "sourceHash": "fnv1a64:eb8a28c91366131e",
   "lessons": [
     {
       "id": "ES-C20-lo-siento",
-      "sequence": 660,
+      "sequence": 1300,
       "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
       "headword": "lo siento",
       "romanization": "lo siento",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00ce4359ea93afdf",
+      "sourceHash": "fnv1a64:1edebc53ccdc91db",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
     },
     {
       "id": "ES-C20-perdon",
-      "sequence": 665,
+      "sequence": 1310,
       "title": "perdón — the sorry that asks for something back",
       "headword": "perdón",
       "romanization": "perdón",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a10e72821bf26fc",
+      "sourceHash": "fnv1a64:10316f8fbdca5ef8",
       "notice": null,
       "blocks": [
         {

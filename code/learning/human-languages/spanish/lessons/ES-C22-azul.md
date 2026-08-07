@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C22-azul
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 705
+sequence: 1370
 chapter: 22
 type: word
 headword: azul

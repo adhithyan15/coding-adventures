@@ -1,7 +1,7 @@
 ---
 id: ES-C17-condicional
 chapter: 17
-sequence: 598
+sequence: 1150
 type: word
 headword: hablaría
 gloss: the conditional — the same weld, using the imperfect of haber instead

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-gracias
 spine_node: SPINE-COURTESY-THANK
-sequence: 250
+sequence: 270
 chapter: 4
 type: word
 headword: gracias

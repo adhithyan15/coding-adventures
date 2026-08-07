@@ -4,11 +4,11 @@
   "chapter": 26,
   "title": "Water, Wine, and Bread",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7d92244aefd55f9c",
+  "sourceHash": "fnv1a64:adcb64dbcc088e9f",
   "lessons": [
     {
       "id": "ES-C26-agua",
-      "sequence": 760,
+      "sequence": 1440,
       "title": "el agua — water, and an article that is not what it looks like",
       "headword": "el agua",
       "romanization": "el agua",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:396cd87e02e45696",
+      "sourceHash": "fnv1a64:af75f70992f67934",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
     },
     {
       "id": "ES-C26-vino",
-      "sequence": 765,
+      "sequence": 1450,
       "title": "el vino — one word, three separate arrivals in English",
       "headword": "el vino",
       "romanization": "el vino",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8403ab5884125cd",
+      "sourceHash": "fnv1a64:6254dc7ee5085423",
       "notice": null,
       "blocks": [
         {
@@ -265,7 +265,7 @@
     },
     {
       "id": "ES-C26-pan",
-      "sequence": 770,
+      "sequence": 1460,
       "title": "el pan — bread, and the friend who shares it",
       "headword": "el pan",
       "romanization": "el pan",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34fd005c9eaee292",
+      "sourceHash": "fnv1a64:652a27f226793cb3",
       "notice": null,
       "blocks": [
         {

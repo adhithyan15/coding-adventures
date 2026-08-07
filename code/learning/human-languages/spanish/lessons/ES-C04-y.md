@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-y
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 310
+sequence: 340
 chapter: 4
 type: word
 headword: y / ¿y tú?

@@ -4,11 +4,11 @@
   "chapter": 18,
   "title": "Chapter 18",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:056b353dce315e5a",
+  "sourceHash": "fnv1a64:611f103a3f18023d",
   "lessons": [
     {
       "id": "ES-C18-subjuntivo",
-      "sequence": 604,
+      "sequence": 1180,
       "title": "hable, coma, viva — the subjunctive",
       "headword": "hable, coma, viva",
       "romanization": "hable, coma, viva",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:256303072a07e4d8",
+      "sourceHash": "fnv1a64:91ce99547c890c02",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -175,7 +175,7 @@
     },
     {
       "id": "ES-C18-inherited-subjunctive-stems",
-      "sequence": 606,
+      "sequence": 1190,
       "title": "tenga, diga, quiera — old irregularities come free",
       "headword": "tenga, diga, haga; quiera, pueda",
       "romanization": "tenga, diga, haga; quiera, pueda",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9406fc796546d74a",
+      "sourceHash": "fnv1a64:b2b0bb94c5c6820f",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
     },
     {
       "id": "ES-C18-subjunctive-outliers",
-      "sequence": 608,
+      "sequence": 1200,
       "title": "sea, vaya, sepa, haya; esté — where the shortcut stops",
       "headword": "sea, vaya, sepa, haya; esté",
       "romanization": "sea, vaya, sepa, haya; esté",
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87910704c052914f",
+      "sourceHash": "fnv1a64:befb2b16944dd31a",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +466,7 @@
     },
     {
       "id": "ES-C18-subjunctive-name",
-      "sequence": 610,
+      "sequence": 1210,
       "title": "subjuntivo — \"joined underneath\"",
       "headword": "subjuntivo",
       "romanization": "subjuntivo",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f17ef5d07b402a",
+      "sourceHash": "fnv1a64:cc5849df9cf29fbb",
       "notice": null,
       "blocks": [
         {
@@ -560,7 +560,7 @@
     },
     {
       "id": "ES-C18-quiero-que",
-      "sequence": 612,
+      "sequence": 1220,
       "title": "quiero que… — making the subjunctive appear",
       "headword": "quiero que…",
       "romanization": "quiero que…",
@@ -571,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a5c6b962d384dee",
+      "sourceHash": "fnv1a64:37bc14318be96308",
       "notice": null,
       "blocks": [
         {
@@ -732,7 +732,7 @@
     },
     {
       "id": "ES-C18-wanting-clause-trap",
-      "sequence": 614,
+      "sequence": 1230,
       "title": "quiero que hables — do not smuggle in a subject",
       "headword": "quiero que hables / quiero hablarte",
       "romanization": "quiero que hables / quiero hablarte",
@@ -743,7 +743,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2eedce6d8fb2c565",
+      "sourceHash": "fnv1a64:24c74260689cfbb0",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +842,7 @@
     },
     {
       "id": "ES-C18-ojala",
-      "sequence": 616,
+      "sequence": 1240,
       "title": "ojalá — a wish borrowed whole",
       "headword": "ojalá",
       "romanization": "ojalá",
@@ -853,7 +853,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a5cbefcd831a467",
+      "sourceHash": "fnv1a64:8a5116ada01886a3",
       "notice": null,
       "blocks": [
         {
@@ -951,7 +951,7 @@
     },
     {
       "id": "ES-C18-practice",
-      "sequence": 618,
+      "sequence": 1250,
       "title": "Chapter 18 practice — fact or wish?",
       "headword": "Chapter 18 practice",
       "romanization": "Chapter 18 practice",
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d42894546917da8b",
+      "sourceHash": "fnv1a64:8a556331081027e6",
       "notice": null,
       "blocks": [
         {
@@ -1052,7 +1052,7 @@
     },
     {
       "id": "ES-C18-practice-subjects",
-      "sequence": 620,
+      "sequence": 1260,
       "title": "Practice — one subject or two?",
       "headword": "one subject or two?",
       "romanization": "one subject or two?",
@@ -1063,7 +1063,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e009f00a2d88fe2f",
+      "sourceHash": "fnv1a64:29a5021c7eb66506",
       "notice": null,
       "blocks": [
         {
@@ -1159,7 +1159,7 @@
     },
     {
       "id": "ES-C18-practice-mood",
-      "sequence": 622,
+      "sequence": 1270,
       "title": "Practice — fact or wish?",
       "headword": "fact or wish?",
       "romanization": "fact or wish?",
@@ -1170,7 +1170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bdbd831a0781532",
+      "sourceHash": "fnv1a64:57ff016d1d7798be",
       "notice": null,
       "blocks": [
         {

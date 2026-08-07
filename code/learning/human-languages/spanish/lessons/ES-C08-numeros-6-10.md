@@ -1,7 +1,7 @@
 ---
 id: ES-C08-numeros-6-10
 chapter: 8
-sequence: 526
+sequence: 790
 type: word
 headword: seis, siete, ocho, nueve, diez
 gloss: the numbers 6–10 (and the months hidden in them)

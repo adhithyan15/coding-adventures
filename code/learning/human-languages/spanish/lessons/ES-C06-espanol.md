@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-espanol
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 500
+sequence: 550
 chapter: 6
 type: word
 headword: español

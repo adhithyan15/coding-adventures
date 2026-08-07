@@ -1,7 +1,7 @@
 ---
 id: ES-C10-practice
 chapter: 10
-sequence: 550
+sequence: 910
 type: practice-mix
 headword: (practice)
 gloss: going places, the near future, and whose things
