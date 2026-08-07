@@ -301,6 +301,11 @@ function makeController(engine: any, init: ControllerInit = {}) {
   let selectedNoteId = "";
   let noteTitleDraft = "";
   let noteBodyDraft = "";
+  // A task NAME (not id) — resolved to attachedTask on Save via
+  // tasksByName(), same "reject the whole save on an unmatched name"
+  // discipline the Sheet Labels column already uses. Empty means "no
+  // attachment." See code/specs/task-app-notes-ui-v1.md's addendum.
+  let noteTaskDraft = "";
   // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
   // (see Grid.mil).
   let sheetSelectedRow = -1;
@@ -550,6 +555,31 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return out;
   };
 
+  // Same shape as labelsByName() — the Notes editor's "attach to task" field
+  // resolves a typed task NAME back to the id upsertNote's attachedTask
+  // needs. Scoped to the active project only, same boundary labelsByName()
+  // uses (task names, like project/label names, aren't unique
+  // workspace-wide — see code/specs/task-app-notes-ui-v1.md's addendum).
+  const tasksByName = (): Map<string, string> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.tasks ?? {}) as Record<string, any>;
+    const out = new Map<string, string>();
+    for (const t of Object.values(map) as any[]) {
+      out.set(String(t.name ?? "").toLowerCase(), t.id as string);
+    }
+    return out;
+  };
+
+  // Reverse of tasksByName() — the editor needs to SHOW the attached task's
+  // name (not its id) when a note is selected.
+  const taskNameById = (id: string): string => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.tasks ?? {}) as Record<string, any>;
+    return String(map[id]?.name ?? "");
+  };
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -585,6 +615,46 @@ function makeController(engine: any, init: ControllerInit = {}) {
             ? `${mins(d.freeSlack)} of it without disturbing the next task.`
             : "",
         ];
+      };
+
+      // Dependency list for the ONE open row — read from the same `flowchart()`
+      // projection the (currently unused-elsewhere) relation graph exposes:
+      // {nodes: [{task, name, kind}], edges: [{from, to, label, scheduling}]}.
+      // Only `scheduling` edges (real CPM dependencies, not generic links) belong
+      // in a task's dependency list. Computed only when a row is open, same
+      // "don't run a query the collapsed list doesn't need" discipline as `sched`.
+      const flow = expanded === null ? undefined : engine.flowchart().data;
+      const depsFor = (id: string): string => {
+        if (!flow) return "";
+        const names = new Map<string, string>();
+        for (const n of (flow.nodes ?? []) as any[]) {
+          names.set(n.task as string, n.name as string);
+        }
+        const parts: string[] = [];
+        for (const e of (flow.edges ?? []) as any[]) {
+          if (!e.scheduling) continue;
+          if (e.to === id) parts.push(`← ${names.get(e.from) ?? e.from} (${e.label})`);
+          if (e.from === id) parts.push(`→ ${names.get(e.to) ?? e.to} (${e.label})`);
+        }
+        return parts.join(" · ");
+      };
+
+      // Attached-notes paragraph for the ONE open row — read from the same
+      // whole-project `workspace()` dump `noteRows()`/`tasksByName()` already
+      // use (no dedicated query exists or is needed for this either). Reachable
+      // now that the Notes editor has a real write side — see the "attach to
+      // task" field wired above and code/specs/task-app-notes-ui-v1.md's
+      // addendum for why this was previously dead plumbing.
+      const notesFor = (id: string): string => {
+        if (expanded === null) return "";
+        const ws = engine.workspace().data;
+        const activeId = engine.activeProject().data as string;
+        const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
+        return (Object.values(notesMap) as any[])
+          .filter((n) => n.attachedTask === id)
+          .map((n) => String(n.body ?? "").trim())
+          .filter(Boolean)
+          .join(" · ");
       };
 
       // Group the list the way the design does: what's underway, what's next, and
@@ -630,6 +700,10 @@ function makeController(engine: any, init: ControllerInit = {}) {
           // engine work.
           c.display[PRIORITY] ?? "",
           c.display[LABELS] ?? "",
+          // Same "appended, not inserted" discipline as priority/labels above —
+          // and same progressive-disclosure gating as d1-d3: empty unless open.
+          isOpen ? depsFor(id) : "",
+          isOpen ? notesFor(id) : "",
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
@@ -710,6 +784,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         selectedNoteId,
         noteTitleValue: noteTitleDraft,
         noteBodyValue: noteBodyDraft,
+        noteTaskValue: noteTaskDraft,
         timelineScale: tl.scale,
         timelineRows: tl.rows,
         newTaskName: newName,
@@ -841,6 +916,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           selectedNoteId = id;
           noteTitleDraft = String(note.title ?? "");
           noteBodyDraft = String(note.body ?? "");
+          noteTaskDraft = note.attachedTask ? taskNameById(note.attachedTask) : "";
           break;
         }
         case "newNote":
@@ -849,6 +925,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           selectedNoteId = `n${++counter}`;
           noteTitleDraft = "";
           noteBodyDraft = "";
+          noteTaskDraft = "";
           break;
         case "noteTitleChange":
           noteTitleDraft = event.value;
@@ -856,8 +933,26 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "noteBodyChange":
           noteBodyDraft = event.value;
           break;
+        case "noteTaskNameChange":
+          noteTaskDraft = event.value;
+          break;
         case "saveNote": {
           if (!selectedNoteId) break;
+          // Empty field → no attachment. A non-empty field must resolve
+          // against the active project's tasks or the WHOLE save is
+          // rejected — same discipline as the Sheet Labels column's
+          // write(), so a typo can't silently attach to nothing or drop an
+          // existing attachment.
+          const typedName = noteTaskDraft.trim();
+          let attachedTask: string | null = null;
+          if (typedName) {
+            const taskId = tasksByName().get(typedName.toLowerCase());
+            if (!taskId) {
+              console.error("Note save failed: no task named", JSON.stringify(typedName));
+              break;
+            }
+            attachedTask = taskId;
+          }
           // upsertNote is create-or-replace by id either way — whether this
           // is a brand-new note (first Save) or an edit to an existing one
           // makes no difference to the op itself.
@@ -865,7 +960,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
             id: selectedNoteId,
             title: noteTitleDraft,
             body: noteBodyDraft,
-            attachedTask: null,
+            attachedTask,
           });
           if (res?.ok === false) {
             console.error("Note save failed:", res.error ?? res);
@@ -886,6 +981,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           selectedNoteId = "";
           noteTitleDraft = "";
           noteBodyDraft = "";
+          noteTaskDraft = "";
           persist();
           break;
         }
@@ -893,6 +989,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
           selectedNoteId = "";
           noteTitleDraft = "";
           noteBodyDraft = "";
+          noteTaskDraft = "";
           break;
         case "sheetNavigate": {
           sheetSelectedRow = event.row;

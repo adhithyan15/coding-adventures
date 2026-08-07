@@ -4,6 +4,21 @@ All notable changes to `mosaic-pkg-notes` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## 0.2.0 — 2026-08-06 — minimal attach-to-task control
+
+### Added
+
+- `slot task-name-value : text ;` and `emit onTaskNameChange ( value :
+  text ) ;` — a single-line "Attach to task" input in the editor, next
+  to title/body. Notes has no notion of task ids; the field holds a
+  task NAME and the host resolves it to an id on Save (mirroring the
+  Sheet Labels column's discipline in `task-app`). Empty means "no
+  attachment." See
+  [task-app-notes-ui-v1.md](../../../specs/task-app-notes-ui-v1.md)'s
+  addendum for the full scope decision — this is deliberately not a
+  dropdown/autocomplete picker, just the minimal write path that makes
+  `Note.attached_task` usable at all.
+
 ## 0.1.0 — 2026-08-06 — initial release
 
 ### Added

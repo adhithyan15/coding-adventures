@@ -11,10 +11,14 @@
 # v0.1.0 scope — see code/specs/task-app-notes-ui-v1.md for the full
 # rationale. Create/edit/delete a note (title + plain-text body), standalone
 # only (no attachment picker yet), no tags, no rich text, no search.
+#
+# v0.2.0 — the spec's addendum adds a minimal "attach to task" text field
+# (task-name-value/onTaskNameChange), resolved by the host to a task id on
+# Save. Still not a real picker (no dropdown/search) — see the addendum.
 
 [package]
 name = "mosaic-pkg-notes"
-version = "0.1.0"
+version = "0.2.0"
 description = "List-plus-editor view over task-core's Note entity (create/edit/delete)"
 license = "MIT OR Apache-2.0"
 

@@ -1,0 +1,84 @@
+% ============================================================================
+% word-problems.adj — SITUATION-TYPE schemas for elementary addition/
+% subtraction word problems (CCSS 1.OA.A.1).
+% ============================================================================
+% CCSS 1.OA.A.1 asks a student to "use addition and subtraction within 20 to
+% solve word problems involving situations of ADD TO, TAKE FROM, PUT
+% TOGETHER/TAKE APART, and COMPARE." Two of those four situation types already
+% have a citable home in this stdlib under a different name: "add to"/"put
+% together" IS `mathematics/cardinality.adj`'s `total_cardinality` (the
+% cardinality of a group made by combining two counted groups — the same
+% claim, framed for counting rather than arithmetic word problems). The
+% remaining two — TAKE FROM and COMPARE — are this library's job: each names
+% the SITUATION (not just the bare operation `arithmetic.adj` already
+% provides), so a consumer can pick the right formula from how a word problem
+% is WORDED ("ate 3 of them" vs. "how many more"), not just from seeing a
+% minus sign.
+%
+%     import "word-problems.adj"               % transitively imports arithmetic.adj
+%     observe start_amount(8)                  % "…had 8 apples…"     (span cited)
+%     observe change_amount(3)                 % "…ate 3 of them…"    (span cited)
+%     ? separate_result(start_amount, change_amount)   % engine → 5, TAKE FROM schema
+%
+% Like `cardinality.adj`, neither formula here states its own arithmetic — each
+% CALLS the cited `difference` primitive from `arithmetic.adj` (RS-1
+% write-once-use-many); the citation here grounds the SITUATION claim, not the
+% subtraction itself (that citation composes in transitively, same as
+% `cardinality.adj`'s relationship to `sum`).
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitive `difference`. The import is RELATIVE to
+% this file (same package, arithmetic/ sibling directory).
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `start_amount`/`change_amount` are the TAKE FROM schema's two
+% observed quantities (a starting amount, and how much of it is removed);
+% `greater_amount`/`lesser_amount` are the COMPARE schema's two observed
+% quantities (which one is worded as the bigger group is a decomposition
+% choice, not this library's — the formula itself is unconstrained the same
+% way `arithmetic.adj`'s own `difference` is). The `surface` lists are the
+% everyday phrasings CCSS 1.OA.A.1 names for each situation.
+% ----------------------------------------------------------------------------
+dictionary word_problems_vocab {
+    define start_amount    : finding  surface "starting amount", "amount before", "had"
+    define change_amount   : finding  surface "amount removed", "amount taken away", "ate", "gave away", "used"
+    define separate_result : finding  surface "amount left", "how many are left", "remaining"
+
+    define greater_amount  : finding  surface "bigger amount", "larger group", "more"
+    define lesser_amount   : finding  surface "smaller amount", "smaller group", "fewer"
+    define compare_difference : finding  surface "how many more", "how many fewer", "the difference between them"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. Both CALL the cited `difference` primitive; the
+% engine composes both citations (this claim about the word-problem
+% situation, plus `arithmetic.adj`'s subtraction definition) into one
+% derivation.
+%
+%   separate_result(start_amount, change_amount)    = difference(start_amount, change_amount)
+%   compare_difference(greater_amount, lesser_amount) = difference(greater_amount, lesser_amount)
+% ----------------------------------------------------------------------------
+formulabook word_problems {
+    use word_problems_vocab
+
+    % TAKE FROM — a starting amount with some of it removed; "how many are
+    % left" is the RESULT of the subtraction operation itself, distinct from
+    % `arithmetic.adj`'s own citation (which grounds the numeric RESULT, "the
+    % difference"; this grounds the OPERATION of taking one quantity away
+    % from another, the situation a "take from" word problem describes).
+    formula separate_result(start_amount, change_amount) = difference(start_amount, change_amount)
+        source "Subtraction is the operation of taking the difference d=x-y of two numbers x and y."
+        locator "https://mathworld.wolfram.com/Subtraction.html"
+        trust authoritative
+
+    % COMPARE — "how many more/fewer" one counted group has than another. The
+    % difference between two counted quantities answers exactly that
+    % question, the situation a "compare" word problem describes.
+    formula compare_difference(greater_amount, lesser_amount) = difference(greater_amount, lesser_amount)
+        source "The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction."
+        locator "https://mathworld.wolfram.com/Difference.html"
+        trust authoritative
+}

@@ -1,5 +1,89 @@
 # Changelog
 
+## [0.75.0] - 2026-08-06 - `min(a, b)`/`max(a, b)` on the plain-arithmetic surface (FL-11)
+
+- `RUNTIME_BUILTIN_FORMULAS` gains `"max"`/`"min"`: a two-argument `max(a, b)`/`min(a, b)` call is
+  now recognised by name in `expand_rec`, the same recognized-by-name built-in mechanism FL-9's
+  `floor`/`mod` use, dispatched BEFORE the user-formula map is consulted. Each maps directly onto
+  the PRE-EXISTING `ExprAst::Call2(BinFn::Max/Min, …)` node — the same one the `latex "…"` frontend
+  already reached for `\max(a, b)`/`\min(a, b)` — so this is a new surface path to old machinery,
+  not a new `ExprAst`/`ComputeOp` variant or exhaustive-match site.
+- No grammar change. The plain grammar's `agg` production already claims the ONE-argument shape
+  (`max(slot)`/`min(slot)`, an aggregation over a slot's observed values) before `apply` is ever
+  tried, so this only ever fires for the TWO-argument shape `agg` cannot produce — no ambiguity
+  between the two `min`/`max` meanings to resolve.
+- `min`/`max` join the reserved-name set at every arity (not just the one-parameter arity `agg`
+  already reserved): `RUNTIME_BUILTIN_FORMULAS`'s existing `ReservedFormulaName` gate in
+  `validate_formula` now rejects `formula min(a, b) = …`/`formula max(a, b) = …` outright, the same
+  as it already rejects a two-parameter `formula mod(a, b) = …`.
+- New unit tests: `max_builtin_computes_the_larger_of_two_named_quantities`,
+  `min_builtin_picks_the_first_argument_when_it_is_smaller`, `max_wrong_arity_is_a_clean_error`,
+  `min_wrong_arity_is_a_clean_error`; `every_reserved_name_is_really_dispatched_by_the_runtime` and
+  the `RUNTIME_BUILTIN_FORMULAS` sortedness test extended to cover `max`/`min`.
+- `mod`/`max`/`min` share ONE `expand_rec` dispatch block (one `a`/`b` local pair) instead of three
+  near-duplicate ones, since all three take exactly two arguments and expand identically. Not just
+  tidiness: three separate blocks each contributed their own `ExprAst` locals to `expand_rec`'s
+  debug-build stack frame, and macOS CI caught the regression directly — `deep_operator_spine_
+  trips_the_nesting_guard_not_the_stack` (a test asserting `FORMULA_MAX_NODE_DEPTH`'s depth guard
+  trips before the native stack does) overflowed the runner's ~2 MiB worker-thread stack a few
+  frames short of the guard, passing on Linux/Windows but not macOS. Sharing the locals restores
+  the same per-call frame footprint `mod` alone had before this release.
+
+## [0.74.0] - 2026-08-06 - `symbolic … for <var>`: rung-0 of the CAS-wiring rung (FL-10)
+
+- New `symbolic <name>(<params>) { <lhs> == <rhs> } for <target>` construct, a sibling of
+  `formula` inside a `formulabook` (new `symbolic_decl` grammar rule; new `SymbolicDef` AST node;
+  new `symbolics: Vec<SymbolicDef>` field on `Statement::Formulabook`). Where a `formula` computes
+  ONE fixed output from its parameters, a `symbolic` clause solves its cited equation for
+  whichever variable the caller didn't already know: bind every declared parameter to a query
+  argument exactly like a `formula` application, then solve the resulting single-variable linear
+  equation for `target` through the SAME `Backend`/`VM` seam every CAS dialect in this workspace
+  uses — not a direct call into `cas-solve`'s solver functions. This closes the gap the rest of the
+  crate had left: `symbolic-vm`/`cas-solve`/`symbolic-ir` existed in the workspace with no adj-lang
+  caller; `adj-lang` now depends on all three.
+- New `crate::symbolic_backend::RungZeroBackend`, a minimal `symbolic_vm::Backend` mirroring
+  `macsyma-runtime`'s `MacsymaBackend`/`solve_handler` (the one existing example of this seam) but
+  scoped to rung-0's single capability: it registers exactly one handler, for the `Solve` head
+  (`cas_solve::SOLVE`), and holds no bindings or other state. The equation is translated to
+  `symbolic_ir::IRNode` (`lower.rs`'s new `expr_to_irnode`), wrapped `Solve(Equal(lhs, rhs),
+  target)`, and evaluated through `symbolic_vm::VM::eval`; the handler delegates the actual
+  linear-coefficient extraction and Gaussian elimination to `cas_solve::solve_linear_system`
+  (a 1×1 system is the fully-general degenerate case) and returns its `Rule(target, value)` node.
+- `expr_to_irnode` is a small, rung-0-scoped structural mirror of what `solve_linear_system`'s own
+  `linear_eval` accepts (`Add`/`Sub`/`Mul` over a `Symbol` target and numeric constants — it has no
+  `Div` case), restricted to `+ − × ÷` on the adj-lang side: a target-carrying `Div` is legal
+  because the divisor must be target-free (dividing by the unknown is nonlinear), so it is folded
+  to a constant and re-expressed as `Mul` by its reciprocal. A target-free sub-expression
+  short-circuits straight to `compute` (`eval_closed`, unchanged from the first cut of this rung),
+  so a bound side of the equation can be anything `compute` supports (a KB slot, `floor`, …) — only
+  the side actually carrying the target is restricted to linear shape.
+- Rung-0 is deliberately narrow and says so in `LowerError` variants: the target may not double as
+  a parameter (`SymbolicTargetIsParameter`); every identifier must resolve to a parameter or the
+  target (`SymbolicFreeVariable`); no nested `formula` application inside the equation
+  (`SymbolicApplicationUnsupported` — composition is explicitly future work); the
+  provenance-required lint (`SymbolicMissingProvenance`); bad/wrong-arity query arguments
+  (`SymbolicBadArgument`/`SymbolicArity`); a bound coefficient that didn't stay exact
+  (`SymbolicNotExact`); the target multiplied/divided by an expression that itself contains it, or
+  any node shape rung-0 doesn't linearize (`SymbolicNonLinear`); an `ExactRational`
+  arithmetic/`i64`-narrowing overflow guard (`SymbolicCoefficientOverflow`); the target already
+  independently bound at apply time (`SymbolicTargetAlreadyBound` — §3D step 1: the target is the
+  unknown being solved FOR, so a program that also `observe`s it is contradictory intent); and a
+  singular system — no solution, or every value satisfies it — which `solve_linear_system` cannot
+  tell apart (`SymbolicUnsolvable`, replacing the finer `SymbolicNoSolution`/`SymbolicIndeterminate`
+  split an earlier direct-`solve_linear` cut of this rung could distinguish but this API cannot).
+- The closed-vocabulary gate's `check_query` (`enforce_vocabulary`) only special-cased the
+  `formulas` map, so a `symbolic` application in any program using `use`/`dictionary` vocabulary
+  scoping was rejected as an `UndefinedTerm` — even though it had already lowered correctly — the
+  moment the later enforcement pass ran. `enforce_vocabulary` now also takes the `symbolics` map;
+  caught by the `electricity.adj` worked example (which only fails through the `use`-scoped path,
+  not a bare inline test), not by the initial in-crate unit tests.
+- `physics/electricity.adj`'s Ohm's law now carries both directions: the existing `formula
+  voltage(current, resistance)` alongside a new `symbolic resistance_from_ohms_law(voltage,
+  current) { voltage == current * resistance } for resistance` — the same cited law, solved for
+  the OTHER variable. `electricity.query.adj` solves for resistance BEFORE it is ever `observe`d
+  (the target may not already be bound), then round-trips the forward `formula` direction against
+  the resistance just recovered.
+
 ## [0.73.0] - 2026-08-06 - floor/mod on the plain-arithmetic surface (FL-9)
 
 - `floor(x)` and `mod(a, b)` join `RUNTIME_BUILTIN_FORMULAS` as recognized-by-name built-ins in

@@ -4,6 +4,88 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - minimal notes attachment + notes paragraph in the task-detail panel
+
+Closes the gap the dependency-list entry below disclosed: `Note.attached_task`
+existed since Phase 8, but no UI anywhere could ever set it, so a
+task-detail "notes paragraph" cell was drafted and pulled back out as
+dead plumbing. `mosaic-pkg-notes` 0.2.0 adds a single-line "Attach to
+task" field to the Notes editor — a task NAME, not id, resolved to
+`attachedTask` on Save. An unrecognised name **rejects the whole save**,
+the same discipline the Sheet Labels column already uses (verified
+live: typing a nonexistent task name and hitting Save logs a console
+error and leaves the note's real attachment untouched — checked the
+persisted IndexedDB record directly, not just the UI). The task-detail
+panel gains `detail-notes` (`row[13]`, appended after the dependency
+list's `row[12]`), reading the attached note's body for the one open
+task.
+
+Found and fixed one real bug before shipping: `Note` is
+`#[serde(rename_all = "camelCase")]` in `task-core`, so the JSON field
+is `attachedTask`, not `attached_task` — the first draft of both the
+detail-panel filter and the editor's "show the currently attached task
+name" lookup used the wrong (snake_case) key and silently matched
+nothing. Caught live-testing (the notes paragraph rendered empty
+despite a real attachment existing) by reading the persisted
+IndexedDB snapshot directly, not by inspection.
+
+Verified live end-to-end, both themes, zero unexpected console errors:
+created a task, created a note, attached it by typing the task's name
+in lowercase (case-insensitive match), confirmed the detail panel's
+notes paragraph renders the body text; reopened the note and confirmed
+the attach field shows the resolved display name (not the raw id);
+typed an unrecognised name and confirmed Save is rejected with a
+console error while the note's real attachment is left untouched in
+the persisted snapshot.
+
+See `code/specs/task-app-notes-ui-v1.md`'s addendum for the full scope
+decision (why a name-matching text field, not a picker).
+
+### Added - dependency list in the task-detail panel
+
+The open task's detail panel now shows its CPM dependencies alongside the
+existing scheduled/slack prose: `→ Build the prototype (FS)` for a
+predecessor edge, `← Design the wireframes (FS)` for a successor edge,
+each labelled FS/SS/FF/SF. Pure UI — `task-core`'s `flowchart()`
+projection (predecessor/successor task ids + kind label, already exported
+through `task-wasm`/`task-engine.mjs`) needed zero new engine work; only
+`scheduling` edges are shown (real CPM dependencies), not generic links.
+Follows the same "appended, not inserted" (`row[12]`) and
+progressive-disclosure (computed only for the one open row) conventions
+`row[6]`-`row[8]`/`row[10]`-`row[11]` already established.
+
+Verified live: added two tasks (every new task auto-links as a
+dependency successor of the previous one, so no dedicated dependency-UI
+was needed to exercise this), expanded each in turn, confirmed both edge
+directions and the FS label render correctly in both themes. Zero
+console errors.
+
+**Scope note**: a matching "notes paragraph" (attached `Note` entities'
+body text) was drafted alongside this but pulled back out before
+shipping — there is no UI anywhere yet to actually attach a note to a
+task (Notes v1 deliberately deferred that as its own "attachment picker"
+item), so the cell would only ever render empty. See `BACKLOG.md`: it
+now needs to ship together with that picker, not before it.
+
+### Changed - project rail extracted to mosaic-pkg-project-nav
+
+Phase 9's first half: the nested-project tree + add/add-subproject
+composer moved out of `TaskApp.mil`/`.mll`/`.msl` into a standalone
+`mosaic-pkg-project-nav` package, per the roadmap's reuse map. A refactor,
+not a redesign — same part names, same styling, same layout, in both
+themes. The brand row and the view-switcher deliberately stayed in
+TaskApp; see `code/specs/task-app-project-nav-v1.md` for why.
+
+Verified live, behavior-identical to before: create a project, create a
+nested sub-project (indent glyph renders), switch selection between
+projects (the "on" raised-card styling follows). Zero console errors.
+
+**Still open** (see `BACKLOG.md`): the per-project/task complexity config
+(board-only ↔ full CPM) that the spec calls "the single most important
+product rule" (§2.3) — not addressed here; it needs a product decision
+the spec doesn't make (what exactly "board only" hides is undefined),
+unlike this extraction, which needed none.
+
 ### Added - label management (create + assign)
 
 Closes the gap the previous entry disclosed: labels can now actually be

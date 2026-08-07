@@ -27,20 +27,26 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Richer Gantt: day-grid columns, weekend/today shading, milestone diamonds,
      dependency arrows, hover tooltips, a legend. Current timeline is a simple
      proportional-bar-per-row view.
-   - Richer task rows: labels/priority chips shipped (see Resolved below). Still
-     missing: critical/slack chips, dependency list, notes paragraph in the detail
-     panel — the notes-paragraph item can now pull from the real `Note` entity
-     (shipped in Phase 8) via an `attached_task` lookup, not just `Task.notes`.
+   - Richer task rows: labels/priority chips, the dependency list, and the notes
+     paragraph all shipped (see Resolved below). Still missing: critical/slack
+     *chips* — today the detail panel's scheduling prose already says "on the
+     critical path" / states slack in prose, so a dedicated chip would be a
+     value-only restyle, low priority.
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-3. **Phase 9 — App-shell assembly + progressive disclosure.** Partially done already via ad hoc
-   UI-design passes ([#8970](https://github.com/adhithyan15/coding-adventures/pull/8970), [#8983](https://github.com/adhithyan15/coding-adventures/pull/8983), [#9112](https://github.com/adhithyan15/coding-adventures/pull/9112), [#8994](https://github.com/adhithyan15/coding-adventures/pull/8994), [#9110](https://github.com/adhithyan15/coding-adventures/pull/9110), [#9127](https://github.com/adhithyan15/coding-adventures/pull/9127), [#9136](https://github.com/adhithyan15/coding-adventures/pull/9136))
-   — theming, project switching, nested-project hierarchy, shell/groups/status/cards all landed.
-   Remaining: package it as a reusable `mosaic-pkg-project-nav` (nested-project tree + view
-   switcher), and the per-project/task **complexity config** (board-only ↔ full CPM) that the
-   spec calls "the single most important product rule" (§2.3) — currently every project exposes
-   the same surface regardless of how simple it is.
+3. **Phase 9 — per-project/task complexity config (board-only ↔ full CPM).** The
+   nested-project tree half of Phase 9 shipped as `mosaic-pkg-project-nav` (see Resolved
+   below); this is what's left. The spec calls it "the single most important product
+   rule" (§2.3) but doesn't define what "board only" actually hides (Timeline tab?
+   Sheet columns? which task-detail fields?), whether it's a project setting, a task
+   setting, or both (the spec's own wording is "per project/task", literally
+   ambiguous), or what middle tiers if any look like — `code/specs/task-app-ui-design.md`
+   has no further elaboration either. The engine has no field to hang this on yet
+   (`ProjectSettings` is calendar/unit conventions only, no complexity/tier field) — this
+   is new `task-core` model work gated on a product decision the spec doesn't make, not
+   a UI-only slice. Whoever picks this up next should write a short decision addendum
+   (concrete tiers, what each hides, per-project vs. per-task) before touching code.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
@@ -61,11 +67,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   a 4-way branch duplicating the whole drop-target + event-loop wasn't judged worth it for a
   colour difference. Today's badge shipped (it only needed a small conditional child, the
   same trick Board's `card-crit` chip already uses).
-- **Notes: attachment picker, tags, rich text, search.** Deferred from the Phase 8 UI
-  ship — see `code/specs/task-app-notes-ui-v1.md`. v1's notes are always standalone (no
-  UI to set `attached_task`); tags are generic and reusable in `mosaic-pkg-notes` but
-  nothing drives them; `Note.body` is plain text, matching every other free-text field
-  in the engine; no search box (mirrors Sheet's own v1 scope cut).
+- **Notes: a real attachment picker, tags, rich text, search.** Deferred from the
+  Phase 8 UI ship — see `code/specs/task-app-notes-ui-v1.md`. A minimal name-matching
+  attach-to-task *text field* shipped (see Resolved below); this item is what's still
+  missing: a real dropdown/autocomplete/search picker, not just the write path. Tags
+  are generic and reusable in `mosaic-pkg-notes` but nothing drives them; `Note.body`
+  is plain text, matching every other free-text field in the engine; no search box
+  (mirrors Sheet's own v1 scope cut).
 - **Label colour picker + duplicate-name prevention + per-label removal.** Deferred
   from the label-management ship (see Resolved below) — `Label.color` is set (always
   `""` in v1) but nothing renders it; two labels can share a name (mirrors project
@@ -80,6 +88,41 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Notes attach-to-task + task-detail notes paragraph.** Closes the gap the
+  dependency-list entry below disclosed. `mosaic-pkg-notes` 0.2.0 gained a
+  minimal "Attach to task" text field (task NAME, resolved to
+  `attachedTask` on Save, unrecognised name **rejects the whole save** —
+  same discipline as the Sheet Labels column). `TaskApp`'s task-detail
+  panel gained `detail-notes` (`row[13]`), reading the open task's
+  attached note body. Found and fixed one real bug before shipping:
+  `Note` is `#[serde(rename_all = "camelCase")]`, so the JSON field is
+  `attachedTask` — the first draft used the wrong snake_case key in both
+  the detail-panel filter and the editor's name-display lookup, silently
+  matching nothing. Caught live-testing by reading the persisted
+  IndexedDB record directly (the UI alone wouldn't have shown *why* it
+  was empty). Verified live end-to-end, both themes: attach by typing a
+  task name case-insensitively, detail panel shows the note body,
+  reopening the note shows the resolved display name, an unrecognised
+  name is rejected without corrupting the existing attachment (checked
+  the persisted snapshot, not just the UI). A real picker (dropdown/
+  autocomplete/search) is still deferred — see the Backlog item above.
+- **Task-detail dependency list.** The open task's detail panel shows its CPM
+  dependencies (`→ Build the prototype (FS)` / `← Design the wireframes (FS)`),
+  read from `task-core`'s existing `flowchart()` projection — zero new engine
+  work. Verified live in both themes, zero console errors.
+- **Phase 9 — nested-project tree extracted to `mosaic-pkg-project-nav`.** The
+  add/add-subproject composer + nested-project list, extracted verbatim from
+  `TaskApp`'s own rail block — same part names, same styling (both themes), same
+  layout structure. A refactor, not a redesign; `code/specs/task-app-project-nav-v1.md`
+  has the full rationale. The brand row and the view-switcher deliberately stayed in
+  TaskApp — the latter is a single, deeply-coupled 36-button block edited in every
+  recent view-addition PR, and extracting it right after several rapid additions would
+  be a large, high-blast-radius refactor with no corresponding precedent to derisk it,
+  unlike the simpler, more self-contained project rail. Verified live,
+  behavior-identical to before: create a project, create a nested sub-project (indent
+  glyph renders), switch selection between projects (the "on" raised-card styling
+  follows). The remaining Phase 9 item (complexity config) is the "Next up" item
+  above — it needs a product decision this extraction didn't.
 - **Label management (create + assign).** Closes the gap the task-row-chips ship
   below disclosed. A "+ Label" composer wraps the Sheet tab in `TaskApp.mll`
   (deliberately TaskApp's own concern, not a `mosaic-pkg-sheet` slot — Sheet has no

@@ -1,0 +1,26 @@
+% ============================================================================
+% volume-formulas.query.adj — worked examples over the volume formula library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a volume
+% question: it states NO arithmetic and NO formula — it only `import`s the
+% grounded library, `observe`s the edge lengths it decomposed from the prompt
+% (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited formula. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the formula's
+% source/locator/trust.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli volume-formulas.query.adj
+% ============================================================================
+
+import "volume-formulas.adj"
+
+% A cube with edge 3: volume = 3 * 3 * 3.
+observe side(3)
+? cube_volume(side)   % expect 27  (MathWorld: V = a³)
+
+% A 4 by 3 by 2 box: volume = 4 * 3 * 2.
+observe box_length(4)
+observe box_width(3)
+observe box_height(2)
+? rectangular_prism_volume(box_length, box_width, box_height)   % expect 24  (MathWorld: V = abc)

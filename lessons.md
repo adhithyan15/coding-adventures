@@ -288,6 +288,8 @@ A condensed quick-reference of mistakes made during development, grouped by cate
   (4) **Clippy lints are platform-conditional; a macOS-only local run misses Linux-only lints.** Crates whose real path is `#[cfg(target_vendor="apple")]` leave dead code / unused imports on Linux (`barcode-layout-1d` `let_unit_value` — Linux font stub returns `()`; `paint-metal`/`text-native-coretext`/`window-appkit` dead_code). The gate runs on ubuntu AND macOS, so clean BOTH. Reproduce Linux lints locally without a Linux box by **cross-checking** (clippy checks, doesn't link): `rustup target add x86_64-unknown-linux-gnu` then `cargo clippy --target x86_64-unknown-linux-gnu …`. Fix with `#![cfg_attr(not(target_vendor = "apple"), allow(...))]` — enforced where the code is live, allowed where it's inactive.
   (5) **The gate runs on EVERY affected Rust package the build tool knows, not just the `code/packages/rust` workspace.** `code/programs/rust/*` are separate cargo projects and wasm/rust packages too; a `--workspace` clippy in `packages/rust` misses them all. It also surfaces pre-existing host-un-buildable crates (`os-kernel`: `#![no_std]` + crates.io `uefi` dep with `panic_handler` → `cargo test` can never link on a std host) — guard such a crate's BUILD to skip on hosts (it targets `x86_64-unknown-uefi`).
 - **Getting a large workspace to zero clippy warnings: `cargo clippy --fix` first, but it stops at the first deny-by-default hard error.** `absurd_extreme_comparisons`/`approx_constant`/`not_unsafe_ptr_arg_deref`/`never_loop` are deny-by-default, and a deny error aborts that crate's compile so `--fix` can't touch its other (machine-applicable) warnings. Clear/allow the hard errors first, then re-run `--fix`; crates that previously failed to compile now get auto-fixed. `--fix` only applies `MachineApplicable` suggestions — `approx_constant` (replacing `3.14159` with `PI` changes the value) is `MaybeIncorrect`, so it is NEVER auto-fixed; resolve those with a scoped `#[allow(clippy::approx_constant)]` + justification, never by editing the literal (it's usually test data / codegen input / an intentional hand-written constant). FFI crates that expose raw-pointer C ABIs (`node-bridge`, `ruby-bridge`) get a crate-level `#![allow(clippy::not_unsafe_ptr_arg_deref)]` with a comment rather than ~80 per-fn annotations.
+- **A `gh pr checks` "FAILED" line can mean "cancelled by the platform," not a real error — check the job `conclusion`, not just its display status.** PR #10017 (a pure state-JSON change) showed `build (windows-latest)` and the downstream `CI gate` as failed after ~15 min. `gh api repos/<owner>/<repo>/actions/jobs/<job-id> --jq '{status,conclusion}'` showed `conclusion: "cancelled"` (not `"failure"`) — `ubuntu-latest`/`macos-latest` had already built the identical commit successfully, so the content was never at fault. Fix: `gh run rerun <run-id> --failed` (not a code change, not a new commit) — it passed clean on rerun. Rule: before touching code in response to a CI red X, fetch the job's actual `conclusion` field; `cancelled`/`skipped`/`abandoned` mean "rerun," only `failure` with real log output means "investigate the diff."
+- **A brand-new branch/PR can show "no checks reported" (zero workflow runs, not merely queued) for hours** during an account-wide GitHub Actions backlog (many concurrent branches pushing at once saturates the concurrent-job ceiling). Distinguish "queued behind others" from "never triggered" with `gh api repos/<owner>/<repo>/actions/workflows/<workflow-id>/runs?branch=<branch> --jq '.total_count'` — `0` means the push/PR event never even created a run; a nonzero count with `status: queued/pending` means it's just waiting its turn. Watch `gh api repos/<owner>/<repo>/actions/runs --jq '.workflow_runs[] | select(.status != "completed") | .status' | sort | uniq -c` for the account-wide backlog size — once it drains (roughly, once `in_progress` count is >0 and the queued count is dropping), new branches start getting picked up on their own. An empty retrigger commit (`git commit --allow-empty`) does not skip the queue; only waiting does.
 - **Changing a shared frontend compiler runs DOWNSTREAM consumers' tests in CI — run them locally first.** Editing `twig-ir-compiler`'s lowering (LANG-FULL TW2: value-defines → typed locals) passed `cargo test -p twig-ir-compiler` and the lang-aot matrix locally, but CI's affected-package detection also rebuilt `twig-vm`, whose `dispatch.rs` test compiled a real Twig program and asserted on the *exact* emitted ops (`(define x 5)` → a `global_set` writing `x` to the host global table).  The new lowering dropped that `global_set`, so the downstream test's expectation broke (the result was still correct).  This is NOT a latent bug to defer — it's a test that legitimately tracks the compiler output you changed, so update it in the same PR.  Rule: when a PR touches a shared `*-ir-compiler` (or any crate many others depend on), enumerate consumers with `grep -rln '<crate>' */Cargo.toml` and run **each** consumer's tests (`cargo test -p <consumer>`) before pushing — not just the changed crate + the integration matrix.  Preserve a downstream test's *intent* when updating it (here: keep exercising `global_set` by switching to a lambda-**captured** define, which still hits the global table) rather than deleting the assertion.
 
 ## QR / format-marker / file-format specifics
@@ -2547,3 +2549,65 @@ Every other `zip`/archive-container port in this repo that enforces an
 aggregate decompression-bomb budget should be audited for the same
 trim-then-measure pattern, not just `cpp/zip` and the three `haskell/zip`
 rounds that found it independently first.
+
+## Adding a same-shaped `if` block to a shared recursive dispatcher can overflow the stack on ONE platform only, even with correct logic and green local tests
+
+`adj-lang`'s `expand_rec` (`code/packages/rust/adj-lang/src/lower.rs`) recurses
+one native stack frame per AST level, guarded by `FORMULA_MAX_NODE_DEPTH`
+(descend-then-check, so recursion never exceeds the cap). Its own doc comment
+already flagged the margin as tight: "a *few hundred* debug-build frames
+already approach the default ~2 MiB worker-thread stack." Adding FL-11's
+`min(a, b)`/`max(a, b)` built-ins as two more `if name == "max" { .. let a =
+..; let b = ..; }` / `if name == "min" { .. }` blocks — each an exact structural
+copy of the pre-existing `mod` block, just with different names and a different
+wrapped node — compiled clean, passed `cargo clippy`, and passed all 252 unit
+tests locally (Windows). It still made macOS CI's `build` job fail for real:
+`deep_operator_spine_trips_the_nesting_guard_not_the_stack` (a test asserting
+the depth guard fires *before* the native stack does, on a 400-level spine)
+aborted with `SIGABRT: process abort signal` / "has overflowed its stack" — the
+guard never got a chance to fire, because 96 recursion frames of the new,
+slightly larger `expand_rec` no longer fit in the runner's ~2 MiB thread stack.
+Linux and Windows builds passed; only macOS's `build` job failed, and it was a
+REAL failure (`gh api .../jobs/<id> --jq '{status,conclusion}'` showed
+`"conclusion": "failure"`, not `"cancelled"`), so [[Check cancelled vs failed CI
+jobs before debugging]] correctly routed to log-reading instead of a rerun.
+
+Root cause: in an unoptimized (`cargo test`/debug) build, rustc/LLVM does not
+reliably coalesce stack slots across sibling `if`-blocks within one function —
+each block's locals (here, two `ExprAst` bindings) can each claim their own
+space in the function's frame, so three near-identical blocks (`mod`, `max`,
+`min`) cost roughly 3× one block's worth of frame size, not 1×. Fix: merge
+same-shaped dispatch blocks that recognize different built-in NAMES but expand
+identically (exactly two args, expand both, wrap in the built-in's own node)
+into ONE `if name == "mod" || name == "max" || name == "min" { .. }` block with
+ONE shared pair of locals, dispatching on `name` only at the point of
+constructing the result node. This restored the exact frame footprint `mod`
+alone had before the change — no logic change, same test outcomes, macOS green
+on the next CI run.
+
+Lessons:
+1. **A function that recurses through itself (a walker/interpreter/expander)
+   has a stack-frame-size budget shared by ALL its branches, not just the one
+   your change touches.** Adding a new `if`/`match` arm with its own locals to
+   such a function is not "adding code," it's "growing every future call's
+   frame" — measure against the SAME kind of margin a recursion-depth cap
+   documents (see the "8 MB vs 1 MB stack" lesson above; this is that lesson's
+   sibling for "more local variables per frame" instead of "more frames").
+2. **When several `if`/`match` arms share an identical shape (same arity check,
+   same recurse-both-children pattern, different only in which node they
+   construct), merge them into one arm with a final dispatch on the
+   discriminant.** This is not just DRY — in a debug build it can be the
+   difference between a stack-safety margin holding and not.
+3. **A green local test suite does not confirm a recursion-adjacent change is
+   stack-safe on every target platform.** Different OS default thread stack
+   sizes (and different compiler stack-slot-reuse behavior per platform) mean
+   the same source can pass on Linux/Windows and abort on macOS (or vice
+   versa) purely from a stack-frame-size change, with zero logic difference.
+   If a crate has an existing depth/recursion guard whose doc comment already
+   calls out a tight stack margin, treat any change to the guarded walker's
+   own function as touching that margin, and re-run (or at least reason
+   about) its dedicated stack-overflow regression test specifically.
+4. `SIGABRT` / "has overflowed its stack" from a `#[test]`-harness thread
+   (Rust's default per-test-thread stack is ~2 MiB unless `RUST_MIN_STACK` or
+   an explicit `Builder::stack_size` overrides it) is the same failure class as
+   Windows' `0xC00000FD` — a real stack overflow, not a flaky/cancelled CI job.
