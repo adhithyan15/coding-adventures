@@ -473,7 +473,7 @@
     {
       "language": "german",
       "chapter": 24,
-      "sourceHash": "fnv1a64:1e17f161dd63d405",
+      "sourceHash": "fnv1a64:fb75d3964d3b3f0f",
       "lessonIds": [
         "GE-C24-denken",
         "GE-C24-verstehen",
@@ -485,7 +485,7 @@
     {
       "language": "german",
       "chapter": 25,
-      "sourceHash": "fnv1a64:936bd6825f20b25f",
+      "sourceHash": "fnv1a64:1615ff0ab8b33552",
       "lessonIds": [
         "GE-C25-nehmen",
         "GE-C25-fragen",

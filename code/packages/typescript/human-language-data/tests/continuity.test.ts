@@ -247,9 +247,9 @@ describe("the real corpus", () => {
     // 21 are never revisited — 42%, against the corpus's 51% — so the headline share
     // ticks DOWN a point. New content is not making this worse; it is slightly better
     // than what it joins. That is still 21 more atoms taught once and abandoned.
-    expect(report.summary.atomsTaught).toBe(1519);
-    expect(report.summary.atomsNeverRevisited).toBe(767);
-    expect(report.summary.neverRevisitedPercent).toBe(50);
+    expect(report.summary.atomsTaught).toBe(1599);
+    expect(report.summary.atomsNeverRevisited).toBe(757);
+    expect(report.summary.neverRevisitedPercent).toBe(47);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -268,7 +268,7 @@ describe("the real corpus", () => {
     // NOT being rewritten to move this number, because contorting good prose to satisfy a
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
-    expect(report.summary.forwardReferences).toBe(504);
+    expect(report.summary.forwardReferences).toBe(506);
   });
 
   it("shows what a declared reading order was worth", () => {

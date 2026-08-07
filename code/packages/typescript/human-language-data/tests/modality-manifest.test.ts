@@ -721,15 +721,23 @@ describe("corpus regression", () => {
     // four-lesson chapters. That is the budget working as intended — it was fitted to
     // chapters that teach a topic, and a verb tranche is a denser shape — and splitting
     // is the honest fix rather than raising the threshold. Page count is never a cost.
+    // Wave 7 then took the same eight verbs to French, German, Italian and Hindi — 32
+    // lessons, eight chapters, so all eight concepts are now SEVEN-way cross-language
+    // joins. `sight` moves for the first time in these tranches (348 -> 352): four Hindi
+    // lessons genuinely teach a Devanagari letter (झ, ढ़ with nuqtā, the preposed ि,
+    // छ/ू) under the canonical `## The letters in this word` heading. Those blocks are
+    // DETACHABLE, so `coreModality` stays `voice` and both Hindi chapters remain 4-of-4
+    // drivable — the book is honest and the driver loses nothing, which is exactly the
+    // arrangement #10011/#10012 were built to make possible.
     expect(manifest.summary).toEqual({
-      totalLessons: 1249,
-      voice: 848,
-      sight: 348,
+      totalLessons: 1281,
+      voice: 876,
+      sight: 352,
       pen: 53,
-      drivableLessons: 848,
+      drivableLessons: 876,
       drivablePercent: 68,
       trackCount: 22,
-      chapterCount: 400,
+      chapterCount: 408,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -738,8 +746,8 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 669,
-      fullyDrivableChapters: 276,
+      drivablePrefixTotal: 695,
+      fullyDrivableChapters: 282,
       unstartableChapters: 90,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
