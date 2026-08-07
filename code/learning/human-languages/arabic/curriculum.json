@@ -362,6 +362,36 @@
         "AR-EXT-027-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "AR-PATH-028",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -487,7 +517,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "AR-PATH-027"
+        "AR-PATH-027",
+        "AR-PATH-028",
+        "AR-PATH-029"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -497,14 +529,9 @@
         "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -518,14 +545,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -828,6 +852,34 @@
         "AR-C29-raa",
         "AR-C30-arafa",
         "AR-C30-akala"
+      ]
+    },
+    {
+      "id": "AR-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can build a family of Arabic nouns out of a verb's three-consonant root using the doer, done-to and ma- place shapes I already know.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ]
+    },
+    {
+      "id": "AR-EXT-029-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can tell a plain Arabic verb from a rebuilt one and say what doubling, stretching or prefixing a root does to its meaning.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
       ]
     }
   ]

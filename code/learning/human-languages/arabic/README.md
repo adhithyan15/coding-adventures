@@ -65,24 +65,47 @@ Two more things:
   *akala*, last of the six, needs no new letter at all. These are the
   curriculum's **first canonical `VERB-*` realizations in any track**, and the
   first lessons anywhere in the corpus to reach **A2**. In the book.
+- **Chapters 31–32 — Eight more verbs, and the root system paying out**
+  ([`lessons/AR-C{31,32}-*`](./lessons/)): **fahima** ("he understood") →
+  **qaraʾa** ("he read") → **saʾala** ("he asked") → **kataba** ("he wrote"),
+  then **ʾakhadha** ("he took") → **fakkara** ("he thought") → **sāʿada** ("he
+  helped") → **ʾaḥabba** ("he loved"). Chapter 31 is where the root engine
+  stops being demonstrated and starts being *used*: **ك-ت-ب** is poured through
+  every pattern the track already taught and returns *kitāb* ("a book"),
+  *kātib* ("a writer"), *maktūb* ("written"), *maktab* ("an office") and
+  *maktaba* ("a library") with nothing new to memorise. Chapter 32 is a ladder
+  of verb **shapes** — plain *ʾakhadha*, Form II *fakkara* (middle consonant
+  doubled), Form III *sāʿada* (vowel stretched), Form IV *ʾaḥabba* (prefixed) —
+  taught as a system rather than as irregularities. Cousins are claimed only
+  where they exist: **ق-ر-أ** really did give English **Quran** and **س-ع-د**
+  the **Saudi** in Saudi Arabia, while *fahima*, *fakkara*, *kataba*,
+  *ʾakhadha*, *saʾala* and *ʾaḥabba* have **no English relative at all**, which
+  each lesson says outright. In the book.
 
-All fifty-one lessons in Chapters 3–30 remain below five effective minutes.
+All fifty-nine lessons in Chapters 3–32 remain below five effective minutes.
 
 ## Can you learn this track in the car?
 
 Mostly. Under [`HL08`](../../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md)
-each lesson is `voice` 🚗, `sight` 👁 or `pen` ✍, and Arabic measures 56 / 5 / 16
-— **73% drivable**, with 48 lessons reachable in chapter-prefix order. (The six
-verb lessons of Chapters 28–30 are all `voice`, and those three chapters are
-drivable end to end: the letters they teach are described in speakable prose,
-not shown as figures.)
+each lesson is `voice` 🚗, `sight` 👁 or `pen` ✍ at **full** modality, and
+Arabic measures 44 / 25 / 16 — but 20 of those `sight` lessons carry their
+visual load entirely inside a **detachable** block, so **56 of 85 lessons have
+a `voice` core (75% drivable)**, with 56 reachable in chapter-prefix order.
 
-The instinct is to blame the script, and it is wrong. **Not one `sight` lesson
-in the track is `sight` because of a script block.** Four of the five are
-`sight` for a sight cue in the prose and the fifth for a table the narration
-lineariser will not read. Only Chapters 3, 4 and 8 are still prefix 0; every
-other chapter is drivable from its first lesson to its last. Chapters 3 and 4
-are blocked because each opens on a `pen` writing lesson that later lessons
+The eight verb lessons of Chapters 31–32 sit in exactly that group. Each uses
+the canonical `## The letters in this word` heading, which types as a `script`
+block: honest at full modality (a letter shape is not a sound), detachable for
+a hands-free renderer, so their `coreModality` is `voice`. The cost is
+visible and deliberate — Arabic's `sight` count rises by eight and two more
+chapters become "unstartable" at full modality — and the alternative was the
+older habit of hiding the letters section behind a non-script heading, which
+made the number look better without making the lesson more listenable.
+
+Chapters 3, 4 and 8 are prefix 0 at full modality, and so are Chapters 31 and
+32 — the latter two only because every lesson in them opens on its detachable
+letters block, which is why they still count as fully drivable once that block
+is set aside. Chapters 3 and 4 are the real blocks: each opens on a `pen`
+writing lesson that later lessons
 depend on: a chapter's drivable prefix can only start with a lesson that has no
 in-chapter prerequisite, and Chapter 4's only such lesson is `AR-W10-ayn`,
 because `AR-C04-maa-with` requires it — مع cannot be read without ʿayn.
@@ -125,7 +148,7 @@ finishing that chapter lets them do, and names the lesson that proves it:
 ```
 
 The file is **authored intent**, not a derived cache — no validator may rewrite
-it. Chapters 3–27 are covered. Chapters 1 and 2 are deliberately left out: their
+it. Chapters 3–32 are covered. Chapters 1 and 2 are deliberately left out: their
 recap lessons are still schema v1 with no declared knowledge atoms, so a payoff
 there could only be invented. That absence is honest, measurable debt and is
 reported as such.
