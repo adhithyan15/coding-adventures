@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: PT-C19-perguntar
+id: PT-C20-perguntar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 720
-chapter: 19
+chapter: 20
 type: word
 headword: perguntar
 gloss: "to ask a question — and why it is not the verb for asking for a coffee"
 concept_tag: VERB-ASK
-prerequisites: [PT-C19-tomar-pegar, PT-C18-dizer]
+prerequisites: [PT-C20-tomar-pegar, PT-C18-dizer]
 sounds: [pr-cluster, final-r]
 roots: [latin-percontari]
 etymology_hook: "perguntar ← percontārī 'to inquire' = per- ('through') + contus ('a punting pole'): to sound the depth of water with a pole. Its neighbour pedir ('to ask FOR') ← petere → petition, appetite, compete, impetus, perpetual"

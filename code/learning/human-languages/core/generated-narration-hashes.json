@@ -4361,23 +4361,36 @@
     {
       "language": "portuguese",
       "chapter": 19,
-      "sourceHash": "fnv1a64:8b916500c9f2d55b",
+      "sourceHash": "fnv1a64:930f414ccf731f3e",
       "lessonIds": [
         "PT-C19-pensar",
         "PT-C19-entender-compreender",
         "PT-C19-ler",
-        "PT-C19-escrever",
-        "PT-C19-tomar-pegar",
-        "PT-C19-perguntar",
-        "PT-C19-ajudar",
-        "PT-C19-gostar"
+        "PT-C19-escrever"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 8,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "portuguese/narration/ch19.txt",
       "json": "portuguese/narration/ch19.json",
-      "textHash": "fnv1a64:ae444c9acbb8613e",
-      "jsonHash": "fnv1a64:e0c131b2f064c378"
+      "textHash": "fnv1a64:409033480eafdf08",
+      "jsonHash": "fnv1a64:4e903ab5ee1f1c96"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:e0da55ea0ca21897",
+      "lessonIds": [
+        "PT-C20-tomar-pegar",
+        "PT-C20-perguntar",
+        "PT-C20-ajudar",
+        "PT-C20-gostar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch20.txt",
+      "json": "portuguese/narration/ch20.json",
+      "textHash": "fnv1a64:1efac2aced68056f",
+      "jsonHash": "fnv1a64:dc90cc1ac8b193fe"
     },
     {
       "language": "punjabi",

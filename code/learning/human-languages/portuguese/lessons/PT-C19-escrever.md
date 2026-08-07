@@ -13,19 +13,19 @@ sounds: [initial-es, final-r]
 roots: [latin-scribere]
 etymology_hook: "escrever ← scrībere 'to scratch, incise' → scribe, script, describe, prescribe, subscribe, transcribe, inscribe, manuscript, postscript, shrift; and Iberian Romance propped an e- in front of every sc-/sp-/st- word: escola, estar, esperar"
 duration:
-  max_seconds: 272
+  max_seconds: 271
 requires:
-  knowledge: [PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03]
+  knowledge: [PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03]
 introduces:
   knowledge: [PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03]
 practises:
-  knowledge: [PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03]
+  knowledge: [PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [PT-C19-ler, PT-C18-ser-estar]
+reviews_of: [PT-C19-pensar, PT-C19-entender-compreender, PT-C19-ler, PT-C18-ser-estar]
 ---
 
 # escrever — scratching, and the e- that props up an s
@@ -81,20 +81,21 @@ So when a Portuguese word opens with **es-** and the rest of it resembles an
 English word missing its *e*, it usually is one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "escrevo, escreves, escreve, escrevemos, escrevem"]
 - [YOU SAY: "Já escrevi a carta" · "Está escrito"]
-- [YOU SAY: reading and writing together — "leio" · "escrevo"]
+- [YOU SAY: the chapter's four, first person — "penso, entendo, leio, escrevo"]
 - [YOU SAY: the propped-up e — "escrever · escola · estar · esperar"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03] -->
 
 [PAUSE 3s] Give the present of *escrever*. (**Escrevo, escreves, escreve,
 escrevemos, escrevem**.) What is its past participle? (***Escrito*** — Latin
 *scriptum*.) What did *scrībere* mean literally? ("To **scratch**".) Why
 *escola* and not *scola*? (Iberian Romance **propped an e-** in front of *sc-*,
 *sp-*, *st-*.) Which verb of being got the same treatment? (***Estar***, from
-*stāre*.) And "I read"? (***Leio***.) Next: taking.
+*stāre*.) Now the four verbs of this chapter, in the *eu* form. (**Penso,
+entendo, leio, escrevo**.) Next: taking.

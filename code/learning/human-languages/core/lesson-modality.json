@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:80460e9dcb7fe521",
+  "sourceHash": "fnv1a64:2b4458b82ca7f348",
   "summary": {
     "totalLessons": 1233,
     "voice": 832,
@@ -16,9 +16,9 @@
     "drivableLessons": 832,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 395,
+    "chapterCount": 396,
     "drivablePrefixTotal": 663,
-    "fullyDrivableChapters": 271,
+    "fullyDrivableChapters": 272,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -4805,25 +4805,40 @@
         },
         {
           "chapter": 19,
-          "lessonCount": 8,
-          "voice": 8,
+          "lessonCount": 4,
+          "voice": 4,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 8,
+          "drivablePrefix": 4,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "PT-C19-pensar",
             "PT-C19-entender-compreender",
             "PT-C19-ler",
-            "PT-C19-escrever",
-            "PT-C19-tomar-pegar",
-            "PT-C19-perguntar",
-            "PT-C19-ajudar",
-            "PT-C19-gostar"
+            "PT-C19-escrever"
+          ]
+        },
+        {
+          "chapter": 20,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C20-tomar-pegar",
+            "PT-C20-perguntar",
+            "PT-C20-ajudar",
+            "PT-C20-gostar"
           ]
         }
       ]
@@ -17319,7 +17334,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d1920cde2e89fad"
+      "sourceHash": "fnv1a64:022d6eed8b617498"
     },
     {
       "id": "PT-C19-entender-compreender",
@@ -17358,12 +17373,12 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eb924f0578e37ba"
+      "sourceHash": "fnv1a64:331c29072a3b115c"
     },
     {
-      "id": "PT-C19-tomar-pegar",
+      "id": "PT-C20-tomar-pegar",
       "language": "portuguese",
-      "chapter": 19,
+      "chapter": 20,
       "sequence": 710,
       "modality": "voice",
       "derived": "voice",
@@ -17371,12 +17386,12 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e6ee22b67cd8795"
+      "sourceHash": "fnv1a64:79c7eb13ce008985"
     },
     {
-      "id": "PT-C19-perguntar",
+      "id": "PT-C20-perguntar",
       "language": "portuguese",
-      "chapter": 19,
+      "chapter": 20,
       "sequence": 720,
       "modality": "voice",
       "derived": "voice",
@@ -17384,12 +17399,12 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79b4ce35890c03d9"
+      "sourceHash": "fnv1a64:b1ae2563d664e109"
     },
     {
-      "id": "PT-C19-ajudar",
+      "id": "PT-C20-ajudar",
       "language": "portuguese",
-      "chapter": 19,
+      "chapter": 20,
       "sequence": 730,
       "modality": "voice",
       "derived": "voice",
@@ -17397,12 +17412,12 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3253e0ab6be8c9e"
+      "sourceHash": "fnv1a64:fd54d3307eb823b6"
     },
     {
-      "id": "PT-C19-gostar",
+      "id": "PT-C20-gostar",
       "language": "portuguese",
-      "chapter": 19,
+      "chapter": 20,
       "sequence": 740,
       "modality": "voice",
       "derived": "voice",
@@ -17410,7 +17425,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5afc9a3ade1ed00"
+      "sourceHash": "fnv1a64:346e56012ffc6875"
     },
     {
       "id": "PA-C01-dhanvaad",

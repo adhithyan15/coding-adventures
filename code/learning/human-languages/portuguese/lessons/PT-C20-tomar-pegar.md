@@ -1,9 +1,9 @@
 ---
 schema_version: 2
-id: PT-C19-tomar-pegar
+id: PT-C20-tomar-pegar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 710
-chapter: 19
+chapter: 20
 type: word
 headword: tomar / pegar
 gloss: "to take — split by whether the thing ends up in your hand or inside you"

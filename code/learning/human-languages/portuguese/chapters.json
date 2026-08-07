@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "portuguese",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-19 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-19 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-20 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-20 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
   "chapters": [
     {
       "chapter": 2,
@@ -396,16 +396,39 @@
     },
     {
       "chapter": 19,
-      "title": "More Verbs at the Core",
-      "label": "ch:pt-more-core-verbs",
-      "canDo": "I can say that I think, understand, read, write, take, ask, help and like in Portuguese, choose between its two verbs for taking and its two for understanding, and keep de attached to gostar.",
+      "title": "Verbs of the Mind",
+      "label": "ch:pt-mind-verbs",
+      "canDo": "I can say that I think, understand, read and write in Portuguese, produce the broken row ler shares with ver, and name the English words each of the four verbs left behind.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
-        "lesson": "PT-C19-gostar",
+        "lesson": "PT-C19-escrever",
         "kind": "production",
-        "summary": "The chapter's last lesson closes the set: after gostar de the reader produces all eight first-person forms in one run - penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto - explains why the de cannot be dropped, and ties gostar back to saber as the second Portuguese verb that stopped meaning to taste.",
+        "summary": "The chapter's last lesson closes the set: after escrever the reader produces all four first-person forms in one run - penso, entendo, leio, escrevo - names escrito as the Latin scriptum, and re-derives the propped-up e- that turned scribere into escrever and stare into estar.",
+        "assesses": [
+          "PT-LEX-PENSAR-02",
+          "PT-LEX-ENTENDER-COMPREENDER-02",
+          "PT-LEX-LER-02",
+          "PT-ETYMON-LER-03",
+          "PT-ETYMON-SER-ESTAR-03",
+          "PT-LEX-ESCREVER-02",
+          "PT-ETYMON-ESCREVER-03"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:pt-taking-asking-helping-liking",
+      "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "PT-C20-gostar",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set: after gostar de the reader produces the eight first-person forms of both verb chapters in one run - penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto - explains why the de cannot be dropped, and ties gostar back to saber as the second Portuguese verb that stopped meaning to taste.",
         "assesses": [
           "PT-LEX-PENSAR-02",
           "PT-LEX-ENTENDER-COMPREENDER-02",

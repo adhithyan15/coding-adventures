@@ -435,9 +435,16 @@
     {
       "language": "portuguese",
       "chapter": 19,
-      "title": "More Verbs at the Core",
-      "label": "ch:pt-more-core-verbs",
-      "output": "portuguese/book/chapters/ch19-more-core-verbs.tex"
+      "title": "Verbs of the Mind",
+      "label": "ch:pt-mind-verbs",
+      "output": "portuguese/book/chapters/ch19-mind-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:pt-taking-asking-helping-liking",
+      "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
     },
     {
       "language": "french",

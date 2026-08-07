@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: PT-C19-ajudar
+id: PT-C20-ajudar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 730
-chapter: 19
+chapter: 20
 type: word
 headword: ajudar
 gloss: "to help — and the Latin i that hardened into Portuguese j"
 concept_tag: VERB-HELP
-prerequisites: [PT-C19-perguntar]
+prerequisites: [PT-C20-perguntar]
 sounds: [j-soft, final-r]
 roots: [latin-adiutare]
 etymology_hook: "ajudar ← adiūtāre, the repeating form of adiuvāre (ad- 'toward' + iuvāre 'to help') → aid, aide, first aid, adjutant, adjuvant; adiūtāre → aiudar → ajudar is the same i→j that gave hoje, já, janeiro"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [PT-C19-perguntar, PT-C09-meses]
+reviews_of: [PT-C20-perguntar, PT-C09-meses]
 ---
 
 # ajudar — helping, and the j that used to be an i

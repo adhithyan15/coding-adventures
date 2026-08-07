@@ -13,7 +13,7 @@ sounds: [nasal-en, final-r]
 roots: [latin-pensare]
 etymology_hook: "pensar ← pēnsāre 'to weigh out', built on pendere 'to hang' → pensive, ponder, pension, compensate, dispense, expense, stipend, pendulum, pendant, depend, suspend — and the peso, still a weight"
 duration:
-  max_seconds: 265
+  max_seconds: 268
 requires:
   knowledge: [PT-LEX-SABER-CONHECER-02, PT-GRAMMAR-FALAR-04]
 introduces:
@@ -34,7 +34,8 @@ reviews_of: [PT-C18-saber-conhecer, PT-C05-falar]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The last chapter gave you the nine verbs Portuguese cannot do
-without. This one adds eight more, and the first of them weighs things.
+without. This one adds four that all happen inside your head — and the first of
+them weighs things.
 
 ## You'll want to know: A plain -ar verb, and the small word after it
 <!-- hl-knowledge: introduces=[PT-LEX-PENSAR-02]; assesses=[] -->

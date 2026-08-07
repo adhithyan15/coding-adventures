@@ -1,19 +1,19 @@
 ---
 schema_version: 2
-id: PT-C19-gostar
+id: PT-C20-gostar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 740
-chapter: 19
+chapter: 20
 type: word
 headword: gostar de
 gloss: "to like, to love — the verb that will not let go of its preposition"
 concept_tag: VERB-LIKE-LOVE
-prerequisites: [PT-C19-ajudar, PT-C18-saber-conhecer]
+prerequisites: [PT-C20-ajudar, PT-C18-saber-conhecer]
 sounds: [open-o, final-r]
 roots: [latin-gustare]
 etymology_hook: "gostar ← gustāre 'to TASTE' → gusto, gustatory, degustation, disgust (dis- + gustus, a bad taste) — the second Portuguese verb that stopped tasting, after saber ← sapere; and gustāre DE, taking a taste OF a thing, is why the de never leaves"
 duration:
-  max_seconds: 282
+  max_seconds: 285
 requires:
   knowledge: [PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-LEX-ESCREVER-02, PT-LEX-TOMAR-PEGAR-02, PT-LEX-PERGUNTAR-02, PT-LEX-AJUDAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-SABER-CONHECER-03]
 introduces:
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [PT-C18-saber-conhecer, PT-C19-pensar, PT-C19-ajudar]
+reviews_of: [PT-C18-saber-conhecer, PT-C19-pensar, PT-C20-ajudar]
 ---
 
 # gostar de — liking, which in Portuguese is tasting
@@ -90,7 +90,7 @@ For the stronger feeling: **adorar**, which needs no *de* (*adoro café*), and
 - [YOU SAY: "gosto, gostas, gosta, gostamos, gostam"]
 - [YOU SAY: "Gosto de café" · "Gosto de você" · "Gosto do vinho"]
 - [YOU SAY: the two tasting verbs — "sabe bem" · "gosto de"]
-- [YOU SAY: the whole chapter, first person — "penso, entendo, leio, escrevo,
+- [YOU SAY: both verb chapters, first person — "penso, entendo, leio, escrevo,
   pego, pergunto, ajudo, gosto"]
 
 ## Wrap-up Recall
@@ -99,6 +99,6 @@ For the stronger feeling: **adorar**, which needs no *de* (*adoro café*), and
 [PAUSE 3s] Say "I like coffee," then "I like the wine." (***Gosto de café***;
 ***gosto do vinho***, since *de + o* fuses to ***do***.) Why the *de*, what did
 *gustāre* mean, and which earlier verb has the same story? (You take a taste
-**of** a thing; "to **taste**"; ***saber***, from *sapere*.) Now the chapter's
-eight, in the *eu* form. (**Penso, entendo, leio, escrevo, pego, pergunto,
-ajudo, gosto**.)
+**of** a thing; "to **taste**"; ***saber***, from *sapere*.) Now the eight of
+these two chapters, in the *eu* form. (**Penso, entendo, leio, escrevo, pego,
+pergunto, ajudo, gosto**.)
