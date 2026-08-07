@@ -4628,6 +4628,25 @@
       "jsonHash": "fnv1a64:55e994e759ef428c"
     },
     {
+      "language": "sanskrit",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+      "lessonIds": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch07.txt",
+      "json": "sanskrit/narration/ch07.json",
+      "textHash": "fnv1a64:47301ded2c9a4c1a",
+      "jsonHash": "fnv1a64:944541d5bfbd1770"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:e2e55a440c95c8cb",

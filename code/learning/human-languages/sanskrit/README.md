@@ -39,8 +39,16 @@ before the whole; and a book you can read straight through.
   forms first, then an east-west sound-law map, then *pañca* in *Punjab*,
   *pentagon*, and the qualified history of *punch*—three prerequisite-ordered
   micro-lessons.
+- **Chapter 7 — The Core Verbs** ([`lessons/SA-C07-*`](./lessons/)): asti /
+  bhavati, gacchati, āgacchati, khādati, paśyati, jānāti. The **dhātu** (root)
+  and its **gaṇa** (present-stem class) taught as the system they are, three of
+  the ten classes walked in order, the *upasarga* prefix shown by turning "goes"
+  into "comes," and every root followed west — \**es-*/\**bheu-* into English's
+  patchwork *am/is/are/be/been*, \**gwem-* into *come* and *advent*, \**spek-*
+  into *inspect* and *telescope*, \**gno-* into *know* and *diagnosis*.
+  **Fully drivable — all six lessons are voice.**
 
-Chapters 1–6 are in the book.
+Chapters 1–7 are in the book.
 
 ---
 
@@ -65,6 +73,16 @@ first-person can-do sentence and the lesson that pays it off.
   lesson follows the *pañca* thread rather than the dual, the gendered paradigm,
   or the Grimm's-law material. The shortfall is recorded rather than padded away.
 
+- **Chapter 7** — *"I can say that someone is, becomes, goes, comes, eats, sees
+  and knows in Sanskrit; I can name each verb by its dhātu rather than by its
+  present form, say which of the three gaṇa patterns builds its stem, and point
+  at the English word that descends from the same root."* Payoff:
+  [`SA-C07-janati`](./lessons/SA-C07-janati.md), a production.
+
+  Representativeness is 12/12 (1.00): the payoff lesson gathers the whole
+  chapter, because the chapter is one system taught six times rather than six
+  unrelated words.
+
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
@@ -77,7 +95,8 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 Generated Devanagari runs use that font while section bookmarks use the
 lessons' Latin romanization.
 
-The forced six-chapter build is warning-free: chapter-qualified recap anchors,
+The forced seven-chapter build is warning-free — no overfull or underfull boxes,
+no missing characters, no hyperref complaints: chapter-qualified recap anchors,
 bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes,
 and concise running titles keep the downloadable PDF and its outline clean.
 

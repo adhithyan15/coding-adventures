@@ -114,6 +114,21 @@
         "SA-EXT-009-ETYMOLOGY"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-010",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -225,20 +240,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "SA-PATH-010"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -250,7 +262,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
