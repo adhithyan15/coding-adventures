@@ -59,8 +59,8 @@ The **I** ending is the same **-ю** you put on *знаю*. Every Russian verb i
 present ends the same way for *I*. Then switch to *you*, and the two families
 separate:
 
-- **ты зна́ешь** — *ty znáyesh* — you know
-- **ты говори́шь** — *ty gavarísh* — you speak
+- **ты знаешь** — *ty znáyesh* — you know
+- **ты говоришь** — *ty gavarísh* — you speak
 
 An **-е-** against an **-и-**. That one vowel is the whole difference, and it is
 why you learn the *you* form alongside the dictionary form: it names the family,
@@ -87,7 +87,7 @@ gave English **cybernetics** and every **cyber-** since. A governor steers; a
 - [YOU SAY: the new letter — "**г** is gamma, and says *g* as in *go*"]
 - [YOU SAY: "говорить" — *ga-va-RIT'*, both *o*s leaning towards *a*]
 - [YOU SAY: "Я говорю" — same **-ю** as *знаю*]
-- [YOU SAY: the two families — "зна́ешь … говори́шь"]
+- [YOU SAY: the two families — "знаешь … говоришь"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN] -->

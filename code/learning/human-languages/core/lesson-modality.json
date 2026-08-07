@@ -7,30 +7,30 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:484af6b25c9e330b",
+  "sourceHash": "fnv1a64:7008963528341b17",
   "summary": {
-    "totalLessons": 1281,
-    "voice": 876,
-    "sight": 352,
+    "totalLessons": 1313,
+    "voice": 884,
+    "sight": 376,
     "pen": 53,
-    "drivableLessons": 876,
-    "drivablePercent": 68,
+    "drivableLessons": 884,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 408,
-    "drivablePrefixTotal": 695,
-    "fullyDrivableChapters": 282,
-    "unstartableChapters": 90,
+    "chapterCount": 416,
+    "drivablePrefixTotal": 702,
+    "fullyDrivableChapters": 283,
+    "unstartableChapters": 96,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 77,
+      "lessonCount": 85,
       "voice": 44,
-      "sight": 17,
+      "sight": 25,
       "pen": 16,
-      "drivablePercent": 57,
+      "drivablePercent": 52,
       "drivablePrefixTotal": 32,
       "modalities": [
         "voice",
@@ -523,16 +523,44 @@
             "AR-C30-arafa",
             "AR-C30-akala"
           ]
+        },
+        {
+          "chapter": 31,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C31-fahima",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 32,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C32-akhadha",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
     {
       "language": "bengali",
-      "lessonCount": 37,
+      "lessonCount": 45,
       "voice": 14,
-      "sight": 23,
+      "sight": 31,
       "pen": 0,
-      "drivablePercent": 38,
+      "drivablePercent": 31,
       "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
@@ -650,6 +678,34 @@
             "BN-C07-dekha",
             "BN-C07-jana"
           ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-C08-bhaba",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-C09-neowa",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -5159,12 +5215,12 @@
     },
     {
       "language": "russian",
-      "lessonCount": 28,
-      "voice": 16,
-      "sight": 7,
+      "lessonCount": 36,
+      "voice": 23,
+      "sight": 8,
       "pen": 5,
-      "drivablePercent": 57,
-      "drivablePrefixTotal": 14,
+      "drivablePercent": 64,
+      "drivablePrefixTotal": 21,
       "modalities": [
         "voice",
         "sight",
@@ -5230,6 +5286,44 @@
             "RU-C03-govorit",
             "RU-C03-videt",
             "RU-C03-idti"
+          ]
+        },
+        {
+          "chapter": 4,
+          "lessonCount": 4,
+          "voice": 3,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": "RU-C04-pisat",
+          "drivable": false,
+          "drivableLessonIds": [
+            "RU-C04-dumat",
+            "RU-C04-ponimat",
+            "RU-C04-chitat"
+          ]
+        },
+        {
+          "chapter": 5,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "RU-C05-brat",
+            "RU-C05-sprashivat",
+            "RU-C05-pomogat",
+            "RU-C05-lyubit"
           ]
         }
       ]
@@ -6013,11 +6107,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 89,
-      "voice": 52,
-      "sight": 29,
+      "lessonCount": 97,
+      "voice": 53,
+      "sight": 36,
       "pen": 8,
-      "drivablePercent": 58,
+      "drivablePercent": 55,
       "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
@@ -6548,6 +6642,35 @@
             "TA-C32-paar",
             "TA-C32-teri"
           ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C33-ninai",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C34-edu",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -8214,6 +8337,110 @@
       "sourceHash": "fnv1a64:7474171579a55797"
     },
     {
+      "id": "AR-C31-fahima",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 780,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9a1c0dfa08fc8d85"
+    },
+    {
+      "id": "AR-C31-qaraa",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 790,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:048d4affba0e5fc3"
+    },
+    {
+      "id": "AR-C31-saala",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 800,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9b7f1e1d11e552b5"
+    },
+    {
+      "id": "AR-C31-kataba",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 810,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8083a92e55e85f54"
+    },
+    {
+      "id": "AR-C32-akhadha",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 820,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ba58f2589a487984"
+    },
+    {
+      "id": "AR-C32-fakkara",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 830,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c78324b8fddadc52"
+    },
+    {
+      "id": "AR-C32-saada",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 840,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:76c015b2e8c3825c"
+    },
+    {
+      "id": "AR-C32-ahabba",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 850,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2c4164cd56e38bb1"
+    },
+    {
       "id": "BN-C01-achchha",
       "language": "bengali",
       "chapter": 1,
@@ -8693,6 +8920,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:9cee0df0ef154a25"
+    },
+    {
+      "id": "BN-C08-bhaba",
+      "language": "bengali",
+      "chapter": 8,
+      "sequence": 500,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:559a663bc15c575f"
+    },
+    {
+      "id": "BN-C08-bojha",
+      "language": "bengali",
+      "chapter": 8,
+      "sequence": 510,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:847cbb02cc421259"
+    },
+    {
+      "id": "BN-C08-pora",
+      "language": "bengali",
+      "chapter": 8,
+      "sequence": 520,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:087da54326653038"
+    },
+    {
+      "id": "BN-C08-lekha",
+      "language": "bengali",
+      "chapter": 8,
+      "sequence": 530,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:057ee091c68a66f7"
+    },
+    {
+      "id": "BN-C09-neowa",
+      "language": "bengali",
+      "chapter": 9,
+      "sequence": 600,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4ab8b306459cb32b"
+    },
+    {
+      "id": "BN-C09-jijnasa-kora",
+      "language": "bengali",
+      "chapter": 9,
+      "sequence": 610,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4b3d683c0f08d7a8"
+    },
+    {
+      "id": "BN-C09-sahajjo-kora",
+      "language": "bengali",
+      "chapter": 9,
+      "sequence": 620,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0b7790c25f7261f4"
+    },
+    {
+      "id": "BN-C09-bhalo-laga",
+      "language": "bengali",
+      "chapter": 9,
+      "sequence": 630,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c9aa4582a3ac3bf3"
     },
     {
       "id": "ZH-C01-tones",
@@ -19006,7 +19337,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e041f674887b95cc"
+      "sourceHash": "fnv1a64:465d68c6c09ddaf8"
     },
     {
       "id": "RU-C03-videt",
@@ -19019,7 +19350,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6012735dbd137abe"
+      "sourceHash": "fnv1a64:b18ddd600f40a6a6"
     },
     {
       "id": "RU-C03-idti",
@@ -19032,7 +19363,111 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6894e3657dbb8585"
+      "sourceHash": "fnv1a64:e19ec69e198f3e9d"
+    },
+    {
+      "id": "RU-C04-dumat",
+      "language": "russian",
+      "chapter": 4,
+      "sequence": 200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab9ee93584dab9d0"
+    },
+    {
+      "id": "RU-C04-ponimat",
+      "language": "russian",
+      "chapter": 4,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb096ddbe147f336"
+    },
+    {
+      "id": "RU-C04-chitat",
+      "language": "russian",
+      "chapter": 4,
+      "sequence": 220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abe88d6b3606e545"
+    },
+    {
+      "id": "RU-C04-pisat",
+      "language": "russian",
+      "chapter": 4,
+      "sequence": 230,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0f08ae4c05ca1162"
+    },
+    {
+      "id": "RU-C05-brat",
+      "language": "russian",
+      "chapter": 5,
+      "sequence": 240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cda6615170c3f19a"
+    },
+    {
+      "id": "RU-C05-sprashivat",
+      "language": "russian",
+      "chapter": 5,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ddc0a7207ebb793"
+    },
+    {
+      "id": "RU-C05-pomogat",
+      "language": "russian",
+      "chapter": 5,
+      "sequence": 260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b965f8611a96ce2d"
+    },
+    {
+      "id": "RU-C05-lyubit",
+      "language": "russian",
+      "chapter": 5,
+      "sequence": 270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff48a9340aa49fa3"
     },
     {
       "id": "SA-C01-am-na",
@@ -22720,6 +23155,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:43e3caa79eab7344"
+    },
+    {
+      "id": "TA-C33-ninai",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 670,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bec4abda60466215"
+    },
+    {
+      "id": "TA-C33-puri",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 680,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:33fe6b5286b65e12"
+    },
+    {
+      "id": "TA-C33-padi",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 690,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2c0a727552358fa4"
+    },
+    {
+      "id": "TA-C33-ezhutu",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 700,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3a36a9291ceaaf55"
+    },
+    {
+      "id": "TA-C34-edu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 710,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:461fc79451361c98"
+    },
+    {
+      "id": "TA-C34-kel",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 720,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5a4741225dff9092"
+    },
+    {
+      "id": "TA-C34-utavu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 730,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cbacf37334d54ef5"
+    },
+    {
+      "id": "TA-C34-pidi",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1480cdf0e8dbdd75"
     },
     {
       "id": "TE-C01-avunu",

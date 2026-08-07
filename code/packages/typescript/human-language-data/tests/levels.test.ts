@@ -219,7 +219,7 @@ describe("corpus snapshot", () => {
 
     expect(summary.byLevel["pre-A1"]).toBe(650);
     expect(summary.byLevel.A1).toBe(297);
-    expect(summary.byLevel.A2).toBe(186);
+    expect(summary.byLevel.A2).toBe(218);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -228,7 +228,7 @@ describe("corpus snapshot", () => {
     // 170 lessons sit in no realization-path segment, all of them schema-v1. They are the
     // reason `mappedPercent` is not 100, and mapping them is migration work, not a gate.
     expect(summary.unmapped).toBe(148);
-    expect(summary.mappedPercent).toBe(88);
+    expect(summary.mappedPercent).toBe(89);
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {

@@ -125,11 +125,47 @@ word lessons — never as a gated reading course.
   **Authored.** These are the corpus's first canonical `VERB-*` realizations in
   any track, and the first lessons anywhere to reach **A2**.
 
+- **Ch. 31 — Understanding, reading, writing**: **فهم** (*fahima*, "he
+  understood") → **قرأ** (*qaraʾa*, "he read") → **سأل** (*saʾala*, "he asked")
+  → **كتب** (*kataba*, "he wrote"). All four are plain **فَعَلَ** verbs, so the
+  chapter can spend itself on what the root system *buys* rather than on new
+  machinery. *fahima* is the first **فَعِلَ** (*a-i-a*) verb, the shape Arabic
+  keeps for states rather than deeds, and it names **و** — read unnamed since
+  *qawl* — because every done-to word in the chapter is spelled with it.
+  *qaraʾa* finally sorts out **hamza's seats** (أ on alif, ؤ on wāw, ئ on
+  dotless yāʾ, ء on nothing), and *saʾala* immediately puts the rule to work:
+  *saʾala*, *suʾāl*, *sāʾil* — one consonant, three spellings, one root, with
+  **مَسْؤول** (*masʾūl*) "asked-of" and therefore "responsible". *kataba*
+  closes the chapter as its payoff, pouring **ك-ت-ب** through every pattern the
+  track already taught — *kitāb*, *kātib*, *maktūb*, *maktab*, *maktaba* — and
+  showing that the *ma-* place shape of *madhhab* and the doer/done-to pair of
+  *qāʾil*/*maqūl* are what make five words out of three letters. Cousins:
+  **ق-ر-أ** really gave English **Quran**; **ك-ت-ب** gave it nothing, though
+  English *ketubah* comes from the same Semitic root through Hebrew *katav*;
+  *fahima* has no relative at all and *fathom* is not one. **Authored.**
+
+- **Ch. 32 — Taking, thinking, helping, loving**: **أخذ** (*ʾakhadha*, "he
+  took") → **فكّر** (*fakkara*, "he thought") → **ساعد** (*sāʿada*, "he
+  helped") → **أحبّ** (*ʾaḥabba*, "he loved"). The chapter's real subject is
+  the **derived forms**, taught as a ladder rather than as irregularities:
+  *ʾakhadha* is the plain control, *fakkara* is **Form II** (*faʿʿala*, middle
+  consonant doubled — the *shadda* doing load-bearing work at last), *sāʿada*
+  is **Form III** (*fāʿala*, the vowel stretched, the verb aimed at another
+  person), *ʾaḥabba* is **Form IV** (*ʾafʿala*, prefixed, the root made to
+  bring its own idea about). Rebuilt verbs get rebuilt doers, so **مُفَكِّر**
+  and **مُساعِد** take a **مُ** prefix where *kātib* and *ākhidh* take a long
+  *ā*. The roots pay out sideways as usual: **س-ع-د** means *good fortune*
+  before it means helping (*saʿīd*, *saʿāda*, and **آل سُعود** behind
+  **Saudi**), and **ح-ب-ب** gives *ḥubb*, *ḥabīb* and *maḥbūb*. Hebrew twins
+  are given with their sound laws (*ʾaḥaz* for *ʾakhadha*, *ḥaviv* for
+  *ḥabīb*) and refused where they are false (*ahav* is **not** related).
+  *ʾaḥabba* is the payoff and names all four shapes together. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 31+ | The rest of the core verb set, the present tense, negation, and the pattern system (verb forms I–X) — always with the root engine and the Spanish-loanword thread |
+| 33+ | The rest of the core verb set, the present tense, negation, and the remaining derived forms (V–X) — always with the root engine and the Spanish-loanword thread |
 
 Note: Arabic marks **gender on "you"** (*anta* to a man, *anti* to a woman) —
 a different axis from the Spanish/French/German formal-vs-informal split.

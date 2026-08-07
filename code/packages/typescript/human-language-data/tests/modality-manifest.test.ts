@@ -729,15 +729,30 @@ describe("corpus regression", () => {
     // DETACHABLE, so `coreModality` stays `voice` and both Hindi chapters remain 4-of-4
     // drivable — the book is honest and the driver loses nothing, which is exactly the
     // arrangement #10011/#10012 were built to make possible.
+    // Wave 8 (Arabic, Russian, Tamil, Bengali) then took the eight to ELEVEN tracks.
+    //
+    // `sight` jumps 352 -> 376 and `unstartableChapters` 90 -> 96, and this is the
+    // `sight`-penalty seam, not a regression. Three of these four tracks are non-Latin,
+    // so their lessons carry a `## The letters in this word` block; those blocks are
+    // DETACHABLE, so every one of the 32 keeps `coreModality: voice` and the driving
+    // edition is untouched — core drivability actually ROSE in each track (Bengali
+    // 97->98%, Tamil 84->86%, Russian 79->83%, Arabic 73->75%).
+    //
+    // The two counters genuinely disagree by design, which is worth knowing before
+    // reading either: `modality-manifest.ts` computes `unstartableChapters` from FULL
+    // modality, while `modality.ts`'s `drivablePrefix` — what the gap report publishes —
+    // uses CORE. Script blocks land exactly on that seam. Publishing `coreVoice` as the
+    // headline per-track number is the standing recommendation; until then, expect this
+    // figure to rise whenever a non-Latin track authors honestly.
     expect(manifest.summary).toEqual({
-      totalLessons: 1281,
-      voice: 876,
-      sight: 352,
+      totalLessons: 1313,
+      voice: 884,
+      sight: 376,
       pen: 53,
-      drivableLessons: 876,
-      drivablePercent: 68,
+      drivableLessons: 884,
+      drivablePercent: 67,
       trackCount: 22,
-      chapterCount: 408,
+      chapterCount: 416,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -746,9 +761,9 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 695,
-      fullyDrivableChapters: 282,
-      unstartableChapters: 90,
+      drivablePrefixTotal: 702,
+      fullyDrivableChapters: 283,
+      unstartableChapters: 96,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

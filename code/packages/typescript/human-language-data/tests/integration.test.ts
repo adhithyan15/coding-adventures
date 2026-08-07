@@ -113,7 +113,12 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "russian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2]);
+      // 2 -> 5. Chapters 1-2 stay hand-written; 3, 4 and 5 are the track's first
+      // GENERATED chapters, and the first Cyrillic ones the book renderer produces.
+      // Chapter 3 (the six core verbs) is generated here rather than left out, because
+      // chapters 4-5 build on знать, быть and говорить directly: printing them without
+      // chapter 3 would put a forward reference into the standalone PDF.
+    ).toEqual([1, 2, 3, 4, 5]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 
