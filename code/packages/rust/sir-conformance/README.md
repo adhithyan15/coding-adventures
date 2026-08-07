@@ -2,17 +2,20 @@
 
 **Cross-backend golden conformance harness for the Semantic IR.**
 
-Lowers real Ruby *source* through the actual frontend and runs the emitted
-program through **every** backend's **real** toolchain, asserting the output is
-identical — byte for byte — on each.
+Lowers real *source*, through any registered [`Frontend`], and runs the
+emitted program through **every** backend's **real** toolchain, asserting the
+output is identical — byte for byte — on each.
 
 ## Why
 
-The Semantic IR (SIR) is a narrow waist: one Ruby frontend
-(`ruby-to-semantic-ir`) lowers to a language-agnostic IR, and several backends
-emit target source (`semantic-ir-to-{python,javascript,go,rust}`). The whole
-point is **behavioural equivalence** — a program's result must not depend on
-which backend emitted it.
+The Semantic IR (SIR) is a narrow waist: a [`Frontend`] (Ruby, Python, or
+JavaScript today) lowers source to a language-agnostic IR, and several
+backends emit target source (`semantic-ir-to-{python,javascript,go,rust,c,ruby}`).
+The whole point is **behavioural equivalence** — a program's result must not
+depend on which backend emitted it, *nor on which frontend produced the
+`Module`* (see [`SIR25` §5](../../../specs/SIR25-language-agnostic-object-model.md)
+— this harness used to hardcode Ruby as its only input, which is the
+structural gap SIR25 names and this crate now closes).
 
 Nothing enforced that end-to-end. Each backend's own `compile_and_run_*` test
 *hand-builds* an SIR module and checks one feature in isolation, so a construct
@@ -30,8 +33,8 @@ matrix specified in
 
 For every program in the corpus, and every backend:
 
-1. **Lower** the Ruby source through `ruby_to_semantic_ir::compile_source`
-   (the frontend runs once per program, as in production).
+1. **Lower** the source through `program.frontend`'s own `compile_source` (the
+   frontend runs once per program, as in production).
 2. **Emit** target source via the backend's `compile`.
 3. **Run** it through the real toolchain — `python3` (with the `sir-runtime-*`
    packages auto-discovered onto `PYTHONPATH`), `node`, `go run`, or
@@ -76,9 +79,12 @@ across backends, a separate formatting concern). Current programs:
 | `string_gsub_sub` | remaining String methods (`gsub`/`sub`) | `bbb\nbaa` |
 | `numeric_abs_gcd` | Numeric methods (`abs`/`gcd`) | `5\n6` |
 | `symbol_upcase_length` | Symbol methods widened from String helpers | `HELLO\n5` |
+| `python_arithmetic` | frontend genericity smoke test — same case as `arithmetic`, sourced from **Python** | `14` |
 
-Adding a program is one `Program { name, ruby, expected }` entry in
-`tests/conformance.rs`.
+Adding a program is one `Program { name, frontend, source, expected }` entry
+in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`
+variant matching `source`'s language (`Frontend::Ruby` for every pre-existing
+entry).
 
 ### Gaps the corpus has surfaced (not yet in the suite)
 
@@ -181,8 +187,12 @@ implemented, and no test noticed" bug (the `case_eq` class). Two tests:
 ## Where it fits
 
 ```
-Ruby source ──► ruby-to-semantic-ir ──► SIR ──► semantic-ir-to-{py,js,go,rust} ──► run
+Ruby/Python/JS source ──► {ruby,python,javascript}-to-semantic-ir ──► SIR
+                                                                        │
+                                                                        ▼
+                                        semantic-ir-to-{py,js,go,rust,c,ruby} ──► run
                                                          ▲
-                              sir-conformance drives this whole path and
-                              checks all four outputs agree with the reference.
+                              sir-conformance drives this whole path — any
+                              registered frontend to every backend — and
+                              checks every output agrees with the reference.
 ```

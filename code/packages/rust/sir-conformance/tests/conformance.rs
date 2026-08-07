@@ -1,13 +1,14 @@
 //! The golden conformance matrix.
 //!
-//! Each [`Program`] in `CORPUS` is real Ruby source paired with the exact
-//! stdout a Ruby interpreter would produce. The matrix test lowers every
-//! program through the frontend and runs it through **every** backend's real
+//! Each [`Program`] in `CORPUS` is real source (mostly Ruby; see `frontend`
+//! on each entry) paired with the exact stdout a real interpreter for that
+//! source language would produce. The matrix test lowers every program
+//! through its own frontend and runs it through **every** backend's real
 //! toolchain, asserting the output equals the reference on each — the single
-//! test that drives Ruby *source* all the way to Python, JavaScript, Go, and
-//! Rust and proves they agree.
+//! test that drives real *source*, from any registered frontend, all the way
+//! to Python, JavaScript, Go, Rust, C, and Ruby and proves they agree.
 
-use sir_conformance::{run, Program, RunOutcome, Target};
+use sir_conformance::{run, Frontend, Program, RunOutcome, Target};
 
 /// The reference corpus. Outputs are intentionally strings and integers only —
 /// booleans render differently across backends (`#t` vs `true`), which is a
@@ -17,19 +18,22 @@ const CORPUS: &[Program] = &[
     // Operator precedence: `*` binds tighter than `+`.
     Program {
         name: "arithmetic",
-        ruby: "puts(2 + 3 * 4)\n",
+        frontend: Frontend::Ruby,
+        source: "puts(2 + 3 * 4)\n",
         expected: "14",
     },
     // A method with parameters, returning its last expression.
     Program {
         name: "def_params",
-        ruby: "def add(a, b)\n  a + b\nend\n\nputs add(2, 3)\n",
+        frontend: Frontend::Ruby,
+        source: "def add(a, b)\n  a + b\nend\n\nputs add(2, 3)\n",
         expected: "5",
     },
     // Implicit return of a trailing `if` (FC — shipped, proven here end-to-end).
     Program {
         name: "tail_if",
-        ruby: "def bigger(a, b)\n  if a > b\n    a\n  else\n    b\n  end\nend\n\nputs bigger(10, 7)\n",
+        frontend: Frontend::Ruby,
+        source: "def bigger(a, b)\n  if a > b\n    a\n  else\n    b\n  end\nend\n\nputs bigger(10, 7)\n",
         expected: "10",
     },
     // Implicit return of a trailing `case` (relies on the `case_eq` builtin
@@ -37,25 +41,29 @@ const CORPUS: &[Program] = &[
     // that whole class of bug).
     Program {
         name: "tail_case",
-        ruby: "def grade(n)\n  case n\n  when 90\n    \"A\"\n  when 80\n    \"B\"\n  else\n    \"C\"\n  end\nend\n\nputs grade(90)\nputs grade(80)\nputs grade(50)\n",
+        frontend: Frontend::Ruby,
+        source: "def grade(n)\n  case n\n  when 90\n    \"A\"\n  when 80\n    \"B\"\n  else\n    \"C\"\n  end\nend\n\nputs grade(90)\nputs grade(80)\nputs grade(50)\n",
         expected: "A\nB\nC",
     },
     // String concatenation (polymorphic `+`).
     Program {
         name: "string_concat",
-        ruby: "puts(\"ab\" + \"cd\")\n",
+        frontend: Frontend::Ruby,
+        source: "puts(\"ab\" + \"cd\")\n",
         expected: "abcd",
     },
     // A user-defined class, `.new`, and an instance method call.
     Program {
         name: "oop_method",
-        ruby: "class Dog\n  def speak\n    \"woof\"\n  end\nend\n\nputs Dog.new.speak\n",
+        frontend: Frontend::Ruby,
+        source: "class Dog\n  def speak\n    \"woof\"\n  end\nend\n\nputs Dog.new.speak\n",
         expected: "woof",
     },
     // A `while` loop with a mutable accumulator: 0+1+2+3+4.
     Program {
         name: "while_loop",
-        ruby: "i = 0\nsum = 0\nwhile i < 5\n  sum = sum + i\n  i = i + 1\nend\n\nputs sum\n",
+        frontend: Frontend::Ruby,
+        source: "i = 0\nsum = 0\nwhile i < 5\n  sum = sum + i\n  i = i + 1\nend\n\nputs sum\n",
         expected: "10",
     },
     // Array literal + `.length` (a method call, which lowers cleanly).
@@ -74,7 +82,8 @@ const CORPUS: &[Program] = &[
     // without tripping the index path.
     Program {
         name: "array_length",
-        ruby: "a = [10, 20, 30]\nputs a.length\n",
+        frontend: Frontend::Ruby,
+        source: "a = [10, 20, 30]\nputs a.length\n",
         expected: "3",
     },
     // `puts` on an Array UNPACKS it one element per line, recursively
@@ -86,7 +95,8 @@ const CORPUS: &[Program] = &[
     // delegating to a native array-aware `puts`); both fixed together.
     Program {
         name: "puts_array_unpack",
-        ruby: "puts [1, 2, 3]\nputs [4, [5, 6], 7]\n",
+        frontend: Frontend::Ruby,
+        source: "puts [1, 2, 3]\nputs [4, [5, 6], 7]\n",
         expected: "1\n2\n3\n4\n5\n6\n7",
     },
     // String `.length` (a method on a String receiver). NOTE: `.upcase` /
@@ -100,19 +110,22 @@ const CORPUS: &[Program] = &[
     // exercises string-method dispatch end-to-end without tripping the gap.
     Program {
         name: "string_length",
-        ruby: "puts \"hello\".length\n",
+        frontend: Frontend::Ruby,
+        source: "puts \"hello\".length\n",
         expected: "5",
     },
     // Instance state via `@ivar` mutated across method calls.
     Program {
         name: "counter_state",
-        ruby: "class Counter\n  def initialize\n    @n = 0\n  end\n  def inc\n    @n = @n + 1\n  end\n  def value\n    @n\n  end\nend\n\nc = Counter.new\nc.inc\nc.inc\nputs c.value\n",
+        frontend: Frontend::Ruby,
+        source: "class Counter\n  def initialize\n    @n = 0\n  end\n  def inc\n    @n = @n + 1\n  end\n  def value\n    @n\n  end\nend\n\nc = Counter.new\nc.inc\nc.inc\nputs c.value\n",
         expected: "2",
     },
     // A module mixed into a class with `include`.
     Program {
         name: "mixin_include",
-        ruby: "module Greet\n  def hi\n    \"hi\"\n  end\nend\n\nclass P\n  include Greet\nend\n\nputs P.new.hi\n",
+        frontend: Frontend::Ruby,
+        source: "module Greet\n  def hi\n    \"hi\"\n  end\nend\n\nclass P\n  include Greet\nend\n\nputs P.new.hi\n",
         expected: "hi",
     },
     // Short-circuit `||` / `&&` returning the deciding OPERAND (Ruby semantics),
@@ -122,14 +135,16 @@ const CORPUS: &[Program] = &[
     // `||`/`&&` threw `unknown builtin` at runtime on three of five backends.
     Program {
         name: "logical_ops",
-        ruby: "puts(\"a\" || \"b\")\nputs(nil || \"b\")\nputs(\"x\" && \"y\")\n",
+        frontend: Frontend::Ruby,
+        source: "puts(\"a\" || \"b\")\nputs(nil || \"b\")\nputs(\"x\" && \"y\")\n",
         expected: "a\nb\ny",
     },
     // A `case` with a multi-value `when` (`when 1, 2, 3`), which folds through
     // the same `or` builtin. Re-enabled now that `or`/`and` work on all backends.
     Program {
         name: "multi_when",
-        ruby: "def sz(n)\n  case n\n  when 1, 2, 3\n    \"small\"\n  else\n    \"big\"\n  end\nend\n\nputs sz(2)\nputs sz(9)\n",
+        frontend: Frontend::Ruby,
+        source: "def sz(n)\n  case n\n  when 1, 2, 3\n    \"small\"\n  else\n    \"big\"\n  end\nend\n\nputs sz(2)\nputs sz(9)\n",
         expected: "small\nbig",
     },
     // Ruby String methods whose names differ from JS natives (`upcase` →
@@ -139,7 +154,8 @@ const CORPUS: &[Program] = &[
     // raised `NoMethodError` on JS only.
     Program {
         name: "string_case",
-        ruby: "puts(\"hello\".upcase)\nputs(\"WORLD\".downcase)\nputs(\"  hi  \".strip)\n",
+        frontend: Frontend::Ruby,
+        source: "puts(\"hello\".upcase)\nputs(\"WORLD\".downcase)\nputs(\"  hi  \".strip)\n",
         expected: "HELLO\nworld\nhi",
     },
     // Sequential local assignments where a later binding READS an earlier one
@@ -149,7 +165,8 @@ const CORPUS: &[Program] = &[
     // existing_local` failed to compile on every backend. Now fixed.
     Program {
         name: "seq_assign",
-        ruby: "a = 5\nb = a + 1\nc = b + a\nputs a\nputs b\nputs c\n",
+        frontend: Frontend::Ruby,
+        source: "a = 5\nb = a + 1\nc = b + a\nputs a\nputs b\nputs c\n",
         expected: "5\n6\n11",
     },
     // ── Collections cascade (C-backend slices 3-10) ──────────────────────
@@ -167,39 +184,58 @@ const CORPUS: &[Program] = &[
     // through every backend's calling convention.
     Program {
         name: "array_reduce",
-        ruby: "puts [1, 2, 3, 4].reduce { |acc, x| acc + x }\n",
+        frontend: Frontend::Ruby,
+        source: "puts [1, 2, 3, 4].reduce { |acc, x| acc + x }\n",
         expected: "10",
     },
     // Two Array 0-arg query methods (slice 3).
     Program {
         name: "array_count_sum",
-        ruby: "puts [1, 2, 3, 4, 5].count\nputs [1, 2, 3].sum\n",
+        frontend: Frontend::Ruby,
+        source: "puts [1, 2, 3, 4, 5].count\nputs [1, 2, 3].sum\n",
         expected: "5\n6",
     },
     // Hash non-block methods (slice 6): `.length` and `.fetch`.
     Program {
         name: "hash_length_fetch",
-        ruby: "h = {\"a\" => 1, \"b\" => 2}\nputs h.length\nputs h.fetch(\"a\")\n",
+        frontend: Frontend::Ruby,
+        source: "h = {\"a\" => 1, \"b\" => 2}\nputs h.length\nputs h.fetch(\"a\")\n",
         expected: "2\n1",
     },
     // Remaining String methods (slice 8): literal `sub`/`gsub`.
     Program {
         name: "string_gsub_sub",
-        ruby: "puts \"aaa\".gsub(\"a\", \"b\")\nputs \"aaa\".sub(\"a\", \"b\")\n",
+        frontend: Frontend::Ruby,
+        source: "puts \"aaa\".gsub(\"a\", \"b\")\nputs \"aaa\".sub(\"a\", \"b\")\n",
         expected: "bbb\nbaa",
     },
     // Numeric methods (slice 9): `abs` and `gcd`.
     Program {
         name: "numeric_abs_gcd",
-        ruby: "puts((-5).abs)\nputs 12.gcd(18)\n",
+        frontend: Frontend::Ruby,
+        source: "puts((-5).abs)\nputs 12.gcd(18)\n",
         expected: "5\n6",
     },
     // Symbol methods (slice 10): `upcase` widened from the String helper,
     // `length` widened the same way.
     Program {
         name: "symbol_upcase_length",
-        ruby: "puts :hello.upcase\nputs :hello.length\n",
+        frontend: Frontend::Ruby,
+        source: "puts :hello.upcase\nputs :hello.length\n",
         expected: "HELLO\n5",
+    },
+    // Frontend genericity smoke test (SIR25 §5): the SAME arithmetic case as
+    // `arithmetic` above, sourced from PYTHON instead of Ruby, proving the
+    // harness — and every backend, since `run()` doesn't know or care which
+    // frontend produced the `Module` — is frontend-agnostic, not Ruby-only.
+    // Deliberately minimal (leaf arithmetic, not the OOP surface): proving the
+    // *plumbing* is this slice's job; extending python-to-semantic-ir to the
+    // OOP declaration surface and adding a matching corpus is the next slice.
+    Program {
+        name: "python_arithmetic",
+        frontend: Frontend::Python,
+        source: "print(2 + 3 * 4)\n",
+        expected: "14",
     },
 ];
 

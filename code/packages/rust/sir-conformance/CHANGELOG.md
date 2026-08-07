@@ -2,6 +2,22 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.23.0] - Frontend genericity: any registered frontend, not just Ruby
+
+Generalizes the harness beyond a hardcoded Ruby-source input path (per
+[`SIR25` §5](../../../specs/SIR25-language-agnostic-object-model.md)):
+adds a `Frontend` enum (`Ruby`/`Python`/`JavaScript`, dispatching to each
+crate's own `compile_source`); `Program` gains a `frontend: Frontend`
+field alongside a renamed `source` field (was `ruby`); `lower_source`/
+`run_source` are now thin Ruby-only wrappers over new frontend-generic
+`lower_source_via`/`run_source_via` primitives, so every existing caller
+is unaffected. Adds `python_arithmetic` to the corpus — the first
+non-Ruby-sourced conformance program, proving the plumbing end-to-end:
+same arithmetic as `arithmetic` (Ruby-sourced), sourced from Python
+instead, runs and matches on all six backends. Fully additive/behavior-
+preserving for every existing test. New deps: `python-to-semantic-ir`,
+`javascript-to-semantic-ir`.
+
 ## [0.22.0] - `puts`-on-Array gap closed
 
 Adds `puts_array_unpack`, proving `puts [1, 2, 3]` / `puts [4, [5, 6], 7]`
