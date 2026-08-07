@@ -17,11 +17,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
       Spanish              before   after
       no sequence              56       6
       forward prerequisites    31       5
-      forward references      143      93
+      forward references      143      99
 
   Corpus-wide: 565 → **515** unsequenced, 271 → **245** forward prerequisites,
-  331 → **300** forward reviews, 509 → **496** forward references. Atom figures are
-  unchanged, as they must be — ordering moved no content.
+  331 → **300** forward reviews. Spanish's atom figures are unchanged by the
+  ordering itself, as they must be — ordering moved no content; the corpus totals
+  moved only because a verb tranche landed on main in parallel.
 - **Chapter 7's six lessons are deliberately left unsequenced.** `curriculum.json`
   says comer → beber → qué → vivir → dónde; the prose `Next:` chain **and**
   `ES-C07-beber`'s own `reviews_of` say comer → vivir → beber → qué → dónde. Under

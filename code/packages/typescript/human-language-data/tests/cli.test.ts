@@ -22,6 +22,11 @@ describe("runCurriculumGapReport", () => {
   // more on a cold runner). The cost is real and deliberate — order, reinforcement
   // and forward references are properties of every lesson, so the walk cannot be
   // input-gated the way `ramp` and `levels` are.
+  //
+  // The corpus only ever grows, so treat this budget as consumable: at 1,249 lessons
+  // the pair of builds is ~5.1s locally. It was ALREADY over the 5s default before any
+  // one PR pushed it there, which is why two sessions hit it independently on the same
+  // afternoon. When it next runs close, raise it — do not thin the report.
   it("prints JSON or text reports for the real curriculum", { timeout: 20_000 }, () => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {

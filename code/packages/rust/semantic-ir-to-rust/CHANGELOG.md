@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.39.4 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
+
+Documentation-only, no behavior change. Per `SIR25-language-agnostic-
+object-model.md`'s §6 (which explicitly tracks this as its own follow-up),
+this backend's OOP-dispatch-mechanism doc-comments — mixin/ancestry
+transitivity, `extend`'s singleton-first precedence, `resolve_class_method`/
+`resolve_instance_method`'s MRO walk, and the built-in-vs-user-defined
+`send`/`tap` precedence rule — now cite SIR25 §2.2/§2.4 as the authority,
+keeping "matching Ruby's ..." as a parenthetical (still true, still useful
+context: this dispatch model happens to coincide with Ruby's today, it just
+isn't *defined as* "whatever Ruby does"). Per-method Collections-catalog
+doc-comments are deliberately left untouched — SIR25 §3 explicitly
+designates that framing as legitimate naming provenance, not structural
+coupling.
+
 ## 0.39.3 — `<<` (Ruby's shift operator) as a top-level builtin
 
 Part of "Python/JS/Rust/Ruby backends: implement shift-operator runtime

@@ -96,8 +96,8 @@ describe("corpus snapshot", () => {
     expect(report.summary.coreVerbCount).toBe(40);
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
-    expect(report.summary.universallyMissing).toHaveLength(23);
-    expect(report.summary.meanCoveredPercent).toBe(14);
+    expect(report.summary.universallyMissing).toHaveLength(15);
+    expect(report.summary.meanCoveredPercent).toBe(17);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -110,9 +110,19 @@ describe("corpus snapshot", () => {
       "VERB-SAY",
       "VERB-SEE",
       "VERB-KNOW",
+      // The second tranche (chapters 38-39) — the same eight Spanish and Portuguese
+      // authored in parallel, so all three joined on them at once.
+      "VERB-THINK",
+      "VERB-UNDERSTAND",
+      "VERB-READ",
+      "VERB-WRITE",
       "VERB-GIVE",
+      "VERB-TAKE",
+      "VERB-ASK",
+      "VERB-HELP",
+      "VERB-LIKE-LOVE",
     ]);
-    expect(latin.coveredPercent).toBe(20);
+    expect(latin.coveredPercent).toBe(40);
     expect(report.tracks.find((track) => track.language === "arabic")!.covered).toEqual([
       "VERB-GO",
       "VERB-COME",
@@ -154,8 +164,31 @@ describe("corpus snapshot", () => {
     // querer. `ser` takes VERB-BE (one lesson per concept), and the rest have no core
     // concept that fits without stretching it.
     const spanish = report.tracks.find((track) => track.language === "spanish")!;
-    expect(spanish.covered).toHaveLength(13);
+    expect(spanish.covered).toHaveLength(21);
     expect(spanish.extras.length).toBe(6);
+
+    // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by
+    // no track anywhere — everyday words like *think*, *read*, *write* and *ask*. Spanish,
+    // Latin and Portuguese were each given the SAME eight rather than a third of the list
+    // apiece, because a verb only becomes a CROSS-LANGUAGE concept when more than one
+    // track teaches it under one id. Splitting the list would have added the same 24
+    // lessons and joined nothing. All three now teach all eight.
+    const portuguese = report.tracks.find((track) => track.language === "portuguese")!;
+    for (const verb of [
+      "VERB-THINK",
+      "VERB-UNDERSTAND",
+      "VERB-READ",
+      "VERB-WRITE",
+      "VERB-TAKE",
+      "VERB-ASK",
+      "VERB-HELP",
+      "VERB-LIKE-LOVE",
+    ]) {
+      expect(spanish.covered).toContain(verb);
+      expect(latin.covered).toContain(verb);
+      expect(portuguese.covered).toContain(verb);
+      expect(report.summary.universallyMissing).not.toContain(verb);
+    }
   });
 
   it("gives every track an explicit authoring list", () => {

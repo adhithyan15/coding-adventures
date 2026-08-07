@@ -164,8 +164,10 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // module name); `include M` / `extend M` lower to the `__include__` /
     // `__extend__` builtins, whose owner/module NAMES ride in as `StrLit`s
     // (never a `Const`), so the runtime side stays a pure NAME-keyed map
-    // operation — NEVER reflection.  Method resolution follows Ruby's MRO
-    // (class → its included modules in reverse → superclass → …), cycle-guarded
+    // operation — NEVER reflection.  Method resolution follows SIR25 §2.2/§2.4's
+    // MRO-based order (class → its included modules in reverse → superclass →
+    // …, SIR's own dispatch semantics — happens to match Ruby's, not defined
+    // as "whatever Ruby does"), cycle-guarded
     // (see `runtime::RUNTIME` — `_sir_included_modules`,
     // `_sir_resolve_instance_method`, `_sir_extend`, `_sir_call_class_method`).
     // A `ModuleDef` body reaching emit is now hosted (not rejected); the

@@ -200,6 +200,20 @@
       "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:spanish-verbs-of-the-mind",
+      "output": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and the Backwards Verb",
+      "label": "ch:spanish-backwards-verb",
+      "output": "spanish/book/chapters/ch35-take-ask-help.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",
@@ -431,6 +445,20 @@
       "title": "Verbs at the Core",
       "label": "ch:pt-core-verbs",
       "output": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 19,
+      "title": "Verbs of the Mind",
+      "label": "ch:pt-mind-verbs",
+      "output": "portuguese/book/chapters/ch19-mind-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:pt-taking-asking-helping-liking",
+      "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
     },
     {
       "language": "french",
@@ -2093,6 +2121,20 @@
       "title": "Eight Verbs at the Core",
       "label": "ch:la-core-verbs",
       "output": "latin/book/chapters/ch37-core-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 38,
+      "title": "Thinking, Reading, Writing",
+      "label": "ch:la-mind-verbs",
+      "output": "latin/book/chapters/ch38-mind-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:la-doing-verbs",
+      "output": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
       "language": "bengali",

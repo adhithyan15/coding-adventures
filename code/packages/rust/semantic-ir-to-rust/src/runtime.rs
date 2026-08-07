@@ -1518,7 +1518,8 @@ pub const RUNTIME: &str = r##"mod __sir {
         // is inert data that can only ever select an ARM we spelled out.
         //
         // A user-defined `send`/`tap`/etc. must win over the universal one
-        // (Ruby's resolution order), so for a `Value::Instance` receiver we
+        // (SIR25 §2.2's resolution order, matching Ruby's), so for a
+        // `Value::Instance` receiver we
         // check the user method table FIRST (below); only a genuine miss
         // reaches these universal Kernel methods, via `object_method`.
         //
@@ -1724,8 +1725,9 @@ pub const RUNTIME: &str = r##"mod __sir {
     }
 
     // Does `owner` reach `target` through the modules mixed into it or into any
-    // of its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end`
-    // where `module M; include N; end` makes `c.is_a?(N)` true.
+    // of its ancestors?  SIR25 §2.4's mixin resolution is TRANSITIVE (matching
+    // Ruby's MRO) — `class C; include M; end` where `module M; include N; end`
+    // makes `c.is_a?(N)` true.
     //
     // Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
     // depth is shaped by the source, so a recursive walk could exhaust the stack
@@ -4359,13 +4361,15 @@ pub const RUNTIME: &str = r##"mod __sir {
         // ── MX6 mixins: per-owner included-module list ────────────────
         //
         // `include M` (in class/module `Owner`) records `M` on `Owner`'s
-        // list, in SOURCE (include) order.  Ruby's MRO searches the
-        // MOST-RECENTLY-included module first, so the resolution walk
-        // iterates this list in REVERSE (see `resolve_instance_method`).
+        // list, in SOURCE (include) order.  SIR25 §2.4's MRO (matching
+        // Ruby's) searches the MOST-RECENTLY-included module first, so the
+        // resolution walk iterates this list in REVERSE (see
+        // `resolve_instance_method`).
         //
         // An owner is a class OR a module NAME — a module that itself
         // `include`s another module has its own entry here, so the MRO walk
-        // recursing into it honours Ruby's transitive mixin inclusion.
+        // recursing into it honours the transitive mixin inclusion SIR25
+        // §2.4 specifies (matching Ruby's).
         //
         // SECURITY: a plain `HashMap<String, Vec<String>>` keyed by
         // source-derived NAMES — no reflection (the C3 RCE discipline).  The
@@ -4450,7 +4454,8 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// itself includes, via the same MRO walk instances use) and copy each
     /// into `Owner`'s class-method table.  An entry `Owner` ALREADY defines
     /// is NOT overwritten — a class's own `def self.m` shadows an extended
-    /// module method, matching Ruby's singleton-first precedence.
+    /// module method, per SIR25 §2.4's singleton-first precedence (matching
+    /// Ruby's).
     ///
     /// Copy-at-extend-time is the v0 model: methods defined on `M` AFTER the
     /// `extend` are not retroactively added, which is sufficient because the
@@ -4505,7 +4510,8 @@ pub const RUNTIME: &str = r##"mod __sir {
         names
     }
 
-    /// Resolve instance method `name` on `cls` following Ruby's MRO:
+    /// Resolve instance method `name` on `cls` following SIR25 §2.2's MRO
+    /// (matching Ruby's, SIR's own dispatch semantics per SIR25):
     ///
     /// ```text
     ///   cls  →  cls's included modules (REVERSE / most-recent-first)  →

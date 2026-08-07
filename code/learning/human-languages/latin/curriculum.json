@@ -334,6 +334,36 @@
         "LA-EXT-025-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "LA-PATH-026",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-027",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C39-capio",
+        "LA-C39-rogo",
+        "LA-C39-adiuvo",
+        "LA-C39-amo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -461,7 +491,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "LA-PATH-025"
+        "LA-PATH-025",
+        "LA-PATH-026",
+        "LA-PATH-027"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -469,13 +501,8 @@
         "VERB-DO-MAKE",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -490,14 +517,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -811,6 +835,34 @@
         "LA-C37-video",
         "LA-C37-scio",
         "LA-C37-do"
+      ]
+    },
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of thinking, reading, understanding and writing, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo"
+      ]
+    },
+    {
+      "id": "LA-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of taking, asking, helping and loving, and trace each one into the English words built on it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C39-capio",
+        "LA-C39-rogo",
+        "LA-C39-adiuvo",
+        "LA-C39-amo"
       ]
     }
   ]

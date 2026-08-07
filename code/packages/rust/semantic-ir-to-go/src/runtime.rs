@@ -4286,8 +4286,9 @@ func _sir_value_is_a(recv Value, actual string, target string) bool {
 }
 
 // Does `owner` reach `target` through the modules mixed into it or into any of
-// its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end` where
-// `module M; include N; end` makes `c.is_a?(N)` true.
+// its ancestors?  SIR25 §2.4's mixin resolution is TRANSITIVE (matching
+// Ruby's MRO) — `class C; include M; end` where `module M; include N; end`
+// makes `c.is_a?(N)` true.
 //
 // Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
 // depth is shaped by the source, so a recursive walk could exhaust the stack on
@@ -4454,12 +4455,13 @@ func _sir_include(owner string, module string) Value {
 // SNAPSHOT `M`'s registered instance methods (including those `M` itself
 // includes, via the same MRO walk used for instances) and copy each into
 // `Owner`'s class-method table.  An entry `Owner` already defines is NOT
-// overwritten (a class/own method shadows an extended module method), matching
-// Ruby's singleton-first precedence.  Copy-at-extend-time is the v0 model:
-// methods defined on `M` AFTER the `extend` are not retroactively added, which
-// is sufficient because the frontend emits every `__def_method__` for `M`
-// before any `__extend__` that names it (registrations run in source order,
-// module def before the including class).
+// overwritten (a class/own method shadows an extended module method), per
+// SIR25 §2.4's singleton-first precedence (matching Ruby's).
+// Copy-at-extend-time is the v0 model: methods defined on `M` AFTER the
+// `extend` are not retroactively added, which is sufficient because the
+// frontend emits every `__def_method__` for `M` before any `__extend__`
+// that names it (registrations run in source order, module def before the
+// including class).
 func _sir_extend(owner string, module string) Value {
 	for _, name := range _sir_module_method_names(module) {
 		key := _sir_method_key(owner, name)
@@ -4508,7 +4510,8 @@ func _sir_module_method_names(module string) []string {
 	return names
 }
 
-// Resolve `method` on `cls` following Ruby's MRO (Method Resolution Order):
+// Resolve `method` on `cls` following SIR25 §2.2's MRO (Method Resolution
+// Order — matching Ruby's, SIR's own dispatch semantics per SIR25):
 //
 //	cls  →  cls's included modules (REVERSE / most-recent-first)  →
 //	cls's superclass  →  its included modules  →  …  →  Object
