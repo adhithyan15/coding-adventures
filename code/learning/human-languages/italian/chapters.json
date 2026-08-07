@@ -95,6 +95,7 @@
       "label": "ch:it-first-verbs",
       "canDo": "I can build my own Italian sentences with -are verbs and drop the subject pronoun the way Italians do.",
       "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO",
         "SPINE-POLITE-REQUEST-REPAIR"
       ],
       "payoff": {

@@ -2091,7 +2091,7 @@
     {
       "language": "italian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:428b548f8b6d4ad0",
+      "sourceHash": "fnv1a64:588a9facd5ea70ef",
       "lessonIds": [
         "IT-C05-parlare",
         "IT-C05-abitare",
@@ -2104,7 +2104,7 @@
       "text": "italian/narration/ch05.txt",
       "json": "italian/narration/ch05.json",
       "textHash": "fnv1a64:6d44cdd003fa5243",
-      "jsonHash": "fnv1a64:24d3fedb1cb34802"
+      "jsonHash": "fnv1a64:ea97a1abbab7ee8d"
     },
     {
       "language": "italian",
@@ -2229,7 +2229,7 @@
     {
       "language": "italian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:62fcc73207804a51",
+      "sourceHash": "fnv1a64:0955fb9314cc86c0",
       "lessonIds": [
         "IT-C14-avere",
         "IT-C14-eta"
@@ -2239,7 +2239,7 @@
       "text": "italian/narration/ch14.txt",
       "json": "italian/narration/ch14.json",
       "textHash": "fnv1a64:dcb61b2646ca0757",
-      "jsonHash": "fnv1a64:1805947c5d2d1f37"
+      "jsonHash": "fnv1a64:6a0bf3c4259fd233"
     },
     {
       "language": "italian",
@@ -2259,7 +2259,7 @@
     {
       "language": "italian",
       "chapter": 16,
-      "sourceHash": "fnv1a64:bea08cde852eca81",
+      "sourceHash": "fnv1a64:c5a3a23e7fecd54e",
       "lessonIds": [
         "IT-C16-essere",
         "IT-C16-essere-stato",
@@ -2271,7 +2271,7 @@
       "text": "italian/narration/ch16.txt",
       "json": "italian/narration/ch16.json",
       "textHash": "fnv1a64:e2376be5ee197120",
-      "jsonHash": "fnv1a64:64d9b4862e69cb24"
+      "jsonHash": "fnv1a64:a0a840f9d8435e3c"
     },
     {
       "language": "italian",
