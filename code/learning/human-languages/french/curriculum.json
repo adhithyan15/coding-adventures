@@ -105,20 +105,27 @@
     },
     {
       "id": "FR-PATH-010",
-      "spine_node": "SPINE-CHECK-WELLBEING",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "FR-C03-aller",
-        "FR-C03-comment-ca-va",
-        "FR-C03-comme-ci-comme-ca"
+        "FR-C03-aller"
       ],
-      "before": [
-        "FR-EXT-010-LANGUAGE-SPECIFIC"
-      ],
+      "before": [],
       "inline": [],
       "after": []
     },
     {
       "id": "FR-PATH-011",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C03-comment-ca-va",
+        "FR-C03-comme-ci-comme-ca"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-012",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
         "FR-C03-merci",
@@ -129,7 +136,7 @@
       "after": []
     },
     {
-      "id": "FR-PATH-012",
+      "id": "FR-PATH-013",
       "spine_node": "SPINE-TAKE-LEAVE",
       "lessons": [
         "FR-C04-au-revoir",
@@ -142,11 +149,21 @@
       "after": []
     },
     {
-      "id": "FR-PATH-013",
-      "spine_node": "SPINE-TIME-OF-DAY",
+      "id": "FR-PATH-014",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "FR-C05-parler",
         "FR-C05-habiter",
+        "FR-C05-travailler"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-015",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
         "FR-C06-nombres-1-5",
         "FR-C06-nombres-6-10",
         "FR-C07-jours-1",
@@ -159,18 +176,43 @@
         "FR-C12-nombres-11-16",
         "FR-C12-nombres-17-20",
         "FR-C13-noir-blanc",
-        "FR-C13-rouge-bleu",
-        "FR-C14-avoir",
-        "FR-C14-age"
+        "FR-C13-rouge-bleu"
       ],
       "before": [],
       "inline": [
-        "FR-EXT-013-LANGUAGE-SPECIFIC"
+        "FR-EXT-015-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "FR-PATH-014",
+      "id": "FR-PATH-016",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FR-C14-avoir",
+        "FR-C14-age"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "FR-EXT-016-LANGUAGE-SPECIFIC"
+      ]
+    },
+    {
+      "id": "FR-PATH-017",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FR-C15-passe-compose",
+        "FR-C15-passe-simple",
+        "FR-C16-etre"
+      ],
+      "before": [
+        "FR-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-018",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "FR-C17-tete",
@@ -178,12 +220,12 @@
       ],
       "before": [],
       "inline": [
-        "FR-EXT-014-LANGUAGE-SPECIFIC"
+        "FR-EXT-018-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "FR-PATH-015",
+      "id": "FR-PATH-019",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
         "FR-C18-oui",
@@ -194,7 +236,7 @@
       "after": []
     },
     {
-      "id": "FR-PATH-016",
+      "id": "FR-PATH-020",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
         "FR-C19-sil-vous-plait",
@@ -205,19 +247,19 @@
       "after": []
     },
     {
-      "id": "FR-PATH-017",
+      "id": "FR-PATH-021",
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
         "FR-C21-le-temps"
       ],
       "before": [],
       "inline": [
-        "FR-EXT-017-LANGUAGE-SPECIFIC"
+        "FR-EXT-021-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "FR-PATH-018",
+      "id": "FR-PATH-022",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "FR-C22-chien-chat",
@@ -225,7 +267,7 @@
       ],
       "before": [],
       "inline": [
-        "FR-EXT-018-LANGUAGE-SPECIFIC"
+        "FR-EXT-022-LANGUAGE-SPECIFIC"
       ],
       "after": []
     }
@@ -244,7 +286,7 @@
     },
     "SPINE-COURTESY-THANK": {
       "segments": [
-        "FR-PATH-011"
+        "FR-PATH-012"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -253,7 +295,7 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "FR-PATH-015"
+        "FR-PATH-019"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -278,15 +320,15 @@
       "segments": [
         "FR-PATH-002",
         "FR-PATH-008",
-        "FR-PATH-010",
-        "FR-PATH-014"
+        "FR-PATH-011",
+        "FR-PATH-018"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "FR-PATH-016"
+        "FR-PATH-020"
       ],
       "omits": [],
       "relocates": {}
@@ -294,7 +336,7 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "FR-PATH-005",
-        "FR-PATH-012"
+        "FR-PATH-013"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -305,8 +347,8 @@
       "segments": [
         "FR-PATH-004",
         "FR-PATH-006",
-        "FR-PATH-013",
-        "FR-PATH-017"
+        "FR-PATH-015",
+        "FR-PATH-021"
       ],
       "omits": [
         "TIME-MORNING",
@@ -326,7 +368,7 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "FR-PATH-003",
-        "FR-PATH-018"
+        "FR-PATH-022"
       ],
       "omits": [],
       "relocates": {}
@@ -339,17 +381,18 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "FR-PATH-010",
+        "FR-PATH-014",
+        "FR-PATH-016",
+        "FR-PATH-017"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
-        "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
-        "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
@@ -367,8 +410,6 @@
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-LIVE",
-        "VERB-WORK",
         "VERB-PLAY",
         "VERB-WALK",
         "VERB-RUN",
@@ -429,26 +470,13 @@
       ]
     },
     {
-      "id": "FR-EXT-010-LANGUAGE-SPECIFIC",
-      "stage": "pre-A1",
-      "kind": "required",
-      "category": "language-specific",
-      "canDo": "I can use the additional French material required at this point in the path.",
-      "prerequisites": [],
-      "lessons": [
-        "FR-C03-aller"
-      ]
-    },
-    {
-      "id": "FR-EXT-013-LANGUAGE-SPECIFIC",
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
       "canDo": "I can use the additional French material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "FR-C05-parler",
-        "FR-C05-habiter",
         "FR-C06-nombres-1-5",
         "FR-C06-nombres-6-10",
         "FR-C07-jours-1",
@@ -461,13 +489,34 @@
         "FR-C12-nombres-11-16",
         "FR-C12-nombres-17-20",
         "FR-C13-noir-blanc",
-        "FR-C13-rouge-bleu",
-        "FR-C14-avoir",
+        "FR-C13-rouge-bleu"
+      ]
+    },
+    {
+      "id": "FR-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
         "FR-C14-age"
       ]
     },
     {
-      "id": "FR-EXT-014-LANGUAGE-SPECIFIC",
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional French material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C15-passe-compose",
+        "FR-C15-passe-simple"
+      ]
+    },
+    {
+      "id": "FR-EXT-018-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -479,7 +528,7 @@
       ]
     },
     {
-      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "id": "FR-EXT-021-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -490,7 +539,7 @@
       ]
     },
     {
-      "id": "FR-EXT-018-LANGUAGE-SPECIFIC",
+      "id": "FR-EXT-022-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",

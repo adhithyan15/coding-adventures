@@ -4,7 +4,7 @@ chapter: 14
 type: word
 headword: avoir
 gloss: to have — the most worn-down verb in French, and a root you already met
-concept_tag: FR-VERB-HAVE
+concept_tag: VERB-HAVE
 prerequisites: [FR-C13-rouge-bleu, FR-C05-habiter]
 sounds: [elision-j-ai, liaison]
 roots: [latin-habere]

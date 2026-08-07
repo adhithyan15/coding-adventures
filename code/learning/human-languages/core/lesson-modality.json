@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:10aa628bb744043a",
+  "sourceHash": "fnv1a64:8c4d6f3e4903dcf9",
   "summary": {
     "totalLessons": 1225,
     "voice": 824,
@@ -8805,7 +8805,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f90923bced4bff0b"
+      "sourceHash": "fnv1a64:4c4319e2d9dc8c2e"
     },
     {
       "id": "FR-C03-comme-ci-comme-ca",
@@ -9000,7 +9000,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22b91db850c4a6bf"
+      "sourceHash": "fnv1a64:13b0ef183fb8ac0b"
     },
     {
       "id": "FR-C05-je-parle-francais",
@@ -9026,7 +9026,7 @@
       "reasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1788b64ee60cd864"
+      "sourceHash": "fnv1a64:1b52b778db2ff0f7"
     },
     {
       "id": "FR-C05-practice",
@@ -9052,7 +9052,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a95b86575122ba2"
+      "sourceHash": "fnv1a64:aa49383efb48bb90"
     },
     {
       "id": "FR-C06-nombres-1-5",
@@ -9290,7 +9290,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e1fce68257fb1f71"
+      "sourceHash": "fnv1a64:8e9f481dabe6b8c4"
     },
     {
       "id": "FR-C15-passe-compose",
@@ -9329,7 +9329,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c03aabc76bc918"
+      "sourceHash": "fnv1a64:2ad8553705ea5e8f"
     },
     {
       "id": "FR-C16-etre-roots",

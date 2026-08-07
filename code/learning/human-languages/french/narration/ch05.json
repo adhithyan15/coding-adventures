@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:78949b91a1ec7467",
+  "sourceHash": "fnv1a64:1ac542fc6064f48f",
   "lessons": [
     {
       "id": "FR-C05-habiter",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22b91db850c4a6bf",
+      "sourceHash": "fnv1a64:13b0ef183fb8ac0b",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1788b64ee60cd864",
+      "sourceHash": "fnv1a64:1b52b778db2ff0f7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a95b86575122ba2",
+      "sourceHash": "fnv1a64:aa49383efb48bb90",
       "notice": null,
       "blocks": [
         {

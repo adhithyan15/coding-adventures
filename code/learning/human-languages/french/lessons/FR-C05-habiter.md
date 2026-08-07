@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: habiter
 gloss: to live / to dwell (a second -er verb — same pattern)
-concept_tag: FR-VERB-HABITER
+concept_tag: VERB-LIVE
 prerequisites: [FR-C05-parler]
 sounds: [silent-final, r-uvular]
 roots: [habitare-latin]

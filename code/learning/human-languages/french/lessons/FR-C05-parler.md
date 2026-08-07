@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: parler
 gloss: to speak / to talk (your first regular -er verb)
-concept_tag: FR-VERB-PARLER
+concept_tag: VERB-SPEAK
 prerequisites: [FR-C02-je, FR-C02-tu-vous]
 sounds: [er-ending, r-uvular]
 roots: [parabolare-latin]
