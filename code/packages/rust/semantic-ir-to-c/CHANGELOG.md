@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.36.5 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
+
+Documentation-only, no behavior change. Per `SIR25-language-agnostic-
+object-model.md`'s §6 (which explicitly tracks this as its own follow-up),
+this backend's OOP-dispatch-mechanism doc-comments — method-resolution
+precedence (`_sir_resolve_method`) and default no-op construction
+(`_sir_call_new`) — now cite SIR25 §2.1/§2.2 as the authority, keeping
+"matching Ruby's ..." as a parenthetical (still true, still useful context:
+this dispatch model happens to coincide with Ruby's today, it just isn't
+*defined as* "whatever Ruby does"). Per-method Collections-catalog
+doc-comments ("matching Ruby's `Array#fetch`", etc.) are deliberately left
+untouched — SIR25 §3 explicitly designates that framing as legitimate
+naming provenance, not structural coupling.
+
 ## 0.36.4 — string interpolation (`"a#{x}b"`)
 
 Filed as its own backlog item ("C backend: support string interpolation").

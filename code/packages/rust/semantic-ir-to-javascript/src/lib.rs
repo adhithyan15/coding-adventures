@@ -189,8 +189,9 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // (keyed by the module name via `__def_method__`), and `include M` /
     // `extend M` lower to `__include__("Owner","M")` / `__extend__(…)` — the
     // frontend triggers `Feature::Modules` for all three.  The inlined OOP
-    // runtime's method-resolution walk now follows Ruby's MRO (class →
-    // included modules, most-recent-first → superclass → …), and `extend`
+    // runtime's method-resolution walk now follows SIR25 §2.2/§2.4's
+    // MRO-based order (matching Ruby's — class → included modules,
+    // most-recent-first → superclass → …), and `extend`
     // registers a module's methods as class ("singleton") methods, so a
     // mixed-in method is found on an including class's instances (`include`)
     // or on the class itself (`extend`).  See `emit`'s `__include__` /
