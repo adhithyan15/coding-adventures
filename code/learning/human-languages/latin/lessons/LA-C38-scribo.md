@@ -6,35 +6,36 @@ sequence: 750
 chapter: 38
 type: word
 headword: scrībō, scrībere
-gloss: "I write" — a verb whose root means "to scratch", and the source of scribe, script, scripture and manuscript
+gloss: "I write" — a verb whose root means "to scratch", and the fourth of this chapter's four
 concept_tag: VERB-WRITE
 prerequisites: [LA-C38-intellego]
 sounds: [macron-long-vowel, c-as-k]
 roots: [scribere-latin]
 etymology_hook: "scrībere ('to write') goes back to a root meaning 'to scratch, to incise', because Romans scratched wax; it gives scribe, scribble, script, scripture, manuscript, postscript, describe, prescribe, subscribe, transcribe and inscribe, plus shrift through Old English, while English write is a separate Germanic word that also meant 'to scratch'"
 duration:
-  max_seconds: 280
+  max_seconds: 285
 requires:
-  knowledge: [LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01]
+  knowledge: [LA-LEX-COGITO-01, LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01]
 introduces:
   knowledge: [LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02]
 practises:
-  knowledge: [LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02]
+  knowledge: [LA-LEX-COGITO-01, LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: classical
-reviews_of: [LA-C38-lego, LA-C38-intellego]
+reviews_of: [LA-C38-cogito, LA-C38-lego, LA-C38-intellego]
 ---
 
-# scrībō — writing began as scratching
+# scrībō — writing began as scratching, and the four together
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-COGITO-01, LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01] -->
 
-[PAUSE 2s] **Legō** takes words off a surface and **intellegō** picks them
-apart. This verb is the one that put them there.
+[PAUSE 2s] **Cōgitō** turns things over, **legō** takes words off a
+surface, **intellegō** picks them apart. One verb is left: the one that put
+them there.
 
 ## You'll want to know: scrībō — "I write"
 <!-- hl-knowledge: introduces=[LA-LEX-SCRIBO-01]; assesses=[] -->
@@ -80,19 +81,20 @@ reaching the same image with two different words. **Scrape** and **scrub**
 are likewise Germanic and unrelated, however much they sound the part.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-COGITO-01, LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "scrībō" — I write, opening sk-]
-- [YOU SAY: "scrībis, scrībit" — you write, he or she writes]
-- [YOU SAY: "legō, scrībō" — I read, I write]
+- [YOU SAY: "scrībō, scrībis, scrībit" — I write, you write, he or she writes]
+- [YOU SAY: this chapter's four "I" forms — cōgitō, legō, intellegō, scrībō]
+- [YOU SAY: the four "he or she" forms — cōgitat, legit, intellegit, scrībit]
 - [YOU SAY: the English relatives — scribe, script, describe, manuscript]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-COGITO-01, LA-LEX-LEGO-01, LA-LEX-INTELLEGO-01, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02] -->
 
-[PAUSE 3s] How does Latin say "I write"? (**Scrībō**.) "They write"?
-(**Scrībunt**.) What did the root originally mean? (**To scratch, to
+[PAUSE 3s] Give this chapter's four "I" forms. (**Cōgitō, legō, intellegō,
+scrībō**.) Now the four "he or she" forms. (**Cōgitat, legit, intellegit,
+scrībit**.) What did *scrībere*'s root originally mean? (**To scratch, to
 incise** — a stylus in wax.) What does **subscribe** literally say?
 (**Write underneath** — to sign.) Is English *write* from this verb?
 (**No** — it is Germanic, and happens to mean "scratch" too.)

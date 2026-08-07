@@ -1,9 +1,9 @@
 ---
 schema_version: 2
-id: LA-C38-capio
+id: LA-C39-capio
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 760
-chapter: 38
+chapter: 39
 type: word
 headword: capiō, capere
 gloss: "I take" — the verb the habeō lesson promised, and the true relative of English have
@@ -13,7 +13,7 @@ sounds: [macron-none-short-vowel, c-as-k]
 roots: [capere-latin]
 etymology_hook: "capere ('to take, to seize') is from PIE *keh₂p-, the root that also produced English have and heave; it gives capture, captive, capable, capacity, accept, except, receive, deceive, conceive, concept, perceive, anticipate, participate, occupy and chase, while the lookalike caput ('head') behind capital and captain is a different word"
 duration:
-  max_seconds: 280
+  max_seconds: 285
 requires:
   knowledge: [LA-LEX-SCRIBO-01, LA-LEX-HABEO-01, LA-ETYMON-HABEO-02]
 introduces:
@@ -33,9 +33,9 @@ reviews_of: [LA-C37-habeo, LA-C38-scribo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SCRIBO-01, LA-LEX-HABEO-01, LA-ETYMON-HABEO-02] -->
 
-[PAUSE 2s] When you learned **habeō**, one thing was left owing: English
-*have* is not its descendant but belongs to another verb. This is that
-other verb.
+[PAUSE 2s] The last chapter closed on **scrībō**. This one opens by paying a
+debt: when you learned **habeō**, you were told that English *have* is not
+its descendant but belongs to another verb. This is that other verb.
 
 ## You'll want to know: capiō — "I take"
 <!-- hl-knowledge: introduces=[LA-LEX-CAPIO-01]; assesses=[] -->

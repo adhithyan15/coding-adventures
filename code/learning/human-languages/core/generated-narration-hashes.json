@@ -3340,23 +3340,36 @@
     {
       "language": "latin",
       "chapter": 38,
-      "sourceHash": "fnv1a64:339acd2f7d003a60",
+      "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
       "lessonIds": [
         "LA-C38-cogito",
         "LA-C38-lego",
         "LA-C38-intellego",
-        "LA-C38-scribo",
-        "LA-C38-capio",
-        "LA-C38-rogo",
-        "LA-C38-adiuvo",
-        "LA-C38-amo"
+        "LA-C38-scribo"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 8,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "latin/narration/ch38.txt",
       "json": "latin/narration/ch38.json",
-      "textHash": "fnv1a64:82b83459cf238352",
-      "jsonHash": "fnv1a64:094039b08e200d01"
+      "textHash": "fnv1a64:14a6092186419df1",
+      "jsonHash": "fnv1a64:958b34e2d8ddc389"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:78c8a48b5713a827",
+      "lessonIds": [
+        "LA-C39-capio",
+        "LA-C39-rogo",
+        "LA-C39-adiuvo",
+        "LA-C39-amo"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch39.txt",
+      "json": "latin/narration/ch39.json",
+      "textHash": "fnv1a64:38a30115dc150212",
+      "jsonHash": "fnv1a64:14e45d70f6ad1110"
     },
     {
       "language": "malayalam",

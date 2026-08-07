@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: LA-C38-rogo
+id: LA-C39-rogo
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 770
-chapter: 38
+chapter: 39
 type: word
 headword: rogō, rogāre
 gloss: "I ask" — a verb probably built on "stretching straight out", and a cousin of regal, direct and right
 concept_tag: VERB-ASK
-prerequisites: [LA-C38-capio, LA-C37-dico]
+prerequisites: [LA-C39-capio, LA-C37-dico]
 sounds: [macron-long-vowel, g-as-hard]
 roots: [rogare-latin]
 etymology_hook: "rogāre ('to ask') gives interrogate, arrogant, abrogate, derogatory, prerogative and surrogate, and is generally traced to the root behind regō and rēx, so it is a cousin of regal, direct, correct and English right; the partner verb petere ('to seek, to ask for') gives petition, appetite, compete, repeat and — through penna, 'feather' — pen"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: classical
-reviews_of: [LA-C37-dico, LA-C38-capio]
+reviews_of: [LA-C37-dico, LA-C39-capio]
 ---
 
 # rogō — asking as reaching straight out

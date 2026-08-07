@@ -1529,18 +1529,26 @@
     {
       "language": "latin",
       "chapter": 38,
-      "sourceHash": "fnv1a64:339acd2f7d003a60",
+      "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
       "lessonIds": [
         "LA-C38-cogito",
         "LA-C38-lego",
         "LA-C38-intellego",
-        "LA-C38-scribo",
-        "LA-C38-capio",
-        "LA-C38-rogo",
-        "LA-C38-adiuvo",
-        "LA-C38-amo"
+        "LA-C38-scribo"
       ],
-      "tex": "latin/book/chapters/ch38-more-core-verbs.tex"
+      "tex": "latin/book/chapters/ch38-mind-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:78c8a48b5713a827",
+      "lessonIds": [
+        "LA-C39-capio",
+        "LA-C39-rogo",
+        "LA-C39-adiuvo",
+        "LA-C39-amo"
+      ],
+      "tex": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
       "language": "malayalam",

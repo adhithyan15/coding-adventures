@@ -2097,9 +2097,16 @@
     {
       "language": "latin",
       "chapter": 38,
-      "title": "Eight More Verbs",
-      "label": "ch:la-more-core-verbs",
-      "output": "latin/book/chapters/ch38-more-core-verbs.tex"
+      "title": "Thinking, Reading, Writing",
+      "label": "ch:la-mind-verbs",
+      "output": "latin/book/chapters/ch38-mind-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:la-doing-verbs",
+      "output": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
       "language": "bengali",

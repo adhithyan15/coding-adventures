@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: LA-C38-adiuvo
+id: LA-C39-adiuvo
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 780
-chapter: 38
+chapter: 39
 type: word
 headword: adiuvō, adiuvāre
 gloss: "I help" — the verb hiding inside English aid, aide and adjutant, and no relation to juvenile
 concept_tag: VERB-HELP
-prerequisites: [LA-C38-rogo]
+prerequisites: [LA-C39-rogo]
 sounds: [v-as-w, macron-long-vowel]
 roots: [iuvare-latin]
 etymology_hook: "adiuvāre is ad ('toward') plus iuvāre ('to help, to please'); through Old French aidier it gives aid and aide, and directly it gives adjutant, adjuvant and coadjutor, while Latin's other help-word auxilium comes from augēre ('to increase') behind auxiliary, augment, auction and author; iuvenis ('young') behind juvenile is a different word entirely"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: classical
-reviews_of: [LA-C38-rogo]
+reviews_of: [LA-C39-rogo]
 ---
 
 # adiuvō — the verb inside "aid"

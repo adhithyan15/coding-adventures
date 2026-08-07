@@ -22,7 +22,7 @@ before the whole; and a book you can read straight through.
 
 ## Progress
 
-- **Chapters 1–38 are authored** as 73 prerequisite-ordered lessons, from
+- **Chapters 1–39 are authored** as 73 prerequisite-ordered lessons, from
   greetings and numbers through names, time, everyday courtesy, the honest
   limits of reconstructed conversational phrases, and the sixteen verbs the
   language leans on hardest.
@@ -31,25 +31,28 @@ before the whole; and a book you can read straight through.
   present-tense forms and the English words it left behind, and each flags the
   resemblances that are *not* real: English *have* is not descended from
   *habēre*, and English *know* is not descended from *sciō*.
-- **Chapter 38 adds eight more** — *cōgitō*, *legō*, *intellegō*, *scrībō*,
-  *capiō*, *rogō*, *adiuvō*, *amō*. This is where Latin's English dividend is
-  largest: *legō* is behind *legible*, *lecture*, *collect* and *elegant*;
-  *scrībō* behind *scribe*, *describe* and *manuscript*; *capiō* behind
-  *capture*, *receive* and *concept*; and *intellegō* is literally *inter* +
-  *legō*, "to read between." Each lesson also names the lookalikes that are
-  not relatives — English *read*, *write*, *think*, *ask* and *help* are all
-  Germanic, *juvenile* is not from *iuvō*, and *capital* is not from *capiō*.
+- **Chapters 38 and 39 add eight more, four at a time** — *cōgitō*, *legō*,
+  *intellegō*, *scrībō* in chapter 38, then *capiō*, *rogō*, *adiuvō*, *amō*
+  in chapter 39. Four rather than eight is deliberate: eight new verbs in one
+  sitting is a steeper ramp than two sittings of four, and pages cost nothing.
+  This is where Latin's English dividend is largest: *legō* is behind
+  *legible*, *lecture*, *collect* and *elegant*; *scrībō* behind *scribe*,
+  *describe* and *manuscript*; *capiō* behind *capture*, *receive* and
+  *concept*; and *intellegō* is literally *inter* + *legō*, "to read between."
+  Each lesson also names the lookalikes that are not relatives — English
+  *read*, *write*, *think*, *ask* and *help* are all Germanic, *juvenile* is
+  not from *iuvō*, and *capital* is not from *capiō*.
 - **Five chapters end on a dedicated payoff lesson** — 1, 19, 21, 33, and 36.
   Chapters 19, 21, and 36 close on a real Latin exchange assembled only from
   words the reader has already been taught; chapter 33 closes on a sorting task,
   because its material is etymological and would not honestly support a
   conversation.
-- **Chapters 2–38 are generated from the same schema-v2 lessons used by Language
+- **Chapters 2–39 are generated from the same schema-v2 lessons used by Language
   Ladder.** Chapter 1 remains the hand-authored opening; deterministic source
   hashes keep every later app/book chapter pair aligned.
 - Every lesson has a shared-spine placement, explicit knowledge boundaries, and
   an effective duration below five minutes.
-- **All 38 chapters carry a capability entry** in
+- **All 39 chapters carry a capability entry** in
   [`chapters.json`](./chapters.json) — no chapter is skipped, and no entry is a
   stub.
 
