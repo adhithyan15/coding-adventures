@@ -301,6 +301,30 @@
       "tex": "bengali/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:db0e24b2e41cd84b",
+      "lessonIds": [
+        "BN-C08-bhaba",
+        "BN-C08-bojha",
+        "BN-C08-pora",
+        "BN-C08-lekha"
+      ],
+      "tex": "bengali/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:87c66f64ea563bde",
+      "lessonIds": [
+        "BN-C09-neowa",
+        "BN-C09-jijnasa-kora",
+        "BN-C09-sahajjo-kora",
+        "BN-C09-bhalo-laga"
+      ],
+      "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:b740a5126cc6bad6",

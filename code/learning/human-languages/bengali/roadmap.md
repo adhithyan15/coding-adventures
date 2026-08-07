@@ -57,12 +57,43 @@ a gated reading course.
   for people — the *savoir*/*connaître* line; √jñā → **know**). The track's
   first canonical spine verbs. **Authored.**
 
+- **Ch. 8 — The Mind and the Page** (`BN-C08-*`): ভাবা *bhābā* (Sanskrit
+  *bhāvayati*, the **causative** of √bhū — so "think" is Ch. 7's হওয়া with a
+  gear changed; and the gear is still live, দেখা → দেখানো "show," খাওয়া →
+  খাওয়ানো "feed") → বোঝা *bojhā* (√budh "to wake" → the **Buddha**, and PIE
+  *\*bʰewdʰ-* → English **bid**, **forbid**; vowel harmony returns, and this
+  time the spelling moves: বুঝি against বোঝে) → পড়া *pôṛā* (√paṭh "recite
+  aloud"; a single intervocalic retroflex softens into **ড়**, the letter
+  Sanskrit had no use for — and the same softening brought √pat "fall" onto the
+  identical spelling, so it is the *falling* twin that owns the English cousins
+  **feather**, **petition**, **pterodactyl**; √paṭh's own trail past Sanskrit is
+  said plainly to be cold) → লেখা *lekhā* (√likh "to scratch" beside Latin
+  *scrībere* and Germanic *wrītan*, three unrelated roots with one idea, named
+  as **convergence, not kinship**; and every **-া** form is also a **noun**,
+  which is what Ch. 4's *dækhā hôbe* was doing — লেখাপড়া, "writing-reading," is
+  *education*). **Authored.**
+
+- **Ch. 9 — Taking, Asking, Helping, Liking** (`BN-C09-*`): নেওয়া *neowā* (√nī
+  "to lead"; **no English descendant**, said plainly — its working life is as
+  the verb that **ends a compound**: লিখে নেওয়া "write it down," নিয়ে আসা
+  "bring," নিয়ে যাওয়া "take away") → জিজ্ঞাসা করা *jijñāsā kôrā* (the Sanskrit
+  **desiderative** of √jñā — asking is জানা with an appetite — and **noun +
+  করা**, the pattern that makes a verb out of any noun the language borrows)
+  → সাহায্য করা *sāhājjo kôrā* (*sahāya* = **সহ-** "together" + **√i** "to go,"
+  both cousins secure: PIE *\*sem-* → **same**, *homo-*; PIE *\*h₁ey-* → **exit**,
+  **transit**; and the doubled **য্য** finally shows the word-final inherent
+  **o** that Ch. 6's five numerals could not) → ভালো লাগা *bhālo lāgā* (√lag "to
+  stick" — *āmār bhālo lāge*, "good sticks to me": **the liker is not the
+  subject**, the same inversion as Spanish *gustar* — set against ভালোবাসা,
+  where you are; the *bāsā* half's origin is **disputed** and reported as such).
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 8 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
-| 9+ | Verb tenses (the past and future of these six), family, food — always tracing the sound-shift back to Sanskrit |
+| 10 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
+| 11+ | Verb tenses (the past and future of these fourteen), family, food — always tracing the sound-shift back to Sanskrit |
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of
