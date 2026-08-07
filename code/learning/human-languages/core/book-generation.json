@@ -817,6 +817,22 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 33,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:te-verbs-of-the-mind",
+      "output": "telugu/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:te-verbs-between-people",
+      "output": "telugu/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",

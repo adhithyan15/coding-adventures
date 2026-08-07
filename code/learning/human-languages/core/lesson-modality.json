@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7008963528341b17",
+  "sourceHash": "fnv1a64:74b12561518baacd",
   "summary": {
-    "totalLessons": 1313,
+    "totalLessons": 1321,
     "voice": 884,
-    "sight": 376,
+    "sight": 384,
     "pen": 53,
     "drivableLessons": 884,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 416,
+    "chapterCount": 418,
     "drivablePrefixTotal": 702,
     "fullyDrivableChapters": 283,
-    "unstartableChapters": 96,
+    "unstartableChapters": 98,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6676,11 +6676,11 @@
     },
     {
       "language": "telugu",
-      "lessonCount": 66,
+      "lessonCount": 74,
       "voice": 39,
-      "sight": 27,
+      "sight": 35,
       "pen": 0,
-      "drivablePercent": 59,
+      "drivablePercent": 53,
       "drivablePrefixTotal": 31,
       "modalities": [
         "voice",
@@ -7194,6 +7194,34 @@
             "TE-C32-cuudu",
             "TE-C32-telusu"
           ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TE-C33-anuko",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TE-C34-tiisuko",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -24119,6 +24147,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:1413881a1d5ae10c"
+    },
+    {
+      "id": "TE-C33-anuko",
+      "language": "telugu",
+      "chapter": 33,
+      "sequence": 670,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:eee1e6ebe3bfa28a"
+    },
+    {
+      "id": "TE-C33-artham-cesuko",
+      "language": "telugu",
+      "chapter": 33,
+      "sequence": 680,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4daba41c708acffd"
+    },
+    {
+      "id": "TE-C33-caduvu",
+      "language": "telugu",
+      "chapter": 33,
+      "sequence": 690,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:20ac8b067d2dafd7"
+    },
+    {
+      "id": "TE-C33-raayu",
+      "language": "telugu",
+      "chapter": 33,
+      "sequence": 700,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:34579995b467114e"
+    },
+    {
+      "id": "TE-C34-tiisuko",
+      "language": "telugu",
+      "chapter": 34,
+      "sequence": 710,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b912560c856ff200"
+    },
+    {
+      "id": "TE-C34-adugu",
+      "language": "telugu",
+      "chapter": 34,
+      "sequence": 720,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:17905a0b5febb5f8"
+    },
+    {
+      "id": "TE-C34-sahayam-ceyu",
+      "language": "telugu",
+      "chapter": 34,
+      "sequence": 730,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3bc08fd14c6ec50c"
+    },
+    {
+      "id": "TE-C34-ishtam",
+      "language": "telugu",
+      "chapter": 34,
+      "sequence": 740,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:43e769d702413130"
     },
     {
       "id": "UR-C01-ji-han",

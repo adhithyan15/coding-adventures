@@ -71,6 +71,31 @@ order; `HL-B22` tracks publishing Chapters 6–31 from the same source.
   known") — no person-ending at all, so the knower rides in the dative
   (*nāku telusu*), and Ch. 6's *nāku telugu vaccu* is finally separable from it:
   *vaccu* marks a **skill**, *telusu* a **fact**. **Authored.**
+- **Ch. 33 — Four Verbs of the Mind**: **అనుకో** (*anukō*, "think") — **అను**
+  ("say", Proto-Dravidian *\*aHn-*) plus **-కొను/-కో**, the ending that hands an
+  action back to its doer, so thinking is literally *saying it to yourself*; the
+  Sanskrit **ఆలోచించు** sits beside it, its noun *ālōcana* glossed both
+  "reflecting" and "seeing" → **అర్థం చేసుకో** (*arthaṁ cēsukō*, "understand") —
+  Sanskrit *arthaṁ* on the native *cēyu* with that same *-kō*, "make the meaning
+  your own", against the dative **నాకు అర్థమైంది**, "to me it became meaning" →
+  **చదువు** (*caduvu*, "read") — also "study", also the noun for an education,
+  with one stem wearing three middle vowels (*caduvutānu*, *cadivānu*,
+  *cadavaṇḍi*) → **రాయు** (*rāyu*, "write") — the everyday spelling of **వ్రాయు**,
+  whose buried *v* leads back to a Dravidian *\*warV-*, "draw a line", shared with
+  Tamil *varai*, Malayalam *varaykkuka* and Kannada *bare*. **Authored.**
+- **Ch. 34 — Four Verbs Between People**: **తీసుకో** (*tīsukō*, "take") — *tīyu*
+  plus *-kō*, the third verb on that ending, and **కొను** is the family's, with
+  Tamil *koḷ* and Malayalam *koḷḷuka* using it as an ending too → **అడుగు**
+  (*aḍugu*, "ask") — no ask-verb is shared by the four literary sisters, and the
+  dictionary's firmest match is Parji *aḍ-*, which names the cause of every
+  earlier oddity: **Telugu is South-Central Dravidian**, with Gondi, Konda, Kui
+  and Kuvi, where the other three are South Dravidian → **సహాయం చేయు**
+  (*sahāyaṁ cēyu*, "help") — Sanskrit *saha* "with" plus *āya* "a going", both
+  halves Indo-European and both in English (*same*, *similar*; *exit*,
+  *transit*) → **నాకు తెలుగు ఇష్టం** (*nāku telugu iṣṭaṁ*, "I like Telugu") — a
+  sentence with **no verb at all**, the fourth dative-subject shape after
+  *vaccu*, *telusu* and *arthamaindi*; the native **నచ్చు** beside it, and
+  **ఇష్టపడు** built on *paḍu*, Ch. 20's falling rain. **Authored.**
 
 ## Planned
 
@@ -78,7 +103,7 @@ order; `HL-B22` tracks publishing Chapters 6–31 from the same source.
 |---|---|
 | 7 | The rest of the case suffixes — locative *-lō*, instrumental/comitative *-tō* — now that Ch. 6 has established how stacking works |
 | 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
-| 33+ | The rest of the core forty verbs — *have*, *do/make*, *say*, *hear*, *give*, *take* — on the machine Ch. 32 built |
+| 35+ | The rest of the core forty verbs — *have*, *do/make*, *say*, *hear*, *give*, *learn* — on the machine Ch. 32 built |
 
 Note: Telugu marks "you" by **register** (*nuvvu* familiar / *mīru* respectful,
 also plural) — like the other tracks, worth teaching beside them.

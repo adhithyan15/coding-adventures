@@ -3153,6 +3153,30 @@
       "tex": "telugu/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:2d798654b223c361",
+      "lessonIds": [
+        "TE-C33-anuko",
+        "TE-C33-artham-cesuko",
+        "TE-C33-caduvu",
+        "TE-C33-raayu"
+      ],
+      "tex": "telugu/book/chapters/ch33-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:da73c64bbe941924",
+      "lessonIds": [
+        "TE-C34-tiisuko",
+        "TE-C34-adugu",
+        "TE-C34-sahayam-ceyu",
+        "TE-C34-ishtam"
+      ],
+      "tex": "telugu/book/chapters/ch34-verbs-between-people.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "sourceHash": "fnv1a64:f1d09ed02a13ed81",
