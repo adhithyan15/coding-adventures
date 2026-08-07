@@ -41,9 +41,15 @@ fi
 # Collect every CJK codepoint that appears anywhere in chinese.json.
 python3 - "$WORK/zh_chars.txt" <<'PY'
 import pathlib, sys
-t = pathlib.Path("../data/scripts/chinese.json").read_text()
-cps = sorted({c for c in t if 0x2E80 <= ord(c) <= 0x9FFF})
-pathlib.Path(sys.argv[1]).write_text("".join(cps))
+t = pathlib.Path("../data/scripts/chinese.json").read_text(encoding="utf8")
+cps = {c for c in t if 0x2E80 <= ord(c) <= 0x9FFF}
+# Printable Basic Latin, including the ordinary space. XeLaTeX typesets a space
+# inside a \zh{...} group with the Chinese font selected, and a font with no
+# U+0020 emits "Missing character" for every one of them — six of them at font
+# setup alone, before a single character of content. subset-jp.sh already carried
+# this line; this subset predated it and had the bug the whole time.
+cps |= {chr(c) for c in range(0x0020, 0x007F)}
+pathlib.Path(sys.argv[1]).write_text("".join(sorted(cps)), encoding="utf8")
 print(f"{len(cps)} characters")
 PY
 
