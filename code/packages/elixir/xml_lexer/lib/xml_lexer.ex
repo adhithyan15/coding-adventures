@@ -147,6 +147,14 @@ defmodule CodingAdventures.XmlLexer do
       # optional content. Whitespace between the target and content
       # is significant.
       "PI_START" -> [{:push_group, "pi"}, {:set_skip_enabled, false}]
+
+      # PI_TARGET is only ever the first token in a PI. Swap (not push)
+      # from "pi" to "pi_body": once matched, the rest of the body must
+      # never be re-offered PI_TARGET's pattern (see xml.tokens' pi/
+      # pi_body groups). PI_END's single :pop_group below still returns
+      # straight past this swap.
+      "PI_TARGET" -> [:pop_group, {:push_group, "pi_body"}]
+
       "PI_END" -> [:pop_group, {:set_skip_enabled, true}]
 
       # --- All other tokens ---

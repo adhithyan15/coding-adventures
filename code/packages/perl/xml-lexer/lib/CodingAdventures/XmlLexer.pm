@@ -67,7 +67,7 @@ package CodingAdventures::XmlLexer;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use File::Basename qw(dirname);
 use File::Spec;
@@ -241,6 +241,14 @@ sub _update_group_stack {
 
     } elsif ( $type eq 'PI_START' ) {
         _push_group('pi');
+    } elsif ( $type eq 'PI_TARGET' ) {
+        # PI_TARGET is only ever the first token in a PI. Swap (not push)
+        # from "pi" to "pi_body": once matched, the rest of the body must
+        # never be re-offered PI_TARGET's pattern (see xml.tokens' pi/
+        # pi_body groups). PI_END's single _pop_group() below still
+        # returns straight past this swap.
+        _pop_group();
+        _push_group('pi_body');
     } elsif ( $type eq 'PI_END' ) {
         _pop_group();
     }

@@ -420,44 +420,44 @@ fn read_attribute(node: &GrammarASTNode) -> Result<(String, String), ParseError>
 }
 
 /// Read a `comment` node's text (empty for `<!---->`).
+///
+/// The grammar allows `{ COMMENT_TEXT }` (zero or more), not just one token:
+/// `xml.tokens` encodes "any run up to `-->`" without lookaround by splitting
+/// the body into bulk runs plus single-dash fallback tokens (both aliased to
+/// COMMENT_TEXT — see that file's comment group). Concatenating every
+/// COMMENT_TEXT child in order reassembles the original text.
 fn read_comment(node: &GrammarASTNode) -> String {
     node.children
         .iter()
-        .find_map(|c| {
-            if token_type(c) == Some("COMMENT_TEXT") {
-                token_value(c).map(str::to_string)
-            } else {
-                None
-            }
-        })
-        .unwrap_or_default()
+        .filter(|c| token_type(c) == Some("COMMENT_TEXT"))
+        .filter_map(token_value)
+        .collect()
 }
 
 /// Read a `cdata` node's verbatim text (empty for `<![CDATA[]]>`).
+///
+/// Same multi-token concatenation as `read_comment`, for the same
+/// lookaround-free encoding reason (see xml.tokens' cdata group).
 fn read_cdata(node: &GrammarASTNode) -> String {
     node.children
         .iter()
-        .find_map(|c| {
-            if token_type(c) == Some("CDATA_TEXT") {
-                token_value(c).map(str::to_string)
-            } else {
-                None
-            }
-        })
-        .unwrap_or_default()
+        .filter(|c| token_type(c) == Some("CDATA_TEXT"))
+        .filter_map(token_value)
+        .collect()
 }
 
 /// Read a `pi` node into `(target, text)`. The text is verbatim, with any
 /// single leading space (which the lexer includes) trimmed for convenience.
+///
+/// Same multi-token concatenation as `read_comment`, for the same
+/// lookaround-free encoding reason (see xml.tokens' pi group).
 fn read_pi(node: &GrammarASTNode) -> Option<(String, String)> {
     let mut target = None;
     let mut text = String::new();
     for child in &node.children {
         match token_type(child) {
             Some("PI_TARGET") => target = token_value(child).map(str::to_string),
-            Some("PI_TEXT") => {
-                text = token_value(child).unwrap_or("").to_string();
-            }
+            Some("PI_TEXT") => text.push_str(token_value(child).unwrap_or("")),
             _ => {}
         }
     }

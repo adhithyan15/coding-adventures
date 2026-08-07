@@ -48,13 +48,13 @@
 --   code/packages/lua/xml_lexer/src/coding_adventures/xml_lexer/init.lua
 --
 -- 6 directory levels up from `script_dir` reaches `code/`.
--- Then we descend into `grammars/xml_lua.tokens`.
+-- Then we descend into `grammars/xml/xml.tokens`.
 
 local grammar_tools = require("coding_adventures.grammar_tools")
 local lexer_pkg     = require("coding_adventures.lexer")
 
 local M = {}
-M.VERSION = "0.1.0"
+M.VERSION = "0.1.1"
 
 -- =========================================================================
 -- Path helpers
@@ -116,7 +116,7 @@ local function get_grammar()
     --           → xml_lexer_pkg/ (4) → lua/ (5) → packages/ (6) → code/
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/xml/xml_lua.tokens"
+    local tokens_path = repo_root .. "/grammars/xml/xml.tokens"
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then
@@ -178,6 +178,16 @@ local function attach_xml_callbacks(gl)
         -- Processing instructions: push "pi" group.
         elseif t == "PI_START" then
             ctx:push_group("pi")
+
+        -- PI_TARGET is only ever the first token in a PI. Swap (not push)
+        -- from "pi" to "pi_body": once matched, the rest of the body must
+        -- never be re-offered PI_TARGET's pattern (see xml.tokens' pi/
+        -- pi_body groups). PI_END's single pop_group() below still
+        -- returns straight past this swap.
+        elseif t == "PI_TARGET" then
+            ctx:pop_group()
+            ctx:push_group("pi_body")
+
         elseif t == "PI_END" then
             ctx:pop_group()
         end
