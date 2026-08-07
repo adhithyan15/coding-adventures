@@ -61,7 +61,46 @@ Indo-European cousins carry the memory load where they are secure (*budan* /
 Two letters arrive inside the words that need them: **آ** with its *madde*, and
 **گ** *gâf*, the second of Persian's four additions to the Arabic set.
 
-## Chapter 7 — People and simple identity *(planned)*
+## Chapter 7 — Four verbs of the mind *(authored)*
+
+**فکر کردن** *fekr kardan* → **فهمیدن** *fahmidan* → **خواندن** *khândan* →
+**نوشتن** *neveshtan*. The chapter's job is to show that a Persian verb comes in
+three shapes, not one. *fekr kardan* opens the **compound verb** — a noun plus
+**کردن** *kardan*, “to do” — which is the productive engine behind hundreds of
+modern Persian verbs, so the lesson opens a door rather than teaching one word.
+*fahmidan* names the single predictable class: strip **-یدن** *-idan* and the
+present stem is what is left. *khândan* and *neveshtan* are the inherited verbs
+whose stems must be told, and the chapter says that plainly rather than hiding
+it. Persian's gentleness is stated up front in the first lesson — no gender, no
+noun cases, no adjective agreement, and one set of personal endings for every
+verb in the language.
+
+Etymology carries the memory load. *khândan* sits on \**swenh₂-*, “to sound,”
+which is why one verb covers reading, reciting, singing and studying, and which
+links it to Latin *sonus* (**sound**, **consonant**, **sonata**) and to English
+**swan**. *neveshtan* is *ni-* “down” on \**peyḱ-*, “to paint, to mark” — the
+root Latin turned into *pingere*, giving **paint**, **picture**, **pigment**.
+The silent **و** of **خواندن** is taught as a fossil of the old *xw-* cluster
+that also lies behind **خدا** *khodâ*.
+
+## Chapter 8 — Taking, asking, helping, loving *(authored)*
+
+**گرفتن** *gereftan* → **پرسیدن** *porsidan* → **کمک کردن** *komak kardan* →
+**دوست داشتن** *dust dâshtan*. The chapter closes the verb-shape argument by
+running the three shapes in a different order and adding a second light verb.
+*gereftan* / **گیر** *gir-* carries the track's clearest inherited cousin —
+\**gʰrebh₂-*, the root English kept as **grab**, **grip** and **grasp** —
+and is the natural place to collect the evidence that Persian and English are
+relatives. *porsidan* is a second free **-idan** stem and the verb behind the
+name question the learner has been able to ask since Chapter 3. *komak kardan*
+proves the compound pattern by reusing *kardan* with a new noun, and its
+Turkic-borrowed **کمک** *komak* adds a third vocabulary layer beside the
+inherited and Arabic ones. *dust dâshtan* introduces the second light verb,
+**داشتن** *dâshtan* / **دار** *dâr-*, and shows Persian saying “love” as “have
+as friend”; **دوست** *dust* is from \**ǵews-*, “to taste, to choose,” the root
+English inherited as **choose**.
+
+## Chapter 9 — People and simple identity *(planned)*
 
 - **man hastam** and the next present-copula forms one at a time;
 - careful written forms versus colloquial Iranian Persian;
@@ -71,8 +110,8 @@ Two letters arrive inside the words that need them: **آ** with its *madde*, and
 ## Part II onward *(sketch)*
 
 Build through everyday location, possession, food, time, family, and routine.
-Put the Chapter 6 present stems to work with **می‌** *mi-* and the personal
-endings, add the past stem and the remaining core verbs, then add
+Put the thirteen present stems from Chapters 6 to 8 to work with **می‌** *mi-*
+and the personal endings, add the past stem and the remaining core verbs, then add
 object marking with **râ**, comparatives, modals, and subordinate clauses toward
 B1. Dari and Tajik remain future related varieties with explicit labels rather
 than silent synonyms for Iranian Persian.

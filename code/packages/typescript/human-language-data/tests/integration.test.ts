@@ -101,7 +101,9 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4, 5, 6]);
+      // 6 -> 8: the eight-verb tranche added Chapters 7 and 8 (mind verbs, then
+      // taking/asking/helping/loving), split 4+4 to stay inside maxNewAtomsPerChapter.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -168,6 +170,14 @@ describe("real curriculum", () => {
       "FA-C06-danestan-pair",
       "FA-C06-goftan-stem",
       "FA-C06-raftan-stem",
+      "FA-C07-fahmidan-stem",
+      "FA-C07-fekr-kardan-verb",
+      "FA-C07-khandan-silent-vav",
+      "FA-C07-neveshtan-stem",
+      "FA-C08-dust-dashtan-literal",
+      "FA-C08-gereftan-stem",
+      "FA-C08-komak-kardan-verb",
+      "FA-C08-porsidan-stem",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
