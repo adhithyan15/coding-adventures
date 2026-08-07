@@ -156,11 +156,42 @@ Spanish and French where a contrast helps. The recurring decoder is the
   inherited *Haupt*, Grimm's Law, and the French/German container comparison
   follow before *Hand* as a separate support step. **Authored.**
 
+- **Ch. 24 — Verbs of the mind**: ***denken*** (`GE-C24-denken`) — the verb
+  Chapter 3 promised inside *danke*, Proto-Germanic \**þankijaną*, which **is**
+  English *think*; Grimm's law turned PIE \**t* into the *th* English kept and
+  German softened to *d*. The false friend ***also*** ("therefore") is taught
+  here, on *Ich denke, also bin ich* → ***verstehen*** (`GE-C24-verstehen`) —
+  *ver-* + *stehen*, "to stand around", and **English built *understand* out of
+  the same inherited verb, separately**; the "under = among" account is marked
+  standard-but-not-certain → ***lesen*** (`GE-C24-lesen`) — first "to gather"
+  (*die Weinlese*), and the introduction of the **strong-verb vowel break**
+  (*du liest*); the resemblance to Latin *legere* is named as **probably not**
+  a shared word, and English *read* (← *rædan*, "to advise" = German *raten*)
+  as no relation at all → ***schreiben*** (`GE-C24-schreiben`, the payoff) —
+  the one **borrowing** in the set, Latin *scrībere*, taken in early enough to
+  become *sch-* and to join the strong verbs, while English kept native
+  *write*; *Manuskript* closes Chapter 17's *Hand*/*manus* circle. **Authored.**
+- **Ch. 25 — Taking, asking, helping, liking**: ***nehmen*** (`GE-C25-nehmen`)
+  — the verb **English threw away** (Norse *take* displaced *niman*), leaving
+  *numb* and *nimble*; the vowel break returns and goes further (*du nimmst*).
+  The false friend ***bekommen*** ("to receive") is flagged here →
+  ***fragen*** (`GE-C25-fragen`) — PIE \**preḱ-*, a **weak** verb as the
+  counter-example, whose root English gets back only through Latin *precārī*
+  (*pray*, *precarious*); Latin *rogāre* is explicitly **not** the cousin. The
+  three German answers *ja* / *nein* / *doch* come back here →
+  ***helfen*** (`GE-C25-helfen`) — **is** *help*, split by the **second** (High
+  German) shift rather than Grimm's law (*Schiff*/ship, *offen*/open,
+  *scharf*/sharp), with English's own *holp*/*holpen* as the fossil of a verb
+  that used to be strong; **no secure cousins outside Germanic**, and the
+  lesson says so → ***mögen, lieben*** (`GE-C25-moegen-lieben`, the payoff) —
+  *may*, *love*, and **gern** (*yearn*), German's three ways of liking, where
+  *Ich lese gern* has no English shape. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 10+ | Cases (der→den→dem), family, food, the body, sprechen & irregular verbs — following the shared theme order |
+| 26+ | Cases (der→den→dem) — now owed explicitly, since Ch. 25 had to route around the accusative article after *mögen* and the dative object of *helfen*; then food, sprechen & the rest of the irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

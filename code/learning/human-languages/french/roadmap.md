@@ -145,6 +145,44 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   and **manufacture**, "made by hand,"
   which now names precisely what isn't. **Authored.**
 
+- **Ch. 24 — Taking, asking, helping, loving**: ***prendre*** (`FR-C24-prendre`)
+  ← *prehendere*, "to grasp," shortened by the Romans themselves to *prendere* →
+  *prehensile*, *apprehend*, *reprehensible*, **prison** (*prehensiō*, "a
+  seizing"), **surprise** (*sur-* + *prendre*, an over-taking), *enterprise*,
+  *apprentice*, **impregnable** (Old French *imprenable*, "not takeable" —
+  nothing to do with pregnancy); the stem loses its *d* and doubles its *n*
+  (*je prends* / *nous prenons* / *ils prennent*) → ***demander***
+  (`FR-C24-demander`) ← *dēmandāre* ← *mandāre*, itself ***manus*** + ***dare***,
+  "to give into the hand," so Ch.17's hand is inside this verb too → *mandate*,
+  *command*, *mandatory*; flagged as a **false friend** — French *demander* is
+  the ordinary polite "ask," never English's forceful "demand" → ***aider***
+  (`FR-C24-aider`) ← *adiūtāre* ← *adiuvāre* → **aid** by the Latin road, plus
+  *aide-de-camp*, *adjutant*, *adjuvant*, with English *help* named as
+  **Germanic and unrelated** and *juvenile* named as *iuvenis*, not *iuvāre* →
+  ***aimer*** (`FR-C24-aimer`), the payoff: **one** verb where English keeps
+  two, so the thing named decides between "like" and "love," and **bien makes it
+  weaker** — *je t'aime bien* is how you turn someone down. *amāre* → *amateur*
+  ("one who does it for love"), *amorous*, *amiable*, *amity*; its deeper
+  ancestor is **stated as unknown** rather than invented. **Authored.**
+- **Ch. 25 — Verbs of the mind**: ***comprendre*** (`FR-C25-comprendre`) — the
+  cheapest verb in the track, because it is Ch.24's *prendre* with **com-** in
+  front: understanding **is** grasping (*comprehendere* → *comprehend*,
+  *comprehensive*, *comprise*), and it breaks in exactly the same places, so the
+  paradigm drilled once now pays out again → ***penser*** (`FR-C25-penser`) ←
+  *pēnsāre*, "to weigh carefully" ← *pendere* → *pensive*, *compensate*,
+  *expense*, *pension*, *poise*, *suspend*, and the flower **pansy**, borrowed
+  straight from French *pensée*, "a thought"; English *think* named as Germanic
+  and unrelated → ***lire*** (`FR-C25-lire`) ← *legere*, which meant "**to
+  gather, to pick out**" before it meant "to read," which is why *legible*,
+  *lecture*, *lesson*, *legend* sit beside *collect*, *select*, *elect*,
+  *neglect*, *elegant* and *intellect*; Greek *legein* marked a **cousin, not a
+  parent**, and *le livre* named as **not** in the family (*liber*) →
+  ***écrire*** (`FR-C25-ecrire`), the payoff ← *scrībere*, "**to scratch**" →
+  *scribe*, *script*, *describe*, *inscribe*; the *é-* is a **prop** French put
+  in front of Latin's *sc-*, the same repair that made *école* and *étoile*, and
+  **manuscript** (*manus* + *scrībere*) is where this verb and Ch.17's *la main*
+  meet inside a single English word. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

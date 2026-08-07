@@ -326,6 +326,20 @@
       "output": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "italian",
+      "chapter": 18,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:it-mind-verbs",
+      "output": "italian/book/chapters/ch18-mind-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "title": "Taking, Asking, Helping — and Mi Piace",
+      "label": "ch:it-backwards-verb",
+      "output": "italian/book/chapters/ch19-backwards-verb.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "title": "How Are You?",
@@ -510,6 +524,20 @@
       "output": "french/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "french",
+      "chapter": 24,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:fr-taking-asking-helping-loving",
+      "output": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "title": "Verbs of the Mind",
+      "label": "ch:fr-verbs-of-the-mind",
+      "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "title": "Head and Hand",
@@ -557,6 +585,20 @@
       "title": "Green and Yellow",
       "label": "ch:ge-green-and-yellow",
       "output": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 24,
+      "title": "Verbs of the Mind",
+      "label": "ch:ge-mind-verbs",
+      "output": "german/book/chapters/ch24-mind-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ge-doing-verbs",
+      "output": "german/book/chapters/ch25-doing-verbs.tex"
     },
     {
       "language": "telugu",
@@ -1652,6 +1694,22 @@
       "title": "Good Afternoon",
       "label": "ch:hi-good-afternoon",
       "output": "hindi/book/chapters/ch33-good-afternoon.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:hi-verbs-of-the-mind",
+      "output": "hindi/book/chapters/ch34-verbs-of-the-mind.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and Liking",
+      "label": "ch:hi-pasand",
+      "output": "hindi/book/chapters/ch35-pasand.tex",
       "scriptSet": "hindi-main"
     },
     {

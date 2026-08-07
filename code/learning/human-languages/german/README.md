@@ -55,8 +55,12 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 21 — Weather**: *das Wetter*, *es ist heiß/kalt*, *es regnet*.
 - **Chapter 22 — Dog and Cat**: *Hund*, *Katze*.
 - **Chapter 23 — Green and Yellow**: *grün*, *gelb*.
+- **Chapter 24 — Verbs of the Mind**: *denken*, *verstehen*, *lesen*,
+  *schreiben* — and the strong-verb vowel break (*du liest*).
+- **Chapter 25 — Taking, Asking, Helping, Liking**: *nehmen*, *fragen*,
+  *helfen*, *mögen/lieben* — and *gern*, German'''s third way of liking.
 
-**All twenty-three chapters are authored and in the book (104 pages).**
+**All twenty-five chapters are authored and in the book (122 pages).**
 
 ---
 
@@ -72,7 +76,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Seven of twenty-three chapters are authored: 17–23.** Those are exactly the
+**Nine of twenty-five chapters are authored: 17–25.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -91,6 +95,8 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 21 Weather | `GE-C21-das-wetter` | 5 / 5 = 1.00 |
 | 22 Dog and Cat | `GE-C22-hund-katze` | 5 / 5 = 1.00 |
 | 23 Green and Yellow | `GE-C23-gruen-gelb` | 5 / 5 = 1.00 |
+| 24 Verbs of the Mind | `GE-C24-schreiben` | 10 / 10 = 1.00 |
+| 25 Taking, Asking, Helping, Liking | `GE-C25-moegen-lieben` | 10 / 10 = 1.00 |
 
 Chapter 17 is the one authored chapter that fails. It runs three word lessons
 deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal consolidation lesson, so
@@ -98,6 +104,34 @@ its payoff can only be the last lesson by `sequence` and reaches a third of the
 chapter. The `assesses` list is **not** padded to hide that: the honest fix is a
 real Kopf/Haupt/Hand practice lesson. Chapter 18 has the same missing-practice
 shape but clears the floor because *nein* reassesses *ja*.
+
+Chapters 24 and 25 close over **all** of their own atoms, and both payoffs also
+reach back past their own chapter — chapter 24's to `GE-LEX-HAND-02`,
+`GE-ETYMON-HAND-MANUS-05` and `GE-SOUND-GRIMMS-LAW-04` from chapter 17;
+chapter 25's to all four of chapter 24's verbs plus `GE-LEX-HUND-02`,
+`GE-LEX-KATZE-04` (ch. 22) and `GE-LEX-WETTER-02` (ch. 21). That is HL09 §7:
+a payoff scoped only to its own chapter adds to the orphan pile rather than
+draining it.
+
+## Reinforcement chaining (HL09 §7)
+
+A chapter-end payoff cannot close the R1 window (n+1…n+3), so the reach-back
+runs at two cadences. Every lesson in chapters 24–25 also names atoms from the
+**one to three lessons immediately before it**, across the chapter seam:
+
+| Lesson | Reaches back to |
+|---|---|
+| `GE-C24-denken` | ch. 21 weather (`GE-LEX-WETTER-02`, `GE-GRAMMAR-WEATHER-SEIN-04`) — *Ich denke, es ist kalt* |
+| `GE-C24-verstehen` | `GE-C24-denken`; ch. 23 `GE-ETYMON-GRUEN-03` — the built-twice-not-shared parallel |
+| `GE-C24-lesen` | `GE-C24-verstehen`, `GE-C24-denken`, ch. 23 `GE-ETYMON-GRUEN-03` |
+| `GE-C24-schreiben` | all three earlier chapter-24 lessons + ch. 17 |
+| `GE-C25-nehmen` | `GE-C24-schreiben`, `GE-C24-lesen`, ch. 17 `GE-LEX-HAND-02` |
+| `GE-C25-fragen` | `GE-C25-nehmen`, `GE-C24-lesen`, ch. 18 `ja`/`nein`/`doch` |
+| `GE-C25-helfen` | `GE-C25-fragen`, `GE-C25-nehmen`, ch. 17 and ch. 19 |
+| `GE-C25-moegen-lieben` | all of chapters 24 and 25, plus chapters 21 and 22 |
+
+The field that carries this is `practises.knowledge`. `reviews_of` names lesson
+ids, not atoms, so it cannot close a reinforcement window and never has.
 
 ## Files
 
