@@ -177,14 +177,30 @@
 //! - `*args` / `**kwargs` rest parameters                      → deferred
 //!   (positional/keyword **default** params land in P8; keyword-only
 //!   params & keyword args land in KW8)
-//! - decorators / classes / `with` / `try` / generators       → deferred
+//! - decorated classes / `with` / `try` / generators           → deferred
 //! - `global` / `nonlocal`, multi-target assignment           → deferred
 //!
 //! Unhandled rules produce a clear `PythonLowerError` rather than
 //! silently dropping source.
 //!
+//! ## OOP surface (SIR25 §2)
+//!
+//! `class Dog(Animal): def __init__(self, name): self.name = name ...`
+//! lowers to the SAME `Stmt::ClassDef` + `__new__`/`__def_method__`/
+//! `__self__` envelope `ruby-to-semantic-ir` emits (see
+//! [`Lowerer::lower_class`]) — no backend needed a single change to run
+//! a Python-sourced class. v0 covers empty-superclass-or-single-base
+//! classes, instance methods (`def m(self, ...)`, `__init__` mapped to
+//! the SIR method name `"initialize"`), and instance variables
+//! (`self.x` read/write). Deferred: class methods/`@classmethod`,
+//! `@@`-style class variables, `include`/`extend` mixins, exceptions —
+//! each its own later milestone, mirroring how `ruby-to-semantic-ir`'s
+//! own OOP surface landed in seven separate slices rather than one.
+//!
 //! See `code/specs/SIR17-python-to-semantic-ir.md` for the full
-//! lowering table and the deferred-form roadmap.
+//! lowering table and the deferred-form roadmap, and
+//! `code/specs/SIR25-language-agnostic-object-model.md` for the OOP
+//! surface's language-agnostic specification this frontend targets.
 
 use std::collections::HashSet;
 
@@ -282,6 +298,12 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, Pytho
 enum Lowered {
     Stmt(Box<Stmt>),
     Expr(Expr),
+    /// A source statement that lowers to *several* IR statements — a
+    /// `class` statement, which expands to one `Stmt::ClassDef` plus one
+    /// `__def_method__` registration per method (OOP surface).  Never a
+    /// value: a class statement contributes nothing to a block's trailing
+    /// expression, matching every other bare statement.
+    Stmts(Vec<Stmt>),
 }
 
 /// What a trailing `primary` `suffix` denotes.  A `suffix` is one of a
@@ -328,6 +350,14 @@ struct FunctionCtx {
     params: HashSet<String>,
     captures: HashSet<String>,
     locals: Vec<String>,
+    /// True only for a method body hoisted from a `class` statement's
+    /// `def` (OOP surface).  A method's first parameter (`self`, by Python
+    /// convention) is *not* added to `params` — it is not an ordinary
+    /// value, it resolves through the SIR dispatch envelope's `__self__`
+    /// builtin (see `resolve_var`) — so this flag is how `self` inside a
+    /// method body is distinguished from an (otherwise unresolved) bare
+    /// name of the same spelling anywhere else.
+    in_method: bool,
 }
 
 impl FunctionCtx {
@@ -337,6 +367,20 @@ impl FunctionCtx {
             params,
             captures,
             locals: Vec::new(),
+            in_method: false,
+        }
+    }
+
+    /// A context for a method body: params are whatever remains *after*
+    /// the leading `self` is stripped by the caller; methods never
+    /// capture (they are hoisted like top-level functions, not closures
+    /// over an enclosing scope — SIR25 §2.2).
+    fn for_method(params: HashSet<String>) -> Self {
+        Self {
+            params,
+            captures: HashSet::new(),
+            locals: Vec::new(),
+            in_method: true,
         }
     }
 
@@ -366,6 +410,12 @@ struct Lowerer {
     /// a function defined later in the file — and mutual recursion —
     /// resolve as [`Expr::DirectCall`].
     function_names: HashSet<String>,
+    /// Every `class` statement's declared name, collected in the same
+    /// first pass as `function_names` (see [`Self::collect_function_names`])
+    /// so `ClassName(args)` resolves to `__new__` construction (OOP
+    /// surface) regardless of whether the call textually precedes or
+    /// follows the class's own definition.
+    class_names: HashSet<String>,
     /// The synthesised + user functions accumulated during lowering, in
     /// definition order.  `main` is appended last by [`Self::lower_file`].
     functions: Vec<Function>,
@@ -391,6 +441,7 @@ impl Lowerer {
             module_name: module_name.to_string(),
             observed: FeatureManifest::new(),
             function_names: HashSet::new(),
+            class_names: HashSet::new(),
             functions: Vec::new(),
             lambda_counter: 0,
             fn_captures: std::collections::HashMap::new(),
@@ -512,11 +563,12 @@ impl Lowerer {
         };
         let stmts: Vec<Stmt> = items
             .into_iter()
-            .map(|item| match item {
-                Lowered::Stmt(s) => *s,
+            .flat_map(|item| match item {
+                Lowered::Stmt(s) => vec![*s],
+                Lowered::Stmts(v) => v,
                 Lowered::Expr(expr) => {
                     let s = expr.span().clone();
-                    Stmt::ExprStmt { expr, span: s }
+                    vec![Stmt::ExprStmt { expr, span: s }]
                 }
             })
             .collect();
@@ -572,6 +624,15 @@ impl Lowerer {
                     }
                 }
             }
+        } else if let Some(class_node) = self.as_class_stmt(stmt) {
+            // A class's declared name is collected here so `ClassName(args)`
+            // resolves to construction regardless of source order (OOP
+            // surface) — mirroring the def-name forward-reference support
+            // above. No recursion into the class body: v0 method defs are
+            // dispatched by name string via `__method__`, never a bare
+            // call, so they never need an entry in `function_names`.
+            let name = self.class_name(class_node)?;
+            self.class_names.insert(name);
         } else {
             // Non-def compound statements (if/while/for) may *contain*
             // nested defs in their suites — but Python forbids `def`
@@ -643,6 +704,86 @@ impl Lowerer {
             }
         }
         Err(self.err_at(def, "malformed def: missing function name".to_string()))
+    }
+
+    /// If `stmt` is a `statement` wrapping a `compound_stmt` wrapping a
+    /// `class_stmt`, return the `class_stmt` node.
+    fn as_class_stmt<'a>(&self, stmt: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
+        if stmt.rule_name != "statement" {
+            return None;
+        }
+        let compound = child_nodes(stmt)
+            .into_iter()
+            .find(|n| n.rule_name == "compound_stmt")?;
+        child_nodes(compound)
+            .into_iter()
+            .find(|n| n.rule_name == "class_stmt")
+    }
+
+    /// Extract a `class_stmt`'s declared name (the `NAME` token after the
+    /// `class` keyword) — same shape as [`Self::def_name`].
+    fn class_name(&self, class_stmt: &GrammarASTNode) -> Result<String, PythonLowerError> {
+        for child in &class_stmt.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if matches!(t.type_, lexer::token::TokenType::Name) && t.type_name.is_none() {
+                    return Ok(t.value.clone());
+                }
+            }
+        }
+        Err(self.err_at(class_stmt, "malformed class: missing class name".to_string()))
+    }
+
+    /// Extract a `class_stmt`'s optional single base class
+    /// (`class Dog(Animal):`) as a bare name. SIR's object model is
+    /// single-inheritance only (SIR25 §2), so this rejects — rather than
+    /// silently picking one of — a multi-base or keyword-argument base
+    /// list (`class Foo(A, B):`, `class Foo(metaclass=M):`), and rejects a
+    /// base expression that is not a bare name (`class Foo(make_base()):`)
+    /// since SIR's `ClassDef.superclass` is a plain name, not an
+    /// expression slot.
+    fn class_superclass(
+        &self,
+        class_stmt: &GrammarASTNode,
+    ) -> Result<Option<String>, PythonLowerError> {
+        // The base-class list reuses the CALL-`arguments` production (the
+        // same grammar shape a function call's `(...)` uses, not
+        // `expression_list` — Python's own grammar does this too, since
+        // `class Foo(Base, metaclass=Meta):` needs keyword-argument
+        // syntax). `class Foo:` / `class Foo():` both have no `arguments`
+        // node or an empty one — either way, no base class.
+        let Some(args_node) = self.first_child_named(class_stmt, "arguments") else {
+            return Ok(None);
+        };
+        let args: Vec<&GrammarASTNode> = child_nodes(args_node)
+            .into_iter()
+            .filter(|n| n.rule_name == "argument")
+            .collect();
+        let base = match args.as_slice() {
+            [] => return Ok(None),
+            [one] => *one,
+            _ => {
+                return Err(self.err_at(
+                    args_node,
+                    "unsupported: multiple base classes (deferred — SIR is single-inheritance)"
+                        .to_string(),
+                ))
+            }
+        };
+        if self.keyword_arg_name(base).is_some() {
+            return Err(self.err_at(
+                base,
+                "unsupported: keyword base-class argument, e.g. `metaclass=...` (deferred)"
+                    .to_string(),
+            ));
+        }
+        let base_expr = self.single_arg_expr(base)?;
+        match self.target_name(base_expr)? {
+            Some(name) => Ok(Some(name)),
+            None => Err(self.err_at(
+                base_expr,
+                "unsupported: base class must be a bare name (deferred)".to_string(),
+            )),
+        }
     }
 
     // -------------------------------------------------------------------
@@ -798,8 +939,12 @@ impl Lowerer {
         let name = match self.target_name(target_node)? {
             Some(name) => name,
             None => {
+                // An instance-variable target (`self.x = v`, OOP surface)?
+                if let Some(stmt) = self.try_attr_assign(assign, target_node, rhs_node, ctx)? {
+                    return Ok(Lowered::Stmt(Box::new(stmt)));
+                }
                 // M5: a *subscript* target (`xs[i] = v` / `d[k] = v`)?
-                // Everything else (attribute, tuple-unpack, …) is deferred.
+                // Everything else (tuple-unpack, chained attrs, …) is deferred.
                 if let Some(stmt) = self.try_subscript_assign(assign, target_node, rhs_node, ctx)? {
                     return Ok(Lowered::Stmt(Box::new(stmt)));
                 }
@@ -832,6 +977,62 @@ impl Lowerer {
                 span,
             })))
         }
+    }
+
+    /// Lower an **instance-variable assignment** `self.x = rhs` (OOP
+    /// surface, SIR25 §2) into [`Stmt::Assign`] with `Scope::Instance`.
+    /// Returns `Ok(None)` when the LHS is not this shape — a bare-name
+    /// `self.x` attribute target where the receiver peels to *exactly*
+    /// `self` — so the caller falls through to the subscript check and
+    /// then the generic deferral (a chained target like `self.x.y = v`
+    /// or an attribute assignment on any receiver other than `self`
+    /// stays deferred, matching the read side's restriction in
+    /// `try_primary_suffixes`).
+    fn try_attr_assign(
+        &mut self,
+        assign: &GrammarASTNode,
+        target_node: &GrammarASTNode,
+        rhs_node: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+    ) -> Result<Option<Stmt>, PythonLowerError> {
+        let primary = match self.peel_to_primary(target_node) {
+            Some(p) => p,
+            None => return Ok(None),
+        };
+        let kids = child_nodes(primary);
+        let (atom, suffixes) = match kids.split_first() {
+            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
+                (*atom, rest)
+            }
+            _ => return Ok(None),
+        };
+        // Only the single-suffix shape `self.x = v` is ours; a chained
+        // target (`self.x.y = v`) is left for the caller's next check
+        // (which will also decline, and the target ultimately defers).
+        if suffixes.len() != 1 {
+            return Ok(None);
+        }
+        let attr_name = match self.suffix_kind(suffixes[0])? {
+            SuffixKind::Attr(name) => name,
+            _ => return Ok(None),
+        };
+        let receiver = self.lower_expr(atom, ctx)?;
+        if !is_self_ref(&receiver) {
+            return Ok(None);
+        }
+        let value = self.lower_expr(rhs_node, ctx)?;
+        let span = self.span_of(assign);
+        // Stmt::Assign unconditionally observes MutableBindings (any
+        // scope) in the validator, alongside the Instance-scope-specific
+        // InstanceVars — declare both so the manifest matches exactly.
+        self.observed.add(Feature::MutableBindings);
+        self.observed.add(Feature::InstanceVars);
+        Ok(Some(Stmt::Assign {
+            name: format!("@{attr_name}"),
+            scope: Scope::Instance,
+            value,
+            span,
+        }))
     }
 
     /// M5: lower a **subscript assignment** `base[index] = rhs` into
@@ -961,6 +1162,7 @@ impl Lowerer {
                 self.lower_while(inner, ctx, depth)?,
             ))),
             "for_stmt" => Ok(Lowered::Stmt(Box::new(self.lower_for(inner, ctx, depth)?))),
+            "class_stmt" => Ok(Lowered::Stmts(self.lower_class(inner, depth)?)),
             "def_stmt" => {
                 // A nested `def` reaching the general statement lowerer:
                 // lift it to a top-level synthesised function with
@@ -978,6 +1180,191 @@ impl Lowerer {
                 format!("unsupported: {other} (deferred to a later milestone)"),
             )),
         }
+    }
+
+    /// Lower a `class_stmt` to SIR's OOP surface (SIR25 §2): one
+    /// `Stmt::ClassDef { name, superclass, body: [] }` followed by one
+    /// `__def_method__` registration per method — the same "empty
+    /// ClassDef, methods hoisted to top-level and registered separately"
+    /// shape `ruby-to-semantic-ir` already produces, so every backend
+    /// that already implements the OOP surface for Ruby needs **zero**
+    /// changes to run a Python-sourced class. That (not any claim in
+    /// prose) is the proof this surface is language-agnostic.
+    ///
+    /// v0 restrictions (each a `deferred` error, not a silent drop):
+    /// decorators, a class body containing anything other than `def`
+    /// statements (no class-level assignments/nested classes/`pass`-only
+    /// bodies with extra statements), more than one base class, a base
+    /// class expression that isn't a bare name. These mirror exactly the
+    /// staged restrictions `ruby-to-semantic-ir`'s own OOP slices used
+    /// (empty-body class first, class-body statements later) — not
+    /// Python-specific corner-cutting.
+    fn lower_class(
+        &mut self,
+        class_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        if child_nodes(class_stmt)
+            .iter()
+            .any(|n| n.rule_name == "decorator")
+        {
+            return Err(self.err_at(
+                class_stmt,
+                "unsupported: decorated class (deferred)".to_string(),
+            ));
+        }
+        let name = self.class_name(class_stmt)?;
+        let superclass = self.class_superclass(class_stmt)?;
+        let suite = self
+            .first_child_named(class_stmt, "suite")
+            .ok_or_else(|| self.err_at(class_stmt, "malformed class: missing body".to_string()))?;
+        let span = self.span_of(class_stmt);
+
+        self.observed.add(Feature::Classes);
+
+        let mut stmts = vec![Stmt::ClassDef {
+            name: name.clone(),
+            superclass,
+            body: vec![],
+            span: span.clone(),
+        }];
+
+        for stmt_node in class_body_statements(suite) {
+            if is_pass_stmt(stmt_node) {
+                // `class Foo: pass` is Python's spelling of an empty class
+                // body — a no-op here, matching Stmt::ClassDef's empty
+                // `body: []` (methods are hoisted, so the empty-body case
+                // is `pass`-only or `def`-only, never both meaningfully).
+                continue;
+            }
+            let def = self.as_def_stmt(stmt_node).ok_or_else(|| {
+                self.err_at(
+                    stmt_node,
+                    "unsupported: class body statement other than `def` (deferred)".to_string(),
+                )
+            })?;
+            stmts.push(self.lower_method_registration(&name, def, depth)?);
+        }
+
+        Ok(stmts)
+    }
+
+    /// Lower one `def` inside a `class` body: hoist its body to a
+    /// top-level function (named `{Class}__{method}`, mirroring the
+    /// Ruby frontend's own hoisting convention) with `self` stripped from
+    /// the exposed parameter list, then return the
+    /// `__def_method__("Class", "method", MakeClosure(...))`
+    /// registration `Stmt` (SIR25 §2.2).
+    ///
+    /// `__init__` maps to the SIR method name `"initialize"` — not the
+    /// literal Python spelling — because every backend's `call_new`
+    /// looks up that exact name to decide whether to run a constructor
+    /// (see `sir-runtime-oop`/each native backend's `resolve_instance_method(cls,
+    /// "initialize")`); this is the one place a Python spelling must be
+    /// translated to SIR's convention rather than passed through, exactly
+    /// as `ruby-to-semantic-ir` passes Ruby's own `initialize` through
+    /// unchanged (same target name, different source spelling).
+    fn lower_method_registration(
+        &mut self,
+        class_name: &str,
+        def: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, PythonLowerError> {
+        let py_name = self.def_name(def)?;
+        let sir_method_name = if py_name == "__init__" {
+            "initialize".to_string()
+        } else {
+            py_name.clone()
+        };
+
+        let specs = self.def_param_specs(def)?;
+        let mut specs_iter = specs.into_iter();
+        let (self_name, self_kind, self_default) = specs_iter.next().ok_or_else(|| {
+            self.err_at(
+                def,
+                format!(
+                    "unsupported: method `{py_name}` has no `self` parameter (deferred — \
+                     static/class methods are a later milestone)"
+                ),
+            )
+        })?;
+        if self_name != "self" || self_kind != ParamKind::Required || self_default.is_some() {
+            return Err(self.err_at(
+                def,
+                format!(
+                    "unsupported: method `{py_name}`'s first parameter must be a plain `self` \
+                     (deferred)"
+                ),
+            ));
+        }
+
+        let mut params: Vec<(String, ParamKind, Option<Expr>)> = Vec::new();
+        // Method-parameter defaults are lowered in a throwaway top-level
+        // context: SIR25's method model has no "enclosing scope" for a
+        // method (it is hoisted like a top-level function, not a
+        // closure — see `FunctionCtx::for_method`), and Python evaluates
+        // a `def`'s defaults at def-time in the scope the `def` is
+        // *written* inside, which for a method is the class body — itself
+        // not an expression-evaluating scope a default could meaningfully
+        // reference beyond enclosing module-level names already reachable
+        // from `top_level()`. This mirrors `lower_def`'s own def-time
+        // evaluation model one level up.
+        let mut default_ctx = FunctionCtx::top_level();
+        for (pname, kind, default_node) in specs_iter {
+            let default = match default_node {
+                Some(node) => Some(self.lower_expr_in(node, &mut default_ctx, depth + 1)?),
+                None => None,
+            };
+            params.push((pname, kind, default));
+        }
+        if params.iter().any(|(_, k, _)| *k == ParamKind::Keyword) {
+            self.observed.add(Feature::KeywordParams);
+        }
+        if params.iter().any(|(_, _, d)| d.is_some()) {
+            self.observed.add(Feature::DefaultParams);
+        }
+
+        let suite = self
+            .first_child_named(def, "suite")
+            .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
+        let hoisted_name = format!("{class_name}__{py_name}");
+        let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
+        let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        let span = self.span_of(def);
+        self.push_function(&hoisted_name, &params, &[], body, span.clone());
+
+        // `__def_method__("Class", "method", MakeClosure(hoisted_name))` —
+        // zero captures (methods never capture, see `FunctionCtx::for_method`).
+        // `push_function` only declares Closures when captures are
+        // non-empty (a method's never are), but the validator observes
+        // Closures unconditionally for ANY MakeClosure — declare it
+        // explicitly here rather than relying on `push_function`'s guard.
+        self.observed.add(Feature::Closures);
+        self.observed.add(Feature::Strings);
+        let closure = Expr::MakeClosure {
+            fn_name: hoisted_name,
+            captures: vec![],
+            span: span.clone(),
+        };
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__def_method__".to_string(),
+                args: vec![
+                    Expr::StrLit {
+                        value: class_name.to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: sir_method_name,
+                        span: span.clone(),
+                    },
+                    closure,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// Lower an `if_stmt` into a nested chain of [`Expr::If`].  (Unchanged
@@ -2406,14 +2793,32 @@ impl Lowerer {
         while i < suffixes.len() {
             let suffix = suffixes[i];
             match self.suffix_kind(suffix)? {
-                SuffixKind::Attr(method) => {
+                SuffixKind::Attr(attr_name) => {
                     // Look ahead: `.method (args)` → method call; a bare
-                    // `.method` (no following call) is deferred.
+                    // `.attr` (no following call) is deferred UNLESS the
+                    // receiver is `self` inside a method body, where
+                    // `self.x` reads an instance variable (SIR25 §2).
                     let next_is_call = match suffixes.get(i + 1) {
                         Some(s) => matches!(self.suffix_kind(s)?, SuffixKind::Call),
                         None => false,
                     };
+                    // Receiver: the accumulated value, or — for a leading
+                    // attribute — the bare atom lowered as a value.
+                    let receiver = match acc.take() {
+                        Some(recv) => recv,
+                        None => self.lower_expr_d(atom, ctx, depth + 1)?,
+                    };
                     if !next_is_call {
+                        if is_self_ref(&receiver) {
+                            self.observed.add(Feature::InstanceVars);
+                            acc = Some(Expr::VarRef {
+                                name: format!("@{attr_name}"),
+                                scope: Scope::Instance,
+                                span: self.span_of(suffix),
+                            });
+                            i += 1;
+                            continue;
+                        }
                         return Err(self.err_at(
                             suffix,
                             "unsupported: attribute access as a value \
@@ -2421,17 +2826,11 @@ impl Lowerer {
                                 .to_string(),
                         ));
                     }
-                    // Receiver: the accumulated value, or — for a leading
-                    // attribute — the bare atom lowered as a value.
-                    let receiver = match acc.take() {
-                        Some(recv) => recv,
-                        None => self.lower_expr_d(atom, ctx, depth + 1)?,
-                    };
                     let call_suffix = suffixes[i + 1];
                     let name_span = self.span_of(suffix);
                     acc = Some(self.lower_method_call(
                         receiver,
-                        method,
+                        attr_name,
                         name_span,
                         call_suffix,
                         ctx,
@@ -2507,11 +2906,15 @@ impl Lowerer {
                 })
             }
             SuffixKind::Subscript => self.lower_subscript_suffix(base, suffix, ctx, depth, span),
-            // Attribute suffixes are consumed by the fold's look-ahead
-            // (`.method (args)` → method dispatch) before reaching here.
+            // A *chained* attribute (`self.x.y`, `f().x`) is deferred — the
+            // fold's look-ahead handles a method call and a bare `self.x`
+            // ivar read inline, in the same iteration; reaching here means
+            // a second attribute followed the first, which is still
+            // unsupported in v0.
             SuffixKind::Attr(_) => Err(self.err_at(
                 suffix,
-                "internal: attribute suffix reached apply_value_suffix".to_string(),
+                "unsupported: chained attribute access as a value (deferred to a later milestone)"
+                    .to_string(),
             )),
         }
     }
@@ -2678,6 +3081,28 @@ impl Lowerer {
             return Ok(Expr::BuiltinCall {
                 name,
                 args,
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+        }
+        // `ClassName(args)` → construction (OOP surface, SIR25 §2.1):
+        // `BuiltinCall("__new__", [StrLit(class), ...args])`, same
+        // envelope `ruby-to-semantic-ir` emits for `Foo.new(args)`.
+        // `class_names` is collected in the same first pass as
+        // `function_names` (see `collect_function_names`), so this
+        // resolves regardless of whether the call precedes the class's
+        // own definition in source order.
+        if self.class_names.contains(&name) && !ctx.is_enclosing_value(&name) {
+            self.observed.add(Feature::Strings);
+            let mut new_args = Vec::with_capacity(args.len() + 1);
+            new_args.push(Expr::StrLit {
+                value: name,
+                span: span.clone(),
+            });
+            new_args.extend(args);
+            return Ok(Expr::BuiltinCall {
+                name: "__new__".to_string(),
+                args: new_args,
                 effects: EffectSet::PURE,
                 span: span.clone(),
             });
@@ -3312,6 +3737,19 @@ impl Lowerer {
         ctx: &mut FunctionCtx,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
+        // A bare `self` inside a method body is the SIR dispatch
+        // envelope's implicit receiver (SIR25 §2.3), not an ordinary
+        // value — `self` is never in `ctx.params` (it is stripped by
+        // `lower_method_registration` precisely so it resolves here,
+        // not as a plain parameter).
+        if ctx.in_method && name == "self" {
+            return Ok(Expr::BuiltinCall {
+                name: "__self__".to_string(),
+                args: vec![],
+                effects: EffectSet::PURE,
+                span,
+            });
+        }
         // Local / param / capture (a value) wins over a same-named fn.
         if ctx.is_enclosing_value(name) {
             return self.resolve_var_in(ctx, name, span);
@@ -3486,6 +3924,51 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// The direct `statement` children of a `class_stmt`'s `suite` — same
+/// extraction as `lower_function_suite`'s `stmt_nodes`, factored out as a
+/// free function since `lower_class` needs it before any lowering (it
+/// walks the body once to build `__def_method__` registrations, with no
+/// tail-position special-casing — a class body has no "return value").
+fn class_body_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    suite
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+            _ => None,
+        })
+        .collect()
+}
+
+/// Is `stmt` (a `statement` node) Python's `pass` — the no-op placeholder
+/// used for an otherwise-empty suite (`class Foo:\n    pass\n`)? Structure:
+/// `statement -> simple_stmt -> small_stmt -> pass_stmt`.
+fn is_pass_stmt(stmt: &GrammarASTNode) -> bool {
+    let Some(simple) = child_nodes(stmt)
+        .into_iter()
+        .find(|n| n.rule_name == "simple_stmt")
+    else {
+        return false;
+    };
+    let Some(small) = child_nodes(simple)
+        .into_iter()
+        .find(|n| n.rule_name == "small_stmt")
+    else {
+        return false;
+    };
+    child_nodes(small).iter().any(|n| n.rule_name == "pass_stmt")
+}
+
+/// Is `expr` the SIR receiver value for the current method's implicit
+/// receiver (`BuiltinCall("__self__", [])`, per SIR25 §2.3 — how a bare
+/// `self` lowers, see `Lowerer::resolve_var`)? Checking the *already
+/// lowered* expression's shape (rather than sniffing the raw grammar atom
+/// token) means the self-vs-other-receiver distinction for `self.x` /
+/// `self.x = v` needs no grammar-level special-casing at all.
+fn is_self_ref(expr: &Expr) -> bool {
+    matches!(expr, Expr::BuiltinCall { name, args, .. } if name == "__self__" && args.is_empty())
 }
 
 /// Is `value` one of the binary arithmetic operator spellings the lowerer

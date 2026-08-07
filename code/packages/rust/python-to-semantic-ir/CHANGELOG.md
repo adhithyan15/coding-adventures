@@ -7,6 +7,41 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.9.0 — OOP declaration surface (SIR25 §2)
+
+Extends the frontend from method-*dispatch* (0.8.0's C2) to the full class
+*declaration* surface: `class Dog(Animal): def __init__(self, ...): ...`
+now lowers to the SAME `Stmt::ClassDef` + `__new__`/`__def_method__`/
+`__self__` envelope `ruby-to-semantic-ir` emits — the OOP-capable backends
+(built for Ruby-sourced classes) needed **zero changes** to run a
+Python-sourced one. That's the concrete proof, not a claim: `sir-conformance`
+gains `python_oop_method`/`python_counter_state`/`python_inheritance`,
+running the same class/instance-method/instance-state/inheritance semantics
+as their Ruby-sourced counterparts across all six backends.
+
+v0 scope: empty-or-single-base classes (`class Foo(Base):`), instance
+methods (`def m(self, ...)`, `self` resolves via `__self__` — never an
+ordinary parameter), `__init__` mapped to the SIR method name
+`"initialize"` (not the literal Python spelling — every backend's
+`call_new` looks up that exact name), instance variables (`self.x`
+read/write, `Scope::Instance`), and single-inheritance ancestry-walk
+dispatch (a subclass with no overriding method still resolves to the
+parent's, with zero extra frontend work — SIR25 §2.2's ancestry walk is a
+backend concern, not a frontend one). Deferred, each its own later
+milestone mirroring how `ruby-to-semantic-ir`'s seven OOP slices landed
+separately rather than at once: `@classmethod`/class methods, class
+variables, `super()` calls, mixins (`include`/`extend`), exceptions,
+decorated classes, and any class-body statement other than `def`.
+
+Found + tracked (not fixed here, orthogonal to this surface): Python's
+`print(x)` always newline-terminates; Ruby's `Kernel#print` never does —
+both share the SIR builtin name `"print"` but not its semantics, so C/Ruby
+(whose `print` faithfully mirrors real Ruby) drop the newline between two
+Python-sourced `print()` calls where Python/JS/Go/Rust already happen to
+get it right. See `sir-conformance`'s README "Gaps the corpus has
+surfaced" for the write-up; `python_inheritance` sidesteps it with a
+single `print` call.
+
 ## 0.8.0 — 2026-07-01
 
 **C2 (collection methods)**: lower Python **method calls** to the shared
