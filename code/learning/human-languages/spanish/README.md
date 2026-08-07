@@ -51,7 +51,7 @@ on.
 
 ## The book
 
-`book/` is the continuous read: all thirty-three chapters, free under CC BY-SA
+`book/` is the continuous read: all thirty-five chapters, free under CC BY-SA
 4.0. The book prints no audio prompts and no timing cues; the practice pieces
 keep them, because that is what they are for.
 
@@ -68,16 +68,15 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-Chapters 1–6 and 19–33 are generated from the same 90 canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–35 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
 handwritten LaTeX during the staged one-source migration. `units/` is legacy
 source material, not a second canonical copy. The complete PDF builds without
 missing glyphs, layout-box warnings, bookmark warnings, duplicate destinations,
-LaTeX warnings, or font fallbacks. (The 214-page figure last verified predates
-the HL-C18 splits, which add eighteen lessons across eleven generated chapters;
-length is not a cost here, so the count is expected to rise.)
+LaTeX warnings, or font fallbacks — 246 pages as of Chapters 34–35. (Length is
+never a cost here, so the page count is expected to rise with every tranche.)
 
 ## Progress
 
@@ -137,10 +136,20 @@ exactly where a word needs it:
 - **Chapters 29–33 — Daily description**: telling time → el tiempo, hace calor,
   llueve → once–quince, dieciséis–diecinueve, Latin's subtractive teens, veinte
   → gato then perro → verde then amarillo.
+- **Chapter 34 — Four Verbs of the Mind**: pensar (← *pēnsāre* "to weigh") →
+  entender (← *intendere* "to stretch toward") → leer (← *legere* "to gather")
+  → escribir (← *scrībere* "to scratch"). The first two are the payoff for the
+  e→ie boot Chapter 11 taught.
+- **Chapter 35 — Taking, Asking, Helping, and the Backwards Verb**: tomar (no
+  settled etymology, and why *coger* is not safe everywhere) → preguntar (←
+  *percontārī*, "to sound with a pole"), and why English's one *ask* becomes
+  *preguntar* and *pedir* → ayudar (← *adiūtāre*: literally English *aid*) →
+  **gustar**, which runs backwards — *me gusta el libro* is "the book pleases
+  me", so the verb agrees with the thing, not with you.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 33 chapters are authored and in the book (214 pages);
-Chapters 1–6 and 19–33 are generated from canonical lessons.** Lessons are
+to its root. **All 35 chapters are authored and in the book (246 pages);
+Chapters 1–6, 19–33 and 34–35 are generated from canonical lessons.** Lessons are
 named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book
 (which LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
 renumbers anything. - **Pronunciation**:
@@ -186,7 +195,7 @@ cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
 Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not
 committed; it is regenerated from source like any other build artefact.
 
-Chapters 1–6 and 19–33 are generated from the same canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–35 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
@@ -205,15 +214,16 @@ entry says, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-All 21 Spanish chapters that own a `core/book-generation.json` target are
-authored: **1–6** and **19–33**. Chapters **7–18** are deliberately absent.
+All 23 Spanish chapters that own a `core/book-generation.json` target are
+authored: **1–6**, **19–33** and **34–35**. Chapters **7–18** are deliberately
+absent.
 Their lessons are still schema v1 with no declared `practises.knowledge`, so
 there is no honest payoff to point at; a stub would destroy the very signal the
 HL05 gap report exists to measure. That absence is tracked debt, and it clears
 when those chapters migrate to schema v2.
 
 Chapters 1–6 end in a terminal `practice-mix` lesson, which is the payoff.
-Chapters 19–33 have no practice lesson, so the payoff is the chapter's last
+Chapters 19–35 have no practice lesson, so the payoff is the chapter's last
 lesson by sequence — the one carrying its recombination and wrap-up recall.
 
 ## Files

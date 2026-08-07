@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "spanish",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6 and 19-33 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-33 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6, 19-33 and 34-35 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-35 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
   "chapters": [
     {
       "chapter": 1,
@@ -412,6 +412,44 @@
           "ES-ETYMON-VERDE-02",
           "ES-LEX-AMARILLO-03",
           "ES-ETYMON-AMARILLO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:spanish-verbs-of-the-mind",
+      "canDo": "I can say what I think, understand, read and write in Spanish, and break the stems of pensar and entender the way a stem-changer requires.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "ES-C34-escribir",
+        "kind": "task",
+        "summary": "Run pensar and entender through the e→ie boot, then leer and escribir as the pair that does not break, and close on the propped-up e- that turns scrībere into escribir and schola into escuela.",
+        "assesses": [
+          "ES-LEX-PENSAR-01",
+          "ES-LEX-LEER-05",
+          "ES-ETYMON-LEER-06",
+          "ES-LEX-ESCRIBIR-07",
+          "ES-ETYMON-ESCRIBIR-08"
+        ]
+      }
+    },
+    {
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and the Backwards Verb",
+      "label": "ch:spanish-backwards-verb",
+      "canDo": "I can say I take, ask and help in Spanish, and build a sentence with gustar the way Spanish actually builds it — with the thing liked as the subject.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "ES-C35-gustar",
+        "kind": "task",
+        "summary": "Say tomar, preguntar and ayudar, then turn gustar around: me gusta el libro is the book pleasing me, so the verb agrees with the thing and the person moves into the little word in front.",
+        "assesses": [
+          "ES-LEX-TOMAR-01",
+          "ES-LEX-AYUDAR-05",
+          "ES-LEX-GUSTAR-07",
+          "ES-ETYMON-GUSTAR-08",
+          "ES-GRAMMAR-GUSTAR-INVERSION-09"
         ]
       }
     }
