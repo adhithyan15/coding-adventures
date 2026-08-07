@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:7520b462f31cab77",
+      "sourceHash": "fnv1a64:353a849b4e833378",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -22,7 +22,7 @@
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:927e348dde94c4bb",
+      "sourceHash": "fnv1a64:17b93bab7a985346",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -38,7 +38,7 @@
     {
       "language": "arabic",
       "chapter": 5,
-      "sourceHash": "fnv1a64:ad8cc04c63058934",
+      "sourceHash": "fnv1a64:f56e92b69f9ca5c4",
       "lessonIds": [
         "AR-C05-naam",
         "AR-C05-la"
@@ -48,7 +48,7 @@
     {
       "language": "arabic",
       "chapter": 6,
-      "sourceHash": "fnv1a64:cc54a0c91344c3bf",
+      "sourceHash": "fnv1a64:ca32dc9ba81d00c8",
       "lessonIds": [
         "AR-C06-min-fadlik"
       ],
@@ -57,7 +57,7 @@
     {
       "language": "arabic",
       "chapter": 7,
-      "sourceHash": "fnv1a64:32ec2ab9f42c3187",
+      "sourceHash": "fnv1a64:11997d49741b3533",
       "lessonIds": [
         "AR-C07-asif"
       ],
@@ -66,7 +66,7 @@
     {
       "language": "arabic",
       "chapter": 8,
-      "sourceHash": "fnv1a64:6294b259f9b691ec",
+      "sourceHash": "fnv1a64:834f2f020141aeed",
       "lessonIds": [
         "AR-C08-al-ahad-al-khamis",
         "AR-C08-al-jumua-as-sabt"
@@ -76,7 +76,7 @@
     {
       "language": "arabic",
       "chapter": 9,
-      "sourceHash": "fnv1a64:929771dbb8260ffd",
+      "sourceHash": "fnv1a64:cad8ad2b10c7e06c",
       "lessonIds": [
         "AR-C09-aswad-abyad",
         "AR-C09-ahmar-azraq"
@@ -86,7 +86,7 @@
     {
       "language": "arabic",
       "chapter": 10,
-      "sourceHash": "fnv1a64:a9e69996866b996b",
+      "sourceHash": "fnv1a64:f827e521576a96e6",
       "lessonIds": [
         "AR-C10-ab-umm",
         "AR-C10-akh-ukht"
@@ -96,7 +96,7 @@
     {
       "language": "arabic",
       "chapter": 11,
-      "sourceHash": "fnv1a64:6bb129866c740e2c",
+      "sourceHash": "fnv1a64:577eb96bfa23f923",
       "lessonIds": [
         "AR-C11-ras",
         "AR-C11-yad"
@@ -106,7 +106,7 @@
     {
       "language": "arabic",
       "chapter": 12,
-      "sourceHash": "fnv1a64:e9eab09aa7dbde6b",
+      "sourceHash": "fnv1a64:c3668e906c7c4a3c",
       "lessonIds": [
         "AR-C12-al-fusul"
       ],
@@ -115,7 +115,7 @@
     {
       "language": "arabic",
       "chapter": 13,
-      "sourceHash": "fnv1a64:9d335ce2306201ce",
+      "sourceHash": "fnv1a64:2bf1e5bd29a9aad5",
       "lessonIds": [
         "AR-C13-maa-khubz"
       ],
@@ -124,7 +124,7 @@
     {
       "language": "arabic",
       "chapter": 14,
-      "sourceHash": "fnv1a64:bb46ab609d4a7b53",
+      "sourceHash": "fnv1a64:36171dbedb6479c2",
       "lessonIds": [
         "AR-C14-ashhur"
       ],
@@ -133,7 +133,7 @@
     {
       "language": "arabic",
       "chapter": 15,
-      "sourceHash": "fnv1a64:4c5d4820286e2376",
+      "sourceHash": "fnv1a64:d237f4238d3aab5c",
       "lessonIds": [
         "AR-C15-ad-duhr-muntasaf-al-layl"
       ],
@@ -142,7 +142,7 @@
     {
       "language": "arabic",
       "chapter": 16,
-      "sourceHash": "fnv1a64:413f30a56fea9570",
+      "sourceHash": "fnv1a64:164b4a3c92afb45a",
       "lessonIds": [
         "AR-C16-al-saa"
       ],
@@ -151,7 +151,7 @@
     {
       "language": "arabic",
       "chapter": 17,
-      "sourceHash": "fnv1a64:7c69d747e1971e1e",
+      "sourceHash": "fnv1a64:52f2473cb0f37d1b",
       "lessonIds": [
         "AR-C17-kam-umruka"
       ],
@@ -160,7 +160,7 @@
     {
       "language": "arabic",
       "chapter": 18,
-      "sourceHash": "fnv1a64:501d33703c5ffa29",
+      "sourceHash": "fnv1a64:03f975260cf68714",
       "lessonIds": [
         "AR-C18-al-taqs"
       ],
@@ -169,7 +169,7 @@
     {
       "language": "arabic",
       "chapter": 19,
-      "sourceHash": "fnv1a64:607084f077915a14",
+      "sourceHash": "fnv1a64:b2984574c102b683",
       "lessonIds": [
         "AR-C19-wahid-khamsa"
       ],
@@ -178,7 +178,7 @@
     {
       "language": "arabic",
       "chapter": 20,
-      "sourceHash": "fnv1a64:fb193a500bf84fa4",
+      "sourceHash": "fnv1a64:1a4a9b47185e3003",
       "lessonIds": [
         "AR-C20-ahada-ashar-ishrun"
       ],
@@ -187,7 +187,7 @@
     {
       "language": "arabic",
       "chapter": 21,
-      "sourceHash": "fnv1a64:d114963100d91b96",
+      "sourceHash": "fnv1a64:40fdcbe5f120c42e",
       "lessonIds": [
         "AR-C21-kalb-qitt"
       ],
@@ -196,7 +196,7 @@
     {
       "language": "arabic",
       "chapter": 22,
-      "sourceHash": "fnv1a64:ef18ebdf4ff568e8",
+      "sourceHash": "fnv1a64:449a2a8fc607fc2a",
       "lessonIds": [
         "AR-C22-akhdar-asfar"
       ],
@@ -205,7 +205,7 @@
     {
       "language": "arabic",
       "chapter": 23,
-      "sourceHash": "fnv1a64:e11413130f677c5e",
+      "sourceHash": "fnv1a64:7ea93bfa857e9abb",
       "lessonIds": [
         "AR-C23-afwan"
       ],
@@ -214,7 +214,7 @@
     {
       "language": "arabic",
       "chapter": 24,
-      "sourceHash": "fnv1a64:0556cfdf53851bbf",
+      "sourceHash": "fnv1a64:2f5427eaf159414b",
       "lessonIds": [
         "AR-C24-ila-al-ghad"
       ],
@@ -223,7 +223,7 @@
     {
       "language": "arabic",
       "chapter": 25,
-      "sourceHash": "fnv1a64:acb8d0310207cdf6",
+      "sourceHash": "fnv1a64:d3d68ec7484f2d86",
       "lessonIds": [
         "AR-C25-yawm"
       ],
@@ -232,7 +232,7 @@
     {
       "language": "arabic",
       "chapter": 26,
-      "sourceHash": "fnv1a64:edb1065ae87c9f6b",
+      "sourceHash": "fnv1a64:dcb94737a6a639f3",
       "lessonIds": [
         "AR-C26-layl"
       ],
@@ -241,7 +241,7 @@
     {
       "language": "arabic",
       "chapter": 27,
-      "sourceHash": "fnv1a64:978af30d3b1dba60",
+      "sourceHash": "fnv1a64:6794c7bd98730641",
       "lessonIds": [
         "AR-C27-tusbih-ala-khayr"
       ],
@@ -250,7 +250,7 @@
     {
       "language": "arabic",
       "chapter": 28,
-      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "sourceHash": "fnv1a64:7a19e068818b4a40",
       "lessonIds": [
         "AR-C28-dhahaba",
         "AR-C28-jaa"
@@ -260,7 +260,7 @@
     {
       "language": "arabic",
       "chapter": 29,
-      "sourceHash": "fnv1a64:3cd401a4e59d594a",
+      "sourceHash": "fnv1a64:f7ad1f74181d07d2",
       "lessonIds": [
         "AR-C29-qala",
         "AR-C29-raa"
@@ -270,7 +270,7 @@
     {
       "language": "arabic",
       "chapter": 30,
-      "sourceHash": "fnv1a64:bd125585f402d92d",
+      "sourceHash": "fnv1a64:c2d689625ad0152c",
       "lessonIds": [
         "AR-C30-arafa",
         "AR-C30-akala"
@@ -280,7 +280,7 @@
     {
       "language": "arabic",
       "chapter": 31,
-      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "sourceHash": "fnv1a64:9c2f65fb98675f08",
       "lessonIds": [
         "AR-C31-fahima",
         "AR-C31-qaraa",
@@ -292,7 +292,7 @@
     {
       "language": "arabic",
       "chapter": 32,
-      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "sourceHash": "fnv1a64:1d8046d7d626b5b5",
       "lessonIds": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",
@@ -304,7 +304,7 @@
     {
       "language": "bengali",
       "chapter": 6,
-      "sourceHash": "fnv1a64:28baeae54e13a2dc",
+      "sourceHash": "fnv1a64:922476792193ab33",
       "lessonIds": [
         "BN-C06-numbers-1-5"
       ],
@@ -313,7 +313,7 @@
     {
       "language": "bengali",
       "chapter": 7,
-      "sourceHash": "fnv1a64:cd9b707ba1f2707e",
+      "sourceHash": "fnv1a64:ee4b384607a8307a",
       "lessonIds": [
         "BN-C07-howa",
         "BN-C07-jaowa",
@@ -327,7 +327,7 @@
     {
       "language": "bengali",
       "chapter": 8,
-      "sourceHash": "fnv1a64:db0e24b2e41cd84b",
+      "sourceHash": "fnv1a64:d5368908b21b0c38",
       "lessonIds": [
         "BN-C08-bhaba",
         "BN-C08-bojha",
@@ -339,7 +339,7 @@
     {
       "language": "bengali",
       "chapter": 9,
-      "sourceHash": "fnv1a64:87c66f64ea563bde",
+      "sourceHash": "fnv1a64:5fd78c2b58509905",
       "lessonIds": [
         "BN-C09-neowa",
         "BN-C09-jijnasa-kora",
@@ -351,7 +351,7 @@
     {
       "language": "chinese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:b740a5126cc6bad6",
+      "sourceHash": "fnv1a64:0dffaa6fdcb5eb0a",
       "lessonIds": [
         "ZH-C01-tones",
         "ZH-C01-ni",
@@ -366,7 +366,7 @@
     {
       "language": "french",
       "chapter": 17,
-      "sourceHash": "fnv1a64:bb8682839ab17ed4",
+      "sourceHash": "fnv1a64:88c5c5d3ced2507f",
       "lessonIds": [
         "FR-C17-tete",
         "FR-C17-main"
@@ -376,7 +376,7 @@
     {
       "language": "french",
       "chapter": 18,
-      "sourceHash": "fnv1a64:52b8d81257884801",
+      "sourceHash": "fnv1a64:3e08b2ac320671fa",
       "lessonIds": [
         "FR-C18-oui",
         "FR-C18-non"
@@ -386,7 +386,7 @@
     {
       "language": "french",
       "chapter": 19,
-      "sourceHash": "fnv1a64:bed21c4a10769e2e",
+      "sourceHash": "fnv1a64:8e610fa2f6ad51d1",
       "lessonIds": [
         "FR-C19-sil-vous-plait"
       ],
@@ -395,7 +395,7 @@
     {
       "language": "french",
       "chapter": 20,
-      "sourceHash": "fnv1a64:aaf2e4df4218e86b",
+      "sourceHash": "fnv1a64:b469f25aa97978c9",
       "lessonIds": [
         "FR-C20-je-suis-desole"
       ],
@@ -404,7 +404,7 @@
     {
       "language": "french",
       "chapter": 21,
-      "sourceHash": "fnv1a64:5a4d6c65cd441e86",
+      "sourceHash": "fnv1a64:5f7615df9768226e",
       "lessonIds": [
         "FR-C21-le-temps"
       ],
@@ -413,7 +413,7 @@
     {
       "language": "french",
       "chapter": 22,
-      "sourceHash": "fnv1a64:023629163e002b64",
+      "sourceHash": "fnv1a64:e044ffc331a4d850",
       "lessonIds": [
         "FR-C22-chien-chat"
       ],
@@ -422,7 +422,7 @@
     {
       "language": "french",
       "chapter": 23,
-      "sourceHash": "fnv1a64:cb3845fade53c6da",
+      "sourceHash": "fnv1a64:492fe82e1b85922f",
       "lessonIds": [
         "FR-C23-vert-jaune"
       ],
@@ -431,7 +431,7 @@
     {
       "language": "french",
       "chapter": 24,
-      "sourceHash": "fnv1a64:1645f8d2a29bceb5",
+      "sourceHash": "fnv1a64:ea3f6af8fa4bc2b0",
       "lessonIds": [
         "FR-C24-prendre",
         "FR-C24-demander",
@@ -443,7 +443,7 @@
     {
       "language": "french",
       "chapter": 25,
-      "sourceHash": "fnv1a64:a50346a946945318",
+      "sourceHash": "fnv1a64:3947f8f573559327",
       "lessonIds": [
         "FR-C25-comprendre",
         "FR-C25-penser",
@@ -455,7 +455,7 @@
     {
       "language": "german",
       "chapter": 17,
-      "sourceHash": "fnv1a64:ce4e6be384d018cf",
+      "sourceHash": "fnv1a64:db42e9b15a61794e",
       "lessonIds": [
         "GE-C17-kopf",
         "GE-C17-kopf-haupt",
@@ -466,7 +466,7 @@
     {
       "language": "german",
       "chapter": 18,
-      "sourceHash": "fnv1a64:0fd5b6c217dea39e",
+      "sourceHash": "fnv1a64:2155da730044ffdb",
       "lessonIds": [
         "GE-C18-ja",
         "GE-C18-nein"
@@ -476,7 +476,7 @@
     {
       "language": "german",
       "chapter": 19,
-      "sourceHash": "fnv1a64:56d533c514140e42",
+      "sourceHash": "fnv1a64:0bd93e2bb2ed36c8",
       "lessonIds": [
         "GE-C19-bitte-requests"
       ],
@@ -485,7 +485,7 @@
     {
       "language": "german",
       "chapter": 20,
-      "sourceHash": "fnv1a64:2949289880ce15c7",
+      "sourceHash": "fnv1a64:4bd97ca8d264bb7c",
       "lessonIds": [
         "GE-C20-entschuldigung"
       ],
@@ -494,7 +494,7 @@
     {
       "language": "german",
       "chapter": 21,
-      "sourceHash": "fnv1a64:e773a690ba617e60",
+      "sourceHash": "fnv1a64:b2f9c8b1276d0114",
       "lessonIds": [
         "GE-C21-das-wetter"
       ],
@@ -503,7 +503,7 @@
     {
       "language": "german",
       "chapter": 22,
-      "sourceHash": "fnv1a64:d7f81c59cce27f45",
+      "sourceHash": "fnv1a64:c62c38806258cb4a",
       "lessonIds": [
         "GE-C22-hund-katze"
       ],
@@ -512,7 +512,7 @@
     {
       "language": "german",
       "chapter": 23,
-      "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+      "sourceHash": "fnv1a64:43ad3c7b9c5753ff",
       "lessonIds": [
         "GE-C23-gruen-gelb"
       ],
@@ -521,7 +521,7 @@
     {
       "language": "german",
       "chapter": 24,
-      "sourceHash": "fnv1a64:fb75d3964d3b3f0f",
+      "sourceHash": "fnv1a64:72cc26138da11014",
       "lessonIds": [
         "GE-C24-denken",
         "GE-C24-verstehen",
@@ -533,7 +533,7 @@
     {
       "language": "german",
       "chapter": 25,
-      "sourceHash": "fnv1a64:1615ff0ab8b33552",
+      "sourceHash": "fnv1a64:20a37f0641a416b5",
       "lessonIds": [
         "GE-C25-nehmen",
         "GE-C25-fragen",
@@ -545,7 +545,7 @@
     {
       "language": "gujarati",
       "chapter": 6,
-      "sourceHash": "fnv1a64:834feb5e4fa699a5",
+      "sourceHash": "fnv1a64:e37450b34f66cad3",
       "lessonIds": [
         "GU-C06-numbers-1-5",
         "GU-C06-number-histories"
@@ -555,7 +555,7 @@
     {
       "language": "gujarati",
       "chapter": 7,
-      "sourceHash": "fnv1a64:0be661817755e933",
+      "sourceHash": "fnv1a64:c349eca6118be071",
       "lessonIds": [
         "GU-C07-hovun",
         "GU-C07-javun",
@@ -569,7 +569,7 @@
     {
       "language": "hindi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:6442776b5a8abb61",
+      "sourceHash": "fnv1a64:ef8184e4fd309678",
       "lessonIds": [
         "HI-C06-numbers-1-5",
         "HI-C06-tin-char-history",
@@ -580,7 +580,7 @@
     {
       "language": "hindi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:b863d0e49f93094c",
+      "sourceHash": "fnv1a64:f87d1c57a285f346",
       "lessonIds": [
         "HI-C07-haan",
         "HI-C07-nahin"
@@ -590,7 +590,7 @@
     {
       "language": "hindi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f095f38d028fb75c",
+      "sourceHash": "fnv1a64:b1b8f12a85d86dd5",
       "lessonIds": [
         "HI-C08-kripaya"
       ],
@@ -599,7 +599,7 @@
     {
       "language": "hindi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:42c3b5981fc5bf8e",
+      "sourceHash": "fnv1a64:7aeb2a323425da50",
       "lessonIds": [
         "HI-C09-maaf-kijiye"
       ],
@@ -608,7 +608,7 @@
     {
       "language": "hindi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:74d9dfe51926b5a9",
+      "sourceHash": "fnv1a64:f99308e4347ef89d",
       "lessonIds": [
         "HI-C10-somavaar-shukravaar",
         "HI-C10-shanivaar-ravivaar"
@@ -618,7 +618,7 @@
     {
       "language": "hindi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:5cc0b729b5b2ccd4",
+      "sourceHash": "fnv1a64:b214c5c197fb166d",
       "lessonIds": [
         "HI-C11-kaalaa-safed",
         "HI-C11-laal-niila"
@@ -628,7 +628,7 @@
     {
       "language": "hindi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:77993917c3517139",
+      "sourceHash": "fnv1a64:576bd38a0219074c",
       "lessonIds": [
         "HI-C12-pitaa-maataa",
         "HI-C12-bhaai-bahin"
@@ -638,7 +638,7 @@
     {
       "language": "hindi",
       "chapter": 13,
-      "sourceHash": "fnv1a64:f4a891a22720b76e",
+      "sourceHash": "fnv1a64:562ea64311b02497",
       "lessonIds": [
         "HI-C13-sir",
         "HI-C13-haath"
@@ -648,7 +648,7 @@
     {
       "language": "hindi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:ab989406c824d264",
+      "sourceHash": "fnv1a64:93c447d022604c69",
       "lessonIds": [
         "HI-C14-ritu"
       ],
@@ -657,7 +657,7 @@
     {
       "language": "hindi",
       "chapter": 15,
-      "sourceHash": "fnv1a64:af7d14a9901f6b3a",
+      "sourceHash": "fnv1a64:3e910409bf2caaad",
       "lessonIds": [
         "HI-C15-paani-roti"
       ],
@@ -666,7 +666,7 @@
     {
       "language": "hindi",
       "chapter": 16,
-      "sourceHash": "fnv1a64:f36135079a7a332d",
+      "sourceHash": "fnv1a64:fde5df6e55b4eb4c",
       "lessonIds": [
         "HI-C16-mahine"
       ],
@@ -675,7 +675,7 @@
     {
       "language": "hindi",
       "chapter": 17,
-      "sourceHash": "fnv1a64:9c78b121b2e9a9b7",
+      "sourceHash": "fnv1a64:ea2a4e52a10354b5",
       "lessonIds": [
         "HI-C17-dopahar-aadhi-raat"
       ],
@@ -684,7 +684,7 @@
     {
       "language": "hindi",
       "chapter": 18,
-      "sourceHash": "fnv1a64:a720d6b0f6833ce7",
+      "sourceHash": "fnv1a64:0748573900687a54",
       "lessonIds": [
         "HI-C18-ghanta"
       ],
@@ -693,7 +693,7 @@
     {
       "language": "hindi",
       "chapter": 19,
-      "sourceHash": "fnv1a64:9a434df12509f11d",
+      "sourceHash": "fnv1a64:4014779158e17d28",
       "lessonIds": [
         "HI-C19-umr",
         "HI-C19-age-grammar"
@@ -703,7 +703,7 @@
     {
       "language": "hindi",
       "chapter": 20,
-      "sourceHash": "fnv1a64:6d86ec71fd68d1c5",
+      "sourceHash": "fnv1a64:c81ce90b51be0ae5",
       "lessonIds": [
         "HI-C20-mausam"
       ],
@@ -712,7 +712,7 @@
     {
       "language": "hindi",
       "chapter": 21,
-      "sourceHash": "fnv1a64:0999275d157d7bf0",
+      "sourceHash": "fnv1a64:62fc4e914737ffa6",
       "lessonIds": [
         "HI-C21-numbers-6-10",
         "HI-C21-six-nine-ten-history"
@@ -722,7 +722,7 @@
     {
       "language": "hindi",
       "chapter": 22,
-      "sourceHash": "fnv1a64:cb46bfa9d45d54ce",
+      "sourceHash": "fnv1a64:fb4e128091aac03a",
       "lessonIds": [
         "HI-C22-gyarah-bees"
       ],
@@ -731,7 +731,7 @@
     {
       "language": "hindi",
       "chapter": 23,
-      "sourceHash": "fnv1a64:b2050e3126777350",
+      "sourceHash": "fnv1a64:79f269f89d2e92e7",
       "lessonIds": [
         "HI-C23-kutta-billi",
         "HI-C23-billi-history"
@@ -741,7 +741,7 @@
     {
       "language": "hindi",
       "chapter": 24,
-      "sourceHash": "fnv1a64:0934b8a539c16d43",
+      "sourceHash": "fnv1a64:bf6a9cccb3a04eec",
       "lessonIds": [
         "HI-C24-hara-pila",
         "HI-C24-pila-history"
@@ -751,7 +751,7 @@
     {
       "language": "hindi",
       "chapter": 25,
-      "sourceHash": "fnv1a64:f9422ee3db11cac4",
+      "sourceHash": "fnv1a64:20e5b86d763f04d0",
       "lessonIds": [
         "HI-C25-din"
       ],
@@ -760,7 +760,7 @@
     {
       "language": "hindi",
       "chapter": 26,
-      "sourceHash": "fnv1a64:71df9fc06faf5b68",
+      "sourceHash": "fnv1a64:18b506a493af22ed",
       "lessonIds": [
         "HI-C26-raat"
       ],
@@ -769,7 +769,7 @@
     {
       "language": "hindi",
       "chapter": 27,
-      "sourceHash": "fnv1a64:f646044fadb6cb52",
+      "sourceHash": "fnv1a64:d2a254c435773a32",
       "lessonIds": [
         "HI-C27-shubh-raatri"
       ],
@@ -778,7 +778,7 @@
     {
       "language": "hindi",
       "chapter": 28,
-      "sourceHash": "fnv1a64:eb678603dbd8f2ac",
+      "sourceHash": "fnv1a64:0921038afb607890",
       "lessonIds": [
         "HI-C28-subah"
       ],
@@ -787,7 +787,7 @@
     {
       "language": "hindi",
       "chapter": 29,
-      "sourceHash": "fnv1a64:f6f1e36cd9fc2d17",
+      "sourceHash": "fnv1a64:2dd29face5c24be0",
       "lessonIds": [
         "HI-C29-shaam"
       ],
@@ -796,7 +796,7 @@
     {
       "language": "hindi",
       "chapter": 30,
-      "sourceHash": "fnv1a64:6c4a5388df1e208c",
+      "sourceHash": "fnv1a64:07062d5d3912daee",
       "lessonIds": [
         "HI-C30-dopahar-widened"
       ],
@@ -805,7 +805,7 @@
     {
       "language": "hindi",
       "chapter": 31,
-      "sourceHash": "fnv1a64:ed596102fbc3b667",
+      "sourceHash": "fnv1a64:42f67f215afe7a22",
       "lessonIds": [
         "HI-C31-suprabhat"
       ],
@@ -814,7 +814,7 @@
     {
       "language": "hindi",
       "chapter": 32,
-      "sourceHash": "fnv1a64:623dae6a35c8d188",
+      "sourceHash": "fnv1a64:79f80cee9d76163a",
       "lessonIds": [
         "HI-C32-shubh-sandhya",
         "HI-C32-evening-register"
@@ -824,7 +824,7 @@
     {
       "language": "hindi",
       "chapter": 33,
-      "sourceHash": "fnv1a64:c139b9d53fd52489",
+      "sourceHash": "fnv1a64:45f3a4da22bd2515",
       "lessonIds": [
         "HI-C33-shubh-dopahar"
       ],
@@ -833,7 +833,7 @@
     {
       "language": "hindi",
       "chapter": 34,
-      "sourceHash": "fnv1a64:98c0474e95403a85",
+      "sourceHash": "fnv1a64:3a6a3431c3eceb38",
       "lessonIds": [
         "HI-C34-sochna",
         "HI-C34-samajhna",
@@ -845,7 +845,7 @@
     {
       "language": "hindi",
       "chapter": 35,
-      "sourceHash": "fnv1a64:19427f33e5a3b21b",
+      "sourceHash": "fnv1a64:f857089bef23e119",
       "lessonIds": [
         "HI-C35-lena",
         "HI-C35-puchna",
@@ -857,7 +857,7 @@
     {
       "language": "italian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:03633dd64e873a05",
+      "sourceHash": "fnv1a64:ccdd45668058fb7d",
       "lessonIds": [
         "IT-C02-prego",
         "IT-C02-come",
@@ -873,7 +873,7 @@
     {
       "language": "italian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:3703362b79bcde7b",
+      "sourceHash": "fnv1a64:8dcd88bbdbe1a9cf",
       "lessonIds": [
         "IT-C03-io",
         "IT-C03-mi-chiamo",
@@ -886,7 +886,7 @@
     {
       "language": "italian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:ca5f394581f1d56b",
+      "sourceHash": "fnv1a64:f4e745989d8d6935",
       "lessonIds": [
         "IT-C04-arrivederci",
         "IT-C04-a-domani",
@@ -899,7 +899,7 @@
     {
       "language": "italian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:588a9facd5ea70ef",
+      "sourceHash": "fnv1a64:86ec5a79975713f7",
       "lessonIds": [
         "IT-C05-parlare",
         "IT-C05-abitare",
@@ -912,7 +912,7 @@
     {
       "language": "italian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:e98372b21a44469a",
+      "sourceHash": "fnv1a64:5028d121ee461113",
       "lessonIds": [
         "IT-C06-numeri-1-5",
         "IT-C06-numeri-6-10"
@@ -922,7 +922,7 @@
     {
       "language": "italian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e411e61a0e42f98e",
+      "sourceHash": "fnv1a64:a0d224ae88caf38e",
       "lessonIds": [
         "IT-C07-giorni-1",
         "IT-C07-giorni-2"
@@ -932,7 +932,7 @@
     {
       "language": "italian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:8c6f2fefca515e70",
+      "sourceHash": "fnv1a64:07ca39eb6f812137",
       "lessonIds": [
         "IT-C08-ora",
         "IT-C08-mezzogiorno-mezzanotte"
@@ -942,7 +942,7 @@
     {
       "language": "italian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:d030a0fa85b5678f",
+      "sourceHash": "fnv1a64:46951b72fb62bef8",
       "lessonIds": [
         "IT-C09-mesi",
         "IT-C09-stagioni"
@@ -952,7 +952,7 @@
     {
       "language": "italian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:408622844a141e06",
+      "sourceHash": "fnv1a64:cdd109c5de02528b",
       "lessonIds": [
         "IT-C10-genitori",
         "IT-C10-fratello-sorella"
@@ -962,7 +962,7 @@
     {
       "language": "italian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:0ba39a1b7b3a0899",
+      "sourceHash": "fnv1a64:f4d1aa5a9e22ef81",
       "lessonIds": [
         "IT-C11-pane",
         "IT-C11-acqua-vino"
@@ -972,7 +972,7 @@
     {
       "language": "italian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:e2431531c5358324",
+      "sourceHash": "fnv1a64:01f0449e1c3e13af",
       "lessonIds": [
         "IT-C12-numeri-11-16",
         "IT-C12-numeri-17-20"
@@ -982,7 +982,7 @@
     {
       "language": "italian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:d158e4e3576da88e",
+      "sourceHash": "fnv1a64:ced69555df526e08",
       "lessonIds": [
         "IT-C13-nero-bianco",
         "IT-C13-rosso-blu"
@@ -992,7 +992,7 @@
     {
       "language": "italian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:0955fb9314cc86c0",
+      "sourceHash": "fnv1a64:200c96ae74356214",
       "lessonIds": [
         "IT-C14-avere",
         "IT-C14-eta"
@@ -1002,7 +1002,7 @@
     {
       "language": "italian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:0b856b51ba3decfd",
+      "sourceHash": "fnv1a64:39516bddf0538c22",
       "lessonIds": [
         "IT-C15-passato-prossimo",
         "IT-C15-passato-remoto"
@@ -1012,7 +1012,7 @@
     {
       "language": "italian",
       "chapter": 16,
-      "sourceHash": "fnv1a64:c5a3a23e7fecd54e",
+      "sourceHash": "fnv1a64:0afca881cab712ed",
       "lessonIds": [
         "IT-C16-essere",
         "IT-C16-essere-stato",
@@ -1024,7 +1024,7 @@
     {
       "language": "italian",
       "chapter": 17,
-      "sourceHash": "fnv1a64:8f8245bda887a5a8",
+      "sourceHash": "fnv1a64:1f0c5b171e9d99ce",
       "lessonIds": [
         "IT-C17-testa",
         "IT-C17-mano"
@@ -1034,7 +1034,7 @@
     {
       "language": "italian",
       "chapter": 18,
-      "sourceHash": "fnv1a64:e6760761fdd366e9",
+      "sourceHash": "fnv1a64:9c45d56002176a7b",
       "lessonIds": [
         "IT-C18-pensare",
         "IT-C18-capire",
@@ -1046,7 +1046,7 @@
     {
       "language": "italian",
       "chapter": 19,
-      "sourceHash": "fnv1a64:f337de5f22901d82",
+      "sourceHash": "fnv1a64:e209bc22f7396c0e",
       "lessonIds": [
         "IT-C19-prendere",
         "IT-C19-chiedere",
@@ -1058,7 +1058,7 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:edad54370036a969",
+      "sourceHash": "fnv1a64:1204445a344e67db",
       "lessonIds": [
         "JA-C01-hai",
         "JA-C01-iie",
@@ -1074,7 +1074,7 @@
     {
       "language": "kannada",
       "chapter": 6,
-      "sourceHash": "fnv1a64:ef1c91cef85816a7",
+      "sourceHash": "fnv1a64:fd4263c3c8f31fa0",
       "lessonIds": [
         "KA-C06-dative-ge",
         "KA-C06-dative-stacking",
@@ -1085,7 +1085,7 @@
     {
       "language": "kannada",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d4a6f697bdb7fb98",
+      "sourceHash": "fnv1a64:694b1c302233f961",
       "lessonIds": [
         "KA-C07-numbers-1-5",
         "KA-C07-numbers-6-10"
@@ -1095,7 +1095,7 @@
     {
       "language": "kannada",
       "chapter": 8,
-      "sourceHash": "fnv1a64:0dd42921ebc1ff57",
+      "sourceHash": "fnv1a64:7284fb7e86bea176",
       "lessonIds": [
         "KA-C08-dayavittu"
       ],
@@ -1104,7 +1104,7 @@
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:72851113a8be5055",
+      "sourceHash": "fnv1a64:6902298ff1e1e1dd",
       "lessonIds": [
         "KA-C09-kshamisi"
       ],
@@ -1113,7 +1113,7 @@
     {
       "language": "kannada",
       "chapter": 10,
-      "sourceHash": "fnv1a64:33566b64ea65a0a8",
+      "sourceHash": "fnv1a64:17e1b9fd0fca9f4f",
       "lessonIds": [
         "KA-C10-vaara"
       ],
@@ -1122,7 +1122,7 @@
     {
       "language": "kannada",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a577aa338975f386",
+      "sourceHash": "fnv1a64:93489da5c4264060",
       "lessonIds": [
         "KA-C11-bannagalu"
       ],
@@ -1131,7 +1131,7 @@
     {
       "language": "kannada",
       "chapter": 12,
-      "sourceHash": "fnv1a64:1cfe2ba34766cd85",
+      "sourceHash": "fnv1a64:c81ae9d57602bb13",
       "lessonIds": [
         "KA-C12-kutumba"
       ],
@@ -1140,7 +1140,7 @@
     {
       "language": "kannada",
       "chapter": 13,
-      "sourceHash": "fnv1a64:0878d10a7187db28",
+      "sourceHash": "fnv1a64:f7e294d9be35cdc5",
       "lessonIds": [
         "KA-C13-dehada-bhagagalu"
       ],
@@ -1149,7 +1149,7 @@
     {
       "language": "kannada",
       "chapter": 14,
-      "sourceHash": "fnv1a64:ec354231e214ee71",
+      "sourceHash": "fnv1a64:3b9b169c25e76933",
       "lessonIds": [
         "KA-C14-kaalagalu"
       ],
@@ -1158,7 +1158,7 @@
     {
       "language": "kannada",
       "chapter": 15,
-      "sourceHash": "fnv1a64:d190fb570c076825",
+      "sourceHash": "fnv1a64:1c112925ed0473a4",
       "lessonIds": [
         "KA-C15-niiru-akki"
       ],
@@ -1167,7 +1167,7 @@
     {
       "language": "kannada",
       "chapter": 16,
-      "sourceHash": "fnv1a64:3f5e4fc9f72d0eb7",
+      "sourceHash": "fnv1a64:ded69c89d1bb0817",
       "lessonIds": [
         "KA-C16-tingalugalu"
       ],
@@ -1176,7 +1176,7 @@
     {
       "language": "kannada",
       "chapter": 17,
-      "sourceHash": "fnv1a64:223e56c5ec67ed1a",
+      "sourceHash": "fnv1a64:d8b6bc2999c6497f",
       "lessonIds": [
         "KA-C17-madhyaahna-madhyaraatri"
       ],
@@ -1185,7 +1185,7 @@
     {
       "language": "kannada",
       "chapter": 18,
-      "sourceHash": "fnv1a64:b8039d88f5603008",
+      "sourceHash": "fnv1a64:a2744a2e4424ac75",
       "lessonIds": [
         "KA-C18-gante"
       ],
@@ -1194,7 +1194,7 @@
     {
       "language": "kannada",
       "chapter": 19,
-      "sourceHash": "fnv1a64:f7c28f10b80343b3",
+      "sourceHash": "fnv1a64:f3dffb9c51fe9078",
       "lessonIds": [
         "KA-C19-vayassu"
       ],
@@ -1203,7 +1203,7 @@
     {
       "language": "kannada",
       "chapter": 20,
-      "sourceHash": "fnv1a64:ebc489f9095368bd",
+      "sourceHash": "fnv1a64:a2f3bf629dabbb3b",
       "lessonIds": [
         "KA-C20-hannondu-ippattu",
         "KA-C20-havamana"
@@ -1213,7 +1213,7 @@
     {
       "language": "kannada",
       "chapter": 21,
-      "sourceHash": "fnv1a64:03d7d39d4493a575",
+      "sourceHash": "fnv1a64:11869d7a39b69707",
       "lessonIds": [
         "KA-C21-naayi-bekku"
       ],
@@ -1222,7 +1222,7 @@
     {
       "language": "kannada",
       "chapter": 22,
-      "sourceHash": "fnv1a64:f63f1cfc23b0cb25",
+      "sourceHash": "fnv1a64:848cc6752d422161",
       "lessonIds": [
         "KA-C22-hasiru-haladi"
       ],
@@ -1231,7 +1231,7 @@
     {
       "language": "kannada",
       "chapter": 23,
-      "sourceHash": "fnv1a64:422a48e530cebe57",
+      "sourceHash": "fnv1a64:8aef4dd2449dd55e",
       "lessonIds": [
         "KA-C23-dina"
       ],
@@ -1240,7 +1240,7 @@
     {
       "language": "kannada",
       "chapter": 24,
-      "sourceHash": "fnv1a64:34c5748dc853de1e",
+      "sourceHash": "fnv1a64:45806e54d1033f7b",
       "lessonIds": [
         "KA-C24-ratri"
       ],
@@ -1249,7 +1249,7 @@
     {
       "language": "kannada",
       "chapter": 25,
-      "sourceHash": "fnv1a64:d84a11ad7e7cac19",
+      "sourceHash": "fnv1a64:9622a770e2fd9992",
       "lessonIds": [
         "KA-C25-shubha-ratri"
       ],
@@ -1258,7 +1258,7 @@
     {
       "language": "kannada",
       "chapter": 26,
-      "sourceHash": "fnv1a64:6c517d5cdb2f5b6a",
+      "sourceHash": "fnv1a64:c767fc975d3723cc",
       "lessonIds": [
         "KA-C26-belagge"
       ],
@@ -1267,7 +1267,7 @@
     {
       "language": "kannada",
       "chapter": 27,
-      "sourceHash": "fnv1a64:5b610fd79895225e",
+      "sourceHash": "fnv1a64:831c34f1ed0d12d1",
       "lessonIds": [
         "KA-C27-sanje"
       ],
@@ -1276,7 +1276,7 @@
     {
       "language": "kannada",
       "chapter": 28,
-      "sourceHash": "fnv1a64:6133ff939c0603ea",
+      "sourceHash": "fnv1a64:dfe03a16baaee8da",
       "lessonIds": [
         "KA-C28-aparahna"
       ],
@@ -1285,7 +1285,7 @@
     {
       "language": "kannada",
       "chapter": 29,
-      "sourceHash": "fnv1a64:65f0071b2ae9fb22",
+      "sourceHash": "fnv1a64:fb3b90edfd38e0ca",
       "lessonIds": [
         "KA-C29-shubhodaya"
       ],
@@ -1294,7 +1294,7 @@
     {
       "language": "kannada",
       "chapter": 30,
-      "sourceHash": "fnv1a64:aebe084d534a27d6",
+      "sourceHash": "fnv1a64:fe5f9834a7737a9a",
       "lessonIds": [
         "KA-C30-shubha-sanje"
       ],
@@ -1303,7 +1303,7 @@
     {
       "language": "kannada",
       "chapter": 31,
-      "sourceHash": "fnv1a64:f2a6ae56d39f4220",
+      "sourceHash": "fnv1a64:969f7e393368770d",
       "lessonIds": [
         "KA-C31-shubha-madhyahna"
       ],
@@ -1312,7 +1312,7 @@
     {
       "language": "kannada",
       "chapter": 32,
-      "sourceHash": "fnv1a64:2c308c4cc3cdd31a",
+      "sourceHash": "fnv1a64:de713860d6c41685",
       "lessonIds": [
         "KA-C32-iru",
         "KA-C32-hoogu",
@@ -1326,7 +1326,7 @@
     {
       "language": "latin",
       "chapter": 2,
-      "sourceHash": "fnv1a64:898dd008f6cb6e08",
+      "sourceHash": "fnv1a64:c822987dd25c0a2b",
       "lessonIds": [
         "LA-C02-numbers-1-5",
         "LA-C02-numbers-6-10"
@@ -1336,7 +1336,7 @@
     {
       "language": "latin",
       "chapter": 3,
-      "sourceHash": "fnv1a64:3662fdf3d0d3281d",
+      "sourceHash": "fnv1a64:674c9a8995df5411",
       "lessonIds": [
         "LA-C03-quaeso"
       ],
@@ -1345,7 +1345,7 @@
     {
       "language": "latin",
       "chapter": 4,
-      "sourceHash": "fnv1a64:af8c86fea4e23dd8",
+      "sourceHash": "fnv1a64:4e2d23bfc970da95",
       "lessonIds": [
         "LA-C04-ignosce-mihi"
       ],
@@ -1354,7 +1354,7 @@
     {
       "language": "latin",
       "chapter": 5,
-      "sourceHash": "fnv1a64:f10d90cbc6a9bb23",
+      "sourceHash": "fnv1a64:e5a69c7728a13fa3",
       "lessonIds": [
         "LA-C05-dies-lunae-veneris",
         "LA-C05-saturni-solis"
@@ -1364,7 +1364,7 @@
     {
       "language": "latin",
       "chapter": 6,
-      "sourceHash": "fnv1a64:ed8c641caa3d95e0",
+      "sourceHash": "fnv1a64:cdf6cfc12d86be34",
       "lessonIds": [
         "LA-C06-niger-albus",
         "LA-C06-ruber-caeruleus"
@@ -1374,7 +1374,7 @@
     {
       "language": "latin",
       "chapter": 7,
-      "sourceHash": "fnv1a64:cad110c49d4d24a0",
+      "sourceHash": "fnv1a64:5371fa2a73f7af11",
       "lessonIds": [
         "LA-C07-pater-mater",
         "LA-C07-frater-soror"
@@ -1384,7 +1384,7 @@
     {
       "language": "latin",
       "chapter": 8,
-      "sourceHash": "fnv1a64:bd30fdc59052d494",
+      "sourceHash": "fnv1a64:0908a453bc41487d",
       "lessonIds": [
         "LA-C08-caput",
         "LA-C08-manus"
@@ -1394,7 +1394,7 @@
     {
       "language": "latin",
       "chapter": 9,
-      "sourceHash": "fnv1a64:edc64f98539cbfbd",
+      "sourceHash": "fnv1a64:a66d0991689bfd1f",
       "lessonIds": [
         "LA-C09-anni-tempora"
       ],
@@ -1403,7 +1403,7 @@
     {
       "language": "latin",
       "chapter": 10,
-      "sourceHash": "fnv1a64:1e7cf552260ff65d",
+      "sourceHash": "fnv1a64:2b5b66f0b53814e3",
       "lessonIds": [
         "LA-C10-aqua-vinum",
         "LA-C10-panis"
@@ -1413,7 +1413,7 @@
     {
       "language": "latin",
       "chapter": 11,
-      "sourceHash": "fnv1a64:cd0f435f0e35bd16",
+      "sourceHash": "fnv1a64:ec5d257ed2599110",
       "lessonIds": [
         "LA-C11-menses"
       ],
@@ -1422,7 +1422,7 @@
     {
       "language": "latin",
       "chapter": 12,
-      "sourceHash": "fnv1a64:1bfb3b5087967528",
+      "sourceHash": "fnv1a64:35131136ef38c4aa",
       "lessonIds": [
         "LA-C12-medius-dies-nox"
       ],
@@ -1431,7 +1431,7 @@
     {
       "language": "latin",
       "chapter": 13,
-      "sourceHash": "fnv1a64:70129fcfaa529aeb",
+      "sourceHash": "fnv1a64:4ae96ef2bfd3d8d1",
       "lessonIds": [
         "LA-C13-hora"
       ],
@@ -1440,7 +1440,7 @@
     {
       "language": "latin",
       "chapter": 14,
-      "sourceHash": "fnv1a64:4cacc8aa4dbfcb69",
+      "sourceHash": "fnv1a64:88a16c4c598e79ac",
       "lessonIds": [
         "LA-C14-annos-natus"
       ],
@@ -1449,7 +1449,7 @@
     {
       "language": "latin",
       "chapter": 15,
-      "sourceHash": "fnv1a64:c3e1e79882a479ae",
+      "sourceHash": "fnv1a64:c49ceb930ccc6db7",
       "lessonIds": [
         "LA-C15-tempestas-pluit",
         "LA-C15-weather-verbs"
@@ -1459,7 +1459,7 @@
     {
       "language": "latin",
       "chapter": 16,
-      "sourceHash": "fnv1a64:b99e5996a77b8d8d",
+      "sourceHash": "fnv1a64:e59fb68133736975",
       "lessonIds": [
         "LA-C16-undecim-viginti"
       ],
@@ -1468,7 +1468,7 @@
     {
       "language": "latin",
       "chapter": 17,
-      "sourceHash": "fnv1a64:ae99ab2bc2171e5f",
+      "sourceHash": "fnv1a64:8785dfde6bd53379",
       "lessonIds": [
         "LA-C17-canis-feles-cattus"
       ],
@@ -1477,7 +1477,7 @@
     {
       "language": "latin",
       "chapter": 18,
-      "sourceHash": "fnv1a64:cbc0896ad4cd0986",
+      "sourceHash": "fnv1a64:f4a249a1e201041e",
       "lessonIds": [
         "LA-C18-viridis-flavus"
       ],
@@ -1486,7 +1486,7 @@
     {
       "language": "latin",
       "chapter": 19,
-      "sourceHash": "fnv1a64:b6d1686c248ae1e9",
+      "sourceHash": "fnv1a64:70daed844fd46cae",
       "lessonIds": [
         "LA-C19-quid-agis",
         "LA-C19-valeo-family",
@@ -1497,7 +1497,7 @@
     {
       "language": "latin",
       "chapter": 20,
-      "sourceHash": "fnv1a64:b25c55ef1e914d27",
+      "sourceHash": "fnv1a64:2bba113a1c0af26c",
       "lessonIds": [
         "LA-C20-quid-tibi-nomen",
         "LA-C20-name-case-variation"
@@ -1507,7 +1507,7 @@
     {
       "language": "latin",
       "chapter": 21,
-      "sourceHash": "fnv1a64:0f93e9300f86bb34",
+      "sourceHash": "fnv1a64:6d6c5bcc65253b22",
       "lessonIds": [
         "LA-C21-volup-est-convenisse",
         "LA-C21-meeting-phrase-context",
@@ -1518,7 +1518,7 @@
     {
       "language": "latin",
       "chapter": 22,
-      "sourceHash": "fnv1a64:06d81dea738f71b3",
+      "sourceHash": "fnv1a64:83da3944b6c5c3a0",
       "lessonIds": [
         "LA-C22-tu-vos"
       ],
@@ -1527,7 +1527,7 @@
     {
       "language": "latin",
       "chapter": 23,
-      "sourceHash": "fnv1a64:5a51c5425280c9de",
+      "sourceHash": "fnv1a64:eee73b246eab12f5",
       "lessonIds": [
         "LA-C23-nihil-est"
       ],
@@ -1536,7 +1536,7 @@
     {
       "language": "latin",
       "chapter": 24,
-      "sourceHash": "fnv1a64:fbfe6bfdc8699ad8",
+      "sourceHash": "fnv1a64:5facfd3a7eb41aac",
       "lessonIds": [
         "LA-C24-propediem-te-videbo"
       ],
@@ -1545,7 +1545,7 @@
     {
       "language": "latin",
       "chapter": 25,
-      "sourceHash": "fnv1a64:909f8cccf78a29c4",
+      "sourceHash": "fnv1a64:89aa6a1c5af4534d",
       "lessonIds": [
         "LA-C25-cras-te-videbo"
       ],
@@ -1554,7 +1554,7 @@
     {
       "language": "latin",
       "chapter": 26,
-      "sourceHash": "fnv1a64:f50df97989beb1d1",
+      "sourceHash": "fnv1a64:0784cd5cf61c5e1c",
       "lessonIds": [
         "LA-C26-quomodo"
       ],
@@ -1563,7 +1563,7 @@
     {
       "language": "latin",
       "chapter": 27,
-      "sourceHash": "fnv1a64:4f1ddd5d47387816",
+      "sourceHash": "fnv1a64:aa106808c41993ce",
       "lessonIds": [
         "LA-C27-bene"
       ],
@@ -1572,7 +1572,7 @@
     {
       "language": "latin",
       "chapter": 28,
-      "sourceHash": "fnv1a64:040b4a9eb03ace92",
+      "sourceHash": "fnv1a64:68f142a3123dfded",
       "lessonIds": [
         "LA-C28-dies"
       ],
@@ -1581,7 +1581,7 @@
     {
       "language": "latin",
       "chapter": 29,
-      "sourceHash": "fnv1a64:6fc771adb72bf7be",
+      "sourceHash": "fnv1a64:3ff440d2911c74e5",
       "lessonIds": [
         "LA-C29-nox"
       ],
@@ -1590,7 +1590,7 @@
     {
       "language": "latin",
       "chapter": 30,
-      "sourceHash": "fnv1a64:cab2e9e1d5a63bcc",
+      "sourceHash": "fnv1a64:97470bda34951513",
       "lessonIds": [
         "LA-C30-bonam-noctem"
       ],
@@ -1599,7 +1599,7 @@
     {
       "language": "latin",
       "chapter": 31,
-      "sourceHash": "fnv1a64:d9f6f591d0ed8564",
+      "sourceHash": "fnv1a64:da073adb37a756c3",
       "lessonIds": [
         "LA-C31-mane"
       ],
@@ -1608,7 +1608,7 @@
     {
       "language": "latin",
       "chapter": 32,
-      "sourceHash": "fnv1a64:34fa2e1f92230d90",
+      "sourceHash": "fnv1a64:02b5729bd9b74ed1",
       "lessonIds": [
         "LA-C32-bonum-mane"
       ],
@@ -1617,7 +1617,7 @@
     {
       "language": "latin",
       "chapter": 33,
-      "sourceHash": "fnv1a64:7df24e4c500c2166",
+      "sourceHash": "fnv1a64:fe72e89d55afa3f8",
       "lessonIds": [
         "LA-C33-vesper",
         "LA-C33-vesper-afterlives",
@@ -1628,7 +1628,7 @@
     {
       "language": "latin",
       "chapter": 34,
-      "sourceHash": "fnv1a64:d620539a00f8c156",
+      "sourceHash": "fnv1a64:25927f0844484b95",
       "lessonIds": [
         "LA-C34-bonum-vesperum"
       ],
@@ -1637,7 +1637,7 @@
     {
       "language": "latin",
       "chapter": 35,
-      "sourceHash": "fnv1a64:efb6b7c9fb361a59",
+      "sourceHash": "fnv1a64:5b5efc1922211d6d",
       "lessonIds": [
         "LA-C35-meridies"
       ],
@@ -1646,7 +1646,7 @@
     {
       "language": "latin",
       "chapter": 36,
-      "sourceHash": "fnv1a64:467e8562c765f453",
+      "sourceHash": "fnv1a64:33e7b9a916303a4a",
       "lessonIds": [
         "LA-C36-salve-post-meridiem",
         "LA-C36-timeless-salve",
@@ -1657,7 +1657,7 @@
     {
       "language": "latin",
       "chapter": 37,
-      "sourceHash": "fnv1a64:7cce21a37232012a",
+      "sourceHash": "fnv1a64:aec4260220b3f2c4",
       "lessonIds": [
         "LA-C37-sum",
         "LA-C37-habeo",
@@ -1673,7 +1673,7 @@
     {
       "language": "latin",
       "chapter": 38,
-      "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
+      "sourceHash": "fnv1a64:9059488149d5e0af",
       "lessonIds": [
         "LA-C38-cogito",
         "LA-C38-lego",
@@ -1685,7 +1685,7 @@
     {
       "language": "latin",
       "chapter": 39,
-      "sourceHash": "fnv1a64:78c8a48b5713a827",
+      "sourceHash": "fnv1a64:7c5e27358c826867",
       "lessonIds": [
         "LA-C39-capio",
         "LA-C39-rogo",
@@ -1697,7 +1697,7 @@
     {
       "language": "malayalam",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a395cc73dc812086",
+      "sourceHash": "fnv1a64:681af808b81537e1",
       "lessonIds": [
         "ML-C06-dative-ikku",
         "ML-C06-dative-subject"
@@ -1707,7 +1707,7 @@
     {
       "language": "malayalam",
       "chapter": 7,
-      "sourceHash": "fnv1a64:86b461ccf2e61aa9",
+      "sourceHash": "fnv1a64:35eb1befcfa03672",
       "lessonIds": [
         "ML-C07-numbers-1-5",
         "ML-C07-numbers-6-10"
@@ -1717,7 +1717,7 @@
     {
       "language": "malayalam",
       "chapter": 8,
-      "sourceHash": "fnv1a64:beb32b8b66098647",
+      "sourceHash": "fnv1a64:ffb6d97c7589e248",
       "lessonIds": [
         "ML-C08-dayavayi"
       ],
@@ -1726,7 +1726,7 @@
     {
       "language": "malayalam",
       "chapter": 9,
-      "sourceHash": "fnv1a64:60ba9f3764eeac28",
+      "sourceHash": "fnv1a64:80976b7237841a5f",
       "lessonIds": [
         "ML-C09-kshamikkanam"
       ],
@@ -1735,7 +1735,7 @@
     {
       "language": "malayalam",
       "chapter": 10,
-      "sourceHash": "fnv1a64:7488bd8c935f62d7",
+      "sourceHash": "fnv1a64:d3ece6c76415e684",
       "lessonIds": [
         "ML-C10-azhcha"
       ],
@@ -1744,7 +1744,7 @@
     {
       "language": "malayalam",
       "chapter": 11,
-      "sourceHash": "fnv1a64:fbbc1ab28dbc377d",
+      "sourceHash": "fnv1a64:5b536d3bc8cf14a0",
       "lessonIds": [
         "ML-C11-nirangal"
       ],
@@ -1753,7 +1753,7 @@
     {
       "language": "malayalam",
       "chapter": 12,
-      "sourceHash": "fnv1a64:e42ba8156c6e3d9a",
+      "sourceHash": "fnv1a64:8f45a618aca85d72",
       "lessonIds": [
         "ML-C12-kudumbam"
       ],
@@ -1762,7 +1762,7 @@
     {
       "language": "malayalam",
       "chapter": 13,
-      "sourceHash": "fnv1a64:8d847e5cf2b99e2d",
+      "sourceHash": "fnv1a64:a45829fa8acae933",
       "lessonIds": [
         "ML-C13-shareera-bhaagangal"
       ],
@@ -1771,7 +1771,7 @@
     {
       "language": "malayalam",
       "chapter": 14,
-      "sourceHash": "fnv1a64:cab5ece57c64c887",
+      "sourceHash": "fnv1a64:e04d86735778ee0f",
       "lessonIds": [
         "ML-C14-kaalangal"
       ],
@@ -1780,7 +1780,7 @@
     {
       "language": "malayalam",
       "chapter": 15,
-      "sourceHash": "fnv1a64:f87c2d31a9e1bcb9",
+      "sourceHash": "fnv1a64:3b8113a57d17a14e",
       "lessonIds": [
         "ML-C15-vellam-ari"
       ],
@@ -1789,7 +1789,7 @@
     {
       "language": "malayalam",
       "chapter": 16,
-      "sourceHash": "fnv1a64:3ae69cba397926e5",
+      "sourceHash": "fnv1a64:995f0f7c5a97288c",
       "lessonIds": [
         "ML-C16-kollavarsham-maasangal"
       ],
@@ -1798,7 +1798,7 @@
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:288f60854351ad94",
+      "sourceHash": "fnv1a64:32bb8fe73e6c747a",
       "lessonIds": [
         "ML-C17-ucha-paathira",
         "ML-C17-paathira"
@@ -1808,7 +1808,7 @@
     {
       "language": "malayalam",
       "chapter": 18,
-      "sourceHash": "fnv1a64:39e6627618aef15f",
+      "sourceHash": "fnv1a64:e627813307b6243b",
       "lessonIds": [
         "ML-C18-mani"
       ],
@@ -1817,7 +1817,7 @@
     {
       "language": "malayalam",
       "chapter": 19,
-      "sourceHash": "fnv1a64:e5e120e17bcb588f",
+      "sourceHash": "fnv1a64:85311e0c61a01ee8",
       "lessonIds": [
         "ML-C19-vayassu"
       ],
@@ -1826,7 +1826,7 @@
     {
       "language": "malayalam",
       "chapter": 20,
-      "sourceHash": "fnv1a64:f974ebaac51f7c0e",
+      "sourceHash": "fnv1a64:0e82f905652cc02e",
       "lessonIds": [
         "ML-C20-pathinonnu-irupathu",
         "ML-C20-kalavastha"
@@ -1836,7 +1836,7 @@
     {
       "language": "malayalam",
       "chapter": 21,
-      "sourceHash": "fnv1a64:e2a78a4d8d90f4df",
+      "sourceHash": "fnv1a64:37a29e2352098181",
       "lessonIds": [
         "ML-C21-naaya-poocha"
       ],
@@ -1845,7 +1845,7 @@
     {
       "language": "malayalam",
       "chapter": 22,
-      "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
+      "sourceHash": "fnv1a64:bb42d0e56add4129",
       "lessonIds": [
         "ML-C22-paccha-manja"
       ],
@@ -1854,7 +1854,7 @@
     {
       "language": "malayalam",
       "chapter": 23,
-      "sourceHash": "fnv1a64:e9c420c4e46128da",
+      "sourceHash": "fnv1a64:e463b24bf194c280",
       "lessonIds": [
         "ML-C23-divasam",
         "ML-C23-naal"
@@ -1864,7 +1864,7 @@
     {
       "language": "malayalam",
       "chapter": 24,
-      "sourceHash": "fnv1a64:acbff52e5880c78d",
+      "sourceHash": "fnv1a64:bd27bc3d1419a5db",
       "lessonIds": [
         "ML-C24-rathri",
         "ML-C24-native-night-words"
@@ -1874,7 +1874,7 @@
     {
       "language": "malayalam",
       "chapter": 25,
-      "sourceHash": "fnv1a64:447949184dfe4ff4",
+      "sourceHash": "fnv1a64:05a80a8079eb53af",
       "lessonIds": [
         "ML-C25-shubha-rathri"
       ],
@@ -1883,7 +1883,7 @@
     {
       "language": "malayalam",
       "chapter": 26,
-      "sourceHash": "fnv1a64:2606e98487e2c8e6",
+      "sourceHash": "fnv1a64:ff7692cb6892cabb",
       "lessonIds": [
         "ML-C26-raavile"
       ],
@@ -1892,7 +1892,7 @@
     {
       "language": "malayalam",
       "chapter": 27,
-      "sourceHash": "fnv1a64:c2a9ff4b74bdfb8e",
+      "sourceHash": "fnv1a64:73ab307399f34fb9",
       "lessonIds": [
         "ML-C27-vaikunneram"
       ],
@@ -1901,7 +1901,7 @@
     {
       "language": "malayalam",
       "chapter": 28,
-      "sourceHash": "fnv1a64:585d631c6cb2a93a",
+      "sourceHash": "fnv1a64:fa6723cf53ce32c5",
       "lessonIds": [
         "ML-C28-uchakazhinju"
       ],
@@ -1910,7 +1910,7 @@
     {
       "language": "malayalam",
       "chapter": 29,
-      "sourceHash": "fnv1a64:8afc5076ee8c3dff",
+      "sourceHash": "fnv1a64:259a4f9ee9f336b4",
       "lessonIds": [
         "ML-C29-suprabhaatham"
       ],
@@ -1919,7 +1919,7 @@
     {
       "language": "malayalam",
       "chapter": 30,
-      "sourceHash": "fnv1a64:043cd698c21af4b8",
+      "sourceHash": "fnv1a64:43698bd93745ed51",
       "lessonIds": [
         "ML-C30-shubha-sayaahnam"
       ],
@@ -1928,7 +1928,7 @@
     {
       "language": "malayalam",
       "chapter": 31,
-      "sourceHash": "fnv1a64:5cd8f71d62d40931",
+      "sourceHash": "fnv1a64:dd9eee586ab695a1",
       "lessonIds": [
         "ML-C31-shubha-madhyaahnam",
         "ML-C31-afternoon-convergence"
@@ -1938,7 +1938,7 @@
     {
       "language": "malayalam",
       "chapter": 32,
-      "sourceHash": "fnv1a64:6dce5556729f174a",
+      "sourceHash": "fnv1a64:eb5f6ee6dc3ed4a4",
       "lessonIds": [
         "ML-C32-undu",
         "ML-C32-pokuka",
@@ -1952,7 +1952,7 @@
     {
       "language": "marathi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4b1e1c620ea3aa6a",
+      "sourceHash": "fnv1a64:b3366258b8d30e41",
       "lessonIds": [
         "MR-C06-numbers-1-5",
         "MR-C06-number-differences"
@@ -1962,7 +1962,7 @@
     {
       "language": "marathi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:ff2ac4184c0d065b",
+      "sourceHash": "fnv1a64:374b1dfaa43d7a67",
       "lessonIds": [
         "MR-C07-asne",
         "MR-C07-jane",
@@ -1976,7 +1976,7 @@
     {
       "language": "persian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:6079d14592306807",
+      "sourceHash": "fnv1a64:022a050d2477f200",
       "lessonIds": [
         "FA-C03-shoma-to",
         "FA-C03-chist",
@@ -1989,7 +1989,7 @@
     {
       "language": "persian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:b6a2b7c1f4986bb4",
+      "sourceHash": "fnv1a64:e1b1f0316b67d0d5",
       "lessonIds": [
         "FA-C04-hal",
         "FA-C04-chetor",
@@ -2003,7 +2003,7 @@
     {
       "language": "persian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:def693c2c104b5a0",
+      "sourceHash": "fnv1a64:c63b7d69773f4f9b",
       "lessonIds": [
         "FA-C05-khoda",
         "FA-C05-hafez",
@@ -2015,7 +2015,7 @@
     {
       "language": "persian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:45fe9072e4bc2575",
+      "sourceHash": "fnv1a64:78eb1cc290466c9b",
       "lessonIds": [
         "FA-C06-budan",
         "FA-C06-raftan",
@@ -2028,7 +2028,7 @@
     {
       "language": "portuguese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:b696688c2654a2d3",
+      "sourceHash": "fnv1a64:90d86947fcde6c44",
       "lessonIds": [
         "PT-C02-de-nada",
         "PT-C02-como",
@@ -2044,7 +2044,7 @@
     {
       "language": "portuguese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:cbeaa2b81cbf1c89",
+      "sourceHash": "fnv1a64:b556716efa31b8ab",
       "lessonIds": [
         "PT-C03-eu",
         "PT-C03-me-chamo",
@@ -2057,7 +2057,7 @@
     {
       "language": "portuguese",
       "chapter": 4,
-      "sourceHash": "fnv1a64:66911b57472a9ba2",
+      "sourceHash": "fnv1a64:c51ff13f62fb7080",
       "lessonIds": [
         "PT-C04-adeus",
         "PT-C04-ate-logo",
@@ -2070,7 +2070,7 @@
     {
       "language": "portuguese",
       "chapter": 5,
-      "sourceHash": "fnv1a64:dc1f079cde196fa2",
+      "sourceHash": "fnv1a64:ae7474948e5bc912",
       "lessonIds": [
         "PT-C05-falar",
         "PT-C05-morar",
@@ -2083,7 +2083,7 @@
     {
       "language": "portuguese",
       "chapter": 6,
-      "sourceHash": "fnv1a64:e500f5a113192fbf",
+      "sourceHash": "fnv1a64:31976b8f731fc34f",
       "lessonIds": [
         "PT-C06-numeros-1-5",
         "PT-C06-numeros-6-10"
@@ -2093,7 +2093,7 @@
     {
       "language": "portuguese",
       "chapter": 7,
-      "sourceHash": "fnv1a64:b504ffa532cad313",
+      "sourceHash": "fnv1a64:aff91efbe69e2545",
       "lessonIds": [
         "PT-C07-dias-1",
         "PT-C07-dias-2"
@@ -2103,7 +2103,7 @@
     {
       "language": "portuguese",
       "chapter": 8,
-      "sourceHash": "fnv1a64:bcad5cb560fb13f6",
+      "sourceHash": "fnv1a64:142febca13551048",
       "lessonIds": [
         "PT-C08-hora",
         "PT-C08-meio-dia-meia-noite"
@@ -2113,7 +2113,7 @@
     {
       "language": "portuguese",
       "chapter": 9,
-      "sourceHash": "fnv1a64:565993042600b26d",
+      "sourceHash": "fnv1a64:40b5f36e4fb874b6",
       "lessonIds": [
         "PT-C09-meses",
         "PT-C09-estacoes"
@@ -2123,7 +2123,7 @@
     {
       "language": "portuguese",
       "chapter": 10,
-      "sourceHash": "fnv1a64:756b61183a892e04",
+      "sourceHash": "fnv1a64:dd61a14d7c4fb6f3",
       "lessonIds": [
         "PT-C10-pais",
         "PT-C10-irmaos"
@@ -2133,7 +2133,7 @@
     {
       "language": "portuguese",
       "chapter": 11,
-      "sourceHash": "fnv1a64:45ea90ec38957e5b",
+      "sourceHash": "fnv1a64:76c585509d90ef7d",
       "lessonIds": [
         "PT-C11-pao",
         "PT-C11-agua-vinho"
@@ -2143,7 +2143,7 @@
     {
       "language": "portuguese",
       "chapter": 12,
-      "sourceHash": "fnv1a64:d62ea89555f0cfaf",
+      "sourceHash": "fnv1a64:70401b019de6c544",
       "lessonIds": [
         "PT-C12-numeros-11-15",
         "PT-C12-numeros-16-20"
@@ -2153,7 +2153,7 @@
     {
       "language": "portuguese",
       "chapter": 13,
-      "sourceHash": "fnv1a64:bde0638b592353e1",
+      "sourceHash": "fnv1a64:3bf43a190148b65c",
       "lessonIds": [
         "PT-C13-preto-branco",
         "PT-C13-vermelho-azul"
@@ -2163,7 +2163,7 @@
     {
       "language": "portuguese",
       "chapter": 14,
-      "sourceHash": "fnv1a64:5dd21c93ee684761",
+      "sourceHash": "fnv1a64:f81f459315220cdc",
       "lessonIds": [
         "PT-C14-ter",
         "PT-C14-idade"
@@ -2173,7 +2173,7 @@
     {
       "language": "portuguese",
       "chapter": 15,
-      "sourceHash": "fnv1a64:6126b552a3d85de0",
+      "sourceHash": "fnv1a64:f7602b2632d5eab4",
       "lessonIds": [
         "PT-C15-preterito-perfeito",
         "PT-C15-tenho-falado"
@@ -2183,7 +2183,7 @@
     {
       "language": "portuguese",
       "chapter": 16,
-      "sourceHash": "fnv1a64:bc608ce25d6412a4",
+      "sourceHash": "fnv1a64:bd1d34a81244f3b3",
       "lessonIds": [
         "PT-C16-ser",
         "PT-C16-ser-roots",
@@ -2195,7 +2195,7 @@
     {
       "language": "portuguese",
       "chapter": 17,
-      "sourceHash": "fnv1a64:05efdf7fd1a723f5",
+      "sourceHash": "fnv1a64:3f54a999c7f93f54",
       "lessonIds": [
         "PT-C17-cabeca",
         "PT-C17-cabeca-caput",
@@ -2206,7 +2206,7 @@
     {
       "language": "portuguese",
       "chapter": 18,
-      "sourceHash": "fnv1a64:0d898ecaffb6d412",
+      "sourceHash": "fnv1a64:4692318f8950d51b",
       "lessonIds": [
         "PT-C18-ser-estar",
         "PT-C18-ter-haver",
@@ -2221,7 +2221,7 @@
     {
       "language": "portuguese",
       "chapter": 19,
-      "sourceHash": "fnv1a64:930f414ccf731f3e",
+      "sourceHash": "fnv1a64:651c6e229af3ae07",
       "lessonIds": [
         "PT-C19-pensar",
         "PT-C19-entender-compreender",
@@ -2233,7 +2233,7 @@
     {
       "language": "portuguese",
       "chapter": 20,
-      "sourceHash": "fnv1a64:e0da55ea0ca21897",
+      "sourceHash": "fnv1a64:9eb09a2acc372193",
       "lessonIds": [
         "PT-C20-tomar-pegar",
         "PT-C20-perguntar",
@@ -2245,7 +2245,7 @@
     {
       "language": "punjabi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:b77ab588fd68bcd5",
+      "sourceHash": "fnv1a64:5760617556944da1",
       "lessonIds": [
         "PA-C06-numbers-1-5",
         "PA-C06-panj-convergence"
@@ -2255,7 +2255,7 @@
     {
       "language": "punjabi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "sourceHash": "fnv1a64:2c01d80da05c9dea",
       "lessonIds": [
         "PA-C07-hona",
         "PA-C07-jana",
@@ -2283,7 +2283,7 @@
     {
       "language": "russian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:01b832ff24f65733",
+      "sourceHash": "fnv1a64:9f5767672ec3100d",
       "lessonIds": [
         "RU-C04-dumat",
         "RU-C04-ponimat",
@@ -2295,7 +2295,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+      "sourceHash": "fnv1a64:32a9ac2581f31cc5",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -2307,7 +2307,7 @@
     {
       "language": "sanskrit",
       "chapter": 6,
-      "sourceHash": "fnv1a64:5f46cbe023b464e1",
+      "sourceHash": "fnv1a64:a656e75219086f98",
       "lessonIds": [
         "SA-C06-numbers-1-5",
         "SA-C06-number-cognates",
@@ -2318,7 +2318,7 @@
     {
       "language": "sanskrit",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+      "sourceHash": "fnv1a64:a9fbc130c5548ced",
       "lessonIds": [
         "SA-C07-asti",
         "SA-C07-gacchati",
@@ -2332,7 +2332,7 @@
     {
       "language": "spanish",
       "chapter": 1,
-      "sourceHash": "fnv1a64:e2e55a440c95c8cb",
+      "sourceHash": "fnv1a64:f60ef7e13f9bcde6",
       "lessonIds": [
         "ES-C01-hola",
         "ES-C01-bien",
@@ -2347,7 +2347,7 @@
     {
       "language": "spanish",
       "chapter": 2,
-      "sourceHash": "fnv1a64:462a506683c04c7f",
+      "sourceHash": "fnv1a64:62cc1761907fc064",
       "lessonIds": [
         "ES-C02-tarde",
         "ES-C02-buenas-tardes",
@@ -2360,7 +2360,7 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:cca681cba079b8ff",
+      "sourceHash": "fnv1a64:73e364d81deb0ce2",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -2382,7 +2382,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:e141ae5a2efc8e27",
+      "sourceHash": "fnv1a64:9d42723f0c32d9e8",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -2405,7 +2405,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:ebc64822725a1f4d",
+      "sourceHash": "fnv1a64:771d84a703b9f61b",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -2420,7 +2420,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:ef479098b3b701b3",
+      "sourceHash": "fnv1a64:6f12c9b2b05829da",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",
@@ -2437,7 +2437,7 @@
     {
       "language": "spanish",
       "chapter": 19,
-      "sourceHash": "fnv1a64:26065bd139568e43",
+      "sourceHash": "fnv1a64:117be7de3910e010",
       "lessonIds": [
         "ES-C19-si",
         "ES-C19-no"
@@ -2447,7 +2447,7 @@
     {
       "language": "spanish",
       "chapter": 20,
-      "sourceHash": "fnv1a64:eb8a28c91366131e",
+      "sourceHash": "fnv1a64:a36ac4da1036c57c",
       "lessonIds": [
         "ES-C20-lo-siento",
         "ES-C20-perdon"
@@ -2457,7 +2457,7 @@
     {
       "language": "spanish",
       "chapter": 21,
-      "sourceHash": "fnv1a64:cbada3c250a98194",
+      "sourceHash": "fnv1a64:289e27ba51c8e4de",
       "lessonIds": [
         "ES-C21-lunes-viernes",
         "ES-C21-sabado-domingo"
@@ -2467,7 +2467,7 @@
     {
       "language": "spanish",
       "chapter": 22,
-      "sourceHash": "fnv1a64:7ce9af6cb50c3202",
+      "sourceHash": "fnv1a64:041d90e535fcd563",
       "lessonIds": [
         "ES-C22-negro-blanco",
         "ES-C22-blanco-germanico",
@@ -2479,7 +2479,7 @@
     {
       "language": "spanish",
       "chapter": 23,
-      "sourceHash": "fnv1a64:55d2e4bd397961e0",
+      "sourceHash": "fnv1a64:06c0c22611f30f9a",
       "lessonIds": [
         "ES-C23-padre-madre",
         "ES-C23-hermano-hermana",
@@ -2490,7 +2490,7 @@
     {
       "language": "spanish",
       "chapter": 24,
-      "sourceHash": "fnv1a64:d9335133eebe69c2",
+      "sourceHash": "fnv1a64:6f69c8d7778b09c2",
       "lessonIds": [
         "ES-C24-cabeza",
         "ES-C24-mano"
@@ -2500,7 +2500,7 @@
     {
       "language": "spanish",
       "chapter": 25,
-      "sourceHash": "fnv1a64:ce540eb8329698ee",
+      "sourceHash": "fnv1a64:5ddb9529e1bbdf8a",
       "lessonIds": [
         "ES-C25-las-estaciones"
       ],
@@ -2509,7 +2509,7 @@
     {
       "language": "spanish",
       "chapter": 26,
-      "sourceHash": "fnv1a64:adcb64dbcc088e9f",
+      "sourceHash": "fnv1a64:0feff5b9bcd607d2",
       "lessonIds": [
         "ES-C26-agua",
         "ES-C26-vino",
@@ -2520,7 +2520,7 @@
     {
       "language": "spanish",
       "chapter": 27,
-      "sourceHash": "fnv1a64:1221fb0b96f61360",
+      "sourceHash": "fnv1a64:30dc8714c72b1563",
       "lessonIds": [
         "ES-C27-los-meses"
       ],
@@ -2529,7 +2529,7 @@
     {
       "language": "spanish",
       "chapter": 28,
-      "sourceHash": "fnv1a64:ab0e2305d98d0480",
+      "sourceHash": "fnv1a64:951cd39eb12af063",
       "lessonIds": [
         "ES-C28-mediodia-medianoche"
       ],
@@ -2538,7 +2538,7 @@
     {
       "language": "spanish",
       "chapter": 29,
-      "sourceHash": "fnv1a64:2a23e6b112a7d818",
+      "sourceHash": "fnv1a64:44ea17e886d33720",
       "lessonIds": [
         "ES-C29-la-hora"
       ],
@@ -2547,7 +2547,7 @@
     {
       "language": "spanish",
       "chapter": 30,
-      "sourceHash": "fnv1a64:6148ab69b50fe394",
+      "sourceHash": "fnv1a64:89124fc54fce7711",
       "lessonIds": [
         "ES-C30-el-tiempo",
         "ES-C30-hace-calor",
@@ -2558,7 +2558,7 @@
     {
       "language": "spanish",
       "chapter": 31,
-      "sourceHash": "fnv1a64:96d1c45d4a4ca6a3",
+      "sourceHash": "fnv1a64:1828cca4b83ba5a3",
       "lessonIds": [
         "ES-C31-once-quince",
         "ES-C31-dieciseis-diecinueve",
@@ -2570,7 +2570,7 @@
     {
       "language": "spanish",
       "chapter": 32,
-      "sourceHash": "fnv1a64:d1283505847604c8",
+      "sourceHash": "fnv1a64:91a467c6f1bd7b7d",
       "lessonIds": [
         "ES-C32-gato",
         "ES-C32-perro"
@@ -2580,7 +2580,7 @@
     {
       "language": "spanish",
       "chapter": 33,
-      "sourceHash": "fnv1a64:1193d6388479368f",
+      "sourceHash": "fnv1a64:0aee1e0f24d86f64",
       "lessonIds": [
         "ES-C33-verde",
         "ES-C33-amarillo"
@@ -2590,7 +2590,7 @@
     {
       "language": "spanish",
       "chapter": 34,
-      "sourceHash": "fnv1a64:64748b10c5f453b4",
+      "sourceHash": "fnv1a64:f8b3a95b6c2bf45c",
       "lessonIds": [
         "ES-C34-pensar",
         "ES-C34-entender",
@@ -2602,7 +2602,7 @@
     {
       "language": "spanish",
       "chapter": 35,
-      "sourceHash": "fnv1a64:e3c93cbb0c057188",
+      "sourceHash": "fnv1a64:0f87cca78f685fd7",
       "lessonIds": [
         "ES-C35-tomar",
         "ES-C35-preguntar",
@@ -2614,7 +2614,7 @@
     {
       "language": "tamil",
       "chapter": 6,
-      "sourceHash": "fnv1a64:f39b57f3b08140c4",
+      "sourceHash": "fnv1a64:8cb1982f517a21f4",
       "lessonIds": [
         "TA-C06-dative-ukku",
         "TA-C06-dative-stacking",
@@ -2626,7 +2626,7 @@
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:1c193954d5aaadb3",
+      "sourceHash": "fnv1a64:eccac2217fcc1cce",
       "lessonIds": [
         "TA-C07-numbers-1-5",
         "TA-C07-numbers-1-5-family",
@@ -2638,7 +2638,7 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f6321c5249da200d",
+      "sourceHash": "fnv1a64:ff8de4c167bb1241",
       "lessonIds": [
         "TA-C08-tayavuseytu",
         "TA-C08-please-register"
@@ -2648,7 +2648,7 @@
     {
       "language": "tamil",
       "chapter": 9,
-      "sourceHash": "fnv1a64:ceed6b208e6e60b0",
+      "sourceHash": "fnv1a64:efc376e3c07dff60",
       "lessonIds": [
         "TA-C09-mannikkavum",
         "TA-C09-sorry-register"
@@ -2658,7 +2658,7 @@
     {
       "language": "tamil",
       "chapter": 10,
-      "sourceHash": "fnv1a64:2538dae6127ff3d7",
+      "sourceHash": "fnv1a64:7c51f849107b6a79",
       "lessonIds": [
         "TA-C10-vaara-kizhamai"
       ],
@@ -2667,7 +2667,7 @@
     {
       "language": "tamil",
       "chapter": 11,
-      "sourceHash": "fnv1a64:bbcb6ccf4fd05171",
+      "sourceHash": "fnv1a64:61a2bcea4e1033d0",
       "lessonIds": [
         "TA-C11-nirangal"
       ],
@@ -2676,7 +2676,7 @@
     {
       "language": "tamil",
       "chapter": 12,
-      "sourceHash": "fnv1a64:37498296b121ed1e",
+      "sourceHash": "fnv1a64:30be3d82f65307ff",
       "lessonIds": [
         "TA-C12-kudumbam"
       ],
@@ -2685,7 +2685,7 @@
     {
       "language": "tamil",
       "chapter": 13,
-      "sourceHash": "fnv1a64:1dbbb29d47b23eee",
+      "sourceHash": "fnv1a64:7e71618cae516fbc",
       "lessonIds": [
         "TA-C13-udal-uruppugal"
       ],
@@ -2694,7 +2694,7 @@
     {
       "language": "tamil",
       "chapter": 14,
-      "sourceHash": "fnv1a64:89ffa688255fddbc",
+      "sourceHash": "fnv1a64:587312786fcdeec0",
       "lessonIds": [
         "TA-C14-kaalangal"
       ],
@@ -2703,7 +2703,7 @@
     {
       "language": "tamil",
       "chapter": 15,
-      "sourceHash": "fnv1a64:5ab3afd6c620e3aa",
+      "sourceHash": "fnv1a64:1db020cd7710662f",
       "lessonIds": [
         "TA-C15-thanneer-arisi"
       ],
@@ -2712,7 +2712,7 @@
     {
       "language": "tamil",
       "chapter": 16,
-      "sourceHash": "fnv1a64:4adcb4d90d11981d",
+      "sourceHash": "fnv1a64:5c3feab13bd65f50",
       "lessonIds": [
         "TA-C16-thamizh-maadangal"
       ],
@@ -2721,7 +2721,7 @@
     {
       "language": "tamil",
       "chapter": 17,
-      "sourceHash": "fnv1a64:06273003bfe95d72",
+      "sourceHash": "fnv1a64:e57f7bea45ffc8ab",
       "lessonIds": [
         "TA-C17-nanpakal-nalliravu",
         "TA-C17-transparent-middle-synonyms"
@@ -2731,7 +2731,7 @@
     {
       "language": "tamil",
       "chapter": 18,
-      "sourceHash": "fnv1a64:b273f5380b760010",
+      "sourceHash": "fnv1a64:c9ee2c591af90a48",
       "lessonIds": [
         "TA-C18-mani",
         "TA-C18-mani-homophone-time"
@@ -2741,7 +2741,7 @@
     {
       "language": "tamil",
       "chapter": 19,
-      "sourceHash": "fnv1a64:44a46feca59b14fa",
+      "sourceHash": "fnv1a64:dffffca8b81faf38",
       "lessonIds": [
         "TA-C19-vayathu",
         "TA-C19-age-register-grammar"
@@ -2751,7 +2751,7 @@
     {
       "language": "tamil",
       "chapter": 20,
-      "sourceHash": "fnv1a64:fa1b550899c021f3",
+      "sourceHash": "fnv1a64:f2dcdac75de024e2",
       "lessonIds": [
         "TA-C20-pathinondru-irupathu",
         "TA-C20-vaanilai"
@@ -2761,7 +2761,7 @@
     {
       "language": "tamil",
       "chapter": 21,
-      "sourceHash": "fnv1a64:99b608014f6d04e5",
+      "sourceHash": "fnv1a64:fa551b755ab7d128",
       "lessonIds": [
         "TA-C21-naay-poonai"
       ],
@@ -2770,7 +2770,7 @@
     {
       "language": "tamil",
       "chapter": 22,
-      "sourceHash": "fnv1a64:3c34a0b9cf9e6a96",
+      "sourceHash": "fnv1a64:b71089fe870c591b",
       "lessonIds": [
         "TA-C22-paccai-manjal"
       ],
@@ -2779,7 +2779,7 @@
     {
       "language": "tamil",
       "chapter": 23,
-      "sourceHash": "fnv1a64:cbbbe0dcc581dbf8",
+      "sourceHash": "fnv1a64:ddd5946903e47c04",
       "lessonIds": [
         "TA-C23-naal",
         "TA-C23-day-family-register"
@@ -2789,7 +2789,7 @@
     {
       "language": "tamil",
       "chapter": 24,
-      "sourceHash": "fnv1a64:5eac37ebcb9ae8cc",
+      "sourceHash": "fnv1a64:f461de4aada5eab7",
       "lessonIds": [
         "TA-C24-iravu",
         "TA-C24-night-register-darkness"
@@ -2799,7 +2799,7 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:d95cb3daafa21b66",
+      "sourceHash": "fnv1a64:6669425fbcc7f978",
       "lessonIds": [
         "TA-C25-iniya-iravu",
         "TA-C25-goodnight-alternatives"
@@ -2809,7 +2809,7 @@
     {
       "language": "tamil",
       "chapter": 26,
-      "sourceHash": "fnv1a64:cbad1f7eb1bb2816",
+      "sourceHash": "fnv1a64:ebd0823010bd8abb",
       "lessonIds": [
         "TA-C26-kaalai"
       ],
@@ -2818,7 +2818,7 @@
     {
       "language": "tamil",
       "chapter": 27,
-      "sourceHash": "fnv1a64:771849e1943269f5",
+      "sourceHash": "fnv1a64:f05a977714a428f1",
       "lessonIds": [
         "TA-C27-maalai"
       ],
@@ -2827,7 +2827,7 @@
     {
       "language": "tamil",
       "chapter": 28,
-      "sourceHash": "fnv1a64:925a2b9b870e5d0f",
+      "sourceHash": "fnv1a64:d06c0f6bbbc1061c",
       "lessonIds": [
         "TA-C28-pirpakal",
         "TA-C28-afternoon-boundary"
@@ -2837,7 +2837,7 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:6c788bc0104707ff",
+      "sourceHash": "fnv1a64:fffbfffb3c9d53d0",
       "lessonIds": [
         "TA-C29-kaalai-vanakkam"
       ],
@@ -2846,7 +2846,7 @@
     {
       "language": "tamil",
       "chapter": 30,
-      "sourceHash": "fnv1a64:f5c2a578b5b6df4d",
+      "sourceHash": "fnv1a64:0f9658a0088c0b7d",
       "lessonIds": [
         "TA-C30-maalai-vanakkam"
       ],
@@ -2855,7 +2855,7 @@
     {
       "language": "tamil",
       "chapter": 31,
-      "sourceHash": "fnv1a64:f8ee12008eeeb646",
+      "sourceHash": "fnv1a64:10ad0e46ce192b01",
       "lessonIds": [
         "TA-C31-matiya-vanakkam",
         "TA-C31-afternoon-greeting-root"
@@ -2865,7 +2865,7 @@
     {
       "language": "tamil",
       "chapter": 32,
-      "sourceHash": "fnv1a64:4dd37565979d56c1",
+      "sourceHash": "fnv1a64:910c91b3fe4d342c",
       "lessonIds": [
         "TA-C32-iru",
         "TA-C32-po",
@@ -2879,7 +2879,7 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:af591db5810ac6fb",
+      "sourceHash": "fnv1a64:1fdee99a68ffe07d",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
@@ -2891,7 +2891,7 @@
     {
       "language": "tamil",
       "chapter": 34,
-      "sourceHash": "fnv1a64:2e2e5e869f303320",
+      "sourceHash": "fnv1a64:a5e98484e1abcce2",
       "lessonIds": [
         "TA-C34-edu",
         "TA-C34-kel",
@@ -2903,7 +2903,7 @@
     {
       "language": "telugu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a0d2c6d28e4fa358",
+      "sourceHash": "fnv1a64:2f73ec5d662719c4",
       "lessonIds": [
         "TE-C06-dative-ku",
         "TE-C06-dative-subject"
@@ -2913,7 +2913,7 @@
     {
       "language": "telugu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:b740fb498ae7b163",
+      "sourceHash": "fnv1a64:3939c2ef203e0a84",
       "lessonIds": [
         "TE-C07-numbers-1-5",
         "TE-C07-numbers-6-10"
@@ -2923,7 +2923,7 @@
     {
       "language": "telugu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:88acff6378f254ad",
+      "sourceHash": "fnv1a64:f6d51d1f3e2ae79f",
       "lessonIds": [
         "TE-C08-dayachesi"
       ],
@@ -2932,7 +2932,7 @@
     {
       "language": "telugu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:012d9dd03b6465c1",
+      "sourceHash": "fnv1a64:e46eb8c94e368c94",
       "lessonIds": [
         "TE-C09-kshaminchandi"
       ],
@@ -2941,7 +2941,7 @@
     {
       "language": "telugu",
       "chapter": 10,
-      "sourceHash": "fnv1a64:10ee7dfe843f7b1a",
+      "sourceHash": "fnv1a64:fdfe897f9dd039c0",
       "lessonIds": [
         "TE-C10-vaaram"
       ],
@@ -2950,7 +2950,7 @@
     {
       "language": "telugu",
       "chapter": 11,
-      "sourceHash": "fnv1a64:6edc3d8566fd18eb",
+      "sourceHash": "fnv1a64:b7da3a39bd4caf32",
       "lessonIds": [
         "TE-C11-rangulu"
       ],
@@ -2959,7 +2959,7 @@
     {
       "language": "telugu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:54fc86cc71a291ff",
+      "sourceHash": "fnv1a64:378218c86d3378e9",
       "lessonIds": [
         "TE-C12-kutumbam"
       ],
@@ -2968,7 +2968,7 @@
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:1debf26c0657eade",
+      "sourceHash": "fnv1a64:f3c1fd5930d6dfd6",
       "lessonIds": [
         "TE-C13-sharira-bhagalu"
       ],
@@ -2977,7 +2977,7 @@
     {
       "language": "telugu",
       "chapter": 14,
-      "sourceHash": "fnv1a64:ae3ab53969658ce4",
+      "sourceHash": "fnv1a64:d37c07902caea5d1",
       "lessonIds": [
         "TE-C14-rutuvulu"
       ],
@@ -2986,7 +2986,7 @@
     {
       "language": "telugu",
       "chapter": 15,
-      "sourceHash": "fnv1a64:54bde29911714c6e",
+      "sourceHash": "fnv1a64:fab4e8f576540712",
       "lessonIds": [
         "TE-C15-neellu-biyyam"
       ],
@@ -2995,7 +2995,7 @@
     {
       "language": "telugu",
       "chapter": 16,
-      "sourceHash": "fnv1a64:a9b000a2c411482d",
+      "sourceHash": "fnv1a64:110244b1daf45413",
       "lessonIds": [
         "TE-C16-nelalu"
       ],
@@ -3004,7 +3004,7 @@
     {
       "language": "telugu",
       "chapter": 17,
-      "sourceHash": "fnv1a64:36b5b3c7a6c8324c",
+      "sourceHash": "fnv1a64:bbbf0a1b93afbe9d",
       "lessonIds": [
         "TE-C17-madhyaahnam-ardharaatri"
       ],
@@ -3013,7 +3013,7 @@
     {
       "language": "telugu",
       "chapter": 18,
-      "sourceHash": "fnv1a64:c703d071cc0d8e4b",
+      "sourceHash": "fnv1a64:033b862fed795dd0",
       "lessonIds": [
         "TE-C18-ganta"
       ],
@@ -3022,7 +3022,7 @@
     {
       "language": "telugu",
       "chapter": 19,
-      "sourceHash": "fnv1a64:ecd0a47d80ab2c07",
+      "sourceHash": "fnv1a64:5b109822e7dc988c",
       "lessonIds": [
         "TE-C19-vayasu"
       ],
@@ -3031,7 +3031,7 @@
     {
       "language": "telugu",
       "chapter": 20,
-      "sourceHash": "fnv1a64:a7a00722b8910236",
+      "sourceHash": "fnv1a64:898c305a430c6d8a",
       "lessonIds": [
         "TE-C20-padakondu-iravai",
         "TE-C20-vatavaranam"
@@ -3041,7 +3041,7 @@
     {
       "language": "telugu",
       "chapter": 21,
-      "sourceHash": "fnv1a64:ac18c5895e380bad",
+      "sourceHash": "fnv1a64:83f9790775ca082f",
       "lessonIds": [
         "TE-C21-kukka-pilli"
       ],
@@ -3050,7 +3050,7 @@
     {
       "language": "telugu",
       "chapter": 22,
-      "sourceHash": "fnv1a64:07cbedbaa5b02653",
+      "sourceHash": "fnv1a64:890edec1c7714961",
       "lessonIds": [
         "TE-C22-pacha-pasupu"
       ],
@@ -3059,7 +3059,7 @@
     {
       "language": "telugu",
       "chapter": 23,
-      "sourceHash": "fnv1a64:60f8859a49057808",
+      "sourceHash": "fnv1a64:d836e297e582968f",
       "lessonIds": [
         "TE-C23-roju"
       ],
@@ -3068,7 +3068,7 @@
     {
       "language": "telugu",
       "chapter": 24,
-      "sourceHash": "fnv1a64:1d1695f2caa824c8",
+      "sourceHash": "fnv1a64:0ad0df4df365c409",
       "lessonIds": [
         "TE-C24-ratri"
       ],
@@ -3077,7 +3077,7 @@
     {
       "language": "telugu",
       "chapter": 25,
-      "sourceHash": "fnv1a64:889282df4447ea86",
+      "sourceHash": "fnv1a64:85e840ea0987f1a1",
       "lessonIds": [
         "TE-C25-shubha-ratri"
       ],
@@ -3086,7 +3086,7 @@
     {
       "language": "telugu",
       "chapter": 26,
-      "sourceHash": "fnv1a64:3874dddb892a5b58",
+      "sourceHash": "fnv1a64:f6be48339c1b4e28",
       "lessonIds": [
         "TE-C26-udayam"
       ],
@@ -3095,7 +3095,7 @@
     {
       "language": "telugu",
       "chapter": 27,
-      "sourceHash": "fnv1a64:504bda7b4b84a05c",
+      "sourceHash": "fnv1a64:4ae2d57c455c4cd5",
       "lessonIds": [
         "TE-C27-sayantram"
       ],
@@ -3104,7 +3104,7 @@
     {
       "language": "telugu",
       "chapter": 28,
-      "sourceHash": "fnv1a64:7a9b4182b27fd1c7",
+      "sourceHash": "fnv1a64:f210750981b56497",
       "lessonIds": [
         "TE-C28-madhyahnam-widened"
       ],
@@ -3113,7 +3113,7 @@
     {
       "language": "telugu",
       "chapter": 29,
-      "sourceHash": "fnv1a64:2a0449c46a95b7f2",
+      "sourceHash": "fnv1a64:7c9bc49b6528857d",
       "lessonIds": [
         "TE-C29-subhodayam"
       ],
@@ -3122,7 +3122,7 @@
     {
       "language": "telugu",
       "chapter": 30,
-      "sourceHash": "fnv1a64:7adf548d83a059ec",
+      "sourceHash": "fnv1a64:94bae33271a431ea",
       "lessonIds": [
         "TE-C30-subha-sayantram"
       ],
@@ -3131,7 +3131,7 @@
     {
       "language": "telugu",
       "chapter": 31,
-      "sourceHash": "fnv1a64:20379a3b55c97b76",
+      "sourceHash": "fnv1a64:1e9a1c1e3370e8df",
       "lessonIds": [
         "TE-C31-subha-madhyahnam",
         "TE-C31-subha-madhyahnam-register"
@@ -3141,7 +3141,7 @@
     {
       "language": "telugu",
       "chapter": 32,
-      "sourceHash": "fnv1a64:a3d9e2ddefa342d5",
+      "sourceHash": "fnv1a64:b6cc897a4df33a01",
       "lessonIds": [
         "TE-C32-undu",
         "TE-C32-vellu",
@@ -3155,7 +3155,7 @@
     {
       "language": "urdu",
       "chapter": 3,
-      "sourceHash": "fnv1a64:f1d09ed02a13ed81",
+      "sourceHash": "fnv1a64:87cdb2b3adebde31",
       "lessonIds": [
         "UR-C03-aap-tum-tu",
         "UR-C03-kya",
@@ -3168,7 +3168,7 @@
     {
       "language": "urdu",
       "chapter": 4,
-      "sourceHash": "fnv1a64:b1d08b5cbfb9ef33",
+      "sourceHash": "fnv1a64:0fcd24cd7c3fe711",
       "lessonIds": [
         "UR-C04-kaise-kaisi",
         "UR-C04-aap-kaise-hain",
@@ -3182,7 +3182,7 @@
     {
       "language": "urdu",
       "chapter": 5,
-      "sourceHash": "fnv1a64:5d2065ac9b927c2f",
+      "sourceHash": "fnv1a64:65e2cc2c814ff552",
       "lessonIds": [
         "UR-C05-khuda",
         "UR-C05-hafiz",
@@ -3194,7 +3194,7 @@
     {
       "language": "urdu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a64f60f1bf438db1",
+      "sourceHash": "fnv1a64:e86bd8a72b37f1e2",
       "lessonIds": [
         "UR-C06-hona",
         "UR-C06-jana",

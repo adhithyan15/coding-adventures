@@ -921,7 +921,7 @@ export function renderBookChapter(
     }
   }
 
-  const sourceHash = canonicalChapterHash(lessons);
+  const sourceHash = canonicalChapterHash(lessons, capability);
   const sections = lessons.map((lesson) => {
     const id = lesson.realization.lessonId;
     return [

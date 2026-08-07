@@ -22,6 +22,7 @@ export {
   canonicalLessonSource,
   canonicalLessonHash,
   combineLessonHashes,
+  combineChapterHash,
   canonicalChapterHash,
   type LessonHashEntry,
 } from "./hash.js";
