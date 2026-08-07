@@ -439,6 +439,23 @@
         "ES-EXT-027-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-031",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C34-pensar",
+        "ES-C34-entender",
+        "ES-C34-leer",
+        "ES-C34-escribir",
+        "ES-C35-tomar",
+        "ES-C35-preguntar",
+        "ES-C35-ayudar",
+        "ES-C35-gustar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -566,7 +583,8 @@
       "segments": [
         "ES-PATH-028",
         "ES-PATH-029",
-        "ES-PATH-030"
+        "ES-PATH-030",
+        "ES-PATH-031"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -574,13 +592,8 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
@@ -590,14 +603,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {
         "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",

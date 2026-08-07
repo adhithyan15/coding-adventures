@@ -93,7 +93,10 @@ describe("real curriculum", () => {
   it("preserves every existing LaTeX book and maps each chapter to short lessons", () => {
     expect(books.books.length).toBeGreaterThanOrEqual(20);
     expect(books.books.reduce((sum, book) => sum + book.chapters.length, 0)).toBeGreaterThanOrEqual(100);
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(33);
+    // 33 -> 35: the second Spanish verb tranche added Chapters 34 and 35, the track's
+    // first chapters filed under an A2 spine node (SPINE-SAY-WHAT-I-DO) rather than an
+    // A1 social function. Both are generated from schema-v2 lessons like 1-6 and 19-33.
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(35);
     expect(
       books.books
         .find((book) => book.language === "persian")

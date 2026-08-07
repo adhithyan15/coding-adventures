@@ -1527,6 +1527,30 @@
       "tex": "latin/book/chapters/ch37-core-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
+      "lessonIds": [
+        "LA-C38-cogito",
+        "LA-C38-lego",
+        "LA-C38-intellego",
+        "LA-C38-scribo"
+      ],
+      "tex": "latin/book/chapters/ch38-mind-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:78c8a48b5713a827",
+      "lessonIds": [
+        "LA-C39-capio",
+        "LA-C39-rogo",
+        "LA-C39-adiuvo",
+        "LA-C39-amo"
+      ],
+      "tex": "latin/book/chapters/ch39-doing-verbs.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:a395cc73dc812086",
@@ -2051,6 +2075,30 @@
       "tex": "portuguese/book/chapters/ch18-core-verbs.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:930f414ccf731f3e",
+      "lessonIds": [
+        "PT-C19-pensar",
+        "PT-C19-entender-compreender",
+        "PT-C19-ler",
+        "PT-C19-escrever"
+      ],
+      "tex": "portuguese/book/chapters/ch19-mind-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:e0da55ea0ca21897",
+      "lessonIds": [
+        "PT-C20-tomar-pegar",
+        "PT-C20-perguntar",
+        "PT-C20-ajudar",
+        "PT-C20-gostar"
+      ],
+      "tex": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:b77ab588fd68bcd5",
@@ -2356,6 +2404,30 @@
         "ES-C33-amarillo"
       ],
       "tex": "spanish/book/chapters/ch33-green-and-yellow.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:bc65a341cf39fbb6",
+      "lessonIds": [
+        "ES-C34-pensar",
+        "ES-C34-entender",
+        "ES-C34-leer",
+        "ES-C34-escribir"
+      ],
+      "tex": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:28a0602c608252cb",
+      "lessonIds": [
+        "ES-C35-tomar",
+        "ES-C35-preguntar",
+        "ES-C35-ayudar",
+        "ES-C35-gustar"
+      ],
+      "tex": "spanish/book/chapters/ch35-take-ask-help.tex"
     },
     {
       "language": "tamil",
