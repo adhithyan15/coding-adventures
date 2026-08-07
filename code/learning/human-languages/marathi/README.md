@@ -12,8 +12,10 @@ pieces taught before the whole; and a book you can read straight through.
   thread is what makes it distinct: it prefers **namaskār** as the greeting,
   keeps **three** genders (Hindi has two), marks **gender on the verb** even in
   the present (*yeto* m. / *yete* f.), and has an **extra letter ळ** (retroflex
-  *ḷ*) shared with the Dravidian south. Each word lesson has a *"The letters in
-  this word"* section; a reader who knows Devanagari skims it.
+  *ḷ*) shared with the Dravidian south. Every word lesson teaches the letters
+  its own word needs, inline — schema-v1 chapters under *"The letters in this
+  word"*, schema-v2 chapters under *"Sounds you'll need"*, which is what keeps
+  those lessons drivable. A reader who knows Devanagari skims either.
 - **Grounded against English + Sanskrit**, with the wider Indo-European family
   drawn in where it reaches (*nāhī* ← PIE *\*ne*, English *no*).
 
@@ -33,8 +35,17 @@ pieces taught before the whole; and a book you can read straight through.
   counting lesson followed by a prerequisite-ordered etymology lesson on why
   *don* copied *tīn*, why Hindi retains *pāṁch*'s nasal, and why written *chār*
   sounds nearer *tsār* in Marathi.
+- **Chapter 7 — The Core Verbs** ([`lessons/MR-C07-*`](./lessons/)): asṇe,
+  jāṇe, yeṇe, khāṇe, pāhṇe, māhīt asṇe — one idea each. The copula **आहे** and
+  the verb-last rule; the present ending that declares your gender; *going* and
+  *coming* as one Sanskrit root; the *-णे* infinitive as a **neuter** noun (the
+  third gender Hindi lost); *paś-* as Indo-European *\*spek-*, cousin of
+  *spectacle* and *spy*; and knowledge in the dative — *malā māhīt āhe*, "to me
+  known is."
 
-Chapters 1–6 are in the book.
+Chapters 1–7 are in the book. Chapters 6 and 7 are schema v2, and Chapter 7 is
+**fully drivable** — all six lessons derive as `voice`, so the whole chapter can
+be done by ear.
 
 ---
 
@@ -55,6 +66,13 @@ first-person can-do sentence and the lesson that pays it off.
   [`MR-C06-number-differences`](./lessons/MR-C06-number-differences.md), a task —
   **दोन**'s borrowed *-n*, **पाच**'s missing nasal, and the *ts* hiding behind an
   unchanged spelling.
+- **Chapter 7** — *"I can use six everyday Marathi verbs, pick the present-tense
+  ending that agrees with my subject's gender, end every sentence on the verb,
+  and say that I know something the way Marathi says it."* Payoff:
+  [`MR-C07-mahit-asne`](./lessons/MR-C07-mahit-asne.md), a task — *malā māhīt
+  āhe* and *malā marāṭhī yete*, which put the knower in the dative, agree the
+  verb with **मराठी** rather than the speaker, and close on **आहे**. It assesses
+  7 of the chapter's 12 introduced atoms (0.58, above the 0.5 floor).
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -65,7 +83,7 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 (`../../_fonts/`) — the same font as the Hindi track. `latexmk -xelatex book.tex`.
-The six-chapter build is warning-clean, and its PDF outline preserves readable
+The seven-chapter build is warning-clean, and its PDF outline preserves readable
 Devanagari while generated non-Latin sections use bookmark-safe romanization.
 
 ## Files

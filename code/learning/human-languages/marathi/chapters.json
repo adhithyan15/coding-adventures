@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "marathi",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 6 is authorable today. Chapters 1-5 are entirely schema-v1 (no introduces/practises knowledge atoms), so no payoff there can name atoms a lesson actually practises; they are deliberately absent rather than stubbed, and that absence is real, measurable debt.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapters 6 and 7 are authorable today. Chapters 1-5 are entirely schema-v1 (no introduces/practises knowledge atoms), so no payoff there can name atoms a lesson actually practises; they are deliberately absent rather than stubbed, and that absence is real, measurable debt.",
   "chapters": [
     {
       "chapter": 6,
@@ -21,6 +21,27 @@
           "MR-ETYMON-DON-ANALOGY",
           "MR-ETYMON-PAACH-NASAL-RETENTION",
           "MR-HISTORY-SELECTIVE-RETENTION"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:mr-core-verbs",
+      "canDo": "I can use six everyday Marathi verbs, pick the present-tense ending that agrees with my subject's gender, end every sentence on the verb, and say that I know something the way Marathi says it — with the knower in the dative and आहे closing the line.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "MR-C07-mahit-asne",
+        "kind": "task",
+        "summary": "Say मला माहीत आहे and मला मराठी येते unprompted: the knower in the dative, the verb agreeing with its own subject rather than with the speaker, and आहे closing the sentence — the whole chapter's machinery in two lines.",
+        "assesses": [
+          "MR-LEX-ASNE-AAHE",
+          "MR-GRAMMAR-AAHE-LAST",
+          "MR-LEX-JANE",
+          "MR-GRAMMAR-PRESENT-GENDER",
+          "MR-LEX-YENE",
+          "MR-LEX-MAHIT-JANNE",
+          "MR-GRAMMAR-DATIVE-KNOWLEDGE"
         ]
       }
     }

@@ -2097,6 +2097,15 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:bn-core-verbs",
+      "output": "bengali/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -2106,11 +2115,29 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 7,
+      "title": "Six Verbs at the Core",
+      "label": "ch:gu-core-verbs",
+      "output": "gujarati/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:mr-core-verbs",
+      "output": "marathi/book/chapters/ch07-core-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },

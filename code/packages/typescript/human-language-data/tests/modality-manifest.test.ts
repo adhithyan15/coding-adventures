@@ -709,19 +709,19 @@ describe("corpus regression", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1188,
-      voice: 780,
+      totalLessons: 1206,
+      voice: 798,
       sight: 355,
       pen: 53,
-      drivableLessons: 780,
+      drivableLessons: 798,
       drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 388,
+      chapterCount: 391,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 609,
-      fullyDrivableChapters: 262,
+      drivablePrefixTotal: 627,
+      fullyDrivableChapters: 265,
       unstartableChapters: 92,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

@@ -40,8 +40,13 @@ you can read straight through.
   counting lesson followed by a prerequisite-ordered history of why *be*
   continues Sanskrit *dvé* and why *traṇ* regained an *r* after Prakrit lost
   it.
+- **Chapter 7 — Six Verbs at the Core** ([`lessons/GU-C07-*`](./lessons/)):
+  hovũ, javũ, āvvũ, khāvũ, jovũ, jāṇvũ — the first Gujarati chapter on the
+  shared spine's verb node, held together by the fact that the infinitive
+  ending **-વું** is Gujarati's **neuter**, so every verb is named in the third
+  gender. Every lesson is listenable end to end.
 
-Chapters 1–6 are in the book.
+Chapters 1–7 are in the book.
 
 ---
 
@@ -62,6 +67,11 @@ first-person can-do sentence and the lesson that pays it off.
   [`GU-C06-number-histories`](./lessons/GU-C06-number-histories.md), a task —
   take **બે** back to feminine/neuter *dvé* via *dv → bb → b*, and **ત્રણ**'s *r*
   back to a learned restoration from Sanskrit.
+- **Chapter 7** — *"I can name six everyday Gujarati verbs by the neuter -વું
+  ending they all share, strip that ending to reach the stem, and say what I do
+  with stem, person-ending, and the copula છે."* Payoff:
+  [`GU-C07-jaanvun`](./lessons/GU-C07-jaanvun.md), a production task — run all
+  six stems, hold the retroflex **ણ**, and build *hũ jāṇũ chhũ*.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -74,9 +84,9 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gujarati font
 (`../../_fonts/NotoSansGujarati-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gujarati runs use that font while section bookmarks use the lessons'
 Latin romanization.
-The six-chapter build is warning-clean, and its PDF outline preserves readable
-Gujarati in the handwritten chapters alongside generated bookmark-safe
-romanization.
+The seven-chapter build is warning-clean — 38 pages, zero `Missing character`,
+zero undefined references — and its PDF outline preserves readable Gujarati in
+the handwritten chapters alongside generated bookmark-safe romanization.
 
 ## Files
 

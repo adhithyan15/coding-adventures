@@ -25,8 +25,17 @@ script** and Gujarati sounds.
 - **A copula all its own — *chhe*.** Gujarati's "is" is neither Hindi's *hai*
   nor Sanskrit's *asti*; it grew from an Old Gujarati form (*achhaï*): *hũ chhũ*
   (I am), *tũ chhe*, *te chhe*, *tame chho*.
-- **The retroflex ળ (ḷ).** Gujarati keeps this extra "hard l," like Marathi and
-  the Dravidian south, that Hindi lost — as in *maḷvũ* ("to meet").
+- **The retroflex ળ (ḷ) — and ણ (ṇ).** Gujarati keeps the extra "hard l," like
+  Marathi and the Dravidian south, that Hindi lost — as in *maḷvũ* ("to meet").
+  **ણ** is the matching retroflex *n*: the tongue tip curls back onto the roof
+  of the mouth, as in *jāṇvũ* ("to know"). Middle Indo-Aryan regularly pulled a
+  single *n* between vowels back to this sound.
+- **Aspirated stops are separate letters.** **ક** *ka* and **ખ** *kha* differ
+  only by a puff of breath after the consonant — a difference English makes
+  without noticing and Gujarati writes down (*khāvũ*, "to eat").
+- **Every verb is named in the neuter.** The infinitive ending **-વું** *-vũ*
+  is the neuter of the three genders, so *hovũ*, *javũ*, *khāvũ* all end the
+  same way. Strip *-vũ* and what is left is the stem.
 - **Verb goes last; "in" comes after the noun.** Gujarati is
   subject–object–verb and uses **post**positions: *Amdāvad-mā rahũ chhũ* ("I
   live in Ahmedabad").

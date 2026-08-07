@@ -40,15 +40,33 @@ trade layer**. The script is taught **inline**, never as a gated reading course.
   inherited unbroken — *traṇ* looks older than *tīn* without being so. Also names
   the script fact the learner can see: Gujarati is Devanagari **without the
   shirorekhā**. **Authored.**
+- **Ch. 7 — Six Verbs at the Core** (`GU-C07-hovun` → `javun` → `aavvun` →
+  `khaavun` → `jovun` → `jaanvun`): the shared-spine verb node
+  `SPINE-SAY-WHAT-I-DO`, realized with six canonical verbs. The chapter's
+  organizing fact is Gujarati's **third gender**: the infinitive ending
+  **-વું** *-vũ* is a **neuter** ending, so every Gujarati verb is *named in the
+  neuter*. Around it, one idea per lesson — **હોવું** *hovũ* (← *bhavati*,
+  English *be*) plus the naming of **છે** *chhe* as a verb of **dwelling**, not
+  a relative of Hindi *hai* (which goes with English *is*); **જવું** *javũ* and
+  Prakrit's **y- → j-**; **આવવું** *āvvũ* from the root *āp-* "reach," whose
+  Latin cousin *cōpula* is the English word **copula** itself, plus the regular
+  **intervocalic p → v** (visible in *dīpa* → *divo*, and in *divāḷī*);
+  **ખાવું** *khāvũ*, deliberately an **honest dead end** — five living
+  Indo-Aryan sisters and no English cousin worth faking; **જોવું** *jovũ*, one
+  vowel sign from *javũ*, with its origin marked **probable, not proven**; and
+  **જાણવું** *jāṇvũ* ← *jñā-*, the chapter's widest web (*know, can, cunning,
+  ken, uncouth, notice, notion, cognition, ignore, diagnosis, agnostic*).
+  Every lesson is `voice` — the whole chapter is drivable. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10 (native words + Gujarati digits ૧૨૩), counting, age |
-| 7 | Family (*mātā*, *pitā*, *bhāī*, *ben*) and the honorific *-jī* / *-bhāī* / *-ben* |
-| 8 | Food and the market — where the Perso-Arabic and Portuguese loans cluster (*batākā* ← Portuguese *batata*) |
-| 9+ | Past and future tenses (where the three genders return on the verb), postpositions, everyday sentences |
+| 7 continuation | The rest of the core verbs (*karvũ*, *āpvũ*, *levũ*, *pīvũ*, *sāmbhaḷvũ*, *samajvũ*) on the same node |
+| 8 | Family (*mātā*, *pitā*, *bhāī*, *ben*) and the honorific *-jī* / *-bhāī* / *-ben* |
+| 9 | Food and the market — where the Perso-Arabic and Portuguese loans cluster (*batākā* ← Portuguese *batata*) |
+| 10+ | Past and future tenses (where the three genders return on the verb), postpositions, everyday sentences |
 
 Note: Gujarati's plain present tense is **gender-neutral** (a man and a woman
 both say *hũ bolũ chhũ*); the three genders surface on **adjectives** and in the

@@ -41,6 +41,12 @@ before the whole; and a book you can read straight through.
 - **Chapter 6 — Numbers 1–5** ([`lessons/BN-C06-*`](./lessons/)): *ek, dui,
   tin, chār, pā̃ch*, the chandrabindu, and the conservative vowel in *dui*. In
   the book.
+- **Chapter 7 — The Core Verbs** ([`lessons/BN-C07-*`](./lessons/)): hôwā (two
+  be-verbs, and আছ- has no future), jāwā (respect rides on the ending), āsā (no
+  grammatical gender, anywhere), khāwā (Bengali eats its drinks), dækhā (vowel
+  harmony under a fixed spelling), jānā (জানা for facts, চেনা for people). The
+  first six **canonical** verb concepts the track has ever realized. In the
+  book, and fully drivable.
 
 ---
 
@@ -60,6 +66,11 @@ first-person can-do sentence and the lesson that pays it off.
   [`BN-C06-numbers-1-5`](./lessons/BN-C06-numbers-1-5.md), a spoken production —
   count the five, name the chandrabindu on **পাঁচ**, place *dui* against *do* and
   *don*.
+- **Chapter 7** — *"I can say what I do with six everyday Bengali verbs, pick
+  the ending that matches তুই, তুমি or আপনি, and say why a Bengali verb never
+  changes for gender and why আছে has to hand the future to হবে."* Payoff:
+  [`BN-C07-jana`](./lessons/BN-C07-jana.md), a spoken production covering 8 of
+  the chapter's 12 introduced atoms.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -70,13 +81,17 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 (`../../_fonts/NotoSansBengali-Static.ttf`). `latexmk -xelatex book.tex`.
-Chapter 6 is generated from the canonical lesson; its Bengali-script runs use
-that font while its section bookmarks use authored romanization.
+Chapters 6 and 7 are generated from the canonical lessons; their Bengali-script
+runs use that font while their section bookmarks use authored romanization.
 
-The forced six-chapter build is warning-free: main-font punctuation,
+The forced seven-chapter build is warning-free: main-font punctuation,
 chapter-qualified recap anchors, bookmark-safe Bengali, natural page bottoms,
 explicit static-font shapes, and a breakable long title keep the downloadable
-PDF and its outline clean.
+PDF and its outline clean. Two details serve the generated chapters: the
+`grammarlens` box takes an optional title, because the generator passes each
+lesson's own "Grammar Lens: …" heading through, and `ǵ`/`ḱ` are composed with
+`\newunicodechar` since the main font has no precomposed glyph for the
+reconstructed PIE palatals.
 
 ## Files
 
