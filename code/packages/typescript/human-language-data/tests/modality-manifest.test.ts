@@ -699,24 +699,30 @@ describe("corpus regression", () => {
   // chapter, while `unstartableChapters` cannot move: an all-voice chapter is startable
   // by definition. The drivable share crossing from 84% to 85% is a real ratchet, not a
   // rounding accident — 965/1142 is 84.5%, which rounds up.
+  // The whole-lesson figures fell when the inline-letters section became the `script`
+  // block it always was (231 lessons across 12 tracks): voice 1011 -> 780, sight 124 ->
+  // 355. THE BOOK IS NOW HONEST AND THE DRIVER LOST NOTHING — `coreModality` sets those
+  // detachable sections aside, so the driving edition reads 1,026 lessons (86%), above
+  // the 84% that stood before the reclassification. This snapshot is the book's number;
+  // `modality.test.ts` asserts the core relationship.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
       totalLessons: 1188,
-      voice: 1011,
-      sight: 124,
+      voice: 780,
+      sight: 355,
       pen: 53,
-      drivableLessons: 1011,
-      drivablePercent: 85,
+      drivableLessons: 780,
+      drivablePercent: 66,
       trackCount: 22,
       chapterCount: 388,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 879,
-      fullyDrivableChapters: 295,
-      unstartableChapters: 44,
+      drivablePrefixTotal: 609,
+      fullyDrivableChapters: 262,
+      unstartableChapters: 92,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });
