@@ -2358,6 +2358,30 @@
       "tex": "spanish/book/chapters/ch33-green-and-yellow.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:bc65a341cf39fbb6",
+      "lessonIds": [
+        "ES-C34-pensar",
+        "ES-C34-entender",
+        "ES-C34-leer",
+        "ES-C34-escribir"
+      ],
+      "tex": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:28a0602c608252cb",
+      "lessonIds": [
+        "ES-C35-tomar",
+        "ES-C35-preguntar",
+        "ES-C35-ayudar",
+        "ES-C35-gustar"
+      ],
+      "tex": "spanish/book/chapters/ch35-take-ask-help.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:f39b57f3b08140c4",

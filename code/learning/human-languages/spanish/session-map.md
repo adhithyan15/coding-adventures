@@ -66,6 +66,26 @@ five and four new atoms respectively against a budget of three. The words come
 first; the social system and the orthography that surround them get their own
 sessions, so nothing arrives in a bundle.
 
+## Chapters 34-35 — the second verb tranche
+
+Eight core verbs no track had realized, one verb per session-slot, chained so
+each is a prerequisite of the next.
+
+| New lesson(s) | Introduces |
+|---|---|
+| pensar | *pēnsāre* "to weigh"; the e→ie boot, reused from *querer* |
+| entender | *intendere* "to stretch toward"; *pretender* flagged as a false friend |
+| leer | *legere* "to gather"; the hiatus *le-ER* |
+| escribir | *scrībere* "to scratch"; the propped-up **e-** of *escuela*, *España* |
+| tomar | an unsettled etymology; *coger* ← *colligere*, and where not to use it |
+| preguntar | "sounding with a pole"; *preguntar* vs *pedir* ← *petere* |
+| ayudar | *adiūtāre* — English *aid* by the other road; Latin *-di-* → Spanish *y* |
+| gustar | *gustāre* "to taste"; **the inversion** — the thing liked is the subject |
+
+*Gustar* closes the tranche because it is the one structure that has to be
+rebuilt rather than translated, and because it reaches back to *mucho gusto*
+from Chapter 3 — the same *gustus*, met as a noun long before the verb.
+
 ## What comes next (recursive)
 
 Chapter 4 answers what Chapter 3 ends on: their reply to **"¿cómo está

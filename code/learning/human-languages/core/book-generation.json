@@ -200,6 +200,20 @@
       "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:spanish-verbs-of-the-mind",
+      "output": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and the Backwards Verb",
+      "label": "ch:spanish-backwards-verb",
+      "output": "spanish/book/chapters/ch35-take-ask-help.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",

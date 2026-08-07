@@ -5261,6 +5261,40 @@
       "jsonHash": "fnv1a64:0ae2b7b200d055da"
     },
     {
+      "language": "spanish",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:bc65a341cf39fbb6",
+      "lessonIds": [
+        "ES-C34-pensar",
+        "ES-C34-entender",
+        "ES-C34-leer",
+        "ES-C34-escribir"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch34.txt",
+      "json": "spanish/narration/ch34.json",
+      "textHash": "fnv1a64:2d75c3da112d51d1",
+      "jsonHash": "fnv1a64:fc61c94ae274afde"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:28a0602c608252cb",
+      "lessonIds": [
+        "ES-C35-tomar",
+        "ES-C35-preguntar",
+        "ES-C35-ayudar",
+        "ES-C35-gustar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch35.txt",
+      "json": "spanish/narration/ch35.json",
+      "textHash": "fnv1a64:40df7ff1ff550a48",
+      "jsonHash": "fnv1a64:ed88066cad003d3f"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:b80adea0055c5306",

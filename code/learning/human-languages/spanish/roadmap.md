@@ -199,9 +199,40 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
     contradicted the lesson it cites. Ch. 5 now carries the DRAE derivation and
     points forward.
 
-Next: **Ch. 19** — everyday description, building toward real conversation.
-From here the course hands over rules, not phrases. Grammar accumulates piece by
-piece. The theme skeleton below plans the wider road.
+- **Chs. 19-33 — Everyday building blocks**: yes/no, apologies, weekdays, the
+  colours, family, body, seasons, food, months, time of day, telling time,
+  weather, the teens, dog and cat, green and yellow. **Authored** — all
+  generated from canonical lessons.
+
+- **Ch. 34 — Four verbs of the mind**: **pensar** ("to think" ← *pēnsāre* "to
+  weigh" → pensive, compensate, expense, peso, pansy; the **e→ie** boot, cashed
+  from Ch. 11) → **entender** ("to understand" ← *intendere*, *in-* + *tendere*
+  "to stretch toward" → intend, intense, attention, tendon, tent; flags Spanish
+  *pretender* as a false friend, and sets *comprender* ← *comprehendere*
+  alongside it) → **leer** ("to read" ← *legere* "to gather, pick out" →
+  legible, legend, lecture, lesson, collect, select, elect, intellect; Greek
+  *légein* named a **cousin**, not a parent) → **escribir** ("to write" ←
+  *scrībere* "to scratch" → scribe, script, describe, manuscript, conscription;
+  plus the propped-up **e-** that also produced *escuela*, *espada*, *España*).
+  **Authored.**
+
+- **Ch. 35 — Taking, asking, helping, and the backwards verb**: **tomar** ("to
+  take", and "to drink" across Latin America) — a common word with **no agreed
+  etymology**, taught beside *coger* ← *colligere* (→ collect, coil) and the
+  regional taboo that makes *tomar* the safe choice → **preguntar** ("to ask a
+  question" ← *percontārī*, "to sound the water with a pole"), which leaves
+  English nothing but a picture, and the split English does not have:
+  *preguntar* for a question, **pedir** ← *petere* for a thing (→ petition,
+  appetite, compete, impetus) → **ayudar** ("to help" ← *adiūtāre*), which is
+  English **aid** by the other road, with the *-di-* → *y* law that also gave
+  *hodiē* → *hoy* → **gustar**, the chapter's payoff: *me gusta el libro* is
+  "the book pleases me", so the **thing liked is the subject** and the verb
+  agrees with it, never with you. **Authored.**
+
+Next: the remaining core verbs — twenty-three of the shared spine's forty are
+still unrealized by any track. From here the course hands over rules, not
+phrases. Grammar accumulates piece by piece. The theme skeleton below plans the
+wider road.
 
 ## Theme Skeleton (planning only)
 
