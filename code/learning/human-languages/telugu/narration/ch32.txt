@@ -1,0 +1,229 @@
+Telugu, chapter 32: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
+
+
+Lesson 1 of 6.
+ఉండు (uṇḍu) — "to be," and the negative that is a different verb.
+
+Warm-up.
+[pause 2 seconds]
+Thirty-one chapters of words. Now the engine room. Telugu glues a verb together one piece at a time, seams showing, and this first verb carries the machine.
+
+You'll want to know: ఉండు.
+ఉండు — uṇḍu — to be, to exist, to stay.
+Chapter 5 met it as "to live somewhere." Here it is the verb-machine itself: ఉండ్- (the stem) + -త- (tense) + -ాను ("I") becomes ఉంటాను (uṇṭānu), "I stay, I will be."
+One form is already in your mouth: ఉన్నాను (unnānu), "I am — right now," the shape hiding inside bāgunnānu and mīru elā unnāru?
+Telugu is alone in this word. Tamil says இரு (iru), Kannada ಇರು (iru), Malayalam ഇരിക്കുക (irikkuka) — one verb, three sisters. Telugu went its own way, as it did with lēdu.
+
+Sounds you'll need: the retroflex ండ.
+ఉ is the standing vowel u. ండు is the retroflex cluster ṇḍ with the u sign — tongue tip curled back, then released. Both shapes are familiar from Chapter 5.
+
+Grammar Lens: Telugu's "be" cannot be made negative.
+There is no negative of uṇḍu. To say something is not there, Telugu drops the verb and picks up a second one, లే- (lē-) — the root behind Chapter 1's lēdu. It takes the very same person-endings:
+[a table of 3 rows, read aloud]
+who: I. is: unnānu. is not: lēnu.
+who: he. is: unnāḍu. is not: lēḍu.
+who: it. is: undi. is not: lēdu.
+So lēdu was never a bare word for "no." It is the it-form of a full verb, and you can now run it through its persons.
+This is where Telugu parted from its sisters. Tamil negates iru with இல்லை (illai), Kannada with ಇಲ್ಲ (illa), Malayalam with ഇല്ല (illa) — one shared root, il-. Telugu dropped it and grew lē- instead.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "uṇḍu" — be, exist, stay]
+[pause 8 seconds for the answer]
+[your turn — say: the three pieces in order — "uṇḍ … ta … ānu" becomes "uṇṭānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair you must switch verbs for — "unnānu … lēnu"]
+[pause 8 seconds for the answer]
+[your turn — say: the three sisters' one verb — "iru … iru … irikkuka"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three pieces of uṇṭānu? (Stem, tense, person — uṇḍ-, -ta-, -ānu.) How do you say "I am not there"? (లేను, lēnu — a different verb entirely.) So what kind of word is lēdu? (The it-form of the negative verb lē-.) Which root do the other three sisters use, and does Telugu? (il-; Telugu does not.) Next: the same machine, tense piece swapped.
+
+
+Lesson 2 of 6.
+వెళ్ళు (veḷḷu) — "to go," and a tense Telugu refuses to split.
+
+Warm-up.
+[pause 2 seconds]
+You have the three pieces — stem, tense, person. Change only the middle one. That is the whole of Telugu tense, and it has one setting fewer than you would expect.
+
+You'll want to know: వెళ్ళు.
+వెళ్ళు — veḷḷu — to go.
+Chapter 4 gave it to you as a bare command, veḷḷu!, "go!" Threaded up it is వెళ్తాను (veḷtānu), and its past is వెళ్ళాను (veḷḷānu), "I went."
+Telugu keeps a second go-verb beside it. The family's inherited word for going is pō-, and Telugu has it as పోవు (pōvu), పోతాను (pōtānu) — the same verb as Tamil போ (pō), Malayalam പോകുക (pōkuka) and Kannada ಹೋಗು (hōgu). So Telugu did not lose the family's word; it gave the everyday job to veḷḷu, a verb of its own whose deeper history is best left open.
+
+Sounds you'll need: the doubled ళ్ళ.
+వె is va with the short-e sign. ళ్ళు is the retroflex ళ (ḷ) doubled and held — veḷ-ḷu, a real catch in the middle. The same doubling is in nīḷḷu, Chapter 15's water.
+
+Grammar Lens: one piece for "I go" and "I will go".
+[a table of 3 rows, read aloud]
+when: now, or later. Telugu: veḷtānu. the middle piece: -ta-.
+when: already. Telugu: veḷḷānu. the middle piece: -ā-.
+when: this minute. Telugu: veḷtunnānu. the middle piece: -tunnā-.
+Be honest about the first row: వెళ్తాను means "I go" and "I will go." Telugu does not separate habit from future — one piece does both, and context decides. Tamil keeps them apart (pōgiṟēṉ against pōvēṉ); Telugu merged them.
+Having merged them, Telugu needed a way to say "right this minute," and built one out of last lesson's verb. వెళ్తున్నాను (veḷtunnānu) is veḷ- plus ఉన్నా-, the very unnānu that means "I am," welded on: literally "going-am-I." The be-verb did not stay a word. It became a piece of every other verb.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "veḷḷu" — go — then "veḷtānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the two meanings of one form — "I go" and "I will go"]
+[pause 8 seconds for the answer]
+[your turn — say: the three times — "veḷtānu … veḷḷānu … veḷtunnānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the be-verb hiding in the third — "unnānu … veḷtunnānu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many things does veḷtānu mean? (Two — "I go" and "I will go"; Telugu merges habit and future.) What is glued inside veḷtunnānu? (ఉన్నా-, the be-verb — "going-am-I.") Does Telugu have the family's old go-root at all? (Yes — pōvu, cousin of pō, pōkuka, hōgu; veḷḷu just took the everyday work.) Next: a verb you call by one shape and build on another.
+
+
+Lesson 3 of 6.
+రా (rā) — "come!", and the stem it is not built on.
+
+Warm-up.
+[pause 2 seconds]
+Veḷḷu threads its pieces on without a fuss: the word you call it by is the word you build on. Its partner refuses — and the goodbye you learned in Chapter 4 has been hiding the reason.
+
+You'll want to know: రా.
+రా — rā — come!
+One syllable: ర (ra) with the long-ā sign. It is a whole command on its own, the plainest thing one Telugu speaker can say to another.
+Every sister has this verb, and every sister's command-shape drifted somewhere different: Tamil வா (vā), Kannada ಬಾ (bā), Malayalam വരുക (varuka), Telugu రా (rā). A v, a b, an r — one old Dravidian come-word, worn three ways, not three separate verbs.
+
+Grammar Lens: the word you call it by is not the word you build on.
+Try to thread endings onto rā- and you get nothing anyone says. They attach to వచ్చు (vaccu) instead, which appears as vast- once the tense piece arrives:
+వస్తాను (vastānu) — "I come, I will come".
+వచ్చాను (vaccānu) — "I came".
+వస్తున్నాను (vastunnānu) — "I am coming right now".
+The third one is last lesson's trick again: the be-verb unnā- welded onto the stem. Learn this verb as a pair, then — rā, and vaccu-. Telugu is not odd here; Tamil pairs vā with varu- and Kannada pairs bā with baru-, and the building-stems stayed far closer to each other than the commands did.
+You have said vastānu already. Chapter 4's farewell వెళ్ళి వస్తాను (veḷḷi vastānu) — "I'll go and come back" — is veḷḷu and vaccu standing side by side, and that second word is exactly the form above. Chapter 6 used the bare stem too, in nāku telugu vaccu.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the command — "rā!"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair to learn together — "rā … vaccu-"]
+[pause 8 seconds for the answer]
+[your turn — say: "vastānu … vaccānu … vastunnānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the farewell you now understand — "veḷḷi vastānu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which shape do the endings attach to for "come"? (వచ్చు, vaccu-, never rā-.) Say "I will come." (Vastānu.) Which two verbs are standing in veḷḷi vastānu? (వెళ్ళు (veḷḷu) and వచ్చు — go, and come back.) Are Tamil vā, Kannada bā and Telugu rā three different verbs? (No — one old come-word, reshaped three ways.) Next: a verb Telugu kept where Tamil replaced it.
+
+
+Lesson 4 of 6.
+తిను (tinu) — "to eat," the root Telugu kept.
+
+Warm-up.
+[pause 2 seconds]
+Three verbs in, and every one has been Telugu's own choice. This one is the opposite: the oldest eat-word the family has, still doing plain everyday work.
+
+You'll want to know: తిను.
+తిను — tinu — to eat.
+తి is the dental ta with the i sign; ను is nu, the same shape that ends nēnu. Threaded up: తింటాను (tiṇṭānu), "I eat, I will eat," and తిన్నాను (tinnānu), "I ate."
+The inherited Dravidian root is tiṉ-, and the family kept it: Kannada ತಿನ್ನು (tinnu), Malayalam തിന്നുക (tinnuka), Tamil தின் (tiṉ). But Tamil narrowed its own to chewing and snacking and put an assembled compound, சாப்பிடு (sāppiḍu), in the everyday slot. Telugu did no such thing. Tinu is still simply the word.
+
+The word, taken apart - the verb stayed native, the mealtime nouns did not.
+Build a noun straight off the root and you get తిండి (tiṇḍi) — "food, grub." Native, transparent, and blunt: it is what you feed people, not what you invite them to.
+For the invitation Telugu reaches across to Sanskrit: భోజనం (bhōjanaṁ, "a meal") and ఆహారం (āhāraṁ, "food"). Both are tatsama loans, taken in whole, and both outrank tiṇḍi in politeness without displacing it.
+That is Telugu's Sanskrit habit in miniature, and it is worth naming plainly. The verbs at the centre of living — be, go, come, eat — stayed Dravidian. The formal and ceremonial vocabulary layered on top came from Sanskrit. You met the same split in Chapter 1, where the greeting namaskāram is Sanskrit while avunu and sarē are native. Telugu borrowed far more of that top layer than Tamil ever did; it did not borrow the floor.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tinu" — eat — then "tiṇṭānu … tinnānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the root the whole family kept — "tinu … tinnu … tinnuka"]
+[pause 8 seconds for the answer]
+[your turn — say: the native noun and the borrowed one — "tiṇḍi … bhōjanaṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the four verbs so far — "uṇṭānu … veḷtānu … vastānu … tiṇṭānu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Did Telugu keep the inherited eat-root? (Yes — tinu, plain and everyday, where Tamil demoted tiṉ and built sāppiḍu.) Which word for food is native, and which is borrowed? (తిండి tiṇḍi is native and blunt; భోజనం bhōjanaṁ is Sanskrit and polite.) What is the pattern? (Native verbs at the core, Sanskrit vocabulary layered on top — as with avunu against namaskāram.) Next: a verb, and the polite ending that fits every verb in this chapter.
+
+
+Lesson 5 of 6.
+చూడు (cūḍu) — "to see," and the polite ending that fits every verb.
+
+Warm-up.
+[pause 2 seconds]
+Four bare commands so far — uṇḍu, veḷḷu, rā, tinu — and every one is blunt. This verb brings the ending that makes them polite.
+
+You'll want to know: చూడు.
+చూడు — cūḍu — to see, to look.
+Threaded up: చూస్తాను (cūstānu), "I see, I will see," and చూశాను (cūśānu), "I saw."
+Here the sisters scatter completely. Tamil says பார் (pār), Kannada ನೋಡು (nōḍu), Malayalam കാണുക (kāṇuka), Telugu చూడు (cūḍu). Four languages, four unrelated everyday verbs.
+And yet the family's oldest seeing-root is right there in all four, sitting in a noun you can point at: కన్ను (kannu, "eye") — Tamil கண் (kaṇ), Kannada ಕಣ್ಣು (kaṇṇu), Malayalam കണ്ണ് (kaṇṇ). Telugu still builds on it: కనిపించు (kanipin̄cu), "to appear, to be visible." Four everyday verbs, one shared eye.
+
+Sounds you'll need: the long ూ.
+చూ is చ (ca) with the long-ū sign — the drawn-out partner of the short u ending every verb in this chapter. Hold it: cū, not cu. డు is retroflex ḍa with that short u.
+
+Grammar Lens: -అండి, the respectful command, on any stem.
+Chapter 8 gave you కూర్చోండి (kūrcōṇḍi), "please sit." Chapter 9 gave you క్షమించండి (kṣamin̄caṇḍi), "forgive me." That shared -అండి (-aṇḍi) is not baked into those two words. It is a slot, and every verb in this chapter can fill it:
+చూడండి (cūḍaṇḍi) — please look.
+రండి (raṇḍi) — please come.
+తినండి (tinaṇḍi) — please eat.
+వెళ్ళండి (veḷḷaṇḍi) — please go.
+Bare stem for a child or a close friend; stem plus -aṇḍi for everyone else. The respect is built the way Chapter 2 built it: mīru is a plural standing in for one person, and -aṇḍi is that plural now sitting on the verb.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "cūḍu" — see, look — then "cūstānu"]
+[pause 8 seconds for the answer]
+[your turn — say: the four sisters' four verbs — "cūḍu … pār … nōḍu … kāṇuka"]
+[pause 8 seconds for the answer]
+[your turn — say: the eye they all share — "kannu … kaṇ … kaṇṇu … kaṇṇ"]
+[pause 8 seconds for the answer]
+[your turn — say: all four polite commands — "cūḍaṇḍi … raṇḍi … tinaṇḍi … veḷḷaṇḍi"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Do the four sisters share an everyday verb for seeing? (No — cūḍu, pār, nōḍu, kāṇuka, all different.) What do they share instead? (The eye — kannu, kaṇ, kaṇṇu, kaṇṇ.) Make "please eat" and "please come." (Tinaṇḍi; raṇḍi.) Where have you met that politeness before? (In మీరు — a plural used for one person, now on the verb.) Next: a verb with no room for a person at all.
+
+
+Lesson 6 of 6.
+తెలుసు (telusu) — "to know," the verb with no room for a person.
+
+Warm-up.
+[pause 2 seconds]
+Five verbs, and every one ended on -ānu, the piece that means "I." The last verb of the chapter has no such piece — and Chapter 6 already handed you the sentence it makes.
+
+You'll want to know: తెలుసు.
+తెలుసు — telusu — it is known.
+Not "to know" in the English sense. It comes from తెలియు (teliyu), "to become clear, to be apparent" — a thing telusu-es to you the way a shape resolves out of fog. Its negative is తెలియదు (teliyadu), "it is not known."
+Tamil has the exact cousin, தெரி (teri). The other two sisters picked different words — Kannada ಗೊತ್ತು, gottu, Malayalam അറിയാം, aṟiyām — but all four build the sentence the same way, which is the point of this lesson.
+
+Grammar Lens: no person on the verb, so the person moves.
+నాకు తెలుసు. — nāku telusu — "I know."
+తెలుసు (telusu) never changes shape. Only the little dative word in front of it moves:
+[a table of 3 rows, read aloud]
+the knower: I. the sentence: nāku telusu.
+the knower: you. the sentence: nīku telusu.
+the knower: he. the sentence: ataniki telusu.
+Five verbs put the person in the last piece, which is why nēnu could be dropped. Here there is no such piece, so the dative word is the one thing you cannot drop. Telugu treats knowing as something that happens to you, not something you do — and Tamil builds it identically, enakkut teriyum.
+Now the distinction Chapter 6 could not yet draw. నాకు తెలుగు వచ్చు uses vaccu, "comes" — Telugu comes to you, and that is a skill, a language you can actually use. నాకు తెలుసు (telusu) is a fact you hold. Two dative sentences, two verbs, two kinds of knowing.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "telusu" — it is known — from "teliyu", to become clear]
+[pause 8 seconds for the answer]
+[your turn — say: "nāku telusu" — I know]
+[pause 8 seconds for the answer]
+[your turn — say: three knowers, one verb — "nāku … nīku … ataniki telusu"]
+[pause 8 seconds for the answer]
+[your turn — say: the five that carried the person — "uṇṭānu, veḷtānu, vastānu, tiṇṭānu, cūstānu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does telusu mean underneath "know"? (It is clear, it is apparent — from teliyu.) Which piece is missing from it? (The person — so the knower sits in the dative instead.) Say "I know." (Nāku telusu.) What is the difference from nāku telugu vaccu? (Vaccu marks a skill, telusu marks a fact.) Name the three slots one last time, with a verb in them. (Stem, tense, person — veḷ + -ta- + -ānu.) And what has no negative of its own? (ఉండు (uṇḍu) — Telugu switches to lē-.)

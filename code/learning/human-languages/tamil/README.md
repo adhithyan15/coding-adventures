@@ -50,6 +50,17 @@ through.
   time, weather, animals, colours, and greetings**
   ([`lessons/TA-C{06..31}-*`](./lessons/)): forty-three prerequisite-ordered
   micro-lessons continue the same inline script, grammar, and etymology method.
+- **Chapter 32 — The Core Verbs** ([`lessons/TA-C32-*`](./lessons/)): இரு
+  (*iru*, be), போ (*pō*, go), வா (*vā*, come), சாப்பிடு (*sāppiḍu*, eat), பார்
+  (*pār*, see), தெரி (*teri*, know). The track's first realisation of the shared
+  canonical `VERB-*` concepts, so these six join the cross-language corpus
+  rather than living under Tamil-only tags. One idea per lesson, all of them
+  aimed at the agglutinative machine: stem + tense + person (*iru*), the middle
+  bead that alone carries tense (*pō*), a stem with two shapes — *vā* to say it
+  by, *varu-* to build on (*vā*) — a verb assembled from a noun plus the light
+  verb இடு (*sāppiḍu*), the strong/weak split you can hear in the doubled
+  consonant (*pār*), and the one common verb that carries no person at all, so
+  the knower moves into the dative (*teri*). In the book, Chapter 32.
 - **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
   curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi,
   vowel signs, and whole-word writing for **வணக்கம்** and **நன்றி**.

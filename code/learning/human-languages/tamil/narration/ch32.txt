@@ -1,0 +1,218 @@
+Tamil, chapter 32: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
+
+
+Lesson 1 of 6.
+இரு (iru) — "to be," and the machine inside every Tamil verb.
+
+Warm-up.
+[pause 2 seconds]
+Thirty-one chapters of words. Now the engine room. Tamil builds a verb the way you thread beads on a string, and this first verb carries the whole string.
+
+You'll want to know: இரு.
+இரு — iru — to be, to exist, to stay.
+It is native Dravidian, from an old root meaning "be, remain, stay put." Kannada kept the very same word, ಇರು (iru), and Malayalam has ഇരിക്കുക (irikkuka); Telugu went its own way with ఉండు (uṇḍu).
+Iru is about existing or being somewhere, not about linking two nouns. Tamil says "I am at home" with iru, and says "I am a teacher" with no verb at all, just the two words side by side.
+Its everyday first-person form is இருக்கிறேன் (irukkiṟēṉ), "I am." You have already heard it: the question eppaḍi irukkiṟīrgaḷ? — "how are you?" — is this verb wearing a different ending.
+
+Sounds you'll need: the letters, and the doubled க்க.
+இ (the standing vowel i) + ரு (ru) becomes இரு (iru). Both shapes turned up in இரவு (iravu, "night").
+In irukkiṟēṉ the க்க is held long — i-ruk-ki, with a catch in the middle. That length is not decoration; a later lesson turns it into a rule.
+
+Grammar Lens: stem, then tense, then person.
+English changes a verb by putting words around it: I am, I was, I will be. Tamil changes it by gluing pieces onto the end of it, always in the same order:
+இரு + க்கிற் + ஏன் becomes இருக்கிறேன் iru (be) + -kkiṟ- (happening now) + -ēṉ (I) becomes irukkiṟēṉ.
+Left to right, the word says be — present — I. Three slots, filled in that order, welded into one word. Languages built this way are called agglutinative, from Latin glutinare, "to glue."
+Two payoffs arrive at once. The last piece already means "I," so nāṉ is optional. And nothing here belongs to iru alone: every verb in this chapter is the same three slots with a new first bead.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "iru" — be, exist, stay]
+[pause 8 seconds for the answer]
+[your turn — say: "irukkiṟēṉ" — I am]
+[pause 8 seconds for the answer]
+[your turn — say: the three beads in order — "iru … kkiṟ … ēṉ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three pieces of irukkiṟēṉ, in order? (Stem, tense, person — iru, -kkiṟ-, -ēṉ.) Which piece carries "I"? (The last one, -ēṉ — which is why nāṉ can be dropped.) Which sister language kept the same verb? (Kannada, iru.) Next: the same machine, with the tense bead swapped.
+
+
+Lesson 2 of 6.
+போ (pō) — "to go," and the bead that carries time.
+
+Warm-up.
+[pause 2 seconds]
+You have the three slots — stem, tense, person. Keep the first and last beads still, and swap only the middle one. That is the whole of Tamil tense.
+
+You'll want to know: போ.
+போ — pō — to go.
+Two letters, ப (pa) with the long-ō sign, and a word so old it has barely moved. It is native Dravidian: Telugu పోవు (pōvu) and Malayalam പോകുക (pōkuka) are the same verb.
+Kannada's everyday word for "go" is ಹೋಗು (hōgu) — and that h is not a different root. It is the same softening of an old p that turned Tamil pattu ("ten") into Kannada hattu. One sound-law, met once with numbers, now paying off with a verb.
+You met the bare stem in the farewell chapter, where pō! is already a whole command: "go!"
+
+Grammar Lens: past, present, future — one bead each.
+Hold the stem pō- and the person-ending -ēṉ ("I") fixed, and let the middle piece do the work:
+[a table of 3 rows, read aloud]
+when: now. Tamil: pōgiṟēṉ. the middle bead: -giṟ-.
+when: already. Tamil: pōṉēṉ. the middle bead: -ṉ-.
+when: not yet. Tamil: pōvēṉ. the middle bead: -v-.
+"I go," "I went," "I will go" — one syllable of difference, sitting between two pieces that never moved. English needs a new word (will) or a whole new shape (went); Tamil needs one bead.
+The tense bead voices to -giṟ- after a vowel, which is why it sounds like pō-gi-ṟēṉ here but iruk-ki-ṟēṉ after the doubled k of iru.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pō" — go]
+[pause 8 seconds for the answer]
+[your turn — say: the three times — "pōgiṟēṉ … pōṉēṉ … pōvēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair that shares one sound-law — "pattu … hattu", "pō … hōgu"]
+[pause 8 seconds for the answer]
+[your turn — say: "irukkiṟēṉ" and "pōgiṟēṉ" — one machine, two stems]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the three beads changes for tense? (The middle one.) Say "I will go." (Pōvēṉ.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h, exactly as in pattu and hattu.) Next: a verb whose stem refuses to sit still.
+
+
+Lesson 3 of 6.
+வா (vā) — "to come," and a stem with two shapes.
+
+Warm-up.
+[pause 2 seconds]
+Pō threads its beads on without a fuss. Its partner vā does not — and the farewell you learned long ago has been hiding the reason.
+
+You'll want to know: வா.
+வா — vā — to come.
+வ (va) with the long-ā sign, and, like pō, a whole command on its own: vā!, "come!" Native Dravidian, and the family keeps it: Malayalam വരുക (varuka), Kannada ಬಾ (bā), Telugu రా (rā). Kannada's b and Telugu's r are two regular reshapings of the same old word, not three separate verbs.
+
+Grammar Lens: the word you say it by is not the word you build on.
+Thread the beads onto vā- and you get nothing a Tamil speaker says. The suffixes attach to வரு- (varu-) instead:
+varu- + -giṟ- + -ēṉ becomes வருகிறேன் (varugiṟēṉ), "I come."
+Past: வந்தேன் (vantēṉ), "I came." Future: வருவேன் (varuvēṉ).
+So a Tamil verb has a form you call it by — the bare command, the form a dictionary lists — and a form the beads actually attach to. For most verbs those are the same shape. For a handful of very common ones, of which vā is the commonest, they are not, and the pair simply has to be learned together: vā, varu-.
+You have said this word already. The farewell போய் வருகிறேன் (pōy varugiṟēṉ) — "I go and come back" — is pō and varu- standing side by side, and that varugiṟēṉ is the very form above.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the command — "vā!"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair that must be learned together — "vā … varu-"]
+[pause 8 seconds for the answer]
+[your turn — say: "varugiṟēṉ … vantēṉ … varuvēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: the farewell you now understand — "pōy varugiṟēṉ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What shape do the beads attach to for "come"? (வரு-, varu-, not vā-.) Say "I come." (Varugiṟēṉ.) Which two verbs are standing in pōy varugiṟēṉ? (போ and வா — go, and come back.) Are Kannada bā and Telugu rā different verbs? (No — the same Dravidian word, reshaped.) Next: a verb Tamil built for itself.
+
+
+Lesson 4 of 6.
+சாப்பிடு (sāppiḍu) — "to eat," a verb built out of two words.
+
+Warm-up.
+[pause 2 seconds]
+Iru, pō, vā — three single syllables inherited whole from the oldest layer of Dravidian. The everyday word for "eat" is nothing of the kind. It was assembled.
+
+You'll want to know: சாப்பிடு.
+சாப்பிடு — sāppiḍu — to eat.
+Four beats: sāp-pi-ḍu, with the ப்ப held long, the same doubling you heard in irukkiṟēṉ. Threaded up, it is சாப்பிடுகிறேன் (sāppiḍugiṟēṉ), "I eat" — stem, then -giṟ-, then -ēṉ, with no surprises. Past: சாப்பிட்டேன் (sāppiṭṭēṉ).
+
+The word, taken apart - food, plus "put".
+The word comes apart cleanly into two Tamil words:
+சாப்பு (sāppu) — food, a meal; the everyday சாப்பாடு (sāppāḍu, "a meal") is built from it.
+இடு (iḍu) — to put, to place.
+Put food. That is all sāppiḍu literally says. இடு is what grammarians call a light verb: a plain, hard-working verb that lends its endings to a noun so the pair can act as one verb. Tamil builds a great many verbs this way, so iḍu is worth knowing on its own. (Where sāppu itself came from is not settled; treat the compound as transparent and the deeper root as open.)
+Then the honest part. The inherited Dravidian word for eating is tiṉ-, and it is thriving next door: Telugu తిను (tinu), Kannada ತಿನ್ನು (tinnu), Malayalam തിന്നുക (tinnuka). Tamil kept it too, as தின் (tiṉ) — now narrowed to chewing and snacking — and kept the old literary உண் (uṇ), Malayalam's ഉണ്ണുക (uṇṇuka), besides. So Tamil did not lose the ancient eat-verbs. It built a new one and let them keep their smaller jobs.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "sāppiḍu" — eat]
+[pause 8 seconds for the answer]
+[your turn — say: "sāppiḍugiṟēṉ" — I eat — then "sāppiṭṭēṉ", I ate]
+[pause 8 seconds for the answer]
+[your turn — say: the two halves — "sāppu" (food) + "iḍu" (put)]
+[pause 8 seconds for the answer]
+[your turn — say: the inherited root next door — "tinu … tinnu … tinnuka"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two words is sāppiḍu made of? (சாப்பு, food, and இடு, to put.) What is a light verb doing there? (Lending its endings to a noun so the pair works as one verb.) Did Tamil lose the inherited eat-root? (No — tiṉ narrowed to chewing, uṇ stayed literary, and the cousins kept tinu, tinnu, tinnuka.) Next: the verb that splits Tamil's verbs into two classes.
+
+
+Lesson 5 of 6.
+பார் (pār) — "to see," and Tamil's two kinds of verb.
+
+Warm-up.
+[pause 2 seconds]
+Four verbs in, one small thing has been inconsistent. Pōgiṟēṉ has a single k. Irukkiṟēṉ has a doubled one. That is not sloppiness — it is a sorting rule, and this verb is where it gets a name.
+
+You'll want to know: பார்.
+பார் — pār — to see, to watch.
+ப with the long-ā sign, then ர் with a puḷḷi to strip its vowel: pār, one syllable ending on the r. From it comes the noun பார்வை (pārvai), "sight, vision."
+Each Dravidian sister settled on a different everyday word for seeing — Kannada ನೋಡು (nōḍu), Telugu చూడు (cūḍu), Malayalam കാണുക (kāṇuka) — so pār is Tamil's own choice, not the family's. But the family's shared root is here too: Tamil keeps காண் (kāṇ), "to see," for formal and literary use, and that is the same word as Malayalam's kāṇuka and Kannada's ಕಾಣು (kāṇu). Four sisters, one inherited root, four everyday preferences.
+
+Grammar Lens: strong verbs and weak verbs.
+Every Tamil verb belongs to one of two camps, and the tense bead tells you which:
+[a table of 2 rows, read aloud]
+camp: weak — pō. present: pōgiṟēṉ. past: pōṉēṉ.
+camp: strong — pār. present: pārkkiṟēṉ. past: pārttēṉ.
+Weak verbs take the tense bead lightly: a single k, softened to g. Strong verbs double it — -kkiṟ-, held long — and take a doubled t in the past. Iru is strong, which is why "I am" was irukkiṟēṉ and never irugiṟēṉ. Sāppiḍu is weak, like pō.
+There is no rule you can hear in the bare stem that tells you which camp a verb is in, so it is learned with the verb, the way a noun's gender is learned in other languages. Two camps, though — not twenty. Meet a verb once in its present form and it is settled forever.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pār" — see, watch]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast, holding the long kk — "pōgiṟēṉ … pārkkiṟēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: the past pair — "pōṉēṉ … pārttēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: which camp each verb sits in — "iru strong, pō weak, sāppiḍu weak, pār strong"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What separates a strong verb from a weak one? (The doubled consonant in the tense bead — pārkkiṟēṉ against pōgiṟēṉ.) Which camp is iru in, and how do you know? (Strong — irukkiṟēṉ holds the kk.) Which Tamil verb for "see" is shared with Malayalam and Kannada? (காண், kāṇ — kept for formal use beside everyday pār.) Next: a verb with no person on the end at all.
+
+
+Lesson 6 of 6.
+தெரி (teri) — "to know," the verb that drops the person.
+
+Warm-up.
+[pause 2 seconds]
+Five verbs, and every one ended on -ēṉ, the bead that means "I." The last verb of the chapter refuses that bead — and Chapter 6 already gave you the sentence it makes.
+
+You'll want to know: தெரி.
+தெரி — teri — to know; to be apparent, to be visible.
+த (ta) with the short-e sign, then ரி (ri). Its base sense is not "know" but "show up, be clear" — a thing teri-s to you the way a shape resolves out of fog. The everyday form is தெரியும் (teriyum): "it is known," "it is apparent."
+Tamil keeps a second know-verb, அறி (aṟi), for knowing by learning — the same word as Kannada ಅರಿ (ari) and Malayalam അറിയുക (aṟiyuka). Teri has an exact cousin too: Telugu's తెలుసు (telusu), from తెలియు (teliyu).
+
+Grammar Lens: no person on the verb, so the person moves.
+எனக்குத் தமிழ் தெரியும். — enakkut tamiḻ teriyum — "I know Tamil."
+Chapter 6 gave you that sentence whole; here is the verb inside it. தெரியும் has no person bead, and stays the same shape no matter who knows:
+enakku teriyum — it is known to me.
+uṉakku teriyum — it is known to you.
+avaṉukku teriyum — it is known to him.
+Only the little dative word in front changes. Tamil treats knowing as something that happens to you rather than something you do, so the knower is not the subject and cannot climb into the verb's last slot.
+That is the chapter's closing symmetry. Five verbs carried the person in the ending, and nāṉ could be dropped. Here the ending carries no person, so the dative word is the one thing you cannot drop. Telugu builds it identically: నాకు తెలుసు (nāku telusu), "to me it is known."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "teri" — be apparent — then "teriyum", it is known]
+[pause 8 seconds for the answer]
+[your turn — say: "enakkut tamiḻ teriyum" — I know Tamil]
+[pause 8 seconds for the answer]
+[your turn — say: the three knowers, one verb — "enakku … uṉakku … avaṉukku teriyum"]
+[pause 8 seconds for the answer]
+[your turn — say: the five that carried the person — "irukkiṟēṉ, pōgiṟēṉ, varugiṟēṉ, sāppiḍugiṟēṉ, pārkkiṟēṉ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does teri mean underneath "know"? (To be apparent, to show up.) Which bead is missing from teriyum? (The person — so the knower sits in the dative word instead.) Say "I know Tamil." (Enakkut tamiḻ teriyum.) Name the three slots one last time, with a strong verb in them. (Stem, tense, person — pār + -kkiṟ- + -ēṉ.) Which sister builds the knowing-sentence the same way? (Telugu, nāku telusu.)

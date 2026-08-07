@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "latin",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 36 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 37 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
   "chapters": [
     {
       "chapter": 1,
@@ -780,6 +780,31 @@
           "LA-PRAGMATICS-SALVE-POST-MERIDIEM-01",
           "LA-PRAGMATICS-TIMELESS-SALVE-01",
           "LA-DIALOGUE-DAY-CYCLE-01"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "Eight Verbs at the Core",
+      "label": "ch:la-core-verbs",
+      "canDo": "I can say I am, I have, I go, I come, I say, I see, I know and I give in Latin, produce the he-or-she form of each, and name the English words each verb left behind.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "LA-C37-do",
+        "kind": "production",
+        "summary": "The chapter's eighth verb closes the set: after learning dō, the reader produces all eight first-person forms and all eight third-person forms in sequence — sum, habeō, eō, veniō, dīcō, videō, sciō, dō and est, habet, it, venit, dīcit, videt, scit, dat.",
+        "assesses": [
+          "LA-LEX-SUM-01",
+          "LA-LEX-HABEO-01",
+          "LA-LEX-EO-01",
+          "LA-LEX-VENIO-01",
+          "LA-LEX-DICO-01",
+          "LA-LEX-VIDEO-01",
+          "LA-LEX-SCIO-01",
+          "LA-LEX-DO-01",
+          "LA-ETYMON-DO-02"
         ]
       }
     }

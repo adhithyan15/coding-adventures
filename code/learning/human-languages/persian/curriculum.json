@@ -95,6 +95,20 @@
         "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "FA-PATH-007",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FA-C06-budan",
+        "FA-C06-raftan",
+        "FA-C06-amadan",
+        "FA-C06-goftan",
+        "FA-C06-danestan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -210,10 +224,47 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-007"
+      ],
       "omits": [
         "VERB-INFINITIVE",
-        "VERB-PRESENT-HABITUAL"
+        "VERB-PRESENT-HABITUAL",
+        "VERB-HAVE",
+        "VERB-DO-MAKE",
+        "VERB-SPEAK",
+        "VERB-SEE",
+        "VERB-HEAR",
+        "VERB-THINK",
+        "VERB-UNDERSTAND",
+        "VERB-LEARN",
+        "VERB-READ",
+        "VERB-WRITE",
+        "VERB-CAN",
+        "VERB-GIVE",
+        "VERB-TAKE",
+        "VERB-BRING",
+        "VERB-GET",
+        "VERB-PUT",
+        "VERB-EAT",
+        "VERB-DRINK",
+        "VERB-SLEEP",
+        "VERB-LIVE",
+        "VERB-WORK",
+        "VERB-PLAY",
+        "VERB-WALK",
+        "VERB-RUN",
+        "VERB-SIT",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-ASK",
+        "VERB-ANSWER",
+        "VERB-HELP",
+        "VERB-MEET",
+        "VERB-BUY",
+        "VERB-OPEN",
+        "VERB-CLOSE",
+        "VERB-LIKE-LOVE"
       ],
       "relocates": {}
     },

@@ -22,20 +22,26 @@ before the whole; and a book you can read straight through.
 
 ## Progress
 
-- **Chapters 1–36 are authored** as 57 prerequisite-ordered lessons, from
-  greetings and numbers through names, time, everyday courtesy, and the honest
-  limits of reconstructed conversational phrases.
+- **Chapters 1–37 are authored** as 65 prerequisite-ordered lessons, from
+  greetings and numbers through names, time, everyday courtesy, the honest
+  limits of reconstructed conversational phrases, and the eight verbs the
+  language leans on hardest.
+- **Chapter 37 gives the track its verbs** — *sum*, *habeō*, *eō*, *veniō*,
+  *dīcō*, *videō*, *sciō*, *dō*, one per lesson. Each teaches its six
+  present-tense forms and the English words it left behind, and each flags the
+  resemblances that are *not* real: English *have* is not descended from
+  *habēre*, and English *know* is not descended from *sciō*.
 - **Five chapters end on a dedicated payoff lesson** — 1, 19, 21, 33, and 36.
   Chapters 19, 21, and 36 close on a real Latin exchange assembled only from
   words the reader has already been taught; chapter 33 closes on a sorting task,
   because its material is etymological and would not honestly support a
   conversation.
-- **Chapters 2–36 are generated from the same schema-v2 lessons used by Language
+- **Chapters 2–37 are generated from the same schema-v2 lessons used by Language
   Ladder.** Chapter 1 remains the hand-authored opening; deterministic source
   hashes keep every later app/book chapter pair aligned.
 - Every lesson has a shared-spine placement, explicit knowledge boundaries, and
   an effective duration below five minutes.
-- **All 36 chapters carry a capability entry** in
+- **All 37 chapters carry a capability entry** in
   [`chapters.json`](./chapters.json) — no chapter is skipped, and no entry is a
   stub.
 
@@ -69,7 +75,7 @@ Each entry carries:
 Two properties of this track are worth stating plainly, because the ledger is
 where they become visible:
 
-1. **Five chapters have a terminal consolidation lesson; 31 do not.** Chapters 1,
+1. **Five chapters have a terminal consolidation lesson; 32 do not.** Chapters 1,
    19, 21, 33, and 36 own a `practice`/`practice-mix` step. Every other chapter's
    payoff is still its last lesson by `sequence` — which is genuinely where that
    chapter's recombination and wrap-up recall happen, but is not a dedicated
@@ -77,17 +83,21 @@ where they become visible:
    the payoff pointers here.
 2. **`assesses` is copied from the payoff lesson, never invented.** Each list is
    exactly that lesson's own `practises.knowledge`, so the ledger cannot overstate
-   what a chapter delivers. On that basis every Latin chapter's payoff exercises
-   100% of the atoms its chapter introduces.
-3. **100% representativeness does not mean the payoff is usable.** The share was
-   already 100% for all 36 chapters when every payoff was just the chapter's last
-   teaching lesson, because that lesson cumulatively practises the whole chapter.
-   The measure that actually moved with the four new lessons is a different one:
-   how many chapters end on something the reader *does*.
+   what a chapter delivers.
+3. **A high representativeness share does not mean the payoff is usable.** The
+   share was already 100% for all 36 chapters when every payoff was just the
+   chapter's last teaching lesson, because that lesson cumulatively practises the
+   whole chapter. The measure that actually moved with the four consolidation
+   lessons is a different one: how many chapters end on something the reader
+   *does*. Chapter 37 is the track's first chapter below 100% — its payoff
+   `LA-C37-do` exercises 9 of the chapter's 16 atoms (56%), because it recombines
+   all eight verbs but not all eight of their separate etymology atoms. That is
+   the honest number: the chapter's payoff is producing the verbs, not reciting
+   their word histories.
 
 ## Book
 
-The 36-chapter book compiles warning-free with XeLaTeX (Latin script, Latin
+The 37-chapter book compiles warning-free with XeLaTeX (Latin script, Latin
 Modern font — no vendored font needed): `latexmk -xelatex book.tex`.
 
 ## Files

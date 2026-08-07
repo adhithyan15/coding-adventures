@@ -100,6 +100,20 @@ letters the lessons already quote but do not yet teach — **ப, ள, ு** fro
 read-now-draw-later note** for the whole track rather than an enumerated list,
 since the list grows with every example.
 
+## Chapter 32 — The Core Verbs (authored)
+
+Six lessons, one verb each, and the track's first realisation of the shared
+canonical `VERB-*` concepts: இரு (`VERB-BE`), போ (`VERB-GO`), வா (`VERB-COME`),
+சாப்பிடு (`VERB-EAT`), பார் (`VERB-SEE`), தெரி (`VERB-KNOW`). The through-line is
+agglutination — stem + tense + person — introduced on இரு and then pressed once
+per lesson: the tense bead (போ), a stem with two shapes (வா), a noun plus a light
+verb (சாப்பிடு), the strong/weak split (பார்), and the person-less verb whose
+knower sits in the dative (தெரி). It is the first Tamil content above A1.
+
+Still open in this strand: the past and future in their own right, negation
+(*-illai* on a verb), and the infinitive/habitual pair the spine node still
+records as omitted.
+
 ## Planned
 
 | Chapter | Theme |

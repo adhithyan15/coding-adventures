@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.8.0 — 2026-08-06
+
+- Added five schema-v2 Chapter 6 micro-lessons, the track's first verbs:
+  **ہونا** *honā* (`VERB-BE`), **جانا** *jānā* (`VERB-GO`), **آنا** *ānā*
+  (`VERB-COME`), **بولنا** *bolnā* (`VERB-SPEAK`), and **جاننا** *jānnā*
+  (`VERB-KNOW`). Urdu had taught zero verbs before this; `SPINE-SAY-WHAT-I-DO`
+  is now realized rather than wholly omitted, and the track reaches A2.
+- Taught the **-نا** *-nā* infinitive ending as a tool rather than a label:
+  strip it and the stem falls out, so each new verb costs less than the last.
+- Introduced the two simultaneous agreements the Urdu present makes — the
+  participle for gender and number, the copula for person — on *jānā*, where a
+  real stem exists to hang them on, and reused the frame unchanged on *bolnā*
+  and *jānnā* to show the machine is already built.
+- Kept the etymology honest per track: *honā* ← Sanskrit *bhavati* ← PIE
+  \**bʰuH-* (English **be**, **build**, **future**, **physics**); *jānnā* ←
+  *jñā-* ← \**ǵneh₃-* (English **know**, **notice**, **diagnosis**); *ānā* is
+  the *ā-* "toward" preverb welded to the same *yā-* root that hardened into
+  *jānā*'s **j-**. *bolnā* is flagged as a genuine dead end — the trail stops
+  at Prakrit *bollaï* and the Sanskrit *brūte* link is proposed, not settled.
+  *jānā* is flagged as having no English cousin at all rather than being given
+  a decorative one.
+- Placed the Persian and Arabic literary register beside the Indo-Aryan core on
+  *bolnā* (homely *bolnā* against Persian-derived *guftagū*), which is also
+  where *nastaʿlīq* is named as part of that same Persian inheritance.
+- Cross-language comparison stays self-contained: Hindi is described as the
+  other standard form of the same spoken language, never assumed as knowledge
+  the reader already has.
+- One new letter across the whole chapter: **ب**, taught against already-read
+  **پ** as a dot-count contrast. **جاننا**'s doubled **ن** is taught as the
+  only thing separating "know" from "go". Added `be-vs-pe-dots` and
+  `geminate-nun` to `pronunciation-reference.md`.
+- All five lessons derive `voice` modality, so Chapter 6 is fully drivable and
+  the track's drivable share rises from 90% to 92%.
+- Declared `chapters.json` chapter 6 with `UR-C06-janna` as payoff; measured
+  representativeness 9/14 = 0.643, above the 0.5 policy threshold. Generated
+  `book/chapters/ch06-core-verbs.tex` and compiled the six-chapter book with
+  XeLaTeX: zero `Missing character` warnings, zero errors. Sanskrit forms are
+  cited in transliteration only, because this book vendors no Devanagari face.
+
 ## 0.7.0 — 2026-08-06
 
 - Added `chapters.json`, the HL05 chapter capability ledger, for Chapters 2–5:

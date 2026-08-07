@@ -605,9 +605,10 @@ describe("the whole corpus", () => {
     const chapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
     const narrated = chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
     expect(narrated).toBe(lessons.length);
-    // 377, not the 375 this was authored against: HL-C39 and HL-C40 each added a
-    // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge.
-    expect(chapters).toHaveLength(377);
+    // 378, not the 375 this was authored against: HL-C39 and HL-C40 each added a
+    // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge, and
+    // the Latin core-verb chapter (chapter 37, eight verb lessons) added one more.
+    expect(chapters).toHaveLength(388);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

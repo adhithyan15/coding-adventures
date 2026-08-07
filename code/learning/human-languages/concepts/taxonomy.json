@@ -384,6 +384,206 @@
       "family": "VERB",
       "gloss": "saying what one wants or needs",
       "core": true
+    },
+    "VERB-BE": {
+      "family": "VERB",
+      "gloss": "to be (existence, identity, or state)",
+      "core": true
+    },
+    "VERB-HAVE": {
+      "family": "VERB",
+      "gloss": "to have, to possess",
+      "core": true
+    },
+    "VERB-DO-MAKE": {
+      "family": "VERB",
+      "gloss": "to do / to make",
+      "core": true
+    },
+    "VERB-GO": {
+      "family": "VERB",
+      "gloss": "to go",
+      "core": true
+    },
+    "VERB-COME": {
+      "family": "VERB",
+      "gloss": "to come",
+      "core": true
+    },
+    "VERB-SAY": {
+      "family": "VERB",
+      "gloss": "to say, to tell",
+      "core": true
+    },
+    "VERB-SPEAK": {
+      "family": "VERB",
+      "gloss": "to speak, to talk",
+      "core": true
+    },
+    "VERB-SEE": {
+      "family": "VERB",
+      "gloss": "to see",
+      "core": true
+    },
+    "VERB-HEAR": {
+      "family": "VERB",
+      "gloss": "to hear, to listen",
+      "core": true
+    },
+    "VERB-KNOW": {
+      "family": "VERB",
+      "gloss": "to know",
+      "core": true
+    },
+    "VERB-THINK": {
+      "family": "VERB",
+      "gloss": "to think",
+      "core": true
+    },
+    "VERB-UNDERSTAND": {
+      "family": "VERB",
+      "gloss": "to understand",
+      "core": true
+    },
+    "VERB-LEARN": {
+      "family": "VERB",
+      "gloss": "to learn",
+      "core": true
+    },
+    "VERB-READ": {
+      "family": "VERB",
+      "gloss": "to read",
+      "core": true
+    },
+    "VERB-WRITE": {
+      "family": "VERB",
+      "gloss": "to write",
+      "core": true
+    },
+    "VERB-CAN": {
+      "family": "VERB",
+      "gloss": "to be able to, can",
+      "core": true
+    },
+    "VERB-GIVE": {
+      "family": "VERB",
+      "gloss": "to give",
+      "core": true
+    },
+    "VERB-TAKE": {
+      "family": "VERB",
+      "gloss": "to take",
+      "core": true
+    },
+    "VERB-BRING": {
+      "family": "VERB",
+      "gloss": "to bring",
+      "core": true
+    },
+    "VERB-GET": {
+      "family": "VERB",
+      "gloss": "to get, to receive",
+      "core": true
+    },
+    "VERB-PUT": {
+      "family": "VERB",
+      "gloss": "to put, to place",
+      "core": true
+    },
+    "VERB-EAT": {
+      "family": "VERB",
+      "gloss": "to eat",
+      "core": true
+    },
+    "VERB-DRINK": {
+      "family": "VERB",
+      "gloss": "to drink",
+      "core": true
+    },
+    "VERB-SLEEP": {
+      "family": "VERB",
+      "gloss": "to sleep",
+      "core": true
+    },
+    "VERB-LIVE": {
+      "family": "VERB",
+      "gloss": "to live, to dwell",
+      "core": true
+    },
+    "VERB-WORK": {
+      "family": "VERB",
+      "gloss": "to work",
+      "core": true
+    },
+    "VERB-PLAY": {
+      "family": "VERB",
+      "gloss": "to play",
+      "core": true
+    },
+    "VERB-WALK": {
+      "family": "VERB",
+      "gloss": "to walk",
+      "core": true
+    },
+    "VERB-RUN": {
+      "family": "VERB",
+      "gloss": "to run",
+      "core": true
+    },
+    "VERB-SIT": {
+      "family": "VERB",
+      "gloss": "to sit",
+      "core": true
+    },
+    "VERB-STAND": {
+      "family": "VERB",
+      "gloss": "to stand",
+      "core": true
+    },
+    "VERB-WAIT": {
+      "family": "VERB",
+      "gloss": "to wait",
+      "core": true
+    },
+    "VERB-ASK": {
+      "family": "VERB",
+      "gloss": "to ask",
+      "core": true
+    },
+    "VERB-ANSWER": {
+      "family": "VERB",
+      "gloss": "to answer, to reply",
+      "core": true
+    },
+    "VERB-HELP": {
+      "family": "VERB",
+      "gloss": "to help",
+      "core": true
+    },
+    "VERB-MEET": {
+      "family": "VERB",
+      "gloss": "to meet",
+      "core": true
+    },
+    "VERB-BUY": {
+      "family": "VERB",
+      "gloss": "to buy",
+      "core": true
+    },
+    "VERB-OPEN": {
+      "family": "VERB",
+      "gloss": "to open",
+      "core": true
+    },
+    "VERB-CLOSE": {
+      "family": "VERB",
+      "gloss": "to close, to shut",
+      "core": true
+    },
+    "VERB-LIKE-LOVE": {
+      "family": "VERB",
+      "gloss": "to like / to love",
+      "core": true
     }
   },
   "namespaced": {

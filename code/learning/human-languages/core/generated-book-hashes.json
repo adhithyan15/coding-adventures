@@ -248,6 +248,36 @@
       "tex": "arabic/book/chapters/ch27-good-night.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "lessonIds": [
+        "AR-C28-dhahaba",
+        "AR-C28-jaa"
+      ],
+      "tex": "arabic/book/chapters/ch28-going-and-coming.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:3cd401a4e59d594a",
+      "lessonIds": [
+        "AR-C29-qala",
+        "AR-C29-raa"
+      ],
+      "tex": "arabic/book/chapters/ch29-saying-and-seeing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:bd125585f402d92d",
+      "lessonIds": [
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:28baeae54e13a2dc",
@@ -1108,6 +1138,20 @@
       "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:2c308c4cc3cdd31a",
+      "lessonIds": [
+        "KA-C32-iru",
+        "KA-C32-hoogu",
+        "KA-C32-baa",
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
+      ],
+      "tex": "kannada/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:898dd008f6cb6e08",
@@ -1439,6 +1483,22 @@
       "tex": "latin/book/chapters/ch36-good-afternoon.tex"
     },
     {
+      "language": "latin",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:7cce21a37232012a",
+      "lessonIds": [
+        "LA-C37-sum",
+        "LA-C37-habeo",
+        "LA-C37-eo",
+        "LA-C37-venio",
+        "LA-C37-dico",
+        "LA-C37-video",
+        "LA-C37-scio",
+        "LA-C37-do"
+      ],
+      "tex": "latin/book/chapters/ch37-core-verbs.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:a395cc73dc812086",
@@ -1680,6 +1740,20 @@
       "tex": "malayalam/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:6dce5556729f174a",
+      "lessonIds": [
+        "ML-C32-undu",
+        "ML-C32-pokuka",
+        "ML-C32-varuka",
+        "ML-C32-tinnuka",
+        "ML-C32-kaanuka",
+        "ML-C32-ariyuka"
+      ],
+      "tex": "malayalam/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:4b1e1c620ea3aa6a",
@@ -1727,6 +1801,19 @@
         "FA-C05-practice"
       ],
       "tex": "persian/book/chapters/ch05-take-leave.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:45fe9072e4bc2575",
+      "lessonIds": [
+        "FA-C06-budan",
+        "FA-C06-raftan",
+        "FA-C06-amadan",
+        "FA-C06-goftan",
+        "FA-C06-danestan"
+      ],
+      "tex": "persian/book/chapters/ch06-core-verbs.tex"
     },
     {
       "language": "portuguese",
@@ -2437,6 +2524,20 @@
       "tex": "tamil/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:4dd37565979d56c1",
+      "lessonIds": [
+        "TA-C32-iru",
+        "TA-C32-po",
+        "TA-C32-vaa",
+        "TA-C32-saappidu",
+        "TA-C32-paar",
+        "TA-C32-teri"
+      ],
+      "tex": "tamil/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:a0d2c6d28e4fa358",
@@ -2675,6 +2776,20 @@
       "tex": "telugu/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:a3d9e2ddefa342d5",
+      "lessonIds": [
+        "TE-C32-undu",
+        "TE-C32-vellu",
+        "TE-C32-raa",
+        "TE-C32-tinu",
+        "TE-C32-cuudu",
+        "TE-C32-telusu"
+      ],
+      "tex": "telugu/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "sourceHash": "fnv1a64:f1d09ed02a13ed81",
@@ -2712,6 +2827,19 @@
         "UR-C05-practice"
       ],
       "tex": "urdu/book/chapters/ch05-take-leave.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a64f60f1bf438db1",
+      "lessonIds": [
+        "UR-C06-hona",
+        "UR-C06-jana",
+        "UR-C06-ana",
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "tex": "urdu/book/chapters/ch06-core-verbs.tex"
     }
   ]
 }

@@ -452,6 +452,63 @@
           "AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02"
         ]
       }
+    },
+    {
+      "chapter": 28,
+      "title": "Going and Coming",
+      "label": "ch:ar-going-and-coming",
+      "canDo": "I can say the Arabic for 'he went' and 'he came', read the three-consonant root under each, and explain why Arabic dictionaries list a verb as 'he did' rather than 'to do'.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "AR-C28-jaa",
+        "kind": "production",
+        "summary": "Say the going/coming pair, name the weak letter that vanishes from jāʾa and point to where it comes back, and restate the root-and-pattern engine dhahaba opened.",
+        "assesses": [
+          "AR-CONCEPT-C28-JAA-01",
+          "AR-CONCEPT-C28-JAA-02",
+          "AR-CONCEPT-C28-DHAHABA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Saying and Seeing",
+      "label": "ch:ar-saying-and-seeing",
+      "canDo": "I can say the Arabic for 'he said' and 'he saw', read the letters qāf and alif maqṣūra, and name the doer, done-to, place and instrument words each root builds.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "AR-C29-raa",
+        "kind": "production",
+        "summary": "Say raʾā, read its dotless alif maqṣūra, follow the root out into raʾy 'opinion' and mirʾāh 'mirror', and restate the pattern family qāla laid out.",
+        "assesses": [
+          "AR-CONCEPT-C29-RAA-01",
+          "AR-CONCEPT-C29-RAA-02",
+          "AR-CONCEPT-C29-QALA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Knowing and Eating",
+      "label": "ch:ar-knowing-and-eating",
+      "canDo": "I can say the Arabic for 'he knew' and 'he ate', tell ʿarafa apart from ʿalima, and say plainly which of these verbs has an English cousin and which has none.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "AR-C30-akala",
+        "kind": "production",
+        "summary": "Say akala with no new letters left to learn, run its doer and done-to forms, place it beside Hebrew akhal, and restate the ʿarafa root family and its Spanish loan.",
+        "assesses": [
+          "AR-CONCEPT-C30-AKALA-01",
+          "AR-CONCEPT-C30-AKALA-02",
+          "AR-CONCEPT-C30-ARAFA-02"
+        ]
+      }
     }
   ]
 }

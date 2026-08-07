@@ -732,6 +732,14 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:te-core-verbs",
+      "output": "telugu/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",
@@ -937,6 +945,14 @@
       "title": "Good Afternoon",
       "label": "ch:ka-good-afternoon",
       "output": "kannada/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ka-core-verbs",
+      "output": "kannada/book/chapters/ch32-core-verbs.tex",
       "scriptSet": "kannada-comparisons"
     },
     {
@@ -1148,6 +1164,14 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ml-core-verbs",
+      "output": "malayalam/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "arabic",
       "chapter": 3,
       "title": "How Are You?",
@@ -1345,6 +1369,30 @@
       "title": "Good Night",
       "label": "ch:ar-good-night",
       "output": "arabic/book/chapters/ch27-good-night.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 28,
+      "title": "Going and Coming",
+      "label": "ch:ar-going-and-coming",
+      "output": "arabic/book/chapters/ch28-going-and-coming.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "title": "Saying and Seeing",
+      "label": "ch:ar-saying-and-seeing",
+      "output": "arabic/book/chapters/ch29-saying-and-seeing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "title": "Knowing and Eating",
+      "label": "ch:ar-knowing-and-eating",
+      "output": "arabic/book/chapters/ch30-knowing-and-eating.tex",
       "scriptSet": "arabic-main"
     },
     {
@@ -1780,6 +1828,14 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ta-core-verbs",
+      "output": "tamil/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "title": "Numbers One to Ten",
@@ -2025,6 +2081,13 @@
       "output": "latin/book/chapters/ch36-good-afternoon.tex"
     },
     {
+      "language": "latin",
+      "chapter": 37,
+      "title": "Eight Verbs at the Core",
+      "label": "ch:la-core-verbs",
+      "output": "latin/book/chapters/ch37-core-verbs.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -2097,6 +2160,15 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 6,
+      "title": "Name a Verb, Find Its Stem",
+      "label": "ch:fa-core-verbs",
+      "output": "persian/book/chapters/ch06-core-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",
@@ -2120,6 +2192,15 @@
       "title": "Take Leave",
       "label": "ch:ur-take-leave",
       "output": "urdu/book/chapters/ch05-take-leave.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "title": "Five Verbs at the Core",
+      "label": "ch:ur-core-verbs",
+      "output": "urdu/book/chapters/ch06-core-verbs.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     },

@@ -50,6 +50,7 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   caught a bare Persian/AMFA correspondence during this change.
 
 
+
 ### Fixed — "detachable" and "is a writing segment" are two different things
 
 - `DETACHABLE_BLOCK_TYPES` gains `script`, so a hands-free renderer may set aside the

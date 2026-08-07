@@ -198,16 +198,28 @@ describe("exam alignment", () => {
 describe("corpus snapshot", () => {
   // The measured answer to "how far is each track from A1, and from Advanced?"
   //
-  // Ratchet these as content lands. `A2: 0` is the headline: the A2 spine tranche exists
-  // but NO track has realized a single node of it, so the whole corpus sits at or below
-  // A1 and "Advanced" does not exist anywhere yet.
+  // Ratchet these as content lands. `A2: 0` was the headline for a long time: the A2
+  // spine tranche existed but NO track had realized a single node of it.
+  //
+  // That changed when three tracks authored core verbs at once — Latin chapter 37 (8),
+  // Arabic chapters 28-30 (6) and Russian chapter 3 (6). All twenty attach to
+  // SPINE-SAY-WHAT-I-DO, which the shared spine declares at stage A2, so the level is
+  // DERIVED rather than claimed:
+  //
+  //   A2  0 -> 20     pre-A1 657 (unchanged)   A1 307 (unchanged)
+  //
+  // `unmapped` and `mappedPercent` do not move: all twenty sit in realization-path
+  // segments, so every one of them has a derivable level. The three tracks were authored
+  // in parallel and each measured this number alone — 8, 6 and 6 — so each was correct
+  // and all three were wrong about the total. It is re-measured here against the merged
+  // corpus, which is the only place the real number exists.
   it("pins where the corpus actually stands on the ladder", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(0);
+    expect(summary.byLevel.A2).toBe(54);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -216,16 +228,35 @@ describe("corpus snapshot", () => {
     // 170 lessons sit in no realization-path segment, all of them schema-v1. They are the
     // reason `mappedPercent` is not 100, and mapping them is migration work, not a gate.
     expect(summary.unmapped).toBe(170);
-    expect(summary.mappedPercent).toBe(85);
+    expect(summary.mappedPercent).toBe(86);
   });
 
-  it("shows no track has reached A2, and five have not reached A1", () => {
+  it("shows nine tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
-    expect(summary.tracks.every((track) => track.reach !== "A2")).toBe(true);
+    // `reach` is the highest level a track has ANY lesson at, so this names the tracks
+    // rather than counting them — "no track is at A2" has become a list, and listing it
+    // keeps the assertion as tight as the original. Nothing has reached B1 or beyond,
+    // which is still the honest ceiling for the whole corpus.
+    expect(
+      summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
+    ).toEqual([
+      "arabic",
+      "kannada",
+      "latin",
+      "malayalam",
+      "persian",
+      "russian",
+      "tamil",
+      "telugu",
+      "urdu",
+    ]);
+    expect(
+      summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
+    ).toBe(true);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-    ).toEqual(["chinese", "japanese", "persian", "russian", "urdu"]);
+    ).toEqual(["chinese", "japanese"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

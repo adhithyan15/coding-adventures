@@ -60,21 +60,60 @@ full answers. Each lesson remains below five minutes. New letters **я**, **ч**
 **ы** and the soft sign **ь** are flagged read-now-draw-later — the writing track
 (RU-W01–W05) has taught в р с н б д п и е т and not yet reached them.
 
-## Chapter 3 — Being and having *(planned)*
+## Chapter 3 — Six verbs, and the one you never say *(authored)*
 
-- The **zero copula**: Russian says "I — student" (*я студент*) with no "am".
-- **это** sentences; **быть** in past/future (why the present is empty).
+The track's first verbs, and the first realization of the shared `VERB-*`
+concepts by any track in the corpus. Six words, one grammatical idea each, in
+this order:
+
+**быть** "to be" ← PIE \**bʰuH-*, which is English **be** — and the lesson is
+really about the **zero copula**: *я студент*, "I student", with nothing in
+between, because Russian declines to use the verb in the present at all (the
+past *был* walks straight back in). English fuses three ancient roots into
+*be / is / was*; Russian keeps two of them visibly apart as **быть** and **есть**
+→ **жить** "to live" ← \**gʷeih₃-*, the root of Latin *vīvere* and Greek *bíos*
+**and** of English **quick** in its older sense of *alive* (*the quick and the
+dead*); grammatically it introduces the **-у** that alone means "I"
+→ **знать** "to know" ← \**ǵneh₃-*, literally English **know** with its silent
+*k* still pronounced, plus the Latin (*notice, ignore, noble*) and Greek
+(*diagnosis, agnostic*) branches; grammatically it introduces **не**, the whole
+of English *don't* with no helper verb — and hands over *я не знаю*
+→ **говорить** "to speak", the chapter's one new letter (**г**, Greek gamma) and
+its one **false friend**: English *govern* is Greek *kybernân* "to steer" and is
+**not** a relative; grammatically it splits the verbs into the **-ешь / -ишь**
+families → **видеть** "to see" ← \**weid-*, the root that meant *see* **and**
+*know*, hence *video/vision* on one branch and **wit / wise / Veda** on the
+other; grammatically it introduces the **д → ж** swap that hits the *I* form and
+nothing else (*вижу*, but *видишь*) → **идти** "to go" ← \**h₁ei-* (Latin *īre*
+→ *exit, transit, itinerary*), whose past **шёл** comes from a different root
+entirely — *go / went* twice over — and which introduces **verbs of motion** in
+the gentlest possible dose: *иду* (now, one way) against *хожу* (habitually).
+
+No new letters beyond **г**, no tables, and every lesson is `voice` — the whole
+chapter is drivable, which is the first time that has been true of a Russian
+chapter end to end.
+
+Known debt, recorded rather than hidden: Chapter 3 has **no LaTeX chapter and no
+HL05 ledger entry**, because Russian's book chapters are handwritten and none
+was authored for it. The lessons are canonical; the book is behind them.
+
+## Chapter 4 — Having, and what things are *(planned)*
+
+- **это** sentences ("this is…"), and **быть** in past and future in their own
+  right rather than as a footnote to the present.
 - **у меня есть…** — Russian's "I have" as "by me there is", reusing *есть* met
-  in *нет*.
+  in *нет* and named again in Chapter 3.
 - Gender of nouns (-∅ / -а / -о) — the first grammatical-gender lesson.
 - Numbers 0–10.
 
 ## Part II onward *(sketch)*
 
 Cases introduced one at a time on real need (accusative for objects → prepositional
-for location → genitive for "of"/negation), present-tense verb conjugation
-(-ешь / -ишь families), aspect (imperfective/perfective) previewed through everyday
-verbs, everyday vocabulary (food, city, time), building toward B1 "normal
+for location → genitive for "of"/negation), the rest of the **-ешь / -ишь**
+conjugations now that Chapter 3 has named the split, aspect
+(imperfective/perfective) previewed through everyday verbs — with the
+идти/ходить pair already in hand — more core verbs against the shared `VERB-*`
+list, everyday vocabulary (food, city, time), building toward B1 "normal
 day-to-day conversation."
 
 The roadmap is a standing plan, updated as chapters are authored.

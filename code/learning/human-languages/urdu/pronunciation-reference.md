@@ -43,6 +43,8 @@ romanization once the Urdu form is familiar.
 | `final-ye` | distinguish broad final **ے** *e* from final **ی** long *ī* | **کیسے / کیسی** *kaise / kaisī* |
 | `retroflex-aspirated-th` | curl the tongue slightly back for **ٹ**, then release the aspiration marked by **ھ** | **ٹھیک** *ṭhīk* |
 | `urdu-question-mark` | recognize **؟** at the left end of a right-to-left question | **آپ کا نام کیا ہے؟** |
+| `be-vs-pe-dots` | count the dots under the shared low scoop: one below is **ب** *b*, three below are **پ** *p* | **بولنا** *bolnā* against **آپ** *āp* |
+| `geminate-nun` | hold the *n* long when two **ن** letters are written in a row | **جاننا** *jānnā* |
 
 ## Shape families already in use
 
@@ -58,6 +60,13 @@ romanization once the Urdu form is familiar.
 - **خدا حافظ** reuses **خ** and long **ا**, adds a clear initial *h* in **حافظ**,
   and reads final **ظ** as *z*. Urdu keeps the two words visibly spaced in this
   course even though Persian normally joins its local spelling.
+- **بولنا** adds the only new consonant the verb chapter needs: **ب** *b*, one
+  low scoop with a single dot below. It shares that skeleton with **پ** *p*,
+  already read in **آپ**, which carries three dots below instead. Dot count is
+  the whole difference, and it is load-bearing throughout the alphabet.
+- **جاننا** writes two **ن** letters in a row and pronounces both, which is the
+  only thing separating it from **جانا** *jānā*. Nothing about the doubling is
+  decorative: **جانا** is “to go” and **جاننا** is “to know.”
 
 ## The Persian-Arabic and Indo-Aryan layers
 

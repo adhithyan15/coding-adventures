@@ -55,12 +55,33 @@ order; `HL-B26` tracks publishing Chapters 6–31 from the same source.
   Tamil enakku** — Malayalam and Tamil separated most recently of the four, and it
   shows. **Authored.**
 
+*(Chapters 7–31 are authored in [`lessons/`](./lessons/) and in the book;
+this roadmap has not caught up with them. Known debt.)*
+
+- **Ch. 32 — The Core Verbs**: **ഉണ്ട്** *uṇṭŭ* / **ഇരിക്കുക** *irikkuka* (be)
+  → **പോകുക** *pōkuka* (go) → **വരുക** *varuka* (come) → **തിന്നുക** *tinnuka*
+  (eat) → **കാണുക** *kāṇuka* (see) → **അറിയുക** *aṟiyuka* (know). The track's
+  first A2 chapter and its first realization of `SPINE-SAY-WHAT-I-DO`. Its
+  spine is the fact that separates Malayalam from all three sisters: the verb
+  is **stem + one ending, with no person slot** — *ñān/nī/avan pōkunnu*, one
+  form for everybody, against Tamil's *pōgiṟēṉ / pōgiṟāy / pōgiṟāṉ*. From
+  there: each tense form is the whole conjugation; the irregularity budget is
+  spent entirely on the past (*vannu*, *kaṇṭu*); the freed slot goes to **mood**
+  (*kāṇāṁ* "let's see", *kāṇaṇaṁ* "must see", *kāṇarutŭ* "must not see"); the
+  **-ഉക / -ഇക്കുക** split separates inherited verbs from Sanskrit borrowings
+  made into verbs; and the chapter closes on *aṟiyuka*, which takes no
+  nominative subject at all, finally supplying the verb inside Ch. 6's
+  **എനിക്ക് മലയാളം അറിയാം**. Malayalam is also shown to be the *conservative*
+  sister twice over — it kept both family be-verbs, and kept inherited *tiṉ-*
+  and *kāṇ-* as everyday words. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 7 | The rest of the case suffixes — accusative *-e*, locative *-il*, comitative *-ōṭu* — now that Ch. 6 has established how stacking works |
 | 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
+| 33+ | Negation and polar questions (`SPINE-NEGATE-AND-ASK`), then the rest of the core verbs Ch. 32 leaves omitted |
 
 Note: Malayalam marks "you" by **register** (*nī* familiar / *niṅṅaḷ*
 respectful, also plural) — like the other tracks, worth teaching beside them.

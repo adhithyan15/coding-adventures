@@ -653,25 +653,7 @@ describe("corpus regression", () => {
   // chapter's drivable prefix is 0 — which is why `drivablePrefixTotal` does not move at
   // all and `unstartableChapters` gains one. Routing that content through `input` blocks
   // would have held the drivable share flat by mislabelling it; the honest classification
-  // is the one that costs the metric.  //
-  // HL00's inline-letters section ("the letters in this word") is now classified as the
-  // `script` block it has always been, which moves 240 lessons across 12 tracks:
-  //
-  //   voice 957 -> 726      sight 124 -> 355      pen 53 (unchanged)
-  //   drivablePercent 84 -> 64      unstartableChapters 44 -> 92
-  //
-  // THIS IS A DELIBERATE LOSS, AND THE SAFE DIRECTION TO BE WRONG IN. Those sections teach
-  // glyph shapes, which cannot be read aloud, so the previous 84% was advertising a
-  // driving edition that would have narrated "ब plus the o-matra" at somebody on a
-  // motorway. The whole point of the flag is to be honest about what needs eyes.
-  //
-  // It is also recoverable, and the route is known. HL-C41 gave `writing` blocks a
-  // `coreModality` so a hands-free view can set them aside; the inline-letters section is
-  // detachable in exactly the same sense (HL00 calls it optional scaffolding a fluent
-  // reader skims). Adding `script` to DETACHABLE_BLOCK_TYPES was tried here and reverted:
-  // that model currently conflates "detachable" with "is a writing segment", so script
-  // blocks started claiming a lesson needs a PEN (pen 53 -> 309) to read letters. Split
-  // those two ideas and the core share returns to ~86% with the honest label intact.
+  // is the one that costs the metric.
   //
   // HL-C05-bolta-hun (the Hindi present-habitual paradigm, split out of the assembly
   // lesson) then added one `voice` lesson: 1133 -> 1134, voice 956 -> 957. It is `voice`
@@ -698,23 +680,48 @@ describe("corpus regression", () => {
   // alone. The prefix and chapter rollups move much further than the raw counts because
   // a single unspeakable table near the front of a chapter used to block everything
   // behind it — which is why unstartable chapters fall by nearly two thirds.
+  //
+  // The Latin core-verb chapter (chapter 37: sum, habeō, eō, veniō, dīcō, videō, sciō,
+  // dō) then added eight lessons, and every one of them is `voice`:
+  //
+  //   totalLessons  1134 -> 1142      voice   957 -> 965  (+8)
+  //   sight          124 ->  124      pen      53 ->  53  (both unchanged)
+  //   drivableLessons 957 ->  965     drivablePercent 84 -> 85
+  //   chapterCount    377 ->  378     fullyDrivableChapters 284 -> 285
+  //   drivablePrefixTotal 825 -> 833  unstartableChapters 44 -> 44 (unchanged)
+  //
+  // All eight counters that move, move together and by the same eight, which is the
+  // signature of a chapter that needs no eyes at all: each lesson teaches one verb, its
+  // six present-tense forms as a bullet list rather than a paradigm grid, and its English
+  // cousins in prose. No table, no script block, no pen. Because the whole chapter is
+  // `voice` and it is a NEW chapter, its drivable prefix runs to its full length — so
+  // `drivablePrefixTotal` gains the full 8 and `fullyDrivableChapters` gains the one new
+  // chapter, while `unstartableChapters` cannot move: an all-voice chapter is startable
+  // by definition. The drivable share crossing from 84% to 85% is a real ratchet, not a
+  // rounding accident — 965/1142 is 84.5%, which rounds up.
+  // The whole-lesson figures fell when the inline-letters section became the `script`
+  // block it always was (231 lessons across 12 tracks): voice 1011 -> 780, sight 124 ->
+  // 355. THE BOOK IS NOW HONEST AND THE DRIVER LOST NOTHING — `coreModality` sets those
+  // detachable sections aside, so the driving edition reads 1,026 lessons (86%), above
+  // the 84% that stood before the reclassification. This snapshot is the book's number;
+  // `modality.test.ts` asserts the core relationship.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
-      totalLessons: 1134,
-      voice: 726,
+      totalLessons: 1188,
+      voice: 780,
       sight: 355,
       pen: 53,
-      drivableLessons: 726,
-      drivablePercent: 64,
+      drivableLessons: 780,
+      drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 377,
-      // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
+      chapterCount: 388,
+      // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 555,
-      fullyDrivableChapters: 251,
+      drivablePrefixTotal: 609,
+      fullyDrivableChapters: 262,
       unstartableChapters: 92,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
