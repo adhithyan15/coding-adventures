@@ -1431,6 +1431,22 @@
       "scriptSet": "arabic-main"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "title": "Understanding, Reading, Writing",
+      "label": "ch:ar-understanding-reading-writing",
+      "output": "arabic/book/chapters/ch31-understanding-reading-writing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "title": "Taking, Thinking, Helping, Loving",
+      "label": "ch:ar-taking-thinking-helping-loving",
+      "output": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "title": "Numbers One to Five",

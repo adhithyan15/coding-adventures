@@ -7,30 +7,30 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1978364c3cd21f06",
+  "sourceHash": "fnv1a64:fbb030b0bcc9e422",
   "summary": {
-    "totalLessons": 1249,
+    "totalLessons": 1257,
     "voice": 848,
-    "sight": 348,
+    "sight": 356,
     "pen": 53,
     "drivableLessons": 848,
-    "drivablePercent": 68,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 400,
+    "chapterCount": 402,
     "drivablePrefixTotal": 669,
     "fullyDrivableChapters": 276,
-    "unstartableChapters": 90,
+    "unstartableChapters": 92,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 77,
+      "lessonCount": 85,
       "voice": 44,
-      "sight": 17,
+      "sight": 25,
       "pen": 16,
-      "drivablePercent": 57,
+      "drivablePercent": 52,
       "drivablePrefixTotal": 32,
       "modalities": [
         "voice",
@@ -523,6 +523,34 @@
             "AR-C30-arafa",
             "AR-C30-akala"
           ]
+        },
+        {
+          "chapter": 31,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C31-fahima",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 32,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C32-akhadha",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -8064,6 +8092,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:7474171579a55797"
+    },
+    {
+      "id": "AR-C31-fahima",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 780,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9a1c0dfa08fc8d85"
+    },
+    {
+      "id": "AR-C31-qaraa",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 790,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:048d4affba0e5fc3"
+    },
+    {
+      "id": "AR-C31-saala",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 800,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9b7f1e1d11e552b5"
+    },
+    {
+      "id": "AR-C31-kataba",
+      "language": "arabic",
+      "chapter": 31,
+      "sequence": 810,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8083a92e55e85f54"
+    },
+    {
+      "id": "AR-C32-akhadha",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 820,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ba58f2589a487984"
+    },
+    {
+      "id": "AR-C32-fakkara",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 830,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c78324b8fddadc52"
+    },
+    {
+      "id": "AR-C32-saada",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 840,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:76c015b2e8c3825c"
+    },
+    {
+      "id": "AR-C32-ahabba",
+      "language": "arabic",
+      "chapter": 32,
+      "sequence": 850,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2c4164cd56e38bb1"
     },
     {
       "id": "BN-C01-achchha",

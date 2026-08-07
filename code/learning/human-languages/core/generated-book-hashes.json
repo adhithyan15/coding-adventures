@@ -278,6 +278,30 @@
       "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "tex": "arabic/book/chapters/ch31-understanding-reading-writing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "tex": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:28baeae54e13a2dc",

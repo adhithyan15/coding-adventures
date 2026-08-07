@@ -471,6 +471,40 @@
       "jsonHash": "fnv1a64:713202450160efc6"
     },
     {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch31.txt",
+      "json": "arabic/narration/ch31.json",
+      "textHash": "fnv1a64:bdcaceaef3e7a7d8",
+      "jsonHash": "fnv1a64:bb16e528e936f72c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch32.txt",
+      "json": "arabic/narration/ch32.json",
+      "textHash": "fnv1a64:3ca7e79f4affb56d",
+      "jsonHash": "fnv1a64:5fbad3ebf5b3dc89"
+    },
+    {
       "language": "bengali",
       "chapter": 1,
       "sourceHash": "fnv1a64:4d5d139533791964",
