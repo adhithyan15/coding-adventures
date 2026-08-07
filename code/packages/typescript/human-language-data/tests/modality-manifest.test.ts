@@ -745,14 +745,14 @@ describe("corpus regression", () => {
     // headline per-track number is the standing recommendation; until then, expect this
     // figure to rise whenever a non-Latin track authors honestly.
     expect(manifest.summary).toEqual({
-      totalLessons: 1313,
-      voice: 884,
-      sight: 376,
+      totalLessons: 1345,
+      voice: 893,
+      sight: 399,
       pen: 53,
-      drivableLessons: 884,
-      drivablePercent: 67,
+      drivableLessons: 893,
+      drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 416,
+      chapterCount: 424,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -761,9 +761,9 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 702,
-      fullyDrivableChapters: 283,
-      unstartableChapters: 96,
+      drivablePrefixTotal: 710,
+      fullyDrivableChapters: 285,
+      unstartableChapters: 102,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

@@ -93,11 +93,33 @@ describe("per-language shared-spine maps", () => {
       "FA-C06-amadan",
       "FA-C06-goftan",
       "FA-C06-danestan",
+      // Chapters 7-8: the eight core verbs (HL-C46). Persian's three verb shapes —
+      // compound, -idan with a predictable stem, and inherited with a stem you must
+      // be told — are what these two chapters exist to separate.
+      "FA-C07-fekr-kardan",
+      "FA-C07-fahmidan",
+      "FA-C07-khandan",
+      "FA-C07-neveshtan",
+      "FA-C08-gereftan",
+      "FA-C08-porsidan",
+      "FA-C08-komak-kardan",
+      "FA-C08-dust-dashtan",
       "UR-C06-hona",
       "UR-C06-jana",
       "UR-C06-ana",
       "UR-C06-bolna",
       "UR-C06-janna",
+      // Chapters 7-8: the same eight core verbs, reached through Urdu's own
+      // Persian/Arabic layer — madad is Arabic, pasand Persian, and the nastaliq
+      // script makes that lineage visible on the page.
+      "UR-C07-sochna",
+      "UR-C07-samajhna",
+      "UR-C07-parhna",
+      "UR-C07-likhna",
+      "UR-C08-lena",
+      "UR-C08-puchhna",
+      "UR-C08-madad",
+      "UR-C08-pasand",
 ]));
   });
 

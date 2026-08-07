@@ -1976,7 +1976,7 @@
     {
       "language": "marathi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:c7935a25fd2daf52",
+      "sourceHash": "fnv1a64:c40441a93d32442c",
       "lessonIds": [
         "MR-C08-vichar-karne",
         "MR-C08-samajne",
@@ -1988,7 +1988,7 @@
     {
       "language": "marathi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:0d8a362e6a162877",
+      "sourceHash": "fnv1a64:9bd96a5da111ca86",
       "lessonIds": [
         "MR-C09-ghene",
         "MR-C09-vicharne",
@@ -2052,7 +2052,7 @@
     {
       "language": "persian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:f2a04e1c7cf5e085",
+      "sourceHash": "fnv1a64:2f855c5eab57857c",
       "lessonIds": [
         "FA-C07-fekr-kardan",
         "FA-C07-fahmidan",
@@ -2064,7 +2064,7 @@
     {
       "language": "persian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:7b80d96a1a7c66b1",
+      "sourceHash": "fnv1a64:b601304cacc02d51",
       "lessonIds": [
         "FA-C08-gereftan",
         "FA-C08-porsidan",
@@ -3203,7 +3203,7 @@
     {
       "language": "telugu",
       "chapter": 33,
-      "sourceHash": "fnv1a64:2d798654b223c361",
+      "sourceHash": "fnv1a64:4354c402e1713329",
       "lessonIds": [
         "TE-C33-anuko",
         "TE-C33-artham-cesuko",
@@ -3215,7 +3215,7 @@
     {
       "language": "telugu",
       "chapter": 34,
-      "sourceHash": "fnv1a64:da73c64bbe941924",
+      "sourceHash": "fnv1a64:2ade66311a32ef2c",
       "lessonIds": [
         "TE-C34-tiisuko",
         "TE-C34-adugu",
@@ -3279,7 +3279,7 @@
     {
       "language": "urdu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "sourceHash": "fnv1a64:182d519f6319b46a",
       "lessonIds": [
         "UR-C07-sochna",
         "UR-C07-samajhna",
@@ -3291,7 +3291,7 @@
     {
       "language": "urdu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:997aec13e461f1b3",
+      "sourceHash": "fnv1a64:dd548ee0ccc086e4",
       "lessonIds": [
         "UR-C08-lena",
         "UR-C08-puchhna",
