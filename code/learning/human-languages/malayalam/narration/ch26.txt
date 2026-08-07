@@ -16,7 +16,7 @@ Why it's said this way.
 No source spells out why "at/in the night" came to mean "morning" specifically — it's a plausible semantic path (perhaps "the night just ending," the pre-dawn hours) rather than one directly documented step by step. Treat the morphological composition as confirmed (Wiktionary is explicit about the rāvŭ+il+e breakdown); treat the semantic mechanism as a reasonable but unconfirmed inference, not a settled fact.
 
 Why it's said this way.
-Malayalam keeps two other words for "morning" too. പ്രഭാതം (prabhātaṁ) is a Sanskrit tatsama sharing its root — prabhāta, "to shine, become bright" — with Telugu's own సుప్రభాతం (suprabhātam, TE-C29, this very arc's Telugu morning-greeting word) — a genuine cross-language callback within this project. പുലർച്ച (pulaṟcca) is native Dravidian, but be honest about its etymology: one database entry links it to a root meaning "to subsist, live," which may or may not be the same root behind its "dawn" sense — treat that specific connection as unconfirmed, not settled.
+Malayalam keeps two other words for "morning" too. പ്രഭാതം (prabhātaṁ) is a Sanskrit tatsama sharing its root — prabhāta, "to shine, become bright" — with Telugu's own సుప్రభాతం (suprabhātam, Telugu's own morning greeting) — a genuine cross-language echo. പുലർച്ച (pulaṟcca) is native Dravidian, but be honest about its etymology: one database entry links it to a root meaning "to subsist, live," which may or may not be the same root behind its "dawn" sense — treat that specific connection as unconfirmed, not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -29,4 +29,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is രാവിലെ literally built from? (രാവ് — "night" — plus locative suffixes -il/-e; a cognate doublet, same root, as ഇരവ് met in Chapter 24 — not literally the same word.) Is the exact reason "night" came to mean "morning" fully documented? (No — the compound itself is confirmed, but the semantic shift is a plausible, unconfirmed inference.) What root does പ്രഭാതം share with a word from Telugu's arc? (prabhāta — the same root behind Telugu's సుప్రభాతం, TE-C29.)
+What is രാവിലെ literally built from? (രാവ് — "night" — plus locative suffixes -il/-e; a cognate doublet, same root, as ഇരവ് met in Chapter 24 — not literally the same word.) Is the exact reason "night" came to mean "morning" fully documented? (No — the compound itself is confirmed, but the semantic shift is a plausible, unconfirmed inference.) What root does പ്രഭാതം share with Telugu's సుప్రభాతం? (prabhāta — the same root behind Telugu's సుప్రభాతం.)

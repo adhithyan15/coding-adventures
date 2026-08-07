@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0fd5b6c217dea39e",
+  "sourceHash": "fnv1a64:9ee7c138518419ac",
   "lessons": [
     {
       "id": "GE-C18-ja",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f08371ea8b32fd39",
+      "sourceHash": "fnv1a64:0320e08d92620a31",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Learn nein and you've really met the same \"n‑of‑no\" that will greet you again in Hindi, and that you already met in Spanish and French. One negative, half the world."
+              "text": "Learn nein and you've really met the same \"n‑of‑no\" that will greet you again in Hindi, and that also sits inside Spanish and French. One negative, half the world."
             }
           ]
         },

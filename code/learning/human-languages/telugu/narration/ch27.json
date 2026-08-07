@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:504bda7b4b84a05c",
+  "sourceHash": "fnv1a64:75dee246e623e7d1",
   "lessons": [
     {
       "id": "TE-C27-sayantram",
@@ -12,14 +12,14 @@
       "title": "సాయంత్రం (sāyantram) — a distant cousin of French \"soir\"",
       "headword": "సాయంత్రం",
       "romanization": "",
-      "gloss": "\"evening\" (sāyantram) — Sanskrit tatsama from సాయం (sāyam, \"in the evening\") + a \"-tana\" time-adjective suffix; సాయం itself traces to PIE seh₁- (\"long, lasting\"), the SAME root as Latin's sērus — already taught in this course as the root of French soir and Italian sera — a genuine distant cognate across two completely different Indo-European branches",
+      "gloss": "\"evening\" (sāyantram) — Sanskrit tatsama from సాయం (sāyam, \"in the evening\") + a \"-tana\" time-adjective suffix; సాయం itself traces to PIE seh₁- (\"long, lasting\"), the SAME root as Latin's sērus — attested as the root of French soir and Italian sera — a genuine distant cognate across two completely different Indo-European branches",
       "script": "telugu",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af5ca885904eebd",
+      "sourceHash": "fnv1a64:d9da980866e3cf48",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "This lesson's word for \"evening\" reaches back to a PIE root you've technically already met — in a completely different language, on a completely different continent's language family."
+              "text": "This lesson's word for \"evening\" reaches back to a PIE root that also surfaces — in a completely different language, on a completely different continent's language family."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the striking part, checked directly against primary sources rather than assumed: సాయం itself traces to Proto-Indo-European seh₁- (\"long, lasting\") — and this is explicitly documented as \"distantly related to Latin sērus\" (\"late\"), itself confirmed independently to trace to the very same seh₁- root (via Proto-Italic sēros). You've technically already met sērus: it's the Latin root already established in this course as the source of French soir and Italian sera — French and Italian's own everyday \"evening\" words. That makes సాయంత్రం and soir/sera genuine distant cognates — one route through Sanskrit tatsama borrowing into Telugu, one route through centuries of Vulgar Latin erosion into French and Italian, both ultimately the same Proto-Indo-European idea of something \"long, lasting\" stretching into \"late in the day.\""
+              "text": "Here's the striking part, checked directly against primary sources rather than assumed: సాయం itself traces to Proto-Indo-European seh₁- (\"long, lasting\") — and this is explicitly documented as \"distantly related to Latin sērus\" (\"late\"), itself confirmed independently to trace to the very same seh₁- root (via Proto-Italic sēros). sērus is worth a closer look: it's the Latin root well attested as the source of French soir and Italian sera — French and Italian's own everyday \"evening\" words. That makes సాయంత్రం and soir/sera genuine distant cognates — one route through Sanskrit tatsama borrowing into Telugu, one route through centuries of Vulgar Latin erosion into French and Italian, both ultimately the same Proto-Indo-European idea of something \"long, lasting\" stretching into \"late in the day.\""
             }
           ]
         },

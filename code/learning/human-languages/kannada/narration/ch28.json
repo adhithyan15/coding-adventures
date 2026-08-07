@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6133ff939c0603ea",
+  "sourceHash": "fnv1a64:222fcb3989c9b13f",
   "lessons": [
     {
       "id": "KA-C28-aparahna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdb40bc5c17babcb",
+      "sourceHash": "fnv1a64:12b4b4c06d6601f7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's where this lesson needs real care: some sources describe ಮಧ್ಯಾಹ್ನ itself being stretched loosely in casual modern speech to cover the whole afternoon too — which would echo Hindi's own दोपहर, already found in this course to have genuinely widened from \"precisely noon\" to \"the whole afternoon.\" But the evidence for Kannada is much thinner than what backed the Hindi finding — general dictionary listings rather than clear, independently-confirmed usage sources. Treat this as a plausible, hedged parallel, not a settled fact the way दोपहर's widening was. ಅಪರಾಹ್ನ remains the more precisely, formally correct word for \"afternoon\" specifically."
+              "text": "Here's where this lesson needs real care: some sources describe ಮಧ್ಯಾಹ್ನ itself being stretched loosely in casual modern speech to cover the whole afternoon too — which would echo Hindi's own दोपहर, attested to have genuinely widened from \"precisely noon\" to \"the whole afternoon.\" But the evidence for Kannada is much thinner than what backed the Hindi finding — general dictionary listings rather than clear, independently-confirmed usage sources. Treat this as a plausible, hedged parallel, not a settled fact the way दोपहर's widening was. ಅಪರಾಹ್ನ remains the more precisely, formally correct word for \"afternoon\" specifically."
             }
           ]
         },

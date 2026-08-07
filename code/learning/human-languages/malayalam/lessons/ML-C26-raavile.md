@@ -6,12 +6,12 @@ sequence: 580
 chapter: 26
 type: word
 headword: രാവിലെ
-gloss: "morning" (rāvile) — a compound of രാവ് (rāvŭ, "night," a cognate doublet of ഇരവ്/iravŭ already met in ML-C24 — same root, not literally the same word) + locative-ish suffixes -il/-e; literally built from NIGHT, not light or rising — a genuinely different strategy than Kannada's "the shining" or Telugu's Sanskrit "rise"; പ്രഭാതം (Sanskrit tatsama, same prabhāta root as Telugu's TE-C29) and പുലർച്ച (native, thinner etymology) also exist as alternatives
+gloss: "morning" (rāvile) — a compound of രാവ് (rāvŭ, "night," a cognate doublet of ഇരവ്/iravŭ already met in ML-C24 — same root, not literally the same word) + locative-ish suffixes -il/-e; literally built from NIGHT, not light or rising — a genuinely different strategy than Kannada's "the shining" or Telugu's Sanskrit "rise"; പ്രഭാതം (Sanskrit tatsama, the same prabhāta root Telugu draws on) and പുലർച്ച (native, thinner etymology) also exist as alternatives
 concept_tag: TIME-MORNING
 prerequisites: [ML-C24-native-night-words]
 sounds: [malayalam-vowel-sign-e, malayalam-virama-va]
 roots: [proto-dravidian-cira-darkness, sanskrit-prabhata-shine]
-etymology_hook: "രാവിലെ (rāvile, 'morning') is, per Wiktionary, a compound of രാവ് (rāvŭ) + -il + -e; രാവ് is confirmed cognate with Tamil ரா/இரவு and shares its Proto-Dravidian *cira ('darkness') root with ഇരവ് (iravŭ), already met in ML-C24 as a literary register synonym for 'night' — a cognate doublet, not literally the same word — meaning Malayalam's everyday 'morning' word is, transparently, built from NIGHT plus locative suffixes, not from light or rising; hedge the exact semantic mechanism (why 'at night' shifted to mean 'morning') since no source spells out the intermediate step, but the morphological composition itself is Wiktionary-confirmed; two alternatives exist too: പ്രഭാതം (prabhātaṁ), a Sanskrit tatsama sharing its root, prabhāta ('shine, become bright'), with Telugu's own సుప్రభాతం (TE-C29) — a genuine cross-language callback within this very arc — and പുലർച്ച (pulaṟcca), native Dravidian but with a thinner, less certain etymology (a Starling-database entry links it to a 'subsist/live' sense that may or may not be the same root as 'dawn,' so treat that connection as unconfirmed, not settled)"
+etymology_hook: "രാവിലെ (rāvile, 'morning') is, per Wiktionary, a compound of രാവ് (rāvŭ) + -il + -e; രാവ് is confirmed cognate with Tamil ரா/இரவு and shares its Proto-Dravidian *cira ('darkness') root with ഇരവ് (iravŭ), already met in ML-C24 as a literary register synonym for 'night' — a cognate doublet, not literally the same word — meaning Malayalam's everyday 'morning' word is, transparently, built from NIGHT plus locative suffixes, not from light or rising; hedge the exact semantic mechanism (why 'at night' shifted to mean 'morning') since no source spells out the intermediate step, but the morphological composition itself is Wiktionary-confirmed; two alternatives exist too: പ്രഭാതം (prabhātaṁ), a Sanskrit tatsama sharing its root, prabhāta ('shine, become bright'), with Telugu's own సుప్రభాతం — a genuine cross-language callback within this very arc — and പുലർച്ച (pulaṟcca), native Dravidian but with a thinner, less certain etymology (a Starling-database entry links it to a 'subsist/live' sense that may or may not be the same root as 'dawn,' so treat that connection as unconfirmed, not settled)"
 duration:
   max_seconds: 299
 requires:
@@ -70,8 +70,8 @@ not a settled fact.
 Malayalam keeps two other words for "morning" too. **പ്രഭാതം**
 (*prabhātaṁ*) is a Sanskrit **tatsama** sharing its root — **prabhāta**,
 "to shine, become bright" — with Telugu's own **సుప్రభాతం**
-(*suprabhātam*, TE-C29, this very arc's Telugu morning-greeting word) —
-a genuine cross-language callback within this project. **പുലർച്ച**
+(*suprabhātam*, Telugu's own morning greeting) —
+a genuine cross-language echo. **പുലർച്ച**
 (*pulaṟcca*) is native Dravidian, but be honest about its etymology:
 one database entry links it to a root meaning "to subsist, live,"
 which may or may not be the same root behind its "dawn" sense — treat
@@ -95,5 +95,5 @@ that specific connection as unconfirmed, not settled.
 root, as ഇരവ് met in Chapter 24 — not literally the same word.) Is the exact reason "night" came to mean "morning"
 fully documented? (**No** — the compound itself is confirmed, but the
 semantic shift is a plausible, unconfirmed inference.) What root does
-പ്രഭാതം share with a word from Telugu's arc? (**prabhāta** —
-the same root behind Telugu's సుప్రభాతం, TE-C29.)
+പ്രഭാതം share with Telugu's సుప్రభాతం? (**prabhāta** —
+the same root behind Telugu's సుప్రభాతం.)

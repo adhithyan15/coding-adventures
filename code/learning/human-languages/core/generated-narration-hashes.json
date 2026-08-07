@@ -1353,7 +1353,7 @@
     {
       "language": "german",
       "chapter": 16,
-      "sourceHash": "fnv1a64:e0757a9507364a37",
+      "sourceHash": "fnv1a64:4dd5d88ce4eb5b94",
       "lessonIds": [
         "GE-C16-perfekt-sein",
         "GE-C16-perfekt-sein-agreement",
@@ -1364,7 +1364,7 @@
       "text": "german/narration/ch16.txt",
       "json": "german/narration/ch16.json",
       "textHash": "fnv1a64:c4eeefbaf59636a0",
-      "jsonHash": "fnv1a64:09aa4b8b422475e9"
+      "jsonHash": "fnv1a64:d1c058b52c61f594"
     },
     {
       "language": "german",
@@ -1385,7 +1385,7 @@
     {
       "language": "german",
       "chapter": 18,
-      "sourceHash": "fnv1a64:0fd5b6c217dea39e",
+      "sourceHash": "fnv1a64:9ee7c138518419ac",
       "lessonIds": [
         "GE-C18-ja",
         "GE-C18-nein"
@@ -1394,8 +1394,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch18.txt",
       "json": "german/narration/ch18.json",
-      "textHash": "fnv1a64:c3a2fb7d92f582df",
-      "jsonHash": "fnv1a64:c07f3fb28214d857"
+      "textHash": "fnv1a64:3c95657affbf0a3b",
+      "jsonHash": "fnv1a64:449d3e4358046d09"
     },
     {
       "language": "german",
@@ -2063,7 +2063,7 @@
     {
       "language": "hindi",
       "chapter": 28,
-      "sourceHash": "fnv1a64:eb678603dbd8f2ac",
+      "sourceHash": "fnv1a64:edb856d15627ca1e",
       "lessonIds": [
         "HI-C28-subah"
       ],
@@ -2071,8 +2071,8 @@
       "drivablePrefix": 1,
       "text": "hindi/narration/ch28.txt",
       "json": "hindi/narration/ch28.json",
-      "textHash": "fnv1a64:721b5c3dbdfbd077",
-      "jsonHash": "fnv1a64:41569e5cb64944cd"
+      "textHash": "fnv1a64:dd8dafe533f15766",
+      "jsonHash": "fnv1a64:74a13834ea9c5b36"
     },
     {
       "language": "hindi",
@@ -2105,7 +2105,7 @@
     {
       "language": "hindi",
       "chapter": 31,
-      "sourceHash": "fnv1a64:ed596102fbc3b667",
+      "sourceHash": "fnv1a64:f1d6d17de7780612",
       "lessonIds": [
         "HI-C31-suprabhat"
       ],
@@ -2113,8 +2113,8 @@
       "drivablePrefix": 1,
       "text": "hindi/narration/ch31.txt",
       "json": "hindi/narration/ch31.json",
-      "textHash": "fnv1a64:08a621efdc852434",
-      "jsonHash": "fnv1a64:99a8082c9affced7"
+      "textHash": "fnv1a64:e986fc75a8de3388",
+      "jsonHash": "fnv1a64:ebf51c10826d3848"
     },
     {
       "language": "hindi",
@@ -2923,7 +2923,7 @@
     {
       "language": "kannada",
       "chapter": 28,
-      "sourceHash": "fnv1a64:6133ff939c0603ea",
+      "sourceHash": "fnv1a64:222fcb3989c9b13f",
       "lessonIds": [
         "KA-C28-aparahna"
       ],
@@ -2931,8 +2931,8 @@
       "drivablePrefix": 1,
       "text": "kannada/narration/ch28.txt",
       "json": "kannada/narration/ch28.json",
-      "textHash": "fnv1a64:40886b43f61d5415",
-      "jsonHash": "fnv1a64:081d95957207643e"
+      "textHash": "fnv1a64:c15c5116eddbda7f",
+      "jsonHash": "fnv1a64:6bf14a67de3cd557"
     },
     {
       "language": "kannada",
@@ -3960,7 +3960,7 @@
     {
       "language": "malayalam",
       "chapter": 26,
-      "sourceHash": "fnv1a64:2606e98487e2c8e6",
+      "sourceHash": "fnv1a64:a66e09b76ff5c1a3",
       "lessonIds": [
         "ML-C26-raavile"
       ],
@@ -3968,8 +3968,8 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch26.txt",
       "json": "malayalam/narration/ch26.json",
-      "textHash": "fnv1a64:888af72ca8b6a0eb",
-      "jsonHash": "fnv1a64:a7c0e6a27b806da9"
+      "textHash": "fnv1a64:9a36b5d33f4831a2",
+      "jsonHash": "fnv1a64:434fba1121a5e17b"
     },
     {
       "language": "malayalam",
@@ -3988,7 +3988,7 @@
     {
       "language": "malayalam",
       "chapter": 28,
-      "sourceHash": "fnv1a64:585d631c6cb2a93a",
+      "sourceHash": "fnv1a64:1867dec0b1c013b3",
       "lessonIds": [
         "ML-C28-uchakazhinju"
       ],
@@ -3996,13 +3996,13 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch28.txt",
       "json": "malayalam/narration/ch28.json",
-      "textHash": "fnv1a64:97355d29f7d068cd",
-      "jsonHash": "fnv1a64:66e8ed9101d91b84"
+      "textHash": "fnv1a64:b04a762e3c13cb24",
+      "jsonHash": "fnv1a64:d4f304c55736cd4e"
     },
     {
       "language": "malayalam",
       "chapter": 29,
-      "sourceHash": "fnv1a64:8afc5076ee8c3dff",
+      "sourceHash": "fnv1a64:5ff329130ddfb50f",
       "lessonIds": [
         "ML-C29-suprabhaatham"
       ],
@@ -4010,13 +4010,13 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch29.txt",
       "json": "malayalam/narration/ch29.json",
-      "textHash": "fnv1a64:0f933dbffca7c62f",
-      "jsonHash": "fnv1a64:c02dd93248fddb37"
+      "textHash": "fnv1a64:c65f0f9a444ecc4c",
+      "jsonHash": "fnv1a64:57212f73609c47bf"
     },
     {
       "language": "malayalam",
       "chapter": 30,
-      "sourceHash": "fnv1a64:043cd698c21af4b8",
+      "sourceHash": "fnv1a64:b0be1109c8dd7827",
       "lessonIds": [
         "ML-C30-shubha-sayaahnam"
       ],
@@ -4024,8 +4024,8 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch30.txt",
       "json": "malayalam/narration/ch30.json",
-      "textHash": "fnv1a64:c2bbda0e753355b7",
-      "jsonHash": "fnv1a64:5a06aebc9fe9bd0d"
+      "textHash": "fnv1a64:ef07def5b3441251",
+      "jsonHash": "fnv1a64:e3da459d44c1cc0e"
     },
     {
       "language": "malayalam",
@@ -6041,7 +6041,7 @@
     {
       "language": "tamil",
       "chapter": 24,
-      "sourceHash": "fnv1a64:5eac37ebcb9ae8cc",
+      "sourceHash": "fnv1a64:6ae266bd9d23bdce",
       "lessonIds": [
         "TA-C24-iravu",
         "TA-C24-night-register-darkness"
@@ -6050,13 +6050,13 @@
       "drivablePrefix": 2,
       "text": "tamil/narration/ch24.txt",
       "json": "tamil/narration/ch24.json",
-      "textHash": "fnv1a64:61445384b7744d18",
-      "jsonHash": "fnv1a64:537d0d3d899e2cb6"
+      "textHash": "fnv1a64:5cfc6ee61e11da0e",
+      "jsonHash": "fnv1a64:5c0e383fa74370cf"
     },
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:d95cb3daafa21b66",
+      "sourceHash": "fnv1a64:d7b170e7217df997",
       "lessonIds": [
         "TA-C25-iniya-iravu",
         "TA-C25-goodnight-alternatives"
@@ -6066,7 +6066,7 @@
       "text": "tamil/narration/ch25.txt",
       "json": "tamil/narration/ch25.json",
       "textHash": "fnv1a64:737644a17b814265",
-      "jsonHash": "fnv1a64:98fbda254a3bc1cc"
+      "jsonHash": "fnv1a64:8875349bf966823b"
     },
     {
       "language": "tamil",
@@ -6602,7 +6602,7 @@
     {
       "language": "telugu",
       "chapter": 27,
-      "sourceHash": "fnv1a64:504bda7b4b84a05c",
+      "sourceHash": "fnv1a64:75dee246e623e7d1",
       "lessonIds": [
         "TE-C27-sayantram"
       ],
@@ -6610,13 +6610,13 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch27.txt",
       "json": "telugu/narration/ch27.json",
-      "textHash": "fnv1a64:b2dd87f969893bb9",
-      "jsonHash": "fnv1a64:5146bc1d5ad8cd92"
+      "textHash": "fnv1a64:924992bc89e47bf3",
+      "jsonHash": "fnv1a64:d46c118874ca8847"
     },
     {
       "language": "telugu",
       "chapter": 28,
-      "sourceHash": "fnv1a64:7a9b4182b27fd1c7",
+      "sourceHash": "fnv1a64:bd72e616f8422935",
       "lessonIds": [
         "TE-C28-madhyahnam-widened"
       ],
@@ -6624,8 +6624,8 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch28.txt",
       "json": "telugu/narration/ch28.json",
-      "textHash": "fnv1a64:9b15fa43a238d361",
-      "jsonHash": "fnv1a64:5dd3f3c74d90f8ec"
+      "textHash": "fnv1a64:96b338d8dd772361",
+      "jsonHash": "fnv1a64:299a097ef18d0a94"
     },
     {
       "language": "telugu",

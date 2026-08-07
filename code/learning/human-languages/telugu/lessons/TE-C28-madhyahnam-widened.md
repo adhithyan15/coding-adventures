@@ -11,7 +11,7 @@ concept_tag: TIME-AFTERNOON
 prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C27-sayantram]
 sounds: [telugu-conjunct-dhya, telugu-vowel-sign-aa]
 roots: [sanskrit-madhya-middle]
-etymology_hook: "మధ్యాహ్నం (madhyāhnam) is the SAME word already met in TE-C17 meaning precisely 'noon' ('middle' + 'day') — but a directly-fetched source confirms it also covers 'the time between noon and evening' in modern usage, the same kind of widening already found for Hindi's दोपहर (well-confirmed) and Kannada's మధ్యాహ్న (more thinly hedged); a separate, more precise word for 'later afternoon' specifically, అపరాహ్నం (aparāhnam, from the same classical five-part Sanskrit day division as Kannada's అపరాహ్న), also exists; thin, informal evidence (native-speaker forum discussion, dictionary usage notes) converges on మధ్యాహ్నం winning colloquially while అపరాహ్నం stays the formally precise term — a hedged, KA-C28-style parallel, not a fully settled comparison"
+etymology_hook: "మధ్యాహ్నం (madhyāhnam) is the SAME word already met in TE-C17 meaning precisely 'noon' ('middle' + 'day') — but a directly-fetched source confirms it also covers 'the time between noon and evening' in modern usage, the same kind of widening already found for Hindi's दोपहर (well-confirmed) and Kannada's మధ్యాహ్న (more thinly hedged); a separate, more precise word for 'later afternoon' specifically, అపరాహ్నం (aparāhnam, from the same classical five-part Sanskrit day division as Kannada's అపరాహ్న), also exists; thin, informal evidence (native-speaker forum discussion, dictionary usage notes) converges on మధ్యాహ్నం winning colloquially while అపరాహ్నం stays the formally precise term — a hedged parallel, not a fully settled comparison"
 duration:
   max_seconds: 270
 requires:
@@ -58,12 +58,12 @@ Telugu also has **అపరాహ్నం** (**aparāhnam**), from the same cla
 **అపరాహ్న** — *prāta/udaya* (sunrise), *saṅgava*, *madhyāhna* (noon),
 *aparāhna* ("later afternoon" specifically), *sāyāhna* (evening). Be
 honest about the sourcing here, echoing the same hedge already applied
-to Kannada's *aparāhna* in KA-C28: thin, informal evidence — a
+to Kannada's *aparāhna*: thin, informal evidence — a
 native-speaker forum discussion, general dictionary usage notes — points
 toward **మధ్యాహ్నం winning colloquially**, with **అపరాహ్నం** staying the
 more **formally precise** term. Real, but not corpus-linguistics-grade
-sourcing — treat it the same cautious way KA-C28 treated its own
-equivalent finding, not as fully settled.
+sourcing — treat it the same cautious way Kannada's own
+equivalent finding was treated, not as fully settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01, TE-ETYMON-C28-MADHYAHNAM-WIDENED-02] -->

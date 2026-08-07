@@ -8,7 +8,7 @@ concept_tag: VERB-BE
 prerequisites: [GE-C14-haben, GE-C15-praeteritum]
 sounds: [ich-laut, final-devoicing]
 roots: [pie-h1es, pie-bhuh, pie-wes]
-etymology_hook: "sein is built from THREE roots: ist/sind ← *h₁es- (Latin est/sunt), bin/bist ← *bʰuH- 'grow, become' (the same root as English be and as Spanish fui, taught in ES-C14), and war/waren ← *wes- 'dwell, remain' (English was/were) — three verbs' worth of forms living under one infinitive"
+etymology_hook: "sein is built from THREE roots: ist/sind ← *h₁es- (Latin est/sunt), bin/bist ← *bʰuH- 'grow, become' (the same root as English be and as Spanish fui), and war/waren ← *wes- 'dwell, remain' (English was/were) — three verbs' worth of forms living under one infinitive"
 est_minutes: 4
 reviews_of: [GE-C14-haben, GE-C15-praeteritum, GE-C05-lernen]
 ---

@@ -6,12 +6,12 @@ sequence: 620
 chapter: 30
 type: phrase
 headword: ശുഭ സായാഹ്നം
-gloss: "good evening" (śubha sāyāhnaṁ) — confirmed real, used "from late afternoon until sunset" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for "evening," Wiktionary-labeled "poetic" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय ("end"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE *seh₁- as Telugu's TE-C27 సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess
+gloss: "good evening" (śubha sāyāhnaṁ) — confirmed real, used "from late afternoon until sunset" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for "evening," Wiktionary-labeled "poetic" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय ("end"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE *seh₁- as Telugu's సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess
 concept_tag: GREETING-EVENING
 prerequisites: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-hna]
 roots: [sanskrit-shubha-beautiful, sanskrit-saya-end]
-etymology_hook: "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ, 'good evening') is confirmed real by a directly-fetched source (preply.com), used 'from late afternoon until sunset' — built on ശുഭ (ML-C25, already verified PIE *ḱewbʰ- root, shared with Hindi/Kannada/Telugu) plus സായാഹ്നം (sāyāhnaṁ, 'evening, eventide'); be honest about a genuine surprise: this is NOT built on ML-C27's native വൈകുന്നേരം at all — സായാഹ്നം is a SEPARATE word, a Sanskrit tatsama that Wiktionary's own part-of-speech label calls 'poetic' (a real, citable register signal, not an unverifiable blog claim, that this greeting likely skews formal/literary); a Sanskrit dictionary page confirms സായാഹ്നം is a karmadhāraya compound of साय ('end') + अह्न ('day'), and Wiktionary's own separate साय entry directly confirms साय traces to PIE *seh₁- ('long, lasting'), explicitly listing सायम् (sāyam, TE-C27's own root), Latin sērus, and Gothic seiþus as cognates — meaning സായാഹ്നം's root and Telugu's TE-C27 సాయంత్రం (built on sāyam) share a genuinely, properly-verified common PIE ancestor, not just a plausible guess; a claim that ordinary Malayalis rarely say this phrase, favoring നമസ്കാരം instead, could NOT be independently verified (the pages making that claim returned 403 errors) — so it is deliberately NOT asserted here, only the Wiktionary 'poetic' register label, which IS independently verifiable"
+etymology_hook: "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ, 'good evening') is confirmed real by a directly-fetched source (preply.com), used 'from late afternoon until sunset' — built on ശുഭ (ML-C25, already verified PIE *ḱewbʰ- root, shared with Hindi/Kannada/Telugu) plus സായാഹ്നം (sāyāhnaṁ, 'evening, eventide'); be honest about a genuine surprise: this is NOT built on ML-C27's native വൈകുന്നേരം at all — സായാഹ്നം is a SEPARATE word, a Sanskrit tatsama that Wiktionary's own part-of-speech label calls 'poetic' (a real, citable register signal, not an unverifiable blog claim, that this greeting likely skews formal/literary); a Sanskrit dictionary page confirms സായാഹ്നം is a karmadhāraya compound of साय ('end') + अह्न ('day'), and Wiktionary's own separate साय entry directly confirms साय traces to PIE *seh₁- ('long, lasting'), explicitly listing सायम् (sāyam, Telugu's own root), Latin sērus, and Gothic seiþus as cognates — meaning സായാഹ്നം's root and Telugu's సాయంత్రం (built on sāyam) share a genuinely, properly-verified common PIE ancestor, not just a plausible guess; a claim that ordinary Malayalis rarely say this phrase, favoring നമസ്കാരം instead, could NOT be independently verified (the pages making that claim returned 403 errors) — so it is deliberately NOT asserted here, only the Wiktionary 'poetic' register label, which IS independently verifiable"
 duration:
   max_seconds: 293
 requires:
@@ -62,9 +62,9 @@ suffix already met in words like *madhyāhna* and *aparāhna*. Following
 the etymology one hop further, Wiktionary's own **साय** entry
 explicitly confirms this root traces to **Proto-Indo-European**
 ***\*seh₁-*** ("**long, lasting**"), directly naming **सायम्**
-(*sāyam* — Telugu's own TE-C27 root) and **Latin sērus** as cognates.
+(*sāyam* — Telugu's own root) and **Latin sērus** as cognates.
 So this is a genuinely, properly-verified shared ancestor with
-Telugu's **సాయంత్రం** (TE-C27) — the same striking PIE chain to
+Telugu's **సాయంత్రం** — the same striking PIE chain to
 Latin *sērus*, French **soir**, and Italian **sera** — not merely a
 plausible guess, but a confirmed cognate, reached by chaining through
 two Wiktionary pages rather than stopping at the first.
@@ -77,8 +77,7 @@ two Wiktionary pages rather than stopping at the first.
   from late afternoon until sunset]
 - [YOU SAY: the honest surprise — NOT built on vaikunnēraṁ; a separate,
   Wiktionary-labeled "poetic" Sanskrit word instead]
-- [YOU SAY: the confirmed echo — sāyāhnaṁ's साय root genuinely shares
-  TE-C27's PIE *seh₁-/Latin sērus connection]
+- [YOU SAY: the confirmed echo — sāyāhnaṁ's साय root genuinely shares the PIE *seh₁-/Latin sērus ancestry behind Telugu's సాయంత్రం]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01, ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02] -->
@@ -88,7 +87,7 @@ native evening word? (**No** — സായാഹ്നം is a completely separa
 Sanskrit tatsama.) What does Wiktionary's own part-of-speech label for
 സായാഹ്നം suggest about its register? (**"Poetic"** — a real,
 checkable signal it likely skews formal or literary.) Is it
-confirmed that സായാഹ്നം shares TE-C27's spectacular PIE root?
+confirmed that സായാഹ്നം shares that spectacular PIE root with Telugu's సాయంత్రం?
 (**Yes** — Wiktionary's separate साय entry directly confirms the same
 PIE *seh₁- ancestry, naming sāyam and Latin sērus as cognates — a
 genuinely verified shared root, reached by following the etymology one

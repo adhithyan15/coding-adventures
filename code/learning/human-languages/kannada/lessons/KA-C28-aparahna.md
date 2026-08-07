@@ -57,7 +57,7 @@ specifically as the fourth part, after noon and before evening.
 Here's where this lesson needs real care: some sources describe
 **ಮಧ್ಯಾಹ್ನ** itself being stretched loosely in casual modern speech to
 cover the whole afternoon too — which would echo Hindi's own दोपहर,
-already found in this course to have genuinely widened from "precisely
+attested to have genuinely widened from "precisely
 noon" to "the whole afternoon." But the evidence for Kannada is **much
 thinner** than what backed the Hindi finding — general dictionary
 listings rather than clear, independently-confirmed usage sources. Treat

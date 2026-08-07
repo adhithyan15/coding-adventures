@@ -61,7 +61,7 @@ you're learning:
 | English | **no, not, none** |
 
 Learn *nein* and you've really met the same "n‑of‑no" that will greet you again
-in Hindi, and that you already met in Spanish and French. One negative, half the
+in Hindi, and that also sits inside Spanish and French. One negative, half the
 world.
 
 ## Guided Practice

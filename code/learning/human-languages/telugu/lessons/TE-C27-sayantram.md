@@ -6,12 +6,12 @@ sequence: 550
 chapter: 27
 type: word
 headword: సాయంత్రం
-gloss: "evening" (sāyantram) — Sanskrit tatsama from సాయం (sāyam, "in the evening") + a "-tana" time-adjective suffix; సాయం itself traces to PIE *seh₁- ("long, lasting"), the SAME root as Latin's sērus — already taught in this course as the root of French soir and Italian sera — a genuine distant cognate across two completely different Indo-European branches
+gloss: "evening" (sāyantram) — Sanskrit tatsama from సాయం (sāyam, "in the evening") + a "-tana" time-adjective suffix; సాయం itself traces to PIE *seh₁- ("long, lasting"), the SAME root as Latin's sērus — attested as the root of French soir and Italian sera — a genuine distant cognate across two completely different Indo-European branches
 concept_tag: TIME-EVENING
 prerequisites: [TE-C26-udayam]
 sounds: [telugu-anusvara, telugu-conjunct-tra]
 roots: [sanskrit-sayam-evening]
-etymology_hook: "సాయంత్రం (sāyantram, 'evening') is a Sanskrit tatsama — from సాయం (sāyam, 'in the evening') plus a Sanskrit '-tana' suffix that turns time-adverbs into adjectives (cf. divātana, 'of the day'; sanātana, 'eternal'); సాయం itself, per Wiktionary, traces to PIE *seh₁- ('long, lasting') — and Wiktionary explicitly states this root is 'distantly related to Latin sērus,' independently confirmed on sērus's own Wiktionary page (Proto-Italic *sēros ← PIE *seh₁-, 'to be long, lasting, slow'); sērus is already established in this course as the root of French soir and Italian sera (LA-C33-vesper) — meaning Telugu's everyday evening word and the Romance family's everyday evening word are genuine, if very distant, cognates, one route through Sanskrit tatsama borrowing, one through Vulgar Latin erosion"
+etymology_hook: "సాయంత్రం (sāyantram, 'evening') is a Sanskrit tatsama — from సాయం (sāyam, 'in the evening') plus a Sanskrit '-tana' suffix that turns time-adverbs into adjectives (cf. divātana, 'of the day'; sanātana, 'eternal'); సాయం itself, per Wiktionary, traces to PIE *seh₁- ('long, lasting') — and Wiktionary explicitly states this root is 'distantly related to Latin sērus,' independently confirmed on sērus's own Wiktionary page (Proto-Italic *sēros ← PIE *seh₁-, 'to be long, lasting, slow'); sērus is well attested as the root of French soir and Italian sera — meaning Telugu's everyday evening word and the Romance family's everyday evening word are genuine, if very distant, cognates, one route through Sanskrit tatsama borrowing, one through Vulgar Latin erosion"
 duration:
   max_seconds: 240
 requires:
@@ -34,7 +34,7 @@ reviews_of: [TE-C26-udayam]
 <!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->
 
 [PAUSE 2s] This lesson's word for "evening" reaches back to a PIE root
-you've technically already met — in a completely different language,
+that also surfaces — in a completely different language,
 on a completely different continent's language family.
 
 ## The word, taken apart - సాయంత్రం — Sanskrit, built from "evening" plus a time-suffix
@@ -54,8 +54,8 @@ rather than assumed: **సాయం** itself traces to **Proto-Indo-European**
 ***\*seh₁-*** ("**long, lasting**") — and this is **explicitly**
 documented as "distantly related to **Latin sērus**" ("late"), itself
 confirmed independently to trace to the very same *\*seh₁-* root
-(via Proto-Italic *\*sēros*). You've technically already met *sērus*: it's
-the Latin root already established in this course as the source of
+(via Proto-Italic *\*sēros*). *sērus* is worth a closer look: it's
+the Latin root well attested as the source of
 **French soir** and **Italian sera** — French and Italian's own everyday
 "evening" words. That makes **సాయంత్రం** and **soir**/**sera** genuine
 distant cognates — one route through Sanskrit tatsama borrowing into
