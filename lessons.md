@@ -2681,3 +2681,99 @@ corpus only ever grows.
 `--bail=0`, `--maxWorkers`, coverage thresholds) makes a local run *less* like CI, not
 more. If you pass one to get a green run, the green means less than it looks like — and
 the final verification pass should always be the one with no flags at all.
+
+## A number that means one thing, read as meaning another — and the fix reproducing the bug (human-language-data, HL09)
+
+The gap report said Spanish "reached A2". It had not: 178 words against the
+~1,000–1,500 A2 asks for, fourteen lessons all realizing one spine node, present
+tense only. **Nothing in the code lied.** `TrackLevelCoverage.reach` is documented
+as *"the highest level this track has any lesson at"*, and that was accurate. One
+lesson pointing at one A2 node moves it. The failure was that a number meaning
+**touches** was read, for the life of the project, as meaning **attains**.
+
+Then the gate written to fix that committed the identical error inside itself. Its
+first version measured **whole-track** vocabulary (Spanish 138) against a
+**per-level cumulative** target, and applied the atom-budget and reinforcement
+criteria track-wide — so one over-budget Hindi lesson sitting *above* pre-A1 blocked
+pre-A1, making that criterion unfalsifiable at the bottom of the ladder for every
+track. Correctly scoped, Spanish's pre-A1 vocabulary is **44, not 138**.
+
+**The general rule: when a criterion says "at or below level X", the measurement
+must be filtered to level X.** A whole-corpus figure compared against a per-slice
+threshold is not a stricter version of the right check — it is a different check
+that happens to return a number. Three sibling bugs in the same module, all found by
+the pre-push security review:
+
+- criterion read "never revisited" where the spec said "fewer than twice", hiding 51
+  of 141 failures;
+- vocabulary counted every lesson type, so drill titles became words — `(practice)`,
+  `qu-`, `fact or wish?`, 25 of 138;
+- a level with **no authored nodes passed** its node criterion, because "no node is
+  unrealized" was implemented as "every node is realized" — the same touches-vs-means
+  error one level up, and live for B1–C2, which have zero nodes.
+
+Corollaries worth keeping:
+
+1. **Name the population in the field name or the doc.** `vocabulary` alone invites
+   the misreading; `vocabulary` documented as *"at ANY level — context, not the
+   criterion"* does not.
+2. **Report the shortfall, not a boolean.** `false` moves the argument; *"teaches 44
+   distinct headwords at or below pre-A1, against 300"* settles it.
+3. **Absent ≠ zero.** "Not measured" and "attained nothing" are opposite facts; the
+   section is `undefined` when its inputs were not supplied, and a test pins that.
+4. A related discovery in the same PR: `report-cli` had never passed `curricula`/`spine`,
+   so the whole `levels` section had been **silently absent from every CLI run** since
+   it shipped — implemented, tested, and invisible to anyone reading the output. A
+   feature with tests but no rendered output is not shipped.
+
+## `assert old in s` is not enough for a scripted replace — assert it is UNIQUE (human-language-data)
+
+A Python patch script filled placeholder pins with real numbers. It guarded every
+replacement with `assert old in s`, per the existing lesson about scripted edits. It
+still corrupted the file: `expect(report.summary.missedByWindow.R2).toBe(0)` appeared
+**twice** — once as a corpus pin awaiting its value, once as a legitimate unit-test
+assertion that no window is judged on a short track. `str.replace(old, new, 1)` took
+the first, which was the unit test.
+
+An earlier no-op guard in the same session produced `expect(report.summary.).toBe(1)`
+by replacing a substring with the empty string, which the parser caught only because
+it was syntactically invalid.
+
+**Use `assert s.count(old) == 1`, or match on enough surrounding context to be
+unique.** Presence proves the target exists; it does not prove you are editing the one
+you meant. Tests caught both here — but a non-unique replace that lands on a *valid*
+line produces no error at all.
+
+## Backticks in `git commit -m "..."` are shell command substitution (any repo)
+
+A commit message written with `-m` inside double quotes contained `` `review` `` and
+`` `practises.knowledge` `` as inline code. zsh executed them:
+
+    (eval):22: command not found: review
+    (eval):22: command not found: practises.knowledge
+
+The commit succeeded with those words **silently deleted** from the message —
+"interleave a  lesson every three lessons" — and nothing failed. Found only by reading
+the message back with `git log -1 --format=%B`.
+
+**Write commit messages with a heredoc** (`git commit -F - <<'MSG'` … `MSG`), quoting
+the delimiter so nothing expands. This applies to `gh pr create --body` too, which is
+already conventionally written that way in this repo.
+
+## A `practises` entry with no block-level `assesses` is rejected, and that gate is the point (human-language-data)
+
+Closing spaced-retrieval windows looked like a frontmatter edit: add the atom to
+`practises:` → `knowledge: [...]` and the measurement closes. The validator refused:
+
+    ERROR [schema-v2-block-assessment-missing] ES-C05-hasta-luego:
+      practised atom 'ES-LEX-ADIOS' is not assessed by any body block
+
+That rule enforces the honesty principle HL09 §7.2 states in prose: **you cannot claim
+practice without pointing at where it happens.** The frontmatter-only edit would have
+closed the metric while helping no learner — a hollow claim that reads as progress.
+
+The real work is two edits per atom: the frontmatter list **and** the
+`assesses=[...]` of the specific `<!-- hl-knowledge: -->` directive on the block whose
+prose actually exercises it. Of 58 open windows in Spanish chapters 3–6, only **17**
+had prose to point at; the other 41 were genuine absence and were left open. A low hit
+rate is the honest result, not a failure of the pass.
