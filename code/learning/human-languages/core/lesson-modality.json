@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7afd1153ecdb59f5",
+  "sourceHash": "fnv1a64:7cb7266d729326a4",
   "summary": {
-    "totalLessons": 1194,
-    "voice": 786,
+    "totalLessons": 1206,
+    "voice": 798,
     "sight": 355,
     "pen": 53,
-    "drivableLessons": 786,
+    "drivableLessons": 798,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 389,
-    "drivablePrefixTotal": 615,
-    "fullyDrivableChapters": 263,
+    "chapterCount": 391,
+    "drivablePrefixTotal": 627,
+    "fullyDrivableChapters": 265,
     "unstartableChapters": 92,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -528,12 +528,12 @@
     },
     {
       "language": "bengali",
-      "lessonCount": 31,
-      "voice": 7,
+      "lessonCount": 37,
+      "voice": 13,
       "sight": 24,
       "pen": 0,
-      "drivablePercent": 23,
-      "drivablePrefixTotal": 1,
+      "drivablePercent": 35,
+      "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
         "sight"
@@ -628,6 +628,27 @@
           "drivable": true,
           "drivableLessonIds": [
             "BN-C06-numbers-1-5"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "BN-C07-howa",
+            "BN-C07-jaowa",
+            "BN-C07-asha",
+            "BN-C07-khaowa",
+            "BN-C07-dekha",
+            "BN-C07-jana"
           ]
         }
       ]
@@ -4193,12 +4214,12 @@
     },
     {
       "language": "marathi",
-      "lessonCount": 35,
-      "voice": 15,
+      "lessonCount": 41,
+      "voice": 21,
       "sight": 20,
       "pen": 0,
-      "drivablePercent": 43,
-      "drivablePrefixTotal": 3,
+      "drivablePercent": 51,
+      "drivablePrefixTotal": 9,
       "modalities": [
         "voice",
         "sight"
@@ -4296,6 +4317,27 @@
           "drivableLessonIds": [
             "MR-C06-numbers-1-5",
             "MR-C06-number-differences"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "MR-C07-asne",
+            "MR-C07-jane",
+            "MR-C07-yene",
+            "MR-C07-khane",
+            "MR-C07-pahne",
+            "MR-C07-mahit-asne"
           ]
         }
       ]
@@ -8247,6 +8289,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:b90d02828e8f4352"
+    },
+    {
+      "id": "BN-C07-howa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:875d94baecd764c8"
+    },
+    {
+      "id": "BN-C07-jaowa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02aa3ee59e96b202"
+    },
+    {
+      "id": "BN-C07-asha",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:781996d54b057830"
+    },
+    {
+      "id": "BN-C07-khaowa",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4af6db76d104a4ea"
+    },
+    {
+      "id": "BN-C07-dekha",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdbc818ec1394d03"
+    },
+    {
+      "id": "BN-C07-jana",
+      "language": "bengali",
+      "chapter": 7,
+      "sequence": 450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cee0df0ef154a25"
     },
     {
       "id": "ZH-C01-tones",
@@ -15829,6 +15949,84 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:c778d912211f1242"
+    },
+    {
+      "id": "MR-C07-asne",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f2ed68a452c17d6"
+    },
+    {
+      "id": "MR-C07-jane",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e542d487028acb9f"
+    },
+    {
+      "id": "MR-C07-yene",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:452475ec272ca043"
+    },
+    {
+      "id": "MR-C07-khane",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3925dbc1a2bd6f7"
+    },
+    {
+      "id": "MR-C07-pahne",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2be2ef5168f6ef78"
+    },
+    {
+      "id": "MR-C07-mahit-asne",
+      "language": "marathi",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e85044dedb2058a5"
     },
     {
       "id": "FA-C01-bale",
