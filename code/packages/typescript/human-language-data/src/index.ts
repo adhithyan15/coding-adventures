@@ -197,6 +197,13 @@ export {
   type TrackVerbCoverage,
   type VerbCoverageReport,
 } from "./verbs.js";
+export {
+  measureRamp,
+  type RampReport,
+  type RampViolation,
+  type ChapterRampViolation,
+  type TrackRampCoverage,
+} from "./ramp.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
