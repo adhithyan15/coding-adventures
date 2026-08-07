@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "hindi",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 3, 4 and 5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom, and a stub would destroy the very signal the gap report exists to carry. Chapters 1 and 2 have no schema-v2 terminal consolidation lesson either: their HI-C01/HI-C02 practice lessons are schema v1, so the payoff falls back to the chapter's last lesson by sequence, which in both cases is a Devanagari writing lesson. Those are recorded as kind 'task' and described as hand-writing work rather than dressed up as spoken dialogue.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 3, 4 and 5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom, and a stub would destroy the very signal the gap report exists to carry. Chapters 34 and 35 are the second verb tranche and are schema v2 throughout, so their payoffs name real atoms. Chapters 1 and 2 have no schema-v2 terminal consolidation lesson either: their HI-C01/HI-C02 practice lessons are schema v1, so the payoff falls back to the chapter's last lesson by sequence, which in both cases is a Devanagari writing lesson. Those are recorded as kind 'task' and described as hand-writing work rather than dressed up as spoken dialogue.",
   "chapters": [
     {
       "chapter": 1,
@@ -544,6 +544,49 @@
         "assesses": [
           "HI-CONCEPT-C33-SHUBH-DOPAHAR-01",
           "HI-CONCEPT-C33-SHUBH-DOPAHAR-02"
+        ]
+      }
+    },
+    {
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:hi-verbs-of-the-mind",
+      "canDo": "I can say what I think, understand, read and write in Hindi, run all four through the present habitual, and say \"Sorry, I don't understand\" when I need to.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "HI-C34-likhna",
+        "kind": "task",
+        "summary": "Run सोचना, समझना, पढ़ना and लिखना through मैं …ता/ती हूँ, spell out मेरा नाम from the letters you first wrote by hand, and name the one meaning — to scratch — that four unrelated families each chose for \"write\".",
+        "assesses": [
+          "HI-CONCEPT-C34-SOCHNA-01",
+          "HI-CONCEPT-C34-SAMAJHNA-01",
+          "HI-CONCEPT-C34-PADHNA-01",
+          "HI-CONCEPT-C34-LIKHNA-01",
+          "HI-CONCEPT-C34-LIKHNA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and Liking",
+      "label": "ch:hi-pasand",
+      "canDo": "I can say I take, ask and help in Hindi, build a conjunct verb out of any noun plus करना, and say what I like the way Hindi says it — with the thing liked as the subject and me in the dative.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "HI-C35-pasand",
+        "kind": "task",
+        "summary": "Say लेना, पूछना and मदद करना, then turn the sentence inside out: मुझे रोटी पसंद है is bread being pleasing to me, so है agrees with the bread and I move into मुझे — the same inversion Spanish and Italian reached on their own.",
+        "assesses": [
+          "HI-CONCEPT-C35-LENA-01",
+          "HI-CONCEPT-C35-PUCHNA-01",
+          "HI-CONCEPT-C35-MADAD-01",
+          "HI-CONCEPT-C35-PASAND-01",
+          "HI-CONCEPT-C35-PASAND-02",
+          "HI-CONCEPT-C35-PASAND-03"
         ]
       }
     }

@@ -1,5 +1,89 @@
 # Changelog
 
+## Eight more core verbs, split across two chapters — 2026-08-07
+
+- Authored **Chapters 24 and 25**: the eight canonical verb concepts Spanish,
+  Latin and Portuguese landed in their own second tranche, so every lesson here
+  turns a three-way cross-language join into a four-way one. One verb per
+  lesson, gone deep, `concept_tag` verbatim:
+
+  | Lesson | Concept | Verb |
+  |---|---|---|
+  | `FR-C24-prendre` | `VERB-TAKE` | prendre |
+  | `FR-C24-demander` | `VERB-ASK` | demander |
+  | `FR-C24-aider` | `VERB-HELP` | aider |
+  | `FR-C24-aimer` | `VERB-LIKE-LOVE` | aimer |
+  | `FR-C25-comprendre` | `VERB-UNDERSTAND` | comprendre |
+  | `FR-C25-penser` | `VERB-THINK` | penser |
+  | `FR-C25-lire` | `VERB-READ` | lire |
+  | `FR-C25-ecrire` | `VERB-WRITE` | écrire |
+
+  French goes from **6 of the 40** core verbs to **14 of 40** (15% → 35%), the
+  second-deepest verb coverage in the corpus after Latin.
+- **Two chapters, not one, and the split is the point.** Eight one-verb lessons
+  introduce twenty atoms against a per-chapter budget of twelve. Every track in
+  the previous wave broke that ceiling; splitting is the resolution rather than
+  raising the budget. Chapter 24 introduces **11** atoms and Chapter 25 **9**,
+  so the ramp report finds **zero** lesson or chapter violations for either —
+  the corpus totals hold at 40 and 25 exactly.
+- **Ordering follows the etymology, not the alphabet.** *Comprendre* is *com-*
+  + *prendre*, so *prendre* is taught first and Chapter 25 opens by spending
+  Chapter 24 rather than by teaching a paradigm twice. The learner meets the
+  irregular stem once (*je prends / nous prenons / ils prennent*) and gets the
+  second verb almost free — which is stated in the lesson as the reason the
+  drill was worth doing.
+- **Two things French does that English does not, each given its own block.**
+  *Aimer* covers both "like" and "love": the **thing named** chooses, and adding
+  *bien* makes the sentence **weaker**, not stronger — *je t'aime bien* is the
+  polite refusal, and that is the single most reliable way for an English
+  speaker to say the wrong thing here. *Demander* is flagged as a **false
+  friend**: it is the ordinary, polite word for asking and carries none of
+  English *demand*'s force.
+- **Every resemblance that is not real is named rather than skipped.** English
+  *help* is Germanic and unrelated to *aider*; English *think* is Germanic and
+  unrelated to *penser*; *juvenile* is from *iuvenis*, not *iuvāre*;
+  *impregnable* has nothing to do with pregnancy; *le livre* is *liber* and not
+  in *legere*'s family; Greek *legein* is *legere*'s **cousin**, not its parent.
+  And where a trail genuinely ends, the lesson says so: *amāre* is given **no**
+  reconstructed ancestor, because it has none that is agreed.
+- **Reinforcement reaches back past the chapter (HL09 §7).** The corpus was
+  measured at 50% of taught atoms never revisited, median zero. Both payoffs
+  therefore re-practise earlier material in the guided practice, not as a
+  name-check: `FR-C24-aimer` says *j'aime le chien* / *j'aime le chat*
+  (Chapter 22), *j'aime le vert* (Chapter 23) and repeats the *s'il vous plaît*
+  request with its register pair (Chapter 19); `FR-C25-ecrire` says *j'écris à
+  la main* and pulls **manuscript** apart into *manus* + *scrībere*, which is
+  Chapter 17's hand doing real work rather than being mentioned. Chapter 24's
+  *demander* also re-earns *manus*, since *mandāre* contains it.
+  Measured effect: **eight French atoms that had never been revisited by
+  anything now are** — `FR-LEX-MAIN-02`, `FR-ETYMON-MAIN-04`, `FR-LEX-CHIEN-02`,
+  `FR-LEX-CHAT-04`, `FR-LEX-PLEASE-02`, `FR-GRAMMAR-PLEASE-REGISTER-04`,
+  `FR-LEX-NON-02`, `FR-SOUND-NON-03`. Corpus `atomsTaught` moves 1519 → 1539
+  while `atomsNeverRevisited` **holds at 767**, so the tranche pays for its own
+  new atoms and eight older ones besides.
+- **No forward references.** Every French word used in either chapter is one
+  the track has already taught (*le pain*, *l'heure*, *la main*, *le chien*,
+  *le chat*, *le vert*, *oui*, *non*, *s'il vous plaît* / *s'il te plaît*, *le
+  français*), and no lesson teases a word a later one will introduce. The
+  continuity report finds **zero** forward references in Chapters 24 and 25;
+  the corpus total holds at 517.
+- **Wiring.** [`curriculum.json`](./curriculum.json) gains `FR-PATH-023`, a
+  second `SPINE-SAY-WHAT-I-DO` segment carrying all eight in reading order, and
+  the eight concepts drop out of that node's `omits` (36 → 28). No extension was
+  needed: every lesson realises a canonical concept, and the prerequisite
+  closure reaches back only to lessons already earlier on the local path
+  (`FR-C17-main`, `FR-C18-oui`/`FR-C18-non`, `FR-C19-sil-vous-plait`,
+  `FR-C22-chien-chat`, `FR-C23-vert-jaune`), so nothing had to be dragged under
+  a node it does not realise. [`chapters.json`](./chapters.json),
+  `core/book-generation.json`, `book/book.tex`, the generated ch24/ch25 TeX and
+  the ch24/ch25 narration all follow.
+- All eight lessons are schema v2 and modality `voice`: both chapters are 4-of-4
+  drivable, no table anywhere exceeds three columns, and the six present-tense
+  forms are always a spoken bullet list rather than a paradigm grid. Computed
+  durations run **247–285 s** against the 300 s ceiling.
+- The book compiles under XeLaTeX at **114 pages** (was 98) with **zero**
+  `Missing character` warnings and **zero** overfull or underfull boxes.
+
 ## French joins the cross-language verb corpus — 2026-08-07
 
 - Retagged the track's six shared verbs from language-local `FR-VERB-*` ids to

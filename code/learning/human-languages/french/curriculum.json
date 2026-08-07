@@ -270,6 +270,23 @@
         "FR-EXT-022-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "FR-PATH-023",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FR-C24-prendre",
+        "FR-C24-demander",
+        "FR-C24-aider",
+        "FR-C24-aimer",
+        "FR-C25-comprendre",
+        "FR-C25-penser",
+        "FR-C25-lire",
+        "FR-C25-ecrire"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -385,7 +402,8 @@
         "FR-PATH-010",
         "FR-PATH-014",
         "FR-PATH-016",
-        "FR-PATH-017"
+        "FR-PATH-017",
+        "FR-PATH-023"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -396,14 +414,9 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -416,14 +429,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },

@@ -48,6 +48,17 @@ Two things shape this track.
   numbers, yes/no and polite repair, days and time, colours, family, body,
   seasons, food, months, age, weather, animals, and progressively finer
   morning/evening/afternoon register.
+- **Chapter 34 — Four Verbs of the Mind** ([`lessons/HI-C34-*`](./lessons/)):
+  सोचना (think — from *śocati*, "to grieve"), समझना (understand — *sam-* +
+  *budh-*, the root of **Buddha**), पढ़ना (read *and* study — *paṭhati*, "to
+  recite aloud"), लिखना (write — *likhati*, "to scratch," the picture Latin,
+  Greek and Old English each reached on their own). In the book.
+- **Chapter 35 — Taking, Asking, Helping — and Liking**
+  ([`lessons/HI-C35-*`](./lessons/)): लेना (take — *labhate* worn down, with
+  लाभ preserving the lost *-bh-*), पूछना (ask — the same inherited verb as
+  English **pray**), मदद करना (help — an Arabic noun plus native करना, Hindi's
+  conjunct-verb engine), and पसंद, which is **not a verb at all**: *mujhe roṭī
+  pasand hai* is "to me, bread is pleasing." In the book.
 - **Writing companions W01–W05** ([`lessons/HI-W*`](./lessons/)): eleven short
   steps introduce the headline, letter bodies, inherent vowel, mātrās,
   preposed short **ि**, spineless letters, virama, conjuncts, and finally whole
@@ -71,7 +82,7 @@ shared-spine nodes it realises, and the **payoff** lesson that proves the
 promise, with the exact knowledge atoms that lesson practises. It is authored
 intent, not a derived cache — no validator may rewrite it.
 
-Thirty of the thirty-three chapters are authored. Three are honestly missing:
+Thirty-two of the thirty-five chapters are authored. Three are honestly missing:
 
 - **Chapters 3, 4, and 5 have no entry.** Every lesson in them is still schema
   v1 with no `practises.knowledge`, so a payoff there could not name a single
@@ -85,17 +96,19 @@ Thirty of the thirty-three chapters are authored. Three are honestly missing:
 Four chapters (1, 2, 6, and 32) currently assess less than half the atoms their
 chapter introduces and will be reported under the 0.5 representativeness
 threshold once the HL05 gates land. The cure is a real terminal consolidation
-lesson in each, not a broader claim here.
+lesson in each, not a broader claim here. Chapters 34 and 35 fire **no** gate
+findings: each payoff closes over its own chapter (5 of 8 atoms, and 6 of 9)
+and every atom it names was taught by that chapter or earlier.
 
 ## Book / fonts
 
-The 33-chapter book compiles with XeLaTeX using **vendored** Noto Sans
+The 35-chapter book compiles with XeLaTeX using **vendored** Noto Sans
 Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
 loaded by relative path — so it builds identically locally and in CI, with no
-system-font dependency. Chapters 6–33 are generated from canonical lesson ASTs
-and checked against Language Ladder source hashes. A forced 114-page build is
-warning-free, and every intentionally blank open-right verso is truly empty.
-`latexmk -xelatex book.tex`.
+system-font dependency. Chapters 6–35 are generated from canonical lesson ASTs
+and checked against Language Ladder source hashes. A forced 124-page build
+reports **zero** missing characters and zero errors; the one overfull and one
+underfull box both pre-date chapters 34–35. `latexmk -xelatex book.tex`.
 
 ## Files
 

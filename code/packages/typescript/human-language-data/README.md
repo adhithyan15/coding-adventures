@@ -117,8 +117,8 @@ const { lessons } = loadEverything();
 const c = measureContinuity(lessons);
 
 c.summary.lessonsWithoutSequence;   // 515 — no declared reading order at all
-c.summary.atomsNeverRevisited;      // 755 of 1519 (50%) taught once, never again
-c.summary.missedByWindow;           // { R1: 749, R2: 1107, R3: 704, R4: 131 }
+c.summary.atomsNeverRevisited;      // 745 of 1599 (47%) taught once, never again
+c.summary.missedByWindow;           // { R1: 778, R2: 1159, R3: 711, R4: 137 }
 c.summary.forwardReferences;        // 504 uses of material a later lesson teaches
 ```
 

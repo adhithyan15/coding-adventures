@@ -55,8 +55,32 @@ between the two Latin daughters can become the lesson:
 - **Chapter 21 — Weather**: *le temps*, *il pleut*.
 - **Chapter 22 — Dog and Cat**: *chien*, *chat*.
 - **Chapter 23 — Green and Yellow**: *vert*, *jaune*.
+- **Chapter 24 — Taking, Asking, Helping, Loving**: *prendre*, *demander*,
+  *aider*, *aimer*.
+- **Chapter 25 — Verbs of the Mind**: *comprendre*, *penser*, *lire*, *écrire*.
 
-**All twenty-three chapters are authored and in the book (98 pages).**
+**All twenty-five chapters are authored and in the book (114 pages).**
+
+### The verb tranche (Chapters 24–25)
+
+Eight canonical core verbs, one per lesson, taking French from **6 of the 40**
+shared core verbs to **14 of 40**. Each of the eight is already taught by
+Spanish, Latin and Portuguese under the same concept id, so every one of these
+lessons turns a three-way cross-language join into a four-way one.
+
+They are split across two chapters rather than crammed into one because eight
+one-verb lessons introduce twenty atoms, well past the twelve a chapter is
+allowed (`maxNewAtomsPerChapter`). Split, each chapter lands inside budget —
+Chapter 24 introduces eleven atoms, Chapter 25 introduces nine — and each gets
+its own capability and its own payoff.
+
+The order is not arbitrary. *Comprendre* **is** *prendre* with *com-* in front,
+so *prendre* has to be taught first: Chapter 25 opens by cashing Chapter 24
+rather than by teaching a new conjugation. Two more things French does that
+English does not are given their own treatment: *aimer* covers **both** "like"
+and "love," and adding *bien* to it makes it **weaker** (*je t'aime bien* is
+how you turn someone down); *demander* is a false friend and means plain
+"ask," never English's forceful "demand."
 
 ---
 
@@ -72,7 +96,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Seven of twenty-three chapters are authored: 17–23.** Those are exactly the
+**Nine of twenty-five chapters are authored: 17–25.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -91,11 +115,26 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 21 Weather | `FR-C21-le-temps` | 4 / 4 = 1.00 |
 | 22 Dog and Cat | `FR-C22-chien-chat` | 4 / 4 = 1.00 |
 | 23 Green and Yellow | `FR-C23-vert-jaune` | 5 / 5 = 1.00 |
+| 24 Taking, Asking, Helping, Loving | `FR-C24-aimer` | 7 / 11 = 0.64 |
+| 25 Verbs of the Mind | `FR-C25-ecrire` | 6 / 9 = 0.67 |
 
-Chapters 17 and 18 have **no terminal consolidation lesson**, so their payoff is
-the last lesson by `sequence`. Chapter 18 still clears the floor because *non*
-reassesses *oui*; Chapter 17 sits exactly on it. Neither `assesses` list is
-padded — a shortfall is a signal that the chapter needs a real practice lesson.
+Chapters 17, 18, 24 and 25 have **no terminal consolidation lesson**, so their
+payoff is the last lesson by `sequence`. Chapter 18 still clears the floor
+because *non* reassesses *oui*; Chapter 17 sits exactly on it. No `assesses`
+list is padded — a shortfall is a signal that the chapter needs a real practice
+lesson.
+
+Chapters 24 and 25 do something the earlier payoffs do not: they assess atoms
+from **earlier chapters** as well as their own, which is HL09 §7's spaced-
+retrieval rule (the corpus measured 50% of taught atoms as never revisited at
+all). `FR-C24-aimer` re-practises *le chien* and *le chat* from Chapter 22, *le
+vert* from Chapter 23 and the *s'il vous plaît* request from Chapter 19;
+`FR-C25-ecrire` re-practises *la main* and its *manus* family from Chapter 17 —
+which is not decoration, since *manuscript* is *manus* + *scrībere* — plus
+*prendre* and *aimer* from Chapter 24. Across the tranche, **eight French atoms
+that had never been revisited by anything now are**: `FR-LEX-MAIN-02`,
+`FR-ETYMON-MAIN-04`, `FR-LEX-CHIEN-02`, `FR-LEX-CHAT-04`, `FR-LEX-PLEASE-02`,
+`FR-GRAMMAR-PLEASE-REGISTER-04`, `FR-LEX-NON-02` and `FR-SOUND-NON-03`.
 
 ## Files
 

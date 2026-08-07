@@ -991,6 +991,40 @@
       "jsonHash": "fnv1a64:d45c6b1b7c74be33"
     },
     {
+      "language": "french",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:1645f8d2a29bceb5",
+      "lessonIds": [
+        "FR-C24-prendre",
+        "FR-C24-demander",
+        "FR-C24-aider",
+        "FR-C24-aimer"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch24.txt",
+      "json": "french/narration/ch24.json",
+      "textHash": "fnv1a64:60ea88664f353cf6",
+      "jsonHash": "fnv1a64:f00546a097e93ebd"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:a50346a946945318",
+      "lessonIds": [
+        "FR-C25-comprendre",
+        "FR-C25-penser",
+        "FR-C25-lire",
+        "FR-C25-ecrire"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch25.txt",
+      "json": "french/narration/ch25.json",
+      "textHash": "fnv1a64:df2e1890cd9841f0",
+      "jsonHash": "fnv1a64:c65dc68905adcf6c"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",
@@ -1364,6 +1398,40 @@
       "json": "german/narration/ch23.json",
       "textHash": "fnv1a64:96af6b0d067f021c",
       "jsonHash": "fnv1a64:f25b61bea2d51d71"
+    },
+    {
+      "language": "german",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:fb75d3964d3b3f0f",
+      "lessonIds": [
+        "GE-C24-denken",
+        "GE-C24-verstehen",
+        "GE-C24-lesen",
+        "GE-C24-schreiben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch24.txt",
+      "json": "german/narration/ch24.json",
+      "textHash": "fnv1a64:ac105e0ff17b46e8",
+      "jsonHash": "fnv1a64:1157ece1a213fab9"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:1615ff0ab8b33552",
+      "lessonIds": [
+        "GE-C25-nehmen",
+        "GE-C25-fragen",
+        "GE-C25-helfen",
+        "GE-C25-moegen-lieben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch25.txt",
+      "json": "german/narration/ch25.json",
+      "textHash": "fnv1a64:72864248825bbdc5",
+      "jsonHash": "fnv1a64:b87fdce5ee07ace4"
     },
     {
       "language": "gujarati",
@@ -2010,6 +2078,40 @@
       "jsonHash": "fnv1a64:8d95973c63c6777d"
     },
     {
+      "language": "hindi",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:98c0474e95403a85",
+      "lessonIds": [
+        "HI-C34-sochna",
+        "HI-C34-samajhna",
+        "HI-C34-padhna",
+        "HI-C34-likhna"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch34.txt",
+      "json": "hindi/narration/ch34.json",
+      "textHash": "fnv1a64:98ebd2cf135f6039",
+      "jsonHash": "fnv1a64:666dad0c489b7563"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:19427f33e5a3b21b",
+      "lessonIds": [
+        "HI-C35-lena",
+        "HI-C35-puchna",
+        "HI-C35-madad",
+        "HI-C35-pasand"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch35.txt",
+      "json": "hindi/narration/ch35.json",
+      "textHash": "fnv1a64:166f16be3a1f289d",
+      "jsonHash": "fnv1a64:d2e4dc0f3a88294d"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -2287,6 +2389,40 @@
       "json": "italian/narration/ch17.json",
       "textHash": "fnv1a64:43812eb2e16e35bb",
       "jsonHash": "fnv1a64:923f8a8b4fc53e91"
+    },
+    {
+      "language": "italian",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:e6760761fdd366e9",
+      "lessonIds": [
+        "IT-C18-pensare",
+        "IT-C18-capire",
+        "IT-C18-leggere",
+        "IT-C18-scrivere"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch18.txt",
+      "json": "italian/narration/ch18.json",
+      "textHash": "fnv1a64:51c0fd04024c453b",
+      "jsonHash": "fnv1a64:1ff75a95046ef0ae"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:f337de5f22901d82",
+      "lessonIds": [
+        "IT-C19-prendere",
+        "IT-C19-chiedere",
+        "IT-C19-aiutare",
+        "IT-C19-mi-piace"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch19.txt",
+      "json": "italian/narration/ch19.json",
+      "textHash": "fnv1a64:15d2d42ad6328b16",
+      "jsonHash": "fnv1a64:adae5d2fccabffe0"
     },
     {
       "language": "japanese",

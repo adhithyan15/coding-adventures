@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "german",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-23 are authored — they are the seven German chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17 is the one authored chapter that FAILS the 0.5 representativeness floor (4 of 12 introduced atoms, 0.33): it is three word lessons deep with no terminal consolidation lesson, so its payoff can only reach the last of the three. That is recorded here rather than hidden by padding assesses — the fix is a real Kopf/Haupt/Hand practice lesson, not a longer list.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-25 are authored — they are the nine German chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17 is the one authored chapter that FAILS the 0.5 representativeness floor (4 of 12 introduced atoms, 0.33): it is three word lessons deep with no terminal consolidation lesson, so its payoff can only reach the last of the three. That is recorded here rather than hidden by padding assesses — the fix is a real Kopf/Haupt/Hand practice lesson, not a longer list. Chapters 24 and 25 follow HL09 section 7: each payoff closes over all of its own chapter's atoms AND names atoms from earlier chapters it genuinely re-practises, so the reach-back is measurable rather than decorative.",
   "chapters": [
     {
       "chapter": 17,
@@ -128,6 +128,70 @@
           "GE-LEX-GELB-04",
           "GE-ETYMON-GELB-05",
           "GE-EVIDENCE-GELB-JAUNE-06"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Verbs of the Mind",
+      "label": "ch:ge-mind-verbs",
+      "canDo": "I can say I think, I understand, I read and I write in German, break a strong verb's vowel in the du and er forms, and say which of the four German borrowed rather than inherited.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "GE-C24-schreiben",
+        "kind": "production",
+        "summary": "The chapter closes on schreiben, the one loan among four inherited verbs: the reader produces all four ich forms and all four er forms, names liest as the only vowel-breaker, and takes Manuskript apart into the Latin hand German never inherited plus the Latin verb it did. It reaches back past its own chapter to reassess Chapter 17's Hand, the Hand/manus gap, and Grimm's law.",
+        "assesses": [
+          "GE-LEX-DENKEN-02",
+          "GE-ETYMON-DENKEN-03",
+          "GE-FALSEFRIEND-ALSO-04",
+          "GE-LEX-VERSTEHEN-05",
+          "GE-ETYMON-VERSTEHEN-06",
+          "GE-LEX-LESEN-07",
+          "GE-ETYMON-LESEN-08",
+          "GE-GRAMMAR-STRONG-VOWEL-09",
+          "GE-LEX-SCHREIBEN-10",
+          "GE-ETYMON-SCHREIBEN-11",
+          "GE-LEX-HAND-02",
+          "GE-ETYMON-HAND-MANUS-05",
+          "GE-SOUND-GRIMMS-LAW-04"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ge-doing-verbs",
+      "canDo": "I can say I take, I ask, I help and I like in German, sort all eight verbs of these two chapters into the three present-tense patterns, and use gern to say I like doing something.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "GE-C25-moegen-lieben",
+        "kind": "production",
+        "summary": "The chapter closes on mögen, lieben and gern: the reader produces all eight ich forms of Chapters 24 and 25, sorts them into vowel-stays, vowel-breaks and the old third pattern, hangs gern on four verbs already learned, and runs the nine-word cousin roll-call. It reaches back to every atom of Chapter 24 and to Chapters 21 and 22 — Ich mag das Wetter, Ich mag die Katze, Der Hund mag Wasser.",
+        "assesses": [
+          "GE-LEX-NEHMEN-02",
+          "GE-ETYMON-NEHMEN-03",
+          "GE-FALSEFRIEND-BEKOMMEN-04",
+          "GE-LEX-FRAGEN-05",
+          "GE-ETYMON-FRAGEN-06",
+          "GE-LEX-HELFEN-07",
+          "GE-ETYMON-HELFEN-08",
+          "GE-LEX-MOEGEN-LIEBEN-09",
+          "GE-ETYMON-MOEGEN-LIEBEN-10",
+          "GE-GRAMMAR-GERN-11",
+          "GE-LEX-DENKEN-02",
+          "GE-ETYMON-DENKEN-03",
+          "GE-FALSEFRIEND-ALSO-04",
+          "GE-LEX-VERSTEHEN-05",
+          "GE-ETYMON-VERSTEHEN-06",
+          "GE-LEX-LESEN-07",
+          "GE-ETYMON-LESEN-08",
+          "GE-GRAMMAR-STRONG-VOWEL-09",
+          "GE-LEX-SCHREIBEN-10",
+          "GE-ETYMON-SCHREIBEN-11",
+          "GE-LEX-HUND-02",
+          "GE-LEX-KATZE-04",
+          "GE-LEX-WETTER-02"
         ]
       }
     }

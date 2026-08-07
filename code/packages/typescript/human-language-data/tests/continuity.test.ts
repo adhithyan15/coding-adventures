@@ -247,11 +247,12 @@ describe("the real corpus", () => {
     // 21 are never revisited — 42%, against the corpus's 51% — so the headline share
     // ticks DOWN a point. New content is not making this worse; it is slightly better
     // than what it joins. That is still 21 more atoms taught once and abandoned.
-    expect(report.summary.atomsTaught).toBe(1519);
-    // 767 -> 755 when HL09 step 3 wired 17 R1 windows in chapters 3-6. Only 12 of
-    // the 17 move the "never" count, because five already had a revisit further out.
-    expect(report.summary.atomsNeverRevisited).toBe(755);
-    expect(report.summary.neverRevisitedPercent).toBe(50);
+    expect(report.summary.atomsTaught).toBe(1599);
+    // HL09 step 3 wired 17 R1 windows in chapters 3-6, of which 12 move the "never"
+    // count — the other five already had a revisit further out. The absolute figures
+    // also move as main lands new lessons; the 17/12 split is what this PR did.
+    expect(report.summary.atomsNeverRevisited).toBe(745);
+    expect(report.summary.neverRevisitedPercent).toBe(47);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -270,13 +271,15 @@ describe("the real corpus", () => {
     // NOT being rewritten to move this number, because contorting good prose to satisfy a
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
-    expect(report.summary.forwardReferences).toBe(504);
+    expect(report.summary.forwardReferences).toBe(506);
 
-    // R1 fell 766 -> 749 in HL09 step 3: exactly the 17 atoms whose practice was
-    // recorded in chapters 3-6. R2 is untouched at 1107 — closing a near window does
-    // not close a far one, and nothing yet addresses R2/R3/R4.
-    expect(report.summary.missedByWindow.R1).toBe(749);
-    expect(report.summary.missedByWindow.R2).toBe(1107);
+    // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
+    // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
+    // change is accountable for is the 17. R2 moves only with new lessons, never from
+    // that work — closing a near window does not close a far one, and nothing yet
+    // addresses R2/R3/R4.
+    expect(report.summary.missedByWindow.R1).toBe(778);
+    expect(report.summary.missedByWindow.R2).toBe(1159);
   });
 
   it("shows what a declared reading order was worth", () => {

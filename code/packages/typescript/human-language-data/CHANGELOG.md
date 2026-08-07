@@ -14,6 +14,10 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
       corpus never revisited 767 -> 755   (12; five already had a distant revisit)
       Spanish never revisited 102 -> 90 of 199
 
+  Those are the figures on the corpus of the day. A verb tranche landed on main in
+  parallel, so the committed pins read 1599 atoms / 745 never revisited / R1 778;
+  what this change is accountable for is the 17 windows and the 12-atom move.
+
 - **Only 17 of the 58 R1 misses in these chapters could be wired.** The other **41 are
   genuine absence** — no lesson in the window touches the atom at all, so there is no
   practice to record. That is what HL09 §7.2 predicted, and it is the honest result:

@@ -313,6 +313,32 @@
         "GE-EXT-026-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "GE-PATH-027",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C24-denken",
+        "GE-C24-verstehen",
+        "GE-C24-lesen",
+        "GE-C24-schreiben"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-028",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C25-nehmen",
+        "GE-C25-fragen",
+        "GE-C25-helfen",
+        "GE-C25-moegen-lieben"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -430,7 +456,9 @@
         "GE-PATH-011",
         "GE-PATH-014",
         "GE-PATH-018",
-        "GE-PATH-021"
+        "GE-PATH-021",
+        "GE-PATH-027",
+        "GE-PATH-028"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -441,13 +469,8 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -461,14 +484,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
