@@ -32,3 +32,10 @@ landed and why, not a semver-tracked API.
   from `reference/volume-conversions.adj`, which converts an already-known volume between units
   rather than computing one from edge lengths. See
   `code/packages/rust/adj-lang-cli/tests/formula_measurement_e2e.rs`.
+- `mathematics/word-problems.adj` (new) — `separate_result` (TAKE FROM) and `compare_difference`
+  (COMPARE), the two of CCSS 1.OA.A.1's four word-problem situation types (ADD TO, TAKE FROM, PUT
+  TOGETHER/TAKE APART, COMPARE) not already covered under a different name (ADD TO/PUT TOGETHER is
+  `cardinality.adj`'s `total_cardinality`). Each composes `arithmetic.adj`'s `difference`, but
+  names the SITUATION so a consumer can pick the right formula from how a word problem is worded,
+  not just from seeing a minus sign. See
+  `code/packages/rust/adj-lang-cli/tests/formula_word_problems_e2e.rs`.

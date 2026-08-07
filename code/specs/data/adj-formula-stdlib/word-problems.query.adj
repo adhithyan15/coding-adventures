@@ -1,0 +1,16 @@
+% This entry program stays at the stdlib root so the mathematics library's
+% cross-directory arithmetic import remains inside the import root.
+%
+% Run (from this directory):
+%     ../../../packages/rust/target/debug/adj-lang-cli word-problems.query.adj
+import "mathematics/word-problems.adj"
+
+% TAKE FROM: "Sam had 8 apples. He ate 3 of them. How many are left?"
+observe start_amount(8)
+observe change_amount(3)
+? separate_result(start_amount, change_amount)   % expect 5
+
+% COMPARE: "Mia has 7 stickers. Ben has 4 stickers. How many more does Mia have?"
+observe greater_amount(7)
+observe lesser_amount(4)
+? compare_difference(greater_amount, lesser_amount)   % expect 3
