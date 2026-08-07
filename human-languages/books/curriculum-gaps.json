@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1249,
+    "totalLessons": 1281,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -28,12 +28,12 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 515,
     "forwardReviews": 300,
-    "atomsNeverRevisited": 767,
-    "forwardReferences": 504,
+    "atomsNeverRevisited": 757,
+    "forwardReferences": 506,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 1094,
+    "drivableLessons": 1126,
     "drivablePercent": 88,
     "chaptersWithoutDrivablePrefix": 40,
     "unexplainedModalityOverrides": 0
@@ -706,7 +706,9 @@
           20,
           21,
           22,
-          23
+          23,
+          24,
+          25
         ],
         "bookChapters": [
           1,
@@ -731,7 +733,9 @@
           20,
           21,
           22,
-          23
+          23,
+          24,
+          25
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -763,7 +767,9 @@
           20,
           21,
           22,
-          23
+          23,
+          24,
+          25
         ],
         "bookChapters": [
           1,
@@ -788,7 +794,9 @@
           20,
           21,
           22,
-          23
+          23,
+          24,
+          25
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -901,7 +909,9 @@
           30,
           31,
           32,
-          33
+          33,
+          34,
+          35
         ],
         "bookChapters": [
           1,
@@ -936,7 +946,9 @@
           30,
           31,
           32,
-          33
+          33,
+          34,
+          35
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1262,7 +1274,9 @@
           14,
           15,
           16,
-          17
+          17,
+          18,
+          19
         ],
         "bookChapters": [
           1,
@@ -1281,7 +1295,9 @@
           14,
           15,
           16,
-          17
+          17,
+          18,
+          19
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1577,19 +1593,19 @@
       {
         "language": "french",
         "status": "mixed",
-        "lessonCount": 73,
+        "lessonCount": 81,
         "versions": {
           "1": 64,
-          "2": 9
+          "2": 17
         }
       },
       {
         "language": "german",
         "status": "mixed",
-        "lessonCount": 76,
+        "lessonCount": 84,
         "versions": {
           "1": 66,
-          "2": 10
+          "2": 18
         }
       },
       {
@@ -1604,10 +1620,10 @@
       {
         "language": "hindi",
         "status": "mixed",
-        "lessonCount": 85,
+        "lessonCount": 93,
         "versions": {
           "1": 34,
-          "2": 51
+          "2": 59
         }
       },
       {
@@ -1649,10 +1665,10 @@
       {
         "language": "italian",
         "status": "mixed",
-        "lessonCount": 58,
+        "lessonCount": 66,
         "versions": {
           "1": 9,
-          "2": 49
+          "2": 57
         }
       },
       {
@@ -2540,16 +2556,16 @@
       },
       {
         "language": "french",
-        "bookChapters": 23,
-        "declaredChapters": 7,
+        "bookChapters": 25,
+        "declaredChapters": 9,
         "missingCapability": 16,
         "findings": 16,
         "clean": false
       },
       {
         "language": "german",
-        "bookChapters": 23,
-        "declaredChapters": 7,
+        "bookChapters": 25,
+        "declaredChapters": 9,
         "missingCapability": 16,
         "findings": 17,
         "clean": false
@@ -2564,16 +2580,16 @@
       },
       {
         "language": "hindi",
-        "bookChapters": 33,
-        "declaredChapters": 30,
+        "bookChapters": 35,
+        "declaredChapters": 32,
         "missingCapability": 3,
         "findings": 7,
         "clean": false
       },
       {
         "language": "italian",
-        "bookChapters": 17,
-        "declaredChapters": 16,
+        "bookChapters": 19,
+        "declaredChapters": 18,
         "missingCapability": 1,
         "findings": 1,
         "clean": false
@@ -2692,8 +2708,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 399,
-      "declaredChapters": 301,
+      "bookChapters": 407,
+      "declaredChapters": 309,
       "chaptersWithoutCapability": 98,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 24,
@@ -3195,16 +3211,16 @@
       },
       {
         "language": "french",
-        "lessonCount": 73,
-        "measurable": 9,
+        "lessonCount": 81,
+        "measurable": 17,
         "unmeasurable": 64,
         "lessonViolations": 6,
         "chapterViolations": 0
       },
       {
         "language": "german",
-        "lessonCount": 76,
-        "measurable": 10,
+        "lessonCount": 84,
+        "measurable": 18,
         "unmeasurable": 66,
         "lessonViolations": 8,
         "chapterViolations": 0
@@ -3219,16 +3235,16 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 85,
-        "measurable": 51,
+        "lessonCount": 93,
+        "measurable": 59,
         "unmeasurable": 34,
         "lessonViolations": 1,
         "chapterViolations": 0
       },
       {
         "language": "italian",
-        "lessonCount": 58,
-        "measurable": 49,
+        "lessonCount": 66,
+        "measurable": 57,
         "unmeasurable": 9,
         "lessonViolations": 3,
         "chapterViolations": 2
@@ -4115,7 +4131,7 @@
           "language": "french",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 73,
+          "lessonCount": 81,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -4125,7 +4141,7 @@
           "language": "german",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 76,
+          "lessonCount": 84,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -4145,17 +4161,17 @@
           "language": "hindi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 85,
+          "lessonCount": 93,
           "totalGlyphs": 55,
           "lessonViolations": 3,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 8
+          "lessonsWithForeignScript": 9
         },
         {
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 58,
+          "lessonCount": 66,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -4305,7 +4321,7 @@
       "summary": {
         "lessonViolations": 61,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 119,
+        "lessonsWithForeignScript": 120,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": {
           "lessonId": "HI-W01-shirorekha-na-ma",
@@ -4324,7 +4340,7 @@
       "lessonViolations": 40,
       "chapterViolations": 25,
       "unmeasurableLessons": 572,
-      "measurablePercent": 54,
+      "measurablePercent": 55,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -13110,6 +13126,84 @@
         "revisits": 0
       },
       {
+        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-01",
+        "language": "hindi",
+        "introducedBy": "HI-W03-matras-naam",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-02",
+        "language": "hindi",
+        "introducedBy": "HI-W03-matras-naam",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-03",
+        "language": "hindi",
+        "introducedBy": "HI-W03-matras-naam",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-W03-PREPOSED-I-01",
+        "language": "hindi",
+        "introducedBy": "HI-W03-preposed-i",
+        "introducedAt": 11,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 12,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 12,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "TA-SCRIPT-ABUGIDA-VA-KA-02",
         "language": "tamil",
         "introducedBy": "TA-W01-abugida-va-ka",
@@ -14776,18 +14870,6 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C06-NUMBERS-1-5-01",
-        "language": "hindi",
-        "introducedBy": "HI-C06-numbers-1-5",
-        "introducedAt": 45,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "HI-CONCEPT-C06-PAANCH-NASAL-01",
         "language": "hindi",
         "introducedBy": "HI-C06-paanch-nasal",
@@ -14848,18 +14930,6 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C07-NAHIN-01",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 49,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "HI-CONCEPT-C07-NAHIN-02",
         "language": "hindi",
         "introducedBy": "HI-C07-nahin",
@@ -14900,30 +14970,6 @@
         "language": "hindi",
         "introducedBy": "HI-C08-kripaya",
         "introducedAt": 50,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-01",
-        "language": "hindi",
-        "introducedBy": "HI-C09-maaf-kijiye",
-        "introducedAt": 51,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-02",
-        "language": "hindi",
-        "introducedBy": "HI-C09-maaf-kijiye",
-        "introducedAt": 51,
         "missed": [
           "R1",
           "R2",
@@ -15136,30 +15182,6 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C15-PAANI-ROTI-01",
-        "language": "hindi",
-        "introducedBy": "HI-C15-paani-roti",
-        "introducedAt": 61,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C15-PAANI-ROTI-02",
-        "language": "hindi",
-        "introducedBy": "HI-C15-paani-roti",
-        "introducedAt": 61,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "HI-CONCEPT-C16-MAHINE-01",
         "language": "hindi",
         "introducedBy": "HI-C16-mahine",
@@ -15232,10 +15254,10 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-01",
+        "atom": "HI-CONCEPT-C20-MAUSAM-01",
         "language": "hindi",
-        "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedBy": "HI-C20-mausam",
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2",
@@ -15244,10 +15266,10 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-02",
+        "atom": "HI-CONCEPT-C20-MAUSAM-02",
         "language": "hindi",
-        "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedBy": "HI-C20-mausam",
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2",
@@ -15256,10 +15278,10 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W03-MATRAS-NAAM-03",
+        "atom": "HI-CONCEPT-C20-MAUSAM-03",
         "language": "hindi",
-        "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedBy": "HI-C20-mausam",
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2",
@@ -15268,10 +15290,22 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W03-PREPOSED-I-01",
+        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-01",
         "language": "hindi",
-        "introducedBy": "HI-W03-preposed-i",
-        "introducedAt": 11,
+        "introducedBy": "HI-C21-numbers-6-10",
+        "introducedAt": 68,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-02",
+        "language": "hindi",
+        "introducedBy": "HI-C21-numbers-6-10",
+        "introducedAt": 68,
         "missed": [
           "R1",
           "R2",
@@ -15280,10 +15314,10 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
         "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 12,
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 69,
         "missed": [
           "R1",
           "R2",
@@ -15292,10 +15326,82 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
         "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 12,
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 69,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03",
+        "language": "hindi",
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 69,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C22-GYARAH-BEES-01",
+        "language": "hindi",
+        "introducedBy": "HI-C22-gyarah-bees",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C22-GYARAH-BEES-02",
+        "language": "hindi",
+        "introducedBy": "HI-C22-gyarah-bees",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C22-GYARAH-BEES-03",
+        "language": "hindi",
+        "introducedBy": "HI-C22-gyarah-bees",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C22-GYARAH-BEES-04",
+        "language": "hindi",
+        "introducedBy": "HI-C22-gyarah-bees",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C23-BILLI-HISTORY-01",
+        "language": "hindi",
+        "introducedBy": "HI-C23-billi-history",
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R2",
@@ -15313,7 +15419,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-W05-CONJUNCTS-01",
@@ -18131,10 +18237,54 @@
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-MAIN-04",
+        "atom": "FR-ETYMON-CHAT-05",
         "language": "french",
-        "introducedBy": "FR-C17-main",
-        "introducedAt": 65,
+        "introducedBy": "FR-C22-chien-chat",
+        "introducedAt": 71,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-CHIEN-03",
+        "language": "french",
+        "introducedBy": "FR-C22-chien-chat",
+        "introducedAt": 71,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-DEMANDER-05",
+        "language": "french",
+        "introducedBy": "FR-C24-demander",
+        "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-DESOLE-03",
+        "language": "french",
+        "introducedBy": "FR-C20-je-suis-desole",
+        "introducedAt": 69,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-JAUNE-05",
+        "language": "french",
+        "introducedBy": "FR-C23-vert-jaune",
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R2"
@@ -18164,10 +18314,87 @@
         "revisits": 0
       },
       {
+        "atom": "FR-ETYMON-PLAIRE-03",
+        "language": "french",
+        "introducedBy": "FR-C19-sil-vous-plait",
+        "introducedAt": 68,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-PLEUVOIR-05",
+        "language": "french",
+        "introducedBy": "FR-C21-le-temps",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-PRENDRE-02",
+        "language": "french",
+        "introducedBy": "FR-C24-prendre",
+        "introducedAt": 73,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-TETE-03",
         "language": "french",
         "introducedBy": "FR-C17-tete",
         "introducedAt": 64,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-VERT-03",
+        "language": "french",
+        "introducedBy": "FR-C23-vert-jaune",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-EVIDENCE-JAUNE-GELB-06",
+        "language": "french",
+        "introducedBy": "FR-C23-vert-jaune",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-FALSEFRIEND-DEMANDER-06",
+        "language": "french",
+        "introducedBy": "FR-C24-demander",
+        "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-GRAMMAR-IL-FAIT-03",
+        "language": "french",
+        "introducedBy": "FR-C21-le-temps",
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R2"
@@ -18186,10 +18413,21 @@
         "revisits": 0
       },
       {
-        "atom": "FR-LEX-MAIN-02",
+        "atom": "FR-GRAMMAR-PRENDRE-STEM-03",
         "language": "french",
-        "introducedBy": "FR-C17-main",
-        "introducedAt": 65,
+        "introducedBy": "FR-C24-prendre",
+        "introducedAt": 73,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-DESOLE-02",
+        "language": "french",
+        "introducedBy": "FR-C20-je-suis-desole",
+        "introducedAt": 69,
         "missed": [
           "R1",
           "R2"
@@ -18197,10 +18435,32 @@
         "revisits": 0
       },
       {
-        "atom": "FR-LEX-NON-02",
+        "atom": "FR-LEX-IL-PLEUT-04",
         "language": "french",
-        "introducedBy": "FR-C18-non",
-        "introducedAt": 67,
+        "introducedBy": "FR-C21-le-temps",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-LEX-JAUNE-04",
+        "language": "french",
+        "introducedBy": "FR-C23-vert-jaune",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-LEX-TEMPS-02",
+        "language": "french",
+        "introducedBy": "FR-C21-le-temps",
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R2"
@@ -18219,6 +18479,17 @@
         "revisits": 0
       },
       {
+        "atom": "FR-LEX-VERT-02",
+        "language": "french",
+        "introducedBy": "FR-C23-vert-jaune",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-PRAGMATICS-SI-05",
         "language": "french",
         "introducedBy": "FR-C18-oui",
@@ -18230,10 +18501,10 @@
         "revisits": 0
       },
       {
-        "atom": "FR-SOUND-MAIN-03",
+        "atom": "FR-PRAGMATICS-SORRY-04",
         "language": "french",
-        "introducedBy": "FR-C17-main",
-        "introducedAt": 65,
+        "introducedBy": "FR-C20-je-suis-desole",
+        "introducedAt": 69,
         "missed": [
           "R1",
           "R2"
@@ -18241,10 +18512,10 @@
         "revisits": 0
       },
       {
-        "atom": "FR-SOUND-NON-03",
+        "atom": "FR-SOUND-MAIN-03",
         "language": "french",
-        "introducedBy": "FR-C18-non",
-        "introducedAt": 67,
+        "introducedBy": "FR-C17-main",
+        "introducedAt": 65,
         "missed": [
           "R1",
           "R2"
@@ -18285,10 +18556,10 @@
         "revisits": 0
       },
       {
-        "atom": "GE-ETYMON-HAND-04",
+        "atom": "GE-ETYMON-BITTE-04",
         "language": "german",
-        "introducedBy": "GE-C17-hand",
-        "introducedAt": 68,
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R2"
@@ -18296,7 +18567,29 @@
         "revisits": 0
       },
       {
-        "atom": "GE-ETYMON-HAND-MANUS-05",
+        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-ETYMON-GELB-05",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 75,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-ETYMON-HAND-04",
         "language": "german",
         "introducedBy": "GE-C17-hand",
         "introducedAt": 68,
@@ -18318,10 +18611,32 @@
         "revisits": 0
       },
       {
+        "atom": "GE-ETYMON-HUND-03",
+        "language": "german",
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "GE-ETYMON-JA-04",
         "language": "german",
         "introducedBy": "GE-C18-ja",
         "introducedAt": 69,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-ETYMON-KATZE-05",
+        "language": "german",
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 74,
         "missed": [
           "R1",
           "R2"
@@ -18362,10 +18677,76 @@
         "revisits": 0
       },
       {
-        "atom": "GE-LEX-HAND-02",
+        "atom": "GE-ETYMON-REGNET-06",
         "language": "german",
-        "introducedBy": "GE-C17-hand",
-        "introducedAt": 68,
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 73,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-ETYMON-WETTER-03",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 73,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-EVIDENCE-CAT-WORDS-06",
+        "language": "german",
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-EVIDENCE-GELB-JAUNE-06",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 75,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-LEX-GELB-04",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 75,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-LEX-GRUEN-02",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 75,
         "missed": [
           "R1",
           "R2"
@@ -18384,10 +18765,10 @@
         "revisits": 0
       },
       {
-        "atom": "GE-LEX-KOPF-02",
+        "atom": "GE-LEX-REGNET-05",
         "language": "german",
-        "introducedBy": "GE-C17-kopf",
-        "introducedAt": 66,
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2"
@@ -18395,10 +18776,10 @@
         "revisits": 0
       },
       {
-        "atom": "GE-LEX-NEIN-02",
+        "atom": "GE-PHRASE-WASSER-BITTE-03",
         "language": "german",
-        "introducedBy": "GE-C18-nein",
-        "introducedAt": 70,
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R2"
@@ -18406,21 +18787,10 @@
         "revisits": 0
       },
       {
-        "atom": "GE-PRAGMATICS-DOCH-05",
+        "atom": "GE-PRAGMATICS-SORRY-04",
         "language": "german",
-        "introducedBy": "GE-C18-ja",
-        "introducedAt": 69,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-SOUND-GRIMMS-LAW-04",
-        "language": "german",
-        "introducedBy": "GE-C17-kopf-haupt",
-        "introducedAt": 67,
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R2"
@@ -18527,6 +18897,72 @@
         "revisits": 0
       },
       {
+        "atom": "HI-CONCEPT-C06-NUMBERS-1-5-01",
+        "language": "hindi",
+        "introducedBy": "HI-C06-numbers-1-5",
+        "introducedAt": 45,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C07-NAHIN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 49,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C09-maaf-kijiye",
+        "introducedAt": 51,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-02",
+        "language": "hindi",
+        "introducedBy": "HI-C09-maaf-kijiye",
+        "introducedAt": 51,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C15-PAANI-ROTI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C15-paani-roti",
+        "introducedAt": 61,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C15-PAANI-ROTI-02",
+        "language": "hindi",
+        "introducedBy": "HI-C15-paani-roti",
+        "introducedAt": 61,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-CONCEPT-C19-AGE-GRAMMAR-01",
         "language": "hindi",
         "introducedBy": "HI-C19-age-grammar",
@@ -18535,7 +18971,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C19-UMR-01",
@@ -18546,150 +18982,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C20-MAUSAM-01",
-        "language": "hindi",
-        "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C20-MAUSAM-02",
-        "language": "hindi",
-        "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C20-MAUSAM-03",
-        "language": "hindi",
-        "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-01",
-        "language": "hindi",
-        "introducedBy": "HI-C21-numbers-6-10",
-        "introducedAt": 68,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-02",
-        "language": "hindi",
-        "introducedBy": "HI-C21-numbers-6-10",
-        "introducedAt": 68,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C22-GYARAH-BEES-01",
-        "language": "hindi",
-        "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C22-GYARAH-BEES-02",
-        "language": "hindi",
-        "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C22-GYARAH-BEES-03",
-        "language": "hindi",
-        "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C22-GYARAH-BEES-04",
-        "language": "hindi",
-        "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C23-BILLI-HISTORY-01",
-        "language": "hindi",
-        "introducedBy": "HI-C23-billi-history",
-        "introducedAt": 72,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "HI-CONCEPT-C23-KUTTA-BILLI-01",
@@ -18700,7 +18993,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C24-HARA-PILA-01",
@@ -18824,7 +19117,7 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C29-SHAAM-01",
+        "atom": "HI-CONCEPT-C29-SHAAM-02",
         "language": "hindi",
         "introducedBy": "HI-C29-shaam",
         "introducedAt": 79,
@@ -18835,10 +19128,131 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C29-SHAAM-02",
+        "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
         "language": "hindi",
-        "introducedBy": "HI-C29-shaam",
-        "introducedAt": 79,
+        "introducedBy": "HI-C30-dopahar-widened",
+        "introducedAt": 80,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-02",
+        "language": "hindi",
+        "introducedBy": "HI-C30-dopahar-widened",
+        "introducedAt": 80,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C31-SUPRABHAT-01",
+        "language": "hindi",
+        "introducedBy": "HI-C31-suprabhat",
+        "introducedAt": 81,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C31-SUPRABHAT-02",
+        "language": "hindi",
+        "introducedBy": "HI-C31-suprabhat",
+        "introducedAt": 81,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C32-EVENING-REGISTER-01",
+        "language": "hindi",
+        "introducedBy": "HI-C32-evening-register",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C32-shubh-sandhya",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C32-shubh-sandhya",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-01",
+        "language": "hindi",
+        "introducedBy": "HI-C33-shubh-dopahar",
+        "introducedAt": 84,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-02",
+        "language": "hindi",
+        "introducedBy": "HI-C33-shubh-dopahar",
+        "introducedAt": 84,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C34-PADHNA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C34-padhna",
+        "introducedAt": 87,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C34-SAMAJHNA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C34-samajhna",
+        "introducedAt": 86,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C34-SOCHNA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C34-sochna",
+        "introducedAt": 85,
         "missed": [
           "R1",
           "R2"
@@ -18888,6 +19302,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "IT-ETYMON-ACQUA-VINO-02",
+        "language": "italian",
+        "introducedBy": "IT-C11-acqua-vino",
+        "introducedAt": 43,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-ETYMON-ARRIVEDERCI-03",
@@ -18945,10 +19370,54 @@
         "revisits": 0
       },
       {
+        "atom": "IT-ETYMON-FRATELLO-SORELLA-02",
+        "language": "italian",
+        "introducedBy": "IT-C10-fratello-sorella",
+        "introducedAt": 41,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "IT-ETYMON-GENITORI-02",
+        "language": "italian",
+        "introducedBy": "IT-C10-genitori",
+        "introducedAt": 40,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "IT-ETYMON-GENITORI-03",
+        "language": "italian",
+        "introducedBy": "IT-C10-genitori",
+        "introducedAt": 40,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "IT-ETYMON-LAVORARE-03",
         "language": "italian",
         "introducedBy": "IT-C05-lavorare",
         "introducedAt": 29,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "IT-ETYMON-MESI-02",
+        "language": "italian",
+        "introducedBy": "IT-C09-mesi",
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -18978,10 +19447,10 @@
         "revisits": 2
       },
       {
-        "atom": "IT-ETYMON-ORA-03",
+        "atom": "IT-ETYMON-PANE-03",
         "language": "italian",
-        "introducedBy": "IT-C08-ora",
-        "introducedAt": 36,
+        "introducedBy": "IT-C11-pane",
+        "introducedAt": 42,
         "missed": [
           "R2",
           "R3"
@@ -18998,17 +19467,6 @@
           "R2"
         ],
         "revisits": 0
-      },
-      {
-        "atom": "IT-ETYMON-PIACERE-03",
-        "language": "italian",
-        "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "IT-ETYMON-PREGO-03",
@@ -19088,21 +19546,21 @@
         "revisits": 2
       },
       {
-        "atom": "IT-GRAMMAR-LAVORARE-04",
+        "atom": "IT-GRAMMAR-MANO-03",
         "language": "italian",
-        "introducedBy": "IT-C05-lavorare",
-        "introducedAt": 29,
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 57,
         "missed": [
-          "R2",
-          "R3"
+          "R1",
+          "R2"
         ],
-        "revisits": 1
+        "revisits": 0
       },
       {
-        "atom": "IT-GRAMMAR-MI-CHIAMO-04",
+        "atom": "IT-GRAMMAR-NUMERI-1-5-04",
         "language": "italian",
-        "introducedBy": "IT-C03-mi-chiamo",
-        "introducedAt": 18,
+        "introducedBy": "IT-C06-numeri-1-5",
+        "introducedAt": 32,
         "missed": [
           "R2",
           "R3"
@@ -19110,10 +19568,21 @@
         "revisits": 2
       },
       {
-        "atom": "IT-GRAMMAR-NUMERI-1-5-04",
+        "atom": "IT-GRAMMAR-NUMERI-11-16-02",
         "language": "italian",
-        "introducedBy": "IT-C06-numeri-1-5",
-        "introducedAt": 32,
+        "introducedBy": "IT-C12-numeri-11-16",
+        "introducedAt": 44,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "IT-GRAMMAR-NUMERI-17-20-02",
+        "language": "italian",
+        "introducedBy": "IT-C12-numeri-17-20",
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -19132,21 +19601,32 @@
         "revisits": 1
       },
       {
-        "atom": "IT-GRAMMAR-PIACERE-04",
+        "atom": "IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03",
         "language": "italian",
-        "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
+        "introducedBy": "IT-C16-passato-prossimo-essere",
+        "introducedAt": 55,
         "missed": [
-          "R2",
-          "R3"
+          "R1",
+          "R2"
         ],
-        "revisits": 1
+        "revisits": 0
       },
       {
         "atom": "IT-LEX-ETA-02",
         "language": "italian",
         "introducedBy": "IT-C14-eta",
         "introducedAt": 49,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "IT-LEX-MANO-02",
+        "language": "italian",
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 57,
         "missed": [
           "R1",
           "R2"
@@ -19176,6 +19656,17 @@
         "revisits": 1
       },
       {
+        "atom": "IT-LEX-PASSATO-PROSSIMO-ESSERE-02",
+        "language": "italian",
+        "introducedBy": "IT-C16-passato-prossimo-essere",
+        "introducedAt": 55,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "IT-LEX-PASSATO-REMOTO-02",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
@@ -19187,10 +19678,32 @@
         "revisits": 0
       },
       {
+        "atom": "IT-NOTICE-NUMERI-17-20-03",
+        "language": "italian",
+        "introducedBy": "IT-C12-numeri-17-20",
+        "introducedAt": 45,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "IT-NOTICE-PASSATO-REMOTO-05",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
         "introducedAt": 51,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "IT-PRAGMATICS-PASSATO-PROSSIMO-ESSERE-04",
+        "language": "italian",
+        "introducedBy": "IT-C16-passato-prossimo-essere",
+        "introducedAt": 55,
         "missed": [
           "R1",
           "R2"
@@ -19297,17 +19810,6 @@
         "revisits": 1
       },
       {
-        "atom": "IT-SOUND-MI-CHIAMO-02",
-        "language": "italian",
-        "introducedBy": "IT-C03-mi-chiamo",
-        "introducedAt": 18,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "IT-SOUND-NUMERI-1-5-02",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-1-5",
@@ -19317,28 +19819,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "IT-SOUND-ORA-02",
-        "language": "italian",
-        "introducedBy": "IT-C08-ora",
-        "introducedAt": 36,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "IT-SOUND-PIACERE-02",
-        "language": "italian",
-        "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "IT-SOUND-PREGO-02",
@@ -23774,60 +24254,60 @@
         "revisits": 1
       },
       {
-        "atom": "FR-ETYMON-CHAT-05",
+        "atom": "FR-ETYMON-AIDER-08",
         "language": "french",
-        "introducedBy": "FR-C22-chien-chat",
-        "introducedAt": 71,
+        "introducedBy": "FR-C24-aider",
+        "introducedAt": 75,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-AIMER-10",
+        "language": "french",
+        "introducedBy": "FR-C24-aimer",
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-CHIEN-03",
+        "atom": "FR-ETYMON-COMPRENDRE-02",
         "language": "french",
-        "introducedBy": "FR-C22-chien-chat",
-        "introducedAt": 71,
+        "introducedBy": "FR-C25-comprendre",
+        "introducedAt": 77,
         "missed": [
           "R1"
         ],
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-DESOLE-03",
+        "atom": "FR-ETYMON-MAIN-04",
         "language": "french",
-        "introducedBy": "FR-C20-je-suis-desole",
-        "introducedAt": 69,
+        "introducedBy": "FR-C17-main",
+        "introducedAt": 65,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-ETYMON-PENSER-05",
+        "language": "french",
+        "introducedBy": "FR-C25-penser",
+        "introducedAt": 78,
         "missed": [
           "R1"
         ],
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-PLAIRE-03",
+        "atom": "FR-GRAMMAR-COMPRENDRE-STEM-03",
         "language": "french",
-        "introducedBy": "FR-C19-sil-vous-plait",
-        "introducedAt": 68,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-PLEUVOIR-05",
-        "language": "french",
-        "introducedBy": "FR-C21-le-temps",
-        "introducedAt": 70,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-GRAMMAR-IL-FAIT-03",
-        "language": "french",
-        "introducedBy": "FR-C21-le-temps",
-        "introducedAt": 70,
+        "introducedBy": "FR-C25-comprendre",
+        "introducedAt": 77,
         "missed": [
           "R1"
         ],
@@ -23841,7 +24321,27 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-AIDER-07",
+        "language": "french",
+        "introducedBy": "FR-C24-aider",
+        "introducedAt": 75,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-AIMER-09",
+        "language": "french",
+        "introducedBy": "FR-C24-aimer",
+        "introducedAt": 76,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FR-LEX-CHAT-04",
@@ -23851,7 +24351,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-CHIEN-02",
@@ -23861,35 +24361,35 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "FR-LEX-DESOLE-02",
+        "atom": "FR-LEX-DEMANDER-04",
         "language": "french",
-        "introducedBy": "FR-C20-je-suis-desole",
-        "introducedAt": 69,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-LEX-IL-PLEUT-04",
-        "language": "french",
-        "introducedBy": "FR-C21-le-temps",
-        "introducedAt": 70,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-LEX-OUI-02",
-        "language": "french",
-        "introducedBy": "FR-C18-oui",
-        "introducedAt": 66,
+        "introducedBy": "FR-C24-demander",
+        "introducedAt": 74,
         "missed": [
           "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-MAIN-02",
+        "language": "french",
+        "introducedBy": "FR-C17-main",
+        "introducedAt": 65,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-NON-02",
+        "language": "french",
+        "introducedBy": "FR-C18-non",
+        "introducedAt": 67,
+        "missed": [
+          "R1"
         ],
         "revisits": 1
       },
@@ -23901,97 +24401,47 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "FR-LEX-TEMPS-02",
+        "atom": "FR-PRAGMATICS-AIMER-BIEN-11",
         "language": "french",
-        "introducedBy": "FR-C21-le-temps",
-        "introducedAt": 70,
+        "introducedBy": "FR-C24-aimer",
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
         "revisits": 0
       },
       {
-        "atom": "FR-PRAGMATICS-SORRY-04",
+        "atom": "FR-SOUND-NON-03",
         "language": "french",
-        "introducedBy": "FR-C20-je-suis-desole",
-        "introducedAt": 69,
+        "introducedBy": "FR-C18-non",
+        "introducedAt": 67,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-BITTE-04",
+        "atom": "GE-ETYMON-GRUEN-03",
         "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 71,
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 75,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
+        "atom": "GE-ETYMON-HAND-MANUS-05",
         "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 72,
+        "introducedBy": "GE-C17-hand",
+        "introducedAt": 68,
         "missed": [
           "R1"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-HUND-03",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 74,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-KATZE-05",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 74,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-REGNET-06",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 73,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-WETTER-03",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 73,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-EVIDENCE-CAT-WORDS-06",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 74,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "GE-GRAMMAR-WEATHER-SEIN-04",
@@ -23999,9 +24449,9 @@
         "introducedBy": "GE-C21-das-wetter",
         "introducedAt": 73,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "GE-LEX-BITTE-PLEASE-02",
@@ -24011,17 +24461,17 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
+        "atom": "GE-LEX-HAND-02",
         "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 72,
+        "introducedBy": "GE-C17-hand",
+        "introducedAt": 68,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-LEX-HUND-02",
@@ -24030,16 +24480,6 @@
         "introducedAt": 74,
         "missed": [
           "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-LEX-JA-02",
-        "language": "german",
-        "introducedBy": "GE-C18-ja",
-        "introducedAt": 69,
-        "missed": [
-          "R2"
         ],
         "revisits": 1
       },
@@ -24051,47 +24491,47 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-LEX-REGNET-05",
+        "atom": "GE-LEX-KOPF-02",
         "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 73,
+        "introducedBy": "GE-C17-kopf",
+        "introducedAt": 66,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-LEX-WETTER-02",
+        "atom": "GE-LEX-NEIN-02",
         "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 73,
+        "introducedBy": "GE-C18-nein",
+        "introducedAt": 70,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-PHRASE-WASSER-BITTE-03",
+        "atom": "GE-PRAGMATICS-DOCH-05",
         "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 71,
+        "introducedBy": "GE-C18-ja",
+        "introducedAt": 69,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "GE-PRAGMATICS-SORRY-04",
+        "atom": "GE-SOUND-GRIMMS-LAW-04",
         "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 72,
+        "introducedBy": "GE-C17-kopf-haupt",
+        "introducedAt": 67,
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 3
       },
       {
         "atom": "GU-ETYMON-AAVVU-REACH",
@@ -24184,84 +24624,84 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
+        "atom": "HI-CONCEPT-C29-SHAAM-01",
         "language": "hindi",
-        "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 80,
+        "introducedBy": "HI-C29-shaam",
+        "introducedAt": 79,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C34-LIKHNA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C34-likhna",
+        "introducedAt": 88,
         "missed": [
           "R1"
         ],
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-02",
+        "atom": "HI-CONCEPT-C34-PADHNA-01",
         "language": "hindi",
-        "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 80,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C31-SUPRABHAT-01",
-        "language": "hindi",
-        "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 81,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C31-SUPRABHAT-02",
-        "language": "hindi",
-        "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 81,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C32-EVENING-REGISTER-01",
-        "language": "hindi",
-        "introducedBy": "HI-C32-evening-register",
-        "introducedAt": 83,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-01",
-        "language": "hindi",
-        "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 82,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-02",
-        "language": "hindi",
-        "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 82,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "IT-ETYMON-ACQUA-VINO-02",
-        "language": "italian",
-        "introducedBy": "IT-C11-acqua-vino",
-        "introducedAt": 43,
+        "introducedBy": "HI-C34-padhna",
+        "introducedAt": 87,
         "missed": [
           "R2"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C34-SAMAJHNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C34-samajhna",
+        "introducedAt": 86,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C34-SOCHNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C34-sochna",
+        "introducedAt": 85,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C35-LENA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C35-lena",
+        "introducedAt": 89,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C35-MADAD-02",
+        "language": "hindi",
+        "introducedBy": "HI-C35-madad",
+        "introducedAt": 91,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C35-PUCHNA-02",
+        "language": "hindi",
+        "introducedBy": "HI-C35-puchna",
+        "introducedAt": 90,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
       },
       {
         "atom": "IT-ETYMON-ACQUA-VINO-03",
@@ -24271,7 +24711,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "IT-ETYMON-AVERE-04",
@@ -24304,36 +24744,6 @@
         "revisits": 1
       },
       {
-        "atom": "IT-ETYMON-FRATELLO-SORELLA-02",
-        "language": "italian",
-        "introducedBy": "IT-C10-fratello-sorella",
-        "introducedAt": 41,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "IT-ETYMON-GENITORI-02",
-        "language": "italian",
-        "introducedBy": "IT-C10-genitori",
-        "introducedAt": 40,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "IT-ETYMON-GENITORI-03",
-        "language": "italian",
-        "introducedBy": "IT-C10-genitori",
-        "introducedAt": 40,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "IT-ETYMON-IO-03",
         "language": "italian",
         "introducedBy": "IT-C03-io",
@@ -24344,14 +24754,14 @@
         "revisits": 3
       },
       {
-        "atom": "IT-ETYMON-MESI-02",
+        "atom": "IT-ETYMON-MANO-04",
         "language": "italian",
-        "introducedBy": "IT-C09-mesi",
-        "introducedAt": 38,
+        "introducedBy": "IT-C17-mano",
+        "introducedAt": 57,
         "missed": [
-          "R2"
+          "R1"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "IT-ETYMON-NERO-BIANCO-02",
@@ -24384,14 +24794,14 @@
         "revisits": 1
       },
       {
-        "atom": "IT-ETYMON-NUMERI-6-10-03",
+        "atom": "IT-ETYMON-ORA-03",
         "language": "italian",
-        "introducedBy": "IT-C06-numeri-6-10",
-        "introducedAt": 33,
+        "introducedBy": "IT-C08-ora",
+        "introducedAt": 36,
         "missed": [
-          "R3"
+          "R2"
         ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "IT-ETYMON-PANE-02",
@@ -24401,17 +24811,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "IT-ETYMON-PANE-03",
-        "language": "italian",
-        "introducedBy": "IT-C11-pane",
-        "introducedAt": 42,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "IT-ETYMON-PARLARE-03",
@@ -24421,7 +24821,17 @@
         "missed": [
           "R2"
         ],
-        "revisits": 6
+        "revisits": 7
+      },
+      {
+        "atom": "IT-ETYMON-PIACERE-03",
+        "language": "italian",
+        "introducedBy": "IT-C03-piacere",
+        "introducedAt": 20,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-ETYMON-ROSSO-BLU-02",
@@ -24461,7 +24871,27 @@
         "missed": [
           "R2"
         ],
+        "revisits": 2
+      },
+      {
+        "atom": "IT-ETYMON-TESTA-03",
+        "language": "italian",
+        "introducedBy": "IT-C17-testa",
+        "introducedAt": 56,
+        "missed": [
+          "R2"
+        ],
         "revisits": 1
+      },
+      {
+        "atom": "IT-ETYMON-TESTA-04",
+        "language": "italian",
+        "introducedBy": "IT-C17-testa",
+        "introducedAt": 56,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-GRAMMAR-AVERE-03",
@@ -24494,6 +24924,16 @@
         "revisits": 1
       },
       {
+        "atom": "IT-GRAMMAR-ESSERE-STATO-02",
+        "language": "italian",
+        "introducedBy": "IT-C16-essere-stato",
+        "introducedAt": 53,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "IT-GRAMMAR-IO-04",
         "language": "italian",
         "introducedBy": "IT-C03-io",
@@ -24504,24 +24944,24 @@
         "revisits": 3
       },
       {
-        "atom": "IT-GRAMMAR-NUMERI-11-16-02",
+        "atom": "IT-GRAMMAR-LAVORARE-04",
         "language": "italian",
-        "introducedBy": "IT-C12-numeri-11-16",
-        "introducedAt": 44,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "IT-GRAMMAR-NUMERI-17-20-02",
-        "language": "italian",
-        "introducedBy": "IT-C12-numeri-17-20",
-        "introducedAt": 45,
+        "introducedBy": "IT-C05-lavorare",
+        "introducedAt": 29,
         "missed": [
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "IT-GRAMMAR-MI-CHIAMO-04",
+        "language": "italian",
+        "introducedBy": "IT-C03-mi-chiamo",
+        "introducedAt": 18,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-GRAMMAR-NUMERI-6-10-04",
@@ -24541,17 +24981,27 @@
         "missed": [
           "R2"
         ],
-        "revisits": 6
+        "revisits": 10
       },
       {
-        "atom": "IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03",
+        "atom": "IT-GRAMMAR-PIACERE-04",
         "language": "italian",
-        "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
+        "introducedBy": "IT-C03-piacere",
+        "introducedAt": 20,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 0
+        "revisits": 2
+      },
+      {
+        "atom": "IT-LEX-ANDARE-02",
+        "language": "italian",
+        "introducedBy": "IT-C16-andare",
+        "introducedAt": 54,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "IT-LEX-AVERE-02",
@@ -24574,20 +25024,20 @@
         "revisits": 1
       },
       {
-        "atom": "IT-LEX-PASSATO-PROSSIMO-ESSERE-02",
+        "atom": "IT-LEX-TESTA-02",
         "language": "italian",
-        "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
+        "introducedBy": "IT-C17-testa",
+        "introducedAt": 56,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "IT-NOTICE-NUMERI-17-20-03",
+        "atom": "IT-NOTICE-ESSERE-STATO-03",
         "language": "italian",
-        "introducedBy": "IT-C12-numeri-17-20",
-        "introducedAt": 45,
+        "introducedBy": "IT-C16-essere-stato",
+        "introducedAt": 53,
         "missed": [
           "R2"
         ],
@@ -24602,16 +25052,6 @@
           "R2"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "IT-PRAGMATICS-PASSATO-PROSSIMO-ESSERE-04",
-        "language": "italian",
-        "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
       },
       {
         "atom": "IT-SOUND-COME-02",
@@ -24634,6 +25074,16 @@
         "revisits": 3
       },
       {
+        "atom": "IT-SOUND-MI-CHIAMO-02",
+        "language": "italian",
+        "introducedBy": "IT-C03-mi-chiamo",
+        "introducedAt": 18,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "IT-SOUND-NUMERI-6-10-02",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-6-10",
@@ -24644,6 +25094,16 @@
         "revisits": 3
       },
       {
+        "atom": "IT-SOUND-ORA-02",
+        "language": "italian",
+        "introducedBy": "IT-C08-ora",
+        "introducedAt": 36,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "IT-SOUND-PARLARE-02",
         "language": "italian",
         "introducedBy": "IT-C05-parlare",
@@ -24652,6 +25112,16 @@
           "R2"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "IT-SOUND-PIACERE-02",
+        "language": "italian",
+        "introducedBy": "IT-C03-piacere",
+        "introducedAt": 20,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "JA-BRIDGE-SINO-JAPANESE",
@@ -26986,6 +27456,14 @@
         "lessonsEarly": 55
       },
       {
+        "lessonId": "GE-C03-danke",
+        "language": "german",
+        "position": 21,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
+        "lessonsEarly": 55
+      },
+      {
         "lessonId": "ES-C12-hacer",
         "language": "spanish",
         "position": 82,
@@ -27031,6 +27509,14 @@
         "position": 85,
         "word": "hace frío",
         "taughtBy": "ES-C30-hace-calor",
+        "lessonsEarly": 51
+      },
+      {
+        "lessonId": "GE-C03-practice",
+        "language": "german",
+        "position": 25,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
         "lessonsEarly": 51
       },
       {
@@ -30931,23 +31417,23 @@
       },
       {
         "language": "french",
-        "lessonCount": 73,
+        "lessonCount": 81,
         "lessonsWithoutSequence": 64,
         "forwardPrerequisites": 21,
         "forwardReviews": 28,
-        "atomsTaught": 34,
+        "atomsTaught": 54,
         "atomsNeverRevisited": 33,
         "forwardReferences": 64
       },
       {
         "language": "german",
-        "lessonCount": 76,
+        "lessonCount": 84,
         "lessonsWithoutSequence": 66,
         "forwardPrerequisites": 30,
         "forwardReviews": 36,
-        "atomsTaught": 41,
-        "atomsNeverRevisited": 40,
-        "forwardReferences": 62
+        "atomsTaught": 61,
+        "atomsNeverRevisited": 31,
+        "forwardReferences": 64
       },
       {
         "language": "gujarati",
@@ -30961,22 +31447,22 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 85,
+        "lessonCount": 93,
         "lessonsWithoutSequence": 34,
         "forwardPrerequisites": 18,
         "forwardReviews": 30,
-        "atomsTaught": 97,
-        "atomsNeverRevisited": 97,
+        "atomsTaught": 114,
+        "atomsNeverRevisited": 94,
         "forwardReferences": 21
       },
       {
         "language": "italian",
-        "lessonCount": 58,
+        "lessonCount": 66,
         "lessonsWithoutSequence": 9,
         "forwardPrerequisites": 6,
         "forwardReviews": 7,
-        "atomsTaught": 112,
-        "atomsNeverRevisited": 26,
+        "atomsTaught": 135,
+        "atomsNeverRevisited": 28,
         "forwardReferences": 53
       },
       {
@@ -31125,25 +31611,25 @@
       "tracksWithUnorderedLessons": 19,
       "forwardPrerequisites": 245,
       "forwardReviews": 300,
-      "atomsTaught": 1519,
-      "atomsNeverRevisited": 767,
-      "neverRevisitedPercent": 50,
+      "atomsTaught": 1599,
+      "atomsNeverRevisited": 757,
+      "neverRevisitedPercent": 47,
       "missedByWindow": {
-        "R1": 766,
-        "R2": 1107,
-        "R3": 704,
-        "R4": 131
+        "R1": 795,
+        "R2": 1159,
+        "R3": 711,
+        "R4": 137
       },
-      "forwardReferences": 504
+      "forwardReferences": 506
     }
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1249,
-    "voice": 848,
-    "sight": 348,
+    "totalLessons": 1281,
+    "voice": 876,
+    "sight": 352,
     "pen": 53,
-    "coreVoice": 1094,
+    "coreVoice": 1126,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 88,
     "tracks": [
@@ -31732,13 +32218,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 73,
-        "voice": 58,
+        "lessonCount": 81,
+        "voice": 66,
         "sight": 12,
         "pen": 3,
-        "coreVoice": 58,
-        "drivablePercent": 79,
-        "drivablePrefixTotal": 42,
+        "coreVoice": 66,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 50,
         "chapters": [
           {
             "language": "french",
@@ -32070,18 +32556,46 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 24,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 25,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "german",
-        "lessonCount": 76,
-        "voice": 65,
+        "lessonCount": 84,
+        "voice": 73,
         "sight": 8,
         "pen": 3,
-        "coreVoice": 65,
-        "drivablePercent": 86,
-        "drivablePrefixTotal": 60,
+        "coreVoice": 73,
+        "drivablePercent": 87,
+        "drivablePrefixTotal": 68,
         "chapters": [
           {
             "language": "german",
@@ -32410,6 +32924,34 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 24,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 25,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -32530,13 +33072,13 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 85,
-        "voice": 49,
-        "sight": 25,
+        "lessonCount": 93,
+        "voice": 53,
+        "sight": 29,
         "pen": 11,
-        "coreVoice": 72,
-        "drivablePercent": 85,
-        "drivablePrefixTotal": 56,
+        "coreVoice": 80,
+        "drivablePercent": 86,
+        "drivablePrefixTotal": 64,
         "chapters": [
           {
             "language": "hindi",
@@ -33007,18 +33549,48 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "hindi",
+            "chapter": 34,
+            "lessonCount": 4,
+            "voice": 1,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "hindi",
+            "chapter": 35,
+            "lessonCount": 4,
+            "voice": 3,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "italian",
-        "lessonCount": 58,
-        "voice": 45,
+        "lessonCount": 66,
+        "voice": 53,
         "sight": 13,
         "pen": 0,
-        "coreVoice": 45,
-        "drivablePercent": 78,
-        "drivablePrefixTotal": 38,
+        "coreVoice": 53,
+        "drivablePercent": 80,
+        "drivablePrefixTotal": 46,
         "chapters": [
           {
             "language": "italian",
@@ -33262,6 +33834,34 @@
               "voice"
             ],
             "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 18,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 19,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           }
         ]
