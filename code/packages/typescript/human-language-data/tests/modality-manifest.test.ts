@@ -712,20 +712,29 @@ describe("corpus regression", () => {
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
+    // The second verb tranche then added 24 lessons — the same eight verbs (THINK,
+    // UNDERSTAND, READ, WRITE, TAKE, ASK, HELP, LIKE-LOVE) in Spanish, Latin and
+    // Portuguese, authored in parallel. All 24 derive `voice`, so `sight` and `pen` do
+    // not move at all and the drivable share ratchets 67% -> 68%. Six chapters, not
+    // three: eight one-verb-per-lesson lessons introduce ~17 atoms against
+    // `maxNewAtomsPerChapter: 12`, so each track ships the tranche as a PAIR of
+    // four-lesson chapters. That is the budget working as intended — it was fitted to
+    // chapters that teach a topic, and a verb tranche is a denser shape — and splitting
+    // is the honest fix rather than raising the threshold. Page count is never a cost.
     expect(manifest.summary).toEqual({
-      totalLessons: 1225,
-      voice: 824,
+      totalLessons: 1249,
+      voice: 848,
       sight: 348,
       pen: 53,
-      drivableLessons: 824,
-      drivablePercent: 67,
+      drivableLessons: 848,
+      drivablePercent: 68,
       trackCount: 22,
-      chapterCount: 394,
+      chapterCount: 400,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 655,
-      fullyDrivableChapters: 270,
+      drivablePrefixTotal: 679,
+      fullyDrivableChapters: 276,
       unstartableChapters: 90,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
