@@ -4,6 +4,52 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — every generated chapter opens by saying what the reader will be able to do (HL-C49)
+
+- **288 of 407 chapters opened on a bare title** — `\chapter{}`, `\label{}`, straight
+  into the first lesson section. Nothing told the reader why they were there. All
+  **302 generated chapters** now carry a short opening, and **all 302 had the data
+  already**: every one has a `canDo` in its HL05 capability ledger.
+- **Derived, never authored.** `book.ts` composes the opening from `canDo` and
+  `payoff.summary`. 302 hand-written intros would be 302 places to drift from the
+  lessons they describe, and the generated file says at the top that editing it is
+  pointless. `canDo` is quoted verbatim, so the book and the ledger cannot disagree
+  about the same sentence.
+- **It must stand alone in English**, per HL09 §8 — the book is a standalone artifact
+  and English is its only requirement. Naming a *source* language is not a violation
+  and is the point of the book ("negro inherited from Latin", "trace *hermano* through
+  *germānus*"); naming another **track of this course** is, because it dangles for a
+  reader holding one PDF. One real violation was found and fixed at source: Telugu
+  ch11's payoff said "the borrowed blue every language in this course now shares".
+- The blurb that used to sit here explained how the chapter was *produced*. Removing
+  it was right; leaving nothing was not.
+
+### Fixed — the reconstruction asterisk was being deleted, turning reconstructions into attested forms
+
+- `renderInlineMarkdown` reads a bare `*` as an italic opener, so `PIE *ne` printed as
+  `PIE ` with the rest of the sentence italicised. In five chapters across German,
+  Hindi and Telugu that **silently converted a reconstructed form into an attested
+  one** — a false etymological claim, in the part of the book that exists for
+  etymology. Lesson authors already wrote `\*`; the ledger authors did not, and
+  nothing warned them. Escaped at source, with a test.
+
+### Fixed — four books explained their own build system to the reader
+
+- Four `payoff.summary` fields ended with a note addressed to the gap report:
+  *"Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by
+  sequence (4 of 12 atoms, below the 0.5 floor)."* Printing that under the chapter
+  title broke the very rule that got the old blurb removed. Moved to a
+  non-printed `payoff.note`; a test rejects it returning.
+
+### Known follow-up
+
+- `canonicalChapterHash` covers lessons only, not the capability. CI still catches a
+  stale chapter — `book-cli --check` compares full text, and the workflow's path
+  filter includes `chapters.json` — but `core/generated-book-hashes.json` is
+  byte-identical after a capability edit, so `language-ladder`'s `bookHashStatus`
+  reports a genuinely stale `.tex` as synced. Folding the capability into the hash is
+  the fix, and it regenerates every chapter, so it ships separately.
+
 ### Added — a track must EARN a level, not touch one (HL09 §3.1)
 
 - Add `src/level-gate.ts`. The gap report now publishes two numbers per track where

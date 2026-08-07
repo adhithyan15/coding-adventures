@@ -121,7 +121,7 @@
       "payoff": {
         "lesson": "TE-C11-rangulu",
         "kind": "production",
-        "summary": "Say నలుపు, తెలుపు, ఎరుపు — Telugu's own three — then నీలం, the borrowed blue every language in this course now shares.",
+        "summary": "Say నలుపు, తెలుపు, ఎరుపు — Telugu's own three — then నీలం, blue, which Telugu borrowed rather than inherited.",
         "assesses": [
           "TE-ETYMON-C10-VAARAM-01",
           "TE-PRAGMATICS-C10-VAARAM-02",
@@ -345,7 +345,7 @@
       "payoff": {
         "lesson": "TE-C22-pacha-pasupu",
         "kind": "production",
-        "summary": "Say పచ్చ and పసుపు and show they are doublets of one Proto-Dravidian *pac- root — where Kannada's yellow broke away as a Sanskrit loan.",
+        "summary": "Say పచ్చ and పసుపు and show they are doublets of one Proto-Dravidian \\*pac- root — where Kannada's yellow broke away as a Sanskrit loan.",
         "assesses": [
           "TE-LEX-C11-RANGULU-01",
           "TE-ETYMON-C11-RANGULU-02",
@@ -454,7 +454,7 @@
       "payoff": {
         "lesson": "TE-C27-sayantram",
         "kind": "production",
-        "summary": "Say సాయంత్రం, from sāyam plus a time-suffix, and follow its PIE *seh₁- root across to Latin sērus, French soir and Italian sera.",
+        "summary": "Say సాయంత్రం, from sāyam plus a time-suffix, and follow its PIE \\*seh₁- root across to Latin sērus, French soir and Italian sera.",
         "assesses": [
           "TE-ETYMON-C26-UDAYAM-01",
           "TE-PRAGMATICS-C26-UDAYAM-02",

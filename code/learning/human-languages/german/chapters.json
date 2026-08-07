@@ -8,17 +8,20 @@
       "title": "Head and Hand",
       "label": "ch:ge-head-and-hand",
       "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "GE-C17-hand",
         "kind": "production",
-        "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand. Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor).",
+        "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
         "assesses": [
           "GE-LEX-HAND-02",
           "GE-SOUND-HAND-03",
           "GE-ETYMON-HAND-04",
           "GE-ETYMON-HAND-MANUS-05"
-        ]
+        ],
+        "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
       }
     },
     {
@@ -26,18 +29,21 @@
       "title": "Yes and No",
       "label": "ch:ge-yes-and-no",
       "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
-      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
       "payoff": {
         "lesson": "GE-C18-nein",
         "kind": "production",
-        "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE *ne chain — nōn, non, nein, nahīṃ. Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja.",
+        "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
         "assesses": [
           "GE-LEX-JA-02",
           "GE-LEX-NEIN-02",
           "GE-SOUND-NEIN-03",
           "GE-ETYMON-NEIN-04",
           "GE-ETYMON-NEGATION-05"
-        ]
+        ],
+        "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
       }
     },
     {
@@ -45,7 +51,9 @@
       "title": "Please",
       "label": "ch:ge-please",
       "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "GE-C19-bitte-requests",
         "kind": "task",
@@ -62,7 +70,9 @@
       "title": "Sorry",
       "label": "ch:ge-sorry",
       "canDo": "I can apologise or excuse myself in German with Entschuldigung, and reach for es tut mir leid when I mean it more.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "GE-C20-entschuldigung",
         "kind": "production",
@@ -79,7 +89,9 @@
       "title": "Weather",
       "label": "ch:ge-weather",
       "canDo": "I can talk about the weather in German — das Wetter, es ist heiß, es ist kalt, es regnet.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "GE-C21-das-wetter",
         "kind": "production",
@@ -98,7 +110,9 @@
       "title": "Dog and Cat",
       "label": "ch:ge-dog-and-cat",
       "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
-      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
       "payoff": {
         "lesson": "GE-C22-hund-katze",
         "kind": "production",
@@ -117,7 +131,9 @@
       "title": "Green and Yellow",
       "label": "ch:ge-green-and-yellow",
       "canDo": "I can name green and yellow in German, and say why grün is English green's own cousin while gelb's link to French jaune is only probable.",
-      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
       "payoff": {
         "lesson": "GE-C23-gruen-gelb",
         "kind": "production",
@@ -136,7 +152,9 @@
       "title": "Verbs of the Mind",
       "label": "ch:ge-mind-verbs",
       "canDo": "I can say I think, I understand, I read and I write in German, break a strong verb's vowel in the du and er forms, and say which of the four German borrowed rather than inherited.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "GE-C24-schreiben",
         "kind": "production",
@@ -163,7 +181,9 @@
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:ge-doing-verbs",
       "canDo": "I can say I take, I ask, I help and I like in German, sort all eight verbs of these two chapters into the three present-tense patterns, and use gern to say I like doing something.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "GE-C25-moegen-lieben",
         "kind": "production",
