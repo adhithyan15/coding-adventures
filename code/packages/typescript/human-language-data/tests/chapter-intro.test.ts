@@ -42,8 +42,10 @@ describe("the chapter opening", () => {
       expect(match).not.toBeNull();
       expect(hasCapability(match![1]!, Number(match![2]))).toBe(false);
     }
-    // Russian chapter 3 is the whole of the debt today.
-    expect(withoutOpening).toEqual(["russian/book/chapters/ch03-first-verbs.tex"]);
+    // Zero, since russian chapter 3 gained its capability. The by-name assertion
+    // above is what keeps this honest: it does not merely count, it requires that any
+    // chapter without an opening genuinely has no capability to build one from.
+    expect(withoutOpening).toEqual([]);
   });
 
   it("never points at another track of this course", () => {
