@@ -7,7 +7,7 @@ chapter: 16
 type: word
 headword: andare
 gloss: to go — one verb built from two historical stems
-concept_tag: IT-VERB-ANDARE
+concept_tag: VERB-GO
 prerequisites: [IT-C16-essere-stato, IT-C02-come-va]
 sounds: [double-consonant, open-a]
 roots: [latin-vadere, disputed-ambitare]

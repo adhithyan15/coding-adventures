@@ -128,23 +128,32 @@
     },
     {
       "id": "IT-PATH-011",
-      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "IT-C05-parlare",
         "IT-C05-abitare",
-        "IT-C05-lavorare",
+        "IT-C05-lavorare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-012",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
         "IT-C05-parlo-italiano",
         "IT-C05-practice"
       ],
       "before": [],
       "inline": [
-        "IT-EXT-011-LANGUAGE-SPECIFIC",
-        "IT-EXT-011-CONSOLIDATION"
+        "IT-EXT-012-LANGUAGE-SPECIFIC",
+        "IT-EXT-012-CONSOLIDATION"
       ],
       "after": []
     },
     {
-      "id": "IT-PATH-012",
+      "id": "IT-PATH-013",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
         "IT-C06-numeri-1-5",
@@ -152,12 +161,12 @@
       ],
       "before": [],
       "inline": [
-        "IT-EXT-012-LANGUAGE-SPECIFIC"
+        "IT-EXT-013-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "IT-PATH-013",
+      "id": "IT-PATH-014",
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
         "IT-C07-giorni-1",
@@ -169,29 +178,16 @@
       ],
       "before": [],
       "inline": [
-        "IT-EXT-013-LANGUAGE-SPECIFIC"
-      ],
-      "after": []
-    },
-    {
-      "id": "IT-PATH-014",
-      "spine_node": "SPINE-EXCHANGE-NAMES",
-      "lessons": [
-        "IT-C10-genitori",
-        "IT-C10-fratello-sorella"
-      ],
-      "before": [],
-      "inline": [
         "IT-EXT-014-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
       "id": "IT-PATH-015",
-      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
-        "IT-C11-pane",
-        "IT-C11-acqua-vino"
+        "IT-C10-genitori",
+        "IT-C10-fratello-sorella"
       ],
       "before": [],
       "inline": [
@@ -201,10 +197,10 @@
     },
     {
       "id": "IT-PATH-016",
-      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
-        "IT-C12-numeri-11-16",
-        "IT-C12-numeri-17-20"
+        "IT-C11-pane",
+        "IT-C11-acqua-vino"
       ],
       "before": [],
       "inline": [
@@ -214,10 +210,10 @@
     },
     {
       "id": "IT-PATH-017",
-      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
-        "IT-C13-nero-bianco",
-        "IT-C13-rosso-blu"
+        "IT-C12-numeri-11-16",
+        "IT-C12-numeri-17-20"
       ],
       "before": [],
       "inline": [
@@ -227,12 +223,10 @@
     },
     {
       "id": "IT-PATH-018",
-      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "IT-C14-avere",
-        "IT-C14-eta",
-        "IT-C15-passato-prossimo",
-        "IT-C15-passato-remoto"
+        "IT-C13-nero-bianco",
+        "IT-C13-rosso-blu"
       ],
       "before": [],
       "inline": [
@@ -242,6 +236,21 @@
     },
     {
       "id": "IT-PATH-019",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "IT-C14-avere",
+        "IT-C14-eta",
+        "IT-C15-passato-prossimo",
+        "IT-C15-passato-remoto"
+      ],
+      "before": [],
+      "inline": [
+        "IT-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-020",
       "spine_node": "SPINE-ASK-LOCATION",
       "lessons": [
         "IT-C16-essere",
@@ -251,13 +260,13 @@
       ],
       "before": [],
       "inline": [
-        "IT-EXT-019-LANGUAGE-SPECIFIC",
-        "IT-EXT-019-ETYMOLOGY"
+        "IT-EXT-020-LANGUAGE-SPECIFIC",
+        "IT-EXT-020-ETYMOLOGY"
       ],
       "after": []
     },
     {
-      "id": "IT-PATH-020",
+      "id": "IT-PATH-021",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "IT-C17-testa",
@@ -265,7 +274,7 @@
       ],
       "before": [],
       "inline": [
-        "IT-EXT-020-LANGUAGE-SPECIFIC"
+        "IT-EXT-021-LANGUAGE-SPECIFIC"
       ],
       "after": []
     }
@@ -305,8 +314,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "IT-PATH-009",
-        "IT-PATH-014",
-        "IT-PATH-018"
+        "IT-PATH-015",
+        "IT-PATH-019"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -322,7 +331,7 @@
       "segments": [
         "IT-PATH-002",
         "IT-PATH-008",
-        "IT-PATH-020"
+        "IT-PATH-021"
       ],
       "omits": [
         "WORD-WELL"
@@ -331,8 +340,8 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "IT-PATH-011",
-        "IT-PATH-015"
+        "IT-PATH-012",
+        "IT-PATH-016"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -353,7 +362,7 @@
     "SPINE-TIME-OF-DAY": {
       "segments": [
         "IT-PATH-005",
-        "IT-PATH-013"
+        "IT-PATH-014"
       ],
       "omits": [
         "TIME-MORNING",
@@ -367,7 +376,7 @@
     },
     "SPINE-ASK-LOCATION": {
       "segments": [
-        "IT-PATH-019"
+        "IT-PATH-020"
       ],
       "omits": [
         "QUESTION-WHERE"
@@ -377,15 +386,15 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "IT-PATH-004",
-        "IT-PATH-017"
+        "IT-PATH-018"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-COUNT-ONE-TO-FIVE": {
       "segments": [
-        "IT-PATH-012",
-        "IT-PATH-016"
+        "IT-PATH-013",
+        "IT-PATH-017"
       ],
       "omits": [
         "NUMBER-ONE-TO-FIVE"
@@ -393,17 +402,15 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "IT-PATH-011"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
-        "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
-        "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
@@ -421,8 +428,6 @@
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-LIVE",
-        "VERB-WORK",
         "VERB-PLAY",
         "VERB-WALK",
         "VERB-RUN",
@@ -438,7 +443,11 @@
         "VERB-CLOSE",
         "VERB-LIKE-LOVE"
       ],
-      "relocates": {}
+      "relocates": {
+        "VERB-HAVE": "SPINE-EXCHANGE-NAMES",
+        "VERB-GO": "SPINE-ASK-LOCATION",
+        "VERB-BE": "SPINE-ASK-LOCATION"
+      }
     },
     "SPINE-NEGATE-AND-ASK": {
       "segments": [],
@@ -518,21 +527,18 @@
       ]
     },
     {
-      "id": "IT-EXT-011-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-012-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
       "canDo": "I can use the additional Italian material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "IT-C05-parlare",
-        "IT-C05-abitare",
-        "IT-C05-lavorare",
         "IT-C05-parlo-italiano"
       ]
     },
     {
-      "id": "IT-EXT-011-CONSOLIDATION",
+      "id": "IT-EXT-012-CONSOLIDATION",
       "stage": "pre-A1",
       "kind": "supporting",
       "category": "consolidation",
@@ -543,7 +549,7 @@
       ]
     },
     {
-      "id": "IT-EXT-012-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-013-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -555,7 +561,7 @@
       ]
     },
     {
-      "id": "IT-EXT-013-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-014-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -571,7 +577,7 @@
       ]
     },
     {
-      "id": "IT-EXT-014-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-015-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -583,7 +589,7 @@
       ]
     },
     {
-      "id": "IT-EXT-015-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-016-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -595,7 +601,7 @@
       ]
     },
     {
-      "id": "IT-EXT-016-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-017-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -607,7 +613,7 @@
       ]
     },
     {
-      "id": "IT-EXT-017-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-018-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -619,7 +625,7 @@
       ]
     },
     {
-      "id": "IT-EXT-018-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-019-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -633,7 +639,7 @@
       ]
     },
     {
-      "id": "IT-EXT-019-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-020-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -646,7 +652,7 @@
       ]
     },
     {
-      "id": "IT-EXT-019-ETYMOLOGY",
+      "id": "IT-EXT-020-ETYMOLOGY",
       "stage": "A1",
       "kind": "supporting",
       "category": "etymology",
@@ -657,7 +663,7 @@
       ]
     },
     {
-      "id": "IT-EXT-020-LANGUAGE-SPECIFIC",
+      "id": "IT-EXT-021-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
