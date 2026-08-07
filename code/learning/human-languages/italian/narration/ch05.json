@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:428b548f8b6d4ad0",
+  "sourceHash": "fnv1a64:588a9facd5ea70ef",
   "lessons": [
     {
       "id": "IT-C05-parlare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b0e44cab29318a5",
+      "sourceHash": "fnv1a64:099131cdde7c1d43",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8653d44be65d7a19",
+      "sourceHash": "fnv1a64:c4775635ebb63b52",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:91b352266303433a",
+      "sourceHash": "fnv1a64:bd73f59ecefa85a0",
       "notice": {
         "modality": "sight",
         "needs": [

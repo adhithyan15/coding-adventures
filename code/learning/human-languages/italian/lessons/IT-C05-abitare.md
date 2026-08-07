@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 id: IT-C05-abitare
-spine_node: SPINE-POLITE-REQUEST-REPAIR
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 290
 chapter: 5
 type: word
 headword: abitare
 gloss: to live / to dwell (a second -are verb — same pattern)
-concept_tag: IT-VERB-ABITARE
+concept_tag: VERB-LIVE
 prerequisites: [IT-C05-parlare]
 sounds: [r-tap, vowel-a-open]
 roots: [habitare-latin]

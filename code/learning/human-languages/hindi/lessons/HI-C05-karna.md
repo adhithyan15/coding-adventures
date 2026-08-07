@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: करना
 gloss: to do, to make (and काम करना, "to work")
-concept_tag: HI-VERB-KARNA
+concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [kr-do]

@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 id: IT-C05-lavorare
-spine_node: SPINE-POLITE-REQUEST-REPAIR
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 300
 chapter: 5
 type: word
 headword: lavorare
 gloss: to work (a third -are verb — and the "labour" road, not the "torture" one)
-concept_tag: IT-VERB-LAVORARE
+concept_tag: VERB-WORK
 prerequisites: [IT-C05-parlare]
 sounds: [r-tap, vowel-a-open]
 roots: [laborare-latin]

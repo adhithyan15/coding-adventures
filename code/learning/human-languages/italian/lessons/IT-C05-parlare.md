@@ -1,13 +1,13 @@
 ---
 schema_version: 2
 id: IT-C05-parlare
-spine_node: SPINE-POLITE-REQUEST-REPAIR
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 280
 chapter: 5
 type: word
 headword: parlare
 gloss: to speak / to talk (your first regular -are verb)
-concept_tag: IT-VERB-PARLARE
+concept_tag: VERB-SPEAK
 prerequisites: [IT-C03-io, IT-C02-come]
 sounds: [r-tap, vowel-a-open]
 roots: [parabolare-latin]

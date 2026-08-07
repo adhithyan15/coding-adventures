@@ -7,7 +7,7 @@ chapter: 14
 type: word
 headword: avere
 gloss: to have — and Italy's only silent letter, which exists purely to prevent confusion
-concept_tag: IT-VERB-HAVE
+concept_tag: VERB-HAVE
 prerequisites: [IT-C13-rosso-blu, IT-C05-parlare]
 sounds: [silent-h, double-n]
 roots: [latin-habere]
