@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4c1a9b355b201a21",
+  "sourceHash": "fnv1a64:5f66eeb5566cb2fa",
   "summary": {
     "totalLessons": 1233,
     "voice": 832,
@@ -3059,12 +3059,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 65,
-      "voice": 62,
+      "lessonCount": 73,
+      "voice": 70,
       "sight": 3,
       "pen": 0,
-      "drivablePercent": 95,
-      "drivablePrefixTotal": 61,
+      "drivablePercent": 96,
+      "drivablePrefixTotal": 69,
       "modalities": [
         "voice",
         "sight"
@@ -3683,6 +3683,44 @@
             "LA-C37-video",
             "LA-C37-scio",
             "LA-C37-do"
+          ]
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C38-cogito",
+            "LA-C38-lego",
+            "LA-C38-intellego",
+            "LA-C38-scribo"
+          ]
+        },
+        {
+          "chapter": 39,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C39-capio",
+            "LA-C39-rogo",
+            "LA-C39-adiuvo",
+            "LA-C39-amo"
           ]
         }
       ]
@@ -5138,12 +5176,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 154,
-      "voice": 129,
+      "lessonCount": 146,
+      "voice": 121,
       "sight": 18,
       "pen": 7,
-      "drivablePercent": 84,
-      "drivablePrefixTotal": 109,
+      "drivablePercent": 83,
+      "drivablePrefixTotal": 101,
       "modalities": [
         "voice",
         "sight",
@@ -5755,44 +5793,6 @@
           "drivableLessonIds": [
             "ES-C33-verde",
             "ES-C33-amarillo"
-          ]
-        },
-        {
-          "chapter": 34,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "ES-C34-pensar",
-            "ES-C34-entender",
-            "ES-C34-leer",
-            "ES-C34-escribir"
-          ]
-        },
-        {
-          "chapter": 35,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "ES-C35-tomar",
-            "ES-C35-preguntar",
-            "ES-C35-ayudar",
-            "ES-C35-gustar"
           ]
         }
       ]
@@ -14696,6 +14696,110 @@
       "sourceHash": "fnv1a64:051856f3e9c81534"
     },
     {
+      "id": "LA-C38-cogito",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f212bec0682b367"
+    },
+    {
+      "id": "LA-C38-lego",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5511be9ba3c46d1"
+    },
+    {
+      "id": "LA-C38-intellego",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:825bf0ef0ce282f8"
+    },
+    {
+      "id": "LA-C38-scribo",
+      "language": "latin",
+      "chapter": 38,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0c57712692fe5f1"
+    },
+    {
+      "id": "LA-C39-capio",
+      "language": "latin",
+      "chapter": 39,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d8ae3b70ae202db"
+    },
+    {
+      "id": "LA-C39-rogo",
+      "language": "latin",
+      "chapter": 39,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fb29952282581ed"
+    },
+    {
+      "id": "LA-C39-adiuvo",
+      "language": "latin",
+      "chapter": 39,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:257e966cc6befa30"
+    },
+    {
+      "id": "LA-C39-amo",
+      "language": "latin",
+      "chapter": 39,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c051a21f677da1d1"
+    },
+    {
       "id": "ML-C01-athe",
       "language": "malayalam",
       "chapter": 1,
@@ -20609,110 +20713,6 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:ae70fb1bf5810c09"
-    },
-    {
-      "id": "ES-C34-pensar",
-      "language": "spanish",
-      "chapter": 34,
-      "sequence": 850,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c34f771fc63fa6da"
-    },
-    {
-      "id": "ES-C34-entender",
-      "language": "spanish",
-      "chapter": 34,
-      "sequence": 855,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:265e5fbe219438c0"
-    },
-    {
-      "id": "ES-C34-leer",
-      "language": "spanish",
-      "chapter": 34,
-      "sequence": 860,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:fe730e9bf319e028"
-    },
-    {
-      "id": "ES-C34-escribir",
-      "language": "spanish",
-      "chapter": 34,
-      "sequence": 865,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c4ff55a994a886be"
-    },
-    {
-      "id": "ES-C35-tomar",
-      "language": "spanish",
-      "chapter": 35,
-      "sequence": 870,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7f64cbe9c19a04ac"
-    },
-    {
-      "id": "ES-C35-preguntar",
-      "language": "spanish",
-      "chapter": 35,
-      "sequence": 875,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4f6bdcdc76c54e70"
-    },
-    {
-      "id": "ES-C35-ayudar",
-      "language": "spanish",
-      "chapter": 35,
-      "sequence": 880,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d33da6ef3a522438"
-    },
-    {
-      "id": "ES-C35-gustar",
-      "language": "spanish",
-      "chapter": 35,
-      "sequence": 885,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:99ebd45c298ca198"
     },
     {
       "id": "TA-W01-curves-va-ka",

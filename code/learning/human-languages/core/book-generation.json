@@ -2109,6 +2109,20 @@
       "output": "latin/book/chapters/ch37-core-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 38,
+      "title": "Thinking, Reading, Writing",
+      "label": "ch:la-mind-verbs",
+      "output": "latin/book/chapters/ch38-mind-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 39,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:la-doing-verbs",
+      "output": "latin/book/chapters/ch39-doing-verbs.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
