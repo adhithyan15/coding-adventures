@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ed1a5f95e7f12a0c",
+  "sourceHash": "fnv1a64:7b6162d999488180",
   "lessons": [
     {
       "id": "FR-C03-aller",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f90923bced4bff0b",
+      "sourceHash": "fnv1a64:4c4319e2d9dc8c2e",
       "notice": {
         "modality": "sight",
         "needs": [

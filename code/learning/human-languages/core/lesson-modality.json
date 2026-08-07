@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a81390188116b364",
+  "sourceHash": "fnv1a64:8c4d6f3e4903dcf9",
   "summary": {
     "totalLessons": 1225,
     "voice": 824,
@@ -8805,7 +8805,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f90923bced4bff0b"
+      "sourceHash": "fnv1a64:4c4319e2d9dc8c2e"
     },
     {
       "id": "FR-C03-comme-ci-comme-ca",
@@ -9000,7 +9000,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22b91db850c4a6bf"
+      "sourceHash": "fnv1a64:13b0ef183fb8ac0b"
     },
     {
       "id": "FR-C05-je-parle-francais",
@@ -9026,7 +9026,7 @@
       "reasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1788b64ee60cd864"
+      "sourceHash": "fnv1a64:1b52b778db2ff0f7"
     },
     {
       "id": "FR-C05-practice",
@@ -9052,7 +9052,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a95b86575122ba2"
+      "sourceHash": "fnv1a64:aa49383efb48bb90"
     },
     {
       "id": "FR-C06-nombres-1-5",
@@ -9290,7 +9290,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e1fce68257fb1f71"
+      "sourceHash": "fnv1a64:8e9f481dabe6b8c4"
     },
     {
       "id": "FR-C15-passe-compose",
@@ -9329,7 +9329,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c03aabc76bc918"
+      "sourceHash": "fnv1a64:2ad8553705ea5e8f"
     },
     {
       "id": "FR-C16-etre-roots",
@@ -19334,7 +19334,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec974cf7795b5dea"
+      "sourceHash": "fnv1a64:9f0c8a41a736120d"
     },
     {
       "id": "ES-C06-ar-presente",
@@ -19361,7 +19361,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87e1da307dcee2f5"
+      "sourceHash": "fnv1a64:37787818353f0baa"
     },
     {
       "id": "ES-C06-estudiar",
@@ -19426,7 +19426,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cc22b5309fcdd0c"
+      "sourceHash": "fnv1a64:0088dadb5fdf6331"
     },
     {
       "id": "ES-C07-comer",
@@ -19439,7 +19439,7 @@
       "reasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:2c5c24910d6f4117"
+      "sourceHash": "fnv1a64:ce6a687141938f2c"
     },
     {
       "id": "ES-C07-donde",
@@ -19491,7 +19491,7 @@
       "reasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1a9b0f692c3ce186"
+      "sourceHash": "fnv1a64:1857cec1eb24a351"
     },
     {
       "id": "ES-C08-cuantos-anos",
@@ -19556,7 +19556,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25fe3250fd9cbc5b"
+      "sourceHash": "fnv1a64:73eb2365c48ed0d8"
     },
     {
       "id": "ES-C09-esta-en",
@@ -19595,7 +19595,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a82cd4ab00b99923"
+      "sourceHash": "fnv1a64:ea5fdc59c0e2c713"
     },
     {
       "id": "ES-C09-ser-vs-estar",
@@ -19634,7 +19634,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8625b52e5ef33af5"
+      "sourceHash": "fnv1a64:cfbc7b80522ef5b7"
     },
     {
       "id": "ES-C10-ir-a-futuro",
@@ -19699,7 +19699,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc28c84739b62d76"
+      "sourceHash": "fnv1a64:142a93616e523eef"
     },
     {
       "id": "ES-C11-practice",
@@ -19751,7 +19751,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b70e553d669e1c90"
+      "sourceHash": "fnv1a64:ab045c322463a363"
     },
     {
       "id": "ES-C12-hacer",
@@ -19764,7 +19764,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8af16bd2e1a9ced7"
+      "sourceHash": "fnv1a64:babb115768b0f09b"
     },
     {
       "id": "ES-C12-practice",
@@ -19803,7 +19803,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:853daae9f3657b07"
+      "sourceHash": "fnv1a64:3dece00044903fdb"
     },
     {
       "id": "ES-C13-practice",
@@ -19842,7 +19842,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43d46c297f5ac8ef"
+      "sourceHash": "fnv1a64:6ac43d9b03170b92"
     },
     {
       "id": "ES-C14-hablar-preterite",

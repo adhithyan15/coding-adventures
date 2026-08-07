@@ -667,7 +667,7 @@
     {
       "language": "french",
       "chapter": 3,
-      "sourceHash": "fnv1a64:ed1a5f95e7f12a0c",
+      "sourceHash": "fnv1a64:7b6162d999488180",
       "lessonIds": [
         "FR-C03-aller",
         "FR-C03-comme-ci-comme-ca",
@@ -682,7 +682,7 @@
       "text": "french/narration/ch03.txt",
       "json": "french/narration/ch03.json",
       "textHash": "fnv1a64:14f9aa931a9ccc5c",
-      "jsonHash": "fnv1a64:d8142dfa04f0be8a"
+      "jsonHash": "fnv1a64:cf1ec701d3a195a5"
     },
     {
       "language": "french",
@@ -708,7 +708,7 @@
     {
       "language": "french",
       "chapter": 5,
-      "sourceHash": "fnv1a64:78949b91a1ec7467",
+      "sourceHash": "fnv1a64:1ac542fc6064f48f",
       "lessonIds": [
         "FR-C05-habiter",
         "FR-C05-je-parle-francais",
@@ -721,7 +721,7 @@
       "text": "french/narration/ch05.txt",
       "json": "french/narration/ch05.json",
       "textHash": "fnv1a64:1593c8b35c764439",
-      "jsonHash": "fnv1a64:f38001fd5fccbdf0"
+      "jsonHash": "fnv1a64:39a85f17fd2c0aee"
     },
     {
       "language": "french",
@@ -846,7 +846,7 @@
     {
       "language": "french",
       "chapter": 14,
-      "sourceHash": "fnv1a64:5d9fc699a891b8f4",
+      "sourceHash": "fnv1a64:a60c4c85228a0399",
       "lessonIds": [
         "FR-C14-age",
         "FR-C14-avoir"
@@ -856,7 +856,7 @@
       "text": "french/narration/ch14.txt",
       "json": "french/narration/ch14.json",
       "textHash": "fnv1a64:c9ff51f24ddbbef0",
-      "jsonHash": "fnv1a64:a63426ffabd68307"
+      "jsonHash": "fnv1a64:44af7bbdb01e0f60"
     },
     {
       "language": "french",
@@ -876,7 +876,7 @@
     {
       "language": "french",
       "chapter": 16,
-      "sourceHash": "fnv1a64:39265ac877f397ff",
+      "sourceHash": "fnv1a64:d8315d6d2e9e3429",
       "lessonIds": [
         "FR-C16-etre",
         "FR-C16-etre-roots",
@@ -888,7 +888,7 @@
       "text": "french/narration/ch16.txt",
       "json": "french/narration/ch16.json",
       "textHash": "fnv1a64:71ce25815506d603",
-      "jsonHash": "fnv1a64:ca55c72812f343c4"
+      "jsonHash": "fnv1a64:4be9f083d6aa429c"
     },
     {
       "language": "french",

@@ -1,5 +1,52 @@
 # Changelog
 
+## French joins the cross-language verb corpus — 2026-08-07
+
+- Retagged the track's six shared verbs from language-local `FR-VERB-*` ids to
+  the canonical concepts every other track already realises: *être* →
+  `VERB-BE`, *avoir* → `VERB-HAVE`, *aller* → `VERB-GO`, *parler* →
+  `VERB-SPEAK`, *habiter* → `VERB-LIVE`, *travailler* → `VERB-WORK`. French
+  contributed **zero** core verbs to the cross-language join before this and
+  now contributes **six**; it is the only track in the corpus that realises
+  `VERB-WORK`, which stops being universally missing.
+- Left `(s')appeler` on `FR-VERB-APPELER`. No core concept covers the
+  reflexive naming verb, and inventing one to make the number look better
+  would be a false realisation.
+- Rewired [`curriculum.json`](./curriculum.json) so the realisation path tells
+  the truth about those six lessons. A canonical `VERB-*` concept is owned by
+  `SPINE-SAY-WHAT-I-DO`, so each retagged lesson has to sit in a segment for
+  **that** node — the node French previously realised with nothing at all
+  (`segments: []`, all forty-two verb concepts in `omits`). Four new
+  `SPINE-SAY-WHAT-I-DO` segments now carry them, each spliced in at exactly
+  the point the lesson already occupied so no chapter moves and no lesson is
+  renumbered:
+  - `FR-PATH-010` — *aller*, lifted out of the head of the old Chapter 3
+    wellbeing segment and placed immediately before it, where it already sat.
+  - `FR-PATH-014` — *parler*, *habiter*, *travailler*, lifted off the front of
+    the long Chapter 5–13 support run.
+  - `FR-PATH-016` — *avoir*, with `FR-C14-age` following it as local support,
+    because *j'ai X ans* is built out of *avoir* and has to stay behind it.
+  - `FR-PATH-017` — *être*, preceded by the two Chapter 15 past-tense lessons
+    it declares as prerequisites.
+- Put **four lessons on the path that had never been on it**: *travailler* and
+  *être* (both now shared realisations, so the path must carry them) and, as
+  the prerequisite closure *être* pulls in, `FR-C15-passe-compose` and
+  `FR-C15-passe-simple`. The two past-tense lessons are French-local support,
+  so they are attached as an extension rather than pretending to realise a
+  shared concept.
+- Split the old Chapter 5–13 segment where *avoir* had to be extracted, and
+  split its language-specific extension to match, since an extension's lessons
+  must all live inside the single segment it attaches to. Segment and
+  extension ids are renumbered to stay ascending in path order, which is the
+  convention every other track follows; `FR-EXT-010` is gone because *aller*
+  was its only lesson and *aller* is no longer local support.
+- Dropped the six concepts from `SPINE-SAY-WHAT-I-DO`'s `omits` and refreshed
+  every node's `segments` ledger against the authored path.
+- Consequence worth naming: `SPINE-SAY-WHAT-I-DO` is an A2 node, so the nine
+  lessons now sitting under it are derived as A2 rather than A1. French's
+  reach moves from A1 to A2 — the same reach the other fifteen verb-realising
+  tracks already report — and five lessons leave the ramp-to-A1 edition.
+
 ## Chapter capability ledger — Chapters 17–23 — 2026-08-06
 
 - Added [`chapters.json`](./chapters.json), the track's HL05 capability ledger:

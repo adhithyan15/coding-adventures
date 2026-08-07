@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: travailler
 gloss: to work (a third -er verb — and the origin of "travel")
-concept_tag: FR-VERB-TRAVAILLER
+concept_tag: VERB-WORK
 prerequisites: [FR-C05-parler]
 sounds: [ai-y, r-uvular]
 roots: [tripalium-latin]

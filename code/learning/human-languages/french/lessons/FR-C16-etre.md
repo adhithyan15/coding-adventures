@@ -4,7 +4,7 @@ chapter: 16
 type: word
 headword: être
 gloss: to be — the six present forms
-concept_tag: FR-VERB-BE
+concept_tag: VERB-BE
 prerequisites: [FR-C15-passe-simple, FR-C14-avoir]
 sounds: [nasal-on, circumflex]
 roots: [latin-esse]

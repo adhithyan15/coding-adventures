@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: aller
 gloss: to go (and, oddly, "to be" in "how are you?")
-concept_tag: FR-VERB-ALLER
+concept_tag: VERB-GO
 prerequisites: []
 sounds: [er-ending, r-uvular]
 roots: [ambulare-latin, vadere-latin, ire-latin]
