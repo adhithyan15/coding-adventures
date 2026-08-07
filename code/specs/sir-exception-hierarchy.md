@@ -10,6 +10,11 @@ for Python & TypeScript** — the IR carries the rescued types and those backend
 match by a built-in class hierarchy at runtime. The real, still-open gaps are
 narrower and different, enumerated below. This spec targets those.
 
+**Authority note (added by SIR25):** the exception model this doc details is
+part of SIR's object model, specified independently of Ruby in
+[`SIR25-language-agnostic-object-model.md`](SIR25-language-agnostic-object-model.md)
+§2 (see "Exceptions" under §2's `Feature::Exceptions` bullet).
+
 ## Current state (from the 2026-07-01 exception survey — what already works)
 
 - **Core IR carries typed rescue.** `Stmt::TryCatch { body, rescues:

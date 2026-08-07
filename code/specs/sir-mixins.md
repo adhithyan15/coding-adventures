@@ -9,6 +9,13 @@ merged runtime-method-table OOP design ([[sir-classes-oop]]) and the typed-error
 / collection / exception cascades — same additive, runtime-table approach, **no
 core-IR change**.
 
+**Authority note (added by SIR25):** the ancestry-walk order this doc extends
+(most-recently-included module first, per Ruby's MRO) is adopted as SIR's own
+defined resolution order in
+[`SIR25-language-agnostic-object-model.md`](SIR25-language-agnostic-object-model.md)
+§2.4 — independent of any one frontend, even though Ruby remains the only
+frontend that reaches it today.
+
 ## Current state (2026-07-01 survey)
 
 - **Parsing + lowering of `module`:** DONE. The grammar has
