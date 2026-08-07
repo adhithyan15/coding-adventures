@@ -1360,7 +1360,8 @@ void _sir_register_extend(const char *cls, const char *module) {
 
 /* Resolve `method` for an INSTANCE of `cls`: walk the ancestry, and at each class
  * check the class's own methods THEN its included modules' methods (most-recently
- * included first, matching Ruby's precedence).  Bounded by SIR_ANCESTRY_MAX. */
+ * included first, per SIR25 §2.2/§2.4's precedence — matching Ruby's).
+ * Bounded by SIR_ANCESTRY_MAX. */
 static SirValue _sir_resolve_method(const char *cls, const char *method) {
     const char *cur = cls;
     int steps = 0;
@@ -1425,7 +1426,8 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
  * the Go/Rust/Ruby backends, which have always run `initialize` here).  Self
  * is restored afterward, same save/restore as `_sir_call_method`.  The object
  * is always returned, even with no `initialize` registered — a plain
- * allocation, matching Ruby's default no-op `Object#initialize`. */
+ * allocation, per SIR25 §2.1's no-op-default construction (matching Ruby's
+ * default `Object#initialize`). */
 SirValue _sir_call_new(const char *cls, int argc, ...) {
     va_list ap;
     SirValue *args, obj, fn;

@@ -2312,9 +2312,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return false;
   }
   // Does `owner` (a class) reach `target` through the modules mixed into it
-  // or into any of its ancestors?  Ruby's MRO is TRANSITIVE — `class C;
-  // include M; end` where `module M; include N; end` makes `c.is_a?(N)` true
-  // — so the module graph must be searched, not just scanned one level.
+  // or into any of its ancestors?  SIR25 §2.4's mixin resolution is
+  // TRANSITIVE (matching Ruby's MRO) — `class C; include M; end` where
+  // `module M; include N; end` makes `c.is_a?(N)` true — so the module graph
+  // must be searched, not just scanned one level.
   //
   // Deliberately ITERATIVE (an explicit worklist, not recursion): the graph's
   // depth is attacker-shaped by the source, and a recursive walk over a long
@@ -2943,7 +2944,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `callSuper("method", "cls", args…)`.  Resolve `method` starting from
   // the SUPERCLASS of `cls` (skipping the current definition) and apply
   // it with the CURRENT `self` still bound — `super` reuses the live
-  // receiver.  A missing super method is a NoMethodError, matching Ruby.
+  // receiver (SIR25 §2.3).  A missing super method is a NoMethodError,
+  // matching Ruby.
   function callSuper(method, cls, ...args) {
     const fn = resolveMethod(methodTable, ancestry[cls], method, includedModules);
     if (fn === undefined) {
