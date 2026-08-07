@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0b24ec80e60f9715",
+  "sourceHash": "fnv1a64:d03e091e9efe44ad",
   "summary": {
     "totalLessons": 1257,
     "voice": 856,
@@ -1094,12 +1094,12 @@
     },
     {
       "language": "german",
-      "lessonCount": 84,
-      "voice": 73,
+      "lessonCount": 76,
+      "voice": 65,
       "sight": 8,
       "pen": 3,
-      "drivablePercent": 87,
-      "drivablePrefixTotal": 68,
+      "drivablePercent": 86,
+      "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
         "sight",
@@ -1513,44 +1513,6 @@
           "drivable": true,
           "drivableLessonIds": [
             "GE-C23-gruen-gelb"
-          ]
-        },
-        {
-          "chapter": 24,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "GE-C24-denken",
-            "GE-C24-verstehen",
-            "GE-C24-lesen",
-            "GE-C24-schreiben"
-          ]
-        },
-        {
-          "chapter": 25,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "GE-C25-nehmen",
-            "GE-C25-fragen",
-            "GE-C25-helfen",
-            "GE-C25-moegen-lieben"
           ]
         }
       ]
@@ -2236,12 +2198,12 @@
     },
     {
       "language": "italian",
-      "lessonCount": 58,
-      "voice": 45,
+      "lessonCount": 66,
+      "voice": 53,
       "sight": 13,
       "pen": 0,
-      "drivablePercent": 78,
-      "drivablePrefixTotal": 38,
+      "drivablePercent": 80,
+      "drivablePrefixTotal": 46,
       "modalities": [
         "voice",
         "sight"
@@ -2539,6 +2501,44 @@
           "drivableLessonIds": [
             "IT-C17-testa",
             "IT-C17-mano"
+          ]
+        },
+        {
+          "chapter": 18,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C18-pensare",
+            "IT-C18-capire",
+            "IT-C18-leggere",
+            "IT-C18-scrivere"
+          ]
+        },
+        {
+          "chapter": 19,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C19-prendere",
+            "IT-C19-chiedere",
+            "IT-C19-aiutare",
+            "IT-C19-mi-piace"
           ]
         }
       ]
@@ -10629,110 +10629,6 @@
       "sourceHash": "fnv1a64:9e76b587bcf9af4a"
     },
     {
-      "id": "GE-C24-denken",
-      "language": "german",
-      "chapter": 24,
-      "sequence": 710,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a2a536fa10cc315c"
-    },
-    {
-      "id": "GE-C24-verstehen",
-      "language": "german",
-      "chapter": 24,
-      "sequence": 720,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d191bf8f3dd5ffe5"
-    },
-    {
-      "id": "GE-C24-lesen",
-      "language": "german",
-      "chapter": 24,
-      "sequence": 730,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6b1835f7b8149d89"
-    },
-    {
-      "id": "GE-C24-schreiben",
-      "language": "german",
-      "chapter": 24,
-      "sequence": 740,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0cecd7771b325637"
-    },
-    {
-      "id": "GE-C25-nehmen",
-      "language": "german",
-      "chapter": 25,
-      "sequence": 750,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c458e7582ab4184d"
-    },
-    {
-      "id": "GE-C25-fragen",
-      "language": "german",
-      "chapter": 25,
-      "sequence": 760,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d1b9b6a2b8bdc8ca"
-    },
-    {
-      "id": "GE-C25-helfen",
-      "language": "german",
-      "chapter": 25,
-      "sequence": 770,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2ea8944cb396d1cc"
-    },
-    {
-      "id": "GE-C25-moegen-lieben",
-      "language": "german",
-      "chapter": 25,
-      "sequence": 780,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:dc777dd3f6fad6ed"
-    },
-    {
       "id": "GU-C01-aabhaar",
       "language": "gujarati",
       "chapter": 1,
@@ -13103,6 +12999,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:a462acace3a0153a"
+    },
+    {
+      "id": "IT-C18-pensare",
+      "language": "italian",
+      "chapter": 18,
+      "sequence": 590,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7fe3dd46f267ece"
+    },
+    {
+      "id": "IT-C18-capire",
+      "language": "italian",
+      "chapter": 18,
+      "sequence": 600,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78085442ef080abe"
+    },
+    {
+      "id": "IT-C18-leggere",
+      "language": "italian",
+      "chapter": 18,
+      "sequence": 610,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54e3ea7bdb0badc0"
+    },
+    {
+      "id": "IT-C18-scrivere",
+      "language": "italian",
+      "chapter": 18,
+      "sequence": 620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf241d48b4032ad6"
+    },
+    {
+      "id": "IT-C19-prendere",
+      "language": "italian",
+      "chapter": 19,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a26fc49607ec8fe5"
+    },
+    {
+      "id": "IT-C19-chiedere",
+      "language": "italian",
+      "chapter": 19,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1a4a8184e67d693"
+    },
+    {
+      "id": "IT-C19-aiutare",
+      "language": "italian",
+      "chapter": 19,
+      "sequence": 650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbbeb0b530219e69"
+    },
+    {
+      "id": "IT-C19-mi-piace",
+      "language": "italian",
+      "chapter": 19,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:659830f6ba3b9926"
     },
     {
       "id": "JA-C01-hai",

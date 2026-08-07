@@ -2357,6 +2357,40 @@
       "jsonHash": "fnv1a64:923f8a8b4fc53e91"
     },
     {
+      "language": "italian",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:e6760761fdd366e9",
+      "lessonIds": [
+        "IT-C18-pensare",
+        "IT-C18-capire",
+        "IT-C18-leggere",
+        "IT-C18-scrivere"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch18.txt",
+      "json": "italian/narration/ch18.json",
+      "textHash": "fnv1a64:51c0fd04024c453b",
+      "jsonHash": "fnv1a64:1ff75a95046ef0ae"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:f337de5f22901d82",
+      "lessonIds": [
+        "IT-C19-prendere",
+        "IT-C19-chiedere",
+        "IT-C19-aiutare",
+        "IT-C19-mi-piace"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch19.txt",
+      "json": "italian/narration/ch19.json",
+      "textHash": "fnv1a64:15d2d42ad6328b16",
+      "jsonHash": "fnv1a64:adae5d2fccabffe0"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:edad54370036a969",

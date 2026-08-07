@@ -960,6 +960,30 @@
       "tex": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "italian",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:e6760761fdd366e9",
+      "lessonIds": [
+        "IT-C18-pensare",
+        "IT-C18-capire",
+        "IT-C18-leggere",
+        "IT-C18-scrivere"
+      ],
+      "tex": "italian/book/chapters/ch18-mind-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:f337de5f22901d82",
+      "lessonIds": [
+        "IT-C19-prendere",
+        "IT-C19-chiedere",
+        "IT-C19-aiutare",
+        "IT-C19-mi-piace"
+      ],
+      "tex": "italian/book/chapters/ch19-backwards-verb.tex"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:edad54370036a969",

@@ -277,6 +277,32 @@
         "IT-EXT-021-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "IT-PATH-022",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "IT-C18-pensare",
+        "IT-C18-capire",
+        "IT-C18-leggere",
+        "IT-C18-scrivere"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-023",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "IT-C19-prendere",
+        "IT-C19-chiedere",
+        "IT-C19-aiutare",
+        "IT-C19-mi-piace"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -403,7 +429,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "IT-PATH-011"
+        "IT-PATH-011",
+        "IT-PATH-022",
+        "IT-PATH-023"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -414,14 +442,9 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -434,14 +457,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {
         "VERB-HAVE": "SPINE-EXCHANGE-NAMES",

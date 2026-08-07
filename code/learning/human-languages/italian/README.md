@@ -23,13 +23,16 @@ your slave" (← Latin *sclavus*, English *slave*/*Slav*).
   il/la/lo (gender), giorno, buongiorno, sera/buonasera, notte/buonanotte,
   grazie, practice. Hand-authored in the book and still readable as legacy
   curriculum content.
-- **Chapters 2–17**: 49 prerequisite-ordered lessons move from wellbeing and
+- **Chapters 2–19**: 57 prerequisite-ordered lessons move from wellbeing and
   introductions through farewells, the first verbs, numbers, calendar and time,
-  family, food, colours, age, two pasts, *essere/andare*, and the body.
+  family, food, colours, age, two pasts, *essere/andare*, the body, and the two
+  core-verb chapters — the four verbs of the mind (*pensare*, *capire*,
+  *leggere*, *scrivere*) and the taking/asking/helping set that ends on
+  *mi piace*, the verb built backwards.
 
 ## Book
 
-Chapters 2–17 are generated from the canonical lessons by `npm run
+Chapters 2–19 are generated from the canonical lessons by `npm run
 generate:books` in the `human-language-data` package; do not edit those chapter
 files by hand.
 
@@ -49,15 +52,26 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–17** are authored, which is every Italian chapter that owns a
+Chapters **2–19** are authored, which is every Italian chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05
 gap report exists to measure. That absence is tracked debt.
 
 Chapters 2–5 end in a terminal `practice-mix`, which is the payoff. Chapters
-6–17 have none, so the payoff is the chapter's last lesson by sequence — the one
+6–19 have none, so the payoff is the chapter's last lesson by sequence — the one
 carrying its recombination and wrap-up recall.
+
+Chapters 18 and 19 also do what HL09 §7 asks and most of the corpus does not:
+their payoffs assess atoms from **earlier** chapters as well as their own.
+Chapter 18's payoff (*scrivere*) re-practises Chapter 5's *-are* present,
+Chapter 15's *passato prossimo*, Chapter 6's *-ct-* → *-tt-* sound-law and
+Chapter 17's *mano*; Chapter 19's (*mi piace*) re-practises Chapter 3's
+*piacere* and *mi chiamo*, Chapter 9's *stagioni*, Chapter 11's *vino* and
+Chapter 18's *leggere* and *capire*. Measured on the committed corpus, none of
+the 23 atoms these two chapters introduce misses a reinforcement window, only
+three are never revisited (the three the track's final lesson introduces, which
+nothing later can reach), and neither chapter makes a forward reference.
 
 ## Files
 
