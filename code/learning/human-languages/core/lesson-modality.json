@@ -10,16 +10,16 @@
   "sourceHash": "fnv1a64:7cb7266d729326a4",
   "summary": {
     "totalLessons": 1206,
-    "voice": 798,
-    "sight": 355,
+    "voice": 805,
+    "sight": 348,
     "pen": 53,
-    "drivableLessons": 798,
-    "drivablePercent": 66,
+    "drivableLessons": 805,
+    "drivablePercent": 67,
     "trackCount": 22,
     "chapterCount": 391,
-    "drivablePrefixTotal": 627,
-    "fullyDrivableChapters": 265,
-    "unstartableChapters": 92,
+    "drivablePrefixTotal": 636,
+    "fullyDrivableChapters": 267,
+    "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -529,10 +529,10 @@
     {
       "language": "bengali",
       "lessonCount": 37,
-      "voice": 13,
-      "sight": 24,
+      "voice": 14,
+      "sight": 23,
       "pen": 0,
-      "drivablePercent": 35,
+      "drivablePercent": 38,
       "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
@@ -587,8 +587,8 @@
         {
           "chapter": 4,
           "lessonCount": 5,
-          "voice": 1,
-          "sight": 4,
+          "voice": 2,
+          "sight": 3,
           "pen": 0,
           "modalities": [
             "voice",
@@ -1520,10 +1520,10 @@
     {
       "language": "gujarati",
       "lessonCount": 39,
-      "voice": 16,
-      "sight": 23,
+      "voice": 17,
+      "sight": 22,
       "pen": 0,
-      "drivablePercent": 41,
+      "drivablePercent": 44,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -1578,8 +1578,8 @@
         {
           "chapter": 4,
           "lessonCount": 5,
-          "voice": 1,
-          "sight": 4,
+          "voice": 2,
+          "sight": 3,
           "pen": 0,
           "modalities": [
             "voice",
@@ -1648,10 +1648,10 @@
     {
       "language": "hindi",
       "lessonCount": 85,
-      "voice": 48,
-      "sight": 26,
+      "voice": 49,
+      "sight": 25,
       "pen": 11,
-      "drivablePercent": 56,
+      "drivablePercent": 58,
       "drivablePrefixTotal": 38,
       "modalities": [
         "voice",
@@ -1709,8 +1709,8 @@
         {
           "chapter": 4,
           "lessonCount": 6,
-          "voice": 1,
-          "sight": 5,
+          "voice": 2,
+          "sight": 4,
           "pen": 0,
           "modalities": [
             "voice",
@@ -4786,10 +4786,10 @@
     {
       "language": "punjabi",
       "lessonCount": 33,
-      "voice": 10,
-      "sight": 23,
+      "voice": 11,
+      "sight": 22,
       "pen": 0,
-      "drivablePercent": 30,
+      "drivablePercent": 33,
       "drivablePrefixTotal": 2,
       "modalities": [
         "voice",
@@ -4844,8 +4844,8 @@
         {
           "chapter": 4,
           "lessonCount": 5,
-          "voice": 1,
-          "sight": 4,
+          "voice": 2,
+          "sight": 3,
           "pen": 0,
           "modalities": [
             "voice",
@@ -5075,11 +5075,11 @@
     {
       "language": "spanish",
       "lessonCount": 146,
-      "voice": 118,
-      "sight": 21,
+      "voice": 121,
+      "sight": 18,
       "pen": 7,
-      "drivablePercent": 81,
-      "drivablePrefixTotal": 92,
+      "drivablePercent": 83,
+      "drivablePrefixTotal": 101,
       "modalities": [
         "voice",
         "sight",
@@ -5180,17 +5180,24 @@
         {
           "chapter": 5,
           "lessonCount": 7,
-          "voice": 6,
-          "sight": 1,
+          "voice": 7,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "ES-C05-adios",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 7,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C05-adios",
+            "ES-C05-hasta",
+            "ES-C05-hasta-limits",
+            "ES-C05-hasta-luego",
+            "ES-C05-hasta-manana",
+            "ES-C05-hasta-pronto",
+            "ES-C05-practice"
+          ]
         },
         {
           "chapter": 6,
@@ -5231,21 +5238,21 @@
         {
           "chapter": 8,
           "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": "ES-C08-tener",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "ES-C08-cuantos-anos",
             "ES-C08-numeros-1-5",
             "ES-C08-numeros-6-10",
-            "ES-C08-practice"
+            "ES-C08-practice",
+            "ES-C08-tener"
           ]
         },
         {
@@ -5356,16 +5363,19 @@
         {
           "chapter": 15,
           "lessonCount": 3,
-          "voice": 0,
-          "sight": 3,
+          "voice": 1,
+          "sight": 2,
           "pen": 0,
           "modalities": [
+            "voice",
             "sight"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "ES-C15-comer-vivir-preterite",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "ES-C15-practice",
           "drivable": false,
-          "drivableLessonIds": []
+          "drivableLessonIds": [
+            "ES-C15-comer-vivir-preterite"
+          ]
         },
         {
           "chapter": 16,
@@ -8204,11 +8214,11 @@
       "language": "bengali",
       "chapter": 4,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:4cfb9c1b606ded5f"
     },
@@ -10734,11 +10744,11 @@
       "language": "gujarati",
       "chapter": 4,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:0c080b0034a7e8c2"
     },
@@ -11412,11 +11422,11 @@
       "language": "hindi",
       "chapter": 4,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:3f48527045e33a5d"
     },
@@ -15034,7 +15044,6 @@
       "derived": "sight",
       "drivable": false,
       "reasons": [
-        "sight-cue",
         "wide-table"
       ],
       "sourceHash": "fnv1a64:fdd67cc65bed0e4b"
@@ -17438,11 +17447,11 @@
       "language": "punjabi",
       "chapter": 4,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:5661e05e766f61d3"
     },
@@ -18891,11 +18900,11 @@
       "language": "spanish",
       "chapter": 5,
       "sequence": 380,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:6a680cbb31975a8e"
     },
@@ -19230,11 +19239,11 @@
       "language": "spanish",
       "chapter": 8,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:73eb2365c48ed0d8"
     },
@@ -19568,11 +19577,11 @@
       "language": "spanish",
       "chapter": 15,
       "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:16ca99df1a1c073e"
     },

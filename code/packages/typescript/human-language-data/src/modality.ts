@@ -461,7 +461,33 @@ export function widestTableColumns(text: string): number {
 /** Which {@link SIGHT_CUES} appear in the text, in list order. */
 export function matchedSightCues(text: string): string[] {
   const haystack = text.toLowerCase();
-  return SIGHT_CUES.filter((cue) => haystack.includes(cue));
+  // WORD BOUNDARIES, NOT BARE SUBSTRINGS.
+  //
+  // This used `haystack.includes(cue)`, which fires on any occurrence anywhere. Two
+  // consequences, both observed while authoring the Dravidian tracks:
+  //
+  //   * `column` matched "a whole column of the family table" — prose ABOUT a cousin
+  //     list, needing no eyes — and the author rewrote correct writing to appease it.
+  //   * `look at` matched the gloss "to see, to look at" inside a vocabulary entry, and
+  //     silently flipped a lesson to `sight`.
+  //
+  // A cue is meant to catch an instruction to the reader ("look at the chart"), not
+  // every appearance of the word. Word-boundary matching keeps the instruction and drops
+  // the mention: `column` no longer fires inside `columns` or mid-word, and a cue must
+  // stand as its own words.
+  //
+  // This is deliberately still a blunt instrument — it cannot tell "look at the chart"
+  // from "you do not need to look at anything" — and it is meant to be. The pin in
+  // `modality-manifest.test.ts` is what catches a detector that stops detecting; the
+  // cost of a false NEGATIVE (a lesson wrongly advertised as drivable) is a driver being
+  // told to look at something at speed, so the bias stays toward over-reporting.
+  // Every cue is plain lowercase letters and spaces (asserted in the tests), so it can go
+  // straight into a pattern with no escaping. A cue containing a regex metacharacter would
+  // be a silent behaviour change, which is why the test pins the alphabet rather than
+  // trusting the list to stay tame.
+  return SIGHT_CUES.filter((cue) =>
+    new RegExp(`(^|[^a-z])${cue}([^a-z]|$)`).test(haystack),
+  );
 }
 
 // ---------------------------------------------------------------------------

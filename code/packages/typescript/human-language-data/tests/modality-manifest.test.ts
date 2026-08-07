@@ -705,24 +705,28 @@ describe("corpus regression", () => {
   // detachable sections aside, so the driving edition reads 1,026 lessons (86%), above
   // the 84% that stood before the reclassification. This snapshot is the book's number;
   // `modality.test.ts` asserts the core relationship.
+  // Sight cues then moved to word-boundary matching: voice 798 -> 805, sight 355 -> 348.
+  // Seven lessons had been marked `sight` by a cue matching INSIDE a longer word
+  // (`columns` matching `column`). No lesson lost a real cue — the control assertions in
+  // `modality.test.ts` pin that instructions still fire.
   it("pins the corpus summary the manifest publishes", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
       totalLessons: 1206,
-      voice: 798,
-      sight: 355,
+      voice: 805,
+      sight: 348,
       pen: 53,
-      drivableLessons: 798,
-      drivablePercent: 66,
+      drivableLessons: 805,
+      drivablePercent: 67,
       trackCount: 22,
       chapterCount: 391,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 627,
-      fullyDrivableChapters: 265,
-      unstartableChapters: 92,
+      drivablePrefixTotal: 636,
+      fullyDrivableChapters: 267,
+      unstartableChapters: 90,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

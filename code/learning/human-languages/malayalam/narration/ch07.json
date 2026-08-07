@@ -184,20 +184,18 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue",
         "wide-table"
       ],
       "sourceHash": "fnv1a64:fdd67cc65bed0e4b",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down",
           "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
           "You'll want to know"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
