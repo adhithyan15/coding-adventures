@@ -162,6 +162,35 @@ describe("the derivation itself", () => {
   });
 });
 
+describe("sight cues match words, not substrings", () => {
+  it("no longer fires inside a longer word", () => {
+    // `column` used to match `columns`, `the table` used to match `the tables`. Seven
+    // corpus lessons were marked `sight` on matches like these.
+    expect(matchedSightCues("the columns of a temple")).toEqual([]);
+    expect(matchedSightCues("overlooked")).toEqual([]);
+  });
+
+  it("CONTROL: still fires on a real instruction", () => {
+    // The cue exists to catch an instruction to the reader. Boundary matching must not
+    // blunt that — a false NEGATIVE tells a driver at speed to look at a chart.
+    expect(matchedSightCues("Now look at the two forms")).toContain("look at");
+    expect(matchedSightCues("see the chart below")).toContain("see the");
+  });
+
+  it("does NOT distinguish a mention from an instruction, and that is known", () => {
+    // Honest limit. "a whole column of the family table" needs no eyes, and this still
+    // flags it, because `column` stands there as its own word. Telling a mention from an
+    // instruction is a semantic problem this lexical scan cannot solve, and the cost
+    // asymmetry says to keep over-reporting: a lesson wrongly called drivable is worse
+    // than one wrongly called sight. Recorded so the next author knows it is a decision.
+    expect(matchedSightCues("a whole column of the family table")).toContain("column");
+  });
+
+  it("keeps every cue plain lowercase, since they go into a pattern unescaped", () => {
+    for (const cue of SIGHT_CUES) expect(cue).toMatch(/^[a-z ]+$/);
+  });
+});
+
 describe("monotonicity", () => {
   it("orders the channels weakest to strongest", () => {
     expect(MODALITIES).toEqual(["voice", "sight", "pen"]);
