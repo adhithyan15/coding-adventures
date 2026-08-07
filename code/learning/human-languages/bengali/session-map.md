@@ -80,6 +80,24 @@ letters that word needs.
 | 36 | dekha | দেখা | "to see" ← √dṛś → **dragon**; vowel harmony, *dekhi* vs *dækhe* |
 | 37 | jana | জানা | "to know" ← √jñā → **know**; জানা facts vs চেনা people |
 
+## Chapter 8 — The Mind and the Page
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 38 | bhaba | ভাবা | "to think" ← *bhāvayati*, the causative of হওয়া's √bhū |
+| 39 | bojha | বোঝা | "to understand" ← √budh → **Buddha**, **bid**; বুঝি vs বোঝে |
+| 40 | pora | পড়া | "to read" ← √paṭh; the flap **ড়**, and √pat's twin → **feather** |
+| 41 | lekha | লেখা | "to write" ← √likh "scratch"; every **-া** form is also a noun |
+
+## Chapter 9 — Taking, Asking, Helping, Liking
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 42 | neowa | নেওয়া | "to take" ← √nī (no English cousin); নিয়ে আসা = "bring" |
+| 43 | jijnasa-kora | জিজ্ঞাসা করা | "to ask" — the desiderative of √jñā; noun + করা |
+| 44 | sahajjo-kora | সাহায্য করা | "to help" ← *saha* "together" + √i "go"; the final inherent **o** |
+| 45 | bhalo-laga | ভালো লাগা | "to like" ← √lag "stick" — *āmār bhālo lāge*; vs ভালোবাসা |
+
 ## Next
 
-Chapter 8 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.
+Chapter 10 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.

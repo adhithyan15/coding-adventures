@@ -2245,6 +2245,24 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:bn-mind-and-page",
+      "output": "bengali/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:bn-conjunct-verbs",
+      "output": "bengali/book/chapters/ch09-conjunct-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "title": "Numbers One to Five",
