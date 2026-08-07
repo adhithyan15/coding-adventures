@@ -6656,6 +6656,40 @@
       "jsonHash": "fnv1a64:9e5d5fc5ed77709f"
     },
     {
+      "language": "telugu",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:2d798654b223c361",
+      "lessonIds": [
+        "TE-C33-anuko",
+        "TE-C33-artham-cesuko",
+        "TE-C33-caduvu",
+        "TE-C33-raayu"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "telugu/narration/ch33.txt",
+      "json": "telugu/narration/ch33.json",
+      "textHash": "fnv1a64:ae0b5efaa850cd94",
+      "jsonHash": "fnv1a64:63b0a95f4c9d0c6a"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:da73c64bbe941924",
+      "lessonIds": [
+        "TE-C34-tiisuko",
+        "TE-C34-adugu",
+        "TE-C34-sahayam-ceyu",
+        "TE-C34-ishtam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "telugu/narration/ch34.txt",
+      "json": "telugu/narration/ch34.json",
+      "textHash": "fnv1a64:22af753b560ce5b7",
+      "jsonHash": "fnv1a64:22d9823170cba8e0"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",

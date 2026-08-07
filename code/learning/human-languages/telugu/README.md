@@ -29,6 +29,18 @@ pieces taught before the whole; and a book you can read straight through.
   one from the separate verb *lē-* (where all three sisters negate on the shared
   *il-*); and **తెలుసు** carries no person-ending at all, so the knower moves
   into the dative — *nāku telusu*, "to me it is known."
+- **The ending that hands a verb back to its doer.** Chapters 33–34 build three
+  verbs on **-కొను / -కో**: *anukō* is "say it **to yourself**" (so Telugu's
+  native word for thinking is transparent), *arthaṁ cēsukō* is "make the meaning
+  **your own**," and *tīsukō* is "pull it out **for yourself**." The ending is
+  not Telugu's alone — Tamil **கொள்** and Malayalam **കൊള്ളുക** are the same
+  verb doing the same job.
+- **Why Telugu keeps going its own way — finally named.** The track had
+  recorded the symptom five times (*lēdu* against *il-*, *uṇḍu* against *iru*,
+  *enimidi*/*tommidi* against *eṭṭu*/*oṉpatu*). Chapter 34's **అడుగు** names the
+  cause: Telugu is **South-Central Dravidian**, with Gondi, Konda, Kui and Kuvi,
+  while Tamil, Kannada and Malayalam are **South Dravidian**. One branch away on
+  the tree, nearest neighbour on the map.
 
 ## Progress
 
@@ -61,6 +73,20 @@ pieces taught before the whole; and a book you can read straight through.
   track's four verbs all sat under Telugu-only tags (`TE-VERB-UNDU`,
   `TE-VERB-VELLU`, …), which join nothing across languages, so Telugu covered
   **zero** of the canonical forty. It now covers six. In the book.
+- **Chapter 33 — Four Verbs of the Mind** ([`lessons/TE-C33-*`](./lessons/)):
+  anukō (think) → arthaṁ cēsukō (understand) → caduvu (read) → rāyu (write),
+  under `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`, `VERB-WRITE`. The **-కో**
+  ending, the dative *nāku arthamaindi* beside *nēnu arthaṁ cēsukuṇṭānu*, the
+  one stem wearing three middle vowels (*caduvutānu* / *cadivānu* /
+  *cadavaṇḍi*), and *vrāyu*'s buried *v* leading back to a Dravidian
+  "draw a line" shared with Tamil *varai* and Kannada *bare*. In the book.
+- **Chapter 34 — Four Verbs Between People** ([`lessons/TE-C34-*`](./lessons/)):
+  tīsukō (take) → aḍugu (ask) → sahāyaṁ cēyu (help) → nāku telugu iṣṭaṁ (like),
+  under `VERB-TAKE`, `VERB-ASK`, `VERB-HELP`, `VERB-LIKE-LOVE`. Telugu's branch
+  named, *sahāya* taken apart into "a going with somebody," and a like-sentence
+  with **no verb in it at all** — the fourth dative-subject sentence the track
+  has built, and the sixth language in the corpus to build liking backwards.
+  Telugu now covers **14 of the canonical 40**. In the book.
 
 ---
 
@@ -118,7 +144,7 @@ Two things are worth knowing when that source turns up:
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Telugu font
 (`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. A forced build produces 95 visually
+and in CI, no system-font dependency. A forced build produces 120 visually
 inspected pages with zero missing glyphs, layout warnings, duplicate
 destinations, bookmark warnings, or font warnings.
 `latexmk -xelatex book.tex`.
