@@ -20,6 +20,14 @@
   `min_builtin_picks_the_first_argument_when_it_is_smaller`, `max_wrong_arity_is_a_clean_error`,
   `min_wrong_arity_is_a_clean_error`; `every_reserved_name_is_really_dispatched_by_the_runtime` and
   the `RUNTIME_BUILTIN_FORMULAS` sortedness test extended to cover `max`/`min`.
+- `mod`/`max`/`min` share ONE `expand_rec` dispatch block (one `a`/`b` local pair) instead of three
+  near-duplicate ones, since all three take exactly two arguments and expand identically. Not just
+  tidiness: three separate blocks each contributed their own `ExprAst` locals to `expand_rec`'s
+  debug-build stack frame, and macOS CI caught the regression directly — `deep_operator_spine_
+  trips_the_nesting_guard_not_the_stack` (a test asserting `FORMULA_MAX_NODE_DEPTH`'s depth guard
+  trips before the native stack does) overflowed the runner's ~2 MiB worker-thread stack a few
+  frames short of the guard, passing on Linux/Windows but not macOS. Sharing the locals restores
+  the same per-call frame footprint `mod` alone had before this release.
 
 ## [0.74.0] - 2026-08-06 - `symbolic … for <var>`: rung-0 of the CAS-wiring rung (FL-10)
 

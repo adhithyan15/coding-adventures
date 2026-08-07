@@ -3338,11 +3338,26 @@ fn expand_rec(
                 let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::Floor(Box::new(value)));
             }
-            // FL-9 built-in: `mod(a, b)` — the remainder of `a` divided by `b`, carrying
-            // the sign of the dividend. Recognised by NAME here; maps onto the EXISTING
-            // `ExprAst::Bin(ArithOp::Mod, …)` node — the same one the `latex "…"`
-            // frontend already reaches for `a \bmod b`. Exactly two arguments.
-            if name == "mod" {
+            // FL-9/FL-11 built-ins: `mod(a, b)`, `max(a, b)`, `min(a, b)` — all three take
+            // exactly two arguments and expand identically (expand both, wrap in the
+            // built-in's own binary node), so they share ONE `if` block and one pair of
+            // `a`/`b` locals rather than three near-duplicate blocks. This isn't just
+            // tidiness: `expand_rec` recurses one native stack frame per AST level (see
+            // [`FORMULA_MAX_NODE_DEPTH`]'s doc comment on how tight that margin already
+            // is), and three separate blocks would each contribute their own `a`/`b`
+            // bindings to this function's debug-build stack frame — measured to trip a
+            // macOS CI runner's default ~2 MiB worker-thread stack a few AST levels short
+            // of the depth guard on `deep_operator_spine_trips_the_nesting_guard_not_the_
+            // stack`. Sharing the locals keeps this function's frame the same size adding
+            // `max`/`min` as it was with `mod` alone.
+            // `mod` maps onto the EXISTING `ExprAst::Bin(ArithOp::Mod, …)` node; `max`/`min`
+            // onto the EXISTING `ExprAst::Call2(BinFn::Max/Min, …)` node — the same nodes
+            // the `latex "…"` frontend already reaches for `a \bmod b`/`\max(a, b)`/
+            // `\min(a, b)`. The plain grammar's `agg` production already claims the
+            // ONE-argument shape of `max`/`min` (`max(slot)`, largest observed value of a
+            // slot); this only ever fires for the two-argument shape `agg` cannot produce,
+            // so there is no ambiguity to resolve.
+            if name == "mod" || name == "max" || name == "min" {
                 if args.len() != 2 {
                     return Err(LowerError::FormulaArity {
                         formula: name.clone(),
@@ -3352,41 +3367,11 @@ fn expand_rec(
                 }
                 let a = expand_rec(&args[0], context, depth, state, d)?;
                 let b = expand_rec(&args[1], context, depth, state, d)?;
-                return Ok(ExprAst::Bin(ArithOp::Mod, Box::new(a), Box::new(b)));
-            }
-            // FL-11 built-in: `max(a, b)` — the larger of two named quantities. Recognised
-            // by NAME here; maps onto the EXISTING `ExprAst::Call2(BinFn::Max, …)` node —
-            // the same one the `latex "…"` frontend already reaches for `\max(a, b)`. The
-            // plain grammar's `agg` production already claims the ONE-argument shape
-            // (`max(slot)`, largest observed value of a slot); this only ever fires for the
-            // two-argument shape `agg` cannot produce, so there is no ambiguity to resolve.
-            // Exactly two arguments.
-            if name == "max" {
-                if args.len() != 2 {
-                    return Err(LowerError::FormulaArity {
-                        formula: name.clone(),
-                        expected: 2,
-                        got: args.len(),
-                    });
-                }
-                let a = expand_rec(&args[0], context, depth, state, d)?;
-                let b = expand_rec(&args[1], context, depth, state, d)?;
-                return Ok(ExprAst::Call2(BinFn::Max, Box::new(a), Box::new(b)));
-            }
-            // FL-11 built-in: `min(a, b)` — the smaller of two named quantities. Mirrors
-            // `max(a, b)` above; maps onto the EXISTING `ExprAst::Call2(BinFn::Min, …)` node.
-            // Exactly two arguments.
-            if name == "min" {
-                if args.len() != 2 {
-                    return Err(LowerError::FormulaArity {
-                        formula: name.clone(),
-                        expected: 2,
-                        got: args.len(),
-                    });
-                }
-                let a = expand_rec(&args[0], context, depth, state, d)?;
-                let b = expand_rec(&args[1], context, depth, state, d)?;
-                return Ok(ExprAst::Call2(BinFn::Min, Box::new(a), Box::new(b)));
+                return Ok(match name.as_str() {
+                    "mod" => ExprAst::Bin(ArithOp::Mod, Box::new(a), Box::new(b)),
+                    "max" => ExprAst::Call2(BinFn::Max, Box::new(a), Box::new(b)),
+                    _ => ExprAst::Call2(BinFn::Min, Box::new(a), Box::new(b)),
+                });
             }
             // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
             // rendering. Recognised by NAME here, before the user-formula lookup, on the
