@@ -510,6 +510,20 @@
       "output": "french/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "french",
+      "chapter": 24,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:fr-taking-asking-helping-loving",
+      "output": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "title": "Verbs of the Mind",
+      "label": "ch:fr-verbs-of-the-mind",
+      "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "title": "Head and Hand",

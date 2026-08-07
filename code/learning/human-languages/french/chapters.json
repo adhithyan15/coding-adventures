@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "french",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-23 are authored — they are the seven French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-25 are authored — they are the French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses. Chapters 24 and 25 likewise have no terminal practice-mix, so their payoff is the chapter's last lesson by sequence — which is where the recombination and wrap-up recall actually live, and where each of the two reaches back past its own chapter to re-practise atoms taught earlier in the track (HL09 §7).",
   "chapters": [
     {
       "chapter": 17,
@@ -125,6 +125,55 @@
           "FR-LEX-JAUNE-04",
           "FR-ETYMON-JAUNE-05",
           "FR-EVIDENCE-JAUNE-GELB-06"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:fr-taking-asking-helping-loving",
+      "canDo": "I can say that I take, ask, help and like or love in French, break prendre's stem the way its plural requires, and know that je t'aime bien is weaker than je t'aime rather than stronger.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "FR-C24-aimer",
+        "kind": "task",
+        "summary": "Run the chapter's four verbs together with je — je prends, je demande, j'aide, j'aime — then turn aimer over: one verb covers like and love, the thing named decides which, and adding bien downgrades it. Reaches back past the chapter to re-say le chien and le chat from Chapter 22, le vert from Chapter 23, and the s'il vous plaît request from Chapter 19.",
+        "assesses": [
+          "FR-LEX-PRENDRE-01",
+          "FR-LEX-DEMANDER-04",
+          "FR-LEX-AIDER-07",
+          "FR-ETYMON-AIDER-08",
+          "FR-LEX-AIMER-09",
+          "FR-ETYMON-AIMER-10",
+          "FR-PRAGMATICS-AIMER-BIEN-11",
+          "FR-LEX-CHIEN-02",
+          "FR-LEX-CHAT-04",
+          "FR-LEX-VERT-02",
+          "FR-LEX-PLEASE-02"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Verbs of the Mind",
+      "label": "ch:fr-verbs-of-the-mind",
+      "canDo": "I can say what I understand, think, read and write in French, and take comprendre apart into com- plus prendre — so understanding, in French, is grasping.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "FR-C25-ecrire",
+        "kind": "task",
+        "summary": "Say the chapter's four with je — je comprends, je pense, je lis, j'écris — and take écrire apart into scrībere 'to scratch' plus the propped-up é- that also made école and étoile. Reaches back past the chapter to la main and manus from Chapter 17, which meet écrire inside the single word manuscript, and to prendre and aimer from Chapter 24.",
+        "assesses": [
+          "FR-LEX-COMPRENDRE-01",
+          "FR-LEX-PENSER-04",
+          "FR-LEX-LIRE-06",
+          "FR-ETYMON-LIRE-07",
+          "FR-LEX-ECRIRE-08",
+          "FR-ETYMON-ECRIRE-09",
+          "FR-LEX-MAIN-02",
+          "FR-ETYMON-MAIN-04",
+          "FR-LEX-PRENDRE-01",
+          "FR-LEX-AIMER-09"
         ]
       }
     }
