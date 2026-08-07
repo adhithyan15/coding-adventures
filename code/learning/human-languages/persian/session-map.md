@@ -1,6 +1,6 @@
-# Persian Session Map — Authored Chapters 1–6
+# Persian Session Map — Authored Chapters 1–8
 
-This is the authoritative order for the twenty-five authored Persian lessons. Every
+This is the authoritative order for the thirty-three authored Persian lessons. Every
 lesson is an independent, prerequisite-safe step of three or four minutes. A
 study session may combine the new step with the reviews shown here, but it never
 turns the combined session into one indivisible lesson.
@@ -77,29 +77,54 @@ has to carry a paradigm. The present tense itself is deliberately later work.
 | **S24** | [`FA-C06-goftan`](./lessons/FA-C06-goftan.md): **گفتن** *goftan* | *khoshvaghtam* *(N+15)*; *khodâ* *(N+7)*; *budan* *(N+3)*; *âmadan* *(N+1)* | rebuild **goftogu** from its two stems |
 | **S25** | [`FA-C06-danestan`](./lessons/FA-C06-danestan.md): **دانستن** *dânestan* | Chapter 3 practice *(N+15)*; *hâfez* *(N+7)*; *raftan* *(N+3)*; *goftan* *(N+1)* | run all five infinitive-and-stem pairs from memory |
 
+## Chapter 7 — Four verbs of the mind
+
+Chapter 7 fills four sessions. Each session teaches one verb and, with it, one
+of the three shapes a Persian verb can take, so the shapes accumulate rather
+than arriving as a list.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S26** | [`FA-C07-fekr-kardan`](./lessons/FA-C07-fekr-kardan.md): **فکر کردن** *fekr kardan* | *hâl* *(N+15)*; *khodâ hâfez* *(N+7)*; *goftan* *(N+3)*; *dânestan* *(N+1)* | split a compound verb; say **kardan, kon-** |
+| **S27** | [`FA-C07-fahmidan`](./lessons/FA-C07-fahmidan.md): **فهمیدن** *fahmidan* | *chetor* *(N+15)*; Chapter 5 practice *(N+7)*; *dânestan* *(N+3)*; *fekr kardan* *(N+1)* | derive a stem by stripping *-idan*; sort Arabic loans from inherited words |
+| **S28** | [`FA-C07-khandan`](./lessons/FA-C07-khandan.md): **خواندن** *khândan* | the wellbeing question *(N+15)*; *budan* *(N+7)*; *fekr kardan* *(N+3)*; *fahmidan* *(N+1)* | read a word with a silent **و**; name the four jobs of one verb |
+| **S29** | [`FA-C07-neveshtan`](./lessons/FA-C07-neveshtan.md): **نوشتن** *neveshtan* | *khub* *(N+15)*; *raftan* *(N+7)*; *fahmidan* *(N+3)*; *khândan* *(N+1)* | run all nine infinitive-and-stem pairs from memory |
+
+## Chapter 8 — Taking, asking, helping, loving
+
+Chapter 8 fills four more sessions and closes the verb-shape argument by adding
+a second light verb, **داشتن** *dâshtan*, beside **کردن** *kardan*.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S30** | [`FA-C08-gereftan`](./lessons/FA-C08-gereftan.md): **گرفتن** *gereftan* | *khubam* *(N+15)*; *âmadan* *(N+7)*; *khândan* *(N+3)*; *neveshtan* *(N+1)* | hear **gereftan** against English **grab**; collect the inherited cousins |
+| **S31** | [`FA-C08-porsidan`](./lessons/FA-C08-porsidan.md): **پرسیدن** *porsidan* | Chapter 4 practice *(N+15)*; *goftan* *(N+7)*; *neveshtan* *(N+3)*; *gereftan* *(N+1)* | derive a second free stem; put the name question you already own |
+| **S32** | [`FA-C08-komak-kardan`](./lessons/FA-C08-komak-kardan.md): **کمک کردن** *komak kardan* | *khodâ* *(N+15)*; *dânestan* *(N+7)*; *gereftan* *(N+3)*; *porsidan* *(N+1)* | reuse *kardan* with a new noun; name the three vocabulary layers |
+| **S33** | [`FA-C08-dust-dashtan`](./lessons/FA-C08-dust-dashtan.md): **دوست داشتن** *dust dâshtan* | *hâfez* *(N+15)*; *fekr kardan* *(N+7)*; *porsidan* *(N+3)*; *komak kardan* *(N+1)* | run all thirteen verbs and sort them into the three shapes |
+
 ## Carry-forward review ledger
 
-Chapter 7 will supply the new lesson in these sessions. Until then, use
+Chapter 9 will supply the new lesson in these sessions. Until then, use
 the due item as a short retrieval session and fill the optional bonus queue only
 with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S26** | *hâl* *(N+15)*; *khodâ hâfez* *(N+7)* |
-| **S27** | *chetor* *(N+15)*; Chapter 5 practice *(N+7)* |
-| **S28** | the wellbeing question *(N+15)*; *budan* *(N+7)* |
-| **S29** | *khub* *(N+15)*; *raftan* *(N+7)* |
-| **S30** | *khubam* *(N+15)*; *âmadan* *(N+7)* |
-| **S31** | Chapter 4 practice *(N+15)*; *goftan* *(N+7)* |
-| **S32** | *khodâ* *(N+15)*; *dânestan* *(N+7)* |
-| **S33** | *hâfez* *(N+15)* |
-| **S34** | *khodâ hâfez* *(N+15)* |
-| **S35** | Chapter 5 practice *(N+15)* |
-| **S36** | *budan* *(N+15)* |
-| **S37** | *raftan* *(N+15)* |
-| **S38** | *âmadan* *(N+15)* |
-| **S39** | *goftan* *(N+15)* |
-| **S40** | *dânestan* *(N+15)* |
+| **S34** | *khodâ hâfez* *(N+15)*; *fahmidan* *(N+7)* |
+| **S35** | Chapter 5 practice *(N+15)*; *khândan* *(N+7)* |
+| **S36** | *budan* *(N+15)*; *neveshtan* *(N+7)* |
+| **S37** | *raftan* *(N+15)*; *gereftan* *(N+7)* |
+| **S38** | *âmadan* *(N+15)*; *porsidan* *(N+7)* |
+| **S39** | *goftan* *(N+15)*; *komak kardan* *(N+7)* |
+| **S40** | *dânestan* *(N+15)*; *dust dâshtan* *(N+7)* |
+| **S41** | *fekr kardan* *(N+15)* |
+| **S42** | *fahmidan* *(N+15)* |
+| **S43** | *khândan* *(N+15)* |
+| **S44** | *neveshtan* *(N+15)* |
+| **S45** | *gereftan* *(N+15)* |
+| **S46** | *porsidan* *(N+15)* |
+| **S47** | *komak kardan* *(N+15)* |
+| **S48** | *dust dâshtan* *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -110,7 +135,7 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–6 lesson now has all four fixed resurfacing sessions through
-S40. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. A future Chapter 7 can begin in S26 while this ledger continues
+Every Chapter 1–8 lesson now has all four fixed resurfacing sessions through
+S48. The app may pull a missed item forward, but it cannot skip the local
+prerequisites. A future Chapter 9 can begin in S34 while this ledger continues
 in the review portion of each session.

@@ -45,6 +45,10 @@ romanization once the Urdu form is familiar.
 | `urdu-question-mark` | recognize **؟** at the left end of a right-to-left question | **آپ کا نام کیا ہے؟** |
 | `be-vs-pe-dots` | count the dots under the shared low scoop: one below is **ب** *b*, three below are **پ** *p* | **بولنا** *bolnā* against **آپ** *āp* |
 | `geminate-nun` | hold the *n* long when two **ن** letters are written in a row | **جاننا** *jānnā* |
+| `che-vs-jim-dots` | count the dots below the *jīm* body: one is **ج** *j*, three are **چ** *ch* | **سوچنا** *sochnā* against **جانا** *jānā* |
+| `do-chashmi-he` | give **ھ** no sound of its own; let it aspirate the letter to its right | **سمجھنا** *samajhnā*, **لکھنا** *likhnā* |
+| `retroflex-flap-rre` | flick a curled-back tongue once for **ڑ**; do not roll it | **پڑھنا** *paṛhnā* |
+| `majhul-e` | read medial **ی** as long *e* where the learned word calls for it | **لینا** *lenā* |
 
 ## Shape families already in use
 
@@ -67,6 +71,18 @@ romanization once the Urdu form is familiar.
 - **جاننا** writes two **ن** letters in a row and pronounces both, which is the
   only thing separating it from **جانا** *jānā*. Nothing about the doubling is
   decorative: **جانا** is “to go” and **جاننا** is “to know.”
+- **چ** *ch* is the **ج** *j* body with **three dots below** instead of one — the
+  same dot-count contrast as **ب** against **پ**, on a second skeleton.
+- **ھ** is *do-chashmī he*, “two-eyed he.” It is never a consonant on its own;
+  it aspirates whatever letter stands to its right. **ٹھیک** used it first, and
+  **سمجھنا**, **پڑھنا**, **پوچھنا** and **لکھنا** use it again in **جھ**,
+  **ڑھ**, **چھ** and **کھ**. Keep it apart from round **ہ** *gol he*, which is
+  a real *h* and is the letter in **ہوں** and **ہونا**.
+- **ڑ** is **ر** *r* wearing the small retroflex mark that also rides on **ٹ**.
+  One diacritic, one instruction — curl the tongue back — now on two letters.
+- **ی** takes a **third** value in **لینا** *lenā*: a long *e*. With
+  consonantal *y* in **کیا** and long *ī* in **جی**, and broad final **ے**
+  beside it, the *ye* family covers *y*, *ī* and *e*; the learned word decides.
 
 ## The Persian-Arabic and Indo-Aryan layers
 

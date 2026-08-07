@@ -40,6 +40,8 @@ lessons will introduce them only when a useful word needs them.
 | `persian-question-mark` | recognize **؟** at the left end of a right-to-left question | **اسم شما چیست؟** |
 | `alef-madde` | read **آ** — alef under a wavy *madde* — as a word-initial long *â* | **آمدن** *âmadan* |
 | `persian-gaf` | read **گ** *gâf* as English *g* in “go”; it is a Persian addition to the Arabic set | **گفتن** *goftan* |
+| `persian-pe` | read **پ** *pe* as English *p*; a **ب** shape with three dots beneath, and the third of Persian's four additions | **پرسیدن** *porsidan* |
+| `silent-vav` | after **خ** and before **ا**, leave **و** unpronounced — it is written, never said | **خواندن** *khândan* |
 
 ## Read the current word before the whole alphabet
 

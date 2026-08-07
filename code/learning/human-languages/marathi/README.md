@@ -13,9 +13,11 @@ pieces taught before the whole; and a book you can read straight through.
   keeps **three** genders (Hindi has two), marks **gender on the verb** even in
   the present (*yeto* m. / *yete* f.), and has an **extra letter ळ** (retroflex
   *ḷ*) shared with the Dravidian south. Every word lesson teaches the letters
-  its own word needs, inline — schema-v1 chapters under *"The letters in this
-  word"*, schema-v2 chapters under *"Sounds you'll need"*, which is what keeps
-  those lessons drivable. A reader who knows Devanagari skims either.
+  its own word needs, inline, under *"The letters in this word"* — the canonical
+  heading, which the tooling treats as a **detachable** section, so a hands-free
+  renderer may skip it and the lesson still counts as drivable. (Chapter 7 uses
+  *"Sounds you'll need"* instead; see the CHANGELOG for why that is a workaround
+  rather than a convention.) A reader who knows Devanagari skims either.
 - **Grounded against English + Sanskrit**, with the wider Indo-European family
   drawn in where it reaches (*nāhī* ← PIE *\*ne*, English *no*).
 
@@ -42,10 +44,28 @@ pieces taught before the whole; and a book you can read straight through.
   third gender Hindi lost); *paś-* as Indo-European *\*spek-*, cousin of
   *spectacle* and *spy*; and knowledge in the dative — *malā māhīt āhe*, "to me
   known is."
+- **Chapter 8 — The Mind and the Page** ([`lessons/MR-C08-*`](./lessons/)):
+  vichār karṇe, samajṇe, vāchṇe, lihiṇe. Four roots that meant something
+  physical first — *car-* "to turn" (Indo-European *\*kʷelh₁-*, behind **wheel**
+  and **cycle**), *budh-* "to wake" (which named the **Buddha**), *vac-* "to
+  speak" (Latin *vōx*, English **voice**), and *likh-* "to scratch," beside
+  Latin *scrībere* and English *write*, which named writing the same way.
+  **समजणे** takes the dative, so *malā marāṭhī samajte* stands beside Chapter
+  7's *malā marāṭhī yete*.
+- **Chapter 9 — Taking, Asking, Helping, Liking**
+  ([`lessons/MR-C09-*`](./lessons/)): gheṇe, vichārṇe, madat karṇe, āvaḍṇe.
+  **घेणे** is the verb hiding inside Chapter 4's *kāḷjī ghyā*, on Sanskrit
+  **ग्रह्** — Vedic *grabh*, which is English **grab**. **विचारणे** is
+  Chapter 8's **विचार** with an infinitive ending, so in Marathi thinking and
+  asking are one word. **मदत** is Arabic *madad* through Persian, the same
+  Deccan layer as **माहीत**. And **आवडणे** is native, with no securely
+  established Sanskrit ancestor, where Hindi and Urdu use the Persian loan
+  *pasand* — it makes *malā marāṭhī āvaḍte* the third sentence on one frame.
 
-Chapters 1–7 are in the book. Chapters 6 and 7 are schema v2, and Chapter 7 is
-**fully drivable** — all six lessons derive as `voice`, so the whole chapter can
-be done by ear.
+Chapters 1–9 are in the book. Chapters 6–9 are schema v2. Chapter 7 is `voice`
+at full modality; Chapters 8 and 9 derive as `sight` because each lesson carries
+a *"The letters in this word"* section — but that section is **detachable**, so
+all eight lessons are `coreVoice` and the two chapters are fully drivable by ear.
 
 ---
 
@@ -73,6 +93,20 @@ first-person can-do sentence and the lesson that pays it off.
   āhe* and *malā marāṭhī yete*, which put the knower in the dative, agree the
   verb with **मराठी** rather than the speaker, and close on **आहे**. It assesses
   7 of the chapter's 12 introduced atoms (0.58, above the 0.5 floor).
+- **Chapter 8** — *"I can say that I think, understand, read and write in
+  Marathi, put the understander in the dative where Marathi puts it, and name
+  what each of the four roots meant before it meant a mental act."* Payoff:
+  [`MR-C08-lihine`](./lessons/MR-C08-lihine.md), a production task — write your
+  own name, run the four verbs and their four root meanings back, and pick out
+  the one that refuses **मी**. It assesses **8 of the chapter's 8** introduced
+  atoms (1.00).
+- **Chapter 9** — *"I can take, ask, help and say what I like and what I love in
+  Marathi, build a fresh verb by putting करणे behind a noun, and say why मला
+  मराठी आवडते has no room for me as its subject."* Payoff:
+  [`MR-C09-avadne`](./lessons/MR-C09-avadne.md), a production task — *malā
+  marāṭhī āvaḍte* beside *mī prem karto*, and both beside *malā marāṭhī yete*
+  and *malā marāṭhī samajte*, so one frame carries three meanings. It assesses
+  **9 of the chapter's 9** introduced atoms (1.00).
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -83,8 +117,10 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 (`../../_fonts/`) — the same font as the Hindi track. `latexmk -xelatex book.tex`.
-The seven-chapter build is warning-clean, and its PDF outline preserves readable
-Devanagari while generated non-Latin sections use bookmark-safe romanization.
+The nine-chapter build is warning-clean — zero `Missing character`, zero
+overfull or underfull boxes, zero package warnings — and its PDF outline
+preserves readable Devanagari while generated non-Latin sections use
+bookmark-safe romanization.
 
 ## Files
 

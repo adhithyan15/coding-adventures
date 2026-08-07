@@ -101,14 +101,19 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2, 3, 4, 5, 6]);
+      // 6 -> 8: the eight-verb tranche added Chapters 7 and 8 (mind verbs, then
+      // taking/asking/helping/loving), split 4+4 to stay inside maxNewAtomsPerChapter.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
       // 5 -> 6: Chapter 6 is the Urdu track's first verb chapter (HL core verbs),
       // so this is the first Urdu chapter whose spine node is A2 rather than A1.
-    ).toEqual([1, 2, 3, 4, 5, 6]);
+      // 6 -> 8: chapters 7 and 8 are the eight-verb tranche — think/understand/read/write
+      // and take/ask/help/like — split into two four-lesson chapters so neither exceeds
+      // the 12-atom chapter budget, both filed under SPINE-SAY-WHAT-I-DO like chapter 6.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -168,6 +173,14 @@ describe("real curriculum", () => {
       "FA-C06-danestan-pair",
       "FA-C06-goftan-stem",
       "FA-C06-raftan-stem",
+      "FA-C07-fahmidan-stem",
+      "FA-C07-fekr-kardan-verb",
+      "FA-C07-khandan-silent-vav",
+      "FA-C07-neveshtan-stem",
+      "FA-C08-dust-dashtan-literal",
+      "FA-C08-gereftan-stem",
+      "FA-C08-komak-kardan-verb",
+      "FA-C08-porsidan-stem",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
@@ -213,6 +226,8 @@ describe("real curriculum", () => {
       "UR-C05-khuda-hafiz-goodbye",
       "UR-C05-khuda-meaning",
       "UR-C05-practice-final-line",
+      "UR-C07-likhna-four-stems",
+      "UR-C08-pasand-dative",
       // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
       // corpus total moves from 51 to 57.
       "ZH-C01-hao-components",

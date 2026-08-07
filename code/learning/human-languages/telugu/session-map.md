@@ -70,6 +70,27 @@ the independent vowels — all in the service of real greetings.
 | 29 | pani-ceyu | పని చేయు | "to work" (noun + *cēyu*) — the twin of Hindi's *karnā* |
 | 30 | practice | (dialogue) | three verbs, one engine |
 
+## Chapter 33 — Four Verbs of the Mind
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 67 | anuko | అనుకో | "think" = *anu* ("say") + **-కో**, the ending that hands the action back to its doer |
+| 68 | artham-cesuko | అర్థం చేసుకో | "understand" = Sanskrit *arthaṁ* + native *cēyu* + *-kō*; and the dative నాకు అర్థమైంది |
+| 69 | caduvu | చదువు | "read", also "study", also the noun for an education; one stem, three middle vowels |
+| 70 | raayu | రాయు / వ్రాయు | "write" ← Dravidian *\*warV-* "draw a line" — Tamil *varai*, Kannada *bare* |
+
+## Chapter 34 — Four Verbs Between People
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 71 | tiisuko | తీసుకో | "take" = *tīyu* + *-kō*; కొను is the family's, Tamil *koḷ* and Malayalam *koḷḷuka* |
+| 72 | adugu | అడుగు | "ask" — no sister shares it; **Telugu is South-Central Dravidian**, with Gondi and Kui |
+| 73 | sahayam-ceyu | సహాయం చేయు | "help" ← *saha* "with" + *āya* "a going" — English *same*, and *exit* |
+| 74 | ishtam | నాకు తెలుగు ఇష్టం | **"I like Telugu"** — no verb at all; ఇష్ట ← the root behind English *ask* |
+
 ## Next
 
-Chapter 6 — the case-endings (Telugu's agglutinative suffixes *-ki, -lō, -tō*).
+Chapter 35 — the rest of the core forty verbs on the machine Chapter 32 built.
+
+Note: sessions 31–66 (Chapters 6–32) are authored but not yet mapped here; that
+metadata debt is tracked as `HL-M02` in the shared backlog.

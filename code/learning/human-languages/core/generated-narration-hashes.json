@@ -4194,6 +4194,40 @@
       "jsonHash": "fnv1a64:2fc9e11dcb4afe37"
     },
     {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c7935a25fd2daf52",
+      "lessonIds": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch08.txt",
+      "json": "marathi/narration/ch08.json",
+      "textHash": "fnv1a64:1c553c88cec93321",
+      "jsonHash": "fnv1a64:9ac8c9c5e51ccff0"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0d8a362e6a162877",
+      "lessonIds": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch09.txt",
+      "json": "marathi/narration/ch09.json",
+      "textHash": "fnv1a64:e7df235d7313dbff",
+      "jsonHash": "fnv1a64:9ad2a0f8b708dd7d"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",
@@ -4295,6 +4329,40 @@
       "json": "persian/narration/ch06.json",
       "textHash": "fnv1a64:03d604560e0778f5",
       "jsonHash": "fnv1a64:1fed00dc889925be"
+    },
+    {
+      "language": "persian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:f2a04e1c7cf5e085",
+      "lessonIds": [
+        "FA-C07-fekr-kardan",
+        "FA-C07-fahmidan",
+        "FA-C07-khandan",
+        "FA-C07-neveshtan"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "persian/narration/ch07.txt",
+      "json": "persian/narration/ch07.json",
+      "textHash": "fnv1a64:c0d4475b960b77d5",
+      "jsonHash": "fnv1a64:7949818ab4c4e064"
+    },
+    {
+      "language": "persian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:7b80d96a1a7c66b1",
+      "lessonIds": [
+        "FA-C08-gereftan",
+        "FA-C08-porsidan",
+        "FA-C08-komak-kardan",
+        "FA-C08-dust-dashtan"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "persian/narration/ch08.txt",
+      "json": "persian/narration/ch08.json",
+      "textHash": "fnv1a64:ed2a46e3b26c4559",
+      "jsonHash": "fnv1a64:b554319082956944"
     },
     {
       "language": "portuguese",
@@ -6622,6 +6690,40 @@
       "jsonHash": "fnv1a64:9e5d5fc5ed77709f"
     },
     {
+      "language": "telugu",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:2d798654b223c361",
+      "lessonIds": [
+        "TE-C33-anuko",
+        "TE-C33-artham-cesuko",
+        "TE-C33-caduvu",
+        "TE-C33-raayu"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "telugu/narration/ch33.txt",
+      "json": "telugu/narration/ch33.json",
+      "textHash": "fnv1a64:ae0b5efaa850cd94",
+      "jsonHash": "fnv1a64:63b0a95f4c9d0c6a"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:da73c64bbe941924",
+      "lessonIds": [
+        "TE-C34-tiisuko",
+        "TE-C34-adugu",
+        "TE-C34-sahayam-ceyu",
+        "TE-C34-ishtam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "telugu/narration/ch34.txt",
+      "json": "telugu/narration/ch34.json",
+      "textHash": "fnv1a64:22af753b560ce5b7",
+      "jsonHash": "fnv1a64:22d9823170cba8e0"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",
@@ -6723,6 +6825,40 @@
       "json": "urdu/narration/ch06.json",
       "textHash": "fnv1a64:ddde1e5f5fcb8c9f",
       "jsonHash": "fnv1a64:d392cba52a248c15"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch07.txt",
+      "json": "urdu/narration/ch07.json",
+      "textHash": "fnv1a64:3e017a5b0b4e6325",
+      "jsonHash": "fnv1a64:9eaa17fdb4518cd0"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:997aec13e461f1b3",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch08.txt",
+      "json": "urdu/narration/ch08.json",
+      "textHash": "fnv1a64:89bfe5828747af1d",
+      "jsonHash": "fnv1a64:807f0572154bf8d0"
     }
   ],
   "findings": []

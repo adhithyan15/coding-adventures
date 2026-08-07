@@ -1,5 +1,81 @@
 # Changelog
 
+## 0.9.0 — 2026-08-07
+
+- Added eight schema-v2 lessons across two new chapters, closing the eight-verb
+  tranche that until now only Latin, Spanish and Portuguese taught. Persian is
+  the fourth track to realise `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`,
+  `VERB-WRITE`, `VERB-TAKE`, `VERB-ASK`, `VERB-HELP` and `VERB-LIKE-LOVE`, and
+  the first from the **Iranian** branch — nothing else in the corpus carries it.
+- Chapter 7, *Four Verbs of the Mind* (`FA-PATH-008`): `FA-C07-fekr-kardan`
+  (**فکر کردن**), `FA-C07-fahmidan` (**فهمیدن**), `FA-C07-khandan`
+  (**خواندن**), `FA-C07-neveshtan` (**نوشتن**). Chapter 8, *Taking, Asking,
+  Helping, Loving* (`FA-PATH-009`): `FA-C08-gereftan` (**گرفتن**),
+  `FA-C08-porsidan` (**پرسیدن**), `FA-C08-komak-kardan` (**کمک کردن**),
+  `FA-C08-dust-dashtan` (**دوست داشتن**). Split 4 + 4 rather than one chapter of
+  eight: the tranche introduces 23 atoms, and one chapter would have doubled
+  `maxNewAtomsPerChapter: 12`. Chapter 7 introduces 12, Chapter 8 introduces 11.
+- The organising idea is that a Persian verb comes in **three shapes**, not one.
+  `FA-GRAMMAR-COMPOUND-VERB-KARDAN` opens the noun-plus-light-verb pattern on
+  *fekr kardan* and is proved twice more, on *komak kardan* and — with a
+  different light verb — on *dust dâshtan*. `FA-GRAMMAR-IDAN-REGULAR-STEM` names
+  the one predictable class, where stripping **-یدن** *-idan* yields the present
+  stem (*fahmidan, fahm-*; *porsidan, pors-*). The inherited verbs keep the
+  Chapter 6 bargain and state it plainly rather than hiding it: *khândan,
+  khân-*; *neveshtan, nevis-*; *gereftan, gir-*.
+- Chapter 7's first lesson says early and explicitly what Persian does not ask
+  for — no grammatical gender, no noun cases, no adjective agreement, and a
+  single set of personal endings for every verb. After Arabic's root system and
+  Russian's aspect this is worth telling a learner up front, and it is true.
+- Etymology is per lesson and verified against Wiktionary before use. *khândan*
+  ← \**swenh₂-* “to sound” (Latin *sonus* → **sound**, **consonant**,
+  **sonata**; English **swan**), which is why one verb covers read, recite, sing
+  and study. *neveshtan* ← *ni-* “down” + \**peyḱ-* “to paint, mark” (Latin
+  *pingere* → **paint**, **picture**, **pigment**). *gereftan* ← \**gʰrebh₂-*,
+  the track's clearest inherited cousin: English **grab**, **grip**, **grasp**,
+  German *greifen*. **دوست** *dust* ← \**ǵews-* “to taste, to choose,” which
+  English inherited as **choose** and Latin took as *gustus* (**gusto**,
+  **disgust**). *porsidan* ← \**preḱ-*, whose own English descendant (Old
+  English *friġnan*) died out and was borrowed back from Latin as **pray**,
+  **prayer**, **precarious**. Where the link is a borrowing rather than an
+  inheritance — *kardan* ← \**kʷer-* and Sanskrit **karma** — the lesson says so
+  instead of implying a family resemblance.
+- Persian's vocabulary layers are named with a word from each: **خوب** *khub*
+  inherited Iranian, **وقت** *vaqt* and **فهم** *fahm* Arabic, and **کمک**
+  *komak* Turkic (Azerbaijani *kömək* ← Proto-Turkic \**kömek*). *fahmidan* is
+  the showpiece — an Arabic noun turned into a native-shaped Persian verb.
+- One new script atom, `FA-SCRIPT-SILENT-VAV`: the **و** of **خواندن** is
+  written and never pronounced. It is taught as a fossil of the old *xw-*
+  cluster, tied back to **خدا** *khodâ* ← Middle Persian *xwadây*, and
+  contrasted against the **و** of **نوشتن**, where it is a plain consonant.
+- Reinforcement was the point of the second cadence. Each lesson reaches back to
+  the one to three lessons before it, across the chapter seam, and the two
+  payoffs reach back several chapters. Persian's never-revisited atoms fall from
+  **23 of 59** to **11 of 82**; eight of the eleven that remain are older
+  script- and dialogue-shaped atoms that these verb lessons cannot honestly
+  practise, and the other three belong to the final lesson, which nothing
+  follows. Fifteen previously orphaned atoms are rescued, among them
+  `FA-SCRIPT-GAF`, `FA-MORPH-KHOSH-VAQT-AM`, `FA-ETYMON-TO-THOU`,
+  `FA-ETYMON-BUDAN-BE`, `FA-ETYMON-KHODA`, `FA-ETYMON-HAL`, `FA-ETYMON-HAFEZ`,
+  `FA-ETYMON-VAQT-ARABIC`, `FA-ETYMON-KHUB`, `FA-SCRIPT-ALEF-MADDE`,
+  `FA-GRAMMAR-NAME-QUESTION-ORDER`, and all three `dânestan` atoms.
+- Both chapter payoffs assess **every** atom their chapter introduces (12/12 and
+  11/11, against the 0.5 representativeness floor) and carry their reach-back
+  atoms in the HL05 ledger as well. `FA-C08-dust-dashtan` runs all thirteen
+  verbs the track now holds.
+- `VERB-HAVE` and `VERB-DO-MAKE` deliberately stay in the `omits` list for
+  `SPINE-SAY-WHAT-I-DO`. *kardan* and *dâshtan* are taught here as atoms because
+  the compound verbs cannot be understood without them, but no lesson carries
+  those concept tags, and claiming them would overstate what the track realises.
+- All eight lessons stay under the five-minute gate on the **computed**
+  estimate, not merely the declared one: 281–298 effective seconds against the
+  300-second threshold. No lesson introduces more than three atoms, no lesson
+  uses a table, and none trips a sight cue, so the track stays 100% drivable.
+- The book gains Chapters 7 and 8 (`ch07-mind-verbs.tex`, `ch08-doing-verbs.tex`)
+  and grows from 37 to 53 pages. Verified locally with XeLaTeX: zero
+  `Missing character` lines, zero overfull or underfull boxes. Romanization uses
+  the track's existing **â** convention throughout rather than a macron.
+
 ## 0.8.0 — 2026-08-06
 
 - Added five schema-v2 Chapter 6 micro-lessons, the track's first verbs:

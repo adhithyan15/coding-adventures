@@ -1974,6 +1974,30 @@
       "tex": "marathi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c40441a93d32442c",
+      "lessonIds": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "tex": "marathi/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:9bd96a5da111ca86",
+      "lessonIds": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "tex": "marathi/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "sourceHash": "fnv1a64:022a050d2477f200",
@@ -2024,6 +2048,30 @@
         "FA-C06-danestan"
       ],
       "tex": "persian/book/chapters/ch06-core-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:2f855c5eab57857c",
+      "lessonIds": [
+        "FA-C07-fekr-kardan",
+        "FA-C07-fahmidan",
+        "FA-C07-khandan",
+        "FA-C07-neveshtan"
+      ],
+      "tex": "persian/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:b601304cacc02d51",
+      "lessonIds": [
+        "FA-C08-gereftan",
+        "FA-C08-porsidan",
+        "FA-C08-komak-kardan",
+        "FA-C08-dust-dashtan"
+      ],
+      "tex": "persian/book/chapters/ch08-doing-verbs.tex"
     },
     {
       "language": "portuguese",
@@ -3153,6 +3201,30 @@
       "tex": "telugu/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:4354c402e1713329",
+      "lessonIds": [
+        "TE-C33-anuko",
+        "TE-C33-artham-cesuko",
+        "TE-C33-caduvu",
+        "TE-C33-raayu"
+      ],
+      "tex": "telugu/book/chapters/ch33-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:2ade66311a32ef2c",
+      "lessonIds": [
+        "TE-C34-tiisuko",
+        "TE-C34-adugu",
+        "TE-C34-sahayam-ceyu",
+        "TE-C34-ishtam"
+      ],
+      "tex": "telugu/book/chapters/ch34-verbs-between-people.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "sourceHash": "fnv1a64:87cdb2b3adebde31",
@@ -3203,6 +3275,30 @@
         "UR-C06-janna"
       ],
       "tex": "urdu/book/chapters/ch06-core-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:182d519f6319b46a",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "tex": "urdu/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:dd548ee0ccc086e4",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "tex": "urdu/book/chapters/ch08-social-verbs.tex"
     }
   ]
 }

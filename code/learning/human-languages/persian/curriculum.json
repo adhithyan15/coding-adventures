@@ -109,6 +109,32 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "FA-PATH-008",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FA-C07-fekr-kardan",
+        "FA-C07-fahmidan",
+        "FA-C07-khandan",
+        "FA-C07-neveshtan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-009",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FA-C08-gereftan",
+        "FA-C08-porsidan",
+        "FA-C08-komak-kardan",
+        "FA-C08-dust-dashtan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -225,7 +251,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "FA-PATH-007"
+        "FA-PATH-007",
+        "FA-PATH-008",
+        "FA-PATH-009"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -235,14 +263,9 @@
         "VERB-SPEAK",
         "VERB-SEE",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -257,14 +280,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },

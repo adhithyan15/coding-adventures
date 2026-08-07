@@ -1,6 +1,6 @@
-# Urdu Session Map — Authored Chapters 1–6
+# Urdu Session Map — Authored Chapters 1–8
 
-This is the authoritative order for the twenty-five authored Urdu lessons. Each new
+This is the authoritative order for the thirty-three authored Urdu lessons. Each new
 lesson is a self-contained, prerequisite-safe step of three or four minutes.
 A longer study session may combine the new step with its due reviews while the
 book and app keep every lesson independently completable.
@@ -70,6 +70,32 @@ Time-of-day farewells remain later spine work.
 | **S24** | [`UR-C06-bolna`](./lessons/UR-C06-bolna.md): **بولنا** *bolnā* | the meeting response *(N+15)*; *khudā* *(N+7)*; *honā* *(N+3)*; *ānā* *(N+1)* | count the dots: **ب** one below, **پ** three below |
 | **S25** | [`UR-C06-janna`](./lessons/UR-C06-janna.md): **جاننا** *jānnā* | Chapter 3 practice *(N+15)*; *hāfiz* *(N+7)*; *jānā* *(N+3)*; *bolnā* *(N+1)* | run all five infinitives and pull each stem |
 
+## Chapter 7 — Four verbs of the mind
+
+Four sessions, four verbs, and three new letters spread one per lesson. Nothing
+here needs a fifth session: the present-tense frame from Chapter 6 is reused
+without change, so each lesson's real cost is one word and at most one shape.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S26** | [`UR-C07-sochna`](./lessons/UR-C07-sochna.md): **سوچنا** *sochnā* | *kaise / kaisī* *(N+15)*; *khudā hāfiz* *(N+7)*; *ānā* *(N+3)*; *jānnā* *(N+1)* | count the dots: **ج** one below, **چ** three below |
+| **S27** | [`UR-C07-samajhna`](./lessons/UR-C07-samajhna.md): **سمجھنا** *samajhnā* | the wellbeing question *(N+15)*; Chapter 5 practice *(N+7)*; *bolnā* *(N+3)*; *sochnā* *(N+1)* | hear the same **ھ** breath in *ṭhīk* and *samajh-* |
+| **S28** | [`UR-C07-parhna`](./lessons/UR-C07-parhna.md): **پڑھنا** *paṛhnā* | *maiṅ ... hūṅ* *(N+15)*; *honā* *(N+7)*; *jānnā* *(N+3)*; *samajhnā* *(N+1)* | trace the retroflex mark on **ٹ**, then on **ڑ** |
+| **S29** | [`UR-C07-likhna`](./lessons/UR-C07-likhna.md): **لکھنا** *likhnā* | *ṭhīk* *(N+15)*; *jānā* *(N+7)*; *sochnā* *(N+3)*; *paṛhnā* *(N+1)* | run all four stems through *maiṅ ...tā/tī hūṅ* |
+
+## Chapter 8 — Four verbs between people
+
+Four more sessions and no new letters at all. The chapter's weight is grammar
+rather than script: one join that builds verbs out of borrowed nouns, and one
+sentence that takes the subject away from you.
+
+| Session | New lesson | Reviews due | Cumulative practice |
+|---|---|---|---|
+| **S30** | [`UR-C08-lena`](./lessons/UR-C08-lena.md): **لینا** *lenā* | the reply *(N+15)*; *ānā* *(N+7)*; *samajhnā* *(N+3)*; *likhnā* *(N+1)* | name **ی** three ways — *y*, *ī*, *e* |
+| **S31** | [`UR-C08-puchhna`](./lessons/UR-C08-puchhna.md): **پوچھنا** *pūchhnā* | Chapter 4 practice *(N+15)*; *bolnā* *(N+7)*; *paṛhnā* *(N+3)*; *lenā* *(N+1)* | ask with *kyā*, then say *maiṅ pūchhtā/pūchhtī hūṅ* |
+| **S32** | [`UR-C08-madad`](./lessons/UR-C08-madad.md): **مدد کرنا** *madad karnā* | *khudā* *(N+15)*; *jānnā* *(N+7)*; *likhnā* *(N+3)*; *pūchhnā* *(N+1)* | say both Arabic roots — *ḥ-f-ẓ* and *m-d-d* |
+| **S33** | [`UR-C08-pasand`](./lessons/UR-C08-pasand.md): **پسند** *pasand* | *hāfiz* *(N+15)*; *sochnā* *(N+7)*; *lenā* *(N+3)*; *madad karnā* *(N+1)* | swap the middle of *mujhe … pasand hai* three times |
+
 ## Carry-forward review ledger
 
 Future chapters may supply the new lesson in these sessions. Until then, use
@@ -78,21 +104,21 @@ with already learned material.
 
 | Session | Fixed review due |
 |---|---|
-| **S26** | *kaise / kaisī* *(N+15)*; *khudā hāfiz* *(N+7)*; *ānā* *(N+3)*; *jānnā* *(N+1)* |
-| **S27** | the wellbeing question *(N+15)*; Chapter 5 practice *(N+7)*; *bolnā* *(N+3)* |
-| **S28** | *maiṅ ... hūṅ* *(N+15)*; *honā* *(N+7)*; *jānnā* *(N+3)* |
-| **S29** | *ṭhīk* *(N+15)*; *jānā* *(N+7)* |
-| **S30** | the reply *(N+15)*; *ānā* *(N+7)* |
-| **S31** | Chapter 4 practice *(N+15)*; *bolnā* *(N+7)* |
-| **S32** | *khudā* *(N+15)*; *jānnā* *(N+7)* |
-| **S33** | *hāfiz* *(N+15)* |
-| **S34** | *khudā hāfiz* *(N+15)* |
-| **S35** | Chapter 5 practice *(N+15)* |
-| **S36** | *honā* *(N+15)* |
-| **S37** | *jānā* *(N+15)* |
-| **S38** | *ānā* *(N+15)* |
-| **S39** | *bolnā* *(N+15)* |
-| **S40** | *jānnā* *(N+15)* |
+| **S34** | *khudā hāfiz* *(N+15)*; *samajhnā* *(N+7)*; *pūchhnā* *(N+3)*; *pasand* *(N+1)* |
+| **S35** | Chapter 5 practice *(N+15)*; *paṛhnā* *(N+7)*; *madad karnā* *(N+3)* |
+| **S36** | *honā* *(N+15)*; *likhnā* *(N+7)*; *pasand* *(N+3)* |
+| **S37** | *jānā* *(N+15)*; *lenā* *(N+7)* |
+| **S38** | *ānā* *(N+15)*; *pūchhnā* *(N+7)* |
+| **S39** | *bolnā* *(N+15)*; *madad karnā* *(N+7)* |
+| **S40** | *jānnā* *(N+15)*; *pasand* *(N+7)* |
+| **S41** | *sochnā* *(N+15)* |
+| **S42** | *samajhnā* *(N+15)* |
+| **S43** | *paṛhnā* *(N+15)* |
+| **S44** | *likhnā* *(N+15)* |
+| **S45** | *lenā* *(N+15)* |
+| **S46** | *pūchhnā* *(N+15)* |
+| **S47** | *madad karnā* *(N+15)* |
+| **S48** | *pasand* *(N+15)* |
 
 Sessions not listed in the ledger have no fixed starter item due; use their
 bonus queue for adaptive or cumulative retrieval.
@@ -103,7 +129,12 @@ review; the fixed ledger remains the book's no-tracking fallback.
 
 ## Schedule check
 
-Every Chapter 1–6 lesson now has all four fixed resurfacing sessions through
-S40. The app may pull a missed item forward, but it cannot skip the local
-prerequisites. A future Chapter 7 can begin in S26 while this ledger continues
-in the review portion of each session.
+Every Chapter 1–8 lesson now has all four fixed resurfacing sessions through
+S48. The app may pull a missed item forward, but it cannot skip the local
+prerequisites.
+
+Chapters 7 and 8 also close the shorter windows inside the lessons themselves
+rather than only in this table: every lesson from S26 on names the preceding
+one to three lessons' atoms in its own `practises.knowledge`, and the two
+chapter payoffs reach back across chapters 3 to 6. That is what moved the
+track's never-revisited atoms from 24 of 59 to 12 of 81.
