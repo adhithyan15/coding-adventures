@@ -226,13 +226,21 @@ describe("corpus snapshot", () => {
     // holds at 98. A new chapter that shipped without a `canDo`/`payoff` would have
     // pushed the debt to 99, which is exactly what this trio is here to catch.
     expect(report.summary.bookChapters).toBe(416);
-    expect(report.summary.declaredChapters).toBe(317);
-    expect(report.summary.chaptersWithoutCapability).toBe(99);
+    // 317 -> 318 when russian chapter 3 gained a capability. It was the only
+    // generated chapter with no HL05 entry, so it was also the only generated chapter
+    // the book could not give an opening to.
+    expect(report.summary.declaredChapters).toBe(318);
+    expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);
     expect(report.summary.titleDrift).toBe(0);
     expect(report.summary.duplicateChapters).toBe(0);
-    expect(report.summary.payoffsNotRepresentative).toBe(24);
+    // 24 -> 25 with russian chapter 3. Its payoff is the last lesson by sequence --
+    // the chapter has no terminal practice lesson -- so it assesses 6 of 18 atoms,
+    // below the 0.5 floor. That is recorded in the chapter's own `payoff.note` and is
+    // a deliberate trade: a chapter with an opening and a thin payoff is better than
+    // one with neither, and HL-C25 exists to author real payoff lessons.
+    expect(report.summary.payoffsNotRepresentative).toBe(25);
   });
 
   it("names the tracks whose chapter debt is already zero", () => {

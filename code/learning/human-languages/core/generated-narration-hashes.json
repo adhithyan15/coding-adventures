@@ -4824,8 +4824,8 @@
       "drivablePrefix": 6,
       "text": "russian/narration/ch03.txt",
       "json": "russian/narration/ch03.json",
-      "textHash": "fnv1a64:26e2130882173b36",
-      "jsonHash": "fnv1a64:3539c96c585e851f"
+      "textHash": "fnv1a64:cc09c5dfc5ca4314",
+      "jsonHash": "fnv1a64:b7849f4e1cf0c345"
     },
     {
       "language": "russian",
