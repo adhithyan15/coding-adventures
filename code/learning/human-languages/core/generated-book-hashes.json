@@ -287,6 +287,20 @@
       "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:cd9b707ba1f2707e",
+      "lessonIds": [
+        "BN-C07-howa",
+        "BN-C07-jaowa",
+        "BN-C07-asha",
+        "BN-C07-khaowa",
+        "BN-C07-dekha",
+        "BN-C07-jana"
+      ],
+      "tex": "bengali/book/chapters/ch07-core-verbs.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:b740a5126cc6bad6",
