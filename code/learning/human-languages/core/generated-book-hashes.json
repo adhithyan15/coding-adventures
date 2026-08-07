@@ -471,6 +471,30 @@
       "tex": "german/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "german",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:1e17f161dd63d405",
+      "lessonIds": [
+        "GE-C24-denken",
+        "GE-C24-verstehen",
+        "GE-C24-lesen",
+        "GE-C24-schreiben"
+      ],
+      "tex": "german/book/chapters/ch24-mind-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:936bd6825f20b25f",
+      "lessonIds": [
+        "GE-C25-nehmen",
+        "GE-C25-fragen",
+        "GE-C25-helfen",
+        "GE-C25-moegen-lieben"
+      ],
+      "tex": "german/book/chapters/ch25-doing-verbs.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:834feb5e4fa699a5",

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:da86fac8c81e8b88",
+  "sourceHash": "fnv1a64:0b24ec80e60f9715",
   "summary": {
     "totalLessons": 1257,
     "voice": 856,
@@ -687,12 +687,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 81,
-      "voice": 66,
+      "lessonCount": 73,
+      "voice": 58,
       "sight": 12,
       "pen": 3,
-      "drivablePercent": 81,
-      "drivablePrefixTotal": 50,
+      "drivablePercent": 79,
+      "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
         "sight",
@@ -1089,55 +1089,17 @@
           "drivableLessonIds": [
             "FR-C23-vert-jaune"
           ]
-        },
-        {
-          "chapter": 24,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "FR-C24-prendre",
-            "FR-C24-demander",
-            "FR-C24-aider",
-            "FR-C24-aimer"
-          ]
-        },
-        {
-          "chapter": 25,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "FR-C25-comprendre",
-            "FR-C25-penser",
-            "FR-C25-lire",
-            "FR-C25-ecrire"
-          ]
         }
       ]
     },
     {
       "language": "german",
-      "lessonCount": 76,
-      "voice": 65,
+      "lessonCount": 84,
+      "voice": 73,
       "sight": 8,
       "pen": 3,
-      "drivablePercent": 86,
-      "drivablePrefixTotal": 60,
+      "drivablePercent": 87,
+      "drivablePrefixTotal": 68,
       "modalities": [
         "voice",
         "sight",
@@ -1551,6 +1513,44 @@
           "drivable": true,
           "drivableLessonIds": [
             "GE-C23-gruen-gelb"
+          ]
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C24-denken",
+            "GE-C24-verstehen",
+            "GE-C24-lesen",
+            "GE-C24-schreiben"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C25-nehmen",
+            "GE-C25-fragen",
+            "GE-C25-helfen",
+            "GE-C25-moegen-lieben"
           ]
         }
       ]
@@ -9640,110 +9640,6 @@
       "sourceHash": "fnv1a64:568c8aef59fa16a9"
     },
     {
-      "id": "FR-C24-prendre",
-      "language": "french",
-      "chapter": 24,
-      "sequence": 710,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3701a294016bd259"
-    },
-    {
-      "id": "FR-C24-demander",
-      "language": "french",
-      "chapter": 24,
-      "sequence": 720,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7d3f728249aa2e13"
-    },
-    {
-      "id": "FR-C24-aider",
-      "language": "french",
-      "chapter": 24,
-      "sequence": 730,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ebc46f670b379245"
-    },
-    {
-      "id": "FR-C24-aimer",
-      "language": "french",
-      "chapter": 24,
-      "sequence": 740,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:85d8360819b5b772"
-    },
-    {
-      "id": "FR-C25-comprendre",
-      "language": "french",
-      "chapter": 25,
-      "sequence": 750,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f3d0a8c0b84add36"
-    },
-    {
-      "id": "FR-C25-penser",
-      "language": "french",
-      "chapter": 25,
-      "sequence": 760,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9c31ea0673fa3e55"
-    },
-    {
-      "id": "FR-C25-lire",
-      "language": "french",
-      "chapter": 25,
-      "sequence": 770,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f07000fefeb3d091"
-    },
-    {
-      "id": "FR-C25-ecrire",
-      "language": "french",
-      "chapter": 25,
-      "sequence": 780,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c75664e4497104d6"
-    },
-    {
       "id": "GE-C01-abend",
       "language": "german",
       "chapter": 1,
@@ -10731,6 +10627,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:9e76b587bcf9af4a"
+    },
+    {
+      "id": "GE-C24-denken",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2a536fa10cc315c"
+    },
+    {
+      "id": "GE-C24-verstehen",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d191bf8f3dd5ffe5"
+    },
+    {
+      "id": "GE-C24-lesen",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b1835f7b8149d89"
+    },
+    {
+      "id": "GE-C24-schreiben",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cecd7771b325637"
+    },
+    {
+      "id": "GE-C25-nehmen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c458e7582ab4184d"
+    },
+    {
+      "id": "GE-C25-fragen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1b9b6a2b8bdc8ca"
+    },
+    {
+      "id": "GE-C25-helfen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ea8944cb396d1cc"
+    },
+    {
+      "id": "GE-C25-moegen-lieben",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc777dd3f6fad6ed"
     },
     {
       "id": "GU-C01-aabhaar",
