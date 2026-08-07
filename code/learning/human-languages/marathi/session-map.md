@@ -73,7 +73,19 @@ word needs.
 | 34 | numbers-1-5 | एक, दोन, तीन, चार, पाच | retrieve the five forms; notice two written differences and one sound difference |
 | 35 | number-differences | दोन · तीन · पाच · चार | *don* copied *tīn* by analogy; Hindi retained *pāṁch*'s nasal; Marathi *chār* shifts toward *tsār* |
 
+## Chapter 7 — The Core Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 36 | asne | असणे | "to be"; the copula आहे closes the sentence; *ásti* ← the root behind *est*, *ist*, *is* |
+| 37 | jane | जाणे | "to go"; *jāto / jāte* — the present ending declares the subject's gender |
+| 38 | yene | येणे | "to come"; *ā-* + *yā-* — going and coming are one Sanskrit verb |
+| 39 | khane | खाणे | "to eat"; the *-णे* infinitive is a **neuter** noun — Marathi's third gender |
+| 40 | pahne | पाहणे | "to see" ← *prapaśyati*; *paś-* ← *\*spek-* → *spectacle, inspect, spy* |
+| 41 | mahit-asne | माहीत असणे | "to know"; *malā māhīt āhe* — the knower is dative; **माहीत** a Persian loan beside inherited जाणणे |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10 and Devanagari digits १२३, then family and
-food, then the case-endings and the tenses where gender returns on the verb.
+food, then more of the core verbs, negation and questions, and the tenses where
+gender returns on the verb.

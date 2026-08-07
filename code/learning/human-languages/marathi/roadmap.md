@@ -40,15 +40,26 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
   adopted, the other a retention made. Plus a third difference invisible in the
   spelling — Marathi **च** before *ā* is nearer **ts**, so चार is said *tsār*.
   **Authored.**
+- **Ch. 7 — The Core Verbs** (`MR-C07-asne` → `MR-C07-jane` → `MR-C07-yene` →
+  `MR-C07-khane` → `MR-C07-pahne` → `MR-C07-mahit-asne`): the track's first
+  `SPINE-SAY-WHAT-I-DO` material, and its first chapter above A1. One idea per
+  lesson, deliberately: the copula **आहे** and the verb-last rule; the
+  present-tense ending that declares the subject's gender; *jāṇe* and *yeṇe* as
+  one Sanskrit root (*yā-* bare, *ā-yā-* "toward here"); the *-णे* infinitive as
+  a **neuter** noun, which is where Marathi's third gender becomes visible;
+  *paś-* ← Indo-European *\*spek-* and its English cousin-web; and the dative
+  knower, *malā māhīt āhe*, with **माहीत** marked as the Persian/Arabic
+  Deccan-layer loan it is beside inherited **जाणणे** (*jñā-*, cousin of *know*).
+  All six lessons are `voice` — the chapter is fully drivable. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
-| 7 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
-| 8 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
-| 9+ | The case-endings deepened, past and future tenses (where gender returns on the verb), everyday sentences — always with the Hindi/Dravidian contrast thread |
+| 8 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
+| 9 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
+| 10+ | More of `SPINE-SAY-WHAT-I-DO` (*karṇe*, *deṇe*, *gheṇe*, *sāṅgṇe*), then negation and questions, past and future tenses (where gender returns on the verb) — always with the Hindi/Dravidian contrast thread |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is
