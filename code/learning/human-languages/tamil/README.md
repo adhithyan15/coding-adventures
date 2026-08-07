@@ -61,6 +61,27 @@ through.
   verb இடு (*sāppiḍu*), the strong/weak split you can hear in the doubled
   consonant (*pār*), and the one common verb that carries no person at all, so
   the knower moves into the dative (*teri*). In the book, Chapter 32.
+- **Chapter 33 — Four Verbs of the Mind** ([`lessons/TA-C33-*`](./lessons/)):
+  நினை (*ninai*, think — and remember), புரி (*puri*, be understood), படி
+  (*paḍi*, read/study), எழுது (*eḻudu*, write). The chapter presses Chapter 32's
+  strong/weak split until it stops being a rule and becomes a reflex — two
+  strong verbs, two weak, each announced by its own held or softened consonant —
+  and settles two things the track had been assuming: that **Tamil marks no
+  voicing**, so ட is *ṭ* or *ḍ* by position (which is why this course writes
+  *paḍi*), and how to make **ழ**, the retroflex glide in *tamiḻ* itself.
+  *Purigiṟadu* adds a second dative-experiencer verb beside *teriyum*. In the
+  book, Chapter 33.
+- **Chapter 34 — Four Verbs Between People** ([`lessons/TA-C34-*`](./lessons/)):
+  எடு (*eḍu*, take), கேள் (*kēḷ*, ask — and hear), உதவு (*udavu*, help), பிடி
+  (*piḍi*, catch → like). *Eḍu* sets up a memory hook against the இடு inside
+  *sāppiḍu* and says plainly that it is **not** an etymology; *kēḷ* is where the
+  track states its **diglossia** position outright (literary *kēḷ*, standard
+  spoken *kēṭkiṟēṉ* — the register these lessons teach — and colloquial
+  *kēkka*); *udavu* is a native word where Telugu, Kannada, Malayalam and Hindi
+  all take Sanskrit *sahāya*, the mirror image of Chapter 8's *daya*. The payoff
+  is **எனக்குப் பிடிக்கும்** — a third dative subject, and the same inversion
+  Spanish *gustar*, Italian *piacere* and Hindi *pasand* reach from a completely
+  unrelated family. In the book, Chapter 34.
 - **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
   curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi,
   vowel signs, and whole-word writing for **வணக்கம்** and **நன்றி**.
@@ -103,9 +124,9 @@ than the ability to read the letters.
 
 ## Book / fonts
 
-The 31-chapter book compiles with XeLaTeX using **vendored** Noto fonts
+The 34-chapter book compiles with XeLaTeX using **vendored** Noto fonts
 (`../../_fonts/`) for Tamil and every comparison script, with no system-font
-dependency. Chapters 6–31 are generated from canonical lesson ASTs and checked
+dependency. Chapters 6–34 are generated from canonical lesson ASTs and checked
 against Language Ladder source hashes. `latexmk -xelatex book.tex`.
 
 ## Files

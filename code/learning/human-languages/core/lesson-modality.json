@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1978364c3cd21f06",
+  "sourceHash": "fnv1a64:c35bdd63fe2129fa",
   "summary": {
-    "totalLessons": 1249,
-    "voice": 848,
-    "sight": 348,
+    "totalLessons": 1257,
+    "voice": 849,
+    "sight": 355,
     "pen": 53,
-    "drivableLessons": 848,
+    "drivableLessons": 849,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 400,
+    "chapterCount": 402,
     "drivablePrefixTotal": 669,
     "fullyDrivableChapters": 276,
-    "unstartableChapters": 90,
+    "unstartableChapters": 92,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -5865,11 +5865,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 89,
-      "voice": 52,
-      "sight": 29,
+      "lessonCount": 97,
+      "voice": 53,
+      "sight": 36,
       "pen": 8,
-      "drivablePercent": 58,
+      "drivablePercent": 55,
       "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
@@ -6400,6 +6400,35 @@
             "TA-C32-paar",
             "TA-C32-teri"
           ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C33-ninai",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C34-edu",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -22156,6 +22185,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:43e3caa79eab7344"
+    },
+    {
+      "id": "TA-C33-ninai",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 670,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bec4abda60466215"
+    },
+    {
+      "id": "TA-C33-puri",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 680,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:33fe6b5286b65e12"
+    },
+    {
+      "id": "TA-C33-padi",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 690,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2c0a727552358fa4"
+    },
+    {
+      "id": "TA-C33-ezhutu",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 700,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3a36a9291ceaaf55"
+    },
+    {
+      "id": "TA-C34-edu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 710,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:461fc79451361c98"
+    },
+    {
+      "id": "TA-C34-kel",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 720,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5a4741225dff9092"
+    },
+    {
+      "id": "TA-C34-utavu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 730,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cbacf37334d54ef5"
+    },
+    {
+      "id": "TA-C34-pidi",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1480cdf0e8dbdd75"
     },
     {
       "id": "TE-C01-avunu",

@@ -5868,6 +5868,40 @@
       "jsonHash": "fnv1a64:abadf3ea1b02b4e9"
     },
     {
+      "language": "tamil",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:af591db5810ac6fb",
+      "lessonIds": [
+        "TA-C33-ninai",
+        "TA-C33-puri",
+        "TA-C33-padi",
+        "TA-C33-ezhutu"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "tamil/narration/ch33.txt",
+      "json": "tamil/narration/ch33.json",
+      "textHash": "fnv1a64:d5d28e2aea496fd2",
+      "jsonHash": "fnv1a64:8e67d492e194f01a"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:2e2e5e869f303320",
+      "lessonIds": [
+        "TA-C34-edu",
+        "TA-C34-kel",
+        "TA-C34-utavu",
+        "TA-C34-pidi"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "tamil/narration/ch34.txt",
+      "json": "tamil/narration/ch34.json",
+      "textHash": "fnv1a64:36d980fd07602035",
+      "jsonHash": "fnv1a64:595f29450881bd12"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:3fd3f66959fa87bf",
