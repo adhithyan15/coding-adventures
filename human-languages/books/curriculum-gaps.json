@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1188,
+    "totalLessons": 1206,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -26,8 +26,8 @@
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 1026,
-    "drivablePercent": 86,
+    "drivableLessons": 1044,
+    "drivablePercent": 87,
     "chaptersWithoutDrivablePrefix": 42,
     "unexplainedModalityOverrides": 0
   },
@@ -1326,7 +1326,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "bookChapters": [
           1,
@@ -1334,7 +1335,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1372,7 +1374,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "bookChapters": [
           1,
@@ -1380,7 +1383,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1395,7 +1399,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "bookChapters": [
           1,
@@ -1403,7 +1408,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1636,10 +1642,10 @@
       {
         "language": "marathi",
         "status": "mixed",
-        "lessonCount": 35,
+        "lessonCount": 41,
         "versions": {
           "1": 33,
-          "2": 2
+          "2": 8
         }
       },
       {
@@ -1654,19 +1660,19 @@
       {
         "language": "bengali",
         "status": "mixed",
-        "lessonCount": 31,
+        "lessonCount": 37,
         "versions": {
           "1": 30,
-          "2": 1
+          "2": 7
         }
       },
       {
         "language": "gujarati",
         "status": "mixed",
-        "lessonCount": 33,
+        "lessonCount": 39,
         "versions": {
           "1": 31,
-          "2": 2
+          "2": 8
         }
       },
       {
@@ -2493,8 +2499,8 @@
       },
       {
         "language": "bengali",
-        "bookChapters": 6,
-        "declaredChapters": 1,
+        "bookChapters": 7,
+        "declaredChapters": 2,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
@@ -2525,8 +2531,8 @@
       },
       {
         "language": "gujarati",
-        "bookChapters": 6,
-        "declaredChapters": 1,
+        "bookChapters": 7,
+        "declaredChapters": 2,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
@@ -2581,8 +2587,8 @@
       },
       {
         "language": "marathi",
-        "bookChapters": 6,
-        "declaredChapters": 1,
+        "bookChapters": 7,
+        "declaredChapters": 2,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
@@ -2661,8 +2667,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 387,
-      "declaredChapters": 289,
+      "bookChapters": 390,
+      "declaredChapters": 292,
       "chaptersWithoutCapability": 98,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 24,
@@ -2675,13 +2681,13 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1188,
-    "voice": 780,
+    "totalLessons": 1206,
+    "voice": 798,
     "sight": 355,
     "pen": 53,
-    "coreVoice": 1026,
+    "coreVoice": 1044,
     "lessonsWithWritingSegments": 0,
-    "drivablePercent": 86,
+    "drivablePercent": 87,
     "tracks": [
       {
         "language": "arabic",
@@ -3126,13 +3132,13 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 31,
-        "voice": 7,
+        "lessonCount": 37,
+        "voice": 13,
         "sight": 24,
         "pen": 0,
-        "coreVoice": 29,
-        "drivablePercent": 94,
-        "drivablePrefixTotal": 24,
+        "coreVoice": 35,
+        "drivablePercent": 95,
+        "drivablePrefixTotal": 30,
         "chapters": [
           {
             "language": "bengali",
@@ -3221,6 +3227,20 @@
               "voice"
             ],
             "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "bengali",
+            "chapter": 7,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
             "firstNonVoiceLesson": null
           }
         ]
@@ -3937,13 +3957,13 @@
       },
       {
         "language": "gujarati",
-        "lessonCount": 33,
-        "voice": 10,
+        "lessonCount": 39,
+        "voice": 16,
         "sight": 23,
         "pen": 0,
-        "coreVoice": 30,
-        "drivablePercent": 91,
-        "drivablePrefixTotal": 29,
+        "coreVoice": 36,
+        "drivablePercent": 92,
+        "drivablePrefixTotal": 35,
         "chapters": [
           {
             "language": "gujarati",
@@ -4032,6 +4052,20 @@
               "voice"
             ],
             "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "gujarati",
+            "chapter": 7,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
             "firstNonVoiceLesson": null
           }
         ]
@@ -6263,13 +6297,13 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 35,
-        "voice": 15,
+        "lessonCount": 41,
+        "voice": 21,
         "sight": 20,
         "pen": 0,
-        "coreVoice": 34,
-        "drivablePercent": 97,
-        "drivablePrefixTotal": 34,
+        "coreVoice": 40,
+        "drivablePercent": 98,
+        "drivablePrefixTotal": 40,
         "chapters": [
           {
             "language": "marathi",
@@ -6358,6 +6392,20 @@
               "voice"
             ],
             "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 7,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
             "firstNonVoiceLesson": null
           }
         ]
