@@ -25,9 +25,9 @@
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 957,
-    "drivablePercent": 84,
-    "chaptersWithoutDrivablePrefix": 44,
+    "drivableLessons": 726,
+    "drivablePercent": 64,
+    "chaptersWithoutDrivablePrefix": 92,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -2652,54 +2652,54 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 1134,
-    "voice": 957,
-    "sight": 124,
+    "voice": 726,
+    "sight": 355,
     "pen": 53,
-    "coreVoice": 957,
+    "coreVoice": 726,
     "lessonsWithWritingSegments": 0,
-    "drivablePercent": 84,
+    "drivablePercent": 64,
     "tracks": [
       {
         "language": "arabic",
         "lessonCount": 71,
-        "voice": 50,
-        "sight": 5,
+        "voice": 38,
+        "sight": 17,
         "pen": 16,
-        "coreVoice": 50,
-        "drivablePercent": 70,
-        "drivablePrefixTotal": 42,
+        "coreVoice": 38,
+        "drivablePercent": 54,
+        "drivablePrefixTotal": 26,
         "chapters": [
           {
             "language": "arabic",
             "chapter": 1,
             "lessonCount": 14,
-            "voice": 8,
-            "sight": 0,
+            "voice": 1,
+            "sight": 7,
             "pen": 6,
-            "coreVoice": 8,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": "AR-W01-abjad-short-vowels"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "AR-C01-al"
           },
           {
             "language": "arabic",
             "chapter": 2,
             "lessonCount": 12,
-            "voice": 8,
-            "sight": 0,
+            "voice": 3,
+            "sight": 5,
             "pen": 4,
-            "coreVoice": 8,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": "AR-W04-dots-family-nun-ta"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "AR-C02-anta-anti"
           },
           {
             "language": "arabic",
@@ -3061,84 +3061,87 @@
       {
         "language": "bengali",
         "lessonCount": 31,
-        "voice": 29,
-        "sight": 2,
+        "voice": 7,
+        "sight": 24,
         "pen": 0,
-        "coreVoice": 29,
-        "drivablePercent": 94,
-        "drivablePrefixTotal": 24,
+        "coreVoice": 7,
+        "drivablePercent": 23,
+        "drivablePrefixTotal": 1,
         "chapters": [
           {
             "language": "bengali",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-C01-achchha"
           },
           {
             "language": "bengali",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 2,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": "BN-C02-amar-naam"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-C02-alaap"
           },
           {
             "language": "bengali",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-C03-ami"
           },
           {
             "language": "bengali",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "BN-C04-practice"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-C04-abar"
           },
           {
             "language": "bengali",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-C05-ami-bangla-boli"
           },
           {
             "language": "bengali",
@@ -3869,84 +3872,87 @@
       {
         "language": "gujarati",
         "lessonCount": 33,
-        "voice": 30,
-        "sight": 3,
+        "voice": 10,
+        "sight": 23,
         "pen": 0,
-        "coreVoice": 30,
-        "drivablePercent": 91,
-        "drivablePrefixTotal": 29,
+        "coreVoice": 10,
+        "drivablePercent": 30,
+        "drivablePrefixTotal": 2,
         "chapters": [
           {
             "language": "gujarati",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 4,
-            "sight": 2,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "GU-C01-namaste"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C01-aabhaar"
           },
           {
             "language": "gujarati",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 9,
-            "sight": 0,
+            "voice": 3,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 9,
+            "coreVoice": 3,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 9,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C02-anand"
           },
           {
             "language": "gujarati",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 2,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C03-hun"
           },
           {
             "language": "gujarati",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "GU-C04-practice"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C04-kaale"
           },
           {
             "language": "gujarati",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C05-bolvun"
           },
           {
             "language": "gujarati",
@@ -3967,21 +3973,21 @@
       {
         "language": "hindi",
         "lessonCount": 85,
-        "voice": 71,
-        "sight": 3,
+        "voice": 48,
+        "sight": 26,
         "pen": 11,
-        "coreVoice": 71,
-        "drivablePercent": 84,
-        "drivablePrefixTotal": 55,
+        "coreVoice": 48,
+        "drivablePercent": 56,
+        "drivablePrefixTotal": 38,
         "chapters": [
           {
             "language": "hindi",
             "chapter": 1,
             "lessonCount": 10,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 4,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
@@ -3994,10 +4000,10 @@
             "language": "hindi",
             "chapter": 2,
             "lessonCount": 16,
-            "voice": 9,
-            "sight": 0,
+            "voice": 4,
+            "sight": 5,
             "pen": 7,
-            "coreVoice": 9,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight",
@@ -4010,45 +4016,46 @@
             "language": "hindi",
             "chapter": 3,
             "lessonCount": 7,
-            "voice": 7,
-            "sight": 0,
+            "voice": 1,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "HI-C03-aap-kaise-hain"
           },
           {
             "language": "hindi",
             "chapter": 4,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": "HI-C04-practice"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "HI-C04-chalta-hun"
           },
           {
             "language": "hindi",
             "chapter": 5,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 2,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": "HI-C05-rahna"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "HI-C05-bolna"
           },
           {
             "language": "hindi",
@@ -4731,23 +4738,22 @@
       {
         "language": "kannada",
         "lessonCount": 60,
-        "voice": 53,
-        "sight": 7,
+        "voice": 32,
+        "sight": 28,
         "pen": 0,
-        "coreVoice": 53,
-        "drivablePercent": 88,
-        "drivablePrefixTotal": 48,
+        "coreVoice": 32,
+        "drivablePercent": 53,
+        "drivablePrefixTotal": 24,
         "chapters": [
           {
             "language": "kannada",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 4,
-            "sight": 2,
+            "voice": 0,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 0,
             "modalities": [
-              "voice",
               "sight"
             ],
             "drivablePrefix": 0,
@@ -4757,57 +4763,61 @@
             "language": "kannada",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 8,
-            "sight": 0,
+            "voice": 4,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 8,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "KA-C02-enu"
           },
           {
             "language": "kannada",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "KA-C03-cennaagi"
           },
           {
             "language": "kannada",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "KA-C04-hoogi-baruttene"
           },
           {
             "language": "kannada",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "KA-C05-iru"
           },
           {
             "language": "kannada",
@@ -5696,83 +5706,86 @@
       {
         "language": "malayalam",
         "lessonCount": 64,
-        "voice": 58,
-        "sight": 6,
+        "voice": 35,
+        "sight": 29,
         "pen": 0,
-        "coreVoice": 58,
-        "drivablePercent": 91,
-        "drivablePrefixTotal": 57,
+        "coreVoice": 35,
+        "drivablePercent": 55,
+        "drivablePrefixTotal": 28,
         "chapters": [
           {
             "language": "malayalam",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 0,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 0,
             "modalities": [
-              "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "ML-C01-practice"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ML-C01-athe"
           },
           {
             "language": "malayalam",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 9,
-            "sight": 0,
+            "voice": 4,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 9,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 9,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ML-C02-aanu"
           },
           {
             "language": "malayalam",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ML-C03-engane"
           },
           {
             "language": "malayalam",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ML-C04-naale-kaanaam"
           },
           {
             "language": "malayalam",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ML-C05-joli-ceyyuka"
           },
           {
             "language": "malayalam",
@@ -6143,83 +6156,87 @@
       {
         "language": "marathi",
         "lessonCount": 35,
-        "voice": 34,
-        "sight": 1,
+        "voice": 15,
+        "sight": 20,
         "pen": 0,
-        "coreVoice": 34,
-        "drivablePercent": 97,
-        "drivablePrefixTotal": 34,
+        "coreVoice": 15,
+        "drivablePercent": 43,
+        "drivablePrefixTotal": 3,
         "chapters": [
           {
             "language": "marathi",
             "chapter": 1,
             "lessonCount": 7,
-            "voice": 7,
-            "sight": 0,
+            "voice": 1,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-C01-baram"
           },
           {
             "language": "marathi",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 9,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 9,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 9,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "marathi",
-            "chapter": 3,
-            "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 6,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "marathi",
-            "chapter": 4,
-            "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 6,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "marathi",
-            "chapter": 5,
-            "lessonCount": 5,
             "voice": 4,
-            "sight": 1,
+            "sight": 5,
             "pen": 0,
             "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "MR-C05-rahne"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-C02-aahe"
+          },
+          {
+            "language": "marathi",
+            "chapter": 3,
+            "lessonCount": 6,
+            "voice": 4,
+            "sight": 2,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "MR-C03-kasa"
+          },
+          {
+            "language": "marathi",
+            "chapter": 4,
+            "lessonCount": 6,
+            "voice": 2,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-C04-bhetu"
+          },
+          {
+            "language": "marathi",
+            "chapter": 5,
+            "lessonCount": 5,
+            "voice": 2,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-C05-bolne"
           },
           {
             "language": "marathi",
@@ -6576,84 +6593,87 @@
       {
         "language": "punjabi",
         "lessonCount": 33,
-        "voice": 31,
-        "sight": 2,
+        "voice": 10,
+        "sight": 23,
         "pen": 0,
-        "coreVoice": 31,
-        "drivablePercent": 94,
-        "drivablePrefixTotal": 30,
+        "coreVoice": 10,
+        "drivablePercent": 30,
+        "drivablePrefixTotal": 2,
         "chapters": [
           {
             "language": "punjabi",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-C01-dhanvaad"
           },
           {
             "language": "punjabi",
             "chapter": 2,
             "lessonCount": 9,
-            "voice": 9,
-            "sight": 0,
+            "voice": 3,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 9,
+            "coreVoice": 3,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 9,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-C02-hai"
           },
           {
             "language": "punjabi",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 2,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-C03-kivein"
           },
           {
             "language": "punjabi",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "PA-C04-practice"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-C04-milaange"
           },
           {
             "language": "punjabi",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "PA-C05-rahna"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-C05-bolna"
           },
           {
             "language": "punjabi",
@@ -6674,28 +6694,28 @@
       {
         "language": "russian",
         "lessonCount": 22,
-        "voice": 16,
-        "sight": 1,
+        "voice": 10,
+        "sight": 7,
         "pen": 5,
-        "coreVoice": 16,
-        "drivablePercent": 73,
-        "drivablePrefixTotal": 15,
+        "coreVoice": 10,
+        "drivablePercent": 45,
+        "drivablePrefixTotal": 8,
         "chapters": [
           {
             "language": "russian",
             "chapter": 1,
             "lessonCount": 12,
-            "voice": 7,
-            "sight": 0,
+            "voice": 1,
+            "sight": 6,
             "pen": 5,
-            "coreVoice": 7,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": "RU-W01-false-friends-v-r"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-C01-da"
           },
           {
             "language": "russian",
@@ -6717,83 +6737,87 @@
       {
         "language": "sanskrit",
         "lessonCount": 33,
-        "voice": 31,
-        "sight": 2,
+        "voice": 9,
+        "sight": 24,
         "pen": 0,
-        "coreVoice": 31,
-        "drivablePercent": 94,
-        "drivablePrefixTotal": 26,
+        "coreVoice": 9,
+        "drivablePercent": 27,
+        "drivablePrefixTotal": 0,
         "chapters": [
           {
             "language": "sanskrit",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": "SA-C01-namaskara"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "SA-C01-am-na"
           },
           {
             "language": "sanskrit",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 8,
-            "sight": 0,
+            "voice": 2,
+            "sight": 6,
             "pen": 0,
-            "coreVoice": 8,
+            "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "SA-C02-anandah"
           },
           {
             "language": "sanskrit",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 2,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "SA-C03-aham"
           },
           {
             "language": "sanskrit",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "SA-C04-gacchami"
           },
           {
             "language": "sanskrit",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "SA-C05-aham-samskritam-vadami"
           },
           {
             "language": "sanskrit",
@@ -7304,21 +7328,21 @@
       {
         "language": "tamil",
         "lessonCount": 83,
-        "voice": 67,
-        "sight": 8,
+        "voice": 46,
+        "sight": 29,
         "pen": 8,
-        "coreVoice": 67,
-        "drivablePercent": 81,
-        "drivablePrefixTotal": 53,
+        "coreVoice": 46,
+        "drivablePercent": 55,
+        "drivablePrefixTotal": 36,
         "chapters": [
           {
             "language": "tamil",
             "chapter": 1,
             "lessonCount": 16,
-            "voice": 7,
-            "sight": 1,
+            "voice": 3,
+            "sight": 5,
             "pen": 8,
-            "coreVoice": 7,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
@@ -7331,58 +7355,61 @@
             "language": "tamil",
             "chapter": 2,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 3,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "TA-C02-en-peyar"
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TA-C02-en"
           },
           {
             "language": "tamil",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TA-C03-eppadi"
           },
           {
             "language": "tamil",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TA-C04-mindum-sandippom"
           },
           {
             "language": "tamil",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TA-C05-naan-tamizh-pesugiren"
           },
           {
             "language": "tamil",
@@ -7756,83 +7783,86 @@
       {
         "language": "telugu",
         "lessonCount": 60,
-        "voice": 54,
-        "sight": 6,
+        "voice": 33,
+        "sight": 27,
         "pen": 0,
-        "coreVoice": 54,
-        "drivablePercent": 90,
-        "drivablePrefixTotal": 50,
+        "coreVoice": 33,
+        "drivablePercent": 55,
+        "drivablePrefixTotal": 25,
         "chapters": [
           {
             "language": "telugu",
             "chapter": 1,
             "lessonCount": 6,
+            "voice": 0,
+            "sight": 6,
+            "pen": 0,
+            "coreVoice": 0,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TE-C01-avunu"
+          },
+          {
+            "language": "telugu",
+            "chapter": 2,
+            "lessonCount": 8,
             "voice": 4,
-            "sight": 2,
+            "sight": 4,
             "pen": 0,
             "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": "TE-C01-dhanyavadamulu"
-          },
-          {
-            "language": "telugu",
-            "chapter": 2,
-            "lessonCount": 8,
-            "voice": 8,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 8,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TE-C02-emiti"
           },
           {
             "language": "telugu",
             "chapter": 3,
             "lessonCount": 6,
-            "voice": 6,
-            "sight": 0,
+            "voice": 1,
+            "sight": 5,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TE-C03-baagaa"
           },
           {
             "language": "telugu",
             "chapter": 4,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TE-C04-malli-kaluddaam"
           },
           {
             "language": "telugu",
             "chapter": 5,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 1,
+            "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TE-C05-maatlaadu"
           },
           {
             "language": "telugu",
