@@ -17,7 +17,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"element"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"misc"#.to_string() }) },
             ] },
-            line_number: 45,
+            line_number: 55,
         },
         GrammarRule {
             name: r#"misc"#.to_string(),
@@ -25,7 +25,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"pi"#.to_string() },
                 GrammarElement::RuleReference { name: r#"comment"#.to_string() },
             ] },
-            line_number: 50,
+            line_number: 58,
         },
         GrammarRule {
             name: r#"element"#.to_string(),
@@ -33,7 +33,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"empty_element"#.to_string() },
                 GrammarElement::RuleReference { name: r#"container_element"#.to_string() },
             ] },
-            line_number: 60,
+            line_number: 62,
         },
         GrammarRule {
             name: r#"empty_element"#.to_string(),
@@ -43,7 +43,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"attribute"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"SELF_CLOSE"#.to_string() },
             ] },
-            line_number: 62,
+            line_number: 64,
         },
         GrammarRule {
             name: r#"container_element"#.to_string(),
@@ -57,7 +57,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"TAG_NAME"#.to_string() },
                 GrammarElement::TokenReference { name: r#"TAG_CLOSE"#.to_string() },
             ] },
-            line_number: 64,
+            line_number: 66,
         },
         GrammarRule {
             name: r#"attribute"#.to_string(),
@@ -66,7 +66,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"ATTR_EQUALS"#.to_string() },
                 GrammarElement::TokenReference { name: r#"ATTR_VALUE"#.to_string() },
             ] },
-            line_number: 72,
+            line_number: 73,
         },
         GrammarRule {
             name: r#"content"#.to_string(),
@@ -79,7 +79,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"ENTITY_REF"#.to_string() },
                 GrammarElement::TokenReference { name: r#"TEXT"#.to_string() },
             ] },
-            line_number: 87,
+            line_number: 78,
         },
         GrammarRule {
             name: r#"comment"#.to_string(),
@@ -88,7 +88,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"COMMENT_TEXT"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"COMMENT_END"#.to_string() },
             ] },
-            line_number: 91,
+            line_number: 80,
         },
         GrammarRule {
             name: r#"cdata"#.to_string(),
@@ -97,7 +97,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"CDATA_TEXT"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"CDATA_END"#.to_string() },
             ] },
-            line_number: 95,
+            line_number: 82,
         },
         GrammarRule {
             name: r#"pi"#.to_string(),
@@ -107,7 +107,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"PI_TEXT"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"PI_END"#.to_string() },
             ] },
-            line_number: 101,
+            line_number: 84,
         },
     ],
         version: 1,

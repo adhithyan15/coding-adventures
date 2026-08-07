@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-08-07
+
+### Fixed
+
+- **Restored the missing `code/grammars/xml/xml.grammar` source file.** The
+  0.1.0 release shipped `src/_grammar.rs` (the compiled `ParserGrammar`) but
+  the `.grammar` source it claims to be generated from — `xml.grammar` — was
+  never actually committed to `code/grammars/xml/`. That directory held only
+  the three `.tokens` lexer sources (`xml.tokens`, `xml_lua.tokens`,
+  `xml_rust.tokens`); every other grammar directory in the repo pairs each
+  `.tokens` file with a `.grammar` file. Without the source, `grammar-tools
+  compile-grammar xml.grammar` (the regen command documented in
+  `_grammar.rs`'s own header) could not actually be run, so the checked-in
+  generated file was unreproducible and any future grammar change would have
+  had no source to edit. Re-added the source (matching the EBNF already
+  documented in `code/specs/XML01-xml-parser.md`) and regenerated
+  `_grammar.rs` from it — output is identical except for cosmetic
+  `line_number` shifts (used only in parser error messages).
+
 ## [0.1.0] - 2026-07-02
 
 ### Added

@@ -1,0 +1,84 @@
+# XML 1.0 — Parser Grammar
+# @version 1
+#
+# Extensible Markup Language (XML) 1.0 — W3C, 1998
+#
+# This grammar defines the *structural* (context-free) nesting rules of XML:
+# how tags, attributes, text, comments, CDATA sections, and processing
+# instructions fit together. It is deliberately purely structural — it
+# consumes the token stream produced by `xml.tokens` (or one of its
+# host-language-compatible variants, `xml_lua.tokens` / `xml_rust.tokens`;
+# all three emit the same token names, so one grammar serves all of them).
+#
+# Three things a context-free grammar *cannot* express are left to a
+# hand-written AST builder that walks the parse tree this grammar produces:
+#
+#   1. End-tag name matching — "<a>" must be closed by "</a>", a
+#      context-*sensitive* constraint (the two TAG_NAME tokens must be
+#      equal). This grammar accepts "<a>...</b>" structurally.
+#   2. Namespace resolution — binding an "xmlns" prefix to a URI depends on
+#      declarations in scope, which is runtime state, not grammar shape.
+#   3. Entity decoding — "&amp;" -> "&", "&#65;" -> "A". The lexer emits
+#      entity references as separate, undecoded tokens on purpose.
+#
+# See code/specs/XML01-xml-parser.md for the full design rationale and the
+# AST that the xml-parser crate builds from this grammar's output.
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from xml.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a literal token
+#
+# Design notes:
+#
+# - Distinct first tokens. Every `content` alternative begins with a unique
+#   token (OPEN_TAG_START, COMMENT_START, CDATA_START, PI_START, CHAR_REF,
+#   ENTITY_REF, TEXT), so the backtracking packrat parser never looks far
+#   ahead and never mis-commits to the wrong alternative.
+# - Empty forms parse. COMMENT_TEXT, CDATA_TEXT, and PI_TEXT are optional so
+#   "<!---->", "<![CDATA[]]>", and "<?t?>" are well-formed.
+# - The XML declaration is a PI. "<?xml version=\"1.0\"?>" lexes as a `pi`
+#   whose PI_TARGET is "xml". The AST builder special-cases that target: it
+#   lifts version/encoding onto the document instead of emitting a PI node.
+
+# A document is a single root element, optionally surrounded by "misc"
+# items — processing instructions (like the XML declaration) and comments.
+# Whitespace and a DOCTYPE are out of scope for this grammar (see XML01).
+document          = { misc } element { misc } ;
+
+# Miscellaneous items that may appear before or after the root element.
+misc              = pi | comment ;
+
+# An element is either self-closing ("<br/>") or has separate open and
+# close tags wrapping content ("<p>...</p>").
+element           = empty_element | container_element ;
+
+empty_element     = OPEN_TAG_START TAG_NAME { attribute } SELF_CLOSE ;
+
+container_element = OPEN_TAG_START TAG_NAME { attribute } TAG_CLOSE
+                     { content }
+                     CLOSE_TAG_START TAG_NAME TAG_CLOSE ;
+
+# An attribute is a name, an "=", and a quoted value. The lexer aliases
+# both single- and double-quoted variants to ATTR_VALUE (see xml.tokens),
+# so the grammar sees one uniform token regardless of quote style.
+attribute         = TAG_NAME ATTR_EQUALS ATTR_VALUE ;
+
+# The body of a container element: nested elements, comments, CDATA
+# sections, processing instructions, character/entity references, or
+# plain text, in any order and any quantity.
+content           = element | comment | cdata | pi | CHAR_REF | ENTITY_REF | TEXT ;
+
+comment           = COMMENT_START [ COMMENT_TEXT ] COMMENT_END ;
+
+cdata             = CDATA_START [ CDATA_TEXT ] CDATA_END ;
+
+pi                = PI_START PI_TARGET [ PI_TEXT ] PI_END ;
