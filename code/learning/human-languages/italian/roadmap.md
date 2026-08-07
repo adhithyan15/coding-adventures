@@ -141,6 +141,50 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   from a system that no longer exists**. English took **manage** from Italian
   *maneggiare*, to handle a **horse**. **Authored.**
 
+- **Ch. 18 — Four verbs of the mind**: ***pensare*** (`IT-C18-pensare`) ←
+  *pēnsāre* "to **weigh out**" (← *pendere*) → pensive/pension/compensate/
+  expense/ponder — and the **doublet**: the one Latin verb reached Italian
+  **twice**, worn smooth through speech as *pesare* "to weigh" and lifted later
+  off the page as *pensare* "to think" → ***capire*** (`IT-C18-capire`) ←
+  ***capere*** "to **seize**" → capture/capable/accept/receive/recipe, so
+  understanding **is** grasping; carries the **-isc- class** (*capisco, capisci,
+  capisce*, but *capiamo, capite*) — a whole conjugation family Italian and
+  French share (*je finis / nous finissons*) and **Spanish lacks**; and flags
+  the look-alike that is **not** a relative, *caput* → *il capo* from Ch. 17 →
+  ***leggere*** (`IT-C18-leggere`) ← *legere* "to **gather**" → legible/lecture/
+  legend/lesson/elect/collect/intelligent, Greek cousin *legein* → *-logy*; the
+  **soft/hard g** flip (*LEDGE-eh-reh* vs *LEG-go*), same rule as the *c* of
+  *piacere*; and the *-ere* **stem stress** → ***scrivere*** (`IT-C18-scrivere`,
+  the payoff) ← *scrībere* "to **scratch**" → scribe/script/describe/postscript,
+  and **manoscritto** = Ch. 17's *mano* + this participle. Closes on the two
+  participles **letto** and **scritto**, rebuilt from *lectum*/*scriptum* by the
+  same *-ct-*/*-pt-* → *-tt-* law that gave *sette* and *otto* in Ch. 6, run
+  through Ch. 15's *ho parlato*. **Authored.**
+
+- **Ch. 19 — Taking, asking, helping, and *mi piace*** (the verb that runs
+  backwards):
+  ***prendere*** (`IT-C19-prendere`) ← ***prehendere*** "to seize" →
+  apprehend/comprehend/prehensile/**prison** (← *prehēnsiō*)/prey/prize/
+  surprise — the chapter's best pairing: Latin had **two** seizing verbs, and
+  Italian built **understanding** on *capere* (Ch. 18) and **taking** on
+  *prehendere*; participle **preso**, because *-ns-* → *-s-* where *-ct-*/*-pt-*
+  → *-tt-*; and at a table it means *I'll have* (**Prendo il pane / l'acqua / il
+  vino**, all Ch. 11) → ***chiedere*** (`IT-C19-chiedere`) ← ***quaerere*** "to
+  **seek**" → query/quest/question/require/acquire/inquest/exquisite, with the
+  hard ***ch*** already met in *mi chiamo*, and the second verb **domandare** ←
+  *dēmandāre* (*dē* + *mandāre* "to put into the **hand**" — Ch. 17's *manus*
+  again) → mandate/command, flagged as a **false friend**: it is not English
+  *demand* → ***aiutare*** (`IT-C19-aiutare`) ← *adiūtāre* (*ad-* + *iuvāre*) →
+  aid/aide-de-camp/adjutant, the one place Italian **kept least**: French
+  *aider* and Spanish *ayudar* keep the *d*, Italian dropped it entirely; and
+  *aiuto* is both "I help" and the shout → ***mi piace*** (`IT-C19-mi-piace`,
+  the payoff): Ch. 3's one-word courtesy **piacere** revealed as this verb's
+  **dictionary form**, and the sentence built the other way round — ***Mi piace
+  il vino*** is "the wine pleases me", so *il vino* is the **subject** and the
+  verb goes plural for the thing (*mi piacciono le stagioni*), never for you.
+  Spanish's *me gusta* (a different Latin verb) and French's *le vin me plaît*
+  (the same *placēre*) supplied in full. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

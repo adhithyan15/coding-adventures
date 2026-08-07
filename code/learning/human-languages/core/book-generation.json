@@ -326,6 +326,20 @@
       "output": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "italian",
+      "chapter": 18,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:it-mind-verbs",
+      "output": "italian/book/chapters/ch18-mind-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "title": "Taking, Asking, Helping — and Mi Piace",
+      "label": "ch:it-backwards-verb",
+      "output": "italian/book/chapters/ch19-backwards-verb.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "title": "How Are You?",
