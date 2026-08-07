@@ -139,8 +139,14 @@ function systemOf(ch: string): string | null {
   return null;
 }
 
-/** Reading order within a track: chapter, then sequence, then id for stability. */
-function readingOrder(a: ParsedLesson, b: ParsedLesson): number {
+/**
+ * Reading order within a track: chapter, then sequence, then id for stability.
+ *
+ * Exported because `continuity.ts` measures the same walk. Two independent
+ * orderings that drift apart would make the two reports disagree about which
+ * lesson comes first, and the disagreement would be silent.
+ */
+export function readingOrder(a: ParsedLesson, b: ParsedLesson): number {
   const chapter = (lesson: ParsedLesson) =>
     typeof lesson.realization.chapter === "number" && Number.isFinite(lesson.realization.chapter)
       ? lesson.realization.chapter
@@ -267,7 +273,7 @@ export interface RampReport {
   };
 }
 
-function frontmatterList(lesson: ParsedLesson, key: string): string[] {
+export function frontmatterList(lesson: ParsedLesson, key: string): string[] {
   const value = lesson.frontmatter[key];
   if (Array.isArray(value)) return value.filter((item): item is string => typeof item === "string");
   return typeof value === "string" && value.trim() ? [value.trim()] : [];
@@ -281,7 +287,7 @@ function frontmatterList(lesson: ParsedLesson, key: string): string[] {
  * chapter gates report all 279 authored chapters as broken, so it is worth restating
  * wherever atoms are counted.
  */
-function introducedAtoms(lesson: ParsedLesson): string[] {
+export function introducedAtoms(lesson: ParsedLesson): string[] {
   const atoms = new Set(frontmatterList(lesson, "introduces.knowledge"));
   for (const block of lesson.blocks ?? []) {
     for (const atom of block.knowledge?.introduces ?? []) atoms.add(atom);

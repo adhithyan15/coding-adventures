@@ -105,6 +105,36 @@ modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLess
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
 
+### Continuity — does the course have a memory of itself? (HL09)
+
+The ramp budgets measure how big each **step** is. This measures whether the steps
+hold together.
+
+```ts
+import { measureContinuity, loadEverything } from "@coding-adventures/human-language-data";
+
+const { lessons } = loadEverything();
+const c = measureContinuity(lessons);
+
+c.summary.lessonsWithoutSequence;   // 565 — no declared reading order at all
+c.summary.atomsNeverRevisited;      // 746 of 1469 (51%) taught once, never again
+c.summary.missedByWindow;           // { R1: 745, R2: 1068, R3: 649, R4: 132 }
+c.summary.forwardReferences;        // 509 uses of material a later lesson teaches
+```
+
+Order comes first: 565 lessons carry no `sequence`, so their order exists only in
+hand-typed LaTeX (French: **64 of 73**). A ramp whose order is unknown cannot be
+verified, so every other number is provisional until that reaches zero.
+
+Reinforcement reads `practises.knowledge`, **never `reviews_of`** — which 144 of
+Spanish's 146 lessons set and which cannot close a window, because it names lesson
+ids while atoms live in another namespace.
+
+Forward references carry their own evidence: a word is reported only when a *later
+lesson's headword* teaches it. That reproduces what a human reviewer found by
+reading — `ES-C07-beber` says *"Como pan y bebo agua"* while `pan` and `agua` are
+chapter 26.
+
 ### The two ramps (HL08)
 
 Gentleness has **two** curves, and until HL-C18C only one of them was counted.
