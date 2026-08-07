@@ -40,9 +40,12 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
 | `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 | `int64_t __gc_collect(void)` | conservative collection rooted at this thread's live stack + callee-saved registers (no caller roots); returns objects freed |
-| `int64_t __gc_safepoint(void)` | paced collect — once the live set reaches the adaptive threshold, runs `__gc_collect_precise` (or `__gc_collect_compacting` when `FlatHeap::should_compact` says fragmentation warrants it); returns objects freed (0 if throttled) |
+| `int64_t __gc_safepoint(void)` | paced collect — once the live set reaches the adaptive threshold, runs `__gc_collect_minor_precise` (only if `__gc_set_auto_minor(1)` attested barrier coverage) or `__gc_collect_compacting`/`__gc_collect_precise`, per `FlatHeap::should_collect_minor`/`should_compact`'s priority order; returns objects freed (0 if throttled) |
 | `void __gc_write_barrier(int64_t parent, int64_t child)` | generational write barrier — records an old `parent` so a minor cycle finds its young children (O(1); `child` not dereferenced) |
 | `int64_t __gc_collect_minor(void)` | minor (young-only) collection rooted at this thread's stack + registers; reclaims young garbage without scanning the old generation; returns objects freed |
+| `int64_t __gc_collect_minor_precise(void)` | minor collection rooted precisely at this thread's stack (AOT00-T8) — the generational analogue of `__gc_collect_precise`; returns objects freed |
+| `void __gc_set_max_minor_streak(int64_t cap)` / `int64_t __gc_max_minor_streak(void)` | tune/read the cap on consecutive automatic minor collections before one is forced to be full (default `8`; clamped `1..=UINT32_MAX`) |
+| `void __gc_set_auto_minor(int64_t on)` / `int64_t __gc_is_auto_minor(void)` | attest every reference store this embedder emits is `__gc_write_barrier`-covered, enabling `__gc_safepoint`'s automatic minor path — **off by default**; enabling it without real barrier coverage is a use-after-free, not a leak |
 | `int64_t __gc_live_bytes(void)` | live payload bytes |
 | `int64_t __gc_collection_count(void)` | collections run so far |
 | `void __gc_reset(void)` | drop the whole heap; free everything |

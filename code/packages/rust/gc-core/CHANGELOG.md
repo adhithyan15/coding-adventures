@@ -1,5 +1,56 @@
 # Changelog — gc-core
 
+## 0.28.0 — 2026-08-06 — `FlatHeap::should_collect_minor` — automatic generational enactment, gated (AOT00-T8)
+
+- **`FlatHeap::should_collect_minor(&self) -> bool`** — the generational sibling of
+  `should_compact`: whether the *next* paced collection should be a **minor**
+  (young-generation-only) cycle instead of a full one, per `AdaptivePolicy`'s
+  survival-ratio signal. Until now `AdaptivePolicy`'s `Generational`
+  recommendation was purely advisory — nothing ever auto-selected a minor
+  collection at an automatic collection site; only an explicit direct caller
+  (`vm-core`) ever ran one.
+- **`auto_minor: bool` (default `false`) + `set_auto_minor`/`auto_minor`** —
+  `should_collect_minor` hardcodes `false` unless this is set. A minor
+  collection's correctness depends entirely on the remembered set being
+  *complete* (every old→young reference store must have called
+  `write_barrier`), which `gc-core` cannot verify a given embedder's compiled
+  output actually does. **Security-review finding, fixed before merge:**
+  `vm-core`'s interpreter loop calls the barrier on every store, but the
+  native-AOT/LLVM code generators' `field_store` lowering does not — enabling
+  automatic minor collection unconditionally would have been a real
+  use-after-free for every AOT-compiled program, not a corner case (immediate
+  tenuring + a churny allocation loop is the *common* profile
+  `AdaptivePolicy` reads as "recommend Generational"). Default `false` keeps
+  every existing call site's behavior byte-for-byte unchanged; an embedder
+  opts in only after confirming its own barrier coverage.
+- **`minor_streak` + `max_minor_streak` (default `8`, `DEFAULT_MAX_MINOR_STREAK`)** —
+  bounds how many consecutive paced minor collections may run before one is
+  forced to be full, once `auto_minor` is on. A minor cycle never scans or
+  frees the old generation, and the EMA survival-ratio signal driving
+  `should_collect_minor` can stay low indefinitely, so without this cap a
+  sustained low-survival workload would starve the old generation of
+  collection forever (a leak, orthogonal to the UAF above).
+  `set_max_minor_streak`/`max_minor_streak` (clamped to a minimum of `1`)
+  mirror `set_tenure_age`/`tenure_age`. Every full-collect entry (`collect`,
+  `collect_region`, `collect_precise`, `collect_mixed`, `collect_compacting`,
+  `incremental_finish`) resets the streak; every minor entry increments it.
+- **`FlatHeap::collect_minor_mixed(root_slots, regions)`** — the young-generation
+  analogue of `collect_mixed`: traces exact root slots *and* conservative
+  regions in one pass, young-only. Needed because a real precise stack walk
+  produces exactly that mix (some frames stack-mapped, some not), and neither
+  existing minor entry (`collect_minor` takes root *values*; `collect_minor_region`
+  takes one raw span) matches that shape. Always directly callable (the
+  `auto_minor` gate applies only to `should_collect_minor`'s automatic
+  recommendation, not to this or any other explicit minor entry).
+- **`minor_finish` now calls `adapt_threshold`**, mirroring every full-collect
+  entry — a review-caught gap: without it, pacing state didn't re-tune after a
+  minor cycle, so a heap sitting over threshold could stay `should_collect()
+  == true` (re-walking the stack at every safepoint) until a full collect
+  eventually ran.
+- See `code/specs/AOT00-T8-adaptive-safepoint-scheduling.md` for the full design,
+  the starvation-hazard analysis (§2), and the barrier-coverage hazard (§2b).
+  `gc-core-capi` 0.24.0 wires this into `__gc_safepoint`.
+
 ## 0.27.1 — 2026-08-03 — regression test: array elements need a ref-array kind, not a no-ref one
 
 No production code change — adds

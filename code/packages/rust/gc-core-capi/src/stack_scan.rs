@@ -375,10 +375,13 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 
 /// A **paced** collect: if the heap has reached its adaptive threshold
 /// ([`gc_core::FlatHeap::should_collect`]), run a collection — **precise**
-/// roots when [`__gc_collect_precise`] can provide them, upgraded further to
-/// a **compacting** cycle ([`__gc_collect_compacting`]) when
-/// [`gc_core::FlatHeap::should_compact`] says fragmentation warrants it.
-/// Otherwise does nothing. Returns objects freed (`0` if no collection ran).
+/// roots when [`__gc_collect_precise`] can provide them, upgraded to a **minor**
+/// cycle ([`__gc_collect_minor_precise`]) when
+/// [`gc_core::FlatHeap::should_collect_minor`] says the survival-ratio signal
+/// warrants it (AOT00-T8), or to a **compacting** cycle
+/// ([`__gc_collect_compacting`]) when [`gc_core::FlatHeap::should_compact`] says
+/// fragmentation warrants it. Otherwise does nothing. Returns objects freed (`0`
+/// if no collection ran).
 ///
 /// This is the drop-in for `twig_gc.c`'s `__twig_gc_safepoint`. The native
 /// backend emits a `safepoint` op at loop back-edges and function entries — cheap,
@@ -387,16 +390,36 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 /// cost stays proportional to allocation, and a tight allocation loop can never
 /// starve the collector (the twig_gc.c comment's original motivation).
 ///
-/// **Always calling the precise/compacting entry points is sound, not just an
-/// optimisation opportunity:** both degrade *exactly* to this function's old
+/// **The minor branch requires an explicit attestation** ([`__gc_set_auto_minor`]) —
+/// unlike every other branch here, it is *not* on by default. A minor collection's
+/// soundness depends entirely on the remembered set being complete (every old→young
+/// reference store must have called [`__gc_write_barrier`]), which this crate cannot
+/// verify a given embedder's compiled output actually does; [`gc_core::FlatHeap::
+/// should_collect_minor`] hardcodes `false` until [`gc_core::FlatHeap::set_auto_minor`]
+/// is called, so this branch is unreachable — and `__gc_safepoint`'s behavior is
+/// byte-for-byte what it was before AOT00-T8 — until an embedder opts in.
+///
+/// **Priority order** (minor, then compacting, then plain precise) mirrors
+/// [`gc_core::policy::AdaptivePolicy`]'s own stated priority: `should_collect_minor`
+/// only answers `true` when Generational is the policy's single top-priority
+/// recommendation (Incremental — the only higher-priority signal — isn't
+/// auto-enactable at a single safepoint call, see `AOT00-T8-adaptive-safepoint-
+/// scheduling.md` §1), and `should_collect_minor`/`should_compact` are mutually
+/// exclusive by the same construction, so checking minor first never masks a
+/// legitimate compacting signal — it only defers to a higher-priority one, exactly
+/// as `should_compact`'s own doc comment already describes for pause-time.
+///
+/// **Always calling the precise/minor/compacting entry points is sound, not just an
+/// optimisation opportunity:** all three degrade *exactly* to this function's old
 /// fully-conservative behaviour when no stack maps are registered yet (see
 /// their own doc comments — an unmapped frame becomes a conservative region
 /// tiling its span, so nothing is missed and nothing unsound is moved). A
 /// program with zero maps registered pays a small extra bookkeeping cost
 /// (walking the frame-pointer chain into per-frame regions instead of one
-/// bulk `[sp, base)` scan) for identical coverage; as backends register
-/// maps, this safepoint gets more precise — and, once `should_compact` fires
-/// — starts relocating objects — automatically, with no separate opt-in.
+/// bulk `[sp, base)` scan) for identical coverage; as backends register maps, this
+/// safepoint gets more precise — and, once attested-safe and `should_collect_minor`
+/// or `should_compact` fires, starts running cheaper/relocating cycles —
+/// automatically, with no *further* opt-in beyond the one-time attestation above.
 ///
 /// # Safety
 ///
@@ -407,7 +430,9 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
     if !with_heap(|h| h.should_collect()) {
         return 0;
     }
-    if with_heap(|h| h.should_compact()) {
+    if with_heap(|h| h.should_collect_minor()) {
+        __gc_collect_minor_precise()
+    } else if with_heap(|h| h.should_compact()) {
         __gc_collect_compacting()
     } else {
         __gc_collect_precise()
@@ -480,6 +505,52 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
 
     // Keep `regs` materialised across the collect: its address is what makes the
     // spilled registers part of the scanned roots.
+    core::hint::black_box(&regs);
+    freed
+}
+
+/// A **minor** (young-generation-only) collection rooted PRECISELY at this thread's
+/// stack (AOT00-T8) — the generational analogue of [`__gc_collect_precise`], sharing
+/// the exact same frame-pointer walk (precise slots for stack-mapped frames,
+/// conservative regions for the rest, plus the spilled callee-saved registers) but
+/// handing the result to [`gc_core::FlatHeap::collect_minor_mixed`] instead of
+/// `collect_mixed` — so it never scans or frees the old generation (see
+/// [`gc_core::FlatHeap::collect_minor`]'s own doc comment for why).
+///
+/// With no stack maps registered this degrades to exactly [`__gc_collect_minor`] (every
+/// frame becomes one conservative region tiling `[sp, base)`), the same safe
+/// degradation `__gc_collect_precise` has relative to `__gc_collect`. A failed
+/// stack-base detection collects nothing this cycle — bias-to-leak, identical to every
+/// other collect entry here.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_precise`]: sound to call from any thread that owns
+/// its stack; it must not run while another thread mutates the same heap.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_minor_precise() -> i64 {
+    // Spill callee-saved registers into a stack buffer (in this frame), then SP.
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    // Capture this frame's frame pointer — the walk's unwind anchor.
+    let fp = current_fp();
+    let base = stack_base();
+
+    // Same trustworthy-range gate as every other precise entry (bias-to-leak).
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| h.collect_minor_mixed(&slots, &regions).freed as i64)
+    } else {
+        0
+    };
+
     core::hint::black_box(&regs);
     freed
 }
@@ -820,6 +891,63 @@ mod tests {
         );
         assert!(__gc_live_bytes() >= 16);
         assert_eq!(__gc_collection_count(), 1);
+        core::hint::black_box(kept);
+    }
+
+    /// End-to-end smoke test for the argument-less **minor** entry
+    /// `__gc_collect_minor_precise` (AOT00-T8): the same asm-capture → frame-pointer-walk
+    /// path, now driving `collect_minor_mixed`. A stack-rooted young local survives — and,
+    /// the property that actually distinguishes this from `__gc_collect_precise`, a
+    /// genuinely unreachable **old**-generation object survives too, because a minor
+    /// cycle never scans or frees the old generation.
+    ///
+    /// This deliberately does **not** assert on the *count* of young objects freed: a raw
+    /// conservative stack scan can retain an extra object if a stray, stale stack word
+    /// happens to look like its address (the same caveat `run_stack_scan_case` documents),
+    /// and that noise is orthogonal to what this test is proving. `__gc_kind_of` gives an
+    /// exact, non-conservative answer for the one property that matters here — the old
+    /// object's survival is unconditional (never touched, stray garbage or not), not a
+    /// "happened to be found live" — so it is safe to assert on exactly.
+    #[test]
+    fn minor_precise_collect_keeps_live_local_and_retains_old() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_minor_precise_collect_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_minor_precise_collect_case() {
+        // A kind with no ref fields, registered only so `__gc_kind_of` can distinguish
+        // "still a live block" (returns the kind id) from "reclaimed" (returns 0) — a
+        // kind-0 object is ambiguous between the two (opaque/unregistered is also `0`).
+        let probe_kind = unsafe { crate::__gc_register_kind(core::ptr::null(), 0) } as u16;
+
+        // Tenure an object to the old generation, then orphan it: no root keeps it
+        // alive from here on, so only a cycle that skips the old generation entirely
+        // (a minor cycle) can leave it standing.
+        let old = crate::__gc_alloc_kind(16, probe_kind);
+        assert!(old != 0);
+        let _ = unsafe { __gc_collect() }; // stack-rooted at this call -> tenured
+        assert_eq!(__gc_collection_count(), 1);
+
+        let kept = __gc_alloc(16); // young, rooted through the collect below
+        assert!(kept != 0);
+        unsafe { *(kept as *mut i64) = 0x0ff1ce };
+
+        let _freed = unsafe { __gc_collect_minor_precise() };
+
+        assert_eq!(
+            unsafe { *(kept as *const i64) },
+            0x0ff1ce,
+            "the stack-rooted young object survives the minor collect"
+        );
+        assert_eq!(
+            unsafe { crate::__gc_kind_of(old) },
+            probe_kind as i64,
+            "the unrooted OLD object survives — a minor cycle never scans/frees the old generation"
+        );
+        assert_eq!(__gc_collection_count(), 2, "minor collections count too");
         core::hint::black_box(kept);
     }
 

@@ -25,7 +25,7 @@
 //! | `__gc_collect_roots(roots, count)` | mark from `count` root words at `roots`, sweep; returns objects freed |
 //! | `__gc_collect_region(base, len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 //! | `__gc_collect()` | conservative collect rooted at this thread's live stack + callee-saved registers; returns objects freed |
-//! | `__gc_safepoint()` | paced collect — when live bytes reach the adaptive threshold, runs `__gc_collect_precise` (or `__gc_collect_compacting` when `FlatHeap::should_compact` says so); returns objects freed |
+//! | `__gc_safepoint()` | paced collect — when live bytes reach the adaptive threshold, runs `__gc_collect_minor_precise` (only if `__gc_set_auto_minor(1)` attested barrier coverage), or `__gc_collect_compacting`/`__gc_collect_precise`, per `FlatHeap::should_collect_minor`/`should_compact`; returns objects freed |
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |
@@ -300,6 +300,48 @@ pub extern "C" fn __gc_set_tenure_age(threshold: i64) {
 #[no_mangle]
 pub extern "C" fn __gc_tenure_age() -> i64 {
     with_heap(|h| h.tenure_age() as i64)
+}
+
+/// Set the cap on **consecutive paced minor collections** (AOT00-T8; see
+/// [`gc_core::FlatHeap::should_collect_minor`]) — how many `__gc_safepoint` calls in a
+/// row may run a minor collection before one is forced to be full, bounding how stale
+/// old-generation garbage can get under a sustained low-survival-ratio workload.
+/// `cap` is clamped to `1..=u32::MAX` (`0` and negatives → `1`; a `0` cap would silently
+/// disable automatic minor scheduling rather than just tune it). Idempotent; safe at
+/// any time.
+#[no_mangle]
+pub extern "C" fn __gc_set_max_minor_streak(cap: i64) {
+    let c = cap.clamp(1, u32::MAX as i64) as u32;
+    with_heap(|h| h.set_max_minor_streak(c));
+}
+
+/// The current minor-streak cap (see [`__gc_set_max_minor_streak`]).
+#[no_mangle]
+pub extern "C" fn __gc_max_minor_streak() -> i64 {
+    with_heap(|h| h.max_minor_streak() as i64)
+}
+
+/// **Attest that every reference store this embedder's compiled output performs is
+/// covered by [`__gc_write_barrier`]**, and thereby allow `__gc_safepoint` to run
+/// automatic minor collections (see [`gc_core::FlatHeap::auto_minor`]'s doc comment for
+/// the full soundness argument this attests to).
+///
+/// **Off by default.** A minor collection's correctness depends entirely on the
+/// remembered set being complete; if this embedder's compiled field-store lowering does
+/// not call `__gc_write_barrier` on every old→young reference store, calling this with
+/// a nonzero `on` makes `__gc_safepoint` capable of freeing a still-referenced young
+/// object — a real use-after-free, not a leak or an imprecision. Do not call this unless
+/// you have verified every heap-reference store your compiler emits is barrier-covered.
+#[no_mangle]
+pub extern "C" fn __gc_set_auto_minor(on: i64) {
+    with_heap(|h| h.set_auto_minor(on != 0));
+}
+
+/// Whether automatic minor scheduling is attested-safe (see [`__gc_set_auto_minor`]).
+/// Returns `0`/`1`.
+#[no_mangle]
+pub extern "C" fn __gc_is_auto_minor() -> i64 {
+    with_heap(|h| h.auto_minor() as i64)
 }
 
 /// Drop the entire heap, freeing every outstanding block, and reset counters.
@@ -626,6 +668,47 @@ mod tests {
         // `__gc_reset` drops the heap but a fresh heap re-defaults to 1.
         __gc_reset();
         assert_eq!(__gc_tenure_age(), 1, "reset restores the default threshold");
+    }
+
+    /// The minor-streak cap (AOT00-T8) is settable + gettable through the C ABI and
+    /// clamps to `1..=u32::MAX` — mirrors `c_abi_set_and_get_tenure_age_clamps`.
+    #[test]
+    fn c_abi_set_and_get_max_minor_streak_clamps() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        assert_eq!(__gc_max_minor_streak(), 8, "default cap is 8");
+
+        __gc_set_max_minor_streak(3);
+        assert_eq!(__gc_max_minor_streak(), 3);
+
+        __gc_set_max_minor_streak(0);
+        assert_eq!(__gc_max_minor_streak(), 1, "0 clamps to 1");
+        __gc_set_max_minor_streak(-9);
+        assert_eq!(__gc_max_minor_streak(), 1, "negative clamps to 1");
+
+        __gc_reset();
+        assert_eq!(__gc_max_minor_streak(), 8, "reset restores the default cap");
+    }
+
+    /// `__gc_is_auto_minor`/`__gc_set_auto_minor` forward to `FlatHeap::auto_minor`/
+    /// `set_auto_minor`, off by default — the security-review fix that keeps
+    /// `__gc_safepoint` from running an automatic minor collection until the embedder
+    /// attests barrier coverage.
+    #[test]
+    fn c_abi_auto_minor_defaults_off_and_is_settable() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        assert_eq!(__gc_is_auto_minor(), 0, "off by default");
+        __gc_set_auto_minor(1);
+        assert_eq!(__gc_is_auto_minor(), 1);
+        __gc_set_auto_minor(0);
+        assert_eq!(__gc_is_auto_minor(), 0);
+
+        __gc_set_auto_minor(1);
+        __gc_reset();
+        assert_eq!(__gc_is_auto_minor(), 0, "reset restores the default (off)");
     }
 
     /// `__gc_register_kind` + `__gc_alloc_kind` give **precise** interior tracing
