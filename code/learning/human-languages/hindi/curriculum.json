@@ -140,11 +140,14 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "HI-C05-bolna",
+        "HI-C05-bolta-hun",
         "HI-C05-rahna",
         "HI-C05-karna"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "HI-EXT-028-LANGUAGE-SPECIFIC"
+      ],
       "after": []
     },
     {
@@ -369,6 +372,23 @@
         "HI-EXT-026-REGISTER"
       ],
       "after": []
+    },
+    {
+      "id": "HI-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C34-sochna",
+        "HI-C34-samajhna",
+        "HI-C34-padhna",
+        "HI-C34-likhna",
+        "HI-C35-lena",
+        "HI-C35-puchna",
+        "HI-C35-madad",
+        "HI-C35-pasand"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -487,7 +507,8 @@
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "HI-PATH-008",
-        "HI-PATH-028"
+        "HI-PATH-028",
+        "HI-PATH-029"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -499,14 +520,9 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-KNOW",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -520,14 +536,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -811,6 +824,17 @@
       "prerequisites": [],
       "lessons": [
         "HI-C32-evening-register"
+      ]
+    },
+    {
+      "id": "HI-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can build the Hindi present habitual — stem + -tā/-tī/-te plus honā — on any verb stem I know.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C05-bolta-hun"
       ]
     }
   ]

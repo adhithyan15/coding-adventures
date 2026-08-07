@@ -2010,6 +2010,40 @@
       "jsonHash": "fnv1a64:8d95973c63c6777d"
     },
     {
+      "language": "hindi",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:98c0474e95403a85",
+      "lessonIds": [
+        "HI-C34-sochna",
+        "HI-C34-samajhna",
+        "HI-C34-padhna",
+        "HI-C34-likhna"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch34.txt",
+      "json": "hindi/narration/ch34.json",
+      "textHash": "fnv1a64:98ebd2cf135f6039",
+      "jsonHash": "fnv1a64:666dad0c489b7563"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:19427f33e5a3b21b",
+      "lessonIds": [
+        "HI-C35-lena",
+        "HI-C35-puchna",
+        "HI-C35-madad",
+        "HI-C35-pasand"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch35.txt",
+      "json": "hindi/narration/ch35.json",
+      "textHash": "fnv1a64:166f16be3a1f289d",
+      "jsonHash": "fnv1a64:d2e4dc0f3a88294d"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",

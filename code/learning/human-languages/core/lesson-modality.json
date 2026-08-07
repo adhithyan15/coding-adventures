@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4710f7f897390137",
+  "sourceHash": "fnv1a64:655202e909d76cfd",
   "summary": {
-    "totalLessons": 1249,
-    "voice": 848,
-    "sight": 348,
+    "totalLessons": 1257,
+    "voice": 852,
+    "sight": 352,
     "pen": 53,
-    "drivableLessons": 848,
+    "drivableLessons": 852,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 400,
-    "drivablePrefixTotal": 679,
+    "chapterCount": 402,
+    "drivablePrefixTotal": 681,
     "fullyDrivableChapters": 276,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
@@ -1647,12 +1647,12 @@
     },
     {
       "language": "hindi",
-      "lessonCount": 85,
-      "voice": 49,
-      "sight": 25,
+      "lessonCount": 93,
+      "voice": 53,
+      "sight": 29,
       "pen": 11,
-      "drivablePercent": 58,
-      "drivablePrefixTotal": 38,
+      "drivablePercent": 57,
+      "drivablePrefixTotal": 40,
       "modalities": [
         "voice",
         "sight",
@@ -2192,6 +2192,40 @@
           "drivable": true,
           "drivableLessonIds": [
             "HI-C33-shubh-dopahar"
+          ]
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "HI-C34-samajhna",
+          "drivable": false,
+          "drivableLessonIds": [
+            "HI-C34-sochna"
+          ]
+        },
+        {
+          "chapter": 35,
+          "lessonCount": 4,
+          "voice": 3,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "HI-C35-puchna",
+          "drivable": false,
+          "drivableLessonIds": [
+            "HI-C35-lena"
           ]
         }
       ]
@@ -12206,6 +12240,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:34614427f8c8c4ec"
+    },
+    {
+      "id": "HI-C34-sochna",
+      "language": "hindi",
+      "chapter": 34,
+      "sequence": 610,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6dca6cd5e0e436f"
+    },
+    {
+      "id": "HI-C34-samajhna",
+      "language": "hindi",
+      "chapter": 34,
+      "sequence": 620,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fe18b61235e1be5b"
+    },
+    {
+      "id": "HI-C34-padhna",
+      "language": "hindi",
+      "chapter": 34,
+      "sequence": 630,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:868c856e36706e86"
+    },
+    {
+      "id": "HI-C34-likhna",
+      "language": "hindi",
+      "chapter": 34,
+      "sequence": 640,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:281996bb41433226"
+    },
+    {
+      "id": "HI-C35-lena",
+      "language": "hindi",
+      "chapter": 35,
+      "sequence": 650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9e64bdec332f5c3"
+    },
+    {
+      "id": "HI-C35-puchna",
+      "language": "hindi",
+      "chapter": 35,
+      "sequence": 660,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8279a3a4b8c92b74"
+    },
+    {
+      "id": "HI-C35-madad",
+      "language": "hindi",
+      "chapter": 35,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:235e467083ddf21d"
+    },
+    {
+      "id": "HI-C35-pasand",
+      "language": "hindi",
+      "chapter": 35,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4625fc75bef6bc43"
     },
     {
       "id": "IT-C01-buongiorno",
