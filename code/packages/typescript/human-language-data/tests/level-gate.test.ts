@@ -8,9 +8,15 @@ import { summarizeLevels } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
 import { measureContinuity } from "../src/continuity.js";
 
+// Built ONCE for the file, not once per test. The gap report now walks continuity
+// (~900ms) and the level gate on top of everything else, so rebuilding an identical
+// report five times cost ~18s and timed out the 5s default on CI. Memoising is also
+// simply correct: every test wants the same report.
+let cached: ReturnType<typeof buildCurriculumGapReport> | undefined;
 function realReport() {
+  if (cached) return cached;
   const e = loadEverything();
-  return buildCurriculumGapReport({
+  cached = buildCurriculumGapReport({
     registry: e.registry,
     lessons: e.lessons,
     books: e.books,
@@ -19,6 +25,7 @@ function realReport() {
     trackChapters: loadTrackChapters(),
     chapterPolicy: loadChapterPolicy(),
   });
+  return cached;
 }
 
 describe("the gate that would have caught the A2 claim", () => {

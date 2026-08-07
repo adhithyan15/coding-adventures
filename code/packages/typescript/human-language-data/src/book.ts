@@ -1,6 +1,6 @@
 import { canonicalChapterHash } from "./hash.js";
 import { hasOwn } from "./constants.js";
-import type { LessonBodyBlock } from "./types.js";
+import type { LessonBodyBlock, ChapterCapability } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
 
 export interface BookGenerationTarget {
@@ -857,9 +857,45 @@ function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptionsI
 }
 
 /** Render one configured chapter from the same typed lesson AST the app receives. */
+/**
+ * The chapter opening a reader actually wants: what they will be able to do.
+ *
+ * DERIVED from the HL05 capability ledger, never authored into the .tex — 302
+ * hand-written intros would be 302 places to drift from the lessons they describe,
+ * and the generated file says at the top that editing it is pointless.
+ *
+ * It must stand alone in English. HL09 §8 is explicit, and the handwritten chapters
+ * show why: several open with cross-track references — "the same wearing-down the
+ * Hindi track shows", "every other track in this course" — which are simply dangling
+ * pointers to a reader holding one language's PDF. English is the only requirement
+ * for any book here, so an intro may never lean on another track.
+ *
+ * `canDo` is already first-person ("I can greet someone in Spanish…"), so it is
+ * quoted as the goal rather than reflowed into second person; rewriting it would
+ * make the book and the ledger disagree about the same sentence.
+ */
+function chapterIntro(
+  capability: ChapterCapability | undefined,
+  options?: InlineRenderOptionsInput,
+): string[] {
+  if (!capability?.canDo) return [];
+  const goal = renderInlineMarkdown(capability.canDo, options);
+  const payoff = capability.payoff?.summary
+    ? renderInlineMarkdown(capability.payoff.summary, options)
+    : "";
+  return [
+    "\\begin{chapteropening}",
+    `\\textbf{By the end of this chapter:} \\emph{${goal}}`,
+    ...(payoff ? ["", `${payoff}`] : []),
+    "\\end{chapteropening}",
+    "",
+  ];
+}
+
 export function renderBookChapter(
   target: BookGenerationTarget,
   allLessons: ParsedLesson[],
+  capability?: ChapterCapability,
 ): GeneratedBookChapter {
   const renderOptions = targetRenderOptions(target);
   const lessons = allLessons
@@ -903,10 +939,12 @@ export function renderBookChapter(
     `\\chapter{${renderInlineMarkdown(target.title, renderOptions)}}`,
     `\\label{${target.label}}`,
     "",
-    // No standing blurb under the chapter title. It used to explain how the
-    // chapter was produced ("generated from the canonical micro-lessons...")
-    // — true, and of no interest whatsoever to somebody who just wants to
-    // learn Spanish. Books do not describe their own build system.
+    // The blurb that used to sit here explained how the chapter was PRODUCED
+    // ("generated from the canonical micro-lessons...") — true, and of no interest
+    // whatsoever to somebody who just wants to learn Spanish. Books do not describe
+    // their own build system. Removing it was right; leaving nothing was not, and
+    // 288 of 407 chapters have opened on a bare title ever since.
+    ...chapterIntro(capability, renderOptions),
     ...sections,
     "",
   ].join("\n");

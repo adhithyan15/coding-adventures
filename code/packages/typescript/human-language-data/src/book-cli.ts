@@ -6,7 +6,7 @@ import {
   type BookGenerationTarget,
   type InlineRenderOptions,
 } from "./book.js";
-import { defaultCurriculumRoot, loadLessons } from "./loader.js";
+import { defaultCurriculumRoot, loadLessons, loadTrackChapters } from "./loader.js";
 
 interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
   /** Named reusable mapping from the config's scriptSets table. */
@@ -102,6 +102,11 @@ export function handwrittenBookChapters(
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
+  const trackChapters = loadTrackChapters(root);
+  const capabilityFor = (language: string, chapter: number) =>
+    trackChapters
+      .find((track) => track.language === language)
+      ?.chapters.find((entry) => entry.chapter === chapter);
   const config = loadConfig(root);
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error("book-generation.json must declare version 1 and at least one target");
@@ -143,7 +148,11 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       }
       target = { ...target, inlineScripts };
     }
-    const generated = renderBookChapter(target, lessons);
+    // HL09 §8: a chapter opens by saying what the reader will be able to do. The
+    // capability is looked up rather than authored, so the intro cannot drift from
+    // the ledger the gap report measures.
+    const capability = capabilityFor(target.language, target.chapter);
+    const generated = renderBookChapter(target, lessons, capability);
     safeOutput(root, target.output);
     outputs.set(target.output, generated.tex);
     manifest.chapters.push({
