@@ -17,6 +17,14 @@ frontend already emits `recv.meth(args…)` as `BuiltinCall("__method__", [recv,
 StrLit("meth"), …args])`, with a trailing block lowered (per RB1) to a `MakeClosure`
 appended to the args.
 
+**Authority note (added by SIR25):** the dispatch resolution order this doc
+extends is specified independently of Ruby in
+[`SIR25-language-agnostic-object-model.md`](SIR25-language-agnostic-object-model.md)
+§2.2. This doc remains authoritative for the *catalog itself* (§ v0 built-in
+catalog below) — the specific method names/arities/behaviors — which any
+frontend or backend implementing SIR's object model is measured against,
+independent of which frontend happens to emit calls into it today.
+
 ## Dispatch algorithm (extends current `call_method`/`callMethod`)
 
 Resolution order for `call_method(recv, name, *args)`:

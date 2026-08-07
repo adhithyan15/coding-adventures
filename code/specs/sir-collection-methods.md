@@ -13,6 +13,13 @@ end-to-end in every source language and every backend**. These are ubiquitous in
 real Ruby/Python/JS; closing this gap is the single biggest step toward "run real
 programs."
 
+**Authority note (added by SIR25):** the catalog below is SIR's own built-in
+method surface, cross-referenced from
+[`SIR25-language-agnostic-object-model.md`](SIR25-language-agnostic-object-model.md)
+§3 as the definitive method-name/arity/behavior reference — independent of
+which frontend emits a call into it. Its provenance (Ruby's stdlib naming) is
+a naming choice, not a structural dependency; see SIR25 §3.
+
 This is the mandate's **backend-runtime-library arm**: where a target language has
 no native form (Go, and the reflective/uniform-dispatch cases), the backend ships a
 small runtime library that implements the operation; where a native form exists

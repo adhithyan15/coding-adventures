@@ -7,6 +7,14 @@ toward the north star (any Ruby script → semantically-correct Python/JS output
 real Ruby is object-oriented, and today user-defined classes only *parse* — they
 don't *execute*.
 
+**Authority note (added by SIR25):** this doc records the design rationale and
+milestone history for SIR's one dynamic-OOP profile. The dispatch mechanism it
+describes is now specified independently of Ruby in
+[`SIR25-language-agnostic-object-model.md`](SIR25-language-agnostic-object-model.md)
+§2 — read that for "what is SIR's semantics," read this for "why it was built
+this way and in this order." The design was developed against Ruby as the first
+concrete frontend, which is why the prose below still speaks in Ruby terms.
+
 ## Current state (2026-07-01 OOP survey — what works vs breaks)
 
 **Works (syntactic + variables):** `class Foo < Bar; end` → `Stmt::ClassDef {
