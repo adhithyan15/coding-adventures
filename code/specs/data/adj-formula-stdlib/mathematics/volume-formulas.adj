@@ -1,0 +1,75 @@
+% ============================================================================
+% volume-formulas.adj — foundational solid-geometry volume formulas.
+% ============================================================================
+% The measurement track's THIRD dimension: volume formulas for the two solids
+% a grade-schooler meets first, each an importable, byte-provenanced,
+% PARAMETERIZED `formula` — the direct sibling of `geometry-formulas.adj`'s
+% area/perimeter formulas, one dimension up. A consumer states NO arithmetic —
+% it `import`s this file, binds the edge lengths from its own byte-provenance
+% decomposition, and asks the engine to apply the cited formula on the CPU.
+% Zero math is performed by the model; the engine computes each value EXACTLY,
+% carrying the formula's citation.
+%
+%     import "volume-formulas.adj"
+%     observe side(3)                       % "…a 3 cm cube…"   (span cited by the model)
+%     ? cube_volume(side)                   % engine → 27, carrying MathWorld's V=a³
+%
+% This is DISTINCT from `reference/volume-conversions.adj`: that library
+% converts an already-known volume between units (liters, gallons, …); this
+% library COMPUTES a volume from edge lengths in the first place. A mixed
+% question composes both: measure the solid here, then convert the unit there.
+%
+% Every formula here is EXACT over its parameters — a volume is a product of
+% edge lengths, with no cited constant (that is why sphere/cylinder volume,
+% which need π as a *separately grounded* constant, are deliberately absent
+% here — they belong in a different, constant-carrying library, same
+% reasoning `geometry-formulas.adj` gives for excluding the circle). The
+% definitions come from Wolfram MathWorld, the authoritative reference for
+% mathematics; each `formula` carries the same provenance envelope every
+% shipped grounded clause carries.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each parameter is an observable edge length the formulas range
+% over, and each result is the derived measure. The `surface` lists are the
+% everyday names a decomposer maps onto the canonical term. `side` is shared
+% with `geometry-formulas.adj`'s own square/cube usage — the same word means
+% "the one edge length" whether the shape is 2D or 3D.
+% ----------------------------------------------------------------------------
+dictionary volume_vocab {
+    define side          : finding  surface "side", "side length", "edge", "edge length", "s"
+    define box_length    : finding  surface "length", "long side", "l"
+    define box_width     : finding  surface "width", "breadth", "short side", "w"
+    define box_height    : finding  surface "height", "depth", "h"
+
+    define cube_volume             : finding  surface "volume of the cube", "cube volume"
+    define rectangular_prism_volume : finding  surface "volume of the box", "volume of the rectangular prism", "box volume"
+}
+
+% ----------------------------------------------------------------------------
+% The formulas. Each is a named, importable, reusable `let` over its formal
+% parameters, bound at apply time, and each carries a definitional quote from
+% Wolfram MathWorld (required on a shipped formula; the linter rejects an
+% unsourced one).
+%
+%   cube_volume(side)                                     = side * side * side    %  V = a³
+%   rectangular_prism_volume(box_length, box_width, box_height) = box_length * box_width * box_height  %  V = abc
+% ----------------------------------------------------------------------------
+formulabook volume_formulas {
+    use volume_vocab
+
+    % Cube volume — the edge length cubed. MathWorld states the volume of a
+    % cube with edge length a as V=a^3.
+    formula cube_volume(side) = side * side * side
+        source "V=a^3"
+        locator "https://mathworld.wolfram.com/Cube.html"
+        trust authoritative
+
+    % Rectangular prism (cuboid) volume — the product of its three edge
+    % lengths. MathWorld states the volume of a rectangular cuboid with edge
+    % lengths a, b, c as V=abc.
+    formula rectangular_prism_volume(box_length, box_width, box_height) = box_length * box_width * box_height
+        source "The volume of a rectangular cuboid is given by V=abc."
+        locator "https://mathworld.wolfram.com/Cuboid.html"
+        trust authoritative
+}

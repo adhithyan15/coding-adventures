@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 2,
   "title": "Chapter 2",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:b70e666895d0cb49",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ebb799b08b06b8f8",
   "lessons": [
     {
       "id": "KA-C02-enu",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "what",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:b9d4879e03664154",
-      "notice": null,
+      "sourceHash": "fnv1a64:1be9909948d15d65",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,7 +50,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -119,13 +128,22 @@
       "romanization": "",
       "gloss": "name",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:2e55e2b9599e2e3d",
-      "notice": null,
+      "sourceHash": "fnv1a64:31cbf4d18c055096",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -146,7 +164,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -237,13 +255,22 @@
       "romanization": "",
       "gloss": "my",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:25ce7bc99a448aa3",
-      "notice": null,
+      "sourceHash": "fnv1a64:acd0ca42626d82bc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -264,7 +291,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -455,13 +482,22 @@
       "romanization": "",
       "gloss": "you (familiar / respectful)",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:8d2a0f5bd8c72e49",
-      "notice": null,
+      "sourceHash": "fnv1a64:d50a8710b4d9aea6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -482,7 +518,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {

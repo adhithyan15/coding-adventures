@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 3,
   "title": "Chapter 3",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:94c6c7cb92e26b0e",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:519a94fefb3cc1fb",
   "lessons": [
     {
       "id": "GU-C03-hun",
@@ -14,13 +14,22 @@
       "romanization": "હું",
       "gloss": "I",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:742510bdf7b7d0cc",
-      "notice": null,
+      "sourceHash": "fnv1a64:806b44e166aa90b1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,7 +50,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -139,13 +148,22 @@
       "romanization": "કેમ",
       "gloss": "how (also \"why\")",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:6f6abb0e8b5db845",
-      "notice": null,
+      "sourceHash": "fnv1a64:6d24d1ed458a9ebc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -166,7 +184,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -244,13 +262,22 @@
       "romanization": "મજા",
       "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:b9eb03fd125860cd",
-      "notice": null,
+      "sourceHash": "fnv1a64:303cb39547727116",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -271,7 +298,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -661,13 +688,22 @@
       "romanization": "વાંધો નહીં",
       "gloss": "no problem / it's okay / you're welcome",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:538e577793d6ad11",
-      "notice": null,
+      "sourceHash": "fnv1a64:b56e87993b078b6e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -688,7 +724,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {

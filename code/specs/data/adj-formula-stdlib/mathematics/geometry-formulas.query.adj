@@ -25,6 +25,7 @@ observe base(10)
 observe height(3)
 ? triangle_area(base, height)          % expect 15  (MathWorld: Δ = ½ a h)
 
-% A square with side 5: area = 5 * 5.
+% A square with side 5: area = 5 * 5, perimeter = 4 * 5.
 observe side(5)
 ? square_area(side)                    % expect 25  (MathWorld: A = a²)
+? square_perimeter(side)               % expect 20  (MathWorld: P = 4a)

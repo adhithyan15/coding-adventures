@@ -239,10 +239,12 @@ layout TaskApp {
             selected-note-id : slot: selected-note-id ,
             title-value : slot: note-title-value ,
             body-value : slot: note-body-value ,
+            task-name-value : slot: note-task-value ,
             onSelectNote : emit: onSelectNote ,
             onNewNote : emit: onNewNote ,
             onTitleChange : emit: onNoteTitleChange ,
             onBodyChange : emit: onNoteBodyChange ,
+            onTaskNameChange : emit: onNoteTaskNameChange ,
             onSave : emit: onSaveNote ,
             onDelete : emit: onDeleteNote ,
             onCancel : emit: onCancelNote
@@ -306,6 +308,12 @@ layout TaskApp {
                       }
                       If ( when: ( row[8] ) ) {
                         Text [ detail-free ] ( content : ( row[8] ) )
+                      }
+                      If ( when: ( row[12] ) ) {
+                        Text [ detail-deps ] ( content : ( row[12] ) )
+                      }
+                      If ( when: ( row[13] ) ) {
+                        Text [ detail-notes ] ( content : ( row[13] ) )
                       }
                     }
                   }

@@ -49,6 +49,7 @@ pub mod ast;
 pub mod lower;
 pub mod resolve;
 pub mod statemachine;
+pub mod symbolic_backend;
 
 mod _lexer_grammar;
 mod _parser_grammar;

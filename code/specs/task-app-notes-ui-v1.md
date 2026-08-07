@@ -82,3 +82,51 @@ note-id + title/body draft state (mirroring the composer's `newName`/
 spec already noted `workspace()` includes it for free), and
 `showNotes`/`selectNote`/`newNote`/`noteTitleChange`/`noteBodyChange`/
 `saveNote`/`deleteNote`/`cancelNote` dispatch cases.
+
+## Addendum (v1.1): minimal attach-to-task control
+
+Discovered while shipping the task-detail dependency list (a small,
+spec-free PR — see `task-app`'s `CHANGELOG.md`): a task-detail "notes
+paragraph" cell was drafted, reading
+`Note.attached_task`, then pulled back out — `attached_task` exists on
+every `Note` since the entity PR, but v1's editor (this doc, above)
+never gave the user a way to *set* it. A read-only cell for a field
+nothing can write is dead plumbing, not a shippable slice. This
+addendum closes that gap with the smallest control that does, ship
+together with the detail-panel cell it unblocks in the same PR.
+
+**Scope decision**: a single-line "Attach to task" text field in the
+Notes editor, next to title/body, resolving a typed *task name* to a
+task id on Save — the exact same discipline the Sheet Labels column
+(`code/programs/mosaic/task-app/CHANGELOG.md`'s label-management entry)
+already established: case-insensitive exact-name match, and an
+**unrecognised name rejects the whole Save** rather than silently
+dropping the attachment or (worse) fuzzy-matching to the wrong task.
+An empty field means "no attachment" — clearing the field and saving
+detaches the note (`attachedTask: null`).
+
+**What this deliberately is NOT**: not a dropdown/autocomplete picker,
+not a multi-select, not editable from the task-detail side (attaching
+happens only from the Notes tab — the detail panel is read-only,
+matching every other detail-panel cell in `TaskApp.mll`). A real
+picker UI (search-as-you-type, browse-by-project) is still the
+"Notes: attachment picker" backlog item's fuller scope — this addendum
+ships the minimal write path that makes the entity field usable at
+all, not the final UX. Two task names colliding case-insensitively
+across different projects is a pre-existing, undeduped condition (task
+names, like project and label names, aren't unique workspace-wide) —
+matching resolves within the *active* project's task list only, same
+scope boundary `labelsByName()` already uses for labels.
+
+**Wiring**: `Notes.mil` gains `slot task-name-value : text ;` and
+`emit onTaskNameChange ( value : text ) ;`, rendered as one more
+`HostInput` in the editor column. `TaskApp` passes both through
+unchanged (same pattern as `title-value`/`body-value`) and owns a
+`noteTaskName` draft string alongside the existing title/body draft.
+On Save, the host resolves the typed name against the active
+project's tasks (case-insensitive exact match); a miss aborts the
+whole save with a console error, mirroring the Sheet Labels column's
+`write()` contract. The task-detail panel's `detail-notes` cell
+(`row[13]`, appended after the dependency list's `row[12]`) then reads
+`Note.attached_task` for the open task — the read side this addendum
+was blocked on.

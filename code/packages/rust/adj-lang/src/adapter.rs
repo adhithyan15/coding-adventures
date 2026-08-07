@@ -34,7 +34,7 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExitDef, ExprAst,
     FormulaDef, NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, SmAction, SmGuard, StateDef,
-    Statement, Term, TransitionDef, TrustTierName,
+    Statement, SymbolicDef, Term, TransitionDef, TrustTierName,
 };
 use bignum_core::BigDecimal;
 use std::str::FromStr;
@@ -924,8 +924,8 @@ fn adapt_rulebook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE
     // The name is the first Name token that isn't the `formulabook` keyword; each
-    // `formulabook_item` wraps either a `use_decl` (a vocabulary binding) or a
-    // `formula_decl` (a definition).
+    // `formulabook_item` wraps a `use_decl` (a vocabulary binding), a `formula_decl`
+    // (a definition), or (FL-10) a `symbolic_decl` (a solved equation).
     let name = first_name_not(node, "formulabook")
         .ok_or(AdapterError::MissingChild {
             rule: "formulabook_decl".into(),
@@ -934,10 +934,15 @@ fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         .to_string();
     let mut uses = Vec::new();
     let mut formulas = Vec::new();
+    let mut symbolics = Vec::new();
     for c in &node.children {
         if let ASTNodeOrToken::Node(item) = c {
             if item.rule_name == "formulabook_item" {
-                let inner = first_child_node(item, "formulabook_item", "use_decl or formula_decl")?;
+                let inner = first_child_node(
+                    item,
+                    "formulabook_item",
+                    "use_decl, formula_decl, or symbolic_decl",
+                )?;
                 match inner.rule_name.as_str() {
                     "use_decl" => {
                         if let Statement::Use(u) = adapt_use(inner)? {
@@ -945,9 +950,10 @@ fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
                         }
                     }
                     "formula_decl" => formulas.push(adapt_formula(inner)?),
+                    "symbolic_decl" => symbolics.push(adapt_symbolic(inner)?),
                     other => {
                         return Err(AdapterError::UnexpectedRule {
-                            expected: "use_decl or formula_decl",
+                            expected: "use_decl, formula_decl, or symbolic_decl",
                             actual: other.to_string(),
                         })
                     }
@@ -957,6 +963,7 @@ fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     }
     Ok(Statement::Formulabook {
         name,
+        symbolics,
         uses,
         formulas,
     })
@@ -1082,6 +1089,77 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
         steps,
         body,
         preconditions,
+        annotations,
+    })
+}
+
+/// `symbolic_decl = "symbolic" IDENT LPAREN [ formula_params ] RPAREN
+///                   LBRACE expr EQEQ expr RBRACE
+///                   "for" IDENT
+///                   { annotation }` (ADJ-FORMULA-LIBRARIES FL-10).
+///
+/// `for` is a lexer keyword (see `adj_lang.tokens`), so — unlike `symbolic`,
+/// which is an IDENT-matched literal — it never surfaces as a `Name` token.
+/// [`direct_name_tokens`] therefore yields exactly `["symbolic", <name>,
+/// <solve_for>]` in source order (parameter names live inside the nested
+/// `formula_params` node, exactly as in [`adapt_formula`], so they never
+/// pollute this list). The name is the first entry that isn't `symbolic`;
+/// the solve-for target is the last entry overall, since it is the only Name
+/// token that follows the `{ expr == expr }` block.
+fn adapt_symbolic(node: &GrammarASTNode) -> Result<SymbolicDef, AdapterError> {
+    let name = first_name_not(node, "symbolic")
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbolic_decl".into(),
+            position: "symbolic name",
+        })?
+        .to_string();
+    let solve_for = direct_name_tokens(node)
+        .last()
+        .cloned()
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbolic_decl".into(),
+            position: "solve-for target",
+        })?;
+    // formula_params = IDENT { COMMA IDENT } — identical extraction to
+    // adapt_formula's own params handling; absent (zero-parameter) yields [].
+    let params = first_named_child(node, "formula_params")
+        .map(|p| {
+            p.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    // The `{ expr == expr }` block has the same `expr relop expr` child shape
+    // as `constrain_decl`/`formula_relation` (relop is always EQEQ here, so
+    // it isn't re-extracted) — collect the two direct `expr` children in
+    // source order, mirroring `adapt_constrain` exactly.
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "symbolic_decl".into(),
+        position: "left-hand expr",
+    })?)?;
+    let rhs = adapt_expr(exprs.get(1).ok_or(AdapterError::MissingChild {
+        rule: "symbolic_decl".into(),
+        position: "right-hand expr",
+    })?)?;
+    let annotations = collect_annotations(node)?;
+    Ok(SymbolicDef {
+        name,
+        params,
+        lhs,
+        rhs,
+        solve_for,
         annotations,
     })
 }

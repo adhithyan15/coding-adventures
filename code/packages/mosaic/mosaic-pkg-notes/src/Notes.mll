@@ -60,6 +60,11 @@ layout Notes {
             multiline : true ,
             onChange : emit: onBodyChange
           )
+          HostInput [ notes-task-input ] (
+            value : slot: task-name-value ,
+            placeholder : "Attach to task (optional)" ,
+            onChange : emit: onTaskNameChange
+          )
           Row [ notes-actions ] {
             HostButton [ notes-save ] ( label : "Save" , onClick : emit: onSave )
             HostButton [ notes-delete ] ( label : "Delete" , onClick : emit: onDelete )

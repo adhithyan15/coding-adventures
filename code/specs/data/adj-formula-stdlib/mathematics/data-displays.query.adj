@@ -1,0 +1,30 @@
+% ============================================================================
+% data-displays.query.adj — worked examples over the data-displays formula
+% library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "how far
+% apart" question: it states NO arithmetic and NO formula — it only `import`s
+% the grounded library, `observe`s the values it decomposed from the prompt
+% (each a byte-provenanced span, elided here), and asks the engine to APPLY
+% the cited formula. The native adj-lang engine binds the parameters, computes
+% each value EXACTLY on the CPU, and returns it with the formula's
+% source/locator/trust.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli data-displays.query.adj
+% ============================================================================
+
+import "data-displays.adj"
+
+% "The class recorded 3 rainy days and 9 sunny days this month. What is the
+% range?"
+observe value_one(3)
+observe value_two(9)
+? range_two(value_one, value_two)   % expect 6  (MathWorld: R = Y_N - Y_1)
+
+% "Three plants measured 5 cm, 12 cm, and 8 cm tall. What is the range of
+% their heights?"
+observe value_one(5)
+observe value_two(12)
+observe value_three(8)
+? range_three(value_one, value_two, value_three)   % expect 7  (MathWorld: R = Y_N - Y_1)

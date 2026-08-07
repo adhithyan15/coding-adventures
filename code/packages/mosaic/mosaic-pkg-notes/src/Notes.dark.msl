@@ -109,6 +109,16 @@ style Notes {
     font-size     : 13 ;
   }
 
+  part notes-task-input {
+    padding       : 10 ;
+    border-radius : 6 ;
+    background    : "#1a1714" ;
+    color         : "#b3a99c" ;
+    border-width  : 1 ;
+    border-color  : "#352e25" ;
+    font-size     : 13 ;
+  }
+
   part notes-actions {
     gap : 8 ;
   }

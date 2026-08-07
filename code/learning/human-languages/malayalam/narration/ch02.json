@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 2,
   "title": "Chapter 2",
-  "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:59770356ce4edd60",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ac6aa6db065a34b3",
   "lessons": [
     {
       "id": "ML-C02-aanu",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "is (the copula)",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:ca846f2149ba8954",
-      "notice": null,
+      "sourceHash": "fnv1a64:ff571c00f6d40e5d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,7 +50,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -134,13 +143,22 @@
       "romanization": "",
       "gloss": "my",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:4eb8dd06d741b871",
-      "notice": null,
+      "sourceHash": "fnv1a64:fdf49546f6b2b6ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -161,7 +179,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -352,13 +370,22 @@
       "romanization": "",
       "gloss": "what",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bf3c2300dc6c14d6",
-      "notice": null,
+      "sourceHash": "fnv1a64:cd1b34c3574c0c15",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -379,7 +406,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -457,13 +484,22 @@
       "romanization": "",
       "gloss": "you (familiar / respectful)",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:395430ab6f3c9043",
-      "notice": null,
+      "sourceHash": "fnv1a64:8df6cc5e645d2578",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -484,7 +520,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -681,13 +717,22 @@
       "romanization": "",
       "gloss": "name",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:100f6d116c58b4b2",
-      "notice": null,
+      "sourceHash": "fnv1a64:fce78214aef0ef35",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -708,7 +753,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {

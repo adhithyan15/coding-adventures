@@ -46,6 +46,7 @@ dictionary geometry_vocab {
     define rectangle_perimeter : finding  surface "perimeter of the rectangle", "rectangle perimeter"
     define triangle_area       : finding  surface "area of the triangle", "triangle area"
     define square_area         : finding  surface "area of the square", "square area"
+    define square_perimeter    : finding  surface "perimeter of the square", "square perimeter"
 }
 
 % ----------------------------------------------------------------------------
@@ -60,6 +61,7 @@ dictionary geometry_vocab {
 %   rectangle_perimeter(length, width) = 2 * (length + width)   %  P = 2(a+b)
 %   triangle_area(base, height)        = base * height / 2      %  Δ = ½ a h
 %   square_area(side)                  = side * side            %  A = a²
+%   square_perimeter(side)             = 4 * side                %  P = 4a
 % ----------------------------------------------------------------------------
 formulabook geometry_formulas {
     use geometry_vocab
@@ -88,5 +90,12 @@ formulabook geometry_formulas {
     formula square_area(side) = side * side
         source "and the area is A=a^2."
         locator "https://mathworld.wolfram.com/Square.html"
+        trust authoritative
+
+    % Square perimeter — four times the side length. MathWorld's perimeter
+    % table lists the square perimeter as 4a.
+    formula square_perimeter(side) = 4 * side
+        source "square | 4a"
+        locator "https://mathworld.wolfram.com/Perimeter.html"
         trust authoritative
 }

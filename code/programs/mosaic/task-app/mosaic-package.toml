@@ -10,7 +10,7 @@ exports = ["TaskApp"]
 [dependencies]
 mosaic-pkg-sheet = "0.1.0"
 mosaic-pkg-calendar = "0.1.0"
-mosaic-pkg-notes = "0.1.0"
+mosaic-pkg-notes = "0.2.0"
 mosaic-pkg-project-nav = "0.1.0"
 
 [kernel]

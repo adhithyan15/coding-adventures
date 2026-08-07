@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 5,
   "title": "Chapter 5",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8fddef5ce8ffce13",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:03f79a98594f4da1",
   "lessons": [
     {
       "id": "MR-C05-bolne",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "to speak (bolṇe)",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:33d723877a8f5454",
-      "notice": null,
+      "sourceHash": "fnv1a64:8e3878fbe5f91411",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,7 +50,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -146,13 +155,22 @@
       "romanization": "",
       "gloss": "to work (kām karṇe)",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:0d0e22db168d221b",
-      "notice": null,
+      "sourceHash": "fnv1a64:77068cc88a0a5570",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -173,7 +191,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -531,16 +549,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f756499e45e3ad01",
+      "sourceHash": "fnv1a64:a5aee5a710cf9dc8",
       "notice": {
         "modality": "sight",
         "needs": [
+          "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -562,7 +584,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {

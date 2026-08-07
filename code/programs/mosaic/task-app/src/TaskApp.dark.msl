@@ -833,6 +833,14 @@ style TaskApp {
     color : "#867c70" ;
     font-size : 12 ;
   }
+  part detail-deps {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part detail-notes {
+    color : "#867c70" ;
+    font-size : 12 ;
+  }
 
   // ── timeline ────────────────────────────────────────────────────────────
   part timeline-card {

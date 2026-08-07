@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 5,
   "title": "Chapter 5",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b725380704b3457e",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:25a70d4ed764c8eb",
   "lessons": [
     {
       "id": "PA-C05-bolna",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "to speak",
       "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:f646adc390acda0f",
-      "notice": null,
+      "sourceHash": "fnv1a64:307dfe45fa3042e4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,7 +50,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -139,13 +148,22 @@
       "romanization": "",
       "gloss": "to work (lit. \"work-do\")",
       "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:f0b27b4137063cd5",
-      "notice": null,
+      "sourceHash": "fnv1a64:f9467160d95bc6b0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -166,7 +184,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -265,13 +283,22 @@
       "romanization": "",
       "gloss": "I speak Punjabi (gendered)",
       "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:d794001d662e05af",
-      "notice": null,
+      "sourceHash": "fnv1a64:f4f87d3d34970a4c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -292,7 +319,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
@@ -565,16 +592,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:084fbd009af99704",
+      "sourceHash": "fnv1a64:78cb36385d3494ad",
       "notice": {
         "modality": "sight",
         "needs": [
+          "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -596,7 +627,7 @@
         },
         {
           "index": 1,
-          "type": "unknown",
+          "type": "script",
           "title": "The letters in this word",
           "segments": [
             {
