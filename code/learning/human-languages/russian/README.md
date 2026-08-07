@@ -24,12 +24,22 @@ inside the words that need it; grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
-- **Drivable by ear.** 22 of the track's 28 lessons need only your ears; the
+- **Drivable by ear.** 30 of the track's 36 lessons need only your ears; the
   other 6 are the five handwriting lessons and one cover-the-column retrieval
   drill. Russian used to be the least drivable track here, entirely because its
   cross-language comparisons were set as tables rather than said as sentences.
-  They are sentences now, and Chapter 3 was written that way from the start —
-  it is the track's first chapter that is drivable end to end.
+  They are sentences now, and Chapters 3, 4 and 5 were written that way from the
+  start — three chapters drivable end to end.
+- **Stress lives in the romanization, not on the Cyrillic.** Russian print does
+  not mark stress and the vendored Cyrillic font carries no combining acute, so
+  this track puts the accent where it can always be rendered and always be read:
+  *chitát'*, *pishú*, *lyublyú*. See
+  [`_fonts/README.md`](../_fonts/README.md) for why.
+- **Aspect is named, not finished.** Chapters 4 and 5 are eight imperfective
+  verbs, and every lesson gives its perfective partner by name — *читать ·
+  прочитать*, *брать · взять*, *спрашивать · спросить*. What a pair does to a
+  whole sentence is deferred to a chapter of its own, because it is the hardest
+  thing about Russian verbs and cannot be done in a footnote.
 
 ## Progress
 
@@ -54,6 +64,30 @@ inside the words that need it; grammar introduced only when a word needs it.
   is **quick** in its older sense of *alive*, and *идти → шёл* is *go → went* in
   a second language. One new letter (**г**), and English *govern* flagged as the
   false friend it is.
+
+- **Chapter 4 — Verbs of the mind and the page**
+  ([`lessons/RU-C04-*`](./lessons/)): думать (to think) → понимать (to
+  understand) → читать (to read) → писать (to write). The chapter opens the
+  **aspect pair** — every Russian verb travels with a finished partner — and
+  explains why Russian has no separate *I am reading*: **быть** has no present
+  tense to build one with. *думать* is the **Дума**, and the standard account
+  ties it to English *doom* by Gothic borrowing rather than descent; *понимать*
+  is a root meaning **take**, exactly as *comprehend* and *grasp* are; *читать*
+  sits with *число* and *честь* and has **no secure English cousin**, which the
+  lesson says rather than inventing one; *писать* is \**peyḱ-* "to scratch",
+  behind **paint** and **picture**. One new letter, **ш** — the one the track
+  has been reading since *живёшь* without naming it — and the **stress trap**
+  that turns *pisát'* into *písat'* flagged plainly.
+- **Chapter 5 — Taking, asking, helping, loving**
+  ([`lessons/RU-C05-*`](./lessons/)): брать (to take) → спрашивать (to ask) →
+  помогать (to help) → любить (to love, and to like). *брать* is English
+  **bear**, and its partner **взять** is **suppletive** — a different word
+  entirely, the same trick that gives *идти* its past *шёл*; *спрашивать* is
+  \**preḱ-*, which became Latin *precārī* and so English **pray**; *помогать*
+  is built on *мочь* "to be able", English **may** and **might**; *любить* is
+  English **love** itself, and teaches the **л** that appears in *люблю* and
+  nowhere else. The chapter closes by putting every verb the track owns after
+  *люблю* as a bare infinitive.
 
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute

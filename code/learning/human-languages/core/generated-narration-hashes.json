@@ -4777,7 +4777,7 @@
     {
       "language": "russian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:db2b416ba4e0b8f9",
+      "sourceHash": "fnv1a64:d2fa252939f19e6f",
       "lessonIds": [
         "RU-C03-byt",
         "RU-C03-zhit",
@@ -4790,8 +4790,42 @@
       "drivablePrefix": 6,
       "text": "russian/narration/ch03.txt",
       "json": "russian/narration/ch03.json",
-      "textHash": "fnv1a64:505407b8a1fc6797",
-      "jsonHash": "fnv1a64:d7f5efd69186e60e"
+      "textHash": "fnv1a64:26e2130882173b36",
+      "jsonHash": "fnv1a64:3539c96c585e851f"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:01b832ff24f65733",
+      "lessonIds": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "russian/narration/ch04.txt",
+      "json": "russian/narration/ch04.json",
+      "textHash": "fnv1a64:f2db03f1baeb0f40",
+      "jsonHash": "fnv1a64:6bb8668802b4545a"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+      "lessonIds": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "russian/narration/ch05.txt",
+      "json": "russian/narration/ch05.json",
+      "textHash": "fnv1a64:8317a203aa3b3696",
+      "jsonHash": "fnv1a64:2682acb694d46961"
     },
     {
       "language": "sanskrit",

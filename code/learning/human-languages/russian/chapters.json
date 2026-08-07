@@ -1,14 +1,16 @@
 {
   "version": 1,
   "language": "russian",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down. The payoff points at RU-C02-practice, the chapter's consolidation lesson, which HL-C32 migrated to schema v2 for exactly this reason; before that migration the only schema-v2 candidate was the cross-language etymology lesson RU-C02-kak-cross-language, whose three atoms gave a representativeness of 0.20 against a 0.50 floor.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down. The payoff points at RU-C02-practice, the chapter's consolidation lesson, which HL-C32 migrated to schema v2 for exactly this reason; before that migration the only schema-v2 candidate was the cross-language etymology lesson RU-C02-kak-cross-language, whose three atoms gave a representativeness of 0.20 against a 0.50 floor. Chapters 4 and 5 (HL-C44) are authorable from the start: both are schema-v2 throughout and each closes on a payoff that assesses every atom its own chapter introduced. Chapter 3 is still absent for a different reason from chapter 1 — it is schema v2, but it has no consolidation lesson, so the only candidate payoff (RU-C03-idti) covers 5 of the chapter's 19 atoms, a representativeness of 0.26 against the 0.50 floor. Its ledger entry is withheld rather than written to fail, and it now shows up as a book chapter without an HL05 capability, which is the honest shape of that debt.",
   "chapters": [
     {
       "chapter": 2,
       "title": "Introducing yourself",
       "label": "ch:russian-introductions",
       "canDo": "I can give my name in Russian, ask for someone else's, and pick ты or вы to match how well I know them.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "RU-C02-practice",
         "kind": "dialogue",
@@ -24,6 +26,59 @@
           "RU-LEX-KAK-VAS-ZOVUT",
           "RU-GRAMMAR-OBJECT-PRONOUNS",
           "RU-GRAMMAR-NAMING-HOW-FRAME"
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Verbs of the Mind and the Page",
+      "label": "ch:russian-verbs-of-the-mind",
+      "canDo": "I can say what I think, understand, read and write in Russian, name the finished partner each of those verbs travels with, and read the letter ш that has been hiding in words I already say.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "RU-C04-pisat",
+        "kind": "task",
+        "summary": "Say all four verbs of the chapter in the I form — я думаю, я понимаю, я читаю, я пишу — then name each one's finished partner, put the stress on the end of писать where it belongs, and read the ш you have been decoding since живёшь.",
+        "assesses": [
+          "RU-LEX-DUMAT",
+          "RU-ETYMON-DUMAT-DUMA",
+          "RU-GRAMMAR-ASPECT-PARTNER",
+          "RU-LEX-PONIMAT",
+          "RU-ETYMON-PONIMAT-TAKE-HOLD",
+          "RU-LEX-CHITAT",
+          "RU-ETYMON-CHITAT-COUNT-HONOUR",
+          "RU-GRAMMAR-NO-PROGRESSIVE",
+          "RU-LEX-PISAT",
+          "RU-SCRIPT-SHA",
+          "RU-ETYMON-PISAT-PAINT"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:russian-verbs-of-the-hand",
+      "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю as a bare infinitive, and tell a suppletive aspect pair like брать·взять from an ordinary one like спрашивать·спросить.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "RU-C05-lyubit",
+        "kind": "task",
+        "summary": "Say я люблю with its inserted л, then run every verb you own through it — я люблю читать, писать, помогать, жить — and close by naming the chapter's four partners and picking out взять as the one built from a different root.",
+        "assesses": [
+          "RU-LEX-BRAT",
+          "RU-ETYMON-BRAT-BEAR",
+          "RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR",
+          "RU-LEX-SPRASHIVAT",
+          "RU-ETYMON-SPRASHIVAT-PRAY",
+          "RU-LEX-POMOGAT",
+          "RU-ETYMON-POMOGAT-MIGHT",
+          "RU-LEX-LYUBIT",
+          "RU-GRAMMAR-L-EPENTHESIS",
+          "RU-ETYMON-LYUBIT-LOVE"
         ]
       }
     }

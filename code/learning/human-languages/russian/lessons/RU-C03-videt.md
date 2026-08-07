@@ -50,7 +50,7 @@ Stress lands on the **first** syllable here — *VEE-dyet'* — the opposite of
 
 The *you* form tells you the family, exactly as promised last lesson:
 
-> **ты ви́дишь** — *ty vídish* — **you see**
+> **ты видишь** — *ty vídish* — **you see**
 
 An **-ишь**, so *видеть* belongs with *говорить*, not with *знать*.
 
@@ -59,7 +59,7 @@ An **-ишь**, so *видеть* belongs with *говорить*, not with *з�
 
 Now the surprise:
 
-> **Я ви́жу.** — *ya vízhu* — **I see.**
+> **Я вижу.** — *ya vízhu* — **I see.**
 
 The **д** has become **ж** — the *measure* sound from *жить*. The ending is the
 ordinary **-у**; it is the consonant in front of it that shifted.

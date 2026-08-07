@@ -2388,6 +2388,33 @@
       "label": "ch:ja-three-scripts",
       "output": "japanese/book/chapters/ch01-three-scripts.tex",
       "scriptSet": "japanese-main"
+    },
+    {
+      "language": "russian",
+      "chapter": 3,
+      "title": "Six Verbs, and the One You Never Say",
+      "label": "ch:russian-first-verbs",
+      "output": "russian/book/chapters/ch03-first-verbs.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "title": "Verbs of the Mind and the Page",
+      "label": "ch:russian-verbs-of-the-mind",
+      "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:russian-verbs-of-the-hand",
+      "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
     }
   ],
   "handwritten": [

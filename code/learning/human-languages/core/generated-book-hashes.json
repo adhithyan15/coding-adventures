@@ -2243,6 +2243,44 @@
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "russian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:d2fa252939f19e6f",
+      "lessonIds": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
+      ],
+      "tex": "russian/book/chapters/ch03-first-verbs.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:01b832ff24f65733",
+      "lessonIds": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "tex": "russian/book/chapters/ch04-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+      "lessonIds": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f46cbe023b464e1",
