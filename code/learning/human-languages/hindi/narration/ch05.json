@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:12bcb2ada8e71c1f",
+  "sourceHash": "fnv1a64:8524e38a45a846be",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72e329b599f1e7c0",
+      "sourceHash": "fnv1a64:63443742433fc576",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f237aa47182dc171",
+      "sourceHash": "fnv1a64:e1c24c88399adaca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -790,7 +790,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0cbfce468a3484eb",
+      "sourceHash": "fnv1a64:222b1446c5932bfd",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: रहना
 gloss: to live, to stay
-concept_tag: HI-VERB-RAHNA
+concept_tag: VERB-LIVE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [rah-remain]

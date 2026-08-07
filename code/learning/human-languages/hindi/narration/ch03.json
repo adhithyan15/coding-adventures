@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5daa0e43b0e9f05d",
+  "sourceHash": "fnv1a64:b67882f8655c637e",
   "lessons": [
     {
       "id": "HI-C03-aap-kaise-hain",
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23b02573179317a8",
+      "sourceHash": "fnv1a64:75b0ccce17d974e7",
       "notice": {
         "modality": "sight",
         "needs": [
