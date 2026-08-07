@@ -1,6 +1,7 @@
 ---
 id: ES-C10-mi-tu-su
 chapter: 10
+sequence: 548
 type: word
 headword: mi, tu, su
 gloss: my, your, his/her/your-formal (the possessives)

@@ -1,6 +1,7 @@
 ---
 id: ES-C17-futuro
 chapter: 17
+sequence: 596
 type: word
 headword: hablaré
 gloss: the future — a compound tense that welded itself shut

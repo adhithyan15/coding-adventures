@@ -1,6 +1,7 @@
 ---
 id: ES-C13-venir
 chapter: 13
+sequence: 574
 type: word
 headword: venir
 gloss: to come — doubly irregular, vengo + e→ie, completing the -go club

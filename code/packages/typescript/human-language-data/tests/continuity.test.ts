@@ -234,12 +234,12 @@ describe("the real corpus", () => {
 
     // ORDER. Until this reaches zero every other number here is provisional: a ramp
     // whose reading order is unknown cannot be verified at all.
-    expect(report.summary.lessonsWithoutSequence).toBe(565);
+    expect(report.summary.lessonsWithoutSequence).toBe(515);
     expect(report.summary.tracksWithUnorderedLessons).toBe(19);
-    expect(report.summary.forwardPrerequisites).toBe(271);
+    expect(report.summary.forwardPrerequisites).toBe(245);
 
-    // 331 lessons claim to review material the learner has not reached yet.
-    expect(report.summary.forwardReviews).toBe(331);
+    // Lessons claiming to review material the learner has not reached yet.
+    expect(report.summary.forwardReviews).toBe(300);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". Half of it is taught once.
@@ -268,12 +268,21 @@ describe("the real corpus", () => {
     // NOT being rewritten to move this number, because contorting good prose to satisfy a
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
-    expect(report.summary.forwardReferences).toBe(517);
+    expect(report.summary.forwardReferences).toBe(504);
   });
 
-  it("reproduces the Spanish audit exactly", () => {
-    // These four numbers were measured independently in Python before this module
-    // existed. They agreeing is the evidence that the walk is the right one.
+  it("shows what a declared reading order was worth", () => {
+    // Before HL09 step 2, Spanish had 56 lessons with no `sequence` and the walk
+    // fell back to alphabetical order within a chapter. That fallback INVENTED
+    // defects: it reported 31 forward prerequisites, of which 26 were artifacts of
+    // sorting `beber` before `comer`. Declaring the real order removed them.
+    //
+    //                     before   after
+    //   no sequence           56       6   (the six chapter-7 lessons, see below)
+    //   forward prereqs       31       5
+    //   forward references   143      99
+    //
+    // The atom figures are unchanged, as they must be: ordering moved no content.
     const { lessons } = loadEverything();
     const spanish = measureContinuity(lessons).tracks.find((t) => t.language === "spanish");
     // HL-C43 added 8 Spanish lessons (chapters 34-35), all of them sequenced and
@@ -283,11 +292,32 @@ describe("the real corpus", () => {
     // against the 146-lesson corpus; the walk is unchanged, only its input grew.
     expect(spanish).toMatchObject({
       lessonCount: 154,
-      lessonsWithoutSequence: 56,
-      forwardPrerequisites: 31,
+      lessonsWithoutSequence: 6,
+      forwardPrerequisites: 5,
       atomsTaught: 199,
       atomsNeverRevisited: 102,
     });
+  });
+
+  it("leaves chapter 7 unsequenced, because its sources contradict", () => {
+    // curriculum.json says comer -> beber -> que -> vivir -> donde; the lesson prose
+    // `Next:` chain AND ES-C07-beber's own reviews_of say comer -> vivir -> beber ->
+    // que -> donde. Under the ledger's order, beber reviews a lesson that has not
+    // happened. Guessing would bake a false ramp into every later measurement, so
+    // these six stay unsequenced until the project owner rules.
+    const { lessons } = loadEverything();
+    const unsequenced = measureContinuity(lessons)
+      .order.filter((d) => d.language === "spanish" && d.kind === "no-sequence")
+      .map((d) => d.lessonId)
+      .sort();
+    expect(unsequenced).toEqual([
+      "ES-C07-beber",
+      "ES-C07-comer",
+      "ES-C07-donde",
+      "ES-C07-practice",
+      "ES-C07-que",
+      "ES-C07-vivir",
+    ]);
   });
 
   it("finds the forward references a human reviewer found by reading", () => {

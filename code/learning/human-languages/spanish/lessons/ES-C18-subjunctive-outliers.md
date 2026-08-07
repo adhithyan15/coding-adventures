@@ -1,6 +1,7 @@
 ---
 id: ES-C18-subjunctive-outliers
 chapter: 18
+sequence: 608
 type: grammar
 headword: sea, vaya, sepa, haya; esté
 gloss: four forms must be learned outright, while estar keeps a regular stem with exceptional stress

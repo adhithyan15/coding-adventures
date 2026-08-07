@@ -1,6 +1,7 @@
 ---
 id: ES-C18-wanting-clause-trap
 chapter: 18
+sequence: 614
 type: grammar
 headword: quiero que hables / quiero hablarte
 gloss: Spanish requires a full clause for a second subject after wanting, but permits object plus infinitive with perception and causation

@@ -1,6 +1,7 @@
 ---
 id: ES-C09-ser-vs-estar
 chapter: 9
+sequence: 536
 type: phrase
 headword: ser vs estar
 gloss: the two "to be" verbs, contrasted — essence vs state

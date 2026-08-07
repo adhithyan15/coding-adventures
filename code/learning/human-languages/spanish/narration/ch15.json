@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "Chapter 15",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8749ab0a4a2c672b",
+  "sourceHash": "fnv1a64:bf95b4776eb920c1",
   "lessons": [
     {
       "id": "ES-C15-comer-vivir-preterite",
-      "sequence": null,
+      "sequence": 584,
       "title": "comí, viví — two conjugations become one",
       "headword": "comí, viví",
       "romanization": "comí, viví",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16ca99df1a1c073e",
+      "sourceHash": "fnv1a64:c4492b031d93a760",
       "notice": null,
       "blocks": [
         {
@@ -166,8 +166,198 @@
       ]
     },
     {
+      "id": "ES-C15-preterite-fuertes",
+      "sequence": 586,
+      "title": "tuve, hice, estuve — the strong preterites",
+      "headword": "tuve, hice, estuve",
+      "romanization": "tuve, hice, estuve",
+      "gloss": "the strong preterites — where the stress moves off the ending and the accent disappears",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:1bf08f09f5512a0b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for 2 tables that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Three of them, all verbs you know",
+          "The accent rule, inverted"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Three of them, all verbs you know and The accent rule, inverted until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything so far pushed the stress to the end: hablÉ, comÍ, comIÓ. Now meet the verbs that do the opposite. They pull the stress back into the stem — and so they lose their accent marks entirely. Spanish calls them pretéritos fuertes, \"strong\" preterites: strong because the stem carries the weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Three of them, all verbs you know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stem changes, then one shared set of endings: -e, -iste, -o, -imos, -ieron."
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "tener becomes tuv-",
+                "hacer becomes hic-",
+                "estar becomes estuv-"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, tener becomes tuv-, hacer becomes hic-, estar becomes estuv-. Come back and look at it when you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The accent rule, inverted",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare the yo and él forms across the three families:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 5,
+              "rowCount": 3,
+              "headers": [
+                "family",
+                "yo",
+                "él/ella",
+                "stressed syllable",
+                "accent?"
+              ],
+              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: family, yo, él/ella, stressed syllable, accent?. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Say them out loud back to back: hablÓ … TUvo. The written accent isn't decoration — it's telling you where the stress went. No accent on a strong preterite because the stress never left the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the yo ending too: -e, not -é (tuve, not tuvé)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "One spelling swerve",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hacer gives hizo, not hico — Spanish swaps c becomes z before o to keep the sound the same. The letter changes so the pronunciation won't."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Why these are irregular",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because they're old. Latin had two ways to build a perfect, and these verbs kept the \"strong\" one, inherited whole rather than rebuilt: tenuī becomes tuve, fēcī becomes hice, stetī/stāre becomes estuve. The regular -ar/-er/-ir patterns are the tidy replacements that spread later; the strong verbs are the most-used ones, worn smooth by frequency and never re-made. Notice tuv- and estuv- even share the same -uv- shape."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tuve, tuviste, tuvo, tuvimos, tuvieron\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tuve, tuviste, tuvo, tuvimos, tuvieron\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hice, hiciste, hizo\" — hear the z",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hice, hiciste, hizo\" — hear the **z**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast pair — \"hablÓ … TUvo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast pair — \"hablÓ … TUvo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ayer estuve en casa\" (\"Yesterday I was at home\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ayer estuve en casa\" (\"Yesterday I was at home\")]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why \"strong\"? (The stem carries the stress.) So why no accent marks? (Because the stress never reaches the ending — the accent only ever marked that.) What's the yo ending? (-e, not -é.) Why hizo and not hico? (c becomes z before o, to protect the sound.) Where do they come from? (Latin's strong perfects — tenuī, fēcī — inherited, not rebuilt.) Next: all three families side by side."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C15-practice",
-      "sequence": null,
+      "sequence": 588,
       "title": "Practice — three families, one question",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -178,7 +368,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:f60f008428500914",
+      "sourceHash": "fnv1a64:84f421ddf990bd02",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -351,196 +541,6 @@
             {
               "kind": "speech",
               "text": "Which two rows are identical? (-er and -ir.) Which forms take a written accent? (Yo and él/ella of the regular verbs only.) What single test separates regular from strong? (Where the stress lands — ending vs stem.) Which form means both \"I was\" and \"I went\"? (Fui.) Which nosotros forms are tense-ambiguous? (Hablamos, vivimos — but not comimos.) Next chapter: talking about the past that kept going — the imperfect."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-preterite-fuertes",
-      "sequence": null,
-      "title": "tuve, hice, estuve — the strong preterites",
-      "headword": "tuve, hice, estuve",
-      "romanization": "tuve, hice, estuve",
-      "gloss": "the strong preterites — where the stress moves off the ending and the accent disappears",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:51b0f34d77b634bd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for 2 tables that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Three of them, all verbs you know",
-          "The accent rule, inverted"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Three of them, all verbs you know and The accent rule, inverted until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Everything so far pushed the stress to the end: hablÉ, comÍ, comIÓ. Now meet the verbs that do the opposite. They pull the stress back into the stem — and so they lose their accent marks entirely. Spanish calls them pretéritos fuertes, \"strong\" preterites: strong because the stem carries the weight."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Three of them, all verbs you know",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The stem changes, then one shared set of endings: -e, -iste, -o, -imos, -ieron."
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "",
-                "tener becomes tuv-",
-                "hacer becomes hic-",
-                "estar becomes estuv-"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, tener becomes tuv-, hacer becomes hic-, estar becomes estuv-. Come back and look at it when you have stopped."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The accent rule, inverted",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Compare the yo and él forms across the three families:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 3,
-              "headers": [
-                "family",
-                "yo",
-                "él/ella",
-                "stressed syllable",
-                "accent?"
-              ],
-              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: family, yo, él/ella, stressed syllable, accent?. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Say them out loud back to back: hablÓ … TUvo. The written accent isn't decoration — it's telling you where the stress went. No accent on a strong preterite because the stress never left the stem."
-            },
-            {
-              "kind": "speech",
-              "text": "Note the yo ending too: -e, not -é (tuve, not tuvé)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "One spelling swerve",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hacer gives hizo, not hico — Spanish swaps c becomes z before o to keep the sound the same. The letter changes so the pronunciation won't."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "Why these are irregular",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Because they're old. Latin had two ways to build a perfect, and these verbs kept the \"strong\" one, inherited whole rather than rebuilt: tenuī becomes tuve, fēcī becomes hice, stetī/stāre becomes estuve. The regular -ar/-er/-ir patterns are the tidy replacements that spread later; the strong verbs are the most-used ones, worn smooth by frequency and never re-made. Notice tuv- and estuv- even share the same -uv- shape."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tuve, tuviste, tuvo, tuvimos, tuvieron\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tuve, tuviste, tuvo, tuvimos, tuvieron\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hice, hiciste, hizo\" — hear the z",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hice, hiciste, hizo\" — hear the **z**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast pair — \"hablÓ … TUvo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast pair — \"hablÓ … TUvo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ayer estuve en casa\" (\"Yesterday I was at home\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ayer estuve en casa\" (\"Yesterday I was at home\")]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why \"strong\"? (The stem carries the stress.) So why no accent marks? (Because the stress never reaches the ending — the accent only ever marked that.) What's the yo ending? (-e, not -é.) Why hizo and not hico? (c becomes z before o, to protect the sound.) Where do they come from? (Latin's strong perfects — tenuī, fēcī — inherited, not rebuilt.) Next: all three families side by side."
             }
           ]
         }

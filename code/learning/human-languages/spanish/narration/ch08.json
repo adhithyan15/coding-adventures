@@ -4,142 +4,11 @@
   "chapter": 8,
   "title": "Chapter 8",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa8faca659cd6608",
+  "sourceHash": "fnv1a64:f96b7bbd0ab4daba",
   "lessons": [
     {
-      "id": "ES-C08-cuantos-anos",
-      "sequence": null,
-      "title": "¿Cuántos años tienes? — \"how old are you?\"",
-      "headword": "¿Cuántos años tienes?",
-      "romanization": "¿Cuántos años tienes?",
-      "gloss": "how old are you? (literally \"how many years do you have?\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:66597346c145929f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "With tener and your numbers, you can ask and give age — and Spanish does it in a way English doesn't: you don't be a number of years old, you have them."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "¿Cuántos años tienes? = \"How old are you?\" literally: \"How many years do you have?\""
-            },
-            {
-              "kind": "speech",
-              "text": "cuántos = \"how many,\" from Latin quantus, \"how much/great\" becomes English quantity, quantum, quantify. (It's the qu- question family — qué, cómo, dónde, cuántos.) It agrees: cuántos años (masc. pl.)."
-            },
-            {
-              "kind": "speech",
-              "text": "años = \"years,\" from Latin annus — and look, the ñ is back (the doubled-nn of annus becomes añ, your writing lesson). annus also gives English annual, anniversary, biennial."
-            },
-            {
-              "kind": "speech",
-              "text": "tienes = \"you have\" (the tener you just learned)."
-            },
-            {
-              "kind": "speech",
-              "text": "Age is had, not been."
-            },
-            {
-              "kind": "speech",
-              "text": "This is a real difference to internalize: Spanish counts age with tener (\"have\"), not ser/estar (\"be\")."
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Cuántos años tienes? — Tengo veinte años. (\"I have twenty years.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "Saying \"soy veinte\" (\"I am twenty\") is simply wrong in Spanish. You possess your years; you don't equal them. (French and Italian do the same — j'ai vingt ans, ho vent'anni, all \"I have.\")"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cuántos años tienes?\" — KWAN-tos AN-yos TYE-nes",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cuántos años tienes?\" — *KWAN-tos AN-yos TYE-nes*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "answer — \"Tengo ___ años\" with your own number",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: answer — \"Tengo ___ años\" with your own number]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "never \"soy ___\"; always \"tengo ___ años\" — age is had",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: never \"soy ___\"; always \"tengo ___ años\" — age is *had*]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ¿Cuántos años tienes? literally ask? (\"How many years do you have?\") Which verb gives age in Spanish — ser or tener? (tener — you have your years.) What letter does años bring back, and from what? (The ñ, from Latin annus's doubled nn.) Next: put counting and age together in practice."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "ES-C08-numeros-1-5",
-      "sequence": null,
+      "sequence": 524,
       "title": "uno, dos, tres, cuatro, cinco — counting to five",
       "headword": "uno, dos, tres, cuatro, cinco",
       "romanization": "uno, dos, tres, cuatro, cinco",
@@ -150,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4aa6da54f52285e5",
+      "sourceHash": "fnv1a64:d0ad0f4bf00e9dd5",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +154,7 @@
     },
     {
       "id": "ES-C08-numeros-6-10",
-      "sequence": null,
+      "sequence": 526,
       "title": "seis, siete, ocho, nueve, diez — and the calendar's secret",
       "headword": "seis, siete, ocho, nueve, diez",
       "romanization": "seis, siete, ocho, nueve, diez",
@@ -296,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e992fae36b1dfcbf",
+      "sourceHash": "fnv1a64:31bbfdae30ea5829",
       "notice": null,
       "blocks": [
         {
@@ -438,8 +307,297 @@
       ]
     },
     {
+      "id": "ES-C08-tener",
+      "sequence": 528,
+      "title": "tener — \"to have,\" your first irregular verb",
+      "headword": "tener",
+      "romanization": "tener",
+      "gloss": "to have (your first irregular / stem-changing verb)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7ac3ca77bc32f7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every verb so far has been regular — hablo, como, vivo, all tidy. tener (\"to have\") is your first irregular one, and it breaks the rule in the two ways Spanish verbs most often do. Meet the exceptions now; you'll see them again and again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ie — the stem grows a -ie-: tienes = TYE-nes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tener comes from Latin tenēre, \"to hold, to keep, to grasp.\" Having is, at root, holding. That root has a firm grip on English:"
+            },
+            {
+              "kind": "speech",
+              "text": "tenant (one who holds land), tenure, tenacious (holding on), tenable, tenet (a held belief)."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: contain (\"hold together\"), retain (\"hold back\"), maintain (\"hold in hand\"), sustain (\"hold up\"), detain, obtain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the two irregularities",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tener misbehaves in exactly the two classic Spanish ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "The yo form is odd: not \"teno\" but tengo (a -g- appears). Several common verbs do this (hago, pongo, salgo, vengo)."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem vowel breaks e becomes ie in the stressed forms — a stem-changer:"
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, tengo, (the -go form).",
+                "tú, tienes, (e becomes ie).",
+                "él/ella/usted, tiene, (e becomes ie).",
+                "nosotros, tenemos, (back to e — unstressed).",
+                "ellos/ustedes, tienen, (e becomes ie)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice tenemos keeps the plain e — the vowel only cracks to ie when it's stressed. That \"boot\" pattern (all forms but nosotros/vosotros) is the single most common irregularity in Spanish; tener is your model for it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tener\" — te-NER",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tener\" — *te-NER*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tengo, tienes, tiene, tenemos, tienen\" — hear the ie crack in, and drop out for tenemos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tengo, tienes, tiene, tenemos, tienen\" — hear the *ie* crack in, and drop out for *tenemos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tener\" then English \"tenant, retain, contain\" — the hold family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tener\" then English \"tenant, retain, contain\" — the *hold* family]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb is tener from, and its English cousins? (tenēre, \"to hold\" — tenant, retain, contain.) Its two irregularities? (The -go yo-form tengo; the e becomes ie stem-change tienes/tiene/tienen.) Which form keeps the plain e? (tenemos — it's unstressed.) Next: use it to give your age."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C08-cuantos-anos",
+      "sequence": 530,
+      "title": "¿Cuántos años tienes? — \"how old are you?\"",
+      "headword": "¿Cuántos años tienes?",
+      "romanization": "¿Cuántos años tienes?",
+      "gloss": "how old are you? (literally \"how many years do you have?\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcb5f16ab501160a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With tener and your numbers, you can ask and give age — and Spanish does it in a way English doesn't: you don't be a number of years old, you have them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿Cuántos años tienes? = \"How old are you?\" literally: \"How many years do you have?\""
+            },
+            {
+              "kind": "speech",
+              "text": "cuántos = \"how many,\" from Latin quantus, \"how much/great\" becomes English quantity, quantum, quantify. (It's the qu- question family — qué, cómo, dónde, cuántos.) It agrees: cuántos años (masc. pl.)."
+            },
+            {
+              "kind": "speech",
+              "text": "años = \"years,\" from Latin annus — and look, the ñ is back (the doubled-nn of annus becomes añ, your writing lesson). annus also gives English annual, anniversary, biennial."
+            },
+            {
+              "kind": "speech",
+              "text": "tienes = \"you have\" (the tener you just learned)."
+            },
+            {
+              "kind": "speech",
+              "text": "Age is had, not been."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a real difference to internalize: Spanish counts age with tener (\"have\"), not ser/estar (\"be\")."
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Cuántos años tienes? — Tengo veinte años. (\"I have twenty years.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Saying \"soy veinte\" (\"I am twenty\") is simply wrong in Spanish. You possess your years; you don't equal them. (French and Italian do the same — j'ai vingt ans, ho vent'anni, all \"I have.\")"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cuántos años tienes?\" — KWAN-tos AN-yos TYE-nes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cuántos años tienes?\" — *KWAN-tos AN-yos TYE-nes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer — \"Tengo ___ años\" with your own number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer — \"Tengo ___ años\" with your own number]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "never \"soy ___\"; always \"tengo ___ años\" — age is had",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: never \"soy ___\"; always \"tengo ___ años\" — age is *had*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ¿Cuántos años tienes? literally ask? (\"How many years do you have?\") Which verb gives age in Spanish — ser or tener? (tener — you have your years.) What letter does años bring back, and from what? (The ñ, from Latin annus's doubled nn.) Next: put counting and age together in practice."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C08-practice",
-      "sequence": null,
+      "sequence": 532,
       "title": "Practice — numbers, having, and age",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -450,7 +608,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f877552a7e8bd113",
+      "sourceHash": "fnv1a64:6c650d67ce5cb460",
       "notice": null,
       "blocks": [
         {
@@ -593,164 +751,6 @@
             {
               "kind": "speech",
               "text": "Count to five. (Uno … cinco.) Give the yo and tú of tener, and name its two irregularities. (Tengo / tienes; the -go yo-form and the e becomes ie stem-change.) How does Spanish give age? (With tener — \"I have X years.\") Next chapter: ser vs estar head-on — the two \"to be\" verbs, sorted for good."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C08-tener",
-      "sequence": null,
-      "title": "tener — \"to have,\" your first irregular verb",
-      "headword": "tener",
-      "romanization": "tener",
-      "gloss": "to have (your first irregular / stem-changing verb)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:25fe3250fd9cbc5b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Every verb so far has been regular — hablo, como, vivo, all tidy. tener (\"to have\") is your first irregular one, and it breaks the rule in the two ways Spanish verbs most often do. Meet the exceptions now; you'll see them again and again."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-ie — the stem grows a -ie-: tienes = TYE-nes."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tener comes from Latin tenēre, \"to hold, to keep, to grasp.\" Having is, at root, holding. That root has a firm grip on English:"
-            },
-            {
-              "kind": "speech",
-              "text": "tenant (one who holds land), tenure, tenacious (holding on), tenable, tenet (a held belief)."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: contain (\"hold together\"), retain (\"hold back\"), maintain (\"hold in hand\"), sustain (\"hold up\"), detain, obtain."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the two irregularities",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tener misbehaves in exactly the two classic Spanish ways:"
-            },
-            {
-              "kind": "speech",
-              "text": "The yo form is odd: not \"teno\" but tengo (a -g- appears). Several common verbs do this (hago, pongo, salgo, vengo)."
-            },
-            {
-              "kind": "speech",
-              "text": "The stem vowel breaks e becomes ie in the stressed forms — a stem-changer:"
-            },
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, tengo, (the -go form).",
-                "tú, tienes, (e becomes ie).",
-                "él/ella/usted, tiene, (e becomes ie).",
-                "nosotros, tenemos, (back to e — unstressed).",
-                "ellos/ustedes, tienen, (e becomes ie)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Notice tenemos keeps the plain e — the vowel only cracks to ie when it's stressed. That \"boot\" pattern (all forms but nosotros/vosotros) is the single most common irregularity in Spanish; tener is your model for it."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tener\" — te-NER",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tener\" — *te-NER*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tengo, tienes, tiene, tenemos, tienen\" — hear the ie crack in, and drop out for tenemos",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tengo, tienes, tiene, tenemos, tienen\" — hear the *ie* crack in, and drop out for *tenemos*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tener\" then English \"tenant, retain, contain\" — the hold family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tener\" then English \"tenant, retain, contain\" — the *hold* family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is tener from, and its English cousins? (tenēre, \"to hold\" — tenant, retain, contain.) Its two irregularities? (The -go yo-form tengo; the e becomes ie stem-change tienes/tiene/tienen.) Which form keeps the plain e? (tenemos — it's unstressed.) Next: use it to give your age."
             }
           ]
         }

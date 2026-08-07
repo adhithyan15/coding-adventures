@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "Chapter 13",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fd74e6b6faccb060",
+  "sourceHash": "fnv1a64:a4e20b412d6537ba",
   "lessons": [
     {
       "id": "ES-C13-poner",
-      "sequence": null,
+      "sequence": 570,
       "title": "poner — \"to put,\" and the club gains a member",
       "headword": "poner",
       "romanization": "poner",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:853daae9f3657b07",
+      "sourceHash": "fnv1a64:4a6d21b6e5842518",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -168,8 +168,312 @@
       ]
     },
     {
+      "id": "ES-C13-salir",
+      "sequence": 572,
+      "title": "salir — \"to go out,\" from a verb that meant \"to leap\"",
+      "headword": "salir",
+      "romanization": "salir",
+      "gloss": "to leave / to go out — a -go yo-form, salgo, from a root that means \"to leap\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e1368dae4cebfe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second -go verb: salir (\"to leave, to go out\"). Same story as poner — regular -ir everywhere but the yo-form, which grows the g: salgo. But its origin is a delight: salir comes from a Latin verb for leaping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "salir comes from Latin salīre, \"to leap, to jump, to spring\" — and over time \"leaping out\" softened into simply \"going out.\" The leap survives across English:"
+            },
+            {
+              "kind": "speech",
+              "text": "salient (\"leaping out,\" so: prominent, sticking out), sally (\"a sudden rush out\"), somersault (sopra + saltus, \"a leap over\")."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: assail / assault (\"leap at\"), resilient (\"leap back\"), result (\"leap back out\"), insult (\"leap upon\")."
+            },
+            {
+              "kind": "speech",
+              "text": "and the salmon — salīre gave Latin salmō, \"the leaper,\" for the fish that leaps upstream."
+            },
+            {
+              "kind": "speech",
+              "text": "So every time you say salgo (\"I go out\"), you are using the old \"leap\" verb behind salient and salmon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the -go yo-form",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, salgo, (-go, like pongo/tengo).",
+                "tú, sales, (regular).",
+                "él/ella/usted, sale, (regular).",
+                "nosotros, salimos, (regular).",
+                "ellos/ustedes, salen, (regular)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday payoff: salir de casa (\"to leave the house\"), salir con alguien (\"to go out with someone\" — to date), and la salida (\"the exit\" — the sign you'll read at every station). Note: English exit is from a different Latin verb, exīre (\"go out\"); Spanish chose the leaping one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"salir\" then the set — \"salgo, sales, sale, salimos, salen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"salir\" then the set — \"**salgo**, sales, sale, salimos, salen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"salir\" then English \"salient, salmon, somersault\" — the leap-family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"salir\" then English \"salient, salmon, somersault\" — the leap-family]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did salir's Latin root salīre originally mean? (\"To leap / jump.\") Name two English cousins. (salient/sally/somersault/salmon — any two.) Give the yo-form and the sign it hides. (salgo; la salida = the exit.) Next: venir — the last -go verb, and the trickiest, because it also cracks its stem."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C13-venir",
+      "sequence": 574,
+      "title": "venir — \"to come,\" the last club member, cracked and g-grown",
+      "headword": "venir",
+      "romanization": "venir",
+      "gloss": "to come — doubly irregular, vengo + e becomes ie, completing the -go club",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aabd87fb7c1c7eae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sixth and final member of the -go club: venir (\"to come\"). And like decir back in Chapter 12, it is doubly irregular — it stacks the -go yo-form and a stem-change. Learn venir and the whole system you've been building since tener clicks shut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "g-hard — the -go of vengo."
+            },
+            {
+              "kind": "speech",
+              "text": "diphthong-ie — the stressed stem e breaks to ie: vienes = vee-EH-nes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "venir comes from Latin venīre, \"to come\" — a root ven-/vent- that comes toward English from every direction:"
+            },
+            {
+              "kind": "speech",
+              "text": "adventure (ad-venīre, \"what comes to you\"), event (\"what comes out\"), convene / convention (\"come together\"), invent (\"come upon\"), prevent (\"come before\"), intervene, revenue (\"what comes back\"), avenue (\"a coming-toward\"), and souvenir (French, \"a thing that comes to mind\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two irregularities at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(1) The -go yo-form, like pongo/salgo/tengo: vengo. (2) The e becomes ie stem-change, like querer/tener: the stressed stem breaks to ie — the \"boot\" again."
+            },
+            {
+              "kind": "table",
+              "headers": [],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "yo, vengo, (-go form).",
+                "tú, vienes, (e becomes ie).",
+                "él/ella/usted, viene, (e becomes ie).",
+                "nosotros, venimos, (plain e — unstressed).",
+                "ellos/ustedes, vienen, (e becomes ie)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Venimos alone keeps the plain e (stress on the ending), drawing the boot; everything inside it cracks to ie, and the yo corner carries the -go. This is the exact shape of tener (tengo / tienes) — venir is its mirror twin."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "The club is complete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have now met all six: tengo, hago, digo, pongo, salgo, vengo. Three plain -go (poner, salir, hacer), one -go + e becomes i (decir), two -go + e becomes ie (tener, venir). The corner is closed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"venir\" then the set — \"vengo, vienes, viene, venimos, vienen\" — the g in vengo, the ie through the boot, plain e in venimos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"venir\" then the set — \"**vengo**, vienes, viene, venimos, vienen\" — the *g* in *vengo*, the *ie* through the boot, plain *e* in *venimos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"venir\" then English \"adventure, convene, event\" — the come-family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"venir\" then English \"adventure, convene, event\" — the come-family]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name venir's two irregularities. (The -go yo-form vengo, and the e becomes ie stem-change.) Which form escapes the boot, and why? (venimos — stress on the ending.) What Latin verb, and two English cousins? (venīre; adventure/event/convene — any two.) Which earlier verb is venir's exact twin? (tener — tengo/tienes = vengo/vienes.) Next: practice — the whole -go club at once."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C13-practice",
-      "sequence": null,
+      "sequence": 576,
       "title": "Practice — the -go club, complete",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -180,7 +484,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d957576393e1d909",
+      "sourceHash": "fnv1a64:c38441962b855240",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -376,310 +680,6 @@
             {
               "kind": "speech",
               "text": "Recite the six yo-forms of the club. (tengo, hago, digo, pongo, salgo, vengo.) Which two are the e becomes ie \"boot\" twins? (tener and venir.) Which single verb is -go and e becomes i? (decir — digo/dices.) You now hold the whole irregular -go corner of Spanish — its oldest, most-used verbs, mastered as one pattern."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C13-salir",
-      "sequence": null,
-      "title": "salir — \"to go out,\" from a verb that meant \"to leap\"",
-      "headword": "salir",
-      "romanization": "salir",
-      "gloss": "to leave / to go out — a -go yo-form, salgo, from a root that means \"to leap\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a12d1080b1f174d9",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The second -go verb: salir (\"to leave, to go out\"). Same story as poner — regular -ir everywhere but the yo-form, which grows the g: salgo. But its origin is a delight: salir comes from a Latin verb for leaping."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "salir comes from Latin salīre, \"to leap, to jump, to spring\" — and over time \"leaping out\" softened into simply \"going out.\" The leap survives across English:"
-            },
-            {
-              "kind": "speech",
-              "text": "salient (\"leaping out,\" so: prominent, sticking out), sally (\"a sudden rush out\"), somersault (sopra + saltus, \"a leap over\")."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: assail / assault (\"leap at\"), resilient (\"leap back\"), result (\"leap back out\"), insult (\"leap upon\")."
-            },
-            {
-              "kind": "speech",
-              "text": "and the salmon — salīre gave Latin salmō, \"the leaper,\" for the fish that leaps upstream."
-            },
-            {
-              "kind": "speech",
-              "text": "So every time you say salgo (\"I go out\"), you are using the old \"leap\" verb behind salient and salmon."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the -go yo-form",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, salgo, (-go, like pongo/tengo).",
-                "tú, sales, (regular).",
-                "él/ella/usted, sale, (regular).",
-                "nosotros, salimos, (regular).",
-                "ellos/ustedes, salen, (regular)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday payoff: salir de casa (\"to leave the house\"), salir con alguien (\"to go out with someone\" — to date), and la salida (\"the exit\" — the sign you'll read at every station). Note: English exit is from a different Latin verb, exīre (\"go out\"); Spanish chose the leaping one."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salir\" then the set — \"salgo, sales, sale, salimos, salen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salir\" then the set — \"**salgo**, sales, sale, salimos, salen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salir\" then English \"salient, salmon, somersault\" — the leap-family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salir\" then English \"salient, salmon, somersault\" — the leap-family]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did salir's Latin root salīre originally mean? (\"To leap / jump.\") Name two English cousins. (salient/sally/somersault/salmon — any two.) Give the yo-form and the sign it hides. (salgo; la salida = the exit.) Next: venir — the last -go verb, and the trickiest, because it also cracks its stem."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C13-venir",
-      "sequence": null,
-      "title": "venir — \"to come,\" the last club member, cracked and g-grown",
-      "headword": "venir",
-      "romanization": "venir",
-      "gloss": "to come — doubly irregular, vengo + e becomes ie, completing the -go club",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:43d46c297f5ac8ef",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The sixth and final member of the -go club: venir (\"to come\"). And like decir back in Chapter 12, it is doubly irregular — it stacks the -go yo-form and a stem-change. Learn venir and the whole system you've been building since tener clicks shut."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "g-hard — the -go of vengo."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-ie — the stressed stem e breaks to ie: vienes = vee-EH-nes."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "venir comes from Latin venīre, \"to come\" — a root ven-/vent- that comes toward English from every direction:"
-            },
-            {
-              "kind": "speech",
-              "text": "adventure (ad-venīre, \"what comes to you\"), event (\"what comes out\"), convene / convention (\"come together\"), invent (\"come upon\"), prevent (\"come before\"), intervene, revenue (\"what comes back\"), avenue (\"a coming-toward\"), and souvenir (French, \"a thing that comes to mind\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: two irregularities at once",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(1) The -go yo-form, like pongo/salgo/tengo: vengo. (2) The e becomes ie stem-change, like querer/tener: the stressed stem breaks to ie — the \"boot\" again."
-            },
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, vengo, (-go form).",
-                "tú, vienes, (e becomes ie).",
-                "él/ella/usted, viene, (e becomes ie).",
-                "nosotros, venimos, (plain e — unstressed).",
-                "ellos/ustedes, vienen, (e becomes ie)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Venimos alone keeps the plain e (stress on the ending), drawing the boot; everything inside it cracks to ie, and the yo corner carries the -go. This is the exact shape of tener (tengo / tienes) — venir is its mirror twin."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "The club is complete",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You have now met all six: tengo, hago, digo, pongo, salgo, vengo. Three plain -go (poner, salir, hacer), one -go + e becomes i (decir), two -go + e becomes ie (tener, venir). The corner is closed."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"venir\" then the set — \"vengo, vienes, viene, venimos, vienen\" — the g in vengo, the ie through the boot, plain e in venimos",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"venir\" then the set — \"**vengo**, vienes, viene, venimos, vienen\" — the *g* in *vengo*, the *ie* through the boot, plain *e* in *venimos*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"venir\" then English \"adventure, convene, event\" — the come-family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"venir\" then English \"adventure, convene, event\" — the come-family]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name venir's two irregularities. (The -go yo-form vengo, and the e becomes ie stem-change.) Which form escapes the boot, and why? (venimos — stress on the ending.) What Latin verb, and two English cousins? (venīre; adventure/event/convene — any two.) Which earlier verb is venir's exact twin? (tener — tengo/tienes = vengo/vienes.) Next: practice — the whole -go club at once."
             }
           ]
         }

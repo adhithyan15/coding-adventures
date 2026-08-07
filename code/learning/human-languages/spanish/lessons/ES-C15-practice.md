@@ -1,6 +1,7 @@
 ---
 id: ES-C15-practice
 chapter: 15
+sequence: 588
 type: practice-mix
 headword: (practice)
 gloss: the whole preterite — -ar, -er/-ir, and strong, told apart by where the stress lands

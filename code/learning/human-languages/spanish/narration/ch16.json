@@ -3,12 +3,12 @@
   "language": "spanish",
   "chapter": 16,
   "title": "Chapter 16",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:afadfe166aa49a8a",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:30eaac9352ed3655",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
-      "sequence": null,
+      "sequence": 590,
       "title": "hablaba, comía — the past that kept going",
       "headword": "hablaba, comía",
       "romanization": "hablaba, comía",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b01d70df596dd3f8",
+      "sourceHash": "fnv1a64:a7934411170c064f",
       "notice": null,
       "blocks": [
         {
@@ -194,8 +194,191 @@
       ]
     },
     {
+      "id": "ES-C16-tres-irregulares",
+      "sequence": 592,
+      "title": "era, iba, veía — all three of them",
+      "headword": "era, iba, veía",
+      "romanization": "era, iba, veía",
+      "gloss": "the only three irregular imperfects in the entire language",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:f0aeca46b35f7ba0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The complete list"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The complete list until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 15 handed you a pile of strong preterites to memorise. Here is the compensation: the imperfect has three irregular verbs. Not three families — three verbs, in the whole language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The complete list",
+          "segments": [
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "",
+                "ser becomes era",
+                "ir becomes iba",
+                "ver becomes veía"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, ser becomes era, ir becomes iba, ver becomes veía. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire irregular inventory. Every other verb in Spanish — thousands of them — takes the regular endings from the last lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Ver barely counts: it just keeps an extra -e- from its older form veer, then conjugates normally (ve- + -ía)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "ir's third Latin verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the best thing in the chapter. Track where ir's tenses come from:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "form",
+                "from Latin verb"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "tense: present. form: voy, vas, va. from Latin verb: vādere \"to advance\" (Ch. 10).",
+                "tense: preterite. form: fui, fuiste, fue. from Latin verb: fuī, from esse (Ch. 14).",
+                "tense: imperfect. form: iba, ibas, iba. from Latin verb: īre — its own infinitive."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish ir is stitched together from three different Latin verbs, and the imperfect is the one place the original īre survives conjugated. The infinitive ir and the imperfect iba are the last two pieces of the real verb; everything else was borrowed from elsewhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "era",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "era from Latin eram, from the same es- root as ser, soy, es — and as English is and are (Chapter 9). So ser uses that ancient root in the present and the imperfect, but jumps to fuī in the preterite: era vs fue."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the accents: éramos, íbamos — stress three syllables back, exactly like hablábamos."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"era, eras, era, éramos, eran\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"era, eras, era, éramos, eran\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iba, ibas, iba, íbamos, iban\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iba, ibas, iba, íbamos, iban\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three sources — \"voy from vādere, fui from fuī, iba from īre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three sources — \"voy ← *vādere* · fui ← *fuī* · iba ← *īre*\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many irregular imperfects are there? (Three — ser, ir, ver.) Which one hardly counts, and why? (Ver — it just keeps an extra -e- from veer.) Where does iba come from? (Latin īre — ir's own verb, and the only tense that kept it.) So how many Latin verbs is ir built from? (Three — vādere, fuī, īre.) Which two forms take a written accent? (Éramos, íbamos — stress three back.) Next: choosing between the two pasts."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C16-practice",
-      "sequence": null,
+      "sequence": 594,
       "title": "Practice — two pasts, one choice",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -206,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2d5ad9eb96e32c1",
+      "sourceHash": "fnv1a64:8ea9920b4d1ad6c4",
       "notice": null,
       "blocks": [
         {
@@ -398,189 +581,6 @@
             {
               "kind": "speech",
               "text": "Preterite or imperfect for a habit? (Imperfect.) Which tense sets the background, and which interrupts it? (Imperfect sets, preterite interrupts.) What's the difference between conocía and conocí? (\"I knew someone\" vs \"I met them.\") How many irregular imperfects were there? (Three.) Give the one-word test. (\"Line or point?\") Next chapter: talking about what will happen."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C16-tres-irregulares",
-      "sequence": null,
-      "title": "era, iba, veía — all three of them",
-      "headword": "era, iba, veía",
-      "romanization": "era, iba, veía",
-      "gloss": "the only three irregular imperfects in the entire language",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:02ca95b17070bfad",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The complete list"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The complete list until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Chapter 15 handed you a pile of strong preterites to memorise. Here is the compensation: the imperfect has three irregular verbs. Not three families — three verbs, in the whole language."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The complete list",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "",
-                "ser becomes era",
-                "ir becomes iba",
-                "ver becomes veía"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, ser becomes era, ir becomes iba, ver becomes veía. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the entire irregular inventory. Every other verb in Spanish — thousands of them — takes the regular endings from the last lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "Ver barely counts: it just keeps an extra -e- from its older form veer, then conjugates normally (ve- + -ía)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "ir's third Latin verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the best thing in the chapter. Track where ir's tenses come from:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "tense",
-                "form",
-                "from Latin verb"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "tense: present. form: voy, vas, va. from Latin verb: vādere \"to advance\" (Ch. 10).",
-                "tense: preterite. form: fui, fuiste, fue. from Latin verb: fuī, from esse (Ch. 14).",
-                "tense: imperfect. form: iba, ibas, iba. from Latin verb: īre — its own infinitive."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish ir is stitched together from three different Latin verbs, and the imperfect is the one place the original īre survives conjugated. The infinitive ir and the imperfect iba are the last two pieces of the real verb; everything else was borrowed from elsewhere."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "era",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "era from Latin eram, from the same es- root as ser, soy, es — and as English is and are (Chapter 9). So ser uses that ancient root in the present and the imperfect, but jumps to fuī in the preterite: era vs fue."
-            },
-            {
-              "kind": "speech",
-              "text": "Note the accents: éramos, íbamos — stress three syllables back, exactly like hablábamos."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"era, eras, era, éramos, eran\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"era, eras, era, éramos, eran\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"iba, ibas, iba, íbamos, iban\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"iba, ibas, iba, íbamos, iban\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Cuando era niño, iba a la escuela\" (\"When I was a child, I used to go to school\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three sources — \"voy from vādere, fui from fuī, iba from īre\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three sources — \"voy ← *vādere* · fui ← *fuī* · iba ← *īre*\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many irregular imperfects are there? (Three — ser, ir, ver.) Which one hardly counts, and why? (Ver — it just keeps an extra -e- from veer.) Where does iba come from? (Latin īre — ir's own verb, and the only tense that kept it.) So how many Latin verbs is ir built from? (Three — vādere, fuī, īre.) Which two forms take a written accent? (Éramos, íbamos — stress three back.) Next: choosing between the two pasts."
             }
           ]
         }

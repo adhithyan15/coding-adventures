@@ -1,6 +1,7 @@
 ---
 id: ES-C09-practice
 chapter: 9
+sequence: 542
 type: practice-mix
 headword: (practice)
 gloss: drilling the ser / estar split

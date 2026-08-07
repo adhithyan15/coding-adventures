@@ -1,6 +1,7 @@
 ---
 id: ES-C13-practice
 chapter: 13
+sequence: 576
 type: practice-mix
 headword: (practice)
 gloss: the whole -go club, complete — tengo, hago, digo, pongo, salgo, vengo
