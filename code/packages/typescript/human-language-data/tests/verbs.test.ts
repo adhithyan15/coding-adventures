@@ -97,7 +97,7 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
     expect(report.summary.universallyMissing).toHaveLength(15);
-    expect(report.summary.meanCoveredPercent).toBe(21);
+    expect(report.summary.meanCoveredPercent).toBe(24);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -129,7 +129,18 @@ describe("corpus snapshot", () => {
       "VERB-SAY",
       "VERB-SEE",
       "VERB-KNOW",
+      // Chapters 31-32, where the ROOT SYSTEM finally does the teaching: ك-ت-ب gives
+      // *kataba* and, off patterns the learner already owns, *kitāb*, *kātib*, *maktūb*,
+      // *maktab*, *maktaba* — generated rather than memorised. No other track can do this.
+      "VERB-THINK",
+      "VERB-UNDERSTAND",
+      "VERB-READ",
+      "VERB-WRITE",
+      "VERB-TAKE",
       "VERB-EAT",
+      "VERB-ASK",
+      "VERB-HELP",
+      "VERB-LIKE-LOVE",
     ]);
     expect(report.tracks.find((track) => track.language === "russian")!.covered).toEqual([
       "VERB-BE",
@@ -137,7 +148,17 @@ describe("corpus snapshot", () => {
       "VERB-SPEAK",
       "VERB-SEE",
       "VERB-KNOW",
+      // Chapters 4-5. Russian was the smallest track in the corpus and this tranche
+      // nearly doubled it — and took its never-revisited atoms from 21 of 34 to 3 of 55.
+      "VERB-THINK",
+      "VERB-UNDERSTAND",
+      "VERB-READ",
+      "VERB-WRITE",
+      "VERB-TAKE",
       "VERB-LIVE",
+      "VERB-ASK",
+      "VERB-HELP",
+      "VERB-LIKE-LOVE",
     ]);
     // The overlap that makes these CROSS-LANGUAGE concepts rather than 22 private
     // vocabularies: three verbs are now taught by more than one track, joined on one id.
