@@ -242,6 +242,19 @@ pub struct VMCore {
 impl VMCore {
     /// Create a `VMCore` with sensible defaults.
     pub fn new() -> Self {
+        // Attest generational-barrier coverage (gc-core AOT00-T8): `should_collect_minor`
+        // is hardcoded `false` on a fresh `FlatHeap` until this is set, because a minor
+        // collection's soundness depends on every old→young reference store having gone
+        // through `write_barrier`. vm-core satisfies that: `handle_gc_field_store` — the
+        // only op that stores a reference into a heap object's field — calls
+        // `ctx.heap.write_barrier` unconditionally on every store. Unlike the native-AOT/
+        // LLVM code generators (which do not emit the barrier yet, so must NOT attest
+        // this), vm-core can safely opt in here once, at construction. This attestation
+        // binds every opcode that ever runs against `DispatchCtx.heap` — including
+        // extension opcodes registered via `register_opcode` — not just the built-in
+        // table: an extension that writes a heap-object field must call the barrier too.
+        let mut heap = gc_core::FlatHeap::new();
+        heap.set_auto_minor(true);
         VMCore {
             u8_wrap: false,
             profiler_enabled: true,
@@ -253,7 +266,7 @@ impl VMCore {
             memory: HashMap::new(),
             globals: HashMap::new(),
             arrays: Vec::new(),
-            heap: gc_core::FlatHeap::new(),
+            heap,
             gc_object_count: 0,
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),

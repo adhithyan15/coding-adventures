@@ -1422,13 +1422,20 @@ fn collect_now(ctx: &mut DispatchCtx) {
 /// a long-running loop with no explicit `safepoint` still gets collected
 /// under allocation pressure without collecting on every single tick.
 ///
-/// When due, further upgrades to a **compacting** cycle whenever
-/// `ctx.heap.should_compact()` says fragmentation warrants it — the same
-/// shared policy `gc-core-capi`'s `__gc_safepoint` consults, so the two
-/// automatic-collection call sites can't drift apart. `collect_compacting`'s
+/// When due, further upgrades to a **minor** (young-generation-only) cycle
+/// whenever `ctx.heap.should_collect_minor()` says the survival-ratio signal
+/// warrants it, or a **compacting** cycle whenever `ctx.heap.should_compact()`
+/// says fragmentation warrants it — the same shared policy `gc-core-capi`'s
+/// `__gc_safepoint` consults (minor checked first, matching `AdaptivePolicy`'s
+/// own priority order), so the two automatic-collection call sites can't
+/// drift apart. `VMCore::new()` attests `set_auto_minor(true)` once at
+/// construction (vm-core's `handle_gc_field_store` calls the generational
+/// write barrier on every store, so `should_collect_minor` is sound to honor
+/// here — see that attestation's own doc comment). `collect_compacting`'s
 /// root-slot rewrite (see `gc_core::HeapRef::as_mut_ptr`) transparently
 /// updates every `Value::HeapRef` in `build_roots`' root set in place, so
-/// vm-core needs no fixup logic of its own beyond passing the same roots.
+/// vm-core needs no fixup logic of its own beyond passing the same roots;
+/// `collect_minor_mixed` never relocates, so no rewrite applies there either.
 fn run_safepoint(ctx: &mut DispatchCtx) {
     if !ctx.heap.should_collect() {
         return;
@@ -1438,7 +1445,9 @@ fn run_safepoint(ctx: &mut DispatchCtx) {
     // field of a live Value::HeapRef reachable through `ctx` for the
     // duration of this call.
     let stats = unsafe {
-        if ctx.heap.should_compact() {
+        if ctx.heap.should_collect_minor() {
+            ctx.heap.collect_minor_mixed(&roots, &[])
+        } else if ctx.heap.should_compact() {
             ctx.heap.collect_compacting(&roots, &[])
         } else {
             ctx.heap.collect_mixed(&roots, &[])
