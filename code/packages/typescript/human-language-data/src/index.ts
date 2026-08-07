@@ -209,6 +209,16 @@ export {
   type ScriptSystemViolation,
   type TrackScriptRamp,
 } from "./ramp.js";
+export {
+  measureContinuity,
+  REINFORCEMENT_WINDOWS,
+  type ContinuityReport,
+  type OrderDefect,
+  type ReinforcementDefect,
+  type ForwardReference,
+  type TrackContinuity,
+  type WindowName,
+} from "./continuity.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";

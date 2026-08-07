@@ -2,6 +2,7 @@ import type { ParsedLesson } from "./parse.js";
 import { runChapterGates, type ChapterGateReport } from "./chapters.js";
 import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
 import { measureRamp, type RampReport } from "./ramp.js";
+import { measureContinuity, type ContinuityReport } from "./continuity.js";
 import type {
   BookCorpus,
   ChapterPolicy,
@@ -111,6 +112,14 @@ export interface CurriculumGapReport {
     scriptRampOverBudgetLessons: number | null;
     /** HL08: lessons opening more than one writing system at once. */
     lessonsOpeningMultipleScripts: number | null;
+    /** HL09: lessons with no declared reading order. Until zero, the rest is provisional. */
+    lessonsWithoutSequence: number;
+    /** HL09: lessons reviewing a lesson the learner has not reached yet. */
+    forwardReviews: number;
+    /** HL09: atoms taught once and never practised again — the headline gap. */
+    atomsNeverRevisited: number;
+    /** HL09: uses of target-language material a later lesson teaches. */
+    forwardReferences: number;
     chaptersWithoutCapability: number | null;
     chapterPayoffsNotRepresentative: number | null;
     chapterGateCleanTracks: number | null;
@@ -161,6 +170,14 @@ export interface CurriculumGapReport {
    * nobody chose.
    */
   ramp?: RampReport;
+  /**
+   * HL09 step 1 — whether the course has a memory of itself.
+   *
+   * The ramp budgets measure how big each step is; this measures whether the
+   * steps hold together. Always present: unlike `ramp` it needs no policy, since
+   * order, reinforcement and forward references are all properties of the lessons.
+   */
+  continuity: ContinuityReport;
   modality: ModalitySummary;
 }
 
@@ -471,6 +488,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   // HL08 ramp budgets. Needs only the policy — every lesson carries its own atoms and
   // its own script, so unlike the chapter gates this does not wait on the ledgers.
   const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
+  const continuity = measureContinuity(lessons);
 
   const chapterGates =
     input.trackChapters && input.chapterPolicy
@@ -510,6 +528,10 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       rampOverBudgetLessons: ramp?.summary.lessonViolations ?? null,
       scriptRampOverBudgetLessons: ramp?.script.summary.lessonViolations ?? null,
       lessonsOpeningMultipleScripts: ramp?.script.summary.systemViolations ?? null,
+      lessonsWithoutSequence: continuity.summary.lessonsWithoutSequence,
+      forwardReviews: continuity.summary.forwardReviews,
+      atomsNeverRevisited: continuity.summary.atomsNeverRevisited,
+      forwardReferences: continuity.summary.forwardReferences,
       chaptersWithoutCapability: chapterGates?.summary.chaptersWithoutCapability ?? null,
       chapterPayoffsNotRepresentative: chapterGates?.summary.payoffsNotRepresentative ?? null,
       chapterGateCleanTracks: chapterGates?.summary.cleanTracks ?? null,
@@ -527,6 +549,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     chapters: chapterGates,
     levels,
     ramp,
+    continuity,
     modality,
   };
 }
@@ -566,6 +589,16 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
             `(max ${report.ramp.script.summary.maxForeignGlyphsInALesson} glyphs) — context, never charged to the budget`,
         ]
       : []),
+    `order: ${report.continuity.summary.lessonsWithoutSequence} lessons with no declared sequence ` +
+      `across ${report.continuity.summary.tracksWithUnorderedLessons} tracks; ` +
+      `${report.continuity.summary.forwardPrerequisites} prerequisites and ` +
+      `${report.continuity.summary.forwardReviews} reviews pointing forward`,
+    `reinforcement: ${report.continuity.summary.atomsNeverRevisited} of ${report.continuity.summary.atomsTaught} ` +
+      `atoms never revisited (${report.continuity.summary.neverRevisitedPercent}%); missed windows ` +
+      Object.entries(report.continuity.summary.missedByWindow)
+        .map(([name, count]) => `${name} ${count}`)
+        .join(", "),
+    `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
     ...(report.chapters
       ? [
           `${report.chapters.summary.chaptersWithoutCapability} of ${report.chapters.summary.bookChapters} book chapters without an HL05 capability; ` +
