@@ -77,6 +77,16 @@ anything commercial, and the etymology is genuinely distinctive:
 > A gentle ramp is not made of small steps; it's made of steps you can still
 > stand on.
 
+**Measured 2026-08-07, before authoring any review lesson:** R1 is n+1…n+3, so a
+chapter-END review cannot close it for 11 of Spanish's 35 chapters (median 4
+lessons, max 15) — which is why the existing `practice-mix` lessons never closed a
+window. And **99 of Spanish's 114 R1 misses are never revisited at any distance**,
+so this is an absence, not a scheduling error. HL09 §7.2 records the consequence:
+R1/R2 must be closed by wiring `practises.knowledge` on the *teaching* lessons
+(≈0 new lessons), and dedicated `review` lessons are for R3/R4 only. The naive
+reading — one review lesson every three lessons — would have added ~50 lessons to
+Spanish and ~2,600 at the 8,000-lesson target to say what one frontmatter line says.
+
 [HL09](../../specs/HL09-gentle-ramp-curriculum-design.md) is the redesign. It sizes
 the work honestly (**~8,000 lessons to C2**, against 146 today), and names **four**
 ramps where the repo measured one: vocabulary, script, **sentence complexity**, and
