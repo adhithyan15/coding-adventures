@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4710f7f897390137",
+  "sourceHash": "fnv1a64:da86fac8c81e8b88",
   "summary": {
-    "totalLessons": 1249,
-    "voice": 848,
+    "totalLessons": 1257,
+    "voice": 856,
     "sight": 348,
     "pen": 53,
-    "drivableLessons": 848,
+    "drivableLessons": 856,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 400,
-    "drivablePrefixTotal": 679,
-    "fullyDrivableChapters": 276,
+    "chapterCount": 402,
+    "drivablePrefixTotal": 687,
+    "fullyDrivableChapters": 278,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -687,12 +687,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 73,
-      "voice": 58,
+      "lessonCount": 81,
+      "voice": 66,
       "sight": 12,
       "pen": 3,
-      "drivablePercent": 79,
-      "drivablePrefixTotal": 42,
+      "drivablePercent": 81,
+      "drivablePrefixTotal": 50,
       "modalities": [
         "voice",
         "sight",
@@ -1088,6 +1088,44 @@
           "drivable": true,
           "drivableLessonIds": [
             "FR-C23-vert-jaune"
+          ]
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C24-prendre",
+            "FR-C24-demander",
+            "FR-C24-aider",
+            "FR-C24-aimer"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C25-comprendre",
+            "FR-C25-penser",
+            "FR-C25-lire",
+            "FR-C25-ecrire"
           ]
         }
       ]
@@ -9600,6 +9638,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:568c8aef59fa16a9"
+    },
+    {
+      "id": "FR-C24-prendre",
+      "language": "french",
+      "chapter": 24,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3701a294016bd259"
+    },
+    {
+      "id": "FR-C24-demander",
+      "language": "french",
+      "chapter": 24,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d3f728249aa2e13"
+    },
+    {
+      "id": "FR-C24-aider",
+      "language": "french",
+      "chapter": 24,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebc46f670b379245"
+    },
+    {
+      "id": "FR-C24-aimer",
+      "language": "french",
+      "chapter": 24,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85d8360819b5b772"
+    },
+    {
+      "id": "FR-C25-comprendre",
+      "language": "french",
+      "chapter": 25,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3d0a8c0b84add36"
+    },
+    {
+      "id": "FR-C25-penser",
+      "language": "french",
+      "chapter": 25,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c31ea0673fa3e55"
+    },
+    {
+      "id": "FR-C25-lire",
+      "language": "french",
+      "chapter": 25,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f07000fefeb3d091"
+    },
+    {
+      "id": "FR-C25-ecrire",
+      "language": "french",
+      "chapter": 25,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c75664e4497104d6"
     },
     {
       "id": "GE-C01-abend",
