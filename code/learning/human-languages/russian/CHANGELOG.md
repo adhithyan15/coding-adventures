@@ -1,5 +1,83 @@
 # Changelog — Russian track
 
+## 0.9.0 — 2026-08-07
+
+HL-C44. Russian sat at **6 of the 40 core verbs** and was still one of the
+smallest tracks in the corpus. This adds the tranche of eight that Spanish,
+Latin and Portuguese already teach, in **two chapters of four** rather than one
+of eight, and takes Russian to **14 of 40** — second only to Latin.
+
+- **New lessons**, in order: `RU-C04-dumat` (думать, `VERB-THINK`),
+  `RU-C04-ponimat` (понимать, `VERB-UNDERSTAND`), `RU-C04-chitat` (читать,
+  `VERB-READ`), `RU-C04-pisat` (писать, `VERB-WRITE`), `RU-C05-brat` (брать,
+  `VERB-TAKE`), `RU-C05-sprashivat` (спрашивать, `VERB-ASK`), `RU-C05-pomogat`
+  (помогать, `VERB-HELP`), `RU-C05-lyubit` (любить, `VERB-LIKE-LOVE`).
+  Sequences 200–270; all schema v2; effective durations 279–291 s against the
+  300 s ceiling; all eight `voice`-cored, so both chapters are drivable.
+- **Each of the eight widens a three-way join to four-way.** Before this branch
+  these concepts were realized by Spanish, Latin and Portuguese and nobody else.
+- **Aspect is introduced, named, and deliberately not finished.** All eight
+  verbs are imperfective, and one atom — `RU-GRAMMAR-ASPECT-PARTNER` — carries
+  the fact that every Russian verb travels with a perfective partner. It is
+  introduced once, on *думать · подумать*, and then practised in all seven
+  lessons that follow, each naming its own partner in a paragraph:
+  *понимать · понять* (reshaped stem), *читать · прочитать* (the clean case),
+  *писать · написать*, *брать · взять* (**suppletive** — a different word
+  entirely, the trick that also gives *идти* its past *шёл*),
+  *спрашивать · спросить*, *помогать · помочь* (an infinitive in **-чь**), and
+  *любить · полюбить* (which means *to come to love*, not *to finish loving* —
+  a pair is not always doing-against-done). What a pair does to a whole sentence
+  is left to a chapter of its own.
+- **The писать stress trap is flagged plainly**, because learners hit it
+  constantly: *pisát'* is **to write**, *písat'* is a child's word for
+  urinating, and the two differ only in where the voice lifts.
+- **One new letter, taught where it is finally needed**: **ш**, inside *пишу*.
+  The track had been reading it since *живёшь*, *знаешь* and *говоришь* without
+  ever naming it. It sits in a `## The letters in this word` section, which is a
+  detachable `script` block, so `coreModality` stays `voice`.
+- **Etymology carried both chapters, and said so when the trail stops.**
+  *писать* is \**peyḱ-* "to cut, scratch" → Latin *pingere* → **paint,
+  picture, pigment**; *брать* is \**bʰer-* → **bear, birth, burden**, Latin
+  *ferre*, Greek *phérein* in **metaphor**; *спрашивать* is \**preḱ-* → Latin
+  *precārī* → **pray, precarious**, and German *fragen*; *помогать* is
+  \**magʰ-* → **may, might, dismay**; *любить* is \**leubʰ-*, which is English
+  **love** itself. Where a cousin is **not** secure the lesson says so: *читать*
+  is given **no** English descendant (and *cheat* and *chit* are named as the
+  false leads they are), and *думать*'s link to **doom** is marked as an early
+  Gothic **borrowing**, not an inheritance, with the minority inherited-root
+  account noted. *брать* is flagged against *брат* "brother", a different root
+  that merely starts the same way — as *быть* is a third.
+- **Reinforcement was the point, and it is measured.** Every lesson's
+  `practises.knowledge` names atoms from the one to three lessons immediately
+  before it, which is what closes R1; the two payoffs reach back several
+  chapters. Russian's never-revisited count goes from **21 of 34 atoms (62%) to
+  3 of 55 (5%)** — and all three survivors belong to the last lesson, which has
+  nothing after it. Rescued at distance: *я*-is-not-*R* and *я* ↔ *ego* from
+  Chapter 2, *ты* ↔ *thou*, the polite-pronoun and naming-question comparisons,
+  **быть** and the zero copula, **не**, *жить* ↔ *quick*, *говорить* ↔ not
+  *govern*, the **г** of gamma, the **д → ж** swap, *идти → шёл*, and the
+  one-way/habitual motion pair.
+- **Stress notation changed, track-wide.** The vendored
+  `NotoSansCyrillic-Static.ttf` is a Basic-Latin + Cyrillic subset with **no
+  combining diacritics**, so `U+0301` printed as a missing character 198 times
+  the first time a Russian verb chapter reached XeLaTeX. Stress now rides on the
+  romanization (*chitát'*, *pishú*, *lyublyú*), which is what the book's own
+  preface already promised the reader; the three Chapter-3 lessons that used
+  Cyrillic acutes were adjusted with no loss, since each already carried the
+  same stress in its romanization.
+- **The book grew from two chapters to five.** Chapters 3, 4 and 5 are the
+  track's first **generated** LaTeX chapters — chapter 3 is included because
+  chapters 4-5 build directly on *знать*, *быть* and *говорить*, and printing
+  them without it would put a forward reference into the standalone PDF. The
+  preamble gains the four environments the generator emits, kept separate from
+  the four the hand-written chapters 1-2 use. `book.pdf` compiles under XeLaTeX
+  at 45 pages with **zero** `Missing character` and **zero** overfull boxes.
+- **HL05 ledgers** for chapters 4 and 5, each with a payoff assessing **every
+  atom its own chapter introduced** (11/11 and 10/10, against a 0.50 floor).
+  Chapter 3 is still without one, and now shows as a book chapter lacking an
+  HL05 capability: with no consolidation lesson its only candidate payoff
+  reaches 0.26. Recorded, not papered over.
+
 ## 0.8.0 — 2026-08-06
 
 HL-C42. Russian taught **zero verbs**. It was the smallest real track in the

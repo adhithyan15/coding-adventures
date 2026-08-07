@@ -135,8 +135,8 @@ Everything else you have met. And the two оs behave the way спасибо taug
 Grammar Lens: verbs come in two families.
 Я говорю. — ya gavaryú — I speak.
 The I ending is the same -ю you put on знаю. Every Russian verb in the present ends the same way for I. Then switch to you, and the two families separate:
-ты зна́ешь — ty znáyesh — you know.
-ты говори́шь — ty gavarísh — you speak.
+ты знаешь — ty znáyesh — you know.
+ты говоришь — ty gavarísh — you speak.
 An -е- against an -и-. That one vowel is the whole difference, and it is why you learn the you form alongside the dictionary form: it names the family, and the remaining endings follow from it.
 
 The word, taken apart — and a false friend.
@@ -151,7 +151,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "Я говорю" — same -ю as знаю]
 [pause 8 seconds for the answer]
-[your turn — say: the two families — "зна́ешь … говори́шь"]
+[your turn — say: the two families — "знаешь … говоришь"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -171,12 +171,12 @@ You'll want to know first — видеть.
 No new letters. Two you should keep honest, though: в says v, not b, and и says ee — the pair that fooled you in привет.
 Stress lands on the first syllable here — VEE-dyet' — the opposite of говорить (govorít'). Russian never prints its stress, so it travels with the word.
 The you form tells you the family, exactly as promised last lesson:
-ты ви́дишь — ty vídish — you see.
+ты видишь — ty vídish — you see.
 An -ишь, so видеть (vídet') belongs with говорить (govorít'), not with знать (znat').
 
 Grammar Lens: the letter that swaps for "I".
 Now the surprise:
-Я ви́жу. — ya vízhu — I see.
+Я вижу. — ya vízhu — I see.
 The д has become ж — the measure sound from жить (zhit'). The ending is the ordinary -у; it is the consonant in front of it that shifted.
 This happens in the I form and nowhere else in the present. Ты видишь, and everyone else, keep their д. So the pattern to carry is small and exact: вижу, then видишь — and after that the verb behaves.
 English does the same trick and has stopped noticing: speak against speech, break against breach, bake against batch. A consonant softening beside a front vowel, in both languages, for the same ancient reason.
@@ -214,12 +214,12 @@ You'll want to know first — идти.
 идти — idtí — to go (on foot, and under way right now).
 No new letters, and only four of them. The дт in the middle is not really pronounced as two sounds — Russians say it-TEE, with the stress at the end.
 The endings are ones you already have:
-Я иду́. — ya idú — I'm going. Ты идёшь. — ty idyósh — you're going.
+Я иду. — ya idú — I'm going. Ты идёшь. — ty idyósh — you're going.
 An -у for I, and an -ешь ending for you, so идти (idtí) sits with знать (znat'), not with говорить (govorít').
 
 Grammar Lens: going now against going often.
 Russian keeps a second verb for the same activity:
-Я иду́ — I am on my way, now, in one direction. Я хожу́ — ya khazhú — I go, as a habit, back and forth.
+Я иду — I am on my way, now, in one direction. Я хожу — ya khazhú — I go, as a habit, back and forth.
 That is not a tense difference. They are two separate verbs, and Russian makes you choose one before you can open your mouth.
 English draws the same line with grammar instead: I'm going against I go. You know the distinction perfectly — you have just never had to choose a verb for it. Every Russian verb of motion comes in such a pair, so this one teaches the pattern.
 
