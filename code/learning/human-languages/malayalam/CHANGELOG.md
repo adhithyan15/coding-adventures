@@ -1,5 +1,43 @@
 # Changelog
 
+## Chapter 32 — The Core Verbs (2026-08-06)
+
+- Added six schema-v2 core-verb lessons, the track's first A2 material and its
+  first realization of `SPINE-SAY-WHAT-I-DO`: `ML-C32-undu` (VERB-BE),
+  `ML-C32-pokuka` (VERB-GO), `ML-C32-varuka` (VERB-COME), `ML-C32-tinnuka`
+  (VERB-EAT), `ML-C32-kaanuka` (VERB-SEE), `ML-C32-ariyuka` (VERB-KNOW). All
+  six take canonical spine concept tags, so the track goes from four namespaced
+  verb concepts and none canonical to six canonical ones.
+- The chapter is built around the fact that makes Malayalam unlike its three
+  Dravidian sisters: **its verb carries no person marking at all**. Chapter 5
+  observed this for one verb; Chapter 32 turns it into the chapter's spine.
+  `ML-C32-undu` sets up the two-slot machine (stem + tense) against Tamil's
+  three (stem + tense + person); `ML-C32-pokuka` shows that each tense form is
+  therefore the *whole* conjugation; `ML-C32-varuka` locates the entire
+  irregularity budget in the past (*varu-* → *vann-*); `ML-C32-kaanuka` shows
+  the freed slot spent on mood (*kāṇāṁ*, *kāṇaṇaṁ*, *kāṇarutŭ*); and
+  `ML-C32-ariyuka` closes by taking the person out of the subject slot too,
+  giving Chapter 6's **എനിക്ക് മലയാളം അറിയാം** the verb it was always built on.
+- Two genuinely conservative facts are recorded rather than glossed: Malayalam
+  kept **both** of the family's be-verbs (ഉണ്ട് = Telugu ఉండు for existing and
+  having, ഇരിക്കുക = Tamil இரு / Kannada ಇರು for being somewhere), and it kept
+  the inherited *tiṉ-* and *kāṇ-* as its everyday eat- and see-words where
+  Tamil, Kannada and Telugu each moved on. `ML-C32-tinnuka` also names the
+  **-ഉക / -ഇക്കുക** split, which marks a native verb off from a Sanskrit
+  borrowing turned into one.
+- Every non-Malayalam form is supplied in full — no lesson assumes the reader
+  knows another target language — and every cognate claim stays inside
+  Dravidian, with Sanskrit material flagged as borrowing.
+- Wired the chapter through the pipeline: `ML-PATH-026` in
+  [`curriculum.json`](./curriculum.json) (dropping the six concepts from
+  `SPINE-SAY-WHAT-I-DO`'s `omits`), a Chapter 32 ledger entry in
+  [`chapters.json`](./chapters.json), a `core/book-generation.json` target, the
+  generated `book/chapters/ch32-core-verbs.tex`, and `\input` in `book.tex`.
+- All six lessons are **voice** modality, so Chapter 32 is drivable end to end,
+  and all six sit under the 300-second effective ceiling (272–294s computed).
+  The 114-page XeLaTeX build has zero missing characters and adds no over- or
+  underfull boxes.
+
 ## Chapter capability ledger for Chapters 6–31 (2026-08-06)
 
 - Added [`chapters.json`](./chapters.json), the track's HL05 chapter capability
