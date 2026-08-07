@@ -83,6 +83,9 @@ across backends, a separate formatting concern). Current programs:
 | `python_oop_method` | Python-sourced OOP surface (SIR25 §2) — same case as `oop_method`, sourced from **Python** | `woof` |
 | `python_counter_state` | Python-sourced instance state — same case as `counter_state`, sourced from **Python** | `2` |
 | `python_inheritance` | Python-sourced single inheritance, ancestry-walk dispatch with no explicit `super()` | `...-woof` |
+| `js_oop_method` | JavaScript-sourced OOP surface (SIR25 §2) — same case as `oop_method`, sourced from **JavaScript** | `woof` |
+| `js_counter_state` | JavaScript-sourced instance state — same case as `counter_state`, sourced from **JavaScript** | `2` |
+| `js_inheritance` | JavaScript-sourced single inheritance, ancestry-walk dispatch with no explicit `super()` | `...-woof` |
 
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`
@@ -114,6 +117,12 @@ visible. Currently tracked:
   array-unpacking rule Python's `print` doesn't share). `python_inheritance`
   sidesteps this with a single `print` call (string-concatenating both
   results) since the gap is orthogonal to what that program tests.
+  JavaScript's `console.log` lowers to the SAME `"print"` builtin name
+  (`javascript-to-semantic-ir`'s dedicated `console.log` → `print`
+  mapping) and, like Python, always newline-terminates — so it hits this
+  identical C/Ruby-only collision. `js_inheritance` sidesteps it the same
+  way `python_inheritance` does: a single `console.log` call,
+  string-concatenating both results.
 - **Array/hash index writes AND reads** (`a[i]`, `a[i] = v`, `h[k]`) — the
   frontend parses and lowers both correctly now (PR #9686 fixed the
   PARSER-precedence gap this section used to describe), but only the C

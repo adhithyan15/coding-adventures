@@ -2,6 +2,25 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.25.0] - JavaScript OOP surface corpus: THIRD frontend, zero backend changes
+
+Adds `js_oop_method`, `js_counter_state`, `js_inheritance` — the SAME
+semantics as the existing Ruby-sourced `oop_method`/`counter_state` and
+Python-sourced `python_oop_method`/`python_counter_state` programs (a
+class, construction, instance methods, instance state, single
+inheritance), sourced from JavaScript
+(`javascript-to-semantic-ir` 0.8.0's new OOP declaration surface,
+SIR25 §2) instead. All three run and match across every backend that
+already runs the Ruby- and Python-sourced originals — now **three**
+independent frontends reach the identical OOP envelope
+(`ClassDef`/`__new__`/`__def_method__`/`__self__`/instance-scoped
+`@ivar`) without the backends needing a single line changed, the
+concrete proof the SIR25 arc set out for. `js_inheritance` sidesteps
+the already-documented cross-language `print`/`console.log`
+newline-collision gap (see README "Gaps the corpus has surfaced") the
+same way `python_inheritance` does: a single `console.log` call with
+string concatenation instead of two prints.
+
 ## [0.24.0] - Python OOP surface corpus: cross-frontend, cross-backend proof
 
 Adds `python_oop_method`, `python_counter_state`, `python_inheritance` —
