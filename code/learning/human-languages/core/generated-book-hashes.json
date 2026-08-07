@@ -1882,6 +1882,30 @@
       "tex": "persian/book/chapters/ch06-core-verbs.tex"
     },
     {
+      "language": "persian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:f2a04e1c7cf5e085",
+      "lessonIds": [
+        "FA-C07-fekr-kardan",
+        "FA-C07-fahmidan",
+        "FA-C07-khandan",
+        "FA-C07-neveshtan"
+      ],
+      "tex": "persian/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:7b80d96a1a7c66b1",
+      "lessonIds": [
+        "FA-C08-gereftan",
+        "FA-C08-porsidan",
+        "FA-C08-komak-kardan",
+        "FA-C08-dust-dashtan"
+      ],
+      "tex": "persian/book/chapters/ch08-doing-verbs.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b696688c2654a2d3",

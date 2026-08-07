@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1978364c3cd21f06",
+  "sourceHash": "fnv1a64:376df5c29ce6a1fc",
   "summary": {
-    "totalLessons": 1249,
-    "voice": 848,
+    "totalLessons": 1257,
+    "voice": 856,
     "sight": 348,
     "pen": 53,
-    "drivableLessons": 848,
+    "drivableLessons": 856,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 400,
-    "drivablePrefixTotal": 669,
-    "fullyDrivableChapters": 276,
+    "chapterCount": 402,
+    "drivablePrefixTotal": 677,
+    "fullyDrivableChapters": 278,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -4382,12 +4382,12 @@
     },
     {
       "language": "persian",
-      "lessonCount": 25,
-      "voice": 24,
+      "lessonCount": 33,
+      "voice": 32,
       "sight": 1,
       "pen": 0,
-      "drivablePercent": 96,
-      "drivablePrefixTotal": 22,
+      "drivablePercent": 97,
+      "drivablePrefixTotal": 30,
       "modalities": [
         "voice",
         "sight"
@@ -4504,6 +4504,44 @@
             "FA-C06-amadan",
             "FA-C06-goftan",
             "FA-C06-danestan"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FA-C07-fekr-kardan",
+            "FA-C07-fahmidan",
+            "FA-C07-khandan",
+            "FA-C07-neveshtan"
+          ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FA-C08-gereftan",
+            "FA-C08-porsidan",
+            "FA-C08-komak-kardan",
+            "FA-C08-dust-dashtan"
           ]
         }
       ]
@@ -16633,6 +16671,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:c9c77c962f6bf2cf"
+    },
+    {
+      "id": "FA-C07-fekr-kardan",
+      "language": "persian",
+      "chapter": 7,
+      "sequence": 260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33e29d0c00d11bff"
+    },
+    {
+      "id": "FA-C07-fahmidan",
+      "language": "persian",
+      "chapter": 7,
+      "sequence": 270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7411eea71ec35188"
+    },
+    {
+      "id": "FA-C07-khandan",
+      "language": "persian",
+      "chapter": 7,
+      "sequence": 280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abcd90b516fa7834"
+    },
+    {
+      "id": "FA-C07-neveshtan",
+      "language": "persian",
+      "chapter": 7,
+      "sequence": 290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf84f9553db841c7"
+    },
+    {
+      "id": "FA-C08-gereftan",
+      "language": "persian",
+      "chapter": 8,
+      "sequence": 300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0cbd7ebe8850758"
+    },
+    {
+      "id": "FA-C08-porsidan",
+      "language": "persian",
+      "chapter": 8,
+      "sequence": 310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8dd2150335c86c9"
+    },
+    {
+      "id": "FA-C08-komak-kardan",
+      "language": "persian",
+      "chapter": 8,
+      "sequence": 320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ce8a795202b003b"
+    },
+    {
+      "id": "FA-C08-dust-dashtan",
+      "language": "persian",
+      "chapter": 8,
+      "sequence": 330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:067ad924f3fff5b1"
     },
     {
       "id": "PT-C01-bom",
