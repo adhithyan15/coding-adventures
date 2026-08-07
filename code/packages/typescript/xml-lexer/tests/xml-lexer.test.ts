@@ -234,13 +234,18 @@ describe("comments", () => {
 
   it("allows single dashes inside comments", () => {
     /**
-     * The COMMENT_TEXT regex `([^-]|-(?!->))+` uses a negative
-     * lookahead to allow single dashes. Only the sequence `-->`
-     * ends the comment.
+     * xml.tokens encodes "up to -->" without lookaround (no target engine
+     * in this repo needs to support it — see that file's comment group):
+     * COMMENT_END is tried first, COMMENT_TEXT greedily consumes non-dash
+     * runs, and a lone "-" that isn't part of "-->" falls through to
+     * COMMENT_DASH, aliased back to COMMENT_TEXT. So a comment body with
+     * embedded dashes comes back as several COMMENT_TEXT-kind tokens
+     * instead of one; concatenating them reassembles the original text.
      */
     const pairs = tokenPairs("<!-- a-b-c -->");
     const text = pairs.filter(([t]) => t === "COMMENT_TEXT").map(([, v]) => v);
-    expect(text).toEqual([" a-b-c "]);
+    expect(text).toEqual([" a", "-", "b", "-", "c "]);
+    expect(text.join("")).toBe(" a-b-c ");
   });
 
   it("tokenizes a comment between elements", () => {
@@ -297,13 +302,15 @@ describe("CDATA sections", () => {
 
   it("handles single brackets inside CDATA (needs ]]> to end)", () => {
     /**
-     * The CDATA_TEXT regex `([^\]]|\](?!\]>))+` uses a negative
-     * lookahead. A single `]` doesn't end the section — only `]]>`
-     * terminates it.
+     * Same lookaround-free, multi-token encoding as the comment group
+     * (see xml.tokens' cdata group and the comment test above). A single
+     * "]" doesn't end the section — only "]]>" does — but it does split
+     * the CDATA_TEXT run, so this comes back as several tokens.
      */
     const pairs = tokenPairs("<![CDATA[a]b]]>");
     const text = pairs.filter(([t]) => t === "CDATA_TEXT").map(([, v]) => v);
-    expect(text).toEqual(["a]b"]);
+    expect(text).toEqual(["a", "]", "b"]);
+    expect(text.join("")).toBe("a]b");
   });
 });
 
@@ -337,6 +344,25 @@ describe("processing instructions", () => {
     expect(types[0]).toBe("PI_START");
     expect(types[1]).toBe("PI_TARGET");
     expect(types[types.length - 1]).toBe("PI_END");
+  });
+
+  it("does not re-tokenize letters after a bare '?' as a second PI_TARGET", () => {
+    /**
+     * PI_TARGET lives in a separate group ("pi") from PI_TEXT/PI_QMARK
+     * ("pi_body"), and the on-token callback swaps from "pi" to "pi_body"
+     * the instant PI_TARGET matches, so PI_TARGET's pattern is never
+     * offered again for the rest of the body (see xml.tokens' pi/pi_body
+     * groups). Without that swap, the "b" after the stray "?" below would
+     * wrongly come back as a second PI_TARGET instead of PI_TEXT.
+     */
+    const pairs = tokenPairs("<?t a?b?>");
+    const targetCount = pairs.filter(([t]) => t === "PI_TARGET").length;
+    expect(targetCount).toBe(1);
+    const text = pairs
+      .filter(([t]) => t === "PI_TEXT")
+      .map(([, v]) => v)
+      .join("");
+    expect(text).toBe(" a?b");
   });
 });
 

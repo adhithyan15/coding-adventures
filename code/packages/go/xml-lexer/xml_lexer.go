@@ -48,9 +48,6 @@
 package xmllexer
 
 import (
-	"sync"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
@@ -137,13 +134,25 @@ func XmlOnToken(token lexer.Token, ctx *lexer.LexerContext) {
 
 	// --- Processing instruction boundaries ---
 	//
-	// `<?` pushes the "pi" group. Skip is disabled so whitespace
-	// in the PI content is preserved as PI_TEXT.
+	// `<?` pushes the "pi" group, which offers only PI_END and PI_TARGET.
+	// Skip is disabled so whitespace in the PI content is preserved.
 	case "PI_START":
 		ctx.PushGroup("pi")
 		ctx.SetSkipEnabled(false)
 
-	// `?>` pops the "pi" group and re-enables skip.
+	// PI_TARGET is only ever the first token in a PI. Swap (pop, then
+	// push — not a nested push) from "pi" to "pi_body", which offers
+	// PI_END, PI_TEXT, and PI_QMARK instead. Without this swap, PI_TARGET's
+	// own pattern would still be on offer for the rest of the body and
+	// could wrongly re-match a run of letters following a lone "?" as a
+	// second PI_TARGET instead of PI_TEXT content — see xml.tokens' pi/
+	// pi_body groups. PI_END's single PopGroup() below still returns
+	// straight past this swap to the default group.
+	case "PI_TARGET":
+		ctx.PopGroup()
+		ctx.PushGroup("pi_body")
+
+	// `?>` pops the "pi"/"pi_body" group and re-enables skip.
 	case "PI_END":
 		ctx.PopGroup()
 		ctx.SetSkipEnabled(true)
@@ -154,64 +163,16 @@ func XmlOnToken(token lexer.Token, ctx *lexer.LexerContext) {
 // Public API
 // ---------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------
-// Go-Compatible Pattern Rewrites
-// -----------------------------------------------------------------------
-//
-// The XML token grammar uses Perl-style negative lookaheads (?!...) which
-// Go's regexp package does not support. For example:
-//
-//   COMMENT_TEXT = /([^-]|-(?!->))+/
-//
-// means "match everything except the --> sequence". In Python's regex
-// engine, (?!->) is a zero-width assertion that checks the next chars
-// without consuming them. Go has no equivalent.
-//
-// Our workaround: rewrite each problematic pattern into a simpler
-// Go-compatible regex that matches a single "safe unit" — either a run of
-// characters that can't start the end delimiter, or a single instance of the
-// delimiter-start character. We then reorder definitions so the end-delimiter
-// pattern (e.g., COMMENT_END) is tried BEFORE the text pattern. This ensures
-// that when the end delimiter appears, it matches first. When it doesn't, the
-// text pattern matches one safe chunk.
-//
-// The consequence is that the lexer may produce multiple consecutive text
-// tokens (e.g., two COMMENT_TEXT tokens instead of one). The TokenizeXml
-// function merges these adjacent same-type tokens into a single token,
-// preserving the expected output.
-//
-// Pattern rewrites:
-//
-//   Original (Python)                    Go-compatible
-//   ──────────────────────────────────   ────────────────────
-//   COMMENT_TEXT: ([^-]|-(?!->))+        [^-]+|-
-//   CDATA_TEXT:   ([^\]]|\](?!\]>))+     [^\]]+|\]
-//   PI_TEXT:      ([^?]|\?(?!>))+        [^?]+|\?
-//
-// And reorder: end-delimiter before text in each group.
-//
-// The compiled-in grammar (TokenGrammarData in grammar_data.go) still carries
-// the original Python lookahead patterns, so we apply these rewrites to it
-// once, lazily, and cache the result. The rewrite mutates the shared grammar
-// in place but is idempotent, and sync.OnceValue guarantees it runs exactly
-// once even under concurrent lexer creation.
-var goCompatibleGrammar = sync.OnceValue(func() *grammartools.TokenGrammar {
-	grammar := TokenGrammarData
-	rewriteGroup(grammar, "comment", "COMMENT_TEXT", `[^-]+|-`, "COMMENT_END")
-	rewriteGroup(grammar, "cdata", "CDATA_TEXT", `[^\]]+|\]`, "CDATA_END")
-	rewriteGroup(grammar, "pi", "PI_TEXT", `[^?]+|\?`, "PI_END")
-	return grammar
-})
-
 // CreateXmlLexer returns a GrammarLexer configured with the XML token grammar,
 // ready to tokenize the given XML text.
 //
 // The grammar is embedded at compile time as native Go in grammar_data.go
-// (TokenGrammarData); nothing is read from disk at run time. Its lookahead
-// text patterns are rewritten to Go-compatible regexes once (see
-// goCompatibleGrammar). The XmlOnToken callback is registered so the lexer
-// switches pattern groups as tag delimiters, comments, CDATA sections, and
-// processing instructions are encountered.
+// (TokenGrammarData) — nothing is read from disk at run time, and every
+// pattern in it is already Go-`regexp`-compatible (no lookaround; see
+// xml.tokens' portability note for how the comment/cdata/pi groups avoid it).
+// The XmlOnToken callback is registered so the lexer switches pattern groups
+// as tag delimiters, comments, CDATA sections, and processing instructions
+// are encountered.
 //
 // The lexer works unchanged when the package is built standalone and needs no
 // filesystem capability. The error result is retained for API compatibility
@@ -228,7 +189,7 @@ func CreateXmlLexer(source string) (*lexer.GrammarLexer, error) {
 	// Create the grammar-driven lexer. The GrammarLexer constructor compiles
 	// all regex patterns and initializes skip pattern matching and pattern
 	// group support.
-	xmlLexer := lexer.NewGrammarLexer(source, goCompatibleGrammar())
+	xmlLexer := lexer.NewGrammarLexer(source, TokenGrammarData)
 
 	// Register the on-token callback. This callback fires after each token
 	// match and switches pattern groups based on the token type. Without
@@ -237,62 +198,6 @@ func CreateXmlLexer(source string) (*lexer.GrammarLexer, error) {
 	xmlLexer.SetOnToken(XmlOnToken)
 
 	return xmlLexer, nil
-}
-
-// rewriteGroup replaces a text pattern in a grammar group with a Go-compatible
-// regex and reorders definitions so the end-delimiter is tried first.
-//
-// Parameters:
-//   - grammar: the parsed TokenGrammar to modify in-place
-//   - groupName: name of the pattern group (e.g., "comment")
-//   - textName: name of the text pattern to rewrite (e.g., "COMMENT_TEXT")
-//   - newPattern: Go-compatible regex replacement
-//   - endName: name of the end-delimiter pattern to move first
-//
-// After this function, the group's definitions are reordered to:
-//
-//	[end-delimiter, text-pattern, ...others]
-//
-// This ensures the end delimiter matches before the text pattern when both
-// could match at the same position.
-func rewriteGroup(grammar *grammartools.TokenGrammar, groupName, textName, newPattern, endName string) {
-	group, ok := grammar.Groups[groupName]
-	if !ok {
-		return
-	}
-
-	// Rewrite the text pattern and separate definitions by role.
-	var endDef, textDef *grammartools.TokenDefinition
-	var others []grammartools.TokenDefinition
-
-	for i := range group.Definitions {
-		d := &group.Definitions[i]
-		switch d.Name {
-		case textName:
-			d.Pattern = newPattern
-			d.IsRegex = true
-			textDef = d
-		case endName:
-			endDef = d
-		default:
-			others = append(others, *d)
-		}
-	}
-
-	// Rebuild: end-delimiter first, then other patterns (e.g. PI_TARGET),
-	// then text pattern last. This order ensures:
-	// 1. End delimiters match before text (so we don't consume the delimiter)
-	// 2. Specific patterns (like PI_TARGET) match before the greedy text pattern
-	// 3. Text pattern is the fallback
-	var reordered []grammartools.TokenDefinition
-	if endDef != nil {
-		reordered = append(reordered, *endDef)
-	}
-	reordered = append(reordered, others...)
-	if textDef != nil {
-		reordered = append(reordered, *textDef)
-	}
-	group.Definitions = reordered
 }
 
 // TokenizeXml is a convenience function that tokenizes XML text in a single

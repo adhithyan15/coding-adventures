@@ -386,6 +386,35 @@ func TestStylesheetPI(t *testing.T) {
 	}
 }
 
+// A PI body containing a lone "?" followed by more letters must not have
+// those letters re-tokenized as a second PI_TARGET. PI_TARGET lives in a
+// separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and XmlOnToken
+// swaps from "pi" to "pi_body" the instant PI_TARGET matches, so
+// PI_TARGET's pattern is never offered again for the rest of the body —
+// see xml.tokens' pi/pi_body groups.
+func TestPIBodyWithBareQuestionMarkNotRetokenizedAsTarget(t *testing.T) {
+	tokens, err := TokenizeXml("<?t a?b?>")
+	if err != nil {
+		t.Fatalf("TokenizeXml returned error: %v", err)
+	}
+	targetCount := 0
+	var text string
+	for _, tok := range tokens {
+		switch tok.TypeName {
+		case "PI_TARGET":
+			targetCount++
+		case "PI_TEXT":
+			text += tok.Value
+		}
+	}
+	if targetCount != 1 {
+		t.Errorf("Expected exactly 1 PI_TARGET, got %d", targetCount)
+	}
+	if text != " a?b" {
+		t.Errorf("Expected PI_TEXT to concatenate to %q, got %q", " a?b", text)
+	}
+}
+
 // =============================================================================
 // Entity and Character References
 // =============================================================================

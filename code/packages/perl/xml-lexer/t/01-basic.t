@@ -213,6 +213,22 @@ subtest 'processing instruction <?xml version="1.0"?>' => sub {
     ok( defined first_of($tokens, 'PI_END'),    'PI_END present' );
 };
 
+# A lone '?' in a PI body followed by more letters must not have those
+# letters re-tokenized as a second PI_TARGET. PI_TARGET lives in a
+# separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and the
+# on-token callback swaps from "pi" to "pi_body" the instant PI_TARGET
+# matches, so PI_TARGET's pattern is never offered again for the rest of
+# the body (see xml.tokens' pi/pi_body groups).
+subtest 'PI body with bare question mark is not retokenized as target' => sub {
+    my $tokens = CodingAdventures::XmlLexer->tokenize('<?t a?b?>');
+
+    is( count_of($tokens, 'PI_TARGET'), 1, 'exactly 1 PI_TARGET' );
+
+    my $text = join '', map { $_->{value} }
+        grep { $_->{type} eq 'PI_TEXT' } @$tokens;
+    is( $text, ' a?b', 'PI_TEXT concatenates to original body' );
+};
+
 # ============================================================================
 # Composite document
 # ============================================================================

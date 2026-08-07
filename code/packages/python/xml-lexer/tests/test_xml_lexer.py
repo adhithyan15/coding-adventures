@@ -175,10 +175,17 @@ class TestComments:
         assert text == ["  spaces  and\ttabs  "]
 
     def test_comment_with_dashes(self) -> None:
-        """Comments can contain single dashes (but not --)."""
+        """Comments can contain single dashes (but not --).
+
+        xml.tokens encodes "up to -->" without lookaround (see that file's
+        comment group), so each embedded "-" ends a bulk COMMENT_TEXT run
+        and starts a new one: several COMMENT_TEXT-kind tokens come back
+        instead of one. Concatenating them reassembles the original text.
+        """
         pairs = token_pairs("<!-- a-b-c -->")
         text = [v for t, v in pairs if t == "COMMENT_TEXT"]
-        assert text == [" a-b-c "]
+        assert text == [" a", "-", "b", "-", "c "]
+        assert "".join(text) == " a-b-c "
 
     def test_comment_between_elements(self) -> None:
         """Comment between two elements."""
@@ -217,10 +224,15 @@ class TestCDATA:
         assert text == ["  hello\n  world  "]
 
     def test_cdata_with_single_bracket(self) -> None:
-        """CDATA can contain ] without ending (needs ]]>)."""
+        """CDATA can contain ] without ending (needs ]]>).
+
+        Same multi-token splitting as test_comment_with_dashes, for the
+        same lookaround-free encoding reason (see xml.tokens' cdata group).
+        """
         pairs = token_pairs("<![CDATA[a]b]]>")
         text = [v for t, v in pairs if t == "CDATA_TEXT"]
-        assert text == ["a]b"]
+        assert text == ["a", "]", "b"]
+        assert "".join(text) == "a]b"
 
 
 # ===========================================================================
@@ -247,6 +259,24 @@ class TestProcessingInstructions:
         assert types[0] == "PI_START"
         assert types[1] == "PI_TARGET"
         assert types[-1] == "PI_END"
+
+    def test_pi_body_with_bare_question_mark_not_retokenized_as_target(
+        self,
+    ) -> None:
+        """A lone "?" in a PI body followed by more letters must not have
+        those letters re-tokenized as a second PI_TARGET.
+
+        PI_TARGET lives in a separate group ("pi") from PI_TEXT/PI_QMARK
+        ("pi_body"), and the on-token callback swaps from "pi" to "pi_body"
+        the instant PI_TARGET matches, so PI_TARGET's pattern is never
+        offered again for the rest of the body (see xml.tokens' pi/pi_body
+        groups).
+        """
+        pairs = token_pairs("<?t a?b?>")
+        target_count = sum(1 for t, _ in pairs if t == "PI_TARGET")
+        assert target_count == 1
+        text = "".join(v for t, v in pairs if t == "PI_TEXT")
+        assert text == " a?b"
 
 
 # ===========================================================================

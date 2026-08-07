@@ -2,6 +2,28 @@
 
 All notable changes to this package are documented here.
 
+## [0.1.1] — 2026-08-07
+
+### Changed
+- **Now loads the canonical `code/grammars/xml/xml.tokens`** instead of a
+  Lua-specific `xml_lua.tokens` fork. The fork existed only to avoid
+  lookaround (unsupported by Lua patterns) and top-level `A|B` alternation
+  (Lua patterns have no alternation operator at all); the canonical file
+  now uses the same lookaround-free, alternation-free technique the fork
+  used, so one source now serves every consuming language. See
+  `coding-adventures-xml-parser`'s (Rust) CHANGELOG for the full
+  rationale. No behavior change for this package — `xml_lua.tokens` and
+  the new `xml.tokens` are equivalent in every way that mattered here.
+
+### Fixed
+- **Fixed a latent PI-body mis-tokenization bug** that predates this
+  release: `<?t a?b?>` had the `b` after the bare `?` wrongly
+  re-tokenized as a second `PI_TARGET` instead of `PI_TEXT`, because the
+  single `pi` group offered `PI_TARGET`'s pattern for the whole PI body,
+  not just the first token. The on-token callback now swaps from the `pi`
+  group to a new `pi_body` group the instant `PI_TARGET` matches, so its
+  pattern is never re-offered. Covered by a new regression test.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

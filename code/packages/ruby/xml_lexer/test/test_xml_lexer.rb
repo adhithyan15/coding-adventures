@@ -197,10 +197,15 @@ class TestXmlLexer < Minitest::Test
   end
 
   def test_comment_with_dashes
-    # Comments can contain single dashes (but not --).
+    # Comments can contain single dashes (but not --). xml.tokens encodes
+    # "up to -->" without lookaround (see that file's comment group), so
+    # each embedded "-" ends a bulk COMMENT_TEXT run and starts a new
+    # one: several COMMENT_TEXT-kind tokens come back instead of one.
+    # Concatenating them reassembles the original text.
     pairs = token_pairs("<!-- a-b-c -->")
     text = values_for_type(pairs, "COMMENT_TEXT")
-    assert_equal [" a-b-c "], text
+    assert_equal [" a", "-", "b", "-", "c "], text
+    assert_equal " a-b-c ", text.join
   end
 
   def test_comment_between_elements
@@ -238,10 +243,13 @@ class TestXmlLexer < Minitest::Test
   end
 
   def test_cdata_with_single_bracket
-    # CDATA can contain ] without ending (needs ]]>).
+    # CDATA can contain ] without ending (needs ]]>). Same multi-token
+    # splitting as test_comment_with_dashes, for the same lookaround-free
+    # encoding reason (see xml.tokens' cdata group).
     pairs = token_pairs("<![CDATA[a]b]]>")
     text = values_for_type(pairs, "CDATA_TEXT")
-    assert_equal ["a]b"], text
+    assert_equal ["a", "]", "b"], text
+    assert_equal "a]b", text.join
   end
 
   # ------------------------------------------------------------------
@@ -265,6 +273,18 @@ class TestXmlLexer < Minitest::Test
     assert_equal "PI_START", types[0]
     assert_equal "PI_TARGET", types[1]
     assert_equal "PI_END", types[-1]
+  end
+
+  # A lone "?" in a PI body followed by more letters must not have those
+  # letters re-tokenized as a second PI_TARGET. PI_TARGET lives in a
+  # separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and the
+  # on-token callback swaps from "pi" to "pi_body" the instant PI_TARGET
+  # matches, so PI_TARGET's pattern is never offered again for the rest
+  # of the body (see xml.tokens' pi/pi_body groups).
+  def test_pi_body_with_bare_question_mark_not_retokenized_as_target
+    pairs = token_pairs("<?t a?b?>")
+    assert_equal 1, count_type(pairs, "PI_TARGET")
+    assert_equal " a?b", values_for_type(pairs, "PI_TEXT").join
   end
 
   # ------------------------------------------------------------------

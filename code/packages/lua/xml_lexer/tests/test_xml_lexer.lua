@@ -366,6 +366,31 @@ describe("processing instructions", function()
         assert.is_not_nil(pt)
         assert.are.equal("xml", pt.value)
     end)
+
+    -- A lone "?" in a PI body followed by more letters must not have
+    -- those letters re-tokenized as a second PI_TARGET. PI_TARGET lives
+    -- in a separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and
+    -- the on-token callback swaps from "pi" to "pi_body" the instant
+    -- PI_TARGET matches, so PI_TARGET's pattern is never offered again
+    -- for the rest of the body (see xml.tokens' pi/pi_body groups).
+    --
+    -- This lexer never disables skip for comment/cdata/pi groups (a
+    -- pre-existing, unrelated gap -- see the loose `assert.matches`
+    -- used for COMMENT_TEXT above), so leading whitespace in the PI
+    -- body is silently stripped here unlike other language ports.
+    -- The assertion below only checks the part this test is actually
+    -- about: PI_TARGET must appear exactly once, and the "b" after the
+    -- stray "?" must come back as PI_TEXT, not a second PI_TARGET.
+    it("does not retokenize letters after a bare '?' as a second PI_TARGET", function()
+        local tokens = xml_lexer.tokenize("<?t a?b?>")
+        assert.are.equal(1, count_of(tokens, "PI_TARGET"))
+
+        local text = ""
+        for _, tok in ipairs(tokens) do
+            if tok.type == "PI_TEXT" then text = text .. tok.value end
+        end
+        assert.are.equal("a?b", text)
+    end)
 end)
 
 -- =========================================================================

@@ -32,6 +32,26 @@
 # - CDATA_END → pop(), enable skip
 # - PI_START → push("pi"), disable skip
 # - PI_END → pop(), enable skip
+#
+# Portability note: every pattern below is written using only features that
+# every target regex engine in this repo supports — no lookaround (`(?!`,
+# `(?=`, ...) and no top-level alternation (`a|b`) inside a single token's
+# regex. Lua's pattern engine has neither feature at all, and Rust's `regex`
+# crate has no lookaround, so patterns relying on either would need a
+# fork per host language. Two techniques keep this one file working
+# everywhere (see the comment/cdata/pi groups and CHAR_REF below for both):
+#
+#   1. Split "A or B" into two separate rules aliased to the same token
+#      name (`-> NAME`) instead of one rule with `A|B` — see CHAR_REF.
+#   2. Replace "run of chars not starting the end delimiter" (a lookahead
+#      idiom) with three rules in priority order: the end delimiter itself
+#      (highest priority, tried first), a greedy bulk pattern for the safe
+#      characters, and a single-character fallback (aliased to the bulk
+#      token) for the one ambiguous character taken one at a time — see the
+#      comment/cdata/pi groups. This means a comment/CDATA/PI body can
+#      surface as *multiple* text tokens instead of one; the grammar
+#      (`xml.grammar`) and AST builders account for that by repeating
+#      (`{ COMMENT_TEXT }`, not `[ COMMENT_TEXT ]`) and concatenating.
 
 escapes: none
 
@@ -56,7 +76,15 @@ skip:
 
 TEXT              = /[^<&]+/
 ENTITY_REF        = /&[a-zA-Z][a-zA-Z0-9]*;/
-CHAR_REF          = /&#[0-9]+;|&#x[0-9a-fA-F]+;/
+
+# CHAR_REF is "&#DIGITS;" (decimal) or "&#xHEX;" (hex). Written as two rules
+# aliased to the same token name instead of one `A|B` pattern (see the
+# portability note above) — hex is listed first since "&#x" is a strict
+# prefix-disjoint case from the decimal form, so order doesn't matter for
+# correctness, only for readability.
+CHAR_REF_HEX      = /&#x[0-9a-fA-F]+;/ -> CHAR_REF
+CHAR_REF_DEC      = /&#[0-9]+;/        -> CHAR_REF
+
 COMMENT_START     = "<!--"
 CDATA_START       = "<![CDATA["
 PI_START          = "<?"
@@ -88,43 +116,75 @@ group tag:
 # Comment group — inside <!-- ... -->
 # -----------------------------------------------------------------------
 #
-# XML comments can contain any text except the sequence "-->" which
-# ends the comment. The regex uses a negative lookahead pattern:
-# match any character that isn't part of "-->".
+# XML comments can contain any text except the sequence "-->" which ends
+# the comment. Rather than a negative-lookahead regex (unsupported by some
+# target engines — see the portability note above), this uses priority
+# order: COMMENT_END is tried first and wins outright on "-->"; otherwise
+# COMMENT_TEXT greedily consumes runs of non-dash characters; a lone dash
+# that isn't part of "-->" falls through to COMMENT_DASH, which is aliased
+# back to COMMENT_TEXT so the AST builder sees one token kind to collect
+# and concatenate. ("hello - world" tokenizes as COMMENT_TEXT("hello "),
+# COMMENT_DASH("-")->COMMENT_TEXT, COMMENT_TEXT(" world").)
 #
 # Skip patterns are disabled in this group (via callback) so that
 # whitespace inside comments is preserved as part of COMMENT_TEXT.
 
 group comment:
-  COMMENT_TEXT    = /([^-]|-(?!->))+/
   COMMENT_END     = "-->"
+  COMMENT_TEXT    = /[^-]+/
+  COMMENT_DASH    = /-/ -> COMMENT_TEXT
 
 # -----------------------------------------------------------------------
 # CDATA group — inside <![CDATA[ ... ]]>
 # -----------------------------------------------------------------------
 #
-# CDATA sections contain raw character data — no entity processing,
-# no tag recognition. Everything is literal text until "]]>" is seen.
+# CDATA sections contain raw character data — no entity processing, no tag
+# recognition. Everything is literal text until "]]>" is seen. Same
+# priority-order technique as the comment group: CDATA_END wins outright on
+# "]]>"; CDATA_TEXT greedily consumes non-bracket runs; a lone "]" that
+# isn't part of "]]>" falls through to CDATA_BRACK, aliased to CDATA_TEXT.
 #
-# The regex matches any character that isn't part of the "]]>" sequence.
 # Skip patterns are disabled so whitespace is preserved.
 
 group cdata:
-  CDATA_TEXT      = /([^\]]|\](?!\]>))+/
   CDATA_END       = "]]>"
+  CDATA_TEXT      = /[^\]]+/
+  CDATA_BRACK     = /]/ -> CDATA_TEXT
 
 # -----------------------------------------------------------------------
-# Processing instruction group — inside <? ... ?>
+# Processing instruction groups — inside <? ... ?>
 # -----------------------------------------------------------------------
 #
-# Processing instructions (PIs) like <?xml version="1.0"?> contain
-# a target name and optional content. The content is everything up
-# to the closing "?>" delimiter.
+# Processing instructions (PIs) like <?xml version="1.0"?> contain a target
+# name and optional content, up to the closing "?>" delimiter. This needs
+# *two* groups, not one, and that's not just the usual lookaround-free
+# technique — it's a real disambiguation the other groups don't face.
 #
-# The regex matches any character that isn't part of "?>".
-# Skip patterns are disabled so whitespace is preserved.
+# PI_TARGET may only be the very *first* token after PI_START; every group
+# here is a flat, unordered-by-position list tried top-to-bottom on every
+# token, so if PI_TARGET stayed in the same group as PI_TEXT/PI_QMARK, it
+# would keep winning (it has to sit above PI_TEXT in priority, or the
+# target name itself would be swallowed as body text) — and a PI body that
+# contains a lone "?" followed by more letters, e.g. "<?t a?b?>", would
+# have that "b" wrongly re-tokenized as a second PI_TARGET instead of body
+# text once the "?" falls through to PI_QMARK. (COMMENT_TEXT/CDATA_TEXT
+# don't have this problem: nothing else in their groups can also match an
+# arbitrary run of characters.)
+#
+# So: `pi` (entered by PI_START) offers only PI_END and PI_TARGET. The
+# callback swaps to `pi_body` the moment PI_TARGET matches — swap, not
+# push, so PI_END's single pop still returns straight to the outer group.
+# `pi_body` offers PI_END and the same priority-order bulk/fallback
+# technique as the comment/cdata groups, with no PI_TARGET in sight to
+# hijack anything.
+#
+# Skip patterns are disabled in both so whitespace is preserved.
 
 group pi:
-  PI_TARGET       = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
-  PI_TEXT         = /([^?]|\?(?!>))+/
   PI_END          = "?>"
+  PI_TARGET       = /[a-zA-Z_][a-zA-Z0-9_:.-]*/
+
+group pi_body:
+  PI_END          = "?>"
+  PI_TEXT         = /[^?]+/
+  PI_QMARK        = /\?/ -> PI_TEXT

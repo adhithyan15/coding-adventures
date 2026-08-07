@@ -49,6 +49,16 @@ pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
                 .expect("'pi' group must exist in xml.tokens grammar");
             ctx.set_skip_enabled(false);
         }
+        "PI_TARGET" => {
+            // Swap (not push) from "pi" to "pi_body": PI_TARGET is only
+            // ever the first token in a PI, so once it's matched, the rest
+            // of the body must never be re-offered PI_TARGET's pattern (see
+            // xml.tokens' pi/pi_body groups for why). PI_END's single
+            // pop_group() below still returns straight past this swap.
+            ctx.pop_group();
+            ctx.push_group("pi_body")
+                .expect("'pi_body' group must exist in xml.tokens grammar");
+        }
         "PI_END" => {
             ctx.pop_group();
             ctx.set_skip_enabled(true);
@@ -308,7 +318,11 @@ mod tests {
         assert_eq!(texts, vec!["  spaces  and\ttabs  "]);
     }
 
-    /// Comments can contain single dashes (but not --).
+    /// Comments can contain single dashes (but not --). Since xml.tokens
+    /// encodes "up to -->" without lookaround (see that file's comment
+    /// group), each embedded "-" ends a bulk COMMENT_TEXT run and starts a
+    /// new one — the lexer emits several COMMENT_TEXT-kind tokens instead
+    /// of one. Concatenating them reassembles the original text exactly.
     #[test]
     fn test_comment_with_dashes() {
         let tokens = tokenize_xml("<!-- a-b-c -->");
@@ -317,7 +331,8 @@ mod tests {
             .filter(|(t, _)| *t == "COMMENT_TEXT")
             .map(|(_, v)| *v)
             .collect();
-        assert_eq!(texts, vec![" a-b-c "]);
+        assert_eq!(texts, vec![" a", "-", "b", "-", "c "]);
+        assert_eq!(texts.concat(), " a-b-c ");
     }
 
     /// Comment between two elements.
@@ -376,7 +391,9 @@ mod tests {
         assert_eq!(texts, vec!["  hello\n  world  "]);
     }
 
-    /// CDATA can contain `]` without ending (needs `]]>`).
+    /// CDATA can contain `]` without ending (needs `]]>`). Same multi-token
+    /// splitting as `test_comment_with_dashes`, for the same lookaround-free
+    /// encoding reason (see xml.tokens' cdata group).
     #[test]
     fn test_cdata_with_single_bracket() {
         let tokens = tokenize_xml("<![CDATA[a]b]]>");
@@ -385,7 +402,8 @@ mod tests {
             .filter(|(t, _)| *t == "CDATA_TEXT")
             .map(|(_, v)| *v)
             .collect();
-        assert_eq!(texts, vec!["a]b"]);
+        assert_eq!(texts, vec!["a", "]", "b"]);
+        assert_eq!(texts.concat(), "a]b");
     }
 
     // =======================================================================
@@ -420,6 +438,26 @@ mod tests {
         assert_eq!(types[0], "PI_START");
         assert_eq!(types[1], "PI_TARGET");
         assert_eq!(*types.last().unwrap(), "PI_END");
+    }
+
+    /// A PI body containing a lone "?" followed by more letters must not
+    /// have those letters re-tokenized as a second PI_TARGET. PI_TARGET
+    /// lives in a separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"),
+    /// and `xml_on_token` swaps from "pi" to "pi_body" the instant
+    /// PI_TARGET matches, so PI_TARGET's pattern is never offered again for
+    /// the rest of the body — see xml.tokens' pi/pi_body groups.
+    #[test]
+    fn test_pi_body_with_bare_question_mark_not_retokenized_as_target() {
+        let tokens = tokenize_xml("<?t a?b?>");
+        let pairs = token_pairs(&tokens);
+        let target_count = pairs.iter().filter(|(t, _)| *t == "PI_TARGET").count();
+        assert_eq!(target_count, 1, "PI_TARGET must appear exactly once");
+        let text: String = pairs
+            .iter()
+            .filter(|(t, _)| *t == "PI_TEXT")
+            .map(|(_, v)| *v)
+            .collect();
+        assert_eq!(text, " a?b");
     }
 
     // =======================================================================

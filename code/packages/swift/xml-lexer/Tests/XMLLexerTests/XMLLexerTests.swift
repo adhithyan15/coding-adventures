@@ -158,10 +158,15 @@ final class XMLLexerTests: XCTestCase {
         XCTAssertEqual(text, ["  spaces  and\ttabs  "])
     }
     
+    // xml.tokens encodes "up to -->" without lookaround (see that file's
+    // comment group), so each embedded "-" ends a bulk COMMENT_TEXT run
+    // and starts a new one: several COMMENT_TEXT-kind tokens come back
+    // instead of one. Concatenating them reassembles the original text.
     func testSingleDashesInsideCommentsAllowed() throws {
         let pairs = try tokenPairs("<!-- a-b-c -->")
         let text = pairs.filter { $0.0 == "COMMENT_TEXT" }.map { $0.1 }
-        XCTAssertEqual(text, [" a-b-c "])
+        XCTAssertEqual(text, [" a", "-", "b", "-", "c "])
+        XCTAssertEqual(text.joined(), " a-b-c ")
     }
     
     func testCommentBetweenElements() throws {
@@ -197,10 +202,14 @@ final class XMLLexerTests: XCTestCase {
         XCTAssertEqual(text, ["  hello\n  world  "])
     }
     
+    // Same multi-token splitting as testSingleDashesInsideCommentsAllowed,
+    // for the same lookaround-free encoding reason (see xml.tokens' cdata
+    // group).
     func testSingleBracketsInsideCDATA() throws {
         let pairs = try tokenPairs("<![CDATA[a]b]]>")
         let text = pairs.filter { $0.0 == "CDATA_TEXT" }.map { $0.1 }
-        XCTAssertEqual(text, ["a]b"])
+        XCTAssertEqual(text, ["a", "]", "b"])
+        XCTAssertEqual(text.joined(), "a]b")
     }
     
     // ===========================================================================
@@ -225,6 +234,20 @@ final class XMLLexerTests: XCTestCase {
         XCTAssertEqual(types[0], "PI_START")
         XCTAssertEqual(types[1], "PI_TARGET")
         XCTAssertEqual(types.last!, "PI_END")
+    }
+
+    // A lone "?" in a PI body followed by more letters must not have those
+    // letters re-tokenized as a second PI_TARGET. PI_TARGET lives in a
+    // separate group ("pi") from PI_TEXT/PI_QMARK ("pi_body"), and the
+    // on-token callback swaps from "pi" to "pi_body" the instant PI_TARGET
+    // matches, so PI_TARGET's pattern is never offered again for the rest
+    // of the body (see xml.tokens' pi/pi_body groups).
+    func testPIBodyWithBareQuestionMarkNotRetokenizedAsTarget() throws {
+        let pairs = try tokenPairs("<?t a?b?>")
+        let targetCount = pairs.filter { $0.0 == "PI_TARGET" }.count
+        XCTAssertEqual(targetCount, 1)
+        let text = pairs.filter { $0.0 == "PI_TEXT" }.map { $0.1 }.joined()
+        XCTAssertEqual(text, " a?b")
     }
     
     // ===========================================================================
