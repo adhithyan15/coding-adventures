@@ -2036,6 +2036,21 @@
       "tex": "portuguese/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:0d898ecaffb6d412",
+      "lessonIds": [
+        "PT-C18-ser-estar",
+        "PT-C18-ter-haver",
+        "PT-C18-ir",
+        "PT-C18-vir",
+        "PT-C18-dizer",
+        "PT-C18-ver",
+        "PT-C18-saber-conhecer"
+      ],
+      "tex": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:b77ab588fd68bcd5",
@@ -2044,6 +2059,20 @@
         "PA-C06-panj-convergence"
       ],
       "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "lessonIds": [
+        "PA-C07-hona",
+        "PA-C07-jana",
+        "PA-C07-auna",
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-C07-janna"
+      ],
+      "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
     },
     {
       "language": "sanskrit",
@@ -2055,6 +2084,20 @@
         "SA-C06-pancha-travels"
       ],
       "tex": "sanskrit/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+      "lessonIds": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "tex": "sanskrit/book/chapters/ch07-core-verbs.tex"
     },
     {
       "language": "spanish",

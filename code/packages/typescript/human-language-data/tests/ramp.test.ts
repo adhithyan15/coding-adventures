@@ -79,8 +79,8 @@ describe("corpus snapshot", () => {
     const report = measureRamp(lessons, loadChapterPolicy());
 
     expect(report.policy).toEqual({ maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 });
-    expect(report.summary.lessonViolations).toBe(38);
-    expect(report.summary.chapterViolations).toBe(23);
+    expect(report.summary.lessonViolations).toBe(40);
+    expect(report.summary.chapterViolations).toBe(25);
 
     // HALF THE CORPUS IS INVISIBLE HERE. 572 lessons declare no atoms, so they are
     // neither compliant nor violating — they are unmigrated. A track with few violations

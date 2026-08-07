@@ -52,12 +52,35 @@ where a word needs them.
   though not universal account — **punch** the drink, for its five ingredients.
   **Authored.**
 
+- **Ch. 7 — The Core Verbs** (`SA-C07-asti` → `SA-C07-gacchati` →
+  `SA-C07-agacchati` → `SA-C07-khadati` → `SA-C07-pashyati` → `SA-C07-janati`):
+  the track's first **canonical** verb concepts (`VERB-BE`, `VERB-GO`,
+  `VERB-COME`, `VERB-EAT`, `VERB-SEE`, `VERB-KNOW`), and the place the
+  **dhātu**-and-**gaṇa** system is finally named. A Sanskrit verb is quoted by
+  its root, and the class is the machinery that turns a root into a present
+  stem; the chapter walks three of the ten classes in order — class 2 (*as-ti*,
+  nothing inserted), class 1 (*bhava-ti*, *gaccha-ti*, *khāda-ti*, *paśya-ti*,
+  a vowel appended), class 9 (*jā-**nā**-ti*, a syllable planted inside). Two
+  structural showpieces get a lesson each: **गम् → गच्छ**, a stem you could
+  never guess from its root, which is *why* roots are the index; and
+  **आ- + गच्छति → आगच्छति**, the *upasarga* prefix system in miniature —
+  Sanskrit has no separate word for "come." As the taproot track it also runs
+  the etymology hardest: \**es-* and \**bheu-* are the two roots English melted
+  into one *am/is/are/be/been* while Sanskrit keeps **अस्ति** and **भवति**
+  apart; \**gwem-* is *come*, *venue*, *advent*; \**spek-* is *inspect*,
+  *species*, *telescope*; \**gno-* is *know*, *notice*, *diagnosis*. The *eat*
+  lesson names an honest gap — everyday **खादति** is **not** the cognate of
+  English *eat*; that is **अद्**/**अत्ति**, kept beside it. Every lesson is
+  `voice`, so the chapter is the track's first fully drivable one.
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10, then the eight cases one at a time (nominative, accusative…) |
-| 7+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
+| 7 continuation | More of the ten gaṇas; the other persons and the dual on these six verbs; the upasarga set widened |
+| 8+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
 
 Note: Sanskrit's showpiece features — the **dual number**, three genders, eight
 cases, and pervasive **sandhi** — are introduced one at a time as real phrases

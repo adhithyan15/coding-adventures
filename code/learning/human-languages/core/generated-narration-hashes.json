@@ -4339,6 +4339,26 @@
       "jsonHash": "fnv1a64:4dae81118ecf4b5d"
     },
     {
+      "language": "portuguese",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:0d898ecaffb6d412",
+      "lessonIds": [
+        "PT-C18-ser-estar",
+        "PT-C18-ter-haver",
+        "PT-C18-ir",
+        "PT-C18-vir",
+        "PT-C18-dizer",
+        "PT-C18-ver",
+        "PT-C18-saber-conhecer"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "portuguese/narration/ch18.txt",
+      "json": "portuguese/narration/ch18.json",
+      "textHash": "fnv1a64:85dca2af99bf97a3",
+      "jsonHash": "fnv1a64:fdd755c82574998f"
+    },
+    {
       "language": "punjabi",
       "chapter": 1,
       "sourceHash": "fnv1a64:03685e752baf67fe",
@@ -4448,6 +4468,25 @@
       "json": "punjabi/narration/ch06.json",
       "textHash": "fnv1a64:281aa641ce5dab6c",
       "jsonHash": "fnv1a64:106331c68cd48720"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "lessonIds": [
+        "PA-C07-hona",
+        "PA-C07-jana",
+        "PA-C07-auna",
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-C07-janna"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "punjabi/narration/ch07.txt",
+      "json": "punjabi/narration/ch07.json",
+      "textHash": "fnv1a64:b16894133401a7ea",
+      "jsonHash": "fnv1a64:44878e06b7f35c71"
     },
     {
       "language": "russian",
@@ -4626,6 +4665,25 @@
       "json": "sanskrit/narration/ch06.json",
       "textHash": "fnv1a64:175f2088a91215d5",
       "jsonHash": "fnv1a64:55e994e759ef428c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+      "lessonIds": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch07.txt",
+      "json": "sanskrit/narration/ch07.json",
+      "textHash": "fnv1a64:47301ded2c9a4c1a",
+      "jsonHash": "fnv1a64:944541d5bfbd1770"
     },
     {
       "language": "spanish",

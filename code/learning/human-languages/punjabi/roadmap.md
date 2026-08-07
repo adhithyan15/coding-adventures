@@ -41,15 +41,42 @@ vocabularies** (Sanskritic and Perso-Arabic) and the **Gurmukhi** script, taught
   which is precisely why the Persian place-name sits so comfortably in Punjabi.
   The *name* is Persian; the *numeral* is homegrown. The convergence history now
   occupies its own sub-five-minute etymology lesson. **Authored.**
+- **Ch. 7 — Six Verbs at the Core** (`PA-C07-hona` → `PA-C07-jana` →
+  `PA-C07-auna` → `PA-C07-khana` → `PA-C07-vekhna` → `PA-C07-janna`): the six
+  commonest verbs, realizing the shared `SPINE-SAY-WHAT-I-DO` node. Ch. 5 named
+  the **-ਣਾ/-ਨਾ** infinitive on *bolṇā*; this chapter runs it six more times and
+  gives each verb exactly **one** idea to carry.
+  **hoṇā** "to be" is two ancient verbs braided into one — the infinitive from
+  *bhū-* (English *be*), the present *hai* from *as-* (English *is*) — the same
+  seam English shows in *am/is/are* against *be/been*.
+  **jāṇā** "to go" ← *yāti*, and its *j* is a rule, not an accident: every
+  Sanskrit initial *y-* became a Punjabi *j-* (*yoga* → *jog*, *yuvan* →
+  *javān*, *yamunā* → *Jamnā*). Honest about the thin cousin web — the prize is
+  the rule.
+  **āuṇā** "to come" is *ā-* "toward" glued on *gam-* "go," and *gam-* is PIE
+  \**gʷem-*, the root English inherited as *come*.
+  **khāṇā** "to eat" carries the track's signature: **tone**. The old breathy
+  ਘ ਝ ਢ ਧ ਭ stopped being breathy and left a pitch on the vowel, so **ਘੋੜਾ**
+  *kòṛā* "horse" and **ਕੋੜਾ** *koṛā* "whip" differ by tune alone — which makes
+  Punjabi the one major Indo-Aryan language with tone. *Khāṇā*'s own ਖ is
+  voiceless and stays flat.
+  **vekhṇā** "to see" ← *prekṣate*, on *īkṣ-*, built on *akṣi* "eye" ← PIE
+  \**h₃ekʷ-* → English *eye*, *window*, *ocular*, *optic*, *autopsy*; the
+  Hindi-shaped twin *dekhṇā* noted in one line.
+  **jāṇnā** "to know" is the chapter payoff: one held *n* from *jāṇā*, from
+  *jñā-* ← \**ǵneh₃-* → English *know*, *can*, *cunning*, *notice*,
+  *diagnosis* — and the two ਜ come from two different Sanskrit sounds.
+  All six are **voice** lessons, so the whole chapter is drivable. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*) |
-| 7+ | Gendered verbs deepened, family, food — with the Sanskrit/Persian thread; tone flagged where it distinguishes words |
+| 7 continuation | The rest of `SPINE-SAY-WHAT-I-DO`: *karnā*, *dennā*, *lainā*, *pīṇā*, *suṇnā* — and the present habitual re-run on each |
+| 8+ | Family, food, and the day — with the Sanskrit/Persian thread; tone flagged again wherever it distinguishes a word |
 
 Note: Punjabi marks "you" by **register** (*tūṇ* familiar / *tusīṇ* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Punjabi is unusually
 **tonal** among Indian languages; the roadmap flags tone only where it changes a
-word's meaning.
+word's meaning, and Ch. 7's *khāṇā* lesson is where that promise is first paid.

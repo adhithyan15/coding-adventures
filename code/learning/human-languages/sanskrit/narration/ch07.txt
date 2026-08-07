@@ -1,0 +1,243 @@
+Sanskrit, chapter 7: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
+
+
+Lesson 1 of 6.
+अस्ति and भवति — Sanskrit's two words for "is".
+
+Warm-up.
+[pause 2 seconds]
+Six chapters of words. Now the machinery. A Sanskrit verb is never quoted the way an English one is, and this pair shows why.
+
+You'll want to know: अस्ति and भवति.
+[a table of 2 rows, read aloud]
+Sanskrit: अस्ति. sound: asti. meaning: he, she, or it is.
+Sanskrit: भवति. sound: bhavati. meaning: he, she, or it becomes.
+Both land in English as "is." Asti states that something simply is there. Bhavati says something comes to be — a state arriving rather than sitting still. Sanskrit never merged the two.
+
+Sounds you'll need: the letters in these two verbs.
+अ is a, a short neutral vowel; ति is ti. Inside अस्ति the s and t stack into one joined shape, स्ति — Devanagari fuses a consonant cluster into a single letter. भवति needs no fusing: भ bha, व va, ति ti.
+
+Grammar Lens: the dhātu and its gaṇa.
+Sanskrit files a verb under its धातु (dhātu), its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under भू (bhū).
+A root is not yet a word. To reach the present it joins one of ten गण (gaṇa) classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati.
+Root, then class, then ending. Every verb in this chapter is built that way.
+
+The word, taken apart — English melted the two together.
+अस् is PIE es-: English is, Latin est, German ist, barely worn.
+भू is PIE bheu-, "to grow, to come to be": English be and been, Latin futūrus behind future, Greek phusis behind physics.
+Now the surprise. English "to be" is stitched from both — am, is, are from es-; be, been, being from bheu-. English fused two verbs into one ragged paradigm. Sanskrit left them side by side.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "asti" — it is]
+[pause 8 seconds for the answer]
+[your turn — say: "bhavati" — it becomes]
+[pause 8 seconds for the answer]
+[your turn — say: the two roots — as, bhū]
+[pause 8 seconds for the answer]
+[your turn — say: the English halves — "is" from one, "been" from the other]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two roots stand behind asti and bhavati? (अस् as and भू bhū.) What does a गण class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
+
+
+Lesson 2 of 6.
+गच्छति (gacchati) — "goes," and why dictionaries file it elsewhere.
+
+Warm-up.
+[pause 2 seconds]
+Root, then class, then ending. Say the two roots from last time. (As, bhū.) Here the middle step stops being tidy.
+
+You'll want to know: गच्छति.
+[a table of 2 rows, read aloud]
+Sanskrit: गच्छति. sound: gacchati. meaning: he, she, or it goes.
+Sanskrit: गच्छामि. sound: gacchāmi. meaning: I go.
+The second form is already yours: Chapter 4 used it to take leave. Same stem, different ending — -ति -ti for "he, she, it," -ामि -āmi for "I."
+
+Sounds you'll need: the letters in गच्छति.
+ग is ga. ति is ti, already familiar. Between them sits च्छ, a doubled ch — one stacked shape for two ch sounds in a row, held slightly long: gach-cha. Let the middle of the word linger.
+
+Grammar Lens: the stem that hides its root.
+The root here is गम् (gam), "to go." The present stem is गच्छ (gaccha). No rule you have met turns one into the other, and no amount of staring at gaccha recovers gam.
+That is the whole reason Sanskrit hangs its grammar on the root rather than on any spoken form. Gam is where the dictionary keeps this verb, where its past and future are built from, and where its relatives — गति gati "motion," आगम āgama "arrival" — are visibly cousins. Learn roots, not forms.
+
+The word, taken apart — going, and coming.
+गम् is PIE gwem-. Its English descendant is come — the same root, turned around: what one language walks away with, another walks toward.
+Latin took it as venīre, "to come," and English then borrowed it back in a crowd: venue, convene, intervene, advent, adventure. Sanskrit gacchati and English come are the two ends of one very old word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "gacchati" — it goes]
+[pause 8 seconds for the answer]
+[your turn — say: "gacchāmi" — I go]
+[pause 8 seconds for the answer]
+[your turn — say: the root, not the stem — gam]
+[pause 8 seconds for the answer]
+[your turn — say: the English cousin — come]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the root of gacchati? (गम् gam.) Could you have predicted the stem from it? (No — which is why the root is what gets learned.) Which ending makes it "I go"? (-ामि -āmi.) Which English verb is the same root? (Come.) Next: the same stem, aimed the other way.
+
+
+Lesson 3 of 6.
+आगच्छति (āgacchati) — "comes," or "goes" reversed.
+
+Warm-up.
+[pause 2 seconds]
+Say "it goes." (Gacchati.) Now add one syllable in front and the direction reverses.
+
+You'll want to know: आगच्छति.
+[a table of 2 rows, read aloud]
+Sanskrit: गच्छति. sound: gacchati. meaning: it goes.
+Sanskrit: आगच्छति. sound: āgacchati. meaning: it comes.
+आ (ā) means "toward, hither." Stick it on the front and the motion turns back to face you. Sanskrit has no separate word for "come" at all: coming is going, aimed homeward.
+
+Sounds you'll need: the letters in आगच्छति.
+Everything after the first letter is last lesson's word, unchanged. The new piece is आ, the long ā — the same vowel as अ a but held roughly twice as long. Length alone carries meaning in Sanskrit, so give it its time: aa-gach-cha-ti.
+
+Grammar Lens: the upasarga, Sanskrit's aiming device.
+आ is an उपसर्ग (upasarga), a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:
+[a table of 3 rows, read aloud]
+prefix: आ ā. sense: toward. on गम्: āgacchati, comes.
+prefix: सम् sam. sense: together. on गम्: saṁgacchati, goes together.
+prefix: नि ni. sense: down. on गम्: nigacchati, goes down.
+A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: संस्कृत (saṁskṛta, "Sanskrit") is sam "together" on the root कृ kṛ "make" — put-together, and so perfected.
+
+The word, taken apart — Latin does the same thing.
+Latin aims venīre "come" with the same kind of prefix: ad- "toward" gives advent, con- "with" gives convene, inter- "between" gives intervene. English does it natively too — come becomes become, overcome, income.
+Sanskrit simply runs the system harder and more openly, with the seams left visible.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "gacchati … āgacchati" — goes, comes]
+[pause 8 seconds for the answer]
+[your turn — say: the prefix and its sense — ā, toward]
+[pause 8 seconds for the answer]
+[your turn — say: one more prefix on the same root — sam, together]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An उपसर्ग, upasarga.) Which Sanskrit word you already knew is built the same way? (संस्कृत — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
+
+
+Lesson 4 of 6.
+खादति (khādati) — "eats," and the cousin it is not.
+
+Warm-up.
+[pause 2 seconds]
+Name the three steps that build a Sanskrit present. (Root, class, ending.) This verb is the tidiest one yet — and hides a warning.
+
+You'll want to know: खादति.
+[a table of 2 rows, read aloud]
+Sanskrit: खादति. sound: khādati. meaning: he, she, or it eats.
+Sanskrit: खाद्य. sound: khādya. meaning: edible, food.
+The root is खाद् (khād), and it belongs to the same class 1 as bhū, so the build is plain: khād + a + ti becomes khādati. No stacked letters, no surprises, nothing hidden.
+
+Sounds you'll need: the letters in खादति.
+खा is khā: a k with a puff of breath after it, then the long ā you met last lesson. Sanskrit treats that puff as a separate letter, not an accent — क ka and ख kha are two different letters that change meaning. द is da, ति is ti.
+
+Grammar Lens: the everyday word and the related word.
+English eat, Latin edere (behind edible), and German essen all descend from PIE ed-. Sanskrit inherited it too, as the root अद् (ad), class 2 — endings straight onto the root, like asti: ad + ti becomes अत्ति (atti), "eats."
+But atti is not the ordinary word. Classical Sanskrit eats with खाद्, a root with no clear European relative at all.
+So the family word and the everyday word part company here. Cognates tell you where a language came from; they do not promise to tell you what it says at dinner. Keep the two questions separate.
+
+The word, taken apart — one meaning, two histories.
+The pattern repeats across the family. English has native eat beside borrowed consume and devour; Sanskrit has inherited अद् beside ordinary खाद्.
+A language keeps its old word somewhere — in a proverb, a compound, a sacred text — while daily speech moves on to another. Khādya, "edible," is the word you will actually meet on a menu.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "khādati" — it eats]
+[pause 8 seconds for the answer]
+[your turn — say: the root and its class build — khād … a … ti]
+[pause 8 seconds for the answer]
+[your turn — say: the cousin of English eat — ad, atti]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the ordinary Sanskrit verb for eating? (खादति, khādati, root खाद्.) Which Sanskrit root is the actual cousin of English eat? (अद् ad, giving atti.) Which class does ad belong to, and how do you know? (Class 2 — the ending goes straight onto the root, as in asti.) Next: a verb built out of two different roots.
+
+
+Lesson 5 of 6.
+पश्यति (paśyati) — "sees," a verb with two roots.
+
+Warm-up.
+[pause 2 seconds]
+So far one root has built each verb. Here two roots share the work, and you have already met the quieter one.
+
+You'll want to know: पश्यति.
+[a table of 2 rows, read aloud]
+Sanskrit: पश्यति. sound: paśyati. meaning: he, she, or it sees.
+Sanskrit: दर्शन. sound: darśana. meaning: a beholding, a viewing.
+The present tense comes from the root पश् (paś). Every other tense of this verb comes from a different root, दृश् (dṛś) — and dṛś is where दर्शन was built, the word inside Chapter 4's farewell पुनर्दर्शनाय, "until a seeing again."
+Two roots, one verb, divided by tense. English does the same with go and went, which were never the same verb either.
+
+Sounds you'll need: the letters in पश्यति.
+प is pa. Then श्य, a stack of two letters: श śa, a sh made with the tongue high and forward, plus य ya. Say them glued: pash-ya-ti. Sanskrit has three different s letters, and this is the one that leans toward sh.
+
+The word, taken apart — pashyati and spectacle.
+पश् descends from PIE spek-, "to observe closely." The s and the p swapped places on the way into Indo-Iranian, which is why the Sanskrit form begins paś- rather than spaś-.
+Latin kept it straight as specere, and English is full of the results: spectacle, inspect, respect, species, suspect, spy.
+Greek swapped the letters too, in its own direction, giving skop-: telescope, microscope, skeptic, bishop (from episkopos, an overseer).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "paśyati" — it sees]
+[pause 8 seconds for the answer]
+[your turn — say: the two roots — paś for the present, dṛś for the rest]
+[pause 8 seconds for the answer]
+[your turn — say: the Chapter 4 word from the other root — darśana]
+[pause 8 seconds for the answer]
+[your turn — say: the English descendants — inspect, species, telescope]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which root gives the present paśyati? (पश् paś.) Which root supplies the rest of the verb? (दृश् dṛś — the one behind darśana.) What PIE root is paś from? (Spek-.) Name two English words from it. (Inspect, species, telescope — any two.) Next: the verb that means "know," and the class that plants a syllable in the middle.
+
+
+Lesson 6 of 6.
+जानाति (jānāti) — "knows," and English know is the same word.
+
+Warm-up.
+[pause 2 seconds]
+Two ways a root has become a stem so far: nothing added, or a vowel added. Here is the third, and it is the boldest.
+
+You'll want to know: जानाति.
+[a table of 2 rows, read aloud]
+Sanskrit: जानाति. sound: jānāti. meaning: he, she, or it knows.
+Sanskrit: ज्ञान. sound: jñāna. meaning: knowledge.
+The root is ज्ञा (jñā). Its class, the ninth, does not add a vowel at the end — it plants a whole syllable -ना- (-nā-) between root and ending: jā + nā + ti becomes jānāti. The marker sits inside the word.
+
+Sounds you'll need: the letters in जानाति.
+जा is jā; ना nā and ति ti close it. The root's own spelling ज्ञ is a famous stacked letter, j over ñ, said gya across much of India today and jña in the classical description. Pick one and stay with it.
+
+The word, taken apart — the most travelled root in the book.
+ज्ञा is PIE gno-. English know is that root undisguised, and so are can and cunning, which began as "know how."
+Latin took it as noscere: notice, notion, cognition, ignore ("not-know"), noble ("well-known"). Greek took it as gnōsis: diagnosis, prognosis, agnostic.
+One root, a whole shelf of English vocabulary, and Sanskrit ज्ञान jñāna sitting at the other end of it.
+
+What you've built: six verbs, three ways to build a stem.
+Asti, bhavati, gacchati, āgacchati, khādati, paśyati, jānāti. Every one is a root plus a class plus an ending, and the class was the only thing that varied: nothing inserted (as-ti), a vowel appended (bhava-ti, khāda-ti), or a syllable planted inside (jā-nā-ti). Prefix one and you aim it: ā-gacchati.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "jānāti" — it knows]
+[pause 8 seconds for the answer]
+[your turn — say: the root and its planted syllable — jñā … nā]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — know]
+[pause 8 seconds for the answer]
+[your turn — say: three roots and their English kin — gam/come, ad/eat, paś/inspect]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (गच्छति and आगच्छति.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)

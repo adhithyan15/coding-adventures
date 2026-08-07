@@ -1,0 +1,201 @@
+Punjabi, chapter 7: Six Verbs at the Core.
+6 lessons. All 6 can be done entirely by ear.
+
+
+Lesson 1 of 6.
+ਹੋਣਾ (hoṇā) — “to be,” and the two old verbs braided inside it.
+
+Warm-up.
+[pause 2 seconds]
+You have been saying ਹੈ hai, “is,” since Chapter 2. Here is the verb it belongs to — and it sounds nothing like it.
+
+You'll want to know first — one word.
+ਹੋਣਾ — hoṇā — to be.
+Four shapes, hanging from the top line: ਹ h, with the ੋ sign on it for o; then ਣ, an n made with the tongue tip curled back; then ਾ for long ā. It reads ho-ṇā.
+The ending -ਣਾ -ṇā is how Punjabi names a verb — the same ending that sat on bolṇā. English names a verb by putting a word in front of it, to be; Punjabi puts an ending on the back and never uses a separate word. Take that ending off and what remains is the stem: ho-.
+
+The word, taken apart — the root English wore down to “be”.
+hoṇā comes from Sanskrit bhavati, “becomes,” built on the root bhū-. Middle Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to hoṇā.
+The root is Indo-European, bʰuH-, “grow, become.” English keeps it in be and been, and — by way of “the place where one dwells” — in build, booth, and bower. Latin held it as fuī “I was” and futūrus, which English borrowed as future. Greek held it as phúsis “nature,” which English borrowed as physics.
+
+Grammar Lens: one verb, two roots.
+Chapter 2 traced ਹੈ hai to a different Sanskrit verb altogether — asti, “is,” the root behind English is, Latin est, German ist. So Punjabi's “to be” is two ancient verbs braided into one: the name and the stem come from bhū-, the everyday present tense comes from as-.
+English braids the very same two, at the very same seam, and nobody notices: am, is, are belong to the as- verb; be, being, been belong to the bʰuH- verb.
+
+Guided Practice.
+[your turn — say: hoṇā — to be]
+[pause 8 seconds for the answer]
+[your turn — strip: hoṇā minus -ṇā leaves the stem ho-]
+[pause 8 seconds for the answer]
+[your turn — connect: hoṇā from bhavati becomes English be]
+[pause 8 seconds for the answer]
+[your turn — connect: hai from asti becomes English is]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) And why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)
+
+
+Lesson 2 of 6.
+ਜਾਣਾ (jāṇā) — “to go,” and a sound law you can run yourself.
+
+Warm-up.
+[pause 2 seconds]
+Name the ending that turns a Punjabi stem into the verb's plain name. (-ਣਾ -ṇā.) Here is the second verb to wear it.
+
+You'll want to know first — one word.
+ਜਾਣਾ — jāṇā — to go.
+ਜ j, then ਾ long ā, then ਣ — the curled-back ṇ you already met inside hoṇā — then ਾ again. Nothing new to decode. Strip the -ਣਾ and the stem is jā-.
+
+The word, taken apart — every Sanskrit y- became a Punjabi j-.
+jāṇā is Sanskrit yāti, “goes,” on the root yā-, “travel.” The y became a j, and that was not an accident about this one word. Early Indo-Aryan turned every initial y- into j- on the way to Punjabi, and the change is regular enough to run backwards yourself:
+Sanskrit yoga becomes Punjabi jog.
+Sanskrit yuvan “young” becomes Punjabi javān.
+Sanskrit yamunā, the river becomes Punjabi Jamnā.
+So a Sanskrit word beginning y- is very often a Punjabi word you half know already, hiding behind a j.
+The root itself is Indo-European, yeh₂-, “to go, travel” — the same verb as Lithuanian jóti, “to ride.” It is one of the rare cases where English inherited nothing usable, so the prize here is the rule, not the cousin.
+
+Guided Practice.
+[your turn — say: jāṇā — to go]
+[pause 8 seconds for the answer]
+[your turn — strip: jāṇā minus -ṇā leaves the stem jā-]
+[pause 8 seconds for the answer]
+[your turn — run the rule: yoga becomes jog, yuvan becomes javān, yamunā becomes Jamnā]
+[pause 8 seconds for the answer]
+[your turn — connect: jāṇā from Sanskrit yāti, “goes”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which Sanskrit verb is jāṇā, and what happened to its first sound? (Yāti, “goes”; the y- became j-.) Give one more word the same change caught. (Jog, javān, or Jamnā.)
+
+
+Lesson 3 of 6.
+ਆਉਣਾ (āuṇā) — “to come,” which is “go” pointed back at you.
+
+Warm-up.
+[pause 2 seconds]
+You can say jāṇā, “to go.” Its opposite is not a different verb. It is the same verb with one small piece stuck on the front.
+
+You'll want to know first — one word.
+ਆਉਣਾ — āuṇā — to come.
+ਆ is a whole syllable on its own, long ā: a Punjabi word cannot start with a bare vowel sign, so a vowel that opens a word rides a carrier letter. Then ਉ for u, then the familiar ਣਾ ending. It reads ā-u-ṇā, three beats. The stem is ā-.
+
+The word, taken apart — the second half is English come.
+āuṇā goes back to Sanskrit ā-gacchati, “comes.” Take that apart and it is the prefix ā-, “toward, hither,” sitting on the verb gam-, “go.” Punjabi's “come” is literally go-toward-me, and the g wore away over the centuries until only the rounded -u- was left of it.
+That prefix is a tool, not a one-off: Punjabi keeps ā- in the sense of motion toward the speaker, the same job English does with a separate word.
+And gam- is the good part. It is Indo-European gʷem-, “to step, go” — and English inherited it straight down the Germanic line as come. Latin took the same root as venīre, which English then borrowed back many times over: advent, invent, convene, venue, event, revenue, intervene, souvenir. Greek took it as baínein, “to step,” giving English base, basis, and acrobat.
+So when a Punjabi speaker says ā, the second syllable of that word is the same ancient step as your own come.
+
+Guided Practice.
+[your turn — say: jāṇā to go, then āuṇā to come]
+[pause 8 seconds for the answer]
+[your turn — split: ā- toward, plus gam- go]
+[pause 8 seconds for the answer]
+[your turn — connect: gam- from gʷem- becomes English come, advent, acrobat]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two pieces are inside āuṇā? (The prefix ā-, “toward,” and the old verb gam-, “go.”) Which everyday English verb is that second piece? (Come.)
+
+
+Lesson 4 of 6.
+ਖਾਣਾ (khāṇā) — “to eat,” and the tone hiding one letter away.
+
+Warm-up.
+[pause 2 seconds]
+This verb is easy. Its neighbour in the alphabet is the strangest thing in the whole language, and this is where you meet it.
+
+You'll want to know first — one word.
+ਖਾਣਾ — khāṇā — to eat.
+ਖ is kh: a k with a puff of breath after it, as in English back-hand said fast. Then ਾ, then the ending ਣਾ. The stem is khā-.
+It comes straight from Sanskrit khādati, “chews, eats.” No English cousin has been securely traced from that root, and that is fine — the prize in this word is its sound.
+
+Sounds you'll need — the tone that only Punjabi kept.
+Gurmukhi keeps its consonants in rows of five. The k-row runs ਕ ka, ਖ kha, ਗ ga, ਘ — and that fourth letter was once gha, a g said with a breathy voice.
+Punjabi lost those breathy-voiced sounds. It did not lose the words. When ਘ gh starts a word it is now said as a plain k, and everything the old consonant carried moved onto the vowel as a low, rising pitch. Same elsewhere in the word, in mirror image: the pitch falls instead.
+That leaves pairs which are spelled differently and pronounced identically, apart from the tune:
+[a table of 2 rows, read aloud]
+Punjabi: ਘੋੜਾ horse. said: kòṛā, pitch dipping then rising.
+Punjabi: ਕੋੜਾ whip. said: koṛā, pitch level.
+Two words, one string of consonants and vowels, and the only difference is music. That makes Punjabi the one major Indo-Aryan language with tone — Hindi, Urdu, Bengali, Gujarati, and Marathi have nothing like it.
+Your ਖਾਣਾ (khāṇā) is safe: ਖ kh is voiceless, it never had the breathy voice, so it never traded anything for a tone. Khāṇā is said flat.
+
+Guided Practice.
+[your turn — say: khāṇā — to eat — flat, no tune]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — kòṛā horse, dipping; then koṛā whip, level]
+[pause 8 seconds for the answer]
+[your turn — say: the rule — the old breathy gh went and left a pitch behind]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What separates kòṛā “horse” from koṛā “whip”? (Pitch alone — the first dips and rises.) Where did that pitch come from? (From ਘ, an old breathy gh that stopped being breathy.) And does khāṇā carry one? (No — ਖ kh has no voice to lose.)
+
+
+Lesson 5 of 6.
+ਵੇਖਣਾ (vekhṇā) — “to see,” a verb built out of the eye itself.
+
+Warm-up.
+[pause 2 seconds]
+The ਖ kh you learned in khāṇā turns up again here, in the middle of a word this time. Same puff of breath, same flat pitch.
+
+You'll want to know first — one word.
+ਵੇਖਣਾ — vekhṇā — to see, to look.
+ਵ v, with the ੇ sign on it for e; then ਖ kh; then the ending ਣਾ. It reads vekh-ṇā, and the stem is vekh-.
+Punjabi also says ਦੇਖਣਾ dekhṇā for the same thing, which is the form Hindi settled on. One word, two front consonants, both alive in Punjabi — vekhṇā is the more homely, more Punjabi-sounding of the two.
+
+The word, taken apart — the root is the eye.
+vekhṇā comes from Sanskrit prekṣate, “looks at” — the prefix pra-, “forth,” on the verb īkṣ-, “see.” And īkṣ- is built on akṣi, the Sanskrit word for the eye. Punjabi's verb for seeing is, underneath, the organ you do it with.
+That noun is Indo-European, h₃ekʷ-, and English is full of it. Inherited plainly: eye — and window, borrowed from Norse vindauga, a “wind-eye,” the hole that let the smoke out. Borrowed from Latin oculus: ocular, binoculars, inoculate. Borrowed from Greek ōps and optikós: optic, optician, autopsy (seeing for oneself), synopsis, myopia.
+So vekhṇā, eye, window, and autopsy are four settlements of one very old word for the thing in your head.
+
+Guided Practice.
+[your turn — say: vekhṇā — to see — then its twin dekhṇā]
+[pause 8 seconds for the answer]
+[your turn — strip: vekhṇā minus -ṇā leaves vekh-]
+[pause 8 seconds for the answer]
+[your turn — connect: īkṣ- from h₃ekʷ- becomes English eye, optic, window]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What noun is hiding inside vekhṇā? (The eye — Sanskrit akṣi, behind the verb īkṣ-.) Name two English words off that root. (Any of eye, window, ocular, optic, autopsy.) And what is the Hindi-shaped twin of this verb? (Dekhṇā.)
+
+
+Lesson 6 of 6.
+ਜਾਣਨਾ (jāṇnā) — “to know,” one letter from “to go”.
+
+Warm-up.
+[pause 2 seconds]
+Run the five you have — hoṇā, jāṇā, āuṇā, khāṇā, vekhṇā — and pull the stem off each one. The sixth is the closest of them all to English.
+
+You'll want to know first — one word.
+ਜਾਣਨਾ — jāṇnā — to know.
+ਜ j, ਾ long ā, then ਣ — the curled-back ṇ — and then a second, different n: ਨ, made with the tongue on the teeth. Then ਾ. Both are pronounced, one after the other: jāṇ-nā, held long across the seam, the way English does in thin-ness.
+That second letter is the whole difference between ਜਾਣਾ jāṇā “to go” and ਜਾਣਨਾ jāṇnā “to know.” The stem here is jāṇ-, and because it already ends in the curled-back ṇ, the infinitive shows up in its other shape, plain -ਨਾ -nā.
+
+The word, taken apart — the widest family in the chapter.
+jāṇnā continues Sanskrit jānāti, on the root jñā-, “know.” Note what that means for the rule from jāṇā: these two Punjabi verbs both open with ਜ j, but from different sources — jāṇā's j was a Sanskrit y, while jāṇnā's was already there, in jñā-.
+That root is Indo-European ǵneh₃-, and English is stuffed with it. Down the Germanic line: know, knowledge, can (once “to know how”), cunning, ken, and uncouth, which is “un-known.” Borrowed from Latin (g)nōscere: notice, note, notion, cognition, recognize, acquaint, narrate, and ignore — “not to know.” Borrowed from Greek gnōsis: diagnosis, prognosis, agnostic.
+
+Guided Practice.
+[your turn — contrast: jāṇā to go, then jāṇnā to know, holding the long n]
+[pause 8 seconds for the answer]
+[your turn — run all six: hoṇā, jāṇā, āuṇā, khāṇā, vekhṇā, jāṇnā, stripping each stem]
+[pause 8 seconds for the answer]
+[your turn — say: the two sources — jāṇā's j from yā-, jāṇnā's from jñā-]
+[pause 8 seconds for the answer]
+[your turn — say: not one of the six carries a tone — every stem is flat]
+[pause 8 seconds for the answer]
+[your turn — connect: jñā- becomes English know, notice, diagnosis]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What single written mark separates jāṇā from jāṇnā? (A second n, the dental ਨ, held long in speech.) Where did each verb's j come from? (Jāṇā's from a Sanskrit y-; jāṇnā's from jñā-.) And which English verb is the very same word as jāṇnā? (Know.)
+[question — say your answer, then pause 8 seconds]
+Which Punjabi verb means to know, jana or janna?

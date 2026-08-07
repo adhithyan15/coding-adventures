@@ -426,6 +426,13 @@
       "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 18,
+      "title": "Verbs at the Core",
+      "label": "ch:pt-core-verbs",
+      "output": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "title": "Head and Hand",
@@ -2151,11 +2158,29 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 7,
+      "title": "Six Verbs at the Core",
+      "label": "ch:pa-core-verbs",
+      "output": "punjabi/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:sa-core-verbs",
+      "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
