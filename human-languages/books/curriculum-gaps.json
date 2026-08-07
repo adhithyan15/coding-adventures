@@ -12,13 +12,13 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1134,
+    "totalLessons": 1188,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 0,
+    "lessonChaptersWithoutBooks": 1,
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
@@ -26,7 +26,7 @@
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 972,
+    "drivableLessons": 1026,
     "drivablePercent": 86,
     "chaptersWithoutDrivablePrefix": 42,
     "unexplainedModalityOverrides": 0
@@ -619,7 +619,8 @@
           33,
           34,
           35,
-          36
+          36,
+          37
         ],
         "bookChapters": [
           1,
@@ -657,7 +658,8 @@
           33,
           34,
           35,
-          36
+          36,
+          37
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -807,7 +809,10 @@
           24,
           25,
           26,
-          27
+          27,
+          28,
+          29,
+          30
         ],
         "bookChapters": [
           1,
@@ -836,7 +841,10 @@
           24,
           25,
           26,
-          27
+          27,
+          28,
+          29,
+          30
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -953,7 +961,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "bookChapters": [
           1,
@@ -986,7 +995,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1026,7 +1036,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "bookChapters": [
           1,
@@ -1059,7 +1070,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1099,7 +1111,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "bookChapters": [
           1,
@@ -1132,7 +1145,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1172,7 +1186,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "bookChapters": [
           1,
@@ -1205,7 +1220,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1398,15 +1414,18 @@
         "hasBook": true,
         "lessonChapters": [
           1,
-          2
+          2,
+          3
         ],
         "bookChapters": [
           1,
           2
         ],
-        "missingBookChapters": [],
+        "missingBookChapters": [
+          3
+        ],
         "orphanBookChapters": [],
-        "coveragePercent": 100
+        "coveragePercent": 67
       },
       {
         "language": "sanskrit",
@@ -1439,14 +1458,16 @@
           2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "bookChapters": [
           1,
           2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1460,14 +1481,16 @@
           2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "bookChapters": [
           1,
           2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1515,9 +1538,9 @@
       {
         "language": "latin",
         "status": "version-2",
-        "lessonCount": 57,
+        "lessonCount": 65,
         "versions": {
-          "2": 57
+          "2": 65
         }
       },
       {
@@ -1541,10 +1564,10 @@
       {
         "language": "arabic",
         "status": "mixed",
-        "lessonCount": 71,
+        "lessonCount": 77,
         "versions": {
           "1": 26,
-          "2": 45
+          "2": 51
         }
       },
       {
@@ -1559,37 +1582,37 @@
       {
         "language": "tamil",
         "status": "mixed",
-        "lessonCount": 83,
+        "lessonCount": 89,
         "versions": {
           "1": 32,
-          "2": 51
+          "2": 57
         }
       },
       {
         "language": "kannada",
         "status": "mixed",
-        "lessonCount": 60,
+        "lessonCount": 66,
         "versions": {
           "1": 30,
-          "2": 30
+          "2": 36
         }
       },
       {
         "language": "telugu",
         "status": "mixed",
-        "lessonCount": 60,
+        "lessonCount": 66,
         "versions": {
           "1": 30,
-          "2": 30
+          "2": 36
         }
       },
       {
         "language": "malayalam",
         "status": "mixed",
-        "lessonCount": 64,
+        "lessonCount": 70,
         "versions": {
           "1": 31,
-          "2": 33
+          "2": 39
         }
       },
       {
@@ -1649,10 +1672,10 @@
       {
         "language": "russian",
         "status": "mixed",
-        "lessonCount": 22,
+        "lessonCount": 28,
         "versions": {
           "1": 15,
-          "2": 7
+          "2": 13
         }
       },
       {
@@ -1667,19 +1690,19 @@
       {
         "language": "persian",
         "status": "mixed",
-        "lessonCount": 20,
+        "lessonCount": 25,
         "versions": {
           "1": 4,
-          "2": 16
+          "2": 21
         }
       },
       {
         "language": "urdu",
         "status": "mixed",
-        "lessonCount": 20,
+        "lessonCount": 25,
         "versions": {
           "1": 4,
-          "2": 16
+          "2": 21
         }
       },
       {
@@ -2462,8 +2485,8 @@
     "tracks": [
       {
         "language": "arabic",
-        "bookChapters": 27,
-        "declaredChapters": 25,
+        "bookChapters": 30,
+        "declaredChapters": 28,
         "missingCapability": 2,
         "findings": 4,
         "clean": false
@@ -2534,24 +2557,24 @@
       },
       {
         "language": "kannada",
-        "bookChapters": 31,
-        "declaredChapters": 26,
+        "bookChapters": 32,
+        "declaredChapters": 27,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
       },
       {
         "language": "latin",
-        "bookChapters": 36,
-        "declaredChapters": 36,
+        "bookChapters": 37,
+        "declaredChapters": 37,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
       },
       {
         "language": "malayalam",
-        "bookChapters": 31,
-        "declaredChapters": 26,
+        "bookChapters": 32,
+        "declaredChapters": 27,
         "missingCapability": 5,
         "findings": 8,
         "clean": false
@@ -2566,8 +2589,8 @@
       },
       {
         "language": "persian",
-        "bookChapters": 5,
-        "declaredChapters": 4,
+        "bookChapters": 6,
+        "declaredChapters": 5,
         "missingCapability": 1,
         "findings": 3,
         "clean": false
@@ -2614,32 +2637,32 @@
       },
       {
         "language": "tamil",
-        "bookChapters": 31,
-        "declaredChapters": 27,
+        "bookChapters": 32,
+        "declaredChapters": 28,
         "missingCapability": 4,
         "findings": 8,
         "clean": false
       },
       {
         "language": "telugu",
-        "bookChapters": 31,
-        "declaredChapters": 26,
+        "bookChapters": 32,
+        "declaredChapters": 27,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
       },
       {
         "language": "urdu",
-        "bookChapters": 5,
-        "declaredChapters": 4,
+        "bookChapters": 6,
+        "declaredChapters": 5,
         "missingCapability": 1,
         "findings": 3,
         "clean": false
       }
     ],
     "summary": {
-      "bookChapters": 377,
-      "declaredChapters": 279,
+      "bookChapters": 387,
+      "declaredChapters": 289,
       "chaptersWithoutCapability": 98,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 24,
@@ -2652,23 +2675,23 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1134,
-    "voice": 726,
+    "totalLessons": 1188,
+    "voice": 780,
     "sight": 355,
     "pen": 53,
-    "coreVoice": 972,
+    "coreVoice": 1026,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 86,
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 71,
-        "voice": 38,
+        "lessonCount": 77,
+        "voice": 44,
         "sight": 17,
         "pen": 16,
-        "coreVoice": 50,
-        "drivablePercent": 70,
-        "drivablePrefixTotal": 42,
+        "coreVoice": 56,
+        "drivablePercent": 73,
+        "drivablePrefixTotal": 48,
         "chapters": [
           {
             "language": "arabic",
@@ -3055,6 +3078,48 @@
               "voice"
             ],
             "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 28,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 29,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 30,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           }
         ]
@@ -4738,13 +4803,13 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 60,
-        "voice": 32,
+        "lessonCount": 66,
+        "voice": 38,
         "sight": 28,
         "pen": 0,
-        "coreVoice": 53,
-        "drivablePercent": 88,
-        "drivablePrefixTotal": 48,
+        "coreVoice": 59,
+        "drivablePercent": 89,
+        "drivablePrefixTotal": 54,
         "chapters": [
           {
             "language": "kannada",
@@ -5184,18 +5249,32 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 32,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "latin",
-        "lessonCount": 57,
-        "voice": 54,
+        "lessonCount": 65,
+        "voice": 62,
         "sight": 3,
         "pen": 0,
-        "coreVoice": 54,
+        "coreVoice": 62,
         "drivablePercent": 95,
-        "drivablePrefixTotal": 53,
+        "drivablePrefixTotal": 61,
         "chapters": [
           {
             "language": "latin",
@@ -5701,18 +5780,32 @@
             ],
             "drivablePrefix": 3,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 37,
+            "lessonCount": 8,
+            "voice": 8,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 8,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "malayalam",
-        "lessonCount": 64,
-        "voice": 35,
+        "lessonCount": 70,
+        "voice": 41,
         "sight": 29,
         "pen": 0,
-        "coreVoice": 58,
+        "coreVoice": 64,
         "drivablePercent": 91,
-        "drivablePrefixTotal": 57,
+        "drivablePrefixTotal": 63,
         "chapters": [
           {
             "language": "malayalam",
@@ -6151,6 +6244,20 @@
             ],
             "drivablePrefix": 2,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 32,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -6257,13 +6364,13 @@
       },
       {
         "language": "persian",
-        "lessonCount": 20,
-        "voice": 19,
+        "lessonCount": 25,
+        "voice": 24,
         "sight": 1,
         "pen": 0,
-        "coreVoice": 20,
+        "coreVoice": 25,
         "drivablePercent": 100,
-        "drivablePrefixTotal": 20,
+        "drivablePrefixTotal": 25,
         "chapters": [
           {
             "language": "persian",
@@ -6334,6 +6441,20 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "persian",
+            "chapter": 6,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           }
         ]
@@ -6694,13 +6815,13 @@
       },
       {
         "language": "russian",
-        "lessonCount": 22,
-        "voice": 10,
+        "lessonCount": 28,
+        "voice": 16,
         "sight": 7,
         "pen": 5,
-        "coreVoice": 16,
-        "drivablePercent": 73,
-        "drivablePrefixTotal": 15,
+        "coreVoice": 22,
+        "drivablePercent": 79,
+        "drivablePrefixTotal": 21,
         "chapters": [
           {
             "language": "russian",
@@ -6732,6 +6853,20 @@
             ],
             "drivablePrefix": 8,
             "firstNonVoiceLesson": "RU-C02-practice-cases"
+          },
+          {
+            "language": "russian",
+            "chapter": 3,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -7328,13 +7463,13 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 83,
-        "voice": 46,
+        "lessonCount": 89,
+        "voice": 52,
         "sight": 29,
         "pen": 8,
-        "coreVoice": 69,
-        "drivablePercent": 83,
-        "drivablePrefixTotal": 55,
+        "coreVoice": 75,
+        "drivablePercent": 84,
+        "drivablePrefixTotal": 61,
         "chapters": [
           {
             "language": "tamil",
@@ -7778,18 +7913,32 @@
             ],
             "drivablePrefix": 2,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 32,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "telugu",
-        "lessonCount": 60,
-        "voice": 33,
+        "lessonCount": 66,
+        "voice": 39,
         "sight": 27,
         "pen": 0,
-        "coreVoice": 55,
+        "coreVoice": 61,
         "drivablePercent": 92,
-        "drivablePrefixTotal": 51,
+        "drivablePrefixTotal": 57,
         "chapters": [
           {
             "language": "telugu",
@@ -8229,18 +8378,32 @@
             ],
             "drivablePrefix": 2,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "telugu",
+            "chapter": 32,
+            "lessonCount": 6,
+            "voice": 6,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           }
         ]
       },
       {
         "language": "urdu",
-        "lessonCount": 20,
-        "voice": 18,
+        "lessonCount": 25,
+        "voice": 23,
         "sight": 2,
         "pen": 0,
-        "coreVoice": 20,
+        "coreVoice": 25,
         "drivablePercent": 100,
-        "drivablePrefixTotal": 20,
+        "drivablePrefixTotal": 25,
         "chapters": [
           {
             "language": "urdu",
@@ -8312,6 +8475,20 @@
               "sight"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "urdu",
+            "chapter": 6,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           }
         ]

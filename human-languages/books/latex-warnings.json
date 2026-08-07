@@ -348,7 +348,7 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 0,
+        "overfull": 1,
         "underfull": 0
       },
       "improvements": [],
