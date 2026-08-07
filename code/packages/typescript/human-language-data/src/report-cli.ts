@@ -39,7 +39,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     return 2;
   }
-  const { registry, lessons, books } = loadEverything(options.root);
+  const { registry, lessons, books, curricula, spine } = loadEverything(options.root);
   // The report's drivable percentages and the committed narration export must be
   // computed at the same table width, or the report will advertise a car-friendly
   // corpus the export cannot actually deliver. One policy file, read by both.
@@ -53,6 +53,11 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     // ledgers can never be measured against different files.
     trackChapters: loadTrackChapters(options.root),
     chapterPolicy: loadChapterPolicy(options.root),
+    // Without these the `levels` section and the HL09 §3.1 level gate are both
+    // silently absent — which is how the CLI managed to never once print the level
+    // figures after HL-C10 shipped them.
+    curricula,
+    spine,
   });
   const json = `${JSON.stringify(report, null, 2)}\n`;
   const text = renderCurriculumGapReport(report);

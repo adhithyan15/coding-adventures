@@ -105,6 +105,28 @@ modality.tracks[0].chapters[0];        // { drivablePrefix: 5, firstNonVoiceLess
 deriveLessonModality(lessons[0]).reasons; // ["wide-table"] — why it needs eyes
 ```
 
+### Attaining a level, versus touching one (HL09 §3.1)
+
+```ts
+import { runLevelGate } from "@coding-adventures/human-language-data";
+
+const gate = runLevelGate({ lessons, levels, curricula, spine, ramp, continuity });
+gate.tracks.find((t) => t.language === "spanish");
+// { touches: "A2", attained: null, inProgressAt: "pre-A1", vocabulary: 113,
+//   blockers: [{ criterion: "vocabulary", shortfall: 256,
+//               detail: "teaches 44 distinct headwords at or below pre-A1, against 300" }, …] }
+```
+
+`touches` is the highest level any lesson **sits at** — one lesson pointing at one A2
+node is enough to move it. `attained` is the highest level where all four §3.1 criteria
+hold, here and below: spine nodes realized, cumulative vocabulary met, no lesson over
+the atom budget, every atom revisited twice. Every criterion is scoped **at or below
+the level** — Spanish teaches 113 headwords in total but only **44** at or below
+pre-A1, and it is the 44 the gate judges.
+
+**Zero of 22 tracks have attained even pre-A1.** That gap between the two numbers is
+what let "Spanish reaches A2" stand on fourteen present-tense lessons.
+
 ### Continuity — does the course have a memory of itself? (HL09)
 
 The ramp budgets measure how big each **step** is. This measures whether the steps
