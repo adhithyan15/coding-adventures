@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:10aa628bb744043a",
+  "sourceHash": "fnv1a64:fe6960c3ff466de1",
   "summary": {
     "totalLessons": 1225,
     "voice": 824,
@@ -9810,7 +9810,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f5debf915f23ce0"
+      "sourceHash": "fnv1a64:2a5f813dc0845297"
     },
     {
       "id": "GE-C03-practice",
@@ -9992,7 +9992,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff029ca03897854f"
+      "sourceHash": "fnv1a64:b692dc8bfe1e4b40"
     },
     {
       "id": "GE-C05-machen",
@@ -10005,7 +10005,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6038f0a02649b609"
+      "sourceHash": "fnv1a64:92a8f484ee09fb92"
     },
     {
       "id": "GE-C05-practice",
@@ -10031,7 +10031,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e93089459bad42a0"
+      "sourceHash": "fnv1a64:03068b42d443b4fe"
     },
     {
       "id": "GE-C06-zahlen-1-5",
@@ -10266,7 +10266,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d1046ec3cd8b7d51"
+      "sourceHash": "fnv1a64:ac77aad8695d3ee6"
     },
     {
       "id": "GE-C15-perfekt",
@@ -10344,7 +10344,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cec3f047484e5bd8"
+      "sourceHash": "fnv1a64:d89aa6546b6499a7"
     },
     {
       "id": "GE-C17-kopf",

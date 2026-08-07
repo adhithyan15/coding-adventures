@@ -4,7 +4,7 @@ chapter: 5
 type: word
 headword: wohnen
 gloss: to live / to dwell (your first regular "weak" verb)
-concept_tag: GE-VERB-WOHNEN
+concept_tag: VERB-LIVE
 prerequisites: [GE-C02-ich, GE-C02-du-sie]
 sounds: [w-is-v, h-pronounced]
 roots: [wonen-ohg]

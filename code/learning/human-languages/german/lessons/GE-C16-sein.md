@@ -4,7 +4,7 @@ chapter: 16
 type: word
 headword: sein
 gloss: to be — one verb assembled from three different ancient roots
-concept_tag: GE-VERB-BE
+concept_tag: VERB-BE
 prerequisites: [GE-C14-haben, GE-C15-praeteritum]
 sounds: [ich-laut, final-devoicing]
 roots: [pie-h1es, pie-bhuh, pie-wes]

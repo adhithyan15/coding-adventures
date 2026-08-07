@@ -1039,7 +1039,7 @@
     {
       "language": "german",
       "chapter": 3,
-      "sourceHash": "fnv1a64:65dc0d28eed56e84",
+      "sourceHash": "fnv1a64:9c052e4af0dd40f4",
       "lessonIds": [
         "GE-C03-bitte",
         "GE-C03-danke",
@@ -1055,7 +1055,7 @@
       "text": "german/narration/ch03.txt",
       "json": "german/narration/ch03.json",
       "textHash": "fnv1a64:a42137aea498ce7f",
-      "jsonHash": "fnv1a64:926c509847e0b5f9"
+      "jsonHash": "fnv1a64:cf42b33ece08daa6"
     },
     {
       "language": "german",
@@ -1082,7 +1082,7 @@
     {
       "language": "german",
       "chapter": 5,
-      "sourceHash": "fnv1a64:226ff8e7967736a8",
+      "sourceHash": "fnv1a64:fa85693f7e833aff",
       "lessonIds": [
         "GE-C05-ich-lerne-deutsch",
         "GE-C05-lernen",
@@ -1095,7 +1095,7 @@
       "text": "german/narration/ch05.txt",
       "json": "german/narration/ch05.json",
       "textHash": "fnv1a64:ad10bc73a7f1fd68",
-      "jsonHash": "fnv1a64:d864d576994202db"
+      "jsonHash": "fnv1a64:6e97996fa3f9e4dc"
     },
     {
       "language": "german",
@@ -1220,7 +1220,7 @@
     {
       "language": "german",
       "chapter": 14,
-      "sourceHash": "fnv1a64:fb7d311ddf2d57e0",
+      "sourceHash": "fnv1a64:a9f6d19b7d1de599",
       "lessonIds": [
         "GE-C14-alter",
         "GE-C14-haben"
@@ -1230,7 +1230,7 @@
       "text": "german/narration/ch14.txt",
       "json": "german/narration/ch14.json",
       "textHash": "fnv1a64:d2386a8b05d32f27",
-      "jsonHash": "fnv1a64:cda1ed27287f023f"
+      "jsonHash": "fnv1a64:92d0a828316ae7a9"
     },
     {
       "language": "german",
@@ -1251,7 +1251,7 @@
     {
       "language": "german",
       "chapter": 16,
-      "sourceHash": "fnv1a64:b519f69c62cd5cd0",
+      "sourceHash": "fnv1a64:e0757a9507364a37",
       "lessonIds": [
         "GE-C16-perfekt-sein",
         "GE-C16-perfekt-sein-agreement",
@@ -1262,7 +1262,7 @@
       "text": "german/narration/ch16.txt",
       "json": "german/narration/ch16.json",
       "textHash": "fnv1a64:c4eeefbaf59636a0",
-      "jsonHash": "fnv1a64:dadb52a3a246b076"
+      "jsonHash": "fnv1a64:09aa4b8b422475e9"
     },
     {
       "language": "german",
