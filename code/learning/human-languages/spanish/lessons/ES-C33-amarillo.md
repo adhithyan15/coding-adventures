@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C33-amarillo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 845
+sequence: 1600
 chapter: 33
 type: word
 headword: amarillo

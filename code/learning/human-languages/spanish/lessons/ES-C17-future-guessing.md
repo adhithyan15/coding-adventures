@@ -1,7 +1,7 @@
 ---
 id: ES-C17-future-guessing
 chapter: 17
-sequence: 602
+sequence: 1170
 type: grammar
 headword: serán las tres
 gloss: the future can express a present guess, and the conditional can express a past guess

@@ -1,7 +1,7 @@
 ---
 id: ES-C11-practice
 chapter: 11
-sequence: 560
+sequence: 960
 type: practice-mix
 headword: (practice)
 gloss: wanting, being able, and the stem-change boot

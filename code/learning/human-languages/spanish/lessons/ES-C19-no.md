@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C19-no
 spine_node: SPINE-RESPOND-BASIC
-sequence: 650
+sequence: 1290
 chapter: 19
 type: word
 headword: no

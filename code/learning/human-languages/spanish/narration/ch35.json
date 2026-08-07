@@ -4,11 +4,11 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and the Backwards Verb",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:28a0602c608252cb",
+  "sourceHash": "fnv1a64:e3c93cbb0c057188",
   "lessons": [
     {
       "id": "ES-C35-tomar",
-      "sequence": 870,
+      "sequence": 1650,
       "title": "tomar — \"to take\", and nobody knows where it came from",
       "headword": "tomar",
       "romanization": "tomar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f64cbe9c19a04ac",
+      "sourceHash": "fnv1a64:734e9cd53f6a9bc3",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
     },
     {
       "id": "ES-C35-preguntar",
-      "sequence": 875,
+      "sequence": 1660,
       "title": "preguntar — \"to ask\", by sounding the water with a pole",
       "headword": "preguntar",
       "romanization": "preguntar",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f6bdcdc76c54e70",
+      "sourceHash": "fnv1a64:c5b2f574d22b44eb",
       "notice": null,
       "blocks": [
         {
@@ -326,7 +326,7 @@
     },
     {
       "id": "ES-C35-ayudar",
-      "sequence": 880,
+      "sequence": 1670,
       "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
       "headword": "ayudar",
       "romanization": "ayudar",
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d33da6ef3a522438",
+      "sourceHash": "fnv1a64:8a9e95416ea42c5e",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
     },
     {
       "id": "ES-C35-gustar",
-      "sequence": 885,
+      "sequence": 1680,
       "title": "gustar — the verb that runs backwards",
       "headword": "gustar",
       "romanization": "gustar",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99ebd45c298ca198",
+      "sourceHash": "fnv1a64:076b246ba782b686",
       "notice": null,
       "blocks": [
         {

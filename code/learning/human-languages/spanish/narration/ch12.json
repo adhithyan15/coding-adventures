@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Chapter 12",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1e748551bb813072",
+  "sourceHash": "fnv1a64:ab04c43bed11cbe9",
   "lessons": [
     {
       "id": "ES-C12-hacer",
-      "sequence": 562,
+      "sequence": 970,
       "title": "hacer — \"to do / to make,\" and the yo-form that grows a g",
       "headword": "hacer",
       "romanization": "hacer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4eaa4375ddf5ddc9",
+      "sourceHash": "fnv1a64:0c31a56e74c2d5ee",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,7 @@
     },
     {
       "id": "ES-C12-decir",
-      "sequence": 564,
+      "sequence": 980,
       "title": "decir — \"to say,\" the verb with two irregularities at once",
       "headword": "decir",
       "romanization": "decir",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72edb388d5667454",
+      "sourceHash": "fnv1a64:4b8ca2a96fcd9236",
       "notice": null,
       "blocks": [
         {
@@ -333,7 +333,7 @@
     },
     {
       "id": "ES-C12-yo-go",
-      "sequence": 566,
+      "sequence": 990,
       "title": "The \"-go\" club — one irregular corner, many verbs",
       "headword": "-go",
       "romanization": "-go",
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:676f366bba630168",
+      "sourceHash": "fnv1a64:17afaf4786688193",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -473,7 +473,7 @@
     },
     {
       "id": "ES-C12-practice",
-      "sequence": 568,
+      "sequence": 1000,
       "title": "Practice — hacer, decir, and the -go club",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cd89031d88c7419",
+      "sourceHash": "fnv1a64:fe2365102528f58f",
       "notice": null,
       "blocks": [
         {

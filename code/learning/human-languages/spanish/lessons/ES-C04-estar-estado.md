@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-estar-estado
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 275
+sequence: 300
 chapter: 4
 type: word
 headword: estás / está

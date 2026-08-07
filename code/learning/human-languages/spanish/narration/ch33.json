@@ -4,11 +4,11 @@
   "chapter": 33,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9997a29a09400b47",
+  "sourceHash": "fnv1a64:1193d6388479368f",
   "lessons": [
     {
       "id": "ES-C33-verde",
-      "sequence": 840,
+      "sequence": 1590,
       "title": "verde — the colour named after being alive",
       "headword": "verde",
       "romanization": "verde",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36b56916259af11e",
+      "sourceHash": "fnv1a64:a19f46a025249f81",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
     },
     {
       "id": "ES-C33-amarillo",
-      "sequence": 845,
+      "sequence": 1600,
       "title": "amarillo — the colour that started as a taste",
       "headword": "amarillo",
       "romanization": "amarillo",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae70fb1bf5810c09",
+      "sourceHash": "fnv1a64:0d33a8da6aadbc9d",
       "notice": null,
       "blocks": [
         {

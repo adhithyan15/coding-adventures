@@ -4,11 +4,11 @@
   "chapter": 27,
   "title": "The Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c0241436ecab0b0",
+  "sourceHash": "fnv1a64:1221fb0b96f61360",
   "lessons": [
     {
       "id": "ES-C27-los-meses",
-      "sequence": 780,
+      "sequence": 1470,
       "title": "los meses — the calendar's gods and Caesars",
       "headword": "los meses",
       "romanization": "los meses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a00cef600dd4a76",
+      "sourceHash": "fnv1a64:5b5026e865212425",
       "notice": null,
       "blocks": [
         {

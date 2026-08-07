@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C23-padre-madre
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 710
+sequence: 1380
 chapter: 23
 type: word
 headword: el padre, la madre

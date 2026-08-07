@@ -4,11 +4,11 @@
   "chapter": 28,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:67c5930a2b05b153",
+  "sourceHash": "fnv1a64:ab0e2305d98d0480",
   "lessons": [
     {
       "id": "ES-C28-mediodia-medianoche",
-      "sequence": 790,
+      "sequence": 1480,
       "title": "mediodía, medianoche — noon and midnight, spelled out in full",
       "headword": "mediodía, medianoche",
       "romanization": "mediodía, medianoche",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3bd9875be93e05a",
+      "sourceHash": "fnv1a64:b3bfe0b28d5bddf9",
       "notice": null,
       "blocks": [
         {

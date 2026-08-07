@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-como-acento
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 185
+sequence: 200
 chapter: 3
 type: writing
 headword: ¿cómo?

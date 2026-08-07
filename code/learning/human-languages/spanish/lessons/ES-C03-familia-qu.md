@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-familia-qu
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 190
+sequence: 210
 chapter: 3
 type: etymology
 headword: qu-

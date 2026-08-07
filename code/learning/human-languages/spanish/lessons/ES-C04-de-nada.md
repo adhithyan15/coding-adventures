@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-de-nada
 spine_node: SPINE-COURTESY-THANK
-sequence: 260
+sequence: 280
 chapter: 4
 type: phrase
 headword: de nada

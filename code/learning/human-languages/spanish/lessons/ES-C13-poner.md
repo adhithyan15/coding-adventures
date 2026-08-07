@@ -1,7 +1,7 @@
 ---
 id: ES-C13-poner
 chapter: 13
-sequence: 570
+sequence: 1010
 type: word
 headword: poner
 gloss: to put / to place — a -go yo-form, pongo

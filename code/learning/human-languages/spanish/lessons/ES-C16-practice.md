@@ -1,7 +1,7 @@
 ---
 id: ES-C16-practice
 chapter: 16
-sequence: 594
+sequence: 1130
 type: practice-mix
 headword: (practice)
 gloss: preterite vs imperfect — the distinction English doesn't grammatically make

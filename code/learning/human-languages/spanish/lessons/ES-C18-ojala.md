@@ -1,7 +1,7 @@
 ---
 id: ES-C18-ojala
 chapter: 18
-sequence: 616
+sequence: 1240
 type: etymology
 headword: ojalá
 gloss: a wish-word borrowed from Andalusi Arabic that triggers the subjunctive without que or a main verb

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-W01-acento
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 320
+sequence: 350
 chapter: 4
 type: writing
 headword: "á é í ó ú"

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:42fbffb8f2c9ee65",
+  "sourceHash": "fnv1a64:c33320f1373d714f",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -528,7 +528,7 @@
     },
     {
       "id": "ES-C03-tu-usted-register",
-      "sequence": 165,
+      "sequence": 170,
       "title": "tú or usted — a choice you have to make every time",
       "headword": "tú o usted",
       "romanization": "tú o usted",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cae1a32ffd9d433",
+      "sourceHash": "fnv1a64:4e4c276351c8a68d",
       "notice": null,
       "blocks": [
         {
@@ -678,7 +678,7 @@
     },
     {
       "id": "ES-C03-usted-origin",
-      "sequence": 170,
+      "sequence": 180,
       "title": "vuestra merced becomes usted — respect compressed into one word",
       "headword": "vuestra merced → usted",
       "romanization": "vuestra merced → usted",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:313935a54432e2fc",
+      "sourceHash": "fnv1a64:a68e3b11f451f46b",
       "notice": null,
       "blocks": [
         {
@@ -807,7 +807,7 @@
     },
     {
       "id": "ES-C03-como",
-      "sequence": 180,
+      "sequence": 190,
       "title": "cómo — \"how,\" your first question word",
       "headword": "cómo",
       "romanization": "cómo",
@@ -818,7 +818,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e4ea930fecfcd0b",
+      "sourceHash": "fnv1a64:466a23d3a98e138a",
       "notice": null,
       "blocks": [
         {
@@ -934,7 +934,7 @@
     },
     {
       "id": "ES-C03-como-acento",
-      "sequence": 185,
+      "sequence": 200,
       "title": "¿cómo? — the two marks that say \"this is a question\"",
       "headword": "¿cómo?",
       "romanization": "¿cómo?",
@@ -946,7 +946,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bec544478750ac13",
+      "sourceHash": "fnv1a64:7061ae42743cb58d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1094,7 +1094,7 @@
     },
     {
       "id": "ES-C03-familia-qu",
-      "sequence": 190,
+      "sequence": 210,
       "title": "The qu- question family — one ancient pattern, many clues",
       "headword": "qu-",
       "romanization": "qu-",
@@ -1105,7 +1105,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b17345e50849e2c0",
+      "sourceHash": "fnv1a64:eb66f372cf2b6887",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1237,7 +1237,7 @@
     },
     {
       "id": "ES-C03-se-llama",
-      "sequence": 200,
+      "sequence": 220,
       "title": "se llama — the reflexive that fits usted",
       "headword": "se llama",
       "romanization": "se llama",
@@ -1248,7 +1248,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e44303bdf967b34",
+      "sourceHash": "fnv1a64:d63e1dc84f6301ca",
       "notice": null,
       "blocks": [
         {
@@ -1406,7 +1406,7 @@
     },
     {
       "id": "ES-C03-como-se-llama",
-      "sequence": 210,
+      "sequence": 230,
       "title": "¿cómo se llama usted? — assembling the question, and answering it",
       "headword": "¿cómo se llama usted?",
       "romanization": "¿cómo se llama usted?",
@@ -1417,7 +1417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15d93f753535461a",
+      "sourceHash": "fnv1a64:8579507a71fa8de4",
       "notice": null,
       "blocks": [
         {
@@ -1551,7 +1551,7 @@
     },
     {
       "id": "ES-C03-mucho",
-      "sequence": 220,
+      "sequence": 240,
       "title": "mucho — \"much,\" and a sound-change you've already seen",
       "headword": "mucho",
       "romanization": "mucho",
@@ -1562,7 +1562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eb31d27e344bac8",
+      "sourceHash": "fnv1a64:6858d837f3aca63a",
       "notice": null,
       "blocks": [
         {
@@ -1673,7 +1673,7 @@
     },
     {
       "id": "ES-C03-gusto",
-      "sequence": 230,
+      "sequence": 250,
       "title": "gusto becomes mucho gusto — \"much pleasure\"",
       "headword": "mucho gusto",
       "romanization": "mucho gusto",
@@ -1684,7 +1684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dab0f8222a757a9f",
+      "sourceHash": "fnv1a64:a318581b4ba64bb9",
       "notice": null,
       "blocks": [
         {
@@ -1809,7 +1809,7 @@
     },
     {
       "id": "ES-C03-practice",
-      "sequence": 240,
+      "sequence": 260,
       "title": "Practice — introducing yourself",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -1820,7 +1820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15726c67051588f6",
+      "sourceHash": "fnv1a64:18b77f42953215fc",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-hablo-espanol
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 505
+sequence: 560
 chapter: 6
 type: phrase
 headword: Hablo español

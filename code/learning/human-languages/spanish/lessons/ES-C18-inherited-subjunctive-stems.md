@@ -1,7 +1,7 @@
 ---
 id: ES-C18-inherited-subjunctive-stems
 chapter: 18
-sequence: 606
+sequence: 1190
 type: grammar
 headword: tenga, diga, haga; quiera, pueda
 gloss: irregular yo stems and stressed stem changes carry into the subjunctive automatically

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-practice
 spine_node: SPINE-TAKE-LEAVE
-sequence: 440
+sequence: 480
 chapter: 5
 type: practice-mix
 headword: (practice)

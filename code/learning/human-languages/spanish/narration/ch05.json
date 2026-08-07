@@ -4,11 +4,11 @@
   "chapter": 5,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9914574b6e231c0f",
+  "sourceHash": "fnv1a64:cff622156693b783",
   "lessons": [
     {
       "id": "ES-C05-adios",
-      "sequence": 380,
+      "sequence": 420,
       "title": "adiós — \"goodbye,\" or \"to God\"",
       "headword": "adiós",
       "romanization": "adiós",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a680cbb31975a8e",
+      "sourceHash": "fnv1a64:1efab3e6e2d1971f",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
     },
     {
       "id": "ES-C05-hasta",
-      "sequence": 390,
+      "sequence": 430,
       "title": "hasta — \"until,\" and Spain's Arabic centuries",
       "headword": "hasta",
       "romanization": "hasta",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fa83bf6f818d032",
+      "sourceHash": "fnv1a64:0373a9248796f3f9",
       "notice": null,
       "blocks": [
         {
@@ -286,7 +286,7 @@
     },
     {
       "id": "ES-C05-hasta-limits",
-      "sequence": 400,
+      "sequence": 440,
       "title": "hasta aquí / hasta la noche — point to the limit",
       "headword": "hasta aquí / hasta la noche",
       "romanization": "hasta aquí / hasta la noche",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:671f64f069058b1a",
+      "sourceHash": "fnv1a64:8a9a3573eb8c6a3e",
       "notice": null,
       "blocks": [
         {
@@ -405,7 +405,7 @@
     },
     {
       "id": "ES-C05-hasta-luego",
-      "sequence": 410,
+      "sequence": 450,
       "title": "hasta luego — the everyday \"see you later\"",
       "headword": "hasta luego",
       "romanization": "hasta luego",
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7c6ad01ee274beb",
+      "sourceHash": "fnv1a64:77d7a5f501080017",
       "notice": null,
       "blocks": [
         {
@@ -561,7 +561,7 @@
     },
     {
       "id": "ES-C05-hasta-manana",
-      "sequence": 420,
+      "sequence": 460,
       "title": "hasta mañana — \"see you tomorrow\" (and the ñ returns)",
       "headword": "hasta mañana",
       "romanization": "hasta mañana",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfc7945c70776255",
+      "sourceHash": "fnv1a64:a6a61bd22ad29bc9",
       "notice": null,
       "blocks": [
         {
@@ -698,7 +698,7 @@
     },
     {
       "id": "ES-C05-hasta-pronto",
-      "sequence": 430,
+      "sequence": 470,
       "title": "hasta pronto — \"see you soon\"",
       "headword": "hasta pronto",
       "romanization": "hasta pronto",
@@ -709,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54f0024553c75758",
+      "sourceHash": "fnv1a64:512b57b48ebad954",
       "notice": null,
       "blocks": [
         {
@@ -854,7 +854,7 @@
     },
     {
       "id": "ES-C05-practice",
-      "sequence": 440,
+      "sequence": 480,
       "title": "Practice — saying goodbye",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -865,7 +865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd27f0a890b9511f",
+      "sourceHash": "fnv1a64:bb6a1ec725b3062b",
       "notice": null,
       "blocks": [
         {

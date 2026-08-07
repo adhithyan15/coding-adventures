@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "Chapter 13",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a4e20b412d6537ba",
+  "sourceHash": "fnv1a64:9012955fa6cf35df",
   "lessons": [
     {
       "id": "ES-C13-poner",
-      "sequence": 570,
+      "sequence": 1010,
       "title": "poner — \"to put,\" and the club gains a member",
       "headword": "poner",
       "romanization": "poner",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4a6d21b6e5842518",
+      "sourceHash": "fnv1a64:c049d52a0fb55326",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -169,7 +169,7 @@
     },
     {
       "id": "ES-C13-salir",
-      "sequence": 572,
+      "sequence": 1020,
       "title": "salir — \"to go out,\" from a verb that meant \"to leap\"",
       "headword": "salir",
       "romanization": "salir",
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e1368dae4cebfe2",
+      "sourceHash": "fnv1a64:fe496f4ed5343157",
       "notice": null,
       "blocks": [
         {
@@ -312,7 +312,7 @@
     },
     {
       "id": "ES-C13-venir",
-      "sequence": 574,
+      "sequence": 1030,
       "title": "venir — \"to come,\" the last club member, cracked and g-grown",
       "headword": "venir",
       "romanization": "venir",
@@ -323,7 +323,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aabd87fb7c1c7eae",
+      "sourceHash": "fnv1a64:c3cbc4d6fcbeaafc",
       "notice": null,
       "blocks": [
         {
@@ -473,7 +473,7 @@
     },
     {
       "id": "ES-C13-practice",
-      "sequence": 576,
+      "sequence": 1040,
       "title": "Practice — the -go club, complete",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c38441962b855240",
+      "sourceHash": "fnv1a64:2497b5ca46b70d45",
       "notice": {
         "modality": "sight",
         "needs": [

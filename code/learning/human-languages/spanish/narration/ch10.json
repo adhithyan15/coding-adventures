@@ -4,11 +4,11 @@
   "chapter": 10,
   "title": "Chapter 10",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3341e73c1c7419bf",
+  "sourceHash": "fnv1a64:dee01cb1d828b806",
   "lessons": [
     {
       "id": "ES-C10-ir",
-      "sequence": 544,
+      "sequence": 880,
       "title": "ir — \"to go,\" stitched from three verbs",
       "headword": "ir",
       "romanization": "ir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a112992448d98155",
+      "sourceHash": "fnv1a64:97e7c19bbe741eda",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
     },
     {
       "id": "ES-C10-ir-a-futuro",
-      "sequence": 546,
+      "sequence": 890,
       "title": "voy a + infinitive — the \"going-to\" future",
       "headword": "voy a + infinitive",
       "romanization": "voy a + infinitive",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:593eb56d09a903d9",
+      "sourceHash": "fnv1a64:2efae4f60d605d59",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +316,7 @@
     },
     {
       "id": "ES-C10-mi-tu-su",
-      "sequence": 548,
+      "sequence": 900,
       "title": "mi, tu, su — my, your, his/her",
       "headword": "mi, tu, su",
       "romanization": "mi, tu, su",
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:9e0132e713e2e689",
+      "sourceHash": "fnv1a64:c16ec47331e0c841",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -478,7 +478,7 @@
     },
     {
       "id": "ES-C10-practice",
-      "sequence": 550,
+      "sequence": 910,
       "title": "Practice — ir, the near future, and possessives",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -489,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e9314985eb5ba8d",
+      "sourceHash": "fnv1a64:e10c22caf5db30ed",
       "notice": null,
       "blocks": [
         {

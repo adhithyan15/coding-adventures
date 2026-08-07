@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-estar
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 270
+sequence: 290
 chapter: 4
 type: word
 headword: estar

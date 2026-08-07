@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C06-cafe
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 450
+sequence: 490
 chapter: 6
 type: word
 headword: café

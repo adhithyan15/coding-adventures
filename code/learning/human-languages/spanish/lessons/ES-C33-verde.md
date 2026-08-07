@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C33-verde
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 840
+sequence: 1590
 chapter: 33
 type: word
 headword: verde

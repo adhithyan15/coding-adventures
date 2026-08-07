@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-W02-enye
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 340
+sequence: 370
 chapter: 4
 type: writing
 headword: "ñ"

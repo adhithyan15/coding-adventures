@@ -1,7 +1,7 @@
 ---
 id: ES-C12-yo-go
 chapter: 12
-sequence: 566
+sequence: 990
 type: phrase
 headword: -go
 gloss: the "-go" verbs — a small club whose yo-form ends in -go

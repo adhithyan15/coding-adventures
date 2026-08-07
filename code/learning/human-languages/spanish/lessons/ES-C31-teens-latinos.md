@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C31-teens-latinos
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 825
+sequence: 1550
 chapter: 31
 type: etymology
 headword: duodēvīgintī, ūndēvīgintī

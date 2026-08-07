@@ -1,7 +1,7 @@
 ---
 id: ES-C18-subjuntivo
 chapter: 18
-sequence: 604
+sequence: 1180
 type: word
 headword: hable, coma, viva
 gloss: "the regular present subjunctive — built from the yo form, with the vowel flipped"

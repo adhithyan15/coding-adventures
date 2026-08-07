@@ -1,7 +1,7 @@
 ---
 id: ES-C12-hacer
 chapter: 12
-sequence: 562
+sequence: 970
 type: word
 headword: hacer
 gloss: to do / to make — an irregular yo-form, hago

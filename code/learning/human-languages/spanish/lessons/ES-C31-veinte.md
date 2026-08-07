@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C31-veinte
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 827
+sequence: 1560
 chapter: 31
 type: word
 headword: veinte

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-pensar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 850
+sequence: 1610
 chapter: 34
 type: word
 headword: pensar

@@ -4,11 +4,11 @@
   "chapter": 16,
   "title": "Chapter 16",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:30eaac9352ed3655",
+  "sourceHash": "fnv1a64:82ec9c67f1912a73",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
-      "sequence": 590,
+      "sequence": 1110,
       "title": "hablaba, comía — the past that kept going",
       "headword": "hablaba, comía",
       "romanization": "hablaba, comía",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7934411170c064f",
+      "sourceHash": "fnv1a64:e20f599f8e6f29be",
       "notice": null,
       "blocks": [
         {
@@ -195,7 +195,7 @@
     },
     {
       "id": "ES-C16-tres-irregulares",
-      "sequence": 592,
+      "sequence": 1120,
       "title": "era, iba, veía — all three of them",
       "headword": "era, iba, veía",
       "romanization": "era, iba, veía",
@@ -206,7 +206,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:f0aeca46b35f7ba0",
+      "sourceHash": "fnv1a64:9c3bcc2a62e8957e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -378,7 +378,7 @@
     },
     {
       "id": "ES-C16-practice",
-      "sequence": 594,
+      "sequence": 1130,
       "title": "Practice — two pasts, one choice",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -389,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ea9920b4d1ad6c4",
+      "sourceHash": "fnv1a64:f180bd5fc945e341",
       "notice": null,
       "blocks": [
         {

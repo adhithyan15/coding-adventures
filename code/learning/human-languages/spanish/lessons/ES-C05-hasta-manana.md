@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-hasta-manana
 spine_node: SPINE-TAKE-LEAVE
-sequence: 420
+sequence: 460
 chapter: 5
 type: phrase
 headword: hasta mañana

@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "Chapter 11",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1845998478b152fa",
+  "sourceHash": "fnv1a64:69ad78a547a85c5d",
   "lessons": [
     {
       "id": "ES-C11-querer",
-      "sequence": 552,
+      "sequence": 920,
       "title": "querer — \"to want,\" and the e becomes ie crack again",
       "headword": "querer",
       "romanization": "querer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5431d0644d171e4a",
+      "sourceHash": "fnv1a64:544fa5d83e0f113f",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
     },
     {
       "id": "ES-C11-poder",
-      "sequence": 554,
+      "sequence": 930,
       "title": "poder — \"to be able,\" and the o becomes ue crack",
       "headword": "poder",
       "romanization": "poder",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d66abfcc957b70d",
+      "sourceHash": "fnv1a64:d5319cef387b6b17",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
     },
     {
       "id": "ES-C11-stem-changes",
-      "sequence": 556,
+      "sequence": 940,
       "title": "e becomes ie and o becomes ue — one rule, two vowels",
       "headword": "e→ie, o→ue",
       "romanization": "e→ie, o→ue",
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7b9e4b8437c58d5",
+      "sourceHash": "fnv1a64:8b3b70b2c52e51a2",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
     },
     {
       "id": "ES-C11-nuestro",
-      "sequence": 558,
+      "sequence": 950,
       "title": "nuestro — \"our,\" the possessive that agrees fully",
       "headword": "nuestro",
       "romanization": "nuestro",
@@ -497,7 +497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a0ac7c6de92c18d",
+      "sourceHash": "fnv1a64:93e91c4220c73ee9",
       "notice": null,
       "blocks": [
         {
@@ -622,7 +622,7 @@
     },
     {
       "id": "ES-C11-practice",
-      "sequence": 560,
+      "sequence": 960,
       "title": "Practice — querer, poder, and the boot",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -633,7 +633,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76a65b2d1bd68da7",
+      "sourceHash": "fnv1a64:af92d49c34d3eda3",
       "notice": null,
       "blocks": [
         {

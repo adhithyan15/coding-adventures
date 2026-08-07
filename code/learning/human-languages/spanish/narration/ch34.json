@@ -4,11 +4,11 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bc65a341cf39fbb6",
+  "sourceHash": "fnv1a64:64748b10c5f453b4",
   "lessons": [
     {
       "id": "ES-C34-pensar",
-      "sequence": 850,
+      "sequence": 1610,
       "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
       "headword": "pensar",
       "romanization": "pensar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c34f771fc63fa6da",
+      "sourceHash": "fnv1a64:04f892f1e8481ab5",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
     },
     {
       "id": "ES-C34-entender",
-      "sequence": 855,
+      "sequence": 1620,
       "title": "entender — \"to understand\", built out of stretching",
       "headword": "entender",
       "romanization": "entender",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:265e5fbe219438c0",
+      "sourceHash": "fnv1a64:070edf4c229dd975",
       "notice": null,
       "blocks": [
         {
@@ -372,7 +372,7 @@
     },
     {
       "id": "ES-C34-leer",
-      "sequence": 860,
+      "sequence": 1630,
       "title": "leer — \"to read\", and before that, \"to gather\"",
       "headword": "leer",
       "romanization": "leer",
@@ -383,7 +383,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe730e9bf319e028",
+      "sourceHash": "fnv1a64:f9fce5111b86e152",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +551,7 @@
     },
     {
       "id": "ES-C34-escribir",
-      "sequence": 865,
+      "sequence": 1640,
       "title": "escribir — \"to write\", which once meant \"to scratch\"",
       "headword": "escribir",
       "romanization": "escribir",
@@ -562,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4ff55a994a886be",
+      "sourceHash": "fnv1a64:70b642cd35202bfe",
       "notice": null,
       "blocks": [
         {

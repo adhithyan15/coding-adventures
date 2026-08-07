@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-como-estas-register
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 290
+sequence: 320
 chapter: 4
 type: grammar
 headword: ¿cómo está usted? / ¿cómo estás?

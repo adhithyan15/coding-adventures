@@ -1,7 +1,7 @@
 ---
 id: ES-C18-practice
 chapter: 18
-sequence: 618
+sequence: 1250
 type: practice-mix
 headword: "Chapter 18 practice"
 gloss: "drilling the vowel flip and inherited stems"

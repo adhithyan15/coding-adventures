@@ -4,11 +4,11 @@
   "chapter": 25,
   "title": "The Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b76c71606e7c1944",
+  "sourceHash": "fnv1a64:ce540eb8329698ee",
   "lessons": [
     {
       "id": "ES-C25-las-estaciones",
-      "sequence": 750,
+      "sequence": 1430,
       "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
       "headword": "la primavera, el verano, el otoño, el invierno",
       "romanization": "la primavera, el verano, el otoño, el invierno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8188afe380d53ba6",
+      "sourceHash": "fnv1a64:3b1b0233f9810058",
       "notice": null,
       "blocks": [
         {

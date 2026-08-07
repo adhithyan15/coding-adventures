@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C04-regular
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 300
+sequence: 330
 chapter: 4
 type: word
 headword: regular

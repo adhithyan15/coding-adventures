@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "Chapter 15",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bf95b4776eb920c1",
+  "sourceHash": "fnv1a64:6a0d0566d7c228af",
   "lessons": [
     {
       "id": "ES-C15-comer-vivir-preterite",
-      "sequence": 584,
+      "sequence": 1080,
       "title": "comí, viví — two conjugations become one",
       "headword": "comí, viví",
       "romanization": "comí, viví",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4492b031d93a760",
+      "sourceHash": "fnv1a64:29f4924f1b0065d6",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
     },
     {
       "id": "ES-C15-preterite-fuertes",
-      "sequence": 586,
+      "sequence": 1090,
       "title": "tuve, hice, estuve — the strong preterites",
       "headword": "tuve, hice, estuve",
       "romanization": "tuve, hice, estuve",
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1bf08f09f5512a0b",
+      "sourceHash": "fnv1a64:62a3242726961642",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -357,7 +357,7 @@
     },
     {
       "id": "ES-C15-practice",
-      "sequence": 588,
+      "sequence": 1100,
       "title": "Practice — three families, one question",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:84f421ddf990bd02",
+      "sourceHash": "fnv1a64:4b3fcf24c86f0c33",
       "notice": {
         "modality": "sight",
         "needs": [

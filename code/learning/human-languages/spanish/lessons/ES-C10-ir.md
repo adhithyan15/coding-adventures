@@ -1,7 +1,7 @@
 ---
 id: ES-C10-ir
 chapter: 10
-sequence: 544
+sequence: 880
 type: word
 headword: ir
 gloss: to go (the most irregular Spanish verb — three Latin verbs in one)

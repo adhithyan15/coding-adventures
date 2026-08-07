@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C22-blanco-germanico
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 695
+sequence: 1350
 chapter: 22
 type: etymology
 headword: blanco ← *blank

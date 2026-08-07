@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C05-hasta-pronto
 spine_node: SPINE-TAKE-LEAVE
-sequence: 430
+sequence: 470
 chapter: 5
 type: phrase
 headword: hasta pronto

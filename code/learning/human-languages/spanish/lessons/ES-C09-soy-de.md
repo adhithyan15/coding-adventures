@@ -1,7 +1,7 @@
 ---
 id: ES-C09-soy-de
 chapter: 9
-sequence: 538
+sequence: 850
 type: phrase
 headword: soy de…
 gloss: "I'm from…" — origin and identity take ser

@@ -1,7 +1,7 @@
 ---
 id: ES-C09-ser
 chapter: 9
-sequence: 534
+sequence: 830
 type: word
 headword: ser
 gloss: to be (identity — permanent, essential)

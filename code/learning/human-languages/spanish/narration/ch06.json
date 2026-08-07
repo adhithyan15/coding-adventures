@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "The First Verbs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4450428fd5374b11",
+  "sourceHash": "fnv1a64:4fe3507a54682e0b",
   "lessons": [
     {
       "id": "ES-C06-cafe",
-      "sequence": 450,
+      "sequence": 490,
       "title": "café — coffee, and a place to drink it",
       "headword": "café",
       "romanization": "café",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f25db04ee0f884da",
+      "sourceHash": "fnv1a64:4b96d615a4e56676",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
     },
     {
       "id": "ES-C06-por-favor",
-      "sequence": 460,
+      "sequence": 500,
       "title": "por favor — \"please,\" i.e. \"for a favour\"",
       "headword": "por favor",
       "romanization": "por favor",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ac312a5638b2595",
+      "sourceHash": "fnv1a64:f66d4757e7f825f2",
       "notice": null,
       "blocks": [
         {
@@ -275,7 +275,7 @@
     },
     {
       "id": "ES-C06-hablar",
-      "sequence": 470,
+      "sequence": 510,
       "title": "hablar — \"to speak,\" which used to mean \"to tell tales\"",
       "headword": "hablar",
       "romanization": "hablar",
@@ -286,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec974cf7795b5dea",
+      "sourceHash": "fnv1a64:f0eaf961627f631b",
       "notice": null,
       "blocks": [
         {
@@ -405,7 +405,7 @@
     },
     {
       "id": "ES-C06-ar-presente",
-      "sequence": 475,
+      "sequence": 520,
       "title": "hablo, hablas, habla — one ending swap, three sentences",
       "headword": "hablo, hablas, habla",
       "romanization": "hablo, hablas, habla",
@@ -417,7 +417,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:16c2c3aaca0bd5c9",
+      "sourceHash": "fnv1a64:d62ffbd226de0824",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -557,7 +557,7 @@
     },
     {
       "id": "ES-C06-trabajar",
-      "sequence": 480,
+      "sequence": 530,
       "title": "trabajar — \"to work,\" and it once meant torture",
       "headword": "trabajar",
       "romanization": "trabajar",
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87e1da307dcee2f5",
+      "sourceHash": "fnv1a64:045c7903c73d446d",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +721,7 @@
     },
     {
       "id": "ES-C06-estudiar",
-      "sequence": 490,
+      "sequence": 540,
       "title": "estudiar — \"to study,\" and the eagerness inside it",
       "headword": "estudiar",
       "romanization": "estudiar",
@@ -732,7 +732,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e41c7eebc5f12c68",
+      "sourceHash": "fnv1a64:a0caa17d21e7026e",
       "notice": null,
       "blocks": [
         {
@@ -889,7 +889,7 @@
     },
     {
       "id": "ES-C06-espanol",
-      "sequence": 500,
+      "sequence": 550,
       "title": "español — the word for the language",
       "headword": "español",
       "romanization": "español",
@@ -900,7 +900,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96238d0438890a16",
+      "sourceHash": "fnv1a64:3419ebdf7bb7ba3f",
       "notice": null,
       "blocks": [
         {
@@ -1004,7 +1004,7 @@
     },
     {
       "id": "ES-C06-hablo-espanol",
-      "sequence": 505,
+      "sequence": 560,
       "title": "Hablo español — your first real sentence",
       "headword": "Hablo español",
       "romanization": "Hablo español",
@@ -1015,7 +1015,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bc0c2715a5aa607",
+      "sourceHash": "fnv1a64:359d617ceb162fa6",
       "notice": null,
       "blocks": [
         {
@@ -1146,7 +1146,7 @@
     },
     {
       "id": "ES-C06-practice",
-      "sequence": 510,
+      "sequence": 570,
       "title": "Practice — making sentences with -ar verbs",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -1157,7 +1157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e76d3d2926c9d2bb",
+      "sourceHash": "fnv1a64:5688a6936f544445",
       "notice": null,
       "blocks": [
         {

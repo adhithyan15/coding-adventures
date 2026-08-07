@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C03-se-llama
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 200
+sequence: 220
 chapter: 3
 type: word
 headword: se llama

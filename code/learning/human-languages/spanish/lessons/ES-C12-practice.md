@@ -1,7 +1,7 @@
 ---
 id: ES-C12-practice
 chapter: 12
-sequence: 568
+sequence: 1000
 type: practice-mix
 headword: (practice)
 gloss: doing, making, saying — hacer, decir, and the -go club
