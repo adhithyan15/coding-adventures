@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: gehen
 gloss: to go — and the verb German uses for "how are you?"
-concept_tag: DE-VERB-GEHEN
+concept_tag: VERB-GO
 prerequisites: []
 sounds: [h-pronounced]
 roots: [gehen-german]

@@ -4,7 +4,7 @@ chapter: 14
 type: word
 headword: haben
 gloss: to have — identical to Latin habēre in sound and sense, and unrelated to it
-concept_tag: GE-VERB-HAVE
+concept_tag: VERB-HAVE
 prerequisites: [GE-C13-rot-blau, GE-C05-machen]
 sounds: [long-a, final-t]
 roots: [germanic-habjana]

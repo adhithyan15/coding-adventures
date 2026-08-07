@@ -116,20 +116,27 @@
     },
     {
       "id": "GE-PATH-011",
-      "spine_node": "SPINE-CHECK-WELLBEING",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "GE-C03-gehen",
-        "GE-C03-wie-geht-es",
-        "GE-C03-es-geht"
+        "GE-C03-gehen"
       ],
-      "before": [
-        "GE-EXT-011-LANGUAGE-SPECIFIC"
-      ],
+      "before": [],
       "inline": [],
       "after": []
     },
     {
       "id": "GE-PATH-012",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C03-wie-geht-es",
+        "GE-C03-es-geht"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-013",
       "spine_node": "SPINE-TAKE-LEAVE",
       "lessons": [
         "GE-C04-auf-wiedersehen",
@@ -143,22 +150,32 @@
       "after": []
     },
     {
-      "id": "GE-PATH-013",
-      "spine_node": "SPINE-TIME-OF-DAY",
+      "id": "GE-PATH-014",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "GE-C05-wohnen",
         "GE-C05-machen",
+        "GE-C05-lernen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-015",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
         "GE-C06-zahlen-1-5",
         "GE-C06-zahlen-6-10"
       ],
       "before": [],
       "inline": [
-        "GE-EXT-013-LANGUAGE-SPECIFIC"
+        "GE-EXT-015-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "GE-PATH-014",
+      "id": "GE-PATH-016",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
         "GE-C08-uhr",
@@ -171,29 +188,72 @@
       ],
       "before": [],
       "inline": [
-        "GE-EXT-014-LANGUAGE-SPECIFIC"
+        "GE-EXT-016-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "GE-PATH-015",
+      "id": "GE-PATH-017",
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
         "GE-C12-elf-zwoelf",
         "GE-C12-zahlen-13-20",
         "GE-C13-schwarz-weiss",
-        "GE-C13-rot-blau",
-        "GE-C14-haben",
-        "GE-C14-alter"
+        "GE-C13-rot-blau"
       ],
       "before": [],
       "inline": [
-        "GE-EXT-015-LANGUAGE-SPECIFIC"
+        "GE-EXT-017-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "GE-PATH-016",
+      "id": "GE-PATH-018",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C14-haben"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-019",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C14-alter"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-020",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "GE-C15-perfekt",
+        "GE-C15-praeteritum"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-021",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C16-sein"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-022",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "GE-C17-kopf",
@@ -202,13 +262,13 @@
       ],
       "before": [],
       "inline": [
-        "GE-EXT-016-LANGUAGE-SPECIFIC",
-        "GE-EXT-016-ETYMOLOGY"
+        "GE-EXT-022-LANGUAGE-SPECIFIC",
+        "GE-EXT-022-ETYMOLOGY"
       ],
       "after": []
     },
     {
-      "id": "GE-PATH-017",
+      "id": "GE-PATH-023",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
         "GE-C18-ja",
@@ -219,7 +279,7 @@
       "after": []
     },
     {
-      "id": "GE-PATH-018",
+      "id": "GE-PATH-024",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
         "GE-C19-bitte-requests",
@@ -230,19 +290,19 @@
       "after": []
     },
     {
-      "id": "GE-PATH-019",
+      "id": "GE-PATH-025",
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
         "GE-C21-das-wetter"
       ],
       "before": [],
       "inline": [
-        "GE-EXT-019-LANGUAGE-SPECIFIC"
+        "GE-EXT-025-LANGUAGE-SPECIFIC"
       ],
       "after": []
     },
     {
-      "id": "GE-PATH-020",
+      "id": "GE-PATH-026",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "GE-C22-hund-katze",
@@ -250,7 +310,7 @@
       ],
       "before": [],
       "inline": [
-        "GE-EXT-020-LANGUAGE-SPECIFIC"
+        "GE-EXT-026-LANGUAGE-SPECIFIC"
       ],
       "after": []
     }
@@ -278,7 +338,7 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "GE-PATH-017"
+        "GE-PATH-023"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -304,8 +364,8 @@
       "segments": [
         "GE-PATH-002",
         "GE-PATH-008",
-        "GE-PATH-011",
-        "GE-PATH-016"
+        "GE-PATH-012",
+        "GE-PATH-022"
       ],
       "omits": [
         "WORD-WELL"
@@ -314,8 +374,8 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "GE-PATH-014",
-        "GE-PATH-018"
+        "GE-PATH-016",
+        "GE-PATH-024"
       ],
       "omits": [],
       "relocates": {}
@@ -323,7 +383,7 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "GE-PATH-005",
-        "GE-PATH-012"
+        "GE-PATH-013"
       ],
       "omits": [],
       "relocates": {}
@@ -332,9 +392,10 @@
       "segments": [
         "GE-PATH-004",
         "GE-PATH-006",
-        "GE-PATH-013",
         "GE-PATH-015",
-        "GE-PATH-019"
+        "GE-PATH-017",
+        "GE-PATH-019",
+        "GE-PATH-025"
       ],
       "omits": [
         "TIME-AFTERNOON",
@@ -352,7 +413,7 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "GE-PATH-003",
-        "GE-PATH-020"
+        "GE-PATH-026"
       ],
       "omits": [],
       "relocates": {}
@@ -365,14 +426,15 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "GE-PATH-011",
+        "GE-PATH-014",
+        "GE-PATH-018",
+        "GE-PATH-021"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
-        "VERB-HAVE",
-        "VERB-DO-MAKE",
-        "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
@@ -381,7 +443,6 @@
         "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
-        "VERB-LEARN",
         "VERB-READ",
         "VERB-WRITE",
         "VERB-CAN",
@@ -393,7 +454,6 @@
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
         "VERB-WALK",
@@ -428,7 +488,9 @@
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-PAST": {
-      "segments": [],
+      "segments": [
+        "GE-PATH-020"
+      ],
       "omits": [
         "VERB-PAST"
       ],
@@ -455,32 +517,19 @@
       ]
     },
     {
-      "id": "GE-EXT-011-LANGUAGE-SPECIFIC",
-      "stage": "pre-A1",
-      "kind": "required",
-      "category": "language-specific",
-      "canDo": "I can use the additional German material required at this point in the path.",
-      "prerequisites": [],
-      "lessons": [
-        "GE-C03-gehen"
-      ]
-    },
-    {
-      "id": "GE-EXT-013-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-015-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
       "canDo": "I can use the additional German material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "GE-C05-wohnen",
-        "GE-C05-machen",
         "GE-C06-zahlen-1-5",
         "GE-C06-zahlen-6-10"
       ]
     },
     {
-      "id": "GE-EXT-014-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-016-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -497,7 +546,7 @@
       ]
     },
     {
-      "id": "GE-EXT-015-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-017-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -507,13 +556,34 @@
         "GE-C12-elf-zwoelf",
         "GE-C12-zahlen-13-20",
         "GE-C13-schwarz-weiss",
-        "GE-C13-rot-blau",
-        "GE-C14-haben",
+        "GE-C13-rot-blau"
+      ]
+    },
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional German material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
         "GE-C14-alter"
       ]
     },
     {
-      "id": "GE-EXT-016-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the German Perfekt that speech actually uses, and recognize the Präteritum the written language keeps — the two pasts sein draws its war/waren forms from.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C15-perfekt",
+        "GE-C15-praeteritum"
+      ]
+    },
+    {
+      "id": "GE-EXT-022-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
       "category": "language-specific",
@@ -525,7 +595,7 @@
       ]
     },
     {
-      "id": "GE-EXT-016-ETYMOLOGY",
+      "id": "GE-EXT-022-ETYMOLOGY",
       "stage": "pre-A1",
       "kind": "supporting",
       "category": "etymology",
@@ -536,7 +606,7 @@
       ]
     },
     {
-      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-025-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",
@@ -547,7 +617,7 @@
       ]
     },
     {
-      "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+      "id": "GE-EXT-026-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
       "category": "language-specific",

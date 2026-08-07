@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:226ff8e7967736a8",
+  "sourceHash": "fnv1a64:fa85693f7e833aff",
   "lessons": [
     {
       "id": "GE-C05-ich-lerne-deutsch",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff029ca03897854f",
+      "sourceHash": "fnv1a64:b692dc8bfe1e4b40",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6038f0a02649b609",
+      "sourceHash": "fnv1a64:92a8f484ee09fb92",
       "notice": null,
       "blocks": [
         {
@@ -635,7 +635,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e93089459bad42a0",
+      "sourceHash": "fnv1a64:03068b42d443b4fe",
       "notice": null,
       "blocks": [
         {
