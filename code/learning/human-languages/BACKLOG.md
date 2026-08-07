@@ -23,6 +23,66 @@ JSON and human-readable reports; the canonical schema-v2 tranches prove one
 typed source across Language Ladder and generated book chapters without
 discarding deep content.
 
+## P-1 — The A2 claim was wrong, and the curriculum is being redesigned (HL09)
+
+**2026-08-07.** The project owner, who has sat A2 examinations, did not believe the
+gap report's claim that Spanish "reaches A2". The audit agreed, by a wide margin:
+
+| | Spanish today | A2 requires | short by |
+|---|---|---|---|
+| distinct headwords | **178** | ~1,000–1,500 | **≈6.7×** |
+| lessons realizing an A2 node | **14** | — | — |
+| A2 spine nodes realized | **1 of 5** | 5 | 4 |
+| tenses taught | present only | preterite, imperfect, perfect, near future, imperative | 5+ |
+
+All 14 realize one node, `SPINE-SAY-WHAT-I-DO`, which declares **42 concepts**;
+three of the other four A2 nodes declare **one concept each**, and
+`SPINE-TALK-ABOUT-PAST` — one concept — stands for the entire past tense.
+
+Three further findings from the same audit, each a defect in its own right:
+
+- **38% of Spanish has no reading order.** 56 of 146 lessons carry no `sequence:`,
+  so their order lives only in hand-typed LaTeX. French is worse: 64 of 73 (88%).
+  A ramp whose order is unknown cannot be verified at all.
+- **51% of taught atoms are never revisited.** 93 of 182; median revisits **zero**.
+  `reviews_of` is set on 144 of 146 lessons and cannot close the gap — it names
+  lesson ids, while atoms live in another namespace, so it has never reinforced
+  anything.
+- **Regional variation is absent.** `vos` appears **0 times in 146 lessons**, for a
+  language whose everyday second person is voseo for ~100 million speakers.
+
+A close read of Spanish chapters 1–8 (62 lesson files) found the mechanism behind
+all of it, and it is not bad writing — chapters 1, 2, 5 and 6 are as well built as
+anything commercial, and the etymology is genuinely distinctive:
+
+- **The schema migration stopped at Chapter 6.** Chapters 1–6 carry `sequence`,
+  `spine_node`, `duration` and knowledge atoms; chapters 7–8 carry **none** of it,
+  so they are invisible to every tool that reads the knowledge graph. The ramp
+  collapses exactly at that boundary.
+- **`type: review` lessons: zero in the whole corpus**, though HL00 defines the
+  type and the N+1/N+3/N+7/N+15 interval. `session-map.md`, the artifact HL00 says
+  verifies the schedule, **covers chapters 1–3 of 33.**
+- **Chapters 7–8 drill vocabulary from Chapters 26 and 31** — *pan*, *agua*,
+  *un/una*, *veintiuno*, *¿Cuánto es?* — because chapters starved of reviewable
+  material reach sideways for whatever they need.
+- **The learner cannot say "no"** (`sí`/`no` are Chapter 19; they are questioned
+  from Chapter 7) **or "I am"** (`estoy` used as a given in Chapter 4, taught
+  nowhere; `yo` omitted from the entire path by ledger design).
+- **Every lesson is `variety: general`.** The Spanish taught is unmarked, and the
+  `tú`/`usted` lesson presents a two-way system as universal.
+- **Chapter 7's order is genuinely ambiguous** — `curriculum.json` says
+  comer→beber→qué→vivir→dónde; the lesson prose and `reviews_of` say
+  comer→vivir→beber→qué→dónde. **This one needs a human decision.**
+
+> A gentle ramp is not made of small steps; it's made of steps you can still
+> stand on.
+
+[HL09](../../specs/HL09-gentle-ramp-curriculum-design.md) is the redesign. It sizes
+the work honestly (**~8,000 lessons to C2**, against 146 today), and names **four**
+ramps where the repo measured one: vocabulary, script, **sentence complexity**, and
+**synthesis**. Length is not a cost; the owner has confirmed thousands of pages are
+acceptable. Nothing may claim a level until HL09 §3.1 is satisfied.
+
 ## Priority rules
 
 1. Close a learner-visible broken promise before adding breadth.
