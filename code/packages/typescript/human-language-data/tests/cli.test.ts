@@ -17,7 +17,12 @@ describe("runValidate", () => {
 });
 
 describe("runCurriculumGapReport", () => {
-  it("prints JSON or text reports for the real curriculum", () => {
+  // 20s, not the 5s default: this builds the WHOLE gap report twice, and since
+  // HL09 that includes the continuity walk (~900ms per build on the real corpus,
+  // more on a cold runner). The cost is real and deliberate — order, reinforcement
+  // and forward references are properties of every lesson, so the walk cannot be
+  // input-gated the way `ramp` and `levels` are.
+  it("prints JSON or text reports for the real curriculum", { timeout: 20_000 }, () => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
