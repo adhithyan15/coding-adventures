@@ -23,6 +23,9 @@
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
     "lessonsWithoutLevel": null,
+    "rampOverBudgetLessons": 40,
+    "scriptRampOverBudgetLessons": 61,
+    "lessonsOpeningMultipleScripts": 5,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 24,
     "chapterGateCleanTracks": 3,
@@ -2683,6 +2686,1636 @@
       "duplicateChapters": 0,
       "cleanTracks": 3,
       "payoffRepresentativeness": 0.5
+    }
+  },
+  "ramp": {
+    "policy": {
+      "maxNewAtomsPerLesson": 3,
+      "maxNewAtomsPerChapter": 12
+    },
+    "lessons": [
+      {
+        "lessonId": "BN-C06-numbers-1-5",
+        "language": "bengali",
+        "chapter": 6,
+        "atoms": 6,
+        "budget": 3
+      },
+      {
+        "lessonId": "PA-C06-panj-convergence",
+        "language": "punjabi",
+        "chapter": 6,
+        "atoms": 6,
+        "budget": 3
+      },
+      {
+        "lessonId": "SA-C06-number-cognates",
+        "language": "sanskrit",
+        "chapter": 6,
+        "atoms": 6,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C23-vert-jaune",
+        "language": "french",
+        "chapter": 23,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C21-das-wetter",
+        "language": "german",
+        "chapter": 21,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C22-hund-katze",
+        "language": "german",
+        "chapter": 22,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C23-gruen-gelb",
+        "language": "german",
+        "chapter": 23,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "PA-C06-numbers-1-5",
+        "language": "punjabi",
+        "chapter": 6,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "SA-C06-numbers-1-5",
+        "language": "sanskrit",
+        "chapter": 6,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "UR-C05-khuda-hafiz",
+        "language": "urdu",
+        "chapter": 5,
+        "atoms": 5,
+        "budget": 3
+      },
+      {
+        "lessonId": "FA-C03-shoma-to",
+        "language": "persian",
+        "chapter": 3,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FA-C05-khodahafez",
+        "language": "persian",
+        "chapter": 5,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C17-main",
+        "language": "french",
+        "chapter": 17,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C17-tete",
+        "language": "french",
+        "chapter": 17,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C18-oui",
+        "language": "french",
+        "chapter": 18,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C21-le-temps",
+        "language": "french",
+        "chapter": 21,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "FR-C22-chien-chat",
+        "language": "french",
+        "chapter": 22,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C17-hand",
+        "language": "german",
+        "chapter": 17,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C17-kopf",
+        "language": "german",
+        "chapter": 17,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C17-kopf-haupt",
+        "language": "german",
+        "chapter": 17,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C18-ja",
+        "language": "german",
+        "chapter": 18,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GE-C18-nein",
+        "language": "german",
+        "chapter": 18,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GU-C06-number-histories",
+        "language": "gujarati",
+        "chapter": 6,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "GU-C06-numbers-1-5",
+        "language": "gujarati",
+        "chapter": 6,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "HI-C22-gyarah-bees",
+        "language": "hindi",
+        "chapter": 22,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "IT-C13-rosso-blu",
+        "language": "italian",
+        "chapter": 13,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "IT-C14-eta",
+        "language": "italian",
+        "chapter": 14,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "IT-C15-passato-remoto",
+        "language": "italian",
+        "chapter": 15,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "KA-C08-dayavittu",
+        "language": "kannada",
+        "chapter": 8,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "LA-C16-undecim-viginti",
+        "language": "latin",
+        "chapter": 16,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "ML-C08-dayavayi",
+        "language": "malayalam",
+        "chapter": 8,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "MR-C06-numbers-1-5",
+        "language": "marathi",
+        "chapter": 6,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "PA-C07-hona",
+        "language": "punjabi",
+        "chapter": 7,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "PA-C07-khana",
+        "language": "punjabi",
+        "chapter": 7,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "RU-C03-govorit",
+        "language": "russian",
+        "chapter": 3,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "SA-C06-pancha-travels",
+        "language": "sanskrit",
+        "chapter": 6,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "TA-W01-abugida-va-ka",
+        "language": "tamil",
+        "chapter": 1,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "TE-C08-dayachesi",
+        "language": "telugu",
+        "chapter": 8,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "UR-C03-aap-tum-tu",
+        "language": "urdu",
+        "chapter": 3,
+        "atoms": 4,
+        "budget": 3
+      },
+      {
+        "lessonId": "UR-C04-main-hun",
+        "language": "urdu",
+        "chapter": 4,
+        "atoms": 4,
+        "budget": 3
+      }
+    ],
+    "chapters": [
+      {
+        "language": "spanish",
+        "chapter": 4,
+        "atoms": 31,
+        "budget": 12,
+        "lessonCount": 15
+      },
+      {
+        "language": "spanish",
+        "chapter": 3,
+        "atoms": 24,
+        "budget": 12,
+        "lessonCount": 14
+      },
+      {
+        "language": "punjabi",
+        "chapter": 7,
+        "atoms": 20,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "russian",
+        "chapter": 3,
+        "atoms": 19,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "spanish",
+        "chapter": 6,
+        "atoms": 19,
+        "budget": 12,
+        "lessonCount": 9
+      },
+      {
+        "language": "arabic",
+        "chapter": 3,
+        "atoms": 18,
+        "budget": 12,
+        "lessonCount": 9
+      },
+      {
+        "language": "japanese",
+        "chapter": 1,
+        "atoms": 18,
+        "budget": 12,
+        "lessonCount": 8
+      },
+      {
+        "language": "spanish",
+        "chapter": 5,
+        "atoms": 17,
+        "budget": 12,
+        "lessonCount": 7
+      },
+      {
+        "language": "tamil",
+        "chapter": 1,
+        "atoms": 17,
+        "budget": 12,
+        "lessonCount": 16
+      },
+      {
+        "language": "arabic",
+        "chapter": 4,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 8
+      },
+      {
+        "language": "gujarati",
+        "chapter": 7,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "latin",
+        "chapter": 1,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "latin",
+        "chapter": 37,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 8
+      },
+      {
+        "language": "persian",
+        "chapter": 4,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "portuguese",
+        "chapter": 2,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 8
+      },
+      {
+        "language": "urdu",
+        "chapter": 4,
+        "atoms": 16,
+        "budget": 12,
+        "lessonCount": 6
+      },
+      {
+        "language": "italian",
+        "chapter": 2,
+        "atoms": 15,
+        "budget": 12,
+        "lessonCount": 8
+      },
+      {
+        "language": "persian",
+        "chapter": 6,
+        "atoms": 15,
+        "budget": 12,
+        "lessonCount": 5
+      },
+      {
+        "language": "russian",
+        "chapter": 2,
+        "atoms": 15,
+        "budget": 12,
+        "lessonCount": 10
+      },
+      {
+        "language": "sanskrit",
+        "chapter": 6,
+        "atoms": 15,
+        "budget": 12,
+        "lessonCount": 3
+      },
+      {
+        "language": "italian",
+        "chapter": 5,
+        "atoms": 14,
+        "budget": 12,
+        "lessonCount": 5
+      },
+      {
+        "language": "persian",
+        "chapter": 3,
+        "atoms": 14,
+        "budget": 12,
+        "lessonCount": 5
+      },
+      {
+        "language": "portuguese",
+        "chapter": 18,
+        "atoms": 14,
+        "budget": 12,
+        "lessonCount": 7
+      },
+      {
+        "language": "urdu",
+        "chapter": 3,
+        "atoms": 14,
+        "budget": 12,
+        "lessonCount": 5
+      },
+      {
+        "language": "urdu",
+        "chapter": 6,
+        "atoms": 14,
+        "budget": 12,
+        "lessonCount": 5
+      }
+    ],
+    "tracks": [
+      {
+        "language": "arabic",
+        "lessonCount": 77,
+        "measurable": 51,
+        "unmeasurable": 26,
+        "lessonViolations": 0,
+        "chapterViolations": 2
+      },
+      {
+        "language": "bengali",
+        "lessonCount": 37,
+        "measurable": 7,
+        "unmeasurable": 30,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "chinese",
+        "lessonCount": 7,
+        "measurable": 7,
+        "unmeasurable": 0,
+        "lessonViolations": 0,
+        "chapterViolations": 0
+      },
+      {
+        "language": "french",
+        "lessonCount": 73,
+        "measurable": 9,
+        "unmeasurable": 64,
+        "lessonViolations": 6,
+        "chapterViolations": 0
+      },
+      {
+        "language": "german",
+        "lessonCount": 76,
+        "measurable": 10,
+        "unmeasurable": 66,
+        "lessonViolations": 8,
+        "chapterViolations": 0
+      },
+      {
+        "language": "gujarati",
+        "lessonCount": 39,
+        "measurable": 8,
+        "unmeasurable": 31,
+        "lessonViolations": 2,
+        "chapterViolations": 1
+      },
+      {
+        "language": "hindi",
+        "lessonCount": 85,
+        "measurable": 51,
+        "unmeasurable": 34,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "italian",
+        "lessonCount": 58,
+        "measurable": 49,
+        "unmeasurable": 9,
+        "lessonViolations": 3,
+        "chapterViolations": 2
+      },
+      {
+        "language": "japanese",
+        "lessonCount": 8,
+        "measurable": 8,
+        "unmeasurable": 0,
+        "lessonViolations": 0,
+        "chapterViolations": 1
+      },
+      {
+        "language": "kannada",
+        "lessonCount": 66,
+        "measurable": 36,
+        "unmeasurable": 30,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "latin",
+        "lessonCount": 65,
+        "measurable": 65,
+        "unmeasurable": 0,
+        "lessonViolations": 1,
+        "chapterViolations": 2
+      },
+      {
+        "language": "malayalam",
+        "lessonCount": 70,
+        "measurable": 39,
+        "unmeasurable": 31,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "marathi",
+        "lessonCount": 41,
+        "measurable": 8,
+        "unmeasurable": 33,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "persian",
+        "lessonCount": 25,
+        "measurable": 21,
+        "unmeasurable": 4,
+        "lessonViolations": 2,
+        "chapterViolations": 3
+      },
+      {
+        "language": "portuguese",
+        "lessonCount": 66,
+        "measurable": 57,
+        "unmeasurable": 9,
+        "lessonViolations": 0,
+        "chapterViolations": 2
+      },
+      {
+        "language": "punjabi",
+        "lessonCount": 39,
+        "measurable": 8,
+        "unmeasurable": 31,
+        "lessonViolations": 4,
+        "chapterViolations": 1
+      },
+      {
+        "language": "russian",
+        "lessonCount": 28,
+        "measurable": 12,
+        "unmeasurable": 16,
+        "lessonViolations": 1,
+        "chapterViolations": 2
+      },
+      {
+        "language": "sanskrit",
+        "lessonCount": 39,
+        "measurable": 9,
+        "unmeasurable": 30,
+        "lessonViolations": 3,
+        "chapterViolations": 1
+      },
+      {
+        "language": "spanish",
+        "lessonCount": 146,
+        "measurable": 84,
+        "unmeasurable": 62,
+        "lessonViolations": 0,
+        "chapterViolations": 4
+      },
+      {
+        "language": "tamil",
+        "lessonCount": 89,
+        "measurable": 57,
+        "unmeasurable": 32,
+        "lessonViolations": 1,
+        "chapterViolations": 1
+      },
+      {
+        "language": "telugu",
+        "lessonCount": 66,
+        "measurable": 36,
+        "unmeasurable": 30,
+        "lessonViolations": 1,
+        "chapterViolations": 0
+      },
+      {
+        "language": "urdu",
+        "lessonCount": 25,
+        "measurable": 21,
+        "unmeasurable": 4,
+        "lessonViolations": 3,
+        "chapterViolations": 3
+      }
+    ],
+    "script": {
+      "policy": {
+        "maxNewGlyphsPerLesson": 3,
+        "maxNewScriptSystemsPerLesson": 1
+      },
+      "lessons": [
+        {
+          "lessonId": "HI-W01-shirorekha-na-ma",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 12,
+          "sample": "खतनमरशसािेो्",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "MR-C01-dhanyavad",
+          "language": "marathi",
+          "chapter": 1,
+          "glyphs": 12,
+          "sample": "आदधनभयवहाीे्",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "RU-C01-da",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 12,
+          "sample": "Навдезйнрсту",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "GU-C01-aabhaar",
+          "language": "gujarati",
+          "chapter": 1,
+          "glyphs": 11,
+          "sample": "આદધનભયરવાૃ્",
+          "systems": [
+            "Gujarati"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "JA-C01-arigatou",
+          "language": "japanese",
+          "chapter": 1,
+          "glyphs": 10,
+          "sample": "あうかがしとりる有難",
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "JA-C01-gozaimasu",
+          "language": "japanese",
+          "chapter": 1,
+          "glyphs": 10,
+          "sample": "おごさざすっまゃ申言",
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "JA-C01-koohii",
+          "language": "japanese",
+          "chapter": 1,
+          "glyphs": 10,
+          "sample": "アイコトバパヒルンー",
+          "systems": [
+            "Hiragana",
+            "Katakana"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-W03-pulli-vanakkam",
+          "language": "tamil",
+          "chapter": 1,
+          "glyphs": 9,
+          "sample": "ஃபரளஷஸிீு",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C07-numbers-1-5",
+          "language": "kannada",
+          "chapter": 7,
+          "glyphs": 8,
+          "sample": "ಎಐಒ೧೨೩೪೫",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-C07-numbers-1-5",
+          "language": "tamil",
+          "chapter": 7,
+          "glyphs": 8,
+          "sample": "ஐஒூ௧௨௩௪௫",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C07-numbers-1-5",
+          "language": "telugu",
+          "chapter": 7,
+          "glyphs": 8,
+          "sample": "ఐఒూ౧౨౩౪౫",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "UR-C01-ji-han",
+          "language": "urdu",
+          "chapter": 1,
+          "glyphs": 8,
+          "sample": "اجرشکںہی",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "JA-C01-konnichiwa",
+          "language": "japanese",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "こちにわん今日",
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C01-dhanyavada",
+          "language": "kannada",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "ದಧನಯವಾ್",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C01-namaskaram",
+          "language": "malayalam",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "ംകനമരസാ",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C07-numbers-6-10",
+          "language": "malayalam",
+          "chapter": 7,
+          "glyphs": 7,
+          "sample": "ഏഴ൬൭൮൯൰",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C01-dhanyavadamulu",
+          "language": "telugu",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "దధమయలా్",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C07-numbers-6-10",
+          "language": "telugu",
+          "chapter": 7,
+          "glyphs": 7,
+          "sample": "ఆొ౦౬౭౮౯",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "AR-C01-as-salamu-alaykum",
+          "language": "arabic",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "سعكموي",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "BN-C02-alaap",
+          "language": "bengali",
+          "chapter": 2,
+          "glyphs": 6,
+          "sample": "গপভলেো",
+          "systems": [
+            "Bengali"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C01-practice",
+          "language": "kannada",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "ಗತಬಿೇೋ",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C07-numbers-6-10",
+          "language": "kannada",
+          "chapter": 7,
+          "glyphs": 6,
+          "sample": "ಆ೦೬೭೮೯",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C16-tingalugalu",
+          "language": "kannada",
+          "chapter": 16,
+          "glyphs": 6,
+          "sample": "ಖಘಜಠಢಫ",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C07-numbers-1-5",
+          "language": "malayalam",
+          "chapter": 7,
+          "glyphs": 6,
+          "sample": "ഒ൧൨൩൪൫",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C01-dhanvaad",
+          "language": "punjabi",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "ਦਧਨਵਾੰ",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C01-sat-sri-akal",
+          "language": "punjabi",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "ਅਕਰਲਿ੍",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C01-dhanyavada",
+          "language": "sanskrit",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "ःदधयवा",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C16-nelalu",
+          "language": "telugu",
+          "chapter": 16,
+          "glyphs": 6,
+          "sample": "ఖఘజఠఢఫ",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "AR-C01-marhaba",
+          "language": "arabic",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "بتثحر",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "BN-C01-achchha",
+          "language": "bengali",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "আচছা্",
+          "systems": [
+            "Bengali"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "BN-C01-dhonnobad",
+          "language": "bengali",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "দধনবয",
+          "systems": [
+            "Bengali"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "FA-C01-mamnoon",
+          "language": "persian",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "اسمنو",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "GU-C01-aavjo",
+          "language": "gujarati",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "ંજુેો",
+          "systems": [
+            "Gujarati"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "GU-C01-namaste",
+          "language": "gujarati",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "કછતમસ",
+          "systems": [
+            "Gujarati"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "HI-C01-alvida",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "अयलवु",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C01-illa",
+          "language": "malayalam",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "ഇഉടണല",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C01-practice",
+          "language": "malayalam",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "പയവശോ",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "MR-C02-anand",
+          "language": "marathi",
+          "chapter": 2,
+          "glyphs": 5,
+          "sample": "झटणलू",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "RU-C01-pozhaluysta",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "бжкло",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C02-anandah",
+          "language": "sanskrit",
+          "chapter": 2,
+          "glyphs": 5,
+          "sample": "ंटभषृ",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-C07-numbers-6-10",
+          "language": "tamil",
+          "chapter": 7,
+          "glyphs": 5,
+          "sample": "௬௭௮௯௰",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-W01-curves-va-ka",
+          "language": "tamil",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "கணமவ்",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C01-practice",
+          "language": "telugu",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "డతళిె",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "AR-W06-harakat-and-hamza",
+          "language": "arabic",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ًُّْ",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "HI-W05-virama-namaste",
+          "language": "hindi",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ंणहू",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C01-namaskara",
+          "language": "kannada",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "ಕಮರಸ",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C02-practice",
+          "language": "kannada",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ಂಅಣಷ",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C01-athe",
+          "language": "malayalam",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "അതെ്",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ML-C02-enre",
+          "language": "malayalam",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "എഞറൻ",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "MR-C01-namaskar",
+          "language": "marathi",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "ःकमस",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C01-namaste",
+          "language": "punjabi",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "ਤਮਸੇ",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C02-khushi",
+          "language": "punjabi",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ਈਖੂੋ",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "RU-C01-practice",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "ДЗПС",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "RU-C02-ya",
+          "language": "russian",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "Яфъѧ",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C01-am-na",
+          "language": "sanskrit",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "आनम्",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C03-kushalam",
+          "language": "sanskrit",
+          "chapter": 3,
+          "glyphs": 4,
+          "sample": "लशीु",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C06-numbers-1-5",
+          "language": "sanskrit",
+          "chapter": 6,
+          "glyphs": 4,
+          "sample": "एञणौ",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-C01-practice",
+          "language": "tamil",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "சயேோ",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C01-avunu",
+          "language": "telugu",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "అనవు",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "UR-C03-aap-tum-tu",
+          "language": "urdu",
+          "chapter": 3,
+          "glyphs": 4,
+          "sample": "آتوپ",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "ZH-C01-ni",
+          "language": "chinese",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "人亻你尔",
+          "systems": [
+            "Han"
+          ],
+          "budget": 3
+        }
+      ],
+      "systems": [
+        {
+          "lessonId": "JA-C01-arigatou",
+          "language": "japanese",
+          "chapter": 1,
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 1
+        },
+        {
+          "lessonId": "JA-C01-gozaimasu",
+          "language": "japanese",
+          "chapter": 1,
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 1
+        },
+        {
+          "lessonId": "JA-C01-hai",
+          "language": "japanese",
+          "chapter": 1,
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 1
+        },
+        {
+          "lessonId": "JA-C01-konnichiwa",
+          "language": "japanese",
+          "chapter": 1,
+          "systems": [
+            "Han",
+            "Hiragana"
+          ],
+          "budget": 1
+        },
+        {
+          "lessonId": "JA-C01-koohii",
+          "language": "japanese",
+          "chapter": 1,
+          "systems": [
+            "Hiragana",
+            "Katakana"
+          ],
+          "budget": 1
+        }
+      ],
+      "tracks": [
+        {
+          "language": "arabic",
+          "script": "arabic",
+          "latinScript": false,
+          "lessonCount": 77,
+          "totalGlyphs": 43,
+          "lessonViolations": 3,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 10
+        },
+        {
+          "language": "bengali",
+          "script": "bengali",
+          "latinScript": false,
+          "lessonCount": 37,
+          "totalGlyphs": 40,
+          "lessonViolations": 3,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "chinese",
+          "script": "chinese",
+          "latinScript": false,
+          "lessonCount": 7,
+          "totalGlyphs": 7,
+          "lessonViolations": 1,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "french",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 73,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "german",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 76,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "gujarati",
+          "script": "gujarati",
+          "latinScript": false,
+          "lessonCount": 39,
+          "totalGlyphs": 36,
+          "lessonViolations": 3,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 2
+        },
+        {
+          "language": "hindi",
+          "script": "devanagari",
+          "latinScript": false,
+          "lessonCount": 85,
+          "totalGlyphs": 55,
+          "lessonViolations": 3,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 8
+        },
+        {
+          "language": "italian",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 58,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "japanese",
+          "script": "japanese",
+          "latinScript": false,
+          "lessonCount": 8,
+          "totalGlyphs": 43,
+          "lessonViolations": 4,
+          "systemViolations": 5,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "kannada",
+          "script": "kannada",
+          "latinScript": false,
+          "lessonCount": 66,
+          "totalGlyphs": 64,
+          "lessonViolations": 7,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 22
+        },
+        {
+          "language": "latin",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 65,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "malayalam",
+          "script": "malayalam",
+          "latinScript": false,
+          "lessonCount": 70,
+          "totalGlyphs": 66,
+          "lessonViolations": 7,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 31
+        },
+        {
+          "language": "marathi",
+          "script": "devanagari",
+          "latinScript": false,
+          "lessonCount": 41,
+          "totalGlyphs": 43,
+          "lessonViolations": 3,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 1
+        },
+        {
+          "language": "persian",
+          "script": "perso-arabic",
+          "latinScript": false,
+          "lessonCount": 25,
+          "totalGlyphs": 26,
+          "lessonViolations": 1,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "portuguese",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 66,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 1
+        },
+        {
+          "language": "punjabi",
+          "script": "gurmukhi",
+          "latinScript": false,
+          "lessonCount": 39,
+          "totalGlyphs": 42,
+          "lessonViolations": 4,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "russian",
+          "script": "cyrillic",
+          "latinScript": false,
+          "lessonCount": 28,
+          "totalGlyphs": 49,
+          "lessonViolations": 4,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 0
+        },
+        {
+          "language": "sanskrit",
+          "script": "devanagari",
+          "latinScript": false,
+          "lessonCount": 39,
+          "totalGlyphs": 42,
+          "lessonViolations": 5,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 1
+        },
+        {
+          "language": "spanish",
+          "script": "latin",
+          "latinScript": true,
+          "lessonCount": 146,
+          "totalGlyphs": 0,
+          "lessonViolations": 0,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 1
+        },
+        {
+          "language": "tamil",
+          "script": "tamil",
+          "latinScript": false,
+          "lessonCount": 89,
+          "totalGlyphs": 50,
+          "lessonViolations": 5,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 21
+        },
+        {
+          "language": "telugu",
+          "script": "telugu",
+          "latinScript": false,
+          "lessonCount": 66,
+          "totalGlyphs": 60,
+          "lessonViolations": 6,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 20
+        },
+        {
+          "language": "urdu",
+          "script": "urdu-nastaliq",
+          "latinScript": false,
+          "lessonCount": 25,
+          "totalGlyphs": 27,
+          "lessonViolations": 2,
+          "systemViolations": 0,
+          "lessonsWithForeignScript": 1
+        }
+      ],
+      "summary": {
+        "lessonViolations": 61,
+        "systemViolations": 5,
+        "lessonsWithForeignScript": 119,
+        "maxForeignGlyphsInALesson": 26,
+        "steepestLesson": {
+          "lessonId": "HI-W01-shirorekha-na-ma",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 12,
+          "sample": "खतनमरशसािेो्",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        }
+      }
+    },
+    "summary": {
+      "lessonViolations": 40,
+      "chapterViolations": 25,
+      "unmeasurableLessons": 572,
+      "measurablePercent": 53,
+      "steepestLesson": {
+        "lessonId": "BN-C06-numbers-1-5",
+        "language": "bengali",
+        "chapter": 6,
+        "atoms": 6,
+        "budget": 3
+      }
     }
   },
   "modality": {
