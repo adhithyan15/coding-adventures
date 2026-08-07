@@ -1,4 +1,4 @@
-# Session Map — Gujarati Chapters 1–6
+# Session Map — Gujarati Chapters 1–7
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -70,6 +70,17 @@ lesson introduces exactly the letters that word needs.
 |---|---|---|---|
 | 32 | numbers-1-5 | એક, બે, ત્રણ, ચાર, પાંચ | retrieve the five forms and the headless-script clue; notice surprising *be* and *traṇ* |
 | 33 | number-histories | બે · ત્રણ | *be* continues *dvé* through *dv → bb → b*; *traṇ* regained an *r* after Prakrit lost it |
+
+## Chapter 7 — Six Verbs at the Core
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 34 | hovun | હોવું | "to be"; **-વું is a neuter ending** — every verb is named in the third gender. *hovũ* ← *bhavati* (English *be*); **chhe** is a different verb from Hindi *hai* |
+| 35 | javun | જવું | "to go" ← Sanskrit *yāti*; Prakrit turned word-initial *y-* into *j-*; stem + person + copula |
+| 36 | aavvun | આવવું | "to come" ← *āpayati*, root *āp-* "reach" (English *apt*, *couple*, **copula**); single *p* between vowels softened to *v* |
+| 37 | khaavun | ખાવું | "to eat" ← *khādati*; five living Indo-Aryan sisters and **no honest English cousin** |
+| 38 | jovun | જોવું | "to see"; one vowel sign away from *javũ*; origin flagged as probable, not proven |
+| 39 | jaanvun | જાણવું | "to know" ← *jānāti*, root *jñā-*, PIE \**gnō-* — *know, cunning, notice, diagnosis*. Chapter payoff |
 
 ## Next
 
