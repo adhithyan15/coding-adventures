@@ -1740,6 +1740,20 @@
       "tex": "malayalam/book/chapters/ch31-good-afternoon.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:6dce5556729f174a",
+      "lessonIds": [
+        "ML-C32-undu",
+        "ML-C32-pokuka",
+        "ML-C32-varuka",
+        "ML-C32-tinnuka",
+        "ML-C32-kaanuka",
+        "ML-C32-ariyuka"
+      ],
+      "tex": "malayalam/book/chapters/ch32-core-verbs.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:4b1e1c620ea3aa6a",

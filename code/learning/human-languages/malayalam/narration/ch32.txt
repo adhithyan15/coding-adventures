@@ -1,0 +1,261 @@
+Malayalam, chapter 32: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
+
+
+Lesson 1 of 6.
+ഉണ്ട് (uṇṭŭ) — "there is," and the machine inside every Malayalam verb.
+
+Warm-up.
+[pause 2 seconds]
+Thirty-one chapters of words. Now the engine room. English makes one verb, "to be," do three jobs. Malayalam uses three words.
+
+You'll want to know.
+ഉണ്ട് — uṇṭŭ — there is, there are; [someone] has.
+ഇരിക്കുക — irikkuka — to be somewhere, to stay, to sit.
+Chapter 2 gave you ആണ് (āṇŭ), the "is" that links two nouns: enṟe pēru Arun āṇŭ, "my name is Arun." ഉണ്ട് does a different job — existing and having: enikku oru sahōdaran uṇṭŭ, "to-me one brother there-is," which is how Malayalam says "I have a brother." ഇരിക്കുക is being in a place: ñān vīṭṭil irikkunnu, "I am at home."
+Identity, existence, location — and none stands in for another.
+
+Sounds you'll need: the letters in this word.
+ഉ (the standing vowel u) + ണ് + ട് becomes ഉണ്ട് (uṇṭŭ). Both consonants are retroflex — tongue curled back — and both have had their vowel stripped, so the word trails off on a half-swallowed ŭ: uṇ-ṭŭ. ഇരിക്കുക runs i-rik-ku-ka, with the doubled ക്ക held long.
+
+The word, taken apart.
+Both are native Dravidian, from the oldest layer, and the family split them between its daughters: Tamil kept இரு (iru), "be, stay"; Kannada kept the same word, ಇರು (iru); Telugu kept the other one, ఉండు (uṇḍu).
+Malayalam kept both, and gave each a job.
+
+Grammar Lens: two pieces, where Tamil has three.
+English changes a verb with words around it: I am, I was, I will be. Malayalam glues a piece onto the end:
+ഇരിക്ക് + ഉന്നു becomes ഇരിക്കുന്നു.
+irikk- (stay) + -unnu (happening now) becomes irikkunnu.
+Stem, then tense. Two slots, and that is the whole machine.
+Tamil glues on a third piece naming who acts: iru + -kkiṟ- + -ēṉ (I) becomes irukkiṟēṉ, "I am," against irukkiṟāṉ, "he is." Malayalam threw that slot away. Ñān irikkunnu, nī irikkunnu, avan irikkunnu — the verb never moves. Chapter 5 showed this with one verb; it holds for every Malayalam verb, and for no sister.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three jobs — "āṇŭ" is, "uṇṭŭ" there-is, "irikkuka" be somewhere]
+[pause 8 seconds for the answer]
+[your turn — say: "enikku oru sahōdaran uṇṭŭ" — I have a brother]
+[pause 8 seconds for the answer]
+[your turn — say: the two pieces — "irikk … unnu"]
+[pause 8 seconds for the answer]
+[your turn — say: one verb, three people — "ñān, nī, avan … irikkunnu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which be-word does Malayalam use for having something? (ഉണ്ട്, uṇṭŭ.) What are the two pieces of irikkunnu? (Stem and tense; there is no third piece.) How does the verb change between "I stay" and "he stays"? (It does not.) Next: the piece that carries time.
+
+
+Lesson 2 of 6.
+പോകുക (pōkuka) — "to go," and the piece that carries time.
+
+Warm-up.
+[pause 2 seconds]
+Stem, then tense. Hold the stem still and swap the second piece. That is the whole of Malayalam tense, and it is a shorter list than you expect.
+
+You'll want to know.
+പോകുക — pōkuka — to go.
+Chapter 4 met this verb in passing, on the way to a farewell. Here it goes to work. The dictionary form is the stem പോക്- (pōk-) plus -ഉക (-uka), the ending that means "to ___."
+[a table of 3 rows, read aloud]
+when: now. Malayalam: pōkunnu. the ending: -unnu.
+when: already. Malayalam: pōyi. the ending: -i.
+when: not yet. Malayalam: pōkuṁ. the ending: -uṁ.
+You have said the middle one already: the goodbye പോയി വരാം (pōyi varāṁ) opens with pōyi, "having gone."
+
+Sounds you'll need: the letters in this word.
+പോ (pa wearing the long-ō sign) + കു (ku) + ക (ka) becomes പോകുക (pōkuka). The ō is long and round; let it run.
+
+The word, taken apart.
+പോ- is native Dravidian, so old it has barely moved: Tamil போ (pō), Telugu పోవు (pōvu), the same verb.
+Kannada's everyday word is ಹೋಗು (hōgu), and that h is no different root. Old Dravidian p- softened to h- in Kannada — "ten" is Malayalam പത്ത് (pattŭ) against Kannada ಹತ್ತು (hattu), the very same swap.
+
+Grammar Lens: three forms are the whole conjugation.
+In most languages a tense is a list. English has I go / he goes. Tamil, Malayalam's closest sister, needs an ending for every person: pōgiṟēṉ ("I go"), pōgiṟāy ("you go"), pōgiṟāṉ ("he goes"), pōgiṟōm ("we go").
+Malayalam's present tense is one word long. Ñān pōkunnu, nī pōkunnu, avan pōkunnu, avar pōkunnu — I, you, he, they, and pōkunnu every time. So those three forms are not the start of a conjugation. They are the whole of it.
+That is the bargain. Nothing to memorise on the verb — and the pronoun in front can never be dropped, since it is now the only thing telling you who went.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pōkuka" — to go]
+[pause 8 seconds for the answer]
+[your turn — say: the three times — "pōkunnu … pōyi … pōkuṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair that shares one sound-law — "pattŭ … hattu", "pō … hōgu"]
+[pause 8 seconds for the answer]
+[your turn — say: four people, one verb — "ñān, nī, avan, avar … pōkunnu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I will go." (Ñān pōkuṁ.) How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you.
+
+
+Lesson 3 of 6.
+വരുക (varuka) — "to come," and a past that reshapes the stem.
+
+Warm-up.
+[pause 2 seconds]
+Pōkuka took its endings without a fuss. Its lifelong partner does not — and the difference sits in exactly one of the three tenses.
+
+You'll want to know.
+വരുക — varuka — to come.
+The stem is വരു- (varu-), and the command is shorter still: വാ! (vā!), "come!" (Chapter 4 met the dictionary form in its other common spelling, വരിക, varika; both name this verb.)
+Go and come are inseparable here. The everyday goodbye പോയി വരാം (pōyi varāṁ) is the two verbs holding hands — "having gone, I'll come" — and Malayalam has no plain farewell that leaves the coming back out.
+
+Sounds you'll need: the letters in this word.
+വ (va) + രു (ru) + ക (ka) becomes വരുക (varuka), three light beats. In the past form വന്നു (vannu) the ന്ന is a doubled n, held long: van-nu, not vanu.
+
+The word, taken apart.
+Native Dravidian, and every sister kept it — each reshaping the front of the word. Tamil has வா (vā) as the command and வரு- (varu-) as the stem; Kannada has ಬಾ (bā); Telugu has రా (rā).
+V, b, r: three regular reworkings of one old word, not three verbs. And Malayalam's vā / varu- pairing is Tamil's exactly, down to the two shapes — which is what "closest sister" means in practice.
+
+Grammar Lens: where Malayalam keeps its irregularity.
+Line the two verbs up:
+[a table of 3 rows, read aloud]
+tense: now. go: pōkunnu. come: varunnu.
+tense: already. go: pōyi. come: vannu.
+tense: not yet. go: pōkuṁ. come: varuṁ.
+Present and future are built the same way for both: stem, plus -unnu or -uṁ. The past is not — varu- collapses into vann-, and no rule would have told you so.
+That is Malayalam's whole irregularity budget, spent in one place. Once a verb's past is learned, nothing else about it can catch you out, because the missing person slot means there is no second, third or plural form waiting behind it. A Malayalam verb costs you three forms. A Tamil one costs three tenses times six persons.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the command — "vā!"]
+[pause 8 seconds for the answer]
+[your turn — say: the three times — "varunnu … vannu … varuṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair, past against past — "pōyi … vannu"]
+[pause 8 seconds for the answer]
+[your turn — say: the goodbye you now understand — "pōyi varāṁ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which tense of varuka is the irregular one? (The past — vannu.) Say "I will come." (Ñān varuṁ.) Are Kannada bā and Telugu rā different verbs from varuka? (No — one old Dravidian word, reshaped three ways.) Next: a verb Malayalam kept where Tamil built a new one.
+
+
+Lesson 4 of 6.
+തിന്നുക (tinnuka) — "to eat," and the ending that names a verb's homeland.
+
+Warm-up.
+[pause 2 seconds]
+Malayalam took in a great deal of Sanskrit. Eating is one of the places it never reached.
+
+You'll want to know.
+തിന്നുക — tinnuka — to eat.
+ഉണ്ണുക — uṇṇuka — to eat a meal, to dine.
+Two inherited verbs, both alive. Tinnuka is eating in general. Uṇṇuka is sitting down to a proper meal, and gives the noun ഊണ് (ūṇŭ), "lunch." The tenses are regular: tinnunnu, tinnu, tinnuṁ.
+
+Sounds you'll need: the letters in this word.
+തി (ti) + ന്നു (a doubled nn with u) + ക (ka) becomes തിന്നുക (tinnuka), with the long n you held in vannu. In ഉണ്ണുക that doubled letter is retroflex ണ്ണ (ṇṇ): uṇ-ṇu-ka.
+
+The word, taken apart.
+തിന്നുക (tinnuka) goes back to Dravidian tiṉ-, and the family kept it: Telugu తిను (tinu), Kannada ತಿನ್ನು (tinnu).
+Tamil kept tiṉ too, as தின், but narrowed it to chewing and built a new everyday word from two of its own: சாப்பிடு (sāppiḍu) is sāppu ("food") plus iḍu ("to put"). Put food. Tamil's ordinary eat-verb is home-made; Malayalam's is the family's original.
+
+Grammar Lens: -ഉക and -ഇക്കുക, two doors into the verb.
+Every verb so far has ended in -ഉക (-uka): tinnuka, pōkuka, varuka, irikkuka. Chapter 5's "to speak" did not — it was സംസാരിക്കുക (saṁsārikkuka), with a longer -ഇക്കുക (-ikkuka). That difference is a passport stamp:
+[a table of 2 rows, read aloud]
+ending: -ഉക -uka. what it marks: an inherited Dravidian verb.
+ending: -ഇക്കുക -ikkuka. what it marks: a Sanskrit word made into a verb.
+Saṁsārikkuka is built on Sanskrit saṁsāra; Chapter 9's ക്ഷമിക്കുക (kṣamikkuka, "to forgive") on kṣamā. Malayalam needed one dependable way to make a verb of any borrowed noun, and -ഇക്കുക is it: a naturalisation ceremony you can hear.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the two eat-verbs — "tinnuka" (eat) and "uṇṇuka" (dine)]
+[pause 8 seconds for the answer]
+[your turn — say: the three times — "tinnunnu … tinnu … tinnuṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins that kept the root — "tinu … tinnu … tinnuka"]
+[pause 8 seconds for the answer]
+[your turn — say: the two endings — "-uka is ours, -ikkuka came from Sanskrit"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Did Malayalam borrow its everyday word for eating? (No — Tamil is the one that built a new compound.) Which verb is for sitting down to a meal? (ഉണ്ണുക, uṇṇuka.) What does -ikkuka tell you? (That the verb was made from a Sanskrit word.) Next: a verb Malayalam kept where all three sisters walked away.
+
+
+Lesson 5 of 6.
+കാണുക (kāṇuka) — "to see," and everything else the second slot can hold.
+
+Warm-up.
+[pause 2 seconds]
+Two slots, and the second one has only carried tense so far. It holds a good deal more — and you have used one of its other endings since Chapter 4.
+
+You'll want to know.
+കാണുക — kāṇuka — to see, to meet.
+Present kāṇunnu, future kāṇuṁ, and a past that reshapes the way vannu did: കണ്ടു (kaṇṭu), "saw."
+You have said this verb in a goodbye. നാളെ കാണാം (nāḷe kāṇāṁ) — "see you tomorrow" — is nāḷe ("tomorrow") plus this stem with a different ending.
+
+Sounds you'll need: the letters in this word.
+കാ (ka with the long-ā sign) + ണു (retroflex ṇu) + ക (ka) becomes കാണുക (kāṇuka). That ണ is the letter that ended uṇṭŭ: tongue curled back to the roof of the mouth.
+
+The word, taken apart.
+Kāṇ- is the family's own see-root, inherited from Proto-Dravidian — and here the four sisters part company. Tamil says பார் (pār), keeping காண் (kāṇ) for formal writing; Kannada says ನೋಡು (nōḍu), keeping ಕಾಣು (kāṇu) alongside; Telugu says చూడు (cūḍu).
+Malayalam simply kept the inherited word in daily use. Twice now — tinnuka and kāṇuka — the youngest of the four sisters turns out to be the conservative one.
+
+Grammar Lens: tense is only one thing that ending can be.
+Hold kāṇ- still and change what follows it:
+[a table of 5 rows, read aloud]
+ending on kāṇ-: kāṇunnu. what it says: sees, is seeing.
+ending on kāṇ-: kāṇuṁ. what it says: will see.
+ending on kāṇ-: kāṇāṁ. what it says: may see; let's see.
+ending on kāṇ-: kāṇaṇaṁ. what it says: must see.
+ending on kāṇ-: kāṇarutŭ. what it says: must not see.
+Time, permission, obligation, prohibition — all in the same single slot. This is where the person ending went: Malayalam gave that slot up and spent the room on mood instead.
+And the payoff lands on every line. Kāṇaṇaṁ is "I must see," "you must see" and "they must see" without changing a letter. In Tamil each of those five ideas must still pick a person ending before it can be said aloud.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kāṇuka" — to see — and the past, "kaṇṭu"]
+[pause 8 seconds for the answer]
+[your turn — say: the farewell you now understand — "nāḷe kāṇāṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the ladder — "kāṇunnu … kāṇuṁ … kāṇāṁ … kāṇaṇaṁ … kāṇarutŭ"]
+[pause 8 seconds for the answer]
+[your turn — say: one form, three people — "ñān, nī, avar … kāṇaṇaṁ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the four sisters kept the inherited see-word for everyday use? (Malayalam — the other three each chose a different word.) Say "must see" and "must not see." (Kāṇaṇaṁ; kāṇarutŭ.) What besides tense does that second slot carry? (Mood — permission, obligation, prohibition.) Next: the verb that moves the person out of the sentence altogether.
+
+
+Lesson 6 of 6.
+അറിയുക (aṟiyuka) — "to know," the verb that takes no subject.
+
+Warm-up.
+[pause 2 seconds]
+Five verbs, and every one let you stand in front of it as ñān, "I." The last one will not — and Chapter 6 already handed you the sentence it makes.
+
+You'll want to know.
+അറിയുക — aṟiyuka — to know.
+Present aṟiyunnu, past അറിഞ്ഞു (aṟiññu), and the form you have met: അറിയാം (aṟiyāṁ), with the -āṁ ending of the last lesson.
+Native Dravidian, and the sisters kept the root — Tamil அறி (aṟi), Kannada ಅರಿ (ari) — though for everyday knowing each reached elsewhere: Tamil தெரியும் (teriyum), Telugu తెలుసు (telusu). Malayalam stayed with aṟi-.
+
+Sounds you'll need: the letters in this word.
+അ (the standing vowel a) + റി (ṟi) + യു (yu) + ക (ka) becomes അറിയുക (aṟiyuka). The റ is Malayalam's hard, tapped ṟ, a different letter and a different sound from the soft ര (r) of varuka.
+
+Grammar Lens: the knower leaves the subject slot.
+എനിക്ക് മലയാളം അറിയാം. — enikku malayāḷaṁ aṟiyāṁ — "I know Malayalam."
+Chapter 6 gave you that sentence whole. Here is the verb inside it. You cannot say ñān malayāḷaṁ aṟiyāṁ: the one who knows is not the subject. That person moves into the dative, the "to me" case.
+enikku aṟiyāṁ — it is known to me.
+ninakku aṟiyāṁ — it is known to you.
+avanŭ aṟiyāṁ — it is known to him.
+Malayalam treats knowing as something that arrives at you rather than something you do, and marks it with the pronoun's case.
+That is the chapter's closing symmetry. With the other five verbs the pronoun in front was the only thing telling you who acted, because the verb carried no person. Here it has changed case, so the sentence has no subject at all. Malayalam took the person off the verb; this construction takes it out of the subject slot too.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "aṟiyuka" — to know — and the past, "aṟiññu"]
+[pause 8 seconds for the answer]
+[your turn — say: "enikku malayāḷaṁ aṟiyāṁ" — I know Malayalam]
+[pause 8 seconds for the answer]
+[your turn — say: three knowers, one verb — "enikku … ninakku … avanŭ aṟiyāṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: the chapter's six — "uṇṭŭ, pōkunnu, varunnu, tinnunnu, kāṇunnu, aṟiyunnu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I know Malayalam," and name the case the "I" wears. (Enikku malayāḷaṁ aṟiyāṁ — the dative.) Name the two slots of a Malayalam verb. (Stem and tense, with no third slot for person.) Which of the six verbs has an irregular past? (Varuka becomes vannu, and kāṇuka becomes kaṇṭu.) Which be-word says "I have"? (ഉണ്ട്, uṇṭŭ.) How many forms has the Malayalam present tense, for any verb at all? (One.)

@@ -56,8 +56,18 @@ pieces taught before the whole; and a book you can read straight through.
 - **Chapters 23–31 — Dayparts and greetings**
   ([`lessons/ML-C{23..31}-*`](./lessons/)): native and Sanskrit day/night
   words, morning, evening, afternoon, and their register-aware greetings.
+- **Chapter 32 — The Core Verbs** ([`lessons/ML-C32-*`](./lessons/)): uṇṭŭ /
+  irikkuka (be), pōkuka (go), varuka (come), tinnuka (eat), kāṇuka (see),
+  aṟiyuka (know) — the track's first A2 chapter, and the one that names
+  Malayalam's signature. A Malayalam verb is **stem plus one ending, with no
+  person slot at all**: *ñān pōkunnu*, *nī pōkunnu*, *avan pōkunnu*, one form
+  for everybody, where Tamil needs *pōgiṟēṉ / pōgiṟāy / pōgiṟāṉ*. The room that
+  frees up goes to **mood** (*kāṇāṁ*, *kāṇaṇaṁ*, *kāṇarutŭ*), the irregularity
+  budget is spent entirely on the past (*vannu*, *kaṇṭu*), and the chapter
+  closes on **അറിയുക**, which will not take a subject at all. In the book, and
+  drivable end to end.
 
-All thirty-three later lessons remain below five effective minutes.
+All thirty-nine later lessons remain below five effective minutes.
 
 ## Book / fonts
 
@@ -87,7 +97,7 @@ finishing that chapter lets them do, and names the lesson that proves it:
 
 The file is **authored intent**, not a derived cache — no validator may rewrite
 it, and it is derived from the lessons themselves rather than from `roadmap.md`,
-which still lags Chapters 6–31. Chapters 6–31 are covered. Chapters 1–5 are
+which still lags Chapters 6–32. Chapters 6–32 are covered. Chapters 1–5 are
 deliberately left out: their recap lessons are still schema v1 with no declared
 knowledge atoms, so a payoff there could only be invented. That absence is
 honest, measurable debt and is reported as such.

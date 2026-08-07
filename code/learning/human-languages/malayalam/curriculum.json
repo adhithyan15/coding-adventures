@@ -320,6 +320,21 @@
         "ML-EXT-025-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-026",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ML-C32-undu",
+        "ML-C32-pokuka",
+        "ML-C32-varuka",
+        "ML-C32-tinnuka",
+        "ML-C32-kaanuka",
+        "ML-C32-ariyuka"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -440,20 +455,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "ML-PATH-026"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -465,7 +477,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",

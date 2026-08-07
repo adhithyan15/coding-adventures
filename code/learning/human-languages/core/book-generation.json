@@ -1164,6 +1164,14 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ml-core-verbs",
+      "output": "malayalam/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "arabic",
       "chapter": 3,
       "title": "How Are You?",
