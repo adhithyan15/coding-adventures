@@ -2315,6 +2315,24 @@
       "scriptCommand": "mr"
     },
     {
+      "language": "marathi",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:mr-mind-and-page",
+      "output": "marathi/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:mr-doing-verbs",
+      "output": "marathi/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "title": "Numbers One to Five",

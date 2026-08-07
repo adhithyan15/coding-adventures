@@ -4194,6 +4194,40 @@
       "jsonHash": "fnv1a64:2fc9e11dcb4afe37"
     },
     {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c7935a25fd2daf52",
+      "lessonIds": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch08.txt",
+      "json": "marathi/narration/ch08.json",
+      "textHash": "fnv1a64:1c553c88cec93321",
+      "jsonHash": "fnv1a64:9ac8c9c5e51ccff0"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0d8a362e6a162877",
+      "lessonIds": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch09.txt",
+      "json": "marathi/narration/ch09.json",
+      "textHash": "fnv1a64:e7df235d7313dbff",
+      "jsonHash": "fnv1a64:9ad2a0f8b708dd7d"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",

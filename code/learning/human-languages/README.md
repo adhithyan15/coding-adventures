@@ -108,7 +108,7 @@ edition is authored.
 | [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
 | [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1–30 authored; Chapters 3–30 canonical/generated for app + book; first track to realize core `VERB-*` concepts and the first to reach A2 |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1–33 authored; Chapters 6–33 canonical/generated for app + book; 11 inline writing steps |
-| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1-6 authored (lessons + book) |
+| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated; Ch. 7–9 = 14 core verbs, 98% drivable) |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali (vendored font) | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated; Ch. 7–9 = 14 core verbs, 98% drivable) |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |
