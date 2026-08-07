@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4710f7f897390137",
+  "sourceHash": "fnv1a64:0b24ec80e60f9715",
   "summary": {
-    "totalLessons": 1249,
-    "voice": 848,
+    "totalLessons": 1257,
+    "voice": 856,
     "sight": 348,
     "pen": 53,
-    "drivableLessons": 848,
+    "drivableLessons": 856,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 400,
-    "drivablePrefixTotal": 679,
-    "fullyDrivableChapters": 276,
+    "chapterCount": 402,
+    "drivablePrefixTotal": 687,
+    "fullyDrivableChapters": 278,
     "unstartableChapters": 90,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -1094,12 +1094,12 @@
     },
     {
       "language": "german",
-      "lessonCount": 76,
-      "voice": 65,
+      "lessonCount": 84,
+      "voice": 73,
       "sight": 8,
       "pen": 3,
-      "drivablePercent": 86,
-      "drivablePrefixTotal": 60,
+      "drivablePercent": 87,
+      "drivablePrefixTotal": 68,
       "modalities": [
         "voice",
         "sight",
@@ -1513,6 +1513,44 @@
           "drivable": true,
           "drivableLessonIds": [
             "GE-C23-gruen-gelb"
+          ]
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C24-denken",
+            "GE-C24-verstehen",
+            "GE-C24-lesen",
+            "GE-C24-schreiben"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C25-nehmen",
+            "GE-C25-fragen",
+            "GE-C25-helfen",
+            "GE-C25-moegen-lieben"
           ]
         }
       ]
@@ -10589,6 +10627,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:9e76b587bcf9af4a"
+    },
+    {
+      "id": "GE-C24-denken",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2a536fa10cc315c"
+    },
+    {
+      "id": "GE-C24-verstehen",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d191bf8f3dd5ffe5"
+    },
+    {
+      "id": "GE-C24-lesen",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b1835f7b8149d89"
+    },
+    {
+      "id": "GE-C24-schreiben",
+      "language": "german",
+      "chapter": 24,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cecd7771b325637"
+    },
+    {
+      "id": "GE-C25-nehmen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c458e7582ab4184d"
+    },
+    {
+      "id": "GE-C25-fragen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1b9b6a2b8bdc8ca"
+    },
+    {
+      "id": "GE-C25-helfen",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ea8944cb396d1cc"
+    },
+    {
+      "id": "GE-C25-moegen-lieben",
+      "language": "german",
+      "chapter": 25,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc777dd3f6fad6ed"
     },
     {
       "id": "GU-C01-aabhaar",

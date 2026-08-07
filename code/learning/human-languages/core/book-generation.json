@@ -559,6 +559,20 @@
       "output": "german/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "german",
+      "chapter": 24,
+      "title": "Verbs of the Mind",
+      "label": "ch:ge-mind-verbs",
+      "output": "german/book/chapters/ch24-mind-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ge-doing-verbs",
+      "output": "german/book/chapters/ch25-doing-verbs.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",

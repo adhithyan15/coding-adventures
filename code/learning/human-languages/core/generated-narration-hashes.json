@@ -1366,6 +1366,40 @@
       "jsonHash": "fnv1a64:f25b61bea2d51d71"
     },
     {
+      "language": "german",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:1e17f161dd63d405",
+      "lessonIds": [
+        "GE-C24-denken",
+        "GE-C24-verstehen",
+        "GE-C24-lesen",
+        "GE-C24-schreiben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch24.txt",
+      "json": "german/narration/ch24.json",
+      "textHash": "fnv1a64:ac105e0ff17b46e8",
+      "jsonHash": "fnv1a64:6f43c56d98cbb29d"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:936bd6825f20b25f",
+      "lessonIds": [
+        "GE-C25-nehmen",
+        "GE-C25-fragen",
+        "GE-C25-helfen",
+        "GE-C25-moegen-lieben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch25.txt",
+      "json": "german/narration/ch25.json",
+      "textHash": "fnv1a64:72864248825bbdc5",
+      "jsonHash": "fnv1a64:d36bf33155a0f091"
+    },
+    {
       "language": "gujarati",
       "chapter": 1,
       "sourceHash": "fnv1a64:08fb66dea407c28f",
