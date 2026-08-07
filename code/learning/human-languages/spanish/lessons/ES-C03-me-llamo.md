@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-ME-LLAMO, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]
 practises:
-  knowledge: [ES-LEX-ME, ES-LEX-LLAMO, ES-LEX-ME-LLAMO, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]
+  knowledge: [ES-LEX-ME, ES-LEX-LLAMO, ES-LEX-ME-LLAMO, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-FIRST-PERSON-VERB]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -41,13 +41,13 @@ introduce yourself. But notice Spanish doesn't say "my name is" at all.
 - [me](./ES-C03-me.md) · [llamo](./ES-C03-llamar.md)
 
 ## The word, taken apart — by assembling it
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-FIRST-PERSON-VERB] -->
 
 **me llamo** = **me** ("myself") + **llamo** ("I call") = literally **"I call
 myself."** Then the name: *Me llamo Susana* — "I call myself Susan."
 
 ## Grammar Lens: reflexive verbs
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN] -->
 
 When the action loops back onto the person doing it — you call *yourself* —
 the verb is **reflexive**, and Spanish marks it with that little pronoun in

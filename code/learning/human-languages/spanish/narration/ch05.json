@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cff622156693b783",
+  "sourceHash": "fnv1a64:ebc64822725a1f4d",
   "lessons": [
     {
       "id": "ES-C05-adios",
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77d7a5f501080017",
+      "sourceHash": "fnv1a64:67d43bf4b728ac2e",
       "notice": null,
       "blocks": [
         {
@@ -709,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:512b57b48ebad954",
+      "sourceHash": "fnv1a64:c022f19f780530c4",
       "notice": null,
       "blocks": [
         {

@@ -2178,7 +2178,7 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c33320f1373d714f",
+      "sourceHash": "fnv1a64:cca681cba079b8ff",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -2200,7 +2200,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:725d6b137377bf9c",
+      "sourceHash": "fnv1a64:e141ae5a2efc8e27",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -2223,7 +2223,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:cff622156693b783",
+      "sourceHash": "fnv1a64:ebc64822725a1f4d",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -2238,7 +2238,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4fe3507a54682e0b",
+      "sourceHash": "fnv1a64:ef479098b3b701b3",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",

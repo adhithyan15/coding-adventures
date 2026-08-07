@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:725d6b137377bf9c",
+  "sourceHash": "fnv1a64:e141ae5a2efc8e27",
   "lessons": [
     {
       "id": "ES-C04-gracias",
@@ -686,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec2185a3c64d23ae",
+      "sourceHash": "fnv1a64:8bb8f60531308827",
       "notice": null,
       "blocks": [
         {
@@ -976,7 +976,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5cf5002e53d936",
+      "sourceHash": "fnv1a64:af6610ef4fcc2317",
       "notice": null,
       "blocks": [
         {
@@ -1239,7 +1239,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:fcfbb52aee30c7f8",
+      "sourceHash": "fnv1a64:00c35b0e1c97c4c6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1771,7 +1771,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5df9c6a05264f0ad",
+      "sourceHash": "fnv1a64:cc42e88629ebdfaf",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]
+  knowledge: [ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS, ES-LEX-ADIOS, ES-PRAGMATICS-FINAL-FAREWELL, ES-ETYMON-HATTA, ES-GRAMMAR-HASTA-ENDPOINT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -44,7 +44,7 @@ today you add **luego** ("later"), and it has a very Latin backstory.
 - The whole phrase: *AHS-tah LWEH-goh*.
 
 ## The word, taken apart — the phrase
-<!-- hl-knowledge: introduces=[ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]; assesses=[ES-ETYMON-HATTA, ES-GRAMMAR-HASTA-ENDPOINT] -->
 
 > **hasta luego** = "until later" → "see you later."
 
@@ -71,7 +71,7 @@ the other two this chapter:
 | **hasta pronto** | soon | you expect to meet again shortly |
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS, ES-LEX-ADIOS, ES-PRAGMATICS-FINAL-FAREWELL] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hasta luego" — *AHS-tah LWEH-goh*]

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]
 practises:
-  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM]
+  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM, ES-GRAMMAR-PRO-DROP]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,7 +78,7 @@ Notice you didn't learn a new ending — that's the point. **One template, every
 regular -ar verb.**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM, ES-GRAMMAR-PRO-DROP] -->
 
 [PAUSE 1s]
 - [YOU SAY: "trabajar" — *tra-ba-HAR*, raspy *j*]

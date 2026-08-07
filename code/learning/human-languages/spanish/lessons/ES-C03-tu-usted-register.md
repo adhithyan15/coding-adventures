@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]
 practises:
-  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-TU-THOU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -42,7 +42,7 @@ neutral.
 - [tú / usted](./ES-C03-tu-usted.md) — the two words themselves.
 
 ## Why it's said this way: the layer English dropped
-<!-- hl-knowledge: introduces=[ES-REGISTER-TU-USTED]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-REGISTER-TU-USTED]; assesses=[ES-ETYMON-TU-THOU] -->
 
 *Tú* and *usted* do not differ in **meaning** — both are "you," singular,
 one person. They differ in **register**: the social distance you are

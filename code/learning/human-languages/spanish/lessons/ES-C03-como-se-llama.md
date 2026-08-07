@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-COMO-SE-LLAMA]
 practises:
-  knowledge: [ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO]
+  knowledge: [ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON, ES-SCRIPT-INVERTED-QUESTION]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -43,7 +43,7 @@ two-way exchange.
   · [usted](./ES-C03-tu-usted.md)
 
 ## The word, taken apart — by assembling it
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-REFLEXIVE-THIRD-PERSON, ES-SCRIPT-INVERTED-QUESTION] -->
 
 **¿Cómo se llama usted?** = *cómo* ("how") + *se llama* ("do you-formal call
 yourself") + *usted* ("you," formal).

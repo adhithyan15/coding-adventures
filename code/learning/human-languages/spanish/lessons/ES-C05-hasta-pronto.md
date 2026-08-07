@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]
+  knowledge: [ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS, ES-LEX-LUEGO, ES-LEX-MANANA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -79,7 +79,7 @@ You now have Spanish's three soft goodbyes, sharpest to vaguest in time:
 - [YOU SAY: the trio — hasta pronto / hasta luego / hasta mañana]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS, ES-LEX-LUEGO, ES-LEX-MANANA] -->
 
 [PAUSE 3s] What does *hasta pronto* mean, and *pronto*'s English twin? ("Until
 soon"; *prompt*.) What Latin word is it from, and its literal sense? (*promptus*,

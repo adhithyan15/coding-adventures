@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "The First Verbs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4fe3507a54682e0b",
+  "sourceHash": "fnv1a64:ef479098b3b701b3",
   "lessons": [
     {
       "id": "ES-C06-cafe",
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:045c7903c73d446d",
+      "sourceHash": "fnv1a64:97af627f6454e1eb",
       "notice": null,
       "blocks": [
         {
@@ -1157,7 +1157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5688a6936f544445",
+      "sourceHash": "fnv1a64:6a403bb27ffc266d",
       "notice": null,
       "blocks": [
         {

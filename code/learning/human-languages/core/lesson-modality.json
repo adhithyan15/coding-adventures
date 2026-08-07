@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a2a56c534299bf00",
+  "sourceHash": "fnv1a64:62268cad7a93b873",
   "summary": {
     "totalLessons": 1249,
     "voice": 848,
@@ -19172,7 +19172,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad8563efb4aff02e"
+      "sourceHash": "fnv1a64:15d4ae4f57ab020b"
     },
     {
       "id": "ES-C03-tu-usted",
@@ -19198,7 +19198,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e4c276351c8a68d"
+      "sourceHash": "fnv1a64:e1ccfd229de2a3fd"
     },
     {
       "id": "ES-C03-usted-origin",
@@ -19277,7 +19277,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8579507a71fa8de4"
+      "sourceHash": "fnv1a64:165a5c83e387b09c"
     },
     {
       "id": "ES-C03-mucho",
@@ -19394,7 +19394,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec2185a3c64d23ae"
+      "sourceHash": "fnv1a64:8bb8f60531308827"
     },
     {
       "id": "ES-C04-regular",
@@ -19420,7 +19420,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5cf5002e53d936"
+      "sourceHash": "fnv1a64:af6610ef4fcc2317"
     },
     {
       "id": "ES-W01-acento",
@@ -19447,7 +19447,7 @@
       "reasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:fcfbb52aee30c7f8"
+      "sourceHash": "fnv1a64:00c35b0e1c97c4c6"
     },
     {
       "id": "ES-W02-enye",
@@ -19503,7 +19503,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5df9c6a05264f0ad"
+      "sourceHash": "fnv1a64:cc42e88629ebdfaf"
     },
     {
       "id": "ES-C04-practice",
@@ -19568,7 +19568,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77d7a5f501080017"
+      "sourceHash": "fnv1a64:67d43bf4b728ac2e"
     },
     {
       "id": "ES-C05-hasta-manana",
@@ -19594,7 +19594,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:512b57b48ebad954"
+      "sourceHash": "fnv1a64:c022f19f780530c4"
     },
     {
       "id": "ES-C05-practice",
@@ -19673,7 +19673,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:045c7903c73d446d"
+      "sourceHash": "fnv1a64:97af627f6454e1eb"
     },
     {
       "id": "ES-C06-estudiar",
@@ -19725,7 +19725,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5688a6936f544445"
+      "sourceHash": "fnv1a64:6a403bb27ffc266d"
     },
     {
       "id": "ES-C07-beber",
