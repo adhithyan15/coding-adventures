@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:8381798e445fbd20",
   "summary": {
-    "totalLessons": 1345,
+    "totalLessons": 1353,
     "voice": 893,
-    "sight": 399,
+    "sight": 407,
     "pen": 53,
     "drivableLessons": 893,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 424,
+    "chapterCount": 426,
     "drivablePrefixTotal": 710,
     "fullyDrivableChapters": 285,
-    "unstartableChapters": 102,
+    "unstartableChapters": 104,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -5153,11 +5153,11 @@
     },
     {
       "language": "punjabi",
-      "lessonCount": 39,
+      "lessonCount": 47,
       "voice": 17,
-      "sight": 22,
+      "sight": 30,
       "pen": 0,
-      "drivablePercent": 44,
+      "drivablePercent": 36,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -5276,6 +5276,34 @@
             "PA-C07-vekhna",
             "PA-C07-janna"
           ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "PA-C08-sochna",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "PA-C09-laina",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -19330,6 +19358,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:720de68e6041f13e"
+    },
+    {
+      "id": "PA-C08-sochna",
+      "language": "punjabi",
+      "chapter": 8,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a9a4fa8645386d68"
+    },
+    {
+      "id": "PA-C08-samajhna",
+      "language": "punjabi",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dbc09d98b1506dd6"
+    },
+    {
+      "id": "PA-C08-parhna",
+      "language": "punjabi",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f872b6ca6fea56e6"
+    },
+    {
+      "id": "PA-C08-likhna",
+      "language": "punjabi",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6dfd8d54df7e6694"
+    },
+    {
+      "id": "PA-C09-laina",
+      "language": "punjabi",
+      "chapter": 9,
+      "sequence": 460,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ba5e85879b8768cb"
+    },
+    {
+      "id": "PA-C09-puchhna",
+      "language": "punjabi",
+      "chapter": 9,
+      "sequence": 470,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:64526add00dafcd0"
+    },
+    {
+      "id": "PA-C09-madad-karna",
+      "language": "punjabi",
+      "chapter": 9,
+      "sequence": 480,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fe20dd4c14e2913b"
+    },
+    {
+      "id": "PA-C09-pasand",
+      "language": "punjabi",
+      "chapter": 9,
+      "sequence": 490,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cf1e6755d4424a40"
     },
     {
       "id": "RU-C01-da",

@@ -139,6 +139,36 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "PA-PATH-012",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-012-MIND-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-013",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-013-DOING-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -252,7 +282,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "PA-PATH-011"
+        "PA-PATH-011",
+        "PA-PATH-012",
+        "PA-PATH-013"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -262,14 +294,9 @@
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -283,14 +310,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
@@ -359,6 +383,34 @@
       "prerequisites": [],
       "lessons": [
         "PA-C06-panj-convergence"
+      ]
+    },
+    {
+      "id": "PA-EXT-012-MIND-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Punjabi, hear the falling tone in the two of those verbs that carry one, and name what each of the four roots meant before it named a mental act.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ]
+    },
+    {
+      "id": "PA-EXT-013-DOING-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
       ]
     },
     {

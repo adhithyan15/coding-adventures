@@ -82,6 +82,24 @@ word needs.
 | 38 | vekhna | ਵੇਖਣਾ | "to see" ← *prekṣate* / *īkṣ-* ← *akṣi* "eye" → English *eye*, *optic*, *window* |
 | 39 | janna | ਜਾਣਨਾ | **payoff** — "to know" ← *jñā-* → English *know*; one held *n* from *jāṇā* |
 
+## Chapter 8 — The Mind, the Page, and the Falling Tone
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 40 | sochna | ਸੋਚਣਾ | "to think" ← *śocyate* / *śuc-* "burn, grieve"; the root behind *śoka* and **Aśoka** |
+| 41 | samajhna | ਸਮਝਣਾ | "to understand" ← *sambudhyate* / *budh-* "wake" → **Buddha**; ਝ heard as a **falling** tone |
+| 42 | parhna | ਪੜ੍ਹਨਾ | "to read" ← *paṭhati* "recite aloud"; the **subjoined ਹ** in ੜ੍ਹ |
+| 43 | likhna | ਲਿਖਣਾ | **payoff** — "to write" ← *likhati* "scratch"; *maiṁ panjābī likhdā hāṁ* |
+
+## Chapter 9 — Taking, Asking, Helping, and What Pleases You
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 44 | laina | ਲੈਣਾ | "to take" ← *labhate* → *lahaï* → *lai*; a breathy *bh* worn away to nothing |
+| 45 | puchhna | ਪੁੱਛਣਾ | "to ask" ← *pṛcchati* ← PIE *preḱ- → English *pray*, *precarious*; cousin to Persian *porsīdan* |
+| 46 | madad-karna | ਮਦਦ ਕਰਨਾ | "to help" — Arabic *madad* (root m-d-d "extend") through Persian, plus noun + *karnā* |
+| 47 | pasand | ਪਸੰਦ | **payoff** — Persian noun, not a verb; *mainū̃ panjābī pasand hai* |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*).

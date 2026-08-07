@@ -54,7 +54,25 @@ before the whole; and a book you can read straight through.
   is one held *n* away from "go" and the same word as English *know*. All six
   are voice-only lessons. In the book.
 
-Chapters 1–7 are in the book.
+- **Chapter 8 — The Mind, the Page, and the Falling Tone**
+  ([`lessons/PA-C08-*`](./lessons/)): sochṇā, samajhṇā, paṛhnā, likhṇā — think,
+  understand, read, write, and every root named something physical first
+  (burning, waking, reciting aloud, scratching). The chapter pays the second
+  half of the tone debt: **ਝ** and **ੜ੍ਹ** are not word-initial, so instead of
+  *kòṛā*'s low rise the pitch goes **high and falls** — *samájṇā*, *páṛnā*. It
+  also teaches the **subjoined ਹ**, the first Gurmukhi mark that hangs below a
+  letter rather than from the top line. Payoff: *maiṁ panjābī likhdā hāṁ*. In
+  the book.
+- **Chapter 9 — Taking, Asking, Helping, and What Pleases You**
+  ([`lessons/PA-C09-*`](./lessons/)): laiṇā, puchhṇā, madad karnā, pasand. The
+  two-vocabularies thread stops being an assertion and becomes a test:
+  *puchhṇā* and Persian *porsīdan* look nothing alike and are cousins;
+  **ਮਦਦ** is a real Arabic borrowing through Persian, where Chapter 6's *panj*
+  was not; **ਪਸੰਦ** is Persian *and* a noun, so it cannot carry the liker —
+  hence **ਮੈਨੂੰ** and *mainū̃ panjābī pasand hai*. Payoff: that sentence, with
+  any infinitive swapped into its middle. In the book.
+
+Chapters 1–9 are in the book.
 
 ---
 
@@ -82,6 +100,24 @@ first-person can-do sentence and the lesson that pays it off.
   *n* that keeps *jāṇnā* apart from *jāṇā*, separate the two **ਜ** that came
   from different Sanskrit sounds, and run all six stems.
 
+- **Chapter 8** — *"I can say that I think, understand, read and write in
+  Punjabi, hear and produce the falling tone that ਸਮਝਣਾ and ਪੜ੍ਹਨਾ carry where a
+  breathy consonant used to be, read a subjoined ਹ tucked under its neighbour,
+  and name what each of the four roots meant before it named an act of the mind
+  — burning, waking, reciting aloud and scratching."* Payoff:
+  [`PA-C08-likhna`](./lessons/PA-C08-likhna.md), a production — say *maiṁ
+  panjābī paṛhdā hāṁ* and *likhdā hāṁ*, then run the four roots back.
+- **Chapter 9** — *"I can take, ask, help and say what I like in Punjabi, build
+  a fresh verb by putting a noun in front of ਕਰਨਾ, tell an inherited word from a
+  borrowed one by its line of descent rather than by how it looks, and say why
+  ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject."* Payoff:
+  [`PA-C09-pasand`](./lessons/PA-C09-pasand.md), a production — that sentence,
+  with any infinitive in the middle slot, plus the chapter's four sources.
+
+Both Chapter 8 and Chapter 9 payoffs assess **every** atom their own chapter
+introduces (10 of 10 each), so both sit at 1.00 against the 0.5
+representativeness floor.
+
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
@@ -92,7 +128,7 @@ gap report is meant to surface; the entries land as those chapters migrate.
 Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
 (`../../_fonts/NotoSansGurmukhi-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
-Latin romanization. A forced seven-chapter build is warning-free — zero
+Latin romanization. A forced nine-chapter build is warning-free — zero
 overfull, underfull, missing-character, Hyperref, duplicate-destination, and
 font-substitution warnings — and the handwritten section bookmarks retain
 readable Gurmukhi plus romanization.

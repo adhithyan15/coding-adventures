@@ -2351,6 +2351,24 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 8,
+      "title": "The Mind, the Page, and the Falling Tone",
+      "label": "ch:pa-mind-and-tone",
+      "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, and What Pleases You",
+      "label": "ch:pa-taking-and-liking",
+      "output": "punjabi/book/chapters/ch09-taking-and-liking.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "title": "Numbers One to Five",

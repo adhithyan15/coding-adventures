@@ -2315,6 +2315,30 @@
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:3c9eca3e36ff2723",
+      "lessonIds": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "tex": "punjabi/book/chapters/ch08-mind-and-tone.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:c655c44197746db3",
+      "lessonIds": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
+      ],
+      "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "sourceHash": "fnv1a64:92f0da71e90f84b4",
