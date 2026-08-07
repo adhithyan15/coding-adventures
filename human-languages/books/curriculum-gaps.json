@@ -22,7 +22,7 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
-    "lessonsWithoutLevel": null,
+    "lessonsWithoutLevel": 148,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
@@ -2719,6 +2719,352 @@
       "cleanTracks": 3,
       "payoffRepresentativeness": 0.5
     }
+  },
+  "levels": {
+    "totalLessons": 1281,
+    "byLevel": {
+      "pre-A1": 650,
+      "A1": 297,
+      "A2": 186,
+      "B1": 0,
+      "B2": 0,
+      "C1": 0,
+      "C2": 0
+    },
+    "unmapped": 148,
+    "mappedPercent": 88,
+    "tracks": [
+      {
+        "language": "arabic",
+        "lessonCount": 77,
+        "byLevel": {
+          "pre-A1": 51,
+          "A1": 18,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 2,
+        "reach": "A2"
+      },
+      {
+        "language": "bengali",
+        "lessonCount": 37,
+        "byLevel": {
+          "pre-A1": 21,
+          "A1": 1,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 9,
+        "reach": "A2"
+      },
+      {
+        "language": "chinese",
+        "lessonCount": 7,
+        "byLevel": {
+          "pre-A1": 7,
+          "A1": 0,
+          "A2": 0,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 0,
+        "reach": "pre-A1"
+      },
+      {
+        "language": "french",
+        "lessonCount": 81,
+        "byLevel": {
+          "pre-A1": 26,
+          "A1": 22,
+          "A2": 17,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 16,
+        "reach": "A2"
+      },
+      {
+        "language": "german",
+        "lessonCount": 84,
+        "byLevel": {
+          "pre-A1": 33,
+          "A1": 18,
+          "A2": 16,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 17,
+        "reach": "A2"
+      },
+      {
+        "language": "gujarati",
+        "lessonCount": 39,
+        "byLevel": {
+          "pre-A1": 22,
+          "A1": 2,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 9,
+        "reach": "A2"
+      },
+      {
+        "language": "hindi",
+        "lessonCount": 93,
+        "byLevel": {
+          "pre-A1": 46,
+          "A1": 28,
+          "A2": 13,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 6,
+        "reach": "A2"
+      },
+      {
+        "language": "italian",
+        "lessonCount": 66,
+        "byLevel": {
+          "pre-A1": 34,
+          "A1": 20,
+          "A2": 11,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 1,
+        "reach": "A2"
+      },
+      {
+        "language": "japanese",
+        "lessonCount": 8,
+        "byLevel": {
+          "pre-A1": 8,
+          "A1": 0,
+          "A2": 0,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 0,
+        "reach": "pre-A1"
+      },
+      {
+        "language": "kannada",
+        "lessonCount": 66,
+        "byLevel": {
+          "pre-A1": 35,
+          "A1": 21,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 4,
+        "reach": "A2"
+      },
+      {
+        "language": "latin",
+        "lessonCount": 73,
+        "byLevel": {
+          "pre-A1": 29,
+          "A1": 28,
+          "A2": 16,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 0,
+        "reach": "A2"
+      },
+      {
+        "language": "malayalam",
+        "lessonCount": 70,
+        "byLevel": {
+          "pre-A1": 35,
+          "A1": 25,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 4,
+        "reach": "A2"
+      },
+      {
+        "language": "marathi",
+        "lessonCount": 41,
+        "byLevel": {
+          "pre-A1": 23,
+          "A1": 2,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 10,
+        "reach": "A2"
+      },
+      {
+        "language": "persian",
+        "lessonCount": 25,
+        "byLevel": {
+          "pre-A1": 20,
+          "A1": 0,
+          "A2": 5,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 0,
+        "reach": "A2"
+      },
+      {
+        "language": "portuguese",
+        "lessonCount": 74,
+        "byLevel": {
+          "pre-A1": 38,
+          "A1": 20,
+          "A2": 15,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 1,
+        "reach": "A2"
+      },
+      {
+        "language": "punjabi",
+        "lessonCount": 39,
+        "byLevel": {
+          "pre-A1": 22,
+          "A1": 4,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 7,
+        "reach": "A2"
+      },
+      {
+        "language": "russian",
+        "lessonCount": 28,
+        "byLevel": {
+          "pre-A1": 14,
+          "A1": 0,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 8,
+        "reach": "A2"
+      },
+      {
+        "language": "sanskrit",
+        "lessonCount": 39,
+        "byLevel": {
+          "pre-A1": 22,
+          "A1": 3,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 8,
+        "reach": "A2"
+      },
+      {
+        "language": "spanish",
+        "lessonCount": 154,
+        "byLevel": {
+          "pre-A1": 61,
+          "A1": 33,
+          "A2": 22,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 38,
+        "reach": "A2"
+      },
+      {
+        "language": "tamil",
+        "lessonCount": 89,
+        "byLevel": {
+          "pre-A1": 49,
+          "A1": 30,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 4,
+        "reach": "A2"
+      },
+      {
+        "language": "telugu",
+        "lessonCount": 66,
+        "byLevel": {
+          "pre-A1": 34,
+          "A1": 22,
+          "A2": 6,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 4,
+        "reach": "A2"
+      },
+      {
+        "language": "urdu",
+        "lessonCount": 25,
+        "byLevel": {
+          "pre-A1": 20,
+          "A1": 0,
+          "A2": 5,
+          "B1": 0,
+          "B2": 0,
+          "C1": 0,
+          "C2": 0
+        },
+        "unmapped": 0,
+        "reach": "A2"
+      }
+    ]
   },
   "ramp": {
     "policy": {
@@ -31604,6 +31950,530 @@
         "R4": 137
       },
       "forwardReferences": 506
+    }
+  },
+  "levelGate": {
+    "vocabularyTargets": {
+      "pre-A1": 300,
+      "A1": 600,
+      "A2": 1200,
+      "B1": 2500,
+      "B2": 4000,
+      "C1": 8000,
+      "C2": 16000
+    },
+    "tracks": [
+      {
+        "language": "arabic",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 33 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 267
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "60 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 60
+          }
+        ],
+        "vocabulary": 57
+      },
+      {
+        "language": "bengali",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 21 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 279
+          }
+        ],
+        "vocabulary": 32
+      },
+      {
+        "language": "chinese",
+        "touches": "pre-A1",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "6 of 7 pre-A1 spine node(s) unrealized: SPINE-COURTESY-THANK, SPINE-RESPOND-BASIC, SPINE-EXCHANGE-NAMES, SPINE-CHECK-WELLBEING…",
+            "shortfall": 6
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 3 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 297
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "1 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 1
+          }
+        ],
+        "vocabulary": 3
+      },
+      {
+        "language": "french",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 26 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 274
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "3 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 3
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "17 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 17
+          }
+        ],
+        "vocabulary": 70
+      },
+      {
+        "language": "german",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 31 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 269
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "5 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 5
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "23 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 23
+          }
+        ],
+        "vocabulary": 70
+      },
+      {
+        "language": "gujarati",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 22 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 278
+          }
+        ],
+        "vocabulary": 33
+      },
+      {
+        "language": "hindi",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 34 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 266
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "39 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 39
+          }
+        ],
+        "vocabulary": 70
+      },
+      {
+        "language": "italian",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-RESPOND-BASIC",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 30 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 270
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "2 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 2
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "38 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 38
+          }
+        ],
+        "vocabulary": 60
+      },
+      {
+        "language": "japanese",
+        "touches": "pre-A1",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "4 of 7 pre-A1 spine node(s) unrealized: SPINE-EXCHANGE-NAMES, SPINE-CHECK-WELLBEING, SPINE-POLITE-REQUEST-REPAIR, SPINE-TAKE-LEAVE",
+            "shortfall": 4
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 7 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 293
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "10 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 10
+          }
+        ],
+        "vocabulary": 7
+      },
+      {
+        "language": "kannada",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 33 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 267
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 1
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "20 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 20
+          }
+        ],
+        "vocabulary": 58
+      },
+      {
+        "language": "latin",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 23 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 277
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "37 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 37
+          }
+        ],
+        "vocabulary": 62
+      },
+      {
+        "language": "malayalam",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 34 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 266
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 1
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "18 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 18
+          }
+        ],
+        "vocabulary": 61
+      },
+      {
+        "language": "marathi",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 23 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 277
+          }
+        ],
+        "vocabulary": 35
+      },
+      {
+        "language": "persian",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 17 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 283
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "2 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 2
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "30 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 30
+          }
+        ],
+        "vocabulary": 22
+      },
+      {
+        "language": "portuguese",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-RESPOND-BASIC",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 32 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 268
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "45 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 45
+          }
+        ],
+        "vocabulary": 65
+      },
+      {
+        "language": "punjabi",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 22 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 278
+          }
+        ],
+        "vocabulary": 33
+      },
+      {
+        "language": "russian",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "2 of 7 pre-A1 spine node(s) unrealized: SPINE-CHECK-WELLBEING, SPINE-TAKE-LEAVE",
+            "shortfall": 2
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 11 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 289
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "8 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 8
+          }
+        ],
+        "vocabulary": 17
+      },
+      {
+        "language": "sanskrit",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 22 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 278
+          }
+        ],
+        "vocabulary": 33
+      },
+      {
+        "language": "spanish",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 44 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 256
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "92 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 92
+          }
+        ],
+        "vocabulary": 113
+      },
+      {
+        "language": "tamil",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 33 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 267
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 1
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "36 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 36
+          }
+        ],
+        "vocabulary": 59
+      },
+      {
+        "language": "telugu",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 33 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 267
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 1
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "19 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 19
+          }
+        ],
+        "vocabulary": 58
+      },
+      {
+        "language": "urdu",
+        "touches": "A2",
+        "attained": null,
+        "inProgressAt": "pre-A1",
+        "blockers": [
+          {
+            "criterion": "spine-nodes",
+            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
+            "shortfall": 1
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 17 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 283
+          },
+          {
+            "criterion": "atom-budget",
+            "detail": "3 lesson(s) at or below pre-A1 exceed the new-atom budget",
+            "shortfall": 3
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "29 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 29
+          }
+        ],
+        "vocabulary": 22
+      }
+    ],
+    "summary": {
+      "tracksOverstating": 22,
+      "tracksWithAnyLevel": 0,
+      "attainedByLevel": {
+        "pre-A1": 0,
+        "A1": 0,
+        "A2": 0,
+        "B1": 0,
+        "B2": 0,
+        "C1": 0,
+        "C2": 0
+      }
     }
   },
   "modality": {
