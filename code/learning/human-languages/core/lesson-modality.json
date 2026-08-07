@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:70cd41485e8eeeb7",
+  "sourceHash": "fnv1a64:d1604dc4f84e4287",
   "summary": {
     "totalLessons": 1225,
     "voice": 824,
@@ -11362,7 +11362,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23b02573179317a8"
+      "sourceHash": "fnv1a64:75b0ccce17d974e7"
     },
     {
       "id": "HI-C03-kaise",
@@ -11505,7 +11505,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72e329b599f1e7c0"
+      "sourceHash": "fnv1a64:63443742433fc576"
     },
     {
       "id": "HI-C05-bolta-hun",
@@ -11531,7 +11531,7 @@
       "reasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f237aa47182dc171"
+      "sourceHash": "fnv1a64:e1c24c88399adaca"
     },
     {
       "id": "HI-C05-main-hindi-bolta-hun",
@@ -11571,7 +11571,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0cbfce468a3484eb"
+      "sourceHash": "fnv1a64:222b1446c5932bfd"
     },
     {
       "id": "HI-C06-numbers-1-5",
