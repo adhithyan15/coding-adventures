@@ -23,6 +23,12 @@ pieces taught before the whole; and a book you can read straight through.
 - **Grammar introduced inline**: agglutination (the plural *-mulu*) at
   *dhanyavādamulu*, yes/no as statements of being at *avunu*, the
   existence-vs-identity split (*lēdu*/*kādu*) at *lēdu*.
+- **Two verbs that break the machine, and both breaks are Telugu's own.**
+  Chapter 32 builds every verb as stem + tense + person, then names the two
+  exceptions honestly: **ఉండు** has no negative of its own, so Telugu fetches
+  one from the separate verb *lē-* (where all three sisters negate on the shared
+  *il-*); and **తెలుసు** carries no person-ending at all, so the knower moves
+  into the dative — *nāku telusu*, "to me it is known."
 
 ## Progress
 
@@ -48,6 +54,13 @@ pieces taught before the whole; and a book you can read straight through.
   time, weather, animals, colours, and greetings**
   ([`lessons/TE-C{06..31}-*`](./lessons/)): thirty prerequisite-ordered
   micro-lessons continue the same inline script, grammar, and etymology method.
+- **Chapter 32 — The Core Verbs** ([`lessons/TE-C32-*`](./lessons/)): uṇḍu (be)
+  → veḷḷu (go) → rā/vaccu (come) → tinu (eat) → cūḍu (see) → telusu (know), one
+  verb per lesson under the **canonical** cross-language tags `VERB-BE`,
+  `VERB-GO`, `VERB-COME`, `VERB-EAT`, `VERB-SEE`, `VERB-KNOW`. Before this the
+  track's four verbs all sat under Telugu-only tags (`TE-VERB-UNDU`,
+  `TE-VERB-VELLU`, …), which join nothing across languages, so Telugu covered
+  **zero** of the canonical forty. It now covers six. In the book.
 
 ---
 

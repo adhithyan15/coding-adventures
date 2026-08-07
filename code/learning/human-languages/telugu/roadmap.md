@@ -11,7 +11,7 @@ and its independence from its sisters (e.g. *lēdu* for "no"). The Telugu script
 is taught **inline**, never as a gated reading course; grammar is introduced
 piece by piece, on the first word that needs it.
 
-Coverage note: canonical lessons now continue through Chapter 31, while the
+Coverage note: canonical lessons now continue through Chapter 32, while the
 narrative sequence below is complete only through Chapter 6. `HL-M02` tracks
 bringing this roadmap and the session map up to the canonical prerequisite
 order; `HL-B22` tracks publishing Chapters 6–31 from the same source.
@@ -52,12 +52,33 @@ order; `HL-B22` tracks publishing Chapters 6–31 from the same source.
   keeps the fossil "**methinks**"). Closes on the four-sister table — *-ku /
   -ukku / -ge / -ikku* are visibly the **same suffix**. **Authored.**
 
+- **Ch. 32 — The Core Verbs**: **ఉండు** (*uṇḍu*, "be") — stem + tense + person on
+  Telugu's own be-verb, and the fact that it **has no negative**: Telugu switches
+  to the separate verb **లే-**, the root behind Ch. 1's *lēdu*, where Tamil,
+  Kannada and Malayalam all negate on the shared *il-* → **వెళ్ళు** (*veḷḷu*,
+  "go") — one tense-piece covering both "I go" and "I will go", with "right now"
+  built by welding *unnā-* onto the stem (*veḷtunnānu*); the inherited *pō-* root
+  survives beside it as **పోవు** → **రా** (*rā*, "come!") — the command and the
+  suffixing stem **వచ్చు** are one verb in two shapes, exactly as Tamil pairs
+  *vā*/*varu-* and Kannada *bā*/*baru-*; this is what Ch. 4's *veḷḷi vastānu* has
+  been carrying → **తిను** (*tinu*, "eat") — the inherited Dravidian root Telugu
+  **kept**, where Tamil demoted its *tiṉ* and built *sāppiḍu*; the verb stayed
+  native while the mealtime nouns (*bhōjanaṁ*, *āhāraṁ*) came from Sanskrit →
+  **చూడు** (*cūḍu*, "see") — no two sisters agree on the everyday see-verb, but
+  all four share the eye (*kannu*, *kaṇ*, *kaṇṇu*, *kaṇṇ*); and the respectful
+  **-అండి** of *kūrcōṇḍi* and *kṣamin̄caṇḍi* is a slot open to every stem
+  (*cūḍaṇḍi*, *raṇḍi*, *tinaṇḍi*, *veḷḷaṇḍi*) → **తెలుసు** (*telusu*, "it is
+  known") — no person-ending at all, so the knower rides in the dative
+  (*nāku telusu*), and Ch. 6's *nāku telugu vaccu* is finally separable from it:
+  *vaccu* marks a **skill**, *telusu* a **fact**. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 7 | The rest of the case suffixes — locative *-lō*, instrumental/comitative *-tō* — now that Ch. 6 has established how stacking works |
 | 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
+| 33+ | The rest of the core forty verbs — *have*, *do/make*, *say*, *hear*, *give*, *take* — on the machine Ch. 32 built |
 
 Note: Telugu marks "you" by **register** (*nuvvu* familiar / *mīru* respectful,
 also plural) — like the other tracks, worth teaching beside them.

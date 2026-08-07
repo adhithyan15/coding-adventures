@@ -317,6 +317,23 @@
       "after": [
         "TE-EXT-025-REGISTER"
       ]
+    },
+    {
+      "id": "TE-PATH-026",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TE-C32-undu",
+        "TE-C32-vellu",
+        "TE-C32-raa",
+        "TE-C32-tinu",
+        "TE-C32-cuudu",
+        "TE-C32-telusu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-026-CORE-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -438,20 +455,17 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
-      "segments": [],
+      "segments": [
+        "TE-PATH-026"
+      ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-BE",
         "VERB-HAVE",
         "VERB-DO-MAKE",
-        "VERB-GO",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SPEAK",
-        "VERB-SEE",
         "VERB-HEAR",
-        "VERB-KNOW",
         "VERB-THINK",
         "VERB-UNDERSTAND",
         "VERB-LEARN",
@@ -463,7 +477,6 @@
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
-        "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
         "VERB-LIVE",
@@ -710,6 +723,22 @@
       "prerequisites": [],
       "lessons": [
         "TE-C31-subha-madhyahnam-register"
+      ]
+    },
+    {
+      "id": "TE-EXT-026-CORE-VERBS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I do with six everyday Telugu verbs, build each one as stem plus tense plus person, and name the two that break the pattern — the one with no negative of its own, and the one with no person at all.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C32-undu",
+        "TE-C32-vellu",
+        "TE-C32-raa",
+        "TE-C32-tinu",
+        "TE-C32-cuudu",
+        "TE-C32-telusu"
       ]
     },
     {

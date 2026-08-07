@@ -6076,6 +6076,25 @@
       "jsonHash": "fnv1a64:3a8a926974182af6"
     },
     {
+      "language": "telugu",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:a3d9e2ddefa342d5",
+      "lessonIds": [
+        "TE-C32-undu",
+        "TE-C32-vellu",
+        "TE-C32-raa",
+        "TE-C32-tinu",
+        "TE-C32-cuudu",
+        "TE-C32-telusu"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "telugu/narration/ch32.txt",
+      "json": "telugu/narration/ch32.json",
+      "textHash": "fnv1a64:31b0cbe4ab1d09ac",
+      "jsonHash": "fnv1a64:9e5d5fc5ed77709f"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",

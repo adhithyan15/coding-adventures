@@ -732,6 +732,14 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:te-core-verbs",
+      "output": "telugu/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",
