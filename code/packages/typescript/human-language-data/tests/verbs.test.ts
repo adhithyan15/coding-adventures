@@ -89,15 +89,15 @@ describe("corpus snapshot", () => {
   // Each agent measured this alone and each wrote "the first track off zero". All three
   // were right in isolation and wrong together; the numbers here are re-measured against
   // the merged corpus.
-  it("pins the core verb baseline: three tracks realize twenty between them", () => {
+  it("pins the core verb baseline: eighteen tracks, and Spanish has joined", () => {
     const { lessons, taxonomy } = loadEverything();
     const report = verbCoverage(lessons, taxonomy);
 
     expect(report.summary.coreVerbCount).toBe(40);
 
-    expect(report.summary.tracksWithNoCoreVerb).toBe(7);
-    expect(report.summary.universallyMissing).toHaveLength(29);
-    expect(report.summary.meanCoveredPercent).toBe(10);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(4);
+    expect(report.summary.universallyMissing).toHaveLength(23);
+    expect(report.summary.meanCoveredPercent).toBe(13);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -141,11 +141,21 @@ describe("corpus snapshot", () => {
       expect(report.summary.universallyMissing).not.toContain(verb);
     }
 
-    // The existing namespaced verbs are still counted, so the work already done is
-    // visible rather than erased.
+    // SPANISH IS THE POINT OF THE WHOLE EXERCISE, AND IT HAS TURNED OVER.
+    //
+    // This assertion used to read `covered: []` and `extras: 19` — a track teaching
+    // nineteen verbs and joining the cross-language corpus on not one of them, because
+    // every tag was namespaced. That was the finding the canonical verb layer existed to
+    // fix, and it is now fixed: thirteen were retagged to canonical concepts and the
+    // realization paths rewired to match, so Spanish is the largest verb contributor in
+    // the corpus.
+    //
+    // Six remain namespaced ON PURPOSE — estar, estar-forms, salir, estudiar, llamar,
+    // querer. `ser` takes VERB-BE (one lesson per concept), and the rest have no core
+    // concept that fits without stretching it.
     const spanish = report.tracks.find((track) => track.language === "spanish")!;
-    expect(spanish.extras.length).toBe(19);
-    expect(spanish.covered).toEqual([]);
+    expect(spanish.covered).toHaveLength(13);
+    expect(spanish.extras.length).toBe(6);
   });
 
   it("gives every track an explicit authoring list", () => {
