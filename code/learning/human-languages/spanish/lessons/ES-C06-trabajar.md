@@ -7,7 +7,7 @@ chapter: 6
 type: word
 headword: trabajar
 gloss: to work (a second -ar verb — same pattern)
-concept_tag: ES-VERB-TRABAJAR
+concept_tag: VERB-WORK
 prerequisites: [ES-C06-hablar, ES-C06-ar-presente]
 sounds: [r-tap, j-jota, b-soft]
 roots: [tripalium-latin]

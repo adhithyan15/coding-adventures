@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Chapter 7",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d7e644b06b4b607",
+  "sourceHash": "fnv1a64:38c0aead8768635a",
   "lessons": [
     {
       "id": "ES-C07-beber",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0088dadb5fdf6331",
+      "sourceHash": "fnv1a64:1cc22b5309fcdd0c",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:ce6a687141938f2c",
+      "sourceHash": "fnv1a64:2c5c24910d6f4117",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -800,7 +800,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1857cec1eb24a351",
+      "sourceHash": "fnv1a64:1a9b0f692c3ce186",
       "notice": {
         "modality": "sight",
         "needs": [

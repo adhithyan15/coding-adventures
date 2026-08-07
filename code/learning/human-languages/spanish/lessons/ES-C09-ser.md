@@ -4,7 +4,7 @@ chapter: 9
 type: word
 headword: ser
 gloss: to be (identity — permanent, essential)
-concept_tag: ES-VERB-SER
+concept_tag: VERB-BE
 prerequisites: [ES-C04-estar, ES-C08-tener]
 sounds: [vowel-e, r-tap]
 roots: [esse-latin, sedere-latin]

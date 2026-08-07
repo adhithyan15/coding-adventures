@@ -4,7 +4,7 @@ chapter: 13
 type: word
 headword: poner
 gloss: to put / to place — a -go yo-form, pongo
-concept_tag: ES-VERB-PONER
+concept_tag: VERB-PUT
 prerequisites: [ES-C12-yo-go, ES-C12-hacer]
 sounds: [g-hard, r-tap]
 roots: [ponere-latin]

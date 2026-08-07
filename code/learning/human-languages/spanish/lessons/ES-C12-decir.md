@@ -4,7 +4,7 @@ chapter: 12
 type: word
 headword: decir
 gloss: to say / to tell — doubly irregular, digo + e→i
-concept_tag: ES-VERB-DECIR
+concept_tag: VERB-SAY
 prerequisites: [ES-C12-hacer, ES-C11-querer]
 sounds: [diphthong-none-i, g-hard]
 roots: [dicere-latin]

@@ -4,7 +4,7 @@ chapter: 12
 type: word
 headword: hacer
 gloss: to do / to make — an irregular yo-form, hago
-concept_tag: ES-VERB-HACER
+concept_tag: VERB-DO-MAKE
 prerequisites: [ES-C08-tener, ES-C06-hablar]
 sounds: [jota-h-silent, g-hard]
 roots: [facere-latin]

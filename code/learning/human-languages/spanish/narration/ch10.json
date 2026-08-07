@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Chapter 10",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:45eb64c530fd2523",
+  "sourceHash": "fnv1a64:60c303e5299f5fd7",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfbc7b80522ef5b7",
+      "sourceHash": "fnv1a64:8625b52e5ef33af5",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Chapter 13",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:70b10e3c98a8e598",
+  "sourceHash": "fnv1a64:fd74e6b6faccb060",
   "lessons": [
     {
       "id": "ES-C13-poner",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3dece00044903fdb",
+      "sourceHash": "fnv1a64:853daae9f3657b07",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -537,7 +537,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ac43d9b03170b92",
+      "sourceHash": "fnv1a64:43d46c297f5ac8ef",
       "notice": null,
       "blocks": [
         {

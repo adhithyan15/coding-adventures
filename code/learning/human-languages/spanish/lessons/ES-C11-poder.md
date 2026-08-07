@@ -4,7 +4,7 @@ chapter: 11
 type: word
 headword: poder
 gloss: to be able / can — a stem-changing verb, o→ue
-concept_tag: ES-VERB-PODER
+concept_tag: VERB-CAN
 prerequisites: [ES-C11-querer, ES-C06-hablar]
 sounds: [diphthong-ue, r-tap]
 roots: [potere-latin]

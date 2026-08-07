@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Chapter 9",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3f6b233c47e2ea13",
+  "sourceHash": "fnv1a64:0f128ec69fedf560",
   "lessons": [
     {
       "id": "ES-C09-esta-en",
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea5fdc59c0e2c713",
+      "sourceHash": "fnv1a64:a82cd4ab00b99923",
       "notice": null,
       "blocks": [
         {
