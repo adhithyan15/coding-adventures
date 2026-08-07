@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:49a7291500444ab9",
   "summary": {
-    "totalLessons": 1345,
-    "voice": 893,
+    "totalLessons": 1353,
+    "voice": 901,
     "sight": 399,
     "pen": 53,
-    "drivableLessons": 893,
-    "drivablePercent": 66,
+    "drivableLessons": 901,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 424,
-    "drivablePrefixTotal": 710,
-    "fullyDrivableChapters": 285,
+    "chapterCount": 426,
+    "drivablePrefixTotal": 718,
+    "fullyDrivableChapters": 287,
     "unstartableChapters": 102,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -5396,12 +5396,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 39,
-      "voice": 15,
+      "lessonCount": 47,
+      "voice": 23,
       "sight": 24,
       "pen": 0,
-      "drivablePercent": 38,
-      "drivablePrefixTotal": 6,
+      "drivablePercent": 49,
+      "drivablePrefixTotal": 14,
       "modalities": [
         "voice",
         "sight"
@@ -5516,6 +5516,44 @@
             "SA-C07-khadati",
             "SA-C07-pashyati",
             "SA-C07-janati"
+          ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C08-cintayati",
+            "SA-C08-avagacchati",
+            "SA-C08-pathati",
+            "SA-C08-likhati"
+          ]
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C09-grhnati",
+            "SA-C09-prcchati",
+            "SA-C09-sahayyam-karoti",
+            "SA-C09-snihyati"
           ]
         }
       ]
@@ -20308,6 +20346,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:96cb8ccb4a739c4c"
+    },
+    {
+      "id": "SA-C08-cintayati",
+      "language": "sanskrit",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ab6a3b5b466e409"
+    },
+    {
+      "id": "SA-C08-avagacchati",
+      "language": "sanskrit",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df200f517ac15a66"
+    },
+    {
+      "id": "SA-C08-pathati",
+      "language": "sanskrit",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9af1425f8c25258"
+    },
+    {
+      "id": "SA-C08-likhati",
+      "language": "sanskrit",
+      "chapter": 8,
+      "sequence": 460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:094a75e4cda64eba"
+    },
+    {
+      "id": "SA-C09-grhnati",
+      "language": "sanskrit",
+      "chapter": 9,
+      "sequence": 470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a64f82544bac0de"
+    },
+    {
+      "id": "SA-C09-prcchati",
+      "language": "sanskrit",
+      "chapter": 9,
+      "sequence": 480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79b521b14cf365df"
+    },
+    {
+      "id": "SA-C09-sahayyam-karoti",
+      "language": "sanskrit",
+      "chapter": 9,
+      "sequence": 490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed8fbaf4e26fa2f5"
+    },
+    {
+      "id": "SA-C09-snihyati",
+      "language": "sanskrit",
+      "chapter": 9,
+      "sequence": 500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:519a8f81d87a0669"
     },
     {
       "id": "ES-C01-hola",

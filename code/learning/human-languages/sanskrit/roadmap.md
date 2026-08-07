@@ -74,13 +74,42 @@ where a word needs them.
   `voice`, so the chapter is the track's first fully drivable one.
   **Authored.**
 
+- **Ch. 8 — The Mind and the Palm Leaf** (`SA-C08-cintayati` →
+  `SA-C08-avagacchati` → `SA-C08-pathati` → `SA-C08-likhati`): thinking,
+  understanding, reading, writing. Three more of the ten gaṇas arrive — class 10
+  planting **-अय-** inside *cintayati*, and the plain *-a-* of class 1 and class
+  6 — and **अवगच्छति** shows the *upasarga* system paying off twice, since
+  "understands" is nothing but **अव** "down" on a verb the reader already owns.
+  This is where the taproot claim stops being a slogan: **पठति** is the verb
+  Hindi, Urdu, Bengali and Marathi still read with, **लिखति** the verb they
+  write with, and **बुध्यते** the verb behind *samajhnā*. To keep that honest the
+  chapter names the mechanism — **तद्भव** (worn down by speech) against
+  **तत्सम** (lifted back out whole) — and applies it to every descendant it
+  claims. It is also candid where the trail fails: \**kweyt-* left English
+  nothing, **लिख्** has no secure English cousin, and *paṭhati*'s own ancestry is
+  a common account rather than a settled one. **Authored.**
+
+- **Ch. 9 — Taking, Asking, Helping, Loving** (`SA-C09-grhnati` →
+  `SA-C09-prcchati` → `SA-C09-sahayyam-karoti` → `SA-C09-snihyati`): the four
+  verbs that finish the shared eight. Class 9 returns on **गृह्णाति**, whose
+  planted **-ना-** curls back to **-णा-** after the vocalic ऋ; **साहाय्यं करोति**
+  shows the noun-plus-**करोति** machine that Hindi, Urdu, Bengali and Marathi all
+  still run. Etymologically it is the track's widest chapter: \**ghrebh-* is
+  *grab*, *grip* and *grasp*; \**prek-* is Latin *precārī* behind *pray* and
+  *precarious* and German *fragen* by the same \**p*→*f* that made *pañca* into
+  *five*; **सहाय**, "one who goes with," is matched picture-for-picture by Latin
+  *comes*; and \**priHos* gives *friend*, *free* and *Friday* while also wearing
+  down eastward into Hindi *piyā*. **स्निह्** closes it with a labelled
+  uncertainty: love named as stickiness, and a disputed tie to the *snow* root.
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10, then the eight cases one at a time (nominative, accusative…) |
-| 7 continuation | More of the ten gaṇas; the other persons and the dual on these six verbs; the upasarga set widened |
-| 8+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
+| 7–9 continuation | More of the ten gaṇas; the other persons and the dual on these fourteen verbs; the upasarga set widened; the ātmanepada endings behind *budhyate* and *snihyati* given their own lesson |
+| 10+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
 
 Note: Sanskrit's showpiece features — the **dual number**, three genders, eight
 cases, and pervasive **sandhi** — are introduced one at a time as real phrases

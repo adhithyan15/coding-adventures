@@ -5060,6 +5060,40 @@
       "jsonHash": "fnv1a64:944541d5bfbd1770"
     },
     {
+      "language": "sanskrit",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:0ee70e63a1bd3fbc",
+      "lessonIds": [
+        "SA-C08-cintayati",
+        "SA-C08-avagacchati",
+        "SA-C08-pathati",
+        "SA-C08-likhati"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch08.txt",
+      "json": "sanskrit/narration/ch08.json",
+      "textHash": "fnv1a64:acedf148c3e0c6bb",
+      "jsonHash": "fnv1a64:02ea774b97c7072f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:32c1bfb4b7f80ccc",
+      "lessonIds": [
+        "SA-C09-grhnati",
+        "SA-C09-prcchati",
+        "SA-C09-sahayyam-karoti",
+        "SA-C09-snihyati"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch09.txt",
+      "json": "sanskrit/narration/ch09.json",
+      "textHash": "fnv1a64:870035148df634b8",
+      "jsonHash": "fnv1a64:238a56f11f991d96"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:e2e55a440c95c8cb",
