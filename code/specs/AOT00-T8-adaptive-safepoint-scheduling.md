@@ -200,11 +200,16 @@ tracked separately; it is what would let an embedder responsibly call `__gc_set_
 
 ### 3.3 What does *not* change
 
-- `vm-core`'s own `safepoint` opcode and any direct `collect_minor`/`collect_minor_region` caller
-  are unaffected — this only changes what the *paced, automatic* `__gc_safepoint` entry does.
 - The Incremental recommendation stays advisory (§1).
 - Nothing about `collect_minor`, the write barrier, or tenuring changes; this spec adds a
   *scheduling* decision on top of already-proven mechanism.
+
+> **Update (follow-up PR, same day):** at initial merge, `vm-core`'s own `safepoint` opcode was
+> listed above as unaffected. It no longer is — `vm-core` is the barrier-correct producer §2b/§6
+> called out, and a same-day follow-up wired `run_safepoint` to check `should_collect_minor`
+> (before `should_compact`, same priority as `__gc_safepoint`) and attested `set_auto_minor(true)`
+> once in `VMCore::new()`. See `vm-core`'s own CHANGELOG (0.23.0) for the details; §6 below is
+> updated to match.
 
 ---
 

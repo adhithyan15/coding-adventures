@@ -1,5 +1,36 @@
 # Changelog — vm-core
 
+## [0.23.0] — 2026-08-07 (`run_safepoint` opts into automatic minor collection, AOT00-T8 follow-up)
+
+`gc-core` 0.28.0 (AOT00-T8) added `FlatHeap::should_collect_minor` — an automatic
+minor-collection recommendation gated behind a `set_auto_minor(true)` attestation,
+because the collector cannot itself verify an embedder's field-store lowering calls
+the generational write barrier on every old→young store. vm-core's own
+`handle_gc_field_store` already calls `ctx.heap.write_barrier` unconditionally on
+every store (the only op that writes a reference into a heap object's field), so it
+is genuinely barrier-correct — this PR is that attestation, plus wiring the
+recommendation into the paced collection path:
+
+- **`VMCore::new()`** now calls `heap.set_auto_minor(true)` once at construction.
+- **`run_safepoint`** now checks `ctx.heap.should_collect_minor()` before
+  `should_compact()`, matching `AdaptivePolicy`'s own priority order (Generational
+  outranks Compacting) — the same order `gc-core-capi`'s `__gc_safepoint` uses. When
+  it fires, `ctx.heap.collect_minor_mixed(&roots, &[])` runs instead of
+  `collect_mixed`/`collect_compacting`.
+- No fixup logic needed: `collect_minor_mixed` never relocates (only `collect_compacting`
+  does, and only that branch needs `build_roots`' interior-address root-slot rewrite).
+- New test `safepoint_over_threshold_picks_minor_when_policy_recommends_it`
+  (`tests/gc_heap.rs`) drives a genuinely low survival-ratio profile through real
+  `gc_collect` cycles (no private-field pokes — `gc_core::GcProfile` isn't visible
+  outside its crate) and proves the dispatch: an unrooted OLD object survives a paced
+  `safepoint` specifically because it took the minor path, distinguishable from
+  full/compacting (which would have reclaimed it too) via vm-core's exact — not
+  conservative — root set.
+- This is the first (and, per `AOT00-T8-adaptive-safepoint-scheduling.md` §6, so far
+  only) producer to enable `auto_minor`; the native-AOT/LLVM backends still need to
+  emit the write barrier from their own `field_store` lowering before they can attest
+  it too.
+
 ## [0.22.0] — 2026-08-03 (Twig GC completion: `alloc`/`field_store`/`field_load`/`is_null` reroute onto the real heap)
 
 A harder verification pass ("it cannot be leaking, we cannot assume

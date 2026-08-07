@@ -313,3 +313,65 @@ fn safepoint_under_threshold_does_not_collect() {
     assert_eq!(result, Some(Value::Int(5)));
     assert_eq!(vm.gc_heap().collection_count(), 0, "well under the 1 MiB threshold — safepoint must no-op");
 }
+
+/// A paced `safepoint` picks the **minor** path over full/compacting when
+/// `AdaptivePolicy`'s survival-ratio signal recommends it (AOT00-T8's
+/// `should_collect_minor`, now wired into vm-core's `run_safepoint` since
+/// `VMCore::new()` attests `set_auto_minor(true)` — vm-core's own
+/// `gc_field_store` is barrier-correct).
+///
+/// Genuinely drives the policy (no private-field pokes — `gc_core::GcProfile`
+/// isn't visible outside its crate, and this test is a *separate* crate from
+/// vm-core besides): six pure-garbage `gc_collect` cycles (each `sr = 0`)
+/// hold the EMA at exactly `0.0`, then one more cycle tenures `old` alongside
+/// a garbage object (`sr = 0.5` that cycle, still landing the EMA at `0.1` —
+/// under the `0.15` threshold) and promotes `old` to the old generation.
+/// `old`'s register is overwritten immediately after — orphaned, but *not*
+/// swept by any further collect, because none runs before the final
+/// safepoint. A large, deliberately-unrooted young block then crosses the
+/// 1 MiB threshold, and the final `safepoint` is the one point this test
+/// actually observes.
+///
+/// vm-core's roots are exact (`build_roots` walks only real `Value::HeapRef`s
+/// — no conservative stack scan, unlike `gc-core-capi`'s equivalent smoke
+/// tests), so `object_count()` afterward is an exact, non-flaky signal: a
+/// **minor** cycle reclaims the unrooted young block but leaves the unrooted
+/// *old* object standing (→ `1`); a full or compacting cycle would reclaim
+/// both, since neither is rooted (→ `0`).
+#[test]
+fn safepoint_over_threshold_picks_minor_when_policy_recommends_it() {
+    let mut instrs = Vec::new();
+    // Six pure-garbage full collects: sr = 0 each cycle, EMA stays exactly 0.
+    for _ in 0..6 {
+        instrs.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+        instrs.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+        instrs.push(ins("gc_collect", None, vec![], "void"));
+    }
+    // Tenure `old` alongside one more garbage object (sr = 0.5 this cycle;
+    // EMA lands at 0.8*0 + 0.2*0.5 = 0.1, under the 0.15 generational
+    // threshold, with total_collections = 7 well past min_cycles_before_advice = 5).
+    instrs.push(ins("gc_alloc", Some("old"), vec![], "ref<pair>"));
+    instrs.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+    instrs.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+    instrs.push(ins("gc_collect", None, vec![], "void"));
+    // Orphan `old` (now tenured) — no further collect runs before the final
+    // safepoint, so nothing else can reclaim it in the meantime.
+    instrs.push(ins("const", Some("old"), vec![Operand::Int(0)], "i64"));
+    // A large, unrooted YOUNG block crosses the 1 MiB threshold.
+    instrs.push(ins("gc_alloc", Some("big"), vec![Operand::Int(1_100_000)], "ref<bytes>"));
+    instrs.push(ins("const", Some("big"), vec![Operand::Int(0)], "i64"));
+    instrs.push(ins("safepoint", None, vec![], "void"));
+    instrs.push(ins("const", Some("done"), vec![Operand::Int(1)], "i64"));
+    instrs.push(ins("ret", None, vec![Operand::Var("done".into())], "i64"));
+
+    let (result, vm) = run_with_vm(instrs);
+    assert_eq!(result, Some(Value::Int(1)));
+    assert_eq!(vm.gc_heap().collection_count(), 8, "the final safepoint ran exactly one more cycle");
+    assert_eq!(
+        vm.gc_heap().object_count(),
+        1,
+        "the unrooted young block was reclaimed but the unrooted OLD object survived — \
+         proving the safepoint took the minor path, not full/compacting (either of which \
+         would have reclaimed both, since neither is rooted)"
+    );
+}
