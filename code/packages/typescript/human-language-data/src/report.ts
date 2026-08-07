@@ -3,6 +3,7 @@ import { runChapterGates, type ChapterGateReport } from "./chapters.js";
 import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
 import { measureRamp, type RampReport } from "./ramp.js";
 import { measureContinuity, type ContinuityReport } from "./continuity.js";
+import { runLevelGate, type LevelGateReport } from "./level-gate.js";
 import type {
   BookCorpus,
   ChapterPolicy,
@@ -178,6 +179,13 @@ export interface CurriculumGapReport {
    * order, reinforcement and forward references are all properties of the lessons.
    */
   continuity: ContinuityReport;
+  /**
+   * HL09 §3.1 — what it takes to CLAIM a level, as opposed to touch one.
+   *
+   * Present only when levels, ramp and continuity were all computed, since the
+   * gate needs all four criteria. Absent is "not measured", never "not attained".
+   */
+  levelGate?: LevelGateReport;
   modality: ModalitySummary;
 }
 
@@ -489,6 +497,10 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   // its own script, so unlike the chapter gates this does not wait on the ledgers.
   const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
   const continuity = measureContinuity(lessons);
+  const levelGate =
+    levels && ramp && input.curricula && input.spine
+      ? runLevelGate({ lessons, levels, curricula: input.curricula, spine: input.spine, ramp, continuity })
+      : undefined;
 
   const chapterGates =
     input.trackChapters && input.chapterPolicy
@@ -550,6 +562,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     levels,
     ramp,
     continuity,
+    levelGate,
     modality,
   };
 }
@@ -599,6 +612,14 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
         .map(([name, count]) => `${name} ${count}`)
         .join(", "),
     `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
+    ...(report.levelGate
+      ? [
+          `levels ATTAINED (HL09 §3.1): ${CEFR_LEVELS.filter((l) => report.levelGate!.summary.attainedByLevel[l] > 0)
+            .map((l) => `${report.levelGate!.summary.attainedByLevel[l]} tracks at ${l}`)
+            .join(", ") || "none"}; ` +
+            `${report.levelGate!.summary.tracksOverstating} track(s) touch a level they have not attained`,
+        ]
+      : []),
     ...(report.chapters
       ? [
           `${report.chapters.summary.chaptersWithoutCapability} of ${report.chapters.summary.bookChapters} book chapters without an HL05 capability; ` +

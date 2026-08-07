@@ -219,6 +219,13 @@ export {
   type TrackContinuity,
   type WindowName,
 } from "./continuity.js";
+export {
+  runLevelGate,
+  LEVEL_VOCABULARY,
+  type LevelGateReport,
+  type TrackLevelAttainment,
+  type LevelBlocker,
+} from "./level-gate.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
