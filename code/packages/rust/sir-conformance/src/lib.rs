@@ -1,36 +1,49 @@
 //! # sir-conformance — cross-backend golden conformance harness
 //!
-//! This crate answers one question, by *running code*: **does the same Ruby
-//! program produce the same output on every backend?**
+//! This crate answers one question, by *running code*: **does the same
+//! program produce the same output on every backend, regardless of which
+//! frontend produced the SIR `Module` in the first place?**
 //!
-//! The Semantic IR (SIR) is a narrow waist — one Ruby frontend
-//! ([`ruby_to_semantic_ir`]) lowers to a language-agnostic IR, and several
-//! backends emit target source (Python, JavaScript, Go, Rust). The promise of
-//! that design is *behavioural equivalence*: a program's observable result must
-//! not depend on which backend emitted it. Nothing enforced that promise
-//! end-to-end — each backend's own `compile_and_run_*` test hand-builds an SIR
-//! module and checks one feature in isolation, so a construct the frontend
-//! emits but a backend never implemented could pass every unit test and still
-//! crash at runtime. (That is exactly what happened with the `case_eq` builtin,
-//! which was missing from three of five runtimes; see the repo's `lessons.md`.)
+//! The Semantic IR (SIR) is a narrow waist — a [`Frontend`] lowers source to a
+//! language-agnostic IR, and several backends emit target source (Python,
+//! JavaScript, Go, Rust, C, Ruby). The promise of that design is *behavioural
+//! equivalence*: a program's observable result must not depend on which
+//! backend emitted it, nor on which frontend produced the `Module`. Nothing
+//! enforced that promise end-to-end — each backend's own `compile_and_run_*`
+//! test hand-builds an SIR module and checks one feature in isolation, so a
+//! construct a frontend emits but a backend never implemented could pass every
+//! unit test and still crash at runtime. (That is exactly what happened with
+//! the `case_eq` builtin, which was missing from three of five runtimes; see
+//! the repo's `lessons.md`.)
 //!
-//! This harness closes that gap. It takes a corpus of **real Ruby source**
-//! programs, each paired with **one expected stdout** (the reference answer,
-//! written once), lowers each through the actual frontend, emits it through
-//! *every* backend, runs the emitted program through that backend's *real*
-//! toolchain (`python3`, `node`, `go`, `rustc`), and asserts the output equals
-//! the reference — **byte for byte, on every backend**. A disagreement is a
-//! faithfulness bug, localised to `(program, backend)`.
+//! This harness closes that gap. It takes a corpus of **real source**
+//! programs (originally Ruby-only; see [`Frontend`] for the full list), each
+//! paired with **one expected stdout** (the reference answer, written once),
+//! lowers each through its own frontend, emits it through *every* backend,
+//! runs the emitted program through that backend's *real* toolchain
+//! (`python3`, `node`, `go`, `rustc`), and asserts the output equals the
+//! reference — **byte for byte, on every backend**. A disagreement is a
+//! faithfulness bug, localised to `(program, backend)`; a case that only
+//! passes for one frontend but not another that reaches the same `Feature`
+//! surface is a genericity bug, localised to `(program, frontend)`.
 //!
 //! This is the first, concrete slice of the conformance matrix specified in
-//! [`SIR21` §Provability](../../../specs/SIR21-type-system-and-integer-semantics.md).
+//! [`SIR21` §Provability](../../../specs/SIR21-type-system-and-integer-semantics.md),
+//! and — for the OOP/dispatch/collection-method surface specifically — the
+//! multi-frontend discipline required by
+//! [`SIR25` §5](../../../specs/SIR25-language-agnostic-object-model.md).
 //!
 //! ## Reference-oracle discipline
 //!
 //! The expected output is compared against **the reference**, never against
-//! another backend — so two backends agreeing on a *wrong* answer cannot hide a
-//! bug. The reference is the value the Ruby program would print under a real
-//! Ruby interpreter; we encode it as a literal string in the corpus.
+//! another backend — so two backends agreeing on a *wrong* answer cannot hide
+//! a bug. For the original Ruby-sourced corpus, the reference is the value a
+//! real Ruby interpreter would print; a program's `expected` field is that
+//! value encoded once, as a literal string. A non-Ruby-sourced program's
+//! `expected` field is the same SIR-level answer — see SIR25 §5: the harness
+//! does not require a Ruby source to exist for a given case, only that
+//! *some* correct reference value was determined once, however it was
+//! determined.
 //!
 //! ## Graceful degradation
 //!
@@ -43,22 +56,68 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
-use ruby_to_semantic_ir::compile_source;
 use semantic_ir::{BackendErrorKind, Module};
 
 pub mod oracle;
 
-/// One conformance program: a name, its Ruby source, and the **reference**
-/// stdout it must produce on every backend.
+/// A source-language frontend the harness can lower a program through.
+///
+/// Deliberately a small, closed enum rather than a trait object: every
+/// variant's `compile_source(source, module_name) -> Result<Module, E>`
+/// signature is already uniform across the frontend crates (differing only in
+/// error type), so dispatch is a single match with no dynamic indirection.
+/// Not every frontend that exists in the repo needs a variant here — only the
+/// general-purpose ones this harness's OOP/Collections-flavoured corpus is
+/// relevant to (the math/CAS frontends have their own oracle-tested
+/// conformance under SIR22/SIR23, against their own native runtimes, which is
+/// a better fit than stdout-diffing against this corpus).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Frontend {
+    Ruby,
+    Python,
+    JavaScript,
+}
+
+impl Frontend {
+    /// Lower `source` (named `module_name`) through this frontend, collapsing
+    /// each frontend's distinct error type to a `String` — mirroring how
+    /// `RunOutcome::Failed` already carries error detail as a plain string.
+    fn compile_source(self, source: &str, module_name: &str) -> Result<Module, String> {
+        match self {
+            Frontend::Ruby => ruby_to_semantic_ir::compile_source(source, module_name)
+                .map_err(|e| format!("{e:?}")),
+            Frontend::Python => python_to_semantic_ir::compile_source(source, module_name)
+                .map_err(|e| format!("{e:?}")),
+            Frontend::JavaScript => {
+                javascript_to_semantic_ir::compile_source(source, module_name)
+                    .map_err(|e| format!("{e:?}"))
+            }
+        }
+    }
+
+    /// Human-readable tag for assertion messages.
+    pub fn tag(self) -> &'static str {
+        match self {
+            Frontend::Ruby => "ruby",
+            Frontend::Python => "python",
+            Frontend::JavaScript => "javascript",
+        }
+    }
+}
+
+/// One conformance program: a name, its source and the [`Frontend`] that
+/// lowers it, and the **reference** stdout it must produce on every backend.
 #[derive(Debug, Clone)]
 pub struct Program {
     /// Short identifier used in temp filenames and assertion messages.
     pub name: &'static str,
-    /// The Ruby source to lower and run.
-    pub ruby: &'static str,
-    /// The exact stdout a real Ruby interpreter would produce (trailing
-    /// whitespace is normalised away before comparison, so a single trailing
-    /// newline need not be encoded).
+    /// The source to lower and run, via `frontend`.
+    pub source: &'static str,
+    /// Which frontend lowers `source` to SIR.
+    pub frontend: Frontend,
+    /// The exact stdout a real interpreter for the source language would
+    /// produce (trailing whitespace is normalised away before comparison, so
+    /// a single trailing newline need not be encoded).
     pub expected: &'static str,
 }
 
@@ -171,30 +230,48 @@ pub enum RunOutcome {
     Failed(String),
 }
 
-/// Lower Ruby `source` (named `name`) to SIR. The source-level primitive used
-/// by both the static [`Program`] corpus and the oracle-derived arithmetic
-/// cases (whose source is generated at runtime, so it cannot be a `&'static`
-/// [`Program`]).
+/// Lower `source` (named `name`) to SIR via Ruby. Kept as the Ruby-only entry
+/// point since it's the one every existing caller uses; [`lower_source_via`]
+/// is the frontend-generic primitive this delegates to.
 pub fn lower_source(name: &str, source: &str) -> Result<Module, String> {
-    compile_source(source, name)
-        .map_err(|e| format!("frontend failed to lower `{name}`: {e:?}"))
+    lower_source_via(name, source, Frontend::Ruby)
 }
 
-/// Lower `program.ruby` to SIR (shared by every backend so the *frontend* runs
-/// exactly once per program, as it would in production).
+/// Lower `source` (named `name`) to SIR via `frontend`. The source-level
+/// primitive used by both the static [`Program`] corpus and the
+/// oracle-derived arithmetic cases (whose source is generated at runtime, so
+/// it cannot be a `&'static` [`Program`]).
+pub fn lower_source_via(name: &str, source: &str, frontend: Frontend) -> Result<Module, String> {
+    frontend
+        .compile_source(source, name)
+        .map_err(|e| format!("{} frontend failed to lower `{name}`: {e}", frontend.tag()))
+}
+
+/// Lower `program.source` to SIR via `program.frontend` (shared by every
+/// backend so the *frontend* runs exactly once per program, as it would in
+/// production).
 pub fn lower(program: &Program) -> Result<Module, String> {
-    lower_source(program.name, program.ruby)
+    lower_source_via(program.name, program.source, program.frontend)
 }
 
-/// Run Ruby `source` (named `name`) through one `target`: lower, emit, compile
-/// if needed, execute through the real toolchain, and return the normalised
-/// stdout. This is the source-level primitive [`run`] delegates to; it accepts
-/// a runtime-generated `&str` so oracle-derived programs can drive it.
+/// Run `source` (named `name`) through one `target`, lowering via Ruby. Kept
+/// as the Ruby-only entry point since it's the one every existing caller
+/// uses; [`run_source_via`] is the frontend-generic primitive this delegates
+/// to.
 pub fn run_source(name: &str, source: &str, target: Target) -> RunOutcome {
+    run_source_via(name, source, Frontend::Ruby, target)
+}
+
+/// Run `source` (named `name`) through one `target`, lowering via `frontend`:
+/// lower, emit, compile if needed, execute through the real toolchain, and
+/// return the normalised stdout. This is the source-level primitive [`run`]
+/// delegates to; it accepts a runtime-generated `&str` so oracle-derived
+/// programs can drive it.
+pub fn run_source_via(name: &str, source: &str, frontend: Frontend, target: Target) -> RunOutcome {
     if !target.available() {
         return RunOutcome::Skipped(format!("{} not on PATH", target.toolchain()));
     }
-    let module = match lower_source(name, source) {
+    let module = match lower_source_via(name, source, frontend) {
         Ok(m) => m,
         Err(e) => return RunOutcome::Failed(e),
     };
@@ -211,7 +288,7 @@ pub fn run_source(name: &str, source: &str, target: Target) -> RunOutcome {
 /// Run one `program` through one `target`: emit, compile if needed, execute
 /// through the real toolchain, and return the normalised stdout.
 pub fn run(program: &Program, target: Target) -> RunOutcome {
-    run_source(program.name, program.ruby, target)
+    run_source_via(program.name, program.source, program.frontend, target)
 }
 
 /// Normalise stdout for comparison: unify CRLF→LF and strip trailing newlines
