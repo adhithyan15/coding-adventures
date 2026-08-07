@@ -653,7 +653,25 @@ describe("corpus regression", () => {
   // chapter's drivable prefix is 0 — which is why `drivablePrefixTotal` does not move at
   // all and `unstartableChapters` gains one. Routing that content through `input` blocks
   // would have held the drivable share flat by mislabelling it; the honest classification
-  // is the one that costs the metric.
+  // is the one that costs the metric.  //
+  // HL00's inline-letters section ("the letters in this word") is now classified as the
+  // `script` block it has always been, which moves 240 lessons across 12 tracks:
+  //
+  //   voice 957 -> 726      sight 124 -> 355      pen 53 (unchanged)
+  //   drivablePercent 84 -> 64      unstartableChapters 44 -> 92
+  //
+  // THIS IS A DELIBERATE LOSS, AND THE SAFE DIRECTION TO BE WRONG IN. Those sections teach
+  // glyph shapes, which cannot be read aloud, so the previous 84% was advertising a
+  // driving edition that would have narrated "ब plus the o-matra" at somebody on a
+  // motorway. The whole point of the flag is to be honest about what needs eyes.
+  //
+  // It is also recoverable, and the route is known. HL-C41 gave `writing` blocks a
+  // `coreModality` so a hands-free view can set them aside; the inline-letters section is
+  // detachable in exactly the same sense (HL00 calls it optional scaffolding a fluent
+  // reader skims). Adding `script` to DETACHABLE_BLOCK_TYPES was tried here and reverted:
+  // that model currently conflates "detachable" with "is a writing segment", so script
+  // blocks started claiming a lesson needs a PEN (pen 53 -> 309) to read letters. Split
+  // those two ideas and the core share returns to ~86% with the honest label intact.
   //
   // HL-C05-bolta-hun (the Hindi present-habitual paradigm, split out of the assembly
   // lesson) then added one `voice` lesson: 1133 -> 1134, voice 956 -> 957. It is `voice`
@@ -685,19 +703,19 @@ describe("corpus regression", () => {
     const manifest = buildModalityManifest(lessons);
     expect(manifest.summary).toEqual({
       totalLessons: 1134,
-      voice: 957,
-      sight: 124,
+      voice: 726,
+      sight: 355,
       pen: 53,
-      drivableLessons: 957,
-      drivablePercent: 84,
+      drivableLessons: 726,
+      drivablePercent: 64,
       trackCount: 22,
       chapterCount: 377,
       // Prerequisite order still costs a commuter 132 of the 957 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
-      drivablePrefixTotal: 825,
-      fullyDrivableChapters: 284,
-      unstartableChapters: 44,
+      drivablePrefixTotal: 555,
+      fullyDrivableChapters: 251,
+      unstartableChapters: 92,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });
