@@ -181,6 +181,7 @@ describe("real curriculum", () => {
       "ML-C23-naal-survival",
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
+      "PA-C07-janna-two-js",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
       "RU-C02-practice-informal-question",

@@ -2046,6 +2046,20 @@
       "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:a0dcbe3bf7eb8de6",
+      "lessonIds": [
+        "PA-C07-hona",
+        "PA-C07-jana",
+        "PA-C07-auna",
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-C07-janna"
+      ],
+      "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f46cbe023b464e1",

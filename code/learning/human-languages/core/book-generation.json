@@ -2151,6 +2151,15 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 7,
+      "title": "Six Verbs at the Core",
+      "label": "ch:pa-core-verbs",
+      "output": "punjabi/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "title": "Numbers One to Five",
