@@ -1,6 +1,14 @@
 import type { ParsedLesson } from "./parse.js";
 import { runChapterGates, type ChapterGateReport } from "./chapters.js";
-import type { BookCorpus, ChapterPolicy, LanguageRegistry, TrackChapters } from "./types.js";
+import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
+import type {
+  BookCorpus,
+  ChapterPolicy,
+  CurriculumSpine,
+  LanguageCurriculum,
+  LanguageRegistry,
+  TrackChapters,
+} from "./types.js";
 import { summarizeModality, type ModalityOptions, type ModalitySummary } from "./modality.js";
 
 export const DURATION_THRESHOLD_SECONDS = 300;
@@ -94,6 +102,8 @@ export interface CurriculumGapReport {
      * HL05 chapter-gate headline counts. `null` when the caller supplied no chapter
      * ledgers — distinguishable from 0, which means "measured, and none found".
      */
+    /** HL-C10: lessons no spine node claims, so no level could be derived. */
+    lessonsWithoutLevel: number | null;
     chaptersWithoutCapability: number | null;
     chapterPayoffsNotRepresentative: number | null;
     chapterGateCleanTracks: number | null;
@@ -127,6 +137,13 @@ export interface CurriculumGapReport {
    * section it cannot distinguish from "measured and found nothing".
    */
   chapters?: ChapterGateReport;
+  /**
+   * HL-C10: what level each lesson builds toward, derived from the spine.
+   *
+   * Absent when the caller supplied no curricula/spine, so an existing consumer keeps its
+   * report shape rather than seeing an empty section it cannot tell from "measured none".
+   */
+  levels?: LevelSummary;
   modality: ModalitySummary;
 }
 
@@ -136,6 +153,9 @@ export interface CurriculumGapReportInput {
   books: BookCorpus;
   /** HL08 tunables; defaults to no table being speakable until the lineariser lands. */
   modality?: ModalityOptions;
+  /** HL-C10 level derivation needs the realization paths and the spine. */
+  curricula?: LanguageCurriculum[];
+  spine?: CurriculumSpine;
   /** HL05 chapter ledgers; when omitted the chapter gates do not run. */
   trackChapters?: TrackChapters[];
   /** HL05/HL08 thresholds; required for the chapter gates to run. */
@@ -426,6 +446,11 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   // HL05 chapter gates. Only run when the caller supplied both the ledgers and the
   // policy: the representativeness rule is meaningless without its threshold, and a
   // silent default would publish a number measured at a floor nobody chose.
+  const levels =
+    input.curricula && input.spine
+      ? summarizeLevels(lessons, input.curricula, input.spine)
+      : undefined;
+
   const chapterGates =
     input.trackChapters && input.chapterPolicy
       ? runChapterGates({
@@ -460,6 +485,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       legacySchemaTracks: schemas.filter((track) => track.status === "legacy").length,
       mixedSchemaTracks: schemas.filter((track) => track.status === "mixed").length,
       version2SchemaTracks: schemas.filter((track) => track.status === "version-2").length,
+      lessonsWithoutLevel: levels?.unmapped ?? null,
       chaptersWithoutCapability: chapterGates?.summary.chaptersWithoutCapability ?? null,
       chapterPayoffsNotRepresentative: chapterGates?.summary.payoffsNotRepresentative ?? null,
       chapterGateCleanTracks: chapterGates?.summary.cleanTracks ?? null,
@@ -475,6 +501,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     books: { tracks: coverage },
     schemas: { tracks: schemas },
     chapters: chapterGates,
+    levels,
     modality,
   };
 }
@@ -491,6 +518,13 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     `${summary.tracksWithoutBooks} tracks without books; ${summary.lessonChaptersWithoutBooks} lesson chapters without book chapters`,
     `${summary.legacySchemaTracks} legacy, ${summary.mixedSchemaTracks} mixed, ${summary.version2SchemaTracks} version-2 schema tracks`,
     `${summary.drivableLessons} drivable lessons (${summary.drivablePercent}% of the corpus)`,
+    ...(report.levels
+      ? [
+          `levels: ${CEFR_LEVELS.filter((l) => report.levels!.byLevel[l] > 0)
+            .map((l) => `${report.levels!.byLevel[l]} ${l}`)
+            .join(", ")}; ${report.levels!.unmapped} unmapped (${report.levels!.mappedPercent}% placed)`,
+        ]
+      : []),
     ...(report.chapters
       ? [
           `${report.chapters.summary.chaptersWithoutCapability} of ${report.chapters.summary.bookChapters} book chapters without an HL05 capability; ` +

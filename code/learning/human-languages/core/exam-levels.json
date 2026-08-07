@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "note": "How the shared spine's CEFR stages line up with the language-specific proficiency exams a learner might actually sit. CEFR is the backbone because the spine already speaks it (core/spine.json declares pre-A1 through C2) and because most of the corpus's European tracks certify against it directly. Everything else maps ONTO CEFR rather than replacing it, so one level field serves every track and a 'ramp to A1' book is a filter, not a separate corpus.",
+  "everyTrackIsMapped": "Every registered track has a mapping. Where no awarding body publishes a CEFR alignment, this file states the project's own editorial judgement rather than leaving a gap — a learner asking 'what is A1 in Tamil?' deserves an answer, and an unmapped track silently drops out of every level report. What is NOT negotiable is saying which kind of answer each one is: `basis` is `published` when the awarding body states the alignment, `research` when it is a widely-cited third-party correspondence, and `editorial` when it is this project's judgement. An editorial mapping is a working default to be corrected, never a claim about what a certificate is worth.",
+  "cefrStages": ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+  "notePreA1": "pre-A1 is NOT a CEFR level. CEFR begins at A1. It is this curriculum's own label for the ramp below A1 — the greetings-and-first-words stretch this project exists to make gentle — and it is exactly the material an exam syllabus assumes you already have. Naming it keeps the ramp measurable instead of invisible.",
+  "tracks": {
+    "spanish": { "exam": "DELE", "basis": "published", "mapping": "identity" },
+    "french": { "exam": "DELF/DALF", "basis": "published", "mapping": "identity" },
+    "german": { "exam": "Goethe-Zertifikat", "basis": "published", "mapping": "identity" },
+    "italian": { "exam": "CILS / CELI", "basis": "published", "mapping": "identity" },
+    "portuguese": { "exam": "CAPLE", "basis": "published", "mapping": "identity" },
+    "russian": {
+      "exam": "TORFL (ТРКИ)",
+      "basis": "published",
+      "mapping": { "A1": "TEU/A1", "A2": "TBU/A2", "B1": "TRKI-1", "B2": "TRKI-2", "C1": "TRKI-3", "C2": "TRKI-4" }
+    },
+    "japanese": {
+      "exam": "JLPT",
+      "basis": "research",
+      "mapping": { "A1": "N5", "A2": "N4", "B1": "N3", "B2": "N2", "C1": "N1", "C2": "beyond N1" },
+      "caveat": "The Japan Foundation publishes no official CEFR alignment and has said the two measure different things. These are the widely-used research correspondences; N1 is often argued to reach C1 rather than sit at it, and nothing in JLPT tests production, so a JLPT level and a CEFR level are not interchangeable claims."
+    },
+    "chinese": {
+      "exam": "HSK (six-band, pre-2021)",
+      "basis": "published",
+      "mapping": { "A1": "HSK1–2", "A2": "HSK3", "B1": "HSK4", "B2": "HSK5", "C1": "HSK6", "C2": "beyond HSK6" },
+      "caveat": "Hanban's own alignment for the six-band HSK. HSK 3.0 (2021) redefines the bands as nine levels and shifts the correspondence upward; revisit when the Chinese track passes HSK3 material."
+    },
+    "arabic": {
+      "exam": "ALPT / ILR / ACTFL",
+      "basis": "research",
+      "mapping": { "A1": "ILR 0+", "A2": "ILR 1", "B1": "ILR 1+", "B2": "ILR 2", "C1": "ILR 2+/3", "C2": "ILR 4" },
+      "caveat": "Arabic certification is fragmented and diglossic: ALPT and the ILR/ACTFL scales test Modern Standard Arabic, while the corpus also teaches greetings a learner would hear in dialect. The mapping is for MSA."
+    },
+    "persian": {
+      "exam": "AMFA (آزمون مهارت فارسی)",
+      "basis": "editorial",
+      "mapping": { "A1": "AMFA 1", "A2": "AMFA 2", "B1": "AMFA 3", "B2": "AMFA 4", "C1": "AMFA 5", "C2": "AMFA 6" },
+      "caveat": "A straight six-to-six correspondence is this project's judgement, not AMFA's. The exam is administered chiefly for study in Iran and its bands are not published against CEFR descriptors, so treat the rungs as evenly spaced only until someone checks them."
+    },
+    "hindi": {
+      "exam": "Dakshina Bharat Hindi Prachar Sabha ladder",
+      "basis": "editorial",
+      "mapping": { "A1": "Prathmic", "A2": "Madhyama", "B1": "Rashtrabhasha", "B2": "Praveshika", "C1": "Visharad", "C2": "Praveen" },
+      "caveat": "A real and widely-sat ladder, but built to spread Hindi to non-Hindi-speaking India rather than to CEFR's can-do descriptors, so the rungs are not evenly spaced against CEFR. Judgement, offered as a working anchor."
+    },
+    "urdu": {
+      "exam": "no widely-sat international ladder",
+      "basis": "editorial",
+      "mapping": "cefr",
+      "caveat": "Urdu shares its spoken core with Hindi, so the Hindi anchors above are the nearest reference; the script and the Persian-Arabic register are where the two diverge and where the ramp differs."
+    },
+    "tamil": {
+      "exam": "no single international ladder; Singapore MOE Tamil and Tamil Nadu state syllabi are the nearest",
+      "basis": "editorial",
+      "mapping": "cefr",
+      "caveat": "The project's judgement, per the owner's instruction to map rather than leave gaps. Tamil's diglossia is the reason no mapping is clean: the written/literary register and the spoken register diverge sharply, and this curriculum teaches spoken Tamil first. Read A1 here as 'can greet, introduce oneself and handle a short exchange in spoken Tamil', which is the CEFR descriptor, not a claim about any Tamil examination."
+    },
+    "telugu": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "kannada": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "malayalam": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "marathi": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "punjabi": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "bengali": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "gujarati": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "sanskrit": {
+      "exam": "Samskrita Bharati ladder / traditional pariksha",
+      "basis": "editorial",
+      "mapping": "cefr",
+      "caveat": "Sanskrit is taught here as a living spoken language for the ramp's purposes, so CEFR's can-do descriptors apply. A traditional syllabus is ordered by grammar and text rather than by communicative function, so the two ladders are not parallel."
+    },
+    "latin": {
+      "exam": "no modern proficiency exam",
+      "basis": "editorial",
+      "mapping": "cefr",
+      "caveat": "CEFR is built around communicative can-do statements, and Latin is learned almost entirely for reading. A1 here means 'can greet, introduce oneself and read a short exchange', which keeps the shared spine usable across all 22 tracks; a reading-only ladder would fit Latin better and is worth revisiting."
+    }
+  }
+}
