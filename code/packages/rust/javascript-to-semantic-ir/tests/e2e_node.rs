@@ -297,3 +297,81 @@ fn array_filter_includes_runs_in_node() {
     );
     assert_eq!(out, "#t");
 }
+
+// ══════════════════════════════════════════════════════════════════════
+// OOP surface (SIR25 §2) — class / new / this / instance vars
+// ══════════════════════════════════════════════════════════════════════
+//
+// Same envelope ruby-to-semantic-ir (and this crate's Python sibling)
+// emit (Stmt::ClassDef + __new__ + __def_method__ + __self__), so these
+// tests prove BOTH that this frontend lowers correctly AND that the
+// existing JS backend/runtime -- built for Ruby-sourced OOP -- needs
+// zero changes to run a JS-sourced class. That's the actual proof of
+// language-agnosticism the SIR25 arc set out for, not a claim.
+//
+// NOTE: this grammar requires a `;` after every method body inside a
+// `class { ... }` (a parser quirk, not real ECMAScript, discovered
+// while probing the CST) -- every source snippet below reflects that.
+
+#[test]
+fn oop_method_dispatch_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping oop_method_dispatch_runs_in_node: `node` not available");
+        return;
+    }
+    // Mirrors sir-conformance's Ruby-sourced `oop_method` case exactly
+    // (class, construction, an instance method call) -- same source
+    // semantics, JS spelling, run through the SAME JS backend/runtime
+    // the Ruby-sourced version already proves.
+    let out = run_via_node(
+        "oop_method",
+        "class Dog {\n  speak() {\n    return \"woof\";\n  };\n}\n\
+         console.log(new Dog().speak());",
+    );
+    assert_eq!(out, "woof");
+}
+
+#[test]
+fn counter_state_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping counter_state_runs_in_node: `node` not available");
+        return;
+    }
+    // Mirrors sir-conformance's Ruby-sourced `counter_state` case:
+    // instance state mutated across method calls on the same object.
+    let out = run_via_node(
+        "counter_state",
+        "class Counter {\n\
+         \x20 constructor() {\n    this.n = 0;\n  };\n\
+         \x20 inc() {\n    this.n = this.n + 1;\n  };\n\
+         \x20 value() {\n    return this.n;\n  };\n\
+         }\n\
+         const c = new Counter();\n\
+         c.inc();\n\
+         c.inc();\n\
+         console.log(c.value());",
+    );
+    assert_eq!(out, "2");
+}
+
+#[test]
+fn inheritance_without_override_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping inheritance_without_override_runs_in_node: `node` not available");
+        return;
+    }
+    // A subclass with NO overriding `speak` still dispatches to the
+    // parent's method via the backend's ancestry walk -- proves
+    // inheritance works from this frontend with zero `super`/`extends`-
+    // specific backend work needed for the common "inherit, don't
+    // override" case.
+    let out = run_via_node(
+        "inheritance",
+        "class Animal {\n  speak() {\n    return \"...\";\n  };\n}\n\
+         class Dog extends Animal {\n  bark() {\n    return \"woof\";\n  };\n}\n\
+         const d = new Dog();\n\
+         console.log(d.speak());\n\
+         console.log(d.bark());",
+    );
+    assert_eq!(out, "...\nwoof");
+}

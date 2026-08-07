@@ -280,6 +280,44 @@ const CORPUS: &[Program] = &[
         source: "class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    def bark(self):\n        return \"woof\"\n\nd = Dog()\nprint(d.speak() + \"-\" + d.bark())\n",
         expected: "...-woof",
     },
+    // JavaScript-sourced OOP surface (SIR25 §2, javascript-to-semantic-ir's
+    // new class/this/ivar lowering): the SAME semantics as `oop_method`
+    // above, sourced from JS instead of Ruby. A third data point proving
+    // the OOP surface is genuinely language-agnostic, not just
+    // Ruby+Python-shaped — this frontend's parser requires a `;` after
+    // every method body inside `class { ... }` (a parser quirk, not real
+    // ECMAScript).
+    Program {
+        name: "js_oop_method",
+        frontend: Frontend::JavaScript,
+        source: "class Dog {\n  speak() {\n    return \"woof\";\n  };\n}\nconsole.log(new Dog().speak());\n",
+        expected: "woof",
+    },
+    // JavaScript-sourced instance state (mirrors `counter_state` above):
+    // `constructor` mapped to SIR's `initialize`, `this.n` read/write
+    // across two method calls on the same object.
+    Program {
+        name: "js_counter_state",
+        frontend: Frontend::JavaScript,
+        source: "class Counter {\n  constructor() {\n    this.n = 0;\n  };\n  inc() {\n    this.n = this.n + 1;\n  };\n  value() {\n    return this.n;\n  };\n}\nconst c = new Counter();\nc.inc();\nc.inc();\nconsole.log(c.value());\n",
+        expected: "2",
+    },
+    // JavaScript-sourced single inheritance, no explicit `super()` (not
+    // yet supported by this frontend — deferred): a subclass with no
+    // overriding method still dispatches to the parent's, proving the
+    // BACKEND's ancestry-walk resolution (built for Ruby) works unchanged
+    // from a JS-sourced ClassDef too. A SINGLE `console.log` call
+    // (string-concatenating both results) sidesteps the SAME `print`
+    // builtin cross-language newline gap `python_inheritance` above
+    // documents — JS's `console.log` lowers through the identical
+    // `BuiltinCall("print", ...)` envelope as Python's `print`, so it
+    // hits the same C/Ruby gap when called more than once.
+    Program {
+        name: "js_inheritance",
+        frontend: Frontend::JavaScript,
+        source: "class Animal {\n  speak() {\n    return \"...\";\n  };\n}\nclass Dog extends Animal {\n  bark() {\n    return \"woof\";\n  };\n}\nconst d = new Dog();\nconsole.log(d.speak() + \"-\" + d.bark());\n",
+        expected: "...-woof",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.

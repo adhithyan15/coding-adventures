@@ -27,13 +27,15 @@ We lower from the *generic* `GrammarASTNode`, **not** from the parser's
 typed-AST bridge (`javascript-parser/src/bridge.rs`). That is the
 contract SIR19 sets, matching how the Ruby and Twig frontends work.
 
-## Milestone status — M5 (collections: arrays & objects)
+## Milestone status — M5 (collections) + C3 (method calls) + OOP surface (SIR25 §2)
 
 This is the fifth slice of SIR19. It implements literals (M1),
 variables/operators (M2), control flow (M3), and functions/closures (M4)
 **plus** collections: array literals, object literals, member / dot /
-subscript access (reads), and indexed / property assignment (writes). The
-supported subset (M1 + M2 + M3 + M4 + M5):
+subscript access (reads), and indexed / property assignment (writes),
+**plus** member-method dispatch (C3) and the class/`this`/`new` OOP
+declaration surface (SIR25 §2). The supported subset (M1 + M2 + M3 + M4 +
+M5 + C3 + OOP):
 
 | JavaScript source           | SIR lowering                                  |
 |-----------------------------|-----------------------------------------------|
@@ -102,6 +104,68 @@ supported subset (M1 + M2 + M3 + M4 + M5):
 - **Deferred:** spread, elisions, object shorthand, computed/numeric keys,
   methods/getters/setters, `.length` assignment (a resize), and array
   methods (`.map`/`.push`/… — need runtime-library support).
+
+### Method calls (C3)
+
+A **method call** `recv.method(args…)` lowers to the shared SIR
+method-dispatch envelope — the same one every OOP-capable frontend
+(Ruby, Python) and backend already speak:
+
+| JavaScript source          | SIR lowering                                                    | Feature declared      |
+|-----------------------------|------------------------------------------------------------------|------------------------|
+| `d.speak()`                 | `BuiltinCall("__method__", [d, StrLit("speak")])`                 | `Strings`              |
+| `xs.map(f).filter(g)`       | nested `__method__` dispatch (outer receiver = inner dispatch)    | `Strings`              |
+| `new Dog().speak()`         | `__new__` construction folded as the receiver of `__method__`     | `Strings`              |
+
+The **receiver is always `args[0]`**, the **method name is always a
+`StrLit` at `args[1]`**, and the call's own arguments follow — no core
+IR node, backend change, or new feature flag is required. A
+`MethodDispatch` feature is deliberately *not* invented (a later
+Phase-2 milestone).
+
+**Grammar shape.** A chained call (`x.a.b()`, `new Dog().speak()`) is a
+`member_expression` (or an `optional_chain_expression` wrapping one, when
+a `new` prefix is chained — see below) with the accesses folded
+**iteratively**, matching the Collections fold above; each `.name(args)`
+step becomes one more `__method__` dispatch layered on the previous one.
+
+### OOP surface (SIR25 §2)
+
+`class Dog extends Animal { constructor(...) {...}; speak(...) {...}; }`
+lowers to the SAME `Stmt::ClassDef` + `__new__`/`__def_method__`/`__self__`
+envelope `ruby-to-semantic-ir` and `python-to-semantic-ir` emit — the
+OOP-capable backends need **zero** changes to run a JavaScript-sourced
+class:
+
+| JavaScript source                      | SIR lowering                                                                                              | Feature declared        |
+|-----------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------|
+| `class Dog {}` / `class Dog extends Animal {}` | `Stmt::ClassDef{name, superclass, body: []}`                                                          | `Classes`                |
+| `new Dog(args)`                          | `BuiltinCall("__new__", [StrLit("Dog"), ...args])`                                                          | `Strings`                |
+| `m(...) {...}` in a class body           | hoisted top-level fn `Dog__m` + `BuiltinCall("__def_method__", [StrLit("Dog"), StrLit("m"), MakeClosure(...)])` | `Strings`, `Closures`  |
+| `constructor(...) {...}`                 | same, but registered under the SIR name `"initialize"` (not the literal spelling)                            | —                        |
+| bare `this` (inside a method)            | `BuiltinCall("__self__", [])`                                                                                | —                        |
+| `this.x` (read)                          | `Expr::VarRef{name: "@x", scope: Instance}`                                                                  | `InstanceVars`           |
+| `this.x = v` (write)                     | `Stmt::Assign{name: "@x", scope: Instance, value: v}`                                                        | `InstanceVars`, `MutableBindings` |
+
+Inheritance needs no extra frontend work beyond the superclass name on
+`ClassDef`: a subclass with no overriding method still dispatches to the
+parent's via the *backend's* ancestry walk (SIR25 §2.2) — `super()` calls
+are the one inheritance-adjacent piece still deferred (see below).
+
+**The `new X().method()` chain shape.** A bare `new Dog(args)` parses as a
+3-child `member_expression[Keyword("new"), target, arguments]`. When a
+chain follows (`new Dog().speak()`), the chain steps (`.`, name,
+call-args) are children of an **enclosing** `optional_chain_expression`
+node, not the inner `member_expression` — `lower_optional_chain_new`
+delegates the `new` construction to the same path as the no-chain case,
+then folds its own trailing steps as ordinary `__method__` dispatch.
+
+v0 restrictions (each a positioned `JsLowerError`, not a silent drop):
+more than one `extends` target or a non-bare-name `extends`, any class
+body element other than a `method_definition`, `new` on a name that
+isn't a known class, and `this` outside a method body — mirroring the
+staged restrictions `ruby-to-semantic-ir`'s and `python-to-semantic-ir`'s
+own OOP slices used.
 
 ### Functions, calls, and closures
 
@@ -249,14 +313,14 @@ Every produced `Module`:
   `semantic_ir::validate` with no used-but-undeclared errors and no
   declared-but-unused warnings.
 
-## Out of scope for M5 (deferred)
+## Out of scope for M5 / C3 / OOP surface (deferred)
 
-Method calls other than `console.log` and array methods (`.map`/`.push`/…,
-which need runtime-library support), spread (`[...xs]` / `{...o}`), array
-elisions, object shorthand / computed / numeric keys / methods / getters /
-setters, `.length` *assignment* (a resize with no IR node), classes /
-`this` / `new`, generators, `async`/`await`, **rest** parameters
-(`...args`), destructuring, and template literals all currently return a
+Array methods needing runtime-library support beyond `console.log` and
+`__method__` dispatch (`.map`/`.push`/…), spread (`[...xs]` / `{...o}`),
+array elisions, object shorthand / computed / numeric keys / methods /
+getters / setters, `.length` *assignment* (a resize with no IR node),
+generators, `async`/`await`, **rest** parameters (`...args`),
+destructuring, and template literals all currently return a
 `JsLowerError`
 describing what was rejected, with the offending node's position. So do
 **early `return`** (non-tail), the remaining control-flow constructs
@@ -264,7 +328,10 @@ describing what was rejected, with the offending node's position. So do
 `break`/`continue`), and the gaps within the M2/M3 operator/assignment
 families (compound assignment outside the loop-update position,
 multi-binding declarations, uninitialised bindings,
-bitwise/shift/exponentiation/nullish operators).
+bitwise/shift/exponentiation/nullish operators). Within the OOP surface:
+`static`/class methods, class fields, `super()` calls, getters/setters,
+mixins, exceptions, and decorated classes stay deferred (see OOP surface
+above).
 The error sites are structured so later milestones slot their handling in
 at exactly the right place. See `CHANGELOG.md` for the milestone roadmap
 and the full SIR19 spec at

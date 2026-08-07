@@ -7,6 +7,44 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.8.0 — OOP declaration surface (SIR25 §2)
+
+Extends the frontend from member-*dispatch* (0.7.0's C3) to the full
+class *declaration* surface: `class Dog extends Animal { constructor(...)
+{...} m(...) {...} }` now lowers to the SAME `Stmt::ClassDef` +
+`__new__`/`__def_method__`/`__self__` envelope `ruby-to-semantic-ir` (and
+this crate's Python sibling) emit — the OOP-capable backends needed
+**zero changes** to run a JS-sourced class. `sir-conformance` gains
+`js_oop_method`/`js_counter_state`/`js_inheritance` — a third data point
+(after Ruby and Python) proving the same class/instance-method/
+instance-state/inheritance semantics across all six backends.
+
+v0 scope: `new ClassName(args)` construction (a bare-name target that is
+a known class; a chained `new X(args).method(args2)` call is a
+*different* CST shape than the no-chain case — the parser hangs the
+chain on an enclosing `optional_chain_expression`, not the inner
+`member_expression` — both are handled), instance methods (`this`
+resolves via `__self__` — it's never a declared parameter in JS, unlike
+Python's `self`, so `FnScope::for_method` is what makes it reachable),
+`constructor` mapped to the SIR method name `"initialize"` (every
+backend's `call_new` looks up that exact name), instance variables
+(`this.x` read/write, `Scope::Instance` — checked before the pre-existing
+`.length`-is-`SeqLen` special case, since an ivar literally named
+`length` must still read/write as an ivar), and single-inheritance
+ancestry-walk dispatch (a subclass with no overriding method still
+resolves to the parent's, zero extra frontend work — SIR25 §2.2's
+ancestry walk is a backend concern). Deferred, each its own later
+milestone mirroring the Ruby/Python OOP surfaces' own staged rollout:
+static/class methods, class fields, `super` calls, getters/setters,
+mixins, exceptions, decorated classes.
+
+Found and documented (not fixed here, orthogonal to this surface):
+`console.log` shares the same `BuiltinCall("print", ...)` envelope
+Python's `print()` uses, so it hits the identical C/Ruby cross-language
+newline gap `python-to-semantic-ir` 0.9.0 first surfaced — see
+`sir-conformance`'s README "Gaps the corpus has surfaced";
+`js_inheritance` sidesteps it with a single `console.log` call.
+
 ### Security
 
 - **Reject reflective-gadget method names at lowering time (C3, defense in
