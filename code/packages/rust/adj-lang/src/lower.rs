@@ -675,6 +675,8 @@ pub enum FormulaBodyTrace {
 /// Sorted, so a reader can see at a glance that nothing is duplicated.
 pub const RUNTIME_BUILTIN_FORMULAS: &[&str] = &[
     "floor",
+    "max",
+    "min",
     "mod",
     "round_sig",
     "round_to",
@@ -3336,11 +3338,26 @@ fn expand_rec(
                 let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::Floor(Box::new(value)));
             }
-            // FL-9 built-in: `mod(a, b)` — the remainder of `a` divided by `b`, carrying
-            // the sign of the dividend. Recognised by NAME here; maps onto the EXISTING
-            // `ExprAst::Bin(ArithOp::Mod, …)` node — the same one the `latex "…"`
-            // frontend already reaches for `a \bmod b`. Exactly two arguments.
-            if name == "mod" {
+            // FL-9/FL-11 built-ins: `mod(a, b)`, `max(a, b)`, `min(a, b)` — all three take
+            // exactly two arguments and expand identically (expand both, wrap in the
+            // built-in's own binary node), so they share ONE `if` block and one pair of
+            // `a`/`b` locals rather than three near-duplicate blocks. This isn't just
+            // tidiness: `expand_rec` recurses one native stack frame per AST level (see
+            // [`FORMULA_MAX_NODE_DEPTH`]'s doc comment on how tight that margin already
+            // is), and three separate blocks would each contribute their own `a`/`b`
+            // bindings to this function's debug-build stack frame — measured to trip a
+            // macOS CI runner's default ~2 MiB worker-thread stack a few AST levels short
+            // of the depth guard on `deep_operator_spine_trips_the_nesting_guard_not_the_
+            // stack`. Sharing the locals keeps this function's frame the same size adding
+            // `max`/`min` as it was with `mod` alone.
+            // `mod` maps onto the EXISTING `ExprAst::Bin(ArithOp::Mod, …)` node; `max`/`min`
+            // onto the EXISTING `ExprAst::Call2(BinFn::Max/Min, …)` node — the same nodes
+            // the `latex "…"` frontend already reaches for `a \bmod b`/`\max(a, b)`/
+            // `\min(a, b)`. The plain grammar's `agg` production already claims the
+            // ONE-argument shape of `max`/`min` (`max(slot)`, largest observed value of a
+            // slot); this only ever fires for the two-argument shape `agg` cannot produce,
+            // so there is no ambiguity to resolve.
+            if name == "mod" || name == "max" || name == "min" {
                 if args.len() != 2 {
                     return Err(LowerError::FormulaArity {
                         formula: name.clone(),
@@ -3350,7 +3367,11 @@ fn expand_rec(
                 }
                 let a = expand_rec(&args[0], context, depth, state, d)?;
                 let b = expand_rec(&args[1], context, depth, state, d)?;
-                return Ok(ExprAst::Bin(ArithOp::Mod, Box::new(a), Box::new(b)));
+                return Ok(match name.as_str() {
+                    "mod" => ExprAst::Bin(ArithOp::Mod, Box::new(a), Box::new(b)),
+                    "max" => ExprAst::Call2(BinFn::Max, Box::new(a), Box::new(b)),
+                    _ => ExprAst::Call2(BinFn::Min, Box::new(a), Box::new(b)),
+                });
             }
             // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
             // rendering. Recognised by NAME here, before the user-formula lookup, on the
@@ -5075,6 +5096,88 @@ mod tests {
                 })) if formula == "mod"
             ),
             "mod takes exactly two arguments"
+        );
+    }
+
+    // ---- FL-11: min/max on the plain-arithmetic surface ----
+
+    #[test]
+    fn max_builtin_computes_the_larger_of_two_named_quantities() {
+        let src = r#"
+            formulabook spread {
+                formula range_two(a, b) = max(a, b) - min(a, b)
+                    source "measures of spread" trust consensus
+            }
+            observe a(3)
+            observe b(9)
+            ? range_two(a, b)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("range_two").expect("applied max/min");
+        assert_eq!(d.value, 6.0, "max(3, 9) - min(3, 9) = 9 - 3 = 6");
+    }
+
+    #[test]
+    fn min_builtin_picks_the_first_argument_when_it_is_smaller() {
+        let src = r#"
+            formulabook spread {
+                formula smaller(a, b) = min(a, b)
+                    source "measures of spread" trust consensus
+            }
+            observe a(2)
+            observe b(5)
+            ? smaller(a, b)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("smaller").expect("applied min");
+        assert_eq!(d.value, 2.0, "min(2, 5) = 2");
+    }
+
+    #[test]
+    fn max_wrong_arity_is_a_clean_error() {
+        // `max(5)` (a single NON-identifier argument) rather than `max(a)`:
+        // `agg` only ever matches exactly one bare IDENT, so a literal argument
+        // falls through to `apply` and actually reaches the arity check below,
+        // instead of being silently swallowed as a one-slot aggregation.
+        let src = r#"
+            formulabook bad {
+                formula broken(a) = max(5)
+                    source "x" trust consensus
+            }
+            observe a(1)
+            ? broken(a)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 2, got: 1
+                })) if formula == "max"
+            ),
+            "max takes exactly two arguments"
+        );
+    }
+
+    #[test]
+    fn min_wrong_arity_is_a_clean_error() {
+        let src = r#"
+            formulabook bad {
+                formula broken(a, b, c) = min(a, b, c)
+                    source "x" trust consensus
+            }
+            observe a(1)
+            observe b(2)
+            observe c(3)
+            ? broken(a, b, c)
+        "#;
+        assert!(
+            matches!(
+                compile(src),
+                Err(crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 2, got: 3
+                })) if formula == "min"
+            ),
+            "min takes exactly two arguments"
         );
     }
 
@@ -8665,6 +8768,8 @@ rule { head: r(a) when: x(t) }";
         // Applications that are well-formed for each built-in's own signature.
         let applications = [
             ("floor", "floor(a)"),
+            ("max", "max(a, 3)"),
+            ("min", "min(a, 3)"),
             ("mod", "mod(a, 3)"),
             ("round_sig", "round_sig(a, 2)"),
             ("round_to", "round_to(a, 2)"),
@@ -8770,7 +8875,14 @@ rule { head: r(a) when: x(t) }";
     /// any single variant would reopen the hole for that variant alone.
     #[test]
     fn a_wrong_arity_call_cannot_silently_become_an_aggregation() {
-        for keyword in ["sum", "count", "min", "max", "avg"] {
+        // `min`/`max` are excluded here since FL-11: they are now full runtime
+        // built-ins ([`RUNTIME_BUILTIN_FORMULAS`]), reserved at every arity, so
+        // a `formula min(first, second) = …` declaration is rejected outright
+        // by the gate in `validate_formula` — it never gets far enough to
+        // reach the aggregation-shadowing call site this test exercises. See
+        // `max_wrong_arity_is_a_clean_error`/`min_wrong_arity_is_a_clean_error`
+        // for min/max's own (call-site, not declaration-site) arity coverage.
+        for keyword in ["sum", "count", "avg"] {
             let src = format!(
                 r#"
                 formulabook arith {{

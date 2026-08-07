@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.75.0] - 2026-08-06 - `min(a, b)`/`max(a, b)` on the plain-arithmetic surface (FL-11)
+
+- `RUNTIME_BUILTIN_FORMULAS` gains `"max"`/`"min"`: a two-argument `max(a, b)`/`min(a, b)` call is
+  now recognised by name in `expand_rec`, the same recognized-by-name built-in mechanism FL-9's
+  `floor`/`mod` use, dispatched BEFORE the user-formula map is consulted. Each maps directly onto
+  the PRE-EXISTING `ExprAst::Call2(BinFn::Max/Min, …)` node — the same one the `latex "…"` frontend
+  already reached for `\max(a, b)`/`\min(a, b)` — so this is a new surface path to old machinery,
+  not a new `ExprAst`/`ComputeOp` variant or exhaustive-match site.
+- No grammar change. The plain grammar's `agg` production already claims the ONE-argument shape
+  (`max(slot)`/`min(slot)`, an aggregation over a slot's observed values) before `apply` is ever
+  tried, so this only ever fires for the TWO-argument shape `agg` cannot produce — no ambiguity
+  between the two `min`/`max` meanings to resolve.
+- `min`/`max` join the reserved-name set at every arity (not just the one-parameter arity `agg`
+  already reserved): `RUNTIME_BUILTIN_FORMULAS`'s existing `ReservedFormulaName` gate in
+  `validate_formula` now rejects `formula min(a, b) = …`/`formula max(a, b) = …` outright, the same
+  as it already rejects a two-parameter `formula mod(a, b) = …`.
+- New unit tests: `max_builtin_computes_the_larger_of_two_named_quantities`,
+  `min_builtin_picks_the_first_argument_when_it_is_smaller`, `max_wrong_arity_is_a_clean_error`,
+  `min_wrong_arity_is_a_clean_error`; `every_reserved_name_is_really_dispatched_by_the_runtime` and
+  the `RUNTIME_BUILTIN_FORMULAS` sortedness test extended to cover `max`/`min`.
+- `mod`/`max`/`min` share ONE `expand_rec` dispatch block (one `a`/`b` local pair) instead of three
+  near-duplicate ones, since all three take exactly two arguments and expand identically. Not just
+  tidiness: three separate blocks each contributed their own `ExprAst` locals to `expand_rec`'s
+  debug-build stack frame, and macOS CI caught the regression directly — `deep_operator_spine_
+  trips_the_nesting_guard_not_the_stack` (a test asserting `FORMULA_MAX_NODE_DEPTH`'s depth guard
+  trips before the native stack does) overflowed the runner's ~2 MiB worker-thread stack a few
+  frames short of the guard, passing on Linux/Windows but not macOS. Sharing the locals restores
+  the same per-call frame footprint `mod` alone had before this release.
+
 ## [0.74.0] - 2026-08-06 - `symbolic … for <var>`: rung-0 of the CAS-wiring rung (FL-10)
 
 - New `symbolic <name>(<params>) { <lhs> == <rhs> } for <target>` construct, a sibling of

@@ -1,0 +1,66 @@
+% ============================================================================
+% data-displays.adj — the "how far apart" measure-of-spread formula library
+% (ADJ-FORMULA-LIBRARIES FL-11).
+% ============================================================================
+% The K-8 "data displays" track of the compute standard library: given a small
+% set of counted or measured quantities, how far apart is the largest from the
+% smallest? Like `arithmetic/average.adj`, a consumer states NO arithmetic — it
+% `import`s this file, `observe`s the values it decomposed from the prompt, and
+% asks the engine to apply the cited formula on the CPU.
+%
+%     import "data-displays.adj"
+%     observe value_one(3)     % "…3 apples…"   (span cited by the model)
+%     observe value_two(9)     % "…9 apples…"   (span cited by the model)
+%     ? range_two(value_one, value_two)   % engine → 6, carrying MathWorld's R=Y_N-Y_1
+%
+% The engine expands `range_two`/`range_three` onto the plain-arithmetic
+% surface's `max(a, b)`/`min(a, b)` (FL-11 — wired directly onto the pre-
+% existing `ExprAst::Call2(BinFn::Max/Min, …)` node the `latex "…"` frontend
+% already reached) minus each other, on the CPU. The audit trail names the
+% formula and its MathWorld citation.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on nothing beyond the runtime's own `max`/`min`
+% built-ins — no `import` needed, unlike `average.adj`'s dependency on
+% `arithmetic.adj`'s `sum`/`quotient`.
+% ----------------------------------------------------------------------------
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The values being spread and their range. Rung-0 types an
+% observable slot as `finding`; the `surface` synonyms let a decomposer map
+% everyday phrasing ("how much more", "spread", "difference between the
+% highest and lowest") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary data_displays_vocab {
+    define value_one    : finding  surface "first value", "first number", "one value"
+    define value_two    : finding  surface "second value", "second number", "other value"
+    define value_three  : finding  surface "third value", "third number", "last value"
+    define range_two    : finding  surface "range", "spread", "how far apart"
+    define range_three  : finding  surface "range", "spread", "how far apart"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. The statistical range is the largest value minus the
+% smallest — MathWorld's own order-statistic definition, R = Y_N - Y_1.
+%
+%   range_two(a, b)      = max(a, b) - min(a, b)
+%   range_three(a, b, c) = max(max(a, b), c) - min(min(a, b), c)
+% ----------------------------------------------------------------------------
+formulabook data_displays {
+    use data_displays_vocab
+
+    % The range of two quantities — the larger minus the smaller.
+    formula range_two(value_one, value_two) = max(value_one, value_two) - min(value_one, value_two)
+        source "Given order statistics Y_1=min_(j)X_j, ..., Y_N=max_(j)X_j, the range of the random sample is defined by R=Y_N-Y_1."
+        locator "https://mathworld.wolfram.com/StatisticalRange.html"
+        trust authoritative
+
+    % The range of three quantities — the largest minus the smallest. Composes
+    % `max`/`min` twice each (associatively), the same fold `average.adj`'s
+    % `mean_three` uses for `sum`.
+    formula range_three(value_one, value_two, value_three) = max(max(value_one, value_two), value_three) - min(min(value_one, value_two), value_three)
+        source "Given order statistics Y_1=min_(j)X_j, ..., Y_N=max_(j)X_j, the range of the random sample is defined by R=Y_N-Y_1."
+        locator "https://mathworld.wolfram.com/StatisticalRange.html"
+        trust authoritative
+}
