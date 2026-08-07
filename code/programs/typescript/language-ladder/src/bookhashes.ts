@@ -1,5 +1,5 @@
 import manifestJson from "../../../../learning/human-languages/core/generated-book-hashes.json";
-import { combineLessonHashes } from "@coding-adventures/human-language-data/src/hash.ts";
+import { combineChapterHash } from "@coding-adventures/human-language-data/src/hash.ts";
 import type { Lesson } from "./lessons.ts";
 
 interface BookHashEntry {
@@ -11,6 +11,31 @@ interface BookHashEntry {
 }
 
 const ENTRIES = manifestJson.chapters as BookHashEntry[];
+
+/**
+ * The HL05 capability ledgers, loaded the same way lessons are.
+ *
+ * The chapter fingerprint covers the two capability fields the book PRINTS, so
+ * reproducing it needs them. Globbed rather than read through the package loader,
+ * which is Node-only — `lessons.ts` makes the same call for the same reason.
+ */
+const CHAPTER_LEDGERS = import.meta.glob(
+  "../../../../learning/human-languages/*/chapters.json",
+  { import: "default", eager: true },
+) as Record<string, { language: string; chapters: ChapterCapabilityEntry[] }>;
+
+interface ChapterCapabilityEntry {
+  chapter: number;
+  canDo?: string;
+  payoff?: { summary?: string };
+}
+
+const CAPABILITIES = new Map<string, ChapterCapabilityEntry>();
+for (const ledger of Object.values(CHAPTER_LEDGERS)) {
+  for (const entry of ledger.chapters ?? []) {
+    CAPABILITIES.set(`${ledger.language}:${entry.chapter}`, entry);
+  }
+}
 
 export type BookHashStatus = "not-generated" | "synced" | "stale";
 
@@ -34,12 +59,13 @@ export function actualChapterHash(
   ) {
     return undefined;
   }
-  return combineLessonHashes(
+  return combineChapterHash(
     chapterLessons.map((lesson) => ({
       id: lesson.id,
       sequence: lesson.sequence!,
       sourceHash: lesson.sourceHash!,
     })),
+    CAPABILITIES.get(`${language}:${chapter}`),
   );
 }
 
