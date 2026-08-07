@@ -348,8 +348,8 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 3,
-        "underfull": 0
+        "overfull": 4,
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/telugu/book/book.log",
