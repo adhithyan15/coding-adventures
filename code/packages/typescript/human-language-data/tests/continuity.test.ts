@@ -243,11 +243,32 @@ describe("the real corpus", () => {
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". Half of it is taught once.
-    expect(report.summary.atomsTaught).toBe(1469);
-    expect(report.summary.atomsNeverRevisited).toBe(746);
-    expect(report.summary.neverRevisitedPercent).toBe(51);
+    // The second verb tranche (HL-C43) then added 24 lessons teaching 50 atoms, of which
+    // 21 are never revisited — 42%, against the corpus's 51% — so the headline share
+    // ticks DOWN a point. New content is not making this worse; it is slightly better
+    // than what it joins. That is still 21 more atoms taught once and abandoned.
+    expect(report.summary.atomsTaught).toBe(1519);
+    expect(report.summary.atomsNeverRevisited).toBe(767);
+    expect(report.summary.neverRevisitedPercent).toBe(50);
 
-    expect(report.summary.forwardReferences).toBe(509);
+    // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
+    //
+    // TWO are real debt that only became VISIBLE now: `LA-C08-manus` and `LA-C37-habeo`
+    // have always used *scrībere* and *capere*, but nothing taught those words, so no
+    // forward reference could be detected. Teaching them in chapters 38-39 exposed uses
+    // that were already there. This is the measurement improving, not the corpus decaying,
+    // and it will keep happening as coverage grows.
+    //
+    // SIX are Spanish end-of-lesson teasers — "Next: **entender**, which cracks open..."
+    // naming the lesson that immediately follows, inside the same chapter. That is a
+    // title, not vocabulary the reader is expected to already know, and it is a different
+    // thing from `ES-C07-beber` drilling *pan* and *agua* nineteen chapters before they
+    // are taught — which is the case this module was built to find. Latin and Portuguese
+    // authored the same eight verbs with zero teasers, so the habit is avoidable; it is
+    // NOT being rewritten to move this number, because contorting good prose to satisfy a
+    // naive matcher is the exact failure the sight-cue detector already demonstrated.
+    // If this metric is to gate anything, it wants a severity split by distance first.
+    expect(report.summary.forwardReferences).toBe(517);
   });
 
   it("reproduces the Spanish audit exactly", () => {
@@ -255,12 +276,17 @@ describe("the real corpus", () => {
     // existed. They agreeing is the evidence that the walk is the right one.
     const { lessons } = loadEverything();
     const spanish = measureContinuity(lessons).tracks.find((t) => t.language === "spanish");
+    // HL-C43 added 8 Spanish lessons (chapters 34-35), all of them sequenced and
+    // prerequisite-closed: `lessonsWithoutSequence` and `forwardPrerequisites` do not
+    // move at all, while `atomsTaught` goes 182 -> 199 and `atomsNeverRevisited`
+    // 93 -> 102. The independent Python audit these four numbers reproduce was run
+    // against the 146-lesson corpus; the walk is unchanged, only its input grew.
     expect(spanish).toMatchObject({
-      lessonCount: 146,
+      lessonCount: 154,
       lessonsWithoutSequence: 56,
       forwardPrerequisites: 31,
-      atomsTaught: 182,
-      atomsNeverRevisited: 93,
+      atomsTaught: 199,
+      atomsNeverRevisited: 102,
     });
   });
 
