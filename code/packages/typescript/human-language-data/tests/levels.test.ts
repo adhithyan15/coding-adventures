@@ -219,7 +219,7 @@ describe("corpus snapshot", () => {
 
     expect(summary.byLevel["pre-A1"]).toBe(657);
     expect(summary.byLevel.A1).toBe(307);
-    expect(summary.byLevel.A2).toBe(36);
+    expect(summary.byLevel.A2).toBe(54);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
@@ -228,10 +228,10 @@ describe("corpus snapshot", () => {
     // 170 lessons sit in no realization-path segment, all of them schema-v1. They are the
     // reason `mappedPercent` is not 100, and mapping them is migration work, not a gate.
     expect(summary.unmapped).toBe(170);
-    expect(summary.mappedPercent).toBe(85);
+    expect(summary.mappedPercent).toBe(86);
   });
 
-  it("shows six tracks have reached A2, and only two have not reached A1", () => {
+  it("shows nine tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -240,7 +240,17 @@ describe("corpus snapshot", () => {
     // which is still the honest ceiling for the whole corpus.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
-    ).toEqual(["arabic", "latin", "persian", "russian", "tamil", "urdu"]);
+    ).toEqual([
+      "arabic",
+      "kannada",
+      "latin",
+      "malayalam",
+      "persian",
+      "russian",
+      "tamil",
+      "telugu",
+      "urdu",
+    ]);
     expect(
       summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
     ).toBe(true);

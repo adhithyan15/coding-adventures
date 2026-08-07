@@ -225,8 +225,8 @@ describe("corpus snapshot", () => {
     // bookChapters 377 -> 378, declaredChapters 279 -> 280, chaptersWithoutCapability
     // holds at 98. A new chapter that shipped without a `canDo`/`payoff` would have
     // pushed the debt to 99, which is exactly what this trio is here to catch.
-    expect(report.summary.bookChapters).toBe(384);
-    expect(report.summary.declaredChapters).toBe(286);
+    expect(report.summary.bookChapters).toBe(387);
+    expect(report.summary.declaredChapters).toBe(289);
     expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

@@ -95,9 +95,9 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.coreVerbCount).toBe(40);
 
-    expect(report.summary.tracksWithNoCoreVerb).toBe(16);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(13);
     expect(report.summary.universallyMissing).toHaveLength(29);
-    expect(report.summary.meanCoveredPercent).toBe(4);
+    expect(report.summary.meanCoveredPercent).toBe(6);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
