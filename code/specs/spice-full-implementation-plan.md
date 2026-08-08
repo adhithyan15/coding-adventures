@@ -4537,9 +4537,15 @@ the Rust, Python, and TypeScript surfaces together.
      shared engine saturation-current-temperature-exponent field.
 
 442. Python and TypeScript Berkeley SPICE BJT energy-gap parity.
-   - Status: implemented in this BJT EG parity slice.
+   - Status: completed in PR 10101.
    - Both parser facades validate positive finite `EG` values and lower them
      into the shared engine energy-gap field.
+
+443. Python and TypeScript Berkeley SPICE BJT forward Early-voltage parity.
+   - Status: implemented in this BJT VAF parity slice.
+   - Both parser facades validate finite, non-negative `VAF` / `VA` values,
+     prefer canonical `VAF`, and lower the result into the shared engine
+     forward-Early-voltage field.
 
 ## Backlog
 
