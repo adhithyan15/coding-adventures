@@ -4,22 +4,48 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
-### Fixed — the Spanish book was printing chapter 38 twice and dropping chapter 40
+### Added — coverage assertions for the book manifest (HL-C50)
 
-Found while wiring chapter 41 next to it, and pre-existing on `main`. The Spanish
-entries in `core/book-generation.json` had drifted one out of step: the target whose
-`output` is `ch39-bring-get-play-meet.tex` declared `"chapter": 38`, and the one for
-`ch40-wait-answer-buy.tex` declared `"chapter": 39`. No target declared chapter 40.
+The Spanish book was printing chapter 38 twice and dropping chapter 40, and **every
+check passed** while it did. That defect is fixed; these are the assertions that would
+have caught it, plus an audit confirming no other track carries the same drift.
 
-The consequences were invisible to every check. `ch39-bring-get-play-meet.tex` was
-**byte-identical in content** to `ch38-narrating.tex` — same `canonical-source-hash`,
-same ES-C38 lessons — with only the title and label swapped, so a reader got chapter
-38 twice under two names. Chapter 40's four lessons reached no book chapter at all.
+The gap was structural. `check:books` compares each **declared** target against what
+the generator produces, so a manifest declaring the wrong chapter round-trips
+perfectly. `titleDrift` stayed 0 because each file took its title from its own
+(correct) target. Narration and modality read the corpus directly and never consult
+the manifest. Nothing asked the coverage question: *do the declarations line up with
+the corpus?*
 
-`check:books` passed throughout, because it validates the targets that are declared,
-not whether the declarations cover the corpus. `chapters.json` was correct the whole
-time; only the book manifest was wrong. Each of the four chapters now renders its own
-lessons under its own hash.
+Five assertions now do, in `book-cli.test.ts`'s existing manifest block:
+
+1. **No chapter number declared twice in a track** — the drift's direct signature.
+2. **Every filename agrees with its declared chapter** — `ch39-*.tex` must not be
+   declared as chapter 38. The cheapest tripwire, and it would have fired the instant
+   the drift was written.
+3. **Every declaration stays inside its own track's directory** — a target writing
+   into another track's folder passes every other check while silently adding a
+   chapter to a book nobody edited.
+4. **No two declarations write the same path** — the loser vanishes silently.
+5. **Every ledgered chapter is `\input` into its book**, not merely present on disk.
+   "Reaches a file" is the weaker claim, and the weaker claim is what let the original
+   bug through in spirit.
+
+**They run over `targets` and `handwritten` together**, which matters more than it
+sounds: the manifest's `handwritten[]` array holds 105 of the 452 declarations, and the
+identical drift there was invisible to every test in the package. Keeping the two
+halves apart is what allowed that.
+
+Each assertion was proven to fire before being trusted. Reintroducing the exact
+Spanish drift trips three; the same drift in `handwritten[]` trips two; a target
+escaping its track trips two; deleting a declaration trips two; and removing an
+`\input` while leaving the file on disk trips the fifth alone.
+
+**Audit result: no other track is affected.** Across all 22 — and across both arrays —
+there are no duplicate declarations, no filename/chapter mismatches, no path
+collisions, and no ledgered chapter missing from its book. Seven chapters have no
+generation target (hindi 1–2, latin 1, persian 2, russian 2, tamil 1, urdu 2); all
+seven are hand-authored, declared in `handwritten[]`, and `\input` into their books.
 
 ### Added — Spanish chapter 41, the second B1 rung (SPINE-GIVE-REASONS)
 
