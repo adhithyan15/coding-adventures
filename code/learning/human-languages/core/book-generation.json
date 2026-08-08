@@ -1066,6 +1066,34 @@
       "output": "italian/book/chapters/ch21-play-get-answer.tex"
     },
     {
+      "language": "italian",
+      "chapter": 22,
+      "title": "Coffee, Tea, Milk, and Sugar",
+      "label": "ch:it-coffee-tea-milk-sugar",
+      "output": "italian/book/chapters/ch22-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "title": "Friends, Family, and a Name",
+      "label": "ch:it-friends-family-name",
+      "output": "italian/book/chapters/ch23-friends-family-name.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "title": "Heart, Eyes, Ears, and Mouth",
+      "label": "ch:it-heart-eyes-ears-mouth",
+      "output": "italian/book/chapters/ch24-heart-eyes-ears-mouth.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "title": "Nose, Stomach, and Throat",
+      "label": "ch:it-nose-stomach-throat",
+      "output": "italian/book/chapters/ch25-nose-stomach-throat.tex"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "title": "Three Writing Systems in One Doorway",

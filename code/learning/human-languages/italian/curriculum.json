@@ -328,6 +328,65 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "IT-PATH-026",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "IT-C22-caffe",
+        "IT-C22-te",
+        "IT-C22-latte",
+        "IT-C22-zucchero"
+      ],
+      "before": [],
+      "inline": [
+        "IT-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-027",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "IT-C23-amico-amica",
+        "IT-C23-famiglia",
+        "IT-C23-nome",
+        "IT-C23-persona"
+      ],
+      "before": [],
+      "inline": [
+        "IT-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-028",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "IT-C24-cuore",
+        "IT-C24-occhio",
+        "IT-C24-orecchio",
+        "IT-C24-bocca"
+      ],
+      "before": [],
+      "inline": [
+        "IT-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-029",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "IT-C25-naso",
+        "IT-C25-stomaco",
+        "IT-C25-gola"
+      ],
+      "before": [],
+      "inline": [
+        "IT-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -366,7 +425,8 @@
       "segments": [
         "IT-PATH-009",
         "IT-PATH-015",
-        "IT-PATH-019"
+        "IT-PATH-019",
+        "IT-PATH-027"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -382,7 +442,9 @@
       "segments": [
         "IT-PATH-002",
         "IT-PATH-008",
-        "IT-PATH-021"
+        "IT-PATH-021",
+        "IT-PATH-028",
+        "IT-PATH-029"
       ],
       "omits": [
         "WORD-WELL"
@@ -392,7 +454,8 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "IT-PATH-012",
-        "IT-PATH-016"
+        "IT-PATH-016",
+        "IT-PATH-026"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -882,6 +945,61 @@
       "lessons": [
         "IT-C17-testa",
         "IT-C17-mano"
+      ]
+    },
+    {
+      "id": "IT-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for coffee, tea, milk and sugar in Italian, and tell which of the four were borrowed and which was inherited.",
+      "prerequisites": [],
+      "lessons": [
+        "IT-C22-caffe",
+        "IT-C22-te",
+        "IT-C22-latte",
+        "IT-C22-zucchero"
+      ]
+    },
+    {
+      "id": "IT-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can introduce a friend, name a family as a whole, ask for someone's name with the word itself, and say 'person' the way Italian always does.",
+      "prerequisites": [],
+      "lessons": [
+        "IT-C23-amico-amica",
+        "IT-C23-famiglia",
+        "IT-C23-nome",
+        "IT-C23-persona"
+      ]
+    },
+    {
+      "id": "IT-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my heart, eyes, ears and mouth in Italian and trace the sound-law that built two of them.",
+      "prerequisites": [],
+      "lessons": [
+        "IT-C24-cuore",
+        "IT-C24-occhio",
+        "IT-C24-orecchio",
+        "IT-C24-bocca"
+      ]
+    },
+    {
+      "id": "IT-EXT-029-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my nose, stomach and throat in Italian, closing the body-word set Chapter 17 opened.",
+      "prerequisites": [],
+      "lessons": [
+        "IT-C25-naso",
+        "IT-C25-stomaco",
+        "IT-C25-gola"
       ]
     }
   ]
