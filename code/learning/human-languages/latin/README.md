@@ -22,9 +22,9 @@ before the whole; and a book you can read straight through.
 
 ## Progress
 
-- **Chapters 1–39 are authored** as 73 prerequisite-ordered lessons, from
+- **Chapters 1–41 are authored** as 81 prerequisite-ordered lessons, from
   greetings and numbers through names, time, everyday courtesy, the honest
-  limits of reconstructed conversational phrases, and the sixteen verbs the
+  limits of reconstructed conversational phrases, and the twenty-four verbs the
   language leans on hardest.
 - **Chapter 37 gives the track its verbs** — *sum*, *habeō*, *eō*, *veniō*,
   *dīcō*, *videō*, *sciō*, *dō*, one per lesson. Each teaches its six
@@ -42,17 +42,32 @@ before the whole; and a book you can read straight through.
   Each lesson also names the lookalikes that are not relatives — English
   *read*, *write*, *think*, *ask* and *help* are all Germanic, *juvenile* is
   not from *iuvō*, and *capital* is not from *capiō*.
+- **Chapters 40 and 41 add the last eight of the core forty** — *audiō*,
+  *dormiō*, *sedeō*, *stō* in chapter 40, then *ambulō*, *currō*, *aperiō*,
+  *claudō* in chapter 41. Each lesson names the conjugation its verb belongs to
+  (fourth, second, first, third) without teaching the whole system, and the two
+  chapters carry the richest English dividend in the track: *audiō* behind
+  *audio*, *audit* and — through *ob-audīre*, "to listen toward" — *obey*;
+  *currō* behind *current*, *curriculum* and *corridor*, and behind *car* a
+  second time by way of a Gaulish wagon-word; *claudō* behind *close* itself.
+- **Chapter 40 names a distinction the track had been using silently** —
+  *inherited* against *borrowed*. English *sit* and *stand* descend from the
+  same ancestors as *sedeō* and *stō* without passing through Latin, while
+  *session* and *station* were taken out of Latin centuries later. Chapter 41
+  then shows the opposite figure: *aperiō* ("cover away") and *operīre*
+  ("cover over") are one root under two prefixes, and English holds both halves
+  — *aperture* from the first, *cover* and *curfew* from the second.
 - **Five chapters end on a dedicated payoff lesson** — 1, 19, 21, 33, and 36.
   Chapters 19, 21, and 36 close on a real Latin exchange assembled only from
   words the reader has already been taught; chapter 33 closes on a sorting task,
   because its material is etymological and would not honestly support a
   conversation.
-- **Chapters 2–39 are generated from the same schema-v2 lessons used by Language
+- **Chapters 2–41 are generated from the same schema-v2 lessons used by Language
   Ladder.** Chapter 1 remains the hand-authored opening; deterministic source
   hashes keep every later app/book chapter pair aligned.
 - Every lesson has a shared-spine placement, explicit knowledge boundaries, and
   an effective duration below five minutes.
-- **All 39 chapters carry a capability entry** in
+- **All 41 chapters carry a capability entry** in
   [`chapters.json`](./chapters.json) — no chapter is skipped, and no entry is a
   stub.
 

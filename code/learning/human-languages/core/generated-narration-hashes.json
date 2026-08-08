@@ -3644,6 +3644,40 @@
       "jsonHash": "fnv1a64:14e45d70f6ad1110"
     },
     {
+      "language": "latin",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:ae6b9b154fb369b2",
+      "lessonIds": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch40.txt",
+      "json": "latin/narration/ch40.json",
+      "textHash": "fnv1a64:2bf91d5f96e991a3",
+      "jsonHash": "fnv1a64:878d418f6161f77a"
+    },
+    {
+      "language": "latin",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:fe69dc2b788501fe",
+      "lessonIds": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch41.txt",
+      "json": "latin/narration/ch41.json",
+      "textHash": "fnv1a64:789a7ac18d00e297",
+      "jsonHash": "fnv1a64:a650ca85c6e504a4"
+    },
+    {
       "language": "malayalam",
       "chapter": 1,
       "sourceHash": "fnv1a64:bfb1a1a7a0f1d6f8",

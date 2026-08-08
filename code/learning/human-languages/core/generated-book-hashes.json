@@ -1743,6 +1743,30 @@
       "tex": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:1cddd2598214fb8f",
+      "lessonIds": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ],
+      "tex": "latin/book/chapters/ch40-sense-and-posture-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:2b002dc26979c3db",
+      "lessonIds": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "tex": "latin/book/chapters/ch41-motion-verbs.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:681af808b81537e1",

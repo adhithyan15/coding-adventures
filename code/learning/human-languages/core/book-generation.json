@@ -2289,6 +2289,20 @@
       "output": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 40,
+      "title": "Hearing, Sleeping, Sitting, Standing",
+      "label": "ch:la-sense-and-posture-verbs",
+      "output": "latin/book/chapters/ch40-sense-and-posture-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 41,
+      "title": "Walking, Running, Opening, Closing",
+      "label": "ch:la-motion-verbs",
+      "output": "latin/book/chapters/ch41-motion-verbs.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
