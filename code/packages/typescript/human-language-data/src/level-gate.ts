@@ -49,6 +49,19 @@ export const LEVEL_VOCABULARY: Record<CefrLevel, number> = {
   C2: 16000,
 };
 
+/**
+ * Is this atom an etymology hook rather than a skill?
+ *
+ * Every track names them the same way — `ES-ETYMON-CREDERE-02`, `TA-ETYMON-NAL-01` —
+ * so the id carries the fact. Note this is a CONVENTION, not an enforced schema: an
+ * etymology atom named some other way is not waived, and a census found a handful
+ * (`ES-HISTORY-AL-ANDALUS-LOANS`, `SA-SOUND-PIE-KW-OUTCOMES`) that arguably qualify
+ * and are not matched. Naming them consistently is the fix, not widening this regex.
+ */
+export function isEtymologyAtom(atom: string): boolean {
+  return /-ETYMON-/.test(atom);
+}
+
 /** Which of the four criteria a level failed, and by how much. */
 export interface LevelBlocker {
   criterion: "spine-nodes" | "vocabulary" | "atom-budget" | "reinforcement";
@@ -241,13 +254,29 @@ export function runLevelGate(input: LevelGateInput): LevelGateReport {
 
       // §3.1 asks for TWO revisits, so `revisits < 2` — not `=== 0`. Measuring
       // zero-revisit atoms only would have hidden 51 of Spanish's 141 failures.
-      const thin = underReinforced.filter(
-        (d) => d.revisits < 2 && atOrBelow(d.introducedBy, level),
-      );
+      //
+      // Etymology atoms are WAIVED here, by the project owner's decision: an etymology
+      // is a memory hook, read once, not a skill to be drilled. Before this, the gate
+      // demanded every atom be revisited twice, and the only way to satisfy that for an
+      // etymon was to re-state it in the Guided Practice and again in the Wrap-up
+      // Recall — so the gate was manufacturing the repetition the owner asked to
+      // remove.
+      //
+      // The waiver lives HERE and not in `continuity.ts` on purpose. `measureContinuity`
+      // goes on reporting every atom truthfully, so `atomsTaught`,
+      // `atomsNeverRevisited` and the R-window counts keep meaning what they say and
+      // the gap report stays honest. Only the LEVEL CLAIM ignores them, which is the
+      // one place the decision actually applies — and it is visible in
+      // `waivedEtymologyAtoms` rather than silently absent.
+      const relevant = underReinforced.filter((d) => atOrBelow(d.introducedBy, level));
+      const waived = relevant.filter((d) => isEtymologyAtom(d.atom));
+      const thin = relevant.filter((d) => d.revisits < 2 && !isEtymologyAtom(d.atom));
       if (thin.length > 0) {
         failures.push({
           criterion: "reinforcement",
-          detail: `${thin.length} atom(s) at or below ${level} are revisited fewer than twice`,
+          detail:
+            `${thin.length} atom(s) at or below ${level} are revisited fewer than twice` +
+            (waived.length > 0 ? ` (${waived.length} etymology hook(s) waived)` : ""),
           shortfall: thin.length,
         });
       }
