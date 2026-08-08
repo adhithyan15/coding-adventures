@@ -43,4 +43,4 @@ five words together.
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **இல்லை**. Is it closer to English *no*, or to *is not*?
-(**Is not** — it is a statement, not a label.) Next: the word for thank you.
+(**Is not** — it is a statement, not a label.) Next: writing it.

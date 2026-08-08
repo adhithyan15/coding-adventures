@@ -37,7 +37,10 @@
         "TA-W03-pulli-vanakkam",
         "TA-W03-write-vanakkam",
         "TA-W04-vowel-signs-nandri",
-        "TA-W04-i-sign-write-nandri"
+        "TA-W04-i-sign-write-nandri",
+        "TA-W05-write-aam",
+        "TA-W06-write-illai",
+        "TA-W07-write-sari"
       ],
       "before": [],
       "inline": [
@@ -874,7 +877,10 @@
         "TA-W03-pulli-vanakkam",
         "TA-W03-write-vanakkam",
         "TA-W04-vowel-signs-nandri",
-        "TA-W04-i-sign-write-nandri"
+        "TA-W04-i-sign-write-nandri",
+        "TA-W05-write-aam",
+        "TA-W06-write-illai",
+        "TA-W07-write-sari"
       ]
     },
     {
