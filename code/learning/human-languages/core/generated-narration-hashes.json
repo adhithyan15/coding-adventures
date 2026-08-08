@@ -6126,7 +6126,7 @@
     {
       "language": "spanish",
       "chapter": 41,
-      "sourceHash": "fnv1a64:aaf392ed71c29d4f",
+      "sourceHash": "fnv1a64:173e1962b10e4f5b",
       "lessonIds": [
         "ES-C41-creer",
         "ES-C41-asi-que",
@@ -6138,7 +6138,7 @@
       "text": "spanish/narration/ch41.txt",
       "json": "spanish/narration/ch41.json",
       "textHash": "fnv1a64:cf2b639c3ae23d4e",
-      "jsonHash": "fnv1a64:c513701f04d28793"
+      "jsonHash": "fnv1a64:9a2700c2d2904ab3"
     },
     {
       "language": "tamil",

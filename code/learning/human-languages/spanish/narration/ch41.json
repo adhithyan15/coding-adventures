@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:aaf392ed71c29d4f",
+  "sourceHash": "fnv1a64:173e1962b10e4f5b",
   "lessons": [
     {
       "id": "ES-C41-creer",
@@ -203,8 +203,8 @@
       "id": "ES-C41-asi-que",
       "sequence": 1890,
       "title": "así que — \"so\", and a word you have been saying since yes",
-      "headword": "así",
-      "romanization": "así",
+      "headword": "así que",
+      "romanization": "así que",
       "gloss": "thus, in that way — and with que after it, \"so\"; built on the same sīc that gave you sí",
       "script": "latin",
       "modality": "voice",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed35ac545ee26f56",
+      "sourceHash": "fnv1a64:9a66f2e2999d5c08",
       "notice": null,
       "blocks": [
         {
