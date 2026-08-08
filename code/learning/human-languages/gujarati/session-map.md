@@ -82,7 +82,26 @@ lesson introduces exactly the letters that word needs.
 | 38 | jovun | જોવું | "to see"; one vowel sign away from *javũ*; origin flagged as probable, not proven |
 | 39 | jaanvun | જાણવું | "to know" ← *jānāti*, root *jñā-*, PIE \**gnō-* — *know, cunning, notice, diagnosis*. Chapter payoff |
 
+## Chapter 8 — The Mind and the Page
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 40 | vicharvun | વિચારવું | "to think"; the noun *vichār* with a verb ending put on it — *vi-* + *car-* "range about", PIE \**kwel-* "turn" (English *wheel*, *cycle*, *colony*); built rather than inherited, like *traṇ*'s restored *r* |
+| 41 | samajvun | સમજવું | "to understand" ← *sambudhyate*, root *budh-* "to wake" — the root of **buddha**, English *bode*, *forbid*; *dhy* → *jjh* → *j*, assimilate then simplify, as *dv* → *bb* → *b* did in *be* |
+| 42 | vanchvun | વાંચવું | "to read" ← *vācayati* "to **make** speak", causative of *vac-* (Latin *vōx* → English *voice*, *vowel*, *advocate*); the nasal dot sits in the **middle** of the word, as in *pā̃ch* |
+| 43 | lakhvun | લખવું | "to write" ← *likhati*, and *likh-* meant **to scratch** — Sanskrit *rekhā* "a line"; no secure English cousin, and the lesson says so. Chapter payoff: *hũ mārũ nām lakhũ chhũ* |
+
+## Chapter 9 — Taking, Asking, Helping, Liking
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 44 | levun | લેવું | "to take" ← *labhate*, PIE \**lebh-* "work, harvest, gain" — not seizing but earning; Latin *labor* often linked and also rejected, so **probable, not proven** |
+| 45 | puchhvun | પૂછવું | "to ask" ← *pṛcchati*, PIE \**prek-* — the verb English kept only for **praying** (*pray*, *precarious*, German *fragen*); its **p** survived because it stands at the front of the word |
+| 46 | madad-karvi | મદદ કરવી | "to help"; Arabic *madad* through Persian, root *m-d-d* "to extend" — a hand held out. **કરવી** is **feminine**, not neuter, because *madad* is a feminine noun |
+| 47 | gamvun | ગમવું | "to like" ← *gamyate*, the **passive** of *gam-* "to go" (English **come**) — born without a doer, so *mane gujarātī game chhe* has no room for *hũ*. Chapter payoff |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10 and Gujarati digits ૧૨૩, then family and
-food, then the tenses where the three genders return on the verb.
+food, then the tenses where the three genders return on the verb — and where
+*gamvũ*'s agreement with the liked thing becomes visible.

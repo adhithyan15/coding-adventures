@@ -567,6 +567,30 @@
       "tex": "gujarati/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "gujarati",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:ac0c437339c0a581",
+      "lessonIds": [
+        "GU-C08-vicharvun",
+        "GU-C08-samajvun",
+        "GU-C08-vanchvun",
+        "GU-C08-lakhvun"
+      ],
+      "tex": "gujarati/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:ea9c16ff2afa234e",
+      "lessonIds": [
+        "GU-C09-levun",
+        "GU-C09-puchhvun",
+        "GU-C09-madad-karvi",
+        "GU-C09-gamvun"
+      ],
+      "tex": "gujarati/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "sourceHash": "fnv1a64:ef8184e4fd309678",

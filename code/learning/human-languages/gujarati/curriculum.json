@@ -128,6 +128,32 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "GU-PATH-011",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GU-C08-vicharvun",
+        "GU-C08-samajvun",
+        "GU-C08-vanchvun",
+        "GU-C08-lakhvun"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-012",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GU-C09-levun",
+        "GU-C09-puchhvun",
+        "GU-C09-madad-karvi",
+        "GU-C09-gamvun"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -241,7 +267,9 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
-        "GU-PATH-010"
+        "GU-PATH-010",
+        "GU-PATH-011",
+        "GU-PATH-012"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -251,14 +279,9 @@
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-HEAR",
-        "VERB-THINK",
-        "VERB-UNDERSTAND",
         "VERB-LEARN",
-        "VERB-READ",
-        "VERB-WRITE",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",
         "VERB-PUT",
@@ -272,14 +295,11 @@
         "VERB-SIT",
         "VERB-STAND",
         "VERB-WAIT",
-        "VERB-ASK",
         "VERB-ANSWER",
-        "VERB-HELP",
         "VERB-MEET",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE",
-        "VERB-LIKE-LOVE"
+        "VERB-CLOSE"
       ],
       "relocates": {}
     },
