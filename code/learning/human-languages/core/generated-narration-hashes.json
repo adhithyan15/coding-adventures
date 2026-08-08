@@ -1637,6 +1637,72 @@
       "jsonHash": "fnv1a64:81f8b10789084d45"
     },
     {
+      "language": "german",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:72138ddefaa606ae",
+      "lessonIds": [
+        "GE-C28-kaffee",
+        "GE-C28-tee",
+        "GE-C28-milch"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch28.txt",
+      "json": "german/narration/ch28.json",
+      "textHash": "fnv1a64:de539fb4ff0d3752",
+      "jsonHash": "fnv1a64:50b299ea302a3540"
+    },
+    {
+      "language": "german",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:9235ee0c6650b4d7",
+      "lessonIds": [
+        "GE-C29-freund",
+        "GE-C29-freundin",
+        "GE-C29-familie"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch29.txt",
+      "json": "german/narration/ch29.json",
+      "textHash": "fnv1a64:db0443b188232973",
+      "jsonHash": "fnv1a64:e234a59397ad2f76"
+    },
+    {
+      "language": "german",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:3d76ed21c25da698",
+      "lessonIds": [
+        "GE-C30-auge",
+        "GE-C30-ohr",
+        "GE-C30-mund",
+        "GE-C30-nase"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch30.txt",
+      "json": "german/narration/ch30.json",
+      "textHash": "fnv1a64:21ca7448e9ca583a",
+      "jsonHash": "fnv1a64:946e736c1e37337f"
+    },
+    {
+      "language": "german",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:a016d74815f78532",
+      "lessonIds": [
+        "GE-C31-arm",
+        "GE-C31-finger",
+        "GE-C31-fuss",
+        "GE-C31-herz"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch31.txt",
+      "json": "german/narration/ch31.json",
+      "textHash": "fnv1a64:d94003c2bce0d255",
+      "jsonHash": "fnv1a64:00dff966fd9cac7b"
+    },
+    {
       "language": "gujarati",
       "chapter": 1,
       "sourceHash": "fnv1a64:08fb66dea407c28f",
