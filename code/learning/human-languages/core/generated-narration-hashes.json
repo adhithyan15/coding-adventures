@@ -5839,6 +5839,40 @@
       "jsonHash": "fnv1a64:768d75640e6ad386"
     },
     {
+      "language": "spanish",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:0e305c37e6fc9666",
+      "lessonIds": [
+        "ES-C36-oir",
+        "ES-C36-dormir",
+        "ES-C36-caminar",
+        "ES-C36-correr"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch36.txt",
+      "json": "spanish/narration/ch36.json",
+      "textHash": "fnv1a64:124d529f278a8ab0",
+      "jsonHash": "fnv1a64:d958feb10ede2f28"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:3899f6300550ff70",
+      "lessonIds": [
+        "ES-C37-abrir",
+        "ES-C37-cerrar",
+        "ES-C37-sentarse",
+        "ES-C37-levantarse"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch37.txt",
+      "json": "spanish/narration/ch37.json",
+      "textHash": "fnv1a64:5b9393ae9965262b",
+      "jsonHash": "fnv1a64:ca00d1b6d278148f"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:b80adea0055c5306",

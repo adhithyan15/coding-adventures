@@ -2780,6 +2780,30 @@
       "tex": "spanish/book/chapters/ch35-take-ask-help.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:3e6206d3d514062c",
+      "lessonIds": [
+        "ES-C36-oir",
+        "ES-C36-dormir",
+        "ES-C36-caminar",
+        "ES-C36-correr"
+      ],
+      "tex": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:60ab3e2d720ff3b6",
+      "lessonIds": [
+        "ES-C37-abrir",
+        "ES-C37-cerrar",
+        "ES-C37-sentarse",
+        "ES-C37-levantarse"
+      ],
+      "tex": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:8cb1982f517a21f4",

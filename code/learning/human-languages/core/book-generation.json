@@ -214,6 +214,20 @@
       "output": "spanish/book/chapters/ch35-take-ask-help.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 36,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:spanish-hear-sleep-walk-run",
+      "output": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "title": "Opening, Closing, Sitting Down, Standing Up",
+      "label": "ch:spanish-open-close-sit-stand",
+      "output": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",

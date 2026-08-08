@@ -86,6 +86,29 @@ each is a prerequisite of the next.
 rebuilt rather than translated, and because it reaches back to *mucho gusto*
 from Chapter 3 — the same *gustus*, met as a noun long before the verb.
 
+## Chapters 36-37 — the third verb tranche
+
+Eight more core verbs no track had realized, one verb per session-slot, chained
+so each is a prerequisite of the next.
+
+| New lesson(s) | Introduces |
+|---|---|
+| oír | *audīre* "to hear", and *obey* ← *ob-* + *audīre*; *oigo* joins the *-go* club, *oyes* is a spelling rule |
+| dormir | *dormīre* "to sleep"; the boot's other vowel, o→ue |
+| caminar | Gaulish *camminus* by way of *el camino*; *andar*'s origin genuinely disputed |
+| correr | *currere* "to run"; **car** shown to be a cousin through Celtic |
+| abrir | *aperīre* "to uncover"; the irregular participle *abierto*; *April* refused |
+| cerrar | *serāre* ← *sera*, the bar across a door — **not** *claudere*; e→ie again |
+| sentarse | \**sedentāre* ← *sedēns*; the reflexive from *me llamo*, now on a verb |
+| levantarse | \**levantāre* ← *levāns*; reflexive without a stem change; *estar de pie* |
+
+Each session practises the atoms of the one or two before it, across the chapter
+seam, which is what closes the R1 window (HL09 §7.2). *Correr* and *levantarse*
+close their chapters and reach further back: *correr* to *perro* (Ch. 32) and
+the weekend (Ch. 21), *levantarse* to the reflexive of *me llamo* (Ch. 3) and to
+*la mano* and *la cabeza* (Ch. 24) — *levanto la mano* being the same verb
+without the pronoun.
+
 ## What comes next (recursive)
 
 Chapter 4 answers what Chapter 3 ends on: their reply to **"¿cómo está

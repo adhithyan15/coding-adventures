@@ -96,7 +96,10 @@ describe("real curriculum", () => {
     // 33 -> 35: the second Spanish verb tranche added Chapters 34 and 35, the track's
     // first chapters filed under an A2 spine node (SPINE-SAY-WHAT-I-DO) rather than an
     // A1 social function. Both are generated from schema-v2 lessons like 1-6 and 19-33.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(35);
+    // 35 -> 37: the third verb tranche added Chapters 36 (oír, dormir, caminar, correr)
+    // and 37 (abrir, cerrar, sentarse, levantarse), again split 4+4 to stay inside
+    // maxNewAtomsPerChapter, and again on SPINE-SAY-WHAT-I-DO.
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(37);
     expect(
       books.books
         .find((book) => book.language === "persian")

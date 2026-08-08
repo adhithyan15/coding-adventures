@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "spanish",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6, 19-33 and 34-35 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-35 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6 and 19-37 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-37 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
   "chapters": [
     {
       "chapter": 1,
@@ -450,6 +450,63 @@
           "ES-LEX-GUSTAR-07",
           "ES-ETYMON-GUSTAR-08",
           "ES-GRAMMAR-GUSTAR-INVERSION-09"
+        ]
+      }
+    },
+    {
+      "chapter": 36,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:spanish-hear-sleep-walk-run",
+      "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "ES-C36-correr",
+        "kind": "task",
+        "summary": "Run the chapter's four verbs together and sort them by what they do to their stems: correr, caminar and andar leave theirs alone, dormir breaks o to ue, oír grows a g in oigo and writes y in oyes. Then name each verb's source in turn — audīre, dormīre, Gaulish camminus, currere — and set the two words with no settled origin, andar and perro, against them.",
+        "assesses": [
+          "ES-LEX-OIR-01",
+          "ES-ETYMON-OIR-02",
+          "ES-GRAMMAR-OIR-Y-03",
+          "ES-LEX-DORMIR-04",
+          "ES-ETYMON-DORMIR-05",
+          "ES-GRAMMAR-STEM-O-UE-06",
+          "ES-LEX-CAMINAR-07",
+          "ES-LEX-ANDAR-08",
+          "ES-ETYMON-CAMINAR-09",
+          "ES-LEX-CORRER-10",
+          "ES-ETYMON-CORRER-11",
+          "ES-LEX-PERRO-03",
+          "ES-EVIDENCE-PERRO-04",
+          "ES-LEX-WEEKEND-01"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "Opening, Closing, Sitting Down, Standing Up",
+      "label": "ch:spanish-open-close-sit-stand",
+      "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "ES-C37-levantarse",
+        "kind": "task",
+        "summary": "Say the chapter in one breath — abro el libro, me siento, cierro el libro, me levanto — then separate the two features it taught: sentarse is reflexive and a stem-changer, levantarse is reflexive only. Name the shared recipe behind both body-position verbs (a Latin present participle, sedēns and levāns), pick abierto out as the one irregular participle, and reach back to la mano for why the article stays feminine.",
+        "assesses": [
+          "ES-LEX-ABRIR-01",
+          "ES-ETYMON-ABRIR-02",
+          "ES-GRAMMAR-ABIERTO-03",
+          "ES-LEX-CERRAR-04",
+          "ES-ETYMON-CERRAR-05",
+          "ES-ETYMON-CLAUDERE-06",
+          "ES-LEX-SENTARSE-07",
+          "ES-ETYMON-SENTARSE-08",
+          "ES-LEX-LEVANTARSE-09",
+          "ES-ETYMON-LEVANTARSE-10",
+          "ES-LEX-DE-PIE-11",
+          "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON",
+          "ES-LEX-MANO-01",
+          "ES-GRAMMAR-MANO-GENDER-02",
+          "ES-LEX-CABEZA-01"
         ]
       }
     }
