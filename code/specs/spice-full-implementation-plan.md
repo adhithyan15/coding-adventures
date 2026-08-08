@@ -4554,9 +4554,14 @@ the Rust, Python, and TypeScript surfaces together.
      reverse-Early-voltage field.
 
 445. Python and TypeScript Berkeley SPICE BJT forward-emission parity.
-   - Status: implemented in this BJT NF parity slice.
+   - Status: completed in PR 10106.
    - Both parser facades validate positive finite `NF` values and lower them
      into the shared engine forward-emission-coefficient field.
+
+446. Python and TypeScript Berkeley SPICE BJT reverse-emission parity.
+   - Status: implemented in this BJT NR parity slice.
+   - Both parser facades validate positive finite `NR` values and lower them
+     into the shared engine reverse-emission-coefficient field.
 
 ## Backlog
 
