@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `BETATCE` alternative mobility temperature
+  coefficient while preserving omission for `BEX` fallback.
 - Validate and lower JFET model-card `BEX` mobility temperature exponent.
 - Validate and lower JFET model-card `TNOM` / `T_NOM` nominal temperature.
 - Validate and lower JFET model-card `VTOTC` alternative threshold-voltage

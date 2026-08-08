@@ -1353,6 +1353,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 nominal_temperature + 273.15 if nominal_temperature is not None else None
             ),
             Bex=model.params.get("BEX", 0.0),
+            Betatce=model.params.get("BETATCE"),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2176,6 +2177,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             mobility_temperature_exponent
         ):
             raise NetlistParseError("JFET BEX must be finite")
+        mobility_temperature_coefficient = params.get("BETATCE")
+        if mobility_temperature_coefficient is not None and not math.isfinite(
+            mobility_temperature_coefficient
+        ):
+            raise NetlistParseError("JFET BETATCE must be finite")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

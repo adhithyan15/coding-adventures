@@ -1472,6 +1472,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET BEX must be finite");
   }
+  const jfetMobilityTemperatureCoefficient = params.get("BETATCE");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetMobilityTemperatureCoefficient !== undefined &&
+    !Number.isFinite(jfetMobilityTemperatureCoefficient)
+  ) {
+    throw new NetlistParseError("JFET BETATCE must be finite");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -2076,6 +2084,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("VTOTC"),
       nominalTemperature !== undefined ? nominalTemperature + 273.15 : undefined,
       model.params.get("BEX") ?? 0.0,
+      model.params.get("BETATCE"),
     );
   }
   if (prefix === "M") {
