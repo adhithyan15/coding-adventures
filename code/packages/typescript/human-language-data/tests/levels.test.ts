@@ -219,7 +219,7 @@ describe("corpus snapshot", () => {
 
     expect(summary.byLevel["pre-A1"]).toBe(650);
     expect(summary.byLevel.A1).toBe(297);
-    expect(summary.byLevel.A2).toBe(322);
+    expect(summary.byLevel.A2).toBe(350);
     expect(summary.byLevel.B1).toBe(0);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);

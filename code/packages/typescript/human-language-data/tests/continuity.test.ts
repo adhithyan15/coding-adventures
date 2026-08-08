@@ -264,9 +264,9 @@ describe("the real corpus", () => {
     // lesson's own, structurally unreachable), Bengali 12 of 18 -> 4 of 35, Tamil 53% ->
     // 38%, Arabic four ch28-30 atoms off zero. Adding vocabulary and reducing orphans at
     // the same time is the whole point; a corpus that only grows is not a course.
-    expect(report.summary.atomsTaught).toBe(1929);
-    expect(report.summary.atomsNeverRevisited).toBe(569);
-    expect(report.summary.neverRevisitedPercent).toBe(29);
+    expect(report.summary.atomsTaught).toBe(2005);
+    expect(report.summary.atomsNeverRevisited).toBe(511);
+    expect(report.summary.neverRevisitedPercent).toBe(25);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -285,7 +285,7 @@ describe("the real corpus", () => {
     // NOT being rewritten to move this number, because contorting good prose to satisfy a
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
-    expect(report.summary.forwardReferences).toBe(515);
+    expect(report.summary.forwardReferences).toBe(518);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -293,7 +293,7 @@ describe("the real corpus", () => {
     // that work — closing a near window does not close a far one, and nothing yet
     // addresses R2/R3/R4.
     expect(report.summary.missedByWindow.R1).toBe(779);
-    expect(report.summary.missedByWindow.R2).toBe(1265);
+    expect(report.summary.missedByWindow.R2).toBe(1287);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -316,11 +316,11 @@ describe("the real corpus", () => {
     // 93 -> 102. The independent Python audit these four numbers reproduce was run
     // against the 146-lesson corpus; the walk is unchanged, only its input grew.
     expect(spanish).toMatchObject({
-      lessonCount: 162,
+      lessonCount: 169,
       lessonsWithoutSequence: 6,
       forwardPrerequisites: 5,
-      atomsTaught: 221,
-      atomsNeverRevisited: 80,
+      atomsTaught: 242,
+      atomsNeverRevisited: 65,
     });
   });
 

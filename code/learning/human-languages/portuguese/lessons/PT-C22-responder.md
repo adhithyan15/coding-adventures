@@ -34,7 +34,7 @@ reviews_of: [PT-C21-comprar, PT-C20-perguntar, PT-C03-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A chapter of verbs for dealing with other people opens with the one
-the course has been missing. You have been able to ask since the last chapter.
+this book has been missing. You have been able to ask since the last chapter.
 Now you can answer.
 
 ## You'll want to know: A plain -er verb

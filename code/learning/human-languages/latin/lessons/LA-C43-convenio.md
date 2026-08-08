@@ -6,7 +6,7 @@ sequence: 930
 chapter: 43
 type: word
 headword: conveniō, occurrō
-gloss: "I meet" — two verbs for meeting, each one a prefix on a verb this course already taught, and the verb hiding inside a phrase from chapter 21
+gloss: "I meet" — two verbs for meeting, each one a prefix on a verb you already know, and the verb hiding inside a phrase from chapter 21
 concept_tag: VERB-MEET
 prerequisites: [LA-C43-respondeo, LA-C37-venio, LA-C41-curro, LA-C21-practice]
 sounds: [macron-long-vowel, macron-none-short-vowel, c-as-k]

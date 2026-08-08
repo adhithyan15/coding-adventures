@@ -1852,7 +1852,7 @@
     {
       "language": "latin",
       "chapter": 43,
-      "sourceHash": "fnv1a64:d296189b10bda856",
+      "sourceHash": "fnv1a64:ad8a6f35e60a75db",
       "lessonIds": [
         "LA-C43-respondeo",
         "LA-C43-convenio",
@@ -2495,7 +2495,7 @@
     {
       "language": "portuguese",
       "chapter": 22,
-      "sourceHash": "fnv1a64:eae6488804ed66aa",
+      "sourceHash": "fnv1a64:5ed624575d99a524",
       "lessonIds": [
         "PT-C22-responder",
         "PT-C22-encontrar",

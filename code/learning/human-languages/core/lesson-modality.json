@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ed8089c004f2bae4",
+  "sourceHash": "fnv1a64:cdabdd84f80adb1c",
   "summary": {
-    "totalLessons": 1424,
-    "voice": 948,
+    "totalLessons": 1445,
+    "voice": 969,
     "sight": 423,
     "pen": 53,
-    "drivableLessons": 948,
+    "drivableLessons": 969,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 444,
-    "drivablePrefixTotal": 765,
-    "fullyDrivableChapters": 299,
+    "chapterCount": 450,
+    "drivablePrefixTotal": 786,
+    "fullyDrivableChapters": 305,
     "unstartableChapters": 108,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -2468,12 +2468,12 @@
     },
     {
       "language": "italian",
-      "lessonCount": 66,
-      "voice": 53,
+      "lessonCount": 73,
+      "voice": 60,
       "sight": 13,
       "pen": 0,
-      "drivablePercent": 80,
-      "drivablePrefixTotal": 46,
+      "drivablePercent": 82,
+      "drivablePrefixTotal": 53,
       "modalities": [
         "voice",
         "sight"
@@ -2809,6 +2809,43 @@
             "IT-C19-chiedere",
             "IT-C19-aiutare",
             "IT-C19-mi-piace"
+          ]
+        },
+        {
+          "chapter": 20,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C20-portare",
+            "IT-C20-comprare",
+            "IT-C20-aspettare",
+            "IT-C20-incontrare"
+          ]
+        },
+        {
+          "chapter": 21,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C21-giocare",
+            "IT-C21-ottenere",
+            "IT-C21-rispondere"
           ]
         }
       ]
@@ -3405,12 +3442,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 81,
-      "voice": 78,
+      "lessonCount": 88,
+      "voice": 85,
       "sight": 3,
       "pen": 0,
-      "drivablePercent": 96,
-      "drivablePrefixTotal": 77,
+      "drivablePercent": 97,
+      "drivablePrefixTotal": 84,
       "modalities": [
         "voice",
         "sight"
@@ -4105,6 +4142,43 @@
             "LA-C41-curro",
             "LA-C41-aperio",
             "LA-C41-claudo"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C42-fero",
+            "LA-C42-accipio",
+            "LA-C42-ludo",
+            "LA-C42-exspecto"
+          ]
+        },
+        {
+          "chapter": 43,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C43-respondeo",
+            "LA-C43-convenio",
+            "LA-C43-emo"
           ]
         }
       ]
@@ -5833,12 +5907,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 162,
-      "voice": 137,
+      "lessonCount": 169,
+      "voice": 144,
       "sight": 18,
       "pen": 7,
       "drivablePercent": 85,
-      "drivablePrefixTotal": 107,
+      "drivablePrefixTotal": 114,
       "modalities": [
         "voice",
         "sight",
@@ -6516,6 +6590,43 @@
             "ES-C37-cerrar",
             "ES-C37-sentarse",
             "ES-C37-levantarse"
+          ]
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C38-traer",
+            "ES-C38-conseguir",
+            "ES-C38-jugar",
+            "ES-C38-conocer"
+          ]
+        },
+        {
+          "chapter": 39,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-esperar",
+            "ES-C39-contestar",
+            "ES-C39-comprar"
           ]
         }
       ]
@@ -8610,7 +8721,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:16d95ec6d2c923e4"
+      "sourceHash": "fnv1a64:b227719d446dd21a"
     },
     {
       "id": "AR-C04-ila-liqaa",
@@ -10104,7 +10215,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:781996d54b057830"
+      "sourceHash": "fnv1a64:7bfc517583c9cf08"
     },
     {
       "id": "BN-C07-khaowa",
@@ -10928,7 +11039,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:09c9c8711a2a7a6a"
+      "sourceHash": "fnv1a64:05a673609f516e36"
     },
     {
       "id": "FR-C03-practice",
@@ -11656,7 +11767,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4900acc35de80fa8"
+      "sourceHash": "fnv1a64:be3d639c94977510"
     },
     {
       "id": "FR-C18-oui",
@@ -12016,7 +12127,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:22351bcb8b4bd18e"
+      "sourceHash": "fnv1a64:f62364763b756bf2"
     },
     {
       "id": "FR-C27-se-lever",
@@ -12034,7 +12145,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c7f80390b7695f21"
+      "sourceHash": "fnv1a64:a76cbc6f47190d89"
     },
     {
       "id": "FR-C27-ouvrir",
@@ -13152,7 +13263,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ac77aad8695d3ee6"
+      "sourceHash": "fnv1a64:6c18654a3bb04712"
     },
     {
       "id": "GE-C15-perfekt",
@@ -13314,7 +13425,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2749ef57887d5546"
+      "sourceHash": "fnv1a64:f183755d890cccc6"
     },
     {
       "id": "GE-C18-ja",
@@ -13566,7 +13677,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ec43afdc6b61f234"
+      "sourceHash": "fnv1a64:66a99fa68a451154"
     },
     {
       "id": "GE-C25-moegen-lieben",
@@ -13692,7 +13803,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b7282b0745a98b5d"
+      "sourceHash": "fnv1a64:a27427e8f3c4687d"
     },
     {
       "id": "GE-C27-oeffnen",
@@ -14686,7 +14797,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b5bf3a010b072219"
+      "sourceHash": "fnv1a64:2cad481346ffbd91"
     },
     {
       "id": "HI-W01-na-ma",
@@ -14953,7 +15064,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:26a1cf3645ca2164"
+      "sourceHash": "fnv1a64:b24b2dec7fbdd6d7"
     },
     {
       "id": "HI-W05-conjuncts",
@@ -14991,7 +15102,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:94b7be2009ede3a8"
+      "sourceHash": "fnv1a64:18e81f0badd3c6fc"
     },
     {
       "id": "HI-C02-aap-tum",
@@ -15471,7 +15582,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6aed02a1964d754d"
+      "sourceHash": "fnv1a64:5ed98f5b6afcd98f"
     },
     {
       "id": "HI-C05-karna",
@@ -16219,7 +16330,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2f546c9def3a7957"
+      "sourceHash": "fnv1a64:c0ee5a92398ef914"
     },
     {
       "id": "HI-C32-shubh-sandhya",
@@ -17457,7 +17568,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ec786a73bf664872"
+      "sourceHash": "fnv1a64:7ba8cdd3c8824ffc"
     },
     {
       "id": "IT-C17-mano",
@@ -17622,6 +17733,132 @@
       "sourceHash": "fnv1a64:659830f6ba3b9926"
     },
     {
+      "id": "IT-C20-portare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e8abdcf4e264efbc"
+    },
+    {
+      "id": "IT-C20-comprare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b8050f28b31c1da"
+    },
+    {
+      "id": "IT-C20-aspettare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1f1a0e124a21d1c0"
+    },
+    {
+      "id": "IT-C20-incontrare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0f6221e9edd39864"
+    },
+    {
+      "id": "IT-C21-giocare",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e33387d3c0bd3f0"
+    },
+    {
+      "id": "IT-C21-ottenere",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4eb78dfdee0371e3"
+    },
+    {
+      "id": "IT-C21-rispondere",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:275e5bcc1a3508a9"
+    },
+    {
       "id": "JA-C01-hai",
       "language": "japanese",
       "chapter": 1,
@@ -17700,7 +17937,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00d779c076662e0e",
+      "sourceHash": "fnv1a64:8f23a1be663b2b64",
       "detachableSegments": [
         "Script — kanji, and the readings problem"
       ]
@@ -20553,7 +20790,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1f6f7d06cae484ef"
+      "sourceHash": "fnv1a64:2c914ecc8a3dc3bf"
     },
     {
       "id": "LA-C40-sto",
@@ -20644,6 +20881,132 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:e7fda89b85277a5e"
+    },
+    {
+      "id": "LA-C42-fero",
+      "language": "latin",
+      "chapter": 42,
+      "sequence": 880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:289d6ac0b78c65fc"
+    },
+    {
+      "id": "LA-C42-accipio",
+      "language": "latin",
+      "chapter": 42,
+      "sequence": 890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:693bd25529f49ec4"
+    },
+    {
+      "id": "LA-C42-ludo",
+      "language": "latin",
+      "chapter": 42,
+      "sequence": 900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e1becf4360cbec2c"
+    },
+    {
+      "id": "LA-C42-exspecto",
+      "language": "latin",
+      "chapter": 42,
+      "sequence": 910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a5147ba22da679a7"
+    },
+    {
+      "id": "LA-C43-respondeo",
+      "language": "latin",
+      "chapter": 43,
+      "sequence": 920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a793ac86a308a8fc"
+    },
+    {
+      "id": "LA-C43-convenio",
+      "language": "latin",
+      "chapter": 43,
+      "sequence": 930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d2bed1758fadb4c9"
+    },
+    {
+      "id": "LA-C43-emo",
+      "language": "latin",
+      "chapter": 43,
+      "sequence": 940,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:31af2c5f7e352398"
     },
     {
       "id": "ML-C01-athe",
@@ -20763,7 +21126,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2cdf31bc9b98e609",
+      "sourceHash": "fnv1a64:65e56bc8c04f01a1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21396,7 +21759,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:cac9e52db2cbf656"
+      "sourceHash": "fnv1a64:52b95d56c392c026"
     },
     {
       "id": "ML-C11-nirangal",
@@ -21630,7 +21993,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2c8e98f67490f7e"
+      "sourceHash": "fnv1a64:d55ae2fb36fe9cc7"
     },
     {
       "id": "ML-C22-paccha-manja",
@@ -21738,7 +22101,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:39130dc31be628cc"
+      "sourceHash": "fnv1a64:9697f21d8b9e03c2"
     },
     {
       "id": "ML-C26-raavile",
@@ -23650,7 +24013,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd65bbf669f07dc2"
+      "sourceHash": "fnv1a64:b9a546e685387f50"
     },
     {
       "id": "FA-C08-porsidan",
@@ -24100,7 +24463,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e036daa989a9b2f7"
+      "sourceHash": "fnv1a64:83eef7581fe19f49"
     },
     {
       "id": "PT-C04-adeus",
@@ -24118,7 +24481,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9b8ef9e56b40ed0a"
+      "sourceHash": "fnv1a64:c97b23b8a6808e1c"
     },
     {
       "id": "PT-C04-ate-logo",
@@ -24190,7 +24553,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3f903540d005c2a3"
+      "sourceHash": "fnv1a64:da806e06899b5675"
     },
     {
       "id": "PT-C05-falar",
@@ -24244,7 +24607,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14e10194f21a22cd"
+      "sourceHash": "fnv1a64:1ec7af1dc5f87985"
     },
     {
       "id": "PT-C05-falo-portugues",
@@ -24280,7 +24643,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:554c9e659dae7732"
+      "sourceHash": "fnv1a64:4afa69ed94e21dae"
     },
     {
       "id": "PT-C06-numeros-1-5",
@@ -25128,7 +25491,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f8ce3a336f2fe6f2"
+      "sourceHash": "fnv1a64:31fa23c67eb5e896"
     },
     {
       "id": "PT-C22-encontrar",
@@ -26409,7 +26772,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:18eedafd904b8b7b"
+      "sourceHash": "fnv1a64:d95935516cdd63d2"
     },
     {
       "id": "RU-C02-kak-vas-zovut",
@@ -26589,7 +26952,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:465d68c6c09ddaf8"
+      "sourceHash": "fnv1a64:d7529203cca9d93a"
     },
     {
       "id": "RU-C03-videt",
@@ -26679,7 +27042,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:abe88d6b3606e545"
+      "sourceHash": "fnv1a64:62614a8b0719dfed"
     },
     {
       "id": "RU-C04-pisat",
@@ -26754,7 +27117,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b965f8611a96ce2d"
+      "sourceHash": "fnv1a64:393bb86560986f4d"
     },
     {
       "id": "RU-C05-lyubit",
@@ -27319,7 +27682,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1ceeeb95c714166",
+      "sourceHash": "fnv1a64:0c5fd96530e11254",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28387,7 +28750,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f42bf3408df4a291",
+      "sourceHash": "fnv1a64:ba441b45cc7061b5",
       "detachableSegments": [
         "Script — the two forms"
       ]
@@ -28652,7 +29015,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d62ffbd226de0824"
+      "sourceHash": "fnv1a64:fa83e0f47eab036a"
     },
     {
       "id": "ES-C06-trabajar",
@@ -28724,7 +29087,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:359d617ceb162fa6"
+      "sourceHash": "fnv1a64:a385aeae4b33aa2c"
     },
     {
       "id": "ES-C06-practice",
@@ -28742,7 +29105,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6a403bb27ffc266d"
+      "sourceHash": "fnv1a64:97363e7b2bea1b09"
     },
     {
       "id": "ES-C07-beber",
@@ -28814,7 +29177,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b1c08a502f1f2b5"
+      "sourceHash": "fnv1a64:a8d3c0b8b383b277"
     },
     {
       "id": "ES-C07-que",
@@ -29102,7 +29465,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e10c22caf5db30ed"
+      "sourceHash": "fnv1a64:ebec5ae13a78d2af"
     },
     {
       "id": "ES-C11-querer",
@@ -29192,7 +29555,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:af92d49c34d3eda3"
+      "sourceHash": "fnv1a64:5fac26b4274aff47"
     },
     {
       "id": "ES-C12-hacer",
@@ -29390,7 +29753,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:15ba2316d6c80667"
+      "sourceHash": "fnv1a64:d01138d7cc6e199d"
     },
     {
       "id": "ES-C15-comer-vivir-preterite",
@@ -30635,6 +30998,132 @@
       "sourceHash": "fnv1a64:12daf97af771d3c5"
     },
     {
+      "id": "ES-C38-traer",
+      "language": "spanish",
+      "chapter": 38,
+      "sequence": 1770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8b742dc8eca59ba0"
+    },
+    {
+      "id": "ES-C38-conseguir",
+      "language": "spanish",
+      "chapter": 38,
+      "sequence": 1780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:553b6dfeb5d6e2dd"
+    },
+    {
+      "id": "ES-C38-jugar",
+      "language": "spanish",
+      "chapter": 38,
+      "sequence": 1790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:136bf8a9658d5523"
+    },
+    {
+      "id": "ES-C38-conocer",
+      "language": "spanish",
+      "chapter": 38,
+      "sequence": 1800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:37b84d1e8e75d86d"
+    },
+    {
+      "id": "ES-C39-esperar",
+      "language": "spanish",
+      "chapter": 39,
+      "sequence": 1810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e4e82b9f7ace68e5"
+    },
+    {
+      "id": "ES-C39-contestar",
+      "language": "spanish",
+      "chapter": 39,
+      "sequence": 1820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:093453e8ebf17b12"
+    },
+    {
+      "id": "ES-C39-comprar",
+      "language": "spanish",
+      "chapter": 39,
+      "sequence": 1830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3af44da425bb5002"
+    },
+    {
       "id": "TA-W01-curves-va-ka",
       "language": "tamil",
       "chapter": 1,
@@ -30699,7 +31188,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6ce88d858a0ad284",
+      "sourceHash": "fnv1a64:207da9661587565a",
       "detachableSegments": [
         "Script you'll notice: ம",
         "Script you'll notice: ண"
@@ -30768,7 +31257,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:19ea78f7643992a1",
+      "sourceHash": "fnv1a64:fe21150d048b0f05",
       "detachableSegments": [
         "Script you'll notice: Build the word"
       ]
@@ -31792,7 +32281,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46646101ede78b4e"
+      "sourceHash": "fnv1a64:69c3cb0567033e1e"
     },
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -31810,7 +32299,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c9c8e831599839e"
+      "sourceHash": "fnv1a64:bc0905b8d3ab5ecc"
     },
     {
       "id": "TA-C17-nanpakal-nalliravu",
@@ -31972,7 +32461,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1dd35c7accb9a520"
+      "sourceHash": "fnv1a64:de5497918953d746"
     },
     {
       "id": "TA-C22-paccai-manjal",
@@ -31990,7 +32479,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a16121a6959da941"
+      "sourceHash": "fnv1a64:7c72b7c8044cb6de"
     },
     {
       "id": "TA-C23-naal",
@@ -32080,7 +32569,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:03301eb9bd9795c0"
+      "sourceHash": "fnv1a64:c412c2fd55012e40"
     },
     {
       "id": "TA-C25-goodnight-alternatives",
@@ -32098,7 +32587,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0f4e1927b3bee8aa"
+      "sourceHash": "fnv1a64:bcf8703e4fee1dda"
     },
     {
       "id": "TA-C26-kaalai",
@@ -32116,7 +32605,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:34c59d75dd71e3e4"
+      "sourceHash": "fnv1a64:f31e62ada32eba46"
     },
     {
       "id": "TA-C27-maalai",
@@ -32188,7 +32677,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8fc0fa5050220196"
+      "sourceHash": "fnv1a64:0903cbd5df40e04f"
     },
     {
       "id": "TA-C30-maalai-vanakkam",
@@ -32410,7 +32899,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c0a727552358fa4",
+      "sourceHash": "fnv1a64:58ad67ba9a906ea4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -33327,7 +33816,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:570ed576366fdc7d"
+      "sourceHash": "fnv1a64:85f205dcd671057f"
     },
     {
       "id": "TE-C15-neellu-biyyam",
@@ -33471,7 +33960,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:56928232f37805f9"
+      "sourceHash": "fnv1a64:d43b5bbf7aa9319f"
     },
     {
       "id": "TE-C22-pacha-pasupu",
@@ -33597,7 +34086,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8eab8bc48df8486f"
+      "sourceHash": "fnv1a64:3150420000d6d5b9"
     },
     {
       "id": "TE-C29-subhodayam",
@@ -33633,7 +34122,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:477b79f35bf246ca"
+      "sourceHash": "fnv1a64:bef920e3f643611d"
     },
     {
       "id": "TE-C31-subha-madhyahnam",
@@ -33900,7 +34389,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:17905a0b5febb5f8",
+      "sourceHash": "fnv1a64:64c137e432a2802e",
       "detachableSegments": [
         "The letters in this word"
       ]

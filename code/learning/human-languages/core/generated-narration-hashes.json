@@ -3798,7 +3798,7 @@
     {
       "language": "latin",
       "chapter": 43,
-      "sourceHash": "fnv1a64:97110fb85bc08d09",
+      "sourceHash": "fnv1a64:24375690fc3b9aee",
       "lessonIds": [
         "LA-C43-respondeo",
         "LA-C43-convenio",
@@ -3808,8 +3808,8 @@
       "drivablePrefix": 3,
       "text": "latin/narration/ch43.txt",
       "json": "latin/narration/ch43.json",
-      "textHash": "fnv1a64:22fd6aa858142b5b",
-      "jsonHash": "fnv1a64:cc96daf5d124abd4"
+      "textHash": "fnv1a64:c3803f03eef8aafc",
+      "jsonHash": "fnv1a64:c23b554b8646412f"
     },
     {
       "language": "malayalam",
@@ -4988,7 +4988,7 @@
     {
       "language": "portuguese",
       "chapter": 22,
-      "sourceHash": "fnv1a64:335fe19aa3cb72d5",
+      "sourceHash": "fnv1a64:6e8a0846f2a726d0",
       "lessonIds": [
         "PT-C22-responder",
         "PT-C22-encontrar",
@@ -4998,8 +4998,8 @@
       "drivablePrefix": 3,
       "text": "portuguese/narration/ch22.txt",
       "json": "portuguese/narration/ch22.json",
-      "textHash": "fnv1a64:abf86f9006c1fcd7",
-      "jsonHash": "fnv1a64:abc19c5f3dd33665"
+      "textHash": "fnv1a64:b8ee21241894440c",
+      "jsonHash": "fnv1a64:fa92614922a5a06d"
     },
     {
       "language": "punjabi",

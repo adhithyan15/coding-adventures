@@ -70,7 +70,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
     expect(vocab.shortfall).toBe(256);
-    expect(spanish.vocabulary).toBe(121);
+    expect(spanish.vocabulary).toBe(128);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

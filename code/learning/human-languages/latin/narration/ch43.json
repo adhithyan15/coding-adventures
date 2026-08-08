@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Answering, Meeting, Buying",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:97110fb85bc08d09",
+  "sourceHash": "fnv1a64:24375690fc3b9aee",
   "lessons": [
     {
       "id": "LA-C43-respondeo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ea50b0acf43b738",
+      "sourceHash": "fnv1a64:a793ac86a308a8fc",
       "notice": null,
       "blocks": [
         {
@@ -175,14 +175,14 @@
       "title": "conveniō and occurrō — coming together, running into",
       "headword": "conveniō, occurrō",
       "romanization": "conveniō, occurrō",
-      "gloss": "\"I meet\" — two verbs for meeting, each one a prefix on a verb this course already taught, and the verb hiding inside a phrase from chapter 21",
+      "gloss": "\"I meet\" — two verbs for meeting, each one a prefix on a verb you already know, and the verb hiding inside a phrase from chapter 21",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac2e0e0c14373b1f",
+      "sourceHash": "fnv1a64:d2bed1758fadb4c9",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:616882d73e9c9a9c",
+      "sourceHash": "fnv1a64:31af2c5f7e352398",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "One flag, and it is the last of the course. English buy is Germanic, and unusually it has no secure relatives outside Germanic at all. The whole h₁em- family reached English only as loans: redeem, ransom, example, premium."
+              "text": "One flag, and it is the last in this book. English buy is Germanic, and unusually it has no secure relatives outside Germanic at all. The whole h₁em- family reached English only as loans: redeem, ransom, example, premium."
             }
           ]
         },

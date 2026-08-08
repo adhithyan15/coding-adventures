@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:335fe19aa3cb72d5",
+  "sourceHash": "fnv1a64:6e8a0846f2a726d0",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8ce3a336f2fe6f2",
+      "sourceHash": "fnv1a64:31fa23c67eb5e896",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "A chapter of verbs for dealing with other people opens with the one the course has been missing. You have been able to ask since the last chapter. Now you can answer."
+              "text": "A chapter of verbs for dealing with other people opens with the one this book has been missing. You have been able to ask since the last chapter. Now you can answer."
             }
           ]
         },

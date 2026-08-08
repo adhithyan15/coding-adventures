@@ -95,9 +95,22 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.coreVerbCount).toBe(40);
 
+    // THE VERB PROGRAM IS COMPLETE, AND THIS IS THE ASSERTION THAT KEEPS IT THAT WAY.
+    //
+    // `universallyMissing` names the core verbs NO track teaches. It shipped at 40 of 40
+    // — not because the tracks taught no verbs (Spanish taught nineteen) but because
+    // every verb tag was NAMESPACED, so `ES-VERB-HABLAR` and `FR-VERB-PARLER` were
+    // different concepts and the cross-language join HL01 exists for contained not one
+    // verb. It is now ZERO.
+    //
+    // Empty is the only correct value from here. A verb re-entering this list means a
+    // track's lessons were unhooked from their realization path — the exact silent
+    // failure that `omits`/`segments` drift produces — and no total would show it.
+    expect(report.summary.universallyMissing).toEqual([]);
+
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
-    expect(report.summary.universallyMissing).toHaveLength(7);
-    expect(report.summary.meanCoveredPercent).toBe(36);
+    expect(report.summary.universallyMissing).toHaveLength(0);
+    expect(report.summary.meanCoveredPercent).toBe(39);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -119,22 +132,32 @@ describe("corpus snapshot", () => {
       "VERB-WRITE",
       "VERB-GIVE",
       "VERB-TAKE",
+      // Chapters 42-43 close the program — the last seven verbs no track taught.
+      // *fero* is suppletive from TWO roots (*bher- present, *telh2- for tuli/latum),
+      // and *emo* originally meant "to take", which is why *redimo* is redeem.
+      "VERB-BRING",
+      "VERB-GET",
       // Chapters 40-41 — the everyday verbs nobody taught. This set is where Latin's
       // taproot claim pays: *sto* and *sedeo* are COGNATE with English stand and sit
       // through *steh2- and *sed-, not borrowed, while *curro* and *claudo* gave English
       // current/courier and close/clause/include by the ordinary Latin route.
       "VERB-SLEEP",
+      "VERB-PLAY",
       "VERB-WALK",
       "VERB-RUN",
       "VERB-SIT",
       "VERB-STAND",
+      "VERB-WAIT",
       "VERB-ASK",
+      "VERB-ANSWER",
       "VERB-HELP",
+      "VERB-MEET",
+      "VERB-BUY",
       "VERB-OPEN",
       "VERB-CLOSE",
       "VERB-LIKE-LOVE",
     ]);
-    expect(latin.coveredPercent).toBe(60);
+    expect(latin.coveredPercent).toBe(78);
     expect(report.tracks.find((track) => track.language === "arabic")!.covered).toEqual([
       "VERB-GO",
       "VERB-COME",
@@ -222,7 +245,7 @@ describe("corpus snapshot", () => {
     // querer. `ser` takes VERB-BE (one lesson per concept), and the rest have no core
     // concept that fits without stretching it.
     const spanish = report.tracks.find((track) => track.language === "spanish")!;
-    expect(spanish.covered).toHaveLength(29);
+    expect(spanish.covered).toHaveLength(36);
     expect(spanish.extras.length).toBe(6);
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by

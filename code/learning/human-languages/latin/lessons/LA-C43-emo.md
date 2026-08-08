@@ -76,7 +76,7 @@ apart. **Capiō** takes. **Accipiō** receives what is handed over.
 **dō**, "I give" — because a sale is both at once: one side gives, the other
 takes.
 
-One flag, and it is the last of the course. English **buy** is Germanic, and
+One flag, and it is the last in this book. English **buy** is Germanic, and
 unusually it has no secure relatives outside Germanic at all. The whole
 *\*h₁em-* family reached English only as loans: redeem, ransom, example,
 premium.
