@@ -3014,6 +3014,52 @@
       "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:1704693ab413713d",
+      "lessonIds": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "tex": "punjabi/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:caae1ac221cc60d6",
+      "lessonIds": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "tex": "punjabi/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:5455334026887be0",
+      "lessonIds": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "tex": "punjabi/book/chapters/ch12-face-parts.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:b1b093d6afa94d79",
+      "lessonIds": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "tex": "punjabi/book/chapters/ch13-heart-and-head.tex"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "sourceHash": "fnv1a64:3025a4b74fe67779",

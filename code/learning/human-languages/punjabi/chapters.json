@@ -97,6 +97,97 @@
           "PA-ETYMON-PASAND-SHINE"
         ]
       }
+    },
+    {
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bread",
+      "label": "ch:pa-request-food-drink",
+      "canDo": "I can politely ask for water, tea, milk, or bread in Punjabi, name which of the four is a loanword and which is inherited with an unknown root, and hear the difference between a tone that stays level and one that never formed at all.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "PA-C10-roti",
+        "kind": "production",
+        "summary": "The chapter closes on ਰੋਟੀ, the request that breaks the drink pattern: the reader produces all four requests with ਕਿਰਪਾ ਕਰਕੇ, sorts ਪਾਣੀ and ਦੁੱਧ (inherited, known root) against ਚਾਹ (loaned from Chinese by the overland route, carrying Punjabi's first noun-level tone) against ਰੋਟੀ (inherited, root unknown), and names the first Punjabi chapter to realize polite requesting at all.",
+        "assesses": [
+          "PA-LEX-ROTI",
+          "PA-ETYMON-ROTI-UNKNOWN",
+          "PA-LEX-DUDH",
+          "PA-ETYMON-DUDH-DUGDHA",
+          "PA-LEX-CHA",
+          "PA-ETYMON-CHA-CHINESE",
+          "PA-LEX-PAANI",
+          "PA-ETYMON-PAANI-DRINK",
+          "PA-PHRASE-KIRPA-KARKE"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Friend, Family, Brother, and Sister",
+      "label": "ch:pa-friend-and-family",
+      "canDo": "I can name a friend, a family, a brother, and a sister in Punjabi, split ਪਰਿਵਾਰ into its two Sanskrit pieces, and hear the same low tone open both ਭਰਾ and ਭੈਣ even though only one of the two is truly a cousin of its English counterpart.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "PA-C11-bhain",
+        "kind": "production",
+        "summary": "The chapter closes on ਭੈਣ, said pàiṇ with the same initial-bh-to-low-tone shift as ਭਰਾ: the reader produces ਦੋਸਤ, ਪਰਿਵਾਰ, ਭਰਾ and ਭੈਣ, states that ਭਰਾ is the unbroken PIE cousin of brother while ਭੈਣ descends from bhaginī and is NOT a cousin of sister, and names the tone rule's low-tone, word-initial case for the first time on a noun rather than a verb.",
+        "assesses": [
+          "PA-LEX-BHAIN",
+          "PA-ETYMON-BHAIN-BHAGA",
+          "PA-LEX-BHARA",
+          "PA-ETYMON-BHARA-BROTHER",
+          "PA-SOUND-TONE-LOW",
+          "PA-LEX-DOST",
+          "PA-ETYMON-DOST-CHOOSE",
+          "PA-LEX-PARIVAR",
+          "PA-ETYMON-PARIVAR-SURROUND"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:pa-face-parts",
+      "canDo": "I can name the eye, ear, mouth, and nose in Punjabi, tell a doubled consonant that survived from one that vanished into tone, and clear up the false friend ਕੰਨ shares in spelling, but not in root, with ਕਰਨਾ.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "PA-C12-nakk",
+        "kind": "production",
+        "summary": "The chapter closes on ਨੱਕ, completing the face: the reader produces ਅੱਖ, ਕੰਨ, ਮੂੰਹ and ਨੱਕ, names ਅੱਖ and ਨੱਕ as unbroken PIE cousins of eye and nose that kept their doubled consonants and so never traded a sound for a tone, and states that ਮੂੰਹ alone among the four carries a level high tone, the same one first heard in ਚਾਹ.",
+        "assesses": [
+          "PA-LEX-NAKK",
+          "PA-ETYMON-NAKK-NOSE",
+          "PA-LEX-MUNH",
+          "PA-ETYMON-MUNH-MUKHA",
+          "PA-LEX-AKKH",
+          "PA-ETYMON-AKKH-EYE",
+          "PA-LEX-KANN",
+          "PA-CONTRAST-KANN-KARNA",
+          "PA-SOUND-TONE-HIGH-LEVEL"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Heart and Head",
+      "label": "ch:pa-heart-and-head",
+      "canDo": "I can name the heart and the head in Punjabi, tell that ਦਿਲ is Punjabi's one borrowed body word against four inherited ones, and trace ਸਿਰ to the same root as English horn rather than English head.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "PA-C13-sir",
+        "kind": "production",
+        "summary": "The tranche closes on ਸਿਰ: the reader produces all six body words from this tranche, states that ਸਿਰ's real English cousin is horn, not head, and that its resemblance to Persian sar is convergence from a shared Proto-Indo-Iranian ancestor rather than a loan — the opposite case from ਦਿਲ, which genuinely was borrowed from Persian despite sharing the same deep Indo-European root as English heart.",
+        "assesses": [
+          "PA-LEX-SIR",
+          "PA-ETYMON-SIR-HORN",
+          "PA-LEX-DIL",
+          "PA-ETYMON-DIL-HEART",
+          "PA-LEX-NAKK",
+          "PA-LEX-AKKH",
+          "PA-LEX-KANN",
+          "PA-LEX-MUNH"
+        ]
+      }
     }
   ]
 }
