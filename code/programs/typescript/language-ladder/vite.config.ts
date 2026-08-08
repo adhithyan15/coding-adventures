@@ -24,6 +24,17 @@ export default defineConfig({
         codeSplitting: {
           groups: [
             {
+              // A frontier import should stay small, but corpus-wide modes must
+              // not fan out to one request per lesson. Rolldown first groups by
+              // track, then caps each batch at roughly 32 kB.
+              name(moduleId) {
+                const normalized = moduleId.replaceAll("\\", "/");
+                const match = /human-languages\/([^/]+)\/lessons\//.exec(normalized);
+                return match?.[1] ? `lessons-${match[1]}` : null;
+              },
+              maxSize: 32_000,
+            },
+            {
               name: "script-data",
               test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]/,
             },

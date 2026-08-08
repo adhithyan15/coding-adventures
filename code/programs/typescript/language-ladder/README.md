@@ -11,6 +11,11 @@ and grounded roots still show where independently ready paths connect.
 spaced-repetition schedule that persists between visits; and **Concepts** shows
 one idea in every language that has it, side by side.
 
+The production app keeps lesson Markdown lazy. Learn fetches only the small
+track-local batches containing completed and current-frontier lessons; opening
+Lessons or Concepts opts into all 278 batches rather than 1,669 individual
+lesson requests. BUILD checks both the request ceiling and chunk-size budgets.
+
 ## Learn mode (the curriculum session)
 
 The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
