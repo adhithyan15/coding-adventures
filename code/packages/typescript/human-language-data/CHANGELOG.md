@@ -4,6 +4,14 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — canonical pronunciation back matter
+
+- Render canonical pronunciation-reference Markdown into LaTeX back matter,
+  including headings, ordered and unordered lists, tables, citations, and each
+  track's configured script font commands.
+- Byte-gate the new Chinese, Japanese, Persian, Russian, and Urdu appendices with
+  `book-cli --check`, bringing pronunciation back matter to all 22 books.
+
 ### Fixed — clean development dependency audit
 
 - Refresh transitive Nano ID from 3.3.16 to 3.3.18 and PostCSS from 8.5.19 to

@@ -4,7 +4,7 @@ A **reference**, not a chapter — a place to look things up. You are *not* mean
 to read this before the lessons: the lessons teach reading through real words,
 introducing each letter as a word needs it. This page gathers the system in one
 spot. Full letter-by-letter decomposition (components + stroke order) lives in
-the machine-readable [`data/scripts/cyrillic.json`](../data/scripts/cyrillic.json).
+the machine-readable [Cyrillic script reference](../data/scripts/cyrillic.json).
 
 ## The one thing that trips everyone: false friends
 

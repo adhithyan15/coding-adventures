@@ -17,6 +17,20 @@ export interface BookGenerationTarget {
   inlineScripts?: InlineRenderOptions[];
 }
 
+/** A generated back-matter reference sourced from canonical Markdown. */
+export interface BookReferenceAppendixTarget {
+  language: string;
+  title: string;
+  source: string;
+  output: string;
+  /** Unicode Script property whose runs need the book's dedicated font command. */
+  unicodeScript?: string;
+  /** LaTeX command name, without the leading backslash, used for those runs. */
+  scriptCommand?: string;
+  /** Multiple script/font mappings for references that compare writing systems inline. */
+  inlineScripts?: InlineRenderOptions[];
+}
+
 export interface InlineRenderOptions {
   unicodeScript: string;
   scriptCommand: string;
@@ -653,6 +667,7 @@ export function renderInlineMarkdown(
 function renderMarkdown(
   markdown: string,
   options?: InlineRenderOptionsInput,
+  tableLayout: "grid" | "records" = "grid",
 ): string {
   const output: string[] = [];
   const paragraph: string[] = [];
@@ -700,6 +715,32 @@ function renderMarkdown(
           renderInlineMarkdown(`| ${row.join(" | ")} |`, options),
           "",
         ]),
+      );
+      tableRows.length = 0;
+      return;
+    }
+    if (tableLayout === "records") {
+      const renderedHeader = header.map((cell) => renderInlineMarkdown(cell, options));
+      output.push(
+        "\\begin{itemize}",
+        "\\raggedright",
+        "\\setlength{\\itemsep}{0.35em}",
+        ...body.flatMap((row) => {
+          const rendered = Array.from({ length: header.length }, (_, index) =>
+            renderInlineMarkdown(row[index] ?? "", options),
+          );
+          return [
+            "  \\item \\begin{minipage}[t]{\\linewidth}",
+            `  \\textbf{${renderedHeader[0] ?? ""}:} ${rendered[0] ?? ""}`,
+            ...rendered.slice(1).map(
+              (cell, index) =>
+                `  \\par \\textbf{${renderedHeader[index + 1] ?? ""}:} ${cell}`,
+            ),
+            "  \\end{minipage}",
+          ];
+        }),
+        "\\end{itemize}",
+        "",
       );
       tableRows.length = 0;
       return;
@@ -767,6 +808,7 @@ function renderMarkdown(
       flushQuote();
       if (!listOpen) {
         output.push("\\begin{itemize}", "\\raggedright");
+        if (tableLayout === "records") output.push("\\setlength{\\itemsep}{0.35em}");
         listOpen = true;
       }
       flushListItem();
@@ -785,6 +827,53 @@ function renderMarkdown(
   flushQuote();
   closeList();
   flushTable();
+  return output.join("\n").trimEnd();
+}
+
+/** Render reference prose, adding ordered-list support without changing lesson rendering. */
+function renderReferenceMarkdown(
+  markdown: string,
+  options?: InlineRenderOptionsInput,
+): string {
+  const lines = markdown.split(/\r?\n/);
+  const output: string[] = [];
+  const ordinary: string[] = [];
+  const flushOrdinary = (): void => {
+    if (ordinary.length === 0) return;
+    const rendered = renderMarkdown(ordinary.join("\n"), options, "records");
+    if (rendered !== "") output.push(rendered, "");
+    ordinary.length = 0;
+  };
+
+  let cursor = 0;
+  while (cursor < lines.length) {
+    const first = /^(\d+)[.)]\s+(.+)$/.exec((lines[cursor] ?? "").trimEnd());
+    if (!first) {
+      ordinary.push(lines[cursor] ?? "");
+      cursor += 1;
+      continue;
+    }
+
+    flushOrdinary();
+    output.push(
+      "\\begin{enumerate}",
+      "\\raggedright",
+      "\\setlength{\\itemsep}{0.35em}",
+    );
+    while (cursor < lines.length) {
+      const item = /^(\d+)[.)]\s+(.+)$/.exec((lines[cursor] ?? "").trimEnd());
+      if (!item) break;
+      const content = [item[2] ?? ""];
+      cursor += 1;
+      while (cursor < lines.length && /^\s+\S/.test(lines[cursor] ?? "")) {
+        content.push((lines[cursor] ?? "").trim());
+        cursor += 1;
+      }
+      output.push(`  \\item ${renderInlineMarkdown(content.join(" "), options)}`);
+    }
+    output.push("\\end{enumerate}", "");
+  }
+  flushOrdinary();
   return output.join("\n").trimEnd();
 }
 
@@ -835,25 +924,82 @@ function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsIn
   );
 }
 
-function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptionsInput | undefined {
+interface InlineRenderTarget {
+  inlineScripts?: InlineRenderOptions[];
+  unicodeScript?: string;
+  scriptCommand?: string;
+}
+
+function targetRenderOptions(
+  target: InlineRenderTarget,
+  description: string,
+): InlineRenderOptionsInput | undefined {
   if (target.inlineScripts !== undefined) {
     if (target.unicodeScript !== undefined || target.scriptCommand !== undefined) {
       throw new Error(
-        `${target.language} chapter ${target.chapter}: inlineScripts cannot be combined with unicodeScript or scriptCommand`,
+        `${description}: inlineScripts cannot be combined with unicodeScript or scriptCommand`,
       );
     }
     if (target.inlineScripts.length === 0) {
-      throw new Error(`${target.language} chapter ${target.chapter}: inlineScripts must not be empty`);
+      throw new Error(`${description}: inlineScripts must not be empty`);
     }
     return target.inlineScripts;
   }
   if (target.unicodeScript === undefined && target.scriptCommand === undefined) return undefined;
   if (target.unicodeScript === undefined || target.scriptCommand === undefined) {
     throw new Error(
-      `${target.language} chapter ${target.chapter}: unicodeScript and scriptCommand must be declared together`,
+      `${description}: unicodeScript and scriptCommand must be declared together`,
     );
   }
   return { unicodeScript: target.unicodeScript, scriptCommand: target.scriptCommand };
+}
+
+/** Render one canonical Markdown pronunciation/script reference as book back matter. */
+export function renderReferenceAppendix(
+  target: BookReferenceAppendixTarget,
+  markdown: string,
+): string {
+  const renderOptions = targetRenderOptions(target, `${target.language} reference appendix`);
+  const lines = markdown.replaceAll("\r\n", "\n").split("\n");
+  const firstContent = lines.findIndex((line) => line.trim() !== "");
+  if (firstContent < 0 || !/^#\s+\S/.test(lines[firstContent] ?? "")) {
+    throw new Error(`${target.source}: reference must begin with a level-one Markdown heading`);
+  }
+  lines.splice(firstContent, 1);
+
+  const output = [
+    `% GENERATED FILE. Edit ${target.source}, then run npm run generate:books.`,
+    "",
+    `\\chapter*{${renderInlineMarkdown(target.title, renderOptions)}}`,
+    `\\addcontentsline{toc}{chapter}{${renderInlineMarkdown(target.title, renderOptions)}}`,
+    "\\markboth{Pronunciation}{Pronunciation}",
+    "",
+  ];
+  const body: string[] = [];
+  const flushBody = (): void => {
+    const rendered = renderReferenceMarkdown(body.join("\n"), renderOptions);
+    if (rendered !== "") output.push(rendered, "");
+    body.length = 0;
+  };
+
+  for (const line of lines) {
+    const heading = /^(#{2,3})\s+(.+)$/.exec(line.trimEnd());
+    if (!heading) {
+      if (/^#\s+/.test(line)) {
+        throw new Error(`${target.source}: reference may contain only one level-one heading`);
+      }
+      body.push(line);
+      continue;
+    }
+    flushBody();
+    const command = (heading[1] ?? "").length === 2 ? "section" : "subsection";
+    output.push(
+      `\\${command}*{${renderInlineMarkdown(heading[2] ?? "", renderOptions)}}`,
+      "",
+    );
+  }
+  flushBody();
+  return `${output.join("\n").trimEnd()}\n`;
 }
 
 /** Render one configured chapter from the same typed lesson AST the app receives. */
@@ -897,7 +1043,7 @@ export function renderBookChapter(
   allLessons: ParsedLesson[],
   capability?: ChapterCapability,
 ): GeneratedBookChapter {
-  const renderOptions = targetRenderOptions(target);
+  const renderOptions = targetRenderOptions(target, `${target.language} chapter ${target.chapter}`);
   const lessons = allLessons
     .filter(
       (lesson) =>

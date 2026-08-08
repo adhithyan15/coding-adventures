@@ -3,12 +3,19 @@ import { dirname, join, normalize, relative as pathRelative, resolve } from "nod
 import { pathToFileURL } from "node:url";
 import {
   renderBookChapter,
+  renderReferenceAppendix,
   type BookGenerationTarget,
+  type BookReferenceAppendixTarget,
   type InlineRenderOptions,
 } from "./book.js";
 import { defaultCurriculumRoot, loadLessons, loadTrackChapters } from "./loader.js";
 
 interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
+  /** Named reusable mapping from the config's scriptSets table. */
+  scriptSet?: string;
+}
+
+interface ConfiguredReferenceAppendixTarget extends BookReferenceAppendixTarget {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -46,6 +53,8 @@ interface BookGenerationConfig {
   sourceBaseUrl: string;
   scriptSets?: Record<string, InlineRenderOptions[]>;
   targets: ConfiguredBookGenerationTarget[];
+  /** Canonical Markdown references rendered into book back matter. */
+  referenceAppendices?: ConfiguredReferenceAppendixTarget[];
   /** Never rendered. See {@link HandwrittenBookChapter}. */
   handwritten?: HandwrittenBookChapter[];
 }
@@ -82,6 +91,20 @@ function safeOutput(root: string, relative: string): string {
     throw new Error(`unsafe generated book output '${relative}'`);
   }
   return output;
+}
+
+function safeMarkdownSource(root: string, relative: string): string {
+  const source = resolve(root, relative);
+  const fromRoot = normalize(pathRelative(resolve(root), source)).replaceAll("\\", "/");
+  if (
+    fromRoot === "" ||
+    fromRoot === ".." ||
+    fromRoot.startsWith("../") ||
+    !fromRoot.endsWith(".md")
+  ) {
+    throw new Error(`unsafe generated book source '${relative}'`);
+  }
+  return source;
 }
 
 /**
@@ -162,6 +185,38 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       lessonIds: generated.lessonIds,
       tex: target.output,
     });
+  }
+  for (const configuredAppendix of config.referenceAppendices ?? []) {
+    const { scriptSet, ...plainAppendix } = configuredAppendix;
+    let appendix: BookReferenceAppendixTarget = { ...plainAppendix };
+    if (scriptSet !== undefined) {
+      if (
+        appendix.inlineScripts !== undefined ||
+        appendix.unicodeScript !== undefined ||
+        appendix.scriptCommand !== undefined
+      ) {
+        throw new Error(
+          `${appendix.language} reference appendix: scriptSet cannot be combined with inline script options`,
+        );
+      }
+      const inlineScripts = config.scriptSets?.[scriptSet];
+      if (!inlineScripts) {
+        throw new Error(
+          `${appendix.language} reference appendix: unknown scriptSet '${scriptSet}'`,
+        );
+      }
+      appendix = { ...appendix, inlineScripts };
+    }
+    const source = safeMarkdownSource(root, appendix.source);
+    safeOutput(root, appendix.output);
+    if (!existsSync(source)) throw new Error(`${appendix.source}: reference source is missing`);
+    if (outputs.has(appendix.output)) {
+      throw new Error(`${appendix.output}: duplicate generated book output`);
+    }
+    outputs.set(
+      appendix.output,
+      renderReferenceAppendix(appendix, readFileSync(source, "utf8")),
+    );
   }
   manifest.chapters.sort(
     (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,
