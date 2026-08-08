@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C14-kaalangal
 spine_node: SPINE-TIME-OF-DAY
-sequence: 340
+sequence: 580
 chapter: 14
 type: word
 headword: வசந்த காலம் கோடைக் காலம் மழைக் காலம் குளிர் காலம்

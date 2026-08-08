@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C32-teri
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 660
+sequence: 930
 chapter: 32
 type: word
 headword: தெரி

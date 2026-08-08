@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C17-transparent-middle-synonyms
 spine_node: SPINE-TIME-OF-DAY
-sequence: 380
+sequence: 630
 chapter: 17
 type: etymology
 headword: நடுப்பகல், நடு இரவு

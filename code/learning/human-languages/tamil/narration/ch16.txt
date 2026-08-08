@@ -1,8 +1,8 @@
 Tamil, chapter 16: Tamil Months.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 சித்திரை to பங்குனி — Tamil's own solar calendar.
 
 Warm-up.
@@ -28,3 +28,45 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What kind of calendar is the Tamil month system — solar, lunar, or lunisolar? (Solar — a genuinely separate calendar from both Gregorian and Hindu lunisolar.) What are the twelve months traditionally named for? (Nakshatras, lunar-mansion star groups.) What two important occasions are dated by this calendar? (Tamil New Year (Chithirai 1) and Pongal (Thai 1).)
+
+
+Lesson 2 of 2.
+ஆம் (ām) — writing a word that starts with a vowel.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: a vowel standing alone, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Every vowel sign so far has hooked onto a consonant — the ி on ற. This word has no consonant to hook onto.
+
+Script you'll notice: a vowel standing alone.
+Tamil writes a vowel two ways, and which one you use depends on where it sits:
+[a table of 2 rows, read aloud]
+inside a word, after a consonant, a small sign — ி in றி.
+starting a word, with nothing before it, a full independent letter.
+ஆ is the independent letter for long ā. It is not a sign and never hangs off anything; it is a letter in its own right.
+Long ā is short அ plus a tail, so அ is where it starts — and you have not been shown that one yet. Its parts, then the tail:
+a curl at the upper left.
+a long horizontal stroke.
+a straight vertical on the right — that is அ.
+a tail added on the right — and now it is ஆ.
+Those are the parts in writing order. Where the pen lifts is not settled: Tamil handwriting varies by region and by school, and this book only claims a pen path where it has a sourced one.
+That is a rule, not a special case: any Tamil word that opens on a vowel opens with a full vowel letter.
+
+Script you'll notice: build the word.
+[a table of 2 rows, read aloud]
+piece: ஆ, ā, this lesson — independent.
+piece: ம், m — ம with the puḷḷi, the dot you already know.
+ஆ, ம் becomes ஆம் (ām).
+Two pieces only. The puḷḷi on ம் closes the word on a bare m, exactly as it did at the end of வணக்கம்.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: அ — curl, horizontal, right vertical]
+[once you have stopped driving — write: ஆ — the same three parts, then the right-hand tail]
+[once you have stopped driving — write: ம் — ம with the dot]
+[once you have stopped driving — write: ஆம் (ām) — two pieces, left to right]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம.) Next: noon and midnight.

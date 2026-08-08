@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C38-vidai
 spine_node: SPINE-TAKE-LEAVE
-sequence: 890
+sequence: 1160
 chapter: 38
 type: word
 headword: விடை

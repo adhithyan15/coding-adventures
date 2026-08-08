@@ -1,6 +1,6 @@
 ---
 id: TA-C01-nandri
-sequence: 200
+sequence: 50
 chapter: 1
 type: word
 headword: நன்றி

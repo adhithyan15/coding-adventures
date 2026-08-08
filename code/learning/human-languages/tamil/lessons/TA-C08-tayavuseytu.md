@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C08-tayavuseytu
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 260
+sequence: 470
 chapter: 8
 type: phrase
 headword: தயவுசெய்து

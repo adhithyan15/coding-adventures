@@ -1,6 +1,6 @@
 ---
 id: TA-C01-aam
-sequence: 180
+sequence: 30
 chapter: 1
 type: word
 headword: ஆம்
@@ -41,4 +41,4 @@ doubles words for warmth and certainty, the way *sari sari* does.
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **ஆம்**. What does **ஆமாம்** add? (**Emphasis** — "yes,
-indeed.") Next: writing it.
+indeed.") Next: the word for no.

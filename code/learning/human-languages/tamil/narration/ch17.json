@@ -4,11 +4,11 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:06273003bfe95d72",
+  "sourceHash": "fnv1a64:6ffa0438a52caeaa",
   "lessons": [
     {
       "id": "TA-C17-nanpakal-nalliravu",
-      "sequence": 370,
+      "sequence": 620,
       "title": "நண்பகல், நள்ளிரவு — one old \"middle\" root, two survival stories",
       "headword": "நண்பகல் நள்ளிரவு",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49f6e1ca6f73b6d4",
+      "sourceHash": "fnv1a64:f54b98fb24a35ebe",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
     },
     {
       "id": "TA-C17-transparent-middle-synonyms",
-      "sequence": 380,
+      "sequence": 630,
       "title": "நடுப்பகல் and நடு இரவு — the transparent twins",
       "headword": "நடுப்பகல், நடு இரவு",
       "romanization": "",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c43444f3c116f991",
+      "sourceHash": "fnv1a64:1a6961f763d05fc1",
       "notice": null,
       "blocks": [
         {

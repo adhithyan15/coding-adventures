@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W01-abugida-va-ka
 spine_node: SPINE-MEET-GREET
-sequence: 110
-chapter: 1
+sequence: 320
+delivery: script
+chapter: 5
 type: writing
 headword: "வ, க"
 gloss: the inherent vowel and the first two Tamil letters, including க's position-driven sounds

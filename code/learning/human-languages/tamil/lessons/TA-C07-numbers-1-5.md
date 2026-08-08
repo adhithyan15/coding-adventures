@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C07-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 220
+sequence: 420
 chapter: 7
 type: word
 headword: ஒன்று இரண்டு மூன்று நான்கு ஐந்து

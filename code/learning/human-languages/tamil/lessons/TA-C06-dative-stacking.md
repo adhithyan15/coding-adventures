@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C06-dative-stacking
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 190
+sequence: 380
 chapter: 6
 type: grammar
 headword: பெயர் + உக்கு

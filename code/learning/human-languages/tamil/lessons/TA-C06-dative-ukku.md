@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C06-dative-ukku
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 180
+sequence: 360
 chapter: 6
 type: word
 headword: -உக்கு
@@ -74,5 +74,4 @@ The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns
 (**On the end** of the noun — Tamil adds, it doesn't put a word in front.) What is
 "to me"? (**எனக்கு** *enakku* — the pronoun's body changes to *en-* first.) Why does
 the suffix show up as *-ukku* and *-kku*? (**One case, two shapes**, chosen by the
-noun's ending.) Next: compare that visible one-purpose suffix with a fused Latin
-ending.
+noun's ending.) Next: two more letters — ம and retroflex ண.

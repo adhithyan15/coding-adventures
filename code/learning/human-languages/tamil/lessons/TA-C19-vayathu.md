@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C19-vayathu
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 410
+sequence: 670
 chapter: 19
 type: phrase
 headword: உனக்கு எத்தனை வயது ஆகிறது?

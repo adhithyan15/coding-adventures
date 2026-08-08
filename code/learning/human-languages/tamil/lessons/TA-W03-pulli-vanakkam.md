@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W03-pulli-vanakkam
 spine_node: SPINE-MEET-GREET
-sequence: 140
-chapter: 1
+sequence: 450
+delivery: script
+chapter: 7
 type: writing
 headword: "்"
 gloss: "the puḷḷi — a visible dot that removes the inherent vowel without creating a conjunct"
@@ -96,4 +97,4 @@ consonants and outside the 247.)
 that Tamil doesn't? (**Fuses** the letters into a **conjunct** — Tamil keeps both
 shapes and the dot.) What does Tamil get in exchange? (A **much smaller
 character set** — 247, with **almost** no ligatures: only the borrowed க்ஷ and
-ஸ்ரீ.) Next: assemble that visible dot into **வணக்கம்**.
+ஸ்ரீ.) Next: six, seven and ten across the family.

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C23-day-family-register
 spine_node: SPINE-TIME-OF-DAY
-sequence: 480
+sequence: 750
 chapter: 23
 type: etymology
 headword: நாள் / தினம்

@@ -4,11 +4,11 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:da98a42e0008636f",
+  "sourceHash": "fnv1a64:a476bb11b5f796c3",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
-      "sequence": 510,
+      "sequence": 780,
       "title": "இனிய இரவு (iṉiya iravu) — \"good night,\" and Tamil breaking the pattern one more time",
       "headword": "இனிய இரவு",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c412c2fd55012e40",
+      "sourceHash": "fnv1a64:3874dc4fc0a7afb5",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
     },
     {
       "id": "TA-C25-goodnight-alternatives",
-      "sequence": 520,
+      "sequence": 790,
       "title": "நல்ல இரவு and இரவு வணக்கம் — old roots recombined",
       "headword": "நல்ல இரவு / இரவு வணக்கம்",
       "romanization": "",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcf8703e4fee1dda",
+      "sourceHash": "fnv1a64:614ee145f16a1bf3",
       "notice": null,
       "blocks": [
         {

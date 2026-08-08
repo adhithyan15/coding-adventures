@@ -1,8 +1,8 @@
 Tamil, chapter 6: Dative Case and Dative Subjects.
-4 lessons. All 4 can be done entirely by ear.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
 -உக்கு (-ukku) — "to, for".
 
 Warm-up.
@@ -30,10 +30,50 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: compare that visible one-purpose suffix with a fused Latin ending.
+What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண.
 
 
-Lesson 2 of 4.
+Lesson 2 of 6.
+ம and ண — a loop, and a curled tongue.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம, Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Two more letters, and with them you'll have every letter of this book's first word. One is easy. The other is a sound you may not be able to hear yet.
+
+Script you'll notice: ம.
+a straight vertical stroke on the LEFT.
+a horizontal along the bottom.
+a rounded arch closing it on the RIGHT.
+Get the sides the right way round. The upright is on the left and the curve on the right — which is the reverse of what most people guess, and the reverse of the Devanagari habit of hanging a shape off a right-hand spine.
+
+Script you'll notice: ண.
+a straight top bar.
+a loop on the left.
+two arches.
+a straight vertical on the right, down to the baseline.
+The dot under the romanization — ṇ, not plain n — is doing real work.
+
+Sounds you'll need: Retroflex.
+Say English n. Your tongue touches just behind your teeth.
+Now curl the tip of your tongue up and back toward the roof of your mouth, and say it again. That is ṇ, and it is a different letter in Tamil.
+English has no such sound and no way to write one, which is why an English speaker typically cannot hear the difference at first. That is expected. The ear learns it after the hand does, which is one good argument for writing the letters rather than only reading them.
+Retroflex sounds are a signature of the languages of India — they show up across Tamil, Telugu, Kannada, Malayalam, Hindi and Sanskrit alike, in families that are otherwise unrelated to each other. It's one of the features that makes South Asia a linguistic area: neighbouring languages that borrowed a sound from each other rather than inheriting it.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: ம — "left upright, bottom, right arch"]
+[once you have stopped driving — write: ண — "top bar, left loop, two arches, straight vertical"]
+[your turn — say: plain n, then curl the tongue back — ṇ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண — what makes it not ன? (One extra arch: ண has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings.
+
+
+Lesson 3 of 6.
 -உக்கு (-ukku) — one carriage in a suffix train.
 
 Warm-up.
@@ -63,7 +103,7 @@ Wrap-up Recall.
 What does -ukku contribute? (Dative to/for, one meaning.) What does Latin -īs fuse? (Case, plural number, and declension class.) Which system leaves the seam visible? (Tamil's agglutinative stack.)
 
 
-Lesson 3 of 4.
+Lesson 4 of 6.
 எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) — "I know Tamil".
 
 Warm-up.
@@ -103,7 +143,7 @@ Wrap-up Recall.
 What does எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) literally say? ("To-me Tamil is-known.") Which word has English got that Tamil hasn't? (A nominative "I" — nāṉ is replaced by the dative enakku.) Why does Tamil use the dative here? (Because knowing happens to you; you don't do it.) Which English word preserves the same idea? (Methinks — "it seems to me".) Next: watch all four Dravidian sisters use the same experiencer shape.
 
 
-Lesson 4 of 4.
+Lesson 5 of 6.
 -ukku, -ku, -ge, -ikku — the family shows its bones.
 
 Warm-up.
@@ -130,3 +170,36 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Do the four sisters agree on dative experiencers? (Yes.) Which four suffix shapes reveal the relationship? (-ukku, -ku, -ge, -ikku.) What stays plain in the sentence? (The thing known or experienced.)
+
+
+Lesson 6 of 6.
+ந, ன, ண (na, ṉa, ṇa) — three stops on one tongue-map.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The backward walk and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+English writes one n. Tamil keeps three tongue positions apart.
+
+Script you'll notice: The backward walk.
+[a table of 3 rows, read aloud]
+letter: ந. sound: na. tongue: against the teeth (dental).
+letter: ன. sound: ṉa. tongue: on the ridge behind the teeth (alveolar).
+letter: ண. sound: ṇa. tongue: curled back to the roof (retroflex).
+Move backward: teeth becomes ridge becomes curled roof. English spells all three with one letter and initially hears them as the same sound; Tamil uses separate letters because its words depend on the contrast.
+You will draw ந and ன when nandri needs them. For now compare the last pair: ண is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண has two.
+Retroflex sounds occur across unrelated South Asian language families. That shared geography makes the region a linguistic area: neighbors can borrow a sound pattern without inheriting it from one ancestor.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: dental ந at the teeth]
+[pause 8 seconds for the answer]
+[your turn — say: alveolar ன at the ridge]
+[pause 8 seconds for the answer]
+[your turn — say: retroflex ண with the tongue curled back]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: one arch in ன, two arches in ண]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண has two.) Next: the numbers one to five.

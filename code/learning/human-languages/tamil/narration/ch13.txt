@@ -1,8 +1,8 @@
 Tamil, chapter 13: Body Parts.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 தலை, கை — head and hand, both Tamil's own.
 
 Warm-up.
@@ -26,3 +26,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What are Tamil's words for head and hand? (தலை talai, கை kai.) Are either of these Sanskrit loans? (No — both native Dravidian, unlike Hindi's Sanskrit-descended sir and hāth.)
+
+
+Lesson 2 of 2.
+ி and நன்றி — replace the vowel, then hear ndr.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The first vowel sign, Script you'll notice: Assemble நன்றி and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A consonant can keep a or lose it under a puḷḷi. The third option is to replace it with a vowel sign.
+
+Script you'll notice: The first vowel sign.
+ற = ṟa becomes றி = ṟi.
+ி is a hook above and to the right. The consonant keeps its shape; the sign hangs from it. Later, ை (ai) will appear before its consonant on the page but after it in speech, the same eye/ear trap as Devanagari ि.
+
+Script you'll notice: Assemble நன்றி.
+ந, ன், றி becomes நன்றி.
+[a table of 3 rows, read aloud]
+piece: ந, na — dental, last lesson.
+piece: ன், ṉ — alveolar, with puḷḷi, Lessons 3–4.
+piece: றி, ṟi — ற plus the i-sign, this lesson.
+
+Sounds you'll need: Why nandri has a d-sound.
+ன் + ற is pronounced close to ndr. This follows a broader Tamil rule: a nasal voices the stop after it.
+[a table of 3 rows, read aloud]
+ந் + த, nd, வந்து vandu.
+ண் + ட, ṇḍ, retroflex pair.
+ன் + ற, ndr, நன்றி.
+Each n-letter creates its own cluster. That payoff explains both the three spellings and the common English romanization nandri, whose d is heard but not separately written.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: றி — ற plus the hook above right]
+[once you have stopped driving — write: நன்றி — three pieces]
+[your turn — say: "ன் + ற = ndr"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are a consonant's three vowel choices? (Keep inherent a, remove it with puḷḷi, or replace it with a vowel sign.) Where does ி attach? (Above and right.) Why is naṉṟi often written nandri? (ன் + ற is pronounced ndr because a nasal voices the following stop.)

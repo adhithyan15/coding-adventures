@@ -1,8 +1,8 @@
 Tamil, chapter 18: Telling Time.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 மணி — Tamil's native "bell," and a real homophone trap.
 
 Warm-up.
@@ -19,10 +19,54 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is Tamil's மணி ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: distinguish the likely Sanskrit gem homophone and tell the time.
+Is Tamil's மணி ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
+இல்லை (illai) — a vowel in front, a vowel sign behind.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Last lesson gave you the rule: a word opening on a vowel opens with a full letter. Here is the same rule with a different vowel, plus one new sign.
+
+Script you'll notice: இ and ல.
+இ is the independent letter for short i — the same job ஆ did, one vowel over. Its parts, in writing order:
+a crossing spiral on the left.
+a tall straight vertical on the right.
+ல is la, with its built-in a like every consonant:
+a curl that turns back on itself.
+a stroke rising to the right.
+Put the puḷḷi on it and you get ல், a bare l.
+The new mark is ை, the sign for ai, and it does something ி did not. It is written to the LEFT of its consonant, but pronounced after it.
+ல + ை becomes லை, and on the page the hook stands before the ல — yet you say lai, not ail.
+Your eye meets the vowel first and your mouth says it second. Devanagari does the same thing with ि, and it catches everyone once.
+Tamil keeps three l-letters (ல ள ழ) and two r-letters (ர ற), the same way it keeps three n's. This is the first of the l's.
+
+Script you'll notice: build the word.
+[a table of 3 rows, read aloud]
+piece: இ, i, independent — the word opens on a vowel.
+piece: ல், l — ல with the puḷḷi, bare consonant.
+piece: லை, lai — ல with the ai sign, this lesson.
+இ, ல், லை becomes இல்லை (illai).
+The ல் + லை is a doubled l, held like the க்க of vaṇakkam: il-lai, not ilai.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: இ — spiral, then the right-hand vertical]
+[once you have stopped driving — write: ல — curl, then rising stroke]
+[once you have stopped driving — write: லை — the ai hook goes on the LEFT]
+[once you have stopped driving — write: இல்லை (illai) — three pieces]
+[your turn — say: "il-lai" — hold the doubled l]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write இல்லை (illai). Why does it open with இ rather than a sign? (The word starts on a vowel.) Which side of its consonant does ை sit on? (The left — written first, spoken second.) Next: the gem-word homophone, and telling clock time.
+
+
+Lesson 3 of 3.
 மணி — hour or jewel? Context decides.
 
 Warm-up.

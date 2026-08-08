@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C37-uur
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 830
+sequence: 1100
 chapter: 37
 type: word
 headword: ஊர்

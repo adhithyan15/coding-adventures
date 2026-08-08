@@ -1,6 +1,6 @@
 ---
 id: TA-C01-sari
-sequence: 220
+sequence: 70
 chapter: 1
 type: word
 headword: சரி
@@ -41,4 +41,4 @@ one warm *sari*. Doubled — *sari, sari* — it means "yes yes, fine, go on."
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **சரி**. What does doubling it add? (**Hurry, or easy
-agreement** — "yes yes, fine.") Next: writing it.
+agreement** — "yes yes, fine.") Next: putting the five words together.

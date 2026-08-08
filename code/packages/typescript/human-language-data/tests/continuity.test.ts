@@ -305,20 +305,32 @@ describe("the real corpus", () => {
     // from the order the curriculum path already declared, so the continuity walk can
     // finally see it. The corpus GREW by a lesson over the same change, and that lesson
     // was born sequenced, so it never entered this count.
-    expect(report.summary.lessonsWithoutSequence).toBe(507);
-    expect(report.summary.tracksWithUnorderedLessons).toBe(19);
+    // 507 -> 483: exactly the 24 Tamil lessons in chapters 2-5 that had never declared
+    // a sequence. They had been falling back to ALPHABETICAL order, which is how
+    // chapter 2 came to teach the assembled phrase "en peyar" before "peyar" existed,
+    // and to ask "what is your name?" last, after the chapter's own practice lesson. Nothing detected it, because a chapter with no declared order
+    // has no order to contradict.
+    expect(report.summary.lessonsWithoutSequence).toBe(483);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track —
+    // the fourth of 22, not the first.
+    expect(report.summary.tracksWithUnorderedLessons).toBe(18);
         // 245 -> 240. Not five prerequisites fixed — five that were never real. Without a
     // `sequence` the walk falls back to alphabetical, so "TA-C01-aam requires
     // TA-C01-vanakkam-family-register" read as a forward prerequisite purely because
-    // `aam` sorts first. Declaring chapter 1's order removed the artifact.
-    expect(report.summary.forwardPrerequisites).toBe(240);
+    // `aam` sorts first. Declaring chapter 1's order removed the artifact.    // 240 -> 230, and forwardReviews 285 -> 273 below: ten lessons each stopped
+    // depending on something taught later. No lesson changed; only Tamil's order did.
+    expect(report.summary.forwardPrerequisites).toBe(230);
 
     // Lessons claiming to review material the learner has not reached yet.
     // 300 -> 285. Fourteen are the same alphabetical-fallback artifact as
     // forwardPrerequisites above, four of them in the writing track rather than the
     // word lessons; the fifteenth is a `reviews_of` list that genuinely shrank when its
     // lesson was rewritten.
-    expect(report.summary.forwardReviews).toBe(285);
+    // 285 -> 273. Ten from the ordering above, and two more from a real fix:
+    // TA-C02-magizhcci reviewed TA-C02-ungal-peyar-enna and TA-C04-mindum-sandippom
+    // reviewed TA-C04-naalai, both before those lessons existed. Both were forward
+    // under the old alphabetical fallback too; the hand-authored book runs them the
+    // other way round, so the sequences now follow the book. Tamil forward reviews: 0.
+    expect(report.summary.forwardReviews).toBe(273);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.
@@ -414,7 +426,8 @@ describe("the real corpus", () => {
     // 439 too. All four dropped references sit in TA-W01-curves-va-ka,
     // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
     // stopped counting because chapter 1 now declares its order.
-    expect(report.summary.forwardReferences).toBe(469);
+    // -1, same cause.
+    expect(report.summary.forwardReferences).toBe(468);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -449,8 +462,16 @@ describe("the real corpus", () => {
     // lessons sit within three of each other — a separate change, and one that would
     // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
     // numbers before TA-C01-nandri teaches the word.
-    expect(report.summary.missedByWindow.R1).toBe(834);
-    expect(report.summary.missedByWindow.R2).toBe(1627);
+    // 834 -> 843, the price of the gentle ramp, paid knowingly. Tamil teaches three
+    // chapters of pure speech and then admits one script lesson at a time. Measured,    // consecutive script lessons sit at 0-indexed reading positions 27,31,36,40,44,
+    // 48,52,56,60,64,68 — gaps of 4,5,4,4,4,4,4,4,4,4. R1 is a 1-3 window, so with this layout no
+    // script lesson can reinforce the previous one inside R1. 24 atoms introduced by
+    // writing lessons miss it; their real revisit counts run 0 to 7, median 2, so all
+    // but two ARE reinforced — just never within three lessons. An interleaved strand
+    // cannot satisfy R1 as that window is defined.
+    expect(report.summary.missedByWindow.R1).toBe(843);
+    // 1627 -> 1625: R2 spans 5-15, which this spacing does reach.
+    expect(report.summary.missedByWindow.R2).toBe(1625);
   });
 
   it("shows what a declared reading order was worth", () => {

@@ -4,11 +4,11 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6419f9af0cbb8148",
+  "sourceHash": "fnv1a64:e2e6fd53c38b59e0",
   "lessons": [
     {
       "id": "TA-C28-pirpakal",
-      "sequence": 550,
+      "sequence": 820,
       "title": "பிற்பகல் (piṟpakal) — \"afternoon,\" a similar sandhi trick to நண்பகல்",
       "headword": "பிற்பகல்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0568dee970d8dc36",
+      "sourceHash": "fnv1a64:f0692fb16627812a",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
     },
     {
       "id": "TA-C28-afternoon-boundary",
-      "sequence": 560,
+      "sequence": 830,
       "title": "Noon or afternoon? — let the sources keep their blur",
       "headword": "நடுப்பகல் / மதியம்",
       "romanization": "",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e0fef18cdf187fb",
+      "sourceHash": "fnv1a64:52837d88f23a53f5",
       "notice": null,
       "blocks": [
         {

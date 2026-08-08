@@ -4,11 +4,11 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:262d769ef6d9dc12",
+  "sourceHash": "fnv1a64:da456f87ee652d26",
   "lessons": [
     {
       "id": "TA-C09-mannikkavum",
-      "sequence": 280,
+      "sequence": 500,
       "title": "மன்னிக்கவும் (maṉṉikkavum) — please forgive",
       "headword": "மன்னிக்கவும்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6af60ab308e7049",
+      "sourceHash": "fnv1a64:2ca552bc0eb5b07e",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
     },
     {
       "id": "TA-C09-sorry-register",
-      "sequence": 290,
+      "sequence": 510,
       "title": "மன்னிக்கவும் — formal forgiveness and a doubled n",
       "headword": "மன்னிக்கவும் / sorry",
       "romanization": "",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63705a2b1437e7b4",
+      "sourceHash": "fnv1a64:0b10828379b8e21d",
       "notice": {
         "modality": "sight",
         "needs": [

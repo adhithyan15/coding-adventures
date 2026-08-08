@@ -1,6 +1,7 @@
 ---
 id: TA-C05-vaazh
 chapter: 5
+sequence: 330
 type: word
 headword: வாழ்
 gloss: to live, to flourish

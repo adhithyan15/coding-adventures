@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C31-matiya-vanakkam
 spine_node: SPINE-TIME-OF-DAY
-sequence: 590
+sequence: 860
 chapter: 31
 type: phrase
 headword: மதிய வணக்கம்

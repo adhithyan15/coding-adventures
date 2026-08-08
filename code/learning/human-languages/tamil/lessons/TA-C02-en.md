@@ -1,6 +1,7 @@
 ---
 id: TA-C02-en
 chapter: 2
+sequence: 110
 type: word
 headword: என்
 gloss: my

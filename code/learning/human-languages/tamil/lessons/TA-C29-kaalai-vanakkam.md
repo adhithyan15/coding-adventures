@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C29-kaalai-vanakkam
 spine_node: SPINE-TIME-OF-DAY
-sequence: 570
+sequence: 840
 chapter: 29
 type: phrase
 headword: காலை வணக்கம்

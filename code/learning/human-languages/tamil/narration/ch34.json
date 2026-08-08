@@ -4,11 +4,11 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b09af3aa1df4854a",
+  "sourceHash": "fnv1a64:0afe185a93c0169e",
   "lessons": [
     {
       "id": "TA-C34-edu",
-      "sequence": 710,
+      "sequence": 980,
       "title": "எடு (eḍu) — \"to take,\" beside the \"put\" you already own",
       "headword": "எடு",
       "romanization": "eḍu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3247ff041aada7e8",
+      "sourceHash": "fnv1a64:5d6ea6f315808c33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -180,7 +180,7 @@
     },
     {
       "id": "TA-C34-kel",
-      "sequence": 720,
+      "sequence": 990,
       "title": "கேள் (kēḷ) — one verb for asking and for hearing",
       "headword": "கேள்",
       "romanization": "kēḷ",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a4741225dff9092",
+      "sourceHash": "fnv1a64:f5e3b74b5b3bf025",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -369,7 +369,7 @@
     },
     {
       "id": "TA-C34-utavu",
-      "sequence": 730,
+      "sequence": 1000,
       "title": "உதவு (udavu) — \"to help,\" and a word Tamil did not borrow",
       "headword": "உதவு",
       "romanization": "udavu",
@@ -380,7 +380,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cbacf37334d54ef5",
+      "sourceHash": "fnv1a64:39f1276ff0515dcc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -532,7 +532,7 @@
     },
     {
       "id": "TA-C34-pidi",
-      "sequence": 740,
+      "sequence": 1010,
       "title": "பிடி (piḍi) — \"to catch,\" and therefore \"to like\"",
       "headword": "பிடி",
       "romanization": "piḍi",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1480cdf0e8dbdd75",
+      "sourceHash": "fnv1a64:d9826b5358141478",
       "notice": null,
       "blocks": [
         {

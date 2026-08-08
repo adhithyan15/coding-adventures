@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C34-kel
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 720
+sequence: 990
 chapter: 34
 type: word
 headword: கேள்

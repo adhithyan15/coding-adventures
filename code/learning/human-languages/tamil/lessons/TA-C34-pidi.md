@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C34-pidi
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 740
+sequence: 1010
 chapter: 34
 type: word
 headword: பிடி

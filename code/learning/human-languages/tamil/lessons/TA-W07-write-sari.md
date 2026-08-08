@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W07-write-sari
 spine_node: SPINE-MEET-GREET
-sequence: 222
-chapter: 1
+sequence: 690
+delivery: script
+chapter: 19
 type: writing
 headword: "சரி"
 gloss: one letter for a whole family of sounds — ச — and the second r
@@ -89,4 +90,4 @@ vowel sign you first hooked onto **ற**.
 nasal.) How many *r*-letters does
 Tamil keep? (**Two** — ர and ற.) In **லை**, which side of the ல does the ai sign
 sit on? (**The left**.) And why does **இல்லை** open with **இ** rather than a
-sign? (**It starts on a vowel**.) Next: putting the five words together.
+sign? (**It starts on a vowel**.) Next: the numbers eleven to twenty.

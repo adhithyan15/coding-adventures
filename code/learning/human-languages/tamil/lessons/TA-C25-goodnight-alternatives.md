@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C25-goodnight-alternatives
 spine_node: SPINE-TIME-OF-DAY
-sequence: 520
+sequence: 790
 chapter: 25
 type: etymology
 headword: நல்ல இரவு / இரவு வணக்கம்

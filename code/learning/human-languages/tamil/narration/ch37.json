@@ -4,11 +4,11 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:956feb3bb64ab0cb",
+  "sourceHash": "fnv1a64:f9fc24867a2d77c3",
   "lessons": [
     {
       "id": "TA-C37-uur",
-      "sequence": 830,
+      "sequence": 1100,
       "title": "ஊர் (ūr) — \"town,\" and the question Tamil asks early",
       "headword": "ஊர்",
       "romanization": "ūr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3393a38bd4aca7f7",
+      "sourceHash": "fnv1a64:e9126594107cd522",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -217,7 +217,7 @@
     },
     {
       "id": "TA-C37-nanban",
-      "sequence": 840,
+      "sequence": 1110,
       "title": "நண்பன் (naṇbaṉ) — \"friend,\" with the ending doing the work",
       "headword": "நண்பன்",
       "romanization": "naṇbaṉ",
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3f3e23276e44561",
+      "sourceHash": "fnv1a64:3b1e135aa5ebe420",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,7 +405,7 @@
     },
     {
       "id": "TA-C37-ivar",
-      "sequence": 850,
+      "sequence": 1120,
       "title": "இவர் (ivar) — \"this person,\" and Tamil's pointing system",
       "headword": "இவர்",
       "romanization": "ivar",
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9ca3f8708b12b192",
+      "sourceHash": "fnv1a64:86cddb2e115cba53",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -582,7 +582,7 @@
     },
     {
       "id": "TA-C37-ivar-en-nanbar",
-      "sequence": 860,
+      "sequence": 1130,
       "title": "இவர் என் நண்பர் (ivar eṉ naṇbar) — \"this is my friend\"",
       "headword": "இவர் என் நண்பர்",
       "romanization": "ivar eṉ naṇbar",
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a2e2284ae61b8a8e",
+      "sourceHash": "fnv1a64:30fc8c871f6986df",
       "notice": {
         "modality": "sight",
         "needs": [

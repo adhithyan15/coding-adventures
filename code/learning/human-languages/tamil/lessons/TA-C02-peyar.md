@@ -1,6 +1,7 @@
 ---
 id: TA-C02-peyar
 chapter: 2
+sequence: 100
 type: word
 headword: பெயர்
 gloss: name

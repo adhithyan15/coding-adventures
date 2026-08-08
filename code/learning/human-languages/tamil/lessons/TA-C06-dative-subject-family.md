@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C06-dative-subject-family
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 210
+sequence: 400
 chapter: 6
 type: grammar
 headword: எனக்கு / నాకు / ನನಗೆ / എനിക്ക്

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C20-vaanilai
 spine_node: SPINE-TIME-OF-DAY
-sequence: 440
+sequence: 710
 chapter: 20
 type: word
 headword: வானிலை

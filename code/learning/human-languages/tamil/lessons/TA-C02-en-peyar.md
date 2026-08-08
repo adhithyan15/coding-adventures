@@ -1,6 +1,7 @@
 ---
 id: TA-C02-en-peyar
 chapter: 2
+sequence: 120
 type: phrase
 headword: என் பெயர் …
 gloss: my name is… (with no "is")

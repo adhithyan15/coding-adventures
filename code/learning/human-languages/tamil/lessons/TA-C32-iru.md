@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C32-iru
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 610
+sequence: 880
 chapter: 32
 type: word
 headword: இரு

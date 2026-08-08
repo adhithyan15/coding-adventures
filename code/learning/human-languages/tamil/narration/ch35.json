@@ -4,11 +4,11 @@
   "chapter": 35,
   "title": "Arriving at a House",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2703e3459eee5f3a",
+  "sourceHash": "fnv1a64:c26956daee7bf61d",
   "lessons": [
     {
       "id": "TA-C35-veedu",
-      "sequence": 750,
+      "sequence": 1020,
       "title": "வீடு (vīḍu) — \"house,\" and the place the greeting happens",
       "headword": "வீடு",
       "romanization": "vīḍu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:297479db3d817cd4",
+      "sourceHash": "fnv1a64:02cdeb414fe5f151",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -197,7 +197,7 @@
     },
     {
       "id": "TA-C35-kadavu",
-      "sequence": 760,
+      "sequence": 1030,
       "title": "கதவு (kadavu) — \"door,\" and a word Tamil never gave up",
       "headword": "கதவு",
       "romanization": "kadavu",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:563406c98419bdc3",
+      "sourceHash": "fnv1a64:939efbe63d9682c4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -364,7 +364,7 @@
     },
     {
       "id": "TA-C35-arai",
-      "sequence": 770,
+      "sequence": 1040,
       "title": "அறை (aṟai) — \"room,\" and Tamil's second r",
       "headword": "அறை",
       "romanization": "aṟai",
@@ -375,7 +375,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34d173f2cce6d96f",
+      "sourceHash": "fnv1a64:52db51b4d7161024",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -546,7 +546,7 @@
     },
     {
       "id": "TA-C35-naarkaali",
-      "sequence": 780,
+      "sequence": 1050,
       "title": "நாற்காலி (nāṟkāli) — \"chair,\" counted out in legs",
       "headword": "நாற்காலி",
       "romanization": "nāṟkāli",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f68ff6aa061a196c",
+      "sourceHash": "fnv1a64:cd96726728bb3047",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W04-i-sign-write-nandri
 spine_node: SPINE-MEET-GREET
-sequence: 170
-chapter: 1
+sequence: 570
+delivery: script
+chapter: 13
 type: writing
 headword: "ி, நன்றி"
 gloss: replace the inherent vowel with i, assemble நன்றி, and hear nasal-triggered voicing

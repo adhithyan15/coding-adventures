@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C26-kaalai
 spine_node: SPINE-TIME-OF-DAY
-sequence: 530
+sequence: 800
 chapter: 26
 type: word
 headword: காலை

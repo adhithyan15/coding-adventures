@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C11-nirangal
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 310
+sequence: 540
 chapter: 11
 type: word
 headword: கருப்பு வெள்ளை சிவப்பு நீலம்

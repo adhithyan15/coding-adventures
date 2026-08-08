@@ -1,6 +1,6 @@
 ---
 id: TA-C01-illai
-sequence: 190
+sequence: 40
 chapter: 1
 type: word
 headword: இல்லை
@@ -43,4 +43,4 @@ five words together.
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **இல்லை**. Is it closer to English *no*, or to *is not*?
-(**Is not** — it is a statement, not a label.) Next: writing it.
+(**Is not** — it is a statement, not a label.) Next: the word for thank you.

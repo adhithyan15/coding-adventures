@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C38-udambu
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 870
+sequence: 1140
 chapter: 38
 type: word
 headword: உடம்பு

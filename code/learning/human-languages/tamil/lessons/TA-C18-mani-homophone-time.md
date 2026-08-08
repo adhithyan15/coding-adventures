@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C18-mani-homophone-time
 spine_node: SPINE-TIME-OF-DAY
-sequence: 400
+sequence: 660
 chapter: 18
 type: etymology
 headword: மணி / மணி

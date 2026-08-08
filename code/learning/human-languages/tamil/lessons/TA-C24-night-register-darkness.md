@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C24-night-register-darkness
 spine_node: SPINE-TIME-OF-DAY
-sequence: 500
+sequence: 770
 chapter: 24
 type: grammar
 headword: இரவு / ராத்திரி / இருள்

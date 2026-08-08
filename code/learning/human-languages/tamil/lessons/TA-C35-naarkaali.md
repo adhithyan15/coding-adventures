@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C35-naarkaali
 spine_node: SPINE-MEET-GREET
-sequence: 780
+sequence: 1050
 chapter: 35
 type: word
 headword: நாற்காலி

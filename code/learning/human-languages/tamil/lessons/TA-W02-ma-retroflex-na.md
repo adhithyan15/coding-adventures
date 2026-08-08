@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W02-ma-retroflex-na
 spine_node: SPINE-MEET-GREET
-sequence: 120
-chapter: 1
+sequence: 370
+delivery: script
+chapter: 6
 type: writing
 headword: "ம, ண"
 gloss: write ம and retroflex ண while training the tongue to curl back
@@ -91,5 +92,4 @@ rather than inheriting it.
 [PAUSE 3s] Draw **ம** — which side is the upright on? (**The left**; the
 arch closes it on the right.) Draw **ண** — what makes it *not* ன? (**One extra arch**: ண has **two** arches where ன has one. Both end in the same straight vertical.) What does the dot in **ṇ** mean? (**Retroflex** — the tongue curls
 **back** to the roof of the mouth.) Why can't you hear it yet? (**English has no
-such sound**; the ear learns it after the hand.) Next: place Tamil's three n's
-along one backward walk through the mouth.
+such sound**; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings.

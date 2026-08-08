@@ -1,6 +1,6 @@
 ---
 id: TA-C01-answering
-sequence: 230
+sequence: 80
 chapter: 1
 type: phrase
 headword: ஆம் / இல்லை / சரி

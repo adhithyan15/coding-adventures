@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C28-afternoon-boundary
 spine_node: SPINE-TIME-OF-DAY
-sequence: 560
+sequence: 830
 chapter: 28
 type: etymology
 headword: நடுப்பகல் / மதியம்

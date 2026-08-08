@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C28-pirpakal
 spine_node: SPINE-TIME-OF-DAY
-sequence: 550
+sequence: 820
 chapter: 28
 type: word
 headword: பிற்பகல்

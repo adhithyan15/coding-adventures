@@ -1,6 +1,7 @@
 ---
 id: TA-C03-eppadi-irukkirirgal
 chapter: 3
+sequence: 190
 type: phrase
 headword: நீங்கள் எப்படி இருக்கிறீர்கள்?
 gloss: how are you? (respectful)

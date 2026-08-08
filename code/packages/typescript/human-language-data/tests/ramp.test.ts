@@ -98,7 +98,12 @@ describe("corpus snapshot", () => {
 
     expect(report.policy).toEqual({ maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 });
     expect(report.summary.lessonViolations).toBe(40);
-    expect(report.summary.chapterViolations).toBe(25);
+    // 25 -> 24. Tamil chapter 1 used to hold all eleven script lessons and blew the
+    // per-chapter atom budget (24 atoms against a budget of 12). Chapters 1-3 are now
+    // pure speech and the script strand runs one lesson at a time from chapter 4, so
+    // no Tamil chapter exceeds the budget. This is the number that most directly
+    // measures "do not throw many things at the reader at once".
+    expect(report.summary.chapterViolations).toBe(24);
 
     // HALF THE CORPUS IS INVISIBLE HERE. 572 lessons declare no atoms, so they are
     // neither compliant nor violating — they are unmigrated. A track with few violations
@@ -254,7 +259,19 @@ describe("the script ramp against the real corpus", () => {
     // script lesson, so the five glyphs of வணக்கம் itself now register against the
     // three-glyph budget — which is honest. A five-letter word IS five new shapes on
     // page one; the old structure hid that behind a "letters in this word" heading.
-    expect(report.summary.lessonViolations).toBe(60);
+    // 60 -> 61, which is a net of three separate moves, not one.
+    // OUT: TA-W03-pulli-vanakkam, at 9 glyphs the steepest Tamil lesson in the corpus.
+    //      It moved to chapter 7, by which point its glyphs are no longer first
+    //      appearances, so it stopped counting.
+    // IN:  TA-C01-practice (5 glyphs, பயுேோ) and TA-C01-nandri (4, நனறி).
+    // Both additions are SPEAKING lessons, and that is the trade being made knowingly:
+    // Tamil now shows the script from page one and does not teach a letter until
+    // chapter 4, so early spoken lessons display glyphs the writing strand has not
+    // reached. This gate counts a glyph the first time it APPEARS, which is the right
+    // rule for a track that teaches script alongside speech and the wrong one for a
+    // track that deliberately shows before it teaches. The exposure is intended; the
+    // count is honest; what it measures is no longer quite what Tamil is doing.
+    expect(report.summary.lessonViolations).toBe(61);
 
     // All five are Japanese Chapter 1, which opens kanji beside hiragana in its very
     // first lesson and adds katakana in its fifth.

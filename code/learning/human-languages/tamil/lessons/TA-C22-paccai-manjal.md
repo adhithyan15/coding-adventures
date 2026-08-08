@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C22-paccai-manjal
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 460
+sequence: 730
 chapter: 22
 type: word
 headword: பச்சை, மஞ்சள்

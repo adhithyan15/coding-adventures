@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C35-veedu
 spine_node: SPINE-MEET-GREET
-sequence: 750
+sequence: 1020
 chapter: 35
 type: word
 headword: வீடு

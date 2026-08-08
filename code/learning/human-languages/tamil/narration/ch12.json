@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:37498296b121ed1e",
+  "sourceHash": "fnv1a64:643afe30d635fb6e",
   "lessons": [
     {
       "id": "TA-C12-kudumbam",
-      "sequence": 320,
+      "sequence": 550,
       "title": "அப்பா, அம்மா, and four sibling words",
       "headword": "அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d83e9a64372df884",
+      "sourceHash": "fnv1a64:418d1b0b702acbe3",
       "notice": null,
       "blocks": [
         {

@@ -1,6 +1,7 @@
 ---
 id: TA-C05-pesu
 chapter: 5
+sequence: 300
 type: word
 headword: பேசு
 gloss: to speak
