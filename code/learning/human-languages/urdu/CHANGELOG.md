@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.1 — 2026-08-08
+
+- Replaced the explicitly temporary Naskh presentation with static Noto
+  Nastaliq Urdu Regular and Bold faces in both the downloadable book and
+  Language Ladder.
+- Kept Naskh as a browser fallback rather than presenting its letter style as
+  the Urdu course's normal typography.
+- Pinned the official Noto distribution revision and file hashes in the shared
+  font inventory, and verified Urdu coverage, OpenType shaping tables, the
+  XeLaTeX book, and the production application bundle.
+
 ## 0.10.0 — 2026-08-08
 
 Thirteen everyday-noun lessons across four new chapters (9–12), continuing the

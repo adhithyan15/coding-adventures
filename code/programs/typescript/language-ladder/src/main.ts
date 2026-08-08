@@ -749,6 +749,7 @@ function renderPractice(): HTMLElement {
   const views = buildScriptView(SCRIPTS[questionScript]!);
   const q = question!;
   const wrap = el("div", "practice");
+  wrap.dataset.script = SCRIPTS[questionScript]!.script;
 
   wrap.appendChild(renderScopeToggle());
 
@@ -1584,6 +1585,7 @@ function renderReview(grid: GridCell[]): HTMLElement {
     const b = el("button", "option") as HTMLButtonElement;
     b.textContent = opt.lesson.headword;
     b.title = opt.language;
+    b.dataset.language = opt.language;
     if (reviewChosen !== null) {
       b.disabled = true;
       if (k === answerKey) b.classList.add("option--correct");
@@ -1691,6 +1693,7 @@ function renderConcepts(): HTMLElement {
         a.language.localeCompare(b.language),
       )) {
         const row = el("div", "concept__row");
+        row.dataset.language = r.language;
 
         const lang = el("span", "concept__lang");
         lang.textContent = languageName(r.language);
@@ -1862,6 +1865,7 @@ function render(): void {
     // (where the match would be meaningless) get none.
     const siblings = syllabary ? crossScriptSiblings(active.sound, data.script, SCRIPTS) : [];
     const body = el("div", "body");
+    body.dataset.script = data.script;
     body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active, siblings));
     app!.appendChild(body);
   } else {

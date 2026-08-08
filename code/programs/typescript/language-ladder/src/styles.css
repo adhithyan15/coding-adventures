@@ -4,6 +4,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Curriculum Nastaliq";
+  src: url("../../../../learning/human-languages/_fonts/NotoNastaliqUrdu-Static.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Curriculum Nastaliq";
+  src: url("../../../../learning/human-languages/_fonts/NotoNastaliqUrdu-Bold-Static.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   --bg: #faf9f7;
   --card: #ffffff;
@@ -368,8 +384,11 @@ body {
 }
 .step__word { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .step__glyph { font-size: 1.9rem; line-height: 1.2; }
-.step[data-language="persian"] .step__glyph,
-.step[data-language="urdu"] .step__glyph { font-family: "Curriculum Naskh", serif; }
+.step[data-language="persian"] .step__glyph { font-family: "Curriculum Naskh", serif; }
+.step[data-language="urdu"] .step__glyph {
+  font-family: "Curriculum Nastaliq", "Curriculum Naskh", serif;
+  line-height: 1.7;
+}
 .step__meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .step__rom { color: var(--muted); font-style: italic; font-size: 0.95rem; }
 .step__gloss { font-size: 0.95rem; }
@@ -453,9 +472,17 @@ body {
   font-size: 2.2rem;
   line-height: 1.25;
 }
-.focused-check[data-language="persian"] .focused-check__glyph,
+.focused-check[data-language="persian"] .focused-check__glyph { font-family: "Curriculum Naskh", serif; }
 .focused-check[data-language="urdu"] .focused-check__glyph {
-  font-family: "Curriculum Naskh", serif;
+  font-family: "Curriculum Nastaliq", "Curriculum Naskh", serif;
+  line-height: 1.7;
+}
+
+[data-script="urdu-nastaliq"] :is(.tile__glyph, .detail__glyph, .option),
+.concept__row[data-language="urdu"] .concept__word,
+.option[data-language="urdu"] {
+  font-family: "Curriculum Nastaliq", "Curriculum Naskh", serif;
+  line-height: 1.7;
 }
 .focused-check__form { display: grid; gap: 9px; margin-top: 14px; }
 .focused-check__prompt { color: var(--ink); font-size: 0.9rem; line-height: 1.5; }

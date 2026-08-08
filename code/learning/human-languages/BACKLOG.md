@@ -5,9 +5,10 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after HL-Q03 merged as #10100. HL-C13 moved next
-because the books are public but the aligned practice app is still a learner-visible
-broken promise, and priority rule 1 places publication ahead of another corpus tranche.
+Last prioritized: 2026-08-08, after HL-C13 merged as #10102 and its public deployment
+was verified. HL-U01 moved next because the newly public book and practice app still
+render Urdu in an explicitly temporary Naskh fallback; correcting the learner-visible
+script presentation takes priority over another corpus tranche.
 Current generated baseline: **22** registered tracks, **1,669** canonical lessons,
 **1,521** mapped lessons, and **22** downloadable LaTeX books spanning **513**
 chapters, **408** of them generated from the canonical lesson AST. Twenty-five mapped
@@ -299,6 +300,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-I03 | Complete (#10092) | Derive the top-level track progress table from canonical curriculum and book-generation data. | A registry-ordered generated table reports canonical and mapped lesson counts plus authored/generated book progress for every track; CI fails byte-for-byte drift. |
 | HL-I04 | Complete (#9908) | Restore exact-main full CI after `perl/wasm-module-encoder` exposed undeclared local test dependencies. | Its `cpanfile` and `Makefile.PL` declare every local package injected by `BUILD`; clean full-build metadata validation and focused Perl tests pass. |
 | HL-I05 | Complete (#9910) | Make the repository's Lua bootstrap resilient to a temporary lua.org connection outage. | All CI platforms install pinned Lua 5.4.7 through an OS-specific cache or checksum-verified byte-identical Debian/Ubuntu source fallback without weakening the Windows MSVC ordering or silently skipping Lua tests. |
+| HL-I06 | Queued | Reconcile stale and reused backlog IDs with merged implementation evidence. | Every completed item names its merge PR, duplicate rows are removed, reused IDs are split into unique stable IDs, and remaining completion signals describe only unfinished work. |
 | HL-B14 | Complete (#9728) | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B15 | Complete (#9735) | Remove Italian's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B16 | Complete (#9744) | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Fifty schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
@@ -335,7 +337,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-M08 | Queued | Reconcile Latin's roadmap and authoritative session map with canonical Chapters 1–36. | Both files stop at Chapter 1 and describe Chapter 2+ as planned even though prerequisite-ordered canonical lessons continue through Chapter 36. |
 | HL-M09 | Queued | Reconcile Spanish's roadmap and authoritative session map with canonical Chapters 1–33 and the new support steps. | The roadmap stops at Chapter 18 and calls Chapter 19 next, while the session map stops at Chapter 3; both lag the prerequisite-ordered canonical curriculum. |
 | HL-T01 | Complete (#9904) | Complete session maps and pronunciation references for Persian and Urdu. | Both five-lesson prefixes now have authoritative N+1/N+3/N+7/N+15 ledgers and sound-id-keyed references; the Urdu guide explicitly preserves the Naskh fallback debt. |
-| HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
+| HL-U01 | Complete (#10104) | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Official Noto Nastaliq Urdu 4.000 Regular and Bold static files are hash-pinned, licensed under OFL-1.1, and used by the book and every target-form surface in Language Ladder; Naskh remains only the app's fallback. |
 
 ## P2 — corpus growth
 
@@ -1887,9 +1889,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Both references are keyed to the sound ids already declared in lesson
   frontmatter, teach script inside known words, and keep transliteration as
   temporary scaffolding rather than a reading prerequisite.
-- The Urdu reference distinguishes Nastaliq as the intended presentation from
-  the current vendored Noto Naskh Arabic fallback. HL-U01 remains open; this
-  documentation does not silently claim that type-style work is complete.
+- The Urdu reference distinguished Nastaliq as the intended presentation from
+  the then-current vendored Noto Naskh Arabic fallback and deliberately left
+  HL-U01 open; the later HL-U01 findings record its closure.
 - The next smallest corpus-growth slice is now explicit as HL-E01: complete the
   shared name exchange in both tracks from one canonical schema-v2 source before
   advancing either language to the wellbeing cluster.
@@ -2436,6 +2438,27 @@ problem.
   republishes practice without requiring a separate application edit.
 - The public curriculum index and application README now expose the stable URL;
   no hand-maintained duplicate content was added to make the app public.
+
+## Findings from HL-U01
+
+- The official Noto distribution publishes static Noto Nastaliq Urdu 4.000
+  Regular and Bold TTFs under OFL-1.1. Both binaries are pinned to distribution
+  commit `46074e15f8956b502051eb4a7796ed8c7d4f3076`, with their SHA-256 digests
+  checked byte for byte by the app test suite.
+- Both fonts cover the complete Urdu course probe and carry `arab` GSUB/GPOS
+  tables with the `URD` language system. The book selects that family through
+  fontspec; Language Ladder selects it on Urdu Learn, focused-check, mixed-review,
+  Concepts, Browse, and script-practice surfaces while keeping Naskh as fallback.
+- The standalone application BUILD passes typecheck, bundle budgets, and all
+  527 tests. Its production output contains both static font assets, and a
+  headless-Chrome run confirms the Urdu frontier uses the loaded Nastaliq face
+  with right-to-left direction and enough line height for the descending form.
+- XeLaTeX builds the 77-page Urdu book with no missing-character or fontspec
+  warnings. Rendered checks of the opening lesson and later grammar pages show
+  contextual Nastaliq joining without collisions or clipped descenders.
+- The backlog had accumulated stale completed rows and reused IDs while earlier
+  work landed; HL-I06 records that integrity repair without displacing this
+  learner-visible Urdu typography fix.
 
 ## Completed foundations
 

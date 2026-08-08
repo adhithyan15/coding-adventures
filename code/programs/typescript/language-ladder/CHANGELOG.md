@@ -10,6 +10,9 @@
 - Keep relative asset URLs and deploy only the `language-ladder/` subdirectory,
   so the app works at its project-site path without replacing the published
   books or the repository's other Pages artifacts.
+- Render Urdu learning, focused-check, mixed-review, concept, browse, and
+  script-practice surfaces with the vendored static Noto Nastaliq Urdu family;
+  keep Naskh as the CSS fallback rather than the normal Urdu face.
 
 ### Changed — frontier-sized production loading
 

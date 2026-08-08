@@ -18,10 +18,10 @@ romanization once the Urdu form is familiar.
   word (`short-vowels-unwritten`). Long vowels use letter shapes such as **ا**,
   **و**, and **ی**; **ے** can carry *e/ai*.
 - Urdu is traditionally printed in **Nastaliq**, whose connected words descend
-  in a flowing slope. The current book and app deliberately use the vendored
-  Noto Naskh Arabic face as a deterministic, legible fallback until a licensed
-  static Nastaliq font is verified. The fallback changes type style, not Urdu
-  spelling, joining order, or lesson sequence.
+  in a flowing slope. The book and app use the vendored static Noto Nastaliq Urdu
+  family, including its Urdu OpenType localization and contextual joins. Naskh
+  remains an accessibility fallback when a learner's browser cannot load the
+  course font; it is no longer the normal presentation.
 
 ## Sound ids used by the starter lessons
 
