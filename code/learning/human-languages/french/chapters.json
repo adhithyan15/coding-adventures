@@ -257,6 +257,101 @@
           "FR-LEX-IL-PLEUT-04"
         ]
       }
+    },
+    {
+      "chapter": 28,
+      "title": "Coffee, Tea, Milk, Sugar",
+      "label": "ch:fr-coffee-tea-milk-sugar",
+      "canDo": "I can ask for coffee, tea, milk or sugar in French, and trace each word to the road it travelled to get there — one unbroken, one forked, one never borrowed, one from Sanskrit.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "FR-C28-sucre",
+        "kind": "task",
+        "summary": "Ask for sugar, trace sucre to Sanskrit śárkarā through Arabic sukkar, and set the chapter's four masculine drink-words beside l'eau's lone feminine exception. Reaches back past the chapter to Chapter 18's si, the answer that contradicts a negative, and to the langue d'oïl / langue d'oc split behind oui itself.",
+        "assesses": [
+          "FR-LEX-SUCRE-07",
+          "FR-ETYMON-SUCRE-08",
+          "FR-LEX-LAIT-05",
+          "FR-ETYMON-LAIT-06",
+          "FR-LEX-CAFE-01",
+          "FR-ETYMON-CAFE-02",
+          "FR-CULTURE-OUI-04",
+          "FR-PRAGMATICS-SI-05"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "The People You Introduce",
+      "label": "ch:fr-the-people-you-introduce",
+      "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "FR-C29-personne",
+        "kind": "task",
+        "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
+        "assesses": [
+          "FR-LEX-PERSONNE-08",
+          "FR-ETYMON-PERSONNE-09",
+          "FR-LEX-AMI-01",
+          "FR-GRAMMAR-ELISION-ARTICLE-02",
+          "FR-LEX-FAMILLE-04",
+          "FR-LEX-ENFANT-06",
+          "FR-SOUND-NON-03",
+          "FR-GRAMMAR-NEGATION-04"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Cheese, Butter, Salt, Egg",
+      "label": "ch:fr-cheese-butter-salt-egg",
+      "canDo": "I can ask for cheese, butter, salt or an egg in French, and say why un œuf keeps its final f while les œufs drops it.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "FR-C30-oeuf",
+        "kind": "task",
+        "summary": "Ask for an egg, hold un œuf's pronounced f against les œufs' silent one, and place œuf beside English egg as genuine cousins rather than a borrowing. Reaches back past the chapter to le sel, le beurre and le fromage, and to Chapter 29's elision rule, which l'œuf needs exactly as l'ami did.",
+        "assesses": [
+          "FR-LEX-OEUF-07",
+          "FR-ETYMON-OEUF-08",
+          "FR-LEX-SEL-05",
+          "FR-LEX-BEURRE-03",
+          "FR-LEX-FROMAGE-01",
+          "FR-GRAMMAR-ELISION-ARTICLE-02"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Eyes, Nose, Mouth, Stomach",
+      "label": "ch:fr-eyes-nose-mouth-stomach",
+      "canDo": "I can name the eye and its irregular-looking plural yeux, the nose, the mouth and the stomach in French, extending Chapter 17's head and hand.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "FR-C31-ventre",
+        "kind": "task",
+        "summary": "Say j'ai mal au ventre, take ventriloquist apart as \"belly-speaker,\" and close the chapter's own four words (l'œil/les yeux, le nez, la bouche, le ventre) beside Chapter 17's head and hand. Reaches back past the chapter to la main's nasal -ain, contrasted with ventre's own different nasal vowel, and further back to le café, l'ami and l'œuf, one word from each of this book's four newest chapters.",
+        "assesses": [
+          "FR-LEX-VENTRE-07",
+          "FR-ETYMON-VENTRE-08",
+          "FR-LEX-BOUCHE-05",
+          "FR-LEX-NEZ-03",
+          "FR-LEX-OEIL-01",
+          "FR-SOUND-MAIN-03",
+          "FR-LEX-CAFE-01",
+          "FR-LEX-AMI-01",
+          "FR-LEX-OEUF-07"
+        ]
+      }
     }
   ]
 }

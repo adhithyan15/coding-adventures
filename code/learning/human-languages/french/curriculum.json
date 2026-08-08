@@ -304,6 +304,66 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "FR-PATH-025",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "FR-C28-cafe",
+        "FR-C28-the",
+        "FR-C28-lait",
+        "FR-C28-sucre"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-025-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-026",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FR-C29-ami",
+        "FR-C29-famille",
+        "FR-C29-enfant",
+        "FR-C29-personne"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-026-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-027",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "FR-C30-fromage",
+        "FR-C30-beurre",
+        "FR-C30-sel",
+        "FR-C30-oeuf"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-028",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FR-C31-oeil",
+        "FR-C31-nez",
+        "FR-C31-bouche",
+        "FR-C31-ventre"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -340,7 +400,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "FR-PATH-007",
-        "FR-PATH-009"
+        "FR-PATH-009",
+        "FR-PATH-026"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -355,14 +416,17 @@
         "FR-PATH-002",
         "FR-PATH-008",
         "FR-PATH-011",
-        "FR-PATH-018"
+        "FR-PATH-018",
+        "FR-PATH-028"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "FR-PATH-020"
+        "FR-PATH-020",
+        "FR-PATH-025",
+        "FR-PATH-027"
       ],
       "omits": [],
       "relocates": {}
@@ -738,6 +802,62 @@
       "lessons": [
         "FR-C22-chien-chat",
         "FR-C23-vert-jaune"
+      ]
+    },
+    {
+      "id": "FR-EXT-025-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for coffee, tea, milk or sugar, name the article each one takes, and trace each word to the road it travelled into French.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C28-cafe",
+        "FR-C28-the",
+        "FR-C28-lait",
+        "FR-C28-sucre"
+      ]
+    },
+    {
+      "id": "FR-EXT-026-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can introduce a friend, name my family, name a child and name any person, and use the article each one's gender requires, including where French elides le or la to l'.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C29-ami",
+        "FR-C29-famille",
+        "FR-C29-enfant",
+        "FR-C29-personne"
+      ]
+    },
+    {
+      "id": "FR-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for cheese, butter, salt or an egg, and say why un œuf keeps its f while les œufs drops it.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C30-fromage",
+        "FR-C30-beurre",
+        "FR-C30-sel",
+        "FR-C30-oeuf"
+      ]
+    },
+    {
+      "id": "FR-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the eye and its irregular plural yeux, the nose, the mouth and the stomach, extending Chapter 17's head and hand.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C31-oeil",
+        "FR-C31-nez",
+        "FR-C31-bouche",
+        "FR-C31-ventre"
       ]
     }
   ]
