@@ -1297,6 +1297,27 @@ Q1 col base emit fast
     assert transistor.Tr == 5.0e-9
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"), [("-1", -1.0), ("0", 0.0), ("4.5", 4.5)]
+)
+def test_parse_bjt_temperature_exponent(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NPN(XTI={value})
+Q1 col base emit fast
+"""
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Xti == expected
+
+
+def test_rejects_non_finite_bjt_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="BJT XTI must be finite"):
+        parse_netlist(".model fast NPN(XTI=1e999)")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
