@@ -798,10 +798,16 @@ describe("corpus regression", () => {
       // under the canonical heading, and the whole-lesson figure fell back to 66%.
       // `coreDrivable` is unaffected: those blocks are detachable, so the driving
       // edition itself lost nothing. This is the sight-share seam, not a regression.
-      totalLessons: 1560,
+      totalLessons: 1563,
       voice: 1046,
       sight: 461,
-      pen: 53,
+      // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
+      // this from the lesson TYPE alone — it says outright that it does not look at
+      // the body — so all three record reasons ["writing-type","script-block"], and
+      // TA-W07 is pen even though it deliberately gives no stroke instructions.
+      // voice and drivable are unchanged, which is what a writing lesson should do
+      // to this table.
+      pen: 56,
       drivableLessons: 1046,
       drivablePercent: 67,
       trackCount: 22,

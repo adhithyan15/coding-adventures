@@ -17,17 +17,22 @@ word they spell:
 
 | lesson | teaches | writes |
 |---|---|---|
-| `TA-W05-write-aam` (171s) | **ஆ**, and the word-initial vowel rule | ஆம் |
-| `TA-W06-write-illai` (187s) | **இ**, **ல**, the **ை** sign, three *l*'s | இல்லை |
-| `TA-W07-write-sari` (164s) | **ச** as s/ch/j, **ர**, two *r*'s | சரி |
+| `TA-W05-write-aam` (230s) | **ஆ**, and the word-initial vowel rule | ஆம் |
+| `TA-W06-write-illai` (233s) | **இ**, **ல**, the **ை** sign, three *l*'s | இல்லை |
+| `TA-W07-write-sari` (241s) | **ச** as s/ch/j, **ர**, two *r*'s | சரி |
 
 They sit at sequences 182, 192 and 222 — **after** the word each one spells, so the
 learner meets a word by ear and then learns to write it. That is the opposite of the
 pre-existing `TA-W04` / நன்றி inversion, where the writing lesson taught how to write a
 word 30 sequence-steps before the word itself was introduced.
 
-Each computes to 164–187 seconds, in keeping with the chapter it joins (its word
-lessons run 89–136s).
+Each computes to 230–241 seconds under `estimateLessonDuration`, which puts them
+with the writing lessons they sit among (TA-W01–W04 compute 176–297s) rather than
+with the word lessons, which run 88–136s. That split is the point: a word lesson
+is short because it holds one word, and a writing lesson is longer because the
+hand is slower than the ear. All three declare `max_seconds: 260`, above their
+computed cost, so the effective figure is the declared one and nothing is
+silently absorbed by `max(declared, computed)`.
 
 Two things the review caught that are worth recording. **ை was described backwards** —
 it is written to the *left* of its consonant and pronounced after it, which the

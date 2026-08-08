@@ -12,7 +12,7 @@ prerequisites: [TA-W04-i-sign-write-nandri, TA-W03-pulli-vanakkam]
 sounds: [independent-vowel-aa, pulli, final-m]
 roots: []
 duration:
-  max_seconds: 180
+  max_seconds: 260
 requires:
   knowledge: [TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01]
 introduces:
@@ -32,8 +32,8 @@ reviews_of: [TA-W04-i-sign-write-nandri, TA-C01-aam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-I-SIGN-WRITE-NANDRI-01] -->
 
-[PAUSE 2s] Every vowel so far has been a **sign** hooked onto a consonant — the
-ி on **ற**. This word has no consonant to hook onto.
+[PAUSE 2s] Every vowel *sign* so far has hooked onto a consonant — the ி on
+**ற**. This word has no consonant to hook onto.
 
 ## Script you'll notice: a vowel standing alone
 <!-- hl-knowledge: introduces=[TA-SCRIPT-INDEPENDENT-VOWEL-AA-01]; assesses=[] -->
@@ -47,8 +47,19 @@ sits**:
 | **starting** a word, with nothing before it | a full **independent letter** |
 
 **ஆ** is the independent letter for long *ā*. It is not a sign and never hangs
-off anything; it is a letter in its own right. Two strokes: **write அ**, then
-**add the right-hand tail** — long *ā* is short *a* plus a tail.
+off anything; it is a letter in its own right.
+
+Long *ā* is short **அ** plus a tail, so **அ** is where it starts — and you have
+not been shown that one yet. Its parts, then the tail:
+
+1. **a curl at the upper left**
+2. **a long horizontal stroke**
+3. **a straight vertical on the right** — that is **அ**
+4. **a tail added on the right** — and now it is **ஆ**
+
+Those are the parts in writing order. Where the pen lifts is not settled: Tamil
+handwriting varies by region and by school, and this book only claims a pen path
+where it has a sourced one.
 
 That is a rule, not a special case: any Tamil word that opens on a vowel opens
 with a full vowel letter.
@@ -70,7 +81,8 @@ it did at the end of **வணக்கம்**.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-INDEPENDENT-VOWEL-AA-01, TA-SCRIPT-WRITE-AAM-02, TA-SCRIPT-PULLI-VANAKKAM-01] -->
 
 [PAUSE 1s]
-- [YOU WRITE: **ஆ** — அ, then the right-hand tail]
+- [YOU WRITE: **அ** — curl, horizontal, right vertical]
+- [YOU WRITE: **ஆ** — the same three parts, then the right-hand tail]
 - [YOU WRITE: **ம்** — ம with the dot]
 - [YOU WRITE: **ஆம்** — two pieces, left to right]
 

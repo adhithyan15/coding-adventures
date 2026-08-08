@@ -391,14 +391,20 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 Warm-up.
 [pause 2 seconds]
-Every vowel so far has been a sign hooked onto a consonant — the ி on ற. This word has no consonant to hook onto.
+Every vowel sign so far has hooked onto a consonant — the ி on ற. This word has no consonant to hook onto.
 
 Script you'll notice: a vowel standing alone.
 Tamil writes a vowel two ways, and which one you use depends on where it sits:
 [a table of 2 rows, read aloud]
 inside a word, after a consonant, a small sign — ி in றி.
 starting a word, with nothing before it, a full independent letter.
-ஆ is the independent letter for long ā. It is not a sign and never hangs off anything; it is a letter in its own right. Two strokes: write அ, then add the right-hand tail — long ā is short a plus a tail.
+ஆ is the independent letter for long ā. It is not a sign and never hangs off anything; it is a letter in its own right.
+Long ā is short அ plus a tail, so அ is where it starts — and you have not been shown that one yet. Its parts, then the tail:
+a curl at the upper left.
+a long horizontal stroke.
+a straight vertical on the right — that is அ.
+a tail added on the right — and now it is ஆ.
+Those are the parts in writing order. Where the pen lifts is not settled: Tamil handwriting varies by region and by school, and this book only claims a pen path where it has a sourced one.
 That is a rule, not a special case: any Tamil word that opens on a vowel opens with a full vowel letter.
 
 Script you'll notice: build the word.
@@ -410,7 +416,8 @@ Two pieces only. The puḷḷi on ம் closes the word on a bare m, exactly as
 
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — write: ஆ — அ, then the right-hand tail]
+[once you have stopped driving — write: அ — curl, horizontal, right vertical]
+[once you have stopped driving — write: ஆ — the same three parts, then the right-hand tail]
 [once you have stopped driving — write: ம் — ம with the dot]
 [once you have stopped driving — write: ஆம் (ām) — two pieces, left to right]
 
@@ -456,8 +463,13 @@ Warm-up.
 Last lesson gave you the rule: a word opening on a vowel opens with a full letter. Here is the same rule with a different vowel, plus one new sign.
 
 Script you'll notice: இ and ல.
-இ is the independent letter for short i — the same job ஆ did, one vowel over. Two strokes: a crossing spiral on the left, then a tall straight vertical on the right.
-ல is la, with its built-in a like every consonant. Two strokes: a curl that turns back on itself, then a stroke rising to the right. Put the puḷḷi on it and you get ல், a bare l.
+இ is the independent letter for short i — the same job ஆ did, one vowel over. Its parts, in writing order:
+a crossing spiral on the left.
+a tall straight vertical on the right.
+ல is la, with its built-in a like every consonant:
+a curl that turns back on itself.
+a stroke rising to the right.
+Put the puḷḷi on it and you get ல், a bare l.
 The new mark is ை, the sign for ai, and it does something ி did not. It is written to the LEFT of its consonant, but pronounced after it.
 ல + ை becomes லை, and on the page the hook stands before the ல — yet you say lai, not ail.
 Your eye meets the vowel first and your mouth says it second. Devanagari does the same thing with ि, and it catches everyone once.
@@ -576,7 +588,7 @@ Say சரி (sari). What does doubling it add? (Hurry, or easy agreement — "
 Lesson 18 of 20.
 சரி (sari) — one letter, several sounds.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ச and ர and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ச and ர, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -589,7 +601,7 @@ where: starting a word. sound: s or ch.
 where: between vowels. sound: softened.
 where: after a nasal, as in ஞ்ச. sound: j.
 That is exactly the pattern க showed — k at the start, g after a nasal, a soft h between vowels. One letter per position of the mouth, and context fills in the rest.
-ர is ra, with its built-in a. It is the second of Tamil's two r-letters, alongside the ற you met in நன்றி.
+ர is ra, with its built-in a. It is the other of Tamil's two r-letters, alongside the ற you met in நன்றி.
 Read both letters here; do not draw them yet. This book gives a stroke order only where it has a sourced one, and ச and ர do not have one yet.
 
 Script you'll notice: build the word.
@@ -607,10 +619,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — contrast: ரி and லை — the ி sign follows its letter, the ை sign precedes it]
 [pause 8 seconds for the answer]
+[once you have stopped driving — write: ஆம் (ām) and இல்லை (illai) again, from memory — yes and no, the two you will reach for most]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read சரி (sari). Which English sounds does ச cover on its own? (s, ch, j — start, between vowels, after a nasal.) How many r-letters does Tamil keep? (Two — ர and ற.) In லை, which side of the ல does the ai sign sit on? (The left.) And why does இல்லை (illai) open with இ rather than a sign? (It starts on a vowel.) Next: putting the five words together.
+Read சரி (sari). Which English sounds does ச cover on its own? (s or ch at the start, softened between vowels, j after a nasal.) How many r-letters does Tamil keep? (Two — ர and ற.) In லை, which side of the ல does the ai sign sit on? (The left.) And why does இல்லை (illai) open with இ rather than a sign? (It starts on a vowel.) Next: putting the five words together.
 
 
 Lesson 19 of 20.

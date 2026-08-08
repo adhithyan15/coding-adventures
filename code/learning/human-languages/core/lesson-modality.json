@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1ca921ce47d3a5fe",
+  "sourceHash": "fnv1a64:785eb885fda913fb",
   "summary": {
-    "totalLessons": 1560,
+    "totalLessons": 1563,
     "voice": 1046,
     "sight": 461,
-    "pen": 53,
+    "pen": 56,
     "drivableLessons": 1046,
     "drivablePercent": 67,
     "trackCount": 22,
@@ -7081,11 +7081,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 113,
+      "lessonCount": 116,
       "voice": 59,
       "sight": 46,
-      "pen": 8,
-      "drivablePercent": 52,
+      "pen": 11,
+      "drivablePercent": 51,
       "drivablePrefixTotal": 44,
       "modalities": [
         "voice",
@@ -7095,10 +7095,10 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 17,
+          "lessonCount": 20,
           "voice": 9,
           "sight": 0,
-          "pen": 8,
+          "pen": 11,
           "modalities": [
             "voice",
             "sight",
@@ -33724,7 +33724,30 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:33b4b0ca5bf90f6f"
+      "sourceHash": "fnv1a64:96c6bb2306442e1b"
+    },
+    {
+      "id": "TA-W05-write-aam",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 182,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d2d9939892304061",
+      "detachableSegments": [
+        "Script you'll notice: a vowel standing alone",
+        "Script you'll notice: build the word"
+      ]
     },
     {
       "id": "TA-C01-illai",
@@ -33742,7 +33765,30 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93b6d60e45822e82"
+      "sourceHash": "fnv1a64:beee25438cdb89ae"
+    },
+    {
+      "id": "TA-W06-write-illai",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 192,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:355d80e464a1c094",
+      "detachableSegments": [
+        "Script you'll notice: இ and ல",
+        "Script you'll notice: build the word"
+      ]
     },
     {
       "id": "TA-C01-nandri",
@@ -33796,7 +33842,30 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7aaa8c8d3e80fe76"
+      "sourceHash": "fnv1a64:c6020b573775bf3a"
+    },
+    {
+      "id": "TA-W07-write-sari",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 222,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:235103e17e063c6b",
+      "detachableSegments": [
+        "Script you'll notice: ச and ர",
+        "Script you'll notice: build the word"
+      ]
     },
     {
       "id": "TA-C01-answering",
