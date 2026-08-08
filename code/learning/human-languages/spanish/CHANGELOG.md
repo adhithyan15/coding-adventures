@@ -8,8 +8,8 @@ core verb is realized somewhere in the corpus.
 
 | Chapter | Lessons | Concept |
 |---|---|---|
-| 38 — Bringing, Getting, Playing, Meeting | `ES-C38-traer` · `ES-C38-conseguir` · `ES-C38-jugar` · `ES-C38-conocer` | `VERB-BRING` · `VERB-GET` · `VERB-PLAY` · `VERB-MEET` |
-| 39 — Waiting, Answering, Buying | `ES-C39-esperar` · `ES-C39-contestar` · `ES-C39-comprar` | `VERB-WAIT` · `VERB-ANSWER` · `VERB-BUY` |
+| 38 — Bringing, Getting, Playing, Meeting | `ES-C39-traer` · `ES-C39-conseguir` · `ES-C39-jugar` · `ES-C39-conocer` | `VERB-BRING` · `VERB-GET` · `VERB-PLAY` · `VERB-MEET` |
+| 39 — Waiting, Answering, Buying | `ES-C40-esperar` · `ES-C40-contestar` · `ES-C40-comprar` | `VERB-WAIT` · `VERB-ANSWER` · `VERB-BUY` |
 
 Spanish now covers **36 of the 40 core verbs (90%)**, and the corpus mean rises
 from 36% to 37%. The split is by what makes each verb hard: Chapter 38 holds the four whose *yo*-form or stem misbehaves, Chapter
@@ -77,7 +77,7 @@ Chapter 19, *padre/madre* from Chapter 23, *pan*/*compañero* and *vino* from
 Chapter 26, and *café*/*qahwa* and *por favor* from Chapter 6. Spanish's
 never-revisited share drops from **36% to 27%** (80 of 221 atoms → 65 of 242).
 Of the 21 new atoms, 18 close R1 (n+1…n+3); the three that do not are
-`ES-C39-comprar`'s own, and the track has no lesson after it to carry them —
+`ES-C40-comprar`'s own, and the track has no lesson after it to carry them —
 the same tail every tranche leaves for the next one, and the reason this one
 could rescue Chapter 37's.
 

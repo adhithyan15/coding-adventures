@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C38-conocer
+id: ES-C39-conocer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1800
-chapter: 38
+sequence: 1840
+chapter: 39
 type: word
 headword: conocer
 gloss: to meet, to be acquainted with — a verb built out of the moment knowing begins
 concept_tag: VERB-MEET
-prerequisites: [ES-C38-jugar, ES-C38-traer, ES-C38-conseguir]
+prerequisites: [ES-C39-jugar, ES-C39-traer, ES-C39-conseguir]
 sounds: [soft-c, k-hard]
 roots: [cognoscere-latin]
 etymology_hook: "conocer ← cognōscere, whose -sc- is Latin's 'begin to' marker: not to know but to COME to know — which is why conocí a María means 'I met María'; English cognition, recognize, incognito, notice and noble come from the same root, and English know is its Germanic sibling"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C38-jugar, ES-C38-conseguir, ES-C38-traer, ES-C23-padre-madre]
+reviews_of: [ES-C39-jugar, ES-C39-conseguir, ES-C39-traer, ES-C23-padre-madre]
 ---
 
 # conocer — "to meet", because knowing has a first moment

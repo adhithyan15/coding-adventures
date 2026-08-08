@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C39-comprar
+id: ES-C40-comprar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1830
-chapter: 39
+sequence: 1870
+chapter: 40
 type: word
 headword: comprar
 gloss: to buy — from Latin's "get ready, procure", and not from the verb behind English compare
 concept_tag: VERB-BUY
-prerequisites: [ES-C39-contestar, ES-C39-esperar, ES-C26-pan]
+prerequisites: [ES-C40-contestar, ES-C40-esperar, ES-C26-pan]
 sounds: [pr-cluster, vowel-o]
 roots: [comparare-parare-latin]
 etymology_hook: "comprar ← comparāre, com- + parāre 'to make ready, to procure' — the root of prepare, repair, apparatus and emperor; English compare comes from a DIFFERENT Latin comparāre, built on compār 'equal', so the two are lookalikes rather than relatives"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C39-contestar, ES-C39-esperar, ES-C26-pan, ES-C26-vino, ES-C06-cafe, ES-C06-por-favor]
+reviews_of: [ES-C40-contestar, ES-C40-esperar, ES-C26-pan, ES-C26-vino, ES-C06-cafe, ES-C06-por-favor]
 ---
 
 # comprar — "to buy", and a cousin that is not one

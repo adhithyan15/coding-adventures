@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C39-contestar
+id: ES-C40-contestar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1820
-chapter: 39
+sequence: 1860
+chapter: 40
 type: word
 headword: contestar
 gloss: to answer — a Roman courtroom word that English turned into a fight and Spanish turned into a reply
 concept_tag: VERB-ANSWER
-prerequisites: [ES-C39-esperar, ES-C35-preguntar]
+prerequisites: [ES-C40-esperar, ES-C35-preguntar]
 sounds: [s-clear, stress-final]
 roots: [contestari-latin]
 etymology_hook: "contestar ← contestārī 'to call witnesses', com- + testis 'a witness' — the Roman act of opening a lawsuit; English kept the fight in contest, Spanish kept the reply, and the shared family is testify, testimony, testament, attest and protest"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C39-esperar, ES-C35-preguntar, ES-C29-la-hora]
+reviews_of: [ES-C40-esperar, ES-C35-preguntar, ES-C29-la-hora]
 ---
 
 # contestar — "to answer", from a Roman courtroom

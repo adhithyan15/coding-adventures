@@ -232,14 +232,14 @@
       "chapter": 38,
       "title": "Bringing, Getting, Playing, Meeting",
       "label": "ch:spanish-bring-get-play-meet",
-      "output": "spanish/book/chapters/ch38-bring-get-play-meet.tex"
+      "output": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
     },
     {
       "language": "spanish",
       "chapter": 39,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
-      "output": "spanish/book/chapters/ch39-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch40-wait-answer-buy.tex"
     },
     {
       "language": "italian",

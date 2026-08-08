@@ -487,10 +487,10 @@
       "id": "ES-PATH-034",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C38-traer",
-        "ES-C38-conseguir",
-        "ES-C38-jugar",
-        "ES-C38-conocer"
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
       ],
       "before": [],
       "inline": [],
@@ -500,9 +500,9 @@
       "id": "ES-PATH-035",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C39-esperar",
-        "ES-C39-contestar",
-        "ES-C39-comprar"
+        "ES-C40-esperar",
+        "ES-C40-contestar",
+        "ES-C40-comprar"
       ],
       "before": [],
       "inline": [],

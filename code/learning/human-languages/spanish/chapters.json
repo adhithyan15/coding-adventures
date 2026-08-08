@@ -8,7 +8,9 @@
       "title": "Hola and Buenos Días",
       "label": "ch:first-words",
       "canDo": "I can greet someone in Spanish, say how I am, and wish them a good day.",
-      "spineNodes": ["SPINE-MEET-GREET"],
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
       "payoff": {
         "lesson": "ES-C01-practice",
         "kind": "dialogue",
@@ -30,7 +32,9 @@
       "title": "The Rest of the Greetings",
       "label": "ch:greetings",
       "canDo": "I can greet someone correctly at any hour — morning, afternoon, or night.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C02-practice",
         "kind": "dialogue",
@@ -51,7 +55,9 @@
       "title": "Introducing Yourself",
       "label": "ch:introductions",
       "canDo": "I can give my name, ask someone else's, and say it was a pleasure to meet them.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "ES-C03-practice",
         "kind": "dialogue",
@@ -102,7 +108,9 @@
       "title": "Farewells",
       "label": "ch:farewells",
       "canDo": "I can close a Spanish conversation and pick the goodbye that fits how soon I will see the person again.",
-      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
       "payoff": {
         "lesson": "ES-C05-practice",
         "kind": "dialogue",
@@ -123,7 +131,9 @@
       "title": "The First Verbs",
       "label": "ch:first-verbs",
       "canDo": "I can build my own Spanish sentences with -ar verbs and ask politely for a coffee.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "ES-C06-practice",
         "kind": "production",
@@ -148,7 +158,9 @@
       "title": "Yes and No",
       "label": "ch:spanish-basic-responses",
       "canDo": "I can answer yes or no in Spanish and negate a sentence by putting no in front of the verb.",
-      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
       "payoff": {
         "lesson": "ES-C19-no",
         "kind": "task",
@@ -164,7 +176,9 @@
       "title": "Lo Siento",
       "label": "ch:spanish-sorry",
       "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "ES-C20-perdon",
         "kind": "task",
@@ -183,7 +197,9 @@
       "title": "Days of the Week",
       "label": "ch:spanish-days-of-the-week",
       "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C21-sabado-domingo",
         "kind": "task",
@@ -201,7 +217,9 @@
       "title": "Black, White, Red, and Blue",
       "label": "ch:spanish-black-white-red-blue",
       "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
-      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
       "payoff": {
         "lesson": "ES-C22-azul",
         "kind": "task",
@@ -221,7 +239,9 @@
       "title": "Parents and Siblings",
       "label": "ch:spanish-family",
       "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "ES-C23-hermano-hache",
         "kind": "task",
@@ -239,7 +259,9 @@
       "title": "Head and Hand",
       "label": "ch:spanish-head-and-hand",
       "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "ES-C24-mano",
         "kind": "task",
@@ -257,7 +279,9 @@
       "title": "The Seasons",
       "label": "ch:spanish-seasons",
       "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C25-las-estaciones",
         "kind": "task",
@@ -274,7 +298,9 @@
       "title": "Water, Wine, and Bread",
       "label": "ch:spanish-water-wine-bread",
       "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "ES-C26-pan",
         "kind": "task",
@@ -291,7 +317,9 @@
       "title": "The Months",
       "label": "ch:spanish-months",
       "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C27-los-meses",
         "kind": "task",
@@ -309,7 +337,9 @@
       "title": "Noon and Midnight",
       "label": "ch:spanish-noon-midnight",
       "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C28-mediodia-medianoche",
         "kind": "task",
@@ -325,7 +355,9 @@
       "title": "Telling Time",
       "label": "ch:spanish-telling-time",
       "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C29-la-hora",
         "kind": "task",
@@ -342,7 +374,9 @@
       "title": "The Weather",
       "label": "ch:spanish-weather",
       "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
-      "spineNodes": ["SPINE-TIME-OF-DAY"],
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
       "payoff": {
         "lesson": "ES-C30-llueve",
         "kind": "task",
@@ -363,7 +397,9 @@
       "title": "Numbers Eleven to Twenty",
       "label": "ch:spanish-numbers-eleven-to-twenty",
       "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
-      "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
       "payoff": {
         "lesson": "ES-C31-veinte",
         "kind": "task",
@@ -384,7 +420,9 @@
       "title": "Dog and Cat",
       "label": "ch:spanish-dog-and-cat",
       "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
-      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
       "payoff": {
         "lesson": "ES-C32-perro",
         "kind": "task",
@@ -402,7 +440,9 @@
       "title": "Green and Yellow",
       "label": "ch:spanish-green-and-yellow",
       "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
-      "spineNodes": ["SPINE-DEFINITE-REFERENCE"],
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
       "payoff": {
         "lesson": "ES-C33-amarillo",
         "kind": "task",
@@ -420,7 +460,9 @@
       "title": "Four Verbs of the Mind",
       "label": "ch:spanish-verbs-of-the-mind",
       "canDo": "I can say what I think, understand, read and write in Spanish, and break the stems of pensar and entender the way a stem-changer requires.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "ES-C34-escribir",
         "kind": "task",
@@ -439,7 +481,9 @@
       "title": "Taking, Asking, Helping — and the Backwards Verb",
       "label": "ch:spanish-backwards-verb",
       "canDo": "I can say I take, ask and help in Spanish, and build a sentence with gustar the way Spanish actually builds it — with the thing liked as the subject.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "ES-C35-gustar",
         "kind": "task",
@@ -458,7 +502,9 @@
       "title": "Hearing, Sleeping, Walking, Running",
       "label": "ch:spanish-hear-sleep-walk-run",
       "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "ES-C36-correr",
         "kind": "task",
@@ -486,7 +532,9 @@
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "ES-C37-levantarse",
         "kind": "task",
@@ -511,7 +559,7 @@
       }
     },
     {
-      "chapter": 38,
+      "chapter": 39,
       "title": "Bringing, Getting, Playing, Meeting",
       "label": "ch:spanish-bring-get-play-meet",
       "canDo": "I can say I bring, get, play and meet in Spanish, and name what each verb does to its yo-form or its stem: traigo grows a hard g, consigo breaks e to i and drops a silent u, juego breaks u to ue alone in the language, and conozco keeps a cluster the other forms lost.",
@@ -519,7 +567,7 @@
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
-        "lesson": "ES-C38-conocer",
+        "lesson": "ES-C39-conocer",
         "kind": "task",
         "summary": "Run the chapter's four verbs in the yo-form — traigo, consigo, juego, conozco — and say what each one does to itself, then name its Latin root and what that root meant: trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know. Choose conocer for a person and saber for a fact, and say which of the four carries a thing toward you rather than away. The chapter also reaches back for oigo, the yo-form that first grew a hard g, and for padre beside English father, the model for saying that Spanish and English words can be siblings rather than borrowings.",
         "assesses": [
@@ -542,7 +590,7 @@
       }
     },
     {
-      "chapter": 39,
+      "chapter": 40,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -550,7 +598,7 @@
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
-        "lesson": "ES-C39-comprar",
+        "lesson": "ES-C40-comprar",
         "kind": "task",
         "summary": "Run espero, contesto and compro — three verbs that break nothing, whose whole difficulty is meaning — and give each root and its sense: spērāre to hope, contestārī to call witnesses, comparāre to procure. Refuse the lookalike: English compare descends from a different Latin comparāre built on compār, so it is not a relative. Then buy — compro el pan, el vino y un café, por favor — and reach back for what pānis gave compañero, which English words vīnum reached, why café is masculine, and what por favor says word for word.",
         "assesses": [

@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C39-esperar
+id: ES-C40-esperar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1810
-chapter: 39
+sequence: 1850
+chapter: 40
 type: word
 headword: esperar
 gloss: to wait — and to hope, and to expect, all in one verb
 concept_tag: VERB-WAIT
-prerequisites: [ES-C38-conocer, ES-C34-escribir, ES-C06-estudiar, ES-C19-si]
+prerequisites: [ES-C39-conocer, ES-C34-escribir, ES-C06-estudiar, ES-C19-si]
 sounds: [st-no-e, r-tap]
 roots: [sperare-latin]
 etymology_hook: "esperar ← spērāre 'to hope', from spēs 'hope' — English got the negative half as despair (dēspērāre, to un-hope) and desperate; Spanish keeps la esperanza, and Zamenhof's pen name Doktoro Esperanto means 'one who hopes'"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C38-conocer, ES-C38-jugar, ES-C34-escribir, ES-C06-estudiar]
+reviews_of: [ES-C39-conocer, ES-C39-jugar, ES-C34-escribir, ES-C06-estudiar]
 ---
 
 # esperar — one verb for waiting, hoping and expecting

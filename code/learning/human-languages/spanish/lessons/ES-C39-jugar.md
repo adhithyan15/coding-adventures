@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C38-jugar
+id: ES-C39-jugar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1790
-chapter: 38
+sequence: 1830
+chapter: 39
 type: word
 headword: jugar
 gloss: to play — from Latin's word for joking, and the only verb in the language that breaks u to ue
 concept_tag: VERB-PLAY
-prerequisites: [ES-C38-conseguir, ES-C36-dormir]
+prerequisites: [ES-C39-conseguir, ES-C36-dormir]
 sounds: [j-jota, diphthong-ue]
 roots: [iocari-latin]
 etymology_hook: "jugar ← iocārī 'to joke', from iocus 'a jest' — English jocular, joke, juggler and jeopardy; Latin's own play-verb lūdere left Spanish entirely and stayed in English as illusion, allude and prelude"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C38-conseguir, ES-C36-dormir, ES-C37-cerrar]
+reviews_of: [ES-C39-conseguir, ES-C36-dormir, ES-C37-cerrar]
 ---
 
 # jugar — "to play", and the only verb of its kind

@@ -1,14 +1,14 @@
 ---
 schema_version: 2
-id: ES-C38-conseguir
+id: ES-C39-conseguir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1780
-chapter: 38
+sequence: 1820
+chapter: 39
 type: word
 headword: conseguir
 gloss: to get, to obtain — getting as following a thing until you have it
 concept_tag: VERB-GET
-prerequisites: [ES-C38-traer, ES-C35-preguntar]
+prerequisites: [ES-C39-traer, ES-C35-preguntar]
 sounds: [g-hard, s-clear]
 roots: [consequi-latin]
 etymology_hook: "conseguir ← cōnsequī, com- 'together' + sequī 'to follow' — the root of sequence, consequence, second, pursue and obsequious; to get something was to follow it until you had it"
@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C38-traer, ES-C35-preguntar, ES-C35-tomar]
+reviews_of: [ES-C39-traer, ES-C35-preguntar, ES-C35-tomar]
 ---
 
 # conseguir — "to get", by following a thing until you have it
