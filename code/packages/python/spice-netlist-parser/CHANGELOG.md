@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `XTI` temperature exponent.
 - Validate and lower JFET model-card `BETATCE` alternative mobility temperature
   coefficient while preserving omission for `BEX` fallback.
 - Validate and lower JFET model-card `BEX` mobility temperature exponent.

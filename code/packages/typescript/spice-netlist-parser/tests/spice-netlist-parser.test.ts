@@ -1332,6 +1332,28 @@ Q1 col base emit fast
     });
   });
 
+  it.each([
+    ["-1", -1.0],
+    ["0", 0.0],
+    ["4.5", 4.5],
+  ])("parses BJT temperature exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NPN(XTI=${value})
+Q1 col base emit fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      saturationCurrentTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects a non-finite BJT temperature exponent", () => {
+    expect(() => parseNetlist(".model fast NPN(XTI=1e999)")).toThrow(
+      "BJT XTI must be finite",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

@@ -4526,10 +4526,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 440. Python and TypeScript Berkeley SPICE JFET alternative beta temperature
      coefficient parity.
-   - Status: implemented in this JFET BETATCE parity slice.
+   - Status: completed in PR 10097.
    - Both parser facades validate finite `BETATCE` values, preserve omission for
      `BEX` fallback, and lower explicit values into the shared engine optional
      mobility-temperature-coefficient field.
+
+441. Python and TypeScript Berkeley SPICE BJT temperature-exponent parity.
+   - Status: implemented in this BJT XTI parity slice.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine saturation-current-temperature-exponent field.
 
 ## Backlog
 
