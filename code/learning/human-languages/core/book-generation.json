@@ -629,6 +629,20 @@
       "output": "german/book/chapters/ch25-doing-verbs.tex"
     },
     {
+      "language": "german",
+      "chapter": 26,
+      "title": "Sitting, Standing, Sleeping, Hearing",
+      "label": "ch:ge-still-verbs",
+      "output": "german/book/chapters/ch26-still-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "title": "Going, Running, Opening, Closing",
+      "label": "ch:ge-moving-verbs",
+      "output": "german/book/chapters/ch27-moving-verbs.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",

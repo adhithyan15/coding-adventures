@@ -339,6 +339,32 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "GE-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-030",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -458,7 +484,9 @@
         "GE-PATH-018",
         "GE-PATH-021",
         "GE-PATH-027",
-        "GE-PATH-028"
+        "GE-PATH-028",
+        "GE-PATH-029",
+        "GE-PATH-030"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -467,7 +495,6 @@
         "VERB-SAY",
         "VERB-SPEAK",
         "VERB-SEE",
-        "VERB-HEAR",
         "VERB-KNOW",
         "VERB-CAN",
         "VERB-GIVE",
@@ -476,19 +503,12 @@
         "VERB-PUT",
         "VERB-EAT",
         "VERB-DRINK",
-        "VERB-SLEEP",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
-        "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-BUY"
       ],
       "relocates": {}
     },

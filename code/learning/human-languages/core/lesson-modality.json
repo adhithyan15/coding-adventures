@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8aff5a9628c8adf6",
+  "sourceHash": "fnv1a64:6f5a49c26bc8ed38",
   "summary": {
     "totalLessons": 1393,
     "voice": 917,
@@ -743,12 +743,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 89,
-      "voice": 74,
+      "lessonCount": 81,
+      "voice": 66,
       "sight": 12,
       "pen": 3,
-      "drivablePercent": 83,
-      "drivablePrefixTotal": 58,
+      "drivablePercent": 81,
+      "drivablePrefixTotal": 50,
       "modalities": [
         "voice",
         "sight",
@@ -1183,55 +1183,17 @@
             "FR-C25-lire",
             "FR-C25-ecrire"
           ]
-        },
-        {
-          "chapter": 26,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "FR-C26-entendre",
-            "FR-C26-dormir",
-            "FR-C26-marcher",
-            "FR-C26-courir"
-          ]
-        },
-        {
-          "chapter": 27,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "FR-C27-sasseoir",
-            "FR-C27-se-lever",
-            "FR-C27-ouvrir",
-            "FR-C27-fermer"
-          ]
         }
       ]
     },
     {
       "language": "german",
-      "lessonCount": 84,
-      "voice": 73,
+      "lessonCount": 92,
+      "voice": 81,
       "sight": 8,
       "pen": 3,
-      "drivablePercent": 87,
-      "drivablePrefixTotal": 68,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 76,
       "modalities": [
         "voice",
         "sight",
@@ -1683,6 +1645,44 @@
             "GE-C25-fragen",
             "GE-C25-helfen",
             "GE-C25-moegen-lieben"
+          ]
+        },
+        {
+          "chapter": 26,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C26-sitzen",
+            "GE-C26-stehen",
+            "GE-C26-schlafen",
+            "GE-C26-hoeren"
+          ]
+        },
+        {
+          "chapter": 27,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C27-gehen",
+            "GE-C27-laufen",
+            "GE-C27-oeffnen",
+            "GE-C27-schliessen"
           ]
         }
       ]
@@ -11778,150 +11778,6 @@
       "sourceHash": "fnv1a64:c75664e4497104d6"
     },
     {
-      "id": "FR-C26-entendre",
-      "language": "french",
-      "chapter": 26,
-      "sequence": 790,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2fcffc50b4c530f1"
-    },
-    {
-      "id": "FR-C26-dormir",
-      "language": "french",
-      "chapter": 26,
-      "sequence": 800,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:8ac859110ce4c654"
-    },
-    {
-      "id": "FR-C26-marcher",
-      "language": "french",
-      "chapter": 26,
-      "sequence": 810,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:97bc8031093782ab"
-    },
-    {
-      "id": "FR-C26-courir",
-      "language": "french",
-      "chapter": 26,
-      "sequence": 820,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:06b9e4a83df44973"
-    },
-    {
-      "id": "FR-C27-sasseoir",
-      "language": "french",
-      "chapter": 27,
-      "sequence": 830,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:22351bcb8b4bd18e"
-    },
-    {
-      "id": "FR-C27-se-lever",
-      "language": "french",
-      "chapter": 27,
-      "sequence": 840,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:c7f80390b7695f21"
-    },
-    {
-      "id": "FR-C27-ouvrir",
-      "language": "french",
-      "chapter": 27,
-      "sequence": 850,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:9520fc80bfc81ee2"
-    },
-    {
-      "id": "FR-C27-fermer",
-      "language": "french",
-      "chapter": 27,
-      "sequence": 860,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b24800fffba8e018"
-    },
-    {
       "id": "GE-C01-abend",
       "language": "german",
       "chapter": 1,
@@ -13434,6 +13290,150 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:6413600515d017a7"
+    },
+    {
+      "id": "GE-C26-sitzen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:afb92dd9ac5c4a8b"
+    },
+    {
+      "id": "GE-C26-stehen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c5502f60549c0f38"
+    },
+    {
+      "id": "GE-C26-schlafen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ecd66be4bbd05f73"
+    },
+    {
+      "id": "GE-C26-hoeren",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5f32d7202016c02e"
+    },
+    {
+      "id": "GE-C27-gehen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9cfcead00ceeff1c"
+    },
+    {
+      "id": "GE-C27-laufen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b7282b0745a98b5d"
+    },
+    {
+      "id": "GE-C27-oeffnen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6077fbe3623e96ba"
+    },
+    {
+      "id": "GE-C27-schliessen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7fbdf7b45126355b"
     },
     {
       "id": "GU-C01-aabhaar",

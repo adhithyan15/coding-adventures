@@ -59,8 +59,14 @@ French *nuit* — one Indo-European word, split four ways.
   *schreiben* — and the strong-verb vowel break (*du liest*).
 - **Chapter 25 — Taking, Asking, Helping, Liking**: *nehmen*, *fragen*,
   *helfen*, *mögen/lieben* — and *gern*, German'''s third way of liking.
+- **Chapter 26 — Sitting, Standing, Sleeping, Hearing**: *sitzen*, *stehen*,
+  *schlafen*, *hören* — the second sound shift's *t*-branch, and a second way
+  for a strong verb to break (*du schläfst*).
+- **Chapter 27 — Going, Running, Opening, Closing**: *gehen*, *laufen*,
+  *rennen*, *öffnen*, *schließen* — where German's walk/run line actually
+  falls, and the first separable verbs (*Ich mache die Hand auf*).
 
-**All twenty-five chapters are authored and in the book (122 pages).**
+**All twenty-seven chapters are authored and in the book (140 pages).**
 
 ---
 
@@ -76,7 +82,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Nine of twenty-five chapters are authored: 17–25.** Those are exactly the
+**Eleven of twenty-seven chapters are authored: 17–27.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -97,6 +103,8 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 23 Green and Yellow | `GE-C23-gruen-gelb` | 5 / 5 = 1.00 |
 | 24 Verbs of the Mind | `GE-C24-schreiben` | 10 / 10 = 1.00 |
 | 25 Taking, Asking, Helping, Liking | `GE-C25-moegen-lieben` | 10 / 10 = 1.00 |
+| 26 Sitting, Standing, Sleeping, Hearing | `GE-C26-hoeren` | 10 / 10 = 1.00 |
+| 27 Going, Running, Opening, Closing | `GE-C27-schliessen` | 10 / 10 = 1.00 |
 
 Chapter 17 is the one authored chapter that fails. It runs three word lessons
 deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal consolidation lesson, so
@@ -112,6 +120,17 @@ chapter 25's to all four of chapter 24's verbs plus `GE-LEX-HUND-02`,
 `GE-LEX-KATZE-04` (ch. 22) and `GE-LEX-WETTER-02` (ch. 21). That is HL09 §7:
 a payoff scoped only to its own chapter adds to the orphan pile rather than
 draining it.
+
+Chapters 26 and 27 do the same and were written to drain it deliberately.
+Chapter 26's payoff reaches to `GE-SOUND-GRIMMS-LAW-04` (ch. 17),
+`GE-LEX-HUND-02`/`GE-ETYMON-HUND-03`/`GE-LEX-KATZE-04` (ch. 22) and all three
+of chapter 25's closing atoms; chapter 27's reaches to `GE-LEX-NEHMEN-02`,
+`GE-ETYMON-NEHMEN-03` and `GE-ETYMON-HELFEN-08` (ch. 25), `GE-LEX-HAND-02` and
+`GE-SOUND-HAND-03` (ch. 17), and back into chapter 26. Six atoms that no lesson
+had ever revisited are revisited here: `GE-SOUND-HAND-03`, `GE-ETYMON-HUND-03`,
+`GE-LEX-REGNET-05`, `GE-LEX-MOEGEN-LIEBEN-09`, `GE-ETYMON-MOEGEN-LIEBEN-10` and
+`GE-GRAMMAR-GERN-11`. The track's never-revisited share falls from **31 of 61
+atoms (51%) to 27 of 81 (33%)**.
 
 ## Reinforcement chaining (HL09 §7)
 
@@ -129,6 +148,14 @@ runs at two cadences. Every lesson in chapters 24–25 also names atoms from the
 | `GE-C25-fragen` | `GE-C25-nehmen`, `GE-C24-lesen`, ch. 18 `ja`/`nein`/`doch` |
 | `GE-C25-helfen` | `GE-C25-fragen`, `GE-C25-nehmen`, ch. 17 and ch. 19 |
 | `GE-C25-moegen-lieben` | all of chapters 24 and 25, plus chapters 21 and 22 |
+| `GE-C26-sitzen` | `GE-C25-moegen-lieben`, `GE-C25-helfen`, `GE-C24-lesen` — *Ich sitze gern*, and the *p*-branch beside the new *t*-branch |
+| `GE-C26-stehen` | `GE-C26-sitzen`; ch. 24 `GE-C24-verstehen`, which had *stehen* inside it |
+| `GE-C26-schlafen` | `GE-C26-stehen`, `GE-C26-sitzen`, ch. 24's vowel break, ch. 21 `GE-LEX-REGNET-05` |
+| `GE-C26-hoeren` | all of chapter 26, plus chapters 17, 22 and 25 |
+| `GE-C27-gehen` | `GE-C26-hoeren`, `GE-C26-stehen`, `GE-C26-schlafen`, `GE-C26-sitzen` |
+| `GE-C27-laufen` | `GE-C27-gehen`; ch. 26's umlaut break, ch. 25 `GE-ETYMON-HELFEN-08`, ch. 22 `GE-LEX-HUND-02` |
+| `GE-C27-oeffnen` | `GE-C27-laufen`, `GE-C27-gehen`, ch. 25 `GE-ETYMON-HELFEN-08`, ch. 17 *Hand* |
+| `GE-C27-schliessen` | all of chapter 27, plus chapters 17, 25 and 26 |
 
 The field that carries this is `practises.knowledge`. `reviews_of` names lesson
 ids, not atoms, so it cannot close a reinforcement window and never has.

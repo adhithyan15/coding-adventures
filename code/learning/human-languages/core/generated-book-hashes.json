@@ -567,6 +567,30 @@
       "tex": "german/book/chapters/ch25-doing-verbs.tex"
     },
     {
+      "language": "german",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:3241b07fef4da498",
+      "lessonIds": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "tex": "german/book/chapters/ch26-still-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:3da3cdbab9f0f237",
+      "lessonIds": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "tex": "german/book/chapters/ch27-moving-verbs.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:e37450b34f66cad3",
