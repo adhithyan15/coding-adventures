@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `VJE` / `PE` base-emitter junction
+  potential.
 - Validate and lower BJT model-card `NR` reverse emission coefficient.
 - Validate and lower BJT model-card `NF` forward emission coefficient.
 - Validate and lower BJT model-card `VAR` / `VB` reverse Early voltage.

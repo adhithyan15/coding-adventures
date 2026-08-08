@@ -1485,6 +1485,42 @@ Q1 col base emit fast
     },
   );
 
+  it.each([
+    ["VJE", "0.5", 0.5],
+    ["PE", "0.5", 0.5],
+    ["VJE", "0.8", 0.8],
+    ["PE", "0.8", 0.8],
+  ])("parses BJT base-emitter junction potential %s=%s", (alias, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterJunctionPotential: expected,
+    });
+  });
+
+  it("gives BJT VJE precedence over PE", () => {
+    const parsed = parseNetlist(`.model fast NPN(PE=0.5 VJE=0.8)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterJunctionPotential: 0.8,
+    });
+  });
+
+  it.each([
+    ["VJE", "0"],
+    ["PE", "0"],
+    ["VJE", "-0.1"],
+    ["PE", "-0.1"],
+    ["VJE", "1e999"],
+    ["PE", "1e999"],
+  ])("rejects invalid BJT base-emitter junction potential %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT VJE must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
