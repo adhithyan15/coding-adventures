@@ -2897,6 +2897,73 @@
       "jsonHash": "fnv1a64:6cb1830b6592312d"
     },
     {
+      "language": "italian",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:77ad59126ebc23a1",
+      "lessonIds": [
+        "IT-C22-caffe",
+        "IT-C22-te",
+        "IT-C22-latte",
+        "IT-C22-zucchero"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "italian/narration/ch22.txt",
+      "json": "italian/narration/ch22.json",
+      "textHash": "fnv1a64:ea42855fc0460295",
+      "jsonHash": "fnv1a64:7e327e6039848643"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:8df82c6158f61973",
+      "lessonIds": [
+        "IT-C23-amico-amica",
+        "IT-C23-famiglia",
+        "IT-C23-nome",
+        "IT-C23-persona"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "italian/narration/ch23.txt",
+      "json": "italian/narration/ch23.json",
+      "textHash": "fnv1a64:4c763763d2a5a3fa",
+      "jsonHash": "fnv1a64:d274b3f4431b7445"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:7670302fce0c6d70",
+      "lessonIds": [
+        "IT-C24-cuore",
+        "IT-C24-occhio",
+        "IT-C24-orecchio",
+        "IT-C24-bocca"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch24.txt",
+      "json": "italian/narration/ch24.json",
+      "textHash": "fnv1a64:30372e50abd8906b",
+      "jsonHash": "fnv1a64:5245fdc651becec5"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:58c18f6ff0de8d04",
+      "lessonIds": [
+        "IT-C25-naso",
+        "IT-C25-stomaco",
+        "IT-C25-gola"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "italian/narration/ch25.txt",
+      "json": "italian/narration/ch25.json",
+      "textHash": "fnv1a64:28b3b63f3eac83d2",
+      "jsonHash": "fnv1a64:86c0083dbc74c30a"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:61da3ea5036d0e14",

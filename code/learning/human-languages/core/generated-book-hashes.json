@@ -1340,6 +1340,53 @@
       "tex": "italian/book/chapters/ch21-play-get-answer.tex"
     },
     {
+      "language": "italian",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:9bab4568c9f5473b",
+      "lessonIds": [
+        "IT-C22-caffe",
+        "IT-C22-te",
+        "IT-C22-latte",
+        "IT-C22-zucchero"
+      ],
+      "tex": "italian/book/chapters/ch22-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:fedb44672e2cb5d1",
+      "lessonIds": [
+        "IT-C23-amico-amica",
+        "IT-C23-famiglia",
+        "IT-C23-nome",
+        "IT-C23-persona"
+      ],
+      "tex": "italian/book/chapters/ch23-friends-family-name.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:295f303782a12913",
+      "lessonIds": [
+        "IT-C24-cuore",
+        "IT-C24-occhio",
+        "IT-C24-orecchio",
+        "IT-C24-bocca"
+      ],
+      "tex": "italian/book/chapters/ch24-heart-eyes-ears-mouth.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:2782903075808aba",
+      "lessonIds": [
+        "IT-C25-naso",
+        "IT-C25-stomaco",
+        "IT-C25-gola"
+      ],
+      "tex": "italian/book/chapters/ch25-nose-stomach-throat.tex"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:d4a2f4f1675bb1d3",

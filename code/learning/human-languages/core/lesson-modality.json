@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e879497d6c95600b",
+  "sourceHash": "fnv1a64:aac768fddd35e7c8",
   "summary": {
     "totalLessons": 1514,
-    "voice": 998,
-    "sight": 463,
+    "voice": 995,
+    "sight": 466,
     "pen": 53,
-    "drivableLessons": 998,
+    "drivableLessons": 995,
     "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 468,
-    "drivablePrefixTotal": 811,
-    "fullyDrivableChapters": 311,
-    "unstartableChapters": 119,
+    "drivablePrefixTotal": 803,
+    "fullyDrivableChapters": 309,
+    "unstartableChapters": 121,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -2586,12 +2586,12 @@
     },
     {
       "language": "italian",
-      "lessonCount": 73,
-      "voice": 60,
-      "sight": 13,
+      "lessonCount": 88,
+      "voice": 72,
+      "sight": 16,
       "pen": 0,
       "drivablePercent": 82,
-      "drivablePrefixTotal": 53,
+      "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
         "sight"
@@ -2964,6 +2964,73 @@
             "IT-C21-giocare",
             "IT-C21-ottenere",
             "IT-C21-rispondere"
+          ]
+        },
+        {
+          "chapter": 22,
+          "lessonCount": 4,
+          "voice": 2,
+          "sight": 2,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "IT-C22-caffe",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 23,
+          "lessonCount": 4,
+          "voice": 3,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "IT-C23-amico-amica",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C24-cuore",
+            "IT-C24-occhio",
+            "IT-C24-orecchio",
+            "IT-C24-bocca"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C25-naso",
+            "IT-C25-stomaco",
+            "IT-C25-gola"
           ]
         }
       ]
@@ -5180,12 +5247,12 @@
     },
     {
       "language": "portuguese",
-      "lessonCount": 96,
-      "voice": 87,
+      "lessonCount": 81,
+      "voice": 72,
       "sight": 9,
       "pen": 0,
-      "drivablePercent": 91,
-      "drivablePrefixTotal": 81,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 66,
       "modalities": [
         "voice",
         "sight"
@@ -5584,81 +5651,6 @@
             "PT-C22-responder",
             "PT-C22-encontrar",
             "PT-C22-jogar-brincar-tocar"
-          ]
-        },
-        {
-          "chapter": 23,
-          "lessonCount": 3,
-          "voice": 3,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "PT-C23-cafe",
-            "PT-C23-cha",
-            "PT-C23-leite"
-          ]
-        },
-        {
-          "chapter": 24,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "PT-C24-queijo",
-            "PT-C24-ovo",
-            "PT-C24-arroz",
-            "PT-C24-acucar"
-          ]
-        },
-        {
-          "chapter": 25,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "PT-C25-amigo",
-            "PT-C25-familia",
-            "PT-C25-homem",
-            "PT-C25-mulher"
-          ]
-        },
-        {
-          "chapter": 26,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "PT-C26-olho",
-            "PT-C26-orelha",
-            "PT-C26-boca",
-            "PT-C26-coracao"
           ]
         }
       ]
@@ -18779,6 +18771,276 @@
       "sourceHash": "fnv1a64:275e5bcc1a3508a9"
     },
     {
+      "id": "IT-C22-caffe",
+      "language": "italian",
+      "chapter": 22,
+      "sequence": 740,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fd3d3e8c33a31297"
+    },
+    {
+      "id": "IT-C22-te",
+      "language": "italian",
+      "chapter": 22,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7f8e82757295def7"
+    },
+    {
+      "id": "IT-C22-latte",
+      "language": "italian",
+      "chapter": 22,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ad2dbe38adfa3d9f"
+    },
+    {
+      "id": "IT-C22-zucchero",
+      "language": "italian",
+      "chapter": 22,
+      "sequence": 770,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a694c02378e7707e"
+    },
+    {
+      "id": "IT-C23-amico-amica",
+      "language": "italian",
+      "chapter": 23,
+      "sequence": 780,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a1e8d418f4d588ca"
+    },
+    {
+      "id": "IT-C23-famiglia",
+      "language": "italian",
+      "chapter": 23,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:98c56f9caecc0c4d"
+    },
+    {
+      "id": "IT-C23-nome",
+      "language": "italian",
+      "chapter": 23,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:03ee965725c95b80"
+    },
+    {
+      "id": "IT-C23-persona",
+      "language": "italian",
+      "chapter": 23,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6acaa01005a8f4c7"
+    },
+    {
+      "id": "IT-C24-cuore",
+      "language": "italian",
+      "chapter": 24,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:acc2c6c3f8fe33fa"
+    },
+    {
+      "id": "IT-C24-occhio",
+      "language": "italian",
+      "chapter": 24,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c0668c356a74be56"
+    },
+    {
+      "id": "IT-C24-orecchio",
+      "language": "italian",
+      "chapter": 24,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:29d8d6f8328b13da"
+    },
+    {
+      "id": "IT-C24-bocca",
+      "language": "italian",
+      "chapter": 24,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1249b42bd30d045c"
+    },
+    {
+      "id": "IT-C25-naso",
+      "language": "italian",
+      "chapter": 25,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:37b2fafc712421df"
+    },
+    {
+      "id": "IT-C25-stomaco",
+      "language": "italian",
+      "chapter": 25,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e1eaeb9f8e6f866d"
+    },
+    {
+      "id": "IT-C25-gola",
+      "language": "italian",
+      "chapter": 25,
+      "sequence": 880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e31db783e499134f"
+    },
+    {
       "id": "JA-C01-hai",
       "language": "japanese",
       "chapter": 1,
@@ -26448,276 +26710,6 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:c0bdfdf3c3d4552c"
-    },
-    {
-      "id": "PT-C23-cafe",
-      "language": "portuguese",
-      "chapter": 23,
-      "sequence": 820,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:3a2ba130519186ce"
-    },
-    {
-      "id": "PT-C23-cha",
-      "language": "portuguese",
-      "chapter": 23,
-      "sequence": 830,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:43ee81275f75dcc3"
-    },
-    {
-      "id": "PT-C23-leite",
-      "language": "portuguese",
-      "chapter": 23,
-      "sequence": 840,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:952b395903d15cfb"
-    },
-    {
-      "id": "PT-C24-queijo",
-      "language": "portuguese",
-      "chapter": 24,
-      "sequence": 850,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:cfa5a967ba99fb12"
-    },
-    {
-      "id": "PT-C24-ovo",
-      "language": "portuguese",
-      "chapter": 24,
-      "sequence": 860,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b410179fd3142c54"
-    },
-    {
-      "id": "PT-C24-arroz",
-      "language": "portuguese",
-      "chapter": 24,
-      "sequence": 870,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:39120ddcf68415d4"
-    },
-    {
-      "id": "PT-C24-acucar",
-      "language": "portuguese",
-      "chapter": 24,
-      "sequence": 880,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2cb901127c211eb1"
-    },
-    {
-      "id": "PT-C25-amigo",
-      "language": "portuguese",
-      "chapter": 25,
-      "sequence": 890,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:82b32ebf2fcddb0b"
-    },
-    {
-      "id": "PT-C25-familia",
-      "language": "portuguese",
-      "chapter": 25,
-      "sequence": 900,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:6c64f312d29c7d17"
-    },
-    {
-      "id": "PT-C25-homem",
-      "language": "portuguese",
-      "chapter": 25,
-      "sequence": 910,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:c880de3d69cf74c6"
-    },
-    {
-      "id": "PT-C25-mulher",
-      "language": "portuguese",
-      "chapter": 25,
-      "sequence": 920,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1ac77f2bef2e483"
-    },
-    {
-      "id": "PT-C26-olho",
-      "language": "portuguese",
-      "chapter": 26,
-      "sequence": 930,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:fcebc8bdf7de4788"
-    },
-    {
-      "id": "PT-C26-orelha",
-      "language": "portuguese",
-      "chapter": 26,
-      "sequence": 940,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e973ec0714feacd"
-    },
-    {
-      "id": "PT-C26-boca",
-      "language": "portuguese",
-      "chapter": 26,
-      "sequence": 950,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b6f35f9cc02e502"
-    },
-    {
-      "id": "PT-C26-coracao",
-      "language": "portuguese",
-      "chapter": 26,
-      "sequence": 960,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b39f1cf1104a200b"
     },
     {
       "id": "PA-C01-dhanvaad",
