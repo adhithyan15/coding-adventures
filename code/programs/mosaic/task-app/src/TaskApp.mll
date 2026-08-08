@@ -49,6 +49,16 @@ layout TaskApp {
           }
         }
 
+        // Flips the active project's complexity tier — see
+        // code/specs/task-app-complexity-config-v1.md. Deliberately a single
+        // button here rather than a per-project-row control in the rail:
+        // this acts on whichever project is currently active, same as the
+        // view switcher right next to it.
+        HostButton [ complexity-toggle ] (
+          label : slot: complexity-label ,
+          onClick : emit: onToggleProjectComplexity
+        )
+
         // Segmented view switch. Two explicit emits rather than one toggle, so
         // clicking the view you are already on is a no-op instead of a swap.
         Row [ seg ] {
@@ -61,7 +71,16 @@ layout TaskApp {
             HostButton [ seg-sheet-off ] ( label : "Sheet" , onClick : emit: onShowSheet )
             HostButton [ seg-cal-off ] ( label : "Calendar" , onClick : emit: onShowCalendar )
             HostButton [ seg-notes-off ] ( label : "Notes" , onClick : emit: onShowNotes )
-            HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+            // Board-tier projects never show Timeline — see `allow-timeline`'s
+            // doc comment. Because `timeline-mode` can only be truthy for a
+            // Full-tier project (main.tsx forces the view away from Timeline
+            // whenever the active project is Board — see main.tsx's dispatch
+            // for onSelectProject/onToggleProjectComplexity), this branch is
+            // reachable only when `allow-timeline` is already non-empty; the
+            // `If` here is defense-in-depth, not the thing doing the hiding.
+            If ( when: slot: allow-timeline ) {
+              HostButton [ seg-tl-on ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+            }
           }
           Else {
             If ( when: slot: board-mode ) {
@@ -70,7 +89,9 @@ layout TaskApp {
               HostButton [ seg-sheet-off2 ] ( label : "Sheet" , onClick : emit: onShowSheet )
               HostButton [ seg-cal-off2 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
               HostButton [ seg-notes-off2 ] ( label : "Notes" , onClick : emit: onShowNotes )
-              HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              If ( when: slot: allow-timeline ) {
+                HostButton [ seg-tl-off2 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+              }
             }
             Else {
               If ( when: slot: sheet-mode ) {
@@ -79,7 +100,9 @@ layout TaskApp {
                 HostButton [ seg-sheet-on ] ( label : "Sheet" , onClick : emit: onShowSheet )
                 HostButton [ seg-cal-off3 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
                 HostButton [ seg-notes-off3 ] ( label : "Notes" , onClick : emit: onShowNotes )
-                HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                If ( when: slot: allow-timeline ) {
+                  HostButton [ seg-tl-off3 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                }
               }
               Else {
                 If ( when: slot: calendar-mode ) {
@@ -88,7 +111,9 @@ layout TaskApp {
                   HostButton [ seg-sheet-off4 ] ( label : "Sheet" , onClick : emit: onShowSheet )
                   HostButton [ seg-cal-on ] ( label : "Calendar" , onClick : emit: onShowCalendar )
                   HostButton [ seg-notes-off4 ] ( label : "Notes" , onClick : emit: onShowNotes )
-                  HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  If ( when: slot: allow-timeline ) {
+                    HostButton [ seg-tl-off4 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                  }
                 }
                 Else {
                   If ( when: slot: notes-mode ) {
@@ -97,7 +122,9 @@ layout TaskApp {
                     HostButton [ seg-sheet-off5 ] ( label : "Sheet" , onClick : emit: onShowSheet )
                     HostButton [ seg-cal-off5 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
                     HostButton [ seg-notes-on ] ( label : "Notes" , onClick : emit: onShowNotes )
-                    HostButton [ seg-tl-off5 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                    If ( when: slot: allow-timeline ) {
+                      HostButton [ seg-tl-off5 ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                    }
                   }
                   Else {
                     HostButton [ seg-list-on ] ( label : "List" , onClick : emit: onShowList )
@@ -105,7 +132,9 @@ layout TaskApp {
                     HostButton [ seg-sheet-off3 ] ( label : "Sheet" , onClick : emit: onShowSheet )
                     HostButton [ seg-cal-off4 ] ( label : "Calendar" , onClick : emit: onShowCalendar )
                     HostButton [ seg-notes-off5 ] ( label : "Notes" , onClick : emit: onShowNotes )
-                    HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                    If ( when: slot: allow-timeline ) {
+                      HostButton [ seg-tl-off ] ( label : "Timeline" , onClick : emit: onShowTimeline )
+                    }
                   }
                 }
               }

@@ -298,6 +298,23 @@ mod tests {
 
     #[cfg(feature = "serde")]
     #[test]
+    fn a_pre_complexity_project_snapshot_defaults_to_full() {
+        // Backward compatibility for task-app-complexity-config-v1.md, Decision 3:
+        // a snapshot saved before `ProjectSettings.complexity` existed must still
+        // load, and land on `Full` — not `Board`. `Board` is only for genuinely NEW
+        // projects (see `ProjectState::empty()`); an old snapshot already had every
+        // scheduling surface visible (there was no tier to hide anything behind), so
+        // defaulting it to `Board` on load would silently hide data the user was
+        // already looking at. `Full` preserves the old behavior exactly.
+        let json = serde_json::to_string(&ProjectState::empty(ProjectId::from_raw("p1")))
+            .unwrap()
+            .replace(",\"complexity\":\"board\"", ""); // simulate the pre-field shape
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert_eq!(back.settings.complexity, ProjectComplexity::Full);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
     fn project_json_round_trips_with_camelcase_and_string_ids() {
         let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
         let mut t = Task::new(TaskId::from_raw("t1"), "Ship it");

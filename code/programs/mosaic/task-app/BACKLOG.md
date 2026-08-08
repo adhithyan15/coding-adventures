@@ -29,19 +29,6 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-2. **Phase 9 — per-project/task complexity config (board-only ↔ full CPM).** The
-   nested-project tree half of Phase 9 shipped as `mosaic-pkg-project-nav` (see Resolved
-   below); this is what's left. The spec calls it "the single most important product
-   rule" (§2.3) but doesn't define what "board only" actually hides (Timeline tab?
-   Sheet columns? which task-detail fields?), whether it's a project setting, a task
-   setting, or both (the spec's own wording is "per project/task", literally
-   ambiguous), or what middle tiers if any look like — `code/specs/task-app-ui-design.md`
-   has no further elaboration either. The engine has no field to hang this on yet
-   (`ProjectSettings` is calendar/unit conventions only, no complexity/tier field) — this
-   is new `task-core` model work gated on a product decision the spec doesn't make, not
-   a UI-only slice. Whoever picks this up next should write a short decision addendum
-   (concrete tiers, what each hides, per-project vs. per-task) before touching code.
-
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
 - **Native drag support for HostDraggable/HostDropTarget.** Every non-web backend (SwiftUI,
@@ -82,6 +69,22 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Phase 9 — per-project complexity config (Board ↔ Full CPM).** Closes
+  the gap the nested-project-tree entry below disclosed — Phase 9 is now
+  fully shipped. See `code/specs/task-app-complexity-config-v1.md` for
+  the decision addendum: project-level (not per-task, since task-level
+  granularity already exists via `Task.schedule: Option<TaskSchedule>`),
+  exactly two tiers (no middle ground — the phase's own title is a
+  binary), new projects start Board, pre-field snapshots load as Full
+  (zero regression). A topbar toggle flips the active project; Board
+  hides Timeline, the schedule window, the CPM-derived task-detail
+  lines, and the Sheet's Start/Finish columns — due dates, overdue
+  status, and dependencies stay in both tiers (basic todo-app concepts,
+  not CPM output). The engine keeps computing CPM unconditionally; this
+  is a host-side display filter. Verified live in both themes: backward
+  compat on real persisted data, the toggle's effect on every listed
+  surface, new-project defaulting, and per-project independence when
+  switching between two differently-tiered projects.
 - **Rename off "Planner".** Renamed the app's on-screen brand to **Trestle**
   (2026-08-06, user picked from a proposed shortlist of Cadence / Waypoint /
   Keel / Trestle). "Planner" collided with Microsoft Planner and others; the
@@ -123,8 +126,9 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   unlike the simpler, more self-contained project rail. Verified live,
   behavior-identical to before: create a project, create a nested sub-project (indent
   glyph renders), switch selection between projects (the "on" raised-card styling
-  follows). The remaining Phase 9 item (complexity config) is the "Next up" item
-  above — it needs a product decision this extraction didn't.
+  follows). The remaining Phase 9 item (complexity config) needed a product
+  decision this extraction didn't — see the complexity-config entry above,
+  now resolved too.
 - **Label management (create + assign).** Closes the gap the task-row-chips ship
   below disclosed. A "+ Label" composer wraps the Sheet tab in `TaskApp.mll`
   (deliberately TaskApp's own concern, not a `mosaic-pkg-sheet` slot — Sheet has no

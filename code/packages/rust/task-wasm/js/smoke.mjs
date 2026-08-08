@@ -55,6 +55,20 @@ assert(
   "n2 orphaned to standalone, not left dangling on a deleted task id",
 );
 
+// Complexity config: a freshly reset project starts Board (new-project default),
+// and the toggle persists through a snapshot round-trip.
+const beforeToggle = JSON.parse(engine.snapshot());
+assert(
+  beforeToggle.projects[beforeToggle.roots[0]].settings.complexity === "board",
+  "fresh project starts Board",
+);
+assert(engine.setProjectComplexity({ complexity: "full" }).ok, "toggle to full");
+const afterToggle = JSON.parse(engine.snapshot());
+assert(
+  afterToggle.projects[afterToggle.roots[0]].settings.complexity === "full",
+  "toggle to Full persists",
+);
+
 console.log("task-wasm smoke OK — bars:", JSON.stringify(gantt.data.bars.map((b) => [b.name, b.start, b.finish])));
 
 function assert(cond, msg) {

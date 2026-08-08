@@ -4,6 +4,24 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - `set_project_complexity` (task-app Phase 9, wasm half)
+
+- **`set_project_complexity`** — set the active project's
+  `ProjectComplexity` (`"board"` or `"full"` — see
+  `code/specs/task-app-complexity-config-v1.md`). Follows the same
+  active-project-targeting `export_op!` pattern every other per-project op
+  already uses (`set_priority`, `set_status`, etc.) — no new args-routing
+  shape introduced.
+- Wired to `js/task-engine.mjs` as `setProjectComplexity`, and verified
+  against the real compiled `.wasm` binary via `js/smoke.mjs`: a freshly
+  reset project starts `"board"`, and a toggle to `"full"` survives a
+  `snapshot()` round-trip.
+- `ProjectSettings` (and now `complexity`) had no dedicated wasm read
+  query before this and still doesn't — it reaches JS embedded in the
+  whole-workspace JSON `snapshot()` already returns, the same way
+  `labels`/`notes` do. (`active_project()` is narrower — it returns only
+  the active project's *id*, not its settings.)
+
 ### Added - the `Note` entity (`upsert_note` / `delete_note`)
 
 - **`upsert_note`** — create or replace a note (`task_core::Note` as the

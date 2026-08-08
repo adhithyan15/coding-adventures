@@ -115,6 +115,26 @@ style TaskApp {
     padding-left : 9 ;
     border-radius : 20 ;
   }
+  // Per-project complexity toggle — see task-app-complexity-config-v1.md.
+  // A pill like pill-ok/pill-warn above, but interactive (a hover state),
+  // so it reads as a control rather than a status badge.
+  part complexity-toggle {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding-top : 3 ;
+    padding-right : 10 ;
+    padding-bottom : 3 ;
+    padding-left : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 20 ;
+    state hover {
+      color : "#f1ebe1" ;
+      border-color : "#443b2f" ;
+    }
+  }
 
   // ── segmented view switch ───────────────────────────────────────────────
   part seg {

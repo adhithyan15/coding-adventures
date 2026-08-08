@@ -4,6 +4,37 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - per-project complexity config (Board ↔ Full CPM)
+
+Phase 9's remaining half — see `code/specs/task-app-complexity-config-v1.md`
+for the full decision addendum the backlog required before touching code.
+
+- A topbar toggle next to the view switcher flips the ACTIVE project
+  between two tiers: **Board** (no Timeline, no schedule window, no
+  CPM-derived task-detail lines, no Sheet Start/Finish columns) and
+  **Full CPM** (everything). Due dates, overdue status, and dependencies
+  are unaffected in either tier — they're basic todo-app concepts, not
+  CPM output (see the spec's Decision 4 for the full classification).
+- New projects (the workspace's own initial one, a top-level create, or
+  a nested subproject) all start **Board** — `ProjectState::empty()` is
+  the single constructor every one of them routes through. This is a
+  real, disclosed behavior change for anyone creating a fresh project;
+  existing persisted projects are unaffected (see the next point).
+- A project saved before this field existed loads as **Full** — the
+  field's own `#[serde(default)]` resolves independently of `empty()`'s
+  new-project default, so old data shows no behavior change on load.
+- The engine keeps computing CPM unconditionally in both tiers — this is
+  a display-time filter the host applies, not a computation toggle
+  (`ProjectState::set_project_complexity` / task-wasm's
+  `set_project_complexity` / `main.tsx`'s `activeProjectComplexity()` +
+  `visibleSheetFields()`).
+- Verified live in both themes: an existing persisted project (real
+  IndexedDB data, not a fixture) loaded as Full CPM; toggling correctly
+  shows/hides every listed surface; a newly created project started
+  Board; two projects with different tiers kept their settings
+  independent when switching between them; the dark-theme toggle
+  renders with the correct colors.
+
 ### Changed - renamed the app's on-screen brand from "Planner" to "Trestle"
 
 "Planner" collided with an existing trademark (Microsoft Planner et al.).

@@ -185,13 +185,18 @@ const SHEET_FIELDS: SheetField[] = [
 
 // Sheet toolbar/state → the View the engine actually evaluates. Rebuilt every
 // render from the host's own filter/sort state, exactly like TASK_VIEW.
+// `fields` is the ACTIVE project's visible column set — see
+// visibleSheetFields() — not always the full SHEET_FIELDS catalogue, so a
+// Board-tier project's Sheet never asks the engine to project columns the
+// UI is about to hide anyway.
 const SHEET_VIEW = (
   projectStart: number,
   filterText: string,
   sortField: string,
   sortAscending: boolean,
+  fields: SheetField[],
 ) => {
-  const sortEntry = SHEET_FIELDS.find((f) => f.label === sortField && f.sortable);
+  const sortEntry = fields.find((f) => f.label === sortField && f.sortable);
   return {
     view: {
       id: "sheet",
@@ -200,7 +205,7 @@ const SHEET_VIEW = (
       filter: { statuses: [], completed: null, search: filterText.trim() || null },
       groupBy: null,
       sort: sortEntry ? [{ field: sortEntry.field, ascending: sortAscending }] : [],
-      visibleFields: SHEET_FIELDS.map((f) => f.field),
+      visibleFields: fields.map((f) => f.field),
     },
     projectStart,
   };
@@ -477,7 +482,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
   // task-id list is what turns a clicked (row, col) back into a task id.
   const sheetRows = (): { ids: string[]; cells: any[][] } => {
     const groups = engine.table(
-      SHEET_VIEW(today, sheetFilterText, sheetSortField, sheetSortAscending),
+      SHEET_VIEW(
+        today,
+        sheetFilterText,
+        sheetSortField,
+        sheetSortAscending,
+        visibleSheetFields(activeProjectComplexity()),
+      ),
     ).data.groups;
     // groupBy is always null here, so there is exactly one group.
     const rowsOut: any[] = (groups[0]?.rows ?? []) as any[];
@@ -580,6 +591,30 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return String(map[id]?.name ?? "");
   };
 
+  // The active project's scheduling-surface tier — see
+  // task-app-complexity-config-v1.md. Read the same "no dedicated query"
+  // way every other project-scoped field already is (labelsByName,
+  // tasksByName, noteRows above). Defaults to "full" if somehow absent
+  // (it never should be — every project gets this field now, board on
+  // create per ProjectState::empty(), full on load for pre-field
+  // snapshots) rather than silently hiding a project's own data.
+  const activeProjectComplexity = (): "board" | "full" => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    return (ws.projects?.[activeId]?.settings?.complexity as "board" | "full") ?? "full";
+  };
+
+  // SHEET_FIELDS, minus the CPM-derived columns (start/finish), for a
+  // Board-tier project. Both `sheetRows()` (which reads it into `visibleFields`
+  // for the engine's table() call) and every other SHEET_FIELDS-shaped read in
+  // getProps() below go through this — a single filtered array, so a column
+  // index always means the same field everywhere it's used (headers, widths,
+  // sort options, and the click/edit resolution in the dispatch cases below).
+  const visibleSheetFields = (complexity: "board" | "full"): SheetField[] =>
+    complexity === "full"
+      ? SHEET_FIELDS
+      : SHEET_FIELDS.filter((f) => f.field.builtin !== "start" && f.field.builtin !== "finish");
+
   return {
     getProps() {
       // Ask the ENGINE for render-ready cells. The host no longer formats dates,
@@ -671,13 +706,23 @@ function makeController(engine: any, init: ControllerInit = {}) {
       // index is resolved through it. Deriving them separately is how this app got a
       // row-index desync before — a click landed on whatever task happened to sit at
       // that position in the *other* ordering.
+      // Board-tier active project: blank the CPM-derived cells everywhere,
+      // not just while collapsed — the engine keeps computing start/finish/
+      // slack regardless (task-app-complexity-config-v1.md's own "display-
+      // time filter, not a computation toggle" note), so this is the ONE
+      // place that stops them reaching the row. due/overdue/deps/notes are
+      // untouched — they're basic todo-app concepts per the spec's Decision 4.
+      const complexity = activeProjectComplexity();
       const taskRows: string[][] = displayIds().map((id) => {
         const c = byTask.get(id)!;
         const due = c.display[DEADLINE] ? `due ${c.display[DEADLINE]}` : "";
-        const window = c.display[START] ? `${c.display[START]} → ${c.display[FINISH]}` : "";
+        const window =
+          complexity === "full" && c.display[START]
+            ? `${c.display[START]} → ${c.display[FINISH]}`
+            : "";
         const late = c.value[OVERDUE]?.value === true ? "⚠ overdue" : "";
         const isOpen = id === expanded;
-        const [d1, d2, d3] = isOpen ? detailFor(id) : ["", "", ""];
+        const [d1, d2, d3] = isOpen && complexity === "full" ? detailFor(id) : ["", "", ""];
         const group = groupOf(id);
         const heading = group === lastGroup ? "" : group;
         lastGroup = group;
@@ -746,18 +791,24 @@ function makeController(engine: any, init: ControllerInit = {}) {
       const overdue = ids.filter(
         (id) => byTask.get(id)!.value[OVERDUE]?.value === true,
       ).length;
+      // Same filtered set sheetRows() above already queried the engine with —
+      // reused here so the headers/widths/sort-options line up with the cells
+      // sheetRows() returned (same array, same order, same length).
+      const sheetFields = visibleSheetFields(complexity);
       return {
         appTitle: "Tasks — auto-scheduled",
         statusLabel: overdue > 0 ? `${overdue} overdue` : "On track",
         statusWarn: overdue > 0 ? "warn" : "",
+        complexityLabel: complexity === "full" ? "Full CPM" : "Board",
+        allowTimeline: complexity === "full" ? "full" : "",
         timelineMode: view === "timeline" ? "timeline" : "",
         boardMode: view === "board" ? "board" : "",
         boardColumns: BOARD_COLUMNS.map((c) => [c.title, c.key]),
         boardCards,
         sheetMode: view === "sheet" ? "sheet" : "",
         sheetViewportRows: sheet.cells,
-        sheetColumnHeaders: SHEET_FIELDS.map((f) => f.label),
-        sheetColumnWidths: SHEET_FIELDS.map((f) => f.width),
+        sheetColumnHeaders: sheetFields.map((f) => f.label),
+        sheetColumnWidths: sheetFields.map((f) => f.width),
         sheetSelectedRow,
         sheetSelectedCol,
         sheetEditRow,
@@ -770,7 +821,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         // The underlying `sheetSortField` state (used by SHEET_VIEW above) stays
         // "" for unsorted; this is only what's shown on the toggle.
         sheetSortField: sheetSortField || "Sort by…",
-        sheetSortOptions: SHEET_FIELDS.filter((f) => f.sortable).map((f) => f.label),
+        sheetSortOptions: sheetFields.filter((f) => f.sortable).map((f) => f.label),
         sheetSortOpen,
         sheetSortAscending,
         newLabelName: newLabel,
@@ -994,7 +1045,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "sheetNavigate": {
           sheetSelectedRow = event.row;
           sheetSelectedCol = event.col;
-          const col = SHEET_FIELDS[event.col];
+          const col = visibleSheetFields(activeProjectComplexity())[event.col];
           // Only an editable column enters edit mode at all — a computed column
           // (Overdue, Start, Finish) just gets selected/highlighted, matching the
           // Cell.mil doc's note that Grid/Cell don't enforce this policy themselves.
@@ -1020,7 +1071,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         case "sheetEditCommit": {
           const { ids } = sheetRows();
           const id = ids[sheetEditRow];
-          const col = SHEET_FIELDS[sheetEditCol];
+          const col = visibleSheetFields(activeProjectComplexity())[sheetEditCol];
           sheetEditRow = -1;
           sheetEditCol = -1;
           sheetEditContent = "";
@@ -1104,7 +1155,29 @@ function makeController(engine: any, init: ControllerInit = {}) {
           const id = projects().ids[event.index];
           // Persist so the choice survives a reload — otherwise you'd come back to the
           // first project and your tasks would look like they'd vanished.
-          if (id && engine.setActiveProject({ id })?.ok !== false) persist();
+          if (id && engine.setActiveProject({ id })?.ok !== false) {
+            // A Board-tier project never shows Timeline (see the .mll's
+            // allow-timeline gate) — switching INTO one while it's the
+            // active view would otherwise leave the switcher unable to
+            // show an "on" state for a button it just hid. See
+            // task-app-complexity-config-v1.md, Decision 5.
+            if (view === "timeline" && activeProjectComplexity() === "board") view = "list";
+            persist();
+          }
+          break;
+        }
+        case "toggleProjectComplexity": {
+          const next = activeProjectComplexity() === "full" ? "board" : "full";
+          const res = engine.setProjectComplexity({ complexity: next });
+          if (res?.ok === false) {
+            console.error("Could not change the project's complexity tier:", res.error ?? res);
+            break;
+          }
+          // Same forced-back-to-List reasoning as selectProject above — this
+          // time the active project didn't change, its tier did, but the
+          // effect on Timeline's reachability is identical.
+          if (view === "timeline" && next === "board") view = "list";
+          persist();
           break;
         }
         case "addTask": {
