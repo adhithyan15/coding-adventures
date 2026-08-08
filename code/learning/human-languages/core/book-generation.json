@@ -552,6 +552,20 @@
       "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
     },
     {
+      "language": "french",
+      "chapter": 26,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:fr-hearing-sleeping-walking-running",
+      "output": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "title": "Sitting, Standing, Opening, Closing",
+      "label": "ch:fr-sitting-standing-opening-closing",
+      "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "title": "Head and Hand",

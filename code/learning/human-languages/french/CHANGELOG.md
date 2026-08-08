@@ -1,5 +1,100 @@
 # Changelog
 
+## Eight verbs no track had ever taught — 2026-08-07
+
+- Authored **Chapters 26 and 27**: eight canonical verb concepts that **no
+  track in the corpus realised** before this tranche. One verb per lesson,
+  gone deep, `concept_tag` verbatim:
+
+  | Lesson | Concept | Verb |
+  |---|---|---|
+  | `FR-C26-entendre` | `VERB-HEAR` | entendre |
+  | `FR-C26-dormir` | `VERB-SLEEP` | dormir |
+  | `FR-C26-marcher` | `VERB-WALK` | marcher |
+  | `FR-C26-courir` | `VERB-RUN` | courir |
+  | `FR-C27-sasseoir` | `VERB-SIT` | s'asseoir |
+  | `FR-C27-se-lever` | `VERB-STAND` | se lever / debout |
+  | `FR-C27-ouvrir` | `VERB-OPEN` | ouvrir |
+  | `FR-C27-fermer` | `VERB-CLOSE` | fermer |
+
+  French goes from **14 of the 40** core verbs to **22 of 40** (35% → 55%), the
+  deepest verb coverage in the corpus. The corpus-wide `universallyMissing`
+  list — concepts nobody teaches — falls from 15 to 7.
+- **Two chapters, not one.** Eight one-verb lessons introduce twenty-two atoms
+  against a per-chapter budget of twelve. Split, Chapter 26 introduces **11**
+  and Chapter 27 introduces **11**, so the ramp report finds **zero** lesson or
+  chapter violations for either and the corpus totals hold at 40 and 25.
+- ***entendre*** gets the tranche's signature block, and the framing is
+  corrected against the record. It is Latin *intendere*, "**to stretch
+  toward**" — English's **intend** is the plainest survival — but the "hear"
+  sense is **not** a late arrival: it is attested from the oldest French texts
+  (c. 1050), alongside attending, understanding and intending. What changed
+  later is that the others fell away as *ouïr* (← *audīre*) wore out, leaving
+  them in *entendu*, *s'entendre* "to get along" and *l'entente*. English kept
+  the *audīre* family instead. Three mind-verbs, three body pictures:
+  *comprendre* grasps, *penser* weighs, *entendre* stretches.
+- **Reflexive body positions, honestly taught.** *S'asseoir* ships with **two**
+  accepted paradigms; the lesson teaches the *-ie-* series whole and marks the
+  *-oi-* singulars as ordinary speech whose plurals (*assoyons*, *assoyez*) are
+  much rarer in France, rather than presenting the two as symmetric. *Je suis
+  assis* is separated from *je m'assieds* as state against movement. And French
+  has **no single verb** for "to stand": the movement is *se lever*, the state
+  is *être debout* — *de* + *bout*, "on end."
+- **The conjugation trap is named.** *Ouvrir* ends in *-ir* and takes *-er*
+  endings, the same set as *marcher*; *fermer* owns them outright, so the two
+  opposites drill as one pair.
+- **Every uncertain link is marked uncertain.** *Marcher*'s origin is left
+  **unsettled** between Frankish **markōn* and Latin *marcus* "a hammer";
+  English *march* is secure (a borrowing *from* French) while English *mark* is
+  a relative **only if** the Frankish account holds, and *la marche*
+  "borderland" is flagged as a separate arrival from the Germanic noun. The
+  **dormouse** is named as **folk etymology** — the story needs an Anglo-Norman
+  word nobody has found. Latin *carrus* (→ *car*, *cargo*) is a **Gaulish
+  loan** sharing *currere*'s root, not a form built from it. English *butt* is
+  a **loan back out of French**, not a Germanic cousin of *bout*; the cousin by
+  descent is **beat**. *Ouvrir* is *aperīre* **reshaped** on its antonym,
+  "probably" — not a blend of two unrelated verbs. And *farm* ← *firmāre* is
+  given as the mainstream account with Old English *feorm* named as
+  interference.
+- **Reinforcement at two cadences (HL09 §7).** Every lesson practises atoms
+  from the **one to three lessons immediately before it**, across the chapter
+  seam — the only cadence that can close the R1 window, since a chapter-end
+  payoff is out of range for the chapter's opening material. On top of that,
+  each payoff reaches several chapters back: `FR-C26-courir` uses *courir*'s
+  hard *c* to re-earn why *canis* became *chien* (Ch.22), and runs *il fait
+  chaud* / *il pleut* (Ch.21) and *ne … pas* (Ch.18) against the new verbs;
+  `FR-C27-fermer` opens and closes *la main* (Ch.17), closes because *il pleut*
+  (Ch.21), and asks in both registers before apologising (Ch.19, Ch.20).
+  Measured: **eleven** French atoms that nothing had ever revisited now are —
+  `FR-ETYMON-CHIEN-03`, `FR-ETYMON-CHAT-05`, `FR-ETYMON-MAINTENIR-05`,
+  `FR-SOUND-MAIN-03`, `FR-GRAMMAR-IL-FAIT-03`, `FR-LEX-IL-PLEUT-04`,
+  `FR-GRAMMAR-NEGATION-04`, `FR-LEX-DESOLE-02`, `FR-PRAGMATICS-SORRY-04`,
+  `FR-ETYMON-COMPRENDRE-02`, `FR-ETYMON-PENSER-05`. French's
+  `atomsNeverRevisited` falls **33 → 25** while its atoms rise **54 → 76**.
+  Two of the tranche's own atoms remain unrevisited — `FR-ETYMON-COURIR-11`
+  and `FR-ETYMON-LEVER-05` — and that is recorded, not padded away.
+- **Payoffs clear the floor on their own merits**: Chapter 26 assesses **9 of
+  11** of its atoms (0.82), Chapter 27 **8 of 11** (0.73), both well above the
+  0.5 representativeness floor, with no `assesses` list padded.
+- **One pre-existing defect became visible and is not hidden.**
+  `FR-C16-passe-compose-etre` drills the learner on *Marcher, courir, nager* and
+  *danser* as movement verbs that take *avoir* — none of which the track taught.
+  Two of those four are now taught, ten chapters later, so the continuity report
+  reports two new forward references (corpus 510 → 512). The earlier lesson was
+  left alone: deleting the words would move the number without fixing the
+  defect, which is that a Chapter 16 grammar lesson has no taught movement verb
+  to point at.
+- All eight lessons are schema v2 and modality `voice`: both chapters are
+  4-of-4 drivable, there is no table anywhere in them, and the six present-tense
+  forms are always a spoken bullet list. Effective durations **295–299 s**
+  against the 300 s ceiling.
+- Wiring: `curriculum.json` gains `FR-PATH-024`, a third `SPINE-SAY-WHAT-I-DO`
+  segment carrying all eight in reading order, and the eight concepts drop out
+  of that node's `omits` (28 → 20). `chapters.json`, `core/book-generation.json`,
+  `book.tex`, the generated ch26/ch27 TeX and the ch26/ch27 narration follow.
+  The French book compiles with XeLaTeX at **134 pages** (was 114) with zero
+  `Missing character` warnings and zero overfull or underfull boxes.
+
 ## Eight more core verbs, split across two chapters — 2026-08-07
 
 - Authored **Chapters 24 and 25**: the eight canonical verb concepts Spanish,

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "french",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-25 are authored — they are the French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses. Chapters 24 and 25 likewise have no terminal practice-mix, so their payoff is the chapter's last lesson by sequence — which is where the recombination and wrap-up recall actually live, and where each of the two reaches back past its own chapter to re-practise atoms taught earlier in the track (HL09 §7).",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-27 are authored — they are the French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses. Chapters 24 through 27 likewise have no terminal practice-mix, so their payoff is the chapter's last lesson by sequence — which is where the recombination and wrap-up recall actually live, and where each of the two reaches back past its own chapter to re-practise atoms taught earlier in the track (HL09 §7).",
   "chapters": [
     {
       "chapter": 17,
@@ -194,6 +194,67 @@
           "FR-ETYMON-MAIN-04",
           "FR-LEX-PRENDRE-01",
           "FR-LEX-AIMER-09"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:fr-hearing-sleeping-walking-running",
+      "canDo": "I can say that I hear, sleep, walk and run in French, use ça marche for \"that works,\" and say why entendre carries English's intend inside it while the Latin verb for hearing ended up in English instead.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C26-courir",
+        "kind": "task",
+        "summary": "Run the chapter's four verbs together with je — j'entends, je dors, je marche, je cours — then use courir's spelling to settle why canis became chien while currere stayed hard at the front: the ca- shift only ever struck c before a. Reaches back past the chapter to le chien and its palatalization from Chapter 22, le chat from the same chapter, il fait chaud and il pleut from Chapter 21, and the ne … pas negation from Chapter 18.",
+        "assesses": [
+          "FR-LEX-COURIR-10",
+          "FR-ETYMON-COURIR-11",
+          "FR-LEX-MARCHER-07",
+          "FR-ETYMON-MARCHER-08",
+          "FR-SEMANTICS-MARCHER-WORK-09",
+          "FR-LEX-DORMIR-04",
+          "FR-GRAMMAR-DORMIR-STEM-06",
+          "FR-LEX-ENTENDRE-01",
+          "FR-ETYMON-ENTENDRE-02",
+          "FR-GRAMMAR-NEGATION-04",
+          "FR-LEX-CHIEN-02",
+          "FR-ETYMON-CHIEN-03",
+          "FR-LEX-CHAT-04",
+          "FR-LEX-IL-PLEUT-04",
+          "FR-GRAMMAR-IL-FAIT-03"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Sitting, Standing, Opening, Closing",
+      "label": "ch:fr-sitting-standing-opening-closing",
+      "canDo": "I can sit down, get up, open and close in French, hold both accepted paradigms of s'asseoir apart, say why French needs two pieces — se lever and debout — where English has one verb \"to stand,\" and know that ouvrir takes marcher's endings despite its -ir spelling.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C27-fermer",
+        "kind": "task",
+        "summary": "Say the chapter's four with je — je m'assieds, je me lève, j'ouvre, je ferme — drill ouvrir and fermer as one pair now that both carry the same endings, and take fermer apart into firmāre, 'to make firm', the verb that gave Italian fermare 'to stop' and Spanish firmar 'to sign'. Reaches back past the chapter to open and close la main from Chapter 17, to close because il pleut from Chapter 21, and to ask in both registers and then apologise, from Chapters 19 and 20.",
+        "assesses": [
+          "FR-LEX-FERMER-10",
+          "FR-ETYMON-FERMER-11",
+          "FR-LEX-OUVRIR-07",
+          "FR-ETYMON-OUVRIR-08",
+          "FR-GRAMMAR-OUVRIR-ER-ENDINGS-09",
+          "FR-LEX-LEVER-04",
+          "FR-LEX-DEBOUT-06",
+          "FR-LEX-ASSEOIR-01",
+          "FR-LEX-MAIN-02",
+          "FR-LEX-PLEASE-02",
+          "FR-GRAMMAR-PLEASE-REGISTER-04",
+          "FR-LEX-DESOLE-02",
+          "FR-PRAGMATICS-SORRY-04",
+          "FR-LEX-IL-PLEUT-04"
         ]
       }
     }

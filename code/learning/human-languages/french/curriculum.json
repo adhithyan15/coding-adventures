@@ -287,6 +287,23 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "FR-PATH-024",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FR-C26-entendre",
+        "FR-C26-dormir",
+        "FR-C26-marcher",
+        "FR-C26-courir",
+        "FR-C27-sasseoir",
+        "FR-C27-se-lever",
+        "FR-C27-ouvrir",
+        "FR-C27-fermer"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -403,7 +420,8 @@
         "FR-PATH-014",
         "FR-PATH-016",
         "FR-PATH-017",
-        "FR-PATH-023"
+        "FR-PATH-023",
+        "FR-PATH-024"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -412,7 +430,6 @@
         "VERB-COME",
         "VERB-SAY",
         "VERB-SEE",
-        "VERB-HEAR",
         "VERB-KNOW",
         "VERB-LEARN",
         "VERB-CAN",
@@ -422,18 +439,11 @@
         "VERB-PUT",
         "VERB-EAT",
         "VERB-DRINK",
-        "VERB-SLEEP",
         "VERB-PLAY",
-        "VERB-WALK",
-        "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-BUY"
       ],
       "relocates": {}
     },

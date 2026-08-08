@@ -453,6 +453,30 @@
       "tex": "french/book/chapters/ch25-verbs-of-the-mind.tex"
     },
     {
+      "language": "french",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:8fceb055d3841a03",
+      "lessonIds": [
+        "FR-C26-entendre",
+        "FR-C26-dormir",
+        "FR-C26-marcher",
+        "FR-C26-courir"
+      ],
+      "tex": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:92921437a691bade",
+      "lessonIds": [
+        "FR-C27-sasseoir",
+        "FR-C27-se-lever",
+        "FR-C27-ouvrir",
+        "FR-C27-fermer"
+      ],
+      "tex": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "sourceHash": "fnv1a64:e86811351e6dab80",
