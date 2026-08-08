@@ -49,7 +49,7 @@ Every registered track has one `curriculum.json`. Its ordered path can revisit a
 shared spine node, attaches required/supporting/reference extensions before,
 inline with, or after a local segment, and explicitly records canonical concepts
 that the track omits or deliberately teaches elsewhere. The data-package gate
-proves that all 21 maps cover their schema-v2 and canonical lessons without
+proves that every registered map covers its schema-v2 and canonical lessons without
 jumping over a prerequisite. Books and the app still read the lesson Markdown;
 the map is the shared scheduling contract, not a second copy of the content.
 
@@ -76,8 +76,9 @@ edition filters on `drivable` and keeps only what a driver can actually do. The 
 job that builds the books runs `check:modality`, so the manifest cannot drift away from
 the lessons it describes — a lesson that silently gained a paradigm table would
 otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
-rather than written into 1,096 frontmatter files, which would be 1,096 places for it to
-go stale; the authored `modality:` override with a `modality_reason:` remains available
+rather than written into every lesson frontmatter file, which would create one place
+per lesson for it to go stale; the authored `modality:` override with a
+`modality_reason:` remains available
 for the genuinely exceptional lesson.
 
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
@@ -99,30 +100,32 @@ edition is authored.
 
 ## Tracks
 
-| Language | Family / script | Status |
-|---|---|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–39 authored; 169 lessons; 36 of the 40 core verbs — and the tranche that leaves **none** unrealized corpus-wide |
-| [French](./french/README.md) | Romance / Latin | Chapters 1–27 authored; 89 lessons; 22 of the 40 core verbs |
-| [German](./german/README.md) | Germanic / Latin | Chapters 1–27 authored; 92 lessons; 22 of the 40 core verbs |
-| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–21 authored; Chapters 2–21 canonical/generated for app + book; 73 lessons; 21 of the 40 core verbs |
-| [Portuguese](./portuguese/README.md) | Romance / Latin | Chapters 1–22 authored; Chapters 2–22 canonical/generated for app + book; 22 of the 40 core verbs |
-| [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1–30 authored; Chapters 3–30 canonical/generated for app + book; first track to realize core `VERB-*` concepts and the first to reach A2 |
-| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1–33 authored; Chapters 6–33 canonical/generated for app + book; 11 inline writing steps |
-| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated; Ch. 7–9 = 14 core verbs, 98% drivable) |
-| [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |
-| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali (vendored font) | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated; Ch. 7–9 = 14 core verbs, 98% drivable) |
-| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil (vendored font) | Chapters 1–31 authored; Chapters 6–31 canonical/generated for app + book; 8 inline writing steps |
-| [Kannada](./kannada/README.md) | Dravidian / Kannada (vendored font) | Chapters 1-2 authored (lessons + book) |
-| [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
-| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1–31 authored; Chapters 6–31 canonical/generated for app + book |
-| [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–43 authored; 88 lessons; 31 of the 40 core verbs |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated) |
-| [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1–5 authored (lessons + book; Chapters 3–5 canonical/generated). Chapters 4–5 are the eight core verbs; aspect is named, not finished |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Eight authored shared-spine chapters; 33 canonical lessons, including thirteen core verbs |
-| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |
-| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese (vendored font subset) | Chapter 1 authored; 7 canonical lessons, book chapter generated. **Scale test** — see that README for what the method does and does not carry outside Indo-European |
-| [Japanese](./japanese/README.md) | Japonic / hiragana + katakana + kanji (vendored font) | Chapter 1 authored; 8 canonical lessons, chapter generated for app + book |
+<!-- BEGIN GENERATED TRACK PROGRESS -->
+| Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
+|---|---|---:|---:|---|
+| [Spanish](./spanish/README.md) | Romance / Latin | 177 | 139 | 41 chapters; through Ch. 41; 29 generated |
+| [Latin](./latin/README.md) | Italic / Latin | 88 | 88 | 43 chapters; through Ch. 43; 42 generated |
+| [French](./french/README.md) | Romance / Latin | 105 | 89 | 31 chapters; through Ch. 31; 15 generated |
+| [German](./german/README.md) | Germanic / Latin | 106 | 89 | 31 chapters; through Ch. 31; 15 generated |
+| [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
+| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil | 118 | 114 | 38 chapters; through Ch. 38; 33 generated |
+| [Kannada](./kannada/README.md) | Dravidian / Kannada | 88 | 84 | 40 chapters; through Ch. 40; 35 generated |
+| [Telugu](./telugu/README.md) | Dravidian / Telugu | 74 | 70 | 34 chapters; through Ch. 34; 29 generated |
+| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 78 | 74 | 34 chapters; through Ch. 34; 29 generated |
+| [Italian](./italian/README.md) | Romance / Latin | 88 | 87 | 25 chapters; through Ch. 25; 24 generated |
+| [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
+| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 52 | 13 chapters; through Ch. 13; 8 generated |
+| [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 61 | 54 | 13 chapters; through Ch. 13; 8 generated |
+| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 57 | 48 | 12 chapters; through Ch. 12; 7 generated |
+| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 50 | 12 chapters; through Ch. 12; 7 generated |
+| [Russian](./russian/README.md) | Slavic / Cyrillic | 50 | 42 | 10 chapters; through Ch. 10; 8 generated |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 51 | 13 chapters; through Ch. 13; 8 generated |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 33 | 33 | 8 chapters; through Ch. 8; 6 generated |
+| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 46 | 46 | 12 chapters; through Ch. 12; 10 generated |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 7 | 7 | 1 chapter; through Ch. 1; 1 generated |
+| [Japanese](./japanese/README.md) | Japonic / Japanese | 8 | 8 | 1 chapter; through Ch. 1; 1 generated |
+<!-- END GENERATED TRACK PROGRESS -->
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
