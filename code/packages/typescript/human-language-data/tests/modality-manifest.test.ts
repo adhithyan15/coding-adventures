@@ -798,9 +798,15 @@ describe("corpus regression", () => {
       // under the canonical heading, and the whole-lesson figure fell back to 66%.
       // `coreDrivable` is unaffected: those blocks are detachable, so the driving
       // edition itself lost nothing. This is the sight-share seam, not a regression.
-      totalLessons: 1615,
-      voice: 1068,
-      sight: 491,
+      // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) is the same
+      // seam again, and it is why voice, sight AND drivablePercent all move together:
+      // most of the wave is ear-only `voice`, but Sanskrit's Devanagari citations and
+      // several tracks' honest `## The letters in this word` blocks add `sight`, so
+      // the whole-lesson share dips 66% -> 65% even though every one of these blocks
+      // is detachable and `coreDrivable` again loses nothing.
+      totalLessons: 1667,
+      voice: 1076,
+      sight: 535,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -808,10 +814,10 @@ describe("corpus regression", () => {
       // voice and drivable are unchanged, which is what a writing lesson should do
       // to this table.
       pen: 56,
-      drivableLessons: 1068,
-      drivablePercent: 66,
+      drivableLessons: 1076,
+      drivablePercent: 65,
       trackCount: 22,
-      chapterCount: 497,
+      chapterCount: 513,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -820,9 +826,12 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 870,
-      fullyDrivableChapters: 327,
-      unstartableChapters: 129,
+      // unstartableChapters 129 -> 142: the 16 new chapters push it up by more than
+      // one apiece where a chapter's own first lesson needs eyes (a script section, a
+      // non-Latin citation) before the driving edition can start it.
+      drivablePrefixTotal: 873,
+      fullyDrivableChapters: 328,
+      unstartableChapters: 142,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

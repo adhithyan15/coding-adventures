@@ -58,9 +58,25 @@ before the whole; and a book you can read straight through.
   snihyati/priyam. \**ghrebh-* → *grab*; \**prek-* → *pray* and *fragen*;
   सहाय "one who goes with" beside Latin *comes*; \**priHos* → *friend*, *free*,
   *Friday* and, eastward, Hindi *piyā*. **Fully drivable.**
+- **Chapter 10 — What You'd Ask For** ([`lessons/SA-C10-*`](./lessons/)):
+  पानीयम्, क्षीरम्, अन्नम् — chosen over the more textbook जल/उदक because
+  पानीयम् is the attested ancestor of the "water" words already taught in
+  Hindi, Gujarati and Bengali. Names the three grammatical genders every
+  Sanskrit noun carries.
+- **Chapter 11 — The People You'd Introduce** ([`lessons/SA-C11-*`](./lessons/)):
+  मित्रम्, कुटुम्बम्, भ्राता, भगिनी. भगिनी, not the more "correct"-looking
+  स्वसृ, is the verified ancestor of the daughter-language sister-words.
+  कुटुम्बम् is a Dravidian loan **into** Sanskrit, later re-lent back to
+  Kannada, Telugu and Tamil — the taproot running backwards.
+- **Chapter 12 — The Face, Part One** ([`lessons/SA-C12-*`](./lessons/)):
+  अक्षि, कर्णः, मुखम् — says why eyes take the dual number.
+- **Chapter 13 — The Face, Part Two** ([`lessons/SA-C13-*`](./lessons/)):
+  नासिका, हृदयम् — names the PIE root हृदयम् shares with *heart*, *cor* and
+  *kardia*.
 
-Chapters 1–9 are in the book. Core verb coverage: **14 of the canonical 40**,
-including all eight verbs the other fifteen verb-bearing tracks share.
+Chapters 1–13 are in the book. Core verb coverage: **14 of the canonical 40**,
+including all eight verbs the other fifteen verb-bearing tracks share. All
+seven pre-A1 spine nodes are now realized.
 
 ---
 
@@ -108,6 +124,20 @@ first-person can-do sentence and the lesson that pays it off.
   Representativeness is 8/8 (1.00); it also reaches back three chapters to
   retrieve Grimm's law, the *pañca* travels and the analogical *f* of *four*,
   which nothing had revisited since Chapter 6.
+
+- **Chapter 10** — *"I can name water, milk and food in Sanskrit, say that food
+  is grammatically the eaten thing, and name the three genders every Sanskrit
+  noun carries."*
+- **Chapter 11** — *"I can name a friend, a family, a brother and a sister in
+  Sanskrit, and say which of those words travelled with English and which
+  quietly did not."*
+- **Chapter 12** — *"I can name an eye, an ear and a mouth in Sanskrit, say why
+  eyes take a dual number, and say which of the three words has a settled
+  Western cousin and which do not."*
+- **Chapter 13** — *"I can name a nose and a heart in Sanskrit, say which
+  daughter-language nose-word नासिका is a relative of rather than a parent of,
+  and close the chapter's twelve nouns against the cousin words this book has
+  already shown."*
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there

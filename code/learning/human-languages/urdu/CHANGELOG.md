@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.10.0 — 2026-08-08
+
+Thirteen everyday-noun lessons across four new chapters (9–12), continuing the
+cross-track pre-A1 vocabulary program and confirming the same measured
+mechanism a further time: `vocabularyOf()` counts distinct `headword:` strings
+1:1 with lessons, so thirteen new word lessons move Urdu's pre-A1 vocabulary
+by exactly thirteen (17 → 30 distinct headwords at or below pre-A1). All seven
+pre-A1 spine nodes are now realized.
+
+- **Ch. 9 — People You'd Introduce** (`SPINE-EXCHANGE-NAMES`): bhāī, bahan,
+  dost, khāndān. Chooses *merā*/*merī* correctly for each noun's grammatical
+  gender, and sorts the four into inherited *bhāī*/*bahan* against Persian
+  *dost*/*khāndān* — the same native-versus-borrowed split Chapter 8's verbs
+  drew.
+- **Ch. 10 — Four Words on the Face** (`SPINE-CHECK-WELLBEING`): kān, nāk,
+  āṅkh, muṅh. Notices *kān* and *nāk* share the same three letters reversed;
+  reads the plain nūn that nasalizes *āṅkh* and *muṅh* against the dedicated
+  ں of *maiṅ*/*hūṅ*; counts three settled Indo-European cousins (*nāk*/nose,
+  *āṅkh*/eye) against *kān*'s honest dead end.
+- **Ch. 11 — The Heart**: dil. Traces *dil* through Middle Persian and
+  Proto-Iranian back to the same PIE \*ḱērd- that gives Sanskrit *hṛdaya*,
+  English *heart*, Latin *cor* and Greek *kardía* — *dil* and *hṛdaya* split
+  at the Indo-Iranian fork, the same root by two roads, not opposite
+  lineages, echoing *pūchhnā* and *porsīdan*.
+- **Ch. 12 — Water, Tea, Milk, Bread** (`SPINE-POLITE-REQUEST-REPAIR`,
+  previously unrealized — this is the resolution): pānī, chāy, dūdh, roṭī.
+  Reuses Chapter 8's dative-experiencer frame on a plain noun (*mujhe roṭī
+  pasand hai*) instead of an infinitive; sorts *pānī*/*dūdh*/*roṭī* as
+  inherited against *chāy*'s Persian loan, and corrects a tempting false
+  cognate between *dūdh* and English *dough*.
+- Book compiles clean with XeLaTeX; all four new chapters wired into
+  `book-generation.json`.
+
 ## 0.9.0 — 2026-08-07
 
 - Added eight schema-v2 lessons in **two** chapters of four, never one of

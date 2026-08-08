@@ -351,16 +351,12 @@ describe("the real corpus", () => {
     // Vocabulary wave 3 (russian/bengali/gujarati/kannada, 52 pre-A1 nouns) added 106
     // atoms while atomsNeverRevisited FELL by 7 — the first wave where the raw count
     // dropped, not just the share. 20% is the lowest reading yet, from 51%.
-    expect(report.summary.atomsTaught).toBe(2385);
-    // +2, and this one goes the WRONG WAY, so it is worth saying why. The two
-    // atoms with revisits=0 are TA-SCRIPT-WRITE-SARI-02 and TA-SCRIPT-CA-ONE-LETTER-01,
-    // both introduced BY TA-W07, the chapter's last writing lesson, so nothing
-    // follows them to do the revisiting — the same structural tail the Russian
-    // survivors above have. A chapter-final lesson's own atoms are unreachable by
-    // construction, not under-taught. The other two spell-the-word atoms (ஆம்,
-    // இல்லை) ARE revisited: TA-W07 re-spells both from memory.
-    expect(report.summary.atomsNeverRevisited).toBe(479);
-    expect(report.summary.neverRevisitedPercent).toBe(20);
+    // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) kept both
+    // trends moving the right way at once: atomsTaught +117 while atomsNeverRevisited
+    // FELL a second time, by 7 more. 19% is the lowest reading yet, from 51%.
+    expect(report.summary.atomsTaught).toBe(2502);
+    expect(report.summary.atomsNeverRevisited).toBe(472);
+    expect(report.summary.neverRevisitedPercent).toBe(19);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -449,8 +445,12 @@ describe("the real corpus", () => {
     // lessons sit within three of each other — a separate change, and one that would
     // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
     // numbers before TA-C01-nandri teaches the word.
-    expect(report.summary.missedByWindow.R1).toBe(834);
-    expect(report.summary.missedByWindow.R2).toBe(1627);
+    // Vocabulary wave 4 pushed both further out: R1 834 -> 838, R2 1627 -> 1718. New
+    // pre-A1 nouns keep landing near the end of already-long chapters, so the near
+    // window (R1) barely moves while the far one (R2) absorbs most of the growth --
+    // the same shape every vocabulary wave has had.
+    expect(report.summary.missedByWindow.R1).toBe(838);
+    expect(report.summary.missedByWindow.R2).toBe(1718);
   });
 
   it("shows what a declared reading order was worth", () => {
