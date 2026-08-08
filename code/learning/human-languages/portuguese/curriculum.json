@@ -358,6 +358,65 @@
         "PT-EXT-026-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "PT-PATH-027",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "PT-C23-cafe",
+        "PT-C23-cha",
+        "PT-C23-leite"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-027-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-028",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "PT-C24-queijo",
+        "PT-C24-ovo",
+        "PT-C24-arroz",
+        "PT-C24-acucar"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-029",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PT-C25-amigo",
+        "PT-C25-familia",
+        "PT-C25-homem",
+        "PT-C25-mulher"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PT-PATH-030",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PT-C26-olho",
+        "PT-C26-orelha",
+        "PT-C26-boca",
+        "PT-C26-coracao"
+      ],
+      "before": [],
+      "inline": [
+        "PT-EXT-030-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -396,7 +455,8 @@
       "segments": [
         "PT-PATH-010",
         "PT-PATH-015",
-        "PT-PATH-019"
+        "PT-PATH-019",
+        "PT-PATH-029"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -412,7 +472,8 @@
       "segments": [
         "PT-PATH-002",
         "PT-PATH-009",
-        "PT-PATH-021"
+        "PT-PATH-021",
+        "PT-PATH-030"
       ],
       "omits": [
         "WORD-WELL"
@@ -422,7 +483,9 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "PT-PATH-012",
-        "PT-PATH-016"
+        "PT-PATH-016",
+        "PT-PATH-027",
+        "PT-PATH-028"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -1010,6 +1073,57 @@
         "PT-C22-responder",
         "PT-C22-encontrar",
         "PT-C22-jogar-brincar-tocar"
+      ]
+    },
+    {
+      "id": "PT-EXT-027-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "canDo": "I can ask for coffee, tea and milk, name their gender, and trace each one to a different origin -- Arabic/Turkish, Cantonese, and plain inherited Latin.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C23-cafe",
+        "PT-C23-cha",
+        "PT-C23-leite"
+      ]
+    },
+    {
+      "id": "PT-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "canDo": "I can ask for cheese, egg, rice and sugar, name their gender, and split them by origin -- two plain inherited Latin words and two Arabic loans that made the same al-Andalus crossing as Chapter 13's azul.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C24-queijo",
+        "PT-C24-ovo",
+        "PT-C24-arroz",
+        "PT-C24-acucar"
+      ]
+    },
+    {
+      "id": "PT-EXT-029-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "canDo": "I can name a friend, a family, a man and a woman with the right gender, and say which Latin root each of the four Romance sisters actually picked for 'woman'.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C25-amigo",
+        "PT-C25-familia",
+        "PT-C25-homem",
+        "PT-C25-mulher"
+      ]
+    },
+    {
+      "id": "PT-EXT-030-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "canDo": "I can name the eye, ear, mouth and heart with the right gender, and say what happened to each Latin root -- kept whole, folded by a sound law, or grown with a suffix.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-C26-olho",
+        "PT-C26-orelha",
+        "PT-C26-boca",
+        "PT-C26-coracao"
       ]
     }
   ]

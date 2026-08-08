@@ -2071,6 +2071,34 @@
       "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 23,
+      "title": "Asking for Something to Drink",
+      "label": "ch:pt-coffee-tea-milk",
+      "output": "portuguese/book/chapters/ch23-coffee-tea-milk.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 24,
+      "title": "Cheese, Egg, Rice, and Sugar",
+      "label": "ch:pt-cheese-egg-rice-sugar",
+      "output": "portuguese/book/chapters/ch24-cheese-egg-rice-sugar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 25,
+      "title": "The People You Introduce",
+      "label": "ch:pt-people-you-introduce",
+      "output": "portuguese/book/chapters/ch25-people-you-introduce.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 26,
+      "title": "The Body, Asking How You Are",
+      "label": "ch:pt-body-how-are-you",
+      "output": "portuguese/book/chapters/ch26-body-how-are-you.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "title": "Numbers One to Five",

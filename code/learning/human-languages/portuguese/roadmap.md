@@ -268,11 +268,45 @@ French.
   inside the advisory budget of 12. With these seven, Portuguese covers **22 of
   the core 40** and the corpus's universally-missing verb list reaches zero.
 
+- **Ch. 23 — Asking for Something to Drink**: **café** (← Arabic *qahwa*, via
+  Turkish *kahve* — a loanword, the first word in the book with no Latin
+  root at all) → **chá** (← Cantonese *chá* via Macau — Portuguese is the
+  one Western European language that skipped the Hokkien/maritime *te*
+  route behind English *tea*, French *thé*) → **leite** (← Latin *lac,
+  lactis*, plain inheritance, closing the chapter's "not one of them got
+  here the same way" table). **Authored.**
+- **Ch. 24 — Cheese, Egg, Rice, and Sugar**: **queijo** (← *cāseus*, an
+  everyday-word cousin of English *cheese* — French/Italian replaced it
+  with *fōrmāticum*, "moulded") → **ovo** (← *ōvum*, barely worn down in two
+  thousand years) → **arroz** and **açúcar** (both ← Arabic, the *al-Andalus*
+  thread Ch. 13's *azul* opened — *arroz* keeps its fused Arabic article
+  where *azul* lost it; *açúcar*'s cedilla reaches back to Ch. 17's
+  *cabeça*). **Authored.**
+- **Ch. 25 — The People You Introduce**: **amigo/amiga** (← *amīcus*, built
+  on *amāre* "to love" — closing the loop Ch. 3's *prazer* opened, ←
+  *placēre* "to please") → **família** (← *familia*, which in Classical
+  Latin named the whole household under one head, servants included, not
+  specifically blood relatives) → **homem** (← *homō*, "human being,"
+  narrowed to "man" in Portuguese, Spanish and French alike) → **mulher**,
+  the payoff: Portuguese/Spanish keep *mulier*, French built *femme* on a
+  different Latin word (*fēmina*), and Italian *donna* comes from a third
+  again (*domina*, "lady of the house"). **Authored.**
+- **Ch. 26 — The Body, Asking How You Are**: **olho** and **orelha** (←
+  *oculus*/*auricula*, both showing the same Vulgar Latin **-c'l- → -lh-**
+  fold Ch. 13's *vermelho* (← *vermiculus*) already demonstrated; *orelha*
+  vs. Spanish *oreja* reruns the identical PT-*lh*/ES-*j* split Ch. 5's
+  *trabalhar*/*trabajar* showed on a verb) → **boca** (← *bucca*, "cheek" in
+  Classical Latin, generalised to "mouth" — the real Classical word for
+  mouth, *ōs, ōris*, survives only in *oral*) → **coração**, the payoff:
+  built on *cor, cordis* plus an augmentative suffix, so its nasal *-ão* was
+  **grown**, unlike *pão*'s and *irmão*'s, which reached the identical
+  ending by **losing** a sound. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 10+ | Family, food, the body — following the shared theme order |
+| 27+ | Following the shared theme order; `SPINE-RESPOND-BASIC` remains unrealized for this track |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth

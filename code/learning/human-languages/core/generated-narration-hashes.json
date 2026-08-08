@@ -5137,6 +5137,73 @@
       "jsonHash": "fnv1a64:bc2e8b2a10271c9b"
     },
     {
+      "language": "portuguese",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:728dab4d688bf937",
+      "lessonIds": [
+        "PT-C23-cafe",
+        "PT-C23-cha",
+        "PT-C23-leite"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "portuguese/narration/ch23.txt",
+      "json": "portuguese/narration/ch23.json",
+      "textHash": "fnv1a64:f01d4f833738c658",
+      "jsonHash": "fnv1a64:69409caf69142bad"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:5aa37243ee8e4e17",
+      "lessonIds": [
+        "PT-C24-queijo",
+        "PT-C24-ovo",
+        "PT-C24-arroz",
+        "PT-C24-acucar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch24.txt",
+      "json": "portuguese/narration/ch24.json",
+      "textHash": "fnv1a64:7aa879b1b380602b",
+      "jsonHash": "fnv1a64:83277ac439c02cd0"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:9a537968b4d88274",
+      "lessonIds": [
+        "PT-C25-amigo",
+        "PT-C25-familia",
+        "PT-C25-homem",
+        "PT-C25-mulher"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch25.txt",
+      "json": "portuguese/narration/ch25.json",
+      "textHash": "fnv1a64:b4d8756296dbeb80",
+      "jsonHash": "fnv1a64:783fd5fb76a1dfba"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:67dfc1fb894195b8",
+      "lessonIds": [
+        "PT-C26-olho",
+        "PT-C26-orelha",
+        "PT-C26-boca",
+        "PT-C26-coracao"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch26.txt",
+      "json": "portuguese/narration/ch26.json",
+      "textHash": "fnv1a64:90f475fabfaa0cd2",
+      "jsonHash": "fnv1a64:7010daea85198e3d"
+    },
+    {
       "language": "punjabi",
       "chapter": 1,
       "sourceHash": "fnv1a64:03685e752baf67fe",

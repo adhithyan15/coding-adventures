@@ -61,6 +61,19 @@ uniquely agrees with the **speaker**, not the listener.
   taught, taking Portuguese to **22 of the core 40**. Split four and three for
   the same reason as the previous tranche: 9 atoms and 8, both inside the
   advisory budget of 12.
+- **Chapters 23-26 — the pre-A1 noun tranche**
+  ([`lessons/PT-C23-*`](./lessons/) through [`PT-C26-*`](./lessons/)):
+  fifteen everyday nouns — **café, chá, leite** (Ch. 23, asking for a
+  drink); **queijo, ovo, arroz, açúcar** (Ch. 24, asking for food);
+  **amigo/amiga, família, homem, mulher** (Ch. 25, people you introduce);
+  **olho, orelha, boca, coração** (Ch. 26, the body, extending Ch. 17).
+  Filed under the pre-A1 spine nodes `SPINE-POLITE-REQUEST-REPAIR`,
+  `SPINE-EXCHANGE-NAMES` and `SPINE-CHECK-WELLBEING`. Moves the HL09 §3.1
+  vocabulary count from 32 to 47 of the 300 needed for pre-A1 (each word
+  lesson counts one distinct headword, no more), and closes 22 of 27
+  under-reinforced pre-A1 atoms — the remaining 5 sit under the two nodes
+  this tranche does not touch. See the changelog for the full measurement
+  and the etymology corrections made during authoring.
 
 ## Book
 
@@ -83,14 +96,14 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–22** are authored, which is every Portuguese chapter that owns a
+Chapters **2–26** are authored, which is every Portuguese chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05
 gap report exists to measure. That absence is tracked debt.
 
 Chapters 2–5 end in a terminal `practice-mix`, which is the payoff. Chapters
-6–22 have none, so the payoff is the chapter's last lesson by sequence — the one
+6–26 have none, so the payoff is the chapter's last lesson by sequence — the one
 carrying its recombination and wrap-up recall. Chapter 2 carries *two*
 `practice-mix` lessons; the terminal one, `PT-C02-formal-practice`, is the
 payoff, and its narrow practice set is a known representativeness risk (see
