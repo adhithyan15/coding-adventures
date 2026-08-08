@@ -99,7 +99,7 @@ describe("real curriculum", () => {
     // 35 -> 37: the third verb tranche added Chapters 36 (oír, dormir, caminar, correr)
     // and 37 (abrir, cerrar, sentarse, levantarse), again split 4+4 to stay inside
     // maxNewAtomsPerChapter, and again on SPINE-SAY-WHAT-I-DO.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(37);
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(38);
     expect(
       books.books
         .find((book) => book.language === "persian")

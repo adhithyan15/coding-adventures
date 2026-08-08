@@ -264,8 +264,8 @@ describe("the real corpus", () => {
     // lesson's own, structurally unreachable), Bengali 12 of 18 -> 4 of 35, Tamil 53% ->
     // 38%, Arabic four ch28-30 atoms off zero. Adding vocabulary and reducing orphans at
     // the same time is the whole point; a corpus that only grows is not a course.
-    expect(report.summary.atomsTaught).toBe(1929);
-    expect(report.summary.atomsNeverRevisited).toBe(569);
+    expect(report.summary.atomsTaught).toBe(1938); // +9: the four Spanish B1 lessons
+    expect(report.summary.atomsNeverRevisited).toBe(571);
     expect(report.summary.neverRevisitedPercent).toBe(29);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -285,15 +285,37 @@ describe("the real corpus", () => {
     // NOT being rewritten to move this number, because contorting good prose to satisfy a
     // naive matcher is the exact failure the sight-cue detector already demonstrated.
     // If this metric is to gate anything, it wants a severity split by distance first.
-    expect(report.summary.forwardReferences).toBe(515);
+    //
+    // 515 -> 521, and all six are the word *luego*, which chapter 38 takes as a
+    // headword. FIVE are chapter 5, inside the fixed farewell *hasta luego* (plus one
+    // in the chapter-4 practice) — a spiral, not a leak, and chapter 38 now opens by
+    // saying the word is already the reader's rather than pretending it is new.
+    // The SIXTH is different: `ES-C10-practice` uses bare adverbial *luego* ("y luego
+    // voy a trabajar"), which is the connective sense, 28 lessons early. That one is a
+    // real leak. The metric reports all six identically, which is exactly the severity
+    // split the comment above asks for: it cannot tell a spiral from a leak.
+    // Note it keys on the HEADWORD, not the atom — chapter 38 introduces only
+    // ES-GRAMMAR-LUEGO-CONNECTIVE-01 and requires chapter 5's ES-LEX-LUEGO, yet the
+    // count is unchanged by that wiring.
+    expect(report.summary.forwardReferences).toBe(521);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
     // change is accountable for is the 17. R2 moves only with new lessons, never from
     // that work — closing a near window does not close a far one, and nothing yet
     // addresses R2/R3/R4.
-    expect(report.summary.missedByWindow.R1).toBe(779);
-    expect(report.summary.missedByWindow.R2).toBe(1265);
+    //
+    // Chapter 38 costs +3 R1 and +10 R2, and almost none of that is its own atoms.
+    // `continuity.ts` only judges a window that FITS: `if (at + window.from > last)
+    // continue`. Lengthening Spanish by four lessons pushed `last` out and un-suppressed
+    // windows that were previously never judged — on chapter 36 and 37 atoms. Of the
+    // +3 R1 exactly one is a chapter-38 atom; of the +10 R2, none is.
+    //
+    // So this is not a cost the new chapter incurred; it is a debt the old chapters
+    // already had, which only became measurable once something followed them. Any
+    // chapter appended to any track will do this, and the number is honest either way.
+    expect(report.summary.missedByWindow.R1).toBe(782);
+    expect(report.summary.missedByWindow.R2).toBe(1275);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -316,11 +338,14 @@ describe("the real corpus", () => {
     // 93 -> 102. The independent Python audit these four numbers reproduce was run
     // against the 146-lesson corpus; the walk is unchanged, only its input grew.
     expect(spanish).toMatchObject({
-      lessonCount: 162,
+      // Chapter 38 added four lessons and ten atoms. The two ORDER numbers did not
+      // move -- no new unsequenced lesson, no new forward prerequisite -- which is the
+      // point of the pin: new content is supposed to leave the walk alone.
+      lessonCount: 166,
       lessonsWithoutSequence: 6,
       forwardPrerequisites: 5,
-      atomsTaught: 221,
-      atomsNeverRevisited: 80,
+      atomsTaught: 230,
+      atomsNeverRevisited: 82,
     });
   });
 

@@ -220,7 +220,9 @@ describe("corpus snapshot", () => {
     expect(summary.byLevel["pre-A1"]).toBe(650);
     expect(summary.byLevel.A1).toBe(297);
     expect(summary.byLevel.A2).toBe(322);
-    expect(summary.byLevel.B1).toBe(0);
+    // 4, not 0: Spanish chapter 38 realizes SPINE-NARRATE-EVENTS, the first B1 node
+    // any track has touched. B2-C2 remain authored-but-unrealized.
+    expect(summary.byLevel.B1).toBe(4);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
@@ -236,8 +238,8 @@ describe("corpus snapshot", () => {
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
     // rather than counting them — "no track is at A2" has become a list, and listing it
-    // keeps the assertion as tight as the original. Nothing has reached B1 or beyond,
-    // which is still the honest ceiling for the whole corpus.
+    // keeps the assertion as tight as the original. Spanish has now left this list --
+    // it reaches B1 -- so the list is 19, and the ceiling for everyone else is A2.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -257,14 +259,16 @@ describe("corpus snapshot", () => {
       "punjabi",
       "russian",
       "sanskrit",
-      "spanish",
       "tamil",
       "telugu",
       "urdu",
     ]);
+    // Exactly one track now exceeds A2, and naming it is stronger than a blanket
+    // "nothing does" -- it says which rung was climbed and by whom.
     expect(
-      summary.tracks.every((track) => track.reach === null || levelRank(track.reach) <= levelRank("A2")),
-    ).toBe(true);
+      summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
+        .map((track) => track.language),
+    ).toEqual(["spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
     ).toEqual(["chinese", "japanese"]);

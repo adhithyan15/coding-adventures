@@ -3,50 +3,146 @@
   "sourceBaseUrl": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/",
   "scriptSets": {
     "telugu-comparisons": [
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "kannada-comparisons": [
-      { "unicodeScript": "Kannada", "scriptCommand": "kn" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "kn"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "malayalam-comparisons": [
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "tamil-comparisons": [
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "arabic-main": [
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
-      { "unicodeScript": "Hebrew", "scriptCommand": "he" }
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      },
+      {
+        "unicodeScript": "Hebrew",
+        "scriptCommand": "he"
+      }
     ],
     "hindi-main": [
-      { "unicodeScript": "Devanagari", "scriptCommand": "hi" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
-      { "unicodeScript": "Cyrillic", "scriptCommand": "ru" }
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "hi"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      },
+      {
+        "unicodeScript": "Cyrillic",
+        "scriptCommand": "ru"
+      }
     ],
     "japanese-main": [
-      { "unicodeScript": "Katakana", "scriptCommand": "ja" },
-      { "unicodeScript": "Hiragana", "scriptCommand": "ja" },
-      { "unicodeScript": "Han", "scriptCommand": "ja" }
+      {
+        "unicodeScript": "Katakana",
+        "scriptCommand": "ja"
+      },
+      {
+        "unicodeScript": "Hiragana",
+        "scriptCommand": "ja"
+      },
+      {
+        "unicodeScript": "Han",
+        "scriptCommand": "ja"
+      }
     ]
   },
   "targets": [
@@ -226,6 +322,13 @@
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "output": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 38,
+      "title": "Telling What Happened",
+      "label": "ch:spanish-narrating",
+      "output": "spanish/book/chapters/ch38-narrating.tex"
     },
     {
       "language": "italian",

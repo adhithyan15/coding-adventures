@@ -5975,6 +5975,23 @@
       "jsonHash": "fnv1a64:ca00d1b6d278148f"
     },
     {
+      "language": "spanish",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:5a76e34b3a495c6c",
+      "lessonIds": [
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch38.txt",
+      "json": "spanish/narration/ch38.json",
+      "textHash": "fnv1a64:c6899120915c3776",
+      "jsonHash": "fnv1a64:aca860193470ca05"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:fe3d3298ecc5bc3a",
