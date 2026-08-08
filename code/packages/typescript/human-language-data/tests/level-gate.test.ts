@@ -84,9 +84,11 @@ describe("the gate that would have caught the A2 claim", () => {
     expect(hindi.blockers.map((b) => b.criterion)).not.toContain("atom-budget");
   });
 
-  it("refuses a level with no authored spine nodes instead of passing it vacuously", () => {
-    // spine.json has zero B1-C2 nodes. "No node is unrealized" is not "every node is
-    // realized" — without this, those levels passed criterion 1 on no evidence.
+  it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
+    // spine.json used to have zero B1-C2 nodes, and the gate refused those levels on
+    // the grounds that "no node is unrealized" is not "every node is realized".
+    // The tranche is authored now, so the refusal has a better reason: 17 nodes exist
+    // and none is realized by any track. The failure names a number instead of a void.
     const e = loadEverything();
     const gate = runLevelGate({
       lessons: e.lessons,
@@ -96,10 +98,13 @@ describe("the gate that would have caught the A2 claim", () => {
       ramp: measureRamp(e.lessons, loadChapterPolicy()),
       continuity: measureContinuity(e.lessons),
     });
-    // No track reaches B1, so assert the rule directly on the spine instead.
-    const authored = new Set(e.spine.nodes.map((n) => n.stage));
-    expect(authored.has("B1")).toBe(false);
-    expect(gate.tracks.every((t) => t.attained === null || t.attained !== "B1")).toBe(true);
+    const authored = e.spine.nodes.filter((n) => n.stage === "B1");
+    expect(authored.length).toBeGreaterThan(0);
+    // Authoring a rung does not climb it. No track may attain B1 on an empty ledger.
+    expect(gate.tracks.every((t) => t.attained === null)).toBe(true);
+    // And the whole ladder is now reachable in principle: every CEFR level has nodes.
+    const stages = new Set(e.spine.nodes.map((n) => n.stage));
+    for (const level of ["B1", "B2", "C1", "C2"]) expect(stages.has(level)).toBe(true);
   });
 
   it("stops at the FIRST failing level, because the criteria are cumulative", () => {

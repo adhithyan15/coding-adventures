@@ -584,6 +584,346 @@
       "family": "VERB",
       "gloss": "to like / to love",
       "core": true
+    },
+    "NARRATIVE-SEQUENCE": {
+      "family": "DISCOURSE",
+      "gloss": "putting events in the order they happened",
+      "core": false
+    },
+    "CONNECTIVE-THEN": {
+      "family": "DISCOURSE",
+      "gloss": "then, next — joining events in sequence",
+      "core": false
+    },
+    "CONNECTIVE-BECAUSE": {
+      "family": "DISCOURSE",
+      "gloss": "because — joining a claim to its reason",
+      "core": false
+    },
+    "ASPECT-ONGOING-PAST": {
+      "family": "GRAMMAR",
+      "gloss": "was doing — an action in progress in the past",
+      "core": false
+    },
+    "OPINION-I-THINK": {
+      "family": "STANCE",
+      "gloss": "I think, in my view — marking an opinion as one's own",
+      "core": false
+    },
+    "CONNECTIVE-SO": {
+      "family": "DISCOURSE",
+      "gloss": "so, therefore — joining a reason to its consequence",
+      "core": false
+    },
+    "MODAL-SHOULD": {
+      "family": "GRAMMAR",
+      "gloss": "should, ought to — advice and mild obligation",
+      "core": false
+    },
+    "DIRECTION-ASK": {
+      "family": "TRAVEL",
+      "gloss": "asking the way, and following the answer",
+      "core": false
+    },
+    "TRANSPORT-TICKET": {
+      "family": "TRAVEL",
+      "gloss": "buying a ticket and naming a destination",
+      "core": false
+    },
+    "LODGING-ROOM": {
+      "family": "TRAVEL",
+      "gloss": "asking for a room and what it includes",
+      "core": false
+    },
+    "PROBLEM-REPORT": {
+      "family": "TRAVEL",
+      "gloss": "saying something has gone wrong, and what is needed",
+      "core": false
+    },
+    "ADJECTIVE-FEELING": {
+      "family": "LEXIS",
+      "gloss": "adjectives for how one feels",
+      "core": false
+    },
+    "COMPARISON-BASIC": {
+      "family": "GRAMMAR",
+      "gloss": "bigger than, the biggest — comparing two or more things",
+      "core": false
+    },
+    "TIME-DURATION": {
+      "family": "GRAMMAR",
+      "gloss": "for how long, since when",
+      "core": false
+    },
+    "CONDITIONAL-REAL": {
+      "family": "GRAMMAR",
+      "gloss": "if X, then Y — for outcomes that really can follow",
+      "core": false
+    },
+    "CONNECTIVE-IF": {
+      "family": "DISCOURSE",
+      "gloss": "if — introducing a condition",
+      "core": false
+    },
+    "MODAL-WOULD": {
+      "family": "GRAMMAR",
+      "gloss": "would — a consequence that depends on a condition",
+      "core": false
+    },
+    "ARGUMENT-CLAIM": {
+      "family": "DISCOURSE",
+      "gloss": "stating the position an argument will defend",
+      "core": false
+    },
+    "ARGUMENT-EVIDENCE": {
+      "family": "DISCOURSE",
+      "gloss": "supporting a claim with a reason or an example",
+      "core": false
+    },
+    "CONNECTIVE-HOWEVER": {
+      "family": "DISCOURSE",
+      "gloss": "however, on the other hand — marking a contrast",
+      "core": false
+    },
+    "CONNECTIVE-ALTHOUGH": {
+      "family": "DISCOURSE",
+      "gloss": "although, even though — conceding a point",
+      "core": false
+    },
+    "REPORTED-SPEECH": {
+      "family": "GRAMMAR",
+      "gloss": "he said that… — reporting rather than quoting",
+      "core": false
+    },
+    "TENSE-BACKSHIFT": {
+      "family": "GRAMMAR",
+      "gloss": "the tense shift a report imposes, where the language has one",
+      "core": false
+    },
+    "QUOTATION-DIRECT": {
+      "family": "DISCOURSE",
+      "gloss": "quoting words as they were spoken",
+      "core": false
+    },
+    "DISCOURSE-TOPIC-SENTENCE": {
+      "family": "DISCOURSE",
+      "gloss": "the sentence that tells you what a paragraph is about",
+      "core": false
+    },
+    "RELATIVE-CLAUSE": {
+      "family": "GRAMMAR",
+      "gloss": "the man who…, the book that… — modifying a noun with a clause",
+      "core": false
+    },
+    "VOICE-PASSIVE": {
+      "family": "GRAMMAR",
+      "gloss": "it was written — where the language has a passive",
+      "core": false
+    },
+    "VOCAB-FIELD-SPECIFIC": {
+      "family": "LEXIS",
+      "gloss": "the vocabulary of one subject area",
+      "core": false
+    },
+    "ABSTRACT-NOUN": {
+      "family": "LEXIS",
+      "gloss": "nouns for things you cannot point at",
+      "core": false
+    },
+    "HEDGE-PROBABLY": {
+      "family": "STANCE",
+      "gloss": "probably, it seems — marking a claim as less than certain",
+      "core": false
+    },
+    "NOMINALIZATION": {
+      "family": "GRAMMAR",
+      "gloss": "turning a verb or adjective into a noun",
+      "core": false
+    },
+    "IMPLICATURE": {
+      "family": "PRAGMATICS",
+      "gloss": "what a speaker means without saying it",
+      "core": false
+    },
+    "IRONY-MARKER": {
+      "family": "PRAGMATICS",
+      "gloss": "the signals that a sentence means its opposite",
+      "core": false
+    },
+    "IDIOM-COMMON": {
+      "family": "LEXIS",
+      "gloss": "fixed phrases whose meaning is not the sum of their words",
+      "core": false
+    },
+    "TONE-SHIFT": {
+      "family": "PRAGMATICS",
+      "gloss": "hearing when the tone of a passage changes",
+      "core": false
+    },
+    "DISCOURSE-COHESION": {
+      "family": "DISCOURSE",
+      "gloss": "the devices that hold a long text together",
+      "core": false
+    },
+    "PARAGRAPH-PLAN": {
+      "family": "DISCOURSE",
+      "gloss": "arranging paragraphs so an argument builds",
+      "core": false
+    },
+    "CONNECTIVE-FURTHERMORE": {
+      "family": "DISCOURSE",
+      "gloss": "furthermore, moreover — adding weight to a point",
+      "core": false
+    },
+    "REFERENCE-ANAPHORA": {
+      "family": "DISCOURSE",
+      "gloss": "pronouns and repeats that point back to something already named",
+      "core": false
+    },
+    "REGISTER-FORMAL": {
+      "family": "PRAGMATICS",
+      "gloss": "the formal register and when it is required",
+      "core": false
+    },
+    "REGISTER-COLLOQUIAL": {
+      "family": "PRAGMATICS",
+      "gloss": "the everyday register and where it would be wrong",
+      "core": false
+    },
+    "HONORIFIC-SYSTEM": {
+      "family": "PRAGMATICS",
+      "gloss": "grammaticalised respect, where the language has it",
+      "core": false
+    },
+    "POLITENESS-STRATEGY": {
+      "family": "PRAGMATICS",
+      "gloss": "softening, distancing, and other ways of being polite",
+      "core": false
+    },
+    "DIALECT-FEATURE": {
+      "family": "VARIATION",
+      "gloss": "a feature that marks one regional variety",
+      "core": false
+    },
+    "ACCENT-VARIATION": {
+      "family": "VARIATION",
+      "gloss": "the same word pronounced differently by region",
+      "core": false
+    },
+    "LEXICAL-VARIANT-REGIONAL": {
+      "family": "VARIATION",
+      "gloss": "different everyday words for the same thing by region",
+      "core": false
+    },
+    "DIGLOSSIA": {
+      "family": "VARIATION",
+      "gloss": "a high and a low variety used in different settings",
+      "core": false
+    },
+    "SYNTHESIS-MULTI-SOURCE": {
+      "family": "DISCOURSE",
+      "gloss": "building one account from several sources",
+      "core": false
+    },
+    "PARAPHRASE": {
+      "family": "DISCOURSE",
+      "gloss": "restating someone's point accurately in your own words",
+      "core": false
+    },
+    "ATTRIBUTION-CITE": {
+      "family": "DISCOURSE",
+      "gloss": "saying whose claim it is",
+      "core": false
+    },
+    "SUMMARY-COMPRESSION": {
+      "family": "DISCOURSE",
+      "gloss": "keeping the argument while cutting the length",
+      "core": false
+    },
+    "NUANCE-MODALITY": {
+      "family": "STANCE",
+      "gloss": "fine gradations of certainty, obligation and permission",
+      "core": false
+    },
+    "COLLOCATION-PRECISE": {
+      "family": "LEXIS",
+      "gloss": "the word that habitually goes with this one",
+      "core": false
+    },
+    "EMPHASIS-DEVICE": {
+      "family": "GRAMMAR",
+      "gloss": "word order, particles or stress used to emphasise",
+      "core": false
+    },
+    "CONNOTATION-CHOICE": {
+      "family": "LEXIS",
+      "gloss": "choosing between near-synonyms for their overtones",
+      "core": false
+    },
+    "LITERARY-REGISTER": {
+      "family": "CULTURE",
+      "gloss": "the register of poetry and literary prose",
+      "core": false
+    },
+    "ARCHAIC-FORM": {
+      "family": "CULTURE",
+      "gloss": "forms that survive only in older or ceremonial text",
+      "core": false
+    },
+    "METER-AND-VERSE": {
+      "family": "CULTURE",
+      "gloss": "how the language's verse is measured",
+      "core": false
+    },
+    "ORTHOGRAPHY-HISTORICAL": {
+      "family": "CULTURE",
+      "gloss": "older spellings and scripts a reader will meet",
+      "core": false
+    },
+    "CULTURAL-ALLUSION": {
+      "family": "CULTURE",
+      "gloss": "references a native reader is expected to catch",
+      "core": false
+    },
+    "PROVERB": {
+      "family": "CULTURE",
+      "gloss": "proverbs and the situations that call for them",
+      "core": false
+    },
+    "EUPHEMISM-AND-TABOO": {
+      "family": "CULTURE",
+      "gloss": "what is said indirectly, and what is not said",
+      "core": false
+    },
+    "HUMOR-CONVENTION": {
+      "family": "CULTURE",
+      "gloss": "what counts as funny, and how it is signalled",
+      "core": false
+    },
+    "EXPLANATION-GIVE": {
+      "family": "DISCOURSE",
+      "gloss": "giving the reason behind a claim",
+      "core": false
+    },
+    "AMBITION-EXPRESS": {
+      "family": "STANCE",
+      "gloss": "stating a hope or an ambition",
+      "core": false
+    },
+    "CONDITION-DEPENDS": {
+      "family": "DISCOURSE",
+      "gloss": "saying an outcome depends on something",
+      "core": false
+    },
+    "SPEECH-ACT-REPORT": {
+      "family": "DISCOURSE",
+      "gloss": "the verbs a report is built on",
+      "core": false
+    },
+    "HEDGE-SUPPOSE": {
+      "family": "STANCE",
+      "gloss": "supposing, assuming — advancing a claim tentatively",
+      "core": false
     }
   },
   "namespaced": {
