@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "16a9192aaf9af376f5d1cedd76b8a253eeaed919",
+    "revision": "cb09f5b9ee198d8aacecebce9230d1015a358f42",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -356,7 +356,7 @@
       "depends_on": ["build-file-standalone-integrity"],
       "branch": "codex/lua-build-windows-standalone",
       "pr_number": null,
-      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Rebased cleanly onto origin/main 005c38161e before implementation, onto post-#10093 origin/main 4833046722, onto post-#10103 origin/main 6c27df28af, and onto post-#10106 origin/main 16a9192aaf after each refreshed collision-clean 1,264-identity/4,420-slot inventory left this item as the coherent in-progress root. The implementation adds all ten standalone recipes with 67 ordered sibling installs, closes clean-tree transitive prerequisites, and makes the ZStd CLI interop tests Windows-native. Fresh isolated LuaRocks validation passes 351 tests with zero failures, errors, or pending cases; wasm_module_encoder production coverage is 90.50%. Python build-tool validation is clean across 4,829 packages; its full 353-test suite passes at 85.26% coverage. Lua build-tool validation passes 61 tests at 73.95% aggregate coverage. Go test, vet, build, and module verification pass; full repository validation retains the exact unrelated 17-diagnostic Perl/Python/Swift baseline and reports zero Lua diagnostics. Changed-file luacheck, luac, parity collisions, state graph, diff, credential scan, and direct security review pass."
+      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Rebased cleanly onto origin/main 005c38161e before implementation, onto post-#10093 origin/main 4833046722, onto post-#10103 origin/main 6c27df28af, onto post-#10106 origin/main 16a9192aaf, and onto post-#10108 origin/main cb09f5b9ee after each refreshed collision-clean 1,264-identity/4,420-slot inventory left this item as the coherent in-progress root. The implementation adds all ten standalone recipes with 67 ordered sibling installs, closes clean-tree transitive prerequisites, and makes the ZStd CLI interop tests Windows-native. Fresh isolated LuaRocks validation passes 351 tests with zero failures, errors, or pending cases; wasm_module_encoder production coverage is 90.50%. Python build-tool validation is clean across 4,829 packages; its full 353-test suite passes at 85.26% coverage. Lua build-tool validation passes 61 tests at 73.95% aggregate coverage. Go test, vet, build, and module verification pass; full repository validation retains the exact unrelated 17-diagnostic Perl/Python/Swift baseline and reports zero Lua diagnostics. Changed-file luacheck, luac, parity collisions, state graph, diff, credential scan, and direct security review pass."
     },
     {
       "id": "build-tool-go-lua-missing-windows-validation-parity",
@@ -1771,7 +1771,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage. Merged PRs #10093, #10095, #10096, #10097, #10099, #10101, #10103, #10105, and #10106 add finite JFET/BJT VTOTC, TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, and NF validation with mirrored Python/TypeScript lowering coverage. These are narrow partial advances rather than completion of this shared multi-lane corpus."
+      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage. Merged PRs #10093, #10095, #10096, #10097, #10099, #10101, #10103, #10105, #10106, and #10108 add finite JFET/BJT VTOTC, TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, NF, and NR validation with mirrored Python/TypeScript lowering coverage. These are narrow partial advances rather than completion of this shared multi-lane corpus."
     },
     {
       "id": "smart-home-switch-entity-command-contract",

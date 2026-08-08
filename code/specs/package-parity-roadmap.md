@@ -931,15 +931,15 @@ selected Lua Windows closure as the coherent in-progress dependency root; the
 new Go-validator, Unix-closure, and Python-alias items remain separately
 ordered follow-ups.
 
-After the externally merged SPICE parity sequence through PR #10106, the
-collision-checked schema-3 inventory at `16a9192aaf` remains unchanged at 1,264
+After the externally merged SPICE parity sequence through PR #10108, the
+collision-checked schema-3 inventory at `cb09f5b9ee` remains unchanged at 1,264
 established implementation identities and 4,420 package slots across 15 lanes,
 with 173 high-consensus packages and 269 missing slots, 814 singletons and
 11,396 missing slots, 618 Rust singletons, zero canonical collisions, and zero
 unknown buckets. PRs #10095, #10096, #10097, #10099, #10101, #10103, #10105,
-and #10106 advance the shared SPICE parameter-validation owner with TNOM, BEX,
-BETATCE, XTI, EG, VAF, VAR, and NF coverage without adding identities or
-materializing a new unowned gap.
+#10106, and #10108 advance the shared SPICE parameter-validation owner with
+TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, NF, and NR coverage without adding
+identities or materializing a new unowned gap.
 The dependency/leverage pass therefore retains the already implemented Lua
 Windows standalone closure as the sole in-progress root, followed by its
 separately owned Go-validator and canonical-Unix closure contracts and the
