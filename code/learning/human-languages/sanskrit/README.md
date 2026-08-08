@@ -47,8 +47,20 @@ before the whole; and a book you can read straight through.
   patchwork *am/is/are/be/been*, \**gwem-* into *come* and *advent*, \**spek-*
   into *inspect* and *telescope*, \**gno-* into *know* and *diagnosis*.
   **Fully drivable — all six lessons are voice.**
+- **Chapter 8 — The Mind and the Palm Leaf**
+  ([`lessons/SA-C08-*`](./lessons/)): cintayati, avagacchati/budhyate, paṭhati,
+  likhati. Class 10 plants **-अय-**; "understands" is built out of **अव** and a
+  verb already owned; **लिख्** means *scratch* before it means *write*. The
+  chapter names **तत्सम** against **तद्भव** so that every claim about a
+  descendant says which kind it is. **Fully drivable.**
+- **Chapter 9 — Taking, Asking, Helping, Loving**
+  ([`lessons/SA-C09-*`](./lessons/)): gṛhṇāti, pṛcchati, sāhāyyaṁ karoti,
+  snihyati/priyam. \**ghrebh-* → *grab*; \**prek-* → *pray* and *fragen*;
+  सहाय "one who goes with" beside Latin *comes*; \**priHos* → *friend*, *free*,
+  *Friday* and, eastward, Hindi *piyā*. **Fully drivable.**
 
-Chapters 1–7 are in the book.
+Chapters 1–9 are in the book. Core verb coverage: **14 of the canonical 40**,
+including all eight verbs the other fifteen verb-bearing tracks share.
 
 ---
 
@@ -83,6 +95,20 @@ first-person can-do sentence and the lesson that pays it off.
   chapter, because the chapter is one system taught six times rather than six
   unrelated words.
 
+- **Chapter 8** — *"I can say that someone thinks, understands, reads and writes
+  in Sanskrit; … and tell a word worn down by speech (तद्भव) from one carried
+  over whole (तत्सम)."* Payoff:
+  [`SA-C08-likhati`](./lessons/SA-C08-likhati.md), a production.
+  Representativeness is 8/8 (1.00).
+
+- **Chapter 9** — *"I can say that someone takes, asks, helps and loves in
+  Sanskrit; … and point at the English word — grab, pray, friend — that each of
+  these four roots also produced."* Payoff:
+  [`SA-C09-snihyati`](./lessons/SA-C09-snihyati.md), a production.
+  Representativeness is 8/8 (1.00); it also reaches back three chapters to
+  retrieve Grimm's law, the *pañca* travels and the analogical *f* of *four*,
+  which nothing had revisited since Chapter 6.
+
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
@@ -95,7 +121,7 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 Generated Devanagari runs use that font while section bookmarks use the
 lessons' Latin romanization.
 
-The forced seven-chapter build is warning-free — no overfull or underfull boxes,
+The forced nine-chapter build is warning-free — no overfull or underfull boxes,
 no missing characters, no hyperref complaints: chapter-qualified recap anchors,
 bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes,
 and concise running titles keep the downloadable PDF and its outline clean.

@@ -97,7 +97,7 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
     expect(report.summary.universallyMissing).toHaveLength(15);
-    expect(report.summary.meanCoveredPercent).toBe(28);
+    expect(report.summary.meanCoveredPercent).toBe(33);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -165,6 +165,31 @@ describe("corpus snapshot", () => {
     for (const shared of ["VERB-GO", "VERB-SEE", "VERB-KNOW"]) {
       const teaching = report.tracks.filter((track) => track.covered.includes(shared));
       expect(teaching.length).toBeGreaterThan(1);
+    }
+
+    // THE EIGHT-VERB PROGRAM, COMPLETE. These eight — think, understand, read, write,
+    // take, ask, help, like — were realized by NO track anywhere when the canonical verb
+    // layer shipped. Every one is now taught by TWENTY of the 22 tracks, across Romance,
+    // Germanic, Italic, Indo-Aryan, Iranian, Slavic, Semitic and Dravidian.
+    //
+    // Chinese and Japanese are the two exceptions and must stay exceptions until they
+    // have somewhere to put a verb: both are genuinely still at chapter 1. Excluding them
+    // is the honest reading, not a gap — which is why this asserts 20 and not 22.
+    const EIGHT = [
+      "VERB-THINK",
+      "VERB-UNDERSTAND",
+      "VERB-READ",
+      "VERB-WRITE",
+      "VERB-TAKE",
+      "VERB-ASK",
+      "VERB-HELP",
+      "VERB-LIKE-LOVE",
+    ];
+    for (const verb of EIGHT) {
+      const teaching = report.tracks.filter((track) => track.covered.includes(verb));
+      expect(teaching).toHaveLength(20);
+      expect(teaching.map((t) => t.language)).not.toContain("chinese");
+      expect(teaching.map((t) => t.language)).not.toContain("japanese");
     }
     // None of the eight is in the universally-missing list any more, and every other
     // canonical verb still is.

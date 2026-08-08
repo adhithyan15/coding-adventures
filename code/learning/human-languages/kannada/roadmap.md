@@ -77,6 +77,28 @@ order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
   closer — ಗೊತ್ತು is not a verb, has no person slot, and so pushes the knower
   out into the dative. **Authored.**
 
+- **Ch. 33 — Four Verbs of Mind and Page**: ಯೋಚಿಸು (*yōcisu*, think) →
+  ಅರ್ಥಮಾಡಿಕೊ (*arthamāḍiko*, understand) → ಓದು (*ōdu*, read) → ಬರೆ (*bare*,
+  write). Two Kannada machines, one per pair. **‑ಇಸು** turns a Sanskrit noun
+  into a Kannada verb — the trick Ch. 9's *kṣamisu* already used — while the
+  inherited ನೆನೆ *nene* stays alive doing the remembering that Tamil's cognate
+  நினை *ninai* does as everyday thinking. **‑ಕೊ**, the worn ಕೊಳ್ಳು, hands an
+  action back to its doer, beside the verbless ನನಗೆ ಅರ್ಥವಾಯಿತು. Then ಓದು, the
+  inherited recite-word Kannada alone left in its ordinary job, and the payoff
+  ಬರೆ — Proto-Dravidian *\*warV-* "draw a line," Tamil வರை — which finally sets
+  the *v* → *b* law beside *p* → *h* and counts the chapter's four verbs onto
+  Ch. 32's six to reach *hattu*. **Authored.**
+
+- **Ch. 34 — Four Verbs Between People**: ತೆಗೆದುಕೊ (*tegeduko*, take) → ಕೇಳು
+  (*kēḷu*, ask **and** hear) → ಸಹಾಯ ಮಾಡು (*sahāya māḍu*, help) → ನನಗೆ ಕನ್ನಡ
+  ಇಷ್ಟ (*iṣṭa*, like). The three-sister comparison in both directions: *tegeduko*
+  matches **Telugu** root for root where the family tree would predict Tamil,
+  and *kēḷu* keeps the inherited double sense "ask/hear" that Tamil and Malayalam
+  keep and Telugu alone split. Closes on the dative subject — *nanage gottu*,
+  *nanage kannaḍa iṣṭa*, *nanage bēku* — showing that the frame is inherited
+  (native *bēku*, answering Tamil *vēṇṭum* by the same *v* → *b* law) even
+  though the word filling it is Sanskrit. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |

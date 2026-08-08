@@ -567,6 +567,30 @@
       "tex": "gujarati/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "gujarati",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:ac0c437339c0a581",
+      "lessonIds": [
+        "GU-C08-vicharvun",
+        "GU-C08-samajvun",
+        "GU-C08-vanchvun",
+        "GU-C08-lakhvun"
+      ],
+      "tex": "gujarati/book/chapters/ch08-mind-and-page.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:ea9c16ff2afa234e",
+      "lessonIds": [
+        "GU-C09-levun",
+        "GU-C09-puchhvun",
+        "GU-C09-madad-karvi",
+        "GU-C09-gamvun"
+      ],
+      "tex": "gujarati/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "sourceHash": "fnv1a64:ef8184e4fd309678",
@@ -1324,6 +1348,30 @@
       "tex": "kannada/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:f4b47817a871fa1e",
+      "lessonIds": [
+        "KA-C33-yocisu",
+        "KA-C33-artha-maadiko",
+        "KA-C33-oodu",
+        "KA-C33-bare"
+      ],
+      "tex": "kannada/book/chapters/ch33-mind-verbs.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:aae351a33dc5cb4d",
+      "lessonIds": [
+        "KA-C34-tegeduko",
+        "KA-C34-keelu",
+        "KA-C34-sahaya-maadu",
+        "KA-C34-ishta"
+      ],
+      "tex": "kannada/book/chapters/ch34-social-verbs.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:c822987dd25c0a2b",
@@ -1950,6 +1998,30 @@
       "tex": "malayalam/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:a8750030ca1ab8bd",
+      "lessonIds": [
+        "ML-C33-cintikkuka",
+        "ML-C33-manassilaakkuka",
+        "ML-C33-vaayikkuka",
+        "ML-C33-ezhutuka"
+      ],
+      "tex": "malayalam/book/chapters/ch33-mind-and-page.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:043dbbb59d4b0051",
+      "lessonIds": [
+        "ML-C34-edukkuka",
+        "ML-C34-codikkuka",
+        "ML-C34-sahaayikkuka",
+        "ML-C34-ishtam"
+      ],
+      "tex": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:b3366258b8d30e41",
@@ -2315,6 +2387,30 @@
       "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:3c9eca3e36ff2723",
+      "lessonIds": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "tex": "punjabi/book/chapters/ch08-mind-and-tone.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:c655c44197746db3",
+      "lessonIds": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
+      ],
+      "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "sourceHash": "fnv1a64:92f0da71e90f84b4",
@@ -2376,6 +2472,30 @@
         "SA-C07-janati"
       ],
       "tex": "sanskrit/book/chapters/ch07-core-verbs.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:8d6a437e1d223376",
+      "lessonIds": [
+        "SA-C08-cintayati",
+        "SA-C08-avagacchati",
+        "SA-C08-pathati",
+        "SA-C08-likhati"
+      ],
+      "tex": "sanskrit/book/chapters/ch08-mind-verbs.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:f4751f5879a2bf2f",
+      "lessonIds": [
+        "SA-C09-grhnati",
+        "SA-C09-prcchati",
+        "SA-C09-sahayyam-karoti",
+        "SA-C09-snihyati"
+      ],
+      "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
     },
     {
       "language": "spanish",

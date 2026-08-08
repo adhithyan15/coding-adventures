@@ -49,6 +49,58 @@
           "SA-ETYMON-GNO-DESCENDANTS"
         ]
       }
+    },
+    {
+      "chapter": 8,
+      "title": "The Mind and the Palm Leaf",
+      "label": "ch:sa-mind-verbs",
+      "canDo": "I can say that someone thinks, understands, reads and writes in Sanskrit; I can name the class that plants -अय- inside a verb, build \"understands\" out of a prefix and a verb I already had, say what लिख् meant before it meant write, and tell a word worn down by speech (तद्भव) from one carried over whole (तत्सम).",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "SA-C08-likhati",
+        "kind": "production",
+        "summary": "Say लिखति, give the scratching sense its root carried first, run the chapter's four verbs back as root plus class plus ending — the planted -अय- of चिन्तयति, the अव- prefix and the waking बुध् behind understanding, the plain -a- of पठति and लिखति — sort Bengali lekhā and Hindi cintā into तद्भव and तत्सम, and name the two word-histories that needed a label rather than a claim.",
+        "assesses": [
+          "SA-LEX-CINTAYATI-THINK",
+          "SA-GRAMMAR-GANA-TEN-AYA",
+          "SA-LEX-AVAGACCHATI-UNDERSTAND",
+          "SA-ETYMON-BUDH-AWAKE-BUDDHA",
+          "SA-LEX-PATHATI-READ",
+          "SA-HISTORY-TATSAMA-TADBHAVA",
+          "SA-LEX-LIKHATI-WRITE",
+          "SA-ETYMON-LIKH-SCRATCH",
+          "SA-GRAMMAR-DHATU-GANA",
+          "SA-ETYMON-PUNCH-DISPUTED"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:sa-doing-verbs",
+      "canDo": "I can say that someone takes, asks, helps and loves in Sanskrit; I can say संस्कृतं मम प्रियम्, build a verb by putting करोति behind a noun, and point at the English word — grab, pray, friend — that each of these four roots also produced.",
+      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "payoff": {
+        "lesson": "SA-C09-snihyati",
+        "kind": "production",
+        "summary": "Say संस्कृतं मम प्रियम्, give स्निह् its older sense of stickiness and label the disputed snow connection, follow प्रिय west into friend, free and Friday by the p-to-f change that also made pañca into five, run the chapter's four verbs back with grab, pray and comes beside them, and sort प्रिय against Hindi piyā as तत्सम against तद्भव — then place पञ्च beside प्रिय as the other word that travelled in both directions at once.",
+        "assesses": [
+          "SA-LEX-GRHNATI-TAKE",
+          "SA-ETYMON-GHREBH-GRAB",
+          "SA-LEX-PRCCHATI-ASK",
+          "SA-ETYMON-PREK-PRAY-FRAGEN",
+          "SA-LEX-SAHAYYAM-KAROTI-HELP",
+          "SA-ETYMON-SAHAYA-GOES-WITH",
+          "SA-LEX-SNIHYATI-PRIYAM-LOVE",
+          "SA-ETYMON-PRIYA-FRIEND-FREE",
+          "SA-SOUND-GRIMMS-LAW-P-TO-F",
+          "SA-HISTORY-TATSAMA-TADBHAVA",
+          "SA-HISTORY-FOUR-FIVE-ANALOGY",
+          "SA-ETYMON-PANJ-PANCA-COGNATE",
+          "SA-HISTORY-PUNJAB-FIVE-WATERS",
+          "SA-ETYMON-PENTE-DESCENDANTS"
+        ]
+      }
     }
   ]
 }

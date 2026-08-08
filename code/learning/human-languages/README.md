@@ -117,7 +117,7 @@ edition is authored.
 | [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1–31 authored; Chapters 6–31 canonical/generated for app + book |
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–36 authored; Chapters 2–36 canonical/generated for app + book |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–7 authored (lessons + book; Chapters 6–7 canonical/generated) |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1–5 authored (lessons + book; Chapters 3–5 canonical/generated). Chapters 4–5 are the eight core verbs; aspect is named, not finished |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Eight authored shared-spine chapters; 33 canonical lessons, including thirteen core verbs |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Five authored shared-spine chapters; 20 canonical lessons |

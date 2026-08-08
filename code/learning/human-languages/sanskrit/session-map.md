@@ -82,6 +82,24 @@ and the Sanskrit-specific marks (visarga, conjuncts) — that word needs.
 | 38 | pashyati | पश्यति | present from **पश्** ← \**spek-* (*inspect*, *species*, *telescope*); the rest of the verb from **दृश्**, the root of Chapter 4's *darśana* |
 | 39 | janati | जानाति | root **ज्ञा** ← \**gno-* = English **know**; class 9 plants **-ना-** inside; the chapter's six verbs gathered up |
 
+## Chapter 8 — The Mind and the Palm Leaf
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 40 | cintayati | चिन्तयति | class 10 plants **-अय-**; root **चिन्त्** ← \**kweyt-* "to notice" — Russian *čitat* and Lithuanian *skaityti* mean "read", and English got nothing |
+| 41 | avagacchati | अवगच्छति · बुध्यते | "understands" = **अव** "down" on *gacchati*; the second verb **बुध्** ← \**bheudh-* → **बुद्ध**, English *forbid*, *bode* |
+| 42 | pathati | पठति | "recites aloud" first; the ancestor of *paṛhnā*, *poṛa*, *paḍhṇe*; **तत्सम vs तद्भव** named here; own ancestry labelled, not claimed |
+| 43 | likhati | लिखति | class 6; **लिख्** = "to scratch" before "to write"; **रेखा** the same root with *r*; → *likhnā*, *lekhā*, *lihiṇe*; chapter payoff |
+
+## Chapter 9 — Taking, Asking, Helping, Loving
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 44 | grhnati | गृह्णाति | class 9 again, **-ना-** → **-णा-** after ऋ; Vedic *gṛbhṇāti*; ← \**ghrebh-* → *grab*, *grip*, *grasp*; → Marathi *gheṇe* |
+| 45 | prcchati | पृच्छति | class 6, the *cch* of *gacchati*; ← \**prek-* → Latin *precārī* → *pray*, *precarious*; German *fragen* by Grimm's *p*→*f* |
+| 46 | sahayyam-karoti | साहाय्यं करोति | noun + **करोति**; **सहाय** = *saha* "with" + √**इ** "go" — as Latin *comes* is *com-* + *īre*; Bengali still uses the word whole |
+| 47 | snihyati | स्निह्यति · प्रियम् | **स्निह्** "sticky, oily" before "fond"; **प्रिय** ← \**priHos* → *friend*, *free*, *Friday*, and → Hindi *piyā*; chapter payoff |
+
 ## Next
 
 Finish Chapter 6 with numbers 6–10, then introduce the eight cases one at a time.

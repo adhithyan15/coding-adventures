@@ -1049,6 +1049,22 @@
       "scriptSet": "kannada-comparisons"
     },
     {
+      "language": "kannada",
+      "chapter": 33,
+      "title": "Four Verbs of Mind and Page",
+      "label": "ch:ka-mind-verbs",
+      "output": "kannada/book/chapters/ch33-mind-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ka-social-verbs",
+      "output": "kannada/book/chapters/ch34-social-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",
@@ -1262,6 +1278,22 @@
       "title": "The Core Verbs",
       "label": "ch:ml-core-verbs",
       "output": "malayalam/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 33,
+      "title": "The Mind and the Page",
+      "label": "ch:ml-mind-and-page",
+      "output": "malayalam/book/chapters/ch33-mind-and-page.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 34,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ml-taking-asking-helping-liking",
+      "output": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex",
       "scriptSet": "malayalam-comparisons"
     },
     {
@@ -2297,6 +2329,24 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:gu-mind-and-page",
+      "output": "gujarati/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:gu-doing-verbs",
+      "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -2351,6 +2401,24 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 8,
+      "title": "The Mind, the Page, and the Falling Tone",
+      "label": "ch:pa-mind-and-tone",
+      "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, and What Pleases You",
+      "label": "ch:pa-taking-and-liking",
+      "output": "punjabi/book/chapters/ch09-taking-and-liking.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "title": "Numbers One to Five",
@@ -2365,6 +2433,24 @@
       "title": "The Core Verbs",
       "label": "ch:sa-core-verbs",
       "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 8,
+      "title": "The Mind and the Palm Leaf",
+      "label": "ch:sa-mind-verbs",
+      "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:sa-doing-verbs",
+      "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
