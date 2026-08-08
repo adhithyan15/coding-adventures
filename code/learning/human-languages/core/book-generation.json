@@ -541,6 +541,34 @@
       "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
     },
     {
+      "language": "french",
+      "chapter": 28,
+      "title": "Coffee, Tea, Milk, Sugar",
+      "label": "ch:fr-coffee-tea-milk-sugar",
+      "output": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "title": "The People You Introduce",
+      "label": "ch:fr-the-people-you-introduce",
+      "output": "french/book/chapters/ch29-the-people-you-introduce.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "title": "Cheese, Butter, Salt, Egg",
+      "label": "ch:fr-cheese-butter-salt-egg",
+      "output": "french/book/chapters/ch30-cheese-butter-salt-egg.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "title": "Eyes, Nose, Mouth, Stomach",
+      "label": "ch:fr-eyes-nose-mouth-stomach",
+      "output": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "title": "Head and Hand",

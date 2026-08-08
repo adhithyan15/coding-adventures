@@ -62,8 +62,83 @@ between the two Latin daughters can become the lesson:
   *marcher*, *courir*.
 - **Chapter 27 — Sitting, Standing, Opening, Closing**: *s'asseoir*, *se lever* /
   *debout*, *ouvrir*, *fermer*.
+- **Chapter 28 — Coffee, Tea, Milk, Sugar**: *le café*, *le thé*, *le lait*,
+  *le sucre*.
+- **Chapter 29 — The People You Introduce**: *l'ami(e)*, *la famille*,
+  *l'enfant*, *la personne*.
+- **Chapter 30 — Cheese, Butter, Salt, Egg**: *le fromage*, *le beurre*,
+  *le sel*, *l'œuf*.
+- **Chapter 31 — Eyes, Nose, Mouth, Stomach**: *l'œil* (*les yeux*), *le nez*,
+  *la bouche*, *le ventre*.
 
-**All twenty-seven chapters are authored and in the book (134 pages).**
+**All thirty-one chapters are authored and in the book (156 pages).**
+
+### The pre-A1 noun tranche (Chapters 28–31)
+
+Sixteen everyday nouns, one per lesson, all filed under the seven pre-A1 spine
+nodes so they count toward `levelGate.tracks[french].vocabulary` — the
+mechanism confirmed by the Hindi, Arabic and Tamil tranches (HL-C53): the gate
+counts distinct `headword:` strings, one per lesson, so sixteen lessons move
+the count by exactly sixteen. Measured with `report-cli`:
+
+- pre-A1 distinct headwords: **26 → 42** (shortfall against 300: 274 → 258)
+- pre-A1 atoms revisited fewer than twice: **9 → 0** (19 etymology hooks
+  waived)
+- track-wide distinct headwords: 78 → 94
+
+Every word was checked against the lessons directory before writing: *l'eau*,
+*le vin*, *le pain*, *le père/la mère*, *le frère/la sœur*, *la tête* and *la
+main* are already taught, so this tranche adds only what was missing —
+coffee, tea, milk and sugar (Chapter 28); friend, family, child and person
+(Chapter 29); cheese, butter, salt and egg (Chapter 30); eye, nose, mouth and
+stomach (Chapter 31), extending Chapter 17's head and hand rather than
+repeating it.
+
+French's own signature is foregrounded rather than treated as an
+afterthought. Every noun carries its article and its gender is stated at the
+point of teaching, never assumed; Chapter 29 lines up four different
+relationships between grammatical gender and the person named (*l'ami/l'amie*
+changes with its referent, *la famille* is fixed regardless, *l'enfant* is one
+spelling with two articles, *la personne* is fixed feminine even naming a
+man). The definite-article elision already used once, quietly, at *l'eau*
+(Chapter 11) is formalised here for the first time as its own atom,
+`FR-GRAMMAR-ELISION-ARTICLE-02`, introduced at *l'ami* and reused at
+*l'enfant*, *l'œuf* and *l'œil*. Cognates were checked rather than assumed —
+*sel*/*salt*, *œuf*/*egg* and *nez*/*nose* are genuine common-descent cousins
+from a shared PIE root, while *lait*/*milk* share no root at all, and
+*café*/*coffee* and *beurre*/*butter* are borrowings, not inheritances.
+
+Household objects were considered and dropped, matching the finding all three
+prior tranches reported independently: the seven pre-A1 spine nodes are all
+social speech acts and hold no concept for naming a concrete object in front
+of you.
+
+Etymologies were corrected against sources during authoring rather than
+assumed: the popular claim that Roman soldiers were paid in salt (behind
+*salary*) appears in no ancient source and is recorded as a later legend
+attached to a genuine word (*salārium* really is built on *sal*); the tidy
+"*persona* = sound through" story is flagged as doubted on phonetic grounds,
+with Etruscan *phersu* given as the likelier root; and *boútūron*
+("cow-cheese," behind *beurre*/*butter*) is treated as a probable Greek
+folk-reshaping of a foreign word, since butter was never a native Greek or
+Roman product.
+
+Reach-back runs at two cadences. Every lesson practises atoms from the one to
+three lessons immediately before it, closing HL09's R1 window across each
+chapter seam. Each chapter's payoff reaches back further: `FR-C28-sucre`
+recovers *si* and the *langue d'oïl* / *langue d'oc* split from Chapter 18;
+`FR-C29-personne` closes with a "four kinds of gender" synthesis over its own
+chapter and reassesses Chapter 18's *non*; `FR-C30-oeuf` reaches back to
+Chapter 29's elision rule; `FR-C31-ventre` is the tranche's own grand payoff,
+naming one word from each of the four new chapters and re-closing three
+atoms from Chapter 17's *tête* that nothing had revisited since it was
+written. Every one of the nine pre-A1 atoms the continuity ledger reported as
+revisited fewer than twice before this tranche is now revisited at least
+twice, and the tranche adds none of its own below that floor.
+
+All sixteen lessons derive `coreModality: voice` — no table wider than two
+columns, and none of the sight-cue phrases the corpus checks for. The book
+compiles under XeLaTeX at 156 pages with zero `Missing character` warnings.
 
 ### The first verb tranche (Chapters 24–25)
 
@@ -138,7 +213,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Eleven of twenty-seven chapters are authored: 17–27.** Those are exactly the
+**Fifteen of thirty-one chapters are authored: 17–31.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -161,6 +236,10 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 25 Verbs of the Mind | `FR-C25-ecrire` | 6 / 9 = 0.67 |
 | 26 Hearing, Sleeping, Walking, Running | `FR-C26-courir` | 9 / 11 = 0.82 |
 | 27 Sitting, Standing, Opening, Closing | `FR-C27-fermer` | 8 / 11 = 0.73 |
+| 28 Coffee, Tea, Milk, Sugar | `FR-C28-sucre` | 6 / 8 = 0.75 |
+| 29 The People You Introduce | `FR-C29-personne` | 6 / 9 = 0.67 |
+| 30 Cheese, Butter, Salt, Egg | `FR-C30-oeuf` | 5 / 8 = 0.625 |
+| 31 Eyes, Nose, Mouth, Stomach | `FR-C31-ventre` | 5 / 8 = 0.625 |
 
 Chapters 17, 18 and 24–27 have **no terminal consolidation lesson**, so their
 payoff is the last lesson by `sequence`. Chapter 18 still clears the floor

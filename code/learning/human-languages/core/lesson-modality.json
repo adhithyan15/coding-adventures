@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4b847a00f72383f6",
+  "sourceHash": "fnv1a64:63a34b4030b3a8a0",
   "summary": {
-    "totalLessons": 1500,
-    "voice": 989,
-    "sight": 458,
+    "totalLessons": 1515,
+    "voice": 999,
+    "sight": 463,
     "pen": 53,
-    "drivableLessons": 989,
+    "drivableLessons": 999,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 464,
-    "drivablePrefixTotal": 798,
-    "fullyDrivableChapters": 307,
-    "unstartableChapters": 118,
+    "chapterCount": 468,
+    "drivablePrefixTotal": 812,
+    "fullyDrivableChapters": 311,
+    "unstartableChapters": 119,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -799,12 +799,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 89,
-      "voice": 74,
+      "lessonCount": 105,
+      "voice": 90,
       "sight": 12,
       "pen": 3,
-      "drivablePercent": 83,
-      "drivablePrefixTotal": 58,
+      "drivablePercent": 86,
+      "drivablePrefixTotal": 74,
       "modalities": [
         "voice",
         "sight",
@@ -1276,6 +1276,82 @@
             "FR-C27-se-lever",
             "FR-C27-ouvrir",
             "FR-C27-fermer"
+          ]
+        },
+        {
+          "chapter": 28,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C28-cafe",
+            "FR-C28-the",
+            "FR-C28-lait",
+            "FR-C28-sucre"
+          ]
+        },
+        {
+          "chapter": 29,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C29-ami",
+            "FR-C29-famille",
+            "FR-C29-enfant",
+            "FR-C29-personne"
+          ]
+        },
+        {
+          "chapter": 30,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C30-fromage",
+            "FR-C30-beurre",
+            "FR-C30-sel",
+            "FR-C30-oeuf"
+          ]
+        },
+        {
+          "chapter": 31,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C31-oeil",
+            "FR-C31-nez",
+            "FR-C31-bouche",
+            "FR-C31-ventre"
           ]
         }
       ]
@@ -6789,12 +6865,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 113,
-      "voice": 59,
-      "sight": 46,
+      "lessonCount": 112,
+      "voice": 53,
+      "sight": 51,
       "pen": 8,
-      "drivablePercent": 52,
-      "drivablePrefixTotal": 44,
+      "drivablePercent": 47,
+      "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
         "sight",
@@ -6803,22 +6879,19 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 17,
-          "voice": 9,
-          "sight": 0,
+          "lessonCount": 16,
+          "voice": 3,
+          "sight": 5,
           "pen": 8,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-W01-curves-va-ka",
           "drivable": false,
-          "drivableLessonIds": [
-            "TA-C01-vanakkam",
-            "TA-C01-vanakkam-family-register"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -12712,6 +12785,294 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b24800fffba8e018"
+    },
+    {
+      "id": "FR-C28-cafe",
+      "language": "french",
+      "chapter": 28,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f677753e65598624"
+    },
+    {
+      "id": "FR-C28-the",
+      "language": "french",
+      "chapter": 28,
+      "sequence": 880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6a6e4b51d87edfac"
+    },
+    {
+      "id": "FR-C28-lait",
+      "language": "french",
+      "chapter": 28,
+      "sequence": 890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:28cc3c2174f142b7"
+    },
+    {
+      "id": "FR-C28-sucre",
+      "language": "french",
+      "chapter": 28,
+      "sequence": 900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00c2bc0ec639e7d8"
+    },
+    {
+      "id": "FR-C29-ami",
+      "language": "french",
+      "chapter": 29,
+      "sequence": 910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:062537a0241dafc9"
+    },
+    {
+      "id": "FR-C29-famille",
+      "language": "french",
+      "chapter": 29,
+      "sequence": 920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a2e90efec38020ec"
+    },
+    {
+      "id": "FR-C29-enfant",
+      "language": "french",
+      "chapter": 29,
+      "sequence": 930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e9cf8f4ab6d04c4a"
+    },
+    {
+      "id": "FR-C29-personne",
+      "language": "french",
+      "chapter": 29,
+      "sequence": 940,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6cc3b4458e10daaa"
+    },
+    {
+      "id": "FR-C30-fromage",
+      "language": "french",
+      "chapter": 30,
+      "sequence": 950,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3ee35eeb1b9466a7"
+    },
+    {
+      "id": "FR-C30-beurre",
+      "language": "french",
+      "chapter": 30,
+      "sequence": 960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a96c749681b59a3c"
+    },
+    {
+      "id": "FR-C30-sel",
+      "language": "french",
+      "chapter": 30,
+      "sequence": 970,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:414e3e74e5d1db44"
+    },
+    {
+      "id": "FR-C30-oeuf",
+      "language": "french",
+      "chapter": 30,
+      "sequence": 980,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:604800eaae572ca3"
+    },
+    {
+      "id": "FR-C31-oeil",
+      "language": "french",
+      "chapter": 31,
+      "sequence": 990,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:02835b86652cbdbc"
+    },
+    {
+      "id": "FR-C31-nez",
+      "language": "french",
+      "chapter": 31,
+      "sequence": 1000,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5d3e9d735674037d"
+    },
+    {
+      "id": "FR-C31-bouche",
+      "language": "french",
+      "chapter": 31,
+      "sequence": 1010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8ec610a883d2e983"
+    },
+    {
+      "id": "FR-C31-ventre",
+      "language": "french",
+      "chapter": 31,
+      "sequence": 1020,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6aa672499b6665b1"
     },
     {
       "id": "GE-C01-abend",
@@ -32116,42 +32477,6 @@
       "sourceHash": "fnv1a64:46ebaea1981bf7f9"
     },
     {
-      "id": "TA-C01-vanakkam",
-      "language": "tamil",
-      "chapter": 1,
-      "sequence": 10,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:017a3556c7283313"
-    },
-    {
-      "id": "TA-C01-vanakkam-family-register",
-      "language": "tamil",
-      "chapter": 1,
-      "sequence": 20,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:ad7b57e45071d385"
-    },
-    {
       "id": "TA-W01-curves-va-ka",
       "language": "tamil",
       "chapter": 1,
@@ -32340,61 +32665,71 @@
       "id": "TA-C01-aam",
       "language": "tamil",
       "chapter": 1,
-      "sequence": 180,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "sequence": null,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "script-block",
+        "sight-cue"
       ],
-      "coreModality": "voice",
+      "coreModality": "sight",
       "coreReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:33b4b0ca5bf90f6f"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5971b60f9445ebba",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "TA-C01-illai",
       "language": "tamil",
       "chapter": 1,
-      "sequence": 190,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "sequence": null,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93b6d60e45822e82"
+      "sourceHash": "fnv1a64:eb7d4be5afd2b4a8",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "TA-C01-nandri",
       "language": "tamil",
       "chapter": 1,
-      "sequence": 200,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "sequence": null,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d08803bcdd6448e5"
+      "sourceHash": "fnv1a64:e3b598578abbeee7",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "TA-C01-nandri-family-register",
       "language": "tamil",
       "chapter": 1,
-      "sequence": 210,
+      "sequence": null,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -32406,49 +32741,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:df441fa9eb2d1a4a"
-    },
-    {
-      "id": "TA-C01-sari",
-      "language": "tamil",
-      "chapter": 1,
-      "sequence": 220,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:7aaa8c8d3e80fe76"
-    },
-    {
-      "id": "TA-C01-answering",
-      "language": "tamil",
-      "chapter": 1,
-      "sequence": 230,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0ce2d20f0c139e8"
+      "sourceHash": "fnv1a64:1b71da01982a1c62"
     },
     {
       "id": "TA-C01-practice",
       "language": "tamil",
       "chapter": 1,
-      "sequence": 240,
+      "sequence": null,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -32460,7 +32759,67 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:de8fee8d6b42c1e3"
+      "sourceHash": "fnv1a64:9fc5ad0e85df4288"
+    },
+    {
+      "id": "TA-C01-sari",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": null,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8abff912866c6ae0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C01-vanakkam",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": null,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4c4fa4af1fcb85dd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C01-vanakkam-family-register",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": null,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:22c3d53d824d6cd4"
     },
     {
       "id": "TA-C02-en",

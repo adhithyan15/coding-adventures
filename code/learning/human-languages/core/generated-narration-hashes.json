@@ -1194,6 +1194,74 @@
       "jsonHash": "fnv1a64:3ba4f55eaf90446d"
     },
     {
+      "language": "french",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:d00ed4930d14c8e9",
+      "lessonIds": [
+        "FR-C28-cafe",
+        "FR-C28-the",
+        "FR-C28-lait",
+        "FR-C28-sucre"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch28.txt",
+      "json": "french/narration/ch28.json",
+      "textHash": "fnv1a64:b2c109c46c98f6d8",
+      "jsonHash": "fnv1a64:0c5585236ad52f3e"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:220193efe18b704a",
+      "lessonIds": [
+        "FR-C29-ami",
+        "FR-C29-famille",
+        "FR-C29-enfant",
+        "FR-C29-personne"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch29.txt",
+      "json": "french/narration/ch29.json",
+      "textHash": "fnv1a64:d56fbf3d665b4d9d",
+      "jsonHash": "fnv1a64:1aa7e592da9927b9"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:80da4be021458867",
+      "lessonIds": [
+        "FR-C30-fromage",
+        "FR-C30-beurre",
+        "FR-C30-sel",
+        "FR-C30-oeuf"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch30.txt",
+      "json": "french/narration/ch30.json",
+      "textHash": "fnv1a64:01da32a9214c0415",
+      "jsonHash": "fnv1a64:5afda570a9f674bd"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:338fa1f1f48d96bb",
+      "lessonIds": [
+        "FR-C31-oeil",
+        "FR-C31-nez",
+        "FR-C31-bouche",
+        "FR-C31-ventre"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch31.txt",
+      "json": "french/narration/ch31.json",
+      "textHash": "fnv1a64:fbe5fa982de525fa",
+      "jsonHash": "fnv1a64:3ff87a738c13e9ba"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",
