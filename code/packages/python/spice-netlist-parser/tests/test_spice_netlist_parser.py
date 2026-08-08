@@ -1417,6 +1417,21 @@ def test_rejects_invalid_bjt_forward_emission_coefficient(value: str) -> None:
         parse_netlist(f".model fast NPN(NF={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("2", 2.0)])
+def test_parse_bjt_reverse_emission_coefficient(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model fast NPN(NR={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Nr == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_bjt_reverse_emission_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="BJT NR must be finite and positive"):
+        parse_netlist(f".model fast NPN(NR={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

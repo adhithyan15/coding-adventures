@@ -1464,6 +1464,27 @@ Q1 col base emit fast
     },
   );
 
+  it.each([
+    ["0.5", 0.5],
+    ["2", 2.0],
+  ])("parses BJT reverse emission coefficient NR=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(NR=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseEmissionCoefficient: expected,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])(
+    "rejects invalid BJT reverse emission coefficient NR=%s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(NR=${value})`)).toThrow(
+        "BJT NR must be finite and positive",
+      );
+    },
+  );
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
