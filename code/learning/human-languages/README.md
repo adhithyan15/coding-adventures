@@ -101,7 +101,7 @@ edition is authored.
 
 | Language | Family / script | Status |
 |---|---|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–37 authored; 162 lessons; 29 of the 40 core verbs |
+| [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–39 authored; 169 lessons; 36 of the 40 core verbs — and the tranche that leaves **none** unrealized corpus-wide |
 | [French](./french/README.md) | Romance / Latin | Chapters 1–27 authored; 89 lessons; 22 of the 40 core verbs |
 | [German](./german/README.md) | Germanic / Latin | Chapters 1–27 authored; 92 lessons; 22 of the 40 core verbs |
 | [Italian](./italian/README.md) | Romance / Latin | Chapters 1–17 authored; Chapters 2–17 canonical/generated for app + book |

@@ -51,7 +51,7 @@ on.
 
 ## The book
 
-`book/` is the continuous read: all thirty-five chapters, free under CC BY-SA
+`book/` is the continuous read: all thirty-nine chapters, free under CC BY-SA
 4.0. The book prints no audio prompts and no timing cues; the practice pieces
 keep them, because that is what they are for.
 
@@ -68,14 +68,14 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-Chapters 1–6, 19–33 and 34–37 are generated from the same canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–39 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
 handwritten LaTeX during the staged one-source migration. `units/` is legacy
 source material, not a second canonical copy. The complete PDF builds without
 missing glyphs, layout-box warnings, bookmark warnings, duplicate destinations,
-LaTeX warnings, or font fallbacks — 262 pages as of Chapters 36–37. (Length is
+LaTeX warnings, or font fallbacks — 278 pages as of Chapters 38–39. (Length is
 never a cost here, so the page count is expected to rise with every tranche.)
 
 ## Progress
@@ -159,9 +159,30 @@ exactly where a word needs it:
   body-position verbs are reflexive and both were built from a Latin present
   participle; standing as a *state* is **estar de pie**, not a verb at all.
 
+- **Chapter 38 — Bringing, Getting, Playing, Meeting**: traer (← *trahere*,
+  "to drag" — *tractor, attract, abstract*), whose *traigo* joins the hard-*g*
+  club *oigo* opened, and which carries **toward** you where *llevar* carries
+  away → conseguir (← *cōnsequī*, *com-* + *sequī* "to follow"), stem-changing
+  **e→i** *and* spelling-changing, *gu*→*g*, in one form: *consigo* → jugar
+  (← *iocārī* "to joke"), the **only** *u→ue* verb in the language, and the
+  second time Spanish dropped a Latin verb (*lūdere*) whose English family is
+  large → conocer (← *cognōscere*, whose *-sc-* marks *beginning*: not to know
+  but to **come** to know, which is why *conocí* means "I met"), against *saber*
+  for facts.
+- **Chapter 39 — Waiting, Answering, Buying**: three verbs that break nothing,
+  where the whole difficulty is meaning. esperar (← *spērāre* "to hope" ← *spēs*;
+  English **despair** is *dēspērāre*, "to un-hope") carries **wait**, **hope**
+  and **expect** in one word, and only context sorts them → contestar
+  (← *contestārī* "to call witnesses" — the Roman act that opened a lawsuit;
+  English kept the fight in *contest*, Spanish kept the reply), beside
+  *responder* ← *respondēre*, "to pledge back" → comprar (← *comparāre*, *com-* +
+  *parāre* "to procure"), whose resemblance to English *compare* is a **false
+  cousin**: that word descends from a *different* Latin *comparāre*, built on
+  *compār*, "equal".
+
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 37 chapters are authored and in the book (262 pages);
-Chapters 1–6, 19–33 and 34–37 are generated from canonical lessons.** Lessons are
+to its root. **All 39 chapters are authored and in the book (278 pages);
+Chapters 1–6, 19–33 and 34–39 are generated from canonical lessons.** Lessons are
 named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book
 (which LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
 renumbers anything. - **Pronunciation**:
@@ -207,7 +228,7 @@ cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
 Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not
 committed; it is regenerated from source like any other build artefact.
 
-Chapters 1–6, 19–33 and 34–37 are generated from the same canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–39 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
@@ -226,8 +247,8 @@ entry says, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-All 25 Spanish chapters that own a `core/book-generation.json` target are
-authored: **1–6**, **19–33** and **34–37**. Chapters **7–18** are deliberately
+All 27 Spanish chapters that own a `core/book-generation.json` target are
+authored: **1–6**, **19–33** and **34–39**. Chapters **7–18** are deliberately
 absent.
 Their lessons are still schema v1 with no declared `practises.knowledge`, so
 there is no honest payoff to point at; a stub would destroy the very signal the
@@ -235,7 +256,7 @@ HL05 gap report exists to measure. That absence is tracked debt, and it clears
 when those chapters migrate to schema v2.
 
 Chapters 1–6 end in a terminal `practice-mix` lesson, which is the payoff.
-Chapters 19–37 have no practice lesson, so the payoff is the chapter's last
+Chapters 19–39 have no practice lesson, so the payoff is the chapter's last
 lesson by sequence — the one carrying its recombination and wrap-up recall.
 
 ## Files
