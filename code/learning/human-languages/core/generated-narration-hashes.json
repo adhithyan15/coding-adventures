@@ -2282,6 +2282,74 @@
       "jsonHash": "fnv1a64:d2e4dc0f3a88294d"
     },
     {
+      "language": "hindi",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:653dbf1b0b6bc8a9",
+      "lessonIds": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch36.txt",
+      "json": "hindi/narration/ch36.json",
+      "textHash": "fnv1a64:e44857285fd03acd",
+      "jsonHash": "fnv1a64:4198446cda3e697c"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:2db6148216359b7d",
+      "lessonIds": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch37.txt",
+      "json": "hindi/narration/ch37.json",
+      "textHash": "fnv1a64:38eedeb6f5199103",
+      "jsonHash": "fnv1a64:7790b8c287a803bb"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:c24fc0097c1f0772",
+      "lessonIds": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch38.txt",
+      "json": "hindi/narration/ch38.json",
+      "textHash": "fnv1a64:bd290b4fb6df788e",
+      "jsonHash": "fnv1a64:3a231321af214a3f"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:8caddac03ed8c336",
+      "lessonIds": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch39.txt",
+      "json": "hindi/narration/ch39.json",
+      "textHash": "fnv1a64:18ec7f15cf7441fb",
+      "jsonHash": "fnv1a64:eb372939873bf487"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
