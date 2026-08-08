@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:52a1932143b668c3",
+  "sourceHash": "fnv1a64:6f5a49c26bc8ed38",
   "summary": {
-    "totalLessons": 1385,
-    "voice": 909,
+    "totalLessons": 1393,
+    "voice": 917,
     "sight": 423,
     "pen": 53,
-    "drivableLessons": 909,
+    "drivableLessons": 917,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 434,
-    "drivablePrefixTotal": 726,
-    "fullyDrivableChapters": 289,
+    "chapterCount": 436,
+    "drivablePrefixTotal": 734,
+    "fullyDrivableChapters": 291,
     "unstartableChapters": 108,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -1188,12 +1188,12 @@
     },
     {
       "language": "german",
-      "lessonCount": 84,
-      "voice": 73,
+      "lessonCount": 92,
+      "voice": 81,
       "sight": 8,
       "pen": 3,
-      "drivablePercent": 87,
-      "drivablePrefixTotal": 68,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 76,
       "modalities": [
         "voice",
         "sight",
@@ -1645,6 +1645,44 @@
             "GE-C25-fragen",
             "GE-C25-helfen",
             "GE-C25-moegen-lieben"
+          ]
+        },
+        {
+          "chapter": 26,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C26-sitzen",
+            "GE-C26-stehen",
+            "GE-C26-schlafen",
+            "GE-C26-hoeren"
+          ]
+        },
+        {
+          "chapter": 27,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GE-C27-gehen",
+            "GE-C27-laufen",
+            "GE-C27-oeffnen",
+            "GE-C27-schliessen"
           ]
         }
       ]
@@ -13252,6 +13290,150 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:6413600515d017a7"
+    },
+    {
+      "id": "GE-C26-sitzen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:afb92dd9ac5c4a8b"
+    },
+    {
+      "id": "GE-C26-stehen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c5502f60549c0f38"
+    },
+    {
+      "id": "GE-C26-schlafen",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ecd66be4bbd05f73"
+    },
+    {
+      "id": "GE-C26-hoeren",
+      "language": "german",
+      "chapter": 26,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5f32d7202016c02e"
+    },
+    {
+      "id": "GE-C27-gehen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9cfcead00ceeff1c"
+    },
+    {
+      "id": "GE-C27-laufen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b7282b0745a98b5d"
+    },
+    {
+      "id": "GE-C27-oeffnen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6077fbe3623e96ba"
+    },
+    {
+      "id": "GE-C27-schliessen",
+      "language": "german",
+      "chapter": 27,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7fbdf7b45126355b"
     },
     {
       "id": "GU-C01-aabhaar",

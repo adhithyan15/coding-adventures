@@ -186,12 +186,51 @@ Spanish and French where a contrast helps. The recurring decoder is the
   lesson says so → ***mögen, lieben*** (`GE-C25-moegen-lieben`, the payoff) —
   *may*, *love*, and **gern** (*yearn*), German's three ways of liking, where
   *Ich lese gern* has no English shape. **Authored.**
+- **Ch. 26 — Sitting, standing, sleeping, hearing**: ***sitzen***
+  (`GE-C26-sitzen`) — **is** *sit*, and the first naming of the second shift's
+  **t**-branch (Germanic *t* → German *z*/*ss*), which retro-explains *Wasser*
+  (Ch. 11) and *zehn* (Ch. 6); PIE \**sed-* carries Latin *sedēre* into
+  *session* and Greek *hédra* into *cathedral*. "Strong" is separated from "the
+  vowel breaks" → ***stehen*** (`GE-C26-stehen`) — the verb Ch. 24 found inside
+  *verstehen*, now on its own: Germanic ran \**stāną* and \**standaną*,
+  English generalized the nasal stem, German the other, and German's **past**
+  (*ich stand*, *gestanden*) hands the *n* back. Latin *stāre* descends from
+  the same \**steh₂-*, as *sedēre* does from \**sed-* → ***schlafen***
+  (`GE-C26-schlafen`) — the **second** kind of vowel break, *a* → *ä*, in the
+  same *du*/*er* slot; two German changes on *sleep* (**p**→**f**, and *s*→*sch*
+  before *l*/*m*/*n*/*w*, unspelt before *p*/*t*, which is why *stehen* is
+  *SHTAY-en*); and the honest twist that the inherited word for sleep was
+  \**swep-* (*somnus*, *hýpnos*, *sofa*), replaced by German and English
+  **together** → ***hören*** (`GE-C26-hoeren`, the payoff) — the one change
+  they **share**, Gothic *hausjan*'s *s* turned to *r* on both sides; Grimm's
+  law on the *h*, with Greek *akoúein* → *acoustic* keeping the *k*, the same
+  swap as *Hund*/*canis*. The "sharp-eared" root analysis is marked cited but
+  unsettled; ***gehören*** ("to belong") is the false friend. **Authored.**
+- **Ch. 27 — Going, running, opening, closing**: ***gehen*** (`GE-C27-gehen`)
+  — the one verb here that **cannot** be traced past Germanic; both languages
+  borrowed a past (*went* ← *wend*; *ging*/*gegangen* ← \**ganganą*, still
+  English *gangway*), and English's *walk* turns out to be German *walken*,
+  "to full cloth", which is why German needs no separate word → ***laufen***
+  (`GE-C27-laufen`) — **is** *leap*, a fourth **p**/**f** pair; the umlaut break
+  returns on *au* → *äu*; and the **walk/run boundary** is taught honestly:
+  *gehen* unhurried, *rennen* flat out, *laufen* across the line — with the
+  Germany/Austria split recorded, not dropped. *Rennen* and *run* each merge
+  \**rinnaną* with its causative \**rannijaną*, separately → ***öffnen***
+  (`GE-C27-oeffnen`) — *offen* is the *open* Ch. 25 only listed; neither word is
+  a root, both are built on **up** (German *auf*), so *aufmachen* is the recipe
+  spoken aloud. **Separable verbs** are introduced here, on nothing new: *auf*
+  (Ch. 4) + *machen* (Ch. 5), split around *die Hand* → ***schließen***
+  (`GE-C27-schliessen`, the payoff) — **no English cousin at all**; English
+  closes with Latin's *close* and with *shut* (really *shoot*), so this is
+  Ch. 25's *nehmen* story a second time. *Schloss*, *Schlüssel*, *Schluss* are
+  the household German built on the verb it kept; the proposed link to Latin
+  *claudere* is reported as unestablished. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 26+ | Cases (der→den→dem) — now owed explicitly, since Ch. 25 had to route around the accusative article after *mögen* and the dative object of *helfen*; then food, sprechen & the rest of the irregular verbs — following the shared theme order |
+| 28+ | Cases (der→den→dem) — owed since Ch. 25 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 27 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 27 has opened them, food, sprechen & the remaining irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

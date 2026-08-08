@@ -1502,6 +1502,40 @@
       "jsonHash": "fnv1a64:b87fdce5ee07ace4"
     },
     {
+      "language": "german",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:9f1e817b7beec48a",
+      "lessonIds": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch26.txt",
+      "json": "german/narration/ch26.json",
+      "textHash": "fnv1a64:85ffccdf04545476",
+      "jsonHash": "fnv1a64:2987171e016b5ded"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:983170162f81dec0",
+      "lessonIds": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch27.txt",
+      "json": "german/narration/ch27.json",
+      "textHash": "fnv1a64:0a4a47ca028ceec3",
+      "jsonHash": "fnv1a64:a78be525eda88662"
+    },
+    {
       "language": "gujarati",
       "chapter": 1,
       "sourceHash": "fnv1a64:08fb66dea407c28f",
