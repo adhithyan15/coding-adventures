@@ -7,30 +7,30 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:91118e65c81835b4",
+  "sourceHash": "fnv1a64:9a6a2b3c253d9d88",
   "summary": {
-    "totalLessons": 1449,
+    "totalLessons": 1464,
     "voice": 973,
-    "sight": 423,
+    "sight": 438,
     "pen": 53,
     "drivableLessons": 973,
-    "drivablePercent": 67,
+    "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 451,
+    "chapterCount": 455,
     "drivablePrefixTotal": 790,
     "fullyDrivableChapters": 306,
-    "unstartableChapters": 108,
+    "unstartableChapters": 112,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 85,
+      "lessonCount": 100,
       "voice": 44,
-      "sight": 25,
+      "sight": 40,
       "pen": 16,
-      "drivablePercent": 52,
+      "drivablePercent": 44,
       "drivablePrefixTotal": 32,
       "modalities": [
         "voice",
@@ -549,6 +549,62 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "AR-C32-akhadha",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C33-shay",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C34-milh",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 35,
+          "lessonCount": 3,
+          "voice": 0,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C35-jar",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 36,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "AR-C36-zayt",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -9554,6 +9610,321 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2c4164cd56e38bb1",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C33-shay",
+      "language": "arabic",
+      "chapter": 33,
+      "sequence": 860,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d386b81660d43aa0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C33-halib",
+      "language": "arabic",
+      "chapter": 33,
+      "sequence": 870,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:28e14939b0409873",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C33-sukkar",
+      "language": "arabic",
+      "chapter": 33,
+      "sequence": 880,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:db0d13a9953e0c80",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C33-qahwa",
+      "language": "arabic",
+      "chapter": 33,
+      "sequence": 890,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:537116d3714fb966",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C34-milh",
+      "language": "arabic",
+      "chapter": 34,
+      "sequence": 900,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0f5ea9c24ee5e175",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C34-lahm",
+      "language": "arabic",
+      "chapter": 34,
+      "sequence": 910,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fc6790ceb65f68c5",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C34-jubn",
+      "language": "arabic",
+      "chapter": 34,
+      "sequence": 920,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:23468191710d0fc0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C34-taam",
+      "language": "arabic",
+      "chapter": 34,
+      "sequence": 930,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4a7d4b03514270ed",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C35-jar",
+      "language": "arabic",
+      "chapter": 35,
+      "sequence": 940,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c3b5d894189ce2e2",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C35-ibn-bint",
+      "language": "arabic",
+      "chapter": 35,
+      "sequence": 950,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e34369727aec4468",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C35-sadiq",
+      "language": "arabic",
+      "chapter": 35,
+      "sequence": 960,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:59ffe28814224473",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C36-zayt",
+      "language": "arabic",
+      "chapter": 36,
+      "sequence": 970,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:389576737b14f3e0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C36-kub",
+      "language": "arabic",
+      "chapter": 36,
+      "sequence": 980,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:51a3d21b81556a2a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C36-tabaq",
+      "language": "arabic",
+      "chapter": 36,
+      "sequence": 990,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c79df8d04f7b28f9",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "AR-C36-milaqa",
+      "language": "arabic",
+      "chapter": 36,
+      "sequence": 1000,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:001d3e7108432439",
       "detachableSegments": [
         "The letters in this word"
       ]

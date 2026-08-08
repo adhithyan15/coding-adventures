@@ -302,6 +302,53 @@
       "tex": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:f3a63219618807ba",
+      "lessonIds": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "tex": "arabic/book/chapters/ch33-asking-for-a-drink.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:140140ef03991197",
+      "lessonIds": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "tex": "arabic/book/chapters/ch34-asking-for-food.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:bc0d1c1b8dd13f35",
+      "lessonIds": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "tex": "arabic/book/chapters/ch35-people-you-introduce.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:6b0582f629a90a18",
+      "lessonIds": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "tex": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:922476792193ab33",

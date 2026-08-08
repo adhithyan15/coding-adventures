@@ -392,6 +392,65 @@
         "AR-EXT-029-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "AR-PATH-030",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-030-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-031",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-031-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-032",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-032-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "AR-PATH-033",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "before": [],
+      "inline": [
+        "AR-EXT-033-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -430,7 +489,8 @@
       "segments": [
         "AR-PATH-007",
         "AR-PATH-014",
-        "AR-PATH-019"
+        "AR-PATH-019",
+        "AR-PATH-032"
       ],
       "omits": [
         "PRONOUN-I",
@@ -454,7 +514,10 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "AR-PATH-011",
-        "AR-PATH-017"
+        "AR-PATH-017",
+        "AR-PATH-030",
+        "AR-PATH-031",
+        "AR-PATH-033"
       ],
       "omits": [],
       "relocates": {}
@@ -1050,6 +1113,61 @@
         "AR-C32-fakkara",
         "AR-C32-saada",
         "AR-C32-ahabba"
+      ]
+    },
+    {
+      "id": "AR-EXT-030-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name tea, milk, sugar and coffee in Arabic, ask for any of them politely, and tell a borrowed word from one Arabic built on a root.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ]
+    },
+    {
+      "id": "AR-EXT-031-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for salt, meat, cheese and food in Arabic, and I can build the word for a restaurant from a root using the ma- place shape.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ]
+    },
+    {
+      "id": "AR-EXT-032-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name and introduce a neighbour, a son, a daughter and a friend in Arabic, and say which single letter genders each pair.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ]
+    },
+    {
+      "id": "AR-EXT-033-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for oil, a cup, a plate and a spoon in Arabic, and I can tell a broken plural from a sound one and say which nouns take which.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
       ]
     }
   ]

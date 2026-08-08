@@ -505,6 +505,73 @@
       "jsonHash": "fnv1a64:5fbad3ebf5b3dc89"
     },
     {
+      "language": "arabic",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:3e7842268901fc1c",
+      "lessonIds": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch33.txt",
+      "json": "arabic/narration/ch33.json",
+      "textHash": "fnv1a64:3fbe254299914906",
+      "jsonHash": "fnv1a64:b99b8de44fe468da"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:136f91c8179d610f",
+      "lessonIds": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch34.txt",
+      "json": "arabic/narration/ch34.json",
+      "textHash": "fnv1a64:e8a2785242d78fca",
+      "jsonHash": "fnv1a64:0f2897564f2861d3"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:b4d4d18659fdeeb2",
+      "lessonIds": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch35.txt",
+      "json": "arabic/narration/ch35.json",
+      "textHash": "fnv1a64:20ab0ec36923c3d4",
+      "jsonHash": "fnv1a64:7288bc000dfb5ab4"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:9e09dda9d25a9e04",
+      "lessonIds": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch36.txt",
+      "json": "arabic/narration/ch36.json",
+      "textHash": "fnv1a64:6c4026d17057d9f2",
+      "jsonHash": "fnv1a64:5aef7ba16320a2f7"
+    },
+    {
       "language": "bengali",
       "chapter": 1,
       "sourceHash": "fnv1a64:fee72d60309a5ae8",
