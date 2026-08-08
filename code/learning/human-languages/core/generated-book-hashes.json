@@ -1324,6 +1324,30 @@
       "tex": "kannada/book/chapters/ch32-core-verbs.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:f4b47817a871fa1e",
+      "lessonIds": [
+        "KA-C33-yocisu",
+        "KA-C33-artha-maadiko",
+        "KA-C33-oodu",
+        "KA-C33-bare"
+      ],
+      "tex": "kannada/book/chapters/ch33-mind-verbs.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:aae351a33dc5cb4d",
+      "lessonIds": [
+        "KA-C34-tegeduko",
+        "KA-C34-keelu",
+        "KA-C34-sahaya-maadu",
+        "KA-C34-ishta"
+      ],
+      "tex": "kannada/book/chapters/ch34-social-verbs.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:c822987dd25c0a2b",

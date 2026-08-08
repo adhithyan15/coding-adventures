@@ -70,6 +70,28 @@ independent vowels — all in the service of real greetings.
 | 29 | kelasa-maadu | ಕೆಲಸ ಮಾಡು | "to work" (noun + *māḍu*) — the twin of Hindi's *karnā* |
 | 30 | practice | (dialogue) | three verbs, one engine |
 
+> Chapters 6–32 are not yet mapped here; their reading order lives in
+> `curriculum.json` and the book. Sessions 31–66 are those chapters' lessons.
+
+## Chapter 33 — Four Verbs of Mind and Page
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 67 | yocisu | ಯೋಚಿಸು | "to think" ← ಯೋಚನೆ + the ‑isu verb-maker; Sanskrit *yojanā* ← *yuj* "to yoke" |
+| 68 | artha-maadiko | ಅರ್ಥಮಾಡಿಕೊ | "to understand" = *artha* + *māḍi* + the reflexive ‑ಕೊ |
+| 69 | oodu | ಓದು | "to read" ← Dravidian *\*ōtu* "to recite"; the ನೋಡು trap |
+| 70 | bare | ಬರೆ | **"to write"** ← *\*warV-* "draw a line"; *v* → *b* beside *p* → *h* |
+
+## Chapter 34 — Four Verbs Between People
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 71 | tegeduko | ತೆಗೆದುಕೊ | "to take" = *tegedu* + ‑ಕೊ; Kannada matches Telugu on both roots |
+| 72 | keelu | ಕೇಳು | "to ask" **and** "to hear" — one inherited root, both senses |
+| 73 | sahaya-maadu | ಸಹಾಯ ಮಾಡು | "to help"; Sanskrit *sahāya* "one who goes with" + native *māḍu* |
+| 74 | ishta | ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ | **"I like Kannada"** — no verb; a Sanskrit word in a native dative frame |
+
 ## Next
 
-Chapter 6 — the case-endings (Kannada's agglutinative suffixes *-ge, -alli, -inda*).
+The remaining twenty-six of the shared spine's core forty verbs. Chapters 6–32
+still need their sessions written into this map.
