@@ -1,17 +1,17 @@
 Human Languages curriculum gap report
 ====================================
-22 tracks, 1667 lessons, 22 books
+22 tracks, 1669 lessons, 22 books
 0 lessons at or above 300 effective seconds
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
 1507 drivable lessons (90% of the corpus)
-levels: 864 pre-A1, 297 A1, 350 A2, 8 B1; 148 unmapped (91% placed)
+levels: 866 pre-A1, 297 A1, 350 A2, 8 B1; 148 unmapped (91% placed)
 ramp: 40 lessons above 3 new atoms (573 unmeasurable, 66% measurable); 24 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 173 lessons show another script (max 26 glyphs) — context, never charged to the budget
 order: 483 lessons with no declared sequence across 18 tracks; 230 prerequisites and 273 reviews pointing forward
-reinforcement: 472 of 2502 atoms never revisited (19%); missed windows R1 847, R2 1716, R3 1205, R4 131
+reinforcement: 474 of 2507 atoms never revisited (19%); missed windows R1 852, R2 1718, R3 1211, R4 134
 forward references: 468 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 98 of 513 book chapters without an HL05 capability; 25 payoffs below the 0.5 representativeness floor; 3 tracks already clean
@@ -19,9 +19,9 @@ levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not atta
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  1076 voice, 535 sight, 56 pen of 1667 lessons; 90% drivable
+  1079 voice, 532 sight, 58 pen of 1669 lessons; 90% drivable
   tables of more than 3 column(s) count as sight
-  1507 lessons have a voice CORE; 0 carry a detachable writing segment (431 rescued for the hands-free view)
+  1507 lessons have a voice CORE; 0 carry a detachable writing segment (428 rescued for the hands-free view)
   arabic: 44 voice, 40 sight, 16 pen; 79% drivable; 36 chapters, 71 lessons reachable in chapter-prefix order; 35 rescued by a detachable writing segment
   bengali: 14 voice, 43 sight, 0 pen; 98% drivable; 12 chapters, 51 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
   chinese: 5 voice, 2 sight, 0 pen; 100% drivable; 1 chapters, 7 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment
@@ -41,7 +41,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   russian: 34 voice, 11 sight, 5 pen; 88% drivable; 10 chapters, 43 lessons reachable in chapter-prefix order; 10 rescued by a detachable writing segment
   sanskrit: 23 voice, 36 sight, 0 pen; 97% drivable; 13 chapters, 52 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
   spanish: 152 voice, 18 sight, 7 pen; 86% drivable; 41 chapters, 122 lessons reachable in chapter-prefix order
-  tamil: 59 voice, 46 sight, 11 pen; 86% drivable; 38 chapters, 86 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
+  tamil: 62 voice, 43 sight, 13 pen; 85% drivable; 38 chapters, 86 lessons reachable in chapter-prefix order; 38 rescued by a detachable writing segment
   telugu: 39 voice, 35 sight, 0 pen; 93% drivable; 34 chapters, 65 lessons reachable in chapter-prefix order; 30 rescued by a detachable writing segment
   urdu: 31 voice, 15 sight, 0 pen; 100% drivable; 12 chapters, 46 lessons reachable in chapter-prefix order; 15 rescued by a detachable writing segment
 
