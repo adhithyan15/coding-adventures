@@ -1142,6 +1142,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.k2.number_line",
+      "title": "Order and measure the distance between points on a number line — the same comparison and range computations under number-line phrasing",
+      "band": "K-2",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.math.k2.comparison", "adj.math.statistics.range"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/mathematics/comparison.adj", "code/specs/data/adj-formula-stdlib/mathematics/data-displays.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

@@ -18,6 +18,16 @@
 % existing `ExprAst::Call2(BinFn::Max/Min, …)` node the `latex "…"` frontend
 % already reached) minus each other, on the CPU. The audit trail names the
 % formula and its MathWorld citation.
+%
+% `range_two` ALSO answers "how far apart are these two points on a number
+% line" — the two framings are the same computation (the distance between two
+% points on a number line is the larger coordinate minus the smaller, exactly
+% MathWorld's R = Y_N - Y_1 for a two-element sample). Rather than ship a
+% second, duplicated formula for the number-line framing — the same
+% write-once-use-many discipline `comparison.adj`'s header documents for
+% `less_than` — `range_two`'s `surface` synonyms below include the number-line
+% phrasing directly, closing ADJ-STDLIB-COVERAGE.md 5.1's "number lines" gap
+% as a vocabulary extension of an already-shipped, already-tested formula.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -36,7 +46,7 @@ dictionary data_displays_vocab {
     define value_one    : finding  surface "first value", "first number", "one value"
     define value_two    : finding  surface "second value", "second number", "other value"
     define value_three  : finding  surface "third value", "third number", "last value"
-    define range_two    : finding  surface "range", "spread", "how far apart"
+    define range_two    : finding  surface "range", "spread", "how far apart", "distance between two points on a number line", "how many steps apart on a number line"
     define range_three  : finding  surface "range", "spread", "how far apart"
 }
 
