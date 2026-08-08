@@ -354,6 +354,20 @@
       "output": "italian/book/chapters/ch19-backwards-verb.tex"
     },
     {
+      "language": "italian",
+      "chapter": 20,
+      "title": "Carrying, Buying, Waiting, Meeting",
+      "label": "ch:it-carry-buy-wait-meet",
+      "output": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "title": "Two Ways to Play, and Two Verbs That Bend",
+      "label": "ch:it-play-get-answer",
+      "output": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "title": "How Are You?",

@@ -184,6 +184,53 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   verb goes plural for the thing (*mi piacciono le stagioni*), never for you.
   Spanish's *me gusta* (a different Latin verb) and French's *le vin me plaît*
   (the same *placēre*) supplied in full. **Authored.**
+- **Ch. 20 — Carrying, buying, waiting, meeting** (four regular *-are* verbs):
+  ***portare*** (`IT-C20-portare`) ← ***portāre*** "to carry" → portable/porter/
+  portfolio/transport/export/import/report, and — through Old French
+  *desporter*, "to carry the mind away from serious matters" — English
+  ***sport***; it also means **to wear**, and *portato* is the well-behaved
+  participle against Ch. 18–19's *scritto*, *letto*, *preso* → ***comprare***
+  (`IT-C20-comprare`) ← ***comparāre*** built on ***parāre*** "to make ready, to
+  procure" → prepare/repair/separate/apparatus/apparel/emperor, plus Italian
+  *parare* behind *parry*, *parasol*, *parachute*; **and the refusal**: English
+  *compare* is a **different** Latin verb of the same spelling, built on *pār*
+  "equal" (→ par/parity/peer/pair/umpire), so the beautiful-looking link is a
+  homograph and the lesson says so → ***aspettare*** (`IT-C20-aspettare`) ←
+  *ad-* + ***spectāre*** "to watch" → spectator/spectacle/spectrum/inspect/
+  respect/prospect/suspect/species; classical Latin's own waiting-verb was
+  *exspectāre*, which English took as **expect**, so *wait* and *expect* are one
+  verb wearing two prefixes; the *-ct-* → *-tt-* law of *otto* and *scritto*
+  gives the doubled *tt*; and **mi aspetto** narrows the verb to "I expect" with
+  the *mi* of *mi chiamo* and *mi piace* → ***incontrare*** (`IT-C20-incontrare`,
+  the payoff) ← Late Latin ***incontrā*** (*in-* + *contrā* "against, opposite")
+  → encounter/contrary/contrast/counter, and **country** ← *(terra) contrāta*,
+  "the land lying opposite"; its past settles Ch. 16's open question — *ho
+  incontrato Marco* and *ho incontrato Anna*, one unmoved participle, because
+  only *essere* makes it agree — and **conoscere** ← *cognōscere* means "to know
+  a person" in the present but "**met, for the first time**" in *ho conosciuto*.
+  **Authored.**
+- **Ch. 21 — Two ways to play, and two verbs that bend**: ***giocare*** /
+  ***suonare*** (`IT-C21-giocare`) — the split English hides. *Giocare* ←
+  ***iocārī*** from ***iocus*** "a jest" → joke/jocular/**jeopardy** (← *jeu
+  parti*, "a divided game") is for a **game**; *suonare* ← ***sonāre*** from
+  ***sonus*** "a noise" → sound/sonata/resonate/unison/dissonant/**counterpoint**
+  is for an **instrument**. Two unrelated Latin words that English happened to
+  cover with one native verb. The *tu* form **giochi** spells in an *h* to hold
+  the *c* hard — the *h* of *chiedere* and *mi chiamo* — against Ch. 14's
+  *hanno* / *anno*, where the same silent letter does the opposite job →
+  ***ottenere*** (`IT-C21-ottenere`) ← ***obtinēre*** (*ob-* + ***tenēre*** "to
+  hold") → obtain/tenacious/tenant/tenure/tenet/tenor/contain/retain/maintain;
+  *-bt-* flattens to *-tt-* exactly where *-ct-* gave *otto* and *-pt-* gave
+  *scritto*; the stem bends (*ottengo, ottieni, ottiene*), and that *-ngo* is the
+  shape behind Ch. 14's Spanish *tengo* and Portuguese *tenho*, which are this
+  same *tenēre* → ***rispondere*** (`IT-C21-rispondere`, the payoff) ←
+  ***respondēre*** (*re-* "back" + ***spondēre*** "to pledge solemnly") →
+  respond/response/responsible/correspond/despond, and the two personal ones,
+  **sponsor** ← *spōnsor* and **spouse** ← *spōnsus/spōnsa*. Asking was a
+  **hunt** (*quaerere*); answering is a **promise**. The participle **risposto**
+  ought by *preso*'s rule to be *risposo* and is not: it joins the small *-sto*
+  band with *chiesto*, which is Ch. 17's *mano* principle again — an "irregular"
+  form is a regular one from a system you can no longer see. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

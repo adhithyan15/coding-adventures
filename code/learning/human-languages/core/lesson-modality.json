@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:32426636845369e5",
+  "sourceHash": "fnv1a64:3ecdf99fc9ea9045",
   "summary": {
-    "totalLessons": 1417,
-    "voice": 941,
+    "totalLessons": 1424,
+    "voice": 948,
     "sight": 423,
     "pen": 53,
-    "drivableLessons": 941,
-    "drivablePercent": 66,
+    "drivableLessons": 948,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 442,
-    "drivablePrefixTotal": 758,
-    "fullyDrivableChapters": 297,
+    "chapterCount": 444,
+    "drivablePrefixTotal": 765,
+    "fullyDrivableChapters": 299,
     "unstartableChapters": 108,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -2468,12 +2468,12 @@
     },
     {
       "language": "italian",
-      "lessonCount": 66,
-      "voice": 53,
+      "lessonCount": 73,
+      "voice": 60,
       "sight": 13,
       "pen": 0,
-      "drivablePercent": 80,
-      "drivablePrefixTotal": 46,
+      "drivablePercent": 82,
+      "drivablePrefixTotal": 53,
       "modalities": [
         "voice",
         "sight"
@@ -2809,6 +2809,43 @@
             "IT-C19-chiedere",
             "IT-C19-aiutare",
             "IT-C19-mi-piace"
+          ]
+        },
+        {
+          "chapter": 20,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C20-portare",
+            "IT-C20-comprare",
+            "IT-C20-aspettare",
+            "IT-C20-incontrare"
+          ]
+        },
+        {
+          "chapter": 21,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "IT-C21-giocare",
+            "IT-C21-ottenere",
+            "IT-C21-rispondere"
           ]
         }
       ]
@@ -17583,6 +17620,132 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:659830f6ba3b9926"
+    },
+    {
+      "id": "IT-C20-portare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e8abdcf4e264efbc"
+    },
+    {
+      "id": "IT-C20-comprare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b8050f28b31c1da"
+    },
+    {
+      "id": "IT-C20-aspettare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1f1a0e124a21d1c0"
+    },
+    {
+      "id": "IT-C20-incontrare",
+      "language": "italian",
+      "chapter": 20,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0f6221e9edd39864"
+    },
+    {
+      "id": "IT-C21-giocare",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e33387d3c0bd3f0"
+    },
+    {
+      "id": "IT-C21-ottenere",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4eb78dfdee0371e3"
+    },
+    {
+      "id": "IT-C21-rispondere",
+      "language": "italian",
+      "chapter": 21,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:275e5bcc1a3508a9"
     },
     {
       "id": "JA-C01-hai",

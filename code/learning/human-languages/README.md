@@ -104,7 +104,7 @@ edition is authored.
 | [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–37 authored; 162 lessons; 29 of the 40 core verbs |
 | [French](./french/README.md) | Romance / Latin | Chapters 1–27 authored; 89 lessons; 22 of the 40 core verbs |
 | [German](./german/README.md) | Germanic / Latin | Chapters 1–27 authored; 92 lessons; 22 of the 40 core verbs |
-| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–17 authored; Chapters 2–17 canonical/generated for app + book |
+| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–21 authored; Chapters 2–21 canonical/generated for app + book; 73 lessons; 21 of the 40 core verbs |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
 | [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1–30 authored; Chapters 3–30 canonical/generated for app + book; first track to realize core `VERB-*` concepts and the first to reach A2 |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1–33 authored; Chapters 6–33 canonical/generated for app + book; 11 inline writing steps |
