@@ -798,9 +798,9 @@ describe("corpus regression", () => {
       // under the canonical heading, and the whole-lesson figure fell back to 66%.
       // `coreDrivable` is unaffected: those blocks are detachable, so the driving
       // edition itself lost nothing. This is the sight-share seam, not a regression.
-      totalLessons: 1563,
-      voice: 1046,
-      sight: 461,
+      totalLessons: 1615,
+      voice: 1068,
+      sight: 491,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -808,10 +808,10 @@ describe("corpus regression", () => {
       // voice and drivable are unchanged, which is what a writing lesson should do
       // to this table.
       pen: 56,
-      drivableLessons: 1046,
-      drivablePercent: 67,
+      drivableLessons: 1068,
+      drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 480,
+      chapterCount: 497,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -820,9 +820,9 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 850,
-      fullyDrivableChapters: 321,
-      unstartableChapters: 120,
+      drivablePrefixTotal: 870,
+      fullyDrivableChapters: 327,
+      unstartableChapters: 129,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });
