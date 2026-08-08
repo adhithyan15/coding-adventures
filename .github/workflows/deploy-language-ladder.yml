@@ -1,0 +1,46 @@
+# Build and publish the shared-spine Language Ladder app under the repository's
+# existing gh-pages site. Relative Vite asset URLs keep the deployed app usable
+# at /coding-adventures/language-ladder/ without a second build configuration.
+
+name: Deploy Language Ladder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/language-ladder/**"
+      - "code/packages/typescript/human-language-data/**"
+      - "code/learning/human-languages/**"
+      - ".github/workflows/deploy-language-ladder.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-language-ladder
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build and validate Language Ladder
+        working-directory: code/programs/typescript/language-ladder
+        run: bash BUILD
+
+      - name: Deploy to GitHub Pages (language-ladder/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/language-ladder/dist
+          destination_dir: language-ladder
+          keep_files: true

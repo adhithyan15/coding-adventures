@@ -5,18 +5,13 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after HL-I03 merged as #10092. HL-I02 moved next
-because the exact package build exposed one high and one moderate fixable development
-advisory; clearing known dependency debt precedes the next corpus expansion. Current
-baseline after the Japanese Chapter 1 tranche (HL-C40), which followed the Mandarin
-Chinese scale test (HL-C39), the Latin chapter payoffs (HL-C24) and the Spanish
-gentle-ramp split (HL-C18A): **22** registered tracks, **1,133** Markdown lessons,
-**22** downloadable LaTeX books, zero duration violations, and 22 validated
-realization maps containing **354** ordered path segments, **298** typed extension
-nodes, and **964** prerequisite-closed mapped lessons. The preceding Persian and Urdu
-Chapter 5 baseline measured 20 tracks and 1,096 lessons; the four tranches since add
-37 lessons between them (+4 Latin payoffs, +18 Spanish micro-lessons, +7 Mandarin,
-+8 Japanese). Twenty-five mapped non-lexical lessons across 18 tracks now carry
+Last prioritized: 2026-08-08, after HL-Q03 merged as #10100. HL-C13 moved next
+because the books are public but the aligned practice app is still a learner-visible
+broken promise, and priority rule 1 places publication ahead of another corpus tranche.
+Current generated baseline: **22** registered tracks, **1,669** canonical lessons,
+**1,521** mapped lessons, and **22** downloadable LaTeX books spanning **513**
+chapters, **408** of them generated from the canonical lesson AST. Twenty-five mapped
+non-lexical lessons across 18 tracks now carry
 compiled objective activities; 94 mapped non-lexical lessons remain explicit
 activity-coverage debt, including 16 legacy lessons that first need schema-v2
 body contracts. HL-V01 keeps the remaining migration debt reproducible in both
@@ -169,7 +164,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C10 | Queued | Complete A1 and add the A2 and B1 spine tranches with all 20 realization ledgers. | Every declared stage carries nodes; every track has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued | Author chapter capabilities and payoffs across all 20 tracks. | All 379 chapters declare a `canDo` and a closed, representative payoff; gates flip to errors per track as debt clears. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
-| HL-C13 | Queued | Deploy Language Ladder to GitHub Pages. | The app is reachable at `/coding-adventures/language-ladder/`; it is currently referenced by no workflow and has never been published. |
+| HL-C13 | Complete in #10102 | Deploy Language Ladder to GitHub Pages. | The validated relative-path build publishes to `/coding-adventures/language-ladder/` after every app, data-package, or human-language content change, preserving the repository's other Pages subdirectories. |
 | HL-C14 | Complete | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
 | HL-C15 | Queued | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
 | HL-C16 | Complete in this PR | Build the narration export (`narration-cli`) with `--write`/`--check`. | Done. `src/speech.ts` + `src/narration.ts` + `src/narration-cli.ts` emit `<track>/narration/chNN.txt` and `.json` for all 375 chapters, hash-gated by `core/generated-narration-hashes.json` and checked byte-for-byte in CI. `[PAUSE Ns]`, `[REPEAT xN]` and `[YOU …: …]` survive as typed directives; a spoken answer is scored only against a compiled `hl-activity` contract, never against a cue. Tables linearise up to **3 columns** (371 of 442 tables, 272 of 340 table-bearing files); a refused table is *spoken* — size, headings, and reason — and marks its lesson `sight`. `maxLinearisableTableColumns` moved 0 → 3 in `core/chapter-policy.json`, taking the corpus from **63% to 84% drivable** (694 → 925 lessons). This is the audio-script output HL04 named and nothing had ever built. |
@@ -2427,6 +2422,20 @@ problem.
 - The full data-package suite remains the behavioral guard: curriculum parsing,
   generated books, narration, modality, and the derived progress table all run
   against the refreshed toolchain before this item can merge.
+
+## Findings from HL-C13
+
+- Language Ladder already emits relative production asset URLs, so the exact
+  bundle validated by its standalone BUILD can run unchanged below the GitHub
+  project site's `/coding-adventures/language-ladder/` path.
+- The repository's established subdirectory publication model is the safe fit:
+  `peaceiris/actions-gh-pages` writes only `language-ladder/` with `keep_files`,
+  preserving the downloadable books and every other Pages artifact.
+- The deployment watches the app, its canonical data package, and the complete
+  human-language curriculum tree. A content-only lesson change therefore
+  republishes practice without requiring a separate application edit.
+- The public curriculum index and application README now expose the stable URL;
+  no hand-maintained duplicate content was added to make the app public.
 
 ## Completed foundations
 
