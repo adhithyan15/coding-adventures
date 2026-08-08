@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseFont, contoursToPath, boundsOf, type Contour } from "../src/truetype";
 
-const FONT_DIR = resolve(__dirname, "../../../../learning/human-languages/_fonts");
+const TEST_DIR = dirname(fileURLToPath(import.meta.url));
+const FONT_DIR = resolve(TEST_DIR, "../../../../learning/human-languages/_fonts");
 const load = (name: string) => {
   const b = readFileSync(resolve(FONT_DIR, name));
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
@@ -132,10 +134,6 @@ function raster(contours: Contour[], win: Window, W = 110, H = 26): boolean[][] 
   }
   return grid;
 }
-
-const inkColumns = (g: boolean[][]) => g[0].map((_, c) => g.some((row) => row[c]));
-/** Count runs of ink along a row — i.e. how many separate strokes it crosses. */
-const runsInRow = (row: boolean[]) => row.reduce((n, v, i) => n + (v && !row[i - 1] ? 1 : 0), 0);
 
 describe("truetype: reading the vendored fonts", () => {
   it("parses Noto Sans Tamil and finds a Unicode cmap", () => {

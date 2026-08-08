@@ -1812,7 +1812,10 @@ function chooseConfusableShuffled(ranked: number[], count: number): number[] {
   return pool.slice(0, count);
 }
 
-function el(tag: string, className: string): HTMLElement {
+function el<Tag extends keyof HTMLElementTagNameMap>(
+  tag: Tag,
+  className: string,
+): HTMLElementTagNameMap[Tag] {
   const node = document.createElement(tag);
   if (className) node.className = className;
   return node;

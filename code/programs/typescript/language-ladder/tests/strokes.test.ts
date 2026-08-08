@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseFont, boundsOf, type Contour } from "../src/truetype";
 import {
   DUCTUS,
@@ -13,7 +14,8 @@ import {
   type Point,
 } from "../src/strokes";
 
-const FONT_DIR = resolve(__dirname, "../../../../learning/human-languages/_fonts");
+const TEST_DIR = dirname(fileURLToPath(import.meta.url));
+const FONT_DIR = resolve(TEST_DIR, "../../../../learning/human-languages/_fonts");
 const load = (name: string) => {
   const b = readFileSync(resolve(FONT_DIR, name));
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;

@@ -4,7 +4,6 @@ import {
   MAX_BOX,
   intervalFor,
   initStates,
-  isDue,
   dueCount,
   masteredCount,
   pickNext,
