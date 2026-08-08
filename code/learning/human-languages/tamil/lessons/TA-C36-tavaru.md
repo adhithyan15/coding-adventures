@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C36-tavaru
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 820
+sequence: 1090
 chapter: 36
 type: word
 headword: தவறு

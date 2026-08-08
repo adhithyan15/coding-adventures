@@ -4,11 +4,11 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b8ec45b437f75500",
+  "sourceHash": "fnv1a64:093d888489413d50",
   "lessons": [
     {
       "id": "TA-C22-paccai-manjal",
-      "sequence": 460,
+      "sequence": 730,
       "title": "பச்சை, மஞ்சள் — closing the Dravidian arc, holding both patterns at once",
       "headword": "பச்சை, மஞ்சள்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c72b7c8044cb6de",
+      "sourceHash": "fnv1a64:3114da16b86a47ea",
       "notice": null,
       "blocks": [
         {

@@ -1,6 +1,7 @@
 ---
 id: TA-C02-nii-niingal
 chapter: 2
+sequence: 140
 type: word
 headword: நீ / நீங்கள்
 gloss: you (familiar / respectful)

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C33-padi
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 690
+sequence: 960
 chapter: 33
 type: word
 headword: படி

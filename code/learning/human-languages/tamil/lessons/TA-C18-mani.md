@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C18-mani
 spine_node: SPINE-TIME-OF-DAY
-sequence: 390
+sequence: 640
 chapter: 18
 type: word
 headword: மணி
@@ -64,5 +64,4 @@ possible Sanskrit connection for this whole word-family as unresolved, so hold
 Kannada/Telugu/Hindi's hour-words? (**Most likely no** — it's treated as a native
 Dravidian "bell" word that independently reached "hour" the same way, though even
 DEDR flags this as not fully settled.) What semantic path links the meanings?
-(A **bell announces the hour**.) Next: distinguish the likely Sanskrit gem
-homophone and tell the time.
+(A **bell announces the hour**.) Next: writing இல்லை — a second independent vowel, ல, and the ai sign.

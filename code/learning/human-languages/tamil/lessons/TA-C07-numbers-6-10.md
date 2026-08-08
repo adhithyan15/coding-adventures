@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C07-numbers-6-10
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 240
+sequence: 440
 chapter: 7
 type: word
 headword: ஆறு ஏழு எட்டு ஒன்பது பத்து
@@ -89,5 +89,4 @@ one-away-from-ten rather than named outright.
 [PAUSE 3s] Count six to ten in Tamil. (*Āṟu, ēḻu, eṭṭu, oṉpatu, pattu*.) Which
 number is written with **ழ**, and where else does that letter appear? (**Seven**,
 *ēḻu* — the same letter that ends *Tamiḻ*.) How is **nine** built? (*Oṉ* "one" +
-*patu* "ten" → *oṉpatu*, one short of ten.) Next: follow these forms across the
-family and hear Kannada *p* soften to *h*.
+*patu* "ten" → *oṉpatu*, one short of ten.) Next: the puḷḷi — the dot that takes a consonant's built-in vowel away.

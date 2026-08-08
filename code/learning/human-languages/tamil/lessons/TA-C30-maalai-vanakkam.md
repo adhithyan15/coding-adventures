@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C30-maalai-vanakkam
 spine_node: SPINE-TIME-OF-DAY
-sequence: 580
+sequence: 850
 chapter: 30
 type: phrase
 headword: மாலை வணக்கம்

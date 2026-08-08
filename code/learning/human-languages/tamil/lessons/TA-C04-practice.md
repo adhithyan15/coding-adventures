@@ -1,6 +1,7 @@
 ---
 id: TA-C04-practice
 chapter: 4
+sequence: 290
 type: practice
 headword: (dialogue)
 gloss: Chapter 4 recap — the farewells

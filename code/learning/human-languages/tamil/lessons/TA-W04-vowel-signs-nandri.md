@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W04-vowel-signs-nandri
 spine_node: SPINE-MEET-GREET
-sequence: 160
-chapter: 1
+sequence: 530
+delivery: script
+chapter: 10
 type: writing
 headword: "ந, ன, ற"
 gloss: "write the remaining two n-letters and the hard r needed for நன்றி"
@@ -90,5 +91,4 @@ other r. You'll meet the contrast properly later; for now, learn the shape.
 [PAUSE 3s] Name Tamil's three n-letters and their tongue positions. (**ந**
 dental, **ன** alveolar, **ண** retroflex.) What are a consonant's three
 possibilities so far? (Keep the built-in **a** or **remove** it with the puḷḷi.)
-Which letter hangs below the baseline? (**ற**, the hard *ṟ*.) Next: replace the
-vowel, assemble **நன்றி**, and hear why English often writes *nandri*.
+Which letter hangs below the baseline? (**ற**, the hard *ṟ*.) Next: the colours — black, white, red and blue.

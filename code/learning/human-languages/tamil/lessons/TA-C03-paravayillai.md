@@ -1,6 +1,7 @@
 ---
 id: TA-C03-paravayillai
 chapter: 3
+sequence: 220
 type: phrase
 headword: பரவாயில்லை
 gloss: it's okay / no problem / you're welcome

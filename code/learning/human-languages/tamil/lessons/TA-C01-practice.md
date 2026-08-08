@@ -1,6 +1,6 @@
 ---
 id: TA-C01-practice
-sequence: 240
+sequence: 90
 chapter: 1
 type: practice
 headword: (recap)
@@ -17,15 +17,14 @@ reviews_of: [TA-C01-answering, TA-C01-vanakkam-family-register, TA-C01-nandri-fa
 
 ## Warm-up
 
-[PAUSE 2s] Five words, and with them a first handful of Tamil letters read
-straight off the page. Let's gather them — and add the farewell, which carries
-a small piece of Tamil culture.
+[PAUSE 2s] Five words, all of them said and none of them written. Let's gather
+them — and add the farewell, which carries a small piece of Tamil culture.
 
-## Read them back
+## Say them back
 
-Sound each out, left to right, before checking:
+Say each one before you check the meaning:
 
-| Read | | Meaning |
+| | | Meaning |
 |---|---|---|
 | **வணக்கம்** | *vaṇakkam* | hello / greetings |
 | **நன்றி** | *naṉṟi* | thank you |
@@ -33,11 +32,10 @@ Sound each out, left to right, before checking:
 | **இல்லை** | *illai* | no / there isn't |
 | **சரி** | *sari* | okay / correct |
 
-The letters that did it: consonants carry a built-in **"a"**; a **puḷḷi** dot
-removes it; a **vowel sign** (like ி for "i," ை for "ai") swaps the built-in
-vowel; and a word-initial vowel gets a **full letter** (ஆ, இ). Plus the big
-idea — Tamil hears **three** *n*'s, three *l*'s, two *r*'s, and lets **one**
-letter stand for several stop-sounds.
+The Tamil is printed beside each word on purpose. You are not expected to read
+it yet and nothing here will ask you to — but five words is a good number of
+shapes to start getting used to. Writing begins in chapter 4, and by then every
+letter you meet will spell a word you already say.
 
 ## The farewell — why Tamil won't just say "I'm leaving"
 
@@ -60,10 +58,10 @@ time. It's a whole worldview folded into a goodbye. (You can also simply repeat
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read all five words aloud. What does the everyday Tamil goodbye
+[PAUSE 3s] Say all five words aloud. What does the everyday Tamil goodbye
 literally mean, and why isn't it just "I'm leaving"? ("I'll go and come back" —
-a bare "I go" sounds like a final parting, so you promise a return.) What does
-a **puḷḷi** do? (Removes a consonant's built-in *a*.)
+a bare "I go" sounds like a final parting, so you promise a return.) Which of
+the five works both to meet someone and to part from them? (**வணக்கம்**.)
 
 Next chapter: introducing yourself — *en peyar…* ("my name…"), and Tamil's
 **nī / nīṅgaḷ** (familiar / respectful "you").

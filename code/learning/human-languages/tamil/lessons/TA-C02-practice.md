@@ -1,6 +1,7 @@
 ---
 id: TA-C02-practice
 chapter: 2
+sequence: 170
 type: practice
 headword: (dialogue)
 gloss: Chapter 2 recap — the introduction exchange

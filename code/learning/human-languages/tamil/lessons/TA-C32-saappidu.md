@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C32-saappidu
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 640
+sequence: 910
 chapter: 32
 type: word
 headword: சாப்பிடு

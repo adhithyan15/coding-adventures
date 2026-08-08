@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C36-teneer
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 790
+sequence: 1060
 chapter: 36
 type: word
 headword: தேநீர்

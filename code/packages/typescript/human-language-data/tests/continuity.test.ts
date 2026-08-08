@@ -305,20 +305,32 @@ describe("the real corpus", () => {
     // from the order the curriculum path already declared, so the continuity walk can
     // finally see it. The corpus GREW by a lesson over the same change, and that lesson
     // was born sequenced, so it never entered this count.
-    expect(report.summary.lessonsWithoutSequence).toBe(507);
-    expect(report.summary.tracksWithUnorderedLessons).toBe(19);
+    // 507 -> 483: exactly the 24 Tamil lessons in chapters 2-5 that had never declared
+    // a sequence. They had been falling back to ALPHABETICAL order, which is how
+    // chapter 2 came to teach the assembled phrase "en peyar" before "peyar" existed,
+    // and to ask "what is your name?" last, after the chapter's own practice lesson. Nothing detected it, because a chapter with no declared order
+    // has no order to contradict.
+    expect(report.summary.lessonsWithoutSequence).toBe(483);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track —
+    // the fourth of 22, not the first.
+    expect(report.summary.tracksWithUnorderedLessons).toBe(18);
         // 245 -> 240. Not five prerequisites fixed — five that were never real. Without a
     // `sequence` the walk falls back to alphabetical, so "TA-C01-aam requires
     // TA-C01-vanakkam-family-register" read as a forward prerequisite purely because
-    // `aam` sorts first. Declaring chapter 1's order removed the artifact.
-    expect(report.summary.forwardPrerequisites).toBe(240);
+    // `aam` sorts first. Declaring chapter 1's order removed the artifact.    // 240 -> 230, and forwardReviews 285 -> 273 below: ten lessons each stopped
+    // depending on something taught later. No lesson changed; only Tamil's order did.
+    expect(report.summary.forwardPrerequisites).toBe(230);
 
     // Lessons claiming to review material the learner has not reached yet.
     // 300 -> 285. Fourteen are the same alphabetical-fallback artifact as
     // forwardPrerequisites above, four of them in the writing track rather than the
     // word lessons; the fifteenth is a `reviews_of` list that genuinely shrank when its
     // lesson was rewritten.
-    expect(report.summary.forwardReviews).toBe(285);
+    // 285 -> 273. Ten from the ordering above, and two more from a real fix:
+    // TA-C02-magizhcci reviewed TA-C02-ungal-peyar-enna and TA-C04-mindum-sandippom
+    // reviewed TA-C04-naalai, both before those lessons existed. Both were forward
+    // under the old alphabetical fallback too; the hand-authored book runs them the
+    // other way round, so the sequences now follow the book. Tamil forward reviews: 0.
+    expect(report.summary.forwardReviews).toBe(273);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.
@@ -410,7 +422,8 @@ describe("the real corpus", () => {
     // 439 too. All four dropped references sit in TA-W01-curves-va-ka,
     // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
     // stopped counting because chapter 1 now declares its order.
-    expect(report.summary.forwardReferences).toBe(469);
+    // -1, same cause.
+    expect(report.summary.forwardReferences).toBe(468);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -445,12 +458,16 @@ describe("the real corpus", () => {
     // lessons sit within three of each other — a separate change, and one that would
     // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
     // numbers before TA-C01-nandri teaches the word.
-    // Vocabulary wave 4 pushed both further out: R1 834 -> 838, R2 1627 -> 1718. New
-    // pre-A1 nouns keep landing near the end of already-long chapters, so the near
-    // window (R1) barely moves while the far one (R2) absorbs most of the growth --
-    // the same shape every vocabulary wave has had.
-    expect(report.summary.missedByWindow.R1).toBe(838);
-    expect(report.summary.missedByWindow.R2).toBe(1718);
+    // Two independent changes land on this number in the same merge: vocabulary wave 4
+    // (new pre-A1 nouns landing near the end of already-long chapters, moving R1 little
+    // and R2 a lot: 834 -> 838 claimed in isolation) and Tamil's script-interleaving
+    // restructure (spacing script lessons so none can reinforce inside the 1-3 R1
+    // window, while R2's wider 5-15 span still reaches most of them: 834 -> 843, 1627 ->
+    // 1625 claimed in isolation). Re-measured against the merged corpus: R1 834 -> 847
+    // (both effects add), R2 1627 -> 1716 (wave 4's growth dominates, Tamil's recovery
+    // is a small offset against it, not the whole story either claim told alone).
+    expect(report.summary.missedByWindow.R1).toBe(847);
+    expect(report.summary.missedByWindow.R2).toBe(1716);
   });
 
   it("shows what a declared reading order was worth", () => {

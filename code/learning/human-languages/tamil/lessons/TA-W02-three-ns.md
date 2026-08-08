@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W02-three-ns
 spine_node: SPINE-MEET-GREET
-sequence: 130
-chapter: 1
+sequence: 410
+delivery: script
+chapter: 6
 type: writing
 headword: "ந, ன, ண"
 gloss: Tamil writes dental, alveolar, and retroflex n with three separate letters
@@ -69,4 +70,4 @@ sound pattern without inheriting it from one ancestor.
 
 [PAUSE 3s] How many n-letters does Tamil have? (**Three**.) What separates them?
 (Tongue position: **dental, alveolar, retroflex**.) Which two differ by one
-arch? (**ன** has one; **ண** has two.) Next: remove the vowel from a consonant.
+arch? (**ன** has one; **ண** has two.) Next: the numbers one to five.

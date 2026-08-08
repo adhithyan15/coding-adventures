@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C34-utavu
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 730
+sequence: 1000
 chapter: 34
 type: word
 headword: உதவு

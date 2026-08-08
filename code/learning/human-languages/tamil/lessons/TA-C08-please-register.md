@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C08-please-register
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 270
+sequence: 480
 chapter: 8
 type: grammar
 headword: தயவுசெய்து / -உங்கள்

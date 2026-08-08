@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C06-dative-subject
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 200
+sequence: 390
 chapter: 6
 type: phrase
 headword: எனக்குத் தமிழ் தெரியும்

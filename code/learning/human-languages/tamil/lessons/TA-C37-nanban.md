@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C37-nanban
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 840
+sequence: 1110
 chapter: 37
 type: word
 headword: நண்பன்

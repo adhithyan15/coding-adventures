@@ -4,11 +4,11 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5c6398928a9c2ba4",
+  "sourceHash": "fnv1a64:e101514a5078173a",
   "lessons": [
     {
       "id": "TA-C23-naal",
-      "sequence": 470,
+      "sequence": 740,
       "title": "நாள் (nāḷ) — \"day,\" the one this arc's Dravidian languages didn't lose",
       "headword": "நாள்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad1a9f6edfca5d2b",
+      "sourceHash": "fnv1a64:01ed309a4046ac0d",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
     },
     {
       "id": "TA-C23-day-family-register",
-      "sequence": 480,
+      "sequence": 750,
       "title": "நாள் and தினம் — everyday native, formal borrowed",
       "headword": "நாள் / தினம்",
       "romanization": "",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be8dbaeab3323246",
+      "sourceHash": "fnv1a64:43a47e46c1189b5e",
       "notice": null,
       "blocks": [
         {

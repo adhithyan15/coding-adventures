@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C32-vaa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 630
+sequence: 900
 chapter: 32
 type: word
 headword: வா

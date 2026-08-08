@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C19-age-register-grammar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 420
+sequence: 680
 chapter: 19
 type: grammar
 headword: உன் வயசு என்ன? / உனக்கு எத்தனை வயது ஆகிறது?

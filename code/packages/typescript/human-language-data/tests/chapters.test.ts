@@ -240,6 +240,11 @@ describe("corpus snapshot", () => {
     // below the 0.5 floor. That is recorded in the chapter's own `payoff.note` and is
     // a deliberate trade: a chapter with an opening and a thin payoff is better than
     // one with neither, and HL-C25 exists to author real payoff lessons.
+    // Still 25, but the Tamil member CHANGED and the total hides it. tamil:1 left the
+    // list (it introduces no atoms now, so the representativeness gate skips it
+    // entirely rather than passing it), and tamil:13 joined at 1/4 — it gained
+    // TA-W04-i-sign-write-nandri when the writing strand was spread out and its payoff
+    // was not widened. Both are recorded in tamil/chapters.json's own notes.
     expect(report.summary.payoffsNotRepresentative).toBe(25);
   });
 

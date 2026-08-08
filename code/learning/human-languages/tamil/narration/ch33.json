@@ -4,11 +4,11 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0434296a320b16ff",
+  "sourceHash": "fnv1a64:87330318c12938c6",
   "lessons": [
     {
       "id": "TA-C33-ninai",
-      "sequence": 670,
+      "sequence": 940,
       "title": "நினை (ninai) — \"to think,\" which is also \"to remember\"",
       "headword": "நினை",
       "romanization": "ninai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bec4abda60466215",
+      "sourceHash": "fnv1a64:3da01ee3c6063b7b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -174,7 +174,7 @@
     },
     {
       "id": "TA-C33-puri",
-      "sequence": 680,
+      "sequence": 950,
       "title": "புரி (puri) — \"to become clear,\" and who it becomes clear to",
       "headword": "புரி",
       "romanization": "puri",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:33fe6b5286b65e12",
+      "sourceHash": "fnv1a64:f02f6b37ae1e15ce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -384,7 +384,7 @@
     },
     {
       "id": "TA-C33-padi",
-      "sequence": 690,
+      "sequence": 960,
       "title": "படி (paḍi) — \"to read,\" and the letter that is two sounds",
       "headword": "படி",
       "romanization": "paḍi",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:58ad67ba9a906ea4",
+      "sourceHash": "fnv1a64:7eae469fe811e74e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -559,7 +559,7 @@
     },
     {
       "id": "TA-C33-ezhutu",
-      "sequence": 700,
+      "sequence": 970,
       "title": "எழுது (eḻudu) — \"to write,\" and the sound Tamil is named for",
       "headword": "எழுது",
       "romanization": "eḻudu",
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3a36a9291ceaaf55",
+      "sourceHash": "fnv1a64:3cbfae9f73f99b68",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,6 +1,7 @@
 ---
 id: TA-C03-nalam
 chapter: 3
+sequence: 210
 type: word
 headword: நலம்
 gloss: well, wellness, good — and the reply "நான் நலமாக இருக்கிறேன்"

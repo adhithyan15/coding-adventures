@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W03-write-vanakkam
 spine_node: SPINE-MEET-GREET
-sequence: 150
-chapter: 1
+sequence: 490
+delivery: script
+chapter: 8
 type: writing
 headword: "வணக்கம்"
 gloss: assemble the first greeting and hold its doubled consonant
@@ -69,4 +70,4 @@ this book, written by hand.
 
 [PAUSE 3s] Write **வணக்கம்**. What is special about **க்க**? (It is **doubled**
 and held.) Why does the word end in *m*, not *ma*? (Final **ம்** carries a
-**puḷḷi**.) Next: write the letters and vowel sign inside *nandri*.
+**puḷḷi**.) Next: the formal way to say *please forgive me*.

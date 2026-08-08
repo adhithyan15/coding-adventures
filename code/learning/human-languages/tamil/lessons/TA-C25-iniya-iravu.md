@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C25-iniya-iravu
 spine_node: SPINE-TIME-OF-DAY
-sequence: 510
+sequence: 780
 chapter: 25
 type: phrase
 headword: இனிய இரவு

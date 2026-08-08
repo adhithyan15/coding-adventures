@@ -1,6 +1,7 @@
 ---
 id: TA-C04-po
 chapter: 4
+sequence: 240
 type: word
 headword: போ
 gloss: to go (and வா, to come)

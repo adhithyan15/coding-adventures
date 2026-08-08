@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C24-iravu
 spine_node: SPINE-TIME-OF-DAY
-sequence: 490
+sequence: 760
 chapter: 24
 type: word
 headword: இரவு

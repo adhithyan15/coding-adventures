@@ -1,6 +1,6 @@
 ---
 id: TA-C01-nandri-family-register
-sequence: 210
+sequence: 60
 chapter: 1
 type: etymology
 headword: நன்றி / നന്ദി

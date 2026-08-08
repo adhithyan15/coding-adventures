@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C37-ivar-en-nanbar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 860
+sequence: 1130
 chapter: 37
 type: phrase
 headword: இவர் என் நண்பர்

@@ -1,6 +1,7 @@
 ---
 id: TA-C04-poy-varugiren
 chapter: 4
+sequence: 250
 type: phrase
 headword: போய் வருகிறேன்
 gloss: goodbye (lit. "I'll go and come back")

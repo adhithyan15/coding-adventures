@@ -4,11 +4,11 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8ccf2dad23d346e7",
+  "sourceHash": "fnv1a64:1c736a85ee572d92",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
-      "sequence": null,
+      "sequence": 180,
       "title": "எப்படி (eppaḍi) — \"how,\" another of the e- questions",
       "headword": "எப்படி",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:115a665d0b5ae3db",
+      "sourceHash": "fnv1a64:1d3bf7b5cc442f13",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -131,7 +131,7 @@
     },
     {
       "id": "TA-C03-eppadi-irukkirirgal",
-      "sequence": null,
+      "sequence": 190,
       "title": "நீங்கள் எப்படி இருக்கிறீர்கள்? (nīṅgaḷ eppaḍi irukkiṟīrgaḷ?)",
       "headword": "நீங்கள் எப்படி இருக்கிறீர்கள்?",
       "romanization": "",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:54b96e84af48f100",
+      "sourceHash": "fnv1a64:0a99d5e4478d95d7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -273,7 +273,7 @@
     },
     {
       "id": "TA-C03-naan",
-      "sequence": null,
+      "sequence": 200,
       "title": "நான் (nāṉ) — \"I,\" the Dravidian first person",
       "headword": "நான்",
       "romanization": "",
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf125d1e56b58ba0",
+      "sourceHash": "fnv1a64:aaef6470e27b2b3d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -407,7 +407,7 @@
     },
     {
       "id": "TA-C03-nalam",
-      "sequence": null,
+      "sequence": 210,
       "title": "நலம் (nalam) — \"well,\" and how to answer",
       "headword": "நலம்",
       "romanization": "",
@@ -418,7 +418,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7085a36204532448",
+      "sourceHash": "fnv1a64:9e274834464afc76",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -549,7 +549,7 @@
     },
     {
       "id": "TA-C03-paravayillai",
-      "sequence": null,
+      "sequence": 220,
       "title": "பரவாயில்லை (paravāyillai) — \"no problem\"",
       "headword": "பரவாயில்லை",
       "romanization": "",
@@ -560,7 +560,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:706b526524e2e1ab",
+      "sourceHash": "fnv1a64:a7e6694023ebed70",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -687,7 +687,7 @@
     },
     {
       "id": "TA-C03-practice",
-      "sequence": null,
+      "sequence": 230,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -698,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38559b2a97d4823f",
+      "sourceHash": "fnv1a64:61cfedde655dc9d7",
       "notice": null,
       "blocks": [
         {

@@ -7,23 +7,18 @@
       "chapter": 1,
       "title": "Greetings",
       "label": "ch:greetings",
-      "canDo": "I can write வணக்கம் and நன்றி by hand, put the puḷḷi and the ி sign in the right places, and tell Tamil's three n-letters apart by name.",
+      "canDo": "I can greet someone, say yes, no and thank you, agree with sari, and hold a short exchange out loud — entirely by ear.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-RESPOND-BASIC",
         "SPINE-COURTESY-THANK"
       ],
       "payoff": {
-        "lesson": "TA-W04-i-sign-write-nandri",
+        "lesson": "TA-C01-answering",
         "kind": "task",
-        "summary": "Write நன்றி from its three pieces — ன் under a puḷḷi, ற with the ி hook — and say why the seam sounds ndr.",
-        "assesses": [
-          "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
-          "TA-SCRIPT-PULLI-VANAKKAM-01",
-          "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
-          "TA-SCRIPT-I-SIGN-WRITE-NANDRI-02",
-          "TA-SOUND-I-SIGN-WRITE-NANDRI-03"
-        ]
+        "summary": "Hold the whole exchange out loud — greet, answer ஆம் or இல்லை, thank, and close with சரி — using only the ear.",
+        "assesses": [],
+        "note": "Chapter 1 holds no writing lesson and introduces no knowledge atoms at all, because its nine lessons are schema v1 and declare none. `assesses` is therefore empty as a matter of fact, and `payoffsNotClosed` is unaffected by it. Be clear about what that costs: chapters.ts guards the representativeness check with `introduced.size > 0`, so this payoff is not measured rather than passing — the gate that used to report tamil:1 at 5/24 now says nothing about it, and the corpus total holds at 25 only because tamil:13 took its place when TA-W04-i-sign-write-nandri moved there. Modelling spoken atoms is HL-C25 work. The writing strand starts in chapter 4."
       }
     },
     {
@@ -163,7 +158,7 @@
       "chapter": 13,
       "title": "Body Parts",
       "label": "ch:ta-body-parts",
-      "canDo": "I can say head and hand in Tamil and account for why both stayed native here where Hindi's pair came from Sanskrit.",
+      "canDo": "I can say head and hand in Tamil, account for why both stayed native here where Hindi's pair came from Sanskrit, and write நன்றி from its pieces.",
       "spineNodes": [
         "SPINE-CHECK-WELLBEING"
       ],
@@ -171,10 +166,11 @@
         "lesson": "TA-C13-udal-uruppugal",
         "kind": "production",
         "summary": "Say talai and kai, then state the contrast with Hindi's Sanskrit-descended pair.",
-        "assesses": [
-          "TA-ETYMON-KUDUMBAM-01",
-          "TA-LEX-UDAL-URUPPUGAL-01"
-        ]
+   "assesses": [
+    "TA-ETYMON-KUDUMBAM-01",
+    "TA-LEX-UDAL-URUPPUGAL-01"
+   ],
+   "note": "This chapter gained TA-W04-i-sign-write-nandri when the writing strand was spread out, and the payoff was not widened to match, so representativeness fell from 2/2 to 1/4 and this chapter is now the tamil entry in payoffsNotRepresentative — the slot chapter 1 used to hold. Widening it means authoring a payoff that assesses both the body-part vocabulary and the நன்றி spelling, which is HL-C25 work."
       }
     },
     {

@@ -4,11 +4,11 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:44ef396f3945a420",
+  "sourceHash": "fnv1a64:bcea2d1a3a4809af",
   "lessons": [
     {
       "id": "TA-C24-iravu",
-      "sequence": 490,
+      "sequence": 760,
       "title": "இரவு (iravu) — \"night,\" and a register question worth a native speaker's ear",
       "headword": "இரவு",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32036d5e65c5aec1",
+      "sourceHash": "fnv1a64:7838990e6a1e86ab",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
     },
     {
       "id": "TA-C24-night-register-darkness",
-      "sequence": 500,
+      "sequence": 770,
       "title": "Night words — a register hypothesis and a semantic boundary",
       "headword": "இரவு / ராத்திரி / இருள்",
       "romanization": "",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b660a38234786f74",
+      "sourceHash": "fnv1a64:b3a2d9a756bc31c9",
       "notice": null,
       "blocks": [
         {

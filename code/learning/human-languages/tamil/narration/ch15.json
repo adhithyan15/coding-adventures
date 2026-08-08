@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:591fbb252f2da03b",
+  "sourceHash": "fnv1a64:bbff81bbd706c3c6",
   "lessons": [
     {
       "id": "TA-C15-thanneer-arisi",
-      "sequence": 350,
+      "sequence": 590,
       "title": "தண்ணீர், அரிசி, சாதம் — water, and rice, the real staple",
       "headword": "தண்ணீர் அரிசி சாதம்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69c3cb0567033e1e",
+      "sourceHash": "fnv1a64:1a1b674fcef23d70",
       "notice": null,
       "blocks": [
         {

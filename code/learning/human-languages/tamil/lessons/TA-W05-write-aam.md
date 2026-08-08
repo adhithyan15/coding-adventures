@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W05-write-aam
 spine_node: SPINE-MEET-GREET
-sequence: 182
-chapter: 1
+sequence: 610
+delivery: script
+chapter: 16
 type: writing
 headword: "ஆம்"
 gloss: a word that begins with a vowel gets a full vowel letter, not a sign
@@ -91,4 +92,4 @@ it did at the end of **வணக்கம்**.
 
 [PAUSE 3s] Write **ஆம்**. When does a Tamil vowel get a full letter instead of
 a sign? (**When it starts a word** — nothing precedes it to hook onto.) What
-closes the word? (**ம்** — the puḷḷi on ம.) Next: the word for no.
+closes the word? (**ம்** — the puḷḷi on ம.) Next: noon and midnight.

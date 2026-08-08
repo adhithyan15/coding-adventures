@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C33-ninai
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 670
+sequence: 940
 chapter: 33
 type: word
 headword: நினை
