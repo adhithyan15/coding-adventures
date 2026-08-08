@@ -45,8 +45,21 @@ you can read straight through.
   shared spine's verb node, held together by the fact that the infinitive
   ending **-વું** is Gujarati's **neuter**, so every verb is named in the third
   gender. Every lesson is listenable end to end.
+- **Chapter 8 — The Mind and the Page** ([`lessons/GU-C08-*`](./lessons/)):
+  vichārvũ, samajvũ, vā̃chvũ, lakhvũ — think, understand, read, write. Held
+  together by what each root was doing *before* it named a mental act: ranging
+  about, waking up, speaking, scratching. Adds the medial *anusvāra* (the nasal
+  dot inside **વાંચવું**, not at the end of it) and the Prakrit
+  assimilate-then-simplify path *dhy* → *jjh* → *j*.
+- **Chapter 9 — Taking, Asking, Helping, Liking** ([`lessons/GU-C09-*`](./lessons/)):
+  levũ, pūchhvũ, madad karvī, gamvũ — take, ask, help, like. Two Gujarati facts
+  get their own blocks here: **મદદ કરવી** ends in the *feminine* **-ી** because
+  *madad* is a feminine noun and the infinitive agrees with it (against neuter
+  *kām karvũ*), and **મને ગુજરાતી ગમે છે** has no room for *hũ* at all — *gamvũ*
+  descends from *gamyate*, the **passive** of *gam-* "to go", so it was born
+  without a doer.
 
-Chapters 1–7 are in the book.
+Chapters 1–9 are in the book.
 
 ---
 
@@ -72,6 +85,29 @@ first-person can-do sentence and the lesson that pays it off.
   with stem, person-ending, and the copula છે."* Payoff:
   [`GU-C07-jaanvun`](./lessons/GU-C07-jaanvun.md), a production task — run all
   six stems, hold the retroflex **ણ**, and build *hũ jāṇũ chhũ*.
+- **Chapter 8** — *"I can say that I think, understand, read and write in
+  Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name
+  what each of the four roots was doing before it meant a mental act."* Payoff:
+  [`GU-C08-lakhvun`](./lessons/GU-C08-lakhvun.md), a production task — say *hũ
+  mārũ nām lakhũ chhũ* and run the four roots back. Assesses **10 of the
+  chapter's 10** atoms.
+- **Chapter 9** — *"I can take, ask, help and say what I like in Gujarati,
+  explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter,
+  and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject."* Payoff:
+  [`GU-C09-gamvun`](./lessons/GU-C09-gamvun.md), a production task — say *mane
+  gujarātī game chhe* against *hũ gujarātī bolũ chhũ*. Assesses **10 of the
+  chapter's 10** atoms.
+
+Chapters 8 and 9 are each four lessons and ten atoms, against the
+`maxNewAtomsPerChapter` budget of twelve. Splitting the eight verbs across two
+chapters rather than one was deliberate: a single eight-lesson chapter would
+have run to roughly twenty atoms, and chapter 7 is already over budget at
+sixteen.
+
+Both payoffs also reach back past their own chapter. Between them the new
+lessons rescue every one of the twelve Gujarati atoms that had been introduced
+and never practised again, at the cost of three new ones in the final lesson:
+the track moves from **12 orphans of 24 atoms** to **3 of 44**.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -84,9 +120,25 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gujarati font
 (`../../_fonts/NotoSansGujarati-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gujarati runs use that font while section bookmarks use the lessons'
 Latin romanization.
-The seven-chapter build is warning-clean — 38 pages, zero `Missing character`,
+The nine-chapter build is warning-clean — 54 pages, zero `Missing character`,
 zero undefined references — and its PDF outline preserves readable Gujarati in
 the handwritten chapters alongside generated bookmark-safe romanization.
+
+Two font rules the Gujarati track has to obey, both verified by compiling rather
+than assumed. **Punctuation must stay outside the `\gu{}` span**: Noto Sans
+Gujarati carries no basic-Latin comma, hyphen or question mark, so a span
+containing one emits `Missing character`. The book generator groups only
+characters whose Unicode script is Gujarati, so it gets this right by
+construction — but a *space* is fine, which is why `\gu{મદદ કરવી}` is safe.
+**Non-Gujarati scripts in lesson prose are not covered by `\gu{}` at all** and
+fall through to Latin Modern Roman, which has no Arabic or Devanagari: source
+links to Arabic *madad* and Sanskrit *gamyate* are titled in romanization for
+exactly this reason. Latin Modern Roman also lacks `ʰ`, `ʷ`, `ḱ` and the
+subscript digits, so PIE roots are written in the plain Pokorny-style ASCII the
+rest of the corpus uses (`*kwel-`, `*bheudh-`, `*wekw-`, `*prek-`, `*gwem-`).
+The nasalised vowels Gujarati romanization needs — `ũ`, `ĩ`, `ã` — are declared
+in [`book/preamble.tex`](./book/preamble.tex) via `newunicodechar`, and `ā̃`
+(as in *pā̃ch*, *vā̃chvũ*) renders without one.
 
 ## Files
 

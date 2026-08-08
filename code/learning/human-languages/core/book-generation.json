@@ -2297,6 +2297,24 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:gu-mind-and-page",
+      "output": "gujarati/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:gu-doing-verbs",
+      "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "title": "Numbers One to Five",

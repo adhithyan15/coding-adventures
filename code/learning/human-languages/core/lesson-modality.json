@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:986ec88524604381",
   "summary": {
-    "totalLessons": 1345,
+    "totalLessons": 1353,
     "voice": 893,
-    "sight": 399,
+    "sight": 407,
     "pen": 53,
     "drivableLessons": 893,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 424,
+    "chapterCount": 426,
     "drivablePrefixTotal": 710,
     "fullyDrivableChapters": 285,
-    "unstartableChapters": 102,
+    "unstartableChapters": 104,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -1651,11 +1651,11 @@
     },
     {
       "language": "gujarati",
-      "lessonCount": 39,
+      "lessonCount": 47,
       "voice": 17,
-      "sight": 22,
+      "sight": 30,
       "pen": 0,
-      "drivablePercent": 44,
+      "drivablePercent": 36,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -1774,6 +1774,34 @@
             "GU-C07-jovun",
             "GU-C07-jaanvun"
           ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C08-vicharvun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C09-levun",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -11898,6 +11926,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:0a53c84fae291b0a"
+    },
+    {
+      "id": "GU-C08-vicharvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ab9bbe40fe19ee9e"
+    },
+    {
+      "id": "GU-C08-samajvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e619706cc4866b8e"
+    },
+    {
+      "id": "GU-C08-vanchvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6a213e7937e89b80"
+    },
+    {
+      "id": "GU-C08-lakhvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cb81bfc0db3e69fa"
+    },
+    {
+      "id": "GU-C09-levun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 460,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0b5eb0b51653ba96"
+    },
+    {
+      "id": "GU-C09-puchhvun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 470,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b616a00d37b78087"
+    },
+    {
+      "id": "GU-C09-madad-karvi",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 480,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9b33f51af27e06a4"
+    },
+    {
+      "id": "GU-C09-gamvun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 490,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e9696c743f91f3a9"
     },
     {
       "id": "HI-W01-shirorekha-na-ma",

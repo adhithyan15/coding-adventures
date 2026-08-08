@@ -57,17 +57,53 @@ trade layer**. The script is taught **inline**, never as a gated reading course.
   **જાણવું** *jāṇvũ* ← *jñā-*, the chapter's widest web (*know, can, cunning,
   ken, uncouth, notice, notion, cognition, ignore, diagnosis, agnostic*).
   Every lesson is `voice` — the whole chapter is drivable. **Authored.**
+- **Ch. 8 — The Mind and the Page** (`GU-C08-vicharvun` → `samajvun` →
+  `vanchvun` → `lakhvun`): four more verbs on `SPINE-SAY-WHAT-I-DO`, held
+  together by what each root was doing **before** it named a mental act.
+  **વિચારવું** *vichārvũ* is the noun *vichār* with a verb ending put on it, on
+  *car-* "to range about" (PIE \**kwel-* "turn" → *wheel*, *cycle*, *colony*) —
+  and it is **built rather than inherited**, the same Sanskrit-reaching-forward
+  habit that put the *r* back into *traṇ*. **સમજવું** *samajvũ* ← *sambudhyate*
+  on *budh-* "to wake," the root of **buddha**, with the Prakrit path *dhy* →
+  *jjh* → *j* given as the same **assimilate-then-simplify** pair that turned
+  *dv* → *bb* → *b* in *be*. **વાંચવું** *vā̃chvũ* ← *vācayati*, the **causative**
+  of *vac-*, so reading is *making a page speak* (Latin *vōx* → *voice*,
+  *vowel*, *advocate*) — and it carries the first **medial** nasal dot, in the
+  middle of the word rather than at its end, matching *pā̃ch*. **લખવું**
+  *lakhvũ* ← *likhati*, where *likh-* meant **to scratch** (Sanskrit *rekhā*
+  "a line"), a second honest dead end after *khāvũ*. Chapter payoff, at 1.00
+  representativeness. **Authored.**
+- **Ch. 9 — Taking, Asking, Helping, Liking** (`GU-C09-levun` → `puchhvun` →
+  `madad-karvi` → `gamvun`): the last four of the eight verbs fifteen other
+  tracks teach. **લેવું** *levũ* ← *labhate*, PIE \**lebh-* "work, harvest,
+  gain" — taking named as **earning**, with Latin *labor* reported as
+  *probable, not proven* and set beside the certainty of *jāṇvũ* and the blank
+  of *khāvũ*. **પૂછવું** *pūchhvũ* ← *pṛcchati*, PIE \**prek-*, the verb English
+  kept only in its religious clothes (*pray*, *precarious*) — and its initial
+  **p** survived precisely because the intervocalic-*p* rule from *āvvũ* has a
+  condition. **મદદ કરવી** *madad karvī* is Arabic *madad* through Persian, root
+  *m-d-d* "to extend," and is the track's first place where the infinitive
+  **stops being neuter**: *madad* is feminine, so the verb agrees and gives
+  *karvī*, against neuter *kām karvũ*. **ગમવું** *gamvũ* ← *gamyate*, the
+  **passive** of *gam-* "to go" (English **come**) — a verb born without a doer,
+  so *mane gujarātī game chhe* has no room for *hũ* at all, and a **native**
+  Indo-Aryan word where Hindi and Urdu use the Persian loan *pasand*. Chapter
+  payoff, at 1.00 representativeness. **Authored.**
+
+Gujarati's core-verb coverage moves **6/40 → 14/40 (35%)**.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 6 continuation | Numbers 6–10 (native words + Gujarati digits ૧૨૩), counting, age |
-| 7 continuation | The rest of the core verbs (*karvũ*, *āpvũ*, *levũ*, *pīvũ*, *sāmbhaḷvũ*, *samajvũ*) on the same node |
-| 8 | Family (*mātā*, *pitā*, *bhāī*, *ben*) and the honorific *-jī* / *-bhāī* / *-ben* |
-| 9 | Food and the market — where the Perso-Arabic and Portuguese loans cluster (*batākā* ← Portuguese *batata*) |
-| 10+ | Past and future tenses (where the three genders return on the verb), postpositions, everyday sentences |
+| 7–9 continuation | The remaining core verbs (*karvũ*, *āpvũ*, *pīvũ*, *sāmbhaḷvũ*, *shīkhvũ*) on the same node |
+| 10 | Family (*mātā*, *pitā*, *bhāī*, *ben*) and the honorific *-jī* / *-bhāī* / *-ben* |
+| 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster (*batākā* ← Portuguese *batata*) |
+| 12+ | Past and future tenses (where the three genders return on the verb), postpositions, everyday sentences |
 
 Note: Gujarati's plain present tense is **gender-neutral** (a man and a woman
-both say *hũ bolũ chhũ*); the three genders surface on **adjectives** and in the
-**past** tense — deferred to the tense chapters so the first verbs stay simple.
+both say *hũ bolũ chhũ*); the three genders surface on **adjectives**, in the
+**past** tense, and — as Chapter 9 shows with *madad karvī* — on an
+**infinitive agreeing with a feminine object**. The past tense stays deferred to
+the tense chapters so the first verbs stay simple.

@@ -1632,6 +1632,40 @@
       "jsonHash": "fnv1a64:f9fee8f10c7c2515"
     },
     {
+      "language": "gujarati",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:33c76eefacc73e1a",
+      "lessonIds": [
+        "GU-C08-vicharvun",
+        "GU-C08-samajvun",
+        "GU-C08-vanchvun",
+        "GU-C08-lakhvun"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch08.txt",
+      "json": "gujarati/narration/ch08.json",
+      "textHash": "fnv1a64:3f6836875489ec21",
+      "jsonHash": "fnv1a64:50016dfd941228ec"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:93ef3a2ee586139d",
+      "lessonIds": [
+        "GU-C09-levun",
+        "GU-C09-puchhvun",
+        "GU-C09-madad-karvi",
+        "GU-C09-gamvun"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch09.txt",
+      "json": "gujarati/narration/ch09.json",
+      "textHash": "fnv1a64:a7ad4a64d98d2297",
+      "jsonHash": "fnv1a64:83705f0fe3be5d80"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "sourceHash": "fnv1a64:f6301764a50979e5",
