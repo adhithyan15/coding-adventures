@@ -654,6 +654,33 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bread",
+      "label": "ch:gu-request-food-drink",
+      "output": "gujarati/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 11,
+      "title": "Friend and Family",
+      "label": "ch:gu-friend-and-family",
+      "output": "gujarati/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:gu-face-parts",
+      "output": "gujarati/book/chapters/ch12-face-parts.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "title": "Numbers One to Five",

@@ -1801,6 +1801,57 @@
       "jsonHash": "fnv1a64:83705f0fe3be5d80"
     },
     {
+      "language": "gujarati",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:bffdebb4ee416147",
+      "lessonIds": [
+        "GU-C10-paani",
+        "GU-C10-chaa",
+        "GU-C10-dudh",
+        "GU-C10-rotli"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch10.txt",
+      "json": "gujarati/narration/ch10.json",
+      "textHash": "fnv1a64:85f88e7616728f0d",
+      "jsonHash": "fnv1a64:b75e09dace785ef2"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:268df2f35691414a",
+      "lessonIds": [
+        "GU-C11-mitra",
+        "GU-C11-kutumb",
+        "GU-C11-bhai",
+        "GU-C11-bahen"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch11.txt",
+      "json": "gujarati/narration/ch11.json",
+      "textHash": "fnv1a64:fabda219f9c195c8",
+      "jsonHash": "fnv1a64:c2370f24eca9ae58"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:dd6356418ad747f7",
+      "lessonIds": [
+        "GU-C12-aankh",
+        "GU-C12-kaan",
+        "GU-C12-modhu",
+        "GU-C12-naak"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch12.txt",
+      "json": "gujarati/narration/ch12.json",
+      "textHash": "fnv1a64:a41b8946aab1a71c",
+      "jsonHash": "fnv1a64:2d898857829749aa"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "sourceHash": "fnv1a64:2a794f935169484b",

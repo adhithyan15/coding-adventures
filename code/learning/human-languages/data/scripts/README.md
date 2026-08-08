@@ -130,8 +130,8 @@ and given the same citation.
    leave `penLifts` out.
 
 Only **ம** currently has an authored ductus. The remaining prose stroke orders —
-190 letters across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
-`devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10,
+192 letters across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
+`devanagari` 28, `gujarati` 31, `hebrew` 22, `perso-arabic` 9, `tamil` 10,
 `urdu-nastaliq` 13) — are **unverified for pen lifts** and are tracked as
 `HL-C19` in the [backlog](../../BACKLOG.md).
 

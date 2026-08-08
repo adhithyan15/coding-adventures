@@ -154,6 +154,51 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "GU-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "GU-C10-paani",
+        "GU-C10-chaa",
+        "GU-C10-dudh",
+        "GU-C10-rotli"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-C11-mitra",
+        "GU-C11-kutumb",
+        "GU-C11-bhai",
+        "GU-C11-bahen"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-015",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GU-C12-aankh",
+        "GU-C12-kaan",
+        "GU-C12-modhu",
+        "GU-C12-naak"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -190,7 +235,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "GU-PATH-005"
+        "GU-PATH-005",
+        "GU-PATH-014"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -199,7 +245,8 @@
     },
     "SPINE-CHECK-WELLBEING": {
       "segments": [
-        "GU-PATH-006"
+        "GU-PATH-006",
+        "GU-PATH-015"
       ],
       "omits": [
         "WORD-GOOD",
@@ -208,7 +255,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "GU-PATH-013"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -547,6 +596,48 @@
       "prerequisites": [],
       "lessons": [
         "GU-C01-namaste"
+      ]
+    },
+    {
+      "id": "GU-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati using the request pattern I build in this chapter.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C10-paani",
+        "GU-C10-chaa",
+        "GU-C10-dudh",
+        "GU-C10-rotli"
+      ]
+    },
+    {
+      "id": "GU-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C11-mitra",
+        "GU-C11-kutumb",
+        "GU-C11-bhai",
+        "GU-C11-bahen"
+      ]
+    },
+    {
+      "id": "GU-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the eye, ear, mouth, and nose in Gujarati.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-C12-aankh",
+        "GU-C12-kaan",
+        "GU-C12-modhu",
+        "GU-C12-naak"
       ]
     }
   ]
