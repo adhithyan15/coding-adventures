@@ -98,6 +98,10 @@ cd code/packages/lua/qr-code
 mise exec -- busted spec/ --verbose
 ```
 
+The monorepo build tool uses `BUILD_windows` on Windows to install the same
+local GF256, paint-instructions, and barcode-2d closure before running these
+specs.
+
 ## Version Capacity Reference (ECC M)
 
 | Version | Size   | Numeric | Alphanumeric | Byte |

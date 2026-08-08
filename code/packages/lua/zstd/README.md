@@ -123,6 +123,9 @@ cd tests && LUA_PATH="../src/?.lua;../src/?/init.lua;../../lzss/src/?.lua;../../
     busted . --verbose --pattern=test_
 ```
 
+On Windows, use the monorepo build tool so it selects `BUILD_windows`, keeps
+the LZSS bootstrap hardened, and supplies the equivalent Windows `LUA_PATH`.
+
 ## Test cases
 
 | ID | Description | Key assertion |

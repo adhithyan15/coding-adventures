@@ -104,8 +104,10 @@ Applies coercions (number → string when schema says `type="string"`) and filte
 
 ```sh
 # From the package directory
-luarocks make --local coding-adventures-json-serializer-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-json-serializer-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
 ```
 
-Or use the BUILD file with the monorepo build tool.
+Or use the BUILD file with the monorepo build tool. On Windows it selects
+`BUILD_windows`, which installs the same local prerequisite closure before the
+package.

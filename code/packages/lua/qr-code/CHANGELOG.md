@@ -3,6 +3,13 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- Added a standalone `BUILD_windows` recipe that installs GF256,
+  paint-instructions, and barcode-2d before the QR package and specs.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

@@ -886,6 +886,51 @@ single-package TypeScript strict-build repairs because it closes the largest
 materialized standalone-build family across compiler, serializer, QR, WASM,
 and compression front doors.
 
+Before implementing that selected wave, the clean parity branch rebased from
+`e634ba0671` onto current `origin/main` at `005c38161e`. The Python build-tool
+validator reproduced exactly ten Lua failures: canonical recipes bootstrap
+local siblings, but the packages had no `BUILD_windows` standalone recipes.
+The implementation adds exactly those ten Windows recipes, preserving every
+canonical prerequisite and installing a 67-rock transitive closure in
+dependency order with Windows path/redirect syntax, hardened sibling installs,
+hardened final self-installs, and the package-specific test commands. Fresh
+isolated LuaRocks trees pass all ten real package suites with 351 successes,
+zero failures, zero errors, and zero pending tests; representative production
+coverage reaches 90.50% for `wasm_module_encoder`. The repository Python
+validator is now clean; the full Go validator retains its exact unrelated
+17-diagnostic Perl/Python/Swift baseline and reports zero Lua diagnostics.
+
+That audit also materialized a build-tool conformance gap rather than widening
+the package repair: Python and Lua validation reject an absent Windows Lua
+closure, while Go currently skips the comparison when either recipe is absent.
+The pending `build-tool-go-lua-missing-windows-validation-parity` item owns the
+absent-override fixture and focused Go validator alignment after this wave.
+
+Fresh-tree validation also showed that several canonical Unix Lua recipes list
+only direct sibling rocks even though unpublished transitive local rocks are
+required. The pending
+`build-file-standalone-integrity-lua-transitive-unix` item owns a complete
+canonical-recipe audit and isolated-tree repair after the Windows wave.
+Separately, the Python build tool's single global alias table maps 251 of the
+258 canonical Lua rock aliases to non-Lua package identities on the current
+4,829-package snapshot. The pending
+`build-tool-python-ecosystem-scoped-alias-resolution` item owns shared collision
+fixtures, ecosystem-scoped ordinary aliases, intentional qualified
+cross-language edges, and real-graph comparison with the Go oracle.
+
+After ready-for-review parity PR #10093 merged at `4833046722`, the
+collision-checked schema-3 inventory contains 1,264 established implementation
+identities and 4,420 package slots across 15 lanes, 173 high-consensus packages
+with 269 missing slots, 814 singletons with 11,396 missing slots, 618 Rust
+singletons, zero canonical collisions, and zero unknown buckets. The merged
+JFET VTOTC work advances the existing shared SPICE parameter-validation owner
+without adding an identity. Dart ZIP fills one established high-consensus slot;
+new C/C++ Deflate, ZIP, and ZStd implementations remain in emerging lanes and
+do not enter the established denominator. This refresh leaves the already
+selected Lua Windows closure as the coherent in-progress dependency root; the
+new Go-validator, Unix-closure, and Python-alias items remain separately
+ordered follow-ups.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

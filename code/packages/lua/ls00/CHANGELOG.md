@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-ls00` package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Added a standalone `BUILD_windows` recipe that installs the local JSON-RPC
+  prerequisite before LS00 and its tests.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

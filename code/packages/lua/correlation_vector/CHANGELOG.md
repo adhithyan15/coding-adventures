@@ -1,5 +1,12 @@
 # Changelog — coding-adventures-correlation-vector (Lua)
 
+## [Unreleased]
+
+### Fixed
+
+- Added a standalone `BUILD_windows` recipe that installs the complete local
+  JSON and grammar prerequisite closure before the package and its tests.
+
 ## [0.1.0] — 2026-04-06
 
 ### Added
