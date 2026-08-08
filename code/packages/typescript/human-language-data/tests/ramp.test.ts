@@ -105,7 +105,7 @@ describe("corpus snapshot", () => {
     // and many unmeasurable lessons has not proved it is gentle. Ratchet this DOWN as
     // schema-v2 migration lands; the violation count will rise as it does, and that is
     // the measurement improving rather than the corpus worsening.
-    expect(report.summary.unmeasurableLessons).toBe(572);
+    expect(report.summary.unmeasurableLessons).toBe(573); // +1: TA-C01-answering, schema-v1 like its chapter
     expect(report.summary.measurablePercent).toBe(62);
   });
 
@@ -248,7 +248,13 @@ describe("the script ramp against the real corpus", () => {
     // 61 lessons put more than three new shapes on the page at once. This is the
     // HL-C18C burn-down list. It is REPORT-ONLY: the debt predates the measurement,
     // so it is made visible rather than turned into a build failure.
-    expect(report.summary.lessonViolations).toBe(61);
+    // 61 -> 60, and the net hides two moves in opposite directions. Two Tamil ch1
+    // lessons left the list when chapter 1 gained a declared reading order. One
+    // JOINED it: TA-C01-vanakkam. Removing its script block stopped it counting as a
+    // script lesson, so the five glyphs of வணக்கம் itself now register against the
+    // three-glyph budget — which is honest. A five-letter word IS five new shapes on
+    // page one; the old structure hid that behind a "letters in this word" heading.
+    expect(report.summary.lessonViolations).toBe(60);
 
     // All five are Japanese Chapter 1, which opens kanji beside hiragana in its very
     // first lesson and adds katakana in its fifth.

@@ -798,11 +798,11 @@ describe("corpus regression", () => {
       // under the canonical heading, and the whole-lesson figure fell back to 66%.
       // `coreDrivable` is unaffected: those blocks are detachable, so the driving
       // edition itself lost nothing. This is the sight-share seam, not a regression.
-      totalLessons: 1499,
-      voice: 983,
-      sight: 463,
+      totalLessons: 1500,
+      voice: 989,
+      sight: 458,
       pen: 53,
-      drivableLessons: 983,
+      drivableLessons: 989,
       drivablePercent: 66,
       trackCount: 22,
       chapterCount: 464,
@@ -814,9 +814,9 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 796,
+      drivablePrefixTotal: 798,
       fullyDrivableChapters: 307,
-      unstartableChapters: 119,
+      unstartableChapters: 118,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });
