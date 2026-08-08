@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "portuguese",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-20 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-20 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-26 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-26 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapter 2 carries two practice-mix lessons; the terminal one, PT-C02-formal-practice, is the payoff.",
   "chapters": [
     {
       "chapter": 2,
@@ -491,6 +491,118 @@
           "PT-LEX-JOGAR-BRINCAR-TOCAR-02",
           "PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04",
           "PT-ETYMON-JOGAR-BRINCAR-TOCAR-03"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Asking for Something to Drink",
+      "label": "ch:pt-coffee-tea-milk",
+      "canDo": "I can ask for coffee, tea or milk in Portuguese, name each one's gender, and say which of the three actually descends from Latin.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "PT-C23-leite",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set with a one-table review of all three drinks' origins (Arabic/Turkish, Cantonese, Latin), then reaches back to Chapter 11's pao and agua/vinho and Chapter 5's trabalhar and Falo portugues to stock a full sentence: Trabalho no Porto e gosto de cafe.",
+        "assesses": [
+          "PT-LEX-CAFE-02",
+          "PT-SOUND-CAFE-02",
+          "PT-ETYMON-CAFE-03",
+          "PT-LEX-CHA-02",
+          "PT-ETYMON-CHA-03",
+          "PT-LEX-LEITE-02",
+          "PT-ETYMON-LEITE-03",
+          "PT-NOTICE-C23-BEBIDAS-04",
+          "PT-ETYMON-PAO-02",
+          "PT-ETYMON-AGUA-VINHO-02",
+          "PT-LEX-FALO-PORTUGUES-02",
+          "PT-GRAMMAR-TRABALHAR-04",
+          "PT-SOUND-TRABALHAR-02"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Cheese, Egg, Rice, and Sugar",
+      "label": "ch:pt-cheese-egg-rice-sugar",
+      "canDo": "I can ask for cheese, egg, rice or sugar in Portuguese, name each one's gender, and split them into the two that are plain Latin and the two that crossed from Asia through Arabic.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "PT-C24-acucar",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set with a one-table review of all four foods' origins, ties acucar's cedilla back to Chapter 17's cabeca, and names acucar and arroz as cousins of English sugar and rice by the same Arabic doorway that gave Chapter 13 its azul.",
+        "assesses": [
+          "PT-LEX-QUEIJO-02",
+          "PT-ETYMON-QUEIJO-03",
+          "PT-LEX-OVO-02",
+          "PT-ETYMON-OVO-03",
+          "PT-LEX-ARROZ-02",
+          "PT-ETYMON-ARROZ-03",
+          "PT-LEX-ACUCAR-02",
+          "PT-ETYMON-ACUCAR-03",
+          "PT-NOTICE-C24-COMIDA-04",
+          "PT-SOUND-CABECA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "The People You Introduce",
+      "label": "ch:pt-people-you-introduce",
+      "canDo": "I can name a friend, a family, a man and a woman in Portuguese with the right gender, and say which Latin root each of the four Romance sisters picked for 'woman'.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "PT-C25-mulher",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set with a one-table review of all four people-words' Latin roots, shows mulher/mujer against femme (fēmina) and donna (domina) as a three-way Romance split, and reaches back to Chapter 3's introduction practice and Chapter 15's tenho falado to build Tenho falado com a minha familia.",
+        "assesses": [
+          "PT-LEX-AMIGO-02",
+          "PT-ETYMON-AMIGO-03",
+          "PT-LEX-FAMILIA-02",
+          "PT-ETYMON-FAMILIA-03",
+          "PT-LEX-HOMEM-02",
+          "PT-ETYMON-HOMEM-03",
+          "PT-LEX-MULHER-02",
+          "PT-ETYMON-MULHER-03",
+          "PT-NOTICE-C25-PESSOAS-04",
+          "PT-LEX-C03-PRACTICE-02",
+          "PT-GRAMMAR-TENHO-FALADO-03",
+          "PT-PRAGMATICS-TENHO-FALADO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "The Body, Asking How You Are",
+      "label": "ch:pt-body-how-are-you",
+      "canDo": "I can name the eye, ear, mouth and heart in Portuguese with the right gender, and say what happened to each Latin root -- kept whole, folded by a sound law, or grown with a suffix.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "PT-C26-coracao",
+        "kind": "production",
+        "summary": "The chapter's last lesson closes the set with a one-table review of what happened to four body-part roots (kept, eroded, folded, grown), contrasts coracao's built nasal -ao against pao's and irmao's worn-down one, and reaches back to Chapter 2's Tudo bem/formal practice to give the wellbeing check-in something to answer with.",
+        "assesses": [
+          "PT-LEX-OLHO-02",
+          "PT-ETYMON-OLHO-03",
+          "PT-LEX-ORELHA-02",
+          "PT-ETYMON-ORELHA-03",
+          "PT-LEX-BOCA-02",
+          "PT-ETYMON-BOCA-03",
+          "PT-LEX-CORACAO-02",
+          "PT-ETYMON-CORACAO-03",
+          "PT-NOTICE-C26-CORPO-04",
+          "PT-LEX-C02-PRACTICE-02",
+          "PT-NOTICE-C02-PRACTICE-03",
+          "PT-LEX-FORMAL-PRACTICE-02",
+          "PT-GRAMMAR-MAO-04"
         ]
       }
     }
