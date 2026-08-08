@@ -1324,6 +1324,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             raise NetlistParseError(
                 f"model {model.name!r} has kind {model.kind!r}, expected 'NJF' or 'PJF'"
             )
+        nominal_temperature = model.params.get("T_NOM", model.params.get("TNOM"))
         return JFET(
             name,
             fields[1],
@@ -1348,6 +1349,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Rs=model.params.get("RS", 0.0),
             Tcv=model.params.get("TCV", 0.0),
             Vtotc=model.params.get("VTOTC"),
+            Tnom=(
+                nominal_temperature + 273.15 if nominal_temperature is not None else None
+            ),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2161,6 +2165,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             )
         ):
             raise NetlistParseError("JFET VTOTC must be finite")
+        nominal_temperature = params.get("T_NOM", params.get("TNOM"))
+        if nominal_temperature is not None and (
+            not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0
+        ):
+            raise NetlistParseError("JFET TNOM must be finite and positive")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

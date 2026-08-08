@@ -1659,6 +1659,42 @@ def test_rejects_non_finite_jfet_alternative_threshold_voltage_coefficient() -> 
         parse_netlist(".model fast NJF(VTOTC=1e999)")
 
 
+@pytest.mark.parametrize(("alias", "value"), [("TNOM", "50"), ("T_NOM", "75")])
+def test_parse_jfet_nominal_temperature(alias: str, value: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({alias}={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Tnom == pytest.approx(float(value) + 273.15)
+
+
+def test_jfet_t_nom_takes_precedence_over_tnom() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(TNOM=25 T_NOM=50)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Tnom == pytest.approx(323.15)
+
+
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_jfet_nominal_temperature(alias: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET TNOM must be finite and positive"
+    ):
+        parse_netlist(f".model fast NJF({alias}={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

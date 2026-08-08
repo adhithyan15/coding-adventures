@@ -1706,6 +1706,49 @@ J1 drain gate source fast
     );
   });
 
+  it.each([
+    ["TNOM", "50"],
+    ["T_NOM", "75"],
+  ])("parses JFET nominal temperature alias %s", (alias, value) => {
+    const parsed = parseNetlist(`
+.model fast NJF(${alias}=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      nominalTemperatureKelvin: Number(value) + 273.15,
+    });
+  });
+
+  it("gives JFET T_NOM precedence over TNOM", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(TNOM=25 T_NOM=50)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      nominalTemperatureKelvin: 323.15,
+    });
+  });
+
+  it.each([
+    ["TNOM", "0"],
+    ["T_NOM", "0"],
+    ["TNOM", "-1"],
+    ["T_NOM", "-1"],
+    ["TNOM", "1e999"],
+    ["T_NOM", "1e999"],
+  ])(
+    "rejects invalid JFET nominal temperature %s=%s",
+    (alias, value) => {
+      expect(() => parseNetlist(`.model fast NJF(${alias}=${value})`)).toThrow(
+        "JFET TNOM must be finite and positive",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
