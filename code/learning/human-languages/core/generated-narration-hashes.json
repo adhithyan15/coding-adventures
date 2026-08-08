@@ -8273,6 +8273,71 @@
       "json": "urdu/narration/ch08.json",
       "textHash": "fnv1a64:89bfe5828747af1d",
       "jsonHash": "fnv1a64:ef09aad11524eba4"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:a24f7fd7207d0a03",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch09.txt",
+      "json": "urdu/narration/ch09.json",
+      "textHash": "fnv1a64:cb00f151ae104c18",
+      "jsonHash": "fnv1a64:9d977a1fc69923d6"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:bb9c226c6cf168a7",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch10.txt",
+      "json": "urdu/narration/ch10.json",
+      "textHash": "fnv1a64:3e8af661ecc26341",
+      "jsonHash": "fnv1a64:539226de1f605373"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:56f531518276b7d1",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch11.txt",
+      "json": "urdu/narration/ch11.json",
+      "textHash": "fnv1a64:eeed4edb2930107d",
+      "jsonHash": "fnv1a64:8904043ce6c2b6e5"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:404672bf9b8f91e1",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch12.txt",
+      "json": "urdu/narration/ch12.json",
+      "textHash": "fnv1a64:4c1be6db2c4ff184",
+      "jsonHash": "fnv1a64:6dcf3e6fadf06d89"
     }
   ],
   "findings": []

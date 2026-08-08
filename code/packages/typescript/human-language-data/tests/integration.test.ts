@@ -121,7 +121,12 @@ describe("real curriculum", () => {
       // 6 -> 8: chapters 7 and 8 are the eight-verb tranche — think/understand/read/write
       // and take/ask/help/like — split into two four-lesson chapters so neither exceeds
       // the 12-atom chapter budget, both filed under SPINE-SAY-WHAT-I-DO like chapter 6.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      // 8 -> 12: the pre-A1 vocabulary tranche (HL-C41 continuation). Chapters 9-12 drop
+      // back to pre-A1 spine nodes (family/friends and face words on EXCHANGE-NAMES and
+      // CHECK-WELLBEING, heart as its own chapter, water/tea/milk/bread realizing
+      // POLITE-REQUEST-REPAIR for the first time in this track), each staying within the
+      // 12-atom chapter budget like every generated chapter before it.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -261,6 +266,15 @@ describe("real curriculum", () => {
       "UR-C05-practice-final-line",
       "UR-C07-likhna-four-stems",
       "UR-C08-pasand-dative",
+      // HL-C41 continuation: the pre-A1 vocabulary tranche added one activity per
+      // payoff/deeper lesson across chapters 9-12.
+      "UR-C09-bahan-agreement",
+      "UR-C09-khandan-sort",
+      "UR-C10-munh-nun",
+      "UR-C10-naak-reversal",
+      "UR-C11-dil-cousin",
+      "UR-C12-doodh-false-friend",
+      "UR-C12-roti-pasand",
       // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
       // corpus total moves from 51 to 57.
       "ZH-C01-hao-components",
