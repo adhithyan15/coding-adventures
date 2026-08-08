@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "spanish",
-  "chapter": 38,
+  "chapter": 39,
   "title": "Bringing, Getting, Playing, Meeting",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c1ac330a7c23eff4",
+  "sourceHash": "fnv1a64:7456067a57e86e2a",
   "lessons": [
     {
       "id": "ES-C39-traer",
-      "sequence": 1770,
+      "sequence": 1810,
       "title": "traer — \"to bring\", and the direction baked into it",
       "headword": "traer",
       "romanization": "traer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b742dc8eca59ba0",
+      "sourceHash": "fnv1a64:6a0db17c3e533347",
       "notice": null,
       "blocks": [
         {
@@ -189,7 +189,7 @@
     },
     {
       "id": "ES-C39-conseguir",
-      "sequence": 1780,
+      "sequence": 1820,
       "title": "conseguir — \"to get\", by following a thing until you have it",
       "headword": "conseguir",
       "romanization": "conseguir",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:553b6dfeb5d6e2dd",
+      "sourceHash": "fnv1a64:e4e9c75fb639785a",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
     },
     {
       "id": "ES-C39-jugar",
-      "sequence": 1790,
+      "sequence": 1830,
       "title": "jugar — \"to play\", and the only verb of its kind",
       "headword": "jugar",
       "romanization": "jugar",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:136bf8a9658d5523",
+      "sourceHash": "fnv1a64:afd135bb76e2825a",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
     },
     {
       "id": "ES-C39-conocer",
-      "sequence": 1800,
+      "sequence": 1840,
       "title": "conocer — \"to meet\", because knowing has a first moment",
       "headword": "conocer",
       "romanization": "conocer",
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37b84d1e8e75d86d",
+      "sourceHash": "fnv1a64:2ddcf318589c91bd",
       "notice": null,
       "blocks": [
         {

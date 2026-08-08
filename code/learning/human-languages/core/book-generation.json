@@ -3,1383 +3,149 @@
   "sourceBaseUrl": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/",
   "scriptSets": {
     "telugu-comparisons": [
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "kannada-comparisons": [
-      { "unicodeScript": "Kannada", "scriptCommand": "kn" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "kn"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "malayalam-comparisons": [
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "tamil-comparisons": [
-      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
-      { "unicodeScript": "Telugu", "scriptCommand": "te" },
-      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
-      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
-      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+      {
+        "unicodeScript": "Tamil",
+        "scriptCommand": "ta"
+      },
+      {
+        "unicodeScript": "Telugu",
+        "scriptCommand": "te"
+      },
+      {
+        "unicodeScript": "Kannada",
+        "scriptCommand": "ka"
+      },
+      {
+        "unicodeScript": "Malayalam",
+        "scriptCommand": "ml"
+      },
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "dv"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      }
     ],
     "arabic-main": [
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
-      { "unicodeScript": "Hebrew", "scriptCommand": "he" }
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      },
+      {
+        "unicodeScript": "Hebrew",
+        "scriptCommand": "he"
+      }
     ],
     "hindi-main": [
-      { "unicodeScript": "Devanagari", "scriptCommand": "hi" },
-      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
-      { "unicodeScript": "Cyrillic", "scriptCommand": "ru" }
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "hi"
+      },
+      {
+        "unicodeScript": "Arabic",
+        "scriptCommand": "ar"
+      },
+      {
+        "unicodeScript": "Cyrillic",
+        "scriptCommand": "ru"
+      }
     ],
     "japanese-main": [
-      { "unicodeScript": "Katakana", "scriptCommand": "ja" },
-      { "unicodeScript": "Hiragana", "scriptCommand": "ja" },
-      { "unicodeScript": "Han", "scriptCommand": "ja" }
+      {
+        "unicodeScript": "Katakana",
+        "scriptCommand": "ja"
+      },
+      {
+        "unicodeScript": "Hiragana",
+        "scriptCommand": "ja"
+      },
+      {
+        "unicodeScript": "Han",
+        "scriptCommand": "ja"
+      }
     ]
   },
   "targets": [
-    {
-      "language": "spanish",
-      "chapter": 1,
-      "title": "Hola and Buenos Días",
-      "label": "ch:first-words",
-      "output": "spanish/book/chapters/ch01-first-words.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 2,
-      "title": "The Rest of the Greetings",
-      "label": "ch:greetings",
-      "output": "spanish/book/chapters/ch02-greetings.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 3,
-      "title": "Introducing Yourself",
-      "label": "ch:introductions",
-      "output": "spanish/book/chapters/ch03-introductions.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 4,
-      "title": "How Are You?",
-      "label": "ch:how-are-you",
-      "output": "spanish/book/chapters/ch04-how-are-you.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 5,
-      "title": "Farewells",
-      "label": "ch:farewells",
-      "output": "spanish/book/chapters/ch05-farewells.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 6,
-      "title": "The First Verbs",
-      "label": "ch:first-verbs",
-      "output": "spanish/book/chapters/ch06-first-verbs.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 19,
-      "title": "Yes and No",
-      "label": "ch:spanish-basic-responses",
-      "output": "spanish/book/chapters/ch19-yes-and-no.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 20,
-      "title": "Lo Siento",
-      "label": "ch:spanish-sorry",
-      "output": "spanish/book/chapters/ch20-lo-siento.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 21,
-      "title": "Days of the Week",
-      "label": "ch:spanish-days-of-the-week",
-      "output": "spanish/book/chapters/ch21-days-of-the-week.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 22,
-      "title": "Black, White, Red, and Blue",
-      "label": "ch:spanish-black-white-red-blue",
-      "output": "spanish/book/chapters/ch22-black-white-red-blue.tex",
-      "unicodeScript": "Arabic",
-      "scriptCommand": "esar"
-    },
-    {
-      "language": "spanish",
-      "chapter": 23,
-      "title": "Parents and Siblings",
-      "label": "ch:spanish-family",
-      "output": "spanish/book/chapters/ch23-family.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 24,
-      "title": "Head and Hand",
-      "label": "ch:spanish-head-and-hand",
-      "output": "spanish/book/chapters/ch24-head-and-hand.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 25,
-      "title": "The Seasons",
-      "label": "ch:spanish-seasons",
-      "output": "spanish/book/chapters/ch25-seasons.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 26,
-      "title": "Water, Wine, and Bread",
-      "label": "ch:spanish-water-wine-bread",
-      "output": "spanish/book/chapters/ch26-water-wine-bread.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 27,
-      "title": "The Months",
-      "label": "ch:spanish-months",
-      "output": "spanish/book/chapters/ch27-months.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 28,
-      "title": "Noon and Midnight",
-      "label": "ch:spanish-noon-midnight",
-      "output": "spanish/book/chapters/ch28-noon-midnight.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 29,
-      "title": "Telling Time",
-      "label": "ch:spanish-telling-time",
-      "output": "spanish/book/chapters/ch29-telling-time.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 30,
-      "title": "The Weather",
-      "label": "ch:spanish-weather",
-      "output": "spanish/book/chapters/ch30-weather.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 31,
-      "title": "Numbers Eleven to Twenty",
-      "label": "ch:spanish-numbers-eleven-to-twenty",
-      "output": "spanish/book/chapters/ch31-numbers-11-20.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 32,
-      "title": "Dog and Cat",
-      "label": "ch:spanish-dog-and-cat",
-      "output": "spanish/book/chapters/ch32-dog-and-cat.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 33,
-      "title": "Green and Yellow",
-      "label": "ch:spanish-green-and-yellow",
-      "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 34,
-      "title": "Four Verbs of the Mind",
-      "label": "ch:spanish-verbs-of-the-mind",
-      "output": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 35,
-      "title": "Taking, Asking, Helping — and the Backwards Verb",
-      "label": "ch:spanish-backwards-verb",
-      "output": "spanish/book/chapters/ch35-take-ask-help.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 36,
-      "title": "Hearing, Sleeping, Walking, Running",
-      "label": "ch:spanish-hear-sleep-walk-run",
-      "output": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 37,
-      "title": "Opening, Closing, Sitting Down, Standing Up",
-      "label": "ch:spanish-open-close-sit-stand",
-      "output": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 38,
-      "title": "Bringing, Getting, Playing, Meeting",
-      "label": "ch:spanish-bring-get-play-meet",
-      "output": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 39,
-      "title": "Waiting, Answering, Buying",
-      "label": "ch:spanish-wait-answer-buy",
-      "output": "spanish/book/chapters/ch40-wait-answer-buy.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 2,
-      "title": "How Are You?",
-      "label": "ch:it-how-are-you",
-      "output": "italian/book/chapters/ch02-how-are-you.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 3,
-      "title": "Introducing Yourself",
-      "label": "ch:it-introductions",
-      "output": "italian/book/chapters/ch03-introductions.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 4,
-      "title": "Farewells",
-      "label": "ch:it-farewells",
-      "output": "italian/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 5,
-      "title": "The First Verbs",
-      "label": "ch:it-first-verbs",
-      "output": "italian/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 6,
-      "title": "Numbers One to Ten",
-      "label": "ch:it-numbers-one-to-ten",
-      "output": "italian/book/chapters/ch06-numbers-1-10.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 7,
-      "title": "Days of the Week",
-      "label": "ch:it-days-of-the-week",
-      "output": "italian/book/chapters/ch07-days-of-the-week.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 8,
-      "title": "Telling Time",
-      "label": "ch:it-telling-time",
-      "output": "italian/book/chapters/ch08-telling-time.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 9,
-      "title": "Months and Seasons",
-      "label": "ch:it-months-and-seasons",
-      "output": "italian/book/chapters/ch09-months-and-seasons.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 10,
-      "title": "Family",
-      "label": "ch:it-family",
-      "output": "italian/book/chapters/ch10-family.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 11,
-      "title": "Bread, Water, and Wine",
-      "label": "ch:it-bread-water-wine",
-      "output": "italian/book/chapters/ch11-bread-water-wine.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 12,
-      "title": "Numbers Eleven to Twenty",
-      "label": "ch:it-numbers-eleven-to-twenty",
-      "output": "italian/book/chapters/ch12-numbers-11-20.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 13,
-      "title": "Colours",
-      "label": "ch:it-colours",
-      "output": "italian/book/chapters/ch13-colours.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 14,
-      "title": "Having and Telling Your Age",
-      "label": "ch:it-having-and-age",
-      "output": "italian/book/chapters/ch14-having-and-age.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 15,
-      "title": "Two Italian Pasts",
-      "label": "ch:it-two-pasts",
-      "output": "italian/book/chapters/ch15-two-pasts.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 16,
-      "title": "Being, Going, and the Past with Essere",
-      "label": "ch:it-essere-andare-past",
-      "output": "italian/book/chapters/ch16-essere-andare-past.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 17,
-      "title": "Head and Hand",
-      "label": "ch:it-head-and-hand",
-      "output": "italian/book/chapters/ch17-head-and-hand.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 18,
-      "title": "Four Verbs of the Mind",
-      "label": "ch:it-mind-verbs",
-      "output": "italian/book/chapters/ch18-mind-verbs.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 19,
-      "title": "Taking, Asking, Helping — and Mi Piace",
-      "label": "ch:it-backwards-verb",
-      "output": "italian/book/chapters/ch19-backwards-verb.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 20,
-      "title": "Carrying, Buying, Waiting, Meeting",
-      "label": "ch:it-carry-buy-wait-meet",
-      "output": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
-    },
-    {
-      "language": "italian",
-      "chapter": 21,
-      "title": "Two Ways to Play, and Two Verbs That Bend",
-      "label": "ch:it-play-get-answer",
-      "output": "italian/book/chapters/ch21-play-get-answer.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 2,
-      "title": "How Are You?",
-      "label": "ch:pt-how-are-you",
-      "output": "portuguese/book/chapters/ch02-how-are-you.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 3,
-      "title": "Introducing Yourself",
-      "label": "ch:pt-introductions",
-      "output": "portuguese/book/chapters/ch03-introductions.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 4,
-      "title": "Farewells",
-      "label": "ch:pt-farewells",
-      "output": "portuguese/book/chapters/ch04-farewells.tex",
-      "unicodeScript": "Arabic",
-      "scriptCommand": "ptar"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 5,
-      "title": "The First Verbs",
-      "label": "ch:pt-first-verbs",
-      "output": "portuguese/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 6,
-      "title": "Numbers One to Ten",
-      "label": "ch:pt-numbers-one-to-ten",
-      "output": "portuguese/book/chapters/ch06-numbers-1-10.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 7,
-      "title": "Days of the Week",
-      "label": "ch:pt-days-of-the-week",
-      "output": "portuguese/book/chapters/ch07-days-of-the-week.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 8,
-      "title": "Telling Time",
-      "label": "ch:pt-telling-time",
-      "output": "portuguese/book/chapters/ch08-telling-time.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 9,
-      "title": "Months and Seasons",
-      "label": "ch:pt-months-and-seasons",
-      "output": "portuguese/book/chapters/ch09-months-and-seasons.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 10,
-      "title": "Family",
-      "label": "ch:pt-family",
-      "output": "portuguese/book/chapters/ch10-family.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 11,
-      "title": "Bread, Water, and Wine",
-      "label": "ch:pt-bread-water-wine",
-      "output": "portuguese/book/chapters/ch11-bread-water-wine.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 12,
-      "title": "Numbers Eleven to Twenty",
-      "label": "ch:pt-numbers-eleven-to-twenty",
-      "output": "portuguese/book/chapters/ch12-numbers-11-20.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 13,
-      "title": "Colours",
-      "label": "ch:pt-colours",
-      "output": "portuguese/book/chapters/ch13-colours.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 14,
-      "title": "Having and Telling Your Age",
-      "label": "ch:pt-having-and-age",
-      "output": "portuguese/book/chapters/ch14-having-and-age.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 15,
-      "title": "The Past Portuguese Kept",
-      "label": "ch:pt-past-portuguese-kept",
-      "output": "portuguese/book/chapters/ch15-past-portuguese-kept.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 16,
-      "title": "Ser and Estar",
-      "label": "ch:pt-ser-and-estar",
-      "output": "portuguese/book/chapters/ch16-ser-and-estar.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 17,
-      "title": "Head and Hand",
-      "label": "ch:pt-head-and-hand",
-      "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 18,
-      "title": "Verbs at the Core",
-      "label": "ch:pt-core-verbs",
-      "output": "portuguese/book/chapters/ch18-core-verbs.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 19,
-      "title": "Verbs of the Mind",
-      "label": "ch:pt-mind-verbs",
-      "output": "portuguese/book/chapters/ch19-mind-verbs.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 20,
-      "title": "Taking, Asking, Helping, Liking",
-      "label": "ch:pt-taking-asking-helping-liking",
-      "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 21,
-      "title": "Bringing, Getting, Waiting, Buying",
-      "label": "ch:pt-bringing-getting-waiting-buying",
-      "output": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
-    },
-    {
-      "language": "portuguese",
-      "chapter": 22,
-      "title": "Answering, Meeting, and Three Ways to Play",
-      "label": "ch:pt-answering-meeting-playing",
-      "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 17,
-      "title": "Head and Hand",
-      "label": "ch:fr-head-and-hand",
-      "output": "french/book/chapters/ch17-head-and-hand.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 18,
-      "title": "Yes and No",
-      "label": "ch:fr-yes-and-no",
-      "output": "french/book/chapters/ch18-yes-and-no.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 19,
-      "title": "Please",
-      "label": "ch:fr-please",
-      "output": "french/book/chapters/ch19-please.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 20,
-      "title": "Sorry",
-      "label": "ch:fr-sorry",
-      "output": "french/book/chapters/ch20-sorry.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 21,
-      "title": "Weather",
-      "label": "ch:fr-weather",
-      "output": "french/book/chapters/ch21-weather.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 22,
-      "title": "Dog and Cat",
-      "label": "ch:fr-dog-and-cat",
-      "output": "french/book/chapters/ch22-dog-and-cat.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 23,
-      "title": "Green and Yellow",
-      "label": "ch:fr-green-and-yellow",
-      "output": "french/book/chapters/ch23-green-and-yellow.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 24,
-      "title": "Taking, Asking, Helping, Loving",
-      "label": "ch:fr-taking-asking-helping-loving",
-      "output": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 25,
-      "title": "Verbs of the Mind",
-      "label": "ch:fr-verbs-of-the-mind",
-      "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 26,
-      "title": "Hearing, Sleeping, Walking, Running",
-      "label": "ch:fr-hearing-sleeping-walking-running",
-      "output": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
-    },
-    {
-      "language": "french",
-      "chapter": 27,
-      "title": "Sitting, Standing, Opening, Closing",
-      "label": "ch:fr-sitting-standing-opening-closing",
-      "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 17,
-      "title": "Head and Hand",
-      "label": "ch:ge-head-and-hand",
-      "output": "german/book/chapters/ch17-head-and-hand.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 18,
-      "title": "Yes and No",
-      "label": "ch:ge-yes-and-no",
-      "output": "german/book/chapters/ch18-yes-and-no.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 19,
-      "title": "Please",
-      "label": "ch:ge-please",
-      "output": "german/book/chapters/ch19-please.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 20,
-      "title": "Sorry",
-      "label": "ch:ge-sorry",
-      "output": "german/book/chapters/ch20-sorry.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 21,
-      "title": "Weather",
-      "label": "ch:ge-weather",
-      "output": "german/book/chapters/ch21-weather.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 22,
-      "title": "Dog and Cat",
-      "label": "ch:ge-dog-and-cat",
-      "output": "german/book/chapters/ch22-dog-and-cat.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 23,
-      "title": "Green and Yellow",
-      "label": "ch:ge-green-and-yellow",
-      "output": "german/book/chapters/ch23-green-and-yellow.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 24,
-      "title": "Verbs of the Mind",
-      "label": "ch:ge-mind-verbs",
-      "output": "german/book/chapters/ch24-mind-verbs.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 25,
-      "title": "Taking, Asking, Helping, Liking",
-      "label": "ch:ge-doing-verbs",
-      "output": "german/book/chapters/ch25-doing-verbs.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 26,
-      "title": "Sitting, Standing, Sleeping, Hearing",
-      "label": "ch:ge-still-verbs",
-      "output": "german/book/chapters/ch26-still-verbs.tex"
-    },
-    {
-      "language": "german",
-      "chapter": 27,
-      "title": "Going, Running, Opening, Closing",
-      "label": "ch:ge-moving-verbs",
-      "output": "german/book/chapters/ch27-moving-verbs.tex"
-    },
-    {
-      "language": "telugu",
-      "chapter": 6,
-      "title": "Case Endings and Dative Subjects",
-      "label": "ch:te-dative-case",
-      "output": "telugu/book/chapters/ch06-dative-case.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 7,
-      "title": "Numbers One to Ten",
-      "label": "ch:te-numbers-one-to-ten",
-      "output": "telugu/book/chapters/ch07-numbers-1-10.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 8,
-      "title": "Please",
-      "label": "ch:te-please",
-      "output": "telugu/book/chapters/ch08-please.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 9,
-      "title": "Sorry",
-      "label": "ch:te-sorry",
-      "output": "telugu/book/chapters/ch09-sorry.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 10,
-      "title": "Days of the Week",
-      "label": "ch:te-days-of-the-week",
-      "output": "telugu/book/chapters/ch10-days.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 11,
-      "title": "Four Core Colours",
-      "label": "ch:te-core-colours",
-      "output": "telugu/book/chapters/ch11-colours.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 12,
-      "title": "Family",
-      "label": "ch:te-family",
-      "output": "telugu/book/chapters/ch12-family.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 13,
-      "title": "Head and Hand",
-      "label": "ch:te-head-and-hand",
-      "output": "telugu/book/chapters/ch13-head-and-hand.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 14,
-      "title": "Seasons",
-      "label": "ch:te-seasons",
-      "output": "telugu/book/chapters/ch14-seasons.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 15,
-      "title": "Water and Rice",
-      "label": "ch:te-water-and-rice",
-      "output": "telugu/book/chapters/ch15-water-and-rice.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 16,
-      "title": "The Traditional Months",
-      "label": "ch:te-traditional-months",
-      "output": "telugu/book/chapters/ch16-months.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 17,
-      "title": "Noon and Midnight",
-      "label": "ch:te-noon-and-midnight",
-      "output": "telugu/book/chapters/ch17-noon-and-midnight.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 18,
-      "title": "Telling Time",
-      "label": "ch:te-telling-time",
-      "output": "telugu/book/chapters/ch18-telling-time.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 19,
-      "title": "Asking Someone's Age",
-      "label": "ch:te-asking-age",
-      "output": "telugu/book/chapters/ch19-age.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 20,
-      "title": "Numbers 11–20 and Weather",
-      "label": "ch:te-numbers-and-weather",
-      "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 21,
-      "title": "Dog and Cat",
-      "label": "ch:te-dog-and-cat",
-      "output": "telugu/book/chapters/ch21-dog-and-cat.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 22,
-      "title": "Green and Yellow",
-      "label": "ch:te-green-and-yellow",
-      "output": "telugu/book/chapters/ch22-green-and-yellow.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 23,
-      "title": "Day",
-      "label": "ch:te-day",
-      "output": "telugu/book/chapters/ch23-day.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 24,
-      "title": "Night",
-      "label": "ch:te-night",
-      "output": "telugu/book/chapters/ch24-night.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 25,
-      "title": "Good Night",
-      "label": "ch:te-good-night",
-      "output": "telugu/book/chapters/ch25-good-night.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 26,
-      "title": "Morning",
-      "label": "ch:te-morning",
-      "output": "telugu/book/chapters/ch26-morning.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 27,
-      "title": "Evening",
-      "label": "ch:te-evening",
-      "output": "telugu/book/chapters/ch27-evening.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 28,
-      "title": "Afternoon",
-      "label": "ch:te-afternoon",
-      "output": "telugu/book/chapters/ch28-afternoon.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 29,
-      "title": "Good Morning",
-      "label": "ch:te-good-morning",
-      "output": "telugu/book/chapters/ch29-good-morning.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 30,
-      "title": "Good Evening",
-      "label": "ch:te-good-evening",
-      "output": "telugu/book/chapters/ch30-good-evening.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 31,
-      "title": "Good Afternoon",
-      "label": "ch:te-good-afternoon",
-      "output": "telugu/book/chapters/ch31-good-afternoon.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 32,
-      "title": "The Core Verbs",
-      "label": "ch:te-core-verbs",
-      "output": "telugu/book/chapters/ch32-core-verbs.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 33,
-      "title": "Four Verbs of the Mind",
-      "label": "ch:te-verbs-of-the-mind",
-      "output": "telugu/book/chapters/ch33-verbs-of-the-mind.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "telugu",
-      "chapter": 34,
-      "title": "Four Verbs Between People",
-      "label": "ch:te-verbs-between-people",
-      "output": "telugu/book/chapters/ch34-verbs-between-people.tex",
-      "scriptSet": "telugu-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 6,
-      "title": "Case Endings and Dative Subjects",
-      "label": "ch:ka-dative-case",
-      "output": "kannada/book/chapters/ch06-dative-case.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 7,
-      "title": "Numbers One to Ten",
-      "label": "ch:ka-numbers-one-to-ten",
-      "output": "kannada/book/chapters/ch07-numbers-1-10.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 8,
-      "title": "Please",
-      "label": "ch:ka-please",
-      "output": "kannada/book/chapters/ch08-please.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 9,
-      "title": "Sorry",
-      "label": "ch:ka-sorry",
-      "output": "kannada/book/chapters/ch09-sorry.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 10,
-      "title": "Days of the Week",
-      "label": "ch:ka-days-of-the-week",
-      "output": "kannada/book/chapters/ch10-days.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 11,
-      "title": "Four Core Colours",
-      "label": "ch:ka-core-colours",
-      "output": "kannada/book/chapters/ch11-colours.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 12,
-      "title": "Family",
-      "label": "ch:ka-family",
-      "output": "kannada/book/chapters/ch12-family.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 13,
-      "title": "Head and Hand",
-      "label": "ch:ka-head-and-hand",
-      "output": "kannada/book/chapters/ch13-head-and-hand.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 14,
-      "title": "Seasons",
-      "label": "ch:ka-seasons",
-      "output": "kannada/book/chapters/ch14-seasons.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 15,
-      "title": "Water and Rice",
-      "label": "ch:ka-water-and-rice",
-      "output": "kannada/book/chapters/ch15-water-and-rice.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 16,
-      "title": "The Traditional Months",
-      "label": "ch:ka-traditional-months",
-      "output": "kannada/book/chapters/ch16-months.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 17,
-      "title": "Noon and Midnight",
-      "label": "ch:ka-noon-and-midnight",
-      "output": "kannada/book/chapters/ch17-noon-and-midnight.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 18,
-      "title": "Telling Time",
-      "label": "ch:ka-telling-time",
-      "output": "kannada/book/chapters/ch18-telling-time.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 19,
-      "title": "Asking Someone's Age",
-      "label": "ch:ka-asking-age",
-      "output": "kannada/book/chapters/ch19-age.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 20,
-      "title": "Numbers 11–20 and Weather",
-      "label": "ch:ka-numbers-and-weather",
-      "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 21,
-      "title": "Dog and Cat",
-      "label": "ch:ka-dog-and-cat",
-      "output": "kannada/book/chapters/ch21-dog-and-cat.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 22,
-      "title": "Green and Yellow",
-      "label": "ch:ka-green-and-yellow",
-      "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 23,
-      "title": "Day",
-      "label": "ch:ka-day",
-      "output": "kannada/book/chapters/ch23-day.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 24,
-      "title": "Night",
-      "label": "ch:ka-night",
-      "output": "kannada/book/chapters/ch24-night.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 25,
-      "title": "Good Night",
-      "label": "ch:ka-good-night",
-      "output": "kannada/book/chapters/ch25-good-night.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 26,
-      "title": "Morning",
-      "label": "ch:ka-morning",
-      "output": "kannada/book/chapters/ch26-morning.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 27,
-      "title": "Evening",
-      "label": "ch:ka-evening",
-      "output": "kannada/book/chapters/ch27-evening.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 28,
-      "title": "Afternoon",
-      "label": "ch:ka-afternoon",
-      "output": "kannada/book/chapters/ch28-afternoon.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 29,
-      "title": "Good Morning",
-      "label": "ch:ka-good-morning",
-      "output": "kannada/book/chapters/ch29-good-morning.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 30,
-      "title": "Good Evening",
-      "label": "ch:ka-good-evening",
-      "output": "kannada/book/chapters/ch30-good-evening.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 31,
-      "title": "Good Afternoon",
-      "label": "ch:ka-good-afternoon",
-      "output": "kannada/book/chapters/ch31-good-afternoon.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 32,
-      "title": "The Core Verbs",
-      "label": "ch:ka-core-verbs",
-      "output": "kannada/book/chapters/ch32-core-verbs.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 33,
-      "title": "Four Verbs of Mind and Page",
-      "label": "ch:ka-mind-verbs",
-      "output": "kannada/book/chapters/ch33-mind-verbs.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "kannada",
-      "chapter": 34,
-      "title": "Four Verbs Between People",
-      "label": "ch:ka-social-verbs",
-      "output": "kannada/book/chapters/ch34-social-verbs.tex",
-      "scriptSet": "kannada-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 6,
-      "title": "Case Endings and Dative Subjects",
-      "label": "ch:ml-dative-case",
-      "output": "malayalam/book/chapters/ch06-dative-case.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 7,
-      "title": "Numbers One to Ten",
-      "label": "ch:ml-numbers-one-to-ten",
-      "output": "malayalam/book/chapters/ch07-numbers-1-10.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 8,
-      "title": "Please",
-      "label": "ch:ml-please",
-      "output": "malayalam/book/chapters/ch08-please.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 9,
-      "title": "Sorry",
-      "label": "ch:ml-sorry",
-      "output": "malayalam/book/chapters/ch09-sorry.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 10,
-      "title": "Days of the Week",
-      "label": "ch:ml-days-of-the-week",
-      "output": "malayalam/book/chapters/ch10-days.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 11,
-      "title": "Four Core Colours",
-      "label": "ch:ml-core-colours",
-      "output": "malayalam/book/chapters/ch11-colours.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 12,
-      "title": "Family",
-      "label": "ch:ml-family",
-      "output": "malayalam/book/chapters/ch12-family.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 13,
-      "title": "Head and Hand",
-      "label": "ch:ml-head-and-hand",
-      "output": "malayalam/book/chapters/ch13-head-and-hand.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 14,
-      "title": "Seasons",
-      "label": "ch:ml-seasons",
-      "output": "malayalam/book/chapters/ch14-seasons.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 15,
-      "title": "Water and Rice",
-      "label": "ch:ml-water-and-rice",
-      "output": "malayalam/book/chapters/ch15-water-and-rice.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 16,
-      "title": "The Traditional Months",
-      "label": "ch:ml-traditional-months",
-      "output": "malayalam/book/chapters/ch16-months.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 17,
-      "title": "Noon and Midnight",
-      "label": "ch:ml-noon-and-midnight",
-      "output": "malayalam/book/chapters/ch17-noon-and-midnight.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 18,
-      "title": "Telling Time",
-      "label": "ch:ml-telling-time",
-      "output": "malayalam/book/chapters/ch18-telling-time.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 19,
-      "title": "Asking Someone's Age",
-      "label": "ch:ml-asking-age",
-      "output": "malayalam/book/chapters/ch19-age.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 20,
-      "title": "Numbers 11–20 and Weather",
-      "label": "ch:ml-numbers-and-weather",
-      "output": "malayalam/book/chapters/ch20-numbers-and-weather.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 21,
-      "title": "Dog and Cat",
-      "label": "ch:ml-dog-and-cat",
-      "output": "malayalam/book/chapters/ch21-dog-and-cat.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 22,
-      "title": "Green and Yellow",
-      "label": "ch:ml-green-and-yellow",
-      "output": "malayalam/book/chapters/ch22-green-and-yellow.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 23,
-      "title": "Day",
-      "label": "ch:ml-day",
-      "output": "malayalam/book/chapters/ch23-day.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 24,
-      "title": "Night",
-      "label": "ch:ml-night",
-      "output": "malayalam/book/chapters/ch24-night.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 25,
-      "title": "Good Night",
-      "label": "ch:ml-good-night",
-      "output": "malayalam/book/chapters/ch25-good-night.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 26,
-      "title": "Morning",
-      "label": "ch:ml-morning",
-      "output": "malayalam/book/chapters/ch26-morning.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 27,
-      "title": "Evening",
-      "label": "ch:ml-evening",
-      "output": "malayalam/book/chapters/ch27-evening.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 28,
-      "title": "Afternoon",
-      "label": "ch:ml-afternoon",
-      "output": "malayalam/book/chapters/ch28-afternoon.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 29,
-      "title": "Good Morning",
-      "label": "ch:ml-good-morning",
-      "output": "malayalam/book/chapters/ch29-good-morning.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 30,
-      "title": "Good Evening",
-      "label": "ch:ml-good-evening",
-      "output": "malayalam/book/chapters/ch30-good-evening.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 31,
-      "title": "Good Afternoon",
-      "label": "ch:ml-good-afternoon",
-      "output": "malayalam/book/chapters/ch31-good-afternoon.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 32,
-      "title": "The Core Verbs",
-      "label": "ch:ml-core-verbs",
-      "output": "malayalam/book/chapters/ch32-core-verbs.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 33,
-      "title": "The Mind and the Page",
-      "label": "ch:ml-mind-and-page",
-      "output": "malayalam/book/chapters/ch33-mind-and-page.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
-    {
-      "language": "malayalam",
-      "chapter": 34,
-      "title": "Taking, Asking, Helping, Liking",
-      "label": "ch:ml-taking-asking-helping-liking",
-      "output": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex",
-      "scriptSet": "malayalam-comparisons"
-    },
     {
       "language": "arabic",
       "chapter": 3,
@@ -1619,6 +385,241 @@
       "label": "ch:ar-taking-thinking-helping-loving",
       "output": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex",
       "scriptSet": "arabic-main"
+    },
+    {
+      "language": "bengali",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "bengali/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:bn-core-verbs",
+      "output": "bengali/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:bn-mind-and-page",
+      "output": "bengali/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:bn-conjunct-verbs",
+      "output": "bengali/book/chapters/ch09-conjunct-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "chinese",
+      "chapter": 1,
+      "title": "Nǐ Hǎo — Hello, Character by Character",
+      "label": "ch:zh-nihao",
+      "output": "chinese/book/chapters/ch01-nihao.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "french",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:fr-head-and-hand",
+      "output": "french/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:fr-yes-and-no",
+      "output": "french/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:fr-please",
+      "output": "french/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:fr-sorry",
+      "output": "french/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:fr-weather",
+      "output": "french/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:fr-dog-and-cat",
+      "output": "french/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:fr-green-and-yellow",
+      "output": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 24,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:fr-taking-asking-helping-loving",
+      "output": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "title": "Verbs of the Mind",
+      "label": "ch:fr-verbs-of-the-mind",
+      "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 26,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:fr-hearing-sleeping-walking-running",
+      "output": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "title": "Sitting, Standing, Opening, Closing",
+      "label": "ch:fr-sitting-standing-opening-closing",
+      "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:ge-head-and-hand",
+      "output": "german/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:ge-yes-and-no",
+      "output": "german/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:ge-please",
+      "output": "german/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:ge-sorry",
+      "output": "german/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:ge-weather",
+      "output": "german/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:ge-dog-and-cat",
+      "output": "german/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:ge-green-and-yellow",
+      "output": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 24,
+      "title": "Verbs of the Mind",
+      "label": "ch:ge-mind-verbs",
+      "output": "german/book/chapters/ch24-mind-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ge-doing-verbs",
+      "output": "german/book/chapters/ch25-doing-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 26,
+      "title": "Sitting, Standing, Sleeping, Hearing",
+      "label": "ch:ge-still-verbs",
+      "output": "german/book/chapters/ch26-still-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "title": "Going, Running, Opening, Closing",
+      "label": "ch:ge-moving-verbs",
+      "output": "german/book/chapters/ch27-moving-verbs.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "gujarati/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 7,
+      "title": "Six Verbs at the Core",
+      "label": "ch:gu-core-verbs",
+      "output": "gujarati/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 8,
+      "title": "The Mind and the Page",
+      "label": "ch:gu-mind-and-page",
+      "output": "gujarati/book/chapters/ch08-mind-and-page.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:gu-doing-verbs",
+      "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     },
     {
       "language": "hindi",
@@ -1861,236 +862,384 @@
       "scriptSet": "hindi-main"
     },
     {
-      "language": "tamil",
-      "chapter": 6,
-      "title": "Dative Case and Dative Subjects",
-      "label": "ch:ta-dative-case",
-      "output": "tamil/book/chapters/ch06-dative-case.tex",
-      "scriptSet": "tamil-comparisons"
+      "language": "italian",
+      "chapter": 2,
+      "title": "How Are You?",
+      "label": "ch:it-how-are-you",
+      "output": "italian/book/chapters/ch02-how-are-you.tex"
     },
     {
-      "language": "tamil",
+      "language": "italian",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:it-introductions",
+      "output": "italian/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:it-farewells",
+      "output": "italian/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:it-first-verbs",
+      "output": "italian/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:it-numbers-one-to-ten",
+      "output": "italian/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 7,
+      "title": "Days of the Week",
+      "label": "ch:it-days-of-the-week",
+      "output": "italian/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 8,
+      "title": "Telling Time",
+      "label": "ch:it-telling-time",
+      "output": "italian/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:it-months-and-seasons",
+      "output": "italian/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:it-family",
+      "output": "italian/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 11,
+      "title": "Bread, Water, and Wine",
+      "label": "ch:it-bread-water-wine",
+      "output": "italian/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:it-numbers-eleven-to-twenty",
+      "output": "italian/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:it-colours",
+      "output": "italian/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 14,
+      "title": "Having and Telling Your Age",
+      "label": "ch:it-having-and-age",
+      "output": "italian/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 15,
+      "title": "Two Italian Pasts",
+      "label": "ch:it-two-pasts",
+      "output": "italian/book/chapters/ch15-two-pasts.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 16,
+      "title": "Being, Going, and the Past with Essere",
+      "label": "ch:it-essere-andare-past",
+      "output": "italian/book/chapters/ch16-essere-andare-past.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:it-head-and-hand",
+      "output": "italian/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 18,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:it-mind-verbs",
+      "output": "italian/book/chapters/ch18-mind-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "title": "Taking, Asking, Helping — and Mi Piace",
+      "label": "ch:it-backwards-verb",
+      "output": "italian/book/chapters/ch19-backwards-verb.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 20,
+      "title": "Carrying, Buying, Waiting, Meeting",
+      "label": "ch:it-carry-buy-wait-meet",
+      "output": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "title": "Two Ways to Play, and Two Verbs That Bend",
+      "label": "ch:it-play-get-answer",
+      "output": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 1,
+      "title": "Three Writing Systems in One Doorway",
+      "label": "ch:ja-three-scripts",
+      "output": "japanese/book/chapters/ch01-three-scripts.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "kannada",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ka-dative-case",
+      "output": "kannada/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
       "chapter": 7,
       "title": "Numbers One to Ten",
-      "label": "ch:ta-numbers-one-to-ten",
-      "output": "tamil/book/chapters/ch07-numbers-1-10.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-numbers-one-to-ten",
+      "output": "kannada/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 8,
       "title": "Please",
-      "label": "ch:ta-please",
-      "output": "tamil/book/chapters/ch08-please.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-please",
+      "output": "kannada/book/chapters/ch08-please.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 9,
       "title": "Sorry",
-      "label": "ch:ta-sorry",
-      "output": "tamil/book/chapters/ch09-sorry.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-sorry",
+      "output": "kannada/book/chapters/ch09-sorry.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 10,
       "title": "Days of the Week",
-      "label": "ch:ta-days-of-the-week",
-      "output": "tamil/book/chapters/ch10-days.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-days-of-the-week",
+      "output": "kannada/book/chapters/ch10-days.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 11,
-      "title": "Colours",
-      "label": "ch:ta-colours",
-      "output": "tamil/book/chapters/ch11-colours.tex",
-      "scriptSet": "tamil-comparisons"
+      "title": "Four Core Colours",
+      "label": "ch:ka-core-colours",
+      "output": "kannada/book/chapters/ch11-colours.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 12,
       "title": "Family",
-      "label": "ch:ta-family",
-      "output": "tamil/book/chapters/ch12-family.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-family",
+      "output": "kannada/book/chapters/ch12-family.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 13,
-      "title": "Body Parts",
-      "label": "ch:ta-body-parts",
-      "output": "tamil/book/chapters/ch13-body-parts.tex",
-      "scriptSet": "tamil-comparisons"
+      "title": "Head and Hand",
+      "label": "ch:ka-head-and-hand",
+      "output": "kannada/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 14,
       "title": "Seasons",
-      "label": "ch:ta-seasons",
-      "output": "tamil/book/chapters/ch14-seasons.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-seasons",
+      "output": "kannada/book/chapters/ch14-seasons.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 15,
       "title": "Water and Rice",
-      "label": "ch:ta-water-and-rice",
-      "output": "tamil/book/chapters/ch15-water-and-rice.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-water-and-rice",
+      "output": "kannada/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 16,
-      "title": "Tamil Months",
-      "label": "ch:ta-tamil-months",
-      "output": "tamil/book/chapters/ch16-months.tex",
-      "scriptSet": "tamil-comparisons"
+      "title": "The Traditional Months",
+      "label": "ch:ka-traditional-months",
+      "output": "kannada/book/chapters/ch16-months.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 17,
       "title": "Noon and Midnight",
-      "label": "ch:ta-noon-and-midnight",
-      "output": "tamil/book/chapters/ch17-noon-and-midnight.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-noon-and-midnight",
+      "output": "kannada/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 18,
       "title": "Telling Time",
-      "label": "ch:ta-telling-time",
-      "output": "tamil/book/chapters/ch18-telling-time.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-telling-time",
+      "output": "kannada/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 19,
       "title": "Asking Someone's Age",
-      "label": "ch:ta-asking-age",
-      "output": "tamil/book/chapters/ch19-age.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-asking-age",
+      "output": "kannada/book/chapters/ch19-age.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 20,
-      "title": "Numbers Eleven to Twenty and Weather",
-      "label": "ch:ta-numbers-and-weather",
-      "output": "tamil/book/chapters/ch20-numbers-and-weather.tex",
-      "scriptSet": "tamil-comparisons"
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ka-numbers-and-weather",
+      "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 21,
       "title": "Dog and Cat",
-      "label": "ch:ta-dog-and-cat",
-      "output": "tamil/book/chapters/ch21-dog-and-cat.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-dog-and-cat",
+      "output": "kannada/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 22,
       "title": "Green and Yellow",
-      "label": "ch:ta-green-and-yellow",
-      "output": "tamil/book/chapters/ch22-green-and-yellow.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-green-and-yellow",
+      "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 23,
       "title": "Day",
-      "label": "ch:ta-day",
-      "output": "tamil/book/chapters/ch23-day.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-day",
+      "output": "kannada/book/chapters/ch23-day.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 24,
       "title": "Night",
-      "label": "ch:ta-night",
-      "output": "tamil/book/chapters/ch24-night.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-night",
+      "output": "kannada/book/chapters/ch24-night.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 25,
       "title": "Good Night",
-      "label": "ch:ta-good-night",
-      "output": "tamil/book/chapters/ch25-good-night.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-good-night",
+      "output": "kannada/book/chapters/ch25-good-night.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 26,
       "title": "Morning",
-      "label": "ch:ta-morning",
-      "output": "tamil/book/chapters/ch26-morning.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-morning",
+      "output": "kannada/book/chapters/ch26-morning.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 27,
       "title": "Evening",
-      "label": "ch:ta-evening",
-      "output": "tamil/book/chapters/ch27-evening.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-evening",
+      "output": "kannada/book/chapters/ch27-evening.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 28,
       "title": "Afternoon",
-      "label": "ch:ta-afternoon",
-      "output": "tamil/book/chapters/ch28-afternoon.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-afternoon",
+      "output": "kannada/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 29,
       "title": "Good Morning",
-      "label": "ch:ta-good-morning",
-      "output": "tamil/book/chapters/ch29-good-morning.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-good-morning",
+      "output": "kannada/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 30,
       "title": "Good Evening",
-      "label": "ch:ta-good-evening",
-      "output": "tamil/book/chapters/ch30-good-evening.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-good-evening",
+      "output": "kannada/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 31,
       "title": "Good Afternoon",
-      "label": "ch:ta-good-afternoon",
-      "output": "tamil/book/chapters/ch31-good-afternoon.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-good-afternoon",
+      "output": "kannada/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 32,
       "title": "The Core Verbs",
-      "label": "ch:ta-core-verbs",
-      "output": "tamil/book/chapters/ch32-core-verbs.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-core-verbs",
+      "output": "kannada/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 33,
-      "title": "Four Verbs of the Mind",
-      "label": "ch:ta-verbs-of-the-mind",
-      "output": "tamil/book/chapters/ch33-verbs-of-the-mind.tex",
-      "scriptSet": "tamil-comparisons"
+      "title": "Four Verbs of Mind and Page",
+      "label": "ch:ka-mind-verbs",
+      "output": "kannada/book/chapters/ch33-mind-verbs.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
-      "language": "tamil",
+      "language": "kannada",
       "chapter": 34,
       "title": "Four Verbs Between People",
-      "label": "ch:ta-verbs-between-people",
-      "output": "tamil/book/chapters/ch34-verbs-between-people.tex",
-      "scriptSet": "tamil-comparisons"
+      "label": "ch:ka-social-verbs",
+      "output": "kannada/book/chapters/ch34-social-verbs.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
       "language": "latin",
@@ -2387,76 +1536,236 @@
       "output": "latin/book/chapters/ch43-answering-meeting-buying.tex"
     },
     {
-      "language": "bengali",
+      "language": "malayalam",
       "chapter": 6,
-      "title": "Numbers One to Five",
-      "label": "ch:numbers-one-to-five",
-      "output": "bengali/book/chapters/ch06-numbers-1-5.tex",
-      "unicodeScript": "Bengali",
-      "scriptCommand": "bn"
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ml-dative-case",
+      "output": "malayalam/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
-      "language": "bengali",
+      "language": "malayalam",
       "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ml-numbers-one-to-ten",
+      "output": "malayalam/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ml-please",
+      "output": "malayalam/book/chapters/ch08-please.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ml-sorry",
+      "output": "malayalam/book/chapters/ch09-sorry.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ml-days-of-the-week",
+      "output": "malayalam/book/chapters/ch10-days.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:ml-core-colours",
+      "output": "malayalam/book/chapters/ch11-colours.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ml-family",
+      "output": "malayalam/book/chapters/ch12-family.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:ml-head-and-hand",
+      "output": "malayalam/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ml-seasons",
+      "output": "malayalam/book/chapters/ch14-seasons.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ml-water-and-rice",
+      "output": "malayalam/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:ml-traditional-months",
+      "output": "malayalam/book/chapters/ch16-months.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ml-noon-and-midnight",
+      "output": "malayalam/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ml-telling-time",
+      "output": "malayalam/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ml-asking-age",
+      "output": "malayalam/book/chapters/ch19-age.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ml-numbers-and-weather",
+      "output": "malayalam/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ml-dog-and-cat",
+      "output": "malayalam/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ml-green-and-yellow",
+      "output": "malayalam/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ml-day",
+      "output": "malayalam/book/chapters/ch23-day.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ml-night",
+      "output": "malayalam/book/chapters/ch24-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ml-good-night",
+      "output": "malayalam/book/chapters/ch25-good-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ml-morning",
+      "output": "malayalam/book/chapters/ch26-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ml-evening",
+      "output": "malayalam/book/chapters/ch27-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ml-afternoon",
+      "output": "malayalam/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ml-good-morning",
+      "output": "malayalam/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ml-good-evening",
+      "output": "malayalam/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ml-good-afternoon",
+      "output": "malayalam/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 32,
       "title": "The Core Verbs",
-      "label": "ch:bn-core-verbs",
-      "output": "bengali/book/chapters/ch07-core-verbs.tex",
-      "unicodeScript": "Bengali",
-      "scriptCommand": "bn"
+      "label": "ch:ml-core-verbs",
+      "output": "malayalam/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
-      "language": "bengali",
-      "chapter": 8,
+      "language": "malayalam",
+      "chapter": 33,
       "title": "The Mind and the Page",
-      "label": "ch:bn-mind-and-page",
-      "output": "bengali/book/chapters/ch08-mind-and-page.tex",
-      "unicodeScript": "Bengali",
-      "scriptCommand": "bn"
+      "label": "ch:ml-mind-and-page",
+      "output": "malayalam/book/chapters/ch33-mind-and-page.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
-      "language": "bengali",
-      "chapter": 9,
+      "language": "malayalam",
+      "chapter": 34,
       "title": "Taking, Asking, Helping, Liking",
-      "label": "ch:bn-conjunct-verbs",
-      "output": "bengali/book/chapters/ch09-conjunct-verbs.tex",
-      "unicodeScript": "Bengali",
-      "scriptCommand": "bn"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 6,
-      "title": "Numbers One to Five",
-      "label": "ch:numbers-one-to-five",
-      "output": "gujarati/book/chapters/ch06-numbers-1-5.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 7,
-      "title": "Six Verbs at the Core",
-      "label": "ch:gu-core-verbs",
-      "output": "gujarati/book/chapters/ch07-core-verbs.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 8,
-      "title": "The Mind and the Page",
-      "label": "ch:gu-mind-and-page",
-      "output": "gujarati/book/chapters/ch08-mind-and-page.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 9,
-      "title": "Taking, Asking, Helping, Liking",
-      "label": "ch:gu-doing-verbs",
-      "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
+      "label": "ch:ml-taking-asking-helping-liking",
+      "output": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
       "language": "marathi",
@@ -2493,78 +1802,6 @@
       "output": "marathi/book/chapters/ch09-doing-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 6,
-      "title": "Numbers One to Five",
-      "label": "ch:numbers-one-to-five",
-      "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
-      "unicodeScript": "Gurmukhi",
-      "scriptCommand": "pa"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 7,
-      "title": "Six Verbs at the Core",
-      "label": "ch:pa-core-verbs",
-      "output": "punjabi/book/chapters/ch07-core-verbs.tex",
-      "unicodeScript": "Gurmukhi",
-      "scriptCommand": "pa"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 8,
-      "title": "The Mind, the Page, and the Falling Tone",
-      "label": "ch:pa-mind-and-tone",
-      "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
-      "unicodeScript": "Gurmukhi",
-      "scriptCommand": "pa"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 9,
-      "title": "Taking, Asking, Helping, and What Pleases You",
-      "label": "ch:pa-taking-and-liking",
-      "output": "punjabi/book/chapters/ch09-taking-and-liking.tex",
-      "unicodeScript": "Gurmukhi",
-      "scriptCommand": "pa"
-    },
-    {
-      "language": "sanskrit",
-      "chapter": 6,
-      "title": "Numbers One to Five",
-      "label": "ch:numbers-one-to-five",
-      "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",
-      "unicodeScript": "Devanagari",
-      "scriptCommand": "sk"
-    },
-    {
-      "language": "sanskrit",
-      "chapter": 7,
-      "title": "The Core Verbs",
-      "label": "ch:sa-core-verbs",
-      "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
-      "unicodeScript": "Devanagari",
-      "scriptCommand": "sk"
-    },
-    {
-      "language": "sanskrit",
-      "chapter": 8,
-      "title": "The Mind and the Palm Leaf",
-      "label": "ch:sa-mind-verbs",
-      "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
-      "unicodeScript": "Devanagari",
-      "scriptCommand": "sk"
-    },
-    {
-      "language": "sanskrit",
-      "chapter": 9,
-      "title": "Taking, Asking, Helping, Loving",
-      "label": "ch:sa-doing-verbs",
-      "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
-      "unicodeScript": "Devanagari",
-      "scriptCommand": "sk"
     },
     {
       "language": "persian",
@@ -2621,6 +1858,916 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "portuguese",
+      "chapter": 2,
+      "title": "How Are You?",
+      "label": "ch:pt-how-are-you",
+      "output": "portuguese/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:pt-introductions",
+      "output": "portuguese/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:pt-farewells",
+      "output": "portuguese/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:pt-first-verbs",
+      "output": "portuguese/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:pt-numbers-one-to-ten",
+      "output": "portuguese/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 7,
+      "title": "Days of the Week",
+      "label": "ch:pt-days-of-the-week",
+      "output": "portuguese/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 8,
+      "title": "Telling Time",
+      "label": "ch:pt-telling-time",
+      "output": "portuguese/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:pt-months-and-seasons",
+      "output": "portuguese/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:pt-family",
+      "output": "portuguese/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 11,
+      "title": "Bread, Water, and Wine",
+      "label": "ch:pt-bread-water-wine",
+      "output": "portuguese/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:pt-numbers-eleven-to-twenty",
+      "output": "portuguese/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:pt-colours",
+      "output": "portuguese/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 14,
+      "title": "Having and Telling Your Age",
+      "label": "ch:pt-having-and-age",
+      "output": "portuguese/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 15,
+      "title": "The Past Portuguese Kept",
+      "label": "ch:pt-past-portuguese-kept",
+      "output": "portuguese/book/chapters/ch15-past-portuguese-kept.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 16,
+      "title": "Ser and Estar",
+      "label": "ch:pt-ser-and-estar",
+      "output": "portuguese/book/chapters/ch16-ser-and-estar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:pt-head-and-hand",
+      "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 18,
+      "title": "Verbs at the Core",
+      "label": "ch:pt-core-verbs",
+      "output": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 19,
+      "title": "Verbs of the Mind",
+      "label": "ch:pt-mind-verbs",
+      "output": "portuguese/book/chapters/ch19-mind-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:pt-taking-asking-helping-liking",
+      "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 21,
+      "title": "Bringing, Getting, Waiting, Buying",
+      "label": "ch:pt-bringing-getting-waiting-buying",
+      "output": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "title": "Answering, Meeting, and Three Ways to Play",
+      "label": "ch:pt-answering-meeting-playing",
+      "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 7,
+      "title": "Six Verbs at the Core",
+      "label": "ch:pa-core-verbs",
+      "output": "punjabi/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 8,
+      "title": "The Mind, the Page, and the Falling Tone",
+      "label": "ch:pa-mind-and-tone",
+      "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, and What Pleases You",
+      "label": "ch:pa-taking-and-liking",
+      "output": "punjabi/book/chapters/ch09-taking-and-liking.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "russian",
+      "chapter": 3,
+      "title": "Six Verbs, and the One You Never Say",
+      "label": "ch:russian-first-verbs",
+      "output": "russian/book/chapters/ch03-first-verbs.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "title": "Verbs of the Mind and the Page",
+      "label": "ch:russian-verbs-of-the-mind",
+      "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:russian-verbs-of-the-hand",
+      "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "title": "The Core Verbs",
+      "label": "ch:sa-core-verbs",
+      "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 8,
+      "title": "The Mind and the Palm Leaf",
+      "label": "ch:sa-mind-verbs",
+      "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:sa-doing-verbs",
+      "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "spanish",
+      "chapter": 1,
+      "title": "Hola and Buenos Días",
+      "label": "ch:first-words",
+      "output": "spanish/book/chapters/ch01-first-words.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 2,
+      "title": "The Rest of the Greetings",
+      "label": "ch:greetings",
+      "output": "spanish/book/chapters/ch02-greetings.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "spanish/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "output": "spanish/book/chapters/ch04-how-are-you.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 5,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "spanish/book/chapters/ch05-farewells.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 6,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "spanish/book/chapters/ch06-first-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 19,
+      "title": "Yes and No",
+      "label": "ch:spanish-basic-responses",
+      "output": "spanish/book/chapters/ch19-yes-and-no.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 20,
+      "title": "Lo Siento",
+      "label": "ch:spanish-sorry",
+      "output": "spanish/book/chapters/ch20-lo-siento.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 21,
+      "title": "Days of the Week",
+      "label": "ch:spanish-days-of-the-week",
+      "output": "spanish/book/chapters/ch21-days-of-the-week.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 22,
+      "title": "Black, White, Red, and Blue",
+      "label": "ch:spanish-black-white-red-blue",
+      "output": "spanish/book/chapters/ch22-black-white-red-blue.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "esar"
+    },
+    {
+      "language": "spanish",
+      "chapter": 23,
+      "title": "Parents and Siblings",
+      "label": "ch:spanish-family",
+      "output": "spanish/book/chapters/ch23-family.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 24,
+      "title": "Head and Hand",
+      "label": "ch:spanish-head-and-hand",
+      "output": "spanish/book/chapters/ch24-head-and-hand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 25,
+      "title": "The Seasons",
+      "label": "ch:spanish-seasons",
+      "output": "spanish/book/chapters/ch25-seasons.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 26,
+      "title": "Water, Wine, and Bread",
+      "label": "ch:spanish-water-wine-bread",
+      "output": "spanish/book/chapters/ch26-water-wine-bread.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 27,
+      "title": "The Months",
+      "label": "ch:spanish-months",
+      "output": "spanish/book/chapters/ch27-months.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 28,
+      "title": "Noon and Midnight",
+      "label": "ch:spanish-noon-midnight",
+      "output": "spanish/book/chapters/ch28-noon-midnight.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 29,
+      "title": "Telling Time",
+      "label": "ch:spanish-telling-time",
+      "output": "spanish/book/chapters/ch29-telling-time.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 30,
+      "title": "The Weather",
+      "label": "ch:spanish-weather",
+      "output": "spanish/book/chapters/ch30-weather.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 31,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:spanish-numbers-eleven-to-twenty",
+      "output": "spanish/book/chapters/ch31-numbers-11-20.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 32,
+      "title": "Dog and Cat",
+      "label": "ch:spanish-dog-and-cat",
+      "output": "spanish/book/chapters/ch32-dog-and-cat.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 33,
+      "title": "Green and Yellow",
+      "label": "ch:spanish-green-and-yellow",
+      "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 34,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:spanish-verbs-of-the-mind",
+      "output": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 35,
+      "title": "Taking, Asking, Helping — and the Backwards Verb",
+      "label": "ch:spanish-backwards-verb",
+      "output": "spanish/book/chapters/ch35-take-ask-help.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 36,
+      "title": "Hearing, Sleeping, Walking, Running",
+      "label": "ch:spanish-hear-sleep-walk-run",
+      "output": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "title": "Opening, Closing, Sitting Down, Standing Up",
+      "label": "ch:spanish-open-close-sit-stand",
+      "output": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 38,
+      "title": "Telling What Happened",
+      "label": "ch:spanish-narrating",
+      "output": "spanish/book/chapters/ch38-narrating.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 38,
+      "title": "Bringing, Getting, Playing, Meeting",
+      "label": "ch:spanish-bring-get-play-meet",
+      "output": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 39,
+      "title": "Waiting, Answering, Buying",
+      "label": "ch:spanish-wait-answer-buy",
+      "output": "spanish/book/chapters/ch40-wait-answer-buy.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 6,
+      "title": "Dative Case and Dative Subjects",
+      "label": "ch:ta-dative-case",
+      "output": "tamil/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ta-numbers-one-to-ten",
+      "output": "tamil/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ta-please",
+      "output": "tamil/book/chapters/ch08-please.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ta-sorry",
+      "output": "tamil/book/chapters/ch09-sorry.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ta-days-of-the-week",
+      "output": "tamil/book/chapters/ch10-days.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 11,
+      "title": "Colours",
+      "label": "ch:ta-colours",
+      "output": "tamil/book/chapters/ch11-colours.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ta-family",
+      "output": "tamil/book/chapters/ch12-family.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 13,
+      "title": "Body Parts",
+      "label": "ch:ta-body-parts",
+      "output": "tamil/book/chapters/ch13-body-parts.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ta-seasons",
+      "output": "tamil/book/chapters/ch14-seasons.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ta-water-and-rice",
+      "output": "tamil/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 16,
+      "title": "Tamil Months",
+      "label": "ch:ta-tamil-months",
+      "output": "tamil/book/chapters/ch16-months.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ta-noon-and-midnight",
+      "output": "tamil/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ta-telling-time",
+      "output": "tamil/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ta-asking-age",
+      "output": "tamil/book/chapters/ch19-age.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty and Weather",
+      "label": "ch:ta-numbers-and-weather",
+      "output": "tamil/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ta-dog-and-cat",
+      "output": "tamil/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ta-green-and-yellow",
+      "output": "tamil/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ta-day",
+      "output": "tamil/book/chapters/ch23-day.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ta-night",
+      "output": "tamil/book/chapters/ch24-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ta-good-night",
+      "output": "tamil/book/chapters/ch25-good-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ta-morning",
+      "output": "tamil/book/chapters/ch26-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ta-evening",
+      "output": "tamil/book/chapters/ch27-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ta-afternoon",
+      "output": "tamil/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ta-good-morning",
+      "output": "tamil/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ta-good-evening",
+      "output": "tamil/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ta-good-afternoon",
+      "output": "tamil/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:ta-core-verbs",
+      "output": "tamil/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 33,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:ta-verbs-of-the-mind",
+      "output": "tamil/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:ta-verbs-between-people",
+      "output": "tamil/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:te-dative-case",
+      "output": "telugu/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:te-numbers-one-to-ten",
+      "output": "telugu/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:te-please",
+      "output": "telugu/book/chapters/ch08-please.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:te-sorry",
+      "output": "telugu/book/chapters/ch09-sorry.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:te-days-of-the-week",
+      "output": "telugu/book/chapters/ch10-days.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:te-core-colours",
+      "output": "telugu/book/chapters/ch11-colours.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:te-family",
+      "output": "telugu/book/chapters/ch12-family.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:te-head-and-hand",
+      "output": "telugu/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:te-seasons",
+      "output": "telugu/book/chapters/ch14-seasons.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:te-water-and-rice",
+      "output": "telugu/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:te-traditional-months",
+      "output": "telugu/book/chapters/ch16-months.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:te-noon-and-midnight",
+      "output": "telugu/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:te-telling-time",
+      "output": "telugu/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:te-asking-age",
+      "output": "telugu/book/chapters/ch19-age.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:te-numbers-and-weather",
+      "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:te-dog-and-cat",
+      "output": "telugu/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:te-green-and-yellow",
+      "output": "telugu/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:te-day",
+      "output": "telugu/book/chapters/ch23-day.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:te-night",
+      "output": "telugu/book/chapters/ch24-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:te-good-night",
+      "output": "telugu/book/chapters/ch25-good-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:te-morning",
+      "output": "telugu/book/chapters/ch26-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:te-evening",
+      "output": "telugu/book/chapters/ch27-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:te-afternoon",
+      "output": "telugu/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:te-good-morning",
+      "output": "telugu/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:te-good-evening",
+      "output": "telugu/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:te-good-afternoon",
+      "output": "telugu/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 32,
+      "title": "The Core Verbs",
+      "label": "ch:te-core-verbs",
+      "output": "telugu/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 33,
+      "title": "Four Verbs of the Mind",
+      "label": "ch:te-verbs-of-the-mind",
+      "output": "telugu/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "title": "Four Verbs Between People",
+      "label": "ch:te-verbs-between-people",
+      "output": "telugu/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",
@@ -2673,50 +2820,6 @@
       "output": "urdu/book/chapters/ch08-social-verbs.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
-    },
-    {
-      "language": "chinese",
-      "chapter": 1,
-      "title": "Nǐ Hǎo — Hello, Character by Character",
-      "label": "ch:zh-nihao",
-      "output": "chinese/book/chapters/ch01-nihao.tex",
-      "unicodeScript": "Han",
-      "scriptCommand": "zh"
-    },
-    {
-      "language": "japanese",
-      "chapter": 1,
-      "title": "Three Writing Systems in One Doorway",
-      "label": "ch:ja-three-scripts",
-      "output": "japanese/book/chapters/ch01-three-scripts.tex",
-      "scriptSet": "japanese-main"
-    },
-    {
-      "language": "russian",
-      "chapter": 3,
-      "title": "Six Verbs, and the One You Never Say",
-      "label": "ch:russian-first-verbs",
-      "output": "russian/book/chapters/ch03-first-verbs.tex",
-      "unicodeScript": "Cyrillic",
-      "scriptCommand": "ru"
-    },
-    {
-      "language": "russian",
-      "chapter": 4,
-      "title": "Verbs of the Mind and the Page",
-      "label": "ch:russian-verbs-of-the-mind",
-      "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
-      "unicodeScript": "Cyrillic",
-      "scriptCommand": "ru"
-    },
-    {
-      "language": "russian",
-      "chapter": 5,
-      "title": "Taking, Asking, Helping, Loving",
-      "label": "ch:russian-verbs-of-the-hand",
-      "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
-      "unicodeScript": "Cyrillic",
-      "scriptCommand": "ru"
     }
   ],
   "handwritten": [

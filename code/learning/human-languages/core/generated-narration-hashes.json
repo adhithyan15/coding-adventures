@@ -6076,35 +6076,52 @@
     {
       "language": "spanish",
       "chapter": 38,
-      "sourceHash": "fnv1a64:c1ac330a7c23eff4",
+      "sourceHash": "fnv1a64:fb08ebb4ab104061",
       "lessonIds": [
-        "ES-C38-traer",
-        "ES-C38-conseguir",
-        "ES-C38-jugar",
-        "ES-C38-conocer"
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 4,
       "text": "spanish/narration/ch38.txt",
       "json": "spanish/narration/ch38.json",
-      "textHash": "fnv1a64:fb6861ab74d95714",
-      "jsonHash": "fnv1a64:95b695f1e84b5f4c"
+      "textHash": "fnv1a64:5423519d63f4278b",
+      "jsonHash": "fnv1a64:d16e5823142a90a6"
     },
     {
       "language": "spanish",
       "chapter": 39,
-      "sourceHash": "fnv1a64:914c3cd989cee222",
+      "sourceHash": "fnv1a64:7456067a57e86e2a",
       "lessonIds": [
-        "ES-C39-esperar",
-        "ES-C39-contestar",
-        "ES-C39-comprar"
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch39.txt",
+      "json": "spanish/narration/ch39.json",
+      "textHash": "fnv1a64:17cd66776c7c615f",
+      "jsonHash": "fnv1a64:bee3ee41fd2ec659"
+    },
+    {
+      "language": "spanish",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:ce6a6c3168436788",
+      "lessonIds": [
+        "ES-C40-esperar",
+        "ES-C40-contestar",
+        "ES-C40-comprar"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 3,
-      "text": "spanish/narration/ch39.txt",
-      "json": "spanish/narration/ch39.json",
-      "textHash": "fnv1a64:c542f630cd008f76",
-      "jsonHash": "fnv1a64:0c7342f00fc2a265"
+      "text": "spanish/narration/ch40.txt",
+      "json": "spanish/narration/ch40.json",
+      "textHash": "fnv1a64:3e0298514bd09b62",
+      "jsonHash": "fnv1a64:b0bae32827f8a1cb"
     },
     {
       "language": "tamil",

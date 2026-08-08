@@ -2947,25 +2947,38 @@
     {
       "language": "spanish",
       "chapter": 38,
-      "sourceHash": "fnv1a64:efc54f8084747f5c",
+      "sourceHash": "fnv1a64:c8ea6dde6af5f2dd",
       "lessonIds": [
-        "ES-C38-traer",
-        "ES-C38-conseguir",
-        "ES-C38-jugar",
-        "ES-C38-conocer"
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
       ],
-      "tex": "spanish/book/chapters/ch38-bring-get-play-meet.tex"
+      "tex": "spanish/book/chapters/ch38-narrating.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:c8ea6dde6af5f2dd",
+      "lessonIds": [
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
+      ],
+      "tex": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
     },
     {
       "language": "spanish",
       "chapter": 39,
-      "sourceHash": "fnv1a64:98fee7c8a800af79",
+      "sourceHash": "fnv1a64:1734ff08f45ebaae",
       "lessonIds": [
-        "ES-C39-esperar",
-        "ES-C39-contestar",
-        "ES-C39-comprar"
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
       ],
-      "tex": "spanish/book/chapters/ch39-wait-answer-buy.tex"
+      "tex": "spanish/book/chapters/ch40-wait-answer-buy.tex"
     },
     {
       "language": "tamil",

@@ -1,14 +1,14 @@
 {
   "version": 1,
   "language": "spanish",
-  "chapter": 39,
+  "chapter": 40,
   "title": "Waiting, Answering, Buying",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:914c3cd989cee222",
+  "sourceHash": "fnv1a64:ce6a6c3168436788",
   "lessons": [
     {
       "id": "ES-C40-esperar",
-      "sequence": 1810,
+      "sequence": 1850,
       "title": "esperar — one verb for waiting, hoping and expecting",
       "headword": "esperar",
       "romanization": "esperar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4e82b9f7ace68e5",
+      "sourceHash": "fnv1a64:d1d66a938854a9f8",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
     },
     {
       "id": "ES-C40-contestar",
-      "sequence": 1820,
+      "sequence": 1860,
       "title": "contestar — \"to answer\", from a Roman courtroom",
       "headword": "contestar",
       "romanization": "contestar",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:093453e8ebf17b12",
+      "sourceHash": "fnv1a64:70efdfe07b3d8faa",
       "notice": null,
       "blocks": [
         {
@@ -321,7 +321,7 @@
     },
     {
       "id": "ES-C40-comprar",
-      "sequence": 1830,
+      "sequence": 1870,
       "title": "comprar — \"to buy\", and a cousin that is not one",
       "headword": "comprar",
       "romanization": "comprar",
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af44da425bb5002",
+      "sourceHash": "fnv1a64:32c3212f61c32a32",
       "notice": null,
       "blocks": [
         {

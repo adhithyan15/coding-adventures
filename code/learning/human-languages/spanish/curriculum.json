@@ -485,6 +485,19 @@
     },
     {
       "id": "ES-PATH-034",
+      "spine_node": "SPINE-NARRATE-EVENTS",
+      "lessons": [
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-035",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ES-C39-traer",
@@ -497,7 +510,7 @@
       "after": []
     },
     {
-      "id": "ES-PATH-035",
+      "id": "ES-PATH-036",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "ES-C40-esperar",
@@ -638,8 +651,8 @@
         "ES-PATH-031",
         "ES-PATH-032",
         "ES-PATH-033",
-        "ES-PATH-034",
-        "ES-PATH-035"
+        "ES-PATH-035",
+        "ES-PATH-036"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -684,13 +697,10 @@
       "relocates": {}
     },
     "SPINE-NARRATE-EVENTS": {
-      "segments": [],
-      "omits": [
-        "NARRATIVE-SEQUENCE",
-        "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
-        "ASPECT-ONGOING-PAST"
+      "segments": [
+        "ES-PATH-034"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-GIVE-REASONS": {
