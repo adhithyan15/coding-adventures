@@ -1353,6 +1353,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT VAF must be finite and non-negative");
   }
+  const bjtReverseEarlyVoltage = params.get("VAR") ?? params.get("VB");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtReverseEarlyVoltage !== undefined &&
+    (!Number.isFinite(bjtReverseEarlyVoltage) || bjtReverseEarlyVoltage < 0.0)
+  ) {
+    throw new NetlistParseError("BJT VAR must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2067,6 +2075,14 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("XTI") ?? 3.0,
       model.params.get("EG") ?? 1.11,
       model.params.get("VAF") ?? model.params.get("VA") ?? 0.0,
+      1.0,
+      1.0,
+      0.75,
+      0.33,
+      0.75,
+      0.33,
+      0.5,
+      model.params.get("VAR") ?? model.params.get("VB") ?? 0.0,
     );
   }
   if (prefix === "J") {

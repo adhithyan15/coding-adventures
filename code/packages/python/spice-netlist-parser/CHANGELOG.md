@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `VAR` / `VB` reverse Early voltage.
 - Validate and lower BJT model-card `VAF` / `VA` forward Early voltage.
 - Validate and lower BJT model-card `EG` energy gap.
 - Validate and lower BJT model-card `XTI` temperature exponent.
