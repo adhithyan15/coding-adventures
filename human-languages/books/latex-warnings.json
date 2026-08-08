@@ -127,7 +127,7 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 1,
+        "overfull": 6,
         "underfull": 0
       },
       "improvements": [],
@@ -246,7 +246,7 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 3,
+        "overfull": 7,
         "underfull": 0
       },
       "improvements": [],
@@ -313,9 +313,9 @@
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
-        "missing_character": 1,
+        "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 2
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
