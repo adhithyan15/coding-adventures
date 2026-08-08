@@ -1613,6 +1613,29 @@ def test_rejects_invalid_jfet_source_resistance(value: str) -> None:
         parse_netlist(f".model fast NJF(RS={value})")
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"), [("-0.01", -0.01), ("0", 0.0), ("0.02", 0.02)]
+)
+def test_parse_jfet_threshold_voltage_temperature_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(TCV={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Tcv == expected
+
+
+def test_rejects_non_finite_jfet_threshold_voltage_temperature_coefficient() -> None:
+    with pytest.raises(NetlistParseError, match="JFET TCV must be finite"):
+        parse_netlist(".model fast NJF(TCV=1e999)")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

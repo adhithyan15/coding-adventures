@@ -1440,6 +1440,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET RS must be finite and non-negative");
   }
+  const jfetThresholdVoltageTemperatureCoefficient = params.get("TCV");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetThresholdVoltageTemperatureCoefficient !== undefined &&
+    !Number.isFinite(jfetThresholdVoltageTemperatureCoefficient)
+  ) {
+    throw new NetlistParseError("JFET TCV must be finite");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -2039,6 +2047,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("GDSNOI") ?? 1.0,
       model.params.get("RD") ?? 0.0,
       model.params.get("RS") ?? 0.0,
+      model.params.get("TCV") ?? 0.0,
     );
   }
   if (prefix === "M") {

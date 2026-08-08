@@ -1656,6 +1656,31 @@ J1 drain gate source fast
     },
   );
 
+  it.each([
+    ["-0.01", -0.01],
+    ["0", 0.0],
+    ["0.02", 0.02],
+  ])(
+    "parses JFET threshold-voltage temperature coefficient %s",
+    (value, expected) => {
+      const parsed = parseNetlist(`
+.model fast NJF(TCV=${value})
+J1 drain gate source fast
+`);
+
+      expect(parsed.circuit.elements()[0]).toMatchObject({
+        kind: "jfet",
+        thresholdVoltageTemperatureCoefficient: expected,
+      });
+    },
+  );
+
+  it("rejects a non-finite JFET threshold-voltage temperature coefficient", () => {
+    expect(() => parseNetlist(".model fast NJF(TCV=1e999)")).toThrow(
+      "JFET TCV must be finite",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
