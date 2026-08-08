@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1615,
+    "totalLessons": 1667,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -28,12 +28,12 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 483,
     "forwardReviews": 273,
-    "atomsNeverRevisited": 479,
+    "atomsNeverRevisited": 472,
     "forwardReferences": 468,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 25,
     "chapterGateCleanTracks": 3,
-    "drivableLessons": 1455,
+    "drivableLessons": 1507,
     "drivablePercent": 90,
     "chaptersWithoutDrivablePrefix": 41,
     "unexplainedModalityOverrides": 0
@@ -1490,7 +1490,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "bookChapters": [
           1,
@@ -1501,7 +1505,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1519,7 +1527,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "bookChapters": [
           1,
@@ -1530,7 +1542,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1649,7 +1665,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "bookChapters": [
           1,
@@ -1660,7 +1680,11 @@
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11,
+          12,
+          13
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1704,7 +1728,11 @@
           5,
           6,
           7,
-          8
+          8,
+          9,
+          10,
+          11,
+          12
         ],
         "bookChapters": [
           1,
@@ -1714,7 +1742,11 @@
           5,
           6,
           7,
-          8
+          8,
+          9,
+          10,
+          11,
+          12
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1860,19 +1892,19 @@
       {
         "language": "marathi",
         "status": "mixed",
-        "lessonCount": 49,
+        "lessonCount": 62,
         "versions": {
           "1": 33,
-          "2": 16
+          "2": 29
         }
       },
       {
         "language": "punjabi",
         "status": "mixed",
-        "lessonCount": 47,
+        "lessonCount": 61,
         "versions": {
           "1": 31,
-          "2": 16
+          "2": 30
         }
       },
       {
@@ -1905,10 +1937,10 @@
       {
         "language": "sanskrit",
         "status": "mixed",
-        "lessonCount": 47,
+        "lessonCount": 59,
         "versions": {
           "1": 30,
-          "2": 17
+          "2": 29
         }
       },
       {
@@ -1923,10 +1955,10 @@
       {
         "language": "urdu",
         "status": "mixed",
-        "lessonCount": 33,
+        "lessonCount": 46,
         "versions": {
           "1": 4,
-          "2": 29
+          "2": 42
         }
       },
       {
@@ -2812,8 +2844,8 @@
       },
       {
         "language": "marathi",
-        "bookChapters": 9,
-        "declaredChapters": 4,
+        "bookChapters": 13,
+        "declaredChapters": 8,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
@@ -2836,8 +2868,8 @@
       },
       {
         "language": "punjabi",
-        "bookChapters": 9,
-        "declaredChapters": 4,
+        "bookChapters": 13,
+        "declaredChapters": 8,
         "missingCapability": 5,
         "findings": 5,
         "clean": false
@@ -2852,8 +2884,8 @@
       },
       {
         "language": "sanskrit",
-        "bookChapters": 9,
-        "declaredChapters": 4,
+        "bookChapters": 13,
+        "declaredChapters": 8,
         "missingCapability": 5,
         "findings": 6,
         "clean": false
@@ -2884,16 +2916,16 @@
       },
       {
         "language": "urdu",
-        "bookChapters": 8,
-        "declaredChapters": 7,
+        "bookChapters": 12,
+        "declaredChapters": 11,
         "missingCapability": 1,
         "findings": 3,
         "clean": false
       }
     ],
     "summary": {
-      "bookChapters": 497,
-      "declaredChapters": 399,
+      "bookChapters": 513,
+      "declaredChapters": 415,
       "chaptersWithoutCapability": 98,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 25,
@@ -2905,9 +2937,9 @@
     }
   },
   "levels": {
-    "totalLessons": 1615,
+    "totalLessons": 1667,
     "byLevel": {
-      "pre-A1": 812,
+      "pre-A1": 864,
       "A1": 297,
       "A2": 350,
       "B1": 8,
@@ -3100,9 +3132,9 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 49,
+        "lessonCount": 62,
         "byLevel": {
-          "pre-A1": 23,
+          "pre-A1": 36,
           "A1": 2,
           "A2": 14,
           "B1": 0,
@@ -3145,9 +3177,9 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 47,
+        "lessonCount": 61,
         "byLevel": {
-          "pre-A1": 22,
+          "pre-A1": 36,
           "A1": 4,
           "A2": 14,
           "B1": 0,
@@ -3175,9 +3207,9 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 47,
+        "lessonCount": 59,
         "byLevel": {
-          "pre-A1": 22,
+          "pre-A1": 34,
           "A1": 3,
           "A2": 14,
           "B1": 0,
@@ -3235,9 +3267,9 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 33,
+        "lessonCount": 46,
         "byLevel": {
-          "pre-A1": 20,
+          "pre-A1": 33,
           "A1": 0,
           "A2": 13,
           "B1": 0,
@@ -3806,8 +3838,8 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 49,
-        "measurable": 16,
+        "lessonCount": 62,
+        "measurable": 29,
         "unmeasurable": 33,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -3830,8 +3862,8 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 47,
-        "measurable": 16,
+        "lessonCount": 61,
+        "measurable": 30,
         "unmeasurable": 31,
         "lessonViolations": 4,
         "chapterViolations": 1
@@ -3846,8 +3878,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 47,
-        "measurable": 17,
+        "lessonCount": 59,
+        "measurable": 29,
         "unmeasurable": 30,
         "lessonViolations": 3,
         "chapterViolations": 1
@@ -3878,8 +3910,8 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 33,
-        "measurable": 29,
+        "lessonCount": 46,
+        "measurable": 42,
         "unmeasurable": 4,
         "lessonViolations": 3,
         "chapterViolations": 3
@@ -4744,8 +4776,8 @@
           "language": "marathi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 49,
-          "totalGlyphs": 45,
+          "lessonCount": 62,
+          "totalGlyphs": 46,
           "lessonViolations": 3,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
@@ -4774,11 +4806,11 @@
           "language": "punjabi",
           "script": "gurmukhi",
           "latinScript": false,
-          "lessonCount": 47,
-          "totalGlyphs": 44,
+          "lessonCount": 61,
+          "totalGlyphs": 45,
           "lessonViolations": 4,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 0
+          "lessonsWithForeignScript": 2
         },
         {
           "language": "russian",
@@ -4794,8 +4826,8 @@
           "language": "sanskrit",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 47,
-          "totalGlyphs": 46,
+          "lessonCount": 59,
+          "totalGlyphs": 48,
           "lessonViolations": 5,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
@@ -4834,17 +4866,17 @@
           "language": "urdu",
           "script": "urdu-nastaliq",
           "latinScript": false,
-          "lessonCount": 33,
+          "lessonCount": 46,
           "totalGlyphs": 33,
           "lessonViolations": 2,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 1
+          "lessonsWithForeignScript": 2
         }
       ],
       "summary": {
         "lessonViolations": 61,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 170,
+        "lessonsWithForeignScript": 173,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": {
           "lessonId": "HI-W01-shirorekha-na-ma",
@@ -4863,7 +4895,7 @@
       "lessonViolations": 40,
       "chapterViolations": 24,
       "unmeasurableLessons": 573,
-      "measurablePercent": 65,
+      "measurablePercent": 66,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -17107,6 +17139,66 @@
         "revisits": 0
       },
       {
+        "atom": "PA-COMPARISON-VEKHNA-DEKHNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-vekhna",
+        "introducedAt": 37,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-AUNA-GAM",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-auna",
+        "introducedAt": 35,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-KHANA-KHAD",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-khana",
+        "introducedAt": 36,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-VEKHNA-IKS",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-vekhna",
+        "introducedAt": 37,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-EVIDENCE-GHORA-KORA",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-khana",
+        "introducedAt": 36,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "PT-ETYMON-DE-NADA-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-de-nada",
@@ -17267,6 +17359,30 @@
         "language": "russian",
         "introducedBy": "RU-C02-ya",
         "introducedAt": 12,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-GRAMMAR-NUMERAL-GENDER",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-numbers-1-5",
+        "introducedAt": 30,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-HISTORY-INDO-ARYAN-NEUTER-FORMS",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-numbers-1-5",
+        "introducedAt": 30,
         "missed": [
           "R1",
           "R2",
@@ -17875,10 +17991,58 @@
         "revisits": 0
       },
       {
-        "atom": "UR-ETYMON-TUM-THOU",
+        "atom": "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
         "language": "urdu",
-        "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedBy": "UR-C05-khuda-hafiz",
+        "introducedAt": 18,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "UR-CROSSLINGUAL-THIK",
+        "language": "urdu",
+        "introducedBy": "UR-C04-thik",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "UR-DIALOGUE-TAKE-LEAVE",
+        "language": "urdu",
+        "introducedBy": "UR-C05-practice",
+        "introducedAt": 19,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "UR-ETYMON-HONA-BE",
+        "language": "urdu",
+        "introducedBy": "UR-C06-hona",
+        "introducedAt": 20,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda-hafiz",
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R2",
@@ -17899,16 +18063,16 @@
         "revisits": 1
       },
       {
-        "atom": "UR-SCRIPT-AAP-TUM-TU",
+        "atom": "UR-SCRIPT-JANA",
         "language": "urdu",
-        "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedBy": "UR-C06-jana",
+        "introducedAt": 21,
         "missed": [
           "R1",
           "R2",
           "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "UR-SCRIPT-MERA-NAAM-HAI",
@@ -23500,59 +23664,356 @@
         "revisits": 0
       },
       {
-        "atom": "PA-COMPARISON-VEKHNA-DEKHNA",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-vekhna",
+        "atom": "MR-ETYMON-AA-YAA-COME",
+        "language": "marathi",
+        "introducedBy": "MR-C07-yene",
         "introducedAt": 37,
         "missed": [
           "R1",
-          "R2"
+          "R3"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-AUNA-GAM",
+        "atom": "MR-ETYMON-PAACH-NASAL-RETENTION",
+        "language": "marathi",
+        "introducedBy": "MR-C06-number-differences",
+        "introducedAt": 34,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-PASH-SPEK",
+        "language": "marathi",
+        "introducedBy": "MR-C07-pahne",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-HISTORY-SELECTIVE-RETENTION",
+        "language": "marathi",
+        "introducedBy": "MR-C06-number-differences",
+        "introducedAt": 34,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-LEX-JANE",
+        "language": "marathi",
+        "introducedBy": "MR-C07-jane",
+        "introducedAt": 36,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-COMPARISON-PANJ-MATCH",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-CONTRAST-JANA-JANNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-janna",
+        "introducedAt": 38,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-AKKH-EYE",
+        "language": "punjabi",
+        "introducedBy": "PA-C12-akkh",
+        "introducedAt": 55,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "PA-ETYMON-HONA-BHU",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-hona",
+        "introducedAt": 33,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-ETYMON-JANA-YATI",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-jana",
+        "introducedAt": 34,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-JANNA-KNOW",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-janna",
+        "introducedAt": 38,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-PANJ-PANCA-INHERITANCE",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-PASAND-SHINE",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-pasand",
+        "introducedAt": 46,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "PA-ETYMON-PERSIAN-PANJ-INDEPENDENT",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-SAMAJH-BUDH",
+        "language": "punjabi",
+        "introducedBy": "PA-C08-samajhna",
+        "introducedAt": 40,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-ETYMON-SOCHNA-SHUC",
+        "language": "punjabi",
+        "introducedBy": "PA-C08-sochna",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-EVIDENCE-PANJAH-PACAS",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-GRAMMAR-A-PREFIX-TOWARD",
         "language": "punjabi",
         "introducedBy": "PA-C07-auna",
         "introducedAt": 35,
         "missed": [
           "R1",
-          "R2"
+          "R3"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-KHANA-KHAD",
+        "atom": "PA-GRAMMAR-BE-TWO-ROOTS",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-hona",
+        "introducedAt": 33,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-HISTORY-PANJ-CONVERGENCE",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-HISTORY-PANJABI-FIVE-RIVERS",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-numbers-1-5",
+        "introducedAt": 31,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-LEX-HONA",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-hona",
+        "introducedAt": 33,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-JANNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-janna",
+        "introducedAt": 38,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-LEX-KHANA",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
         "introducedAt": 36,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-LEX-NUMBERS-ONE-TO-FIVE",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-numbers-1-5",
+        "introducedAt": 31,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-VEKHNA-IKS",
+        "atom": "PA-LEX-SAMAJHNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C08-samajhna",
+        "introducedAt": 40,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-SOCHNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C08-sochna",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-LEX-VEKHNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-vekhna",
         "introducedAt": 37,
         "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-SCRIPT-GURMUKHI-TOP-LINE",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-numbers-1-5",
+        "introducedAt": 31,
+        "missed": [
           "R1",
-          "R2"
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-SCRIPT-TIPPI-NASAL",
+        "language": "punjabi",
+        "introducedBy": "PA-C06-numbers-1-5",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R3"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-EVIDENCE-GHORA-KORA",
+        "atom": "PA-SOUND-NASAL-STOP-VOICING",
         "language": "punjabi",
-        "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedBy": "PA-C06-panj-convergence",
+        "introducedAt": 32,
         "missed": [
           "R1",
-          "R2"
+          "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "PA-SOUND-Y-TO-J",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-jana",
+        "introducedAt": 34,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "PT-ETYMON-ACUCAR-03",
@@ -24842,6 +25303,94 @@
         "revisits": 3
       },
       {
+        "atom": "SA-COMPARISON-NUMERAL-FAMILY",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-EKA-SUFFIX-CAVEAT",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-GNO-DESCENDANTS",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-janati",
+        "introducedAt": 38,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-GWEM-COME-VENUE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-gacchati",
+        "introducedAt": 34,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-PANJ-PANCA-COGNATE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-pancha-travels",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-PENTE-DESCENDANTS",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-pancha-travels",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-PUNCH-DISPUTED",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-pancha-travels",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-SPEK-DESCENDANTS",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-pashyati",
+        "introducedAt": 37,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "SA-GRAMMAR-NUMERAL-DUAL",
         "language": "sanskrit",
         "introducedBy": "SA-C06-numbers-1-5",
@@ -24850,29 +25399,106 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "SA-GRAMMAR-NUMERAL-GENDER",
+        "atom": "SA-HISTORY-FOUR-FIVE-ANALOGY",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-HISTORY-NUMERAL-INHERITANCE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-HISTORY-PUNJAB-FIVE-WATERS",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-pancha-travels",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR",
         "language": "sanskrit",
         "introducedBy": "SA-C06-numbers-1-5",
         "introducedAt": 30,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "SA-HISTORY-INDO-ARYAN-NEUTER-FORMS",
+        "atom": "SA-LEX-ASTI-BHAVATI-BE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-asti",
+        "introducedAt": 33,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-LEX-NUMBERS-ONE-TO-FIVE",
         "language": "sanskrit",
         "introducedBy": "SA-C06-numbers-1-5",
         "introducedAt": 30,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 2
+      },
+      {
+        "atom": "SA-LEX-PASHYATI-SEE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-pashyati",
+        "introducedAt": 37,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-SOUND-GRIMMS-LAW-P-TO-F",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-SOUND-PIE-KW-OUTCOMES",
+        "language": "sanskrit",
+        "introducedBy": "SA-C06-number-cognates",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "TA-ETYMON-EZHUTU-03",
@@ -25964,48 +26590,48 @@
         "revisits": 1
       },
       {
-        "atom": "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
+        "atom": "UR-DIALOGUE-WELLBEING",
         "language": "urdu",
-        "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedBy": "UR-C04-practice",
+        "introducedAt": 15,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "UR-CROSSLINGUAL-THIK",
+        "atom": "UR-ETYMON-ANA-TOWARD-GO",
         "language": "urdu",
-        "introducedBy": "UR-C04-thik",
-        "introducedAt": 13,
+        "introducedBy": "UR-C06-ana",
+        "introducedAt": 22,
         "missed": [
           "R1",
-          "R2"
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "UR-DIALOGUE-TAKE-LEAVE",
+        "atom": "UR-ETYMON-HAFIZ-ARABIC",
         "language": "urdu",
-        "introducedBy": "UR-C05-practice",
-        "introducedAt": 19,
+        "introducedBy": "UR-C05-hafiz",
+        "introducedAt": 17,
         "missed": [
           "R1",
-          "R2"
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 3
       },
       {
-        "atom": "UR-ETYMON-HONA-BE",
+        "atom": "UR-ETYMON-JANNA-KNOW",
         "language": "urdu",
-        "introducedBy": "UR-C06-hona",
-        "introducedAt": 20,
+        "introducedBy": "UR-C06-janna",
+        "introducedAt": 24,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "UR-ETYMON-KHUSH-PERSIAN",
@@ -26023,6 +26649,28 @@
         "language": "urdu",
         "introducedBy": "UR-C03-kya",
         "introducedAt": 6,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-SOCHNA-GRIEVE",
+        "language": "urdu",
+        "introducedBy": "UR-C07-sochna",
+        "introducedAt": 25,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-TUM-THOU",
+        "language": "urdu",
+        "introducedBy": "UR-C03-aap-tum-tu",
+        "introducedAt": 5,
         "missed": [
           "R1",
           "R2"
@@ -26063,15 +26711,37 @@
         "revisits": 1
       },
       {
-        "atom": "UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS",
+        "atom": "UR-GRAMMAR-WELLBEING-WORD-ORDER",
         "language": "urdu",
-        "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedBy": "UR-C04-main-thik-hun",
+        "introducedAt": 14,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 1
+      },
+      {
+        "atom": "UR-LEX-JANA",
+        "language": "urdu",
+        "introducedBy": "UR-C06-jana",
+        "introducedAt": 21,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-LEX-JANNA",
+        "language": "urdu",
+        "introducedBy": "UR-C06-janna",
+        "introducedAt": 24,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "UR-LEX-KAISE-KAISI",
@@ -26085,6 +26755,17 @@
         "revisits": 2
       },
       {
+        "atom": "UR-LEX-KHUDA-HAFIZ",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda-hafiz",
+        "introducedAt": 18,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "UR-LEX-WELLBEING-QUESTION",
         "language": "urdu",
         "introducedBy": "UR-C04-aap-kaise-hain",
@@ -26096,13 +26777,68 @@
         "revisits": 3
       },
       {
-        "atom": "UR-SCRIPT-JANA",
+        "atom": "UR-LEX-WELLBEING-REPLY",
         "language": "urdu",
-        "introducedBy": "UR-C06-jana",
-        "introducedAt": 21,
+        "introducedBy": "UR-C04-main-thik-hun",
+        "introducedAt": 14,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-PRAGMATICS-STANDARD-FAREWELL",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda-hafiz",
+        "introducedAt": 18,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-REGISTER-INDO-ARYAN-CORE",
+        "language": "urdu",
+        "introducedBy": "UR-C06-bolna",
+        "introducedAt": 23,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-SCRIPT-AAP-TUM-TU",
+        "language": "urdu",
+        "introducedBy": "UR-C03-aap-tum-tu",
+        "introducedAt": 5,
         "missed": [
           "R1",
           "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-SCRIPT-HAFIZ",
+        "language": "urdu",
+        "introducedBy": "UR-C05-hafiz",
+        "introducedAt": 17,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-SCRIPT-JANNA-DOUBLE-NUN",
+        "language": "urdu",
+        "introducedBy": "UR-C06-janna",
+        "introducedAt": 24,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 1
       },
@@ -26118,6 +26854,28 @@
         "revisits": 2
       },
       {
+        "atom": "UR-SCRIPT-KHUDA",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda",
+        "introducedAt": 16,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda-hafiz",
+        "introducedAt": 18,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "UR-SCRIPT-KYA",
         "language": "urdu",
         "introducedBy": "UR-C03-kya",
@@ -26125,6 +26883,17 @@
         "missed": [
           "R1",
           "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-SCRIPT-THIK",
+        "language": "urdu",
+        "introducedBy": "UR-C04-thik",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R3"
         ],
         "revisits": 2
       },
@@ -31029,12 +31798,32 @@
         "revisits": 1
       },
       {
-        "atom": "MR-ETYMON-AA-YAA-COME",
+        "atom": "MR-ETYMON-BAHIN-NOT-SISTER",
         "language": "marathi",
-        "introducedBy": "MR-C07-yene",
-        "introducedAt": 37,
+        "introducedBy": "MR-C11-bahin",
+        "introducedAt": 56,
         "missed": [
-          "R1"
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-BHAKARI-LUMP",
+        "language": "marathi",
+        "introducedBy": "MR-C10-bhakari",
+        "introducedAt": 52,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-BHAU-BROTHER",
+        "language": "marathi",
+        "introducedBy": "MR-C11-bhau",
+        "introducedAt": 55,
+        "missed": [
+          "R2"
         ],
         "revisits": 1
       },
@@ -31043,6 +31832,16 @@
         "language": "marathi",
         "introducedBy": "MR-C08-samajne",
         "introducedAt": 42,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-ETYMON-CHAHA-OVERLAND",
+        "language": "marathi",
+        "introducedBy": "MR-C10-chaha",
+        "introducedAt": 50,
         "missed": [
           "R2"
         ],
@@ -31056,23 +31855,63 @@
         "missed": [
           "R1"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "MR-ETYMON-PAACH-NASAL-RETENTION",
+        "atom": "MR-ETYMON-DUDH-DUGDHA",
         "language": "marathi",
-        "introducedBy": "MR-C06-number-differences",
-        "introducedAt": 34,
+        "introducedBy": "MR-C10-dudh",
+        "introducedAt": 51,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "MR-ETYMON-PASH-SPEK",
+        "atom": "MR-ETYMON-GRAH-GRAB",
         "language": "marathi",
-        "introducedBy": "MR-C07-pahne",
-        "introducedAt": 39,
+        "introducedBy": "MR-C09-ghene",
+        "introducedAt": 45,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-LIKH-SCRATCH",
+        "language": "marathi",
+        "introducedBy": "MR-C08-lihine",
+        "introducedAt": 44,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-MADAT-ARABIC",
+        "language": "marathi",
+        "introducedBy": "MR-C09-madat-karne",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-MITRA-BIND",
+        "language": "marathi",
+        "introducedBy": "MR-C11-mitra",
+        "introducedAt": 53,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-ETYMON-PAANI-DRINK",
+        "language": "marathi",
+        "introducedBy": "MR-C10-paani",
+        "introducedAt": 49,
         "missed": [
           "R2"
         ],
@@ -31086,27 +31925,187 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "MR-HISTORY-SELECTIVE-RETENTION",
+        "atom": "MR-ETYMON-VICHAR-THINK-ASK",
         "language": "marathi",
-        "introducedBy": "MR-C06-number-differences",
-        "introducedAt": 34,
+        "introducedBy": "MR-C09-vicharne",
+        "introducedAt": 46,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "MR-LEX-JANE",
+        "atom": "MR-ETYMON-VICHAR-TURN",
+        "language": "marathi",
+        "introducedBy": "MR-C08-vichar-karne",
+        "introducedAt": 41,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-GRAMMAR-AAHE-LAST",
+        "language": "marathi",
+        "introducedBy": "MR-C07-asne",
+        "introducedAt": 35,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+        "language": "marathi",
+        "introducedBy": "MR-C07-mahit-asne",
+        "introducedAt": 40,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-GRAMMAR-DATIVE-LIKING",
+        "language": "marathi",
+        "introducedBy": "MR-C09-avadne",
+        "introducedAt": 48,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-GRAMMAR-KUTUMB-NEUTER",
+        "language": "marathi",
+        "introducedBy": "MR-C11-kutumb",
+        "introducedAt": 54,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-GRAMMAR-NE-NEUTER-NOUN",
+        "language": "marathi",
+        "introducedBy": "MR-C07-khane",
+        "introducedAt": 38,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-GRAMMAR-PRESENT-GENDER",
         "language": "marathi",
         "introducedBy": "MR-C07-jane",
         "introducedAt": 36,
         "missed": [
+          "R3"
+        ],
+        "revisits": 10
+      },
+      {
+        "atom": "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT",
+        "language": "marathi",
+        "introducedBy": "MR-C11-bahin",
+        "introducedAt": 56,
+        "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 2
+      },
+      {
+        "atom": "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER",
+        "language": "marathi",
+        "introducedBy": "MR-C10-bhakari",
+        "introducedAt": 52,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-ASNE-AAHE",
+        "language": "marathi",
+        "introducedBy": "MR-C07-asne",
+        "introducedAt": 35,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-AVADNE",
+        "language": "marathi",
+        "introducedBy": "MR-C09-avadne",
+        "introducedAt": 48,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-LEX-BAHIN",
+        "language": "marathi",
+        "introducedBy": "MR-C11-bahin",
+        "introducedAt": 56,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-BHAKARI",
+        "language": "marathi",
+        "introducedBy": "MR-C10-bhakari",
+        "introducedAt": 52,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-BHAU",
+        "language": "marathi",
+        "introducedBy": "MR-C11-bhau",
+        "introducedAt": 55,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-CHAHA",
+        "language": "marathi",
+        "introducedBy": "MR-C10-chaha",
+        "introducedAt": 50,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-DUDH",
+        "language": "marathi",
+        "introducedBy": "MR-C10-dudh",
+        "introducedAt": 51,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-GHENE",
+        "language": "marathi",
+        "introducedBy": "MR-C09-ghene",
+        "introducedAt": 45,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "MR-LEX-KHANE",
@@ -31114,9 +32113,79 @@
         "introducedBy": "MR-C07-khane",
         "introducedAt": 38,
         "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-KUTUMB",
+        "language": "marathi",
+        "introducedBy": "MR-C11-kutumb",
+        "introducedAt": 54,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-LIHINE",
+        "language": "marathi",
+        "introducedBy": "MR-C08-lihine",
+        "introducedAt": 44,
+        "missed": [
           "R2"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "MR-LEX-MADAT-KARNE",
+        "language": "marathi",
+        "introducedBy": "MR-C09-madat-karne",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-LEX-MAHIT-JANNE",
+        "language": "marathi",
+        "introducedBy": "MR-C07-mahit-asne",
+        "introducedAt": 40,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-MITRA",
+        "language": "marathi",
+        "introducedBy": "MR-C11-mitra",
+        "introducedAt": 53,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-NUMBERS-ONE-TO-FIVE",
+        "language": "marathi",
+        "introducedBy": "MR-C06-numbers-1-5",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-LEX-PAANI",
+        "language": "marathi",
+        "introducedBy": "MR-C10-paani",
+        "introducedAt": 49,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "MR-LEX-PAHNE",
@@ -31126,7 +32195,17 @@
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-PREM-KARNE",
+        "language": "marathi",
+        "introducedBy": "MR-C09-avadne",
+        "introducedAt": 48,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "MR-LEX-VACHNE",
@@ -31139,64 +32218,154 @@
         "revisits": 2
       },
       {
-        "atom": "PA-COMPARISON-PANJ-MATCH",
-        "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "atom": "MR-LEX-VICHAR-KARNE",
+        "language": "marathi",
+        "introducedBy": "MR-C08-vichar-karne",
+        "introducedAt": 41,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 5
       },
       {
-        "atom": "PA-CONTRAST-JANA-JANNA",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
+        "atom": "MR-LEX-VICHARNE",
+        "language": "marathi",
+        "introducedBy": "MR-C09-vicharne",
+        "introducedAt": 46,
         "missed": [
           "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-ETYMON-HONA-BHU",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
-        "missed": [
-          "R1"
         ],
         "revisits": 2
       },
       {
-        "atom": "PA-ETYMON-JANA-YATI",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-jana",
-        "introducedAt": 34,
+        "atom": "MR-LEX-YENE",
+        "language": "marathi",
+        "introducedBy": "MR-C07-yene",
+        "introducedAt": 37,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
-        "atom": "PA-ETYMON-JANNA-KNOW",
+        "atom": "MR-PHRASE-KRUPAYA",
+        "language": "marathi",
+        "introducedBy": "MR-C10-paani",
+        "introducedAt": 49,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-SCRIPT-DON-FINAL-N",
+        "language": "marathi",
+        "introducedBy": "MR-C06-numbers-1-5",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-SCRIPT-PAACH-NONNASAL",
+        "language": "marathi",
+        "introducedBy": "MR-C06-numbers-1-5",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MR-SOUND-CHA-TSAA",
+        "language": "marathi",
+        "introducedBy": "MR-C06-numbers-1-5",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-ETYMON-BHAIN-BHAGA",
         "language": "punjabi",
-        "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
+        "introducedBy": "PA-C11-bhain",
+        "introducedAt": 54,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-PANJ-PANCA-INHERITANCE",
+        "atom": "PA-ETYMON-BHARA-BROTHER",
         "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedBy": "PA-C11-bhara",
+        "introducedAt": 53,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-CHA-CHINESE",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-chaa",
+        "introducedAt": 48,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-DUDH-DUGDHA",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-dudh",
+        "introducedAt": 49,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-LAINA-LABH",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-laina",
+        "introducedAt": 43,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-ETYMON-LIKH-SCRATCH",
+        "language": "punjabi",
+        "introducedBy": "PA-C08-likhna",
+        "introducedAt": 42,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-MADAD-ARABIC",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-madad-karna",
+        "introducedAt": 45,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-PAANI-DRINK",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-paani",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "PA-ETYMON-PARHNA-PATH",
@@ -31209,154 +32378,174 @@
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-PERSIAN-PANJ-INDEPENDENT",
+        "atom": "PA-ETYMON-PARIVAR-SURROUND",
         "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedBy": "PA-C11-parivar",
+        "introducedAt": 52,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "PA-ETYMON-SAMAJH-BUDH",
+        "atom": "PA-ETYMON-PUCHHNA-PRACH",
         "language": "punjabi",
-        "introducedBy": "PA-C08-samajhna",
-        "introducedAt": 40,
+        "introducedBy": "PA-C09-puchhna",
+        "introducedAt": 44,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "PA-ETYMON-SOCHNA-SHUC",
+        "atom": "PA-ETYMON-ROTI-UNKNOWN",
         "language": "punjabi",
-        "introducedBy": "PA-C08-sochna",
-        "introducedAt": 39,
+        "introducedBy": "PA-C10-roti",
+        "introducedAt": 50,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-GRAMMAR-DATIVE-LIKING",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-pasand",
+        "introducedAt": 46,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-GRAMMAR-NA-INFINITIVE",
+        "language": "punjabi",
+        "introducedBy": "PA-C07-hona",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 13
+      },
+      {
+        "atom": "PA-GRAMMAR-NOUN-PLUS-KARNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-madad-karna",
+        "introducedAt": 45,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "PA-EVIDENCE-PANJAH-PACAS",
-        "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-GRAMMAR-A-PREFIX-TOWARD",
+        "atom": "PA-LEX-AUNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-auna",
         "introducedAt": 35,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "PA-GRAMMAR-BE-TWO-ROOTS",
+        "atom": "PA-LEX-DUDH",
         "language": "punjabi",
-        "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
+        "introducedBy": "PA-C10-dudh",
+        "introducedAt": 49,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "PA-HISTORY-PANJ-CONVERGENCE",
+        "atom": "PA-LEX-JANA",
         "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedBy": "PA-C07-jana",
+        "introducedAt": 34,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "PA-HISTORY-PANJABI-FIVE-RIVERS",
+        "atom": "PA-LEX-LAINA",
         "language": "punjabi",
-        "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-LEX-HONA",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "PA-LEX-JANNA",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-LEX-KHANA",
-        "language": "punjabi",
-        "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedBy": "PA-C09-laina",
+        "introducedAt": 43,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PA-LEX-NUMBERS-ONE-TO-FIVE",
+        "atom": "PA-LEX-LIKHNA",
         "language": "punjabi",
-        "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-LEX-SAMAJHNA",
-        "language": "punjabi",
-        "introducedBy": "PA-C08-samajhna",
-        "introducedAt": 40,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "PA-LEX-SOCHNA",
-        "language": "punjabi",
-        "introducedBy": "PA-C08-sochna",
-        "introducedAt": 39,
+        "introducedBy": "PA-C08-likhna",
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PA-LEX-VEKHNA",
+        "atom": "PA-LEX-PAANI",
         "language": "punjabi",
-        "introducedBy": "PA-C07-vekhna",
-        "introducedAt": 37,
+        "introducedBy": "PA-C10-paani",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PA-LEX-PARIVAR",
+        "language": "punjabi",
+        "introducedBy": "PA-C11-parivar",
+        "introducedAt": 52,
         "missed": [
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-PASAND",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-pasand",
+        "introducedAt": 46,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PA-LEX-PUCHHNA",
+        "language": "punjabi",
+        "introducedBy": "PA-C09-puchhna",
+        "introducedAt": 44,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-ROTI",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-roti",
+        "introducedAt": 50,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-PHRASE-KIRPA-KARKE",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-paani",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "PA-SCRIPT-ADDAK-DOUBLING",
@@ -31366,17 +32555,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-SCRIPT-GURMUKHI-TOP-LINE",
-        "language": "punjabi",
-        "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "PA-SCRIPT-SUBJOINED-HA",
@@ -31389,34 +32568,14 @@
         "revisits": 1
       },
       {
-        "atom": "PA-SCRIPT-TIPPI-NASAL",
-        "language": "punjabi",
-        "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-SOUND-NASAL-STOP-VOICING",
-        "language": "punjabi",
-        "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "PA-SOUND-PUNJABI-TONE",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
         "introducedAt": 36,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "PA-SOUND-TONE-FALLING",
@@ -31424,19 +32583,19 @@
         "introducedBy": "PA-C08-samajhna",
         "introducedAt": 40,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
-        "atom": "PA-SOUND-Y-TO-J",
+        "atom": "PA-SOUND-TONE-HIGH-LEVEL",
         "language": "punjabi",
-        "introducedBy": "PA-C07-jana",
-        "introducedAt": 34,
+        "introducedBy": "PA-C10-chaa",
+        "introducedAt": 48,
         "missed": [
           "R1"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "PT-ETYMON-AGUA-VINHO-02",
@@ -32579,20 +33738,30 @@
         "revisits": 1
       },
       {
-        "atom": "SA-COMPARISON-NUMERAL-FAMILY",
+        "atom": "SA-ETYMON-AD-EAT-COGNATE",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C07-khadati",
+        "introducedAt": 36,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-BHAGA-SHARE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C11-bhagini",
+        "introducedAt": 53,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "SA-ETYMON-AD-EAT-COGNATE",
+        "atom": "SA-ETYMON-BHRATER-PIE",
         "language": "sanskrit",
-        "introducedBy": "SA-C07-khadati",
-        "introducedAt": 36,
+        "introducedBy": "SA-C11-bhrata",
+        "introducedAt": 52,
         "missed": [
           "R2"
         ],
@@ -32609,74 +33778,104 @@
         "revisits": 1
       },
       {
-        "atom": "SA-ETYMON-EKA-SUFFIX-CAVEAT",
+        "atom": "SA-ETYMON-GHREBH-GRAB",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C09-grhnati",
+        "introducedAt": 43,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "SA-ETYMON-GNO-DESCENDANTS",
+        "atom": "SA-ETYMON-KSHIRA-DISPUTED",
         "language": "sanskrit",
-        "introducedBy": "SA-C07-janati",
-        "introducedAt": 38,
+        "introducedBy": "SA-C10-kshiram",
+        "introducedAt": 48,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "SA-ETYMON-GWEM-COME-VENUE",
+        "atom": "SA-ETYMON-KUTUMBA-DRAVIDIAN",
         "language": "sanskrit",
-        "introducedBy": "SA-C07-gacchati",
-        "introducedAt": 34,
+        "introducedBy": "SA-C11-kutumbam",
+        "introducedAt": 51,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "SA-ETYMON-PANJ-PANCA-COGNATE",
+        "atom": "SA-ETYMON-LIKH-SCRATCH",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-pancha-travels",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "SA-ETYMON-PENTE-DESCENDANTS",
-        "language": "sanskrit",
-        "introducedBy": "SA-C06-pancha-travels",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "SA-ETYMON-PUNCH-DISPUTED",
-        "language": "sanskrit",
-        "introducedBy": "SA-C06-pancha-travels",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "SA-ETYMON-SPEK-DESCENDANTS",
-        "language": "sanskrit",
-        "introducedBy": "SA-C07-pashyati",
-        "introducedAt": 37,
+        "introducedBy": "SA-C08-likhati",
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-MEI-BIND",
+        "language": "sanskrit",
+        "introducedBy": "SA-C11-mitram",
+        "introducedAt": 50,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-PA-DRINK-POTION",
+        "language": "sanskrit",
+        "introducedBy": "SA-C10-paniyam",
+        "introducedAt": 47,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-PREK-PRAY-FRAGEN",
+        "language": "sanskrit",
+        "introducedBy": "SA-C09-prcchati",
+        "introducedAt": 44,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-PRIYA-FRIEND-FREE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C09-snihyati",
+        "introducedAt": 46,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-ETYMON-SAHAYA-GOES-WITH",
+        "language": "sanskrit",
+        "introducedBy": "SA-C09-sahayyam-karoti",
+        "introducedAt": 45,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-GRAMMAR-DHATU-GANA",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-asti",
+        "introducedAt": 33,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 9
       },
       {
         "atom": "SA-GRAMMAR-GANA-TEN-AYA",
@@ -32689,54 +33888,24 @@
         "revisits": 1
       },
       {
-        "atom": "SA-HISTORY-FOUR-FIVE-ANALOGY",
+        "atom": "SA-GRAMMAR-UPASARGA-PREFIX",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C07-agacchati",
+        "introducedAt": 35,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "SA-HISTORY-NUMERAL-INHERITANCE",
+        "atom": "SA-LEX-AGACCHATI-COME",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C07-agacchati",
+        "introducedAt": 35,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "SA-HISTORY-PUNJAB-FIVE-WATERS",
-        "language": "sanskrit",
-        "introducedBy": "SA-C06-pancha-travels",
-        "introducedAt": 32,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR",
-        "language": "sanskrit",
-        "introducedBy": "SA-C06-numbers-1-5",
-        "introducedAt": 30,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "SA-LEX-ASTI-BHAVATI-BE",
-        "language": "sanskrit",
-        "introducedBy": "SA-C07-asti",
-        "introducedAt": 33,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "SA-LEX-AVAGACCHATI-UNDERSTAND",
@@ -32759,34 +33928,64 @@
         "revisits": 3
       },
       {
+        "atom": "SA-LEX-GACCHATI-GO",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-gacchati",
+        "introducedAt": 34,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-GRHNATI-TAKE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C09-grhnati",
+        "introducedAt": 43,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-JANATI-KNOW",
+        "language": "sanskrit",
+        "introducedBy": "SA-C07-janati",
+        "introducedAt": 38,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "SA-LEX-KHADATI-EAT",
         "language": "sanskrit",
         "introducedBy": "SA-C07-khadati",
         "introducedAt": 36,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "SA-LEX-NUMBERS-ONE-TO-FIVE",
+        "atom": "SA-LEX-KUTUMBAM-FAMILY",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-numbers-1-5",
-        "introducedAt": 30,
+        "introducedBy": "SA-C11-kutumbam",
+        "introducedAt": 51,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "SA-LEX-PASHYATI-SEE",
+        "atom": "SA-LEX-LIKHATI-WRITE",
         "language": "sanskrit",
-        "introducedBy": "SA-C07-pashyati",
-        "introducedAt": 37,
+        "introducedBy": "SA-C08-likhati",
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "SA-LEX-PATHATI-READ",
@@ -32799,22 +33998,32 @@
         "revisits": 1
       },
       {
-        "atom": "SA-SOUND-GRIMMS-LAW-P-TO-F",
+        "atom": "SA-LEX-PRCCHATI-ASK",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C09-prcchati",
+        "introducedAt": 44,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "SA-SOUND-PIE-KW-OUTCOMES",
+        "atom": "SA-LEX-SAHAYYAM-KAROTI-HELP",
         "language": "sanskrit",
-        "introducedBy": "SA-C06-number-cognates",
-        "introducedAt": 31,
+        "introducedBy": "SA-C09-sahayyam-karoti",
+        "introducedAt": 45,
         "missed": [
-          "R1"
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "SA-LEX-SNIHYATI-PRIYAM-LOVE",
+        "language": "sanskrit",
+        "introducedBy": "SA-C09-snihyati",
+        "introducedAt": 46,
+        "missed": [
+          "R2"
         ],
         "revisits": 1
       },
@@ -33519,44 +34728,54 @@
         "revisits": 2
       },
       {
-        "atom": "UR-DIALOGUE-WELLBEING",
+        "atom": "UR-ETYMON-AANKH-EYE",
         "language": "urdu",
-        "introducedBy": "UR-C04-practice",
-        "introducedAt": 15,
+        "introducedBy": "UR-C10-aankh",
+        "introducedAt": 39,
         "missed": [
           "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "UR-ETYMON-ANA-TOWARD-GO",
-        "language": "urdu",
-        "introducedBy": "UR-C06-ana",
-        "introducedAt": 22,
-        "missed": [
-          "R1"
         ],
         "revisits": 1
       },
       {
-        "atom": "UR-ETYMON-HAFIZ-ARABIC",
+        "atom": "UR-ETYMON-BAHAN-SHARE",
         "language": "urdu",
-        "introducedBy": "UR-C05-hafiz",
-        "introducedAt": 17,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "UR-ETYMON-JANNA-KNOW",
-        "language": "urdu",
-        "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
+        "introducedBy": "UR-C09-bahan",
+        "introducedAt": 34,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-DOST-CHOOSE",
+        "language": "urdu",
+        "introducedBy": "UR-C09-dost",
+        "introducedAt": 35,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-KAAN-UNCERTAIN",
+        "language": "urdu",
+        "introducedBy": "UR-C10-kaan",
+        "introducedAt": 37,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-KHANDAN-PERSIAN",
+        "language": "urdu",
+        "introducedBy": "UR-C09-khandan",
+        "introducedAt": 36,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "UR-ETYMON-KHUDA-PERSIAN",
@@ -33566,7 +34785,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
         "atom": "UR-ETYMON-LENA-TAKE",
@@ -33576,13 +34795,53 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-MADAD-EXTEND",
+        "language": "urdu",
+        "introducedBy": "UR-C08-madad",
+        "introducedAt": 31,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-MUNH-MYTH",
+        "language": "urdu",
+        "introducedBy": "UR-C10-munh",
+        "introducedAt": 40,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-NAAK-NOSE",
+        "language": "urdu",
+        "introducedBy": "UR-C10-naak",
+        "introducedAt": 38,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "UR-ETYMON-PARHNA-RECITE",
         "language": "urdu",
         "introducedBy": "UR-C07-parhna",
         "introducedAt": 27,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-ETYMON-PUCHHNA-ASK",
+        "language": "urdu",
+        "introducedBy": "UR-C08-puchhna",
+        "introducedAt": 30,
         "missed": [
           "R2"
         ],
@@ -33599,10 +34858,10 @@
         "revisits": 1
       },
       {
-        "atom": "UR-ETYMON-SOCHNA-GRIEVE",
+        "atom": "UR-GRAMMAR-CONJUNCT-VERB",
         "language": "urdu",
-        "introducedBy": "UR-C07-sochna",
-        "introducedAt": 25,
+        "introducedBy": "UR-C08-madad",
+        "introducedAt": 31,
         "missed": [
           "R2"
         ],
@@ -33619,24 +34878,84 @@
         "revisits": 3
       },
       {
-        "atom": "UR-GRAMMAR-WELLBEING-WORD-ORDER",
+        "atom": "UR-LEX-AANKH",
         "language": "urdu",
-        "introducedBy": "UR-C04-main-thik-hun",
-        "introducedAt": 14,
+        "introducedBy": "UR-C10-aankh",
+        "introducedAt": 39,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "UR-LEX-AAP-TUM-TU",
+        "atom": "UR-LEX-ANA",
         "language": "urdu",
-        "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedBy": "UR-C06-ana",
+        "introducedAt": 22,
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 2
+      },
+      {
+        "atom": "UR-LEX-BAHAN",
+        "language": "urdu",
+        "introducedBy": "UR-C09-bahan",
+        "introducedAt": 34,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-LEX-BHAI",
+        "language": "urdu",
+        "introducedBy": "UR-C09-bhai",
+        "introducedAt": 33,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-LEX-BOLNA",
+        "language": "urdu",
+        "introducedBy": "UR-C06-bolna",
+        "introducedAt": 23,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "UR-LEX-DOST",
+        "language": "urdu",
+        "introducedBy": "UR-C09-dost",
+        "introducedAt": 35,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-LEX-HAFIZ",
+        "language": "urdu",
+        "introducedBy": "UR-C05-hafiz",
+        "introducedAt": 17,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "UR-LEX-HONA",
+        "language": "urdu",
+        "introducedBy": "UR-C06-hona",
+        "introducedAt": 20,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "UR-LEX-HUN",
@@ -33649,34 +34968,34 @@
         "revisits": 4
       },
       {
-        "atom": "UR-LEX-JANA",
+        "atom": "UR-LEX-KAAN",
         "language": "urdu",
-        "introducedBy": "UR-C06-jana",
-        "introducedAt": 21,
+        "introducedBy": "UR-C10-kaan",
+        "introducedAt": 37,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "UR-LEX-JANNA",
+        "atom": "UR-LEX-KHANDAN",
         "language": "urdu",
-        "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "UR-LEX-KHUDA-HAFIZ",
-        "language": "urdu",
-        "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedBy": "UR-C09-khandan",
+        "introducedAt": 36,
         "missed": [
           "R2"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "UR-LEX-KHUDA",
+        "language": "urdu",
+        "introducedBy": "UR-C05-khuda",
+        "introducedAt": 16,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "UR-LEX-KYA",
@@ -33687,6 +35006,26 @@
           "R2"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "UR-LEX-LIKHNA",
+        "language": "urdu",
+        "introducedBy": "UR-C07-likhna",
+        "introducedAt": 28,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "UR-LEX-MADAD-KARNA",
+        "language": "urdu",
+        "introducedBy": "UR-C08-madad",
+        "introducedAt": 31,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "UR-LEX-MAIN",
@@ -33709,6 +35048,26 @@
         "revisits": 4
       },
       {
+        "atom": "UR-LEX-MUNH",
+        "language": "urdu",
+        "introducedBy": "UR-C10-munh",
+        "introducedAt": 40,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "UR-LEX-NAAK",
+        "language": "urdu",
+        "introducedBy": "UR-C10-naak",
+        "introducedAt": 38,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "UR-LEX-NAME-QUESTION",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-ka-naam-kya-hai",
@@ -33729,6 +35088,16 @@
         "revisits": 2
       },
       {
+        "atom": "UR-LEX-PUCHHNA",
+        "language": "urdu",
+        "introducedBy": "UR-C08-puchhna",
+        "introducedAt": 30,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "UR-LEX-SAMAJHNA",
         "language": "urdu",
         "introducedBy": "UR-C07-samajhna",
@@ -33739,42 +35108,22 @@
         "revisits": 2
       },
       {
-        "atom": "UR-LEX-WELLBEING-REPLY",
+        "atom": "UR-LEX-SOCHNA",
         "language": "urdu",
-        "introducedBy": "UR-C04-main-thik-hun",
-        "introducedAt": 14,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "UR-PRAGMATICS-STANDARD-FAREWELL",
-        "language": "urdu",
-        "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "UR-PRAGMATICS-YOU-REGISTER",
-        "language": "urdu",
-        "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedBy": "UR-C07-sochna",
+        "introducedAt": 25,
         "missed": [
           "R3"
         ],
         "revisits": 4
       },
       {
-        "atom": "UR-REGISTER-INDO-ARYAN-CORE",
+        "atom": "UR-LEX-THIK",
         "language": "urdu",
-        "introducedBy": "UR-C06-bolna",
-        "introducedAt": 23,
+        "introducedBy": "UR-C04-thik",
+        "introducedAt": 13,
         "missed": [
-          "R1"
+          "R3"
         ],
         "revisits": 2
       },
@@ -33786,43 +35135,53 @@
         "missed": [
           "R1"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "UR-SCRIPT-HAFIZ",
+        "atom": "UR-REGISTER-WRITING-BORROWED",
         "language": "urdu",
-        "introducedBy": "UR-C05-hafiz",
-        "introducedAt": 17,
+        "introducedBy": "UR-C07-likhna",
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "UR-SCRIPT-JANNA-DOUBLE-NUN",
+        "atom": "UR-SCRIPT-BE-LETTER",
         "language": "urdu",
-        "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
+        "introducedBy": "UR-C06-bolna",
+        "introducedAt": 23,
         "missed": [
-          "R2"
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "UR-SCRIPT-CHE-LETTER",
+        "language": "urdu",
+        "introducedBy": "UR-C07-sochna",
+        "introducedAt": 25,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "UR-SCRIPT-HAMZA-YE",
+        "language": "urdu",
+        "introducedBy": "UR-C09-bhai",
+        "introducedAt": 33,
+        "missed": [
+          "R1"
         ],
         "revisits": 1
       },
       {
-        "atom": "UR-SCRIPT-KHUDA",
+        "atom": "UR-SCRIPT-KAAN-NAAK-REVERSAL",
         "language": "urdu",
-        "introducedBy": "UR-C05-khuda",
-        "introducedAt": 16,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
-        "language": "urdu",
-        "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedBy": "UR-C10-naak",
+        "introducedAt": 38,
         "missed": [
           "R2"
         ],
@@ -33836,7 +35195,17 @@
         "missed": [
           "R1"
         ],
-        "revisits": 3
+        "revisits": 4
+      },
+      {
+        "atom": "UR-SCRIPT-NUN-NASAL-VOWEL",
+        "language": "urdu",
+        "introducedBy": "UR-C10-munh",
+        "introducedAt": 40,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "UR-SCRIPT-RRE-LETTER",
@@ -33849,16 +35218,6 @@
         "revisits": 1
       },
       {
-        "atom": "UR-SCRIPT-THIK",
-        "language": "urdu",
-        "introducedBy": "UR-C04-thik",
-        "introducedAt": 13,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "UR-SCRIPT-URDU-QUESTION-MARK",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-ka-naam-kya-hai",
@@ -33867,6 +35226,16 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "UR-SCRIPT-YE-THIRD-VALUE",
+        "language": "urdu",
+        "introducedBy": "UR-C08-lena",
+        "introducedAt": 29,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ZH-LEX-HAO-FOND",
@@ -37748,12 +39117,12 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 49,
+        "lessonCount": 62,
         "lessonsWithoutSequence": 33,
         "forwardPrerequisites": 15,
         "forwardReviews": 19,
-        "atomsTaught": 36,
-        "atomsNeverRevisited": 3,
+        "atomsTaught": 68,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 12
       },
       {
@@ -37778,12 +39147,12 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 47,
+        "lessonCount": 61,
         "lessonsWithoutSequence": 31,
         "forwardPrerequisites": 15,
         "forwardReviews": 16,
-        "atomsTaught": 51,
-        "atomsNeverRevisited": 3,
+        "atomsTaught": 82,
+        "atomsNeverRevisited": 4,
         "forwardReferences": 0
       },
       {
@@ -37798,12 +39167,12 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 47,
+        "lessonCount": 59,
         "lessonsWithoutSequence": 30,
         "forwardPrerequisites": 17,
         "forwardReviews": 18,
-        "atomsTaught": 43,
-        "atomsNeverRevisited": 5,
+        "atomsTaught": 67,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 1
       },
       {
@@ -37838,12 +39207,12 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 33,
+        "lessonCount": 46,
         "lessonsWithoutSequence": 4,
         "forwardPrerequisites": 1,
         "forwardReviews": 0,
-        "atomsTaught": 81,
-        "atomsNeverRevisited": 12,
+        "atomsTaught": 111,
+        "atomsNeverRevisited": 8,
         "forwardReferences": 1
       }
     ],
@@ -37852,13 +39221,13 @@
       "tracksWithUnorderedLessons": 18,
       "forwardPrerequisites": 230,
       "forwardReviews": 273,
-      "atomsTaught": 2385,
-      "atomsNeverRevisited": 479,
-      "neverRevisitedPercent": 20,
+      "atomsTaught": 2502,
+      "atomsNeverRevisited": 472,
+      "neverRevisitedPercent": 19,
       "missedByWindow": {
-        "R1": 843,
-        "R2": 1625,
-        "R3": 1097,
+        "R1": 847,
+        "R2": 1716,
+        "R3": 1205,
         "R4": 131
       },
       "forwardReferences": 468
@@ -38140,17 +39509,12 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 23 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 277
+            "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 264
           }
         ],
-        "vocabulary": 43
+        "vocabulary": 56
       },
       {
         "language": "persian",
@@ -38212,17 +39576,12 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 22 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 278
+            "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 264
           }
         ],
-        "vocabulary": 41
+        "vocabulary": 55
       },
       {
         "language": "russian",
@@ -38255,17 +39614,12 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 22 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 278
+            "detail": "teaches 34 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 266
           }
         ],
-        "vocabulary": 41
+        "vocabulary": 53
       },
       {
         "language": "spanish",
@@ -38341,14 +39695,9 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-POLITE-REQUEST-REPAIR",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 17 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 283
+            "detail": "teaches 30 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 270
           },
           {
             "criterion": "atom-budget",
@@ -38357,11 +39706,11 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "16 atom(s) at or below pre-A1 are revisited fewer than twice (5 etymology hook(s) waived)",
-            "shortfall": 16
+            "detail": "24 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 24
           }
         ],
-        "vocabulary": 30
+        "vocabulary": 43
       }
     ],
     "summary": {
@@ -38380,11 +39729,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1615,
-    "voice": 1068,
-    "sight": 491,
+    "totalLessons": 1667,
+    "voice": 1076,
+    "sight": 535,
     "pen": 56,
-    "coreVoice": 1455,
+    "coreVoice": 1507,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 90,
     "tracks": [
@@ -42872,13 +44221,13 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 49,
+        "lessonCount": 62,
         "voice": 21,
-        "sight": 28,
+        "sight": 41,
         "pen": 0,
-        "coreVoice": 48,
+        "coreVoice": 61,
         "drivablePercent": 98,
-        "drivablePrefixTotal": 48,
+        "drivablePrefixTotal": 61,
         "chapters": [
           {
             "language": "marathi",
@@ -43009,6 +44358,62 @@
               "sight"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 10,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 11,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 12,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 13,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": null
           }
         ]
@@ -43519,13 +44924,13 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 47,
-        "voice": 17,
-        "sight": 30,
+        "lessonCount": 61,
+        "voice": 18,
+        "sight": 43,
         "pen": 0,
-        "coreVoice": 46,
+        "coreVoice": 60,
         "drivablePercent": 98,
-        "drivablePrefixTotal": 46,
+        "drivablePrefixTotal": 60,
         "chapters": [
           {
             "language": "punjabi",
@@ -43656,6 +45061,63 @@
               "sight"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 10,
+            "lessonCount": 4,
+            "voice": 1,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 11,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 12,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 13,
+            "lessonCount": 2,
+            "voice": 0,
+            "sight": 2,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           }
         ]
@@ -43819,13 +45281,13 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 47,
+        "lessonCount": 59,
         "voice": 23,
-        "sight": 24,
+        "sight": 36,
         "pen": 0,
-        "coreVoice": 45,
-        "drivablePercent": 96,
-        "drivablePrefixTotal": 40,
+        "coreVoice": 57,
+        "drivablePercent": 97,
+        "drivablePrefixTotal": 52,
         "chapters": [
           {
             "language": "sanskrit",
@@ -43957,6 +45419,62 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 10,
+            "lessonCount": 3,
+            "voice": 0,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 11,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 12,
+            "lessonCount": 3,
+            "voice": 0,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 13,
+            "lessonCount": 2,
+            "voice": 0,
+            "sight": 2,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           }
         ]
@@ -45624,13 +47142,13 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 33,
-        "voice": 24,
-        "sight": 9,
+        "lessonCount": 46,
+        "voice": 31,
+        "sight": 15,
         "pen": 0,
-        "coreVoice": 33,
+        "coreVoice": 46,
         "drivablePercent": 100,
-        "drivablePrefixTotal": 33,
+        "drivablePrefixTotal": 46,
         "chapters": [
           {
             "language": "urdu",
@@ -45738,6 +47256,65 @@
             "lessonCount": 4,
             "voice": 1,
             "sight": 3,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "urdu",
+            "chapter": 9,
+            "lessonCount": 4,
+            "voice": 3,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "urdu",
+            "chapter": 10,
+            "lessonCount": 4,
+            "voice": 1,
+            "sight": 3,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "urdu",
+            "chapter": 11,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "urdu",
+            "chapter": 12,
+            "lessonCount": 4,
+            "voice": 2,
+            "sight": 2,
             "pen": 0,
             "coreVoice": 4,
             "modalities": [
