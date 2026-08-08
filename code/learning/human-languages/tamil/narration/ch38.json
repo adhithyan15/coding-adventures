@@ -1,0 +1,558 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 38,
+  "title": "Keeping Well, and Leaving",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d9d5146731ccd6eb",
+  "lessons": [
+    {
+      "id": "TA-C38-udambu",
+      "sequence": 870,
+      "title": "உடம்பு (uḍambu) — \"body,\" and how Tamil asks after your health",
+      "headword": "உடம்பு",
+      "romanization": "uḍambu",
+      "gloss": "body — the noun in the everyday Tamil way of asking after someone's health",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4c3a8be338bc60b3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Introduce a friend respectfully and name the ending. (Ivar eṉ naṇbar — the respectful -அர்.) Next you would ask how they are."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உடம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உடம்பு — uḍambu — body."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole of it, not a part. You have தலை (talai) and கை (kai) already; this is what they belong to, and the word inside the question Tamil speakers actually ask:"
+            },
+            {
+              "kind": "speech",
+              "text": "உங்கள் உடம்பு எப்படி இருக்கு — uṅgaḷ uḍambu eppaḍi irukku — how is your body, that is, how are you keeping."
+            },
+            {
+              "kind": "speech",
+              "text": "Every piece is yours: உங்கள், எப்படி, and இருக்கு from இரு. What is new is that the health question hangs on a noun rather than on you."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil has a second way to ask it, through உணவு — the noun standing on உண், \"to eat.\" Asking whether somebody has eaten is asking whether they are all right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உ + ட + ம் + பு: the standing vowel u, ட, then ம் — ம shut by the puḷḷi you have used since வணக்கம் — and பு. ம was one of the first letters you formed with a pen, alongside retroflex ண."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: two softenings in one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The letters say u-ṭa-m-pu; your mouth says uḍambu. ட sits between vowels, so it softens — the paḍi rule. ப follows the nasal ம், so it voices — the naṉṟi rule that also made naṇbaṉ. Two rules, one short word, neither written down."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart - the same entry as உடல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil has another word for the body, உடல் (uḍal), and the Dravidian dictionary does not treat them as rivals: உடல், உடம்பு (uḍambu) and உடலம் sit in the same entry, with Kannada's ಒಡಲು beside them. Usage has divided them: உடல் leans literary, உடம்பு (uḍambu) is what you say aloud about someone unwell."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "grammar",
+          "title": "Grammar Lens: where the person goes in a health question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two shapes Tamil uses to ask about a state:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the question",
+                "where the person sits"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the question: உங்கள் உடம்பு (uḍambu) எப்படி இருக்கு. where the person sits: as a possessor.",
+                "the question: உனக்கு எத்தனை வயது ஆகிறது. where the person sits: in the dative."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The formal age question does not make you the subject at all — \"to you, how many years are becoming.\" The body question makes உடம்பு (uḍambu) the subject."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two softenings — \"uṭampu … uḍambu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two softenings — \"uṭampu … uḍambu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question — \"uṅgaḷ uḍambu eppaḍi irukku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question — \"uṅgaḷ uḍambu eppaḍi irukku\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parts, the whole, and the two forms of one root — \"talai, kai … uḍambu … uḍal\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parts, the whole, and the two forms of one root — \"talai, kai … uḍambu … uḍal\"]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask someone respectfully how they are keeping, through the body, and name the two sound rules inside uḍambu. (Uṅgaḷ uḍambu eppaḍi irukku; ட softens between vowels, ப voices after a nasal.) Are உடல் and உடம்பு different words, and where does the person sit in the formal age question? (No, same entry; in the dative.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C38-sugam",
+      "sequence": 880,
+      "title": "சுகம் (sugam) — \"ease,\" the word Tamil did borrow",
+      "headword": "சுகம்",
+      "romanization": "sugam",
+      "gloss": "wellbeing, ease — the Sanskrit word Tamil did take in, sitting beside the native நலம் it never dropped",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e334b1613ee920fd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Health through the body, and the other body-word in its entry. (Uṅgaḷ uḍambu eppaḍi irukku; uḍal.) A second answer came from abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுகம் — sugam — wellbeing, ease, comfort."
+            },
+            {
+              "kind": "speech",
+              "text": "The க is doing its old trick: the letter is ka, but between vowels it comes out g. Su-g-am, not su-ka-m."
+            },
+            {
+              "kind": "speech",
+              "text": "சுகமா — sugamā — keeping well."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not the ordinary Tamil \"how are you,\" which is நல்லா இருக்கீங்களா. சுகமா is warmer and more Sanskritic, and which you hear depends on somebody's ஊர் — the native place whose name so often ends in -ūr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சு + க + ம்: ச with the u sign, a bare க, ம closed by the puḷḷi. Nothing is doubled — hold that against மன்னிக்கவும், where ன்னி has ன dotted shut and written a second time, and க்க does the same to க."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where the dative is required",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுகமா has no dative in it, and a family of Tamil states demands one: எனக்குத் தமிழ் தெரியும், \"to me, Tamil is known.\" Put a noun there and the shapes part:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the phrase",
+                "what happened"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the phrase: நான் to எனக்கு. what happened: the pronoun changes its body.",
+                "the phrase: நண்பர் to நண்பருக்கு. what happened: the noun just takes -உக்கு."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So நண்பருக்குத் தமிழ் தெரியும், and the formal age question does the same: உனக்கு எத்தனை வயது ஆகிறது. சுகமா does not: knowing and ageing come to a person; being well is what a person is."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart - the borrowing Tamil kept beside its own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுகம் (sugam) is Sanskrit सुख (sukha), \"ease\" — the apology lesson in reverse. There, மன்னிக்கவும் stood on Tamil's own மன்னி while the neighbours built their \"sorry\" on Sanskrit kṣamā. Here Tamil borrowed sukha and kept நலம் as the everyday word; Malayalam took the same loan, സുഖം, as its ordinary greeting."
+            },
+            {
+              "kind": "speech",
+              "text": "The old parse of sukha is su- \"good\" plus kha \"aperture\" — a chariot's axle-hole. Treat that as contested: the standard Sanskrit dictionary hedges it with \"said to be,\" and offers su-stha."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the softened க — \"sugam,\" not \"sukam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the softened க — \"sugam,\" not \"sukam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the state that needs a dative — \"naṇbarukkut tamiḻ teriyum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the state that needs a dative — \"naṇbarukkut tamiḻ teriyum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the state that does not, and the word kept beside it — \"sugamā … nalam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the state that does not, and the word kept beside it — \"sugamā … nalam\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is க heard as g, and what did the noun do that நான் does not? (Between vowels; it takes -உக்கு, while நான் becomes எனக்கு.) Which word did Tamil borrow, which did it keep, and how firm is the \"good axle-hole\" story? (சுகம் (sugam); நலம்; contested.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C38-vidai",
+      "sequence": 890,
+      "title": "விடை (viḍai) — \"leave,\" and the root under the house",
+      "headword": "விடை",
+      "romanization": "viḍai",
+      "gloss": "leave to depart — the noun for taking your leave, from the same root as வீடு",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f9300ce323ff2a68",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sugam — which language it came from, and which Tamil word stayed beside it. (Sanskrit; நலம்.) You came through the door, took the நாற்காலி — four legs, counted out — were given tea, said என் தவறு when the wrong cup arrived, and introduced a friend. One thing is left."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடை — viḍai — leave; permission to depart."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the act of going — you have போய் வருகிறேன் for that — but the leave itself, taken with பெறு (peṟu), \"to obtain\":"
+            },
+            {
+              "kind": "speech",
+              "text": "நன்றி. விடை பெறுகிறேன். — naṉṟi. viḍai peṟugiṟēṉ. — Thank you. I take my leave."
+            },
+            {
+              "kind": "speech",
+              "text": "It is formal and slightly literary; leaving a friend's house you would say போய் வருகிறேன்."
+            },
+            {
+              "kind": "speech",
+              "text": "The தயவுசெய்து you learned for asking has a family across the Dravidian languages, all built on the same daya, \"kindness,\" plus a light verb. Leaving is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வி + டை. வி is வ with the ி sign — the first vowel sign you learned, which made நன்றி possible. டை is ட with the ai sign ை, which wraps around the front."
+            },
+            {
+              "kind": "speech",
+              "text": "நன்றி stands beside it above, so read it once more: ந + ன் + றி — dental n, alveolar n dotted shut, hard ற with that same ி. And பெறுகிறேன் has a க between vowels, so it softens."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - one root, three words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடை (viḍai) is inherited Dravidian, and belongs to விடு (viḍu), \"to let go.\" Leave is what you are let go with."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the first word of these lessons. வீடு, \"house,\" is filed by the Dravidian dictionary in the same entry as விடு — and விடை (viḍai) is in it too:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the word: விடு viḍu. what it is: to let go, to release.",
+                "the word: வீடு vīḍu. what it is: the house — and, in the old sense, final release.",
+                "the word: விடை viḍai. what it is: leave to depart."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You walked in through வீடு and walk out through விடை (viḍai), one word in different clothes. Kannada's ಬೀಡು, the same house with its b-, sits on that root as well."
+            },
+            {
+              "kind": "speech",
+              "text": "Two cautions, because a neat pattern is when to slow down. A second விடை (viḍai) means \"bull,\" a Sanskrit borrowing from vṛṣa; and ஊர் — the settlement inside Tanjore — and நண்பன் are outside this root entirely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the departure — \"naṉṟi. viḍai peṟugiṟēṉ.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the departure — \"naṉṟi. viḍai peṟugiṟēṉ.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one root, three ways — \"viḍu … vīḍu … viḍai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one root, three ways — \"viḍu … vīḍu … viḍai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that do not join it — \"ūr … naṇbaṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that do not join it — \"ūr … naṇbaṉ\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take your leave formally, thanks in front of it, and name the earlier word that shares this root. (Naṉṟi. viḍai peṟugiṟēṉ.; வீடு, from விடு, \"to let go.\") Do ஊர் and நண்பன் belong to that root? (No — a settlement and a closeness; not everything joins up.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

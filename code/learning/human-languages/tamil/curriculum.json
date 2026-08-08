@@ -413,13 +413,84 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "TA-PATH-031",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-C35-veedu",
+        "TA-C35-kadavu",
+        "TA-C35-arai",
+        "TA-C35-naarkaali"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-031-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-032",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C36-teneer",
+        "TA-C36-paal",
+        "TA-C36-unavu",
+        "TA-C36-tavaru"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-032-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-033",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C37-uur",
+        "TA-C37-nanban",
+        "TA-C37-ivar",
+        "TA-C37-ivar-en-nanbar"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-033-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-034",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C38-udambu",
+        "TA-C38-sugam"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-034-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-035",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TA-C38-vidai"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-035-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
         "TA-PATH-001",
-        "TA-PATH-003"
+        "TA-PATH-003",
+        "TA-PATH-031"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -455,7 +526,8 @@
         "TA-PATH-009",
         "TA-PATH-013",
         "TA-PATH-018",
-        "TA-PATH-023"
+        "TA-PATH-023",
+        "TA-PATH-033"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -467,7 +539,8 @@
       "segments": [
         "TA-PATH-008",
         "TA-PATH-010",
-        "TA-PATH-019"
+        "TA-PATH-019",
+        "TA-PATH-034"
       ],
       "omits": [
         "WORD-GOOD",
@@ -478,14 +551,16 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "TA-PATH-015",
-        "TA-PATH-021"
+        "TA-PATH-021",
+        "TA-PATH-032"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "TA-PATH-012"
+        "TA-PATH-012",
+        "TA-PATH-035"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1108,6 +1183,71 @@
       "prerequisites": [],
       "lessons": [
         "TA-C01-vanakkam"
+      ]
+    },
+    {
+      "id": "TA-EXT-031-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the house, its door, a room and a chair in Tamil, so a greeting has somewhere to happen.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C35-veedu",
+        "TA-C35-kadavu",
+        "TA-C35-arai",
+        "TA-C35-naarkaali"
+      ]
+    },
+    {
+      "id": "TA-EXT-032-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for tea, milk or food in Tamil, and say whose mistake it was when the wrong thing arrives.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C36-teneer",
+        "TA-C36-paal",
+        "TA-C36-unavu",
+        "TA-C36-tavaru"
+      ]
+    },
+    {
+      "id": "TA-EXT-033-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask where somebody is from and introduce a friend in Tamil, choosing the ending that fits.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C37-uur",
+        "TA-C37-nanban",
+        "TA-C37-ivar",
+        "TA-C37-ivar-en-nanbar"
+      ]
+    },
+    {
+      "id": "TA-EXT-034-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask after somebody's health in Tamil through the body, and recognise the Sanskrit-derived alternative.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C38-udambu",
+        "TA-C38-sugam"
+      ]
+    },
+    {
+      "id": "TA-EXT-035-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take my leave in Tamil in the formal register, and place the word on its root.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C38-vidai"
       ]
     }
   ]
