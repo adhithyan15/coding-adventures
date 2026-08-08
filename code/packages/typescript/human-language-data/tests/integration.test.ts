@@ -131,7 +131,11 @@ describe("real curriculum", () => {
       // Chapter 3 (the six core verbs) is generated here rather than left out, because
       // chapters 4-5 build on знать, быть and говорить directly: printing them without
       // chapter 3 would put a forward reference into the standalone PDF.
-    ).toEqual([1, 2, 3, 4, 5]);
+      // 5 -> 10: the pre-A1 vocabulary tranche (HL-C-russian-vocab). Chapter 6 is
+      // water/coffee/tea/bread under SPINE-POLITE-REQUEST-REPAIR; 7-8 are
+      // friend/siblings/family under SPINE-EXCHANGE-NAMES; 9-10 are the track's
+      // first realization of SPINE-CHECK-WELLBEING, ear/nose/mouth/eye then heart.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 

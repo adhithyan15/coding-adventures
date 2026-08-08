@@ -5402,6 +5402,85 @@
       "jsonHash": "fnv1a64:73d2df65ad99c392"
     },
     {
+      "language": "russian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:8ced31e3df3eb956",
+      "lessonIds": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "russian/narration/ch06.txt",
+      "json": "russian/narration/ch06.json",
+      "textHash": "fnv1a64:4e6a00360326ec4e",
+      "jsonHash": "fnv1a64:dee781ea755dd287"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:d465fe6d8a8f0a04",
+      "lessonIds": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "russian/narration/ch07.txt",
+      "json": "russian/narration/ch07.json",
+      "textHash": "fnv1a64:c35c7f394452280a",
+      "jsonHash": "fnv1a64:e1629f7dbdd58140"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c9e6981d34ccdb65",
+      "lessonIds": [
+        "RU-C08-semya"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "russian/narration/ch08.txt",
+      "json": "russian/narration/ch08.json",
+      "textHash": "fnv1a64:836b51214c92b611",
+      "jsonHash": "fnv1a64:231a6cc50469e0fb"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:4b73bd4181d0e091",
+      "lessonIds": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "russian/narration/ch09.txt",
+      "json": "russian/narration/ch09.json",
+      "textHash": "fnv1a64:acf1bcbb81351e84",
+      "jsonHash": "fnv1a64:e1cde963703292fa"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:1fd0b7f471419796",
+      "lessonIds": [
+        "RU-C10-serdtse"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "russian/narration/ch10.txt",
+      "json": "russian/narration/ch10.json",
+      "textHash": "fnv1a64:344eed543d162f55",
+      "jsonHash": "fnv1a64:069067b21c2a5dcc"
+    },
+    {
       "language": "sanskrit",
       "chapter": 1,
       "sourceHash": "fnv1a64:281f1ccd090a19c1",

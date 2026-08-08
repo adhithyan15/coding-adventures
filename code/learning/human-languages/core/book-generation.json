@@ -2134,6 +2134,51 @@
       "scriptCommand": "ru"
     },
     {
+      "language": "russian",
+      "chapter": 6,
+      "title": "Water, Coffee, Tea, and Bread",
+      "label": "ch:russian-water-coffee-tea-bread",
+      "output": "russian/book/chapters/ch06-water-coffee-tea-bread.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "title": "Friend and Siblings",
+      "label": "ch:russian-friend-and-siblings",
+      "output": "russian/book/chapters/ch07-friend-and-siblings.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "title": "Family",
+      "label": "ch:russian-family",
+      "output": "russian/book/chapters/ch08-family.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "title": "Eyes, Ears, Mouth, and Nose",
+      "label": "ch:russian-face-parts",
+      "output": "russian/book/chapters/ch09-face-parts.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "title": "Heart",
+      "label": "ch:russian-heart",
+      "output": "russian/book/chapters/ch10-heart.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "title": "Numbers One to Five",
