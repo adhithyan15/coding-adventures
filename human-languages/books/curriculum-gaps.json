@@ -29,7 +29,7 @@
     "lessonsWithoutSequence": 515,
     "forwardReviews": 300,
     "atomsNeverRevisited": 516,
-    "forwardReferences": 524,
+    "forwardReferences": 443,
     "chaptersWithoutCapability": 98,
     "chapterPayoffsNotRepresentative": 25,
     "chapterGateCleanTracks": 3,
@@ -30031,14 +30031,6 @@
         "lessonsEarly": 120
       },
       {
-        "lessonId": "ES-C05-hasta-luego",
-        "language": "spanish",
-        "position": 44,
-        "word": "luego",
-        "taughtBy": "ES-C38-luego",
-        "lessonsEarly": 118
-      },
-      {
         "lessonId": "ES-C05-hasta-pronto",
         "language": "spanish",
         "position": 46,
@@ -30519,14 +30511,6 @@
         "lessonsEarly": 34
       },
       {
-        "lessonId": "LA-C05-dies-lunae-veneris",
-        "language": "latin",
-        "position": 10,
-        "word": "diēs",
-        "taughtBy": "LA-C28-dies",
-        "lessonsEarly": 34
-      },
-      {
         "lessonId": "LA-C14-annos-natus",
         "language": "latin",
         "position": 24,
@@ -30541,38 +30525,6 @@
         "word": "hand",
         "taughtBy": "GE-C17-hand",
         "lessonsEarly": 33
-      },
-      {
-        "lessonId": "KA-C06-dative-subject",
-        "language": "kannada",
-        "position": 32,
-        "word": "ಗೊತ್ತು",
-        "taughtBy": "KA-C32-gottu",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "LA-C05-saturni-solis",
-        "language": "latin",
-        "position": 11,
-        "word": "diēs",
-        "taughtBy": "LA-C28-dies",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "LA-C14-annos-natus",
-        "language": "latin",
-        "position": 24,
-        "word": "sum",
-        "taughtBy": "LA-C37-sum",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "ES-C03-usted-origin",
-        "language": "spanish",
-        "position": 17,
-        "word": "favor",
-        "taughtBy": "ES-C06-por-favor",
-        "lessonsEarly": 32
       },
       {
         "lessonId": "GE-C06-zahlen-1-5",
@@ -30695,14 +30647,6 @@
         "lessonsEarly": 23
       },
       {
-        "lessonId": "LA-C12-medius-dies-nox",
-        "language": "latin",
-        "position": 22,
-        "word": "nox",
-        "taughtBy": "LA-C29-nox",
-        "lessonsEarly": 23
-      },
-      {
         "lessonId": "FR-C16-passe-compose-etre",
         "language": "french",
         "position": 62,
@@ -30716,14 +30660,6 @@
         "position": 8,
         "word": "bis morgen",
         "taughtBy": "GE-C04-bis-morgen",
-        "lessonsEarly": 22
-      },
-      {
-        "lessonId": "LA-C12-medius-dies-nox",
-        "language": "latin",
-        "position": 22,
-        "word": "diēs",
-        "taughtBy": "LA-C28-dies",
         "lessonsEarly": 22
       },
       {
@@ -30749,14 +30685,6 @@
         "word": "போய் வருகிறேன்",
         "taughtBy": "TA-C04-poy-varugiren",
         "lessonsEarly": 21
-      },
-      {
-        "lessonId": "GE-C01-gut",
-        "language": "german",
-        "position": 2,
-        "word": "geht",
-        "taughtBy": "GE-C03-es-geht",
-        "lessonsEarly": 20
       },
       {
         "lessonId": "ML-C01-practice",
@@ -30820,22 +30748,6 @@
         "position": 32,
         "word": "mère",
         "taughtBy": "FR-C10-parents",
-        "lessonsEarly": 17
-      },
-      {
-        "lessonId": "GU-C05-kaam-karvun",
-        "language": "gujarati",
-        "position": 28,
-        "word": "કરવી",
-        "taughtBy": "GU-C09-madad-karvi",
-        "lessonsEarly": 17
-      },
-      {
-        "lessonId": "HI-C17-dopahar-aadhi-raat",
-        "language": "hindi",
-        "position": 63,
-        "word": "दोपहर",
-        "taughtBy": "HI-C30-dopahar-widened",
         "lessonsEarly": 17
       },
       {
@@ -30903,22 +30815,6 @@
         "lessonsEarly": 15
       },
       {
-        "lessonId": "KA-C17-madhyaahna-madhyaraatri",
-        "language": "kannada",
-        "position": 44,
-        "word": "ಮಧ್ಯಾಹ್ನ",
-        "taughtBy": "KA-C31-shubha-madhyahna",
-        "lessonsEarly": 15
-      },
-      {
-        "lessonId": "BN-C04-abar-dekha-hobe",
-        "language": "bengali",
-        "position": 21,
-        "word": "দেখা",
-        "taughtBy": "BN-C07-dekha",
-        "lessonsEarly": 14
-      },
-      {
         "lessonId": "HI-W03-matras-naam",
         "language": "hindi",
         "position": 10,
@@ -30959,27 +30855,11 @@
         "lessonsEarly": 14
       },
       {
-        "lessonId": "BN-C04-dekha-hobe",
-        "language": "bengali",
-        "position": 22,
-        "word": "দেখা",
-        "taughtBy": "BN-C07-dekha",
-        "lessonsEarly": 13
-      },
-      {
         "lessonId": "GU-C01-namaste",
         "language": "gujarati",
         "position": 3,
         "word": "કેમ",
         "taughtBy": "GU-C03-kem",
-        "lessonsEarly": 13
-      },
-      {
-        "lessonId": "HI-C17-dopahar-aadhi-raat",
-        "language": "hindi",
-        "position": 63,
-        "word": "रात",
-        "taughtBy": "HI-C26-raat",
         "lessonsEarly": 13
       },
       {
@@ -30989,14 +30869,6 @@
         "word": "ఉండు",
         "taughtBy": "TE-C05-undu",
         "lessonsEarly": 13
-      },
-      {
-        "lessonId": "BN-C04-kal-dekha-hobe",
-        "language": "bengali",
-        "position": 23,
-        "word": "দেখা",
-        "taughtBy": "BN-C07-dekha",
-        "lessonsEarly": 12
       },
       {
         "lessonId": "FR-C01-bien",
@@ -31031,14 +30903,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "TE-C17-madhyaahnam-ardharaatri",
-        "language": "telugu",
-        "position": 43,
-        "word": "మధ్యాహ్నం",
-        "taughtBy": "TE-C28-madhyahnam-widened",
-        "lessonsEarly": 12
-      },
-      {
         "lessonId": "FR-C01-practice",
         "language": "french",
         "position": 8,
@@ -31063,26 +30927,10 @@
         "lessonsEarly": 11
       },
       {
-        "lessonId": "HI-W04-write-mera-naam",
-        "language": "hindi",
-        "position": 13,
-        "word": "नाम",
-        "taughtBy": "HI-C02-naam",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "IT-C01-practice",
         "language": "italian",
         "position": 7,
         "word": "mi chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 11
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "position": 7,
-        "word": "chiamo",
         "taughtBy": "IT-C03-mi-chiamo",
         "lessonsEarly": 11
       },
@@ -31119,14 +30967,6 @@
         "lessonsEarly": 10
       },
       {
-        "lessonId": "HI-W04-write-mera-naam",
-        "language": "hindi",
-        "position": 13,
-        "word": "मेरा",
-        "taughtBy": "HI-C02-meraa",
-        "lessonsEarly": 10
-      },
-      {
         "lessonId": "LA-C19-practice",
         "language": "latin",
         "position": 32,
@@ -31157,14 +30997,6 @@
         "word": "வணக்கம்",
         "taughtBy": "TA-C01-vanakkam",
         "lessonsEarly": 10
-      },
-      {
-        "lessonId": "BN-C02-alaap",
-        "language": "bengali",
-        "position": 6,
-        "word": "ভালো",
-        "taughtBy": "BN-C03-bhalo",
-        "lessonsEarly": 9
       },
       {
         "lessonId": "BN-C04-dekha-hobe",
@@ -31199,26 +31031,10 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "ES-C03-llamar",
-        "language": "spanish",
-        "position": 13,
-        "word": "llama",
-        "taughtBy": "ES-C03-se-llama",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "FR-C01-practice",
         "language": "french",
         "position": 8,
         "word": "je m'appelle…",
-        "taughtBy": "FR-C02-je-mappelle",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 8,
-        "word": "m'appelle…",
         "taughtBy": "FR-C02-je-mappelle",
         "lessonsEarly": 8
       },
@@ -31351,14 +31167,6 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "ES-C03-me-llamo",
-        "language": "spanish",
-        "position": 14,
-        "word": "llama",
-        "taughtBy": "ES-C03-se-llama",
-        "lessonsEarly": 7
-      },
-      {
         "lessonId": "ES-C11-practice",
         "language": "spanish",
         "position": 81,
@@ -31395,14 +31203,6 @@
         "language": "german",
         "position": 22,
         "word": "bis bald",
-        "taughtBy": "GE-C04-bis-bald",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "position": 22,
-        "word": "bald",
         "taughtBy": "GE-C04-bis-bald",
         "lessonsEarly": 7
       },
@@ -31519,46 +31319,6 @@
         "lessonsEarly": 6
       },
       {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "position": 13,
-        "word": "vous",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "position": 3,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "GE-C01-practice",
-        "language": "german",
-        "position": 10,
-        "word": "heiße…",
-        "taughtBy": "GE-C02-ich-heisse",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "position": 22,
-        "word": "wiedersehen",
-        "taughtBy": "GE-C04-auf-wiedersehen",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "position": 18,
-        "word": "नाम",
-        "taughtBy": "HI-C02-naam",
-        "lessonsEarly": 6
-      },
-      {
         "lessonId": "LA-C25-cras-te-videbo",
         "language": "latin",
         "position": 41,
@@ -31615,14 +31375,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "ES-C03-tu-usted-register",
-        "language": "spanish",
-        "position": 16,
-        "word": "llama",
-        "taughtBy": "ES-C03-se-llama",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "ES-C04-practice",
         "language": "spanish",
         "position": 40,
@@ -31644,14 +31396,6 @@
         "position": 3,
         "word": "morgen",
         "taughtBy": "GE-C01-morgen",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "position": 17,
-        "word": "geht",
-        "taughtBy": "GE-C03-es-geht",
         "lessonsEarly": 5
       },
       {
@@ -31692,22 +31436,6 @@
         "position": 4,
         "word": "prego",
         "taughtBy": "IT-C02-prego",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "KA-C26-belagge",
-        "language": "kannada",
-        "position": 54,
-        "word": "ಮಧ್ಯಾಹ್ನ",
-        "taughtBy": "KA-C31-shubha-madhyahna",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "PT-C16-ser-vs-estar",
-        "language": "portuguese",
-        "position": 54,
-        "word": "estar",
-        "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 5
       },
       {
@@ -31767,14 +31495,6 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "position": 3,
-        "word": "nuit",
-        "taughtBy": "FR-C01-nuit",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "FR-C02-appeler",
         "language": "french",
         "position": 11,
@@ -31795,14 +31515,6 @@
         "language": "french",
         "position": 26,
         "word": "au revoir",
-        "taughtBy": "FR-C04-au-revoir",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 26,
-        "word": "revoir",
         "taughtBy": "FR-C04-au-revoir",
         "lessonsEarly": 4
       },
@@ -31855,27 +31567,11 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "KA-C27-sanje",
-        "language": "kannada",
-        "position": 55,
-        "word": "ಮಧ್ಯಾಹ್ನ",
-        "taughtBy": "KA-C31-shubha-madhyahna",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "LA-C24-propediem-te-videbo",
         "language": "latin",
         "position": 40,
         "word": "diēs",
         "taughtBy": "LA-C28-dies",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "ML-C02-enre-peru-aanu",
-        "language": "malayalam",
-        "position": 8,
-        "word": "പേര്",
-        "taughtBy": "ML-C02-peru",
         "lessonsEarly": 4
       },
       {
@@ -31895,27 +31591,11 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "TA-C02-en-peyar",
-        "language": "tamil",
-        "position": 17,
-        "word": "பெயர்",
-        "taughtBy": "TA-C02-peyar",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "TA-W04-vowel-signs-nandri",
         "language": "tamil",
         "position": 6,
         "word": "நன்றி",
         "taughtBy": "TA-C01-nandri",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "position": 7,
-        "word": "పేరు",
-        "taughtBy": "TE-C02-peru",
         "lessonsEarly": 4
       },
       {
@@ -32007,27 +31687,11 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "position": 13,
-        "word": "m'appelle…",
-        "taughtBy": "FR-C02-je-mappelle",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "GE-C01-gute-nacht",
         "language": "german",
         "position": 3,
         "word": "guten tag",
         "taughtBy": "GE-C01-guten-tag",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "position": 5,
-        "word": "morgen",
-        "taughtBy": "GE-C01-morgen",
         "lessonsEarly": 3
       },
       {
@@ -32047,22 +31711,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "position": 18,
-        "word": "क्या",
-        "taughtBy": "HI-C02-kya",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "HI-C03-aap-kaise-hain",
-        "language": "hindi",
-        "position": 26,
-        "word": "कैसे",
-        "taughtBy": "HI-C03-kaise",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
         "position": 0,
@@ -32076,22 +31724,6 @@
         "position": 49,
         "word": "essere",
         "taughtBy": "IT-C16-essere",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "KA-C28-aparahna",
-        "language": "kannada",
-        "position": 56,
-        "word": "ಮಧ್ಯಾಹ್ನ",
-        "taughtBy": "KA-C31-shubha-madhyahna",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "LA-C14-annos-natus",
-        "language": "latin",
-        "position": 24,
-        "word": "vīgintī",
-        "taughtBy": "LA-C16-undecim-viginti",
         "lessonsEarly": 3
       },
       {
@@ -32159,14 +31791,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "position": 25,
-        "word": "वदामि",
-        "taughtBy": "SA-C05-vadami",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "TE-C03-baagaa",
         "language": "telugu",
         "position": 14,
@@ -32204,14 +31828,6 @@
         "position": 36,
         "word": "مع",
         "taughtBy": "AR-C04-maa-with",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "BN-C02-amar-naam",
-        "language": "bengali",
-        "position": 8,
-        "word": "নাম",
-        "taughtBy": "BN-C02-naam",
         "lessonsEarly": 2
       },
       {
@@ -32263,14 +31879,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C05-practice",
-        "language": "spanish",
-        "position": 47,
-        "word": "favor",
-        "taughtBy": "ES-C06-por-favor",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "ES-C07-donde",
         "language": "spanish",
         "position": 59,
@@ -32291,14 +31899,6 @@
         "language": "spanish",
         "position": 67,
         "word": "ser vs estar",
-        "taughtBy": "ES-C09-ser-vs-estar",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 67,
-        "word": "vs estar",
         "taughtBy": "ES-C09-ser-vs-estar",
         "lessonsEarly": 2
       },
@@ -32375,14 +31975,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 28,
-        "word": "revoir",
-        "taughtBy": "FR-C04-au-revoir",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "FR-C05-habiter",
         "language": "french",
         "position": 35,
@@ -32431,14 +32023,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C04-bis-bald",
-        "language": "german",
-        "position": 29,
-        "word": "später",
-        "taughtBy": "GE-C04-bis-spater",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "GE-C04-bis-spater",
         "language": "german",
         "position": 31,
@@ -32468,14 +32052,6 @@
         "position": 8,
         "word": "નામ",
         "taughtBy": "GU-C02-naam",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "position": 22,
-        "word": "नाम",
-        "taughtBy": "HI-C02-naam",
         "lessonsEarly": 2
       },
       {
@@ -32519,26 +32095,10 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "IT-C02-practice",
-        "language": "italian",
-        "position": 16,
-        "word": "chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "IT-C03-practice",
         "language": "italian",
         "position": 21,
         "word": "a domani",
-        "taughtBy": "IT-C04-a-domani",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C03-practice",
-        "language": "italian",
-        "position": 21,
-        "word": "domani",
         "taughtBy": "IT-C04-a-domani",
         "lessonsEarly": 2
       },
@@ -32564,6 +32124,14 @@
         "position": 24,
         "word": "पुन्हा भेटू",
         "taughtBy": "MR-C04-punha-bhetu",
+        "lessonsEarly": 2
+      },
+      {
+        "lessonId": "PT-C01-bom",
+        "language": "portuguese",
+        "position": 0,
+        "word": "dia",
+        "taughtBy": "PT-C01-dia",
         "lessonsEarly": 2
       },
       {
@@ -32607,14 +32175,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "PT-C03-practice",
-        "language": "portuguese",
-        "position": 21,
-        "word": "logo",
-        "taughtBy": "PT-C04-ate-logo",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "RU-C01-practice",
         "language": "russian",
         "position": 3,
@@ -32639,14 +32199,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "TE-C02-naa-peru",
-        "language": "telugu",
-        "position": 9,
-        "word": "పేరు",
-        "taughtBy": "TE-C02-peru",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "AR-C01-practice",
         "language": "arabic",
         "position": 4,
@@ -32668,14 +32220,6 @@
         "position": 20,
         "word": "تشرفنا",
         "taughtBy": "AR-C02-tasharrafna",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "AR-W12-maa-salama",
-        "language": "arabic",
-        "position": 37,
-        "word": "مع",
-        "taughtBy": "AR-C04-maa-with",
         "lessonsEarly": 1
       },
       {
@@ -32731,14 +32275,6 @@
         "language": "spanish",
         "position": 26,
         "word": "de nada",
-        "taughtBy": "ES-C04-de-nada",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C04-gracias",
-        "language": "spanish",
-        "position": 26,
-        "word": "nada",
         "taughtBy": "ES-C04-de-nada",
         "lessonsEarly": 1
       },
@@ -32851,14 +32387,6 @@
         "language": "spanish",
         "position": 69,
         "word": "soy de…",
-        "taughtBy": "ES-C09-soy-de",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C09-ser-vs-estar",
-        "language": "spanish",
-        "position": 69,
-        "word": "de…",
         "taughtBy": "ES-C09-soy-de",
         "lessonsEarly": 1
       },
@@ -33079,14 +32607,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 26,
-        "word": "bientôt",
-        "taughtBy": "FR-C04-a-bientot",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "FR-C04-a-bientot",
         "language": "french",
         "position": 27,
@@ -33095,26 +32615,10 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C04-a-bientot",
-        "language": "french",
-        "position": 27,
-        "word": "demain",
-        "taughtBy": "FR-C04-a-demain",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "FR-C04-a-demain",
         "language": "french",
         "position": 28,
         "word": "à plus tard",
-        "taughtBy": "FR-C04-a-plus-tard",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 28,
-        "word": "plus tard",
         "taughtBy": "FR-C04-a-plus-tard",
         "lessonsEarly": 1
       },
@@ -33279,14 +32783,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C04-bis-morgen",
-        "language": "german",
-        "position": 30,
-        "word": "später",
-        "taughtBy": "GE-C04-bis-spater",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "GE-C04-practice",
         "language": "german",
         "position": 32,
@@ -33391,22 +32887,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GU-C02-maarun-naam-chhe",
-        "language": "gujarati",
-        "position": 9,
-        "word": "નામ",
-        "taughtBy": "GU-C02-naam",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GU-C04-kaale",
-        "language": "gujarati",
-        "position": 21,
-        "word": "મળીશું",
-        "taughtBy": "GU-C04-malishun",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "HI-C01-dhanyavad",
         "language": "hindi",
         "position": 5,
@@ -33439,27 +32919,11 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "position": 22,
-        "word": "मेरा",
-        "taughtBy": "HI-C02-meraa",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "HI-C07-haan",
         "language": "hindi",
         "position": 48,
         "word": "नहीं",
         "taughtBy": "HI-C07-nahin",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C26-raat",
-        "language": "hindi",
-        "position": 76,
-        "word": "रात्रि",
-        "taughtBy": "HI-C27-shubh-raatri",
         "lessonsEarly": 1
       },
       {
@@ -33519,26 +32983,10 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "IT-C03-io",
-        "language": "italian",
-        "position": 17,
-        "word": "chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "IT-C04-a-domani",
         "language": "italian",
         "position": 23,
         "word": "a presto",
-        "taughtBy": "IT-C04-a-presto",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C04-a-domani",
-        "language": "italian",
-        "position": 23,
-        "word": "presto",
         "taughtBy": "IT-C04-a-presto",
         "lessonsEarly": 1
       },
@@ -33551,26 +32999,10 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "IT-C04-a-presto",
-        "language": "italian",
-        "position": 24,
-        "word": "più tardi",
-        "taughtBy": "IT-C04-a-piu-tardi",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "IT-C04-arrivederci",
         "language": "italian",
         "position": 22,
         "word": "a domani",
-        "taughtBy": "IT-C04-a-domani",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C04-arrivederci",
-        "language": "italian",
-        "position": 22,
-        "word": "domani",
         "taughtBy": "IT-C04-a-domani",
         "lessonsEarly": 1
       },
@@ -33759,14 +33191,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ML-C02-ninre-peru-entaanu",
-        "language": "malayalam",
-        "position": 11,
-        "word": "പേര്",
-        "taughtBy": "ML-C02-peru",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "ML-C02-practice",
         "language": "malayalam",
         "position": 13,
@@ -33799,14 +33223,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "MR-C02-majhe-naav-aahe",
-        "language": "marathi",
-        "position": 11,
-        "word": "नाव",
-        "taughtBy": "MR-C02-naav",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "MR-C02-practice",
         "language": "marathi",
         "position": 13,
@@ -33831,14 +33247,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "MR-C03-mi",
-        "language": "marathi",
-        "position": 18,
-        "word": "बरा आहे",
-        "taughtBy": "MR-C03-mi-bara-aahe",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "MR-C04-practice",
         "language": "marathi",
         "position": 24,
@@ -33855,26 +33263,10 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "PA-C02-mera-naam-hai",
-        "language": "punjabi",
-        "position": 10,
-        "word": "ਨਾਂ",
-        "taughtBy": "PA-C02-naam",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
         "position": 0,
         "word": "bom dia",
-        "taughtBy": "PT-C01-bom-dia",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 0,
-        "word": "dia",
         "taughtBy": "PT-C01-bom-dia",
         "lessonsEarly": 1
       },
@@ -33943,35 +33335,11 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "PT-C04-adeus",
-        "language": "portuguese",
-        "position": 22,
-        "word": "logo",
-        "taughtBy": "PT-C04-ate-logo",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "PT-C04-ate-amanha",
         "language": "portuguese",
         "position": 24,
         "word": "até breve",
         "taughtBy": "PT-C04-ate-breve",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C04-ate-amanha",
-        "language": "portuguese",
-        "position": 24,
-        "word": "breve",
-        "taughtBy": "PT-C04-ate-breve",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C04-ate-logo",
-        "language": "portuguese",
-        "position": 23,
-        "word": "amanhã",
-        "taughtBy": "PT-C04-ate-amanha",
         "lessonsEarly": 1
       },
       {
@@ -34151,22 +33519,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "SA-C02-mama-nama-asti",
-        "language": "sanskrit",
-        "position": 11,
-        "word": "नाम",
-        "taughtBy": "SA-C02-nama",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "SA-C03-bhavan-katham-asti",
-        "language": "sanskrit",
-        "position": 15,
-        "word": "कथम्",
-        "taughtBy": "SA-C03-katham",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "TA-C01-practice",
         "language": "tamil",
         "position": 12,
@@ -34216,7 +33568,7 @@
         "forwardReviews": 15,
         "atomsTaught": 117,
         "atomsNeverRevisited": 97,
-        "forwardReferences": 20
+        "forwardReferences": 19
       },
       {
         "language": "bengali",
@@ -34226,7 +33578,7 @@
         "forwardReviews": 14,
         "atomsTaught": 35,
         "atomsNeverRevisited": 4,
-        "forwardReferences": 10
+        "forwardReferences": 5
       },
       {
         "language": "chinese",
@@ -34246,7 +33598,7 @@
         "forwardReviews": 28,
         "atomsTaught": 76,
         "atomsNeverRevisited": 25,
-        "forwardReferences": 66
+        "forwardReferences": 57
       },
       {
         "language": "german",
@@ -34256,7 +33608,7 @@
         "forwardReviews": 36,
         "atomsTaught": 81,
         "atomsNeverRevisited": 27,
-        "forwardReferences": 65
+        "forwardReferences": 56
       },
       {
         "language": "gujarati",
@@ -34266,7 +33618,7 @@
         "forwardReviews": 17,
         "atomsTaught": 44,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 10
+        "forwardReferences": 7
       },
       {
         "language": "hindi",
@@ -34276,7 +33628,7 @@
         "forwardReviews": 30,
         "atomsTaught": 114,
         "atomsNeverRevisited": 94,
-        "forwardReferences": 21
+        "forwardReferences": 11
       },
       {
         "language": "italian",
@@ -34286,7 +33638,7 @@
         "forwardReviews": 7,
         "atomsTaught": 156,
         "atomsNeverRevisited": 14,
-        "forwardReferences": 53
+        "forwardReferences": 46
       },
       {
         "language": "japanese",
@@ -34306,7 +33658,7 @@
         "forwardReviews": 11,
         "atomsTaught": 99,
         "atomsNeverRevisited": 9,
-        "forwardReferences": 16
+        "forwardReferences": 11
       },
       {
         "language": "latin",
@@ -34316,7 +33668,7 @@
         "forwardReviews": 0,
         "atomsTaught": 190,
         "atomsNeverRevisited": 22,
-        "forwardReferences": 23
+        "forwardReferences": 17
       },
       {
         "language": "malayalam",
@@ -34326,7 +33678,7 @@
         "forwardReviews": 20,
         "atomsTaught": 96,
         "atomsNeverRevisited": 46,
-        "forwardReferences": 11
+        "forwardReferences": 9
       },
       {
         "language": "marathi",
@@ -34336,7 +33688,7 @@
         "forwardReviews": 19,
         "atomsTaught": 36,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 14
+        "forwardReferences": 12
       },
       {
         "language": "persian",
@@ -34356,7 +33708,7 @@
         "forwardReviews": 6,
         "atomsTaught": 154,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 56
+        "forwardReferences": 51
       },
       {
         "language": "punjabi",
@@ -34366,7 +33718,7 @@
         "forwardReviews": 16,
         "atomsTaught": 51,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 1
+        "forwardReferences": 0
       },
       {
         "language": "russian",
@@ -34386,7 +33738,7 @@
         "forwardReviews": 18,
         "atomsTaught": 43,
         "atomsNeverRevisited": 5,
-        "forwardReferences": 4
+        "forwardReferences": 1
       },
       {
         "language": "spanish",
@@ -34396,7 +33748,7 @@
         "forwardReviews": 6,
         "atomsTaught": 260,
         "atomsNeverRevisited": 70,
-        "forwardReferences": 107
+        "forwardReferences": 98
       },
       {
         "language": "tamil",
@@ -34406,7 +33758,7 @@
         "forwardReviews": 27,
         "atomsTaught": 126,
         "atomsNeverRevisited": 48,
-        "forwardReferences": 18
+        "forwardReferences": 17
       },
       {
         "language": "telugu",
@@ -34416,7 +33768,7 @@
         "forwardReviews": 21,
         "atomsTaught": 98,
         "atomsNeverRevisited": 9,
-        "forwardReferences": 13
+        "forwardReferences": 10
       },
       {
         "language": "urdu",
@@ -34443,7 +33795,7 @@
         "R3": 859,
         "R4": 145
       },
-      "forwardReferences": 524
+      "forwardReferences": 443
     }
   },
   "levelGate": {

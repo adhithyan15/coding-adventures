@@ -12,7 +12,7 @@ script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system
 cousin layer: 152 lessons show another script (max 26 glyphs) — context, never charged to the budget
 order: 515 lessons with no declared sequence across 19 tracks; 245 prerequisites and 300 reviews pointing forward
 reinforcement: 516 of 2023 atoms never revisited (26%); missed windows R1 788, R2 1305, R3 859, R4 145
-forward references: 524 uses of material a later lesson teaches
+forward references: 443 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 98 of 452 book chapters without an HL05 capability; 25 payoffs below the 0.5 representativeness floor; 3 tracks already clean
 
