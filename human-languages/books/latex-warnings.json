@@ -313,9 +313,9 @@
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
-        "missing_character": 0,
+        "missing_character": 1,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
