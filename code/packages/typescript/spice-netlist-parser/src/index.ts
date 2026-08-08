@@ -1361,6 +1361,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT VAR must be finite and non-negative");
   }
+  const bjtForwardEmissionCoefficient = params.get("NF");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtForwardEmissionCoefficient !== undefined &&
+    (!Number.isFinite(bjtForwardEmissionCoefficient) || bjtForwardEmissionCoefficient <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT NF must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2075,7 +2083,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("XTI") ?? 3.0,
       model.params.get("EG") ?? 1.11,
       model.params.get("VAF") ?? model.params.get("VA") ?? 0.0,
-      1.0,
+      model.params.get("NF") ?? 1.0,
       1.0,
       0.75,
       0.33,
