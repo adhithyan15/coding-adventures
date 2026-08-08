@@ -13,13 +13,13 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "e634ba0671240ec4fa5cbc8f14d92fc866d84dd5",
+    "revision": "4833046722db11fee2c2750c7daee3db1692c407",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
-    "implementation_package_slots": 4419,
+    "implementation_package_slots": 4420,
     "high_consensus_packages": 173,
-    "high_consensus_missing_slots": 270,
+    "high_consensus_missing_slots": 269,
     "singleton_packages": 814,
     "singleton_missing_slots": 11396,
     "rust_singletons": 618,
@@ -356,7 +356,7 @@
       "depends_on": ["build-file-standalone-integrity"],
       "branch": "codex/lua-build-windows-standalone",
       "pr_number": null,
-      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Repair these as one dependency-shaped standalone-build wave. Rebased cleanly onto origin/main 005c38161e before implementation."
+      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Repair these as one dependency-shaped standalone-build wave. Rebased cleanly onto origin/main 005c38161e before implementation and again onto post-#10093 origin/main 4833046722 after the refreshed collision-clean 1,264-identity/4,420-slot inventory left this item as the coherent in-progress root."
     },
     {
       "id": "build-tool-go-lua-missing-windows-validation-parity",
