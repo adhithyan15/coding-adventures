@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:653dbf1b0b6bc8a9",
+  "sourceHash": "fnv1a64:451b541e2e9dd5a5",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:400e1a65c0cf63ef",
+      "sourceHash": "fnv1a64:cc3dacc2fb708c31",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here is your first piece of help. A noun ending in long -ā is usually masculine, and darvāzā ends in -ा. Keep it as a lean, not a law: this course will show you where it fails, in both directions."
+              "text": "Here is your first piece of help. A noun ending in long -ā is usually masculine, and darvāzā ends in -ा. Keep it as a lean, not a law: later chapters will show you where it fails, in both directions."
             },
             {
               "kind": "speech",

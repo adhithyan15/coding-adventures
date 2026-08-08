@@ -58,7 +58,7 @@ no voicing: **க** spells a hard *k*, a soft *g* and even an *h*, and **positio
 decides**. Here it opens the word, so it is hard — *ka*, not *ga*.
 
 The same rule then lands on the second letter. **த** is named *ta*, but it sits
-between two vowels, so it softens. That is why this course writes *ka**d**avu*
+between two vowels, so it softens. That is why this book writes *ka**d**avu*
 and not *katavu*. One rule, two letters, one word.
 
 ## The word, taken apart - the everyday word and the bookish one

@@ -2351,7 +2351,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:653dbf1b0b6bc8a9",
+      "sourceHash": "fnv1a64:451b541e2e9dd5a5",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -2362,8 +2362,8 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch36.txt",
       "json": "hindi/narration/ch36.json",
-      "textHash": "fnv1a64:e44857285fd03acd",
-      "jsonHash": "fnv1a64:4198446cda3e697c"
+      "textHash": "fnv1a64:82edfe031d597cb4",
+      "jsonHash": "fnv1a64:45be1c1589e719f7"
     },
     {
       "language": "hindi",
@@ -6817,7 +6817,7 @@
     {
       "language": "tamil",
       "chapter": 35,
-      "sourceHash": "fnv1a64:c346ffee5ae76309",
+      "sourceHash": "fnv1a64:2703e3459eee5f3a",
       "lessonIds": [
         "TA-C35-veedu",
         "TA-C35-kadavu",
@@ -6828,13 +6828,13 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch35.txt",
       "json": "tamil/narration/ch35.json",
-      "textHash": "fnv1a64:6f13d636837a03df",
-      "jsonHash": "fnv1a64:c2a101abd187509e"
+      "textHash": "fnv1a64:73c0cbf33267d147",
+      "jsonHash": "fnv1a64:7316a8120132566d"
     },
     {
       "language": "tamil",
       "chapter": 36,
-      "sourceHash": "fnv1a64:670535ac9b63a59a",
+      "sourceHash": "fnv1a64:f2d3d5c13c0737fe",
       "lessonIds": [
         "TA-C36-teneer",
         "TA-C36-paal",
@@ -6845,13 +6845,13 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch36.txt",
       "json": "tamil/narration/ch36.json",
-      "textHash": "fnv1a64:25cdbf4d49b812d5",
-      "jsonHash": "fnv1a64:6845d2405f768be0"
+      "textHash": "fnv1a64:0939422c53d55470",
+      "jsonHash": "fnv1a64:eaecb9427be3c9af"
     },
     {
       "language": "tamil",
       "chapter": 37,
-      "sourceHash": "fnv1a64:7d37f287632fb94f",
+      "sourceHash": "fnv1a64:956feb3bb64ab0cb",
       "lessonIds": [
         "TA-C37-uur",
         "TA-C37-nanban",
@@ -6862,8 +6862,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch37.txt",
       "json": "tamil/narration/ch37.json",
-      "textHash": "fnv1a64:a51f01fcd1b4bfe7",
-      "jsonHash": "fnv1a64:363128adfbc4bcc4"
+      "textHash": "fnv1a64:ac8790b0e34fcd44",
+      "jsonHash": "fnv1a64:9935f52d6ca83937"
     },
     {
       "language": "tamil",

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7d37f287632fb94f",
+  "sourceHash": "fnv1a64:956feb3bb64ab0cb",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5b1b5f724e390f6b",
+      "sourceHash": "fnv1a64:e3f3e23276e44561",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -312,7 +312,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The letter after ண் is ப, named pa. The course writes naṇbaṉ because of the நன்றி rule: a nasal in front of a stop voices it. A Tamil reader supplies the voicing, as an English reader supplies the sh in sugar."
+              "text": "The letter after ண் is ப, named pa. This book writes naṇbaṉ because of the நன்றி rule: a nasal in front of a stop voices it. A Tamil reader supplies the voicing, as an English reader supplies the sh in sugar."
             }
           ]
         },

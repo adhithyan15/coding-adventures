@@ -80,7 +80,7 @@ literally *the eating*. Tamil has two eating verbs, of different ages:
 **உண்** is a bare inherited root, and the Dravidian dictionary lists *uṇavu*
 inside its entry.
 
-**சாப்பிடு** is where the ground softens, so hold this course's earlier account
+**சாப்பிடு** is where the ground softens, so hold Chapter 32's earlier account
 loosely. You were shown *sāppu*, "food," plus **இடு** (*iḍu*), "to put." The
 **இடு** is visible in the spelling; the first half is the problem. The great
 Tamil lexicon records no plain word *sāppu* meaning "food," and the Dravidian

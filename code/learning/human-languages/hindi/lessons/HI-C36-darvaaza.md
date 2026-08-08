@@ -55,8 +55,7 @@ A nuqta is a small confession in ink: *this sound came from somewhere else.*
 दरवाज़ा**.
 
 Here is your first piece of help. A noun ending in long **-ā** is usually
-masculine, and *darvāzā* ends in **-ा**. Keep it as a lean, not a law: this
-course will show you where it fails, in both directions.
+masculine, and *darvāzā* ends in **-ा**. Keep it as a lean, not a law: later chapters will show you where it fails, in both directions.
 
 **घर** ends in a consonant and is masculine too — so a consonant ending tells
 you nothing at all. That one you simply learn.

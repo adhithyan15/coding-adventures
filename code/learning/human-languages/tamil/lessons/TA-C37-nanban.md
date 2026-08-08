@@ -69,7 +69,7 @@ writing lesson gave them to you one at a time; here they arrive together.
 ## Sounds you'll need: why it is heard as naṇbaṉ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SOUND-I-SIGN-WRITE-NANDRI-03] -->
 
-The letter after **ண்** is **ப**, named *pa*. The course writes *naṇ**b**aṉ*
+The letter after **ண்** is **ப**, named *pa*. This book writes *naṇ**b**aṉ*
 because of the **நன்றி** rule: a nasal in front of a stop **voices it**. A Tamil
 reader supplies the voicing, as an English reader supplies the *sh* in
 *sugar*.

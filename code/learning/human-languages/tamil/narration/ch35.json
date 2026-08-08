@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Arriving at a House",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c346ffee5ae76309",
+  "sourceHash": "fnv1a64:2703e3459eee5f3a",
   "lessons": [
     {
       "id": "TA-C35-veedu",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1a0f46c867a9c03",
+      "sourceHash": "fnv1a64:563406c98419bdc3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -271,7 +271,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same rule then lands on the second letter. த is named ta, but it sits between two vowels, so it softens. That is why this course writes kadavu and not katavu. One rule, two letters, one word."
+              "text": "The same rule then lands on the second letter. த is named ta, but it sits between two vowels, so it softens. That is why this book writes kadavu and not katavu. One rule, two letters, one word."
             }
           ]
         },

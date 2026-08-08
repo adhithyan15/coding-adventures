@@ -976,7 +976,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:d6ea031f2071a150",
+      "sourceHash": "fnv1a64:d7b8aea5442f7154",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -3378,7 +3378,7 @@
     {
       "language": "tamil",
       "chapter": 35,
-      "sourceHash": "fnv1a64:9b721566605c8133",
+      "sourceHash": "fnv1a64:dc38c4fb1b2e3bc9",
       "lessonIds": [
         "TA-C35-veedu",
         "TA-C35-kadavu",
@@ -3390,7 +3390,7 @@
     {
       "language": "tamil",
       "chapter": 36,
-      "sourceHash": "fnv1a64:71c92947d2d24ca0",
+      "sourceHash": "fnv1a64:231ca7f273eff40e",
       "lessonIds": [
         "TA-C36-teneer",
         "TA-C36-paal",
@@ -3402,7 +3402,7 @@
     {
       "language": "tamil",
       "chapter": 37,
-      "sourceHash": "fnv1a64:977ef60cd0294c2e",
+      "sourceHash": "fnv1a64:2a3905874c0757ce",
       "lessonIds": [
         "TA-C37-uur",
         "TA-C37-nanban",
