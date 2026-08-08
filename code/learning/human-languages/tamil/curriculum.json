@@ -40,7 +40,9 @@
         "TA-W04-i-sign-write-nandri",
         "TA-W05-write-aam",
         "TA-W06-write-illai",
-        "TA-W07-write-sari"
+        "TA-W07-write-sari",
+        "TA-W08-read-en",
+        "TA-W09-read-peyar"
       ],
       "before": [],
       "inline": [
@@ -880,7 +882,9 @@
         "TA-W04-i-sign-write-nandri",
         "TA-W05-write-aam",
         "TA-W06-write-illai",
-        "TA-W07-write-sari"
+        "TA-W07-write-sari",
+        "TA-W08-read-en",
+        "TA-W09-read-peyar"
       ]
     },
     {

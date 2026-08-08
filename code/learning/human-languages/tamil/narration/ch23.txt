@@ -1,8 +1,8 @@
 Tamil, chapter 23: Day.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 நாள் (nāḷ) — "day," the one this arc's Dravidian languages didn't lose.
 
 Warm-up.
@@ -24,7 +24,7 @@ Wrap-up Recall.
 Where did you already meet நாள் before this lesson? (Inside நாளை, nāḷai, "tomorrow," Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 நாள் and தினம் — everyday native, formal borrowed.
 
 Warm-up.
@@ -54,3 +54,53 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which track alone keeps a native everyday day-word? (Tamil.) Where does tiṉam appear? (Formal compounds.) Is it unrelated to Kannada dina? (No — it is the same Sanskrit tatsama.)
+
+
+Lesson 3 of 3.
+பெயர் (peyar) — a sign that waits on the left.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and ய, Script you'll notice: the ெ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One vowel sign you have met does something strange: ை stands to the left of its consonant and is spoken after it. That was not a one-off. Here is a second sign with the same habit.
+
+Script you'll notice: ப and ய.
+Two consonants, each carrying its built-in a like every other:
+[a table of 2 rows, read aloud]
+ப, pa.
+ய, ya.
+Read both; do not draw them yet. Neither has a sourced stroke order in this book's script data, so neither gets one here.
+
+Script you'll notice: the ெ sign.
+ெ is the sign for e, and it is written to the LEFT of its consonant and pronounced after it — exactly what ை does.
+ப + ெ becomes பெ, and on the page the hook stands before the ப — yet you say pe, not ep.
+So the left-standing signs are a family, not an exception you have to remember one member at a time. Compare the three vowel signs you now hold:
+[a table of 3 rows, read aloud]
+sign: ி. sound: i. where it sits: above and to the right.
+sign: ை. sound: ai. where it sits: to the left, spoken after.
+sign: ெ. sound: e. where it sits: to the left, spoken after.
+Be clear about how well attested each half of that is. The sourced description covers ை — "a double hook written BEFORE (to the left of) the consonant, though pronounced after it." There is no such entry for ெ yet, so the claim that ெ sits on the left is stated from the pattern the two signs share, not from a source for ெ itself. It is reliable — this is ordinary Tamil orthography — but it is one step further from the page than the ை rule is.
+
+Script you'll notice: build the word.
+[a table of 3 rows, read aloud]
+piece: பெ, pe — ப with the ெ sign on its left, this lesson.
+piece: ய, ya, this lesson.
+piece: ர், bare r — ர under a puḷḷi, ர from சரி.
+பெ, ய, ர் becomes பெயர் (peyar).
+Three pieces for a word you have used since chapter 2 without once needing to read it. That is the point of the order: the word came first, and the letters are catching up to a word you already own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: ப, ய — then பெ — then பெயர் (peyar)]
+[pause 8 seconds for the answer]
+[your turn — say: "peyar" — "name"]
+[pause 8 seconds for the answer]
+[your turn — read: என் பெயர் (peyar) — "my name," both words, straight off the page]
+[pause 8 seconds for the answer]
+[your turn — contrast: றி and பெ — the ி sign follows, the ெ sign precedes]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read பெயர் (peyar). Which side of its consonant does ெ sit on, and when is it spoken? (The left, and after — like ை.) Name the other left-standing sign you know. (ை, as in இல்லை.) Read என் பெயர் (peyar) and say what it means. ("My name" — எ opens on a vowel, ர் closes on a bare r.) Next: the word for night.

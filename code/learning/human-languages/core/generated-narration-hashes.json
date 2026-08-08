@@ -7036,7 +7036,7 @@
     {
       "language": "tamil",
       "chapter": 2,
-      "sourceHash": "fnv1a64:5ddf50ce83788a95",
+      "sourceHash": "fnv1a64:8d5757d04fc5050e",
       "lessonIds": [
         "TA-C02-peyar",
         "TA-C02-en",
@@ -7047,12 +7047,12 @@
         "TA-C02-magizhcci",
         "TA-C02-practice"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 0,
+      "voiceLessons": 6,
+      "drivablePrefix": 2,
       "text": "tamil/narration/ch02.txt",
       "json": "tamil/narration/ch02.json",
-      "textHash": "fnv1a64:16569d2844b716ae",
-      "jsonHash": "fnv1a64:d630085af5e8a783"
+      "textHash": "fnv1a64:15a4ea890299aca6",
+      "jsonHash": "fnv1a64:5102266a57d3d2f9"
     },
     {
       "language": "tamil",
@@ -7345,16 +7345,17 @@
     {
       "language": "tamil",
       "chapter": 21,
-      "sourceHash": "fnv1a64:4c3e69eb6f237751",
+      "sourceHash": "fnv1a64:676890fadc32e283",
       "lessonIds": [
-        "TA-C21-naay-poonai"
+        "TA-C21-naay-poonai",
+        "TA-W08-read-en"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch21.txt",
       "json": "tamil/narration/ch21.json",
-      "textHash": "fnv1a64:48902886989d2146",
-      "jsonHash": "fnv1a64:6d432a2b71c2488d"
+      "textHash": "fnv1a64:bc4f6d639748430f",
+      "jsonHash": "fnv1a64:5ee48cd117c45700"
     },
     {
       "language": "tamil",
@@ -7373,17 +7374,18 @@
     {
       "language": "tamil",
       "chapter": 23,
-      "sourceHash": "fnv1a64:e101514a5078173a",
+      "sourceHash": "fnv1a64:89b27d26d650da3d",
       "lessonIds": [
         "TA-C23-naal",
-        "TA-C23-day-family-register"
+        "TA-C23-day-family-register",
+        "TA-W09-read-peyar"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch23.txt",
       "json": "tamil/narration/ch23.json",
-      "textHash": "fnv1a64:d94067274a15b0dd",
-      "jsonHash": "fnv1a64:bea80eb6ba8ae396"
+      "textHash": "fnv1a64:0c86a4e975ec4afd",
+      "jsonHash": "fnv1a64:d9288267a6fc8ae7"
     },
     {
       "language": "tamil",

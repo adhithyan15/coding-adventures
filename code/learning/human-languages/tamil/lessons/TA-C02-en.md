@@ -7,7 +7,7 @@ headword: என்
 gloss: my
 concept_tag: PRONOUN-MY
 prerequisites: [TA-C02-peyar]
-sounds: [independent-e, pulli]
+sounds: []
 roots: [naan-dravidian]
 est_minutes: 3
 reviews_of: [TA-C02-peyar]
@@ -18,11 +18,6 @@ reviews_of: [TA-C02-peyar]
 ## Warm-up
 
 [PAUSE 2s] "My" — and, like *peyar*, a word with no European cousin at all.
-
-## The letters in this word
-
-*(Skim if you read Tamil.)* **எ** (independent vowel *e*, word-initial) + **ன்**
-(bare alveolar *ṉ*, puḷḷi) → **eṉ**.
 
 ## The word, taken apart
 

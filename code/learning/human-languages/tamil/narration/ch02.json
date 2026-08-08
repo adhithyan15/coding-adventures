@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 2,
   "title": "Chapter 2",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5ddf50ce83788a95",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8d5757d04fc5050e",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -14,22 +14,13 @@
       "romanization": "",
       "gloss": "name",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a332e99363610b9e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:2161da5980392e73",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,17 +41,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.) ப (pa) + ெ (the e-sign, written before, read after) becomes பெ (pe); ய (ya); ர் (bare r, with the puḷḷi). Read பெ, ய, ர் becomes peyar."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -75,7 +55,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +95,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -141,22 +121,13 @@
       "romanization": "",
       "gloss": "my",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d5a9c62328bb6c9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:add24a5ae6f81e1d",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -177,17 +148,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.) எ (independent vowel e, word-initial) + ன் (bare alveolar ṉ, puḷḷi) becomes eṉ."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -198,7 +158,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -229,7 +189,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -500,22 +460,13 @@
       "romanization": "",
       "gloss": "what",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d41a8ac0f94efe6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:421ac73fe9673ba4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -536,17 +487,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.) எ (e) + ன் (bare ṉ) + ன (ṉa) becomes eṉṉa — a doubled, held ṉṉ."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -557,7 +497,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -588,7 +528,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

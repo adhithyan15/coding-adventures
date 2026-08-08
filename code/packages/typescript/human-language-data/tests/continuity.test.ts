@@ -366,8 +366,17 @@ describe("the real corpus", () => {
     // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) kept both
     // trends moving the right way at once: atomsTaught +117 while atomsNeverRevisited
     // FELL a second time, by 7 more. 19% is the lowest reading yet, from 51%.
-    expect(report.summary.atomsTaught).toBe(2502);
-    expect(report.summary.atomsNeverRevisited).toBe(472);
+    // +5: TA-W08-read-en introduces 2, TA-W09-read-peyar 3. They teach எ, ப, ய and the
+    // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
+    // lessons because the writing strand had never covered them.
+    expect(report.summary.atomsTaught).toBe(2507);
+    // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
+    // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
+    // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
+    // Against that, TA-W09 re-uses ர when it spells பெயர், so declaring
+    // CA-ONE-LETTER-01 pulls that atom out of the orphan set for the first time
+    // (revisits 0 -> 1). Three in, one out.
+    expect(report.summary.atomsNeverRevisited).toBe(474);
     expect(report.summary.neverRevisitedPercent).toBe(19);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -466,8 +475,17 @@ describe("the real corpus", () => {
     // 1625 claimed in isolation). Re-measured against the merged corpus: R1 834 -> 847
     // (both effects add), R2 1627 -> 1716 (wave 4's growth dominates, Tamil's recovery
     // is a small offset against it, not the whole story either claim told alone).
-    expect(report.summary.missedByWindow.R1).toBe(847);
-    expect(report.summary.missedByWindow.R2).toBe(1716);
+    // +5, exactly the five new atoms and no offsets. The strand's cadence puts
+    // consecutive script lessons 4-5 apart and R1 is a 1-3 window, so an atom a script
+    // lesson introduces cannot be reinforced inside R1 by the next one.
+    expect(report.summary.missedByWindow.R1).toBe(852);
+    // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
+    // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
+    // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
+    // window, so practising INDEPENDENT-VOWEL-I-01, LA-AI-SIGN-02 and CA-ONE-LETTER-01
+    // there reinforces them at a distance R1 could never reach. Measured: all three go
+    // from missing R1/R2/R3 to missing only R1/R3.
+    expect(report.summary.missedByWindow.R2).toBe(1718);
   });
 
   it("shows what a declared reading order was worth", () => {

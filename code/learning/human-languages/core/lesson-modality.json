@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4b2c6b3ce026852b",
+  "sourceHash": "fnv1a64:99f79b7601915af8",
   "summary": {
-    "totalLessons": 1667,
-    "voice": 1076,
-    "sight": 535,
-    "pen": 56,
-    "drivableLessons": 1076,
+    "totalLessons": 1669,
+    "voice": 1079,
+    "sight": 532,
+    "pen": 58,
+    "drivableLessons": 1079,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 876,
-    "fullyDrivableChapters": 323,
-    "unstartableChapters": 142,
+    "drivablePrefixTotal": 878,
+    "fullyDrivableChapters": 321,
+    "unstartableChapters": 141,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7518,12 +7518,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 116,
-      "voice": 59,
-      "sight": 46,
-      "pen": 11,
-      "drivablePercent": 51,
-      "drivablePrefixTotal": 47,
+      "lessonCount": 118,
+      "voice": 62,
+      "sight": 43,
+      "pen": 13,
+      "drivablePercent": 53,
+      "drivablePrefixTotal": 49,
       "modalities": [
         "voice",
         "sight",
@@ -7557,17 +7557,20 @@
         {
           "chapter": 2,
           "lessonCount": 8,
-          "voice": 3,
-          "sight": 5,
+          "voice": 6,
+          "sight": 2,
           "pen": 0,
           "modalities": [
             "voice",
             "sight"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "TA-C02-peyar",
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-C02-en-peyar",
           "drivable": false,
-          "drivableLessonIds": []
+          "drivableLessonIds": [
+            "TA-C02-peyar",
+            "TA-C02-en"
+          ]
         },
         {
           "chapter": 3,
@@ -7874,16 +7877,18 @@
         },
         {
           "chapter": 21,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TA-W08-read-en",
+          "drivable": false,
           "drivableLessonIds": [
             "TA-C21-naay-poonai"
           ]
@@ -7906,16 +7911,18 @@
         },
         {
           "chapter": 23,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TA-W09-read-peyar",
+          "drivable": false,
           "drivableLessonIds": [
             "TA-C23-naal",
             "TA-C23-day-family-register"
@@ -36015,42 +36022,36 @@
       "language": "tamil",
       "chapter": 2,
       "sequence": 100,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a332e99363610b9e",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:2161da5980392e73"
     },
     {
       "id": "TA-C02-en",
       "language": "tamil",
       "chapter": 2,
       "sequence": 110,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d5a9c62328bb6c9",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:add24a5ae6f81e1d"
     },
     {
       "id": "TA-C02-en-peyar",
@@ -36096,21 +36097,18 @@
       "language": "tamil",
       "chapter": 2,
       "sequence": 150,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9d41a8ac0f94efe6",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:421ac73fe9673ba4"
     },
     {
       "id": "TA-C02-ungal-peyar-enna",
@@ -37271,6 +37269,30 @@
       "sourceHash": "fnv1a64:a2f119fd5362a2d8"
     },
     {
+      "id": "TA-W08-read-en",
+      "language": "tamil",
+      "chapter": 21,
+      "sequence": 725,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0eab9a657dd7d20f",
+      "detachableSegments": [
+        "Script you'll notice: எ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-C22-paccai-manjal",
       "language": "tamil",
       "chapter": 22,
@@ -37323,6 +37345,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:43a47e46c1189b5e"
+    },
+    {
+      "id": "TA-W09-read-peyar",
+      "language": "tamil",
+      "chapter": 23,
+      "sequence": 755,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c0ecc7c2b714e39e",
+      "detachableSegments": [
+        "Script you'll notice: ப and ய",
+        "Script you'll notice: the ெ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-C24-iravu",

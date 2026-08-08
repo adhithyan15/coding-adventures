@@ -7,7 +7,7 @@ headword: என்ன
 gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [TA-C02-nii-niingal]
-sounds: [independent-e, doubled-nn]
+sounds: []
 roots: [yaa-dravidian]
 est_minutes: 3
 reviews_of: [TA-C02-nii-niingal, TA-C02-en-peyar]
@@ -18,11 +18,6 @@ reviews_of: [TA-C02-nii-niingal, TA-C02-en-peyar]
 ## Warm-up
 
 [PAUSE 2s] The last piece of the question: "what."
-
-## The letters in this word
-
-*(Skim if you read Tamil.)* **எ** (*e*) + **ன்** (bare *ṉ*) + **ன** (*ṉa*) →
-**eṉṉa** — a doubled, held *ṉṉ*.
 
 ## The word, taken apart
 
