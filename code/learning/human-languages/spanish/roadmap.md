@@ -229,10 +229,40 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   "the book pleases me", so the **thing liked is the subject** and the verb
   agrees with it, never with you. **Authored.**
 
-Next: the remaining core verbs — twenty-three of the shared spine's forty are
-still unrealized by any track. From here the course hands over rules, not
-phrases. Grammar accumulates piece by piece. The theme skeleton below plans the
-wider road.
+- **Ch. 36 — Hearing, sleeping, walking, running**: **oír** ("to hear" ←
+  *audīre* → audio, audible, audience, audition, auditorium, audit, and **obey**
+  ← *oboedīre* = *ob-* "toward" + *audīre*), set against *escuchar* ←
+  *auscultāre* (→ auscultate, **scout**) for the listening you choose; its *yo*
+  joins Ch. 12's *-go* club and its *y* is a **spelling** rule → **dormir** ("to
+  sleep" ← *dormīre* → dormitory, dormant, dormer; *dormouse* left as likely
+  but unproved), whose **o→ue** is the boot's other vowel → **caminar** ("to
+  walk" ← *el camino* ← Late Latin *camminus*, a **Gaulish** loan that stocked
+  every Romance road and reached English only inside borrowed French phrases;
+  the near-identical *camīnus* "hearth" is a different word and gave **chimney**),
+  beside **andar**, whose origin is **genuinely disputed** → **correr** ("to
+  run" ← *currere* → current, currency, curriculum, courier, cursor, corridor,
+  occur, excursion), the payoff, which also shows English **car** to be a cousin
+  through Gaulish *carrus* at PIE \**kers-*. **Authored.**
+
+- **Ch. 37 — Opening, closing, sitting down, standing up**: **abrir** ("to open"
+  ← *aperīre* → aperture, overt, overture, aperitif; *April* named as folk
+  etymology and refused), with the irregular participle **abierto** → **cerrar**
+  ("to close" ← Late Latin *serāre*, from *sera*, **the bar dropped across a
+  door** — **not** *claudere*, which gave English close, clause, include,
+  exclude, recluse and which Spanish kept only in *incluir*, *excluir*,
+  *concluir*, *clausura*) → **sentarse** ("to seat oneself" ← Vulgar Latin
+  \**sedentāre* from *sedēns* → sedentary, session, siege, preside, reside,
+  assess, cathedral, chair; and the Germanic branch *sit, seat, settle, saddle,
+  nest*) → **levantarse** ("to raise oneself" ← \**levantāre* from *levāns* →
+  lever, elevate, levity, alleviate, relieve, leaven, levy, **the Levant**), the
+  payoff. Both body-position verbs are **reflexive** and both were made from a
+  Latin **present participle**; standing as a *state* is **estar de pie**, no
+  verb at all. **Authored.**
+
+Next: the remaining core verbs — seven of the shared spine's forty are still
+unrealized by any track. From here the course hands over rules, not phrases.
+Grammar accumulates piece by piece. The theme skeleton below plans the wider
+road.
 
 ## Theme Skeleton (planning only)
 

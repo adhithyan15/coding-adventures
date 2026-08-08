@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "latin",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 39 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. All 41 Latin chapters are authored here. Chapters 1, 19, 21, 33 and 36 own a terminal consolidation lesson that recombines the chapter's material; every other chapter's payoff is still its last lesson by sequence, which is where that chapter's recombination and wrap-up recall currently live. Chapter 1's title and label come from its hand-written book/chapters/ch01-greetings.tex, the only Latin chapter with no core/book-generation.json target.",
   "chapters": [
     {
       "chapter": 1,
@@ -847,6 +847,62 @@
           "LA-LEX-ADIUVO-01",
           "LA-LEX-AMO-01",
           "LA-ETYMON-AMO-02"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "Hearing, Sleeping, Sitting, Standing",
+      "label": "ch:la-sense-and-posture-verbs",
+      "canDo": "I can say I hear, I sleep, I sit and I stand in Latin, produce the he-or-she form of each, name the conjugation each belongs to, and tell an English word inherited from the shared ancestor apart from one borrowed out of Latin.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "LA-C40-sto",
+        "kind": "production",
+        "summary": "The chapter closes on stō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — audiō, dormiō, sedeō, stō and audit, dormit, sedet, stat — sorts stand from station as inherited against borrowed, and reaches back three chapters to retrieve sum and eō, neither of which had been revisited since chapter 37.",
+        "assesses": [
+          "LA-LEX-AUDIO-01",
+          "LA-LEX-DORMIO-01",
+          "LA-LEX-SEDEO-01",
+          "LA-ETYMON-SEDEO-02",
+          "LA-ETYMON-INHERITED-VS-BORROWED-03",
+          "LA-LEX-STO-01",
+          "LA-ETYMON-STO-02",
+          "LA-LEX-SUM-01",
+          "LA-ETYMON-SUM-02",
+          "LA-LEX-EO-01",
+          "LA-ETYMON-EO-02"
+        ]
+      }
+    },
+    {
+      "chapter": 41,
+      "title": "Walking, Running, Opening, Closing",
+      "label": "ch:la-motion-verbs",
+      "canDo": "I can say I walk, I run, I open and I close in Latin, produce the he-or-she form of each, name the conjugation each belongs to, and say what a Latin prefix does to the verb it sits on.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "LA-C41-claudo",
+        "kind": "production",
+        "summary": "The chapter closes on claudō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — ambulō, currō, aperiō, claudō and ambulat, currit, aperit, claudit — reads include/exclude beside accept/except and intellegō as one prefix rule, and so retrieves capiō and intellegō from two and three chapters back, neither of them revisited before now.",
+        "assesses": [
+          "LA-LEX-AMBULO-01",
+          "LA-LEX-CURRO-01",
+          "LA-LEX-APERIO-01",
+          "LA-ETYMON-APERIO-02",
+          "LA-ETYMON-APERIO-OPERIO-03",
+          "LA-LEX-CLAUDO-01",
+          "LA-ETYMON-CLAUDO-02",
+          "LA-LEX-CAPIO-01",
+          "LA-ETYMON-CAPIO-02",
+          "LA-LEX-INTELLEGO-01",
+          "LA-ETYMON-INTELLEGO-02",
+          "LA-ETYMON-SEDEO-02",
+          "LA-ETYMON-INHERITED-VS-BORROWED-03"
         ]
       }
     }

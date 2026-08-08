@@ -453,6 +453,30 @@
       "tex": "french/book/chapters/ch25-verbs-of-the-mind.tex"
     },
     {
+      "language": "french",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:8fceb055d3841a03",
+      "lessonIds": [
+        "FR-C26-entendre",
+        "FR-C26-dormir",
+        "FR-C26-marcher",
+        "FR-C26-courir"
+      ],
+      "tex": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:92921437a691bade",
+      "lessonIds": [
+        "FR-C27-sasseoir",
+        "FR-C27-se-lever",
+        "FR-C27-ouvrir",
+        "FR-C27-fermer"
+      ],
+      "tex": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "sourceHash": "fnv1a64:e86811351e6dab80",
@@ -541,6 +565,30 @@
         "GE-C25-moegen-lieben"
       ],
       "tex": "german/book/chapters/ch25-doing-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:3241b07fef4da498",
+      "lessonIds": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "tex": "german/book/chapters/ch26-still-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:3da3cdbab9f0f237",
+      "lessonIds": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "tex": "german/book/chapters/ch27-moving-verbs.tex"
     },
     {
       "language": "gujarati",
@@ -1743,6 +1791,30 @@
       "tex": "latin/book/chapters/ch39-doing-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:1cddd2598214fb8f",
+      "lessonIds": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ],
+      "tex": "latin/book/chapters/ch40-sense-and-posture-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:2b002dc26979c3db",
+      "lessonIds": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "tex": "latin/book/chapters/ch41-motion-verbs.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:681af808b81537e1",
@@ -2778,6 +2850,30 @@
         "ES-C35-gustar"
       ],
       "tex": "spanish/book/chapters/ch35-take-ask-help.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:3e6206d3d514062c",
+      "lessonIds": [
+        "ES-C36-oir",
+        "ES-C36-dormir",
+        "ES-C36-caminar",
+        "ES-C36-correr"
+      ],
+      "tex": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:60ab3e2d720ff3b6",
+      "lessonIds": [
+        "ES-C37-abrir",
+        "ES-C37-cerrar",
+        "ES-C37-sentarse",
+        "ES-C37-levantarse"
+      ],
+      "tex": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
     },
     {
       "language": "tamil",

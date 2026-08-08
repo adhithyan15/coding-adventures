@@ -1093,6 +1093,40 @@
       "jsonHash": "fnv1a64:c65dc68905adcf6c"
     },
     {
+      "language": "french",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:eac4adb1915b9a9d",
+      "lessonIds": [
+        "FR-C26-entendre",
+        "FR-C26-dormir",
+        "FR-C26-marcher",
+        "FR-C26-courir"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch26.txt",
+      "json": "french/narration/ch26.json",
+      "textHash": "fnv1a64:9bbe1f0d826a66e8",
+      "jsonHash": "fnv1a64:4926cfd1e165d33d"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:ac5b1968b18e6213",
+      "lessonIds": [
+        "FR-C27-sasseoir",
+        "FR-C27-se-lever",
+        "FR-C27-ouvrir",
+        "FR-C27-fermer"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch27.txt",
+      "json": "french/narration/ch27.json",
+      "textHash": "fnv1a64:966f43db626e03d4",
+      "jsonHash": "fnv1a64:47b757ea26d32acd"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",
@@ -1500,6 +1534,40 @@
       "json": "german/narration/ch25.json",
       "textHash": "fnv1a64:72864248825bbdc5",
       "jsonHash": "fnv1a64:b87fdce5ee07ace4"
+    },
+    {
+      "language": "german",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:9f1e817b7beec48a",
+      "lessonIds": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch26.txt",
+      "json": "german/narration/ch26.json",
+      "textHash": "fnv1a64:85ffccdf04545476",
+      "jsonHash": "fnv1a64:2987171e016b5ded"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:983170162f81dec0",
+      "lessonIds": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch27.txt",
+      "json": "german/narration/ch27.json",
+      "textHash": "fnv1a64:0a4a47ca028ceec3",
+      "jsonHash": "fnv1a64:a78be525eda88662"
     },
     {
       "language": "gujarati",
@@ -3642,6 +3710,40 @@
       "json": "latin/narration/ch39.json",
       "textHash": "fnv1a64:38a30115dc150212",
       "jsonHash": "fnv1a64:14e45d70f6ad1110"
+    },
+    {
+      "language": "latin",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:ae6b9b154fb369b2",
+      "lessonIds": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch40.txt",
+      "json": "latin/narration/ch40.json",
+      "textHash": "fnv1a64:2bf91d5f96e991a3",
+      "jsonHash": "fnv1a64:878d418f6161f77a"
+    },
+    {
+      "language": "latin",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:fe69dc2b788501fe",
+      "lessonIds": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch41.txt",
+      "json": "latin/narration/ch41.json",
+      "textHash": "fnv1a64:789a7ac18d00e297",
+      "jsonHash": "fnv1a64:a650ca85c6e504a4"
     },
     {
       "language": "malayalam",
@@ -5837,6 +5939,40 @@
       "json": "spanish/narration/ch35.json",
       "textHash": "fnv1a64:40df7ff1ff550a48",
       "jsonHash": "fnv1a64:768d75640e6ad386"
+    },
+    {
+      "language": "spanish",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:0e305c37e6fc9666",
+      "lessonIds": [
+        "ES-C36-oir",
+        "ES-C36-dormir",
+        "ES-C36-caminar",
+        "ES-C36-correr"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch36.txt",
+      "json": "spanish/narration/ch36.json",
+      "textHash": "fnv1a64:124d529f278a8ab0",
+      "jsonHash": "fnv1a64:d958feb10ede2f28"
+    },
+    {
+      "language": "spanish",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:3899f6300550ff70",
+      "lessonIds": [
+        "ES-C37-abrir",
+        "ES-C37-cerrar",
+        "ES-C37-sentarse",
+        "ES-C37-levantarse"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch37.txt",
+      "json": "spanish/narration/ch37.json",
+      "textHash": "fnv1a64:5b9393ae9965262b",
+      "jsonHash": "fnv1a64:ca00d1b6d278148f"
     },
     {
       "language": "tamil",

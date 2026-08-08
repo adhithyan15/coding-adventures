@@ -96,8 +96,8 @@ describe("corpus snapshot", () => {
     expect(report.summary.coreVerbCount).toBe(40);
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
-    expect(report.summary.universallyMissing).toHaveLength(15);
-    expect(report.summary.meanCoveredPercent).toBe(33);
+    expect(report.summary.universallyMissing).toHaveLength(7);
+    expect(report.summary.meanCoveredPercent).toBe(36);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
@@ -109,20 +109,32 @@ describe("corpus snapshot", () => {
       "VERB-COME",
       "VERB-SAY",
       "VERB-SEE",
-      "VERB-KNOW",
       // The second tranche (chapters 38-39) — the same eight Spanish and Portuguese
       // authored in parallel, so all three joined on them at once.
+      "VERB-HEAR",
+      "VERB-KNOW",
       "VERB-THINK",
       "VERB-UNDERSTAND",
       "VERB-READ",
       "VERB-WRITE",
       "VERB-GIVE",
       "VERB-TAKE",
+      // Chapters 40-41 — the everyday verbs nobody taught. This set is where Latin's
+      // taproot claim pays: *sto* and *sedeo* are COGNATE with English stand and sit
+      // through *steh2- and *sed-, not borrowed, while *curro* and *claudo* gave English
+      // current/courier and close/clause/include by the ordinary Latin route.
+      "VERB-SLEEP",
+      "VERB-WALK",
+      "VERB-RUN",
+      "VERB-SIT",
+      "VERB-STAND",
       "VERB-ASK",
       "VERB-HELP",
+      "VERB-OPEN",
+      "VERB-CLOSE",
       "VERB-LIKE-LOVE",
     ]);
-    expect(latin.coveredPercent).toBe(40);
+    expect(latin.coveredPercent).toBe(60);
     expect(report.tracks.find((track) => track.language === "arabic")!.covered).toEqual([
       "VERB-GO",
       "VERB-COME",
@@ -210,7 +222,7 @@ describe("corpus snapshot", () => {
     // querer. `ser` takes VERB-BE (one lesson per concept), and the rest have no core
     // concept that fits without stretching it.
     const spanish = report.tracks.find((track) => track.language === "spanish")!;
-    expect(spanish.covered).toHaveLength(21);
+    expect(spanish.covered).toHaveLength(29);
     expect(spanish.extras.length).toBe(6);
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by

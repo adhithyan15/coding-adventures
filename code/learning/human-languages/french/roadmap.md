@@ -182,6 +182,59 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   in front of Latin's *sc-*, the same repair that made *école* and *étoile*, and
   **manuscript** (*manus* + *scrībere*) is where this verb and Ch.17's *la main*
   meet inside a single English word. **Authored.**
+- **Ch. 26 — Hearing, sleeping, walking, running**: ***entendre***
+  (`FR-C26-entendre`) ← *intendere*, **in-** "toward" + *tendere* "**to
+  stretch**" → *intend* (the plainest survival), *intent*, *intense*, *tension*,
+  *tent*, *extend*, *pretend*. From the oldest French texts it already means
+  hearing **and** attending **and** understanding **and** intending; the other
+  senses fell away as *ouïr* (← *audīre*) wore out, leaving *entendu*,
+  *s'entendre* "to get along" and *l'entente* — while English kept the *audīre*
+  family (*audio*, *audience*, *audible*). Three mind-verbs, three body
+  pictures: *comprendre* grasps, *penser* weighs, *entendre* stretches →
+  ***dormir*** (`FR-C26-dormir`) ← *dormīre*, inherited unchanged →
+  *dormitory* (and French's own *dortoir*), *dormant*, *dormer*; the
+  **dormouse** is named as **folk etymology**, resting on an Anglo-Norman word
+  nobody has found. Stem rule: the singular sheds the *m* (*je dors* / *nous
+  dormons*) → ***marcher*** (`FR-C26-marcher`), origin **genuinely unsettled**
+  between Frankish **markōn* "to press a step in" and Late Latin *marcāre* ←
+  *marcus* "a hammer"; English **march** is a secure borrowing *from* French,
+  English **mark** is a relative **only if** the Frankish account holds, and *la
+  marche* "borderland" (→ *marquis*, *margrave*) is a separate arrival from the
+  Germanic **noun**. Also "to work": ***ça marche***, and *ça ne marche pas*
+  brings Ch.18's *ne … pas* onto a real verb — *pas* being Latin *passus*, "a
+  step" → ***courir*** (`FR-C26-courir`), the payoff ← *currere* → *current*,
+  *currency*, *cursor*, *course*, *corridor*, *courier*, **curriculum** ("a
+  running"), *concur*, *occur*, *excursion*; its hard *c* settles why *canis*
+  became *chien* while *currere* did not — the *ca-* shift only ever struck **c
+  before a**. Latin *carrus* (→ *car*, *cargo*) is named as a **Gaulish loan
+  from the same root**, not a form built from *currere*. **Authored.**
+- **Ch. 27 — Sitting, standing, opening, closing**: ***s'asseoir***
+  (`FR-C27-sasseoir`) ← Vulgar Latin *adsedēre*, a remaking of Classical
+  *adsidēre* (*ad-* + *sedēre*) → *sedentary*, *session*, *sediment*,
+  *reside*, *preside*, *president*, *assiduous*, *siege*, *possess*, *obsess*,
+  *subsidy*, and a bishop's *see* (← *sedēs*); English *sit*, *seat* and
+  *settle* are **genuine Germanic cousins** by descent. Two accepted paradigms
+  are taught honestly — the *-ie-* series whole, the *-oi-* singulars as
+  ordinary speech whose plurals are much rarer — plus the 1990 spelling
+  *s'assoir*, and *je suis assis* as the **state** against the movement →
+  ***se lever* / *debout*** (`FR-C27-se-lever`): French has **no single verb**
+  for "to stand," so the movement is *se lever* ← *levāre* ← *levis*, "**light
+  in weight**" → *elevate*, *elevator*, *levitate*, *levity*, *lever*,
+  *alleviate*, *relieve*, *relief*, *leaven* — and the state is *être debout*,
+  *de* + *bout*, "**on end**." *Bout* ← *bouter* ← Frankish **bōtan*, whose
+  English cousin **by descent** is **beat**; *butt* is a later **loan back out
+  of French**. Old French *ester* survives only in a courtroom phrase →
+  ***ouvrir*** (`FR-C27-ouvrir`) ← popular Latin *operīre*, *aperīre*
+  **reshaped** to match its own antonym *cooperīre* (→ *couvrir*) →
+  *aperture*, *aperitif*, and through Old French *ovrir* the English **overt**
+  (its past participle) and **overture**; the trap is that this *-ir* verb takes
+  ***-er*** endings, *marcher*'s → ***fermer*** (`FR-C27-fermer`), the payoff
+  ← *firmāre*, "**to make firm**" ← *firmus* → *firm*, *affirm*, *confirm*,
+  *infirm*, *infirmary*, *firmament*, and **probably** *farm* (Old French
+  *ferme*, "a fixed rent") — hedged, because Old English *feorm* muddies it.
+  One Latin verb, three jobs: French *fermer* "close," Italian *fermare*
+  "stop," Spanish *firmar* "sign," while Spanish and Portuguese close with
+  **bolt** verbs from elsewhere. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

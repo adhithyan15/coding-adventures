@@ -58,10 +58,14 @@ between the two Latin daughters can become the lesson:
 - **Chapter 24 — Taking, Asking, Helping, Loving**: *prendre*, *demander*,
   *aider*, *aimer*.
 - **Chapter 25 — Verbs of the Mind**: *comprendre*, *penser*, *lire*, *écrire*.
+- **Chapter 26 — Hearing, Sleeping, Walking, Running**: *entendre*, *dormir*,
+  *marcher*, *courir*.
+- **Chapter 27 — Sitting, Standing, Opening, Closing**: *s'asseoir*, *se lever* /
+  *debout*, *ouvrir*, *fermer*.
 
-**All twenty-five chapters are authored and in the book (114 pages).**
+**All twenty-seven chapters are authored and in the book (134 pages).**
 
-### The verb tranche (Chapters 24–25)
+### The first verb tranche (Chapters 24–25)
 
 Eight canonical core verbs, one per lesson, taking French from **6 of the 40**
 shared core verbs to **14 of 40**. Each of the eight is already taught by
@@ -82,6 +86,44 @@ and "love," and adding *bien* to it makes it **weaker** (*je t'aime bien* is
 how you turn someone down); *demander* is a false friend and means plain
 "ask," never English's forceful "demand."
 
+### The second verb tranche (Chapters 26–27)
+
+Eight more canonical core verbs, one per lesson, taking French from **14 of the
+40** shared core verbs to **22 of 40** — the deepest coverage in the corpus.
+These eight were realised by **no track anywhere** before this tranche, so the
+concept ids `VERB-HEAR`, `VERB-SLEEP`, `VERB-WALK`, `VERB-RUN`, `VERB-SIT`,
+`VERB-STAND`, `VERB-OPEN` and `VERB-CLOSE` come off the corpus-wide
+"nobody teaches this" list.
+
+Split two-by-two for the same reason as the first tranche: eight one-verb
+lessons introduce twenty-two atoms against a chapter budget of twelve. Chapter
+26 introduces eleven and Chapter 27 introduces eleven, so both land inside
+budget and each carries its own capability and payoff.
+
+Four things this pair of chapters can say that the earlier ones could not:
+
+- ***entendre*** is Latin *intendere*, "**to stretch toward**" — the same verb
+  English kept as **intend**. From the oldest French texts it already covers
+  hearing, attending, understanding and intending all at once; what happened
+  later is that the other senses fell away as *ouïr* (← *audīre*) wore out, and
+  they survive only in *entendu*, *s'entendre* "to get along" and *l'entente*.
+  English took the *audīre* family instead — *audio*, *audience*, *audible*.
+- **the body-position verbs are reflexive**, and ***s'asseoir*** ships with
+  **two** accepted paradigms (*je m'assieds* and *je m'assois*). The lesson
+  teaches the *-ie-* series whole and marks the *-oi-* singulars as ordinary
+  speech whose plurals are much rarer, rather than pretending the two are
+  symmetric.
+- **French has no single verb for "to stand."** The movement is ***se lever***
+  and the state is ***être debout***, which is *de* + *bout*, "**on end**."
+- ***ouvrir*** ends in *-ir* and takes ***-er*** endings, the same set as
+  *marcher*; ***fermer*** owns them outright, so the two opposites drill as one
+  pair.
+
+And two useful everyday facts land here: *ça marche* means "that works, fine,
+deal," and *fermer* is Latin *firmāre* — a French door is not shut but **made
+firm**, the same verb that gave Italian *fermare* "to stop" and Spanish
+*firmar* "to sign."
+
 ---
 
 ## For contributors
@@ -96,7 +138,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Nine of twenty-five chapters are authored: 17–25.** Those are exactly the
+**Eleven of twenty-seven chapters are authored: 17–27.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -117,8 +159,10 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 23 Green and Yellow | `FR-C23-vert-jaune` | 5 / 5 = 1.00 |
 | 24 Taking, Asking, Helping, Loving | `FR-C24-aimer` | 7 / 11 = 0.64 |
 | 25 Verbs of the Mind | `FR-C25-ecrire` | 6 / 9 = 0.67 |
+| 26 Hearing, Sleeping, Walking, Running | `FR-C26-courir` | 9 / 11 = 0.82 |
+| 27 Sitting, Standing, Opening, Closing | `FR-C27-fermer` | 8 / 11 = 0.73 |
 
-Chapters 17, 18, 24 and 25 have **no terminal consolidation lesson**, so their
+Chapters 17, 18 and 24–27 have **no terminal consolidation lesson**, so their
 payoff is the last lesson by `sequence`. Chapter 18 still clears the floor
 because *non* reassesses *oui*; Chapter 17 sits exactly on it. No `assesses`
 list is padded — a shortfall is a signal that the chapter needs a real practice
@@ -135,6 +179,26 @@ which is not decoration, since *manuscript* is *manus* + *scrībere* — plus
 that had never been revisited by anything now are**: `FR-LEX-MAIN-02`,
 `FR-ETYMON-MAIN-04`, `FR-LEX-CHIEN-02`, `FR-LEX-CHAT-04`, `FR-LEX-PLEASE-02`,
 `FR-GRAMMAR-PLEASE-REGISTER-04`, `FR-LEX-NON-02` and `FR-SOUND-NON-03`.
+
+Chapters 26 and 27 reach back at **two** cadences rather than one. Every lesson
+practises atoms from the **one to three lessons immediately before it**, across
+the chapter seam — which is the only cadence that can close HL09's R1 window
+(n+1 … n+3), because a chapter-*end* payoff is out of range for everything the
+chapter opened with. On top of that, each payoff reaches several chapters back:
+`FR-C26-courir` uses *courir*'s hard *c* to re-earn why *canis* became *chien*
+(Chapter 22), and runs *il fait chaud* / *il pleut* (Chapter 21) and *ne … pas*
+(Chapter 18) against the new verbs; `FR-C27-fermer` opens and closes *la main*
+(Chapter 17), closes because *il pleut* (Chapter 21), and asks in both registers
+before apologising (Chapters 19 and 20).
+
+Measured effect: **eleven more French atoms that nothing had ever revisited now
+are** — `FR-ETYMON-CHIEN-03`, `FR-ETYMON-CHAT-05`, `FR-ETYMON-MAINTENIR-05`,
+`FR-SOUND-MAIN-03`, `FR-GRAMMAR-IL-FAIT-03`, `FR-LEX-IL-PLEUT-04`,
+`FR-GRAMMAR-NEGATION-04`, `FR-LEX-DESOLE-02`, `FR-PRAGMATICS-SORRY-04`,
+`FR-ETYMON-COMPRENDRE-02` and `FR-ETYMON-PENSER-05`. French's
+`atomsNeverRevisited` falls 33 → 25 while its atom count rises 54 → 76. Two of
+the tranche's own new atoms are still unrevisited — `FR-ETYMON-COURIR-11` and
+`FR-ETYMON-LEVER-05` — and that is recorded rather than papered over.
 
 ## Files
 

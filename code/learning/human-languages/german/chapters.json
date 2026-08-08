@@ -214,6 +214,73 @@
           "GE-LEX-WETTER-02"
         ]
       }
+    },
+    {
+      "chapter": 26,
+      "title": "Sitting, Standing, Sleeping, Hearing",
+      "label": "ch:ge-still-verbs",
+      "canDo": "I can say I sit, I stand, I sleep and I hear in German, tell the second shift's t-branch from its p-branch, break a verb's a to ä for du and er, and say which of the four changes German made alone and which it made alongside English.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "GE-C26-hoeren",
+        "kind": "production",
+        "summary": "The chapter closes on hören, the one verb of the four whose vowel cannot break because it was born umlauted: the reader produces all four ich forms and all four er forms, names schlafen as the only breaker, tells Grimm's law on the h of hören and Hund from the second shift on sitzen and schlafen, and hangs gern on the new verb. It reaches back past its own chapter to Chapter 17's Grimm's law, Chapter 22's Hund and Katze with the Hund etymology that had never been revisited, and Chapter 25's mögen, lieben and gern, all three of which were orphans until here.",
+        "assesses": [
+          "GE-LEX-SITZEN-02",
+          "GE-ETYMON-SITZEN-03",
+          "GE-LEX-STEHEN-04",
+          "GE-ETYMON-STEHEN-05",
+          "GE-LEX-SCHLAFEN-06",
+          "GE-ETYMON-SCHLAFEN-07",
+          "GE-GRAMMAR-UMLAUT-BREAK-08",
+          "GE-LEX-HOEREN-09",
+          "GE-ETYMON-HOEREN-10",
+          "GE-FALSEFRIEND-GEHOEREN-11",
+          "GE-SOUND-GRIMMS-LAW-04",
+          "GE-LEX-HUND-02",
+          "GE-ETYMON-HUND-03",
+          "GE-LEX-KATZE-04",
+          "GE-LEX-MOEGEN-LIEBEN-09",
+          "GE-ETYMON-MOEGEN-LIEBEN-10",
+          "GE-GRAMMAR-GERN-11"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Going, Running, Opening, Closing",
+      "label": "ch:ge-moving-verbs",
+      "canDo": "I can say I go, I run and I open and close my hand in German, split a separable verb so its prefix waits at the end of the sentence, and say why German's line between walking and running is not where English draws it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "GE-C27-schliessen",
+        "kind": "production",
+        "summary": "The chapter closes on schließen, the second verb in these chapters that German kept and English lost: the reader produces all of Chapter 27's verbs, splits both aufmachen and zumachen around die Hand, names Schloss, Schlüssel and Schluss as the household built on the kept verb, and runs the eight-verb morning that closes Chapters 26 and 27 together. It reaches back to Chapter 25's nehmen and the second shift on helfen, to Chapter 17's Hand and its final-d devoicing, which had never been revisited, and to Chapter 26's sitzen, stehen and hören.",
+        "assesses": [
+          "GE-LEX-GEHEN-02",
+          "GE-ETYMON-GEHEN-03",
+          "GE-LEX-LAUFEN-04",
+          "GE-ETYMON-LAUFEN-05",
+          "GE-LEX-RENNEN-06",
+          "GE-LEX-OEFFNEN-07",
+          "GE-ETYMON-OFFEN-08",
+          "GE-GRAMMAR-SEPARABLE-09",
+          "GE-LEX-SCHLIESSEN-10",
+          "GE-ETYMON-SCHLIESSEN-11",
+          "GE-LEX-NEHMEN-02",
+          "GE-ETYMON-NEHMEN-03",
+          "GE-ETYMON-HELFEN-08",
+          "GE-LEX-HAND-02",
+          "GE-SOUND-HAND-03",
+          "GE-LEX-SITZEN-02",
+          "GE-LEX-STEHEN-04",
+          "GE-LEX-HOEREN-09"
+        ]
+      }
     }
   ]
 }
