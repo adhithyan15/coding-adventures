@@ -5,8 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-06, when the Step-by-Step capability program (HL05–HL07)
-was specified and placed ahead of the remaining roadmap and migration work. Current
+Last prioritized: 2026-08-08, after HL-Q01 merged as #10089. HL-I03 moved next
+because four vocabulary waves had already made the hand-maintained track table stale;
+the index now needs to derive its claims before the next corpus expansion. Current
 baseline after the Japanese Chapter 1 tranche (HL-C40), which followed the Mandarin
 Chinese scale test (HL-C39), the Latin chapter payoffs (HL-C24) and the Spanish
 gentle-ramp split (HL-C18A): **22** registered tracks, **1,133** Markdown lessons,
@@ -285,7 +286,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
 | HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapters 3–5 practice. Coverage is 25 of 119 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
-| HL-Q01 | Complete in this PR after #9916 | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npm run typecheck` passes after fixing the pre-existing DOM element type, review-log cast, ESM fixture paths, and unused test symbols; BUILD now keeps the gate enforced. |
+| HL-Q01 | Complete (#10089, after #9916) | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npm run typecheck` passes after fixing the pre-existing DOM element type, review-log cast, ESM fixture paths, and unused test symbols; BUILD now keeps the gate enforced. |
 | HL-Q02 | Queued | Split Language Ladder's monolithic production JavaScript bundle. | Vite should no longer emit its 500 kB chunk warning; initial Learn-mode loading should not require the current 7.12 MB script while all modes and offline-relative deployment keep working. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
@@ -298,8 +299,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
 | HL-B13 | Complete (#9711) | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
 | HL-I01 | Complete (#9715) | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
-| HL-I02 | Queued | Update the human-language data package beyond the vulnerable PostCSS 8.5.19 transitive development dependency. | A clean install reports GHSA-fxqj-rqcc-2cmp through Vitest/Vite; PostCSS 8.5.25 is available, but this development-only moderate finding remains behind reader-facing book and app gaps. |
-| HL-I03 | Queued | Derive the top-level track progress table from canonical curriculum and book-generation data. | The hand-maintained table can lag shipped chapters after a generated-book migration; a checked or generated summary should keep every prior language visible without repeating stale progress claims. |
+| HL-I02 | Queued — reprioritized after HL-I03 | Refresh the human-language data package's vulnerable transitive development locks. | A clean install now reports high-severity Nano ID GHSA-2v37-7h3g-55p8 and moderate PostCSS GHSA-fxqj-rqcc-2cmp through Vitest/Vite; both have fixes available and should leave `npm audit` at zero. |
+| HL-I03 | Complete in this PR | Derive the top-level track progress table from canonical curriculum and book-generation data. | A registry-ordered generated table reports canonical and mapped lesson counts plus authored/generated book progress for every track; CI fails byte-for-byte drift. |
 | HL-I04 | Complete (#9908) | Restore exact-main full CI after `perl/wasm-module-encoder` exposed undeclared local test dependencies. | Its `cpanfile` and `Makefile.PL` declare every local package injected by `BUILD`; clean full-build metadata validation and focused Perl tests pass. |
 | HL-I05 | Complete (#9910) | Make the repository's Lua bootstrap resilient to a temporary lua.org connection outage. | All CI platforms install pinned Lua 5.4.7 through an OS-specific cache or checksum-verified byte-identical Debian/Ubuntu source fallback without weakening the Windows MSVC ordering or silently skipping Lua tests. |
 | HL-B14 | Complete (#9728) | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
@@ -2367,10 +2368,29 @@ problem.
   gzip), above Vite's 500 kB warning threshold. HL-Q02 records that separate
   learner-loading concern without coupling a bundle redesign to this repair.
 
+## Findings from HL-I03
+
+- The index table now follows the authored registry order and derives every row
+  from the language registry, parsed lessons, realization maps, authored book
+  files, and the generated-book manifest. A newly registered track therefore
+  appears even when all of its progress counts are still zero.
+- The first generated snapshot keeps all 22 tracks visible and measures 1,669
+  canonical lessons, 1,521 uniquely mapped lessons, 513 authored book chapters,
+  and 408 generated chapters. These are outputs, not new hand-maintained claims.
+- Each row reports the canonical/mapped lesson gap instead of hiding it inside a
+  prose status. That makes unfinished one-source migration visible without
+  confusing it with missing book publication.
+- `generate:progress` rewrites only the marked table. `check:progress` compares
+  the complete README byte for byte in the unified publication job before TeX is
+  installed, so curriculum or book growth cannot silently stale the index again.
+- The exact package BUILD also refreshed HL-I02's evidence: the development tree
+  now reports one high Nano ID advisory and one moderate PostCSS advisory, both
+  with fixes available. HL-I02 moves ahead of non-security housekeeping next.
+
 ## Completed foundations
 
 - HL04 defines the 45-concept shared spine and migration contract.
-- The 20-track registry, Persian/Urdu pilots, full Markdown bodies, registry-driven
+- The multi-track registry, Persian/Urdu pilots, full Markdown bodies, registry-driven
   language selection, RTL app rendering, and fail-closed prerequisites are merged.
 - One CI job now installs TeX once, compiles every book, uploads one publication
   bundle, and publishes the catalog after changes reach `main`.

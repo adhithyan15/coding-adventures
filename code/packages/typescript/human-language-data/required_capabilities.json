@@ -50,7 +50,13 @@
       "action": "write",
       "target": "../../learning/human-languages/core/generated-narration-hashes.json",
       "justification": "The explicit generate:narration command refreshes the narration source-hash manifest that detects drift between the lessons and the committed voice script; CI normally verifies it without writing."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/README.md",
+      "justification": "The explicit generate:progress command refreshes only the marked registry-ordered track table; CI normally uses the read-only check:progress drift gate."
     }
   ],
-  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book and narration generators write only configured LaTeX chapters, per-chapter narration scripts, and their shared source-hash manifests, each path checked against the curriculum root before opening. No network or process access is needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book, narration, and progress generators write only configured LaTeX chapters, per-chapter narration scripts, shared source-hash manifests, and the marked top-level README table. No network or process access is needed."
 }

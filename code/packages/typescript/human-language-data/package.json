@@ -12,6 +12,8 @@
     "check:modality": "node dist/modality-cli.js --check",
     "generate:narration": "node dist/narration-cli.js --write",
     "check:narration": "node dist/narration-cli.js --check",
+    "generate:progress": "node dist/track-progress-cli.js --write",
+    "check:progress": "node dist/track-progress-cli.js --check",
     "report": "node dist/report-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",

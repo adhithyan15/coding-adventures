@@ -141,6 +141,11 @@ jobs:
           npm ci
           npm run build
           npm run check:books
+          # The top-level track table is a generated view over the registry,
+          # curriculum maps, lessons, and book manifest. Keep every registered
+          # language visible without hand-maintained chapter or lesson claims.
+          # Regenerate with `npm run generate:progress`.
+          npm run check:progress
           # The modality manifest (core/lesson-modality.json) is derived from the
           # lessons and is what lets the complete book, the app, and the future
           # dictation-friendly driving edition be filtered out of one source. A stale

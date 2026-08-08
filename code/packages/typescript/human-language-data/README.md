@@ -16,9 +16,14 @@ It also produces the versioned migration-gap report published with every book
 bundle and deterministically renders configured LaTeX chapters from that same
 lesson AST.
 
+The Human Languages index is derived too. `npm run generate:progress` rewrites
+only the marked track table in `code/learning/human-languages/README.md`; CI runs
+`npm run check:progress` so registry additions, curriculum growth, and generated
+book chapters cannot leave its counts stale.
+
 ```
 lessons/*.md frontmatter  ─┐
-curriculum.json × 20       ─┼─►  Dataset + local realization paths
+<track>/curriculum.json    ─┼─►  Dataset + local realization paths
 concepts/taxonomy.json     ─┤         + validate() / validateCurriculum()
 data/scripts/*.json        ─┘         + independent frontier planning
 ```
@@ -410,6 +415,15 @@ npm run generate:books
 npm run check:books
 ```
 
+Regenerate or verify the registry-ordered track table in the top-level Human
+Languages index:
+
+```bash
+npm run build
+npm run generate:progress
+npm run check:progress
+```
+
 `core/book-generation.json` declares each generated chapter. The generator
 orders schema-v2 lessons by `sequence`, writes the LaTeX chapter, and records a
 stable FNV-1a fingerprint in `core/generated-book-hashes.json`. The fingerprint
@@ -447,20 +461,18 @@ until the existing corpus has been split.
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
-
 | `modality-manifest.ts` | that derivation as an emittable, filterable JSON artifact | ✅ |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
-| `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
-
-Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `narration-cli.ts` touch the filesystem (declared in
-
 | `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
+| `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
+| `track-progress.ts` | registry/curriculum/book facts → top-level progress rows | ✅ |
+| `track-progress-cli.ts` | rewrites or checks the marked README track table | ⛔ (fs) |
 
-Only `loader.ts`, `cli.ts`, `report-cli.ts`, `book-cli.ts`, and `modality-cli.ts` touch the filesystem (declared in
+Only the modules marked `fs` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
 

@@ -72,6 +72,12 @@ export {
   loadEverything,
 } from "./loader.js";
 export {
+  buildTrackProgress,
+  renderTrackProgressTable,
+  type GeneratedBookChapterRef,
+  type TrackProgress,
+} from "./track-progress.js";
+export {
   MODALITIES,
   MODALITY_SIGNS,
   SIGHT_CUES,
