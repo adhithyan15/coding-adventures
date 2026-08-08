@@ -1,5 +1,6 @@
 ---
 id: TA-C01-vanakkam-family-register
+sequence: 20
 chapter: 1
 type: etymology
 headword: வணக்கம் / நமஸ்காரம்

@@ -1,5 +1,6 @@
 ---
 id: TA-C01-vanakkam
+sequence: 10
 chapter: 1
 type: word
 headword: வணக்கம்
@@ -8,63 +9,39 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [tamil-inherent-a, pulli-virama, retroflex-n]
 roots: [vaṇaṅku]
-est_minutes: 4
+est_minutes: 1
 reviews_of: []
 ---
 
-# வணக்கம் (vaṇakkam) — "greetings," a small act of respect
+# வணக்கம் (vaṇakkam) — "greetings"
 
 ## Warm-up
 
-[PAUSE 2s] The first Tamil word, and the one you'll use most. Like *namaste*,
-it is literally a gesture of respect turned into a word. You'll learn to
-*read* it and to understand it in the same breath.
+[PAUSE 2s] The first Tamil word, and the one you will use most. One word, one
+lesson. Say it, and you have greeted someone.
 
-## The letters in this word
+## The word
 
-*(If you already read Tamil, skim this — it's here so the book needs no prior
-knowledge.)* Tamil is written **left to right**, and — like the Indian scripts
-generally — every consonant carries a **built-in "a"** unless something removes
-it.
+**வணக்கம்** — *vaṇakkam* — **"greetings."**
 
-- **வ** = "va" · **க** = "ka" · **ம** = "ma" — each consonant with its built-in
-  *a*.
-- **ண** = "ṇa" — a **retroflex** *n*, made with the tongue curled back to the
-  roof of the mouth. Tamil keeps several *n*-sounds and several *l*-sounds
-  apart; this is the curled-back one. (More on that next lesson.)
-- **க்** — the dot on top (called a **puḷḷi**) **kills the built-in vowel**,
-  leaving a bare "k." So the double **க்க** is "k-ka" = a held "kk."
+Say it *va-ṇak-kam*, with the *kk* held a beat longer than a single *k*.
 
-Put them in order, left to right: **வ · ண · க் · க · ம்** = *va-ṇa-k-ka-m* →
+It is what you say walking into a room, answering a phone, or meeting anyone at
+all. It does not change for morning or evening, and it does not change for one
+person or many.
 
-> **வணக்கம்** = **vaṇakkam**
-
-You just read Tamil. Two facts did most of it: consonants carry *a*, and a
-**puḷḷi** dot removes it.
-
-## The word, taken apart
-
-**வணக்கம்** (*vaṇakkam*) comes from the verb **வணங்கு** (*vaṇaṅku*), "to bow,
-to bend, to pay homage." Add the ending that turns a verb into a noun of the
-action, and you get *vaṇakkam* = **"a bowing, an act of reverence"** — the
-same idea as Sanskrit *namaste* ("I bow to you"), but built from a **native
-Tamil** root, not a borrowed one.
-
-That last point is the whole personality of Tamil: it is an old language proud
-of its own word-stock, and it often keeps a home-grown word where its
-neighbours reached for Sanskrit.
+> Its root is the verb *vaṇaṅku*, "to bow." *Vaṇakkam* is the act of bowing,
+> turned into a word — and it is native Tamil, not borrowed from Sanskrit.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: read it left to right — va · ṇa · k · ka · m → "vaṇakkam"]
-- [YOU SAY: what the *puḷḷi* dot on க் does (kills its vowel: ka → k)]
-- [YOU SAY: "vaṇaṅku — to bow; vaṇakkam — an act of reverence"]
+- [YOU SAY: "vaṇakkam" — hold the *kk*]
+- [YOU SAY: it to someone arriving]
+- [YOU SAY: it to someone leaving — the same word does both]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read **வணக்கம்**. What verb is it built from, and what does that
-verb mean? (*vaṇaṅku*, "to bow / pay homage.") What does a **puḷḷi** do to a
-consonant? (Removes its built-in *a*.) Is the root borrowed from Sanskrit?
-(**No** — it is native Tamil.) Next: compare that native greeting across the
-family and learn where it fits.
+[PAUSE 3s] Say **வணக்கம்**. Does it change between morning and evening?
+(**No** — one greeting, all day.) Does it change for one person or a crowd?
+(**No**.) Next: the same greeting across the Dravidian family.

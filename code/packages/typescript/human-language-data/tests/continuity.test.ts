@@ -301,12 +301,24 @@ describe("the real corpus", () => {
 
     // ORDER. Until this reaches zero every other number here is provisional: a ramp
     // whose reading order is unknown cannot be verified at all.
-    expect(report.summary.lessonsWithoutSequence).toBe(515);
+        // 515 -> 507. Eight Tamil chapter-1 lessons that had no `sequence` were given one
+    // from the order the curriculum path already declared, so the continuity walk can
+    // finally see it. The corpus GREW by a lesson over the same change, and that lesson
+    // was born sequenced, so it never entered this count.
+    expect(report.summary.lessonsWithoutSequence).toBe(507);
     expect(report.summary.tracksWithUnorderedLessons).toBe(19);
-    expect(report.summary.forwardPrerequisites).toBe(245);
+        // 245 -> 240. Not five prerequisites fixed — five that were never real. Without a
+    // `sequence` the walk falls back to alphabetical, so "TA-C01-aam requires
+    // TA-C01-vanakkam-family-register" read as a forward prerequisite purely because
+    // `aam` sorts first. Declaring chapter 1's order removed the artifact.
+    expect(report.summary.forwardPrerequisites).toBe(240);
 
     // Lessons claiming to review material the learner has not reached yet.
-    expect(report.summary.forwardReviews).toBe(300);
+    // 300 -> 285. Fourteen are the same alphabetical-fallback artifact as
+    // forwardPrerequisites above, four of them in the writing track rather than the
+    // word lessons; the fifteenth is a `reviews_of` list that genuinely shrank when its
+    // lesson was rewritten.
+    expect(report.summary.forwardReviews).toBe(285);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.
@@ -380,7 +392,12 @@ describe("the real corpus", () => {
     // now does it deliberately, and completely: the accident only ever covered the
     // tail after the first word, so 45 self-references it had never caught are gone
     // too. Every one was verified to be a token of the reporting lesson's own headword.
-    expect(report.summary.forwardReferences).toBe(443);
+    //
+    // 443 -> 439, and NOT because of the prose rewrite — a sequence-only corpus reads
+    // 439 too. All four dropped references sit in TA-W01-curves-va-ka,
+    // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
+    // stopped counting because chapter 1 now declares its order.
+    expect(report.summary.forwardReferences).toBe(439);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the

@@ -3,9 +3,256 @@
   "language": "tamil",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe3d3298ecc5bc3a",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:cd6ee126f13c74e3",
   "lessons": [
+    {
+      "id": "TA-C01-vanakkam",
+      "sequence": 10,
+      "title": "வணக்கம் (vaṇakkam) — \"greetings\"",
+      "headword": "வணக்கம்",
+      "romanization": "",
+      "gloss": "hello / greetings (vaṇakkam — \"reverence, homage\")",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:017a3556c7283313",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first Tamil word, and the one you will use most. One word, one lesson. Say it, and you have greeted someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணக்கம் — vaṇakkam — \"greetings.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Say it va-ṇak-kam, with the kk held a beat longer than a single k."
+            },
+            {
+              "kind": "speech",
+              "text": "It is what you say walking into a room, answering a phone, or meeting anyone at all. It does not change for morning or evening, and it does not change for one person or many."
+            },
+            {
+              "kind": "speech",
+              "text": "Its root is the verb vaṇaṅku, \"to bow.\" Vaṇakkam is the act of bowing, turned into a word — and it is native Tamil, not borrowed from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vaṇakkam\" — hold the kk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vaṇakkam\" — hold the *kk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it to someone arriving",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it to someone arriving]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it to someone leaving — the same word does both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it to someone leaving — the same word does both]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say வணக்கம் (vaṇakkam). Does it change between morning and evening? (No — one greeting, all day.) Does it change for one person or a crowd? (No.) Next: the same greeting across the Dravidian family."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-vanakkam-family-register",
+      "sequence": 20,
+      "title": "வணக்கம் (vaṇakkam) — one bow, two lexical loyalties",
+      "headword": "வணக்கம் / நமஸ்காரம்",
+      "romanization": "",
+      "gloss": "Tamil kept a native bow-word where its neighbors borrowed Sanskrit, and uses it across settings",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad7b57e45071d385",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vaṇakkam names a bow. Neighboring languages name the same gesture with a different inherited or borrowed root."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Hello\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Tamil. \"Hello\": vaṇakkam. Source: native Dravidian vaṇaṅku.",
+                "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit.",
+                "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
+                "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit.",
+                "Language: Hindi. \"Hello\": namaste. Source: Sanskrit.",
+                "Language: English. \"Hello\": hello. Source: Germanic hailing-call."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four tracks use Sanskrit namas-, \"bow.\" Tamil kept its own verb. The gesture and social meaning match; the lexical loyalty differs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Where the word fits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say vaṇakkam with pressed palms or a small head-bow: the gesture is the word. It works as hello and goodbye, at any time, to almost anyone. It is respectful without being stiff; cinema and formal speech can also use it as a ringing one-word salutation to a whole room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vaṇakkam\" with a small bow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vaṇakkam\" with a small bow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "Tamil vaṇaṅku, neighbors Sanskrit namas-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: Tamil *vaṇaṅku* · neighbors Sanskrit *namas-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "greeting or parting becomes வணக்கம் (vaṇakkam) works",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: greeting or parting → **வணக்கம்** works]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Dravidian language kept its native bow-word? (Tamil.) What did the neighbors borrow? (Sanskrit namas-.) Can vaṇakkam greet and part? (Yes — it is an all-day respectful salutation.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TA-W01-curves-va-ka",
       "sequence": 100,
@@ -1341,30 +1588,19 @@
     },
     {
       "id": "TA-C01-aam",
-      "sequence": null,
+      "sequence": 180,
       "title": "ஆம் (ām) — \"yes\"",
       "headword": "ஆம்",
       "romanization": "",
       "gloss": "yes (ām)",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block",
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5971b60f9445ebba",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:33b4b0ca5bf90f6f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1379,61 +1615,35 @@
             },
             {
               "kind": "speech",
-              "text": "A two-letter word, and your first look at how Tamil writes a vowel that stands on its own."
+              "text": "The plain yes. One word, and then we will put these together."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "unknown",
+          "title": "The word",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Tamil.)"
+              "text": "ஆம் — ām — \"yes.\""
             },
             {
               "kind": "speech",
-              "text": "ஆ = \"ā\" (a long \"aa\"). When a word starts with a vowel, Tamil uses a full independent vowel letter like this — not the little vowel sign you hook onto a consonant. (Compare: the \"i\" hooked onto ற to make றி last lesson; here the vowel leads, so it gets its own full letter.)"
+              "text": "One beat, with a long opening aa."
             },
             {
               "kind": "speech",
-              "text": "ம் = \"m,\" with the puḷḷi dot removing its built-in a — the same bare m that ended vaṇakkam."
+              "text": "Stretch it and you get ஆமாம் (āmām) — \"yes, indeed; that's right.\" Tamil doubles words for warmth and certainty, the way sari sari does."
             },
             {
               "kind": "speech",
-              "text": "Left to right: ஆ, ம் = ā-m, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ஆம் = ām = \"yes.\""
+              "text": "Ām is a worn-down form of āgum, \"it becomes, it will be\" — a yes that started life as a verb, which is a very Tamil way to agree."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ஆம் (ām) is the plain \"yes.\" Stretch it for emphasis and you get ஆமாம் (āmām) — \"yes, indeed / that's right,\" a doubling-up that Tamil loves for warmth and certainty."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Tamil often answers by echoing the verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ām exists, but Tamil speakers frequently say \"yes\" by repeating the verb of the question instead. Asked \"vandāyā?\" (\"did you come?\"), a natural yes is \"vandēn\" (\"I came\"). English leans on a single all-purpose yes; Tamil often answers with the action itself. Bank ām as the simple word, and don't be surprised when a \"yes\" comes back as a whole verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1446,34 +1656,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ā, m becomes \"ām\"",
+              "instruction": "\"ām\" — one long aa, closed on the m",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ā · m → \"ām\"]"
+              "source": "[YOU SAY: \"ām\" — one long *aa*, closed on the *m*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the emphatic \"āmām\" — \"yes, indeed\"",
+              "instruction": "\"āmām\" — the emphatic double",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the emphatic \"āmām\" — \"yes, indeed\"]"
+              "source": "[YOU SAY: \"āmām\" — the emphatic double]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why ஆ is a full letter here (the word starts with the vowel)",
+              "instruction": "\"ām\" then \"sari\" — yes, and alright",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why ஆ is a *full* letter here (the word starts with the vowel)]"
+              "source": "[YOU SAY: \"ām\" then \"sari\" — yes, and alright]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1485,7 +1695,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ஆம். Why is ஆ a full vowel letter rather than a vowel sign? (The word begins with the vowel — nothing to hook onto.) What's the emphatic \"yes\"? (āmām.)"
+              "text": "Say ஆம். What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: the word for no."
             }
           ]
         }
@@ -1493,28 +1703,19 @@
     },
     {
       "id": "TA-C01-illai",
-      "sequence": null,
-      "title": "இல்லை (illai) — \"no,\" and how Tamil says a thing is not",
+      "sequence": 190,
+      "title": "இல்லை (illai) — \"no\"",
       "headword": "இல்லை",
       "romanization": "",
       "gloss": "no / there isn't (illai — the negative)",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb7d4be5afd2b4a8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:93b6d60e45822e82",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1529,81 +1730,35 @@
             },
             {
               "kind": "speech",
-              "text": "The partner of ām. But where English \"no\" is a small flat word, Tamil's illai is really a tiny verb meaning \"it is not / there is not\" — and that's a window into how the language thinks."
+              "text": "The other half of the pair. One word, and then the lesson that puts all five together."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "unknown",
+          "title": "The word",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Tamil.)"
+              "text": "இல்லை — illai — \"no.\""
             },
             {
               "kind": "speech",
-              "text": "இ = \"i\" — an independent vowel (the word starts with it, so it gets a full letter, exactly like ஆ in ām)."
+              "text": "Two beats: il-lai, with the l held across the join."
             },
             {
               "kind": "speech",
-              "text": "ல் = \"l,\" with the puḷḷi dot removing its vowel becomes bare l."
+              "text": "On its own it is the everyday no. But it is not really the adjective \"no\" — it is a small statement meaning \"is not.\" That will matter when we put the five words together."
             },
             {
               "kind": "speech",
-              "text": "லை = \"lai\" — the consonant ல (la) carrying the vowel sign ை, which makes \"ai.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: இ, ல், லை = i-l-lai, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "இல்லை = illai."
-            },
-            {
-              "kind": "speech",
-              "text": "(Notice ல் + லை — a bare l leaning into lai, giving the doubled \"ll.\")"
+              "text": "Its root is il, the idea of not-being. Its positive twin is uṇḍu, \"there is.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "இல்லை (illai) is built on the root இல் (il), the idea of \"not-being, absence.\" So illai is not really the adjective \"no\" — it is the statement \"[it] is not,\" \"[there] is not.\" Its positive twin is உண்டு (uṇḍu), \"there is.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Tamil negates by being, not by a \"not\"-word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English changes a sentence to negative by inserting not / no: \"there is a book\" becomes \"there is no book.\" Tamil instead swaps in the negative verb of existence:"
-            },
-            {
-              "kind": "speech",
-              "text": "puttakam uṇḍu — \"there is a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "puttakam illai — \"there is not a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So illai does double duty: on its own it's the everyday \"no,\" and inside a sentence it's the word that makes the whole thing negative. Learn it as \"is not,\" and both uses fall out naturally. (This — negation carried by a special verb rather than a particle — is a deeply Dravidian habit, quite unlike English or Hindi.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1616,34 +1771,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "i, l, lai becomes \"illai\"",
+              "instruction": "\"illai\" — two beats, the l held across the join",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: i · l · lai → \"illai\"]"
+              "source": "[YOU SAY: \"illai\" — two beats, the *l* held across the join]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — ām (\"yes\") / illai (\"no\")",
+              "instruction": "the pair — \"ām\" … \"illai\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *ām* (\"yes\") / *illai* (\"no\")]"
+              "source": "[YOU SAY: the pair — \"ām\" … \"illai\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"puttakam illai\" — \"there is no book\"",
+              "instruction": "it alone, as a complete answer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"puttakam illai\" — \"there is no book\"]"
+              "source": "[YOU SAY: it alone, as a complete answer]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1655,7 +1810,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read இல்லை. Literally, is it closer to \"no\" or to \"is not\"? (\"Is not / there is not.\") What is its positive twin? (uṇḍu, \"there is.\") How does Tamil make a sentence negative — with a particle like English not, or by swapping in a negative verb? (A negative verb.)"
+              "text": "Say இல்லை. Is it closer to English no, or to is not? (Is not — it is a statement, not a label.) Next: the word for thank you."
             }
           ]
         }
@@ -1663,28 +1818,19 @@
     },
     {
       "id": "TA-C01-nandri",
-      "sequence": null,
-      "title": "நன்றி (naṉṟi) — \"thank you,\" literally \"goodness\"",
+      "sequence": 200,
+      "title": "நன்றி (naṉṟi) — \"thank you\"",
       "headword": "நன்றி",
       "romanization": "",
       "gloss": "thank you (naṉṟi — \"goodness, gratitude\")",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3b598578abbeee7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:d08803bcdd6448e5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1699,88 +1845,35 @@
             },
             {
               "kind": "speech",
-              "text": "The word for gratitude — and the doorway to one of Tamil's most famous features: it hears differences between sounds English throws into one bin."
+              "text": "One word again. This is the one you will reach for second-most, and Tamil says it with a noun rather than a verb."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "unknown",
+          "title": "The word",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Tamil.) Three consonants and a vowel sign:"
+              "text": "நன்றி — naṉṟi — \"thank you.\""
             },
             {
               "kind": "speech",
-              "text": "ந = \"na\" — a dental n (tongue on the teeth, like the n in Spanish nada)."
+              "text": "Two beats: naṉ-ṟi. The ṉ and the ṟ are both made further back than English n and r; copy the sound rather than the spelling."
             },
             {
               "kind": "speech",
-              "text": "ன் = \"ṉ\" — a different n, alveolar (tongue on the ridge just behind the teeth), with a puḷḷi dot killing its vowel."
+              "text": "It works on its own, with no verb around it. Someone hands you something; you say naṉṟi, and that is a whole sentence."
             },
             {
               "kind": "speech",
-              "text": "ற = \"ṟa\" — a hard r/ṟ sound made with a tap further back."
-            },
-            {
-              "kind": "speech",
-              "text": "ி is a vowel sign that changes the built-in a to \"i\": ற + ி becomes றி = \"ṟi.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ந, ன், றி = na-ṉ-ṟi, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "நன்றி = naṉṟi."
+              "text": "Its root is nal, \"good\" — the same nal- inside nalla (\"good\") and nanmai (\"a good deed\"). Saying naṉṟi names the good someone did you."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "நன்றி (naṉṟi) grows from the root நல் / நன் (nal / naṉ), \"good, goodness\" — the same root inside nanmai (\"good deed\"), nallavan (\"a good man\"). So naṉṟi is literally \"goodness\", and to say it is to name the good someone has done you. Gratitude, in Tamil, is just \"the good [you did].\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Tamil hears three of every n, l, and r",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You met ந (dental na), ன (alveolar ṉa), and last lesson ண (retroflex ṇa) — three n-letters, for three tongue positions:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Letter",
-                "Sound",
-                "Tongue"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Letter: ந. Sound: dental n. Tongue: on the teeth.",
-                "Letter: ன. Sound: alveolar ṉ. Tongue: on the ridge behind the teeth.",
-                "Letter: ண. Sound: retroflex ṇ. Tongue: curled back to the roof."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Tamil does the same for l (ல ள ழ) and r (ர ற). English fuses all these into single letters and never notices; Tamil keeps them distinct, and they change meaning — so learning to hear them is learning to read. Don't drill the whole set now; just know the differences are real and will return word by word."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1793,34 +1886,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "na, ṉ, ṟi becomes \"naṉṟi\"",
+              "instruction": "\"naṉṟi\" — two beats, both consonants far back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: na · ṉ · ṟi → \"naṉṟi\"]"
+              "source": "[YOU SAY: \"naṉṟi\" — two beats, both consonants far back]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three n's — ந (teeth), ன (ridge), ண (curled back)",
+              "instruction": "\"vaṇakkam\" then \"naṉṟi\" — greeting, then thanks",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three *n*'s — ந (teeth), ன (ridge), ண (curled back)]"
+              "source": "[YOU SAY: \"vaṇakkam\" then \"naṉṟi\" — greeting, then thanks]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nal — good; naṉṟi — the good you did\"",
+              "instruction": "it on its own, with nothing around it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nal — good; naṉṟi — the good you did\"]"
+              "source": "[YOU SAY: it on its own, with nothing around it]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1832,7 +1925,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read நன்றி. What does it literally mean, and from what root? (\"Goodness,\" from nal \"good.\") How many distinct n-sounds does Tamil write, and what tells them apart? (Three — dental, alveolar, retroflex — by tongue position.) Next: compare the gratitude word across the family and choose its register."
+              "text": "Say நன்றி. Does it need a verb to be a complete reply? (No — it stands alone.) Next: how thanks travels across the family."
             }
           ]
         }
@@ -1840,7 +1933,7 @@
     },
     {
       "id": "TA-C01-nandri-family-register",
-      "sequence": null,
+      "sequence": 210,
       "title": "நன்றி — a native family word with a register edge",
       "headword": "நன்றி / നന്ദി",
       "romanization": "",
@@ -1851,7 +1944,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b71da01982a1c62",
+      "sourceHash": "fnv1a64:df441fa9eb2d1a4a",
       "notice": null,
       "blocks": [
         {
@@ -1974,8 +2067,265 @@
       ]
     },
     {
+      "id": "TA-C01-sari",
+      "sequence": 220,
+      "title": "சரி (sari) — \"okay\"",
+      "headword": "சரி",
+      "romanization": "",
+      "gloss": "okay / alright / correct (sari)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7aaa8c8d3e80fe76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The most useful small word in the language, and the easiest to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரி — sari — \"okay, alright, correct.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats: sa-ri."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the verbal nod of Tamil. Someone proposes a plan and the whole reply is one warm sari. Doubled — sari, sari — it means \"yes yes, fine, go on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It began as \"correct, even, level,\" and slid from that is right to alright the way English right did."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sari\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sari\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sari, sari\" — the doubled, hurry-along version",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sari, sari\" — the doubled, hurry-along version]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree to something with nothing but this word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree to something with nothing but this word]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say சரி. What does doubling it add? (Hurry, or easy agreement — \"yes yes, fine.\") Next: putting the five together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C01-answering",
+      "sequence": 230,
+      "title": "Putting the five together — how Tamil answers",
+      "headword": "ஆம் / இல்லை / சரி",
+      "romanization": "",
+      "gloss": "answering in Tamil — the five words in use, and the two habits behind them",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0ce2d20f0c139e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, one at a time. Now they go into a conversation, and two habits show up that English does not have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Using them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A whole exchange, built only from the five words:"
+            },
+            {
+              "kind": "speech",
+              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி? — ஆம். — நன்றி. — சரி. — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
+            },
+            {
+              "kind": "speech",
+              "text": "Every reply is one word. Tamil is comfortable with that in a way English is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two habits behind the answers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One — Tamil often answers by echoing the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Ām is correct, but a speaker will often say yes by repeating the verb of the question. Asked \"did you come?\", a natural yes is vandēṉ — \"I came.\" Keep ām as your word, and expect a yes to come back as a whole verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Two — Tamil negates by being, not with a \"not\"-word."
+            },
+            {
+              "kind": "speech",
+              "text": "English makes a sentence negative by inserting not. Tamil swaps in the negative verb of existence:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "puttakam uṇḍu, \"there is a book\".",
+                "puttakam illai, \"there is not a book\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So illai does double duty: alone it is the everyday no; inside a sentence it is what makes the whole thing negative. Learn it as is not and both uses fall out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange above, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange above, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "\"puttakam uṇḍu\" … \"puttakam illai\" — only the last word changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: \"puttakam uṇḍu\" … \"puttakam illai\" — only the last word changed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give a one-word reply to sari? and to naṉṟi. (ām / sari.) Besides ām, what else is a natural yes? (Repeating the verb.) What does illai do inside a sentence? (Makes it negative — it is the \"is not\" verb.) Next: the chapter's own recap, and then names."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TA-C01-practice",
-      "sequence": null,
+      "sequence": 240,
       "title": "Chapter 1 — recap, and how Tamil says goodbye",
       "headword": "(recap)",
       "romanization": "",
@@ -1986,7 +2336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fc5ad0e85df4288",
+      "sourceHash": "fnv1a64:de8fee8d6b42c1e3",
       "notice": null,
       "blocks": [
         {
@@ -2115,439 +2465,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: introducing yourself — en peyar… (\"my name…\"), and Tamil's nī / nīṅgaḷ (familiar / respectful \"you\")."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TA-C01-sari",
-      "sequence": null,
-      "title": "சரி (sari) — \"okay,\" the word that oils every conversation",
-      "headword": "சரி",
-      "romanization": "",
-      "gloss": "okay / alright / correct (sari)",
-      "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:8abff912866c6ae0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "If ām is \"yes\" and illai is \"no,\" sari is the easy middle: \"okay, alright, fine, agreed.\" You'll hear it constantly — and it hides a neat fact about the Tamil alphabet."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.)"
-            },
-            {
-              "kind": "speech",
-              "text": "ச = \"sa\" (here) — but this one letter also does the job of English s, ch, and j: at the start of a word it's often \"sa,\" between vowels it softens. Tamil simply doesn't give voiced/unvoiced or s/ch their own separate letters — context decides the sound. (You saw the same economy with க, which can be k, g, or h depending on where it sits.)"
-            },
-            {
-              "kind": "speech",
-              "text": "ரி = \"ri\" — the consonant ர (ra) carrying the vowel sign ி for \"i.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ச, ரி = sa-ri, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "சரி = sari = \"okay / correct.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "சரி (sari) is the native Tamil word for \"correct, even, level,\" and by an easy hop, \"okay, agreed.\" It is the verbal nod of the language: propose a plan and the reply is a single warm \"sari.\" Repeat it — \"sari, sari\" — and it means \"yes yes, alright, enough said.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one letter, several sounds",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English mostly gives each sound its own letter; Tamil does the opposite for its stop-consonants — one letter per position of the mouth, and the voicing (k vs g, s vs ch) is filled in by rules of position. That's why a learner can't always predict the exact sound from the letter alone at first — but it also means Tamil has a strikingly small alphabet for the sounds it covers. You'll pick up the position-rules by ear, word by word."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sa, ri becomes \"sari\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sa · ri → \"sari\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the everyday triple — ām (yes), illai (no), sari (okay)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the everyday triple — *ām* (yes) · *illai* (no) · *sari* (okay)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sari, sari\" — \"alright, alright\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sari, sari\" — \"alright, alright\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read சரி. What does it literally mean, and what does it do in conversation? (\"Correct/even\" becomes \"okay, agreed.\") Why can't you always predict whether ச is \"sa\" or \"cha\"? (Tamil uses one letter per mouth-position; the exact sound depends on where it sits in the word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TA-C01-vanakkam",
-      "sequence": null,
-      "title": "வணக்கம் (vaṇakkam) — \"greetings,\" a small act of respect",
-      "headword": "வணக்கம்",
-      "romanization": "",
-      "gloss": "hello / greetings (vaṇakkam — \"reverence, homage\")",
-      "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:4c4fa4af1fcb85dd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first Tamil word, and the one you'll use most. Like namaste, it is literally a gesture of respect turned into a word. You'll learn to read it and to understand it in the same breath."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(If you already read Tamil, skim this — it's here so the book needs no prior knowledge.) Tamil is written left to right, and — like the Indian scripts generally — every consonant carries a built-in \"a\" unless something removes it."
-            },
-            {
-              "kind": "speech",
-              "text": "வ = \"va\", க = \"ka\", ம = \"ma\" — each consonant with its built-in a."
-            },
-            {
-              "kind": "speech",
-              "text": "ண = \"ṇa\" — a retroflex n, made with the tongue curled back to the roof of the mouth. Tamil keeps several n-sounds and several l-sounds apart; this is the curled-back one. (More on that next lesson.)"
-            },
-            {
-              "kind": "speech",
-              "text": "க் — the dot on top (called a puḷḷi) kills the built-in vowel, leaving a bare \"k.\" So the double க்க is \"k-ka\" = a held \"kk.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Put them in order, left to right: வ, ண, க், க, ம் = va-ṇa-k-ka-m, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "வணக்கம் = vaṇakkam."
-            },
-            {
-              "kind": "speech",
-              "text": "You just read Tamil. Two facts did most of it: consonants carry a, and a puḷḷi dot removes it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "வணக்கம் (vaṇakkam) comes from the verb வணங்கு (vaṇaṅku), \"to bow, to bend, to pay homage.\" Add the ending that turns a verb into a noun of the action, and you get vaṇakkam = \"a bowing, an act of reverence\" — the same idea as Sanskrit namaste (\"I bow to you\"), but built from a native Tamil root, not a borrowed one."
-            },
-            {
-              "kind": "speech",
-              "text": "That last point is the whole personality of Tamil: it is an old language proud of its own word-stock, and it often keeps a home-grown word where its neighbours reached for Sanskrit."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read it left to right — va, ṇa, k, ka, m becomes \"vaṇakkam\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read it left to right — va · ṇa · k · ka · m → \"vaṇakkam\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what the puḷḷi dot on க் does (kills its vowel: ka becomes k)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what the *puḷḷi* dot on க் does (kills its vowel: ka → k)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vaṇaṅku — to bow; vaṇakkam — an act of reverence\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vaṇaṅku — to bow; vaṇakkam — an act of reverence\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read வணக்கம் (vaṇakkam). What verb is it built from, and what does that verb mean? (vaṇaṅku, \"to bow / pay homage.\") What does a puḷḷi do to a consonant? (Removes its built-in a.) Is the root borrowed from Sanskrit? (No — it is native Tamil.) Next: compare that native greeting across the family and learn where it fits."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TA-C01-vanakkam-family-register",
-      "sequence": null,
-      "title": "வணக்கம் (vaṇakkam) — one bow, two lexical loyalties",
-      "headword": "வணக்கம் / நமஸ்காரம்",
-      "romanization": "",
-      "gloss": "Tamil kept a native bow-word where its neighbors borrowed Sanskrit, and uses it across settings",
-      "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:22c3d53d824d6cd4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Vaṇakkam names a bow. Neighboring languages name the same gesture with a different inherited or borrowed root."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Across the family",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"Hello\"",
-                "Source"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "Language: Tamil. \"Hello\": vaṇakkam. Source: native Dravidian vaṇaṅku.",
-                "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit.",
-                "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
-                "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit.",
-                "Language: Hindi. \"Hello\": namaste. Source: Sanskrit.",
-                "Language: English. \"Hello\": hello. Source: Germanic hailing-call."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Four tracks use Sanskrit namas-, \"bow.\" Tamil kept its own verb. The gesture and social meaning match; the lexical loyalty differs."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Where the word fits",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Say vaṇakkam with pressed palms or a small head-bow: the gesture is the word. It works as hello and goodbye, at any time, to almost anyone. It is respectful without being stiff; cinema and formal speech can also use it as a ringing one-word salutation to a whole room."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vaṇakkam\" with a small bow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vaṇakkam\" with a small bow]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "Tamil vaṇaṅku, neighbors Sanskrit namas-",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: Tamil *vaṇaṅku* · neighbors Sanskrit *namas-*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CHOOSE",
-              "instruction": "greeting or parting becomes வணக்கம் (vaṇakkam) works",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CHOOSE: greeting or parting → **வணக்கம்** works]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which Dravidian language kept its native bow-word? (Tamil.) What did the neighbors borrow? (Sanskrit namas-.) Can vaṇakkam greet and part? (Yes — it is an all-day respectful salutation.)"
             }
           ]
         }

@@ -1,62 +1,44 @@
 ---
 id: TA-C01-aam
+sequence: 180
 chapter: 1
 type: word
 headword: ஆம்
 gloss: yes (ām)
 concept_tag: RESPONSE-YES
-prerequisites: [TA-C01-vanakkam-family-register]
+prerequisites: [TA-C01-vanakkam]
 sounds: [independent-vowel-aa, matra-vs-independent]
 roots: [ām]
-est_minutes: 3
-reviews_of: [TA-C01-vanakkam-family-register, TA-C01-vanakkam, TA-C01-nandri]
+est_minutes: 1
+reviews_of: [TA-C01-vanakkam]
 ---
 
 # ஆம் (ām) — "yes"
 
 ## Warm-up
 
-[PAUSE 2s] A two-letter word, and your first look at how Tamil writes a vowel
-that stands on its own.
+[PAUSE 2s] The plain yes. One word, and then we will put these together.
 
-## The letters in this word
+## The word
 
-*(Skim if you read Tamil.)*
+**ஆம்** — *ām* — **"yes."**
 
-- **ஆ** = **"ā"** (a long "aa"). When a word **starts** with a vowel, Tamil
-  uses a full **independent vowel letter** like this — not the little vowel
-  *sign* you hook onto a consonant. (Compare: the "i" hooked onto **ற** to make
-  **றி** last lesson; here the vowel leads, so it gets its own full letter.)
-- **ம்** = "m," with the **puḷḷi** dot removing its built-in *a* — the same
-  bare *m* that ended *vaṇakkam*.
+One beat, with a long opening *aa*.
 
-Left to right: **ஆ · ம்** = *ā-m* →
+Stretch it and you get **ஆமாம்** (*āmām*) — "yes, indeed; that's right." Tamil
+doubles words for warmth and certainty, the way *sari sari* does.
 
-> **ஆம்** = **ām** = "yes."
-
-## The word, taken apart
-
-**ஆம்** (*ām*) is the plain "yes." Stretch it for emphasis and you get
-**ஆமாம்** (*āmām*) — "yes, indeed / that's right," a doubling-up that Tamil
-loves for warmth and certainty.
-
-## Grammar Lens: Tamil often answers by echoing the verb
-
-*ām* exists, but Tamil speakers frequently say "yes" by **repeating the verb**
-of the question instead. Asked *"vandāyā?"* ("did you come?"), a natural yes is
-*"vandēn"* ("I came"). English leans on a single all-purpose *yes*; Tamil often
-answers with the action itself. Bank *ām* as the simple word, and don't be
-surprised when a "yes" comes back as a whole verb.
+> *Ām* is a worn-down form of *āgum*, "it becomes, it will be" — a yes that
+> started life as a verb, which is a very Tamil way to agree.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: ā · m → "ām"]
-- [YOU SAY: the emphatic "āmām" — "yes, indeed"]
-- [YOU SAY: why ஆ is a *full* letter here (the word starts with the vowel)]
+- [YOU SAY: "ām" — one long *aa*, closed on the *m*]
+- [YOU SAY: "āmām" — the emphatic double]
+- [YOU SAY: "ām" then "sari" — yes, and alright]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read **ஆம்**. Why is **ஆ** a full vowel letter rather than a vowel
-sign? (The word begins with the vowel — nothing to hook onto.) What's the
-emphatic "yes"? (*āmām*.)
+[PAUSE 3s] Say **ஆம்**. What does **ஆமாம்** add? (**Emphasis** — "yes,
+indeed.") Next: the word for no.

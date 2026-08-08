@@ -217,7 +217,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
-    expect(summary.byLevel["pre-A1"]).toBe(696);
+    expect(summary.byLevel["pre-A1"]).toBe(697); // +1: TA-C01-answering
     expect(summary.byLevel.A1).toBe(297);
     expect(summary.byLevel.A2).toBe(350);
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
@@ -279,7 +279,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(993);
+    expect(ramp).toHaveLength(994);
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

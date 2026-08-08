@@ -1,76 +1,46 @@
 ---
 id: TA-C01-nandri
+sequence: 200
 chapter: 1
 type: word
 headword: நன்றி
 gloss: thank you (naṉṟi — "goodness, gratitude")
 concept_tag: COURTESY-THANKS
-prerequisites: [TA-C01-vanakkam-family-register]
+prerequisites: [TA-C01-illai]
 sounds: [dental-vs-alveolar-vs-retroflex-n, matra-i]
 roots: [nal]
-est_minutes: 4
-reviews_of: [TA-C01-vanakkam-family-register, TA-C01-vanakkam]
+est_minutes: 1
+reviews_of: [TA-C01-illai]
 ---
 
-# நன்றி (naṉṟi) — "thank you," literally "goodness"
+# நன்றி (naṉṟi) — "thank you"
 
 ## Warm-up
 
-[PAUSE 2s] The word for gratitude — and the doorway to one of Tamil's most
-famous features: it hears differences between sounds English throws into one
-bin.
+[PAUSE 2s] One word again. This is the one you will reach for second-most, and
+Tamil says it with a noun rather than a verb.
 
-## The letters in this word
+## The word
 
-*(Skim if you read Tamil.)* Three consonants and a vowel sign:
+**நன்றி** — *naṉṟi* — **"thank you."**
 
-- **ந** = "na" — a **dental** *n* (tongue on the teeth, like the *n* in
-  Spanish *nada*).
-- **ன்** = "ṉ" — a **different** *n*, **alveolar** (tongue on the ridge just
-  behind the teeth), with a **puḷḷi** dot killing its vowel.
-- **ற** = "ṟa" — a hard *r*/*ṟ* sound made with a tap further back.
-- **ி** is a **vowel sign** that changes the built-in *a* to **"i"**:
-  **ற + ி → றி** = "ṟi."
+Two beats: *naṉ-ṟi*. The *ṉ* and the *ṟ* are both made further back than English
+*n* and *r*; copy the sound rather than the spelling.
 
-Left to right: **ந · ன் · றி** = *na-ṉ-ṟi* →
+It works on its own, with no verb around it. Someone hands you something; you
+say *naṉṟi*, and that is a whole sentence.
 
-> **நன்றி** = **naṉṟi**
-
-## The word, taken apart
-
-**நன்றி** (*naṉṟi*) grows from the root **நல் / நன்** (*nal / naṉ*), "good,
-goodness" — the same root inside *nanmai* ("good deed"), *nallavan* ("a good
-man"). So *naṉṟi* is literally **"goodness"**, and to say it is to name the
-good someone has done you. Gratitude, in Tamil, is just "the good [you did]."
-
-## Grammar Lens: Tamil hears three of every *n*, *l*, and *r*
-
-You met **ந** (dental na), **ன** (alveolar ṉa), and last lesson **ண**
-(retroflex ṇa) — **three** *n*-letters, for three tongue positions:
-
-| Letter | Sound | Tongue |
-|---|---|---|
-| **ந** | dental *n* | on the teeth |
-| **ன** | alveolar *ṉ* | on the ridge behind the teeth |
-| **ண** | retroflex *ṇ* | curled back to the roof |
-
-Tamil does the same for *l* (**ல ள ழ**) and *r* (**ர ற**). English fuses all
-these into single letters and never notices; Tamil keeps them distinct, and
-they **change meaning** — so learning to hear them is learning to read. Don't
-drill the whole set now; just know the differences are real and will return
-word by word.
+> Its root is *nal*, "good" — the same *nal-* inside *nalla* ("good") and
+> *nanmai* ("a good deed"). Saying *naṉṟi* names the good someone did you.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: na · ṉ · ṟi → "naṉṟi"]
-- [YOU SAY: the three *n*'s — ந (teeth), ன (ridge), ண (curled back)]
-- [YOU SAY: "nal — good; naṉṟi — the good you did"]
+- [YOU SAY: "naṉṟi" — two beats, both consonants far back]
+- [YOU SAY: "vaṇakkam" then "naṉṟi" — greeting, then thanks]
+- [YOU SAY: it on its own, with nothing around it]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read **நன்றி**. What does it literally mean, and from what root?
-("Goodness," from *nal* "good.") How many distinct *n*-sounds does Tamil write,
-and what tells them apart? (Three — dental, alveolar, retroflex — by tongue
-position.) Next: compare the gratitude word across the family and choose its
-register.
+[PAUSE 3s] Say **நன்றி**. Does it need a verb to be a complete reply? (**No** —
+it stands alone.) Next: how thanks travels across the family.

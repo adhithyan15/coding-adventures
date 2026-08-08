@@ -73,7 +73,8 @@
       "id": "TA-PATH-006",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
-        "TA-C01-sari"
+        "TA-C01-sari",
+        "TA-C01-answering"
       ],
       "before": [],
       "inline": [],
@@ -515,9 +516,7 @@
         "TA-PATH-004",
         "TA-PATH-006"
       ],
-      "omits": [
-        "RESPONSE-YESNO"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-EXCHANGE-NAMES": {
