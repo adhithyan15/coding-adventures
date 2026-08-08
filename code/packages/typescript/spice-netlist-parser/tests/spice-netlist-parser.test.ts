@@ -1771,6 +1771,43 @@ J1 drain gate source fast
     );
   });
 
+  it.each([
+    ["-0.5", -0.5],
+    ["0", 0.0],
+    ["1.25", 1.25],
+  ])(
+    "parses JFET alternative mobility temperature coefficient %s",
+    (value, expected) => {
+      const parsed = parseNetlist(`
+.model fast NJF(BETATCE=${value})
+J1 drain gate source fast
+`);
+
+      expect(parsed.circuit.elements()[0]).toMatchObject({
+        kind: "jfet",
+        mobilityTemperatureCoefficient: expected,
+      });
+    },
+  );
+
+  it("preserves an omitted JFET alternative mobility temperature coefficient", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(BEX=1.5)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      mobilityTemperatureCoefficient: undefined,
+    });
+  });
+
+  it("rejects a non-finite JFET alternative mobility temperature coefficient", () => {
+    expect(() => parseNetlist(".model fast NJF(BETATCE=1e999)")).toThrow(
+      "JFET BETATCE must be finite",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
