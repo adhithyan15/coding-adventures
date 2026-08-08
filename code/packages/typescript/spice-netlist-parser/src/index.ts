@@ -1385,6 +1385,16 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT VJE must be finite and positive");
   }
+  const bjtBaseEmitterGradingCoefficient = params.get("MJE") ?? params.get("ME");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseEmitterGradingCoefficient !== undefined &&
+    (!Number.isFinite(bjtBaseEmitterGradingCoefficient) ||
+      bjtBaseEmitterGradingCoefficient < 0.0 ||
+      bjtBaseEmitterGradingCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("BJT MJE must be finite and in [0, 1)");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2102,7 +2112,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("NF") ?? 1.0,
       model.params.get("NR") ?? 1.0,
       model.params.get("VJE") ?? model.params.get("PE") ?? 0.75,
-      0.33,
+      model.params.get("MJE") ?? model.params.get("ME") ?? 0.33,
       0.75,
       0.33,
       0.5,

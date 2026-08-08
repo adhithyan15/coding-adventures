@@ -1521,6 +1521,42 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["MJE", "0", 0.0],
+    ["ME", "0", 0.0],
+    ["MJE", "0.4", 0.4],
+    ["ME", "0.4", 0.4],
+  ])("parses BJT base-emitter grading coefficient %s=%s", (alias, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterGradingCoefficient: expected,
+    });
+  });
+
+  it("gives BJT MJE precedence over ME", () => {
+    const parsed = parseNetlist(`.model fast NPN(ME=0.2 MJE=0.4)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterGradingCoefficient: 0.4,
+    });
+  });
+
+  it.each([
+    ["MJE", "-0.1"],
+    ["ME", "-0.1"],
+    ["MJE", "1"],
+    ["ME", "1"],
+    ["MJE", "1e999"],
+    ["ME", "1e999"],
+  ])("rejects invalid BJT base-emitter grading coefficient %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT MJE must be finite and in [0, 1)",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

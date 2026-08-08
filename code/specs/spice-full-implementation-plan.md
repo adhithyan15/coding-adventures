@@ -4564,10 +4564,16 @@ the Rust, Python, and TypeScript surfaces together.
      into the shared engine reverse-emission-coefficient field.
 
 447. Python and TypeScript Berkeley SPICE BJT base-emitter-potential parity.
-   - Status: implemented in this BJT VJE parity slice.
+   - Status: completed in PR 10109.
    - Both parser facades validate positive finite `VJE` / `PE` values, prefer
      canonical `VJE`, and lower the result into the shared engine
      base-emitter-junction-potential field.
+
+448. Python and TypeScript Berkeley SPICE BJT base-emitter-grading parity.
+   - Status: implemented in this BJT MJE parity slice.
+   - Both parser facades validate finite `MJE` / `ME` values in `[0, 1)`,
+     prefer canonical `MJE`, and lower the result into the shared engine
+     base-emitter-grading-coefficient field.
 
 ## Backlog
 
