@@ -607,6 +607,15 @@ without promoting those test-only references into the runtime dependency
 graph. This allowlist is validation-only: undeclared references and references
 from any other ignored metadata block still fail closed.
 
+For a Lua package whose canonical `BUILD` bootstraps repository-local sibling
+rocks, validation MUST require a `BUILD_windows` standalone recipe. That recipe
+MUST preserve every sibling install in canonical order using Windows path and
+redirect syntax. If a canonical sibling install uses `--deps-mode=none` or
+`--no-manifest`, the Windows install MUST retain equivalent hardening. Once a
+recipe bootstraps sibling rocks, its final self-install MUST also disable
+dependency resolution. Each BUILD line is a separate shell invocation, so a
+recipe MUST NOT depend on working-directory state from an earlier line.
+
 Validation fixtures report stable diagnostic codes for:
 
 - missing or empty BUILD files;
