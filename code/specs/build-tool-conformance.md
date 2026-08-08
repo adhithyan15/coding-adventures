@@ -609,8 +609,10 @@ from any other ignored metadata block still fail closed.
 
 For a Lua package whose canonical `BUILD` bootstraps repository-local sibling
 rocks, validation MUST require a `BUILD_windows` standalone recipe. That recipe
-MUST preserve every sibling install in canonical order using Windows path and
-redirect syntax. If a canonical sibling install uses `--deps-mode=none` or
+MUST preserve every canonical sibling install, add any transitive local rocks
+needed for a clean build, and install the complete closure in dependency order
+using Windows path and redirect syntax. If a canonical sibling install uses
+`--deps-mode=none` or
 `--no-manifest`, the Windows install MUST retain equivalent hardening. Once a
 recipe bootstraps sibling rocks, its final self-install MUST also disable
 dependency resolution. Each BUILD line is a separate shell invocation, so a

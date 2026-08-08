@@ -102,8 +102,9 @@ must win over a Starlark plan; current implementations that do otherwise are
 non-conforming.
 
 An override is a complete standalone recipe, not a patch applied to the
-canonical `BUILD`. It must therefore preserve the canonical recipe's ordered
-repository-local prerequisite bootstrap before building the package itself.
+canonical `BUILD`. It must therefore preserve every canonical repository-local
+prerequisite and install the complete closure in dependency order before
+building the package itself.
 Lua packages whose canonical recipe installs sibling rocks require a
 `BUILD_windows` recipe with the same sibling closure, Windows path and redirect
 syntax, and equivalent dependency-resolution hardening. Each BUILD line runs
