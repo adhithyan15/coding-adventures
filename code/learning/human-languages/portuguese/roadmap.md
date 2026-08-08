@@ -227,6 +227,47 @@ French.
   budget of 12, where four-lesson chapters land at 8 and 9. Page count is never
   a cost here, and a gentler ramp is worth a chapter break.
 
+- **Chapters 21–22 — the final core-verb tranche.** ***trazer***
+  (`PT-C21-trazer`) ← *trahere*, "to **drag**," through a worn *tragere* →
+  *tract, tractor, traction, attract, subtract, extract, distract, contract,
+  abstract*; irregular *trago* and bare *traz*, preterite *trouxe* →
+  ***conseguir / obter*** (`PT-C21-conseguir`) ← *cōnsequī* = *con-* + *sequī*,
+  "to **follow** through to the end" → *sequel, sequence, consequence, pursue*,
+  and **second** (*secundus*, "the following one"). Its high-frequency second
+  job is "to **manage to**" before an infinitive. *Obter* ← *obtinēre* conjugates
+  on *ter*, so *obtenho* is *tenho* with *ob-* → ***esperar***
+  (`PT-C21-esperar`) ← *spērāre* ← *spēs*, "hope" → *despair, desperate,
+  desperado*, and **Esperanto**, "one who hopes." One verb, three English ones:
+  *wait*, *hope*, *expect*. Its propped ***e-*** is the same one behind
+  *escrever* ← *scrībere* and *estar* ← *stāre* → ***comprar***
+  (`PT-C21-comprar`), Chapter 21's payoff ← *comparāre* = *com-* + *parāre*,
+  "to **procure**" → *prepare, repair, separate, apparatus, emperor*. Latin had
+  a **second**, identically spelled *comparāre* from *com-* + *pār*, "equal" —
+  and *that* is where English *compare* comes from, so *comprar* and *compare*
+  are **not** relatives. The lesson names the trap. **Authored.**
+
+  ***responder*** (`PT-C22-responder`) ← *respondēre* = *re-* + *spondēre*, "to
+  **pledge**" → *respond, response, responsible, despondent, sponsor*, and
+  **spouse** (*spōnsus*, "the one promised"); the answering half of
+  *perguntar*'s pole in the water → ***encontrar*** (`PT-C22-encontrar`) ←
+  Vulgar Latin \**incontrāre* = *in* + *contrā*, "**facing**" → *encounter*,
+  *counter*, and **country** (*(terra) contrāta*, "the land lying opposite").
+  Meeting splits with *conhecer*, taught in Chapter 18: *encontrar* someone you
+  know, *conhecer* someone for the first time → ***jogar / brincar / tocar***
+  (`PT-C22-jogar-brincar-tocar`), Chapter 22's payoff and the tranche's
+  signature. English has one verb for playing chess, playing in the garden and
+  playing the piano; Portuguese has three. *Jogar* ← *iocārī* ← *iocus*, "a
+  joke" → *joke, jocular, juggler*. *Tocar* ← Vulgar Latin \**toccāre*, "to
+  **strike**," most likely imitative → **touch**, *toccata*, *tocsin* — you
+  *tocar* an instrument because you strike it. *Brincar* is the honest gap: the
+  leading account runs through *brinco* ("earring") ← *vinculum* ("a bond"),
+  with a Germanic "gleam" word as a live rival, and neither is settled.
+  **Authored.**
+
+  Split four and three for the previous tranche's reason: 9 atoms and 8, both
+  inside the advisory budget of 12. With these seven, Portuguese covers **22 of
+  the core 40** and the corpus's universally-missing verb list reaches zero.
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
