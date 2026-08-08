@@ -94,7 +94,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/gujarati/book/book.log",
@@ -162,7 +162,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 2
+        "underfull": 3
       },
       "improvements": [],
       "log": "code/learning/human-languages/kannada/book/book.log",
@@ -196,7 +196,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 2
+        "underfull": 3
       },
       "improvements": [],
       "log": "code/learning/human-languages/malayalam/book/book.log",
@@ -263,8 +263,8 @@
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 0,
-        "underfull": 0
+        "overfull": 5,
+        "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/punjabi/book/book.log",
