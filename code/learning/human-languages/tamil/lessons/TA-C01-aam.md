@@ -41,4 +41,4 @@ doubles words for warmth and certainty, the way *sari sari* does.
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **ஆம்**. What does **ஆமாம்** add? (**Emphasis** — "yes,
-indeed.") Next: the word for no.
+indeed.") Next: writing it.

@@ -41,4 +41,4 @@ one warm *sari*. Doubled — *sari, sari* — it means "yes yes, fine, go on."
 ## Wrap-up Recall
 
 [PAUSE 3s] Say **சரி**. What does doubling it add? (**Hurry, or easy
-agreement** — "yes yes, fine.") Next: putting the five together.
+agreement** — "yes yes, fine.") Next: writing it.

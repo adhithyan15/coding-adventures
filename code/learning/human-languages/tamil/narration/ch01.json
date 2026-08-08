@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cd6ee126f13c74e3",
+  "sourceHash": "fnv1a64:b35c2c9e484d8ba0",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -1599,7 +1599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33b4b0ca5bf90f6f",
+      "sourceHash": "fnv1a64:96c6bb2306442e1b",
       "notice": null,
       "blocks": [
         {
@@ -1695,7 +1695,206 @@
             },
             {
               "kind": "speech",
-              "text": "Say ஆம். What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: the word for no."
+              "text": "Say ஆம் (ām). What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: writing it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W05-write-aam",
+      "sequence": 182,
+      "title": "ஆம் (ām) — writing a word that starts with a vowel",
+      "headword": "ஆம்",
+      "romanization": "ām",
+      "gloss": "a word that begins with a vowel gets a full vowel letter, not a sign",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d2d9939892304061",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: a vowel standing alone",
+          "Script you'll notice: build the word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: a vowel standing alone, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every vowel sign so far has hooked onto a consonant — the ி on ற. This word has no consonant to hook onto."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: a vowel standing alone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil writes a vowel two ways, and which one you use depends on where it sits:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "inside a word, after a consonant, a small sign — ி in றி.",
+                "starting a word, with nothing before it, a full independent letter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ஆ is the independent letter for long ā. It is not a sign and never hangs off anything; it is a letter in its own right."
+            },
+            {
+              "kind": "speech",
+              "text": "Long ā is short அ plus a tail, so அ is where it starts — and you have not been shown that one yet. Its parts, then the tail:"
+            },
+            {
+              "kind": "speech",
+              "text": "a curl at the upper left."
+            },
+            {
+              "kind": "speech",
+              "text": "a long horizontal stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "a straight vertical on the right — that is அ."
+            },
+            {
+              "kind": "speech",
+              "text": "a tail added on the right — and now it is ஆ."
+            },
+            {
+              "kind": "speech",
+              "text": "Those are the parts in writing order. Where the pen lifts is not settled: Tamil handwriting varies by region and by school, and this book only claims a pen path where it has a sourced one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a rule, not a special case: any Tamil word that opens on a vowel opens with a full vowel letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: ஆ, ā, this lesson — independent.",
+                "piece: ம், m — ம with the puḷḷi, the dot you already know."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ஆ, ம் becomes ஆம் (ām)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces only. The puḷḷi on ம் closes the word on a bare m, exactly as it did at the end of வணக்கம் (vaṇakkam)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "அ — curl, horizontal, right vertical",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **அ** — curl, horizontal, right vertical]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஆ — the same three parts, then the right-hand tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஆ** — the same three parts, then the right-hand tail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ம் — ம with the dot",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ம்** — ம with the dot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஆம் (ām) — two pieces, left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஆம்** — two pieces, left to right]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம.) Next: the word for no."
             }
           ]
         }
@@ -1714,7 +1913,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93b6d60e45822e82",
+      "sourceHash": "fnv1a64:beee25438cdb89ae",
       "notice": null,
       "blocks": [
         {
@@ -1810,7 +2009,211 @@
             },
             {
               "kind": "speech",
-              "text": "Say இல்லை. Is it closer to English no, or to is not? (Is not — it is a statement, not a label.) Next: the word for thank you."
+              "text": "Say இல்லை (illai). Is it closer to English no, or to is not? (Is not — it is a statement, not a label.) Next: writing it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W06-write-illai",
+      "sequence": 192,
+      "title": "இல்லை (illai) — a vowel in front, a vowel sign behind",
+      "headword": "இல்லை",
+      "romanization": "illai",
+      "gloss": "a second independent vowel, the letter ல, and the left-standing ai sign",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:355d80e464a1c094",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: இ and ல",
+          "Script you'll notice: build the word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson gave you the rule: a word opening on a vowel opens with a full letter. Here is the same rule with a different vowel, plus one new sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: இ and ல",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இ is the independent letter for short i — the same job ஆ did, one vowel over. Its parts, in writing order:"
+            },
+            {
+              "kind": "speech",
+              "text": "a crossing spiral on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a tall straight vertical on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "ல is la, with its built-in a like every consonant:"
+            },
+            {
+              "kind": "speech",
+              "text": "a curl that turns back on itself."
+            },
+            {
+              "kind": "speech",
+              "text": "a stroke rising to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Put the puḷḷi on it and you get ல், a bare l."
+            },
+            {
+              "kind": "speech",
+              "text": "The new mark is ை, the sign for ai, and it does something ி did not. It is written to the LEFT of its consonant, but pronounced after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ல + ை becomes லை, and on the page the hook stands before the ல — yet you say lai, not ail."
+            },
+            {
+              "kind": "speech",
+              "text": "Your eye meets the vowel first and your mouth says it second. Devanagari does the same thing with ि, and it catches everyone once."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil keeps three l-letters (ல ள ழ) and two r-letters (ர ற), the same way it keeps three n's. This is the first of the l's."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: இ, i, independent — the word opens on a vowel.",
+                "piece: ல், l — ல with the puḷḷi, bare consonant.",
+                "piece: லை, lai — ல with the ai sign, this lesson."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "இ, ல், லை becomes இல்லை (illai)."
+            },
+            {
+              "kind": "speech",
+              "text": "The ல் + லை is a doubled l, held like the க்க of vaṇakkam: il-lai, not ilai."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இ — spiral, then the right-hand vertical",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **இ** — spiral, then the right-hand vertical]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ல — curl, then rising stroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ல** — curl, then rising stroke]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "லை — the ai hook goes on the LEFT",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **லை** — the ai hook goes on the LEFT]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இல்லை (illai) — three pieces",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **இல்லை** — three pieces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il-lai\" — hold the doubled l",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il-lai\" — hold the doubled *l*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write இல்லை (illai). Why does it open with இ rather than a sign? (The word starts on a vowel.) Which side of its consonant does ை sit on? (The left — written first, spoken second.) Next: the word for thank you."
             }
           ]
         }
@@ -2079,7 +2482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aaa8c8d3e80fe76",
+      "sourceHash": "fnv1a64:c6020b573775bf3a",
       "notice": null,
       "blocks": [
         {
@@ -2175,7 +2578,187 @@
             },
             {
               "kind": "speech",
-              "text": "Say சரி. What does doubling it add? (Hurry, or easy agreement — \"yes yes, fine.\") Next: putting the five together."
+              "text": "Say சரி (sari). What does doubling it add? (Hurry, or easy agreement — \"yes yes, fine.\") Next: writing it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W07-write-sari",
+      "sequence": 222,
+      "title": "சரி (sari) — one letter, several sounds",
+      "headword": "சரி",
+      "romanization": "sari",
+      "gloss": "one letter for a whole family of sounds — ச — and the second r",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:235103e17e063c6b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ச and ர",
+          "Script you'll notice: build the word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ச and ர, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen க cover k, g and a soft h depending on where it sits. Here is the same economy on a second letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ச and ர",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ச is written once and does the work English splits between s, ch and j. Position picks which:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where",
+                "sound"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "where: starting a word. sound: s or ch.",
+                "where: between vowels. sound: softened.",
+                "where: after a nasal, as in ஞ்ச. sound: j."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is exactly the pattern க showed — k at the start, g after a nasal, a soft h between vowels. One letter per position of the mouth, and context fills in the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "ர is ra, with its built-in a. It is the other of Tamil's two r-letters, alongside the ற you met in நன்றி."
+            },
+            {
+              "kind": "speech",
+              "text": "Read both letters here; do not draw them yet. This book gives a stroke order only where it has a sourced one, and ச and ர do not have one yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: ச, sa here, this lesson.",
+                "piece: ரி, ri — ர with the ி sign, the sign from நன்றி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ச, ரி becomes சரி (sari)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and both parts are things you already hold: a consonant, and the vowel sign you first hooked onto ற."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ச — then சரி (sari)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ச** — then **சரி**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sari\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sari\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "ரி and லை — the ி sign follows its letter, the ை sign precedes it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **ரி** and **லை** — the ி sign follows its letter, the ை sign precedes it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஆம் (ām) and இல்லை (illai) again, from memory — yes and no, the two you will reach for most",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ஆம்** and **இல்லை** again, from memory — yes and no, the two you will reach for most]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read சரி (sari). Which English sounds does ச cover on its own? (s or ch at the start, softened between vowels, j after a nasal.) How many r-letters does Tamil keep? (Two — ர and ற.) In லை, which side of the ல does the ai sign sit on? (The left.) And why does இல்லை (illai) open with இ rather than a sign? (It starts on a vowel.) Next: putting the five words together."
             }
           ]
         }
@@ -2225,7 +2808,7 @@
             },
             {
               "kind": "speech",
-              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி? — ஆம். — நன்றி. — சரி. — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
+              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி (sari)? — ஆம் (ām). — நன்றி. — சரி (sari). — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
             },
             {
               "kind": "speech",

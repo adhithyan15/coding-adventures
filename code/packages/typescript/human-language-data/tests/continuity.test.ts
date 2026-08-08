@@ -345,8 +345,18 @@ describe("the real corpus", () => {
     // the one-headword-per-lesson exchange rate a further four times, and kept the
     // reach-back discipline: atomsTaught +151 while atomsNeverRevisited FELL by 21.
     // 21% — still the lowest this figure has read since 51%.
-    expect(report.summary.atomsTaught).toBe(2272);
-    expect(report.summary.atomsNeverRevisited).toBe(484);
+    // The Tamil ch1 script-gap lessons add 7: TA-W05 two, TA-W06 three, TA-W07 two.
+    // Splitting one word-lesson per word moved letter teaching into the writing
+    // track; these atoms are the seven script facts that move stranded.
+    expect(report.summary.atomsTaught).toBe(2279);
+    // +2, and this one goes the WRONG WAY, so it is worth saying why. The two
+    // atoms with revisits=0 are TA-SCRIPT-WRITE-SARI-02 and TA-SCRIPT-CA-ONE-LETTER-01,
+    // both introduced BY TA-W07, the chapter's last writing lesson, so nothing
+    // follows them to do the revisiting — the same structural tail the Russian
+    // survivors above have. A chapter-final lesson's own atoms are unreachable by
+    // construction, not under-taught. The other two spell-the-word atoms (ஆம்,
+    // இல்லை) ARE revisited: TA-W07 re-spells both from memory.
+    expect(report.summary.atomsNeverRevisited).toBe(486);
     expect(report.summary.neverRevisitedPercent).toBe(21);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -418,8 +428,26 @@ describe("the real corpus", () => {
     // So this is not a cost the new chapter incurred; it is a debt the old chapters
     // already had, which only became measurable once something followed them. Any
     // chapter appended to any track will do this, and the number is honest either way.
-    expect(report.summary.missedByWindow.R1).toBe(823);
-    expect(report.summary.missedByWindow.R2).toBe(1520);
+    // The Tamil ch1 script lessons introduce atoms that miss R1 six times and R2 six
+    // times — yet the totals move only +5 and +4. The difference is the point: those
+    // same lessons practise the OLDER script atoms they build on (the puḷḷi, the ி
+    // sign), rescuing one R1 and two R2 misses that main was already carrying. New
+    // teaching paid down old debt at the same time.
+    //
+    // The two sets are not the same six. WRITE-AAM-02 misses R1 but lands in R2;
+    // INDEPENDENT-VOWEL-AA-01 does the reverse. Common to both: two of TA-W07's own,
+    // which nothing follows, and TA-W06's three, which are the interesting case —
+    // TA-W07 does revisit all three (revisits=1), but at a distance
+    // of FOUR lessons, because the interleave puts word lessons between consecutive
+    // writing lessons and those are schema v1 — no atoms, so they cannot pay a window.
+    // Distance 4 falls in the hole between R1 (1-3) and R2 (5-15), so a genuinely
+    // reinforced atom scores as missing every window. The windows have a gap here;
+    // the lessons do not. Closing it means reordering ch1 so consecutive writing
+    // lessons sit within three of each other — a separate change, and one that would
+    // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
+    // numbers before TA-C01-nandri teaches the word.
+    expect(report.summary.missedByWindow.R1).toBe(828);
+    expect(report.summary.missedByWindow.R2).toBe(1524);
   });
 
   it("shows what a declared reading order was worth", () => {
