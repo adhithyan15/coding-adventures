@@ -258,11 +258,50 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   payoff. Both body-position verbs are **reflexive** and both were made from a
   Latin **present participle**; standing as a *state* is **estar de pie**, no
   verb at all. **Authored.**
+- **Ch. 38 — Bringing, getting, playing, meeting**: the four verbs whose
+  *yo*-form or stem misbehaves. **traer** ("to bring" ← *trahere* "to drag" →
+  tractor, traction, attract, contract, subtract, abstract, and through French
+  trace, train, trail, portray ← *prōtrahere*, retreat ← *retrahere*), whose
+  *traigo* joins the hard-*g* club *oigo* opened, and which carries **toward**
+  the speaker where *llevar* (← *levāre*, already behind *levantarse*) carries
+  away → **conseguir** ("to get" ← *cōnsequī* = *com-* + *sequī* "to follow" →
+  sequence, sequel, consequence, second, execute, obsequious, pursue), which
+  breaks **e→i** *and* drops the silent *u* of *gu* in the same form,
+  *consigo*; *obtener* (← *obtinēre*) named as the formal partner → **jugar**
+  ("to play" ← *iocārī* "to joke" ← *iocus* → joke, jocular, juggler ←
+  *ioculātor*, jeopardy ← *jeu parti*), the **only** *u→ue* verb in Spanish,
+  and the second Latin verb Spanish walked away from — *lūdere* keeping
+  illusion, allude, elude, prelude, ludicrous, as *claudere* did in Ch. 37 →
+  **conocer** ("to meet" ← *cognōscere*, whose *-sc-* is Latin's **inchoative**
+  marker, so the verb means "to *come* to know" — which is why *conocí* is "I
+  met" → cognition, recognize, incognito, notice, notion, noble; *know* and
+  *ken* its Germanic siblings), set against **saber** for facts, the payoff.
+  **Authored.**
+- **Ch. 39 — Waiting, answering, buying**: three verbs that break nothing,
+  where the whole difficulty is meaning. **esperar** ("to wait" ← *spērāre* "to
+  hope" ← *spēs*; English took the negative — **despair** ← *dēspērāre*, "to
+  un-hope", desperate, desperado ← Spanish *desesperado*; *prosper* hedged as
+  the traditional reading only), which carries **wait**, **hope** and **expect**
+  in one word with only context to sort them, and whose *e-* is the run-up
+  already met in *escribir* and *estudiar* → **contestar** ("to answer" ←
+  *contestārī* "to call witnesses", *com-* + *testis* — the Roman act that
+  opened a lawsuit; **English kept the fight** in *contest*, **Spanish kept the
+  reply** → testify, testimony, testament, attest, protest), beside
+  **responder** ← *respondēre* "to pledge back" → respond, responsible, sponsor,
+  spouse ← *spōnsus*; the noun *la respuesta* comes from the second, never the
+  first → **comprar** ("to buy" ← *comparāre* = *com-* + *parāre* "to procure" →
+  prepare, repair, apparatus, apparel, separate, parade, emperor ← *imperāre*),
+  whose resemblance to English *compare* is **refused**: that word descends from
+  a *different* Latin *comparāre*, built on *compār*, "equal". The payoff.
+  **Authored.**
 
-Next: the remaining core verbs — seven of the shared spine's forty are still
-unrealized by any track. From here the course hands over rules, not phrases.
-Grammar accumulates piece by piece. The theme skeleton below plans the wider
-road.
+Next: with these seven, **no core verb is unrealized anywhere in the corpus** —
+`verbCoverage`'s `universallyMissing` set is empty for the first time, and
+Spanish itself holds 36 of the 40. What is left in the `VERB` family are the six
+entries the coverage report deliberately excludes as *grammatical* rather than
+lexical (infinitive, present-habitual, negate, past, future, want). From here the
+course hands over rules, not phrases. Grammar accumulates piece by
+piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 

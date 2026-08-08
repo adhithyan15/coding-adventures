@@ -2876,6 +2876,29 @@
       "tex": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:efc54f8084747f5c",
+      "lessonIds": [
+        "ES-C38-traer",
+        "ES-C38-conseguir",
+        "ES-C38-jugar",
+        "ES-C38-conocer"
+      ],
+      "tex": "spanish/book/chapters/ch38-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:98fee7c8a800af79",
+      "lessonIds": [
+        "ES-C39-esperar",
+        "ES-C39-contestar",
+        "ES-C39-comprar"
+      ],
+      "tex": "spanish/book/chapters/ch39-wait-answer-buy.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:8cb1982f517a21f4",
