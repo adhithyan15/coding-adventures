@@ -1346,6 +1346,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Gdsnoi=model.params.get("GDSNOI", 1.0),
             Rd=model.params.get("RD", 0.0),
             Rs=model.params.get("RS", 0.0),
+            Tcv=model.params.get("TCV", 0.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2146,6 +2147,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(source_resistance) or source_resistance < 0.0
         ):
             raise NetlistParseError("JFET RS must be finite and non-negative")
+        threshold_voltage_temperature_coefficient = params.get("TCV")
+        if threshold_voltage_temperature_coefficient is not None and not math.isfinite(
+            threshold_voltage_temperature_coefficient
+        ):
+            raise NetlistParseError("JFET TCV must be finite")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

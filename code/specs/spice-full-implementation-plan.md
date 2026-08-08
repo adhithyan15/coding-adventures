@@ -4497,9 +4497,15 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine intrinsic-drain-resistance field.
 
 435. Python and TypeScript Berkeley SPICE JFET source-resistance parity.
-   - Status: implemented in this JFET source-resistance parity slice.
+   - Status: completed in PR 10090.
    - Both parser facades validate finite, non-negative `RS` values and lower
      them into the shared engine intrinsic-source-resistance field.
+
+436. Python and TypeScript Berkeley SPICE JFET threshold-voltage temperature
+     coefficient parity.
+   - Status: implemented in this JFET TCV parity slice.
+   - Both parser facades validate finite `TCV` values and lower them into the
+     shared engine threshold-voltage temperature-coefficient field.
 
 ## Backlog
 
@@ -4508,8 +4514,8 @@ the Rust, Python, and TypeScript surfaces together.
      currently use `B` as a legacy beta alias, while the engine model uses `B`
      for Parker-Skellern doping-tail shaping. Do not assign one card value to
      both fields silently.
-   - Continue the unambiguous audited JFET gaps with `TCV`, `VTOTC`,
-     `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
+   - Continue the unambiguous audited JFET gaps with `VTOTC`, `TNOM` / `T_NOM`,
+     `BEX`, and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.
    - Re-audit MOS lowering after those direct JFET and BJT omissions close.
