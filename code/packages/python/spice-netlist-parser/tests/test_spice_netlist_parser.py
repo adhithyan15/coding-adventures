@@ -1371,6 +1371,37 @@ def test_rejects_invalid_bjt_forward_early_voltage(alias: str, value: str) -> No
         parse_netlist(f".model fast NPN({alias}={value})")
 
 
+@pytest.mark.parametrize("alias", ["VAR", "VB"])
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("120", 120.0)])
+def test_parse_bjt_reverse_early_voltage(
+    alias: str, value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({alias}={value})\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Var == expected
+
+
+def test_bjt_var_takes_precedence_over_vb() -> None:
+    parsed = parse_netlist(".model fast NPN(VB=40 VAR=120)\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Var == 120.0
+
+
+@pytest.mark.parametrize("alias", ["VAR", "VB"])
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_bjt_reverse_early_voltage(alias: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT VAR must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN({alias}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

@@ -1409,6 +1409,40 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["VAR", "0", 0.0],
+    ["VB", "0", 0.0],
+    ["VAR", "120", 120.0],
+    ["VB", "120", 120.0],
+  ])("parses BJT reverse Early voltage %s=%s", (alias, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseEarlyVoltage: expected,
+    });
+  });
+
+  it("gives BJT VAR precedence over VB", () => {
+    const parsed = parseNetlist(`.model fast NPN(VB=40 VAR=120)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseEarlyVoltage: 120.0,
+    });
+  });
+
+  it.each([
+    ["VAR", "-0.1"],
+    ["VB", "-0.1"],
+    ["VAR", "1e999"],
+    ["VB", "1e999"],
+  ])("rejects invalid BJT reverse Early voltage %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT VAR must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

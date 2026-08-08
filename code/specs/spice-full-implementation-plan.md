@@ -4542,10 +4542,16 @@ the Rust, Python, and TypeScript surfaces together.
      into the shared engine energy-gap field.
 
 443. Python and TypeScript Berkeley SPICE BJT forward Early-voltage parity.
-   - Status: implemented in this BJT VAF parity slice.
+   - Status: completed in PR 10103.
    - Both parser facades validate finite, non-negative `VAF` / `VA` values,
      prefer canonical `VAF`, and lower the result into the shared engine
      forward-Early-voltage field.
+
+444. Python and TypeScript Berkeley SPICE BJT reverse Early-voltage parity.
+   - Status: implemented in this BJT VAR parity slice.
+   - Both parser facades validate finite, non-negative `VAR` / `VB` values,
+     prefer canonical `VAR`, and lower the result into the shared engine
+     reverse-Early-voltage field.
 
 ## Backlog
 
