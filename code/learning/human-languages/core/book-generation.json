@@ -862,6 +862,38 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 36,
+      "title": "One House, Four Languages",
+      "label": "ch:hi-one-house-four-languages",
+      "output": "hindi/book/chapters/ch36-one-house-four-languages.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "title": "One Tea, Please",
+      "label": "ch:hi-one-tea-please",
+      "output": "hindi/book/chapters/ch37-one-tea-please.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "title": "Six Words for Where It Hurts",
+      "label": "ch:hi-where-it-hurts",
+      "output": "hindi/book/chapters/ch38-where-it-hurts.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "title": "The People Around You",
+      "label": "ch:hi-people-around-you",
+      "output": "hindi/book/chapters/ch39-people-around-you.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",

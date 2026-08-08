@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "hindi",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 3, 4 and 5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom, and a stub would destroy the very signal the gap report exists to carry. Chapters 34 and 35 are the second verb tranche and are schema v2 throughout, so their payoffs name real atoms. Chapters 1 and 2 have no schema-v2 terminal consolidation lesson either: their HI-C01/HI-C02 practice lessons are schema v1, so the payoff falls back to the chapter's last lesson by sequence, which in both cases is a Devanagari writing lesson. Those are recorded as kind 'task' and described as hand-writing work rather than dressed up as spoken dialogue.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 3, 4 and 5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom, and a stub would destroy the very signal the gap report exists to carry. Chapters 34 and 35 are the second verb tranche and are schema v2 throughout, so their payoffs name real atoms. Chapters 1 and 2 have no schema-v2 terminal consolidation lesson either: their HI-C01/HI-C02 practice lessons are schema v1, so the payoff falls back to the chapter's last lesson by sequence, which in both cases is a Devanagari writing lesson. Those are recorded as kind 'task' and described as hand-writing work rather than dressed up as spoken dialogue. Chapters 36 to 39 are the pre-A1 noun tranche: four chapters of four word lessons each, every lesson carrying its noun's grammatical gender as part of the atom, and each payoff reaching back past its own chapter to atoms the ledger showed were never revisited.",
   "chapters": [
     {
       "chapter": 1,
@@ -587,6 +587,150 @@
           "HI-CONCEPT-C35-PASAND-01",
           "HI-CONCEPT-C35-PASAND-02",
           "HI-CONCEPT-C35-PASAND-03"
+        ]
+      }
+    },
+    {
+      "chapter": 36,
+      "title": "One House, Four Languages",
+      "label": "ch:hi-one-house-four-languages",
+      "canDo": "I can name a house, its door, a room and the chair I am offered, give each one the possessive its gender demands, and say where each of the four words came from — Sanskrit, Persian, Portuguese and Arabic.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "HI-C36-kursi",
+        "kind": "task",
+        "summary": "Run घर, दरवाज़ा, कमरा and कुर्सी with the right possessive — and hear मेरा turn into मेरी at the first feminine noun, the promise chapter 2 made and never kept. Then name the four languages one room drew on, spell कुर्सी with its virāma and its conjunct, and say नमस्ते at the door coming in and शुभ रात्रि going out.",
+        "assesses": [
+          "HI-CONCEPT-C36-GHAR-01",
+          "HI-CONCEPT-C36-GHAR-02",
+          "HI-CONCEPT-C36-DARVAAZA-01",
+          "HI-CONCEPT-C36-DARVAAZA-02",
+          "HI-CONCEPT-C36-DARVAAZA-03",
+          "HI-CONCEPT-C36-KAMRA-01",
+          "HI-CONCEPT-C36-KAMRA-02",
+          "HI-CONCEPT-C36-KURSI-01",
+          "HI-CONCEPT-C36-KURSI-02",
+          "HI-CONCEPT-C36-KURSI-03",
+          "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
+          "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
+          "HI-CONCEPT-W03-PREPOSED-I-01",
+          "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+          "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+          "HI-CONCEPT-W05-CONJUNCTS-01",
+          "HI-CONCEPT-W05-CONJUNCTS-02",
+          "HI-CONCEPT-W05-VIRAMA-NAMASTE-01",
+          "HI-CONCEPT-C27-SHUBH-RAATRI-01",
+          "HI-CONCEPT-C27-SHUBH-RAATRI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "One Tea, Please",
+      "label": "ch:hi-one-tea-please",
+      "canDo": "I can ask for tea, milk, food or a book in the words Hindi speakers actually use rather than the dictionary's, I know that कृपया belongs on a sign and दीजिए in the street, and I can name which of the four nouns take मेरी.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "HI-C37-kitaab",
+        "kind": "task",
+        "summary": "Ask for all four — एक चाय दीजिए, एक दूध दीजिए, खाना दीजिए, and the किताब that is मेरी — then unpack the Arabic root k-t-b into book, scribe and school, and place कृपया where it belongs, beside पुस्तक at the formal end of the language.",
+        "assesses": [
+          "HI-CONCEPT-C37-CHAI-01",
+          "HI-CONCEPT-C37-CHAI-02",
+          "HI-CONCEPT-C37-CHAI-03",
+          "HI-CONCEPT-C37-DUDH-01",
+          "HI-CONCEPT-C37-DUDH-02",
+          "HI-CONCEPT-C37-KHAANA-01",
+          "HI-CONCEPT-C37-KHAANA-02",
+          "HI-CONCEPT-C37-KITAAB-01",
+          "HI-CONCEPT-C37-KITAAB-02",
+          "HI-CONCEPT-C37-KITAAB-03",
+          "HI-CONCEPT-C36-KURSI-01",
+          "HI-CONCEPT-C36-KURSI-02",
+          "HI-CONCEPT-C36-KURSI-03",
+          "HI-CONCEPT-C08-KRIPAYA-01",
+          "HI-CONCEPT-C08-KRIPAYA-02",
+          "HI-CONCEPT-C09-MAAF-KIJIYE-02",
+          "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
+          "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
+          "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03",
+          "HI-CONCEPT-W03-PREPOSED-I-01"
+        ]
+      }
+    },
+    {
+      "chapter": 38,
+      "title": "Six Words for Where It Hurts",
+      "label": "ch:hi-where-it-hurts",
+      "canDo": "I can name six parts of my body, say that one of them is not well, and tell which three are word-for-word cousins of their English translations — and which one has no traceable ancestry at all.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "HI-C38-pet",
+        "kind": "task",
+        "summary": "Say all six body words with the possessive each one demands — मेरा सिर, मेरा हाथ, मेरी आँख, मेरा दाँत, मेरा पैर, मेरा पेट — then say मेरा पेट ठीक नहीं है, and separate the three exact Indo-European cousins from the two words, पेट and रोटी, whose histories genuinely stop.",
+        "assesses": [
+          "HI-CONCEPT-C38-AANKH-01",
+          "HI-CONCEPT-C38-AANKH-02",
+          "HI-CONCEPT-C38-DAANT-01",
+          "HI-CONCEPT-C38-DAANT-02",
+          "HI-CONCEPT-C38-PAIR-01",
+          "HI-CONCEPT-C38-PAIR-02",
+          "HI-CONCEPT-C38-PET-01",
+          "HI-CONCEPT-C38-PET-02",
+          "HI-CONCEPT-C13-SIR-01",
+          "HI-CONCEPT-C13-HAATH-01",
+          "HI-CONCEPT-C13-HAATH-02",
+          "HI-CONCEPT-C07-NAHIN-02",
+          "HI-CONCEPT-C07-NAHIN-03",
+          "HI-CONCEPT-C15-PAANI-ROTI-01",
+          "HI-CONCEPT-C15-PAANI-ROTI-02",
+          "HI-CONCEPT-W03-MATRAS-NAAM-01",
+          "HI-CONCEPT-W03-MATRAS-NAAM-02",
+          "HI-CONCEPT-W03-MATRAS-NAAM-03",
+          "HI-CONCEPT-C37-KITAAB-01",
+          "HI-CONCEPT-C36-KURSI-01"
+        ]
+      }
+    },
+    {
+      "chapter": 39,
+      "title": "The People Around You",
+      "label": "ch:hi-people-around-you",
+      "canDo": "I can name the friend, the child, the man and the woman around me, I know that दोस्त takes its possessive from the person while आँख never does, and I can choose between औरत and महिला by register.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "HI-C39-aurat",
+        "kind": "task",
+        "summary": "Say the whole household with every possessive right — मेरा पिता, मेरी माता, मेरा भाई, मेरी बहन, मेरा बच्चा, मेरी बच्ची — then मेरा दोस्त or मेरी दोस्त depending on who the friend is, and say why Arabic ʿawra does not mean “woman” even though औरत does.",
+        "assesses": [
+          "HI-CONCEPT-C39-DOST-01",
+          "HI-CONCEPT-C39-DOST-02",
+          "HI-CONCEPT-C39-DOST-03",
+          "HI-CONCEPT-C39-BACCHA-01",
+          "HI-CONCEPT-C39-BACCHA-02",
+          "HI-CONCEPT-C39-AADMI-01",
+          "HI-CONCEPT-C39-AADMI-02",
+          "HI-CONCEPT-C39-AURAT-01",
+          "HI-CONCEPT-C39-AURAT-02",
+          "HI-CONCEPT-C39-AURAT-03",
+          "HI-CONCEPT-C12-BHAAI-BAHIN-01",
+          "HI-CONCEPT-C12-BHAAI-BAHIN-02",
+          "HI-CONCEPT-C12-PITAA-MAATAA-01",
+          "HI-CONCEPT-C12-PITAA-MAATAA-02",
+          "HI-CONCEPT-C37-KITAAB-01",
+          "HI-CONCEPT-C37-KITAAB-03",
+          "HI-CONCEPT-C36-KURSI-01",
+          "HI-CONCEPT-C36-KURSI-03",
+          "HI-CONCEPT-C38-AANKH-01",
+          "HI-CONCEPT-C37-CHAI-01"
         ]
       }
     }

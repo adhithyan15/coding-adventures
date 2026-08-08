@@ -927,6 +927,54 @@
       "tex": "hindi/book/chapters/ch35-pasand.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:d6ea031f2071a150",
+      "lessonIds": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ],
+      "tex": "hindi/book/chapters/ch36-one-house-four-languages.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:ebf952fd9155efa9",
+      "lessonIds": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ],
+      "tex": "hindi/book/chapters/ch37-one-tea-please.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:f7ff13f56a78a073",
+      "lessonIds": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ],
+      "tex": "hindi/book/chapters/ch38-where-it-hurts.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:5a01181601c965b8",
+      "lessonIds": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
+      ],
+      "tex": "hindi/book/chapters/ch39-people-around-you.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:bdc42ed768d3dffb",

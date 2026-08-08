@@ -389,12 +389,73 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "HI-PATH-030",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-030-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-031",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-031-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-032",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-032-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-033",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-033-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "HI-PATH-001"
+        "HI-PATH-001",
+        "HI-PATH-030"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -425,7 +486,8 @@
         "HI-PATH-004",
         "HI-PATH-007",
         "HI-PATH-015",
-        "HI-PATH-020"
+        "HI-PATH-020",
+        "HI-PATH-033"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -436,7 +498,8 @@
       "segments": [
         "HI-PATH-006",
         "HI-PATH-027",
-        "HI-PATH-016"
+        "HI-PATH-016",
+        "HI-PATH-032"
       ],
       "omits": [
         "WORD-GOOD",
@@ -447,7 +510,8 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "HI-PATH-012",
-        "HI-PATH-018"
+        "HI-PATH-018",
+        "HI-PATH-031"
       ],
       "omits": [],
       "relocates": {}
@@ -1005,6 +1069,62 @@
       "prerequisites": [],
       "lessons": [
         "HI-C05-bolta-hun"
+      ]
+    },
+    {
+      "id": "HI-EXT-030-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the house, the door, the room and the chair I am shown to, and give each one the possessive its gender demands.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ]
+    },
+    {
+      "id": "HI-EXT-031-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for tea, milk, food or a book in the words a Hindi speaker actually uses, and I know which noun takes मेरी.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ]
+    },
+    {
+      "id": "HI-EXT-032-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name six parts of my body and say that one of them is not well.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ]
+    },
+    {
+      "id": "HI-EXT-033-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the people around me — friend, child, man, woman — and I know which of them take their gender from the person rather than the word.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
       ]
     }
   ]

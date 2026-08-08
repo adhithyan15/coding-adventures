@@ -59,6 +59,14 @@ Two things shape this track.
   English **pray**), मदद करना (help — an Arabic noun plus native करना, Hindi's
   conjunct-verb engine), and पसंद, which is **not a verb at all**: *mujhe roṭī
   pasand hai* is "to me, bread is pleasing." In the book.
+- **Chapters 36–39 — the pre-A1 noun tranche** ([`lessons/HI-C36-*`](./lessons/)
+  through `HI-C39-*`): sixteen everyday nouns, four per chapter, each taught
+  **with its grammatical gender as part of the atom** rather than as an
+  afterthought — घर दरवाज़ा कमरा कुर्सी (a house and what is in it); चाय दूध
+  खाना किताब (what you ask for, and how you actually ask); आँख दाँत पैर पेट
+  (six body words, three of them exact Indo-European cousins and one with no
+  traceable ancestry); दोस्त बच्चा आदमी औरत (the people around you). All four
+  chapters hang off **pre-A1** spine nodes. In the book.
 - **Writing companions W01–W05** ([`lessons/HI-W*`](./lessons/)): eleven short
   steps introduce the headline, letter bodies, inherent vowel, mātrās,
   preposed short **ि**, spineless letters, virama, conjuncts, and finally whole
@@ -82,7 +90,7 @@ shared-spine nodes it realises, and the **payoff** lesson that proves the
 promise, with the exact knowledge atoms that lesson practises. It is authored
 intent, not a derived cache — no validator may rewrite it.
 
-Thirty-two of the thirty-five chapters are authored. Three are honestly missing:
+Thirty-six of the thirty-nine chapters are authored. Three are honestly missing:
 
 - **Chapters 3, 4, and 5 have no entry.** Every lesson in them is still schema
   v1 with no `practises.knowledge`, so a payoff there could not name a single
@@ -98,17 +106,27 @@ chapter introduces and will be reported under the 0.5 representativeness
 threshold once the HL05 gates land. The cure is a real terminal consolidation
 lesson in each, not a broader claim here. Chapters 34 and 35 fire **no** gate
 findings: each payoff closes over its own chapter (5 of 8 atoms, and 6 of 9)
-and every atom it names was taught by that chapter or earlier.
+and every atom it names was taught by that chapter or earlier. Chapters 36–39
+also fire **no** findings, and each of their payoffs assesses **every** atom its
+own chapter introduces plus a reach-back list drawn from earlier chapters.
 
 ## Book / fonts
 
-The 35-chapter book compiles with XeLaTeX using **vendored** Noto Sans
+The 39-chapter book compiles with XeLaTeX using **vendored** Noto Sans
 Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
 loaded by relative path — so it builds identically locally and in CI, with no
-system-font dependency. Chapters 6–35 are generated from canonical lesson ASTs
-and checked against Language Ladder source hashes. A forced 124-page build
-reports **zero** missing characters and zero errors; the one overfull and one
-underfull box both pre-date chapters 34–35. `latexmk -xelatex book.tex`.
+system-font dependency. Chapters 6–39 are generated from canonical lesson ASTs
+and checked against Language Ladder source hashes. A 164-page build reports
+**zero** missing characters and zero errors. `latexmk -xelatex book.tex`.
+
+**What the main font cannot set.** The book's main face is Latin Modern, and it
+has no Greek, no Hebrew and no Han. Chapters 36–39 were drafted quoting Greek
+*odoús* and *ósse*, Hebrew *ʾādām*, and the Chinese character for tea in their
+own scripts; a XeLaTeX run reported 28 dropped glyphs, against a track baseline
+of zero. All of them are now given in **romanization only**, which is why those
+lessons name Greek and Hebrew forms without showing them. Only Devanagari
+(including nuqta letters and conjuncts) and Perso-Arabic have vendored fonts and
+may be set in script.
 
 ## Files
 
