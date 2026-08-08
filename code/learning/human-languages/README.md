@@ -98,6 +98,11 @@ validated PDFs and a machine-readable `catalog.json` are published to GitHub Pag
 automatically. Tracks without a `book/` directory are omitted until their long-form
 edition is authored.
 
+The same canonical lessons power the public
+[Language Ladder practice app](https://adhithyan15.github.io/coding-adventures/language-ladder/),
+where any mix of tracks can advance independently through the shared spine and
+enter cross-language review only after focused retrieval.
+
 ## Tracks
 
 <!-- BEGIN GENERATED TRACK PROGRESS -->

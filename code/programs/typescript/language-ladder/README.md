@@ -1,5 +1,7 @@
 # Language Ladder
 
+Live app: <https://adhithyan15.github.io/coding-adventures/language-ladder/>
+
 **The HL03 unified curriculum learning app** (it began life as the HL02
 `script-writing-visualizer` and has subsumed that app's modes). Five modes.
 **Learn** (the default) walks each selected language's validated local path —

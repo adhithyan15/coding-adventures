@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — public Language Ladder
+
+- Publish the validated production build to the repository's existing GitHub
+  Pages site at `/coding-adventures/language-ladder/` whenever the app, shared
+  data package, or human-language curriculum changes.
+- Keep relative asset URLs and deploy only the `language-ladder/` subdirectory,
+  so the app works at its project-site path without replacing the published
+  books or the repository's other Pages artifacts.
+
 ### Changed — frontier-sized production loading
 
 - Keep the 1,669-lesson Markdown corpus behind lazy imports. Learn initially
