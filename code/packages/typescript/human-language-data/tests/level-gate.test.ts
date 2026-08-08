@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
 import { buildCurriculumGapReport } from "../src/report.js";
-import { LEVEL_VOCABULARY, runLevelGate } from "../src/level-gate.js";
+import { LEVEL_VOCABULARY, runLevelGate, isEtymologyAtom } from "../src/level-gate.js";
 import { summarizeLevels } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
 import { measureContinuity } from "../src/continuity.js";
@@ -117,6 +117,50 @@ describe("the gate that would have caught the A2 claim", () => {
       if (track.inProgressAt !== null) expect(track.blockers.length).toBeGreaterThan(0);
       if (track.attained === null) expect(track.inProgressAt).toBe("pre-A1");
     }
+  });
+});
+
+describe("etymology is a hook, not a skill", () => {
+  it("waives etymology atoms from the reinforcement criterion, and says how many", () => {
+    // The owner's decision: an etymology is read once, not drilled. Before this the
+    // gate demanded every atom be revisited twice, and the only way to satisfy that
+    // for an etymon was to re-state it in the Guided Practice and again in the
+    // Wrap-up Recall -- so the GATE was manufacturing the repetition.
+    const gate = realReport().levelGate!;
+    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
+    const reinforcement = spanish.blockers.find((b) => b.criterion === "reinforcement")!;
+
+    // The waiver must be VISIBLE. A silently loosened gate is worse than a strict one.
+    expect(reinforcement.detail).toMatch(/etymology hook\(s\) waived/);
+    // And it must BITE, which needs a number the waiver actually changes. Two earlier
+    // versions of this assertion did not: `shortfall < shortfall + waived` is true of
+    // any number, and comparing against a whole-track count could not fail because the
+    // gate scopes to pre-A1. Both passed with the waiver deleted. So pin the figure:
+    // Spanish has 87 under-reinforced atoms at or below pre-A1; 34 of them are
+    // etymology hooks. Delete the waiver and this reads 87. (The detail says 35
+    // waived, not 34, because `waived` counts every etymology atom in scope — one of
+    // them is already revisited twice and was never in the shortfall.)
+    expect(reinforcement.shortfall).toBe(53);
+    expect(reinforcement.detail).toContain("35 etymology hook(s) waived");
+  });
+
+  it("leaves continuity's own numbers alone", () => {
+    // The waiver lives at the GATE on purpose. `measureContinuity` still reports every
+    // atom, so the gap report and every pinned corpus figure keep meaning what they
+    // say. If this ever fails, the waiver has leaked into the measurement.
+    const e = loadEverything();
+    const continuity = measureContinuity(e.lessons);
+    const etymons = continuity.reinforcement.filter((d) => isEtymologyAtom(d.atom));
+    expect(etymons.length).toBeGreaterThan(0);
+  });
+
+  it("matches the id convention and nothing else", () => {
+    expect(isEtymologyAtom("ES-ETYMON-CREDERE-02")).toBe(true);
+    expect(isEtymologyAtom("TA-ETYMON-NAL-01")).toBe(true);
+    // A skill atom that merely mentions a language or a sound is NOT waived.
+    expect(isEtymologyAtom("ES-LEX-DE-PIE-11")).toBe(false);
+    expect(isEtymologyAtom("SA-SOUND-PIE-KW-OUTCOMES")).toBe(false);
+    expect(isEtymologyAtom("ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL")).toBe(false);
   });
 });
 
