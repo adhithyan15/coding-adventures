@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4d5d139533791964",
+  "sourceHash": "fnv1a64:fee72d60309a5ae8",
   "lessons": [
     {
       "id": "BN-C01-achchha",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3548b8e1e6d8b786",
+      "sourceHash": "fnv1a64:6a2efd84816feecc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come,\" a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell you met in Tamil and Marathi — a whole culture's optimism folded into one verb."
+              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come,\" a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb."
             }
           ]
         },
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b6dedebbef9e9c4a",
+      "sourceHash": "fnv1a64:46d50e117712ba2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -294,7 +294,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same \"thank you\" you learned in Hindi, Marathi, and Punjabi — now watch Bengali reshape it twice."
+              "text": "The same \"thank you\" Hindi, Marathi, and Punjabi use — now watch Bengali reshape it twice."
             }
           ]
         },
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63149e08a09fd266",
+      "sourceHash": "fnv1a64:d1f13ec389f3ef0c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -566,7 +566,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নমস্কার is the same word as the Sanskrit namaskāra you met in Hindi and Marathi — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
+              "text": "নমস্কার is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
             }
           ]
         },

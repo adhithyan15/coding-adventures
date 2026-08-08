@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b1d08b5cbfb9ef33",
+  "sourceHash": "fnv1a64:9dbfd2d2b7a48352",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -426,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37b78208f52d826d",
+      "sourceHash": "fnv1a64:b3f0baedf26298f9",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +468,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Urdu ٹھیک and Hindi ṭhīk are the same everyday Hindustani word. Their grammar is closely shared; their scripts make different literary histories visible. This Urdu lesson leaves the Hindi side romanized: mixed-language practice may show both scripts only after each form has been learned in its own track."
+              "text": "Urdu ٹھیک and Hindi ṭhīk are the same everyday Hindustani word. Their grammar is closely shared; their scripts make different literary histories visible. This Urdu lesson leaves the Hindi side romanized: mixed-language practice may show both scripts only after each form has been learned in its own right."
             }
           ]
         },

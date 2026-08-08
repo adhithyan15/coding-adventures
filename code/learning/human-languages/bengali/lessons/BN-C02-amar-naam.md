@@ -29,7 +29,7 @@ name is…**" *Āmār nām Arun.* → "My name is Arun."
 Look at what is missing: there is **no verb**. Bengali sets "my name" beside
 "Arun" — *āmār nām Arun* — and the "is" is simply understood. This is the **zero
 copula**: for present-tense equational sentences (X is Y), Bengali needs no "to
-be" at all. (It is the same habit you would meet in Tamil — and unlike Hindi's
+be" at all. (It is the same habit Tamil has — and unlike Hindi's
 *merā nām … hai*, which keeps the *hai*.) Bengali only brings back a verb when it
 talks about a *state* or *place* — you'll see that in Chapter 3.
 

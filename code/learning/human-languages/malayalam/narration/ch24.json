@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:acbff52e5880c78d",
+  "sourceHash": "fnv1a64:0d0c4eff0a873076",
   "lessons": [
     {
       "id": "ML-C24-rathri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53a7d4f15dc6e80c",
+      "sourceHash": "fnv1a64:3aa52d9e621d242e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest echo from earlier in this arc: just like Hindi's own रात (raat, ultimately from the same Sanskrit रात्रि), Malayalam's rāthri traces to Proto-Indo-European h₁reh₁- (\"to rest\") — a completely different PIE root from Latin's nox (nókʷts). Two Indo-European languages, two words for \"night,\" that look like they might be old cousins — but genuinely aren't. Same false-cognate story, now confirmed across a second Indo-Aryan-rooted borrowing."
+              "text": "Here's the honest echo across the family: just like Hindi's own रात (raat, ultimately from the same Sanskrit रात्रि), Malayalam's rāthri traces to Proto-Indo-European h₁reh₁- (\"to rest\") — a completely different PIE root from Latin's nox (nókʷts). Two Indo-European languages, two words for \"night,\" that look like they might be old cousins — but genuinely aren't. Same false-cognate story, now confirmed across a second Indo-Aryan-rooted borrowing."
             }
           ]
         },

@@ -31,7 +31,7 @@ is **written before** the consonant it follows but **read after** it. **আস�
 Sanskrit root shared with Hindi *ānā*). Yet it is how Bengalis say *goodbye* —
 never "I'm leaving" (unlucky, too final) but "I'll come [again]": **আসি**, or the
 fuller *āschhi* ("I am coming"). It is the very same "promise of return" farewell
-you met in Tamil and Marathi — a whole culture's optimism folded into one verb.
+Tamil and Marathi reach for — a whole culture's optimism folded into one verb.
 
 ## Why it's said this way
 

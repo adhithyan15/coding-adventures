@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f63f1cfc23b0cb25",
+  "sourceHash": "fnv1a64:e6b54c7e41773a27",
   "lessons": [
     {
       "id": "KA-C22-hasiru-haladi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43482806a1544152",
+      "sourceHash": "fnv1a64:6b4ce584accf6c2a",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹಸಿರು (hasiru, \"green\") comes from Old Kannada ಪಸಿರ್ (pasir), from Proto-Dravidian pac-, \"green\" — the exact same root behind Tamil's பச்சை (paccai) and Telugu's పచ్చ (pacca). Kannada even keeps a doublet of its own, ಪಚ್ಚೆ (pacce), sitting right alongside hasiru. So unlike Kannada's blue (ನೀಲಿ, borrowed from Sanskrit), green here is the real, deep, native Dravidian word — and this particular root will keep resurfacing as Telugu, Malayalam, and Tamil's own green words come up later in this same arc."
+              "text": "ಹಸಿರು (hasiru, \"green\") comes from Old Kannada ಪಸಿರ್ (pasir), from Proto-Dravidian pac-, \"green\" — the exact same root behind Tamil's பச்சை (paccai) and Telugu's పచ్చ (pacca). Kannada even keeps a doublet of its own, ಪಚ್ಚೆ (pacce), sitting right alongside hasiru. So unlike Kannada's blue (ನೀಲಿ, borrowed from Sanskrit), green here is the real, deep, native Dravidian word — and this particular root resurfaces in Telugu's, Malayalam's, and Tamil's own green words too."
             }
           ]
         },

@@ -52,7 +52,7 @@ settled — but if it holds, this isn't a case of Malayalam **avoiding**
 Sanskrit at all. It's Malayalam reaching for a **different** Sanskrit root
 than its neighbors: *ucca* ("high") instead of *madhya* ("middle"). Noon
 becomes "**the sun at its peak**" rather than "the middle of the day" — the
-same zenith-based idea you already saw in Arabic's *aẓ-ẓuhr* (from a root
+same zenith-based idea inside Arabic's *aẓ-ẓuhr* (from a root
 meaning "to appear, become visible/apex"), just arrived at from Sanskrit
 rather than Arabic.
 

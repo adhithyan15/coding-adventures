@@ -29,9 +29,9 @@ the next as a conjunct: **স্ + ক → স্ক**.
 
 ## The word, taken apart
 
-**নমস্কার** is the *same word* as the Sanskrit *namaskāra* you met in Hindi and
-Marathi — *namas* ("a bow") + *kāra* ("the making of"). But hear what Bengali
-does: the inherent "a" becomes **ô**, and *s* shifts to **sh**, so written
+**নমস্কার** is the *same word* as the Sanskrit *namaskāra* behind Hindi's and
+Marathi's greeting — *namas* ("a bow") + *kāra* ("the making of").
+But hear what Bengali does: the inherent "a" becomes **ô**, and *s* shifts to **sh**, so written
 *namaskāra* is spoken **nô·mosh·kar**. That habit — *a→ô*, *s→sh* — is Bengali's
 fingerprint; once you hear it, you can un-shift almost any word back to its
 Sanskrit cousin.

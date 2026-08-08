@@ -17,7 +17,7 @@ reviews_of: [ML-C03-njaan]
 ## Warm-up
 
 [PAUSE 2s] The word at the heart of "how are you?" — and it travelled all the way
-from the Sanskrit track.
+from Sanskrit.
 
 ## The letters in this word
 
@@ -28,7 +28,7 @@ from the Sanskrit track.
 
 **സുഖം** (*sukhaṁ*, "well-being, comfort, ease, happiness") is a **Sanskrit**
 loan — *sukha* = *su-* ("good, well") + *kha* ("space, feeling") — the same *su-*
-that is Greek *eu-* (as in *euphoria*), met in the Sanskrit track. Malayalam,
+that is Greek *eu-* (as in *euphoria*). Malayalam,
 Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil
 did — and *sukham* is a perfect case: for "well," where Tamil answers with native
 *nalam*, Malayalam reaches for Sanskrit *sukham*.

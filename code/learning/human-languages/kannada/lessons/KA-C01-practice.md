@@ -50,7 +50,7 @@ Kannada, like Tamil, avoids a bare "I'm leaving." The everyday goodbye is:
 > come [back]."**
 
 and the reply is **ಹೋಗಿ ಬನ್ನಿ** (*hōgi banni*) — **"go, and come [back]."**
-The very same worldview you met in Tamil's *pōy varugiṟēṉ*: you never simply
+The very same worldview inside Tamil's *pōy varugiṟēṉ*: you never simply
 depart, you promise a return. (Casually, Kannada also just re-uses *namaskāra*
 to part.)
 

@@ -33,8 +33,8 @@ reviews_of: [LA-C20-name-case-variation, LA-C20-quid-tibi-nomen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02] -->
 
-[PAUSE 2s] German's lesson on "you" was about **formality** — *du* versus
-*Sie*. Latin's version of this same lesson is about something completely
+[PAUSE 2s] German's two words for "you" are about **formality** — *du* versus
+*Sie*. Latin's two words for "you" split on something completely
 different: plain **number**. Formality hadn't been invented yet.
 
 ## You'll want to know: tū — you, one person

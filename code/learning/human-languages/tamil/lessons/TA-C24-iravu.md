@@ -11,7 +11,7 @@ concept_tag: TIME-NIGHT
 prerequisites: [TA-C17-transparent-middle-synonyms, TA-C23-day-family-register]
 sounds: [tamil-vowel-sign-u, tamil-retroflex-lla]
 roots: [proto-dravidian-cira-darkness, sanskrit-ratri, proto-dravidian-cirvl]
-etymology_hook: "இரவு (iravu, 'night') is native Dravidian, from Proto-Dravidian *cira ('darkness') — already used standalone inside நள்ளிரவு (naḷḷiravu, 'midnight,' Chapter 17: 'இரவு, a word every Tamil speaker still uses on its own'); Tamil also has ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) ← PIE *h₁reh₁- ('to rest') — the SAME PIE root already confirmed, specifically, for Hindi's raat and Malayalam's rāthri in this arc (Kannada's and Telugu's rātri lessons note the Sanskrit tatsama status but don't independently make this same PIE-root/nox comparison), a completely different root from Latin nox's *nókʷts; be honest about register here, and flag it clearly for a native speaker's own read: at least one Tamil dictionary source states plainly that 'colloquially, ராத்திரி is more common,' implying இரவு leans more literary/formal — if accurate, this runs the OPPOSITE direction from நாள்'s story last lesson, where the native word was the uncontested everyday choice and no loanword competed; this claim rests on limited dictionary-level sourcing, not deep confirmation, and register judgments about Sanskrit-loan versus native-Tamil vocabulary are exactly the kind of thing a native speaker's own ear should settle, not a scraped source"
+etymology_hook: "இரவு (iravu, 'night') is native Dravidian, from Proto-Dravidian *cira ('darkness') — already used standalone inside நள்ளிரவு (naḷḷiravu, 'midnight,' Chapter 17: 'இரவு, a word every Tamil speaker still uses on its own'); Tamil also has ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) ← PIE *h₁reh₁- ('to rest') — the SAME PIE root behind Hindi's raat and Malayalam's rāthri (Kannada's and Telugu's rātri are the very same tatsama, so the same root and the same contrast with Latin nox hold for them), a completely different root from Latin nox's *nókʷts; be honest about register here, and flag it clearly for a native speaker's own read: at least one Tamil dictionary source states plainly that 'colloquially, ராத்திரி is more common,' implying இரவு leans more literary/formal — if accurate, this runs the OPPOSITE direction from நாள்'s story last lesson, where the native word was the uncontested everyday choice and no loanword competed; this claim rests on limited dictionary-level sourcing, not deep confirmation, and register judgments about Sanskrit-loan versus native-Tamil vocabulary are exactly the kind of thing a native speaker's own ear should settle, not a scraped source"
 duration:
   max_seconds: 240
 requires:
@@ -56,7 +56,7 @@ Tamil also keeps **ராத்திரி** (**rāttiri**), a Sanskrit **tatsa
 Kannada's *ratri* and Telugu's *ratri*. It traces to **Proto-Indo-European**
 ***\*h₁reh₁-*** ("**to rest**"), a **completely different** root from
 Latin *nox*'s ***\*nókʷts*** — the same specific comparison already drawn
-for Hindi's *raat* and Malayalam's *rāthri* earlier in this arc, now a
+for Hindi's *raat* and Malayalam's *rāthri*, now a
 third confirmation, same false-cognate pattern, same honest
 non-relationship to *nox*.
 
@@ -74,6 +74,6 @@ non-relationship to *nox*.
 [PAUSE 3s] Where did you already meet **இரவு** before this lesson? (Inside
 **நள்ளிரவு**, *naḷḷiravu*, "midnight," Chapter 17.) Does **ராத்திரி**'s PIE
 root match Latin *nox*'s? (**No** — ***\*h₁reh₁-*** "to rest," the same
-false-cognate pattern already drawn for Hindi and Malayalam earlier in
-this arc.) Next: treat the proposed register split as a hypothesis and keep
+false-cognate pattern already drawn for Hindi and Malayalam.) Next:
+treat the proposed register split as a hypothesis and keep
 "darkness" separate from "night."

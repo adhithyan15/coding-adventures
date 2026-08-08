@@ -34,8 +34,8 @@ reviews_of: [AR-C04-maa-salama, AR-C01-al, AR-W06-hamza, AR-W06-harakat-and-hamz
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The other everyday farewell — and the one with a surprise waiting in
-the Spanish track.
+[PAUSE 2s] The other everyday farewell — and the one with a surprise waiting inside
+Spanish.
 
 ## You'll want to know — A note on the letters
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-ILA-LIQAA-01]; assesses=[] -->

@@ -50,7 +50,7 @@ all.
 
 Every one of these is the counting-word (from the AGE and NUM-1-5 lessons)
 plus **عشر** (*ʿashar*, "**ten**") — a straightforward additive compound, the
-same shape you've now seen in Spanish's *once*-*quince* and Latin's
+same shape Spanish builds in *once*-*quince* and Latin in
 *ūndecim*-*quīndecim*.
 
 ## You'll want to know — عشرون — NOT "two-ten," a genuinely different word

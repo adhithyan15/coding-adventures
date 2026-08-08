@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Colours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bbcb6ccf4fd05171",
+  "sourceHash": "fnv1a64:690810fd97646553",
   "lessons": [
     {
       "id": "TA-C11-nirangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:57cc7e3f10c4a1d8",
+      "sourceHash": "fnv1a64:442d28ae6ba4719a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This isn't random. You may remember from Latin's color lesson that \"blue\" is, across many of the world's languages, one of the last basic colors to settle into its own fixed word — often arriving late, or borrowed, compared to black, white, and red. Tamil's colors look like exactly this pattern in miniature: three old, native words, and one — blue — reaching outside the language for a Sanskrit loan."
+              "text": "This isn't random. \"Blue\" is, across many of the world's languages, one of the last basic colors to settle into its own fixed word — often arriving late, or borrowed, compared to black, white, and red. Tamil's colors look like exactly this pattern in miniature: three old, native words, and one — blue — reaching outside the language for a Sanskrit loan."
             },
             {
               "kind": "speech",

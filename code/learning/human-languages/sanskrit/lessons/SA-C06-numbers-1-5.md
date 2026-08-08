@@ -59,10 +59,10 @@ Three notes, and the third one matters more than it looks.
 ***Pañca* barely inflects** in the nominative and accusative. It is also the one
 you already half-know.
 
-**And Sanskrit numbers have gender.** Look at the last column. When you meet
-these words again in Hindi, Marathi, Bengali, Gujarati or Punjabi, they will
-mostly descend from the **neuter** forms — *trī́ṇi* and *catvā́ri*, not *tráyaḥ*
-and *catvā́raḥ*. Keep that column in view; the daughter lessons depend on it.
+**And Sanskrit numbers have gender.** Look at the last column. These
+same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly
+descend from the **neuter** forms — *trī́ṇi* and *catvā́ri*, not *tráyaḥ*
+and *catvā́raḥ*. Keep that column in view; the daughter languages inherit from it.
 
 ## What you've built: two directions
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR] -->

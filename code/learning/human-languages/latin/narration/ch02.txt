@@ -24,7 +24,7 @@ Latin: trēs. becomes French: trois. becomes Spanish: tres.
 Latin: quattuor. becomes French: quatre. becomes Spanish: cuatro.
 Latin: quīnque. becomes French: cinq. becomes Spanish: cinco.
 (A purist's note: French deux and Spanish dos actually descend from the accusative duōs, not the duo shown — as Romance words generally do.)
-Quattuor becomes quatre becomes cuatro is the same wearing-down the Hindi track shows for catvāri becomes chār — two branches of one ancient word (PIE kʷetwóres), one softening in Europe, one in India. And they seed English too: ūnus in unit and union, duo in duo and dual, trēs in trio and triple, quīnque in quintet.
+Quattuor becomes quatre becomes cuatro is the same wearing-down Hindi shows in catvāri becomes chār — two branches of one ancient word (PIE kʷetwóres), one softening in Europe, one in India. And they seed English too: ūnus in unit and union, duo in duo and dual, trēs in trio and triple, quīnque in quintet.
 
 Grammar Lens: A grammar seed: the first three bend.
 Here's something Latin does that its children mostly dropped: one, two and three change their endings to match what they count — ūnus/ūna/ūnum, duo/duae, trēs/tria — while four and up stay fixed. You don't need the full tables yet; just notice that ūnus is really ūn- with a changeable tail, and file away that Latin makes even its numbers agree.

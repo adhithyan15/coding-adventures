@@ -28,8 +28,8 @@ question-marker **ഓ** (*ō*) → **സുഖമാണോ** (*sukhamāṇō*), 
 
 **സുഖമാണോ?** literally means "**is [it] well?**" — where English says "how are
 you?", Malayalam more often says "are you well?" The word **സുഖം** (*sukhaṁ*,
-"well-being, comfort, ease") is a **Sanskrit** loan — the very *sukha* you meet in
-the Sanskrit track (the *su-* "good" that is Greek *eu-*). Onto it, Malayalam
+"well-being, comfort, ease") is a **Sanskrit** loan — *sukha* itself,
+borrowed whole (the *su-* "good" that is Greek *eu-*). Onto it, Malayalam
 adds its own **native copula** *āṇŭ* ("is," from Chapter 2) and the question
 particle **-ō** — a whole yes/no question made by one small sound at the end. This
 mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature.
@@ -44,7 +44,7 @@ just the little *-ō*. You will use it to question any statement.
 
 [PAUSE 1s]
 - [YOU SAY: "sukhamāṇō?"]
-- [YOU SAY: the Sanskrit word for well-being inside it (*sukha* — as in the Sanskrit track)]
+- [YOU SAY: the Sanskrit word for well-being inside it (*sukha*)]
 - [YOU SAY: how Malayalam makes a yes/no question (add *-ō*)]
 
 ## Wrap-up Recall

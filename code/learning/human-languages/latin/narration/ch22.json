@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "You, Singular and Plural",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:06d81dea738f71b3",
+  "sourceHash": "fnv1a64:4b3451a0670a1066",
   "lessons": [
     {
       "id": "LA-C22-tu-vos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4746a09ecea844d0",
+      "sourceHash": "fnv1a64:58b50d89a5634ac8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "German's lesson on \"you\" was about formality — du versus Sie. Latin's version of this same lesson is about something completely different: plain number. Formality hadn't been invented yet."
+              "text": "German's two words for \"you\" are about formality — du versus Sie. Latin's two words for \"you\" split on something completely different: plain number. Formality hadn't been invented yet."
             }
           ]
         },

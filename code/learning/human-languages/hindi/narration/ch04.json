@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Chapter 4",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf7b02944e8671f2",
+  "sourceHash": "fnv1a64:2abf2f1a1a306578",
   "lessons": [
     {
       "id": "HI-C04-chalta-hun",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee0eb7d8e9024f10",
+      "sourceHash": "fnv1a64:f9d45fa8e08e7d18",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -203,7 +203,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कल (kal) means both \"tomorrow\" and \"yesterday\" — the same word for the day on either side of today. It is from Sanskrit काल (kāla, \"time\") — the very root you may have met in Punjabi's akāl (\"timeless\"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes \"tomorrow\"), kal milā (past becomes \"yesterday\")."
+              "text": "कल (kal) means both \"tomorrow\" and \"yesterday\" — the same word for the day on either side of today. It is from Sanskrit काल (kāla, \"time\") — the very root that sits inside Punjabi's akāl (\"timeless\"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes \"tomorrow\"), kal milā (past becomes \"yesterday\")."
             },
             {
               "kind": "speech",

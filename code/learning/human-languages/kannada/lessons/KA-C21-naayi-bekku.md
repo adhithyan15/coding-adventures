@@ -11,7 +11,7 @@ concept_tag: KA-ANIMALS
 prerequisites: [KA-C20-hannondu-ippattu]
 sounds: [kannada-vowel-sign-e, kannada-geminate-kk]
 roots: [dravidian-naay-dog, dravidian-veruku-wildcat]
-etymology_hook: "ನಾಯಿ (nāyi, 'dog') is a solid, native Proto-Dravidian root — no mystery, unlike every dog-word you've met elsewhere in this arc; ಬೆಕ್ಕು (bekku, 'cat') is cognate with a DIFFERENT ancient Dravidian root, the same one behind Tamil/Malayalam's word for wildcat/civet cat — Kannada's everyday cat-word and Tamil's everyday cat-word (pūnai) come from two genuinely separate Dravidian roots"
+etymology_hook: "ನಾಯಿ (nāyi, 'dog') is a solid, native Proto-Dravidian root — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; ಬೆಕ್ಕು (bekku, 'cat') is cognate with a DIFFERENT ancient Dravidian root, the same one behind Tamil/Malayalam's word for wildcat/civet cat — Kannada's everyday cat-word and Tamil's everyday cat-word (pūnai) come from two genuinely separate Dravidian roots"
 reviews_of: [KA-C20-hannondu-ippattu]
 duration:
   max_seconds: 240

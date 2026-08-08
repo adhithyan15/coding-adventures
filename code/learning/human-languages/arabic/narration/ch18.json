@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:501d33703c5ffa29",
+  "sourceHash": "fnv1a64:28f3803b1a2eb944",
   "lessons": [
     {
       "id": "AR-C18-al-taqs",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6d43c1a5b4ae6b8",
+      "sourceHash": "fnv1a64:25835c3671e986bc",
       "notice": null,
       "blocks": [
         {
@@ -80,7 +80,7 @@
             },
             {
               "kind": "speech",
-              "text": "Unlike hot and cold, rain isn't a verbless adjective sentence — Arabic uses an actual personal verb, tumṭir (\"is raining\"), with a feminine dummy pronoun, إنها (innahā, \"she/it\"), standing in as the subject. So within Arabic's own weather vocabulary, hot/cold stay verbless while rain gets a real, conjugated verb — echoing the same \"rain behaves differently from other weather\" pattern you saw in Latin's dedicated pluit."
+              "text": "Unlike hot and cold, rain isn't a verbless adjective sentence — Arabic uses an actual personal verb, tumṭir (\"is raining\"), with a feminine dummy pronoun, إنها (innahā, \"she/it\"), standing in as the subject. So within Arabic's own weather vocabulary, hot/cold stay verbless while rain gets a real, conjugated verb — echoing the same \"rain behaves differently from other weather\" pattern Latin shows in its dedicated pluit."
             }
           ]
         },

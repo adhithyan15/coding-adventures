@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Chapter 4",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c98e4b4133bd0b64",
+  "sourceHash": "fnv1a64:911ace96428ac7d3",
   "lessons": [
     {
       "id": "GE-C04-auf-wiedersehen",
@@ -324,7 +324,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:543133b77d65bee3",
+      "sourceHash": "fnv1a64:2e55d77a4ab3c56b",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
             },
             {
               "kind": "speech",
-              "text": "morgen = \"tomorrow\" — and \"morning,\" exactly the double meaning you saw in Spanish mañana and French demain. German just uses Morgen for both:"
+              "text": "morgen = \"tomorrow\" — and \"morning,\" exactly the double meaning carried by Spanish mañana and French demain. German just uses Morgen for both:"
             },
             {
               "kind": "speech",

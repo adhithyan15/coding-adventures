@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ceed6b208e6e60b0",
+  "sourceHash": "fnv1a64:262d769ef6d9dc12",
   "lessons": [
     {
       "id": "TA-C09-mannikkavum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d90c27fb2d5e0c93",
+      "sourceHash": "fnv1a64:b6af60ab308e7049",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "மன்னி (maṉṉi) = \"to forgive, excuse, pardon\" — and unlike the words you'll meet in Kannada, Telugu, and Malayalam, this is Tamil's own native verb, not borrowed from Sanskrit kṣamā."
+              "text": "மன்னி (maṉṉi) = \"to forgive, excuse, pardon\" — and unlike the words Kannada, Telugu, and Malayalam reach for, this is Tamil's own native verb, not borrowed from Sanskrit kṣamā."
             },
             {
               "kind": "speech",

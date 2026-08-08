@@ -46,8 +46,8 @@ be hiding the very same ancient root this whole arc keeps circling back to.
 **పచ్చ** (*pacca*). Kannada even keeps a doublet of its own, **ಪಚ್ಚೆ**
 (*pacce*), sitting right alongside *hasiru*. So unlike Kannada's **blue**
 (ನೀಲಿ, borrowed from Sanskrit), green here is the real, deep, native
-Dravidian word — and this particular root will keep resurfacing as Telugu,
-Malayalam, and Tamil's own green words come up later in this same arc.
+Dravidian word — and this particular root resurfaces in Telugu's,
+Malayalam's, and Tamil's own green words too.
 
 ## The word, taken apart: ಹಳದಿ — a turmeric-word loan, and a secret cousin of gelb
 <!-- hl-knowledge: introduces=[KA-ETYMON-C22-HASIRU-HALADI-02]; assesses=[] -->

@@ -17,7 +17,7 @@ reviews_of: [HI-C01-dhanyavad, HI-C02-hai]
 ## Warm-up
 
 [PAUSE 2s] When someone thanks you, this is what you say back — and it hides a
-word you may meet again in Sanskrit.
+word Sanskrit uses whole, unchanged.
 
 ## The letters in this word
 
@@ -36,8 +36,8 @@ from Chapter 2) and **है** (*hai*, "is").
 - *āgata* is from the root **गम्** (*gam*, "to go/come"), cousin of English
   **come**.
 
-You will meet *svāgatam* again, unchanged, in the Sanskrit track — this is the
-same word, worn into everyday Hindi.
+Sanskrit's own *svāgatam* is this very word, unchanged — here it is
+again, worn into everyday Hindi.
 
 ## Guided Practice
 

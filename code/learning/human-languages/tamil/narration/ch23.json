@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cbbbe0dcc581dbf8",
+  "sourceHash": "fnv1a64:5c6398928a9c2ba4",
   "lessons": [
     {
       "id": "TA-C23-naal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77b519193dd4561d",
+      "sourceHash": "fnv1a64:ad1a9f6edfca5d2b",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நாள் (nāḷ) — \"day\" — is native Dravidian, from Proto-Dravidian nāḷ. You've already met it, hiding inside நாளை (nāḷai, \"tomorrow,\" Chapter 4). But here's the honest headline of this lesson: நாள் isn't a survivor clinging to one narrow sense the way some native words elsewhere in this arc have been — it is simply Tamil's plain, everyday, unmarked word for counting a day, as ordinary as மூன்று நாள் (mūnṟu nāḷ, \"three days\")."
+              "text": "நாள் (nāḷ) — \"day\" — is native Dravidian, from Proto-Dravidian nāḷ. You've already met it, hiding inside நாளை (nāḷai, \"tomorrow,\" Chapter 4). But here's the honest headline of this lesson: நாள் isn't a survivor clinging to one narrow sense the way some native Dravidian words are — it is simply Tamil's plain, everyday, unmarked word for counting a day, as ordinary as மூன்று நாள் (mūnṟu nāḷ, \"three days\")."
             }
           ]
         },

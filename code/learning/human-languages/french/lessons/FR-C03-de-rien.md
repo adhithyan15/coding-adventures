@@ -18,8 +18,8 @@ reviews_of: [FR-C03-merci]
 ## Warm-up
 
 [PAUSE 2s] Someone says **merci**. The easy reply: **de rien** — literally *"of
-nothing."* You wave the favour off as no trouble — and if you did the Spanish
-track, you've *already met this exact trick.*
+nothing."* You wave the favour off as no trouble — and Spanish
+pulls *this exact trick* too.
 
 ## Sounds you'll need
 

@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6edc3d8566fd18eb",
+  "sourceHash": "fnv1a64:c981c0b76cf70dc0",
   "lessons": [
     {
       "id": "TE-C11-rangulu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:442aa8558e8036cc",
+      "sourceHash": "fnv1a64:f7ff3cc44bcfdd9a",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నీలం (nīlam) = \"blue\" — the identical Sanskrit నీల (nīla) loan you've now seen in Tamil (nīlam), Malayalam (nīla), Kannada (nīli), and Hindi (nīlā). Four Dravidian languages plus Hindi, all independently keeping their own native black/white/red, and all reaching for the exact same borrowed word the moment it comes to blue."
+              "text": "నీలం (nīlam) = \"blue\" — the identical Sanskrit నీల (nīla) loan that also sits in Tamil (nīlam), Malayalam (nīla), Kannada (nīli), and Hindi (nīlā). Four Dravidian languages plus Hindi, all independently keeping their own native black/white/red, and all reaching for the exact same borrowed word the moment it comes to blue."
             }
           ]
         },

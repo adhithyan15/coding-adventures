@@ -12,7 +12,7 @@ romanization: tuṣbiḥ ʿalā khayr
 prerequisites: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
-etymology_hook: "تصبح على خير (tuṣbiḥ ʿalā khayr), the everyday Arabic 'good night,' literally means 'may you WAKE UP into goodness' — tuṣbiḥ is the ordinary imperfect of aṣbaḥa ('to become morning'), used performatively as a blessing (no special subjunctive/jussive marking), the same ṣ-b-ḥ root as ṣabāḥ al-khayr ('good morning'), plus khayr ('goodness') already met in masāʾ al-khayr; unlike every other language in this arc, Arabic's night-parting phrase points FORWARD to the morning, not to the night itself"
+etymology_hook: "تصبح على خير (tuṣbiḥ ʿalā khayr), the everyday Arabic 'good night,' literally means 'may you WAKE UP into goodness' — tuṣbiḥ is the ordinary imperfect of aṣbaḥa ('to become morning'), used performatively as a blessing (no special subjunctive/jussive marking), the same ṣ-b-ḥ root as ṣabāḥ al-khayr ('good morning'), plus khayr ('goodness') already met in masāʾ al-khayr; unlike the everyday good-nights of English, French, German, and Spanish, Arabic's night-parting phrase points FORWARD to the morning, not to the night itself"
 duration:
   max_seconds: 240
 requires:
@@ -63,8 +63,8 @@ particular form, *tuṣbiḥ*, addresses one **man**; a woman is *tuṣbiḥī*
 ## Why it's said this way — Be honest: this points forward, not backward
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]; assesses=[] -->
 
-Here's the genuinely different part: **every** other "good night" in this
-arc — English, French, German, Spanish — wishes something about the
+Here's the genuinely different part: the everyday "good night" of
+English, French, German, and Spanish wishes something about the
 **night itself**. Arabic's everyday version does the opposite: it's
 grammatically about the **morning that follows**, built from the same
 "waking" root already hiding in *ṣabāḥ*. Notice what's genuinely absent:

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2538dae6127ff3d7",
+  "sourceHash": "fnv1a64:9bc3e175ebf3b9fd",
   "lessons": [
     {
       "id": "TA-C10-vaara-kizhamai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6deae3e70e1cb8b",
+      "sourceHash": "fnv1a64:7d4d6526c887f8d7",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've seen Hindi's week built entirely from Sanskrit deity-names plus वार (vār). Tamil's week tells a richer story: it uses its own word for \"day,\" and some of its planet-names are Tamil's own too — while others are borrowed, just like Hindi's."
+              "text": "Hindi's week is built entirely from Sanskrit deity-names plus वार (vār). Tamil's week tells a richer story: it uses its own word for \"day,\" and some of its planet-names are Tamil's own too — while others are borrowed, just like Hindi's."
             }
           ]
         },

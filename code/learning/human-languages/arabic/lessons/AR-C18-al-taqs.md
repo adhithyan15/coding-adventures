@@ -68,7 +68,7 @@ uses an actual **personal verb**, *tumṭir* ("is raining"), with a **feminine
 dummy pronoun**, **إنها** (*innahā*, "she/it"), standing in as the subject.
 So within Arabic's own weather vocabulary, hot/cold stay verbless while rain
 gets a real, conjugated verb — echoing the same "rain behaves differently
-from other weather" pattern you saw in Latin's dedicated *pluit*.
+from other weather" pattern Latin shows in its dedicated *pluit*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C18-AL-TAQS-01, AR-CONCEPT-C18-AL-TAQS-02] -->

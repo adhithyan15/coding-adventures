@@ -31,8 +31,8 @@ doing a second job.
 > **bis morgen** = "until tomorrow" → "see you tomorrow."
 
 - **bis** = "until" (last lesson).
-- **morgen** = "tomorrow" — **and** "morning," exactly the double meaning you saw
-  in Spanish *mañana* and French *demain*. German just uses **Morgen** for both:
+- **morgen** = "tomorrow" — **and** "morning," exactly the double meaning carried by
+  Spanish *mañana* and French *demain*. German just uses **Morgen** for both:
   - *Guten Morgen!* = "Good **morning**!" (Chapter 1)
   - *bis morgen* = "until **tomorrow**."
   - (When it means "morning," it's a capital-M noun, *der Morgen*; as "tomorrow,"

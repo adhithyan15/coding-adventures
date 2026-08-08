@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Chapter 13",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7a363e0c3afce25f",
+  "sourceHash": "fnv1a64:0903bc711593d695",
   "lessons": [
     {
       "id": "GE-C13-rot-blau",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e146ae0153ea6eca",
+      "sourceHash": "fnv1a64:c066fb5de47769ca",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
             },
             {
               "kind": "speech",
-              "text": "Portuguese went a different way entirely — its blue is azul, from Arabic. You'll meet that one in the Portuguese track."
+              "text": "Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too."
             }
           ]
         },

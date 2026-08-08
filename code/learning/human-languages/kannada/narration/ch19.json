@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f7c28f10b80343b3",
+  "sourceHash": "fnv1a64:0bbdb6e2aee64cb4",
   "lessons": [
     {
       "id": "KA-C19-vayassu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1ca6627d9b28ecb",
+      "sourceHash": "fnv1a64:e3ad4ab4ba5f1858",
       "notice": null,
       "blocks": [
         {

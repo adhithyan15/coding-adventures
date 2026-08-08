@@ -43,7 +43,7 @@ through and through, not borrowed from Sanskrit.
 **மன்னிக்கவும்** is built from three pieces:
 
 - **மன்னி** (*maṉṉi*) = "**to forgive, excuse, pardon**" — and unlike the
-  words you'll meet in Kannada, Telugu, and Malayalam, this is Tamil's **own**
+  words Kannada, Telugu, and Malayalam reach for, this is Tamil's **own**
   native verb, not borrowed from Sanskrit **kṣamā**.
 - **‑க்க** (*‑kka*) = an infinitive-forming ending.
 - **‑உம்** (*‑um*) = a formal, written-register particle used to make a

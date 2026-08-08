@@ -44,7 +44,7 @@ word for "day." Tamil doesn't. This lesson is about the one that didn't.
 **Proto-Dravidian** ***\*nāḷ***. You've already met it, hiding inside
 **நாளை** (*nāḷai*, "tomorrow," Chapter 4). But here's the honest headline
 of this lesson: நாள் isn't a survivor clinging to one narrow sense the way
-some native words elsewhere in this arc have been — it is simply Tamil's
+some native Dravidian words are — it is simply Tamil's
 **plain, everyday, unmarked** word for counting a day, as ordinary as
 **மூன்று நாள்** (*mūnṟu nāḷ*, "**three days**").
 

@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b2050e3126777350",
+  "sourceHash": "fnv1a64:dead36175f19a05e",
   "lessons": [
     {
       "id": "HI-C23-kutta-billi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47c46e86a23f8923",
+      "sourceHash": "fnv1a64:1e4f97628c48b9b1",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met a mystery dog-word in Spanish and another in English/German. Hindi genuinely gives you a third."
+              "text": "Spanish has a mystery dog-word, and English/German another. Hindi genuinely gives you a third."
             }
           ]
         },

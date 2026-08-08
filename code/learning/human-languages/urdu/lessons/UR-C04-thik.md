@@ -12,7 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [UR-C04-main-hun]
 sounds: [rtl, retroflex-aspirated-th, long-i]
 roots: [shared-hindustani-thik]
-etymology_hook: Thik is shared everyday Hindustani vocabulary; Urdu writes it ٹھیک, while the Hindi track teaches its own script independently.
+etymology_hook: Thik is shared everyday Hindustani vocabulary; Urdu writes it ٹھیک, while Hindi writes the very same word in its own script.
 duration:
   max_seconds: 220
 requires:
@@ -54,7 +54,7 @@ Urdu **ٹھیک** and Hindi *ṭhīk* are the same everyday Hindustani word. The
 grammar is closely shared; their scripts make different literary histories
 visible. This Urdu lesson leaves the Hindi side romanized: mixed-language
 practice may show both scripts only after each form has been learned in its own
-track.
+right.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK] -->
