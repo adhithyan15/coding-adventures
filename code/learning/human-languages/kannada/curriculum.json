@@ -344,6 +344,86 @@
         "KA-EXT-027-SOCIAL-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-027",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C35-kutumba",
+        "KA-C35-snehita"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-028-FAMILY-FRIENDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-028",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C36-magu",
+        "KA-C36-maga",
+        "KA-C36-magalu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-029-CHILD-SON-DAUGHTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-029",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C37-kannu",
+        "KA-C37-kivi",
+        "KA-C37-moogu",
+        "KA-C37-baayi"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-030-FACE-WORDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-030",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C38-hrudaya"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-031-HEART"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-031",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C39-chaha",
+        "KA-C39-kaapi",
+        "KA-C39-haalu"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-032-TEA-COFFEE-MILK"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-032",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C40-oota"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-033-MEAL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -383,7 +463,9 @@
         "KA-PATH-006",
         "KA-PATH-010",
         "KA-PATH-015",
-        "KA-PATH-020"
+        "KA-PATH-020",
+        "KA-PATH-027",
+        "KA-PATH-028"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -395,7 +477,9 @@
       "segments": [
         "KA-PATH-005",
         "KA-PATH-007",
-        "KA-PATH-016"
+        "KA-PATH-016",
+        "KA-PATH-029",
+        "KA-PATH-030"
       ],
       "omits": [
         "WORD-GOOD",
@@ -406,7 +490,9 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "KA-PATH-012",
-        "KA-PATH-018"
+        "KA-PATH-018",
+        "KA-PATH-031",
+        "KA-PATH-032"
       ],
       "omits": [],
       "relocates": {}
@@ -950,6 +1036,80 @@
       "prerequisites": [],
       "lessons": [
         "KA-C01-namaskara"
+      ]
+    },
+    {
+      "id": "KA-EXT-028-FAMILY-FRIENDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my family as a group and name a friend in Kannada, and say which of the two words is a Sanskrit loan.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C35-kutumba",
+        "KA-C35-snehita"
+      ]
+    },
+    {
+      "id": "KA-EXT-029-CHILD-SON-DAUGHTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say child, son and daughter in Kannada, and show how one root with three different endings does the work that Chapter 12 needed four separate words to do.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C36-magu",
+        "KA-C36-maga",
+        "KA-C36-magalu"
+      ]
+    },
+    {
+      "id": "KA-EXT-030-FACE-WORDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my eye, ear, nose and mouth in Kannada, and say which of the four the family agrees on and which it splits.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C37-kannu",
+        "KA-C37-kivi",
+        "KA-C37-moogu",
+        "KA-C37-baayi"
+      ]
+    },
+    {
+      "id": "KA-EXT-031-HEART",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my heart in Kannada and say why it is a genuine cousin of the English word, not just a resemblance.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C38-hrudaya"
+      ]
+    },
+    {
+      "id": "KA-EXT-032-TEA-COFFEE-MILK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for tea, coffee or milk in Kannada, and trace each word back along the road it travelled to get here.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C39-chaha",
+        "KA-C39-kaapi",
+        "KA-C39-haalu"
+      ]
+    },
+    {
+      "id": "KA-EXT-033-MEAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I am having a meal in Kannada, using the word Chapter 32 used before ever teaching it.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C40-oota"
       ]
     }
   ]

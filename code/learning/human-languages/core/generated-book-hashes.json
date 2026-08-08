@@ -1538,6 +1538,68 @@
       "tex": "kannada/book/chapters/ch34-social-verbs.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:bc3dee0a27f24c08",
+      "lessonIds": [
+        "KA-C35-kutumba",
+        "KA-C35-snehita"
+      ],
+      "tex": "kannada/book/chapters/ch35-family-and-friends.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:4dcda7738f8fd19b",
+      "lessonIds": [
+        "KA-C36-magu",
+        "KA-C36-maga",
+        "KA-C36-magalu"
+      ],
+      "tex": "kannada/book/chapters/ch36-child-son-daughter.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:d930f5497451e5e3",
+      "lessonIds": [
+        "KA-C37-kannu",
+        "KA-C37-kivi",
+        "KA-C37-moogu",
+        "KA-C37-baayi"
+      ],
+      "tex": "kannada/book/chapters/ch37-face-words.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:6743c01296d112dd",
+      "lessonIds": [
+        "KA-C38-hrudaya"
+      ],
+      "tex": "kannada/book/chapters/ch38-heart.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:a86727c525b40543",
+      "lessonIds": [
+        "KA-C39-chaha",
+        "KA-C39-kaapi",
+        "KA-C39-haalu"
+      ],
+      "tex": "kannada/book/chapters/ch39-tea-coffee-milk.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:8b19ae8af2a3e681",
+      "lessonIds": [
+        "KA-C40-oota"
+      ],
+      "tex": "kannada/book/chapters/ch40-a-meal.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:51044be5ca538b91",

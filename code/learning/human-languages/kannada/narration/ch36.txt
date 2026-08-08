@@ -1,0 +1,97 @@
+Kannada, chapter 36: One Root, Three Endings.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+ಮಗು (magu) — "child," before it picks a gender.
+
+Warm-up.
+[pause 2 seconds]
+Snēhita and geḷeya were two words for one idea. This word is the opposite kind of pair-maker: one word that the next two lessons will split in two.
+
+You'll want to know: ಮಗು.
+ಮಗು — magu — baby, child (no gender specified).
+ಇದು ನನ್ನ ಮಗು. — idu nanna magu. — "This is my child."
+
+The word, taken apart: the plain root, before gender.
+ಮಗು (magu) goes back to Proto-Dravidian maka, "child" — a plain root with no gender marked on it at all. Hold that root in mind: the next lesson adds one ending to it and gets "son"; the one after adds a different ending and gets "daughter." Chapter 12 solved the parallel problem — telling siblings apart — with four completely separate words. This root solves a smaller problem the opposite way: one shape, several endings.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "idu nanna magu" — this is my child]
+[pause 8 seconds for the answer]
+[your turn — say: the root to hold onto — "maka"]
+[pause 8 seconds for the answer]
+[your turn — say: friend, then child — "snēhita … magu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "this is my child." (Idu nanna magu.) Does magu specify a gender? (No.) What is the Proto-Dravidian root underneath it, and what happens to it next? (maka — the next two lessons put different endings on it for "son" and "daughter.")
+
+
+Lesson 2 of 3.
+ಮಗ (maga) — "son," the same root with one vowel doing the work.
+
+Warm-up.
+[pause 2 seconds]
+Maga, magu — hold the root steady and change almost nothing.
+
+You'll want to know: ಮಗ.
+ಮಗ — maga — son.
+ಇವನು ನನ್ನ ಮಗ. — ivanu nanna maga. — "He is my son."
+Set beside magu: ಮಗು magu becomes ಮಗ maga. The same three letters, minus the length on the final vowel — the plain, inherent -a now standing for "male."
+
+The word, taken apart: one shape, worn from an older one.
+Maga descends from the same Proto-Dravidian maka as magu. The sisters carry a longer form for "son" — reconstructed as magan — and Kannada is the branch that wore the ending down to a single open vowel. Tamil keeps more of the shape: மகன் (makaṉ), "son."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ivanu nanna maga" — he is my son]
+[pause 8 seconds for the answer]
+[your turn — say: the near pair — "magu … maga"]
+[pause 8 seconds for the answer]
+[your turn — say: Kannada's worn form, then Tamil's fuller one — "maga … makaṉ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "he is my son." (Ivanu nanna maga.) How does maga differ from magu? (One vowel — the plain -a standing for "male.") What does Tamil's fuller form for "son" look like? (மகன் makaṉ — Kannada wore the ending down to just the vowel.)
+
+
+Lesson 3 of 3.
+ಮಗಳು (magaḷu) — "daughter," one more ending on the same root.
+
+Warm-up.
+[pause 2 seconds]
+Magu gave you the plain root, maga the male ending. One more ending closes the set.
+
+You'll want to know: ಮಗಳು.
+ಮಗಳು — magaḷu — daughter.
+ಇವಳು ನನ್ನ ಮಗಳು. — ivaḷu nanna magaḷu. — "She is my daughter."
+
+Grammar Lens: gender by ending, not by a new word.
+Line the three up:
+[a table of 3 rows, read aloud]
+ಮಗು magu means child, no gender.
+ಮಗ maga means son.
+ಮಗಳು magaḷu means daughter.
+One root, three endings. Chapter 12 solved a different split — older against younger sibling — the opposite way, with four unrelated words, ಅಣ್ಣ/ತಮ್ಮ and ಅಕ್ಕ/ತಂಗಿ sharing no root at all. Gender here rides on a suffix; age there needed a whole new word every time.
+
+The word, taken apart: matching Tamil almost exactly.
+Magaḷu continues Proto-Dravidian makaḷ, "daughter." Tamil மகள் (makaḷ) and Malayalam മകൾ (makaḷ) are close to identical to Kannada's own form — this branch of the family barely touched the word at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ivaḷu nanna magaḷu" — she is my daughter]
+[pause 8 seconds for the answer]
+[your turn — say: the set of three — "magu … maga … magaḷu"]
+[pause 8 seconds for the answer]
+[your turn — say: one root three endings, then four words no root — "maga, magaḷu … aṇṇa, tamma, akka, tangi"]
+[pause 8 seconds for the answer]
+[your turn — say: the sisters, near-identical — "magaḷu … makaḷ … makaḷ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "she is my daughter." (Ivaḷu nanna magaḷu.) Name the three words built on maka and what each means. (Magu — child; maga — son; magaḷu — daughter.) How does that differ from how Chapter 12 split siblings by age? (Chapter 12 used four unrelated words; this set uses one root and different endings.) How close is Tamil's word for daughter? (Nearly identical — makaḷ.)

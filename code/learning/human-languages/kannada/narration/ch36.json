@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 36,
+  "title": "One Root, Three Endings",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a9f129f06c399190",
+  "lessons": [
+    {
+      "id": "KA-C36-magu",
+      "sequence": 770,
+      "title": "ಮಗು (magu) — \"child,\" before it picks a gender",
+      "headword": "ಮಗು",
+      "romanization": "magu",
+      "gloss": "baby, child — gender-neutral, and the root that the next two lessons split by gender",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90185e269967727c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Snēhita and geḷeya were two words for one idea. This word is the opposite kind of pair-maker: one word that the next two lessons will split in two."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಗು — magu — baby, child (no gender specified)."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ನನ್ನ ಮಗು. — idu nanna magu. — \"This is my child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the plain root, before gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಗು (magu) goes back to Proto-Dravidian maka, \"child\" — a plain root with no gender marked on it at all. Hold that root in mind: the next lesson adds one ending to it and gets \"son\"; the one after adds a different ending and gets \"daughter.\" Chapter 12 solved the parallel problem — telling siblings apart — with four completely separate words. This root solves a smaller problem the opposite way: one shape, several endings."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"idu nanna magu\" — this is my child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"idu nanna magu\" — this is my child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root to hold onto — \"maka\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root to hold onto — \"maka\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "friend, then child — \"snēhita … magu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: friend, then child — \"snēhita … magu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this is my child.\" (Idu nanna magu.) Does magu specify a gender? (No.) What is the Proto-Dravidian root underneath it, and what happens to it next? (maka — the next two lessons put different endings on it for \"son\" and \"daughter.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C36-maga",
+      "sequence": 780,
+      "title": "ಮಗ (maga) — \"son,\" the same root with one vowel doing the work",
+      "headword": "ಮಗ",
+      "romanization": "maga",
+      "gloss": "son — the same root as \"child,\" with its ending changed",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dec55ffa3a323b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Maga, magu — hold the root steady and change almost nothing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಗ — maga — son."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇವನು ನನ್ನ ಮಗ. — ivanu nanna maga. — \"He is my son.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside magu: ಮಗು magu becomes ಮಗ maga. The same three letters, minus the length on the final vowel — the plain, inherent -a now standing for \"male.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: one shape, worn from an older one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Maga descends from the same Proto-Dravidian maka as magu. The sisters carry a longer form for \"son\" — reconstructed as magan — and Kannada is the branch that wore the ending down to a single open vowel. Tamil keeps more of the shape: மகன் (makaṉ), \"son.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ivanu nanna maga\" — he is my son",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ivanu nanna maga\" — he is my son]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near pair — \"magu … maga\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near pair — \"magu … maga\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kannada's worn form, then Tamil's fuller one — \"maga … makaṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Kannada's worn form, then Tamil's fuller one — \"maga … makaṉ\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he is my son.\" (Ivanu nanna maga.) How does maga differ from magu? (One vowel — the plain -a standing for \"male.\") What does Tamil's fuller form for \"son\" look like? (மகன் makaṉ — Kannada wore the ending down to just the vowel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C36-magalu",
+      "sequence": 790,
+      "title": "ಮಗಳು (magaḷu) — \"daughter,\" one more ending on the same root",
+      "headword": "ಮಗಳು",
+      "romanization": "magaḷu",
+      "gloss": "daughter — one more ending on the same root, where Chapter 12 needed four whole words to do a similar job",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fac2a2d47e37a4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Magu gave you the plain root, maga the male ending. One more ending closes the set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಗಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಗಳು — magaḷu — daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇವಳು ನನ್ನ ಮಗಳು. — ivaḷu nanna magaḷu. — \"She is my daughter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: gender by ending, not by a new word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Line the three up:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Kannada",
+                "means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ಮಗು magu means child, no gender.",
+                "ಮಗ maga means son.",
+                "ಮಗಳು magaḷu means daughter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One root, three endings. Chapter 12 solved a different split — older against younger sibling — the opposite way, with four unrelated words, ಅಣ್ಣ/ತಮ್ಮ and ಅಕ್ಕ/ತಂಗಿ sharing no root at all. Gender here rides on a suffix; age there needed a whole new word every time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: matching Tamil almost exactly",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Magaḷu continues Proto-Dravidian makaḷ, \"daughter.\" Tamil மகள் (makaḷ) and Malayalam മകൾ (makaḷ) are close to identical to Kannada's own form — this branch of the family barely touched the word at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ivaḷu nanna magaḷu\" — she is my daughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ivaḷu nanna magaḷu\" — she is my daughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the set of three — \"magu … maga … magaḷu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the set of three — \"magu … maga … magaḷu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one root three endings, then four words no root — \"maga, magaḷu … aṇṇa, tamma, akka, tangi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one root three endings, then four words no root — \"maga, magaḷu … aṇṇa, tamma, akka, tangi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sisters, near-identical — \"magaḷu … makaḷ … makaḷ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sisters, near-identical — \"magaḷu … makaḷ … makaḷ\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she is my daughter.\" (Ivaḷu nanna magaḷu.) Name the three words built on maka and what each means. (Magu — child; maga — son; magaḷu — daughter.) How does that differ from how Chapter 12 split siblings by age? (Chapter 12 used four unrelated words; this set uses one root and different endings.) How close is Tamil's word for daughter? (Nearly identical — makaḷ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

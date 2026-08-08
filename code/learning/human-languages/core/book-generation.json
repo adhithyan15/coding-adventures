@@ -1306,6 +1306,54 @@
       "scriptSet": "kannada-comparisons"
     },
     {
+      "language": "kannada",
+      "chapter": 35,
+      "title": "Family and Friends",
+      "label": "ch:ka-family-and-friends",
+      "output": "kannada/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "title": "One Root, Three Endings",
+      "label": "ch:ka-child-son-daughter",
+      "output": "kannada/book/chapters/ch36-child-son-daughter.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "title": "Four Words on the Face",
+      "label": "ch:ka-face-words",
+      "output": "kannada/book/chapters/ch37-face-words.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "title": "The Heart",
+      "label": "ch:ka-heart",
+      "output": "kannada/book/chapters/ch38-heart.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "title": "Tea, Coffee, Milk",
+      "label": "ch:ka-tea-coffee-milk",
+      "output": "kannada/book/chapters/ch39-tea-coffee-milk.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "title": "A Meal",
+      "label": "ch:ka-a-meal",
+      "output": "kannada/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "title": "Numbers One to Ten",

@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 35,
+  "title": "Family and Friends",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:cf4d737163378ab5",
+  "lessons": [
+    {
+      "id": "KA-C35-kutumba",
+      "sequence": 750,
+      "title": "ಕುಟುಂಬ (kuṭumba) — \"family,\" the word the household words never needed",
+      "headword": "ಕುಟುಂಬ",
+      "romanization": "kuṭumba",
+      "gloss": "family — the collective word Chapter 12's parents and siblings never needed, because each of them was already the name of one specific person",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:426a4f44bc8687c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nanage kannaḍa iṣṭa closed the last chapter on a sentence built from nothing but nouns. This chapter opens on the plainest nouns of all: the words for the people you would actually say that sentence to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕುಟುಂಬ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುಟುಂಬ — kuṭumba — family."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ನನ್ನ ಕುಟುಂಬ. — idu nanna kuṭumba. — \"This is my family.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Nanna, \"my,\" has been yours since Chapter 2."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the group word Chapter 12 never needed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕುಟುಂಬ is Sanskrit कुटुम्ब (kuṭumba), \"family, household,\" carried into Kannada whole — the same kind of loan as ಇಷ್ಟ and ಸಹಾಯ."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 12 gave you six words: ಅಪ್ಪ, ಅಮ್ಮ, and the four age-graded siblings ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ. Every one is native Dravidian, and not one of them means \"family\" — each names a single specific person. Kannada never inherited a word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"idu nanna kuṭumba\" — this is my family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"idu nanna kuṭumba\" — this is my family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six named people, then the borrowed group word — \"appa, amma, aṇṇa, tamma, akka, tangi … kuṭumba\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six named people, then the borrowed group word — \"appa, amma, aṇṇa, tamma, akka, tangi … kuṭumba\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nanage kannaḍa iṣṭa\" — once more, no verb in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nanage kannaḍa iṣṭa\" — once more, no verb in it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this is my family.\" (Idu nanna kuṭumba.) Is kuṭumba native Dravidian or a loan? (A Sanskrit loan, like iṣṭa and sahāya.) Name Chapter 12's six family words. (Appa, amma, aṇṇa, tamma, akka, tangi.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumba fills.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C35-snehita",
+      "sequence": 760,
+      "title": "ಸ್ನೇಹಿತ (snēhita) — \"friend,\" built out of the word for oil",
+      "headword": "ಸ್ನೇಹಿತ",
+      "romanization": "snēhita",
+      "gloss": "friend — built on the Sanskrit word for oil, sitting beside a native Dravidian word that means exactly the same thing",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8225512e39400e14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kuṭumba named the people you are born into. Not every important person in your life is one of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ನೇಹಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನೇಹಿತ — snēhita — friend (a woman friend is ಸ್ನೇಹಿತೆ, snēhite)."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇವನು ನನ್ನ ಸ್ನೇಹಿತ. — ivanu nanna snēhita. — \"He is my friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the word for oil, doing a second job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ನೇಹಿತ is Sanskrit स्नेहित (snēhita), built on स्नेह (snēha). Snēha's first meaning is not \"affection\" at all — it is \"oil, unctuousness, smoothness.\" Only from there did it stretch to \"fondness, love\": a substance that makes things slide smoothly together became the word for whatever binds two people the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada also holds an inherited word for the same idea, and it did not retire when the Sanskrit one arrived: ಗೆಳೆಯ (geḷeya, a male friend) and ಗೆಳತಿ (geḷati, a female friend) are ordinary, everyday Dravidian words, sitting right beside snēhita the way ನೆರವು sits beside sahāya."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ivanu nanna snēhita\" — he is my friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ivanu nanna snēhita\" — he is my friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the loan, then the native pair — \"snēhita … geḷeya, geḷati\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the loan, then the native pair — \"snēhita … geḷeya, geḷati\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oil, then affection — \"snēha: oil … snēha: love\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: oil, then affection — \"snēha: oil … snēha: love\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "family, then friend — \"kuṭumba … snēhita\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: family, then friend — \"kuṭumba … snēhita\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he is my friend.\" (Ivanu nanna snēhita.) What did snēha mean before it meant \"affection\"? (Oil, smoothness.) Name Kannada's native word for a friend. (ಗೆಳೆಯ geḷeya, or ಗೆಳತಿ geḷati for a woman.) Is kuṭumba the people you choose, or the people you're born into? (Born into — snēhita is who you choose.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
