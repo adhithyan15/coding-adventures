@@ -495,6 +495,19 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-035",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C39-creer",
+        "ES-C39-asi-que",
+        "ES-C39-deber",
+        "ES-C39-explicar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -684,13 +697,10 @@
       "relocates": {}
     },
     "SPINE-GIVE-REASONS": {
-      "segments": [],
-      "omits": [
-        "OPINION-I-THINK",
-        "CONNECTIVE-SO",
-        "MODAL-SHOULD",
-        "EXPLANATION-GIVE"
+      "segments": [
+        "ES-PATH-035"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-HANDLE-TRAVEL": {

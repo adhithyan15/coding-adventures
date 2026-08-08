@@ -331,6 +331,13 @@
       "output": "spanish/book/chapters/ch38-narrating.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 39,
+      "title": "Saying Why",
+      "label": "ch:spanish-giving-reasons",
+      "output": "spanish/book/chapters/ch39-giving-reasons.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",

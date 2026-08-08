@@ -2888,6 +2888,18 @@
       "tex": "spanish/book/chapters/ch38-narrating.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:61be0713ce7ea455",
+      "lessonIds": [
+        "ES-C39-creer",
+        "ES-C39-asi-que",
+        "ES-C39-deber",
+        "ES-C39-explicar"
+      ],
+      "tex": "spanish/book/chapters/ch39-giving-reasons.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:8cb1982f517a21f4",
