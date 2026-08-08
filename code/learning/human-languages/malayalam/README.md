@@ -66,8 +66,24 @@ pieces taught before the whole; and a book you can read straight through.
   budget is spent entirely on the past (*vannu*, *kaṇṭu*), and the chapter
   closes on **അറിയുക**, which will not take a subject at all. In the book, and
   drivable end to end.
+- **Chapter 33 — The Mind and the Page** ([`lessons/ML-C33-*`](./lessons/)):
+  cintikkuka (think), manassilākkuka (understand), vāyikkuka (read), eḻutuka
+  (write). Two of the four are Sanskrit, and Malayalam tells you so out loud:
+  the **ഇ** of **‑ഇക്കുക** and the **‑ഇച്ചു** past mark a borrowing.
+  **മനസ്സിലാക്കുക** comes apart into *manassŭ* + *‑il* + *ākkuka*, "to put in the
+  mind," and its twin **എനിക്ക് മനസ്സിലായി** puts the understander back in the
+  dative. **വായിക്കുക** looks built on *vāy*, "mouth," and is not — Gundert
+  marks it a *tadbhava* of Sanskrit *vac*. **എഴുതുക** is Tamil **எழுது**
+  unchanged, carrying the **ഴ** Kannada and Telugu lost along with the verb.
+- **Chapter 34 — Taking, Asking, Helping, Liking** ([`lessons/ML-C34-*`](./lessons/)):
+  eṭukkuka (take), cōdikkuka (ask), sahāyikkuka (help), *enikku malayāḷaṁ
+  iṣṭamāṇŭ* (like). **എടുക്കുക** corrects the Chapter 32 rule — the stamp is the
+  **ഇ**, not the doubled **ക്ക**. **ചോദിക്കുക** is Sanskrit *cud*, "to urge,"
+  and Malayalam needed it because **കേൾക്കുക** had narrowed to hearing where
+  Tamil's *kēḷ* still asks. The chapter closes on the sentence that will not let
+  you be its subject at all.
 
-All thirty-nine later lessons remain below five effective minutes.
+All forty-seven later lessons remain below five effective minutes.
 
 ## Book / fonts
 

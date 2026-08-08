@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:9563f4beec45cba8",
   "summary": {
-    "totalLessons": 1345,
+    "totalLessons": 1353,
     "voice": 893,
-    "sight": 399,
+    "sight": 407,
     "pen": 53,
     "drivableLessons": 893,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 424,
+    "chapterCount": 426,
     "drivablePrefixTotal": 710,
     "fullyDrivableChapters": 285,
-    "unstartableChapters": 102,
+    "unstartableChapters": 104,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -3931,11 +3931,11 @@
     },
     {
       "language": "malayalam",
-      "lessonCount": 70,
+      "lessonCount": 78,
       "voice": 41,
-      "sight": 29,
+      "sight": 37,
       "pen": 0,
-      "drivablePercent": 59,
+      "drivablePercent": 53,
       "drivablePrefixTotal": 34,
       "modalities": [
         "voice",
@@ -4451,6 +4451,34 @@
             "ML-C32-kaanuka",
             "ML-C32-ariyuka"
           ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ML-C33-cintikkuka",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ML-C34-edukkuka",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -16792,6 +16820,110 @@
         "no-visual-dependency"
       ],
       "sourceHash": "fnv1a64:6808949bcdfecb1d"
+    },
+    {
+      "id": "ML-C33-cintikkuka",
+      "language": "malayalam",
+      "chapter": 33,
+      "sequence": 710,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fb9950eafd8d75f9"
+    },
+    {
+      "id": "ML-C33-manassilaakkuka",
+      "language": "malayalam",
+      "chapter": 33,
+      "sequence": 720,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:849a0711b2d645e3"
+    },
+    {
+      "id": "ML-C33-vaayikkuka",
+      "language": "malayalam",
+      "chapter": 33,
+      "sequence": 730,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2fce0d3acec6edee"
+    },
+    {
+      "id": "ML-C33-ezhutuka",
+      "language": "malayalam",
+      "chapter": 33,
+      "sequence": 740,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2b0a89276b63a0fc"
+    },
+    {
+      "id": "ML-C34-edukkuka",
+      "language": "malayalam",
+      "chapter": 34,
+      "sequence": 750,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b9dbf6266c79e350"
+    },
+    {
+      "id": "ML-C34-codikkuka",
+      "language": "malayalam",
+      "chapter": 34,
+      "sequence": 760,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0567ce8cc6bc9ec7"
+    },
+    {
+      "id": "ML-C34-sahaayikkuka",
+      "language": "malayalam",
+      "chapter": 34,
+      "sequence": 770,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5629cfa7a0ec5d31"
+    },
+    {
+      "id": "ML-C34-ishtam",
+      "language": "malayalam",
+      "chapter": 34,
+      "sequence": 780,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:26559609ae66518f"
     },
     {
       "id": "MR-C01-baram",

@@ -1265,6 +1265,22 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 33,
+      "title": "The Mind and the Page",
+      "label": "ch:ml-mind-and-page",
+      "output": "malayalam/book/chapters/ch33-mind-and-page.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 34,
+      "title": "Taking, Asking, Helping, Liking",
+      "label": "ch:ml-taking-asking-helping-liking",
+      "output": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "arabic",
       "chapter": 3,
       "title": "How Are You?",
