@@ -32,10 +32,18 @@ your slave" (← Latin *sclavus*, English *slave*/*Slav*).
   *aspettare*, *incontrare*); and the chapter that splits English "play" in two
   (*giocare* / *suonare*) before *ottenere* and *rispondere*. The track realizes
   **21 of the 40** core verb concepts.
+- **Chapters 22–25**: the track's first noun-only tranche, fifteen everyday
+  words targeting the HL09 pre-A1 vocabulary gate. Coffee, tea, milk and sugar
+  at the table (*il caffè*, *il tè*, *il latte*, *lo zucchero* — three
+  loanwords and one inherited word); a friend, a family, a name and a person
+  (*l'amico*/*l'amica*, *la famiglia*, *il nome*, *la persona* — the last
+  always grammatically feminine, whoever it names); and the rest of the body
+  Chapter 17 promised (*il cuore*, *l'occhio*, *l'orecchio*, *la bocca*, *il
+  naso*, *lo stomaco*, *la gola*).
 
 ## Book
 
-Chapters 2–21 are generated from the canonical lessons by `npm run
+Chapters 2–25 are generated from the canonical lessons by `npm run
 generate:books` in the `human-language-data` package; do not edit those chapter
 files by hand.
 
@@ -55,7 +63,7 @@ entry states, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-Chapters **2–21** are authored, which is every Italian chapter that owns a
+Chapters **2–25** are authored, which is every Italian chapter that owns a
 `core/book-generation.json` target. Chapter **1** is deliberately absent: its
 lessons are still schema v1 with no declared `practises.knowledge`, so there is
 no honest payoff to point at, and stubbing one would destroy the signal the HL05
@@ -79,8 +87,17 @@ Chapter 19's *prendere* and *chiedere*.
 Measured on the committed corpus, none of the 44 atoms these four chapters
 introduce misses a reinforcement window, only three are never revisited (the
 three the track's final lesson introduces, which nothing later can reach), and
-none of the four makes a forward reference. Across the whole track the
-never-revisited count is **14 of 156** taught atoms.
+none of the four makes a forward reference.
+
+Chapters 22–25 (the pre-A1 noun tranche, HL09) repeat the same pattern one
+level down: each chapter's own last lesson reaches back into the chapter
+before it — *amico* into *zucchero*, *cuore* into *persona*, *stomaco* into
+*naso* and *zucchero*, *gola* into the whole body set — closing eleven of the
+prior wave's 24 under-reinforced pre-A1 atoms along the way, and introducing
+zero forward references. As with Chapters 18–21, the tranche's own final
+lesson (`IT-C25-gola`) introduces three atoms nothing later can reach yet.
+Across the whole track the never-revisited count is **19 of 197** taught
+atoms.
 
 ## Files
 

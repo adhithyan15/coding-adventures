@@ -365,6 +365,64 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "GE-PATH-031",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "GE-C28-kaffee",
+        "GE-C28-tee",
+        "GE-C28-milch"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-031-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-032",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GE-C29-freund",
+        "GE-C29-freundin",
+        "GE-C29-familie"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-032-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-033",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C30-auge",
+        "GE-C30-ohr",
+        "GE-C30-mund",
+        "GE-C30-nase"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-033-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GE-PATH-034",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GE-C31-arm",
+        "GE-C31-finger",
+        "GE-C31-fuss",
+        "GE-C31-herz"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-034-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -401,7 +459,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "GE-PATH-007",
-        "GE-PATH-009"
+        "GE-PATH-009",
+        "GE-PATH-032"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -417,7 +476,9 @@
         "GE-PATH-002",
         "GE-PATH-008",
         "GE-PATH-012",
-        "GE-PATH-022"
+        "GE-PATH-022",
+        "GE-PATH-033",
+        "GE-PATH-034"
       ],
       "omits": [
         "WORD-WELL"
@@ -427,7 +488,8 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "GE-PATH-016",
-        "GE-PATH-024"
+        "GE-PATH-024",
+        "GE-PATH-031"
       ],
       "omits": [],
       "relocates": {}
@@ -836,6 +898,60 @@
       "lessons": [
         "GE-C22-hund-katze",
         "GE-C23-gruen-gelb"
+      ]
+    },
+    {
+      "id": "GE-EXT-031-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for coffee, tea, or milk in German using the request pattern I already know.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C28-kaffee",
+        "GE-C28-tee",
+        "GE-C28-milch"
+      ]
+    },
+    {
+      "id": "GE-EXT-032-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name a friend, male or female, and my family in German.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C29-freund",
+        "GE-C29-freundin",
+        "GE-C29-familie"
+      ]
+    },
+    {
+      "id": "GE-EXT-033-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the eye, ear, mouth, and nose in German.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C30-auge",
+        "GE-C30-ohr",
+        "GE-C30-mund",
+        "GE-C30-nase"
+      ]
+    },
+    {
+      "id": "GE-EXT-034-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the arm, finger, foot, and heart in German, completing the body set Chapter 17 named but did not finish teaching.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C31-arm",
+        "GE-C31-finger",
+        "GE-C31-fuss",
+        "GE-C31-herz"
       ]
     }
   ]

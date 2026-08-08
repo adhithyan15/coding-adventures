@@ -541,6 +541,34 @@
       "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
     },
     {
+      "language": "french",
+      "chapter": 28,
+      "title": "Coffee, Tea, Milk, Sugar",
+      "label": "ch:fr-coffee-tea-milk-sugar",
+      "output": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "title": "The People You Introduce",
+      "label": "ch:fr-the-people-you-introduce",
+      "output": "french/book/chapters/ch29-the-people-you-introduce.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "title": "Cheese, Butter, Salt, Egg",
+      "label": "ch:fr-cheese-butter-salt-egg",
+      "output": "french/book/chapters/ch30-cheese-butter-salt-egg.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "title": "Eyes, Nose, Mouth, Stomach",
+      "label": "ch:fr-eyes-nose-mouth-stomach",
+      "output": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "title": "Head and Hand",
@@ -616,6 +644,34 @@
       "title": "Going, Running, Opening, Closing",
       "label": "ch:ge-moving-verbs",
       "output": "german/book/chapters/ch27-moving-verbs.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 28,
+      "title": "Coffee, Tea, and Milk",
+      "label": "ch:ge-coffee-tea-milk",
+      "output": "german/book/chapters/ch28-coffee-tea-milk.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 29,
+      "title": "Friend and Family",
+      "label": "ch:ge-friend-and-family",
+      "output": "german/book/chapters/ch29-friend-and-family.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 30,
+      "title": "Eyes, Ears, Mouth, Nose",
+      "label": "ch:ge-face-parts",
+      "output": "german/book/chapters/ch30-face-parts.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 31,
+      "title": "Arm, Finger, Foot, Heart",
+      "label": "ch:ge-hand-table-complete",
+      "output": "german/book/chapters/ch31-hand-table-complete.tex"
     },
     {
       "language": "gujarati",
@@ -1064,6 +1120,34 @@
       "title": "Two Ways to Play, and Two Verbs That Bend",
       "label": "ch:it-play-get-answer",
       "output": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 22,
+      "title": "Coffee, Tea, Milk, and Sugar",
+      "label": "ch:it-coffee-tea-milk-sugar",
+      "output": "italian/book/chapters/ch22-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "title": "Friends, Family, and a Name",
+      "label": "ch:it-friends-family-name",
+      "output": "italian/book/chapters/ch23-friends-family-name.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "title": "Heart, Eyes, Ears, and Mouth",
+      "label": "ch:it-heart-eyes-ears-mouth",
+      "output": "italian/book/chapters/ch24-heart-eyes-ears-mouth.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "title": "Nose, Stomach, and Throat",
+      "label": "ch:it-nose-stomach-throat",
+      "output": "italian/book/chapters/ch25-nose-stomach-throat.tex"
     },
     {
       "language": "japanese",
@@ -2069,6 +2153,34 @@
       "title": "Answering, Meeting, and Three Ways to Play",
       "label": "ch:pt-answering-meeting-playing",
       "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 23,
+      "title": "Asking for Something to Drink",
+      "label": "ch:pt-coffee-tea-milk",
+      "output": "portuguese/book/chapters/ch23-coffee-tea-milk.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 24,
+      "title": "Cheese, Egg, Rice, and Sugar",
+      "label": "ch:pt-cheese-egg-rice-sugar",
+      "output": "portuguese/book/chapters/ch24-cheese-egg-rice-sugar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 25,
+      "title": "The People You Introduce",
+      "label": "ch:pt-people-you-introduce",
+      "output": "portuguese/book/chapters/ch25-people-you-introduce.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 26,
+      "title": "The Body, Asking How You Are",
+      "label": "ch:pt-body-how-are-you",
+      "output": "portuguese/book/chapters/ch26-body-how-are-you.tex"
     },
     {
       "language": "punjabi",

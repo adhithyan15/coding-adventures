@@ -1194,6 +1194,74 @@
       "jsonHash": "fnv1a64:3ba4f55eaf90446d"
     },
     {
+      "language": "french",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:d00ed4930d14c8e9",
+      "lessonIds": [
+        "FR-C28-cafe",
+        "FR-C28-the",
+        "FR-C28-lait",
+        "FR-C28-sucre"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch28.txt",
+      "json": "french/narration/ch28.json",
+      "textHash": "fnv1a64:b2c109c46c98f6d8",
+      "jsonHash": "fnv1a64:0c5585236ad52f3e"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:220193efe18b704a",
+      "lessonIds": [
+        "FR-C29-ami",
+        "FR-C29-famille",
+        "FR-C29-enfant",
+        "FR-C29-personne"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch29.txt",
+      "json": "french/narration/ch29.json",
+      "textHash": "fnv1a64:d56fbf3d665b4d9d",
+      "jsonHash": "fnv1a64:1aa7e592da9927b9"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:80da4be021458867",
+      "lessonIds": [
+        "FR-C30-fromage",
+        "FR-C30-beurre",
+        "FR-C30-sel",
+        "FR-C30-oeuf"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch30.txt",
+      "json": "french/narration/ch30.json",
+      "textHash": "fnv1a64:01da32a9214c0415",
+      "jsonHash": "fnv1a64:5afda570a9f674bd"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:338fa1f1f48d96bb",
+      "lessonIds": [
+        "FR-C31-oeil",
+        "FR-C31-nez",
+        "FR-C31-bouche",
+        "FR-C31-ventre"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch31.txt",
+      "json": "french/narration/ch31.json",
+      "textHash": "fnv1a64:fbe5fa982de525fa",
+      "jsonHash": "fnv1a64:3ff87a738c13e9ba"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",
@@ -1635,6 +1703,72 @@
       "json": "german/narration/ch27.json",
       "textHash": "fnv1a64:70899409818d857b",
       "jsonHash": "fnv1a64:81f8b10789084d45"
+    },
+    {
+      "language": "german",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:72138ddefaa606ae",
+      "lessonIds": [
+        "GE-C28-kaffee",
+        "GE-C28-tee",
+        "GE-C28-milch"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch28.txt",
+      "json": "german/narration/ch28.json",
+      "textHash": "fnv1a64:de539fb4ff0d3752",
+      "jsonHash": "fnv1a64:50b299ea302a3540"
+    },
+    {
+      "language": "german",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:9235ee0c6650b4d7",
+      "lessonIds": [
+        "GE-C29-freund",
+        "GE-C29-freundin",
+        "GE-C29-familie"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch29.txt",
+      "json": "german/narration/ch29.json",
+      "textHash": "fnv1a64:db0443b188232973",
+      "jsonHash": "fnv1a64:e234a59397ad2f76"
+    },
+    {
+      "language": "german",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:3d76ed21c25da698",
+      "lessonIds": [
+        "GE-C30-auge",
+        "GE-C30-ohr",
+        "GE-C30-mund",
+        "GE-C30-nase"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch30.txt",
+      "json": "german/narration/ch30.json",
+      "textHash": "fnv1a64:21ca7448e9ca583a",
+      "jsonHash": "fnv1a64:946e736c1e37337f"
+    },
+    {
+      "language": "german",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:a016d74815f78532",
+      "lessonIds": [
+        "GE-C31-arm",
+        "GE-C31-finger",
+        "GE-C31-fuss",
+        "GE-C31-herz"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch31.txt",
+      "json": "german/narration/ch31.json",
+      "textHash": "fnv1a64:d94003c2bce0d255",
+      "jsonHash": "fnv1a64:00dff966fd9cac7b"
     },
     {
       "language": "gujarati",
@@ -2761,6 +2895,73 @@
       "json": "italian/narration/ch21.json",
       "textHash": "fnv1a64:61092490c4f28364",
       "jsonHash": "fnv1a64:6cb1830b6592312d"
+    },
+    {
+      "language": "italian",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:77ad59126ebc23a1",
+      "lessonIds": [
+        "IT-C22-caffe",
+        "IT-C22-te",
+        "IT-C22-latte",
+        "IT-C22-zucchero"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "italian/narration/ch22.txt",
+      "json": "italian/narration/ch22.json",
+      "textHash": "fnv1a64:ea42855fc0460295",
+      "jsonHash": "fnv1a64:7e327e6039848643"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:8df82c6158f61973",
+      "lessonIds": [
+        "IT-C23-amico-amica",
+        "IT-C23-famiglia",
+        "IT-C23-nome",
+        "IT-C23-persona"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "italian/narration/ch23.txt",
+      "json": "italian/narration/ch23.json",
+      "textHash": "fnv1a64:4c763763d2a5a3fa",
+      "jsonHash": "fnv1a64:d274b3f4431b7445"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:7670302fce0c6d70",
+      "lessonIds": [
+        "IT-C24-cuore",
+        "IT-C24-occhio",
+        "IT-C24-orecchio",
+        "IT-C24-bocca"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch24.txt",
+      "json": "italian/narration/ch24.json",
+      "textHash": "fnv1a64:30372e50abd8906b",
+      "jsonHash": "fnv1a64:5245fdc651becec5"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:58c18f6ff0de8d04",
+      "lessonIds": [
+        "IT-C25-naso",
+        "IT-C25-stomaco",
+        "IT-C25-gola"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "italian/narration/ch25.txt",
+      "json": "italian/narration/ch25.json",
+      "textHash": "fnv1a64:28b3b63f3eac83d2",
+      "jsonHash": "fnv1a64:86c0083dbc74c30a"
     },
     {
       "language": "japanese",
@@ -5135,6 +5336,73 @@
       "json": "portuguese/narration/ch22.json",
       "textHash": "fnv1a64:b8ee21241894440c",
       "jsonHash": "fnv1a64:bc2e8b2a10271c9b"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:728dab4d688bf937",
+      "lessonIds": [
+        "PT-C23-cafe",
+        "PT-C23-cha",
+        "PT-C23-leite"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "portuguese/narration/ch23.txt",
+      "json": "portuguese/narration/ch23.json",
+      "textHash": "fnv1a64:f01d4f833738c658",
+      "jsonHash": "fnv1a64:69409caf69142bad"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:5aa37243ee8e4e17",
+      "lessonIds": [
+        "PT-C24-queijo",
+        "PT-C24-ovo",
+        "PT-C24-arroz",
+        "PT-C24-acucar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch24.txt",
+      "json": "portuguese/narration/ch24.json",
+      "textHash": "fnv1a64:7aa879b1b380602b",
+      "jsonHash": "fnv1a64:83277ac439c02cd0"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:9a537968b4d88274",
+      "lessonIds": [
+        "PT-C25-amigo",
+        "PT-C25-familia",
+        "PT-C25-homem",
+        "PT-C25-mulher"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch25.txt",
+      "json": "portuguese/narration/ch25.json",
+      "textHash": "fnv1a64:b4d8756296dbeb80",
+      "jsonHash": "fnv1a64:783fd5fb76a1dfba"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:67dfc1fb894195b8",
+      "lessonIds": [
+        "PT-C26-olho",
+        "PT-C26-orelha",
+        "PT-C26-boca",
+        "PT-C26-coracao"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch26.txt",
+      "json": "portuguese/narration/ch26.json",
+      "textHash": "fnv1a64:90f475fabfaa0cd2",
+      "jsonHash": "fnv1a64:7010daea85198e3d"
     },
     {
       "language": "punjabi",

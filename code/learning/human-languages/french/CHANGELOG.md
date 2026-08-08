@@ -1,5 +1,72 @@
 # Changelog
 
+## Sixteen pre-A1 nouns, and what the level gate did — 2026-08-08
+
+- Authored **Chapters 28–31**: sixteen everyday nouns, one per lesson, all
+  filed under pre-A1 spine nodes through new `FR-PATH-025..028` segments and
+  `FR-EXT-025..028-LANGUAGE-SPECIFIC` extensions:
+
+  | Chapter | Spine node | Words |
+  |---|---|---|
+  | 28 Coffee, Tea, Milk, Sugar | `SPINE-POLITE-REQUEST-REPAIR` | café, thé, lait, sucre |
+  | 29 The People You Introduce | `SPINE-EXCHANGE-NAMES` | ami/amie, famille, enfant, personne |
+  | 30 Cheese, Butter, Salt, Egg | `SPINE-POLITE-REQUEST-REPAIR` | fromage, beurre, sel, œuf |
+  | 31 Eyes, Nose, Mouth, Stomach | `SPINE-CHECK-WELLBEING` | œil/yeux, nez, bouche, ventre |
+
+  This continues the pre-A1 vocabulary probe HL-C53 ran on Hindi, Arabic and
+  Tamil: `vocabularyOf()` counts distinct `headword:` strings, one per
+  lesson, so sixteen lessons move `levelGate.tracks[french].vocabulary` by
+  exactly sixteen — 26 → 42 (of the 300 target), shortfall 274 → 258.
+- **Checked against the lessons directory before writing, not assumed.**
+  *l'eau*, *le vin*, *le pain*, *le père/la mère*, *le frère/la sœur*,
+  *la tête* and *la main* are already taught; this tranche adds only the
+  words genuinely missing.
+- **Gender and elision made explicit, never an afterthought.** Every noun
+  carries its article at the point of teaching. `FR-GRAMMAR-ELISION-ARTICLE-02`
+  formalises, for the first time as its own atom, the *le/la → l'* rule
+  already used quietly at *l'eau* (Chapter 11) — introduced at *l'ami*, reused
+  at *l'enfant*, *l'œuf* and *l'œil*. Chapter 29 lines up four different
+  relationships between grammatical gender and the person named: *l'ami* /
+  *l'amie* changes with its referent, *la famille* is fixed regardless,
+  *l'enfant* is one spelling under two articles, *la personne* is fixed
+  feminine even naming a man.
+- **Cognates verified, not assumed.** *sel*/*salt*, *œuf*/*egg* and
+  *nez*/*nose* are genuine common-descent cousins from a shared PIE root;
+  *lait*/*milk* share no root at all; *café*/*coffee* and *beurre*/*butter*
+  are borrowings, not inheritances — and *café* and *thé* are a matched pair
+  with opposite stories, one word taking a single road through Ottoman
+  Turkish, the other forking in two depending which Chinese port a trader
+  dealt with.
+- **Etymology corrected against sources during authoring:** the "Roman
+  soldiers were paid in salt" story behind *salary* appears in no ancient
+  source and is recorded as a later legend, not fact; *persona* = "sound
+  through" is flagged as doubted on phonetic grounds, with Etruscan *phersu*
+  given as the likelier root; *boútūron* "cow-cheese" (behind *beurre*/
+  *butter*) is treated as a probable folk-reshaping of a foreign word, since
+  butter was never native to Greece or Rome.
+- **Household objects considered and dropped**, matching the finding all
+  three prior tranches reported independently: the seven pre-A1 spine nodes
+  are all social speech acts and hold no concept for a concrete object.
+- **Reinforcement, closed to zero.** Every lesson practises the one to three
+  lessons before it; each chapter's payoff reaches back further —
+  `FR-C28-sucre` recovers *si* and the *langue d'oïl* / *langue d'oc* split
+  from Chapter 18; `FR-C29-personne` closes a four-way gender synthesis and
+  reassesses Chapter 18's *non*; `FR-C30-oeuf` reaches to Chapter 29's
+  elision rule; `FR-C31-ventre`, the tranche's grand payoff, names one word
+  from each new chapter and re-closes three Chapter 17 *tête* atoms nothing
+  had revisited since it was written. All nine pre-A1 atoms the continuity
+  ledger reported as revisited fewer than twice are now revisited at least
+  twice: `levelGate.tracks[french]` reinforcement blocker clears from 9 to 0.
+- All sixteen lessons derive `coreModality: voice`; the book compiles under
+  XeLaTeX at 156 pages with zero `Missing character` warnings. Two raw glyphs
+  caught during authoring and fixed before commit: *ȳ* (in *būtȳrum*,
+  *tȳrós*, *cȳse*) has no Latin Modern Roman glyph, simplified to *y*; a
+  literal IPA *ɔ* and bracketed IPA notation were removed in favour of plain
+  respelling, matching house style.
+- The atom-budget blocker (3 lessons: `FR-C17-main`, `FR-C17-tete`,
+  `FR-C18-oui`) is pre-existing debt from before this branch and is
+  untouched.
+
 ## Eight verbs no track had ever taught — 2026-08-07
 
 - Authored **Chapters 26 and 27**: eight canonical verb concepts that **no

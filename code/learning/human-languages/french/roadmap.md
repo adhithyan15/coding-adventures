@@ -236,6 +236,82 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   "stop," Spanish *firmar* "sign," while Spanish and Portuguese close with
   **bolt** verbs from elsewhere. **Authored.**
 
+- **Ch. 28 — Coffee, tea, milk, sugar**: ***le café*** (`FR-C28-cafe`) ← Ottoman
+  Turkish *kahve* ← Arabic *qahwa*, once "wine" in pre-Islamic Arabia, via
+  Italian *caffè* — the same borrowing at every European stop, French *café*,
+  English *coffee*, German *Kaffee* alike → ***le thé*** (`FR-C28-the`), the
+  opposite story: Mandarin *chá* went overland into Persian, Arabic and Hindi
+  while Hokkien *tê*, bought at the port of Amoy, went by Dutch ship into
+  Dutch *thee*, French *thé*, English *tea* → ***le lait*** (`FR-C28-lait`) ←
+  Latin *lac*, stem *lact-*, **inherited**, not borrowed; English *lactic/
+  lactose/lactate* are learned cousins of *lait*, but English *milk* shares no
+  root with it at all → ***le sucre*** (`FR-C28-sucre`), the payoff ← Arabic
+  *sukkar* ← Persian *shakar* ← Sanskrit *śárkarā* "grit, gravel" — a
+  *different* Arabic word from *café*'s *qahwa*, so the two share a language
+  of transmission, not a root; closes with the lean that French drink-words
+  default masculine, broken by *l'eau*'s feminine, and reassesses Chapter
+  18's *si* (the "yes" that contradicts a negative) and the *langue d'oïl* /
+  *langue d'oc* split. **Authored.**
+- **Ch. 29 — The people you introduce**: ***l'ami / l'amie***
+  (`FR-C29-ami`) ← Latin *amicus/amica*, built on *amāre* "to love" →
+  *amicable*, *amiable*, *amity*; formalises, for the first time as its own
+  atom, the *le/la → l'* elision already used quietly at *l'eau* (Ch. 11) and
+  in *j'ai* → ***la famille*** (`FR-C29-famille`) ← *familia*, "the
+  household," built on *famulus* "servant" — Roman *familia* named
+  **everyone under one roof**, servants included, broadening to "relatives"
+  only because relatives usually lived there too → ***l'enfant***
+  (`FR-C29-enfant`) ← *īnfāns*, "not speaking" (*in-* + *fārī*) — Latin had
+  already widened the word past babyhood before French existed, so French
+  didn't narrow English's *infant*, it kept the older wide sense forward; one
+  spelling, gender shown only by *un/une* → ***la personne***
+  (`FR-C29-personne`), the payoff ← *persona*, a theatrical mask, from
+  Etruscan *phersu* (probably ← Greek *prósōpon* "face"); the tidy "sound
+  through" story (*per-* + *sonāre*) is flagged as doubted on phonetic
+  grounds. **Always feminine**, even naming a man — gender that has come
+  loose from sex entirely — and *ne … personne* flips it to "nobody." Closes
+  with all four words' gender patterns lined up side by side, and reassesses
+  Chapter 18's *non* (a sound contrast: doubled *-nn-* blocks the nasal *non*
+  has) and its *ne … pas* negation. **Authored.**
+- **Ch. 30 — Cheese, butter, salt, egg**: ***le fromage*** (`FR-C30-fromage`)
+  ← Medieval Latin *formāticum*, "a thing made in a mould" ← *forma* — French
+  alone named the cheese for the mould; Spanish *queso*, Portuguese *queijo*
+  and English *cheese/casein* all continue Latin *caseus* instead, so
+  *fromage* and *cheese* are **not** cousins → ***le beurre***
+  (`FR-C30-beurre`) ← Latin *būtyrum* ← Greek *boútūron*, usually parsed
+  "cow-cheese" (*boûs* + *tyrós*) but butter was never native to Greece or
+  Rome, so the compound is plausibly a folk-reshaping of a foreign,
+  possibly Scythian, word; English *butter* borrows the identical Latin
+  word — one loanword, arriving twice, not two coinages → ***le sel***
+  (`FR-C30-sel`) ← Latin *sal*, **inherited**, and a genuine cousin of
+  English *salt* (both from PIE **sal-*, not a borrowing either way, unlike
+  *lait*/*milk*); the "Roman soldiers paid in salt" story behind *salarium* /
+  *salary* is checked and found in **no ancient source** — a later legend
+  attached to a real word → ***l'œuf*** (`FR-C30-oeuf`), the payoff ← Latin
+  *ovum*, from PIE **h₂ōwyóm*, a genuine cousin of English *egg* (via Old
+  Norse/Germanic), the same relationship as *sel/salt*; *un œuf* keeps a
+  pronounced final *f*, *les œufs* drops it entirely — the one French noun in
+  this book whose final consonant survives in the singular and vanishes in
+  the plural. **Authored.**
+- **Ch. 31 — Eyes, nose, mouth, stomach**: ***l'œil* / *les yeux***
+  (`FR-C31-oeil`) ← Vulgar Latin *oclus* (← *oculus*); *yeux* is the
+  **regular** sound outcome of Latin's plural *oculōs* — it only *looks*
+  irregular because *œil*'s own singular eroded further and faster, the same
+  pattern as *le ciel/les cieux* and *le travail/les travaux* → ***le nez***
+  (`FR-C31-nez`) ← *nāsus*, from PIE **nas-*, a genuine cousin of English
+  *nose* (English *nasal* is instead a **learned** borrowing, beside native
+  *nose*, the same relationship as *lactic* beside *milk*) → ***la bouche***
+  (`FR-C31-bouche`) ← *bucca*, "cheek" — Classical Latin's real word for
+  mouth, *ōs*, collided in sound with *os* "bone" once vowel length stopped
+  being pronounced, and the slangy stand-in *bucca* took over; English keeps
+  *bucca*'s original sense in the narrow technical *buccal* → ***le ventre***
+  (`FR-C31-ventre`), the tranche's grand payoff ← *venter*, stem *ventr-* →
+  *ventral*, *ventriloquist* ("belly-speaker," *venter* + *loquī*); its nasal
+  is a different vowel from *la main*'s *-ain* from Chapter 17. Closes by
+  naming one word from each of the four new chapters (*café, ami, œuf,
+  ventre*) and re-closing three Chapter 17 *tête* atoms — feminine gender,
+  the soldiers'-slang pot story, the circumflex's lost *s* — that nothing had
+  revisited since Chapter 17 was written. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

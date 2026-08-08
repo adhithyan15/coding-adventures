@@ -232,11 +232,53 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   band with *chiesto*, which is Ch. 17's *mano* principle again — an "irregular"
   form is a regular one from a system you can no longer see. **Authored.**
 
+- **Ch. 22 — Coffee, tea, milk, and sugar**: ***caffè*** (`IT-C22-caffe`) ←
+  Ottoman Turkish *kahve* ← Arabic *qahwa* → coffee/café/Kaffee, the pan-European
+  loan → ***tè*** (`IT-C22-te`) ← Hokkien Chinese *tê*, carried by sea via Dutch
+  *thee* (against the *chai* languages' overland route from Mandarin/Cantonese
+  *chá*) → ***latte*** (`IT-C22-latte`) ← Latin *lac, lactis* → lactic/lactose/
+  **lettuce** (← *lactuca*, "the milky plant") — inherited, not borrowed →
+  ***zucchero*** (`IT-C22-zucchero`, the payoff) ← Arabic *sukkar* (← Persian
+  *shakar* ← Sanskrit *śarkarā*), by a different road than *caffè* — through Old
+  French *sucre*, the same route English **sugar** took. First noun in the track
+  that actually needs Ch. 1's second article, *lo*, on real vocabulary rather
+  than an invented example. **Authored.**
+- **Ch. 23 — Friends, family, and a name**: ***l'amico, l'amica***
+  (`IT-C23-amico-amica`) ← Latin *amicus/amica*, from *amāre* "to love" →
+  amiable/amicable/amity, and English **enemy** ← *inimicus*, "not-a-friend" →
+  ***famiglia*** (`IT-C23-famiglia`) ← Latin *familia*, originally the whole
+  household including servants (← *famulus*) → family/familiar → ***nome***
+  (`IT-C23-nome`) ← Latin *nomen, nominis* → noun/nominate/pronoun/anonymous/
+  renown — the word Ch. 3's *mi chiamo* ("I call myself") always talked around
+  → ***persona*** (`IT-C23-persona`, the payoff) — a Latin word for a
+  theatrical mask, further origin disputed (Etruscan *phersu* over the old
+  *per- + sonāre* folk etymology) → person/personal/personnel/parson —
+  grammatically **feminine always**, independent of the referent's sex, a
+  sharper case of the gender-vs-reality gap Ch. 17's *mano* first raised.
+  **Authored.**
+- **Ch. 24 — Heart, eyes, ears, and mouth**: ***cuore*** (`IT-C24-cuore`) ←
+  Latin *cor, cordis* → cordial/courage/accord/concord/discord/record → paying
+  off Ch. 17's "next: the rest of the body" → ***occhio*** (`IT-C24-occhio`)
+  ← Latin *oculus*, crushed by the regular *-c'l- → -cchi-* sound-law →
+  ocular/oculist/binoculars/monocle → ***orecchio*** (`IT-C24-orecchio`) ←
+  Latin *auricula*, "little ear," the same sound-law again → aural/auricle →
+  ***bocca*** (`IT-C24-bocca`, the payoff) ← Latin *bucca*, "cheek" — slang
+  that displaced the real classical word for mouth, *os/oris*, across nearly
+  all of Romance → English *debouch, embouchure* (via French *bouche*).
+  **Authored.**
+- **Ch. 25 — Nose, stomach, and throat**: ***naso*** (`IT-C25-naso`) ← Latin
+  *nasus* → nasal/nostril/**nasturtium** ("nose-twister") → ***stomaco***
+  (`IT-C25-stomaco`) ← Latin *stomachus* ← Greek *stómakhos* — the one body
+  word that passed through Greek before it ever reached Latin → ***gola***
+  (`IT-C25-gola`, the payoff) ← Latin *gula* → gullet, and, proposed but not
+  certain, **glutton** (← *gluttire*) — closes the seven-word body set begun
+  in Ch. 24. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 10+ | Family, food, the body — following the shared theme order |
+| 26+ | More core verbs, the remaining pre-A1 vocabulary gap, and `SPINE-RESPOND-BASIC` (Italian has not yet taught *sì*/*no*) |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

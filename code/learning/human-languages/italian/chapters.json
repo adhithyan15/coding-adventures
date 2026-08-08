@@ -508,6 +508,112 @@
           "IT-LEX-ASPETTARE-02"
         ]
       }
+    },
+    {
+      "chapter": 22,
+      "title": "Coffee, Tea, Milk, and Sugar",
+      "label": "ch:it-coffee-tea-milk-sugar",
+      "canDo": "I can ask for coffee, tea, milk and sugar in Italian, and tell which of the four were borrowed and which was inherited.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "IT-C22-zucchero",
+        "kind": "task",
+        "summary": "The chapter's last lesson gathers il caffè, il tè, il latte and lo zucchero, meets lo on a real noun for the first time since Chapter 1 stated the rule, and sorts all four by history: caffè from Turkish, tè from Chinese, zucchero from Arabic by a different road than caffè, and latte alone never borrowed at all.",
+        "assesses": [
+          "IT-LEX-CAFFE-02",
+          "IT-ETYMON-CAFFE-03",
+          "IT-NOTICE-CAFFE-04",
+          "IT-LEX-TE-02",
+          "IT-ETYMON-TE-03",
+          "IT-NOTICE-TE-04",
+          "IT-LEX-LATTE-02",
+          "IT-ETYMON-LATTE-03",
+          "IT-ETYMON-NERO-BIANCO-02",
+          "IT-LEX-ZUCCHERO-02",
+          "IT-ETYMON-ZUCCHERO-03",
+          "IT-GRAMMAR-ZUCCHERO-04"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Friends, Family, and a Name",
+      "label": "ch:it-friends-family-name",
+      "canDo": "I can introduce a friend, name a family as a whole, ask for someone's name with the word itself, and say 'person' the way Italian always does.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "IT-C23-persona",
+        "kind": "task",
+        "summary": "The chapter's last lesson gathers l'amico/l'amica, la famiglia, il nome and la persona, closing on the one noun taught so far whose grammatical gender never tracks the sex of whoever it names.",
+        "assesses": [
+          "IT-LEX-AMICO-AMICA-02",
+          "IT-GRAMMAR-AMICO-AMICA-04",
+          "IT-LEX-FAMIGLIA-02",
+          "IT-LEX-NOME-02",
+          "IT-ETYMON-NOME-03",
+          "IT-NOTICE-NOME-04",
+          "IT-ETYMON-GENITORI-02",
+          "IT-LEX-TESTA-02",
+          "IT-LEX-PERSONA-02",
+          "IT-ETYMON-PERSONA-03",
+          "IT-GRAMMAR-PERSONA-04"
+        ]
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Heart, Eyes, Ears, and Mouth",
+      "label": "ch:it-heart-eyes-ears-mouth",
+      "canDo": "I can name my heart, eyes, ears and mouth in Italian, and trace the sound-law that built two of them.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "IT-C24-bocca",
+        "kind": "task",
+        "summary": "The chapter's last lesson gathers il cuore, l'occhio, l'orecchio and la bocca, the set Chapter 17's la mano lesson promised, and closes on bocca's history as slang for 'cheek' that replaced Latin's real word for mouth.",
+        "assesses": [
+          "IT-LEX-CUORE-02",
+          "IT-LEX-OCCHIO-02",
+          "IT-LEX-ORECCHIO-02",
+          "IT-ETYMON-ORECCHIO-03",
+          "IT-GRAMMAR-ORECCHIO-04",
+          "IT-SOUND-PREGO-02",
+          "IT-ETYMON-PREGO-03",
+          "IT-LEX-BOCCA-02",
+          "IT-ETYMON-BOCCA-03",
+          "IT-NOTICE-BOCCA-04"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Nose, Stomach, and Throat",
+      "label": "ch:it-nose-stomach-throat",
+      "canDo": "I can name my nose, stomach and throat in Italian, closing the body-word set Chapter 17 opened.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "IT-C25-gola",
+        "kind": "task",
+        "summary": "The chapter's last lesson gathers il naso, lo stomaco and la gola, closing the seven-word body set begun in Chapter 24, and lays out the five different kinds of word-history behind those seven words in one place.",
+        "assesses": [
+          "IT-LEX-NASO-02",
+          "IT-ETYMON-NASO-03",
+          "IT-LEX-STOMACO-02",
+          "IT-ETYMON-STOMACO-03",
+          "IT-LEX-BOCCA-02",
+          "IT-LEX-CUORE-02",
+          "IT-LEX-GOLA-02",
+          "IT-ETYMON-GOLA-03",
+          "IT-NOTICE-GOLA-04"
+        ]
+      }
     }
   ]
 }
