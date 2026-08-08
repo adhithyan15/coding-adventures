@@ -1,27 +1,27 @@
 Human Languages curriculum gap report
 ====================================
-22 tracks, 1499 lessons, 22 books
+22 tracks, 1500 lessons, 22 books
 0 lessons at or above 300 effective seconds
 0 unknown prerequisites; 35 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
-1344 drivable lessons (90% of the corpus)
-levels: 696 pre-A1, 297 A1, 350 A2, 8 B1; 148 unmapped (90% placed)
-ramp: 40 lessons above 3 new atoms (572 unmeasurable, 62% measurable); 25 chapters above 12
-script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
+1346 drivable lessons (90% of the corpus)
+levels: 697 pre-A1, 297 A1, 350 A2, 8 B1; 148 unmapped (90% placed)
+ramp: 40 lessons above 3 new atoms (573 unmeasurable, 62% measurable); 25 chapters above 12
+script ramp: 60 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 165 lessons show another script (max 26 glyphs) — context, never charged to the budget
-order: 515 lessons with no declared sequence across 19 tracks; 245 prerequisites and 300 reviews pointing forward
+order: 507 lessons with no declared sequence across 19 tracks; 240 prerequisites and 285 reviews pointing forward
 reinforcement: 463 of 2121 atoms never revisited (22%); missed windows R1 797, R2 1376, R3 906, R4 119
-forward references: 443 uses of material a later lesson teaches
+forward references: 439 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 98 of 464 book chapters without an HL05 capability; 25 payoffs below the 0.5 representativeness floor; 3 tracks already clean
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  983 voice, 463 sight, 53 pen of 1499 lessons; 90% drivable
+  989 voice, 458 sight, 53 pen of 1500 lessons; 90% drivable
   tables of more than 3 column(s) count as sight
-  1344 lessons have a voice CORE; 0 carry a detachable writing segment (361 rescued for the hands-free view)
+  1346 lessons have a voice CORE; 0 carry a detachable writing segment (357 rescued for the hands-free view)
   arabic: 44 voice, 40 sight, 16 pen; 79% drivable; 36 chapters, 71 lessons reachable in chapter-prefix order; 35 rescued by a detachable writing segment
   bengali: 14 voice, 31 sight, 0 pen; 98% drivable; 9 chapters, 39 lessons reachable in chapter-prefix order; 30 rescued by a detachable writing segment
   chinese: 5 voice, 2 sight, 0 pen; 100% drivable; 1 chapters, 7 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment
@@ -41,11 +41,11 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   russian: 23 voice, 8 sight, 5 pen; 83% drivable; 5 chapters, 29 lessons reachable in chapter-prefix order; 7 rescued by a detachable writing segment
   sanskrit: 23 voice, 24 sight, 0 pen; 96% drivable; 9 chapters, 40 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
   spanish: 152 voice, 18 sight, 7 pen; 86% drivable; 41 chapters, 122 lessons reachable in chapter-prefix order
-  tamil: 53 voice, 51 sight, 8 pen; 88% drivable; 38 chapters, 84 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
+  tamil: 59 voice, 46 sight, 8 pen; 88% drivable; 38 chapters, 86 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
   telugu: 39 voice, 35 sight, 0 pen; 93% drivable; 34 chapters, 65 lessons reachable in chapter-prefix order; 30 rescued by a detachable writing segment
   urdu: 24 voice, 9 sight, 0 pen; 100% drivable; 8 chapters, 33 lessons reachable in chapter-prefix order; 9 rescued by a detachable writing segment
 
-Chapters that cannot be started by ear (drivable prefix 0): 40
+Chapters that cannot be started by ear (drivable prefix 0): 39
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
