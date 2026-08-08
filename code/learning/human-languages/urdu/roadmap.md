@@ -87,7 +87,7 @@ absorb centuries of Persian and Arabic without ever conjugating a foreign word
 — and puts a second Arabic triliteral root, **م-د-د**, beside **ح-ف-ظ** from
 Chapter 5. **پسند** takes the subject away: **مجھے پڑھنا پسند ہے** is “to me,
 reading is pleasing,” with the liked thing as subject and the liker in the
-dative — the sixth language in this course to build liking that way.
+dative — one more language that builds liking that way.
 
 ## Chapter 9 — People and simple identity *(planned)*
 

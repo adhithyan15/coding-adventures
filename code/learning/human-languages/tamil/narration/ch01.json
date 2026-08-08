@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b80adea0055c5306",
+  "sourceHash": "fnv1a64:fe3d3298ecc5bc3a",
   "lessons": [
     {
       "id": "TA-W01-curves-va-ka",
@@ -359,7 +359,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6ce88d858a0ad284",
+      "sourceHash": "fnv1a64:207da9661587565a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two more letters, and with them you'll have every letter of the course's first word. One is easy. The other is a sound you may not be able to hear yet."
+              "text": "Two more letters, and with them you'll have every letter of this book's first word. One is easy. The other is a sound you may not be able to hear yet."
             }
           ]
         },
@@ -845,7 +845,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:19ea78f7643992a1",
+      "sourceHash": "fnv1a64:fe21150d048b0f05",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -908,7 +908,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the first word of the course, written by hand."
+              "text": "That is the first word of this book, written by hand."
             }
           ]
         },

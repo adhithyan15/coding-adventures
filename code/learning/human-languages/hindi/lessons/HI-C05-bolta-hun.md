@@ -18,7 +18,8 @@ reviews_of: [HI-C05-bolna, HI-C03-hun]
 
 [PAUSE 2s] You have the stem *bol-*. This lesson is the machine that turns any
 stem into a sentence about what someone *does* — and it is the single biggest
-piece of leverage in the course so far, because it fits every verb you will
+piece of leverage in
+this book so far, because it fits every verb you will
 ever meet.
 
 ## You'll want to know first

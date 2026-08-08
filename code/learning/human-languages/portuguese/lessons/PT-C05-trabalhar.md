@@ -33,8 +33,9 @@ reviews_of: [PT-C05-morar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] A third **-ar** verb — and Portuguese rejoins its Iberian sister on the
-darkest etymology in the curriculum. **trabalhar** ("to work"), like Spanish
+[PAUSE 2s] A third **-ar** verb — and Portuguese rejoins its Iberian sister on
+one of the darkest etymologies
+anywhere. **trabalhar** ("to work"), like Spanish
 *trabajar*, began as a word for **torture**.
 
 ## Sounds you'll need

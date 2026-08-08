@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:39740a258074cd83",
+  "sourceHash": "fnv1a64:642fa2c7b3998717",
   "lessons": [
     {
       "id": "ML-C25-shubha-rathri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39130dc31be628cc",
+      "sourceHash": "fnv1a64:9697f21d8b9e03c2",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already have rāthri. One more Sanskrit word, already familiar from three earlier languages in this arc, completes Malayalam's \"good night\" — and this lesson's honest twist is one you've technically seen before, just in a different language."
+              "text": "You already have rāthri. One more Sanskrit word, shared with Hindi, Kannada, and Telugu, completes Malayalam's \"good night\" — and this lesson's honest twist is one you've technically seen before, just in a different language."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c34a0b9cf9e6a96",
+  "sourceHash": "fnv1a64:b8ec45b437f75500",
   "lessons": [
     {
       "id": "TA-C22-paccai-manjal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a16121a6959da941",
+      "sourceHash": "fnv1a64:7c72b7c8044cb6de",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The Tamil Lexicon also records பசுப்பு (pacuppu, \"greenish yellow\") — a genuine doublet of paccai itself, from the same pac- root, matching Telugu's pasupu closely. Unlike Telugu, though, this doublet is not Tamil's everyday word for yellow — that job belongs to mañcaḷ; pacuppu survives mainly as a dictionary-recorded shade word. So Tamil, uniquely in this arc, holds a trace of both patterns at once: a pac- doublet sitting quietly in the dictionary (Telugu's pattern), next to a separate, dominant root doing the everyday work (Malayalam's pattern)."
+              "text": "The Tamil Lexicon also records பசுப்பு (pacuppu, \"greenish yellow\") — a genuine doublet of paccai itself, from the same pac- root, matching Telugu's pasupu closely. Unlike Telugu, though, this doublet is not Tamil's everyday word for yellow — that job belongs to mañcaḷ; pacuppu survives mainly as a dictionary-recorded shade word. So Tamil alone holds a trace of both patterns at once: a pac- doublet sitting quietly in the dictionary (Telugu's pattern), next to a separate, dominant root doing the everyday work (Malayalam's pattern)."
             },
             {
               "kind": "speech",
@@ -129,7 +129,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is Tamil's everyday word for yellow, and is it related to paccai? (மஞ்சள், mañcaḷ — no, a completely separate native root, matching Malayalam's mañña/maññaḷ.) What rarer Tamil word IS a doublet of paccai, from the same pac- root? (பசுப்பு, pacuppu, \"greenish yellow\" — echoing Telugu's pacca/pasupu pattern.) Does any one pattern hold across all the Dravidian languages in this arc? (No — Kannada splits native/loan, Telugu fuses one root, Malayalam keeps two separate roots, and Tamil turns out to hold traces of both Telugu's and Malayalam's patterns at once.)"
+              "text": "What is Tamil's everyday word for yellow, and is it related to paccai? (மஞ்சள், mañcaḷ — no, a completely separate native root, matching Malayalam's mañña/maññaḷ.) What rarer Tamil word IS a doublet of paccai, from the same pac- root? (பசுப்பு, pacuppu, \"greenish yellow\" — echoing Telugu's pacca/pasupu pattern.) Does any one pattern hold across all four major Dravidian languages? (No — Kannada splits native/loan, Telugu fuses one root, Malayalam keeps two separate roots, and Tamil turns out to hold traces of both Telugu's and Malayalam's patterns at once.)"
             }
           ]
         }

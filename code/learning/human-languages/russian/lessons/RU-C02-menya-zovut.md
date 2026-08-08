@@ -12,7 +12,7 @@ romanization: menyá zovút
 prerequisites: [RU-C02-vy-formality]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [slavic-zvati]
-etymology_hook: "меня зовут is literally '[they] CALL me' — an unnamed 'they' doing the naming, so the sentence contains no word for 'my' and none for 'name'; and меня is not я plus an ending but a SUPPLETIVE form from a different PIE stem, the first case FORM in the course"
+etymology_hook: "меня зовут is literally '[they] CALL me' — an unnamed 'they' doing the naming, so the sentence contains no word for 'my' and none for 'name'; and меня is not я plus an ending but a SUPPLETIVE form from a different PIE stem, the first case FORM in this book"
 duration:
   max_seconds: 240
 requires:
@@ -68,7 +68,8 @@ English has the same trick and doesn't notice it:
 ## Grammar Lens: меня is not я
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-MENYA-OBJECT-CASE]; assesses=[] -->
 
-This is the important part, and the course's first taste of **case**.
+This is the important part, and
+this book's first taste of **case**.
 
 You learned **я** for "I" last lesson. But here it is **меня** — because *I* is
 now the **object** of the calling, not the one doing it. Russian changes the

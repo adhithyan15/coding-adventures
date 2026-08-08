@@ -4,6 +4,55 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — the course named as a set (HL-C50)
+
+The last of the standalone-book classes: the series referred to as a **set**, without
+the word "in" that the previous guard keyed on — *"the course keeps finding
+connections"*, *"the curriculum treats Latin as a taproot"*, *"the course's first
+taste of case"*, *"every other language in this arc"*, *"the fifth language to close
+the loop"*. **66 authored files** — 53 lesson sources, 11 handwritten chapters and
+book shells, 2 reference docs.
+
+Two treatments, and the split is the substance of the change:
+
+- **In-volume references became "this book"** — *"the first word of the course"* →
+  *"the first word of this book"*. A reader is holding the book, so a claim about it
+  is answerable. The guard deliberately does not match "in this book".
+- **Cross-volume references were reworded** to drop the invisible set — *"unlike
+  every other language in this arc's dog-word"* → *"unlike the tangled dog-words of
+  Spanish, Hindi, and English"*.
+
+### Note — moving a claim in-volume makes it checkable, so check it
+
+Book-scope is the safer place for a claim, but it is not a free move: it converts
+something vague into something a reader can verify. Two failed that verification and
+were caught in review:
+
+- *"three genuinely separate calendar traditions across **this book**"* — the Tamil
+  book teaches **one** calendar. The proof sat nine lines above, unchanged: *"By now
+  you've seen Arabic and Hindi each juggle two calendars."* The reader met the other
+  two in other volumes.
+- *"closing **this book** on the root that opened it"* — the Arabic book runs 32
+  chapters; this is chapter 4. It closes the **greeting arc**, and now says so.
+
+That is three such failures in two changes (the first was *"a third fate for a
+consonant in this book"*, which the Punjabi volume never enumerates). The rule is
+recorded in `lessons.md`: an ordinal or count moved to book scope must be walked
+against that volume's actual table of contents, not assumed.
+
+### Changed — the guard, and the bypass it had already been taught about
+
+Six patterns added: `(the|this) (course|curriculum|series)`, `(course|curriculum)'s`,
+`(in|across|throughout) this arc`, `the (first…tenth) language`, `every track`, `this
+course covers`. Each proven to fire on a reintroduced defect while *"this book"*,
+*"this book's first taste of case"* and an in-volume *"the numbers arc"* keep passing.
+
+The first version shipped a bypass the test file's own comments already warned about:
+**one intervening adjective defeats the pattern.** *"this **whole** curriculum"*,
+*"this **single** course"*, *"the **whole** course"* — an earlier pattern had learned
+exactly this and the lesson was not carried across. Seven more sites were hiding
+behind it.
+
 ### Fixed — the course-level phrases (HL-C50)
 
 The class the previous change counted and deferred: bare *"in this course"*, *"in

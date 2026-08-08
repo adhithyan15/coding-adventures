@@ -68,7 +68,7 @@ and leaves one verb lying across it.
 
 So **Wir laufen** is "we're walking" or "we're running," and only the situation
 tells you which. That holds across most of Germany. In **Austria** it does not:
-there *laufen* means *run*. This course teaches the German usage.
+there *laufen* means *run*. This book teaches the German usage.
 
 > **Der Hund rennt.** — no ambiguity left.
 

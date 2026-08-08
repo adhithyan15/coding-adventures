@@ -6,7 +6,7 @@ sequence: 690
 chapter: 33
 type: word
 headword: படி
-gloss: to read, to study — and the reason this course writes it paḍi with a d when the letter is ட
+gloss: to read, to study — and the reason this book writes it paḍi with a d when the letter is ட
 romanization: paḍi
 concept_tag: VERB-READ
 prerequisites: [TA-C33-puri, TA-W01-abugida-va-ka, TA-W02-ma-retroflex-na]

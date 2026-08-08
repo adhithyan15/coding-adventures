@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Going, Running, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:983170162f81dec0",
+  "sourceHash": "fnv1a64:1bd7e0838fb35899",
   "lessons": [
     {
       "id": "GE-C27-gehen",
@@ -222,7 +222,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7282b0745a98b5d",
+      "sourceHash": "fnv1a64:a27427e8f3c4687d",
       "notice": null,
       "blocks": [
         {
@@ -311,7 +311,7 @@
             },
             {
               "kind": "speech",
-              "text": "So Wir laufen is \"we're walking\" or \"we're running,\" and only the situation tells you which. That holds across most of Germany. In Austria it does not: there laufen means run. This course teaches the German usage."
+              "text": "So Wir laufen is \"we're walking\" or \"we're running,\" and only the situation tells you which. That holds across most of Germany. In Austria it does not: there laufen means run. This book teaches the German usage."
             },
             {
               "kind": "speech",

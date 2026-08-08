@@ -61,5 +61,5 @@ to the **end**.)
 [PAUSE 3s] Which two verbs share the preterite *fui/fue*? (**ser** and **ir**.)
 How does the accent change *hablo* into *habló*? (It moves the **stress to the
 end** — present → preterite.) In "**Fui a casa**," be/go? (**Go** — *ir*.) You can
-now speak in the **past** — the course has crossed from "what is" to "what
+now speak in the **past** — this book has crossed from "what is" to "what
 happened."

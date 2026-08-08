@@ -11,7 +11,7 @@ concept_tag: GREETING-MORNING
 prerequisites: [HI-C28-subah]
 sounds: [devanagari-conjunct-pra, devanagari-bha]
 roots: [su-good, prabhata-dawn-sanskrit]
-etymology_hook: "सुप्रभात (suprabhāt, 'good morning') = सु ('good') + प्रभात (prabhāta, native Sanskrit 'dawn, daybreak,' from प्रभा/prabhā, 'light, splendour,' itself from भा, 'to shine,' + preverb प्र-, 'forth' + suffix -त) — a COMPLETELY DIFFERENT root from सुबह (subah, HI-C28's Persian/Arabic loan for the everyday noun 'morning'); be honest about its actual register, though: sources describe सुप्रभात as skewing FORMAL and WRITTEN (speeches, radio, greeting-card/WhatsApp-forward culture) rather than casual spoken Hindi, where नमस्ते commonly covers mornings too — this is a genuine formal/everyday split, though there's no strong evidence सुप्रभात itself is being routinely code-switched to English the way some sources (thinly) suggested for other languages' night greetings in this arc"
+etymology_hook: "सुप्रभात (suprabhāt, 'good morning') = सु ('good') + प्रभात (prabhāta, native Sanskrit 'dawn, daybreak,' from प्रभा/prabhā, 'light, splendour,' itself from भा, 'to shine,' + preverb प्र-, 'forth' + suffix -त) — a COMPLETELY DIFFERENT root from सुबह (subah, HI-C28's Persian/Arabic loan for the everyday noun 'morning'); be honest about its actual register, though: sources describe सुप्रभात as skewing FORMAL and WRITTEN (speeches, radio, greeting-card/WhatsApp-forward culture) rather than casual spoken Hindi, where नमस्ते commonly covers mornings too — this is a genuine formal/everyday split, though there's no strong evidence सुप्रभात itself is being routinely code-switched to English the way some sources (thinly) suggested for other languages' night greetings"
 duration:
   max_seconds: 296
 requires:
@@ -63,8 +63,8 @@ image" culture — rather than casual spoken conversation, where
 **नमस्ते** commonly covers mornings too. That's a real formal/everyday
 split, but it isn't the same thing as being displaced by **English**
 specifically — there's no strong evidence for that particular
-substitution here. Don't assume every "good ___" greeting in every
-language this course covers follows the same displacement story; verify
+substitution here. Don't assume every "good ___" greeting in every language
+follows the same displacement story; verify
 each one on its own, and don't flatten a hedge into a fact either way.
 
 ## Guided Practice
@@ -85,7 +85,7 @@ Persian/Arabic; प्रभात, inside suprabhāt, is native Sanskrit, ultim
 from भा, "to shine.") Is सुप्रभात commonly used in casual spoken Hindi?
 (**Not especially** — it skews formal/written, with नमस्ते commonly
 covering mornings in everyday speech.) Is it being displaced by English
-"good morning," the way some sources (thinly) suggested for other
-languages' night greetings in this arc? (**No strong evidence of
+"good morning," the way some sources (thinly) suggested for other languages'
+night greetings? (**No strong evidence of
 that** — its own story is a formal/everyday split, not an English
 substitution.)

@@ -18,7 +18,7 @@ reviews_of: [GE-C13-rot-blau, GE-C05-machen, GE-C10-geschwister]
 ## Warm-up
 
 [PAUSE 2s] German's workhorse verb, the twin of English *have* — and the source
-of the best false cognate in this whole course.
+of one of the best false cognates anywhere.
 
 ## The forms
 

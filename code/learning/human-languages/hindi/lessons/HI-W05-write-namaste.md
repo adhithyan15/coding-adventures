@@ -33,7 +33,8 @@ reviews_of: [HI-W05-conjuncts, HI-C01-namaste, HI-C01-namaskar]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You have learned every piece separately. Now the writing track pays
-off in the first word of the course.
+off in the first word of
+this book.
 
 ## You'll want to know — Assemble नमस्ते
 <!-- hl-knowledge: introduces=[HI-CONCEPT-W05-WRITE-NAMASTE-01]; assesses=[] -->

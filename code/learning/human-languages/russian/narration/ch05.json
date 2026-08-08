@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a0b93e64b7cb51a6",
+  "sourceHash": "fnv1a64:88e8486d0c691191",
   "lessons": [
     {
       "id": "RU-C05-brat",
@@ -354,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b965f8611a96ce2d",
+      "sourceHash": "fnv1a64:393bb86560986f4d",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
             },
             {
               "kind": "speech",
-              "text": "One honest limit: the person you help takes a case this course has not reached, so keep the sentence bare. Я помогаю alone is ordinary Russian."
+              "text": "One honest limit: the person you help takes a case this book has not reached, so keep the sentence bare. Я помогаю alone is ordinary Russian."
             }
           ]
         },

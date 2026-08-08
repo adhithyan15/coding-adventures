@@ -55,8 +55,8 @@ month's full moon specifically, not simply the month's start.
 ## Why it's said this way: Be honest: this is a THIRD calendar, not a variant of the others
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-THAMIZH-MAADANGAL-02]; assesses=[] -->
 
-You've now met three genuinely separate calendar traditions across this
-course: the Gregorian solar calendar (borrowed names, everyday civil use
+You've now met three genuinely separate calendar traditions: the Gregorian
+solar calendar (borrowed names, everyday civil use
 in most of the world), the pan-Indian Hindu lunisolar calendar (Chaitra,
 Vaishākh... tied to the six *ṛtu*), and now Tamil's **own** solar
 calendar, following neither. **சித்திரை 1** (the 1st of Chithirai) is

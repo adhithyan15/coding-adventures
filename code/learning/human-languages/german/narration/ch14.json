@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Chapter 14",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a9f6d19b7d1de599",
+  "sourceHash": "fnv1a64:5e1bd195a055b413",
   "lessons": [
     {
       "id": "GE-C14-alter",
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ac77aad8695d3ee6",
+      "sourceHash": "fnv1a64:6c18654a3bb04712",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -220,7 +220,7 @@
             },
             {
               "kind": "speech",
-              "text": "German's workhorse verb, the twin of English have — and the source of the best false cognate in this whole course."
+              "text": "German's workhorse verb, the twin of English have — and the source of one of the best false cognates anywhere."
             }
           ]
         },

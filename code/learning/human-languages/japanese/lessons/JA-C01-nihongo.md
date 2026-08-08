@@ -70,8 +70,8 @@ relatives: Mandarin writes the same three characters and says *Rìběnyǔ*; Kore
 borrowed the same compound as *ilbon-eo*. Same characters, related imported
 sounds, one meaning, three languages.
 
-That is a real, checkable connection, and it is the honest replacement for the
-Latin roots this curriculum leans on elsewhere. English has no share in it.
+That is a real, checkable connection, and it is the honest replacement for the Latin roots
+that anchor a European language. English has no share in it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS, JA-BRIDGE-SINO-JAPANESE] -->

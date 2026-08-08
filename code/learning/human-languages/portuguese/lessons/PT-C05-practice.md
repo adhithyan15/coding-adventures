@@ -81,5 +81,5 @@ Same endings every time (**-o / -as / -a**), no pronoun needed.
 [PAUSE 3s] What are the three singular *-ar* endings? (*-o / -as / -a*.) Give the
 "I" forms of the three verbs. (*Falo, moro, trabalho*.) *falar* vs Spanish
 *hablar* — what's the sound-law difference? (Portuguese kept *f-*; Spanish shifted
-*f→h*.) All five of your languages now move in real sentences — the course has
-handed over rules, not phrases.
+*f→h*.) Portuguese now moves in real sentences — this
+book has handed over rules, not phrases.

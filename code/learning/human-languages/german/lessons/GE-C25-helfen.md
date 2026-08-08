@@ -56,7 +56,7 @@ The *e* becomes **i** in *du* and *er*, exactly as in *nehmen* — the third ver
 to do it, so by now you can predict it.
 
 One honest limit: when German names the person helped, that person's word takes
-a form this course has not taught. Keep to **Ich helfe** on its own.
+a noun form this book has not taught. Keep to **Ich helfe** on its own.
 
 ## Why it's said this way: asking for it politely
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HELFEN-07, GE-LEX-BITTE-PLEASE-02] -->

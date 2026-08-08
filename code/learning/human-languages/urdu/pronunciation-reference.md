@@ -62,8 +62,8 @@ romanization once the Urdu form is familiar.
 - **ٹھیک** introduces the Indic retroflex-plus-aspiration sequence **ٹھ** only
   when the wellbeing reply needs it.
 - **خدا حافظ** reuses **خ** and long **ا**, adds a clear initial *h* in **حافظ**,
-  and reads final **ظ** as *z*. Urdu keeps the two words visibly spaced in this
-  course even though Persian normally joins its local spelling.
+  and reads final **ظ** as *z*. Urdu conventionally keeps the two words visibly
+  spaced, even though Persian normally joins its local spelling.
 - **بولنا** adds the only new consonant the verb chapter needs: **ب** *b*, one
   low scoop with a single dot below. It shares that skeleton with **پ** *p*,
   already read in **آپ**, which carries three dots below instead. Dot count is

@@ -44,9 +44,9 @@ precise in modern use.
 still literally "middle" + "day" — but a source fetched directly (not
 just a search summary) confirms it now covers "**the time between noon
 and evening**" in modern usage — a genuine widened sense, not just the
-precise midday instant its etymology points to. This mirrors what
-this course already found for Hindi's **दोपहर** (clearly, well-
-confirmed widened from "noon" to "afternoon") and, more thinly, for
+precise midday instant its etymology points to. This mirrors
+Hindi's **दोपहर** (clearly, well-
+confirmed widened from "noon" to "afternoon") and, more thinly
 Kannada's own **మధ్యాహ్న** (a hedged, single-source impression of the
 same kind of stretch).
 

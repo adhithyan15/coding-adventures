@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Three Writing Systems in One Doorway",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:41f12f11cb910ec8",
+  "sourceHash": "fnv1a64:61da3ea5036d0e14",
   "lessons": [
     {
       "id": "JA-C01-hai",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:00d779c076662e0e",
+      "sourceHash": "fnv1a64:8f23a1be663b2b64",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -548,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is a real, checkable connection, and it is the honest replacement for the Latin roots this curriculum leans on elsewhere. English has no share in it."
+              "text": "That is a real, checkable connection, and it is the honest replacement for the Latin roots that anchor a European language. English has no share in it."
             }
           ]
         },

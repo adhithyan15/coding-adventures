@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Chapter 11",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69ad78a547a85c5d",
+  "sourceHash": "fnv1a64:68f9ddd8f459cb18",
   "lessons": [
     {
       "id": "ES-C11-querer",
@@ -633,7 +633,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af92d49c34d3eda3",
+      "sourceHash": "fnv1a64:5fac26b4274aff47",
       "notice": null,
       "blocks": [
         {
@@ -797,7 +797,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the yo of querer and poder. (Quiero, puedo.) Which form of each stays plain, and why? (Queremos/podemos — the stress is on the ending.) How does nuestro agree, versus mi/tu/su? (Gender and number — four forms.) Next chapter carries the grammar forward — the course now runs on rules."
+              "text": "Give the yo of querer and poder. (Quiero, puedo.) Which form of each stays plain, and why? (Queremos/podemos — the stress is on the ending.) How does nuestro agree, versus mi/tu/su? (Gender and number — four forms.) Next chapter carries the grammar forward — this book now runs on rules."
             }
           ]
         }

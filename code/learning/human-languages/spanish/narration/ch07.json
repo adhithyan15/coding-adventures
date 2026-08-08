@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Chapter 7",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:38c0aead8768635a",
+  "sourceHash": "fnv1a64:4158219fe9416bef",
   "lessons": [
     {
       "id": "ES-C07-beber",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b1c08a502f1f2b5",
+      "sourceHash": "fnv1a64:a8d3c0b8b383b277",
       "notice": null,
       "blocks": [
         {
@@ -632,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the singular endings for -er/-ir verbs? (-o / -es / -e.) Give the \"I\" forms of comer, vivir, beber. (Como, vivo, bebo.) Ask \"what do you study?\" and \"where do you live?\" (¿Qué estudias? ¿Dónde vives?) You can now hold a simple back-and-forth — the course is fully in sentence territory. Next: numbers (uno, dos, tres) and telling someone your age and phone."
+              "text": "What are the singular endings for -er/-ir verbs? (-o / -es / -e.) Give the \"I\" forms of comer, vivir, beber. (Como, vivo, bebo.) Ask \"what do you study?\" and \"where do you live?\" (¿Qué estudias? ¿Dónde vives?) You can now hold a simple back-and-forth — this book is fully in sentence territory. Next: numbers (uno, dos, tres) and telling someone your age and phone."
             }
           ]
         }

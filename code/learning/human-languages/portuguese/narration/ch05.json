@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dc1f079cde196fa2",
+  "sourceHash": "fnv1a64:e76e77a13fe3855a",
   "lessons": [
     {
       "id": "PT-C05-falar",
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14e10194f21a22cd",
+      "sourceHash": "fnv1a64:1ec7af1dc5f87985",
       "notice": null,
       "blocks": [
         {
@@ -353,7 +353,7 @@
             },
             {
               "kind": "speech",
-              "text": "A third -ar verb — and Portuguese rejoins its Iberian sister on the darkest etymology in the curriculum. trabalhar (\"to work\"), like Spanish trabajar, began as a word for torture."
+              "text": "A third -ar verb — and Portuguese rejoins its Iberian sister on one of the darkest etymologies anywhere. trabalhar (\"to work\"), like Spanish trabajar, began as a word for torture."
             }
           ]
         },
@@ -637,7 +637,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:554c9e659dae7732",
+      "sourceHash": "fnv1a64:4afa69ed94e21dae",
       "notice": null,
       "blocks": [
         {
@@ -782,7 +782,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the \"I\" forms of the three verbs. (Falo, moro, trabalho.) falar vs Spanish hablar — what's the sound-law difference? (Portuguese kept f-; Spanish shifted f becomes h.) All five of your languages now move in real sentences — the course has handed over rules, not phrases."
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the \"I\" forms of the three verbs. (Falo, moro, trabalho.) falar vs Spanish hablar — what's the sound-law difference? (Portuguese kept f-; Spanish shifted f becomes h.) Portuguese now moves in real sentences — this book has handed over rules, not phrases."
             }
           ]
         }

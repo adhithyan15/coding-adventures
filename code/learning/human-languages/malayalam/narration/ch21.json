@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9a5c08971a480364",
+  "sourceHash": "fnv1a64:c360a34d72f9d5ba",
   "lessons": [
     {
       "id": "ML-C21-naaya-poocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2c8e98f67490f7e",
+      "sourceHash": "fnv1a64:d55ae2fb36fe9cc7",
       "notice": null,
       "blocks": [
         {

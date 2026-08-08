@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f287ad3b981ede05",
+  "sourceHash": "fnv1a64:299477aef2c2aa1c",
   "lessons": [
     {
       "id": "SA-C05-aham-samskritam-vadami",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e1ceeeb95c714166",
+      "sourceHash": "fnv1a64:0c5fd96530e11254",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -200,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "करोमि (karomi, \"I do, I make\") is from the root कृ (kṛ, \"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this whole course:"
+              "text": "करोमि (karomi, \"I do, I make\") is from the root कृ (kṛ, \"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:"
             },
             {
               "kind": "speech",

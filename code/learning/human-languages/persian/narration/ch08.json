@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0dd578d8d51e5c72",
+  "sourceHash": "fnv1a64:5e3fa6637a9815fa",
   "lessons": [
     {
       "id": "FA-C08-gereftan",
@@ -12,14 +12,14 @@
       "title": "گرفتن (gereftan) — “to take,” and a cousin you can hear",
       "headword": "گرفتن",
       "romanization": "gereftan",
-      "gloss": "to take — and the clearest English cousin in the whole course",
+      "gloss": "to take — and the clearest English cousin in this book",
       "script": "perso-arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd65bbf669f07dc2",
+      "sourceHash": "fnv1a64:b9a546e685387f50",
       "notice": null,
       "blocks": [
         {

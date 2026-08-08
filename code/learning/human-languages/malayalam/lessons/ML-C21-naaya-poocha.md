@@ -11,7 +11,7 @@ concept_tag: ML-ANIMALS
 prerequisites: [ML-C20-pathinonnu-irupathu]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ch]
 roots: [dravidian-naay-dog, dravidian-punai-cat]
-etymology_hook: "നായ (nāya, 'dog') continues the same solid, native Proto-Dravidian root as Kannada's naayi and Tamil's naay — no mystery, unlike every other language in this arc's dog-word; പൂച്ച (pūcha, 'cat') closely matches Tamil's everyday word pūnai, part of a family distinct from Kannada's bekku and Telugu's pilli — Dravidian genuinely splits more on 'cat' than on 'dog'"
+etymology_hook: "നായ (nāya, 'dog') continues the same solid, native Proto-Dravidian root as Kannada's naayi and Tamil's naay — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; പൂച്ച (pūcha, 'cat') closely matches Tamil's everyday word pūnai, part of a family distinct from Kannada's bekku and Telugu's pilli — Dravidian genuinely splits more on 'cat' than on 'dog'"
 duration:
   max_seconds: 240
 requires:

@@ -67,4 +67,4 @@ o→ue), *nuestros* (our, agreeing), and *ir a* from Ch.10.
 [PAUSE 3s] Give the *yo* of *querer* and *poder*. (*Quiero, puedo*.) Which form of
 each stays plain, and why? (*Queremos/podemos* — the stress is on the ending.) How
 does *nuestro* agree, versus *mi/tu/su*? (Gender **and** number — four forms.) Next
-chapter carries the grammar forward — the course now runs on rules.
+chapter carries the grammar forward — this book now runs on rules.

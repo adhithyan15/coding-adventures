@@ -54,8 +54,7 @@ Telugu's *vēsavi* and Kannada's *bēsige* are close enough in shape to be
 genuine cousins — the same native Dravidian summer-word wearing two
 languages' sound changes. And once again, it's **వానాకాలం** (*vānākālam*,
 the rains) that actually organizes Andhra/Telangana's agricultural year,
-not a clean four-way Western split — the same honest point every language
-in this arc has made.
+not a clean four-way Western split — the same honest point its neighbours make.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C13-SHARIRA-BHAGALU-01, TE-LEX-C14-RUTUVULU-01, TE-PRAGMATICS-C14-RUTUVULU-02] -->

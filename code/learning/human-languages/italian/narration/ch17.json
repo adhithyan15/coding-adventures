@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c89b171c9cc323f6",
+  "sourceHash": "fnv1a64:68aa89d6596eb587",
   "lessons": [
     {
       "id": "IT-C17-testa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec786a73bf664872",
+      "sourceHash": "fnv1a64:7ba8cdd3c8824ffc",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the conservative-sister pattern this course keeps meeting. Chapter 11 had acqua against eau; Chapter 15 had parlato keeping the Latin -t- that parlé wore away. Italian holds its shape; French erodes."
+              "text": "This is the conservative-sister pattern this book keeps meeting. Chapter 11 had acqua against eau; Chapter 15 had parlato keeping the Latin -t- that parlé wore away. Italian holds its shape; French erodes."
             },
             {
               "kind": "speech",

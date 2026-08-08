@@ -50,7 +50,7 @@ God."* It's the fossil of a blessing — *"[I commend you] to God"* — said at
 parting, exactly like the English **goodbye**, which is a worn-down *"God be
 with ye."*
 
-This is one of the most beautiful family resemblances in the whole curriculum —
+This is one of the most beautiful family resemblances anywhere —
 five languages, one farewell prayer:
 
 | language | goodbye | = |

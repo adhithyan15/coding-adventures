@@ -78,5 +78,5 @@ real first meeting. This slots between your greetings (Ch. 1–2) and farewells
 [PAUSE 3s] Why does Portuguese usually drop *eu*? (The verb ending says who.)
 What does *me chamo* literally mean, and its root? ("I call myself"; *clāmāre*.)
 What does *prazer* mean, and its Italian twin? ("A pleasure"; *piacere*.)
-Portuguese now runs greet → introduce → how-are-you → goodbye, end to end — the
-fifth language to close the loop.
+Portuguese now runs greet → introduce → how-are-you → goodbye, end to end —
+the loop is closed.

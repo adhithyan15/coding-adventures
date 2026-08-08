@@ -33,8 +33,8 @@ reviews_of: [TA-C17-transparent-middle-synonyms, TA-C24-night-register-darkness,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01] -->
 
-[PAUSE 2s] Every other language in this arc had a confidently-sourced
-story for its "morning" word — Sanskrit, or clearly native. Tamil's
+[PAUSE 2s] Tamil's neighbours each had a confidently-sourced story for
+their "morning" word — Sanskrit, or clearly native. Tamil's
 own word for morning is different: even Wiktionary itself isn't sure
 where it comes from.
 

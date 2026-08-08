@@ -52,7 +52,7 @@ The **আ-** in front is Sanskrit's *ā-*, "hither, toward" — the very prefix 
 turns going into coming. Hindi's *ānā* is that *ā-* welded onto *yā-*, the go-verb
 of the last lesson: "go, but this way." Bengali shows the same prefix on a
 different stem, and the honest position on that stem is that its history is
-unsettled; this course will not invent one for it.
+unsettled; this book will not invent one for it.
 
 ## Sounds you'll need: স
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:e141ae5a2efc8e27",
+  "sourceHash": "fnv1a64:251f36fd9697af71",
   "lessons": [
     {
       "id": "ES-C04-gracias",
@@ -1515,7 +1515,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f42bf3408df4a291",
+      "sourceHash": "fnv1a64:ba441b45cc7061b5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1541,7 +1541,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can write ñ and you can say it. Two of the next words in the course carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n."
+              "text": "You can write ñ and you can say it. Two of the next words in this book carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n."
             }
           ]
         },

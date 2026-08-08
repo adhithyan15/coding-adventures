@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a3c7390dd9db5c1",
+  "sourceHash": "fnv1a64:578c8067fccd9a7e",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -897,14 +897,14 @@
       "title": "مع السلامة (as-salāma) (maʿa s-salāma) — \"goodbye\"",
       "headword": "مع السلامة",
       "romanization": "maʿa s-salāma",
-      "gloss": "goodbye — literally 'with safety', closing the course on the root that opened it",
+      "gloss": "goodbye — literally 'with safety', closing the greeting arc on the root that opened it",
       "script": "arabic",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:16d95ec6d2c923e4",
+      "sourceHash": "fnv1a64:b227719d446dd21a",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af591db5810ac6fb",
+  "sourceHash": "fnv1a64:0434296a320b16ff",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -388,14 +388,14 @@
       "title": "படி (paḍi) — \"to read,\" and the letter that is two sounds",
       "headword": "படி",
       "romanization": "paḍi",
-      "gloss": "to read, to study — and the reason this course writes it paḍi with a d when the letter is ட",
+      "gloss": "to read, to study — and the reason this book writes it paḍi with a d when the letter is ட",
       "script": "tamil",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2c0a727552358fa4",
+      "sourceHash": "fnv1a64:58ad67ba9a906ea4",
       "notice": {
         "modality": "sight",
         "needs": [

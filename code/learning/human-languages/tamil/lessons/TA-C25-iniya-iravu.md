@@ -33,8 +33,9 @@ reviews_of: [TA-C24-night-register-darkness, TA-C24-iravu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01] -->
 
-[PAUSE 2s] Four languages in this arc all reached for the same Sanskrit
-phrase to say "good night." This lesson closes the arc with the one that
+[PAUSE 2s] Hindi, Kannada, Telugu, and Malayalam all reached for the same
+Sanskrit phrase to say "good night." This lesson closes the arc with the one
+that
 didn't — and it's a pattern you've actually seen from Tamil before, all
 the way back in Chapter 1.
 
@@ -51,7 +52,7 @@ built from Tamil's own word-stock, start to finish.
 ## Why it's said this way: The pattern this breaks
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-INIYA-IRAVU-02]; assesses=[] -->
 
-Every other language in this arc's GREETING-GOODNIGHT lesson reached for
+Tamil's Dravidian sisters and Hindi all reached for
 the **same** Sanskrit phrase: Hindi's **शुभ रात्रि**, Kannada's **ಶುಭ
 ರಾತ್ರಿ**, Telugu's **శుభ రాత్రి**, Malayalam's **ശുഭ രാത്രി** — all four
 built from the identical tatsama pair, **śubh** ("to be beautiful") +

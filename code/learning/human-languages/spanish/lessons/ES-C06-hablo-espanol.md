@@ -32,7 +32,8 @@ reviews_of: [ES-C06-espanol, ES-C06-ar-presente, ES-C06-hablar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESPANOL, ES-LEX-HABLAR] -->
 
-[PAUSE 2s] This is the moment the course has been building to. You take a
+[PAUSE 2s] This is the moment
+this book has been building to. You take a
 **verb** you conjugated yourself and a **noun** you took apart yourself, and
 make a sentence **nobody handed you pre-assembled**.
 

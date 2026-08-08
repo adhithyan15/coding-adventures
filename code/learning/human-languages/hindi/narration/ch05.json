@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cbeb6be21dffed51",
+  "sourceHash": "fnv1a64:20f1ec1638063c5d",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6aed02a1964d754d",
+      "sourceHash": "fnv1a64:5ed98f5b6afcd98f",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have the stem bol-. This lesson is the machine that turns any stem into a sentence about what someone does — and it is the single biggest piece of leverage in the course so far, because it fits every verb you will ever meet."
+              "text": "You have the stem bol-. This lesson is the machine that turns any stem into a sentence about what someone does — and it is the single biggest piece of leverage in this book so far, because it fits every verb you will ever meet."
             }
           ]
         },

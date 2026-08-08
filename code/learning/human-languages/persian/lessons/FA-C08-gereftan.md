@@ -7,7 +7,7 @@ chapter: 8
 type: word
 headword: گرفتن
 romanization: gereftan
-gloss: to take — and the clearest English cousin in the whole course
+gloss: to take — and the clearest English cousin in this book
 concept_tag: VERB-TAKE
 prerequisites: [FA-C07-neveshtan]
 sounds: [rtl, persian-gaf, short-vowels-unwritten]

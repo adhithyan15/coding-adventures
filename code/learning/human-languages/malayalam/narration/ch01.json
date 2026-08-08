@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bfb1a1a7a0f1d6f8",
+  "sourceHash": "fnv1a64:b228867e095b9ba0",
   "lessons": [
     {
       "id": "ML-C01-athe",
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2cdf31bc9b98e609",
+      "sourceHash": "fnv1a64:65e56bc8c04f01a1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -954,7 +954,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason this curriculum teaches the four side by side."
+              "text": "sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side."
             }
           ]
         },

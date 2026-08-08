@@ -41,7 +41,7 @@ lent it to English several dozen times over.
 
 > **la main** — the hand. **Feminine**, and worth flagging: it ends in a
 > consonant and still takes *la*. French gender is not predictable from the
-> ending, which is why this course always gives you the article.
+> ending, which is why this book always gives you the article.
 
 The *-ain* is the nasal vowel from Chapter 11's *pain* — say them together:
 *pain*, *main*.

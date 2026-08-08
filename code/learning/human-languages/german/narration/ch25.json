@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1615ff0ab8b33552",
+  "sourceHash": "fnv1a64:eb085c89028cb9aa",
   "lessons": [
     {
       "id": "GE-C25-nehmen",
@@ -456,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec43afdc6b61f234",
+      "sourceHash": "fnv1a64:66a99fa68a451154",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
             },
             {
               "kind": "speech",
-              "text": "One honest limit: when German names the person helped, that person's word takes a form this course has not taught. Keep to Ich helfe on its own."
+              "text": "One honest limit: when German names the person helped, that person's word takes a noun form this book has not taught. Keep to Ich helfe on its own."
             }
           ]
         },

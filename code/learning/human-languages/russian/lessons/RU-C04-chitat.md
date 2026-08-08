@@ -79,7 +79,7 @@ surfaces in Sanskrit *cétati*, "he perceives."
 And then the trail stops. There is **no secure English descendant**, and the two
 words that look promising are not it: **cheat** is a clipped *escheat*, from
 Latin *cadere*, "to fall," and **chit**, the little note, came into English from
-India. This course would rather hand you nothing than a cousin that is only a
+India. This book would rather hand you nothing than a cousin that is only a
 resemblance — the care it took with *говорить*, which is not *govern*.
 
 ## Guided Practice

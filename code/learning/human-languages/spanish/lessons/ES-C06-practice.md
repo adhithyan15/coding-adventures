@@ -83,6 +83,6 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 [PAUSE 3s] What are the three singular *-ar* endings? (*-o / -as / -a*.) Give the
 “I” form of all three verbs. (*Hablo, trabajo, estudio*.) Why does *Hablo
 español* need no separate subject word? (The *-o* carries “I.”) You can now
-generate sentences — the course stops
-handing you phrases and starts handing you *rules*. Next chapter adds the
+generate sentences — this book stops handing you phrases and starts handing
+you *rules*. Next chapter adds the
 *-er/-ir* verb families.

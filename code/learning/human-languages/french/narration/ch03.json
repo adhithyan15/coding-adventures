@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9f3ccd87a574d1a9",
+  "sourceHash": "fnv1a64:db59db21d0da9d56",
   "lessons": [
     {
       "id": "FR-C03-aller",
@@ -753,7 +753,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09c9c8711a2a7a6a",
+      "sourceHash": "fnv1a64:05a673609f516e36",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +841,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three Romance sisters, three different pictures of gratitude: French hands you a reward, Spanish hands you grace, Portuguese declares itself obliged. Same feeling, three metaphors — this is exactly the kind of thing the curriculum wants you to notice, not just memorize."
+              "text": "Three Romance sisters, three different pictures of gratitude: French hands you a reward, Spanish hands you grace, Portuguese declares itself obliged. Same feeling, three metaphors — this is exactly the kind of thing worth noticing, not just memorizing."
             }
           ]
         },

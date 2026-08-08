@@ -11,7 +11,7 @@ romanization: "(vowel killer)"
 prerequisites: [HI-W04-write-mera-naam, HI-W03-preposed-i, HI-W02-ka-ta-mouth-order]
 sounds: [devanagari-virama, devanagari-conjunct]
 roots: [sanskrit-virama, sanskrit-namas]
-etymology_hook: "virāma विराम means 'a STOPPING, a cessation' (vi- + ram- 'to rest') — the same word that grades Hindi's punctuation, pūrṇ virām 'complete stop' = full stop, alp virām 'slight stop' = comma; and namaste = namas 'a bow' + te 'to you', so the first word of the course is literally 'a bowing to you', from nam- 'to bend'"
+etymology_hook: "virāma विराम means 'a STOPPING, a cessation' (vi- + ram- 'to rest') — the same word that grades Hindi's punctuation, pūrṇ virām 'complete stop' = full stop, alp virām 'slight stop' = comma; and namaste = namas 'a bow' + te 'to you', so the first word of this book is literally 'a bowing to you', from nam- 'to bend'"
 duration:
   max_seconds: 181
 requires:

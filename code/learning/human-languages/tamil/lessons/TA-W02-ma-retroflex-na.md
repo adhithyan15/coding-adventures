@@ -33,8 +33,8 @@ reviews_of: [TA-W01-abugida-va-ka, TA-W01-curves-va-ka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-01] -->
 
-[PAUSE 2s] Two more letters, and with them you'll have every letter of the
-course's first word. One is easy. The other is a sound you may not be able to
+[PAUSE 2s] Two more letters, and with them you'll have every letter of
+this book's first word. One is easy. The other is a sound you may not be able to
 hear yet.
 
 ## Script you'll notice: ம
