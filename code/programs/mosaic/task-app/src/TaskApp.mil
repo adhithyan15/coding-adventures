@@ -36,6 +36,16 @@ component TaskApp {
   slot status-label : text ;
   slot status-warn  : text ;
 
+  // Per-project complexity toggle (Board ↔ Full CPM) — see
+  // code/specs/task-app-complexity-config-v1.md. `complexity-label` names the
+  // active project's CURRENT tier ("Board" / "Full CPM"), for a single small
+  // topbar button that flips it. `allow-timeline` is non-empty only when the
+  // active project is Full — it gates the Timeline button out of the
+  // view-switcher entirely for a Board-tier project, since the engine keeps
+  // computing CPM either way but Board tier deliberately never shows it.
+  slot complexity-label : text ;
+  slot allow-timeline   : text ;
+
   // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
   // of the task list, and `view-toggle-label` names the view you'd switch TO.
   //
@@ -142,6 +152,14 @@ component TaskApp {
   // `pkg::mosaic-pkg-notes::Notes` has the attach-to-task field (see its own
   // Notes.mil and code/specs/task-app-notes-ui-v1.md's addendum), the read side
   // is reachable and ships here.
+  //
+  // For a Board-tier project (see `complexity-label`/`allow-timeline` above and
+  // task-app-complexity-config-v1.md), the host additionally blanks cells 3
+  // (schedule window) and 6-8 (the CPM-derived detail lines) regardless of
+  // whether the row is expanded — Board tier hides these everywhere, not just
+  // in the collapsed state. Cells 2/4 (due/overdue) and 12/13 (dependencies/
+  // notes) are unaffected: they're basic todo-app concepts per the spec's
+  // Decision 4, not CPM output, so Board tier keeps them.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.
@@ -154,6 +172,9 @@ component TaskApp {
   emit onAddProject ;
   emit onAddSubproject ;
   emit onSelectProject ( index : number ) ;
+
+  // Flip the active project's complexity tier (Board ↔ Full).
+  emit onToggleProjectComplexity ;
 
   // Choose a view. Two explicit events rather than one toggle, so clicking the view
   // you are already on is a no-op instead of switching away from it.
