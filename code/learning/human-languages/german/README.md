@@ -65,8 +65,21 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 27 — Going, Running, Opening, Closing**: *gehen*, *laufen*,
   *rennen*, *öffnen*, *schließen* — where German's walk/run line actually
   falls, and the first separable verbs (*Ich mache die Hand auf*).
+- **Chapter 28 — Coffee, Tea, and Milk**: *der Kaffee*, *der Tee*, *die
+  Milch* — extends the *Wasser, bitte* request pattern to two loanwords
+  (Arabic/Turkish/Italian; Hokkien Chinese by way of Dutch) and one native
+  word.
+- **Chapter 29 — Friend and Family**: *der Freund*, *die Freundin* (the
+  native *-in* feminine suffix), *die Familie* (the one Latin loan in the
+  chapter).
+- **Chapter 30 — Eyes, Ears, Mouth, Nose**: *das Auge*, *das Ohr*, *der
+  Mund*, *die Nase* — extends Chapter 17's body-part material to the rest of
+  the face.
+- **Chapter 31 — Arm, Finger, Foot, Heart**: *der Arm*, *der Finger*, *der
+  Fuß*, *das Herz* — completes the five-word Hand/Arm/Finger/Fuß/Herz set
+  Chapter 17 named but only a fifth of which it taught.
 
-**All twenty-seven chapters are authored and in the book (140 pages).**
+**All thirty-one chapters are authored and in the book (166 pages).**
 
 ---
 
@@ -82,7 +95,7 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Eleven of twenty-seven chapters are authored: 17–27.** Those are exactly the
+**Fifteen of thirty-one chapters are authored: 17–31.** Those are exactly the
 chapters whose lessons have been migrated to schema version 2 and so declare
 real knowledge atoms. Chapters 1–16 are still schema v1 and carry no
 `practises.knowledge`, so a payoff written for them could only assess invented
@@ -105,6 +118,10 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 25 Taking, Asking, Helping, Liking | `GE-C25-moegen-lieben` | 10 / 10 = 1.00 |
 | 26 Sitting, Standing, Sleeping, Hearing | `GE-C26-hoeren` | 10 / 10 = 1.00 |
 | 27 Going, Running, Opening, Closing | `GE-C27-schliessen` | 10 / 10 = 1.00 |
+| 28 Coffee, Tea, and Milk | `GE-C28-milch` | 9 / 9 = 1.00 |
+| 29 Friend and Family | `GE-C29-familie` | 9 / 9 = 1.00 |
+| 30 Eyes, Ears, Mouth, Nose | `GE-C30-nase` | 12 / 12 = 1.00 |
+| 31 Arm, Finger, Foot, Heart | `GE-C31-herz` | 12 / 12 = 1.00 |
 
 Chapter 17 is the one authored chapter that fails. It runs three word lessons
 deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal consolidation lesson, so
@@ -132,6 +149,15 @@ had ever revisited are revisited here: `GE-SOUND-HAND-03`, `GE-ETYMON-HUND-03`,
 `GE-GRAMMAR-GERN-11`. The track's never-revisited share falls from **31 of 61
 atoms (51%) to 27 of 81 (33%)**.
 
+Chapters 28–31 are the pre-A1 vocabulary tranche (fourteen nouns; see
+CHANGELOG). All four payoffs close over their own chapter's atoms at 1.00
+representativeness. Chapter 28's payoff also rescues chapter 27's two
+never-revisited atoms, `GE-LEX-SCHLIESSEN-10` and `GE-ETYMON-SCHLIESSEN-11`;
+chapter 30's rescues chapter 26's disputed `GE-ETYMON-HOEREN-10` "sharp-eared"
+link, never revisited since it was flagged; chapter 31's reaches to chapters
+10, 13, 17, 22 and 26 at once, completing the Hand/Arm/Finger/Fuß/Herz set
+chapter 17 printed but only a fifth of which it taught.
+
 ## Reinforcement chaining (HL09 §7)
 
 A chapter-end payoff cannot close the R1 window (n+1…n+3), so the reach-back
@@ -156,6 +182,20 @@ runs at two cadences. Every lesson in chapters 24–25 also names atoms from the
 | `GE-C27-laufen` | `GE-C27-gehen`; ch. 26's umlaut break, ch. 25 `GE-ETYMON-HELFEN-08`, ch. 22 `GE-LEX-HUND-02` |
 | `GE-C27-oeffnen` | `GE-C27-laufen`, `GE-C27-gehen`, ch. 25 `GE-ETYMON-HELFEN-08`, ch. 17 *Hand* |
 | `GE-C27-schliessen` | all of chapter 27, plus chapters 17, 25 and 26 |
+| `GE-C28-kaffee` | ch. 19 `bitte` pattern; ch. 27's orphaned `GE-LEX-SCHLIESSEN-10`/`GE-ETYMON-SCHLIESSEN-11` |
+| `GE-C28-tee` | `GE-C28-kaffee` |
+| `GE-C28-milch` | all of chapter 28, plus ch. 19's `bitte` pattern again |
+| `GE-C29-freund` | `GE-C28-milch` |
+| `GE-C29-freundin` | `GE-C29-freund` |
+| `GE-C29-familie` | all of chapter 29 |
+| `GE-C30-auge` | `GE-C29-familie`; ch. 17 `GE-LEX-KOPF-02` |
+| `GE-C30-ohr` | `GE-C30-auge`; ch. 26 `GE-LEX-HOEREN-09`/`GE-ETYMON-HOEREN-10` |
+| `GE-C30-mund` | `GE-C30-ohr` |
+| `GE-C30-nase` | all of chapter 30, plus ch. 17 `GE-LEX-KOPF-02`/`GE-LEX-HAND-02` |
+| `GE-C31-arm` | `GE-C30-nase`; ch. 17 `GE-LEX-HAND-02` |
+| `GE-C31-finger` | `GE-C31-arm` |
+| `GE-C31-fuss` | `GE-C31-finger`; ch. 17 `GE-SOUND-GRIMMS-LAW-04` (via the prerequisite chain) |
+| `GE-C31-herz` | all of chapter 31, plus ch. 17 `GE-LEX-HAND-02`, ch. 22 `GE-ETYMON-HUND-03`, ch. 26 `GE-ETYMON-HOEREN-10` |
 
 The field that carries this is `practises.knowledge`. `reviews_of` names lesson
 ids, not atoms, so it cannot close a reinforcement window and never has.

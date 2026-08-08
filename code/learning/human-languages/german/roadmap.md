@@ -226,11 +226,49 @@ Spanish and French where a contrast helps. The recurring decoder is the
   the household German built on the verb it kept; the proposed link to Latin
   *claudere* is reported as unestablished. **Authored.**
 
+- **Ch. 28 — Coffee, tea, and milk**: the pre-A1 vocabulary tranche's food
+  chapter. ***der Kaffee*** (`GE-C28-kaffee`) — a loanword three hops deep,
+  Arabic *qahwa* → Ottoman Turkish *kahve* → Italian *caffè* → German
+  *Kaffee* → ***der Tee*** (`GE-C28-tee`) — a different loan by a different
+  route, Hokkien Chinese *tê* carried by Dutch sea traders, set beside the
+  overland *tea*/*chai* isogloss (Hindi, Russian, Turkish) by name → ***die
+  Milch*** (`GE-C28-milch`, the payoff) — the one native word of the three,
+  PIE *\*h₂melg-* "to milk," closing the trio the way Ch. 11's *Wasser*
+  closed beside the loanword *Wein*. Extends Ch. 19's *Wasser, bitte* pattern
+  to two more drinks and rescues Ch. 27's two orphaned atoms. **Authored.**
+- **Ch. 29 — Friend and family**: ***der Freund*** (`GE-C29-freund`) — the
+  same inherited word as English *friend*, both frozen Proto-Germanic present
+  participles of "to love" (PIE *\*preyH-*), the same root inside Ch. 2's
+  *freut mich* → ***die Freundin*** (`GE-C29-freundin`) — the native
+  feminine *-in* suffix as a general rule (Lehrer/Lehrerin,
+  Student/Studentin), with English's one surviving fossil, **vixen** →
+  ***die Familie*** (`GE-C29-familie`, the payoff) — the chapter's one Latin
+  loan, *familia* "household" (← *famulus*, "servant"), the group Ch. 10's
+  *Eltern* and *Geschwister* already belong to. **Authored.**
+- **Ch. 30 — Eyes, ears, mouth, nose**: extends Ch. 17's *Kopf*/*Hand*
+  body-part material. ***das Auge*** (`GE-C30-auge`) and ***das Ohr***
+  (`GE-C30-ohr`) both trace to confirmed PIE roots; ***der Mund***
+  (`GE-C30-mund`) is inherited but its root beyond Proto-Germanic is not
+  agreed upon, stated honestly rather than guessed; ***die Nase***
+  (`GE-C30-nase`, the payoff) is cousin to Latin *nasus* (English *nasal*) by
+  shared descent, the same *rot*/*rouge* shape as Ch. 13. Rescues Ch. 26's
+  disputed "sharp-eared" *hören*/*Ohr* link. **Authored.**
+- **Ch. 31 — Arm, finger, foot, heart**: completes the five-word
+  Hand/Arm/Finger/Fuß/Herz comparison Ch. 17 printed but only taught a fifth
+  of. ***der Arm*** (`GE-C31-arm`) — outside Grimm's law's reach entirely,
+  which is *why* it looks nearly identical to English *arm* → ***der
+  Finger*** (`GE-C31-finger`) — identical to English, with an explicitly
+  unproven proposed link to *fünf* → ***der Fuß*** (`GE-C31-fuss`) — a
+  second *p → f* Grimm's-law case beside *Vater*/*father*, its **ß**
+  following Ch. 13's long-vowel rule → ***das Herz*** (`GE-C31-herz`, the
+  payoff) — a third instance of Grimm's law's *k → h* swap, alongside
+  *hören*/*akoúein* (Ch. 26) and *Hund*/*canis* (Ch. 22). **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 28+ | Cases (der→den→dem) — owed since Ch. 25 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 27 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 27 has opened them, food, sprechen & the remaining irregular verbs — following the shared theme order |
+| 32+ | Cases (der→den→dem) — owed since Ch. 25 had to route around the accusative article after *mögen* and the dative object of *helfen*, and Ch. 27 had to pick *die Hand* as its object for the same reason; then the rest of the separable verbs now that Ch. 27 has opened them, sprechen & the remaining irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

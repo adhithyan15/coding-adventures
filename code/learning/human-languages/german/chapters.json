@@ -281,6 +281,116 @@
           "GE-LEX-HOEREN-09"
         ]
       }
+    },
+    {
+      "chapter": 28,
+      "title": "Coffee, Tea, and Milk",
+      "label": "ch:ge-coffee-tea-milk",
+      "canDo": "I can politely ask for coffee, tea, or milk in German, and say which of the three words is native and which two are loans.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GE-C28-milch",
+        "kind": "production",
+        "summary": "The chapter closes on Milch, the native word beside two loans: the reader produces all three drinks with der/die articles, extends Chapter 19's Wasser, bitte pattern to Kaffee, bitte and Tee, bitte, and states each word's route — Kaffee overland through Arabic, Turkish and Italian; Tee by sea from Hokkien Chinese by way of Dutch; Milch never borrowed at all. It reaches back to Chapter 19's bitte pattern and rescues Chapter 27's final atoms, GE-LEX-SCHLIESSEN-10 and GE-ETYMON-SCHLIESSEN-11, which no lesson had revisited.",
+        "assesses": [
+          "GE-LEX-KAFFEE-02",
+          "GE-SOUND-KAFFEE-03",
+          "GE-ETYMON-KAFFEE-04",
+          "GE-LEX-TEE-02",
+          "GE-SOUND-TEE-03",
+          "GE-ETYMON-TEE-04",
+          "GE-LEX-MILCH-02",
+          "GE-SOUND-MILCH-03",
+          "GE-ETYMON-MILCH-04",
+          "GE-LEX-BITTE-PLEASE-02",
+          "GE-PHRASE-WASSER-BITTE-03"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Friend and Family",
+      "label": "ch:ge-friend-and-family",
+      "canDo": "I can name a friend, male or female, and my family in German, build a feminine person-noun with -in, and say which of the three words is native and which is borrowed.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "GE-C29-familie",
+        "kind": "production",
+        "summary": "The chapter closes on Familie, the one Latin loan beside two native words: the reader produces der Freund, die Freundin and die Familie with articles, builds the feminine -in suffix on a masculine person-noun and names its one English fossil (vixen), and states that Familie gathers the very members Chapter 10 already named (Vater, Mutter, Bruder, Schwester, Geschwister). It reaches back to Chapter 2's freut mich, which shares Freund's root, and to Chapter 10's family words.",
+        "assesses": [
+          "GE-LEX-FREUND-02",
+          "GE-SOUND-FREUND-03",
+          "GE-ETYMON-FREUND-04",
+          "GE-LEX-FREUNDIN-02",
+          "GE-GRAMMAR-SUFFIX-IN-03",
+          "GE-ETYMON-SUFFIX-IN-04",
+          "GE-LEX-FAMILIE-02",
+          "GE-SOUND-FAMILIE-03",
+          "GE-ETYMON-FAMILIE-04"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Eyes, Ears, Mouth, Nose",
+      "label": "ch:ge-face-parts",
+      "canDo": "I can name the eye, ear, mouth, and nose in German, and say which of the four traces to a confirmed ancient root and which does not.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "GE-C30-nase",
+        "kind": "production",
+        "summary": "The chapter closes on Nase, cousin of both English nose and Latin nasus by separate descent: the reader produces all four face parts with articles and plurals, names Auge and Ohr as words with confirmed Proto-Indo-European roots, names Mund as inherited but not traced further, and completes Chapter 17's face by running Kopf, Auge, Ohr, Mund, Nase, Hand together. It reaches back to Chapter 17's Kopf and Hand and to Chapter 26's hören, rescuing the disputed 'sharp-eared' link between hören and Ohr.",
+        "assesses": [
+          "GE-LEX-AUGE-02",
+          "GE-SOUND-AUGE-03",
+          "GE-ETYMON-AUGE-04",
+          "GE-LEX-OHR-02",
+          "GE-SOUND-OHR-03",
+          "GE-ETYMON-OHR-04",
+          "GE-LEX-MUND-02",
+          "GE-SOUND-MUND-03",
+          "GE-ETYMON-MUND-04",
+          "GE-LEX-NASE-02",
+          "GE-SOUND-NASE-03",
+          "GE-ETYMON-NASE-04",
+          "GE-LEX-KOPF-02",
+          "GE-LEX-HAND-02"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Arm, Finger, Foot, Heart",
+      "label": "ch:ge-hand-table-complete",
+      "canDo": "I can name the arm, finger, foot, and heart in German, completing the Hand/Arm/Finger/Fuß/Herz table Chapter 17 named but did not finish teaching, and say which of the four shows Grimm's law and which sits outside it.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "GE-C31-herz",
+        "kind": "production",
+        "summary": "The chapter closes on Herz, the third word in the book to show Grimm's law's k-to-h swap: the reader produces all four words with articles, names Arm as a word outside Grimm's law's reach entirely, Fuß as a second p-to-f case beside Vater, and Finger's disputed link to fünf, and finally completes the five-word table Chapter 17 printed but only taught one-fifth of. It reaches back to Chapter 17's Hand and Grimm's law, Chapter 26's hören, and Chapter 22's Hund, all three of which supply the k-to-h comparison.",
+        "assesses": [
+          "GE-LEX-ARM-02",
+          "GE-SOUND-ARM-03",
+          "GE-ETYMON-ARM-04",
+          "GE-LEX-FINGER-02",
+          "GE-ETYMON-FINGER-03",
+          "GE-EVIDENCE-FINGER-FUENF-04",
+          "GE-LEX-FUSS-02",
+          "GE-SOUND-FUSS-03",
+          "GE-ETYMON-FUSS-04",
+          "GE-LEX-HERZ-02",
+          "GE-SOUND-HERZ-03",
+          "GE-ETYMON-HERZ-04"
+        ]
+      }
     }
   ]
 }
