@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:585d631c6cb2a93a",
+  "sourceHash": "fnv1a64:1867dec0b1c013b3",
   "lessons": [
     {
       "id": "ML-C28-uchakazhinju",
@@ -12,14 +12,14 @@
       "title": "ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — \"noon, having passed\"",
       "headword": "ഉച്ചകഴിഞ്ഞ്",
       "romanization": "",
-      "gloss": "\"afternoon\" (uchakaḻiññ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's \"noon\") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian kaẓi, \"to be over, spent\") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally \"noon having passed\" — a structurally different strategy than Telugu's TE-C28, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word",
+      "gloss": "\"afternoon\" (uchakaḻiññ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's \"noon\") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian kaẓi, \"to be over, spent\") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally \"noon having passed\" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bdf6bbb53b5f17a",
+      "sourceHash": "fnv1a64:e41a549db6c8c832",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest structural contrast: Telugu's own afternoon word (TE-C28, మధ్యాహ్నం) is the exact same word as its \"noon,\" simply widened to also cover \"afternoon\" — one word, stretched. Malayalam does something structurally different: ഉച്ച itself stays put, meaning only \"noon,\" and a second word — കഴിഞ്ഞ്, \"passed\" — gets bolted on to build a new phrase for \"afternoon.\" Same problem (naming the stretch of time after noon), two genuinely different solutions: semantic widening in Telugu, compositional phrase-building in Malayalam."
+              "text": "Here's the honest structural contrast: Telugu's own afternoon word (మధ్యాహ్నం) is the exact same word as its \"noon,\" simply widened to also cover \"afternoon\" — one word, stretched. Malayalam does something structurally different: ഉച്ച itself stays put, meaning only \"noon,\" and a second word — കഴിഞ്ഞ്, \"passed\" — gets bolted on to build a new phrase for \"afternoon.\" Same problem (naming the stretch of time after noon), two genuinely different solutions: semantic widening in Telugu, compositional phrase-building in Malayalam."
             }
           ]
         },

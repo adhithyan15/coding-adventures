@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:19b1565fd051c3b2",
+  "sourceHash": "fnv1a64:96b8b2d21640a8cc",
   "summary": {
     "totalLessons": 1345,
     "voice": 893,
@@ -11154,7 +11154,7 @@
       "reasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d89aa6546b6499a7"
+      "sourceHash": "fnv1a64:27f2396af22b0742"
     },
     {
       "id": "GE-C17-kopf",
@@ -11219,7 +11219,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f08371ea8b32fd39"
+      "sourceHash": "fnv1a64:0320e08d92620a31"
     },
     {
       "id": "GE-C19-bitte-requests",
@@ -12927,7 +12927,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9ea3170f752ff96"
+      "sourceHash": "fnv1a64:1312ac6766ba1c4c"
     },
     {
       "id": "HI-C29-shaam",
@@ -12966,7 +12966,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54bc4e10a097404f"
+      "sourceHash": "fnv1a64:2f546c9def3a7957"
     },
     {
       "id": "HI-C32-shubh-sandhya",
@@ -14814,7 +14814,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdb40bc5c17babcb"
+      "sourceHash": "fnv1a64:12b4b4c06d6601f7"
     },
     {
       "id": "KA-C29-shubhodaya",
@@ -16635,7 +16635,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c121410eb8791e2"
+      "sourceHash": "fnv1a64:1f7e1a50dbcee8a6"
     },
     {
       "id": "ML-C27-vaikunneram",
@@ -16661,7 +16661,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bdf6bbb53b5f17a"
+      "sourceHash": "fnv1a64:e41a549db6c8c832"
     },
     {
       "id": "ML-C29-suprabhaatham",
@@ -16674,7 +16674,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6912e9a6e8d8a94"
+      "sourceHash": "fnv1a64:1243bf8f8bdb38de"
     },
     {
       "id": "ML-C30-shubha-sayaahnam",
@@ -16687,7 +16687,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1534fdd93094a16"
+      "sourceHash": "fnv1a64:319b9cf0184e41fe"
     },
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -23264,7 +23264,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab1654179acfc46"
+      "sourceHash": "fnv1a64:c5945153902f2494"
     },
     {
       "id": "TA-C24-night-register-darkness",
@@ -23290,7 +23290,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1ba720045827d42"
+      "sourceHash": "fnv1a64:03301eb9bd9795c0"
     },
     {
       "id": "TA-C25-goodnight-alternatives",
@@ -24306,7 +24306,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af5ca885904eebd"
+      "sourceHash": "fnv1a64:d9da980866e3cf48"
     },
     {
       "id": "TE-C28-madhyahnam-widened",
@@ -24319,7 +24319,7 @@
       "reasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c6a0a323d457a5d"
+      "sourceHash": "fnv1a64:8eab8bc48df8486f"
     },
     {
       "id": "TE-C29-subhodayam",

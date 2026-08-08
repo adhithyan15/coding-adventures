@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5eac37ebcb9ae8cc",
+  "sourceHash": "fnv1a64:6ae266bd9d23bdce",
   "lessons": [
     {
       "id": "TA-C24-iravu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab1654179acfc46",
+      "sourceHash": "fnv1a64:c5945153902f2494",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil also keeps ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) — the same word already met, as a tatsama, in Kannada's ratri and Telugu's ratri (though those two lessons didn't draw out its PIE ancestry). It traces to Proto-Indo-European h₁reh₁- (\"to rest\"), a completely different root from Latin nox's nókʷts — the same specific comparison already drawn for Hindi's raat and Malayalam's rāthri earlier in this arc, now a third confirmation, same false-cognate pattern, same honest non-relationship to nox."
+              "text": "Tamil also keeps ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) — the same word that surfaces, as a tatsama, in Kannada's ratri and Telugu's ratri. It traces to Proto-Indo-European h₁reh₁- (\"to rest\"), a completely different root from Latin nox's nókʷts — the same specific comparison already drawn for Hindi's raat and Malayalam's rāthri earlier in this arc, now a third confirmation, same false-cognate pattern, same honest non-relationship to nox."
             }
           ]
         },

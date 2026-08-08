@@ -52,12 +52,10 @@ Persian/Arabic loan you use for the everyday noun "morning." Hindi's
 ## The exchange — Formal register
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C31-SUPRABHAT-02]; assesses=[] -->
 
-Here's a genuine, checked-not-assumed finding — hedged carefully, since
-this arc's earlier lesson (Telugu's TE-C25) only ever offered a
-similarly hedged claim itself: some sources describe Telugu speakers
+Here's a genuine, checked-not-assumed finding — hedged carefully, because
+the evidence behind it is thin: some sources describe Telugu speakers
 often code-switching to English "good night" instead of their own
-Sanskrit-descended phrase, though even that lesson admitted the
-evidence was thin and might apply more broadly across South Asian
+Sanskrit-descended phrase, though that claim might apply more broadly across South Asian
 languages, not just Telugu. सुप्रभात's own story is different again, and
 just as worth hedging: it skews toward **formal, written** contexts —
 speeches, radio, the well-known Hindi WhatsApp-forward "good morning

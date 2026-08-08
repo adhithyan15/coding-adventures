@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Chapter 16",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e0757a9507364a37",
+  "sourceHash": "fnv1a64:4dd5d88ce4eb5b94",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d89aa6546b6499a7",
+      "sourceHash": "fnv1a64:27f2396af22b0742",
       "notice": {
         "modality": "sight",
         "needs": [

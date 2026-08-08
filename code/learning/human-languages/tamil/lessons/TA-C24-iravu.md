@@ -52,9 +52,8 @@ lesson gives it its own full chapter.
 <!-- hl-knowledge: introduces=[TA-ETYMON-IRAVU-02]; assesses=[] -->
 
 Tamil also keeps **ராத்திரி** (**rāttiri**), a Sanskrit **tatsama** from
-**रात्रि** (*rātri*) — the same word already met, as a tatsama, in
-Kannada's *ratri* and Telugu's *ratri* (though those two lessons didn't
-draw out its PIE ancestry). It traces to **Proto-Indo-European**
+**रात्रि** (*rātri*) — the same word that surfaces, as a tatsama, in
+Kannada's *ratri* and Telugu's *ratri*. It traces to **Proto-Indo-European**
 ***\*h₁reh₁-*** ("**to rest**"), a **completely different** root from
 Latin *nox*'s ***\*nókʷts*** — the same specific comparison already drawn
 for Hindi's *raat* and Malayalam's *rāthri* earlier in this arc, now a

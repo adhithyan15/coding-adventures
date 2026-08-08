@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:043cd698c21af4b8",
+  "sourceHash": "fnv1a64:b0be1109c8dd7827",
   "lessons": [
     {
       "id": "ML-C30-shubha-sayaahnam",
@@ -12,14 +12,14 @@
       "title": "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ) — \"good evening,\" a different evening-word than expected",
       "headword": "ശുഭ സായാഹ്നം",
       "romanization": "",
-      "gloss": "\"good evening\" (śubha sāyāhnaṁ) — confirmed real, used \"from late afternoon until sunset\" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for \"evening,\" Wiktionary-labeled \"poetic\" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय (\"end\"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE seh₁- as Telugu's TE-C27 సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess",
+      "gloss": "\"good evening\" (śubha sāyāhnaṁ) — confirmed real, used \"from late afternoon until sunset\" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for \"evening,\" Wiktionary-labeled \"poetic\" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय (\"end\"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE seh₁- as Telugu's సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1534fdd93094a16",
+      "sourceHash": "fnv1a64:319b9cf0184e41fe",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സായാഹ്നം is, per a Sanskrit dictionary, a compound of साय (\"end\") plus अह्न (\"day\") — the same \"-ahna\" day-part suffix already met in words like madhyāhna and aparāhna. Following the etymology one hop further, Wiktionary's own साय entry explicitly confirms this root traces to Proto-Indo-European seh₁- (\"long, lasting\"), directly naming सायम् (sāyam — Telugu's own TE-C27 root) and Latin sērus as cognates. So this is a genuinely, properly-verified shared ancestor with Telugu's సాయంత్రం (TE-C27) — the same striking PIE chain to Latin sērus, French soir, and Italian sera — not merely a plausible guess, but a confirmed cognate, reached by chaining through two Wiktionary pages rather than stopping at the first."
+              "text": "സായാഹ്നം is, per a Sanskrit dictionary, a compound of साय (\"end\") plus अह्न (\"day\") — the same \"-ahna\" day-part suffix already met in words like madhyāhna and aparāhna. Following the etymology one hop further, Wiktionary's own साय entry explicitly confirms this root traces to Proto-Indo-European seh₁- (\"long, lasting\"), directly naming सायम् (sāyam — Telugu's own root) and Latin sērus as cognates. So this is a genuinely, properly-verified shared ancestor with Telugu's సాయంత్రం — the same striking PIE chain to Latin sērus, French soir, and Italian sera — not merely a plausible guess, but a confirmed cognate, reached by chaining through two Wiktionary pages rather than stopping at the first."
             }
           ]
         },
@@ -93,11 +93,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the confirmed echo — sāyāhnaṁ's साय root genuinely shares TE-C27's PIE seh₁-/Latin sērus connection",
+              "instruction": "the confirmed echo — sāyāhnaṁ's साय root genuinely shares the PIE seh₁-/Latin sērus ancestry behind Telugu's సాయంత్రం",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the confirmed echo — sāyāhnaṁ's साय root genuinely shares TE-C27's PIE *seh₁-/Latin sērus connection]"
+              "source": "[YOU SAY: the confirmed echo — sāyāhnaṁ's साय root genuinely shares the PIE *seh₁-/Latin sērus ancestry behind Telugu's సాయంత్రం]"
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ശുഭ സായാഹ്നം built on വൈകുന്നേരം, ML-C27's native evening word? (No — സായാഹ്നം is a completely separate Sanskrit tatsama.) What does Wiktionary's own part-of-speech label for സായാഹ്നം suggest about its register? (\"Poetic\" — a real, checkable signal it likely skews formal or literary.) Is it confirmed that സായാഹ്നം shares TE-C27's spectacular PIE root? (Yes — Wiktionary's separate साय entry directly confirms the same PIE seh₁- ancestry, naming sāyam and Latin sērus as cognates — a genuinely verified shared root, reached by following the etymology one hop further.)"
+              "text": "Is ശുഭ സായാഹ്നം built on വൈകുന്നേരം, ML-C27's native evening word? (No — സായാഹ്നം is a completely separate Sanskrit tatsama.) What does Wiktionary's own part-of-speech label for സായാഹ്നം suggest about its register? (\"Poetic\" — a real, checkable signal it likely skews formal or literary.) Is it confirmed that സായാഹ്നം shares that spectacular PIE root with Telugu's సాయంత్రం? (Yes — Wiktionary's separate साय entry directly confirms the same PIE seh₁- ancestry, naming sāyam and Latin sērus as cognates — a genuinely verified shared root, reached by following the etymology one hop further.)"
             }
           ]
         }

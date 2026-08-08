@@ -466,7 +466,7 @@
     {
       "language": "german",
       "chapter": 18,
-      "sourceHash": "fnv1a64:2155da730044ffdb",
+      "sourceHash": "fnv1a64:e9e07423bcae1d2b",
       "lessonIds": [
         "GE-C18-ja",
         "GE-C18-nein"
@@ -778,7 +778,7 @@
     {
       "language": "hindi",
       "chapter": 28,
-      "sourceHash": "fnv1a64:0921038afb607890",
+      "sourceHash": "fnv1a64:aa118d4de9155d64",
       "lessonIds": [
         "HI-C28-subah"
       ],
@@ -805,7 +805,7 @@
     {
       "language": "hindi",
       "chapter": 31,
-      "sourceHash": "fnv1a64:42f67f215afe7a22",
+      "sourceHash": "fnv1a64:20cdef2bc980d1ca",
       "lessonIds": [
         "HI-C31-suprabhat"
       ],
@@ -1276,7 +1276,7 @@
     {
       "language": "kannada",
       "chapter": 28,
-      "sourceHash": "fnv1a64:dfe03a16baaee8da",
+      "sourceHash": "fnv1a64:eec9235b2b616702",
       "lessonIds": [
         "KA-C28-aparahna"
       ],
@@ -1883,7 +1883,7 @@
     {
       "language": "malayalam",
       "chapter": 26,
-      "sourceHash": "fnv1a64:ff7692cb6892cabb",
+      "sourceHash": "fnv1a64:437e5d82ff116344",
       "lessonIds": [
         "ML-C26-raavile"
       ],
@@ -1901,7 +1901,7 @@
     {
       "language": "malayalam",
       "chapter": 28,
-      "sourceHash": "fnv1a64:fa6723cf53ce32c5",
+      "sourceHash": "fnv1a64:428c8a0427b509aa",
       "lessonIds": [
         "ML-C28-uchakazhinju"
       ],
@@ -1910,7 +1910,7 @@
     {
       "language": "malayalam",
       "chapter": 29,
-      "sourceHash": "fnv1a64:259a4f9ee9f336b4",
+      "sourceHash": "fnv1a64:0f0e11c1f1c88788",
       "lessonIds": [
         "ML-C29-suprabhaatham"
       ],
@@ -1919,7 +1919,7 @@
     {
       "language": "malayalam",
       "chapter": 30,
-      "sourceHash": "fnv1a64:43698bd93745ed51",
+      "sourceHash": "fnv1a64:727c2fe45971ffe0",
       "lessonIds": [
         "ML-C30-shubha-sayaahnam"
       ],
@@ -2837,7 +2837,7 @@
     {
       "language": "tamil",
       "chapter": 24,
-      "sourceHash": "fnv1a64:f461de4aada5eab7",
+      "sourceHash": "fnv1a64:d1418990f5c6ca40",
       "lessonIds": [
         "TA-C24-iravu",
         "TA-C24-night-register-darkness"
@@ -2847,7 +2847,7 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:6669425fbcc7f978",
+      "sourceHash": "fnv1a64:0654ee6779045a38",
       "lessonIds": [
         "TA-C25-iniya-iravu",
         "TA-C25-goodnight-alternatives"
@@ -3143,7 +3143,7 @@
     {
       "language": "telugu",
       "chapter": 27,
-      "sourceHash": "fnv1a64:4ae2d57c455c4cd5",
+      "sourceHash": "fnv1a64:617a41c5acc96650",
       "lessonIds": [
         "TE-C27-sayantram"
       ],
@@ -3152,7 +3152,7 @@
     {
       "language": "telugu",
       "chapter": 28,
-      "sourceHash": "fnv1a64:f210750981b56497",
+      "sourceHash": "fnv1a64:d5eace0b899e3573",
       "lessonIds": [
         "TE-C28-madhyahnam-widened"
       ],

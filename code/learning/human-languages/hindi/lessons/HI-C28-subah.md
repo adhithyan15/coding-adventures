@@ -6,12 +6,12 @@ sequence: 540
 chapter: 28
 type: word
 headword: सुबह
-gloss: "morning" (subah) — a Persian/Arabic loanword, NOT Sanskrit tatsama like din/raat; shares its Arabic root with ṣabāḥ, already met in the Arabic arc's "good night" phrase
+gloss: "morning" (subah) — a Persian/Arabic loanword, NOT Sanskrit tatsama like din/raat; shares the Arabic root ص-ب-ح with ṣabāḥ ("morning") and with the tuṣbiḥ inside the Arabic "good night" phrase
 concept_tag: TIME-MORNING
 prerequisites: [HI-C25-din, HI-C26-raat]
 sounds: [hindi-ba, hindi-ha]
 roots: [arabic-sbh-dawn]
-etymology_hook: "सुबह (subah, 'morning') is genuinely borrowed — Persian صبح (subh) ← Arabic صبح (ṣubḥ), from the triliteral root ص-ب-ح (ṣ-b-ḥ, 'dawn, to become morning') — the SAME Arabic root already met in this course's Arabic arc, inside تصبح على خير (tuṣbiḥ ʿalā khayr, 'good night,' literally 'may you wake into goodness,' AR-C27); unlike दिन/din and रात/raat (both Sanskrit tatsama, HI-C25/26), Hindi's everyday word for 'morning' isn't Sanskrit at all — a genuine break from the pattern the last two lessons set"
+etymology_hook: "सुबह (subah, 'morning') is genuinely borrowed — Persian صبح (subh) ← Arabic صبح (ṣubḥ), from the triliteral root ص-ب-ح (ṣ-b-ḥ, 'dawn, to become morning') — the SAME Arabic root that sits inside the Arabic goodnight تصبح على خير (tuṣbiḥ ʿalā khayr, 'good night,' literally 'may you wake into goodness'); unlike दिन/din and रात/raat (both Sanskrit tatsama, HI-C25/26), Hindi's everyday word for 'morning' isn't Sanskrit at all — a genuine break from the pattern the last two lessons set"
 duration:
   max_seconds: 222
 requires:
@@ -28,14 +28,14 @@ variety: standard-hindi
 reviews_of: [HI-C25-din, HI-C26-raat]
 ---
 
-# सुबह (subah) — "morning," and a root you've already met, in Arabic
+# सुबह (subah) — "morning," and a root that also sits in Arabic
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] दिन and रात were both Sanskrit words, straight through. This
-one breaks that pattern completely — and lands somewhere you've
-genuinely been before, in a different language entirely.
+one breaks that pattern completely — and lands on a root that also
+sits inside a different language entirely.
 
 ## You'll want to know — सुबह — a real surprise: not Sanskrit at all
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C28-SUBAH-01]; assesses=[] -->
@@ -47,13 +47,13 @@ Sanskrit tatsama, met the last two lessons), *subah* is genuinely
 **صبح** (*ṣubḥ*), built on the Arabic triliteral root **ص-ب-ح**
 (***ṣ-b-ḥ***, "dawn, to become morning").
 
-## You'll want to know — A root you've technically already learned — in Arabic
+## You'll want to know — A root that also sits inside an Arabic goodnight
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C28-SUBAH-02]; assesses=[] -->
 
-Here's the honest callback: this is the **exact same** Arabic root
-already met in this course's Arabic arc — inside **تصبح على خير**
+Here's the honest connection: this is the **exact same** Arabic root
+that sits inside the Arabic goodnight **تصبح على خير**
 (*tuṣbiḥ ʿalā khayr*, "good night," literally "may **you wake into
-goodness**," built on this very root, AR-C27). Hindi's everyday word for
+goodness**," built on this very root). Hindi's everyday word for
 "morning" and Arabic's own good-night farewell — a phrase that never
 even mentions "night" — both trace to the **same three Arabic
 consonants**, ص-ب-ح, arriving in Hindi by a completely different route
@@ -80,6 +80,6 @@ category, even when the last two examples made it look that way.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C28-SUBAH-01, HI-CONCEPT-C28-SUBAH-02, HI-CONCEPT-C28-SUBAH-03] -->
 
 [PAUSE 3s] Is सुबह a Sanskrit tatsama, like दिन and रात? (**No** — a
-genuine Persian/Arabic loanword.) What Arabic phrase, already taught in
-this course, shares सुबह's exact root? (**تصبح على خير**, *tuṣbiḥ ʿalā
+genuine Persian/Arabic loanword.) Which Arabic phrase, met earlier in this
+lesson, shares सुबह's exact root? (**تصبح على خير**, *tuṣbiḥ ʿalā
 khayr*, "good night" — both trace to the Arabic root ص-ب-ح, *ṣ-b-ḥ*.)

@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7a9b4182b27fd1c7",
+  "sourceHash": "fnv1a64:bd72e616f8422935",
   "lessons": [
     {
       "id": "TE-C28-madhyahnam-widened",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c6a0a323d457a5d",
+      "sourceHash": "fnv1a64:8eab8bc48df8486f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu also has అపరాహ్నం (aparāhnam), from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna in KA-C28: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way KA-C28 treated its own equivalent finding, not as fully settled."
+              "text": "Telugu also has అపరాహ్నం (aparāhnam), from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way Kannada's own equivalent finding was treated, not as fully settled."
             }
           ]
         },

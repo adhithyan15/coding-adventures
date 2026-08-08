@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ed596102fbc3b667",
+  "sourceHash": "fnv1a64:f1d6d17de7780612",
   "lessons": [
     {
       "id": "HI-C31-suprabhat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54bc4e10a097404f",
+      "sourceHash": "fnv1a64:2f546c9def3a7957",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's a genuine, checked-not-assumed finding — hedged carefully, since this arc's earlier lesson (Telugu's TE-C25) only ever offered a similarly hedged claim itself: some sources describe Telugu speakers often code-switching to English \"good night\" instead of their own Sanskrit-descended phrase, though even that lesson admitted the evidence was thin and might apply more broadly across South Asian languages, not just Telugu. सुप्रभात's own story is different again, and just as worth hedging: it skews toward formal, written contexts — speeches, radio, the well-known Hindi WhatsApp-forward \"good morning image\" culture — rather than casual spoken conversation, where नमस्ते commonly covers mornings too. That's a real formal/everyday split, but it isn't the same thing as being displaced by English specifically — there's no strong evidence for that particular substitution here. Don't assume every \"good ___\" greeting in every language this course covers follows the same displacement story; verify each one on its own, and don't flatten a hedge into a fact either way."
+              "text": "Here's a genuine, checked-not-assumed finding — hedged carefully, because the evidence behind it is thin: some sources describe Telugu speakers often code-switching to English \"good night\" instead of their own Sanskrit-descended phrase, though that claim might apply more broadly across South Asian languages, not just Telugu. सुप्रभात's own story is different again, and just as worth hedging: it skews toward formal, written contexts — speeches, radio, the well-known Hindi WhatsApp-forward \"good morning image\" culture — rather than casual spoken conversation, where नमस्ते commonly covers mornings too. That's a real formal/everyday split, but it isn't the same thing as being displaced by English specifically — there's no strong evidence for that particular substitution here. Don't assume every \"good ___\" greeting in every language this course covers follows the same displacement story; verify each one on its own, and don't flatten a hedge into a fact either way."
             }
           ]
         },
