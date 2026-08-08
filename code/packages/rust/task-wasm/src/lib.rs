@@ -682,6 +682,22 @@ pub unsafe extern "C" fn kanban(ptr: *const u8, len: usize) -> *mut u8 {
     }))
 }
 
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ComplexityArgs {
+    complexity: task_core::ProjectComplexity,
+}
+export_op!(
+    /// Set how much of the scheduling machinery the active project exposes
+    /// (`"board"` or `"full"` — see `task-app-complexity-config-v1.md`).
+    set_project_complexity,
+    ComplexityArgs,
+    |s, a| {
+        s.set_project_complexity(a.complexity);
+        Ok(())
+    }
+);
+
 // ── workspace operations (across projects) ────────────────────────────────────────
 
 #[derive(Deserialize)]
@@ -1467,6 +1483,39 @@ mod tests {
         assert!(call1(set_priority, r#"{"id":"a","priority":"high"}"#).contains(r#""ok":true"#));
         // Deleting the label unlinks it everywhere.
         assert!(call1(delete_label, r#"{"id":"l1"}"#).contains(r#""ok":true"#));
+    }
+
+    #[test]
+    fn project_complexity_op_targets_the_active_project() {
+        reset();
+        // A freshly reset workspace's project is newly created, so it starts Board
+        // (task-app-complexity-config-v1.md, Decision 3) — confirm that lands on the
+        // wasm surface too (via `snapshot()`, which embeds `ProjectSettings` as-is,
+        // the same "no dedicated read query" shape the settings field already had
+        // before this change), then flip it and confirm the flip is visible too.
+        let snap = take(snapshot());
+        assert!(
+            snap.contains(r#""complexity":"board""#),
+            "a freshly reset project should start Board: {snap}"
+        );
+
+        assert!(
+            call1(set_project_complexity, r#"{"complexity":"full"}"#).contains(r#""ok":true"#)
+        );
+        let snap = take(snapshot());
+        assert!(
+            snap.contains(r#""complexity":"full""#),
+            "expected the flipped setting to show up in the snapshot: {snap}"
+        );
+
+        assert!(
+            call1(set_project_complexity, r#"{"complexity":"board"}"#).contains(r#""ok":true"#)
+        );
+        let snap = take(snapshot());
+        assert!(
+            snap.contains(r#""complexity":"board""#),
+            "expected the flip back to Board to persist: {snap}"
+        );
     }
 
     #[test]

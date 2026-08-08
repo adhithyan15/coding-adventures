@@ -890,6 +890,18 @@ pub struct ProjectSettings {
     pub hours_per_day: u16,
     /// Working days in a standard week (for unit conversion).
     pub days_per_week: u8,
+    /// How much of the scheduling machinery this project exposes to the
+    /// user — see [`ProjectComplexity`]. Field-level `#[serde(default)]`
+    /// (not just this struct's own `Default` impl) so a snapshot saved
+    /// before this field existed still deserializes: it lands on
+    /// `ProjectComplexity::default()`, i.e. `Full` — identical to that
+    /// snapshot's actual prior behavior (Timeline and all scheduling
+    /// detail were always shown; there was no tier to leave). Newly
+    /// created projects are set to `Board` explicitly by the
+    /// project-creation ops instead of relying on this default — see
+    /// `code/specs/task-app-complexity-config-v1.md`, Decision 3.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub complexity: ProjectComplexity,
 }
 
 impl Default for ProjectSettings {
@@ -900,8 +912,30 @@ impl Default for ProjectSettings {
             currency: "USD".to_string(),
             hours_per_day: 8,
             days_per_week: 5,
+            complexity: ProjectComplexity::default(),
         }
     }
+}
+
+/// How much of the scheduling machinery a project exposes to the user.
+///
+/// The engine computes CPM the same way regardless of this setting — it is
+/// a **display-time** distinction the host makes, not a computation
+/// toggle. See `code/specs/task-app-complexity-config-v1.md` for the full
+/// design (what each tier hides, why there are exactly two, and why this
+/// lives on the project rather than the task).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum ProjectComplexity {
+    /// Board only: no Timeline view, no start/finish schedule window, no
+    /// CPM-derived task-detail lines (scheduled/earliest/latest, slack,
+    /// critical path). Due dates, overdue status, and dependencies still
+    /// show — they're basic todo-app concepts, not CPM output.
+    Board,
+    /// Everything: Timeline, full task-detail, every Sheet column.
+    #[default]
+    Full,
 }
 
 /// The unit durations are displayed in.
@@ -1002,7 +1036,18 @@ impl ProjectState {
             workflows: BTreeMap::new(),
             baselines: BTreeMap::new(),
             views: BTreeMap::new(),
-            settings: ProjectSettings::default(),
+            // `ProjectSettings::default()` gives `complexity: Full` (the
+            // safe choice for an *absent* field on a deserialized
+            // snapshot — see the field's doc comment). A brand-new
+            // project constructed here, in contrast, has no prior
+            // behavior to preserve, so it starts `Board` explicitly —
+            // where "simple by default" (task-app-super-app.md §2.3)
+            // actually lands. See task-app-complexity-config-v1.md,
+            // Decision 3.
+            settings: ProjectSettings {
+                complexity: ProjectComplexity::Board,
+                ..ProjectSettings::default()
+            },
         }
     }
 }

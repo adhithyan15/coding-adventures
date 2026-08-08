@@ -365,6 +365,15 @@ impl ProjectState {
         Ok(())
     }
 
+    /// Set how much of the scheduling machinery this project exposes to the
+    /// user (see [`ProjectComplexity`] and
+    /// `code/specs/task-app-complexity-config-v1.md`). Infallible — there's
+    /// no invalid value for a two-variant enum and nothing else to
+    /// validate against.
+    pub fn set_project_complexity(&mut self, complexity: ProjectComplexity) {
+        self.settings.complexity = complexity;
+    }
+
     /// Add a dated exception to a calendar. Rejects invalid intervals or unknown calendar.
     pub fn add_calendar_exception(
         &mut self,
@@ -1101,6 +1110,53 @@ mod tests {
             w.create_project(pid("x"), "x", Some(pid("nope"))),
             Err(OpError::NotFound)
         );
+    }
+
+    #[test]
+    fn new_projects_default_to_board_complexity() {
+        // "Simple by default" (task-app-super-app.md §2.3): every route to a new
+        // project — a fresh workspace's initial project, a top-level create, and a
+        // nested subproject — goes through ProjectState::empty(), so all three land
+        // on Board without needing to touch each caller individually.
+        let w = ws();
+        assert_eq!(
+            w.projects[&pid("p1")].settings.complexity,
+            ProjectComplexity::Board,
+            "the workspace's own initial project"
+        );
+
+        let mut w2 = ws();
+        w2.create_project(pid("p2"), "Second", None).unwrap();
+        w2.create_project(pid("sub"), "Sub", Some(pid("p2")))
+            .unwrap();
+        assert_eq!(
+            w2.projects[&pid("p2")].settings.complexity,
+            ProjectComplexity::Board,
+            "top-level create_project"
+        );
+        assert_eq!(
+            w2.projects[&pid("sub")].settings.complexity,
+            ProjectComplexity::Board,
+            "nested create_project"
+        );
+    }
+
+    #[test]
+    fn set_project_complexity_toggles_and_is_idempotent() {
+        let mut s = base();
+        assert_eq!(s.settings.complexity, ProjectComplexity::Board);
+
+        s.set_project_complexity(ProjectComplexity::Full);
+        assert_eq!(s.settings.complexity, ProjectComplexity::Full);
+
+        // Setting the same value again is a plain, side-effect-free overwrite —
+        // nothing else on the project changes.
+        let before = s.clone();
+        s.set_project_complexity(ProjectComplexity::Full);
+        assert_eq!(s, before);
+
+        s.set_project_complexity(ProjectComplexity::Board);
+        assert_eq!(s.settings.complexity, ProjectComplexity::Board);
     }
 
     #[test]

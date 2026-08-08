@@ -52,11 +52,13 @@ variant — this is not a one-way door.
   as `Full` — identical to today's actual behavior (Timeline visible,
   full task-detail, all Sheet columns). No regression, no surprise
   disappearance of data a user was already looking at.
-- **Newly created projects** get `Board` explicitly, set by the
-  `create_project`/`add_subproject` ops rather than relying on the
-  struct default. This is where §2.3's "simple by default" actually
-  lands: a brand-new project starts board-only and opts up, rather than
-  starting fully CPM-exposed and never being simplified.
+- **Newly created projects** get `Board` explicitly, set in
+  `ProjectState::empty()` — the single constructor every new project
+  goes through (top-level, nested subproject, or the workspace's own
+  initial default project) — rather than relying on the struct default.
+  This is where §2.3's "simple by default" actually lands: a brand-new
+  project starts board-only and opts up, rather than starting fully
+  CPM-exposed and never being simplified.
 
 ## Decision 4 — exactly what "Board" hides
 
@@ -132,8 +134,9 @@ Board-tier project, does the same.
 
 - `task-core`: `ProjectComplexity` enum (`Board`/`Full`, `#[serde(default)]`
   via the field), `ProjectSettings.complexity` field, a new
-  `set_project_complexity(project_id, complexity)` op, `create_project`/
-  `add_subproject` set `Board` explicitly on the new `ProjectSettings`.
+  `set_project_complexity(project_id, complexity)` op,
+  `ProjectState::empty()` sets `Board` explicitly on the new
+  `ProjectSettings` (see Decision 3).
 - `task-wasm`: `set_project_complexity` exported via the existing
   `export_ws_op!` macro pattern (no settings mutation op existed before
   this — `ProjectSettings` currently only reaches JS read-only, embedded

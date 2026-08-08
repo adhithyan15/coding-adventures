@@ -98,6 +98,13 @@ export function createTaskEngine(wasmBytes, options = {}) {
     setDecision: op("set_decision"),
     answerDecision: op("answer_decision"),
     setProjectName: op("set_project_name"),
+    /**
+     * How much of the scheduling machinery the active project exposes to
+     * the user — `{ complexity: "board" | "full" }`. See
+     * task-app-complexity-config-v1.md. The engine keeps computing CPM
+     * either way; this is a display-time filter the host applies.
+     */
+    setProjectComplexity: op("set_project_complexity"),
 
     // ── workspace operations (across projects) ──
     /**
