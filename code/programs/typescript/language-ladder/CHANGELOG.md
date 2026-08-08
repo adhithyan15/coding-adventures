@@ -8,8 +8,13 @@
   parses only completed lessons and the current frontier of each selected local
   path; Lessons and Concepts opt into the complete corpus when opened.
 - Split script data, curriculum plans, and generated-book ledgers into stable
-  cacheable chunks. The largest eager production chunk is now 409.48 kB and
+  cacheable chunks. The largest eager production chunk is now 475.10 kB and
   Vite's 500 kB warning is clean, down from one 7,115.81 kB JavaScript file.
+- Group lazy lessons into track-local batches capped near 32 kB. Corpus-wide
+  modes now fetch 278 batches instead of 1,669 per-lesson modules, while Learn
+  still downloads only the small batches containing its active frontiers.
+- Enforce the production budgets in BUILD: fewer than 400 lesson requests, no
+  lesson batch above 33 kB, and no eager chunk above 500 kB.
 - Preserve pure relative asset URLs for local and sub-path publication, and
   show an explicit loading or failure state while a requested corpus tranche
   arrives.

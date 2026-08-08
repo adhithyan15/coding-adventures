@@ -24,4 +24,5 @@ set -e
 npm install
 npm run typecheck
 npm run build
+npm run check:bundle
 npx vitest run
