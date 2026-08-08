@@ -2873,6 +2873,60 @@
       "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
     },
     {
+      "language": "russian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:0ce562adf7d1fad2",
+      "lessonIds": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ],
+      "tex": "russian/book/chapters/ch06-water-coffee-tea-bread.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:4ddc7c1db403cd12",
+      "lessonIds": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra"
+      ],
+      "tex": "russian/book/chapters/ch07-friend-and-siblings.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:886df16439a152b3",
+      "lessonIds": [
+        "RU-C08-semya"
+      ],
+      "tex": "russian/book/chapters/ch08-family.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:2e29240c130df1fb",
+      "lessonIds": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz"
+      ],
+      "tex": "russian/book/chapters/ch09-face-parts.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:8978e5aa9809cf91",
+      "lessonIds": [
+        "RU-C10-serdtse"
+      ],
+      "tex": "russian/book/chapters/ch10-heart.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:ed7e736c1528be0e",

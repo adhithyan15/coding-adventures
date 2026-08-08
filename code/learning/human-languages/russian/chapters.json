@@ -104,6 +104,142 @@
           "RU-ETYMON-LYUBIT-LOVE"
         ]
       }
+    },
+    {
+      "chapter": 6,
+      "title": "Water, Coffee, Tea, and Bread",
+      "label": "ch:russian-water-coffee-tea-bread",
+      "canDo": "I can name water, coffee, tea and bread with their genders in Russian, ask for any of them politely, and say which are native and which are loans.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "RU-C06-khleb",
+        "kind": "production",
+        "summary": "The chapter closes on хлеб, the word that looks native but is a prehistoric Germanic loan: the reader produces all four words with their genders, extends пожалуйста into a real request pattern on кофе and чай, and sorts the set into native (вода), loan disguised by age (хлеб), and two visibly foreign words that arrived by opposite routes (кофе by sea, чай overland). It reaches back to Chapter 5's любить, closing the chapter's own final atoms which nothing had yet revisited.",
+        "assesses": [
+          "RU-LEX-VODA",
+          "RU-GRAMMAR-NOUN-GENDER-ENDING",
+          "RU-ETYMON-VODA-WATER",
+          "RU-LEX-KOFE",
+          "RU-SCRIPT-FE",
+          "RU-ETYMON-KOFE-ROUTE",
+          "RU-LEX-CHAI",
+          "RU-ETYMON-CHAI-ROUTE",
+          "RU-GRAMMAR-REQUEST-PATTERN",
+          "RU-LEX-KHLEB",
+          "RU-SCRIPT-KHA",
+          "RU-ETYMON-KHLEB-LOAF",
+          "RU-LEX-LYUBIT",
+          "RU-GRAMMAR-L-EPENTHESIS",
+          "RU-ETYMON-LYUBIT-LOVE"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Friend and Siblings",
+      "label": "ch:russian-friend-and-siblings",
+      "canDo": "I can name a friend, brother and sister in Russian, build a feminine person-noun with по-...-а, and say which pronoun, ты or вы, goes with each.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "RU-C07-sestra",
+        "kind": "production",
+        "summary": "The chapter closes on сестра, брат's securely cognate pair: the reader produces друг, подруга, брат and сестра with their genders, builds the по-...-а feminine pattern on подруга, and names all four as exactly who Chapter 2's ты was for. It reaches back to Chapter 5's брать/брат minimal pair and rescues three Chapter 2 atoms — the ты/вы comparison, the vy-politeness pragmatics, and the ty/thou etymology — that nothing had revisited since.",
+        "assesses": [
+          "RU-LEX-DRUG",
+          "RU-ETYMON-DRUG-ACCOMPANY",
+          "RU-LEX-PODRUGA",
+          "RU-GRAMMAR-FEMININE-SUFFIX-A",
+          "RU-LEX-BRAT-NOUN",
+          "RU-ETYMON-BRAT-BROTHER",
+          "RU-LEX-SESTRA",
+          "RU-ETYMON-SESTRA-SISTER",
+          "RU-LEX-BRAT",
+          "RU-ETYMON-BRAT-BEAR",
+          "RU-COMPARISON-POLITE-PRONOUNS",
+          "RU-PRAGMATICS-VY-POLITENESS",
+          "RU-ETYMON-TY-THOU"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Family",
+      "label": "ch:russian-family",
+      "canDo": "I can name a family in Russian, and say what its own root shares with the English word home.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "RU-C08-semya",
+        "kind": "production",
+        "summary": "A one-lesson chapter that gathers Chapter 7's four people under семья, and reaches all the way back to Chapter 3's жить to rescue that lesson's stranded etymon — the two words share an idea, if not a root, and the chapter says so honestly.",
+        "assesses": [
+          "RU-LEX-SEMYA",
+          "RU-ETYMON-SEMYA-HOME",
+          "RU-LEX-DRUG",
+          "RU-LEX-PODRUGA",
+          "RU-LEX-BRAT-NOUN",
+          "RU-LEX-SESTRA",
+          "RU-LEX-ZHIT",
+          "RU-ETYMON-ZHIT-QUICK"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Eyes, Ears, Mouth, and Nose",
+      "label": "ch:russian-face-parts",
+      "canDo": "I can name the ear, nose, mouth and eye in Russian with their genders, and say which trace to a secure ancient root and which do not.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "RU-C09-glaz",
+        "kind": "production",
+        "summary": "The chapter closes on глаз, the word that quietly evicted Russian's true inherited eye-word: the reader produces all four face words with their genders, names ухо and нос as secure PIE cognates, names рот as an honest dead end, and traces глаз back to slang for 'ball' while placing the real cousin of English eye, око, inside очки. It is the first realization of SPINE-CHECK-WELLBEING in this track, and it reaches back to Chapter 3's видеть and говорить, rescuing three atoms nothing had revisited.",
+        "assesses": [
+          "RU-LEX-UKHO",
+          "RU-ETYMON-UKHO-EAR",
+          "RU-LEX-NOS",
+          "RU-ETYMON-NOS-NOSE",
+          "RU-LEX-ROT",
+          "RU-ETYMON-ROT-DIG",
+          "RU-LEX-GLAZ",
+          "RU-ETYMON-GLAZ-BALL",
+          "RU-LEX-VIDET",
+          "RU-ETYMON-VIDET-WIT",
+          "RU-GRAMMAR-CONSONANT-SWAP-I-FORM",
+          "RU-LEX-GOVORIT",
+          "RU-SCRIPT-GE-GAMMA"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Heart",
+      "label": "ch:russian-heart",
+      "canDo": "I can name the heart in Russian, pronounce its silent letter correctly, and name its cousins across three other languages.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "RU-C10-serdtse",
+        "kind": "production",
+        "summary": "A one-lesson chapter closing the tranche on сердце, the surest cognate in the book: the reader produces the word with its silent д, reads the new letter ц, names heart, cor and kardía as its cousins, and closes by naming любить as the verb the heart does — the last of Chapter 5's atoms to be rescued.",
+        "assesses": [
+          "RU-LEX-SERDTSE",
+          "RU-SCRIPT-TSE",
+          "RU-ETYMON-SERDTSE-HEART",
+          "RU-LEX-GLAZ",
+          "RU-ETYMON-GLAZ-BALL",
+          "RU-LEX-LYUBIT",
+          "RU-ETYMON-LYUBIT-LOVE"
+        ]
+      }
     }
   ]
 }
