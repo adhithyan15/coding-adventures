@@ -4532,9 +4532,14 @@ the Rust, Python, and TypeScript surfaces together.
      mobility-temperature-coefficient field.
 
 441. Python and TypeScript Berkeley SPICE BJT temperature-exponent parity.
-   - Status: implemented in this BJT XTI parity slice.
+   - Status: completed in PR 10099.
    - Both parser facades validate finite `XTI` values and lower them into the
      shared engine saturation-current-temperature-exponent field.
+
+442. Python and TypeScript Berkeley SPICE BJT energy-gap parity.
+   - Status: implemented in this BJT EG parity slice.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine energy-gap field.
 
 ## Backlog
 

@@ -1354,6 +1354,27 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0.5", 0.5],
+    ["1.2", 1.2],
+  ])("parses BJT energy gap %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NPN(EG=${value})
+Q1 col base emit fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      energyGapElectronVolts: expected,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])("rejects invalid BJT energy gap %s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(EG=${value})`)).toThrow(
+      "BJT EG must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

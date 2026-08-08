@@ -1337,6 +1337,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT XTI must be finite");
   }
+  const bjtEnergyGap = params.get("EG");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtEnergyGap !== undefined &&
+    (!Number.isFinite(bjtEnergyGap) || bjtEnergyGap <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT EG must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2049,6 +2057,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("TF") ?? 0.0,
       model.params.get("TR") ?? 0.0,
       model.params.get("XTI") ?? 3.0,
+      model.params.get("EG") ?? 1.11,
     );
   }
   if (prefix === "J") {
