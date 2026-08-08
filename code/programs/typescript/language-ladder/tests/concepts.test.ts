@@ -10,10 +10,12 @@ import {
 } from "../src/concepts.js";
 import {
   indicesByLanguage,
-  loadLessons,
   nextDue,
   type Lesson,
 } from "../src/lessons.js";
+import { REAL_LESSONS } from "./real-lessons.ts";
+
+const loadLessons = () => REAL_LESSONS;
 import { buildPool } from "../src/interleave.js";
 import { initStates, pickNext, reviewIn } from "../src/scheduler.js";
 import taxonomy from "../../../../learning/human-languages/concepts/taxonomy.json";

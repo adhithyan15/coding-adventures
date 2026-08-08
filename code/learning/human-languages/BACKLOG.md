@@ -287,7 +287,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
 | HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapters 3–5 practice. Coverage is 25 of 119 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
 | HL-Q01 | Complete (#10089, after #9916) | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npm run typecheck` passes after fixing the pre-existing DOM element type, review-log cast, ESM fixture paths, and unused test symbols; BUILD now keeps the gate enforced. |
-| HL-Q02 | Queued | Split Language Ladder's monolithic production JavaScript bundle. | Vite should no longer emit its 500 kB chunk warning; initial Learn-mode loading should not require the current 7.12 MB script while all modes and offline-relative deployment keep working. |
+| HL-Q02 | Complete (#10098) | Split Language Ladder's monolithic production JavaScript bundle. | Learn mode lazily fetches only completed and current-frontier lessons; corpus-wide views opt into the full set; the four eager chunks are each below 410 kB and Vite emits no size warning. |
+| HL-Q03 | Queued | Batch lazy full-corpus loading without regressing Learn's frontier-sized downloads. | Lessons and Concepts should retain on-demand loading but avoid issuing one request per canonical lesson when opening all 1,669 lessons. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
 | HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
@@ -2367,6 +2368,21 @@ problem.
 - The production build emits one 7,115.81 kB JavaScript chunk (1,800.06 kB
   gzip), above Vite's 500 kB warning threshold. HL-Q02 records that separate
   learner-loading concern without coupling a bundle redesign to this repair.
+
+## Findings from HL-Q02
+
+- The authored Markdown glob is now lazy. Learn mode asks for only the selected
+  paths' current frontiers plus lessons already passed there; Lessons and
+  Concepts explicitly load the complete corpus when first opened.
+- The production build has four eager JavaScript chunks: the 409.48 kB app
+  shell, 305.12 kB script data, 299.31 kB curriculum plans, and 374.16 kB book
+  ledgers. Vite emits no 500 kB warning, replacing the former 7,115.81 kB
+  monolith without raising the warning threshold.
+- A headless-Chrome run against `vite preview` rendered all 22 initial frontier
+  cards, including Persian and Urdu, from the relative-path production build.
+- The complete corpus currently produces 1,669 small lazy chunks. That is ideal
+  for frontier-sized Learn requests but creates excessive fan-out when a learner
+  first opens Lessons or Concepts, so HL-Q03 records a follow-up batching pass.
 
 ## Findings from HL-I03
 

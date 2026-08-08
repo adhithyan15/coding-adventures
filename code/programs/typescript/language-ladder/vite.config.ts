@@ -15,4 +15,29 @@ export default defineConfig({
   server: {
     fs: { allow: [repoRoot] },
   },
+  build: {
+    // Keep the interactive shell below Vite's 500 kB warning threshold. These
+    // canonical datasets change at different cadences and are independently
+    // cacheable; lesson Markdown is already split lazily by `lessons.ts`.
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "script-data",
+              test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]/,
+            },
+            {
+              name: "curriculum-plans",
+              test: /(?:curriculum\.json|core[\\/](?:languages|spine)\.json)$/,
+            },
+            {
+              name: "book-ledgers",
+              test: /(?:chapters\.json|generated-book-hashes\.json)$/,
+            },
+          ],
+        },
+      },
+    },
+  },
 });

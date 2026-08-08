@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { actualChapterHash, bookHashStatus, expectedBookHash } from "../src/bookhashes.ts";
-import { loadLessons } from "../src/lessons.ts";
+import { REAL_LESSONS } from "./real-lessons.ts";
+
+const loadLessons = () => REAL_LESSONS;
 
 describe("generated book source hashes", () => {
   it.each([

@@ -2,6 +2,18 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — frontier-sized production loading
+
+- Keep the 1,669-lesson Markdown corpus behind lazy imports. Learn initially
+  parses only completed lessons and the current frontier of each selected local
+  path; Lessons and Concepts opt into the complete corpus when opened.
+- Split script data, curriculum plans, and generated-book ledgers into stable
+  cacheable chunks. The largest eager production chunk is now 409.48 kB and
+  Vite's 500 kB warning is clean, down from one 7,115.81 kB JavaScript file.
+- Preserve pure relative asset URLs for local and sub-path publication, and
+  show an explicit loading or failure state while a requested corpus tranche
+  arrives.
+
 ### Fixed — standalone TypeScript validation
 
 - Restore a clean strict typecheck across the application and all tests by

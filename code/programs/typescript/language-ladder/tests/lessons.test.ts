@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   indicesByLanguage,
+  lessonIdFromPath,
   languageFromPath,
   languagesOf,
+  loadBundledLessons,
   loadLessons,
   toLesson,
   nextDue,
@@ -10,6 +12,7 @@ import {
 } from "../src/lessons.ts";
 import { buildPool } from "../src/interleave.ts";
 import { parseLesson } from "@coding-adventures/human-language-data/src/parse.ts";
+import { REAL_LESSONS } from "./real-lessons.ts";
 
 const SPANISH = `---
 id: ES-C17-futuro
@@ -62,6 +65,14 @@ describe("languageFromPath", () => {
   it("returns empty for a path that isn't a lesson", () => {
     expect(languageFromPath("../../elsewhere/notes.md")).toBe("");
     expect(languageFromPath("/human-languages/spanish/roadmap.md")).toBe("");
+  });
+});
+
+describe("lessonIdFromPath", () => {
+  it("reads the canonical id without loading lesson Markdown", () => {
+    expect(lessonIdFromPath("/human-languages/spanish/lessons/ES-C17-futuro.md"))
+      .toBe("ES-C17-futuro");
+    expect(lessonIdFromPath("/human-languages/spanish/curriculum.json")).toBe("");
   });
 });
 
@@ -134,9 +145,17 @@ describe("loadLessons", () => {
     // `dhanya` (the Sanskrit root of "thanks") is cited by Hindi, Kannada and
     // Telugu lessons — a real shared-root connection. If roots weren't plumbed
     // through toLesson, every lesson's roots would be [] and this would fail.
-    const withDhanya = loadLessons().filter((l) => l.roots.includes("dhanya"));
+    const withDhanya = REAL_LESSONS.filter((l) => l.roots.includes("dhanya"));
     const langs = new Set(withDhanya.map((l) => l.language));
     expect(langs.size).toBeGreaterThanOrEqual(2);
+  });
+
+  it("can load only a requested frontier instead of the whole corpus", async () => {
+    const lessons = await loadBundledLessons(["ES-C17-futuro", "TA-C06-dative-ukku"]);
+    expect(lessons.map((lesson) => lesson.id)).toEqual([
+      "ES-C17-futuro",
+      "TA-C06-dative-ukku",
+    ]);
   });
 });
 
