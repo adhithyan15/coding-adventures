@@ -7,13 +7,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Next up (priority order)
 
-1. **Rename off "Planner".** (User decision, 2026-08-06, still open — needs the user
-   awake to review.) "Planner" collides with an existing trademark (Microsoft Planner et
-   al.) — needs a new, trademark-safe name. User wants a **short list of alternatives
-   proposed**, not "Travail" locked in unilaterally. Not started: this needs the user's
-   input, not something to advance solo.
-
-2. **Design-fidelity gap, remaining items.** The clear value mismatches (colors that
+1. **Design-fidelity gap, remaining items.** The clear value mismatches (colors that
    didn't match a design token, collapsed-to-uniform spacing, drifted shadow alpha
    values) are closed — see `CHANGELOG.md`'s "re-closed the design-fidelity gap" entry.
    What's left needs either a product decision or real feature work, not a value fix:
@@ -35,7 +29,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
      was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
 
-3. **Phase 9 — per-project/task complexity config (board-only ↔ full CPM).** The
+2. **Phase 9 — per-project/task complexity config (board-only ↔ full CPM).** The
    nested-project tree half of Phase 9 shipped as `mosaic-pkg-project-nav` (see Resolved
    below); this is what's left. The spec calls it "the single most important product
    rule" (§2.3) but doesn't define what "board only" actually hides (Timeline tab?
@@ -88,6 +82,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Rename off "Planner".** Renamed the app's on-screen brand to **Trestle**
+  (2026-08-06, user picked from a proposed shortlist of Cadence / Waypoint /
+  Keel / Trestle). "Planner" collided with Microsoft Planner and others; the
+  name was never baked into any spec or package/directory path — only the
+  `TaskApp.mll` `brand-name` `Text` node and the `design/ui-prototype.html`
+  mock displayed it, so this was a small, contained value change, not a
+  structural rename. Verified live in both themes after rebuilding the web
+  bundle; zero console errors.
 - **Notes attach-to-task + task-detail notes paragraph.** Closes the gap the
   dependency-list entry below disclosed. `mosaic-pkg-notes` 0.2.0 gained a
   minimal "Attach to task" text field (task NAME, resolved to

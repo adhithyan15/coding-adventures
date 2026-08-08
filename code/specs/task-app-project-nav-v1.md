@@ -21,9 +21,10 @@ this repackages; nothing about its behavior changes here.
 ## What stays in TaskApp, and why
 
 - **The brand row** (logo mark + app name) — app identity, not project
-  navigation. Also the one thing the still-open "rename off Planner"
-  backlog item touches; keeping it out of this package means that
-  decision, whenever it lands, doesn't ripple through a package boundary.
+  navigation. Also the one thing the "rename off Planner" backlog item
+  touched (now resolved — the app is named Trestle); keeping it out of
+  this package meant that decision didn't ripple through a package
+  boundary when it landed.
 - **The view-switcher** (the segmented List/Board/Sheet/Calendar/Notes/
   Timeline tab row) — named alongside "nested-project tree" in the same
   roadmap bullet, but deliberately NOT extracted here. It's a single,

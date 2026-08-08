@@ -14,7 +14,7 @@ layout TaskApp {
     Column [ rail ] {
       Row [ brand ] {
         Box [ brand-mark ] { }
-        Text [ brand-name ] ( content : "Planner" )
+        Text [ brand-name ] ( content : "Trestle" )
       }
 
       // The nested-project tree + add-project composer, extracted verbatim
