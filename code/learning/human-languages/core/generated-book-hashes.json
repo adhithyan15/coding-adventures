@@ -2378,6 +2378,30 @@
       "tex": "sanskrit/book/chapters/ch07-core-verbs.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:8d6a437e1d223376",
+      "lessonIds": [
+        "SA-C08-cintayati",
+        "SA-C08-avagacchati",
+        "SA-C08-pathati",
+        "SA-C08-likhati"
+      ],
+      "tex": "sanskrit/book/chapters/ch08-mind-verbs.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:f4751f5879a2bf2f",
+      "lessonIds": [
+        "SA-C09-grhnati",
+        "SA-C09-prcchati",
+        "SA-C09-sahayyam-karoti",
+        "SA-C09-snihyati"
+      ],
+      "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:f60ef7e13f9bcde6",

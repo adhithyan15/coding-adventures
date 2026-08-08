@@ -1,0 +1,155 @@
+Sanskrit, chapter 8: The Mind and the Palm Leaf.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+चिन्तयति (cintayati) — "thinks," and a root that never reached English.
+
+Warm-up.
+[pause 2 seconds]
+Say "it knows." (Jānāti, root ज्ञा — the root English know is made of.) Here is what you do before you know.
+
+You'll want to know: चिन्तयति.
+[a table of 2 rows, read aloud]
+Sanskrit: चिन्तयति. sound: cintayati. meaning: he, she, or it thinks.
+Sanskrit: चिन्ता. sound: cintā. meaning: a thought, a worry.
+The root is चिन्त् (cint), "to think, to turn over." Chapter 3 already handed you the noun: न चिन्ता (na cintā), "no worry," is this root saying "think nothing of it."
+
+Sounds you'll need: the letters in चिन्तयति.
+चि is ci, said chi as in chip. Then न्त, न na stacked with त ta and said as one nt. य is ya, ति is ti: chin-ta-ya-ti.
+
+Grammar Lens: the tenth class plants अय.
+Three ways a गण class has turned a root into a present stem: add nothing (as-ti), add a vowel (bhava-ti), plant a syllable inside (jā-nā-ti). Here is the fourth.
+The tenth class inserts -अय- (-aya-) between root and ending: cint + aya + ti becomes चिन्तयति (cintayati). The marker is loud and always in the same position, so -aya- names its class on hearing.
+
+The word, taken apart — the c that used to be a k.
+चिन्त् goes back to PIE kweyt-, "to notice" — and its च c- is the rounded k from the numbers, which Indo-Iranian merged with plain k and then palatalised before a front vowel.
+Where it went next is the surprise. Baltic and Slavic took "notice" to "count" and then to read: Russian čitat and Lithuanian skaityti both mean "to read." Sanskrit made the same root mean think.
+And English? Nothing descends from kweyt-. The trail west runs out, and saying so beats inventing a cousin.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "cintayati" — it thinks]
+[pause 8 seconds for the answer]
+[your turn — say: the root and its planted syllable — cint … aya]
+[pause 8 seconds for the answer]
+[your turn — say: the Chapter 3 phrase built on the same root — na cintā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does class 10 put between root and ending, and what is cintayati's root? (-अय-; चिन्त्, the root of na cintā.) Why does the word begin with c and not k? (A rounded PIE k, merged and then palatalised — the numbers' rule.) Which verb of knowing came just before this one, and does cint have an English cousin? (जानाति; no — this root left English nothing.)
+
+
+Lesson 2 of 4.
+अवगच्छति (avagacchati) — "understands," going down into it.
+
+Warm-up.
+[pause 2 seconds]
+Say "it goes," then "it comes." (Gacchati, āgacchati — one उपसर्ग prefix apart.) And say "it thinks." (Cintayati.) One more prefix, and thinking turns into understanding.
+
+You'll want to know: अवगच्छति.
+[a table of 2 rows, read aloud]
+Sanskrit: गच्छति. sound: gacchati. meaning: it goes.
+Sanskrit: अवगच्छति. sound: avagacchati. meaning: it understands.
+अव (ava) means "down." Put it on "goes" and you get "goes down into" — and that is Sanskrit's ordinary verb for understanding. No new root, no new stem: one more preverb on a word you already own.
+Sanskrit has a second verb for it too, बुध्यते (budhyate), "wakes, comes to realise." Its ending -ते -te belongs to Sanskrit's second set of endings, used when the action loops back on the doer — waking is something you do to yourself.
+
+Sounds you'll need: the letters in अवगच्छति.
+Everything after two syllables is last chapter's word. The new opening is अ a plus व va: a-va-gach-cha-ti. In बुध्यते the middle is ध्य, a stack of ध dha and य ya, said glued: bu-dhya-te.
+
+The word, taken apart — the awakened one.
+गम्, under avagacchati, is still PIE gwem-, the root of English come and Latin venīre behind advent.
+बुध् is PIE bheudh-, "to be awake, to be aware." Its most famous derivative is बुद्ध (buddha), "the awakened one" — a title, not a name. Greek made it punthanomai, "to learn by asking"; Russian budit still means "to wake."
+English got it too, worn thin: forbid and bode (as in foreboding) descend from Old English bēodan, "to announce, to offer." Modern bid mixes that verb with a second, unrelated one — so keep to forbid and bode if you want the clean cousin.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "gacchati … avagacchati" — goes, understands]
+[pause 8 seconds for the answer]
+[your turn — say: the prefix and its sense — ava, down]
+[pause 8 seconds for the answer]
+[your turn — say: the other verb and its root — budhyate, budh]
+[pause 8 seconds for the answer]
+[your turn — say: what बुद्ध means — the awakened one]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build "understands" out of pieces you already had. (अव "down" + गच्छति "goes".) Name the three verbs that share that one stem. (Gacchati, āgacchati, avagacchati.) What does बुध् mean before it means "understand," and what title comes from it? (To wake; बुद्ध, the awakened one.) Which two English words are its clean cousins? (Forbid and bode.)
+
+
+Lesson 3 of 4.
+पठति (paṭhati) — "reads," and where the word went afterwards.
+
+Warm-up.
+[pause 2 seconds]
+Say "it thinks" and "it understands." (Cintayati, avagacchati.) This next verb is the plainest build in the chapter and the richest afterlife.
+
+You'll want to know: पठति.
+[a table of 2 rows, read aloud]
+Sanskrit: पठति. sound: paṭhati. meaning: he, she, or it reads.
+Sanskrit: पाठ. sound: pāṭha. meaning: a lesson, a recitation.
+The root is पठ् (paṭh), class 1 — root, vowel, ending, exactly like bhavati. Its first meaning is not "read" but "recite aloud, rehearse, study": reading was a thing done with the mouth, and Sanskrit named it that way.
+
+Sounds you'll need: the letters in पठति.
+प is pa. ठ is ṭha, a t made with the tongue curled back to the roof of the mouth and a puff of breath after it. ति is ti, tongue forward. Hear the two t-sounds apart: pa-ṭha-ti.
+
+The word, taken apart — worn down, or carried whole.
+This is the verb four living languages still read with — Hindi and Urdu paṛhnā, Bengali poṛa, Marathi paḍhṇe. The change is regular: that curled-back ठ softens between vowels, and the old ending drops off. A word reshaped by centuries of ordinary speech is तद्भव (tadbhava), "become from that."
+Now set चिन्ता beside it. It sits in Hindi, Marathi and Bengali unchanged — lifted back out of Sanskrit by scholars rather than inherited through speech. That kind is तत्सम (tatsama), "the same as that." Every claim about a Sanskrit word's descendants is one of those two, and they are not the same claim.
+
+Grammar Lens: where पठति itself came from.
+The usual account runs back through प्रथ् (prath), "to spread, to become widely known" — reciting as broadcasting — and behind that a root that also gives पृथिवी (pṛthivī), "the earth, the wide one."
+Some hold instead that paṭhati is a later, spoken form that scholars dressed up as Sanskrit. Keep the label on it, exactly as you did with punch: a common account, not a settled one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "paṭhati" — it reads, it recites]
+[pause 8 seconds for the answer]
+[your turn — say: a worn-down grandchild — paṛhnā]
+[pause 8 seconds for the answer]
+[your turn — say: a word carried whole — cintā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did paṭhati mean before "read," and which class builds it? (Recite aloud; class 1.) Name the two ways a Sanskrit word reaches a modern language. (तद्भव, worn down through speech; तत्सम, carried over whole.) Which is paṛhnā, which is cintā, and what label belongs on paṭhati's own ancestry? (Tadbhava; tatsama; a common account, not settled — the caution you kept on punch.)
+
+
+Lesson 4 of 4.
+लिखति (likhati) — "writes," and the scratch it started as.
+
+Warm-up.
+[pause 2 seconds]
+Say "it reads." (Paṭhati.) Name a language that still reads with that word. (Hindi paṛhnā, Bengali poṛa, Marathi paḍhṇe — any one.) Now the other half of literacy.
+
+You'll want to know: लिखति.
+[a table of 2 rows, read aloud]
+Sanskrit: लिखति. sound: likhati. meaning: he, she, or it writes.
+Sanskrit: लेखनी. sound: lekhanī. meaning: a pen.
+The root is लिख् (likh), class 6. Class 6 adds the same -a- class 1 does but leaves the root untouched: likh + a + ti. Two classes, one vowel, and the difference is only whether the root gets strengthened first.
+
+Sounds you'll need: the letters in लिखति.
+लि is li. ख is kha, a k with a puff of breath after it — the letter that opens khādati. ति is ti: li-kha-ti.
+
+The word, taken apart — writing is scratching.
+लिख् does not mean "write" first. It means to scratch, to scrape, to furrow, and "write" second — because writing was scratching, into palm leaf and birch bark with a stylus. The older sense stays visible in रेखा (rekhā), "a line, a scratch," the same root wearing an r.
+Outside Sanskrit the trail is thin but real: Greek ereikō, "to tear," and Lithuanian riekti, "to slice." No everyday English word descends from it — that is two roots in this chapter that left English nothing.
+Eastward, a different story: Hindi and Urdu likhnā, Bengali lekhā, Marathi lihiṇe — worn down, tadbhava, with Marathi's kh softened to h.
+
+What you've built: four verbs, four ways to build a stem.
+Cintayati, avagacchati, paṭhati, likhati. Thinking plants -अय-; understanding is "goes" with अव in front, or बुध्यते, waking; reading and writing take a plain -a-, class 1 and class 6.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "likhati" — it writes]
+[pause 8 seconds for the answer]
+[your turn — say: what the root meant first — to scratch]
+[pause 8 seconds for the answer]
+[your turn — say: the chapter's four — cintayati, avagacchati, paṭhati, likhati]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did लिख् mean before "write," and what are the chapter's four verbs? (To scratch; cintayati, avagacchati, paṭhati, likhati.) Which plants -अय-, and which is a prefix on a verb you already had? (Cintayati; avagacchati.) Which verb of understanding means "wakes," and what title comes from its root? (बुध्यते; बुद्ध.) Is Bengali lekhā tatsama or tadbhava, and which two word-histories here needed a label rather than a claim? (Tadbhava; paṭhati's ancestry and likh's English kin — the punch caution, twice.)

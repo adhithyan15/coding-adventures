@@ -2369,6 +2369,24 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 8,
+      "title": "The Mind and the Palm Leaf",
+      "label": "ch:sa-mind-verbs",
+      "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "title": "Taking, Asking, Helping, Loving",
+      "label": "ch:sa-doing-verbs",
+      "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "title": "Ask and Answer Names",
