@@ -4,6 +4,23 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - renamed the app's on-screen brand from "Planner" to "Trestle"
+
+"Planner" collided with an existing trademark (Microsoft Planner et al.).
+Presented the user a short list of trademark-safe alternatives (Cadence,
+Waypoint, Keel, Trestle) rather than locking one in unilaterally, per
+`BACKLOG.md`'s "Rename off Planner" item; the user picked **Trestle**.
+
+The name was never baked into any spec, package name, or directory path —
+only two files displayed it as a literal string: `TaskApp.mll`'s
+`brand-name` `Text` node (the single source of truth the React components
+are compiled from) and `design/ui-prototype.html`'s historical design
+mock (`<title>` and the rail's `.name` div). Rebuilt the web bundle
+(`scripts/build-web.sh`) to regenerate `host/web/src/TaskApp.{light,dark}.tsx`
+from the updated source — those two files are gitignored build output, not
+committed, so no other file needed touching. Verified live in both themes
+after rebuild: brand text reads "Trestle", zero console errors.
+
 ### Added - minimal notes attachment + notes paragraph in the task-detail panel
 
 Closes the gap the dependency-list entry below disclosed: `Note.attached_task`
