@@ -387,6 +387,38 @@
       "scriptSet": "arabic-main"
     },
     {
+      "language": "arabic",
+      "chapter": 33,
+      "title": "Asking for a Drink",
+      "label": "ch:ar-asking-for-a-drink",
+      "output": "arabic/book/chapters/ch33-asking-for-a-drink.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "title": "Asking for Food",
+      "label": "ch:ar-asking-for-food",
+      "output": "arabic/book/chapters/ch34-asking-for-food.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "title": "The People You Introduce",
+      "label": "ch:ar-people-you-introduce",
+      "output": "arabic/book/chapters/ch35-people-you-introduce.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "title": "Cups, Plates, and More Than One",
+      "label": "ch:ar-cups-plates-and-more-than-one",
+      "output": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",

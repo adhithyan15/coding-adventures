@@ -161,11 +161,58 @@ word lessons — never as a gated reading course.
   *ḥabīb*) and refused where they are false (*ahav* is **not** related).
   *ʾaḥabba* is the payoff and names all four shapes together. **Authored.**
 
+- **Ch. 33 — Asking for a drink** (`SPINE-POLITE-REQUEST-REPAIR`): **شاي**
+  (*shāy*) → **حليب** (*ḥalīb*) → **سكر** (*sukkar*) → **قهوة** (*qahwa*). The
+  chapter's subject is **what a root is for**, shown by contrast: *shāy* and
+  *sukkar* were **borrowed** and so have no root and no family, while *ḥalīb*
+  sits straight on **ح-ل-ب**, "to milk," the same verb-to-noun transparency as
+  *khubz* on **خ-ب-ز**. *Qahwa* is the payoff and names the **ة** as Arabic's
+  visible gender marker. Cousins are real throughout — *qahwa* → Turkish
+  *kahve* → Italian *caffè* → English **coffee**; *as-sukkar* → Spanish
+  **azúcar**, article and all — and the Aleppo milk story is refused as folk
+  etymology. **Authored.**
+
+- **Ch. 34 — Asking for food** (`SPINE-POLITE-REQUEST-REPAIR`): **ملح**
+  (*milḥ*) → **لحم** (*laḥm*) → **جبن** (*jubn*) → **طعام** (*ṭaʿām*). *Laḥm* is
+  *milḥ* reordered, which states the root system in one line, and its Hebrew
+  twin **לֶחֶם** (*leḥem*) means *bread* off the same root — the seam running
+  straight through **Bethlehem**. *Jubn* is the chapter's honest limit: the same
+  letters spell "cowardice," and the lesson refuses to make one root of them.
+  *Ṭaʿām* is the payoff, naming **ط** as the emphatic partner of **ت** beside
+  **ص** and **ض**, then pouring **ط-ع-م** through the *ma-* place shape of
+  *maktab* to **generate** **مَطْعَم** (*maṭʿam*), "a restaurant." **Authored.**
+
+- **Ch. 35 — The people you introduce** (`SPINE-EXCHANGE-NAMES`): **جار**
+  (*jār*) → **ابن**/**بنت** (*ibn*, *bint*) → **صديق** (*ṣadīq*). *Jār* is a
+  **hollow** root — **ج-و-ر** with its **و** collapsed into a long *alif*,
+  exactly as *qāla* hides **ق-و-ل** — and the hidden letter resurfaces in
+  *jāwara* and *jīrān*. *Ibn* and *bint* are gendered by one added **ت**, the
+  move *akh*/*ukht* already made; the grammarians' **ب-ن-ي** derivation is given
+  and then held loosely against Hebrew *ben*/*bat*. *Ṣadīq* is the payoff: root
+  **ص-د-ق**, "to be truthful," so a friend is the one who is *true* to you —
+  with *ṣidq*, *ṣādiq* (the doer shape of *qāʾil* and *kātib*), *ṣadaqa* and
+  *aṣdiqāʾ*, and the **فَعيل** (*faʿīl*) pattern collected for the third time
+  after *ḥalīb* and *malīḥ*. **Authored.**
+
+- **Ch. 36 — Cups, plates, and more than one** (`SPINE-POLITE-REQUEST-REPAIR`):
+  **زيت** (*zayt*) → **كوب** (*kūb*) → **طبق** (*ṭabaq*) → **ملعقة**
+  (*milʿaqa*). **ز** (*zāy*) is named as **ر** plus one dot — the dots-family
+  trick a third time — and *az-zayt* and *az-zaytūna* are shown surviving as
+  Spanish **aceite** and **aceituna**. The chapter's real subject is the
+  **plural**: *kūb* → *akwāb* and *ṭabaq* → *aṭbāq* in one shape,
+  **أَفْعال**, so the **broken** plural is a pattern rather than chaos.
+  *Milʿaqa* is the payoff, setting the *mi-* **tool** shape (*mirʾāh*,
+  *milʿaqa*) against the *ma-* **place** shape (*maktab*, *maṭʿam*) and sorting
+  broken against **sound** plurals (*qahawāt*, *ṣadīqāt*). *Kūb*'s resemblance
+  to Latin *cuppa* is offered as unsettled, not claimed. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 33+ | The rest of the core verb set, the present tense, negation, and the remaining derived forms (V–X) — always with the root engine and the Spanish-loanword thread |
+| 37+ | The rest of the core verb set, the present tense, negation, and the remaining derived forms (V–X) — always with the root engine and the Spanish-loanword thread |
+| pre-A1 backfill | The vocabulary criterion is short by **252 headwords** and the gate counts **one per lesson**, so this is the long pole. Household and place nouns (*bayt*, *bāb*, *kursī*, *ṭāwila*, *miftāḥ*) wait on an honest home: the nearest spine node, `SPINE-ASK-LOCATION`, is **A1**, and the seven pre-A1 nodes hold no concrete object among their 34 concepts |
+| Chapters 28–30 | Reheading their `## You'll want to know — The letters in this word` sections to the canonical `## The letters in this word`, so the letters become detachable and the six lessons regain a `voice` core |
 
 Note: Arabic marks **gender on "you"** (*anta* to a man, *anti* to a woman) —
 a different axis from the Spanish/French/German formal-vs-informal split.
