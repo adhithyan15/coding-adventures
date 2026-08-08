@@ -608,7 +608,7 @@ describe("the whole corpus", () => {
     // 378, not the 375 this was authored against: HL-C39 and HL-C40 each added a
     // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge, and
     // the Latin core-verb chapter (chapter 37, eight verb lessons) added one more.
-    expect(chapters).toHaveLength(443);
+    expect(chapters).toHaveLength(451);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

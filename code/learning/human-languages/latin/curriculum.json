@@ -394,6 +394,35 @@
         "LA-EXT-029-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "LA-PATH-030",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C42-fero",
+        "LA-C42-accipio",
+        "LA-C42-ludo",
+        "LA-C42-exspecto"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-030-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-031",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C43-respondeo",
+        "LA-C43-convenio",
+        "LA-C43-emo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-031-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -525,7 +554,9 @@
         "LA-PATH-026",
         "LA-PATH-027",
         "LA-PATH-028",
-        "LA-PATH-029"
+        "LA-PATH-029",
+        "LA-PATH-030",
+        "LA-PATH-031"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -534,18 +565,11 @@
         "VERB-SPEAK",
         "VERB-LEARN",
         "VERB-CAN",
-        "VERB-BRING",
-        "VERB-GET",
         "VERB-PUT",
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-LIVE",
-        "VERB-WORK",
-        "VERB-PLAY",
-        "VERB-WAIT",
-        "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY"
+        "VERB-WORK"
       ],
       "relocates": {}
     },
@@ -1085,6 +1109,33 @@
         "LA-C41-curro",
         "LA-C41-aperio",
         "LA-C41-claudo"
+      ]
+    },
+    {
+      "id": "LA-EXT-030-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of bringing, getting, playing and waiting, and say whether a verb is welded from two roots, built from a prefix on an older verb, or of unknown ancestry.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C42-fero",
+        "LA-C42-accipio",
+        "LA-C42-ludo",
+        "LA-C42-exspecto"
+      ]
+    },
+    {
+      "id": "LA-EXT-031-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the Latin verbs of answering, meeting and buying, and say what an English word means by reading the older sense of the Latin verb inside it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C43-respondeo",
+        "LA-C43-convenio",
+        "LA-C43-emo"
       ]
     }
   ]

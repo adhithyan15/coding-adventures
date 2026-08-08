@@ -109,6 +109,30 @@ the weekend (Ch. 21), *levantarse* to the reflexive of *me llamo* (Ch. 3) and to
 *la mano* and *la cabeza* (Ch. 24) — *levanto la mano* being the same verb
 without the pronoun.
 
+## Chapters 38-39 — the final verb tranche
+
+The last seven core verbs no track had realized. Chapter 38 groups the four
+whose *yo*-form or stem misbehaves; Chapter 39 groups the three that are
+perfectly regular, where the whole difficulty is meaning.
+
+| New lesson(s) | Introduces |
+|---|---|
+| traer | *trahere* "to drag"; *traigo* joins the hard-*g* club *oigo* opened; *traer* here vs *llevar* away |
+| conseguir | *cōnsequī* = *com-* + *sequī* "to follow"; **e→i**, plus the silent *u* leaving in *consigo* |
+| jugar | *iocārī* "to joke" ← *iocus*; the language's **only** *u→ue* verb; *lūdere* dropped as *claudere* was |
+| conocer | *cognōscere*, whose *-sc-* marks **beginning** — to *come* to know, hence "I met"; against *saber* |
+| esperar | *spērāre* "to hope" ← *spēs*; **wait, hope and expect** in one word; *despair* ← *dēspērāre* |
+| contestar | *contestārī* "to call witnesses"; English kept the fight (*contest*), Spanish the reply; *responder* ← *respondēre* |
+| comprar | *comparāre* = *com-* + *parāre* "to procure"; English *compare* is a **different** Latin verb, on *compār* |
+
+Each session practises the atoms of the one to three before it, across the
+chapter seam. The two payoff sessions reach much further back: *conocer* closes
+Chapter 38 and rescues *oigo* (Ch. 36) and *padre/father* (Ch. 23) as the model
+for sibling words; *comprar* closes Chapter 39 by shopping — *compro el pan, el
+vino y un café, por favor* — which pulls *pan* and *compañero* (Ch. 26), *vino*
+(Ch. 26), *café* and its Arabic *qahwa* (Ch. 6) and *por favor* (Ch. 6) forward
+after long silences.
+
 ## What comes next (recursive)
 
 Chapter 4 answers what Chapter 3 ends on: their reply to **"¿cómo está

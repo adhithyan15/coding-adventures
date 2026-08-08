@@ -1128,6 +1128,29 @@
       "tex": "italian/book/chapters/ch19-backwards-verb.tex"
     },
     {
+      "language": "italian",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:6d3aec87a5e28a14",
+      "lessonIds": [
+        "IT-C20-portare",
+        "IT-C20-comprare",
+        "IT-C20-aspettare",
+        "IT-C20-incontrare"
+      ],
+      "tex": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:1bbf4696f15b9f74",
+      "lessonIds": [
+        "IT-C21-giocare",
+        "IT-C21-ottenere",
+        "IT-C21-rispondere"
+      ],
+      "tex": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:d4a2f4f1675bb1d3",
@@ -1815,6 +1838,29 @@
       "tex": "latin/book/chapters/ch41-motion-verbs.tex"
     },
     {
+      "language": "latin",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:6fad56bd41d0a009",
+      "lessonIds": [
+        "LA-C42-fero",
+        "LA-C42-accipio",
+        "LA-C42-ludo",
+        "LA-C42-exspecto"
+      ],
+      "tex": "latin/book/chapters/ch42-getting-and-waiting-verbs.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:14d3d26e9a0ab943",
+      "lessonIds": [
+        "LA-C43-respondeo",
+        "LA-C43-convenio",
+        "LA-C43-emo"
+      ],
+      "tex": "latin/book/chapters/ch43-answering-meeting-buying.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:681af808b81537e1",
@@ -2435,6 +2481,29 @@
       "tex": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:779c8ba797e92346",
+      "lessonIds": [
+        "PT-C21-trazer",
+        "PT-C21-conseguir",
+        "PT-C21-esperar",
+        "PT-C21-comprar"
+      ],
+      "tex": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:03a1c7ec6f561b21",
+      "lessonIds": [
+        "PT-C22-responder",
+        "PT-C22-encontrar",
+        "PT-C22-jogar-brincar-tocar"
+      ],
+      "tex": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:5760617556944da1",
@@ -2878,7 +2947,7 @@
     {
       "language": "spanish",
       "chapter": 38,
-      "sourceHash": "fnv1a64:df3c16c1c32fc89c",
+      "sourceHash": "fnv1a64:c8ea6dde6af5f2dd",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
@@ -2886,6 +2955,30 @@
         "ES-C38-contar"
       ],
       "tex": "spanish/book/chapters/ch38-narrating.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:c8ea6dde6af5f2dd",
+      "lessonIds": [
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
+      ],
+      "tex": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:1734ff08f45ebaae",
+      "lessonIds": [
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
+      ],
+      "tex": "spanish/book/chapters/ch40-wait-answer-buy.tex"
     },
     {
       "language": "tamil",

@@ -495,6 +495,31 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-035",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-036",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C40-esperar",
+        "ES-C40-contestar",
+        "ES-C40-comprar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -625,7 +650,9 @@
         "ES-PATH-030",
         "ES-PATH-031",
         "ES-PATH-032",
-        "ES-PATH-033"
+        "ES-PATH-033",
+        "ES-PATH-035",
+        "ES-PATH-036"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -633,14 +660,7 @@
         "VERB-SEE",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-GIVE",
-        "VERB-BRING",
-        "VERB-GET",
-        "VERB-PLAY",
-        "VERB-WAIT",
-        "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY"
+        "VERB-GIVE"
       ],
       "relocates": {
         "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",

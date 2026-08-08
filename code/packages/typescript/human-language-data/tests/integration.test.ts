@@ -99,7 +99,12 @@ describe("real curriculum", () => {
     // 35 -> 37: the third verb tranche added Chapters 36 (oír, dormir, caminar, correr)
     // and 37 (abrir, cerrar, sentarse, levantarse), again split 4+4 to stay inside
     // maxNewAtomsPerChapter, and again on SPINE-SAY-WHAT-I-DO.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(38);
+    // 38 -> 40: HL-C52 took chapter 38 for the first above-A2 content (narrating), so
+    // the final verb tranche renumbered to 39 (traer, conseguir, jugar, conocer) and
+    // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
+    // the collision surfaced as a merge conflict on chapters.json rather than silently,
+    // because both sides must edit it.
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(40);
     expect(
       books.books
         .find((book) => book.language === "persian")

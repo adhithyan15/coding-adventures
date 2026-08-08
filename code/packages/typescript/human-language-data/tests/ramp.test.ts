@@ -106,7 +106,7 @@ describe("corpus snapshot", () => {
     // schema-v2 migration lands; the violation count will rise as it does, and that is
     // the measurement improving rather than the corpus worsening.
     expect(report.summary.unmeasurableLessons).toBe(572);
-    expect(report.summary.measurablePercent).toBe(60);
+    expect(report.summary.measurablePercent).toBe(61);
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {

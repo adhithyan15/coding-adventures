@@ -41,7 +41,7 @@ and put them in order.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `diphthong-ue` — *ue* is one glide, not two syllables.
-- `g-soft-gw` — between vowels the *g* softens; **luego** is *LWEH-ɣo*, not the
+- `g-soft-gw` — between vowels the *g* softens; **luego** is *LWEH-gho*, not the
   hard stop English puts in *go*.
 
 ## The word, taken apart: luego

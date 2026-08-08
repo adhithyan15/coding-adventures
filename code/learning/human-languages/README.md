@@ -101,11 +101,11 @@ edition is authored.
 
 | Language | Family / script | Status |
 |---|---|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–37 authored; 162 lessons; 29 of the 40 core verbs |
+| [Spanish](./spanish/README.md) | Romance / Latin | Reference track — Chapters 1–39 authored; 169 lessons; 36 of the 40 core verbs — and the tranche that leaves **none** unrealized corpus-wide |
 | [French](./french/README.md) | Romance / Latin | Chapters 1–27 authored; 89 lessons; 22 of the 40 core verbs |
 | [German](./german/README.md) | Germanic / Latin | Chapters 1–27 authored; 92 lessons; 22 of the 40 core verbs |
-| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–17 authored; Chapters 2–17 canonical/generated for app + book |
-| [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
+| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–21 authored; Chapters 2–21 canonical/generated for app + book; 73 lessons; 21 of the 40 core verbs |
+| [Portuguese](./portuguese/README.md) | Romance / Latin | Chapters 1–22 authored; Chapters 2–22 canonical/generated for app + book; 22 of the 40 core verbs |
 | [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1–30 authored; Chapters 3–30 canonical/generated for app + book; first track to realize core `VERB-*` concepts and the first to reach A2 |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1–33 authored; Chapters 6–33 canonical/generated for app + book; 11 inline writing steps |
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated; Ch. 7–9 = 14 core verbs, 98% drivable) |
@@ -116,7 +116,7 @@ edition is authored.
 | [Kannada](./kannada/README.md) | Dravidian / Kannada (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1–31 authored; Chapters 6–31 canonical/generated for app + book |
-| [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–41 authored; 81 lessons; 24 of the 40 core verbs |
+| [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapters 1–43 authored; 88 lessons; 31 of the 40 core verbs |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–9 authored (lessons + book; Chapters 6–9 canonical/generated) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1–5 authored (lessons + book; Chapters 3–5 canonical/generated). Chapters 4–5 are the eight core verbs; aspect is named, not finished |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Eight authored shared-spine chapters; 33 canonical lessons, including thirteen core verbs |

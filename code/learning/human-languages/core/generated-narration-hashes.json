@@ -2595,6 +2595,39 @@
       "jsonHash": "fnv1a64:adae5d2fccabffe0"
     },
     {
+      "language": "italian",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:8e8b66cfd72012b7",
+      "lessonIds": [
+        "IT-C20-portare",
+        "IT-C20-comprare",
+        "IT-C20-aspettare",
+        "IT-C20-incontrare"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch20.txt",
+      "json": "italian/narration/ch20.json",
+      "textHash": "fnv1a64:1939cafb88d0cbc1",
+      "jsonHash": "fnv1a64:5a8181e3a1c1dc4f"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:a761ac70bf7a393a",
+      "lessonIds": [
+        "IT-C21-giocare",
+        "IT-C21-ottenere",
+        "IT-C21-rispondere"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "italian/narration/ch21.txt",
+      "json": "italian/narration/ch21.json",
+      "textHash": "fnv1a64:61092490c4f28364",
+      "jsonHash": "fnv1a64:6cb1830b6592312d"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:61da3ea5036d0e14",
@@ -3744,6 +3777,39 @@
       "json": "latin/narration/ch41.json",
       "textHash": "fnv1a64:789a7ac18d00e297",
       "jsonHash": "fnv1a64:a650ca85c6e504a4"
+    },
+    {
+      "language": "latin",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:4dbf15871e17fae6",
+      "lessonIds": [
+        "LA-C42-fero",
+        "LA-C42-accipio",
+        "LA-C42-ludo",
+        "LA-C42-exspecto"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch42.txt",
+      "json": "latin/narration/ch42.json",
+      "textHash": "fnv1a64:d683fa407a37fa30",
+      "jsonHash": "fnv1a64:07d5e2e31f76219f"
+    },
+    {
+      "language": "latin",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:71453eda34ec1745",
+      "lessonIds": [
+        "LA-C43-respondeo",
+        "LA-C43-convenio",
+        "LA-C43-emo"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "latin/narration/ch43.txt",
+      "json": "latin/narration/ch43.json",
+      "textHash": "fnv1a64:c3803f03eef8aafc",
+      "jsonHash": "fnv1a64:a97a2763013cd568"
     },
     {
       "language": "malayalam",
@@ -4903,6 +4969,39 @@
       "jsonHash": "fnv1a64:dc90cc1ac8b193fe"
     },
     {
+      "language": "portuguese",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:0620ada581adf034",
+      "lessonIds": [
+        "PT-C21-trazer",
+        "PT-C21-conseguir",
+        "PT-C21-esperar",
+        "PT-C21-comprar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "portuguese/narration/ch21.txt",
+      "json": "portuguese/narration/ch21.json",
+      "textHash": "fnv1a64:acbc571e5de794f8",
+      "jsonHash": "fnv1a64:25cf5ee06a696e14"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:059a3c61a88fcec7",
+      "lessonIds": [
+        "PT-C22-responder",
+        "PT-C22-encontrar",
+        "PT-C22-jogar-brincar-tocar"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "portuguese/narration/ch22.txt",
+      "json": "portuguese/narration/ch22.json",
+      "textHash": "fnv1a64:b8ee21241894440c",
+      "jsonHash": "fnv1a64:bc2e8b2a10271c9b"
+    },
+    {
       "language": "punjabi",
       "chapter": 1,
       "sourceHash": "fnv1a64:03685e752baf67fe",
@@ -5977,7 +6076,7 @@
     {
       "language": "spanish",
       "chapter": 38,
-      "sourceHash": "fnv1a64:5a76e34b3a495c6c",
+      "sourceHash": "fnv1a64:fb08ebb4ab104061",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
@@ -5988,8 +6087,41 @@
       "drivablePrefix": 4,
       "text": "spanish/narration/ch38.txt",
       "json": "spanish/narration/ch38.json",
-      "textHash": "fnv1a64:c6899120915c3776",
-      "jsonHash": "fnv1a64:aca860193470ca05"
+      "textHash": "fnv1a64:5423519d63f4278b",
+      "jsonHash": "fnv1a64:d16e5823142a90a6"
+    },
+    {
+      "language": "spanish",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:7456067a57e86e2a",
+      "lessonIds": [
+        "ES-C39-traer",
+        "ES-C39-conseguir",
+        "ES-C39-jugar",
+        "ES-C39-conocer"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch39.txt",
+      "json": "spanish/narration/ch39.json",
+      "textHash": "fnv1a64:17cd66776c7c615f",
+      "jsonHash": "fnv1a64:bee3ee41fd2ec659"
+    },
+    {
+      "language": "spanish",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:ce6a6c3168436788",
+      "lessonIds": [
+        "ES-C40-esperar",
+        "ES-C40-contestar",
+        "ES-C40-comprar"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "spanish/narration/ch40.txt",
+      "json": "spanish/narration/ch40.json",
+      "textHash": "fnv1a64:3e0298514bd09b62",
+      "jsonHash": "fnv1a64:b0bae32827f8a1cb"
     },
     {
       "language": "tamil",

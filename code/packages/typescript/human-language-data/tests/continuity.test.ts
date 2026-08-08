@@ -264,9 +264,9 @@ describe("the real corpus", () => {
     // lesson's own, structurally unreachable), Bengali 12 of 18 -> 4 of 35, Tamil 53% ->
     // 38%, Arabic four ch28-30 atoms off zero. Adding vocabulary and reducing orphans at
     // the same time is the whole point; a corpus that only grows is not a course.
-    expect(report.summary.atomsTaught).toBe(1938); // +9: the four Spanish B1 lessons
-    expect(report.summary.atomsNeverRevisited).toBe(571);
-    expect(report.summary.neverRevisitedPercent).toBe(29);
+    expect(report.summary.atomsTaught).toBe(2014); // +9: the four Spanish B1 lessons
+    expect(report.summary.atomsNeverRevisited).toBe(514);
+    expect(report.summary.neverRevisitedPercent).toBe(26);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -297,7 +297,7 @@ describe("the real corpus", () => {
     // Note it keys on the HEADWORD, not the atom — chapter 38 introduces only
     // ES-GRAMMAR-LUEGO-CONNECTIVE-01 and requires chapter 5's ES-LEX-LUEGO, yet the
     // count is unchanged by that wiring.
-    expect(report.summary.forwardReferences).toBe(521);
+    expect(report.summary.forwardReferences).toBe(524);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -314,8 +314,8 @@ describe("the real corpus", () => {
     // So this is not a cost the new chapter incurred; it is a debt the old chapters
     // already had, which only became measurable once something followed them. Any
     // chapter appended to any track will do this, and the number is honest either way.
-    expect(report.summary.missedByWindow.R1).toBe(782);
-    expect(report.summary.missedByWindow.R2).toBe(1275);
+    expect(report.summary.missedByWindow.R1).toBe(785);
+    expect(report.summary.missedByWindow.R2).toBe(1294);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -341,11 +341,11 @@ describe("the real corpus", () => {
       // Chapter 38 added four lessons and ten atoms. The two ORDER numbers did not
       // move -- no new unsequenced lesson, no new forward prerequisite -- which is the
       // point of the pin: new content is supposed to leave the walk alone.
-      lessonCount: 166,
+      lessonCount: 173,
       lessonsWithoutSequence: 6,
       forwardPrerequisites: 5,
-      atomsTaught: 230,
-      atomsNeverRevisited: 82,
+      atomsTaught: 251,
+      atomsNeverRevisited: 68,
     });
   });
 

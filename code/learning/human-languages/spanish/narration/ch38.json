@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Telling What Happened",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5a76e34b3a495c6c",
+  "sourceHash": "fnv1a64:fb08ebb4ab104061",
   "lessons": [
     {
       "id": "ES-C38-luego",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ae2c7b60116965d",
+      "sourceHash": "fnv1a64:e9a02a7f9284da41",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "g-soft-gw — between vowels the g softens; luego is LWEH-ɣo, not the hard stop English puts in go."
+              "text": "g-soft-gw — between vowels the g softens; luego is LWEH-gho, not the hard stop English puts in go."
             }
           ]
         },
