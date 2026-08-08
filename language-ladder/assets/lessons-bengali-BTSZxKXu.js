@@ -1,0 +1,152 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+id: BN-C05-kaj-kora
+chapter: 5
+type: word
+headword: কাজ করা
+gloss: to work (lit. "work-do")
+concept_tag: BN-VERB-KORA
+prerequisites: [BN-C05-bola]
+sounds: [long-aa, o-inherent]
+roots: [kr-do, karya-work]
+est_minutes: 4
+reviews_of: [BN-C05-bola, BN-C05-thaka]
+---
+
+# কাজ করা (kāj kôrā) — "to work"
+
+## Warm-up
+
+[PAUSE 2s] The last verb of the chapter — and, like Hindi's *karnā*, it is a "do"
+verb that builds a hundred others.
+
+## The letters in this word
+
+**কাজ** (*kāj*, "work"): **কা** (*kā*) + **জ** (*j*). **করা** (*kôrā*, "do"): **ক**
+(*kô*) + **রা** (*rā*).
+
+## The word, taken apart
+
+**করা** (*kôrā*, "to do, to make") is from Sanskrit **√কৃ** (*√kṛ*, "to do"), from
+PIE **\\*kʷer-** — the same root you met in Chapter 1's **নমস্কার** (*nômoshkar* =
+*namas* + *kāra*, "the **making** of a bow") and in *karma*. And **কাজ** (*kāj*,
+"work") is itself from Sanskrit *kārya* ("work, task," also from √kṛ) — so "work-
+do" is, at root, "*kṛ*-thing *kṛ*-do." Like Hindi, Bengali builds compound verbs
+as **noun + করা**:
+
+- **কাজ করা** (*kāj kôrā*) = "work-do" = "**to work**"
+- **কথা বলা** (*kôthā bôlā*) = "to converse" (using *bôlā* from earlier)
+
+So *āmi kāj kôri* = "I work" — the *-i* "I" ending, no gender.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "kāj kôrā" (to work)]
+- [YOU SAY: "I work" — *āmi kāj kôri*]
+- [YOU SAY: the Chapter-1 word that shares the *√kṛ* root (*nômoshkar*)]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Sanskrit root do both *kôrā* ("do") and *kāj* ("work") come from,
+and name a Chapter-1 word built on it. (*√kṛ*, "to do"; *nômoshkar* — "the making
+of a bow.")
+`,r=e({default:()=>i}),i=`---
+id: BN-C05-practice
+chapter: 5
+type: practice
+headword: (dialogue)
+gloss: Chapter 5 recap — the first verbs
+concept_tag: REVIEW
+prerequisites: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora]
+sounds: []
+roots: []
+est_minutes: 4
+reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora, BN-C03-ami]
+---
+
+# Chapter 5 — The first verbs
+
+## Warm-up
+
+[PAUSE 2s] No new words. Three verbs, one gender-free engine — build real
+sentences about yourself.
+
+## Build the sentences
+
+[PAUSE 1s each]
+- [YOU SAY: "I speak Bengali" — *āmi bānglā bôli*]
+- [YOU SAY: "I live in Kolkata" — *āmi Kolkātāy thāki*]
+- [YOU SAY: "I work" — *āmi kāj kôri*]
+- [YOU SAY: "he speaks" and "she speaks" — *se bôle* (the same for both!)]
+
+## The engine
+
+[PAUSE 2s]
+- [YOU SAY: the "I" ending on every present verb (*-i*)]
+- [YOU SAY: the one thing Bengali verbs never mark (gender)]
+- [YOU SAY: where the verb sits, and where "in" sits (verb last; *-y/-te* after the noun)]
+
+## Roots you now carry
+
+[PAUSE 2s]
+- *bôlā* "to speak" (native; *bol-*, like Hindi/Punjabi)
+- *thākā* "to live" ← Sanskrit *sthā* → English **stand/stay/state**
+- *kôrā* "to do" ← *√kṛ* — root of *nômoshkar*; *kāj* "work" ← *kārya* (also √kṛ)
+- *bānglā* ← *bôngo*, the ancient region — the Ganges delta
+
+## Wrap-up Recall
+
+[PAUSE 3s] In one breath, say your language, your city, and your work in Bengali —
+and note what stays the same for anyone. (*Āmi bānglā bôli. Āmi … thāki. Āmi kāj
+kôri* — no gender, so it's the same for a man or a woman.)
+`,a=e({default:()=>o}),o=`---
+id: BN-C05-thaka
+chapter: 5
+type: word
+headword: থাকা
+gloss: to live, to stay, to remain
+concept_tag: BN-VERB-THAKA
+prerequisites: [BN-C05-bola]
+sounds: [tha-aspirate, long-aa]
+roots: [stha-sanskrit]
+est_minutes: 4
+reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli]
+---
+
+# থাকা (thākā) — "to live, to stay"
+
+## Warm-up
+
+[PAUSE 2s] A second verb, so you can say where you live.
+
+## The letters in this word
+
+**থা** (*thā*, an aspirated *t* + long *ā*) + **কা** (*kā*) → **থাকা** (*thākā*).
+
+## The word, taken apart
+
+**থাকা** (*thākā*, "to live, to stay, to remain") is from Sanskrit **স্থা**
+(*sthā*, "to stand, to stay") — the same PIE root **\\*steh₂-** ("to stand") that
+gives English **stand**, **stay**, **state**, and Latin *stāre*. So Bengali's "to
+live/stay" and English's "to stand/stay" are, at the root, one word. "I live in
+Kolkata" is **আমি কলকাতায় থাকি** (*āmi Kolkātāy thāki*) — stem *thāk-* + the *-i*
+"I" ending, no gender.
+
+## Grammar Lens: "in" comes after the noun
+
+**কলকাতায়** (*Kolkātāy*) = *Kolkata* + **-য়** / **-তে** (*-y/-te*, "in, at"), glued
+to the **end** of the noun. Bengali uses **post**positions (case-endings) where
+English uses prepositions: "Kolkata-in I live," the verb last.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "thākā"]
+- [YOU SAY: "I live in Kolkata" — *āmi Kolkātāy thāki*]
+- [YOU SAY: the English cousins of its root *sthā* (*stand, stay, state*)]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Sanskrit/PIE root is *thākā* from, and its English cousins?
+(Sanskrit *sthā* / PIE *\\*steh₂-* "to stand"; English **stand, stay, state**.)
+`;export{r as n,t as r,a as t};

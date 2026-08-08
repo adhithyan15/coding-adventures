@@ -1,0 +1,759 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-C06-hablar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 510
+chapter: 6
+type: word
+headword: hablar
+gloss: to speak / to talk — at root, "to tell stories"
+concept_tag: VERB-SPEAK
+prerequisites: [ES-C06-por-favor]
+sounds: [silent-h, r-tap, v-b]
+roots: [fabulari-latin]
+etymology_hook: "hablar ← Latin fabulārī 'to chat, tell tales' (← fābula 'story' → fable); the f→h sound-law"
+duration:
+  max_seconds: 220
+requires:
+  knowledge: [ES-SOUND-H-SILENT]
+introduces:
+  knowledge: [ES-LEX-HABLAR, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C06-por-favor]
+---
+
+# hablar — "to speak," which used to mean "to tell tales"
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Fixed phrases got you this far. **Hablar** ("to speak") is the
+first verb you will take apart and put back together. Today: the word
+itself. Next lesson: the pattern it unlocks.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SOUND-F-TO-H]; assesses=[] -->
+
+- \`silent-h\` — the **h is completely silent**: *hablar* = *ah-BLAR*.
+  (Spanish *h* never makes a sound.)
+- \`v-b\` — the *b* is a soft *b*; *hablo* = *AH-bloh*.
+
+That silent *h* is not an accident of spelling. Latin's initial **f-**
+weakened in a whole set of Spanish words and eventually fell silent
+altogether, but the scribes kept writing a letter where it used to be — and
+that letter is **h**. You are looking at the gravestone of an *f*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-HABLAR, ES-ETYMON-FABULARI]; assesses=[] -->
+
+**hablar** comes from Latin **fābulārī**, *"to chat, to tell tales"* — from
+**fābula**, "a story." So *to speak*, in Spanish, is at root *to tell
+stories*. Notice Latin had a plainer verb available (*loquī*, "to speak,"
+which English keeps in **eloquent** and **loquacious**) — and Spanish chose
+the chattier, more colourful one.
+
+That **fābula** is thoroughly English: **fable**, **fabulous**
+("story-like"), **confabulate**, and **ineffable** ("un-speak-able").
+
+The single path you need today is **fābulārī → hablar**; later words will
+let you test how broadly that *f- → h-* pattern reaches.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI] -->
+
+[PAUSE 1s]
+- [YOU SAY: "hablar" — *ah-BLAR*, silent *h*]
+- [YOU SAY: "hablar" then English "fable, fabulous, ineffable" — the *fābula* root]
+- [YOU SAY: the sound law — "fābulārī" then "hablar"]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI] -->
+
+[PAUSE 3s] What Latin word is *hablar* from, and what English word shares
+it? (*Fābulārī* ← *fābula* — **fable**.) What happened to its initial Latin
+*f-*? (It weakened away, leaving the written but **silent** Spanish *h-*.)
+Next: the ending pattern that turns this one verb into a machine.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: ES-C06-hablo-espanol
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 560
+chapter: 6
+type: phrase
+headword: Hablo español
+gloss: your first sentence built from parts — and the rule that languages take no article
+concept_tag: ES-SENTENCE-HABLO-ESPANOL
+prerequisites: [ES-C06-espanol, ES-C06-ar-presente, ES-W03-question-span]
+sounds: [enye-ny, silent-h]
+roots: [hispania-latin]
+duration:
+  max_seconds: 230
+requires:
+  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+introduces:
+  knowledge: [ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
+practises:
+  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C06-espanol, ES-C06-ar-presente, ES-C06-hablar]
+---
+
+# Hablo español — your first real sentence
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESPANOL, ES-LEX-HABLAR] -->
+
+[PAUSE 2s] This is the moment
+this book has been building to. You take a
+**verb** you conjugated yourself and a **noun** you took apart yourself, and
+make a sentence **nobody handed you pre-assembled**.
+
+## What you've built — the sentence assembled
+<!-- hl-knowledge: introduces=[ES-LEX-HABLO-ESPANOL]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP] -->
+
+Snap two things you already own together:
+
+> **Hablo** (I speak, from *hablar*) + **español** (Spanish) =
+> **Hablo español.**
+
+That is a complete, grammatical Spanish sentence, and notice what is **not**
+in it: no separate subject word. The *-o* of *hablo* already says "I" — the
+pro-drop you just learned, doing real work in a real sentence.
+
+Now swap the pieces and watch it generate:
+
+- **Estudio español.** — "I study Spanish."
+- **Trabajo.** — "I work."
+- **¿Hablas español?** — "Do you speak Spanish?" (the **¿ ?** pair opening
+  and closing the question, as in the writing lesson).
+
+## Grammar Lens: languages go bare
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-BARE-LANGUAGE]; assesses=[] -->
+
+One more thing missing from *hablo español*: **no "the," no "a."** After a
+verb like *hablar* or *estudiar*, a language name takes **no article** —
+*hablo español*, never *hablo el español*.
+
+This matters because Spanish otherwise loves its articles far more than
+English does (*me gusta **el** café*, "I like coffee"). So this is a genuine
+exception you have to hold onto, and the rule of thumb is narrow: right
+after *hablar*, the language goes bare.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE] -->
+
+[PAUSE 1s]
+- [YOU SAY: "Hablo español" — *AH-bloh es-pa-NYOL*]
+- [YOU SAY: swap the verb — "Estudio español", "Trabajo"]
+- [YOU SAY: ask it — "¿Hablas español?" (raise the pitch; ¿ opens it)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE] -->
+
+[PAUSE 3s] Say "I speak Spanish," then "I study Spanish." (*Hablo español;
+estudio español*.) Why is there no separate subject word? (The *-o* ending
+carries "I.") Why no "the" before *español*? (**Languages take no article**
+after a verb like *hablar*.) You just built a sentence from parts — that is
+the whole game from here.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: ES-C06-por-favor
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 500
+chapter: 6
+type: phrase
+headword: por favor
+gloss: please (literally "for [a] favour")
+concept_tag: COURTESY-PLEASE
+prerequisites: [ES-C06-cafe]
+sounds: [r-tap, v-b]
+roots: [pro-latin, favere-latin]
+etymology_hook: "por (← pro 'for') + favor (← favēre 'to favour') → English favour, favorite, favorable"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-CAFE, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+introduces:
+  knowledge: [ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR]
+practises:
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C04-gracias, ES-C04-de-nada]
+---
+
+# por favor — "please," i.e. "for a favour"
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can already thank (*gracias*) and reply (*de nada*). The third
+courtesy completes the set: **por favor**, "please" — literally *"for [a]
+favour."* You're asking someone to do you a kindness.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- \`r-tap\` — one soft tapped *r* in *por* and *favor*.
+- \`v-b\` — Spanish *v* and *b* sound **identical** (a soft *b*): *favor* ≈
+  *fah-BOR*. (So *favor* and English *favour* look alike *and* the *v* even sounds
+  like the *b* you'd hear in "harbour.")
+
+## The word, taken apart — the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-POR-FAVOR, ES-ETYMON-PRO-FAVOR]; assesses=[] -->
+
+- **por** = "for / through / by," from Latin **prō** ("for, on behalf of") — the
+  same *pro-* in English **pro**noun, **pro**pose, **pro**tect.
+- **favor** = "a favour, goodwill," from Latin **favēre**, *"to be favourable to,
+  to support."* It's the very word English borrowed: **favour**, **favorite**,
+  **favorable**, **favouritism**.
+
+So *por favor* literally says **“for a favour”** — *[do this] as a kindness
+to me.* English **favour**, **favorite**, and **favorable** keep the same
+Latin family visible without asking you to learn another language's formula.
+
+## Grammar Lens: the courtesy set is complete
+<!-- hl-knowledge: introduces=[ES-PRAGMATICS-POLITE-REQUEST]; assesses=[] -->
+
+You now hold the three pillars of politeness:
+
+- **por favor** — please (asking).
+- **gracias** — thank you (receiving).
+- **de nada** — you're welcome (replying).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR] -->
+
+[PAUSE 1s]
+- [YOU SAY: "por favor" — *por fah-BOR*, soft *v/b*]
+- [YOU SAY: "Café, por favor" — "Coffee, please"]
+- [YOU SAY: "favor" then English "favour, favorite" — one family]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR] -->
+
+[PAUSE 3s] What does *por favor* literally mean? ("For a favour.") What Latin
+verb is *favor* from, and its English cousins? (*favēre* — favour, favorite,
+favorable.) Which three-word courtesy loop do you now own? (*Por favor →
+gracias → de nada*.) Next: your first regular **verb** — *hablar*, “to speak.”
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: ES-C06-practice
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 570
+chapter: 6
+type: practice-mix
+headword: (practice)
+gloss: your first sentences — the -ar present tense in action
+concept_tag: CH6-PRACTICE
+prerequisites: [ES-C06-espanol, ES-C06-hablo-espanol]
+sounds: []
+roots: []
+duration:
+  max_seconds: 270
+requires:
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
+reviews_of: [ES-C06-hablar, ES-C06-ar-presente, ES-C06-trabajar, ES-C06-estudiar, ES-C06-espanol, ES-C06-hablo-espanol, ES-C04-practice]
+---
+
+# Practice — making sentences with -ar verbs
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] A milestone chapter: for the first time you're not reciting fixed
+phrases, you're **building sentences from a pattern**. Drill the three verbs
+through the endings until *hablo / hablas / habla* is automatic.
+
+## Grammar Lens: conjugate on command
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 1s] Run each verb through the three singular jobs you know: the ending
+alone for **I** → **tú** → **usted**:
+
+- **hablar**: hablo · hablas · habla
+- **trabajar**: trabajo · trabajas · trabaja
+- **estudiar**: estudio · estudias · estudia
+
+Same three endings (**-o / -as / -a**) every time — that's the whole regular
+**-ar** present, singular.
+
+## The exchange — say something real
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+> — ¿**Hablas** español? — **Hablo español.**
+> — ¿**Estudias** español? — **Estudio español.**
+> — **Café, por favor.** — ¡Gracias! — De nada.
+
+## What you've built this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- **por favor** — please (← "for a favour"), completing gracias / de nada / por
+  favor.
+- **the singular regular -ar pattern** — drop *-ar*, add **-o / -as / -a**: the
+  template behind *hablar, trabajar,* and *estudiar*.
+- **hablar** (← *fābula*, fable; the f→h law), **trabajar** (← *tripalium*,
+  torture → travail/travel), **estudiar** (← *studēre*, eagerness → student).
+- **Hablo español** — your first self-assembled sentence (pro-drop, no article).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE] -->
+
+[PAUSE 1s]
+- [YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]
+- [YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]
+- [YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]
+
+[REPEAT x2] Ask and answer “¿Hablas español? — Hablo español.”
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA] -->
+
+[PAUSE 3s] What are the three singular *-ar* endings? (*-o / -as / -a*.) Give the
+“I” form of all three verbs. (*Hablo, trabajo, estudio*.) Why does *Hablo
+español* need no separate subject word? (The *-o* carries “I.”) You can now
+generate sentences — this book stops handing you phrases and starts handing
+you *rules*. Next chapter adds the
+*-er/-ir* verb families.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: ES-C06-trabajar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 530
+chapter: 6
+type: word
+headword: trabajar
+gloss: to work (a second -ar verb — same pattern)
+concept_tag: VERB-WORK
+prerequisites: [ES-C06-hablar, ES-C06-ar-presente]
+sounds: [r-tap, j-jota, b-soft]
+roots: [tripalium-latin]
+etymology_hook: "trabajar ← Latin tripaliāre 'to torture' (← tripalium, a 3-stake device) → English travail, travel"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+introduces:
+  knowledge: [ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]
+practises:
+  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM, ES-GRAMMAR-PRO-DROP]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C06-hablar, ES-C06-ar-presente]
+---
+
+# trabajar — "to work," and it once meant *torture*
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] A second **-ar** verb — snap it into the exact template you just
+learned. And *trabajar* has the darkest, best etymology in this chapter: it began
+as a word for **torture**, and it's the secret origin of English **travel**.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- \`j-jota\` — the **j** is a raspy *h*-from-the-throat (the *jota*): *trabajar* =
+  *tra-ba-**HAR***.
+- \`r-tap\`, \`b-soft\` — tapped *r*, soft *b*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]; assesses=[] -->
+
+**trabajar** comes from Vulgar Latin **tripaliāre**, *"to torture"* — from
+**tripalium**, a Roman instrument of torture made of **three stakes** (*tri-*
+"three" + *pālus* "stake," the root of English **pale** and **impale**).
+
+The chain of meaning is grimly logical: *torture* → *torment / suffering* →
+*hard toil* → just **work**. And English took the very same word down a parallel
+road:
+
+- **travail** — painful, laborious effort (and the pains of childbirth).
+- **travel** — yes: journeying was once such an *ordeal* that "travail" (toil)
+  became **travel** (to make a journey). Every time you *travel*, you're
+  etymologically being *tortured*.
+
+So even plain **trabajo**, “I work,” hides the old idea of toil as torment — a
+dark little joke inside an everyday verb.
+
+## Grammar Lens: same -ar template
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Drop **-ar**, add the ending — identical to *hablar*:
+
+| person | form | meaning |
+|---|---|---|
+| I (ending carries the subject) | **trabajo** | I work |
+| tú | **trabajas** | you work |
+| usted | **trabaja** | you (formal) work |
+
+Notice you didn't learn a new ending — that's the point. **One template, every
+regular -ar verb.**
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM, ES-GRAMMAR-PRO-DROP] -->
+
+[PAUSE 1s]
+- [YOU SAY: "trabajar" — *tra-ba-HAR*, raspy *j*]
+- [YOU SAY: "trabajo, trabajas, trabaja" — same endings as *hablo/hablas/habla*]
+- [YOU SAY: "trabajar" → travail → travel — torture became a journey]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM] -->
+
+[PAUSE 3s] What did *trabajar* originally mean, and from what device? ("To
+torture," ← *tripalium*, a three-stake tool.) What two English words come from
+the same root? (*Travail* and *travel*.) How do you say "I work"? (*Trabajo* —
+same *-o* ending.) Next: **estudiar**, "to study."
+`,d=e({default:()=>f}),f=`---
+id: ES-C07-beber
+chapter: 7
+type: word
+headword: beber
+gloss: to drink (another -er verb — cementing the pattern)
+concept_tag: VERB-DRINK
+prerequisites: [ES-C07-comer]
+sounds: [v-b, r-tap]
+roots: [bibere-latin]
+etymology_hook: "beber ← Latin bibere 'to drink' → English beverage, imbibe, bibulous, bib"
+est_minutes: 3
+reviews_of: [ES-C07-comer, ES-C07-vivir]
+---
+
+# beber — "to drink," and the pattern is yours
+
+## Warm-up
+
+[PAUSE 2s] One more **-er** verb to make the pattern automatic — **beber**, "to
+drink." Pair it with *comer* and you can talk about eating and drinking, the
+heart of any café or restaurant.
+
+## Sounds you'll need
+
+- \`v-b\` — both *b*'s are the soft Spanish *b*: *be-**BER***.
+
+## The word, taken apart
+
+**beber** comes from Latin **bibere**, *"to drink"* — a thirsty little root that
+soaked into English:
+
+- **beverage** — a drink (via Old French *bevrage*, from *bibere*).
+- **imbibe** — to drink in (*in-* + *bibere*).
+- **bibulous** — fond of drinking; **bib** — the cloth that catches drips; even
+  **beer**'s cousins hover nearby.
+
+## Grammar Lens: no new grammar — that's the point
+
+*beber* is a regular **-er** verb, so it takes the endings you already own:
+
+| yo | **bebo** | I drink |
+| tú | **bebes** | you drink |
+| él/ella/usted | **bebe** | he/she drinks / you (formal) drink |
+
+Nothing new to learn — you're just *reusing the machine*. Now you can say:
+
+> **Como** pan y **bebo** agua. — "I eat bread and drink water."
+
+Two verbs, two nouns, one sentence you built yourself.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "beber" — *be-BER*]
+- [YOU SAY: "bebo, bebes, bebe" — the familiar *-o/-es/-e*]
+- [YOU SAY: "Como y bebo" — "I eat and drink"]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Latin verb is *beber* from, and its English cousins? (*bibere* —
+beverage, imbibe.) Did *beber* need any new endings? (No — it's a regular *-er*
+verb.) Say "I drink." (*Bebo*.) Next: start **asking** — *qué*, "what?"
+`,p=e({default:()=>m}),m=`---
+id: ES-C07-comer
+chapter: 7
+type: word
+headword: comer
+gloss: to eat (your first -er verb)
+concept_tag: VERB-EAT
+prerequisites: [ES-C06-hablar]
+sounds: [r-tap, vowel-o]
+roots: [comedere-latin]
+etymology_hook: "comer ← Latin comedere 'to eat up' (com- + edere 'eat') → English edible, comestible"
+est_minutes: 4
+reviews_of: [ES-C06-hablar, ES-C06-practice]
+---
+
+# comer — "to eat," and the second verb family
+
+## Warm-up
+
+[PAUSE 2s] Last chapter you learned the **-ar** verbs. Spanish has two more
+families — **-er** and **-ir** — and here's the good news: they're **almost the
+same**. Meet **comer** ("to eat"), your first **-er** verb.
+
+## Sounds you'll need
+
+- \`r-tap\` — one soft tap: *ko-**MER***.
+- The *c* before *o* is a hard *k*: *comer* = *ko-MER*.
+
+## The word, taken apart
+
+**comer** comes from Latin **comedere**, *"to eat up"* — **com-** (intensifier,
+"completely") + **edere**, "to eat." That **edere** is the twin of English **eat**
+(both from the same ancient root), and it feeds a small English family:
+
+- **edible** — fit to be eaten.
+- **comestible** — a fancy word for food (straight from *comedere*).
+- English **eat** itself — the Germanic cousin of Latin *edere*.
+
+## Grammar Lens: the -er present tense
+
+The pattern is the **-ar** one with the *a*'s swapped for *e*'s. Drop **-er**, add:
+
+| person | -ar was | **-er** is | *comer* → |
+|---|---|---|---|
+| yo | -o | **-o** | **como** (I eat) |
+| tú | -as | **-es** | **comes** (you eat) |
+| él/ella/usted | -a | **-e** | **come** (he/she eats) |
+| (nosotros) | -amos | -emos | comemos |
+| (ellos/ustedes) | -an | -en | comen |
+
+So the **yo** form is identical (**-o**), and *tú*/*él* just trade *a* for *e*:
+*hablas/habla* → *comes/come*. If you know *-ar*, you already 90% know *-er*.
+
+> ⚠️ Watch the false friend: **como** means "I eat" **and** "like/as" (*como tú*,
+> "like you") **and**, with an accent, **cómo** = "how?". Same four letters,
+> three jobs — the accent and context sort them out.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "comer" — *ko-MER*]
+- [YOU SAY: "como, comes, come" — note the *-o/-es/-e* endings]
+- [YOU SAY: "comer" then English "edible, comestible, eat" — the *edere* family]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Latin verb is *comer* from, and its English cousins? (*comedere*
+← *edere* — edible, eat.) What are the three singular *-er* endings? (*-o / -es /
+-e*.) How do they differ from *-ar*? (Only the vowel: *a* → *e*.) Next: your
+first **-ir** verb, *vivir*.
+`,h=e({default:()=>g}),g=`---
+id: ES-C07-donde
+chapter: 7
+type: word
+headword: dónde
+gloss: where?
+concept_tag: QUESTION-WHERE
+prerequisites: [ES-C07-que, ES-C07-vivir]
+sounds: [d-soft, accent-mark]
+roots: [de-unde-latin]
+etymology_hook: "dónde ← Latin de unde 'from where' (unde 'whence'); the accent marks the question"
+est_minutes: 3
+reviews_of: [ES-C07-que, ES-C07-vivir]
+---
+
+# dónde — "where?"
+
+## Warm-up
+
+[PAUSE 2s] A second question word, and a second real question you can build:
+**dónde**, "where?" Pair it with *vivir* and you can ask the single most common
+getting-to-know-you question: *where do you live?*
+
+## Sounds you'll need
+
+- \`d-soft\` — the middle *d* is soft, near the *th* of *this*: *DON-deh*.
+- \`accent-mark\` — like *qué*, the **accent on *ó*** marks the question word
+  (*dónde* = "where?"; *donde* without = "where," a relative — "the place *where*").
+
+## The word, taken apart
+
+**dónde** comes from Latin **de unde**, literally *"from whence."* *unde* meant
+"from where," and Spanish glued *de* onto the front and wore the pair down to
+*dónde*. (English once had the matching set *whence / where / whither* — "from
+where / at where / to where"; Spanish keeps that flavour in *de dónde* "from
+where", *dónde* "where", *adónde* "to where".)
+
+## Grammar Lens: your first getting-to-know-you questions
+
+Two question words + verbs you own = real conversation:
+
+> **¿Dónde vives?** — "Where do you live?" → *Vivo en Madrid.*
+> **¿Dónde trabajas?** — "Where do you work?"
+> **¿Qué estudias?** — "What do you study?"
+
+Notice the little **en** ("in," ← Latin *in*) in the answer — the first
+preposition, slipping in exactly where you need it. You're now trading real
+questions and answers, not fixed phrases.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "dónde" — *DON-deh*, soft *d*]
+- [YOU SAY: "¿Dónde vives?" — "Where do you live?"]
+- [YOU SAY: answer — "Vivo en …" with your city]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Latin phrase is *dónde* from, and what did it mean? (*De unde* —
+"from whence.") Why the accent? (It marks the *question* word.) Ask "where do you
+live?" and answer it. (*¿Dónde vives? — Vivo en …*) Next: put the questions and
+verbs together in practice.
+`,_=e({default:()=>v}),v=`---
+id: ES-C07-practice
+chapter: 7
+type: practice-mix
+headword: (practice)
+gloss: asking and answering — the full present tense in real questions
+concept_tag: CH7-PRACTICE
+prerequisites: [ES-C07-comer, ES-C07-vivir, ES-C07-beber, ES-C07-que, ES-C07-donde]
+sounds: []
+roots: []
+est_minutes: 4
+reviews_of: [ES-C07-comer, ES-C07-vivir, ES-C07-que, ES-C07-donde, ES-C06-practice]
+---
+
+# Practice — asking real questions
+
+## Warm-up
+
+[PAUSE 2s] You now have all three verb families **and** two question words. This
+is where it becomes a conversation: you can **ask** and **answer**, not just
+recite. Drill until the questions come without thinking.
+
+## The whole present tense, at a glance
+
+[PAUSE 1s] Conjugate *yo → tú → él/ella* — feel how little differs:
+
+- **-ar** *hablar*: hablo · hablas · habla
+- **-er** *comer*: como · comes · come
+- **-ir** *vivir*: vivo · vives · vive
+
+**Endings:** *-ar* → -o/-as/-a; *-er* and *-ir* → **-o/-es/-e** (identical in the
+singular). Master these and you conjugate almost any regular verb.
+
+## Real exchanges
+
+> — ¿**Dónde vives**? — **Vivo** en Sevilla. ¿Y tú?
+> — **Vivo** en México. ¿**Qué estudias**?
+> — **Estudio** español. ¿**Qué comes**?
+> — **Como** una tapa y **bebo** un café. ¿Algo más? — Un agua, **por favor**.
+
+## What you've built this chapter
+
+- **comer / beber** (-er), **vivir** (-ir) — the two remaining verb families;
+  singular endings **-o / -es / -e**.
+- **qué** (← *quid*) and **dónde** (← *de unde*) — your first question words,
+  each wearing the **accent** and opening with **¿**.
+- **Real questions**: *¿Qué comes? ¿Dónde vives? ¿Dónde trabajas?* — and the first
+  preposition, **en** ("in"), in the answers.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: conjugate all three families, yo/tú/él, back to back]
+- [YOU SAY: ask a stranger three things — where they live, what they study, what
+  they're eating — and answer for yourself]
+- [YOU SAY: chain a whole café moment — greet, order "por favor", ask/answer,
+  say "gracias", "adiós"]
+
+[REPEAT x2] "¿Dónde vives? — Vivo en … ¿Y tú?"
+
+## Wrap-up Recall
+
+[PAUSE 3s] What are the singular endings for *-er/-ir* verbs? (*-o / -es / -e*.)
+Give the "I" forms of *comer, vivir, beber*. (*Como, vivo, bebo*.) Ask "what do
+you study?" and "where do you live?" (*¿Qué estudias? ¿Dónde vives?*) You can now
+hold a simple back-and-forth — this book is fully in sentence territory. Next:
+**numbers** (uno, dos, tres) and telling someone your age and phone.
+`,y=e({default:()=>b}),b=`---
+id: ES-C07-que
+chapter: 7
+type: word
+headword: qué
+gloss: what? (your first question word)
+concept_tag: QUESTION-WHAT
+prerequisites: [ES-C07-comer]
+sounds: [k-hard, accent-mark]
+roots: [quid-latin]
+etymology_hook: "qué ← Latin quid 'what' → English quiddity, quid pro quo; the accent marks the question"
+est_minutes: 3
+reviews_of: [ES-C07-comer, ES-W01-acento]
+---
+
+# qué — "what?", your first question word
+
+## Warm-up
+
+[PAUSE 2s] You can make statements; now start **asking**. The first question word
+is **qué**, "what?" — and it puts to work two things from your writing chapter:
+the **accent** and the **¿ ?**.
+
+## Sounds you'll need
+
+- \`k-hard\` — **qu** is a plain hard **k** (the *u* is silent): *qué* = *keh*.
+- \`accent-mark\` — the **accent on *é*** marks this as the *question* word (recall
+  the diacrítica: *qué* = "what?"; *que* = "that"). Question words wear the accent.
+
+## The word, taken apart
+
+**qué** comes from Latin **quid**, *"what"* — the neuter of *quis*, "who." It's a
+small function word with a few learned English descendants:
+
+- **quiddity** — the "what-ness," the essence of a thing.
+- **quid pro quo** — "*what* for *what*," this for that.
+- the *qu-* question family it heads in Spanish: *qué, quién* (who), *cuál*
+  (which) — Latin's *qu-* interrogatives, the same *wh-* instinct as English
+  (Latin *qu-* and English *wh-* are ancient cousins).
+
+## Grammar Lens: asking with a verb you know
+
+Put **qué** in front of a verb, wrap it in **¿ ?**, and you have a real question:
+
+> **¿Qué comes?** — "What are you eating? / What do you eat?"
+> **¿Qué bebes?** — "What are you drinking?"
+
+Remember the opening **¿** (from the writing lesson) warns the reader a question
+is coming; the accent on *qué* marks it as the question word. Answer with the
+verb you already conjugate: *Como pan.* ("I eat bread.")
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "qué" — *keh*, silent *u*]
+- [YOU SAY: "¿Qué comes?" / "¿Qué bebes?" — ask with verbs you know]
+- [YOU SAY: "qué" vs "que" — the accent marks the *question*]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What Latin word is *qué* from? (*quid* — quiddity, quid pro quo.) Why
+does *qué* carry an accent? (It's the *question* word; *que* without = "that.")
+Ask "what are you eating?" (*¿Qué comes?*) Next: asking **where** — *dónde*.
+`;export{d as a,a as c,p as i,r as l,_ as n,l as o,h as r,s,y as t,t as u};
