@@ -279,6 +279,270 @@
       "concepts": [
         "VERB-FUTURE"
       ]
+    },
+    {
+      "id": "SPINE-NARRATE-EVENTS",
+      "stage": "B1",
+      "canDo": "I can tell a simple connected story about something that happened, in order.",
+      "prerequisites": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "core": true,
+      "concepts": [
+        "NARRATIVE-SEQUENCE",
+        "CONNECTIVE-THEN",
+        "CONNECTIVE-BECAUSE",
+        "ASPECT-ONGOING-PAST"
+      ]
+    },
+    {
+      "id": "SPINE-GIVE-REASONS",
+      "stage": "B1",
+      "canDo": "I can give reasons and explanations for my opinions and plans.",
+      "prerequisites": [
+        "SPINE-NEGATE-AND-ASK",
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "core": true,
+      "concepts": [
+        "OPINION-I-THINK",
+        "CONNECTIVE-SO",
+        "MODAL-SHOULD",
+        "EXPLANATION-GIVE"
+      ]
+    },
+    {
+      "id": "SPINE-HANDLE-TRAVEL",
+      "stage": "B1",
+      "canDo": "I can deal with most situations that come up while travelling.",
+      "prerequisites": [
+        "SPINE-ASK-LOCATION",
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "core": true,
+      "concepts": [
+        "DIRECTION-ASK",
+        "TRANSPORT-TICKET",
+        "LODGING-ROOM",
+        "PROBLEM-REPORT"
+      ]
+    },
+    {
+      "id": "SPINE-DESCRIBE-EXPERIENCE",
+      "stage": "B1",
+      "canDo": "I can describe experiences, feelings and ambitions.",
+      "prerequisites": [
+        "SPINE-NARRATE-EVENTS"
+      ],
+      "core": true,
+      "concepts": [
+        "ADJECTIVE-FEELING",
+        "AMBITION-EXPRESS",
+        "COMPARISON-BASIC",
+        "TIME-DURATION"
+      ]
+    },
+    {
+      "id": "SPINE-EXPRESS-CONDITION",
+      "stage": "B1",
+      "canDo": "I can say what would happen if something else did.",
+      "prerequisites": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "core": true,
+      "concepts": [
+        "CONDITIONAL-REAL",
+        "CONNECTIVE-IF",
+        "MODAL-WOULD",
+        "CONDITION-DEPENDS"
+      ]
+    },
+    {
+      "id": "SPINE-ARGUE-A-VIEW",
+      "stage": "B2",
+      "canDo": "I can develop an argument, giving relevant reasons and examples.",
+      "prerequisites": [
+        "SPINE-GIVE-REASONS",
+        "SPINE-EXPRESS-CONDITION"
+      ],
+      "core": true,
+      "concepts": [
+        "ARGUMENT-CLAIM",
+        "ARGUMENT-EVIDENCE",
+        "CONNECTIVE-HOWEVER",
+        "CONNECTIVE-ALTHOUGH"
+      ]
+    },
+    {
+      "id": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "stage": "B2",
+      "canDo": "I can report what someone else said or asked.",
+      "prerequisites": [
+        "SPINE-NARRATE-EVENTS"
+      ],
+      "core": true,
+      "concepts": [
+        "REPORTED-SPEECH",
+        "TENSE-BACKSHIFT",
+        "SPEECH-ACT-REPORT",
+        "QUOTATION-DIRECT"
+      ]
+    },
+    {
+      "id": "SPINE-READ-EXTENDED-PROSE",
+      "stage": "B2",
+      "canDo": "I can read articles and reports on contemporary matters.",
+      "prerequisites": [
+        "SPINE-DESCRIBE-EXPERIENCE"
+      ],
+      "core": true,
+      "concepts": [
+        "DISCOURSE-TOPIC-SENTENCE",
+        "RELATIVE-CLAUSE",
+        "VOICE-PASSIVE",
+        "VOCAB-FIELD-SPECIFIC"
+      ]
+    },
+    {
+      "id": "SPINE-DISCUSS-ABSTRACT",
+      "stage": "B2",
+      "canDo": "I can take part in a discussion of abstract or unfamiliar topics.",
+      "prerequisites": [
+        "SPINE-ARGUE-A-VIEW",
+        "SPINE-READ-EXTENDED-PROSE"
+      ],
+      "core": true,
+      "concepts": [
+        "ABSTRACT-NOUN",
+        "HEDGE-PROBABLY",
+        "HEDGE-SUPPOSE",
+        "NOMINALIZATION"
+      ]
+    },
+    {
+      "id": "SPINE-INFER-IMPLICIT-MEANING",
+      "stage": "C1",
+      "canDo": "I can grasp what a speaker implies without saying it.",
+      "prerequisites": [
+        "SPINE-DISCUSS-ABSTRACT"
+      ],
+      "core": true,
+      "concepts": [
+        "IMPLICATURE",
+        "IRONY-MARKER",
+        "IDIOM-COMMON",
+        "TONE-SHIFT"
+      ]
+    },
+    {
+      "id": "SPINE-STRUCTURE-EXTENDED-TEXT",
+      "stage": "C1",
+      "canDo": "I can produce clear, well-structured text on a complex subject.",
+      "prerequisites": [
+        "SPINE-READ-EXTENDED-PROSE",
+        "SPINE-ARGUE-A-VIEW"
+      ],
+      "core": true,
+      "concepts": [
+        "DISCOURSE-COHESION",
+        "PARAGRAPH-PLAN",
+        "CONNECTIVE-FURTHERMORE",
+        "REFERENCE-ANAPHORA"
+      ]
+    },
+    {
+      "id": "SPINE-SHIFT-REGISTER",
+      "stage": "C1",
+      "canDo": "I can shift register to suit the person I am speaking to and the setting.",
+      "prerequisites": [
+        "SPINE-DISCUSS-ABSTRACT"
+      ],
+      "core": true,
+      "concepts": [
+        "REGISTER-FORMAL",
+        "REGISTER-COLLOQUIAL",
+        "HONORIFIC-SYSTEM",
+        "POLITENESS-STRATEGY"
+      ]
+    },
+    {
+      "id": "SPINE-FOLLOW-REGIONAL-VARIATION",
+      "stage": "C1",
+      "canDo": "I can follow a speaker whose regional variety differs from the one I learned.",
+      "prerequisites": [
+        "SPINE-SHIFT-REGISTER"
+      ],
+      "core": true,
+      "concepts": [
+        "DIALECT-FEATURE",
+        "ACCENT-VARIATION",
+        "LEXICAL-VARIANT-REGIONAL",
+        "DIGLOSSIA"
+      ]
+    },
+    {
+      "id": "SPINE-SUMMARIZE-FROM-SOURCES",
+      "stage": "C2",
+      "canDo": "I can summarise several sources and reconstruct the argument in my own words.",
+      "prerequisites": [
+        "SPINE-STRUCTURE-EXTENDED-TEXT",
+        "SPINE-INFER-IMPLICIT-MEANING"
+      ],
+      "core": true,
+      "concepts": [
+        "SYNTHESIS-MULTI-SOURCE",
+        "PARAPHRASE",
+        "ATTRIBUTION-CITE",
+        "SUMMARY-COMPRESSION"
+      ]
+    },
+    {
+      "id": "SPINE-EXPRESS-FINE-SHADES",
+      "stage": "C2",
+      "canDo": "I can convey finer shades of meaning precisely.",
+      "prerequisites": [
+        "SPINE-SHIFT-REGISTER",
+        "SPINE-SUMMARIZE-FROM-SOURCES"
+      ],
+      "core": true,
+      "concepts": [
+        "NUANCE-MODALITY",
+        "COLLOCATION-PRECISE",
+        "EMPHASIS-DEVICE",
+        "CONNOTATION-CHOICE"
+      ]
+    },
+    {
+      "id": "SPINE-READ-LITERARY-AND-CLASSICAL",
+      "stage": "C2",
+      "canDo": "I can read literary and older texts and feel the period they come from.",
+      "prerequisites": [
+        "SPINE-INFER-IMPLICIT-MEANING",
+        "SPINE-FOLLOW-REGIONAL-VARIATION"
+      ],
+      "core": true,
+      "concepts": [
+        "LITERARY-REGISTER",
+        "ARCHAIC-FORM",
+        "METER-AND-VERSE",
+        "ORTHOGRAPHY-HISTORICAL"
+      ]
+    },
+    {
+      "id": "SPINE-READ-CULTURAL-WEIGHT",
+      "stage": "C2",
+      "canDo": "I can read the cultural weight of a phrase, not only its meaning.",
+      "prerequisites": [
+        "SPINE-SHIFT-REGISTER",
+        "SPINE-READ-LITERARY-AND-CLASSICAL"
+      ],
+      "core": true,
+      "concepts": [
+        "CULTURAL-ALLUSION",
+        "PROVERB",
+        "EUPHEMISM-AND-TABOO",
+        "HUMOR-CONVENTION"
+      ]
     }
   ]
 }
