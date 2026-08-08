@@ -1,0 +1,515 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 37,
+  "title": "Four Words on the Face",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:1d2b959adaf95179",
+  "lessons": [
+    {
+      "id": "KA-C37-kannu",
+      "sequence": 800,
+      "title": "ಕಣ್ಣು (kaṇṇu) — \"eye,\" the same word across four languages",
+      "headword": "ಕಣ್ಣು",
+      "romanization": "kaṇṇu",
+      "gloss": "eye — matching Telugu almost letter for letter, and Tamil and Malayalam nearly as closely",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83e2044986919cd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tale, kai — Chapter 13's head and hand, and nothing more of the body since. This chapter adds four words to that short list, starting above the nose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಣ್ಣು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಣ್ಣು — kaṇṇu — eye."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಕಣ್ಣು. — nanna kaṇṇu. — \"My eye.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: nearly one word, four times over",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಣ್ಣು (kaṇṇu) continues Proto-Dravidian kaṇ, \"eye.\" Tamil கண் (kaṇ) and Malayalam കണ്ണ് (kaṇṇŭ) sit close beside it — and Telugu కన్ను (kannu) sits closest of all, nearly identical letter for letter. Four languages that otherwise pull apart on nearly everything — tense, the p becomes h law, half their vocabulary — agree almost completely on this one, the same closeness the last chapter found between Kannada's magaḷu and Tamil and Malayalam's own makaḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nanna kaṇṇu\" — my eye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nanna kaṇṇu\" — my eye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four sisters, nearly one word — \"kaṇṇu … kaṇ … kaṇṇŭ … kannu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four sisters, nearly one word — \"kaṇṇu … kaṇ … kaṇṇŭ … kannu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two more near-matches — \"magaḷu, makaḷ … kaṇṇu, kaṇ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two more near-matches — \"magaḷu, makaḷ … kaṇṇu, kaṇ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three body words now — \"tale, kai, kaṇṇu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three body words now — \"tale, kai, kaṇṇu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my eye.\" (Nanna kaṇṇu.) Which sister matches Kannada's word almost exactly? (Telugu — kannu.) Which earlier word showed this same closeness with Tamil and Malayalam? (ಮಗಳು, magaḷu.) Name the body words you have now. (Tale, head; kai, hand; kaṇṇu, eye.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C37-kivi",
+      "sequence": 810,
+      "title": "ಕಿವಿ (kivi) — \"ear,\" where Tamil's everyday word actually diverges",
+      "headword": "ಕಿವಿ",
+      "romanization": "kivi",
+      "gloss": "ear — matching Tamil and Telugu's literary word, where everyday spoken Tamil actually reaches for a different one",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed6b81e1f79d6006",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kaṇṇu matched all three sisters closely. This one is honest about matching only some of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಿವಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಿವಿ — kivi — ear."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಕಿವಿ. — nanna kivi. — \"My ear.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a literary cousin, not an everyday one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಿವಿ (kivi) continues Proto-Dravidian kewi, \"ear.\" Telugu's everyday word చెవి (cevi) is the same root, and so is Tamil's — but only in its literary register: செவி (cevi) shows up in poetry and formal speech, while ordinary spoken Tamil reaches for an unrelated word instead, காது (kātu). It is the same honest split Chapter 34 found in கேள்/kēḷ against Telugu's vinu and aḍugu: a shared root can go on living in one register of a language while everyday speech moves on to something else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nanna kivi\" — my ear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nanna kivi\" — my ear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared root's two lives — \"cevi, literary … kātu, everyday\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared root's two lives — \"cevi, literary … kātu, everyday\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eye, then ear — \"kaṇṇu … kivi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: eye, then ear — \"kaṇṇu … kivi\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my ear.\" (Nanna kivi.) Does everyday spoken Tamil use the same root as kivi? (No — it uses kātu; the shared root cevi survives mostly in literary Tamil.) Which earlier Kannada word split the same way? (கேள்/kēḷu — kept by three sisters, dropped in Telugu's everyday speech.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C37-moogu",
+      "sequence": 820,
+      "title": "ಮೂಗು (mūgu) — \"nose,\" where Telugu is the one that drifts",
+      "headword": "ಮೂಗು",
+      "romanization": "mūgu",
+      "gloss": "nose — matching Tamil and Malayalam closely, with Telugu the odd one out this time",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4818ed2c32529fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kivi split the family down a register line. This word splits it a different way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೂಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂಗು — mūgu — nose."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಮೂಗು. — nanna mūgu. — \"My nose.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: Telugu drifts this time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೂಗು (mūgu) continues Proto-Dravidian mūnk(k)u, \"nose.\" Tamil மூக்கு (mūkku) and Malayalam മൂക്ക് (mūkkŭ) sit close beside Kannada's own form. Telugu is the outlier this round: ముక్కు (mukku) is treated as a slightly irregular reflex, likely blended with a separate word for \"face.\" Ear put Telugu with the group and split Tamil's registers; nose does the opposite — Telugu drifts, and Tamil and Malayalam hold the line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nanna mūgu\" — my nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nanna mūgu\" — my nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the close sisters, then the drifting one — \"mūkku, mūkkŭ … mukku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the close sisters, then the drifting one — \"mūkku, mūkkŭ … mukku\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ear, then nose — \"kivi … mūgu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ear, then nose — \"kivi … mūgu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my nose.\" (Nanna mūgu.) Which sister drifts from the shared root this time? (Telugu — mukku, likely blended with its word for \"face.\") Which two sisters hold the root closely? (Tamil and Malayalam — mūkku, mūkkŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C37-baayi",
+      "sequence": 830,
+      "title": "ಬಾಯಿ (bāyi) — \"mouth,\" a word you've already met twice",
+      "headword": "ಬಾಯಿ",
+      "romanization": "bāyi",
+      "gloss": "mouth — a word this book has already shown you twice, in two sound-law tables, without ever saying what it means",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d51caf6e91e84716",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Bā, come; bare, write. Both chapters used one more word in passing, to prove the same sound law, and neither one told you what it meant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಯಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಯಿ — bāyi — mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ಬಾಯಿ. — nanna bāyi. — \"My mouth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Four body words now: tale, kai, kaṇṇu, kivi, mūgu, bāyi — six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the third proof of a law you already know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಯಿ (bāyi) answers Tamil வாய் (vāy), \"mouth,\" through the exact law Chapter 32 gave you: word-initial Tamil v- becomes Kannada b-. You have already seen this pair once, sitting quietly inside Chapter 32's etymology note for ಬಾ, and again inside Chapter 33's for ಬರೆ — both times as a worked example, neither time explained. Here is what it means:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Tamil",
+                "Kannada",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Tamil: vā. Kannada: bā. meaning: come.",
+                "Tamil: varai. Kannada: bare. meaning: write, draw.",
+                "Tamil: vāy. Kannada: bāyi. meaning: mouth."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three clean proofs of one law, and this lesson finally cashes in the third."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nanna bāyi\" — my mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nanna bāyi\" — my mouth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three proofs — \"vā, bā … varai, bare … vāy, bāyi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three proofs — \"vā, bā … varai, bare … vāy, bāyi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six body words — \"tale, kai, kaṇṇu, kivi, mūgu, bāyi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six body words — \"tale, kai, kaṇṇu, kivi, mūgu, bāyi\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my mouth.\" (Nanna bāyi.) Which two earlier chapters already used this exact word, without explaining it? (Chapter 32's bā note and Chapter 33's bare note.) Give the law it proves, and its other two examples. (Word-initial v- becomes b- — vā becomes bā, varai becomes bare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,5 +1,72 @@
 # Changelog — Russian track
 
+## 0.10.0 — 2026-08-08
+
+Pre-A1 vocabulary tranche (part of the cross-track vocabulary program that has
+now confirmed the same mechanism eight times running). Fourteen everyday nouns
+across five new chapters (6–10) — Russian's first nouns of any kind — moving
+pre-A1 vocabulary from **11 to 25** distinct headwords (shortfall 289 → 275)
+and track-wide vocabulary from **25 to 39**. `SPINE-CHECK-WELLBEING`, unrealized
+until now, is realized for the first time; only `SPINE-TAKE-LEAVE` remains
+unrealized among the seven pre-A1 spine nodes.
+
+- **Ch. 6 — Water, Coffee, Tea, and Bread** (`SPINE-POLITE-REQUEST-REPAIR`):
+  вода, кофе, чай, хлеб. Opens the noun half of the book: no articles at all,
+  and gender predictable from the ending (consonant → masculine, -а/-я →
+  feminine, -о/-е → neuter) — stated as a rule, then immediately broken by
+  *кофе*, masculine despite its -е ending, a fossil of the vanished form
+  *кофий*. *чай* (overland, Mandarin *chá* via Persian/Turkic) and *кофе*
+  (by sea, Arabic *qahwa* via Turkish and Dutch) took opposite routes to the
+  same drink family; *хлеб* looks completely native and is a prehistoric
+  Germanic loan, cousin of English *loaf*. Also introduces Russian's first
+  polite-request pattern, "*[word], пожалуйста*."
+- **Ch. 7 — Friend and Siblings** (`SPINE-EXCHANGE-NAMES`): друг, подруга,
+  брат, сестра — exactly who Chapter 2's *ты* was for. *подруга* is built
+  live from *по- + друг + -а*; *брат* (the noun) is one soft sign from
+  Chapter 5's verb *брать*, the minimal pair that lesson had already warned
+  about; *брат*/*сестра* are secure PIE cognates of *brother*/*sister*.
+- **Ch. 8 — Family** (`SPINE-EXCHANGE-NAMES`, one lesson): семья gathers
+  Chapter 7's four people and turns out to be a distant cousin of English
+  *home*, *hamlet*, and every English place name ending in *-ham* — PIE
+  *\*ḱey-*, "to lie down, settle."
+- **Ch. 9 — Eyes, Ears, Mouth, and Nose** (`SPINE-CHECK-WELLBEING`, first
+  realization of this node for Russian): ухо, нос, рот, глаз. *ухо* and *нос*
+  are straight PIE inheritances (English *ear*, *nose*); *рот* has no secure
+  English cousin and says so; *глаз* is the chapter's real story — Old
+  Russian slang for "round stone" that evicted the true inherited eye-word,
+  *око* (the actual cousin of English *eye*), now surviving only inside
+  *очки*, "glasses" ("little eyes").
+- **Ch. 10 — Heart** (`SPINE-CHECK-WELLBEING`, one lesson): сердце, the surest
+  cognate in the book — PIE *\*ḱerd-*, with English *heart*, Latin
+  *cor/cordis* (→ *cordial*, *courage*, *record*), and Greek *kardía*
+  (→ *cardiac*) — and the new letter **ц**.
+- **Three new letters, each taught where first needed**: **ф** (*кофе*),
+  **х** (*хлеб*), **ц** (*сердце*) — false friends and new shapes alike
+  flagged the same way Chapter 1 flagged в/р/с/н.
+- **Reinforcement discipline matched the program's best.** Every lesson's
+  `practises.knowledge` names atoms from the 1–3 lessons before it, and every
+  chapter payoff reaches back further: Chapter 6 rescues Chapter 5's
+  previously-unrevisited *любить* atoms; Chapter 7 rescues three Chapter 2
+  atoms (the ты/вы comparison, vy-politeness pragmatics, and ty/thou
+  etymology) untouched since they were introduced; Chapter 8 rescues Chapter
+  3's *жить* etymon; Chapter 9 rescues Chapter 3's *видеть* and *говорить*
+  atoms. Track-wide never-revisited-at-any-distance count: **0** (was 0
+  before this branch and stayed there through 14 new lessons and 33 new
+  atoms).
+- **Two font traps caught before commit**: the PIE syllabic-r diacritic in
+  *wódr̥* (the unmapped combining ring below, U+0325) and the CJK character
+  茶 in *чай*'s etymology — both silently broke a forced XeLaTeX compile with
+  "Missing character" until flattened to plain Latin transcription.
+
+Verification: forced XeLaTeX build of the 71-page book has zero missing
+characters and zero duplicate labels. `npx vitest run tests/integration.test.ts
+tests/cli.test.ts` passes (19/19) — `integration.test.ts`'s pinned Russian
+book-chapter list is updated from `[1..5]` to `[1..10]`, the one deliberate
+edit to a shared test file. `check:modality`, `check:books` and
+`check:narration` all pass. The six corpus-wide pinned-number tests
+(chapters, continuity, levels, modality-manifest, narration, ramp) shift with
+any authored content and are left failing per standing instruction.
+
 ## 0.9.0 — 2026-08-07
 
 HL-C44. Russian sat at **6 of the 40 core verbs** and was still one of the

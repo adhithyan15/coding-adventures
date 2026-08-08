@@ -396,6 +396,42 @@
       "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:f8e481ad0313cbcc",
+      "lessonIds": [
+        "BN-C10-cha",
+        "BN-C10-jol",
+        "BN-C10-dudh",
+        "BN-C10-bhat"
+      ],
+      "tex": "bengali/book/chapters/ch10-tea-water-milk-rice.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:141a754a9363c5a5",
+      "lessonIds": [
+        "BN-C11-bondhu",
+        "BN-C11-poribar",
+        "BN-C11-bhai",
+        "BN-C11-bon"
+      ],
+      "tex": "bengali/book/chapters/ch11-friend-family-brother-sister.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:b257f6b368a6fd18",
+      "lessonIds": [
+        "BN-C12-chokh",
+        "BN-C12-mukh",
+        "BN-C12-nak",
+        "BN-C12-hridoy"
+      ],
+      "tex": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:e6411b8670357094",
@@ -778,6 +814,42 @@
         "GU-C09-gamvun"
       ],
       "tex": "gujarati/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:823cf9fdd857c4cd",
+      "lessonIds": [
+        "GU-C10-paani",
+        "GU-C10-chaa",
+        "GU-C10-dudh",
+        "GU-C10-rotli"
+      ],
+      "tex": "gujarati/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:003c74b8365059ad",
+      "lessonIds": [
+        "GU-C11-mitra",
+        "GU-C11-kutumb",
+        "GU-C11-bhai",
+        "GU-C11-bahen"
+      ],
+      "tex": "gujarati/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:29b53fffefa78e96",
+      "lessonIds": [
+        "GU-C12-aankh",
+        "GU-C12-kaan",
+        "GU-C12-modhu",
+        "GU-C12-naak"
+      ],
+      "tex": "gujarati/book/chapters/ch12-face-parts.tex"
     },
     {
       "language": "hindi",
@@ -1677,6 +1749,68 @@
         "KA-C34-ishta"
       ],
       "tex": "kannada/book/chapters/ch34-social-verbs.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:bc3dee0a27f24c08",
+      "lessonIds": [
+        "KA-C35-kutumba",
+        "KA-C35-snehita"
+      ],
+      "tex": "kannada/book/chapters/ch35-family-and-friends.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:4dcda7738f8fd19b",
+      "lessonIds": [
+        "KA-C36-magu",
+        "KA-C36-maga",
+        "KA-C36-magalu"
+      ],
+      "tex": "kannada/book/chapters/ch36-child-son-daughter.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:d930f5497451e5e3",
+      "lessonIds": [
+        "KA-C37-kannu",
+        "KA-C37-kivi",
+        "KA-C37-moogu",
+        "KA-C37-baayi"
+      ],
+      "tex": "kannada/book/chapters/ch37-face-words.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:6743c01296d112dd",
+      "lessonIds": [
+        "KA-C38-hrudaya"
+      ],
+      "tex": "kannada/book/chapters/ch38-heart.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:a86727c525b40543",
+      "lessonIds": [
+        "KA-C39-chaha",
+        "KA-C39-kaapi",
+        "KA-C39-haalu"
+      ],
+      "tex": "kannada/book/chapters/ch39-tea-coffee-milk.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:8b19ae8af2a3e681",
+      "lessonIds": [
+        "KA-C40-oota"
+      ],
+      "tex": "kannada/book/chapters/ch40-a-meal.tex"
     },
     {
       "language": "latin",
@@ -2871,6 +3005,60 @@
         "RU-C05-lyubit"
       ],
       "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:0ce562adf7d1fad2",
+      "lessonIds": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ],
+      "tex": "russian/book/chapters/ch06-water-coffee-tea-bread.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:4ddc7c1db403cd12",
+      "lessonIds": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra"
+      ],
+      "tex": "russian/book/chapters/ch07-friend-and-siblings.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:886df16439a152b3",
+      "lessonIds": [
+        "RU-C08-semya"
+      ],
+      "tex": "russian/book/chapters/ch08-family.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:2e29240c130df1fb",
+      "lessonIds": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz"
+      ],
+      "tex": "russian/book/chapters/ch09-face-parts.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:8978e5aa9809cf91",
+      "lessonIds": [
+        "RU-C10-serdtse"
+      ],
+      "tex": "russian/book/chapters/ch10-heart.tex"
     },
     {
       "language": "sanskrit",

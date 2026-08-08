@@ -61,12 +61,39 @@ before the whole; and a book you can read straight through.
   inherent **o** Chapter 6 could not demonstrate), bhālo lāgā (**the liker is
   not the subject** — *āmār bhālo lāge*, "good sticks to me" — set against
   ভালোবাসা, where you are). In the book.
+- **Chapter 10 — Tea, Water, Milk, and Rice** ([`lessons/BN-C10-*`](./lessons/)):
+  chā (a Chinese loan via Persian), jôl (disputed root, beside the
+  Bangladesh-register pāni, which traces cleanly to Chapter 7's √pā), dudh
+  (√duh — its secure English cousin is *doughty*, not the look-alike
+  *dough*), bhāt (√bhaj "to share," a root Chapter 11 picks back up). Also
+  realizes `SPINE-POLITE-REQUEST-REPAIR` — previously unrealized in this
+  track — by reusing Chapter 7's respectful খান as a polite-offer pattern
+  rather than teaching a separate "please" word. In the book.
+- **Chapter 11 — Friend, Family, Brother, and Sister**
+  ([`lessons/BN-C11-*`](./lessons/)): bôndhu (a tatsama, √bandh — English
+  **bind**/**bond**/**band**, undisguised), pôribār (a tatsama, "what
+  surrounds you"), bhāi (a tadbhava, and simply *is* English "brother," not
+  a cousin of it), bon (the payoff — not related to English "sister" at
+  all, but to Chapter 10's ভাত, both from √bhaj, "to share"). States and
+  demonstrates that Bengali marks no grammatical gender on any of these
+  words. In the book.
+- **Chapter 12 — Eye, Mouth, Nose, and Heart**
+  ([`lessons/BN-C12-*`](./lessons/)): chokh (an ardhatatsama, half-worn
+  through Old and Middle Bengali), mukh (a tatsama whose own deepest root is
+  a genuine, unresolved Dravidian-vs-Indo-European dispute), nāk (a
+  tadbhava, as secure a cousin of English "nose" as etymology gets), hridoy
+  (the payoff — a tatsama with a poetic tadbhava twin, হিয়া, and the widest
+  confirmed cousin family in the track: **heart**, *kardía*, *cor*). In the
+  book.
 
 With Chapters 8 and 9 the track realizes **14 of the 40 core verb concepts**, up
 from six, and joins Spanish, Latin and Portuguese on all eight of
 `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`, `VERB-WRITE`, `VERB-TAKE`,
 `VERB-ASK`, `VERB-HELP` and `VERB-LIKE-LOVE` — each of which was a three-track
-concept before and is now a four-track one.
+concept before and is now a four-track one. Chapters 10–12 add twelve
+pre-A1 nouns, moving the track's pre-A1 vocabulary from 21 to 33 distinct
+headwords (of the 300 HL09 asks for) and closing the one pre-A1 spine node —
+`SPINE-POLITE-REQUEST-REPAIR` — this track had never realized.
 
 ---
 
@@ -104,6 +131,25 @@ first-person can-do sentence and the lesson that pays it off.
   Two of the remaining three are retrieved by the very next lesson after the one
   that taught them; the third — the doubled **য্য** of সাহায্য — genuinely is
   not, and `chapters.json` records that rather than claiming otherwise.
+- **Chapter 10** — *"I can offer or ask for tea, water, milk and rice
+  politely in Bengali, reusing the respectful verb ending Chapter 7 already
+  taught, and say which of the four words is a Chinese loan and which
+  shares a root with a word two lessons later."* Payoff:
+  [`BN-C10-bhat`](./lessons/BN-C10-bhat.md), a spoken production covering
+  **6 of the chapter's 6** introduced atoms.
+- **Chapter 11** — *"I can name a friend, my family, my brother and my
+  sister in Bengali, none of them marked for gender, and say which are
+  borrowed whole from Sanskrit and which evolved by sound change."* Payoff:
+  [`BN-C11-bon`](./lessons/BN-C11-bon.md), a spoken production covering the
+  chapter's 4 new lexical atoms plus a rescue of all five of Chapter 6's
+  numbers atoms.
+- **Chapter 12** — *"I can name my eye, my mouth, my nose and my heart in
+  Bengali, and say which of those four words is settled Indo-European,
+  which is a genuinely disputed origin, and which is borrowed whole from
+  Sanskrit with the widest confirmed cousin family in this book."* Payoff:
+  [`BN-C12-hridoy`](./lessons/BN-C12-hridoy.md), a spoken production
+  covering the chapter's 4 new lexical atoms plus a rescue of Chapter 8's
+  flapped-ড় sound rule and causative-আনো grammar.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -114,21 +160,25 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 (`../../_fonts/NotoSansBengali-Static.ttf`). `latexmk -xelatex book.tex`.
-Chapters 6 through 9 are generated from the canonical lessons; their
+Chapters 6 through 12 are generated from the canonical lessons; their
 Bengali-script runs use that font while their section bookmarks use authored
 romanization.
 
-The forced nine-chapter build is warning-free — 54 pages, zero
-`Missing character`, zero over/underfull boxes, and the conjuncts Chapters 8 and
-9 add (**ড়**, **জ্ঞ**, **য্য**, **দ্বার**) all render from the vendored font
-with no preamble change: main-font punctuation,
-chapter-qualified recap anchors, bookmark-safe Bengali, natural page bottoms,
-explicit static-font shapes, and a breakable long title keep the downloadable
-PDF and its outline clean. Two details serve the generated chapters: the
-`grammarlens` box takes an optional title, because the generator passes each
-lesson's own "Grammar Lens: …" heading through, and `ǵ`/`ḱ` are composed with
-`\newunicodechar` since the main font has no precomposed glyph for the
-reconstructed PIE palatals.
+The forced twelve-chapter build is warning-free — 76 pages, zero
+`Missing character`, zero over/underfull boxes, and the conjuncts Chapters 8
+through 12 add (**ড়**, **জ্ঞ**, **য্য**, **দ্বার**, **ন্ধ**, **ৃ**) all
+render from the vendored font with no preamble change: main-font
+punctuation, chapter-qualified recap anchors, bookmark-safe Bengali, natural
+page bottoms, explicit static-font shapes, and a breakable long title keep
+the downloadable PDF and its outline clean. Two details serve the generated
+chapters: the `grammarlens` box takes an optional title, because the
+generator passes each lesson's own "Grammar Lens: …" heading through, and
+`ǵ`/`ḱ` are composed with `\newunicodechar` since the main font has no
+precomposed glyph for the reconstructed PIE palatals. Every Sanskrit
+citation in the prose is rendered in **Bengali script**, never Devanagari —
+the only Indic font this book loads — which Chapters 10–12 learned the hard
+way when a first pass quoted roots in Devanagari and briefly reintroduced
+91 `Missing character` errors.
 
 ## Files
 

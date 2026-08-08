@@ -642,6 +642,139 @@
           "KA-GRAMMAR-C32-GOTTU-02"
         ]
       }
+    },
+    {
+      "chapter": 35,
+      "title": "Family and Friends",
+      "label": "ch:ka-family-and-friends",
+      "canDo": "I can name my family as a group in Kannada and name a friend, and say which of the two words is native and which is a Sanskrit loan.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "KA-C35-snehita",
+        "kind": "production",
+        "summary": "Say ಇದು ನನ್ನ ಕುಟುಂಬ and ಇವನು ನನ್ನ ಸ್ನೇಹಿತ, trace kuṭumba and snēhita back to Sanskrit, and set snēhita beside the native pair ಗೆಳೆಯ/ಗೆಳತಿ.",
+        "assesses": [
+          "KA-LEX-C35-KUTUMBA-01",
+          "KA-ETYMON-C35-KUTUMBA-02",
+          "KA-LEX-C35-SNEHITA-01",
+          "KA-ETYMON-C35-SNEHITA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 36,
+      "title": "One Root, Three Endings",
+      "label": "ch:ka-child-son-daughter",
+      "canDo": "I can say child, son and daughter in Kannada, and show how one shared root with three different endings does the job Chapter 12 needed four separate words for.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "KA-C36-magalu",
+        "kind": "production",
+        "summary": "Line up ಮಗು, ಮಗ and ಮಗಳು against Proto-Dravidian *maka, and contrast gender-by-ending here with Chapter 12's four unrelated age-graded sibling words.",
+        "assesses": [
+          "KA-LEX-C36-MAGU-01",
+          "KA-ETYMON-C36-MAGU-02",
+          "KA-LEX-C36-MAGA-01",
+          "KA-ETYMON-C36-MAGA-02",
+          "KA-LEX-C36-MAGALU-01",
+          "KA-GRAMMAR-C36-MAGALU-02",
+          "KA-ETYMON-C36-MAGALU-03"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "Four Words on the Face",
+      "label": "ch:ka-face-words",
+      "canDo": "I can name my eye, ear, nose and mouth in Kannada, and say which of the four the Dravidian family agrees on closely and which one splits.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "KA-C37-baayi",
+        "kind": "production",
+        "summary": "Name ಕಣ್ಣು, ಕಿವಿ, ಮೂಗು and ಬಾಯಿ, and finally explain ಬಾಯಿ — the word this book already used twice, unglossed, as proof of the v → b law behind ಬಾ and ಬರೆ.",
+        "assesses": [
+          "KA-LEX-C37-KANNU-01",
+          "KA-ETYMON-C37-KANNU-02",
+          "KA-LEX-C37-KIVI-01",
+          "KA-ETYMON-C37-KIVI-02",
+          "KA-LEX-C37-MOOGU-01",
+          "KA-ETYMON-C37-MOOGU-02",
+          "KA-LEX-C37-BAAYI-01",
+          "KA-ETYMON-C37-BAAYI-02"
+        ]
+      }
+    },
+    {
+      "chapter": 38,
+      "title": "The Heart",
+      "label": "ch:ka-heart",
+      "canDo": "I can name my heart in Kannada and say why it is a genuine Indo-European cousin of the English word, not just a resemblance.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "KA-C38-hrudaya",
+        "kind": "production",
+        "summary": "Say ನನ್ನ ಹೃದಯ, read the vocalic-r sign ೃ against Chapter 14's independent ಋ, and trace hṛdaya to the same Proto-Indo-European root as English heart, Latin cor and Greek kardía.",
+        "assesses": [
+          "KA-LEX-C38-HRUDAYA-01",
+          "KA-ETYMON-C38-HRUDAYA-02"
+        ]
+      }
+    },
+    {
+      "chapter": 39,
+      "title": "Tea, Coffee, Milk",
+      "label": "ch:ka-tea-coffee-milk",
+      "canDo": "I can politely ask for tea, coffee or milk in Kannada, and trace each word along the road it travelled to get here.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "KA-C39-haalu",
+        "kind": "production",
+        "summary": "Ask ದಯವಿಟ್ಟು ಚಹಾ, ಕಾಫಿ or ಹಾಲು, follow chā through Persian and kāphi through five languages, then explain hālu — the word Chapter 32 already recited unglossed as proof of the p → h law.",
+        "assesses": [
+          "KA-LEX-C39-CHAHA-01",
+          "KA-ETYMON-C39-CHAHA-02",
+          "KA-LEX-C39-KAAPI-01",
+          "KA-ETYMON-C39-KAAPI-02",
+          "KA-LEX-C39-HAALU-01",
+          "KA-ETYMON-C39-HAALU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "A Meal",
+      "label": "ch:ka-a-meal",
+      "canDo": "I can say I am having a meal in Kannada, using the word Chapter 32 used once and never explained, and place it at the hour of two greetings I already know.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "KA-C40-oota",
+        "kind": "production",
+        "summary": "Say ಊಟ ಮಾಡು, explain ūṭa against everyday tinnu, read the independent vowel ಊ, and place the word at the hour of ಶುಭ ಮಧ್ಯಾಹ್ನ and before ಶುಭ ರಾತ್ರಿ.",
+        "assesses": [
+          "KA-LEX-C40-OOTA-01",
+          "KA-ETYMON-C40-OOTA-02",
+          "KA-LEX-C32-TINNU-01",
+          "KA-LEX-C39-HAALU-01",
+          "KA-ETYMON-C39-HAALU-02",
+          "KA-ETYMON-C25-SHUBHA-RATRI-01",
+          "KA-ETYMON-C25-SHUBHA-RATRI-02",
+          "KA-ETYMON-C25-SHUBHA-RATRI-03",
+          "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
+          "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02"
+        ]
+      }
     }
   ]
 }

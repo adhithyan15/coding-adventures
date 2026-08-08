@@ -455,6 +455,33 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 10,
+      "title": "Tea, Water, Milk, and Rice",
+      "label": "ch:bn-tea-water-milk-rice",
+      "output": "bengali/book/chapters/ch10-tea-water-milk-rice.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 11,
+      "title": "Friend, Family, Brother, and Sister",
+      "label": "ch:bn-friend-family-brother-sister",
+      "output": "bengali/book/chapters/ch11-friend-family-brother-sister.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 12,
+      "title": "Eye, Mouth, Nose, and Heart",
+      "label": "ch:bn-eye-mouth-nose-heart",
+      "output": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "title": "Nǐ Hǎo — Hello, Character by Character",
@@ -706,6 +733,33 @@
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:gu-doing-verbs",
       "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bread",
+      "label": "ch:gu-request-food-drink",
+      "output": "gujarati/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 11,
+      "title": "Friend and Family",
+      "label": "ch:gu-friend-and-family",
+      "output": "gujarati/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:gu-face-parts",
+      "output": "gujarati/book/chapters/ch12-face-parts.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
@@ -1387,6 +1441,54 @@
       "title": "Four Verbs Between People",
       "label": "ch:ka-social-verbs",
       "output": "kannada/book/chapters/ch34-social-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 35,
+      "title": "Family and Friends",
+      "label": "ch:ka-family-and-friends",
+      "output": "kannada/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "title": "One Root, Three Endings",
+      "label": "ch:ka-child-son-daughter",
+      "output": "kannada/book/chapters/ch36-child-son-daughter.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "title": "Four Words on the Face",
+      "label": "ch:ka-face-words",
+      "output": "kannada/book/chapters/ch37-face-words.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "title": "The Heart",
+      "label": "ch:ka-heart",
+      "output": "kannada/book/chapters/ch38-heart.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "title": "Tea, Coffee, Milk",
+      "label": "ch:ka-tea-coffee-milk",
+      "output": "kannada/book/chapters/ch39-tea-coffee-milk.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "title": "A Meal",
+      "label": "ch:ka-a-meal",
+      "output": "kannada/book/chapters/ch40-a-meal.tex",
       "scriptSet": "kannada-comparisons"
     },
     {
@@ -2242,6 +2344,51 @@
       "title": "Taking, Asking, Helping, Loving",
       "label": "ch:russian-verbs-of-the-hand",
       "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 6,
+      "title": "Water, Coffee, Tea, and Bread",
+      "label": "ch:russian-water-coffee-tea-bread",
+      "output": "russian/book/chapters/ch06-water-coffee-tea-bread.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "title": "Friend and Siblings",
+      "label": "ch:russian-friend-and-siblings",
+      "output": "russian/book/chapters/ch07-friend-and-siblings.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "title": "Family",
+      "label": "ch:russian-family",
+      "output": "russian/book/chapters/ch08-family.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "title": "Eyes, Ears, Mouth, and Nose",
+      "label": "ch:russian-face-parts",
+      "output": "russian/book/chapters/ch09-face-parts.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "title": "Heart",
+      "label": "ch:russian-heart",
+      "output": "russian/book/chapters/ch10-heart.tex",
       "unicodeScript": "Cyrillic",
       "scriptCommand": "ru"
     },

@@ -348,7 +348,10 @@ describe("the real corpus", () => {
     // The Tamil ch1 script-gap lessons add 7: TA-W05 two, TA-W06 three, TA-W07 two.
     // Splitting one word-lesson per word moved letter teaching into the writing
     // track; these atoms are the seven script facts that move stranded.
-    expect(report.summary.atomsTaught).toBe(2279);
+    // Vocabulary wave 3 (russian/bengali/gujarati/kannada, 52 pre-A1 nouns) added 106
+    // atoms while atomsNeverRevisited FELL by 7 — the first wave where the raw count
+    // dropped, not just the share. 20% is the lowest reading yet, from 51%.
+    expect(report.summary.atomsTaught).toBe(2385);
     // +2, and this one goes the WRONG WAY, so it is worth saying why. The two
     // atoms with revisits=0 are TA-SCRIPT-WRITE-SARI-02 and TA-SCRIPT-CA-ONE-LETTER-01,
     // both introduced BY TA-W07, the chapter's last writing lesson, so nothing
@@ -356,8 +359,8 @@ describe("the real corpus", () => {
     // survivors above have. A chapter-final lesson's own atoms are unreachable by
     // construction, not under-taught. The other two spell-the-word atoms (ஆம்,
     // இல்லை) ARE revisited: TA-W07 re-spells both from memory.
-    expect(report.summary.atomsNeverRevisited).toBe(486);
-    expect(report.summary.neverRevisitedPercent).toBe(21);
+    expect(report.summary.atomsNeverRevisited).toBe(479);
+    expect(report.summary.neverRevisitedPercent).toBe(20);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -411,7 +414,7 @@ describe("the real corpus", () => {
     // 439 too. All four dropped references sit in TA-W01-curves-va-ka,
     // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
     // stopped counting because chapter 1 now declares its order.
-    expect(report.summary.forwardReferences).toBe(463);
+    expect(report.summary.forwardReferences).toBe(469);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -446,8 +449,8 @@ describe("the real corpus", () => {
     // lessons sit within three of each other — a separate change, and one that would
     // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
     // numbers before TA-C01-nandri teaches the word.
-    expect(report.summary.missedByWindow.R1).toBe(828);
-    expect(report.summary.missedByWindow.R2).toBe(1524);
+    expect(report.summary.missedByWindow.R1).toBe(834);
+    expect(report.summary.missedByWindow.R2).toBe(1627);
   });
 
   it("shows what a declared reading order was worth", () => {

@@ -106,7 +106,7 @@ describe("corpus snapshot", () => {
     // schema-v2 migration lands; the violation count will rise as it does, and that is
     // the measurement improving rather than the corpus worsening.
     expect(report.summary.unmeasurableLessons).toBe(573); // +1: TA-C01-answering, schema-v1 like its chapter
-    expect(report.summary.measurablePercent).toBe(63);
+    expect(report.summary.measurablePercent).toBe(65);
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
@@ -263,7 +263,7 @@ describe("the script ramp against the real corpus", () => {
 
     // The cousin layer's footprint. Not a violation — a reason to keep that layer
     // visually skippable, so a reader who knows no sister language can pass it by.
-    expect(report.summary.lessonsWithForeignScript).toBe(165);
+    expect(report.summary.lessonsWithForeignScript).toBe(170);
     expect(report.summary.maxForeignGlyphsInALesson).toBe(26);
   });
 

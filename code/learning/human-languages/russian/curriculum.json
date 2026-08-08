@@ -123,6 +123,53 @@
         "RU-EXT-009-HAND-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "RU-PATH-010",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-010-FOOD-DRINK"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra",
+        "RU-C08-semya"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-011-FRIEND-FAMILY"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-012",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz",
+        "RU-C10-serdtse"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-012-BODY-PARTS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -159,7 +206,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "RU-PATH-006"
+        "RU-PATH-006",
+        "RU-PATH-011"
       ],
       "omits": [
         "QUESTION-WHAT",
@@ -171,7 +219,9 @@
       "relocates": {}
     },
     "SPINE-CHECK-WELLBEING": {
-      "segments": [],
+      "segments": [
+        "RU-PATH-012"
+      ],
       "omits": [
         "QUESTION-HOW",
         "STATE-HOW-ARE-YOU",
@@ -183,7 +233,8 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "RU-PATH-003"
+        "RU-PATH-003",
+        "RU-PATH-010"
       ],
       "omits": [
         "COURTESY-SORRY"
@@ -563,6 +614,50 @@
         "RU-C05-sprashivat",
         "RU-C05-pomogat",
         "RU-C05-lyubit"
+      ]
+    },
+    {
+      "id": "RU-EXT-010-FOOD-DRINK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name water, coffee, tea and bread with their genders in Russian, ask for any of them politely, and say which are native and which are loans.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ]
+    },
+    {
+      "id": "RU-EXT-011-FRIEND-FAMILY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name a friend, brother, sister and family in Russian, build a feminine person-noun with по-...-а, and say which pronoun, ты or вы, goes with each.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra",
+        "RU-C08-semya"
+      ]
+    },
+    {
+      "id": "RU-EXT-012-BODY-PARTS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the ear, nose, mouth, eye and heart in Russian with their genders, and say which trace to a secure ancient root and which do not.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz",
+        "RU-C10-serdtse"
       ]
     }
   ]

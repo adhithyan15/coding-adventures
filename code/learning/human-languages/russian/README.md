@@ -24,12 +24,19 @@ inside the words that need it; grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
-- **Drivable by ear.** 30 of the track's 36 lessons need only your ears; the
-  other 6 are the five handwriting lessons and one cover-the-column retrieval
-  drill. Russian used to be the least drivable track here, entirely because its
+- **Drivable by ear.** 34 of the track's 50 lessons need only your ears; the
+  rest are the five handwriting lessons, one cover-the-column retrieval drill,
+  and four lessons whose new Cyrillic letter (ш, ф, х, ц) needs a look at the
+  page. Russian used to be the least drivable track here, entirely because its
   cross-language comparisons were set as tables rather than said as sentences.
   They are sentences now, and Chapters 3, 4 and 5 were written that way from the
   start — three chapters drivable end to end.
+- **Nouns arrive with a gender and no article at all.** Chapter 6 opens the
+  noun half of this book on *вода*: masculine ends in a consonant, feminine in
+  *-а/-я*, neuter in *-о/-е*, and Russian has no word for *the* or *a* to
+  learn on top of it. *кофе* immediately breaks the rule on purpose — masculine
+  despite its *-е* ending, a fossil of the vanished form *кофий* — because a
+  rule taught only through its regular cases isn't earned yet.
 - **Stress lives in the romanization, not on the Cyrillic.** Russian print does
   not mark stress and the vendored Cyrillic font carries no combining acute, so
   this track puts the accent where it can always be rendered and always be read:
@@ -88,6 +95,42 @@ inside the words that need it; grammar introduced only when a word needs it.
   English **love** itself, and teaches the **л** that appears in *люблю* and
   nowhere else. The chapter closes by putting every verb the track owns after
   *люблю* as a bare infinitive.
+
+- **Chapter 6 — Water, coffee, tea, and bread**
+  ([`lessons/RU-C06-*`](./lessons/)): вода (water) → кофе (coffee) → чай (tea)
+  → хлеб (bread) — the track's first nouns, and the lesson that finally gives
+  *пожалуйста* something to attach to. *вода* is PIE \**wódr*, the same root
+  as English *water* and *hydro-*, and the source of *vódka* ("little
+  water"); *кофе* is masculine by fossil, not by rule, having crossed Arabic →
+  Turkish → Dutch into Peter the Great's Russia; *чай* took the opposite,
+  overland road — Mandarin *chá* by way of Persian and Turkic — the same split
+  that gives English *tea* and Hindi *chai* two different words for one plant;
+  *хлеб* looks completely native and isn't, a prehistoric borrowing from
+  Proto-Germanic \*hlaibaz, the same root as English *loaf*.
+- **Chapter 7 — Friend and siblings** ([`lessons/RU-C07-*`](./lessons/)):
+  друг (friend) → подруга (friend, feminine) → брат (brother) → сестра
+  (sister) — the four people Chapter 2's ты was always for. *подруга* is built
+  live from *по- + друг + -а*, Russian's ordinary feminine-agent pattern;
+  *брат* and *сестра* are two of the surest cognates in the book, PIE
+  \**bʰréh₂tēr* and \**swésōr*, and the noun *брат* is one soft sign from
+  Chapter 5's verb *брать* — the exact minimal pair that lesson warned about.
+- **Chapter 8 — Family** ([`lessons/RU-C08-semya.md`](./lessons/RU-C08-semya.md)):
+  семья gathers Chapter 7's four people, and its root — PIE \**ḱey-*, "to lie
+  down, settle" — is a distant cousin of English *home*, *hamlet*, and every
+  English place name ending in *-ham*.
+- **Chapter 9 — Eyes, ears, mouth, and nose** ([`lessons/RU-C09-*`](./lessons/)):
+  ухо (ear) → нос (nose) → рот (mouth) → глаз (eye) — the track's first
+  realization of `SPINE-CHECK-WELLBEING`. *ухо* and *нос* are straight PIE
+  inheritances (English *ear*, *nose*); *рот* has no secure English cousin at
+  all; and *глаз* is the strangest word in the chapter — slang for "round
+  stone" that evicted Russian's true inherited eye-word, *око* (the real
+  cousin of English *eye*), which survives today only in *очки*, "glasses" —
+  literally "little eyes."
+- **Chapter 10 — Heart** ([`lessons/RU-C10-serdtse.md`](./lessons/RU-C10-serdtse.md)):
+  сердце closes the tranche on the surest cognate in the book — PIE \**ḱerd-*,
+  the same root as English *heart*, Latin *cor/cordis* (→ *cordial*,
+  *courage*, *record*), and Greek *kardía* (→ *cardiac*) — with a silent **д**
+  and the new letter **ц**.
 
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute
