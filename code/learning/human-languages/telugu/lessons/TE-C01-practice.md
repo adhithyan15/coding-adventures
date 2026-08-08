@@ -50,7 +50,7 @@ Telugu, too, avoids a bare "I'm leaving." The everyday goodbye is:
 > come [back]."**
 
 and the reply is **వెళ్ళి రండి** (*veḷḷi raṇḍi*) — **"go, and come [back]."**
-The same worldview you met in Tamil's *pōy varugiṟēṉ* and Kannada's *hōgi
+The same worldview inside Tamil's *pōy varugiṟēṉ* and Kannada's *hōgi
 baruttēne*: never simply depart — promise a return. (Casually, Telugu also
 just says *veḷtānu*, "I'll go," or re-uses *namaskāram*.)
 

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5a4d6c65cd441e86",
+  "sourceHash": "fnv1a64:9eab135f57a4f26d",
   "lessons": [
     {
       "id": "FR-C21-le-temps",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e101761a178417",
+      "sourceHash": "fnv1a64:128c25861fdc9bbf",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "le temps = both \"time\" and \"weather\" — from Latin tempus, same as Spanish's tiempo (English kept only the \"time\" half: temporal, tempo). So quel temps fait-il? (\"what's the weather like?\") is literally \"what time does it make?\" — the identical construction you met in Spanish's ¿qué tiempo hace?."
+              "text": "le temps = both \"time\" and \"weather\" — from Latin tempus, same as Spanish's tiempo (English kept only the \"time\" half: temporal, tempo). So quel temps fait-il? (\"what's the weather like?\") is literally \"what time does it make?\" — the identical construction inside Spanish's ¿qué tiempo hace?."
             }
           ]
         },

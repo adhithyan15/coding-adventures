@@ -57,7 +57,7 @@ formal and informal contexts, appropriate for greeting people after
 work or arriving at an evening gathering. Neither source flags it as
 archaic or displaced. This doesn't mean these sources are beyond
 question — they're still the same general genre of language-learning
-content that's needed hedging elsewhere in this arc — but **being
+content that has needed hedging before — but **being
 independently cross-corroborated** is a real, meaningful difference in
 evidence quality from a single dramatic claim, and it's worth being
 just as honest about a claim holding up as about one that doesn't.

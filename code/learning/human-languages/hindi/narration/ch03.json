@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b67882f8655c637e",
+  "sourceHash": "fnv1a64:3214a53668c2fb82",
   "lessons": [
     {
       "id": "HI-C03-aap-kaise-hain",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f6fac68a084606c",
+      "sourceHash": "fnv1a64:553885ef8fce1ee2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "When someone thanks you, this is what you say back — and it hides a word you may meet again in Sanskrit."
+              "text": "When someone thanks you, this is what you say back — and it hides a word Sanskrit uses whole, unchanged."
             }
           ]
         },
@@ -212,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "You will meet svāgatam again, unchanged, in the Sanskrit track — this is the same word, worn into everyday Hindi."
+              "text": "Sanskrit's own svāgatam is this very word, unchanged — here it is again, worn into everyday Hindi."
             }
           ]
         },

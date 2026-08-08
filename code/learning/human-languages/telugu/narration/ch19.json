@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ecd0a47d80ab2c07",
+  "sourceHash": "fnv1a64:466c98e8fb1a6905",
   "lessons": [
     {
       "id": "TE-C19-vayasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cdddf1d35e0de1",
+      "sourceHash": "fnv1a64:93863a8dc7d95c43",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వయస్సు (vayasu) = \"age\" — the exact same Sanskrit वयस् (vayas, \"age, vigor, strength,\" PIE cousin of Latin vīs) you just met in Kannada."
+              "text": "వయస్సు (vayasu) = \"age\" — the exact same Sanskrit वयस् (vayas, \"age, vigor, strength,\" PIE cousin of Latin vīs) that Kannada also carries."
             }
           ]
         },

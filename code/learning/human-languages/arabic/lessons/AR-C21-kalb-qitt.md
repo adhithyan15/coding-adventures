@@ -6,7 +6,7 @@ sequence: 650
 chapter: 21
 type: word
 headword: كلب, قط
-gloss: dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the mystery words you've met in other languages; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated
+gloss: dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the tangled dog-words of Spanish, Hindi, and English; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated
 concept_tag: AR-ANIMALS
 prerequisites: [AR-C20-ahada-ashar-ishrun]
 sounds: [arabic-qaf, arabic-geminate-tt]
@@ -33,10 +33,10 @@ reviews_of: [AR-C20-ahada-ashar-ishrun]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You've met a genuine dog-word mystery in Spanish, and another one
-in German by way of English. Arabic's dog-word has no such mystery — and its
-cat-word turns out to be a long-lost cousin of nearly every European cat-word
-you've already learned.
+[PAUSE 2s] Spanish has a genuine dog-word mystery, and German
+another by way of English. Arabic's dog-word has no such mystery — and its
+cat-word turns out to be a long-lost cousin of nearly every European
+cat-word there is.
 
 ## Why it's said this way — كلب — a solid Semitic root, no mystery here
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C21-KALB-QITT-01]; assesses=[] -->
@@ -74,7 +74,7 @@ being worked out.
 [PAUSE 1s]
 - [YOU SAY: "kalb" — dog, a solid Semitic root, cousin of Hebrew's kelev]
 - [YOU SAY: "qiṭṭ" — cat, most likely a distant cousin of Latin's cattus and
-  every European cat-word you've learned]
+  every European cat-word there is]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C21-KALB-QITT-01, AR-CONCEPT-C21-KALB-QITT-02] -->

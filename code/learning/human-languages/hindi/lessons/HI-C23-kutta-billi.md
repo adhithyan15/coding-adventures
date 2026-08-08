@@ -33,8 +33,8 @@ reviews_of: [HI-C22-gyarah-bees]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You have met a mystery dog-word in Spanish and another in
-English/German. Hindi genuinely gives you a **third**.
+[PAUSE 2s] Spanish has a mystery dog-word, and English/German
+another. Hindi genuinely gives you a **third**.
 
 ## You'll want to know — कुत्ता — a third mystery, displacing Sanskrit's own PIE word
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C23-KUTTA-BILLI-01]; assesses=[] -->

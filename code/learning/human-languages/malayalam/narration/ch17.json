@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:288f60854351ad94",
+  "sourceHash": "fnv1a64:0a0fa920ce37765e",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6da9faf1334b3f22",
+      "sourceHash": "fnv1a64:7d243c4083456d88",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഉച്ച (ucha) = \"noon, midday\" — and unlike Kannada's madhyāhna or Telugu's madhyāhnam, this is not a madhya (\"middle\") compound at all. It most likely shares its root with Tamil உச்சி (ucci, \"crown of the head, peak, summit, zenith\") and Kannada's own ಉಚ್ಚಿ (ucci). Here's the honest twist: per Wiktionary, that whole ucci family across Tamil and Kannada is itself documented as a Sanskrit borrowing, from उच्च (ucca, \"high\"). Malayalam's own ucha has no fully documented etymology yet, so treat the connection as likely rather than settled — but if it holds, this isn't a case of Malayalam avoiding Sanskrit at all. It's Malayalam reaching for a different Sanskrit root than its neighbors: ucca (\"high\") instead of madhya (\"middle\"). Noon becomes \"the sun at its peak\" rather than \"the middle of the day\" — the same zenith-based idea you already saw in Arabic's aẓ-ẓuhr (from a root meaning \"to appear, become visible/apex\"), just arrived at from Sanskrit rather than Arabic."
+              "text": "ഉച്ച (ucha) = \"noon, midday\" — and unlike Kannada's madhyāhna or Telugu's madhyāhnam, this is not a madhya (\"middle\") compound at all. It most likely shares its root with Tamil உச்சி (ucci, \"crown of the head, peak, summit, zenith\") and Kannada's own ಉಚ್ಚಿ (ucci). Here's the honest twist: per Wiktionary, that whole ucci family across Tamil and Kannada is itself documented as a Sanskrit borrowing, from उच्च (ucca, \"high\"). Malayalam's own ucha has no fully documented etymology yet, so treat the connection as likely rather than settled — but if it holds, this isn't a case of Malayalam avoiding Sanskrit at all. It's Malayalam reaching for a different Sanskrit root than its neighbors: ucca (\"high\") instead of madhya (\"middle\"). Noon becomes \"the sun at its peak\" rather than \"the middle of the day\" — the same zenith-based idea inside Arabic's aẓ-ẓuhr (from a root meaning \"to appear, become visible/apex\"), just arrived at from Sanskrit rather than Arabic."
             }
           ]
         },

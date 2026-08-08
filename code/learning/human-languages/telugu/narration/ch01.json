@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3fd3f66959fa87bf",
+  "sourceHash": "fnv1a64:1e014704b06c6363",
   "lessons": [
     {
       "id": "TE-C01-avunu",
@@ -734,7 +734,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:54e10d121ebdf0e1",
+      "sourceHash": "fnv1a64:95fea69b15a25359",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -810,7 +810,7 @@
             },
             {
               "kind": "speech",
-              "text": "and the reply is వెళ్ళి రండి (veḷḷi raṇḍi) — \"go, and come [back].\" The same worldview you met in Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: never simply depart — promise a return. (Casually, Telugu also just says veḷtānu, \"I'll go,\" or re-uses namaskāram.)"
+              "text": "and the reply is వెళ్ళి రండి (veḷḷi raṇḍi) — \"go, and come [back].\" The same worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: never simply depart — promise a return. (Casually, Telugu also just says veḷtānu, \"I'll go,\" or re-uses namaskāram.)"
             }
           ]
         },

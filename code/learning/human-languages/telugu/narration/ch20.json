@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a7a00722b8910236",
+  "sourceHash": "fnv1a64:7158e143058013f8",
   "lessons": [
     {
       "id": "TE-C20-padakondu-iravai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b15c534e755f7c6",
+      "sourceHash": "fnv1a64:e884cbd15de39796",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu's teens echo పది (padi, \"ten\") plus each digit — పదకొండు (padakoṇḍu, 11), పన్నెండు (panneṇḍu, 12), and onward through పందొమ్మిది (paṅdommidi, 19) — the same \"digit + ten-echo\" compounding you just saw in Kannada."
+              "text": "Telugu's teens echo పది (padi, \"ten\") plus each digit — పదకొండు (padakoṇḍu, 11), పన్నెండు (panneṇḍu, 12), and onward through పందొమ్మిది (paṅdommidi, 19) — the same \"digit + ten-echo\" compounding Kannada builds."
             }
           ]
         },

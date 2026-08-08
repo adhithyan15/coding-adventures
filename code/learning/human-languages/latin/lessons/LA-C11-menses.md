@@ -33,7 +33,7 @@ reviews_of: [LA-C10-panis, LA-C10-aqua-vinum]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02] -->
 
-[PAUSE 2s] You'll meet these twelve names again, worn down, in Spanish and
+[PAUSE 2s] These twelve names turn up again, worn down, in Spanish and
 French. Latin lets you see something they can't show you directly: **two
 of these months used to have completely different names.**
 

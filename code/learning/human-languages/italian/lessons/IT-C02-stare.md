@@ -33,8 +33,8 @@ reviews_of: [IT-C02-come]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Like Spanish, Italian has **two** verbs for "to be" — **essere**
-(identity) and **stare** (state). "How are you?" runs on **stare**. And if you
-did the Spanish track, this is *estar* with its front *e* taken off.
+(identity) and **stare** (state). "How are you?" runs on **stare**. Spanish's *estar* is
+this very verb, with a front *e* added on.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[IT-SOUND-STARE-02]; assesses=[] -->

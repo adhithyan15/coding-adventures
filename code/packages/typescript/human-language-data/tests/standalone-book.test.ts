@@ -22,6 +22,22 @@ const CHAPTERS = [
   })),
 ];
 
+// Chapters PLUS lesson sources. Frontmatter never reaches the .tex — which is
+// exactly where the `ES-C14` in GE-C16 hid — but it does reach narration and the app,
+// and it is the authored source of truth, so it is held to the same rule.
+const SURFACES = [
+  ...CHAPTERS,
+  ...loadEverything().lessons.map((lesson) => ({
+    source: `${lesson.language}/lessons/${lesson.realization.lessonId}.md`,
+    // canonicalLessonSource returns JSON, where a line break is the two-character
+    // escape `\n`, not a newline. Un-escaping matters twice: `\\s+` in the patterns
+    // below could not cross a wrap (a pointer split as "the Spanish\ntrack" was
+    // invisible, and one real defect hid there), and `[^.?!\\n]` silently bounded
+    // nothing, so the 60-char window could jump paragraphs on this surface alone.
+    tex: canonicalLessonSource(lesson).replace(/\\n/g, "\n"),
+  })),
+];
+
 const TRACK_PREFIX: Record<string, string> = {
   arabic: "AR", bengali: "BN", chinese: "ZH", french: "FR", german: "GE",
   gujarati: "GU", hindi: "HI", italian: "IT", japanese: "JA", kannada: "KA",
@@ -72,46 +88,74 @@ describe("a reader holding the PDF", () => {
     // "What Arabic phrase, already taught in this course, shares सुबह's root?" was a
     // RECALL question in the Hindi book quizzing the Arabic one. Unanswerable.
     //
-    // The first version of this guard demanded the literal words "in this course" and
-    // passed green while the SAME chapter's printed heading still said "a root you've
-    // already met, in Arabic". So match the claim, then decide by CONTEXT: ~86
-    // chapters say "already met" about their OWN earlier lessons ("already met in
-    // Chapter 24"), which is the callback the ramp is built on and must keep passing.
-    // What fails is the claim sitting next to ANOTHER language, or next to an appeal
-    // to a different language in the abstract.
-    // A legitimate callback carries an IN-volume locator: "already met in Chapter 24",
-    // "already met last lesson". The defect carries an OUT-of-volume one: "already met
-    // in Arabic", "already met in the Arabic arc", "already taught in this course".
-    // So match the claim plus the locator that follows it, and let the locator decide.
+    // Two things decide a match, because the phrase alone cannot: ~86 chapters say
+    // "already met in Chapter 24" about their OWN earlier lessons, which is the
+    // callback the gentle ramp is built on and must keep passing. What fails is a
+    // second-person memory claim aimed at ANOTHER language, or a pointer at another
+    // language's MATERIAL ("the Spanish track", "Latin's colour lesson").
     //
-    // Four things this regex learned the hard way, each proven by execution:
+    // Four things this learned the hard way, each proven by execution:
     //  - `[^.?!\n]` not `[^.?!]`, or a 60-char window jumps a paragraph break and
     //    pairs a claim with an unrelated locator two paragraphs down;
-    //  - the language must be read from the CAPTURED locator, not searched for across
-    //    the whole match — searching found "Sanskrit" in "already met alongside
-    //    Sanskrit, in Telugu" and flagged the Telugu book for citing itself;
-    //  - no bare `from <language>`: in this corpus "from Sanskrit ucca" is an etymology,
-    //    not a pointer, so `from` is accepted only before "the <lang> book/arc/…";
-    //  - scoped to .tex. Extending it to frontmatter is right and is the next step, but
-    //    the corpus has ~20 cross-volume pointers phrased in ways this pattern cannot
-    //    see at all ("you learned in Hindi", "Latin's colour lesson"), so a narrow
-    //    guard that holds is worth more here than a broad one that must be muted.
-    const LOCATOR =
-      `(?:in this course|in this track|in (?:a|another|one) (?:completely )?different language` +
-      `|in (?:the )?(${Object.keys(TRACK_PREFIX).join("|")})(?:\\b| (?:arc|book|track))` +
-      `|from the (${Object.keys(TRACK_PREFIX).join("|")}) (?:arc|book|track|lesson|chapter))`;
-    const OFFENDING = new RegExp(
-      `(?:already|genuinely) (?:met|taught|learned|established|found|been)\\b[^.?!\\n]{0,60}?\\b${LOCATOR}`,
-      "gi",
-    );
+    //  - read the language from the CAPTURED locator, not by searching the whole
+    //    match — searching found "Sanskrit" in "already met alongside Sanskrit, in
+    //    Telugu" and flagged the Telugu book for citing itself;
+    //  - no bare `from <language>`: "from Sanskrit ucca" is an etymology, not a
+    //    pointer, so `from` is accepted only before "the <lang> book/arc/…";
+    //  - `track` is also a VERB. "unlike how closely Kannada and Telugu track Tamil"
+    //    is prose, not a pointer, so the material nouns require a possessive or an
+    //    article rather than matching a bare "<language> track".
+    const L = Object.keys(TRACK_PREFIX).join("|");
+    // Plural too: "the Spanish, Italian, French, and Portuguese tracks" slipped a
+    // singular-only pattern, as did "in the Spanish and Latin lessons".
+    const MATERIAL = `(?:lesson|chapter|book|track|arc|volume|curriculum|series)s?`;
+    const PATTERNS = [
+      // "you met in Tamil", "you may remember from Latin", "you've now seen in Spanish"
+      new RegExp(
+        `\\byou(?:'ve| have| may| already|'ll| will)?\\s+(?:\\w+\\s+){0,3}?` +
+          `(?:meet|met|learn|learned|learnt|see|saw|seen|remember|encountered)\\b[^.?!\\n]{0,60}?` +
+          `\\bin\\s+(?:the\\s+)?(${L})\\b`,
+        "gi",
+      ),
+      // "the Spanish track", "Latin's colour lesson", "in the Tamil book"
+      new RegExp(`\\b(?:the|in the|from the)\\s+(${L})\\s+${MATERIAL}\\b`, "gi"),
+      new RegExp(`\\b(${L})'s\\s+(?:\\w+\\s+){0,2}?${MATERIAL}\\b`, "gi"),
+      // "already taught in this course", "earlier in this arc"
+      new RegExp(
+        `(?:already|genuinely)\\s+(?:met|taught|learned|established|found|been)` +
+          `\\b[^.?!\\n]{0,60}?\\bin this (?:course|track|arc)\\b()`,
+        "gi",
+      ),
+      // "earlier in this arc", "elsewhere in this course" -- no memory verb needed.
+      // "earlier in this arc", "elsewhere in this course" -- no memory verb needed.
+      // An adjective may intervene: "elsewhere in this ENTIRE arc" defeated a pattern
+      // that demanded the noun come straight after "this", and the Malayalam sibling
+      // of a phrase fixed in Kannada was sitting in that gap.
+      new RegExp(
+        `\\b(?:earlier|elsewhere|later)\\s+in this\\s+(?:\\w+\\s+)?` +
+          `(?:course|track|arc|curriculum|volume|series)\\b()`,
+        "gi",
+      ),
+      // A pointer needs no language and no verb: "the daughter lessons", "its own
+      // track", "the companion volumes". Bare "in this course"/"in this curriculum"
+      // is deliberately NOT here -- 48 lessons carry it, a coherent class of its own
+      // and the next item. A guard muted on 48 files the day it lands is worth less
+      // than one that holds.
+      new RegExp(
+        `\\b(?:the (?:daughter|companion|sibling|other) (?:lesson|chapter|book|track|arc|volume)s?` +
+          `|its own (?:track|book|volume|arc))\\b()`,
+        "gi",
+      ),
+    ];
     const offenders: string[] = [];
-    for (const { source, tex } of CHAPTERS) {
+    for (const { source, tex } of SURFACES) {
       const own = source.split("/")[0]!;
-      for (const match of tex.matchAll(OFFENDING)) {
-        // Read the language out of the locator the regex actually matched. A book
-        // naming its OWN language points nowhere else.
-        const named = (match[1] ?? match[2])?.toLowerCase();
-        if (named !== own) offenders.push(`${source}: ${match[0].replace(/\s+/g, " ")}`);
+      for (const pattern of PATTERNS) {
+        for (const match of tex.matchAll(pattern)) {
+          // A book naming its OWN language points nowhere else.
+          const named = match[1]?.toLowerCase();
+          if (named !== own) offenders.push(`${source}: ${match[0].replace(/\s+/g, " ")}`);
+        }
       }
     }
     expect(offenders).toEqual([]);

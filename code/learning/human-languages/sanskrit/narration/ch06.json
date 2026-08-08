@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5f46cbe023b464e1",
+  "sourceHash": "fnv1a64:9af53af00e5fce0a",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:09f36fd41edd6bf6",
+      "sourceHash": "fnv1a64:d11d09bd8e57ad00",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "And Sanskrit numbers have gender. Look at the last column. When you meet these words again in Hindi, Marathi, Bengali, Gujarati or Punjabi, they will mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter lessons depend on it."
+              "text": "And Sanskrit numbers have gender. Look at the last column. These same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter languages inherit from it."
             }
           ]
         },

@@ -54,8 +54,8 @@ you [then]." Here it is again, with "tomorrow" filling the slot.
 
 **Gh-d-w**'s core sense is "**to go out at dawn, early morning**" — and
 **"tomorrow"** grows directly out of that "early morning" sense. This is
-**not** a one-off coincidence: you've already seen this **exact** shift
-happen in Latin, where *māne* ("morning") became French's *demain* and
+**not** a one-off coincidence: this **exact** shift also
+happened in Latin, where *māne* ("morning") became French's *demain* and
 Spanish's *mañana* ("tomorrow"). Two completely unrelated language
 families — Semitic and Indo-European — independently building "tomorrow"
 out of "morning."

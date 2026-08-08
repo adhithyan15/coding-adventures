@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cab2e9e1d5a63bcc",
+  "sourceHash": "fnv1a64:f3a2478d1df2b1c2",
   "lessons": [
     {
       "id": "LA-C30-bonam-noctem",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66256ba5a5212e25",
+      "sourceHash": "fnv1a64:227678274c9d90e1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the careful part, matching the same honesty already applied to quōmodo tē habēs?, nihil est, and crās tē vidēbō earlier in this arc: the accusative-of-wishing principle itself is genuine, solid Classical Latin grammar. But this specific fixed phrase, bonam noctem, is not actually attested as a Roman farewell formula in any surviving classical text — it appears to be a later, post-classical convention, built correctly from real grammar but not itself a citation. Treat the grammar as reliable and the exact phrase as a well-formed construction, not a quotation from a Roman text."
+              "text": "Here's the careful part, matching the same honesty already applied to quōmodo tē habēs?, nihil est, and crās tē vidēbō: the accusative-of-wishing principle itself is genuine, solid Classical Latin grammar. But this specific fixed phrase, bonam noctem, is not actually attested as a Roman farewell formula in any surviving classical text — it appears to be a later, post-classical convention, built correctly from real grammar but not itself a citation. Treat the grammar as reliable and the exact phrase as a well-formed construction, not a quotation from a Roman text."
             }
           ]
         },

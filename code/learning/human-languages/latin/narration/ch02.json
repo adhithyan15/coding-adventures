@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:898dd008f6cb6e08",
+  "sourceHash": "fnv1a64:3574a27090aae3f1",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:a1d47161206de2cc",
+      "sourceHash": "fnv1a64:d29f71d351fbc066",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -106,7 +106,7 @@
             },
             {
               "kind": "speech",
-              "text": "Quattuor becomes quatre becomes cuatro is the same wearing-down the Hindi track shows for catvāri becomes chār — two branches of one ancient word (PIE kʷetwóres), one softening in Europe, one in India. And they seed English too: ūnus in unit and union, duo in duo and dual, trēs in trio and triple, quīnque in quintet."
+              "text": "Quattuor becomes quatre becomes cuatro is the same wearing-down Hindi shows in catvāri becomes chār — two branches of one ancient word (PIE kʷetwóres), one softening in Europe, one in India. And they seed English too: ūnus in unit and union, duo in duo and dual, trēs in trio and triple, quīnque in quintet."
             }
           ]
         },

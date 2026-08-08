@@ -96,7 +96,7 @@ forms: ist, sind, seid, sein. from Proto-Indo-European: h₁es- — "to be". whi
 forms: bin, bist. from Proto-Indo-European: bʰuH- — "to grow, become". which also gave: English be; Latin fuī.
 forms: war, waren. from Proto-Indo-European: wes- — "to dwell, remain". which also gave: English was, were.
 Three separate ancient verbs, each contributing a slice of the paradigm. When one verb's forms are filled in from another verb, that's suppletion — the same thing English does in go / went.
-And notice bin/bist has a cousin you have already met. Latin fuī is the source of Spanish fui, "I was / I went," which the Spanish track taught in Chapter 14 as one of the pretéritos fuertes. German bin and Spanish fui descend from the same PIE root bʰuH- — one landed in the present, the other in the past.
+And notice bin/bist has a cousin abroad. Latin fuī is the source of Spanish fui, "I was / I went" — one of that language's pretéritos fuertes. German bin and Spanish fui descend from the same PIE root bʰuH- — one landed in the present, the other in the past.
 
 Why "be" verbs are the messiest words in every language.
 This is not bad luck. It is a rule:

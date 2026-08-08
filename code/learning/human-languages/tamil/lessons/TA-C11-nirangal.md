@@ -61,7 +61,7 @@ color lesson for that careful distinction).
 ## Why it's said this way: Be honest about why blue is the odd one out
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-NIRANGAL-03]; assesses=[] -->
 
-This isn't random. You may remember from Latin's color lesson that **"blue"**
+This isn't random. **"Blue"**
 is, across many of the world's languages, one of the **last** basic colors
 to settle into its own fixed word — often arriving late, or borrowed,
 compared to black, white, and red. Tamil's colors look like exactly this

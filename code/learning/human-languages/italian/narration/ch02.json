@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:03633dd64e873a05",
+  "sourceHash": "fnv1a64:ca661e84ba10f32a",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af7966db27fdd5d9",
+      "sourceHash": "fnv1a64:12dbb54d4f03c1e3",
       "notice": null,
       "blocks": [
         {
@@ -309,7 +309,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like Spanish, Italian has two verbs for \"to be\" — essere (identity) and stare (state). \"How are you?\" runs on stare. And if you did the Spanish track, this is estar with its front e taken off."
+              "text": "Like Spanish, Italian has two verbs for \"to be\" — essere (identity) and stare (state). \"How are you?\" runs on stare. Spanish's estar is this very verb, with a front e added on."
             }
           ]
         },

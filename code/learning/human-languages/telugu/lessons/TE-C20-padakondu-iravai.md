@@ -43,7 +43,7 @@ of extra erosion have worn it past the point of being visible today.
 Telugu's teens echo **పది** (*padi*, "**ten**") plus each digit — **పదకొండు**
 (*padakoṇḍu*, 11), **పన్నెండు** (*panneṇḍu*, 12), and onward through
 **పందొమ్మిది** (*paṅdommidi*, 19) — the same "digit + ten-echo" compounding
-you just saw in Kannada.
+Kannada builds.
 
 ## The word, taken apart - ఇరవై — most likely the same "two-tens," just worn further
 <!-- hl-knowledge: introduces=[TE-ETYMON-C20-PADAKONDU-IRAVAI-02]; assesses=[] -->

@@ -46,9 +46,9 @@ Three separate ancient verbs, each contributing a slice of the paradigm. When on
 verb's forms are filled in from another verb, that's **suppletion** — the same
 thing English does in *go / went*.
 
-And notice *bin/bist* has a **cousin you have already met**. Latin *fuī* is the
-source of Spanish **fui**, "I was / I went," which the Spanish track taught in
-Chapter 14 as one of the *pretéritos fuertes*. German *bin* and Spanish *fui*
+And notice *bin/bist* has a **cousin abroad**. Latin *fuī* is the
+source of Spanish **fui**, "I was / I went" — one of that language's
+*pretéritos fuertes*. German *bin* and Spanish *fui*
 descend from the same PIE root \**bʰuH-* — one landed in the present, the other
 in the past.
 

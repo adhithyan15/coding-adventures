@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fa1b550899c021f3",
+  "sourceHash": "fnv1a64:8f64238981d04880",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7b6f1dddb46cfde",
+      "sourceHash": "fnv1a64:e976c1dcd9de69f6",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "So vāṉilai literally means \"the standing of the sky\" or \"the sky's state\" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat \"native\" as the best current account rather than a fully settled fact, the same hedge you've seen elsewhere in this course — but both pieces are independently well-attested as old, native Dravidian vocabulary.)"
+              "text": "So vāṉilai literally means \"the standing of the sky\" or \"the sky's state\" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat \"native\" as the best current account rather than a fully settled fact, the same hedge every native-word claim here deserves — but both pieces are independently well-attested as old, native Dravidian vocabulary.)"
             }
           ]
         },

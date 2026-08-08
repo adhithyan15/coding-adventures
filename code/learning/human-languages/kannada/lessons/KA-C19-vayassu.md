@@ -11,7 +11,7 @@ concept_tag: KA-AGE
 prerequisites: [KA-C18-gante]
 sounds: [kannada-anusvara, kannada-conjunct-ssu]
 roots: [sanskrit-vayas-vigor-age]
-etymology_hook: "ವಯಸ್ಸು (vayassu, 'age') is from Sanskrit वयस् (vayas, 'age, youth, vigor'), from PIE *wéyh₁os — the SAME PIE root as Latin's vīs ('force'), the very word you met in Latin's age lesson's own vocabulary family; Kannada asks age with a simple possessive, 'your age how-much,' no verb at all"
+etymology_hook: "ವಯಸ್ಸು (vayassu, 'age') is from Sanskrit वयस् (vayas, 'age, youth, vigor'), from PIE *wéyh₁os — the SAME PIE root as Latin's vīs ('force, strength, vigor'), the two having split toward different senses; Kannada asks age with a simple possessive, 'your age how-much,' no verb at all"
 reviews_of: [KA-C18-gante]
 duration:
   max_seconds: 250

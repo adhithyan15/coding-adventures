@@ -44,8 +44,8 @@ French and Spanish went their separate ways.
 **le temps** = both "**time**" and "**weather**" — from Latin **tempus**,
 same as Spanish's *tiempo* (English kept only the "time" half: **temporal,
 tempo**). So **quel temps fait-il ?** ("what's the weather like?") is
-literally "**what time does it make**?" — the identical construction you met
-in Spanish's *¿qué tiempo hace?*.
+literally "**what time does it make**?" — the identical construction inside
+Spanish's *¿qué tiempo hace?*.
 
 ## Grammar Lens: il fait chaud / il fait froid
 <!-- hl-knowledge: introduces=[FR-GRAMMAR-IL-FAIT-03]; assesses=[] -->

@@ -47,7 +47,7 @@ announced the hour by striking a bell, so the bell-word became the hour-word.
 ## Why it's said this way: this is Kannada matching Hindi, not matching Tamil
 <!-- hl-knowledge: introduces=[KA-PRAGMATICS-C18-GANTE-02]; assesses=[] -->
 
-This is a genuinely different picture from what you'll see in Tamil. Kannada's
+This is a genuinely different picture from Tamil's. Kannada's
 *gaṇṭe*, like Hindi's *ghanṭā*, is a **Sanskrit-derived** "bell → hour" word.
 Tamil, by contrast, most likely uses a **native Dravidian** word for exactly the
 same "bell → hour" idea — a different root entirely, arrived at independently

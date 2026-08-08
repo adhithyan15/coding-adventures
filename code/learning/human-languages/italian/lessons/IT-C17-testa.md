@@ -32,8 +32,8 @@ reviews_of: [IT-C01-il-la-lo, IT-C11-acqua-vino]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] If you have done the French chapter, you already know this word's
-story. What is worth seeing is how much **less** Italian did to it.
+[PAUSE 2s] French tells this word's story too. What is worth seeing
+here is how much **less** Italian did to it.
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[IT-LEX-TESTA-02]; assesses=[] -->

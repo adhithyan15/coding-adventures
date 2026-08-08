@@ -33,7 +33,7 @@ reviews_of: [TA-C09-sorry-register, TA-C09-mannikkavum]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-SORRY-REGISTER-01] -->
 
-[PAUSE 2s] You've seen Hindi's week built entirely from Sanskrit deity-names
+[PAUSE 2s] Hindi's week is built entirely from Sanskrit deity-names
 plus **वार** (*vār*). Tamil's week tells a richer story: it uses its **own**
 word for "day," and **some** of its planet-names are Tamil's own too — while
 others are borrowed, just like Hindi's.

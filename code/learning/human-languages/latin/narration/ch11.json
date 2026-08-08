@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cd0f435f0e35bd16",
+  "sourceHash": "fnv1a64:ed09806a42bd4829",
   "lessons": [
     {
       "id": "LA-C11-menses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8829f5644f26d3b8",
+      "sourceHash": "fnv1a64:767b2688a9fef140",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You'll meet these twelve names again, worn down, in Spanish and French. Latin lets you see something they can't show you directly: two of these months used to have completely different names."
+              "text": "These twelve names turn up again, worn down, in Spanish and French. Latin lets you see something they can't show you directly: two of these months used to have completely different names."
             }
           ]
         },

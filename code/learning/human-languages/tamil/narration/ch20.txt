@@ -43,7 +43,7 @@ You'll want to know: வானிலை — vaanam + nilai.
 வானிலை (vāṉilai) = "weather" — built from:
 வானம் (vāṉam, "sky") — most likely a native Dravidian word, with confirmed cognates in Kannada ಬಾನು (bānu, "sky") and Telugu వాన (vāna, "rain," from the same sky/rain-cloud root) — distinct from the Sanskrit sky word ākāśa that those same two languages use elsewhere.
 நிலை (nilai, "state, standing, condition") — from நில் (nil, "to stand"), one of Tamil's most basic native verb roots.
-So vāṉilai literally means "the standing of the sky" or "the sky's state" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account rather than a fully settled fact, the same hedge you've seen elsewhere in this course — but both pieces are independently well-attested as old, native Dravidian vocabulary.)
+So vāṉilai literally means "the standing of the sky" or "the sky's state" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account rather than a fully settled fact, the same hedge every native-word claim here deserves — but both pieces are independently well-attested as old, native Dravidian vocabulary.)
 
 You'll want to know: மழை பெய்கிறது — "rain is falling".
 மழை பெய்கிறது. — "It's raining." — literally "rain is falling." (mazhai peykiRathu — from பெய் pey, "to fall/pour," specifically used for rain.)

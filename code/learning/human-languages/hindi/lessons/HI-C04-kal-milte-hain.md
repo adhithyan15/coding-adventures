@@ -28,7 +28,7 @@ the trickiest words.
 
 **कल** (*kal*) means **both "tomorrow" and "yesterday"** — the same word for the
 day on either side of today. It is from Sanskrit **काल** (*kāla*, "time") — the
-very root you may have met in Punjabi's *akāl* ("timeless"). Hindi trusts context
+very root that sits inside Punjabi's *akāl* ("timeless"). Hindi trusts context
 (and the verb's tense) to tell which *kal* you mean: *kal milte haiṁ* (present-ish
 → "**tomorrow**"), *kal milā* (past → "**yesterday**").
 

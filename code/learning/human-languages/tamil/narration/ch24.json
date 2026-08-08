@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ae266bd9d23bdce",
+  "sourceHash": "fnv1a64:44ef396f3945a420",
   "lessons": [
     {
       "id": "TA-C24-iravu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5945153902f2494",
+      "sourceHash": "fnv1a64:32036d5e65c5aec1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil also keeps ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) — the same word that surfaces, as a tatsama, in Kannada's ratri and Telugu's ratri. It traces to Proto-Indo-European h₁reh₁- (\"to rest\"), a completely different root from Latin nox's nókʷts — the same specific comparison already drawn for Hindi's raat and Malayalam's rāthri earlier in this arc, now a third confirmation, same false-cognate pattern, same honest non-relationship to nox."
+              "text": "Tamil also keeps ராத்திரி (rāttiri), a Sanskrit tatsama from रात्रि (rātri) — the same word that surfaces, as a tatsama, in Kannada's ratri and Telugu's ratri. It traces to Proto-Indo-European h₁reh₁- (\"to rest\"), a completely different root from Latin nox's nókʷts — the same specific comparison already drawn for Hindi's raat and Malayalam's rāthri, now a third confirmation, same false-cognate pattern, same honest non-relationship to nox."
             }
           ]
         },
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where did you already meet இரவு before this lesson? (Inside நள்ளிரவு, naḷḷiravu, \"midnight,\" Chapter 17.) Does ராத்திரி's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" the same false-cognate pattern already drawn for Hindi and Malayalam earlier in this arc.) Next: treat the proposed register split as a hypothesis and keep \"darkness\" separate from \"night.\""
+              "text": "Where did you already meet இரவு before this lesson? (Inside நள்ளிரவு, naḷḷiravu, \"midnight,\" Chapter 17.) Does ராத்திரி's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" the same false-cognate pattern already drawn for Hindi and Malayalam.) Next: treat the proposed register split as a hypothesis and keep \"darkness\" separate from \"night.\""
             }
           ]
         }

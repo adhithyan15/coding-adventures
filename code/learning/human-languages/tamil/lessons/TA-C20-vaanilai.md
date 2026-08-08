@@ -54,8 +54,8 @@ entirely from native pieces.
 So *vāṉilai* literally means "**the standing of the sky**" or "**the sky's
 state**" — and unlike its three Dravidian cousins, neither piece here is a
 Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account
-rather than a fully settled fact, the same hedge you've seen elsewhere in this
-course — but both pieces are independently well-attested as old, native
+rather than a fully settled fact, the same hedge every native-word claim here
+deserves — but both pieces are independently well-attested as old, native
 Dravidian vocabulary.)
 
 ## You'll want to know: மழை பெய்கிறது — "rain is falling"

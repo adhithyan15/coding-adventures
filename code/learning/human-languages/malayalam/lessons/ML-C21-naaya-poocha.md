@@ -42,8 +42,8 @@ fragmented Dravidian picture for "cat."
 
 **നായ** (*nāya*, "**dog**") continues the same solid, native
 **Proto-Dravidian** root as Kannada's **ನಾಯಿ** (*nāyi*) and Tamil's own word
-— no mystery here at all, unlike every dog-word you've met elsewhere in this
-entire arc.
+— no mystery here at all, unlike the tangled dog-words of Spanish,
+Hindi, and English.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C21-NAAYA-POOCHA-02]; assesses=[] -->

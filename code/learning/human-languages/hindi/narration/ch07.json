@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b863d0e49f93094c",
+  "sourceHash": "fnv1a64:7f46ae04549f4eaa",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26289ff3f3503fe7",
+      "sourceHash": "fnv1a64:9df4c614f504322b",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met this exact idea in the German nein lesson (\"not one\"); here it is again at the other end of the family, in Hindi. The word for no is one of the most stubbornly unchanged things human languages have."
+              "text": "German's nein carries this exact idea (\"not one\"); here it is again at the other end of the family, in Hindi. The word for no is one of the most stubbornly unchanged things human languages have."
             }
           ]
         },

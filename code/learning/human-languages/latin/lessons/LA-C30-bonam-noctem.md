@@ -57,8 +57,8 @@ more natural, idiomatic choice for a wish like this.
 <!-- hl-knowledge: introduces=[LA-GRAMMAR-BONAM-NOCTEM-02]; assesses=[] -->
 
 Here's the careful part, matching the same honesty already applied to
-*quōmodo tē habēs?*, *nihil est*, and *crās tē vidēbō* earlier in this
-arc: the **accusative-of-wishing** principle itself is genuine, solid
+*quōmodo tē habēs?*, *nihil est*, and *crās tē vidēbō*: the
+**accusative-of-wishing** principle itself is genuine, solid
 Classical Latin grammar. But this **specific fixed phrase**, *bonam
 noctem*, is **not** actually attested as a Roman farewell formula in any
 surviving classical text — it appears to be a later, post-classical

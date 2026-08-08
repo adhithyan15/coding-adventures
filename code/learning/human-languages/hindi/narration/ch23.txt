@@ -7,7 +7,7 @@ Lesson 1 of 2.
 
 Warm-up.
 [pause 2 seconds]
-You have met a mystery dog-word in Spanish and another in English/German. Hindi genuinely gives you a third.
+Spanish has a mystery dog-word, and English/German another. Hindi genuinely gives you a third.
 
 You'll want to know — कुत्ता — a third mystery, displacing Sanskrit's own PIE word.
 Sanskrit's actual, inherited word for dog was श्वान (śvān) — the exact same PIE root, ḱwon-, behind Latin's canis, English's hound, and German's Hund. It's the only word for dog found in the Rigveda. But everyday Hindi doesn't use śvān at all — the ordinary word is कुत्ता (kuttā), which traces through Prakrit to a Sanskrit form, कुर्कुर (kurkura). Its ultimate origin is honestly unresolved — serious proposals split between an onomatopoeic origin (imitating a dog's bark) and a non-Indo-Aryan substrate word borrowed from an unrelated language family, with no consensus on which is right. Either way, kuttā quietly pushed śvān into rare, formal, literary use — the exact same shape of story as Spanish's perro displacing can, and English's dog displacing hound. Three unrelated language families, three mystery words, all crowding out the same inherited PIE word for "dog."

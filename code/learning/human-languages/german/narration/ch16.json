@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Chapter 16",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4dd5d88ce4eb5b94",
+  "sourceHash": "fnv1a64:830f5bd79326d776",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:27f2396af22b0742",
+      "sourceHash": "fnv1a64:290823f98679e2c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -390,7 +390,7 @@
             },
             {
               "kind": "speech",
-              "text": "And notice bin/bist has a cousin you have already met. Latin fuī is the source of Spanish fui, \"I was / I went,\" which the Spanish track taught in Chapter 14 as one of the pretéritos fuertes. German bin and Spanish fui descend from the same PIE root bʰuH- — one landed in the present, the other in the past."
+              "text": "And notice bin/bist has a cousin abroad. Latin fuī is the source of Spanish fui, \"I was / I went\" — one of that language's pretéritos fuertes. German bin and Spanish fui descend from the same PIE root bʰuH- — one landed in the present, the other in the past."
             }
           ]
         },

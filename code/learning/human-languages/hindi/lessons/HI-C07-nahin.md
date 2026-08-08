@@ -57,7 +57,7 @@ sound, **PIE \*ne**:
 | Latin *nōn* | → Spanish **no**, French **non** |
 | Germanic | → German **nein**, English **no / not** |
 
-You met this exact idea in the German *nein* lesson ("not one"); here it is again
+German's *nein* carries this exact idea ("not one"); here it is again
 at the other end of the family, in Hindi. The word for *no* is one of the most
 stubbornly unchanged things human languages have.
 

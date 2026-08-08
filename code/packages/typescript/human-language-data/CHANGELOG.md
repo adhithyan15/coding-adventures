@@ -4,6 +4,83 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — the pointers the last guard could not see (HL-C50)
+
+The previous change closed cross-volume *lesson ids* and left a gap it named out
+loud: pointers phrased in prose, which no pattern then in place could match. This
+closes it — **72 pointer sites across 59 authored files** (53 lesson sources and 6
+handwritten chapters).
+
+- **Second-person memory claims aimed at another language**: *"you learned in
+  Hindi"*, *"you met in Tamil"*, *"You may remember from Latin's colour lesson"*,
+  *"You've met a genuine dog-word mystery in Spanish"*. A reader holding one volume
+  has met none of it.
+- **Pointers at another volume's material**: *"the Spanish track"*, *"the Tamil
+  book"*, *"German's lesson on you"*, *"the Hindi lesson on ऋतु"*, *"Telugu earlier
+  in this arc"*, *"every other language in this arc"*.
+- Every one keeps the cross-language **fact** and resolves it to the **language and
+  the word** — *"the same worldview inside Tamil's pōy varugiṟēṉ"*, not *"the
+  worldview you met in Tamil"*. Nothing was cut.
+- **Future-tense pointers count too** — *"You'll meet these twelve names again in
+  Spanish"*, *"the words you'll meet in Kannada"* — and so does *"earlier in this
+  arc"* with no memory verb in front of it — including with an adjective wedged in
+  (*"elsewhere in this **entire** arc"*, verbatim the phrasing fixed in Kannada while
+  its Malayalam sibling was left standing). Plural material nouns too: *"the Spanish,
+  Italian, French, and Portuguese **tracks**"*. All were missed by earlier sweeps of
+  this same change.
+- **Five of these live in handwritten chapters**, not generated ones — `bengali`,
+  `kannada`, `telugu` ch01, `hindi` ch03, `latin` ch01 carry no `GENERATED FILE`
+  header, so the `.tex` *is* the source there. Checked before editing, both ways.
+
+### Changed — the guard now covers the phrasings, and the frontmatter
+
+- Extended from `.tex` alone to **chapters plus lesson sources**, so frontmatter is
+  held to the same rule. Six patterns replace one: a memory verb aimed at another
+  language, `the <lang> <material>`, `<lang>'s … <material>`, and the original
+  "in this course". Each proven to fire on a reintroduced defect.
+- Two false-positive classes it must **not** flag, both found by running it:
+  *"seen Hindi borrow umr **from Arabic**"* — a borrowing source, not a locator, so
+  bare `from <language>` no longer counts; and *"unlike how closely Kannada and
+  Telugu **track** Tamil"* — `track` is a verb there, so the material nouns require
+  an article or possessive.
+- **The lesson surface needed un-escaping first.** `canonicalLessonSource` returns
+  JSON, where a line break is the two-character escape `\n` and not a newline. So
+  `\s+` could not cross a wrap — a pointer split as `"the Spanish\ntrack"` was
+  invisible, and one real defect (`FR-C03-de-rien`) hid there — and `[^.?!\n]`
+  bounded nothing, leaving the 60-char window free to jump paragraphs on exactly the
+  surface that had just been added. One `.replace(/\\n/g, "\n")` fixes both.
+
+### Known remaining gap, measured
+
+Bare *"in this course"* (40 lessons) and *"in this curriculum"* (8) are a coherent
+class of their own and the next item — named here with a count rather than left to be
+rediscovered. The guard deliberately does not match them: one muted on 48 files the
+day it lands is worth less than one that holds.
+
+### Note — five claims this change invented, and then withdrew
+
+Replacing a pointer means writing a new sentence, and a new sentence can be false in
+ways the old one was not. Five were caught in review before landing:
+
+- *"the one European blue that is not a Germanic loan at all"* — Spanish's `azul` is
+  Arabic too, and the corpus says so two files away.
+- *"Latin's own vocabulary family for age and vigour"* — no such family. The second
+  attempt, *"the sense narrowed to force alone"*, was **also** wrong and contradicted
+  the same lesson's own body three lines down. The body already said it: the two words
+  split toward different senses.
+- *"the PIE/`nox` contrast is not independently attested"* for Kannada and Telugu — it
+  is the identical Sanskrit word. The gap was in the curriculum, not the scholarship.
+- *"the boundary-blur Malayalam shows when its TIME word widens toward AFTERNOON"* —
+  backwards. Malayalam is the corpus's explicit counter-example (*"keeps 'noon'
+  unwidened"*); the widening is Telugu's.
+- *"svāgatam survives unchanged in Sanskrit itself"* — Sanskrit is the ancestor. A
+  word cannot survive in its own source.
+
+Every one has the same shape: a statement about **the books** rewritten as a statement
+about **the world**. The pointer was the only thing making the original true, so
+deleting it silently widened the claim. Three review passes were needed, and each
+found defects the one before it had not.
+
 ### Fixed — one volume no longer cites another (HL-C50)
 
 - **Nine cross-volume citations across 9 lessons** (8 distinct foreign ids): Malayalam

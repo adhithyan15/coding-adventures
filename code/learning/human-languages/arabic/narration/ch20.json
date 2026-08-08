@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fb193a500bf84fa4",
+  "sourceHash": "fnv1a64:02fe68e22e87631c",
   "lessons": [
     {
       "id": "AR-C20-ahada-ashar-ishrun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a1426dc9c9a2abd",
+      "sourceHash": "fnv1a64:7e829f5fd5ea8d75",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of these is the counting-word (from the AGE and NUM-1-5 lessons) plus عشر (ʿashar, \"ten\") — a straightforward additive compound, the same shape you've now seen in Spanish's once-quince and Latin's ūndecim-quīndecim."
+              "text": "Every one of these is the counting-word (from the AGE and NUM-1-5 lessons) plus عشر (ʿashar, \"ten\") — a straightforward additive compound, the same shape Spanish builds in once-quince and Latin in ūndecim-quīndecim."
             }
           ]
         },

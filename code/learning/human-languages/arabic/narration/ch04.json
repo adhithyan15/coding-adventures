@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:927e348dde94c4bb",
+  "sourceHash": "fnv1a64:6a3c7390dd9db5c1",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -1095,7 +1095,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2d7502d85e39eb8",
+      "sourceHash": "fnv1a64:e69d598f6d1990e8",
       "notice": null,
       "blocks": [
         {
@@ -1111,7 +1111,7 @@
             },
             {
               "kind": "speech",
-              "text": "The other everyday farewell — and the one with a surprise waiting in the Spanish track."
+              "text": "The other everyday farewell — and the one with a surprise waiting inside Spanish."
             }
           ]
         },

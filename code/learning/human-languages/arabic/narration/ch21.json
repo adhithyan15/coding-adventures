@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d114963100d91b96",
+  "sourceHash": "fnv1a64:be01e1709d18c13b",
   "lessons": [
     {
       "id": "AR-C21-kalb-qitt",
@@ -12,14 +12,14 @@
       "title": "كلب, قط — a solid root, and the word that closes the loop",
       "headword": "كلب, قط",
       "romanization": "",
-      "gloss": "dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the mystery words you've met in other languages; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated",
+      "gloss": "dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the tangled dog-words of Spanish, Hindi, and English; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated",
       "script": "arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f33045d5cd091570",
+      "sourceHash": "fnv1a64:5c58ecb89a42a062",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've met a genuine dog-word mystery in Spanish, and another one in German by way of English. Arabic's dog-word has no such mystery — and its cat-word turns out to be a long-lost cousin of nearly every European cat-word you've already learned."
+              "text": "Spanish has a genuine dog-word mystery, and German another by way of English. Arabic's dog-word has no such mystery — and its cat-word turns out to be a long-lost cousin of nearly every European cat-word there is."
             }
           ]
         },
@@ -84,11 +84,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"qiṭṭ\" — cat, most likely a distant cousin of Latin's cattus and every European cat-word you've learned",
+              "instruction": "\"qiṭṭ\" — cat, most likely a distant cousin of Latin's cattus and every European cat-word there is",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"qiṭṭ\" — cat, most likely a distant cousin of Latin's cattus and every European cat-word you've learned]"
+              "source": "[YOU SAY: \"qiṭṭ\" — cat, most likely a distant cousin of Latin's cattus and every European cat-word there is]"
             }
           ]
         },

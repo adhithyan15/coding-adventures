@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:978af30d3b1dba60",
+  "sourceHash": "fnv1a64:39b23a5f466d7f67",
   "lessons": [
     {
       "id": "AR-C27-tusbih-ala-khayr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f336d22da3abfe2",
+      "sourceHash": "fnv1a64:2df88df161fba6d1",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the genuinely different part: every other \"good night\" in this arc — English, French, German, Spanish — wishes something about the night itself. Arabic's everyday version does the opposite: it's grammatically about the morning that follows, built from the same \"waking\" root already hiding in ṣabāḥ. Notice what's genuinely absent: ليل (layl, \"night,\" last lesson) doesn't appear anywhere in this phrase at all. It reuses pieces you already have (ṣ-b-ḥ, khayr) but points them at a different moment in time than every other language's farewell."
+              "text": "Here's the genuinely different part: the everyday \"good night\" of English, French, German, and Spanish wishes something about the night itself. Arabic's everyday version does the opposite: it's grammatically about the morning that follows, built from the same \"waking\" root already hiding in ṣabāḥ. Notice what's genuinely absent: ليل (layl, \"night,\" last lesson) doesn't appear anywhere in this phrase at all. It reuses pieces you already have (ṣ-b-ḥ, khayr) but points them at a different moment in time than every other language's farewell."
             }
           ]
         },

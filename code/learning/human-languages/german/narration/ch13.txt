@@ -25,7 +25,7 @@ language: French. "blue": bleu.
 language: Italian. "blue": blu.
 language: English. "blue": blue — taken from French, not from German.
 English is the odd one here: it had Germanic blāw available but borrowed the French form instead. The word went Germanic becomes French becomes English, coming home in disguise.
-Portuguese went a different way entirely — its blue is azul, from Arabic. You'll meet that one in the Portuguese track.
+Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too.
 
 The chapter in one table.
 [a table of 4 rows, read aloud]

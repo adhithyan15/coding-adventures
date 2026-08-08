@@ -69,7 +69,7 @@ their descendants and you see the erosion happen:
 (A purist's note: French *deux* and Spanish *dos* actually descend from the
 **accusative** *duōs*, not the *duo* shown — as Romance words generally do.)
 
-*Quattuor → quatre → cuatro* is the same wearing-down the Hindi track shows for
+*Quattuor → quatre → cuatro* is the same wearing-down Hindi shows in
 *catvāri → chār* — two branches of one ancient word (**PIE \*kʷetwóres**), one
 softening in Europe, one in India. And they seed English too: *ūnus* in *unit*
 and *union*, *duo* in *duo* and *dual*, *trēs* in *trio* and *triple*, *quīnque*

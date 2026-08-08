@@ -17,7 +17,7 @@ reviews_of: [KA-C01-haudu, KA-C01-illa]
 ## Warm-up
 
 [PAUSE 2s] The easy middle between "yes" and "no": "okay, alright, fine,
-correct." And it's a word you already met in the Tamil book — the Dravidian
+correct." And Tamil has the very same word — the Dravidian
 family shares it whole.
 
 ## The letters in this word

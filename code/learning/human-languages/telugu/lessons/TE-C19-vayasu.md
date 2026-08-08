@@ -40,7 +40,7 @@ verbless grammar, just fused together by ordinary Telugu vowel sandhi.
 <!-- hl-knowledge: introduces=[TE-ETYMON-C19-VAYASU-01]; assesses=[] -->
 
 **వయస్సు** (*vayasu*) = "**age**" — the exact same Sanskrit **वयस्** (*vayas*,
-"age, vigor, strength," PIE cousin of Latin **vīs**) you just met in Kannada.
+"age, vigor, strength," PIE cousin of Latin **vīs**) that Kannada also carries.
 
 ## Grammar Lens: fused by sandhi, still verbless
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C19-VAYASU-02]; assesses=[] -->

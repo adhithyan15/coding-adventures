@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "See You Tomorrow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0556cfdf53851bbf",
+  "sourceHash": "fnv1a64:c1fe02cf7cf4d33b",
   "lessons": [
     {
       "id": "AR-C24-ila-al-ghad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cdff4548a8a9674",
+      "sourceHash": "fnv1a64:bbf0d19361870582",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Gh-d-w's core sense is \"to go out at dawn, early morning\" — and \"tomorrow\" grows directly out of that \"early morning\" sense. This is not a one-off coincidence: you've already seen this exact shift happen in Latin, where māne (\"morning\") became French's demain and Spanish's mañana (\"tomorrow\"). Two completely unrelated language families — Semitic and Indo-European — independently building \"tomorrow\" out of \"morning.\""
+              "text": "Gh-d-w's core sense is \"to go out at dawn, early morning\" — and \"tomorrow\" grows directly out of that \"early morning\" sense. This is not a one-off coincidence: this exact shift also happened in Latin, where māne (\"morning\") became French's demain and Spanish's mañana (\"tomorrow\"). Two completely unrelated language families — Semitic and Indo-European — independently building \"tomorrow\" out of \"morning.\""
             }
           ]
         },

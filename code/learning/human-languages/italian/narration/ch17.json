@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8f8245bda887a5a8",
+  "sourceHash": "fnv1a64:312b7248145dbb09",
   "lessons": [
     {
       "id": "IT-C17-testa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad1ac30c6518f022",
+      "sourceHash": "fnv1a64:ec786a73bf664872",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "If you have done the French chapter, you already know this word's story. What is worth seeing is how much less Italian did to it."
+              "text": "French tells this word's story too. What is worth seeing here is how much less Italian did to it."
             }
           ]
         },

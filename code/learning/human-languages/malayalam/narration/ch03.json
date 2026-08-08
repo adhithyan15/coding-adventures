@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6e4c284aceda5c95",
+  "sourceHash": "fnv1a64:a828ffb52fb5052d",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -566,7 +566,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5e0de3df6b96aec1",
+      "sourceHash": "fnv1a64:edfd9838cfc6c07f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -591,7 +591,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word at the heart of \"how are you?\" — and it travelled all the way from the Sanskrit track."
+              "text": "The word at the heart of \"how are you?\" — and it travelled all the way from Sanskrit."
             }
           ]
         },
@@ -613,7 +613,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സുഖം (sukhaṁ, \"well-being, comfort, ease, happiness\") is a Sanskrit loan — sukha = su- (\"good, well\") + kha (\"space, feeling\") — the same su- that is Greek eu- (as in euphoria), met in the Sanskrit track. Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukham is a perfect case: for \"well,\" where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukham."
+              "text": "സുഖം (sukhaṁ, \"well-being, comfort, ease, happiness\") is a Sanskrit loan — sukha = su- (\"good, well\") + kha (\"space, feeling\") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukham is a perfect case: for \"well,\" where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukham."
             }
           ]
         },
@@ -708,7 +708,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c17999601548f76",
+      "sourceHash": "fnv1a64:f7048cc0cbaacda2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -755,7 +755,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സുഖമാണോ? literally means \"is [it] well?\" — where English says \"how are you?\", Malayalam more often says \"are you well?\" The word സുഖം (sukhaṁ, \"well-being, comfort, ease\") is a Sanskrit loan — the very sukha you meet in the Sanskrit track (the su- \"good\" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ (\"is,\" from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature."
+              "text": "സുഖമാണോ? literally means \"is [it] well?\" — where English says \"how are you?\", Malayalam more often says \"are you well?\" The word സുഖം (sukhaṁ, \"well-being, comfort, ease\") is a Sanskrit loan — sukha itself, borrowed whole (the su- \"good\" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ (\"is,\" from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature."
             }
           ]
         },
@@ -793,11 +793,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Sanskrit word for well-being inside it (sukha — as in the Sanskrit track)",
+              "instruction": "the Sanskrit word for well-being inside it (sukha)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Sanskrit word for well-being inside it (*sukha* — as in the Sanskrit track)]"
+              "source": "[YOU SAY: the Sanskrit word for well-being inside it (*sukha*)]"
             },
             {
               "kind": "prompt",

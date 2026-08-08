@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:925a2b9b870e5d0f",
+  "sourceHash": "fnv1a64:6419f9af0cbb8148",
   "lessons": [
     {
       "id": "TA-C28-pirpakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b28557a764c08bb8",
+      "sourceHash": "fnv1a64:0568dee970d8dc36",
       "notice": null,
       "blocks": [
         {

@@ -48,7 +48,7 @@ fourth time.
 <!-- hl-knowledge: introduces=[TE-ETYMON-C11-RANGULU-02]; assesses=[] -->
 
 **నీలం** (*nīlam*) = "**blue**" — the identical Sanskrit **నీల** (*nīla*)
-loan you've now seen in Tamil (*nīlam*), Malayalam (*nīla*), Kannada
+loan that also sits in Tamil (*nīlam*), Malayalam (*nīla*), Kannada
 (*nīli*), and Hindi (*nīlā*). Four Dravidian languages plus Hindi, all
 independently keeping their own native black/white/red, and all reaching for
 the **exact same** borrowed word the moment it comes to blue.

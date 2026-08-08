@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:89ffa688255fddbc",
+  "sourceHash": "fnv1a64:efef50f495c96454",
   "lessons": [
     {
       "id": "TA-C14-kaalangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:694c78bf15e7787a",
+      "sourceHash": "fnv1a64:555129c6b521a26a",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tamil has words that line up with Spanish's four seasons — but, just like the Hindi lesson on ऋतु, forcing them into a clean four-way split hides what actually matters on the ground."
+              "text": "Tamil has words that line up with Spanish's four seasons — but, just like Hindi's ऋतु, forcing them into a clean four-way split hides what actually matters on the ground."
             }
           ]
         },

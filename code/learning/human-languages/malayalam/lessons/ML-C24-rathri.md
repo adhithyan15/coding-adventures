@@ -51,7 +51,7 @@ the same way). This lesson gives it its own, full standing.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C24-RATHRI-02]; assesses=[] -->
 
-Here's the honest echo from earlier in this arc: just like Hindi's own
+Here's the honest echo across the family: just like Hindi's own
 **रात** (*raat*, ultimately from the same Sanskrit **रात्रि**), Malayalam's
 *rāthri* traces to **Proto-Indo-European** ***\*h₁reh₁-*** ("**to rest**")
 — a **completely different** PIE root from Latin's *nox* (***\*nókʷts***).

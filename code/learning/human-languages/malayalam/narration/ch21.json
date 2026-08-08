@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2a78a4d8d90f4df",
+  "sourceHash": "fnv1a64:9a5c08971a480364",
   "lessons": [
     {
       "id": "ML-C21-naaya-poocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b76808f04d3669a",
+      "sourceHash": "fnv1a64:e2c8e98f67490f7e",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നായ (nāya, \"dog\") continues the same solid, native Proto-Dravidian root as Kannada's ನಾಯಿ (nāyi) and Tamil's own word — no mystery here at all, unlike every dog-word you've met elsewhere in this entire arc."
+              "text": "നായ (nāya, \"dog\") continues the same solid, native Proto-Dravidian root as Kannada's ನಾಯಿ (nāyi) and Tamil's own word — no mystery here at all, unlike the tangled dog-words of Spanish, Hindi, and English."
             }
           ]
         },

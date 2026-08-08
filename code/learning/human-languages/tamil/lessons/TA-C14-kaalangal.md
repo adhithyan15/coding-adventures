@@ -34,7 +34,7 @@ reviews_of: [TA-C13-udal-uruppugal]
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-UDAL-URUPPUGAL-01] -->
 
 [PAUSE 2s] Tamil has words that line up with Spanish's four seasons — but,
-just like the Hindi lesson on ऋतु, forcing them into a clean four-way split
+just like Hindi's ऋतु, forcing them into a clean four-way split
 hides what actually matters on the ground.
 
 ## You'll want to know: The four words

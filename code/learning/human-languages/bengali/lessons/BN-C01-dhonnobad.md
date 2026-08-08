@@ -16,7 +16,7 @@ reviews_of: [BN-C01-nomoshkar]
 
 ## Warm-up
 
-[PAUSE 2s] The same "thank you" you learned in Hindi, Marathi, and Punjabi — now
+[PAUSE 2s] The same "thank you" Hindi, Marathi, and Punjabi use — now
 watch Bengali reshape it *twice*.
 
 ## The letters in this word

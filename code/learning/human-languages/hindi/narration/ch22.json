@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cb46bfa9d45d54ce",
+  "sourceHash": "fnv1a64:b8dba90a72b12b25",
   "lessons": [
     {
       "id": "HI-C22-gyarah-bees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df7700b573fce384",
+      "sourceHash": "fnv1a64:7654234c3bf74681",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Be honest about this one: Hindi's teens don't follow a clean, predictable pattern the way Spanish's or Latin's do. But hiding inside that irregularity is a real echo of something you just saw in Latin."
+              "text": "Be honest about this one: Hindi's teens don't follow a clean, predictable pattern the way Spanish's or Latin's do. But hiding inside that irregularity is a real echo of something Latin does too."
             }
           ]
         },

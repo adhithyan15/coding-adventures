@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Chapter 3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b6162d999488180",
+  "sourceHash": "fnv1a64:9f3ccd87a574d1a9",
   "lessons": [
     {
       "id": "FR-C03-aller",
@@ -614,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1e3a06b51f0b29c",
+      "sourceHash": "fnv1a64:a67f465814030d42",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +630,7 @@
             },
             {
               "kind": "speech",
-              "text": "Someone says merci. The easy reply: de rien — literally \"of nothing.\" You wave the favour off as no trouble — and if you did the Spanish track, you've already met this exact trick."
+              "text": "Someone says merci. The easy reply: de rien — literally \"of nothing.\" You wave the favour off as no trouble — and Spanish pulls this exact trick too."
             }
           ]
         },
