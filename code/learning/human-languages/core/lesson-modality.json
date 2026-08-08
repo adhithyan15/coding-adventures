@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:cdabdd84f80adb1c",
+  "sourceHash": "fnv1a64:69311fa33015eb7e",
   "summary": {
     "totalLessons": 1445,
     "voice": 969,
@@ -20988,7 +20988,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d2bed1758fadb4c9"
+      "sourceHash": "fnv1a64:47b717c63651b2dd"
     },
     {
       "id": "LA-C43-emo",
@@ -21006,7 +21006,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31af2c5f7e352398"
+      "sourceHash": "fnv1a64:567a2a36c09be502"
     },
     {
       "id": "ML-C01-athe",
@@ -25491,7 +25491,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31fa23c67eb5e896"
+      "sourceHash": "fnv1a64:91891c6856a502dc"
     },
     {
       "id": "PT-C22-encontrar",
