@@ -2536,6 +2536,38 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 35,
+      "title": "Arriving at a House",
+      "label": "ch:ta-arriving-at-a-house",
+      "output": "tamil/book/chapters/ch35-arriving-at-a-house.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 36,
+      "title": "What You Are Offered",
+      "label": "ch:ta-what-you-are-offered",
+      "output": "tamil/book/chapters/ch36-what-you-are-offered.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 37,
+      "title": "Your Town, Your Friend",
+      "label": "ch:ta-your-town-your-friend",
+      "output": "tamil/book/chapters/ch37-your-town-your-friend.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 38,
+      "title": "Keeping Well, and Leaving",
+      "label": "ch:ta-keeping-well-and-leaving",
+      "output": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "title": "Case Endings and Dative Subjects",

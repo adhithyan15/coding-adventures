@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:91118e65c81835b4",
+  "sourceHash": "fnv1a64:b777144ee21a5da7",
   "summary": {
-    "totalLessons": 1449,
+    "totalLessons": 1464,
     "voice": 973,
-    "sight": 423,
+    "sight": 438,
     "pen": 53,
     "drivableLessons": 973,
-    "drivablePercent": 67,
+    "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 451,
+    "chapterCount": 455,
     "drivablePrefixTotal": 790,
     "fullyDrivableChapters": 306,
-    "unstartableChapters": 108,
+    "unstartableChapters": 112,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6652,11 +6652,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 97,
+      "lessonCount": 112,
       "voice": 53,
-      "sight": 36,
+      "sight": 51,
       "pen": 8,
-      "drivablePercent": 55,
+      "drivablePercent": 47,
       "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
@@ -7214,6 +7214,62 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-C34-edu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 35,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C35-veedu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 36,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C36-teneer",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 37,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C37-uur",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 3,
+          "voice": 0,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C38-udambu",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -33096,6 +33152,321 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:1480cdf0e8dbdd75"
+    },
+    {
+      "id": "TA-C35-veedu",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 750,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:297479db3d817cd4",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C35-kadavu",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 760,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c1a0f46c867a9c03",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C35-arai",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 770,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:34d173f2cce6d96f",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C35-naarkaali",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 780,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f68ff6aa061a196c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-teneer",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 790,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fbaac7d8134225e1",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-paal",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 800,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6a72f2af11ebc2dc",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-unavu",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 810,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:79a09af6b5c1e1fd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-tavaru",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 820,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:46edc651e85b20f4",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-uur",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 830,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3393a38bd4aca7f7",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-nanban",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 840,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5b1b5f724e390f6b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-ivar",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 850,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ca3f8708b12b192",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-ivar-en-nanbar",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 860,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a2e2284ae61b8a8e",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-udambu",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 870,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4c3a8be338bc60b3",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-sugam",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 880,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e334b1613ee920fd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-vidai",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 890,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f9300ce323ff2a68",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "TE-C01-avunu",

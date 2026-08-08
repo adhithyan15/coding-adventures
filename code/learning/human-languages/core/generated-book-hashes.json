@@ -3270,6 +3270,53 @@
       "tex": "tamil/book/chapters/ch34-verbs-between-people.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:9b721566605c8133",
+      "lessonIds": [
+        "TA-C35-veedu",
+        "TA-C35-kadavu",
+        "TA-C35-arai",
+        "TA-C35-naarkaali"
+      ],
+      "tex": "tamil/book/chapters/ch35-arriving-at-a-house.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:71c92947d2d24ca0",
+      "lessonIds": [
+        "TA-C36-teneer",
+        "TA-C36-paal",
+        "TA-C36-unavu",
+        "TA-C36-tavaru"
+      ],
+      "tex": "tamil/book/chapters/ch36-what-you-are-offered.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:977ef60cd0294c2e",
+      "lessonIds": [
+        "TA-C37-uur",
+        "TA-C37-nanban",
+        "TA-C37-ivar",
+        "TA-C37-ivar-en-nanbar"
+      ],
+      "tex": "tamil/book/chapters/ch37-your-town-your-friend.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:cdf9a751033520e6",
+      "lessonIds": [
+        "TA-C38-udambu",
+        "TA-C38-sugam",
+        "TA-C38-vidai"
+      ],
+      "tex": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:2f73ec5d662719c4",

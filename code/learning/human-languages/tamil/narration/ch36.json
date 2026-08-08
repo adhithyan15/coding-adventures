@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 36,
+  "title": "What You Are Offered",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:670535ac9b63a59a",
+  "lessons": [
+    {
+      "id": "TA-C36-teneer",
+      "sequence": 790,
+      "title": "தேநீர் (tēnīr) — \"tea,\" half of it already yours",
+      "headword": "தேநீர்",
+      "romanization": "tēnīr",
+      "gloss": "tea — a borrowed syllable welded onto the நீர் that is already inside தண்ணீர்",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fbaac7d8134225e1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nāṟkāli, and what its halves mean. (Four, and leg.) You are in the aṟai with the chair, and the next thing in a Tamil house is this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேநீர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேநீர் — tēnīr — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "The second half is yours from the water lesson: நீர் (nīr), \"water,\" the plain older word inside தண்ணீர் (taṇṇīr) — taṇ, \"cool,\" plus nīr. So தேநீர் (tēnīr) is, literally, tea water."
+            },
+            {
+              "kind": "speech",
+              "text": "தேநீர், தயவுசெய்து. — tēnīr, tayavuseytu — Tea, please."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech you will also hear plain டீ (ṭī), straight from English tea. தேநீர் (tēnīr) is the fuller word — a sign, a menu, a formal host."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தே is த with the ē sign ே, which stands in front of its consonant. நீ is ந with the long ī sign; ர் is ர shut by a puḷḷi — the soft r, not the hard ற."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words beside it are worth reading. நன்றி is ந + ன் + றி, what you say when the tea arrives. In தயவுசெய்து, செய் is ce plus ய் shut by that same dot before து."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - the syllable that sailed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீர் is inherited and very old. தே is not Tamil at all: it is the combining form of தேய் (tēy), borrowed from Malay teh, which took it from the Hokkien of the southern Chinese coast, where the leaf is tê."
+            },
+            {
+              "kind": "speech",
+              "text": "The world's words for tea come in two shapes, decided by how the tea reached each language. The southern Chinese coast carried te: Dutch thee, and through Dutch, English tea and French thé — and by the Malay ports, Tamil's தே. The overland routes carried cha: Persian and Hindi chāy, Russian chay. Portuguese says chá despite being a sea power, because its traders worked out of Macau. Where the ship docked decided the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil then did what the European te-languages did not: rather than take the loan whole, it welded it to நீர் — a word that has travelled outward as well, since English mulligatawny is Tamil மிளகுத்தண்ணீர், \"pepper water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Weigh that against the rice word. அரிசி may stand behind English rice through Greek, and the dictionaries hedge. The tea routes are documented. Different histories, different confidence."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared half — \"nīr … taṇṇīr … tēnīr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared half — \"nīr … taṇṇīr … tēnīr\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tēnīr, tayavuseytu\" — tea, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tēnīr, tayavuseytu\" — tea, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two routes — \"te … cha\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two routes — \"te … cha\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pepper water in an English soup — \"miḷagut taṇṇīr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pepper water in an English soup — \"miḷagut taṇṇīr\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the second half of tēnīr and the word that shares it, then ask for tea politely. (நீர், inside தண்ணீர்; tēnīr, tayavuseytu.) Why do some languages say te and others cha, and which is better established — the tea split or arisi-to-rice? (The route the tea travelled; and the tea split.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C36-paal",
+      "sequence": 800,
+      "title": "பால் (pāl) — \"milk,\" and a p that becomes an h next door",
+      "headword": "பால்",
+      "romanization": "pāl",
+      "gloss": "milk — one syllable, inherited whole, and the word that shows Kannada turning p into h",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6a72f2af11ebc2dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tēnīr. Which half is borrowed, and which is the old Tamil word for water? (Tē is the traveller; nīr is Tamil's own.) Here is what goes into it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பால்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பால் — pāl — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "One syllable, one long ā, a final ல் with no vowel after it. Say it short and closed: pāl, never pāla."
+            },
+            {
+              "kind": "speech",
+              "text": "பால் தேநீர் — pāl tēnīr — milk tea."
+            },
+            {
+              "kind": "speech",
+              "text": "With தண்ணீர் (taṇṇīr, cool water) already in hand, you can now name what a Tamil household is likely to put in front of a guest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பா is ப with the long ā sign ா. Then ல்: ல with the puḷḷi, the dot that removes the built-in a and leaves a bare consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "That dot is the whole reason the word ends where it does. Without it, பால would be pāla, two syllables. A single dot carries the difference between a word and a non-word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - the p that went soft",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பால் (pāl) is inherited Dravidian, and its relatives are close:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the cousin",
+                "language"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the cousin: പാൽ pāl. language: Malayalam.",
+                "the cousin: పాలు pālu. language: Telugu.",
+                "the cousin: ಹಾಲು hālu. language: Kannada, modern."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada has changed the front of the word once more, this time p into h — the textbook example of the best-known sound change in the family. Old Kannada said pālu, exactly as Tamil does; the p- began turning into h- around the tenth century and the change had run through the whole vocabulary by the fourteenth."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it beside the change you met at the house. Tamil v, Kannada b, in vīḍu / bīḍu. Tamil p, Kannada h, in pāl / hālu. Both are regular correspondences at the front of a word, and between them they let you recognise a Kannada word as a relative rather than a stranger. Telugu and Malayalam did neither: they keep the p, as Tamil does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pāl\" — stopped by the dot, not pāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pāl\" — stopped by the dot, not *pāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pāl tēnīr\" — milk tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pāl tēnīr\" — milk tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two front-swaps together — \"vīḍu, bīḍu … pāl, hālu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two front-swaps together — \"vīḍu, bīḍu … pāl, hālu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you can be offered — \"taṇṇīr, tēnīr, pāl\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you can be offered — \"taṇṇīr, tēnīr, pāl\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"milk tea,\" then say what the dot on ல் is doing and what the word would be without it. (Pāl tēnīr; it removes the built-in vowel, and without it, pāla.) What does Kannada put at the front instead of p, and is it a one-off? (h — hālu; regular, from the tenth century to the fourteenth.) Name the other Kannada front-swap. (v to b — vīḍu, bīḍu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C36-unavu",
+      "sequence": 810,
+      "title": "உணவு (uṇavu) — \"food,\" from the verb underneath it",
+      "headword": "உணவு",
+      "romanization": "uṇavu",
+      "gloss": "food — the noun standing on உண், the older eating verb behind சாப்பிடு's everyday one",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:79a09af6b5c1e1fd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pāl — milk — and the Kannada shape of it. (Hālu.) Drink is settled. Now the word for everything else on the plate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உணவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உணவு — uṇavu — food."
+            },
+            {
+              "kind": "speech",
+              "text": "The general word: food as a category, not a dish. It covers the rice words you have — அரிசி (arisi), the raw grain, and சாதம் (sātam), the cooked meal — and all that is served beside them."
+            },
+            {
+              "kind": "speech",
+              "text": "உணவு, தயவுசெய்து. — uṇavu, tayavuseytu — Food, please."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the register. உணவு (uṇavu) is the careful, written word — a menu, a sign. Around a family table people say சாப்பாடு (sāppāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உ is a standing vowel — a full letter, not a sign. Then ண, then வு, which is வ with the u sign underneath. ண is the retroflex n you first wrote alongside ம, and the letter inside தண்ணீர்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: the tongue in ண",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Curl the tip of your tongue back to the roof of your mouth and release into the vowel. That is ண, and uṇavu gives it a clean run because the letter sits between two vowels. Contrast the ன of நன்றி and the ந of நீர், both made near the teeth."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart - the verb inside the noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உணவு (uṇavu) is உண் (uṇ), \"to eat,\" with a noun-forming ending. Food is literally the eating. Tamil has two eating verbs, of different ages:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the verb",
+                "where it lives"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the verb: உண் uṇ. where it lives: old, inherited, literary now.",
+                "the verb: சாப்பிடு sāppiḍu. where it lives: the everyday spoken verb."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "உண் is a bare inherited root, and the Dravidian dictionary lists uṇavu inside its entry."
+            },
+            {
+              "kind": "speech",
+              "text": "சாப்பிடு is where the ground softens, so hold this course's earlier account loosely. You were shown sāppu, \"food,\" plus இடு (iḍu), \"to put.\" The இடு is visible in the spelling; the first half is the problem. The great Tamil lexicon records no plain word sāppu meaning \"food,\" and the Dravidian etymological dictionary has no entry for this verb at all. It is not Sanskrit — Telugu and Malayalam have their own forms — but its origin is open. The word you would use at a table has the weaker paperwork."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root and the noun — \"uṇ … uṇavu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root and the noun — \"uṇ … uṇavu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the retroflex, tongue curled back — \"uṇavu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the retroflex, tongue curled back — \"uṇavu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the documented one, then the everyday one — \"uṇ … sāppiḍu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the documented one, then the everyday one — \"uṇ … sāppiḍu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raw grain, then cooked meal — \"arisi … sātam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: raw grain, then cooked meal — \"arisi … sātam\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb is uṇavu built on, and where does your tongue go for ண? (உண்; curled back.) Which eating verb would you use at a table, and how sure is anyone where it came from? (சாப்பிடு — not at all: the Dravidian dictionary has no entry.) Give the raw grain and the cooked meal. (Arisi; sātam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C36-tavaru",
+      "sequence": 820,
+      "title": "தவறு (tavaṟu) — \"a mistake,\" and the rest of the apology",
+      "headword": "தவறு",
+      "romanization": "tavaṟu",
+      "gloss": "a mistake — the noun that lets you finish an apology, and the same word as the verb \"to slip\"",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:46edc651e85b20f4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter back: tēnīr, pāl, uṇavu. Suppose one arrives and it is not what you asked for. You have \"sorry,\" but not the word for what went wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தவறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தவறு — tavaṟu — a mistake, an error, a fault."
+            },
+            {
+              "kind": "speech",
+              "text": "With என் (eṉ), \"my,\" and no verb — Tamil needs none:"
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னிக்கவும், என் தவறு. பால் இல்லை, தேநீர். maṉṉikkavum, eṉ tavaṟu. pāl illai, tēnīr. Sorry, my mistake. Not milk — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னிக்கவும் is the careful, written-leaning apology; in speech many Tamil speakers simply say sorry, in English. என் தவறு (tavaṟu) suits either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "த + வ + று. The last piece is ற, the hard r of aṟai, with the u sign — made at the ridge behind the teeth, tongue flat, not curled."
+            },
+            {
+              "kind": "speech",
+              "text": "The apology in front of it does something this word does not. மன்னிக்கவும் has ன்னி: the alveolar ன switched off by a dot, then written a second time with the i sign. Tamil doubles a consonant by repeating the letter with a dot on the first, never by inventing a joined shape — the க்க of வணக்கம் over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - the slip and the noun are one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தவறு (tavaṟu) is inherited Dravidian, a verb and a noun in one shape: \"to slip, to fail,\" and \"a slip, a mistake.\" The dictionary files it beside தப்பு (tappu); its cousins are everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the chapter in a line. மன்னிக்கவும் was the showpiece: Tamil kept its own மன்னி where Kannada, Telugu and Malayalam reached for Sanskrit kṣamā. தவறு (tavaṟu) is inherited too, and so is உண் inside uṇavu, and பால் (pāl). But தேநீர் (tēnīr) is half a loan from a Malay port, and சாதம் was flagged as Sanskrit-influenced when you met it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest statement is not \"Tamil does not borrow.\" It is that Tamil borrows without evicting: the inherited word stays, and the loan takes a different job or register."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eṉ tavaṟu\" — my mistake, with no verb in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eṉ tavaṟu\" — my mistake, with no verb in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole repair — \"maṉṉikkavum, eṉ tavaṟu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole repair — \"maṉṉikkavum, eṉ tavaṟu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words for a mistake — \"tavaṟu … tappu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words for a mistake — \"tavaṟu … tappu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the borrowed one among this chapter's words — \"tēnīr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the borrowed one among this chapter's words — \"tēnīr\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Apologise, name the fault, and say why there is no word for \"is\" in it. (Maṉṉikkavum, eṉ tavaṟu; Tamil needs none.) How does Tamil write a doubled consonant, as in ன்னி and க்க? (The letter a second time, dot on the first.) Which apology verb is native where the neighbours took Sanskrit, and does that make Tamil a language that never borrows? (மன்னி, against kṣamā; no — it borrows without evicting.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -82,6 +82,23 @@ through.
   is **எனக்குப் பிடிக்கும்** — a third dative subject, and the same inversion
   Spanish *gustar*, Italian *piacere* and Hindi *pasand* reach from a completely
   unrelated family. In the book, Chapter 34.
+- **Chapters 35–38 — A visit, in fifteen nouns**
+  ([`lessons/TA-C{35..38}-*`](./lessons/)): the track's first tranche of
+  everyday **nouns**, and the first authored specifically to move the HL09
+  §3.1 level gate. Chapter 35 walks a guest in — வீடு (*vīḍu*), கதவு
+  (*kadavu*), அறை (*aṟai*), நாற்காலி (*nāṟkāli*, "four" plus "leg") — and
+  sets Kannada's *v-* to *b-* shift beside Tamil. Chapter 36 is what you are
+  offered: தேநீர் (*tēnīr*, half a Malay loan welded to the நீர் already
+  inside தண்ணீர்), பால் (*pāl*, the textbook case of Kannada *p-* to
+  *h-*), உணவு (*uṇavu*), and தவறு (*tavaṟu*) to finish an apology.
+  Chapter 37 is the part of a Tamil introduction English does not have —
+  ஊர் (*ūr*, the native place, and the *-ore* in Tanjore), நண்பன் /
+  நண்பி / நண்பர், இவர் and the இ- / அ- / எ- pointing series, closing
+  on **இவர் என் நண்பர்**. Chapter 38 asks after somebody and leaves:
+  உடம்பு (*uḍambu*), சுகம் (*sugam*, the Sanskrit loan Tamil kept beside
+  native நலம்), and விடை (*viḍai*) — which the Dravidian dictionary files
+  in the **same entry as வீடு**, so the arc walks in through the house and out
+  through the leave on one root. In the book, Chapters 35–38.
 - **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
   curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi,
   vowel signs, and whole-word writing for **வணக்கம்** and **நன்றி**.
@@ -124,9 +141,9 @@ than the ability to read the letters.
 
 ## Book / fonts
 
-The 34-chapter book compiles with XeLaTeX using **vendored** Noto fonts
+The 38-chapter book compiles with XeLaTeX using **vendored** Noto fonts
 (`../../_fonts/`) for Tamil and every comparison script, with no system-font
-dependency. Chapters 6–34 are generated from canonical lesson ASTs and checked
+dependency. Chapters 6–38 are generated from canonical lesson ASTs and checked
 against Language Ladder source hashes. `latexmk -xelatex book.tex`.
 
 ## Files
