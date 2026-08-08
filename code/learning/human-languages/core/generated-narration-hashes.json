@@ -4132,7 +4132,7 @@
     {
       "language": "malayalam",
       "chapter": 33,
-      "sourceHash": "fnv1a64:80533b571ecc8af0",
+      "sourceHash": "fnv1a64:cf65e258da063e67",
       "lessonIds": [
         "ML-C33-cintikkuka",
         "ML-C33-manassilaakkuka",
@@ -4144,12 +4144,12 @@
       "text": "malayalam/narration/ch33.txt",
       "json": "malayalam/narration/ch33.json",
       "textHash": "fnv1a64:b4eb67ad0083f697",
-      "jsonHash": "fnv1a64:5bb75164a1b81a4a"
+      "jsonHash": "fnv1a64:b0bfe85031092e3f"
     },
     {
       "language": "malayalam",
       "chapter": 34,
-      "sourceHash": "fnv1a64:4fb249a1209ea600",
+      "sourceHash": "fnv1a64:ca58cd193100f052",
       "lessonIds": [
         "ML-C34-edukkuka",
         "ML-C34-codikkuka",
@@ -4161,7 +4161,7 @@
       "text": "malayalam/narration/ch34.txt",
       "json": "malayalam/narration/ch34.json",
       "textHash": "fnv1a64:da024c026dbf6135",
-      "jsonHash": "fnv1a64:d5dc77fd1b8315d5"
+      "jsonHash": "fnv1a64:997f426f6cf61e66"
     },
     {
       "language": "marathi",
