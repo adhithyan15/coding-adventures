@@ -36,8 +36,10 @@ describe("the gate that would have caught the A2 claim", () => {
     const gate = realReport().levelGate!;
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
 
-    // The number that misled: one lesson pointing at one A2 node moves `touches`.
-    expect(spanish.touches).toBe("A2");
+    // The number that misled: one lesson pointing at one node moves `touches`, and
+    // chapter 38 has now moved it to B1 on the strength of four lessons. `attained`
+    // is unmoved at null, which is exactly the distinction this module exists for.
+    expect(spanish.touches).toBe("B1");
     // The number that does not: Spanish has not met even pre-A1's criteria.
     expect(spanish.attained).toBeNull();
     expect(spanish.inProgressAt).toBe("pre-A1");
@@ -70,7 +72,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
     expect(vocab.shortfall).toBe(256);
-    expect(spanish.vocabulary).toBe(121);
+    expect(spanish.vocabulary).toBe(125);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

@@ -4,6 +4,72 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — the first content above A2: Spanish chapter 38 (HL09, SPINE-NARRATE-EVENTS)
+
+The B1–C2 spine landed with all 17 nodes declared as gaps in all 22 tracks. This
+realizes the first of them, in one track, as a worked example: **"Telling What
+Happened"**, four lessons, one concept each.
+
+| lesson | concept | what is new |
+|---|---|---|
+| `ES-C38-luego` | CONNECTIVE-THEN | the connective use of a word chapter 5 already gave you |
+| `ES-C38-porque` | CONNECTIVE-BECAUSE | joining a reason to a claim |
+| `ES-C38-imperfecto` | ASPECT-ONGOING-PAST | **not** the forms — scene versus event |
+| `ES-C38-contar` | NARRATIVE-SEQUENCE | the synthesis: a four-sentence told story |
+
+Every lesson carries an etymological connection, per HL09. Spanish `touches` B1 now;
+`attained` is still null, which is the distinction the level gate exists to keep.
+
+### Note — two lessons were re-teaching material the book already owned
+
+Review caught both, and both were the same mistake: writing a B1 lesson without
+checking what the track had already taught.
+
+- **The imperfect is taught in full at chapter 16**, with its three irregulars and
+  the same `-ābam` etymology. The draft presented it as new — 22 chapters late.
+  Rewritten to teach the only thing that *is* new at B1: **which past tense to reach
+  for**, scene versus event. Chapter 16 is now cited, reviewed, and credited.
+- **`luego` is taught at chapter 5**, inside *hasta luego*, along with its `locus`
+  etymology. The draft re-introduced `ES-LEX-LUEGO` and the etymology as fresh atoms.
+  It now *requires* chapter 5's atoms and introduces only
+  `ES-GRAMMAR-LUEGO-CONNECTIVE-01` — the connective function, which is genuinely new.
+
+Also caught: the payoff story used five words the course never teaches (*ventana*,
+*temprano*, *cada*, *hambre*, *historia*) directly beneath the claim **"every word is
+one you already own"**. The story is rebuilt from taught vocabulary and the claim is
+now true. `forwardReferences` cannot see this class — its blind spot is words the
+course teaches *nowhere*.
+
+### Fixed — four wrong etymologies and one missing book target
+
+- *"`*kʷ-` **hardened** to `hw-`"* — Grimm's Law turns a stop into a fricative. That
+  is softening, and it was the one sentence the lesson was built on.
+- *"`que` ← Latin `quid` / **`quod`**"* — `que` inherits `quid` and *usurps* `quod`'s
+  roles without taking its form. The lesson's own recall answer already said `quid`.
+- *"Knock the final consonant off each"* — false for `-ābās` → `-abas`, in the table
+  three lines below. Both this and the contested intervocalic-`b`-loss claim were cut
+  with the rest of the forms material.
+- *"Two languages, **independently**"* — English *recount* and *account* are the same
+  word Spanish inherited, via Old French. Only *tell* is a genuine parallel, and the
+  paragraph now says so.
+
+**The chapter reached the app but not the book.** `core/book-generation.json` is a
+hand-maintained target list; narration and modality are corpus-driven and picked
+chapter 38 up automatically, so `check:books` passed while the book had no chapter.
+Target added and `book.tex` wired — `bookChapters` 442 → 443.
+
+### Changed — two pin comments that described the wrong cause
+
+- **R1 +3 / R2 +10** was attributed to the final lesson's atoms having nothing after
+  them. Wrong: of the +3 R1 exactly one is a chapter-38 atom, and of the +10 R2 none
+  is. `continuity.ts` only judges a window that fits, so *lengthening* the track
+  un-suppressed windows on chapters 36–37. The debt was already there; appending a
+  chapter made it measurable.
+- **forwardReferences +6** was called six instances of the fixed phrase from chapter
+  4. Five are chapter 5; the sixth (`ES-C10-practice`) is bare adverbial *luego* —
+  a real 28-lesson-early leak, reported identically to the five spirals. That is the
+  severity split the metric's own comment has been asking for.
+
 ### Added — the B1–C2 spine, so the ladder has rungs above A2 (HL09 §3.1)
 
 `spine.json` stopped at A2. The level gate handled that correctly — it refused B1–C2

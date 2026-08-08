@@ -2876,6 +2876,18 @@
       "tex": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:df3c16c1c32fc89c",
+      "lessonIds": [
+        "ES-C38-luego",
+        "ES-C38-porque",
+        "ES-C38-imperfecto",
+        "ES-C38-contar"
+      ],
+      "tex": "spanish/book/chapters/ch38-narrating.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:8cb1982f517a21f4",
