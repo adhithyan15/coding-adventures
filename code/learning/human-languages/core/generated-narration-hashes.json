@@ -5028,6 +5028,71 @@
       "jsonHash": "fnv1a64:9ad2a0f8b708dd7d"
     },
     {
+      "language": "marathi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:507c5abe2c6c17d2",
+      "lessonIds": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch10.txt",
+      "json": "marathi/narration/ch10.json",
+      "textHash": "fnv1a64:599b69607fc99702",
+      "jsonHash": "fnv1a64:012d45932ec4fc4f"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:bc272c6f569ea8c9",
+      "lessonIds": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch11.txt",
+      "json": "marathi/narration/ch11.json",
+      "textHash": "fnv1a64:3e0f5651dd0af8ef",
+      "jsonHash": "fnv1a64:23c769ab8b30c43d"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:6aa24870cb193793",
+      "lessonIds": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch12.txt",
+      "json": "marathi/narration/ch12.json",
+      "textHash": "fnv1a64:f475f24d12c4b38a",
+      "jsonHash": "fnv1a64:f7238830a5c1f3ca"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:e9c69014bcab3516",
+      "lessonIds": [
+        "MR-C13-hrudaya"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch13.txt",
+      "json": "marathi/narration/ch13.json",
+      "textHash": "fnv1a64:5988d20e6b2bbcc9",
+      "jsonHash": "fnv1a64:9fccf6dfa1364ba9"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",

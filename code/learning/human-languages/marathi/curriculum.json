@@ -179,6 +179,63 @@
         "MR-EXT-014-DOING-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "MR-PATH-015",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-016",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-017",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-018",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "MR-C13-hrudaya"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -215,7 +272,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "MR-PATH-005",
-        "MR-PATH-007"
+        "MR-PATH-007",
+        "MR-PATH-016"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -225,7 +283,9 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "MR-PATH-006",
-        "MR-PATH-008"
+        "MR-PATH-008",
+        "MR-PATH-017",
+        "MR-PATH-018"
       ],
       "omits": [
         "WORD-GOOD",
@@ -234,7 +294,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "MR-PATH-015"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -617,6 +679,59 @@
       "prerequisites": [],
       "lessons": [
         "MR-C01-namaskar"
+      ]
+    },
+    {
+      "id": "MR-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi using the request pattern I build in this chapter.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ]
+    },
+    {
+      "id": "MR-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name a friend, a family, a brother, and a sister in Marathi.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ]
+    },
+    {
+      "id": "MR-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the eye, ear, mouth, and nose in Marathi.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ]
+    },
+    {
+      "id": "MR-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the heart in Marathi and know it as the surest cognate this track has taught.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C13-hrudaya"
       ]
     }
   ]
