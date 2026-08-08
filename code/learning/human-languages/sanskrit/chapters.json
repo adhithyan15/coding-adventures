@@ -101,6 +101,97 @@
           "SA-ETYMON-PENTE-DESCENDANTS"
         ]
       }
+    },
+    {
+      "chapter": 10,
+      "title": "What You'd Ask For",
+      "label": "ch:sa-request-nouns",
+      "canDo": "I can name water, milk and food in Sanskrit, say that food is grammatically the eaten thing, and name the three genders every Sanskrit noun carries.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "SA-C10-annam",
+        "kind": "production",
+        "summary": "Say अन्नम्, name the root अद् it shares with खादति's cousin अत्ति, and state the three grammatical genders Sanskrit sorts every noun into, tying the neuter -म् running through the chapter back to the neuter numeral forms of Chapter 6.",
+        "assesses": [
+          "SA-LEX-PANIYAM-WATER",
+          "SA-ETYMON-PA-DRINK-POTION",
+          "SA-LEX-KSHIRAM-MILK",
+          "SA-ETYMON-KSHIRA-DISPUTED",
+          "SA-LEX-ANNAM-FOOD",
+          "SA-ETYMON-AD-EAT-COGNATE",
+          "SA-GRAMMAR-NOUN-GENDER-THREE",
+          "SA-GRAMMAR-NUMERAL-GENDER",
+          "SA-HISTORY-INDO-ARYAN-NEUTER-FORMS"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "The People You'd Introduce",
+      "label": "ch:sa-people-nouns",
+      "canDo": "I can name a friend, a family, a brother and a sister in Sanskrit, and say which of those words travelled with English and which quietly did not.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "SA-C11-bhagini",
+        "kind": "production",
+        "summary": "Say भगिनी, name the share-word भग it is built on, name स्वसृ as the real but non-living PIE cousin of English sister, and run the chapter's four people back together with the roads each one travelled.",
+        "assesses": [
+          "SA-LEX-MITRAM-FRIEND",
+          "SA-ETYMON-MEI-BIND",
+          "SA-LEX-KUTUMBAM-FAMILY",
+          "SA-ETYMON-KUTUMBA-DRAVIDIAN",
+          "SA-LEX-BHRATA-BROTHER",
+          "SA-ETYMON-BHRATER-PIE",
+          "SA-LEX-BHAGINI-SISTER",
+          "SA-ETYMON-BHAGA-SHARE"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "The Face, Part One",
+      "label": "ch:sa-face-nouns-1",
+      "canDo": "I can name an eye, an ear and a mouth in Sanskrit, say why eyes take a dual number, and say which of the three words has a settled Western cousin and which do not.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "SA-C12-mukham",
+        "kind": "production",
+        "summary": "Say मुखम्, report both scholarly accounts of its origin without choosing between them, and run अक्षि, कर्णः and मुखम् back together against their daughter-language descendants and the neuter gender most of them share.",
+        "assesses": [
+          "SA-LEX-AKSHI-EYE",
+          "SA-ETYMON-OKW-EYE",
+          "SA-GRAMMAR-NUMERAL-DUAL",
+          "SA-LEX-KARNAH-EAR",
+          "SA-ETYMON-KARNA-DISPUTED",
+          "SA-LEX-MUKHAM-MOUTH",
+          "SA-ETYMON-MUKHA-DISPUTED",
+          "SA-GRAMMAR-NOUN-GENDER-THREE"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "The Face, Part Two",
+      "label": "ch:sa-face-nouns-2",
+      "canDo": "I can name a nose and a heart in Sanskrit, say which daughter-language nose-word नासिका is a relative of rather than a parent of, and close the chapter's twelve nouns against the cousin words this book has already shown.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "SA-C13-hridayam",
+        "kind": "production",
+        "summary": "Say हृदयम्, name the PIE root it shares with heart, cor and kardia, place हृदयम् beside the same root's other independent inheritances, and run all twelve of this tranche's nouns back together by group and by gender.",
+        "assesses": [
+          "SA-LEX-NASIKA-NOSE",
+          "SA-ETYMON-NEHAS-NOSE",
+          "SA-LEX-HRIDAYAM-HEART",
+          "SA-ETYMON-KERD-HEART",
+          "SA-LEX-PANIYAM-WATER",
+          "SA-LEX-ANNAM-FOOD",
+          "SA-LEX-MITRAM-FRIEND",
+          "SA-LEX-BHRATA-BROTHER",
+          "SA-LEX-BHAGINI-SISTER",
+          "SA-GRAMMAR-NOUN-GENDER-THREE"
+        ]
+      }
     }
   ]
 }

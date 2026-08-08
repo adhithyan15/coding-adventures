@@ -1,0 +1,110 @@
+Sanskrit, chapter 12: The Face, Part One.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 3.
+अक्षि (akṣi) — "eye," and the number Sanskrit built for it.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say "sister." (Bhaginī.) The people you would introduce are done. Now for the face you would check on someone with.
+
+You'll want to know: अक्षि.
+[a table of 2 rows, read aloud]
+Sanskrit: अक्षि. sound: akṣi. meaning: eye.
+Sanskrit: अक्षिणी. sound: akṣiṇī. meaning: the two eyes.
+Neuter, like most of this book's shortest nouns.
+
+The letters in this word.
+अ opens bare. क्षि is the same क्ष conjunct you sounded out in क्षीरम्, now carrying a short-i instead of a long one: a-kṣi.
+
+The word, taken apart — an eye older than Rome.
+अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi आँख and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was.
+And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around द्वौ, "two," rather than an ordinary count word. A single eye is अक्षि (akṣi); the two you were born with are not a small plural, they are अक्षिणी — grammar built for a body that comes in pairs.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "akṣi" — eye]
+[pause 8 seconds for the answer]
+[your turn — say: its English and Latin selves — eye, oculus]
+[pause 8 seconds for the answer]
+[your turn — say: the dual form for two of them — akṣiṇī]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (अक्षिणी; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
+
+
+Lesson 2 of 3.
+कर्णः (karṇaḥ) — "ear," a word without a settled parent.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say "eye," and its dual form for two of them. (Akṣi; akṣiṇī.) The next sense is one Sanskrit itself never traced to its source.
+
+You'll want to know: कर्णः.
+[a table of 2 rows, read aloud]
+Sanskrit: कर्णः. sound: karṇaḥ. meaning: ear.
+Sanskrit: कर्णौ. sound: karṇau. meaning: the two ears — dual again.
+Masculine, unlike अक्षि (akṣi).
+
+The letters in this word.
+कर् is kar, the r you have sounded since संस्कृत. ण is the curled-back retroflex n, familiar from गृह्णाति. The final ः, a visarga, breathes the word out on an echo of its own vowel: kar-ṇa-ḥ, the same puff first heard closing नमस्ते.
+
+The word, taken apart — no agreed parent.
+Where अक्षि (akṣi)'s ancestry runs clean back to PIE, कर्णः (karṇaḥ)'s does not run anywhere agreed. Proposed roots mean "a defect," "a point," "a handle," and "to hear" — and no single account has won out over the others.
+What is certain is where it went. कर्णः (karṇaḥ) wore down through Prakrit kaṇṇa into Gujarati kān — and changed gender on the way: masculine in Sanskrit, feminine in Gujarati. A word can cross a language boundary and lose the very grammar that first classified it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "karṇaḥ" — ear]
+[pause 8 seconds for the answer]
+[your turn — say: the four disputed guesses — a defect, a point, a handle, to hear]
+[pause 8 seconds for the answer]
+[your turn — say: the daughter word and its new gender — kān, now feminine]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is कर्णः (karṇaḥ)'s root settled or disputed? (Disputed — four guesses, no winner.) What ending marks it masculine, and where did you meet that sound before? (-अः, a visarga, first heard on नमस्ते.) What gender does the Gujarati descendant kān take, and is that the same as Sanskrit's? (Feminine — it changed.)
+
+
+Lesson 3 of 3.
+मुखम् (mukham) — "mouth," a word two families both claim.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say "ear" and "eye." (Karṇaḥ, akṣi.) One more, and this one's ancestry is argued over by two whole language families, not just two scholars.
+
+You'll want to know: मुखम्.
+[a table of 2 rows, read aloud]
+Sanskrit: मुखम्. sound: mukham. meaning: mouth, face.
+Sanskrit: सम्मुखम्. sound: sammukham. meaning: face to face — सम् "together" plus मुखम्.
+Neuter, back to the family's usual ending.
+
+The letters in this word.
+मु is म under a short-u sign. ख is the aspirated kha you met in खादति — a k with a puff of breath, distinct from plain क. म् closes it: mu-kha-m.
+
+The word, taken apart — a word two families claim.
+मुखम् (mukham) is genuinely contested territory. One line of scholarship derives it from Dravidian; another argues for an Indo-European source, pointing to its presence in the Rigveda and in Iranian languages. Neither claim has settled the question, and this book takes no side either.
+What is not contested is where it lives now. Bengali mukh keeps it whole, a तत्सम — while Gujarati holds a worn-down तद्भव doublet, moḍhũ, alongside its own formal mukh. That is the same shape this book already showed with चिन्ता and पठति: one word, two roads into the same daughter language, once carried whole and once worn down by speech. मुखम् (mukham) closes this chapter neuter, like every noun here but bhrātā.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "mukham" — mouth, face]
+[pause 8 seconds for the answer]
+[your turn — say: the two disputed families — Dravidian, or Indo-European]
+[pause 8 seconds for the answer]
+[your turn — say: its two Gujarati faces — mukh, and worn-down moḍhũ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two language families both claim मुखम्? (Dravidian, and Indo-European — unsettled.) Name मुखम्'s two Gujarati descendants and which is तत्सम, which तद्भव. (mukh, तत्सम; moḍhũ, तद्भव.) Name this chapter's three words for the face. (Akṣi, karṇaḥ, mukham.)

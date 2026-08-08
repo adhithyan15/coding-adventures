@@ -2501,6 +2501,42 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 10,
+      "title": "What You'd Ask For",
+      "label": "ch:sa-request-nouns",
+      "output": "sanskrit/book/chapters/ch10-request-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "title": "The People You'd Introduce",
+      "label": "ch:sa-people-nouns",
+      "output": "sanskrit/book/chapters/ch11-people-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "title": "The Face, Part One",
+      "label": "ch:sa-face-nouns-1",
+      "output": "sanskrit/book/chapters/ch12-face-nouns-1.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "title": "The Face, Part Two",
+      "label": "ch:sa-face-nouns-2",
+      "output": "sanskrit/book/chapters/ch13-face-nouns-2.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "title": "Hola and Buenos Días",

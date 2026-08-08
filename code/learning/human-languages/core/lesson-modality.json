@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a20600b3a70f768b",
+  "sourceHash": "fnv1a64:4cef1b56ed3c5270",
   "summary": {
-    "totalLessons": 1629,
-    "voice": 1069,
-    "sight": 504,
+    "totalLessons": 1627,
+    "voice": 1068,
+    "sight": 503,
     "pen": 56,
-    "drivableLessons": 1069,
+    "drivableLessons": 1068,
     "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 501,
@@ -6065,11 +6065,11 @@
     },
     {
       "language": "punjabi",
-      "lessonCount": 61,
-      "voice": 18,
-      "sight": 43,
+      "lessonCount": 47,
+      "voice": 17,
+      "sight": 30,
       "pen": 0,
-      "drivablePercent": 30,
+      "drivablePercent": 36,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -6214,63 +6214,6 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "PA-C09-laina",
-          "drivable": false,
-          "drivableLessonIds": []
-        },
-        {
-          "chapter": 10,
-          "lessonCount": 4,
-          "voice": 1,
-          "sight": 3,
-          "pen": 0,
-          "modalities": [
-            "voice",
-            "sight"
-          ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C10-paani",
-          "drivable": false,
-          "drivableLessonIds": []
-        },
-        {
-          "chapter": 11,
-          "lessonCount": 4,
-          "voice": 0,
-          "sight": 4,
-          "pen": 0,
-          "modalities": [
-            "sight"
-          ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C11-dost",
-          "drivable": false,
-          "drivableLessonIds": []
-        },
-        {
-          "chapter": 12,
-          "lessonCount": 4,
-          "voice": 0,
-          "sight": 4,
-          "pen": 0,
-          "modalities": [
-            "sight"
-          ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C12-akkh",
-          "drivable": false,
-          "drivableLessonIds": []
-        },
-        {
-          "chapter": 13,
-          "lessonCount": 2,
-          "voice": 0,
-          "sight": 2,
-          "pen": 0,
-          "modalities": [
-            "sight"
-          ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C13-dil",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -6478,11 +6421,11 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 47,
+      "lessonCount": 59,
       "voice": 23,
-      "sight": 24,
+      "sight": 36,
       "pen": 0,
-      "drivablePercent": 49,
+      "drivablePercent": 39,
       "drivablePrefixTotal": 14,
       "modalities": [
         "voice",
@@ -6637,6 +6580,62 @@
             "SA-C09-sahayyam-karoti",
             "SA-C09-snihyati"
           ]
+        },
+        {
+          "chapter": 10,
+          "lessonCount": 3,
+          "voice": 0,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "SA-C10-paniyam",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 11,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "SA-C11-mitram",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 12,
+          "lessonCount": 3,
+          "voice": 0,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "SA-C12-akshi",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 2,
+          "voice": 0,
+          "sight": 2,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "SA-C13-nasika",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -29777,297 +29776,6 @@
       ]
     },
     {
-      "id": "PA-C10-paani",
-      "language": "punjabi",
-      "chapter": 10,
-      "sequence": 500,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:dfd5bcf4f1c5a178",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C10-chaa",
-      "language": "punjabi",
-      "chapter": 10,
-      "sequence": 510,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:272712fa4822d6f7"
-    },
-    {
-      "id": "PA-C10-dudh",
-      "language": "punjabi",
-      "chapter": 10,
-      "sequence": 520,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:c563cb8818f2ec50",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C10-roti",
-      "language": "punjabi",
-      "chapter": 10,
-      "sequence": 530,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:59b55cfa516d4f75",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C11-dost",
-      "language": "punjabi",
-      "chapter": 11,
-      "sequence": 540,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:1e7b38f4476778ba",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C11-parivar",
-      "language": "punjabi",
-      "chapter": 11,
-      "sequence": 550,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:edc886bfb095835d",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C11-bhara",
-      "language": "punjabi",
-      "chapter": 11,
-      "sequence": 560,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:e0e3c62522448c62",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C11-bhain",
-      "language": "punjabi",
-      "chapter": 11,
-      "sequence": 570,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:dcde203bbabcbb3c",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C12-akkh",
-      "language": "punjabi",
-      "chapter": 12,
-      "sequence": 580,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:02cee814770632f1",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C12-kann",
-      "language": "punjabi",
-      "chapter": 12,
-      "sequence": 590,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f21af6e1defd8763",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C12-munh",
-      "language": "punjabi",
-      "chapter": 12,
-      "sequence": 600,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:ceebc6370764052b",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C12-nakk",
-      "language": "punjabi",
-      "chapter": 12,
-      "sequence": 610,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0163d79b2785b9e0",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C13-dil",
-      "language": "punjabi",
-      "chapter": 13,
-      "sequence": 620,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:431ad2ee677edac2",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C13-sir",
-      "language": "punjabi",
-      "chapter": 13,
-      "sequence": 630,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f34c56bd8284fb9",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
       "id": "RU-C01-da",
       "language": "russian",
       "chapter": 1,
@@ -31916,6 +31624,258 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:519a8f81d87a0669"
+    },
+    {
+      "id": "SA-C10-paniyam",
+      "language": "sanskrit",
+      "chapter": 10,
+      "sequence": 510,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9188c5753343aa38",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C10-kshiram",
+      "language": "sanskrit",
+      "chapter": 10,
+      "sequence": 520,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:24fd0c5de4ef7a12",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C10-annam",
+      "language": "sanskrit",
+      "chapter": 10,
+      "sequence": 530,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6c78c02377a4c751",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C11-mitram",
+      "language": "sanskrit",
+      "chapter": 11,
+      "sequence": 540,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:22203044d329a15c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C11-kutumbam",
+      "language": "sanskrit",
+      "chapter": 11,
+      "sequence": 550,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a852d9aa465d1d1d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C11-bhrata",
+      "language": "sanskrit",
+      "chapter": 11,
+      "sequence": 560,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5a9bf0cfc707336a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C11-bhagini",
+      "language": "sanskrit",
+      "chapter": 11,
+      "sequence": 570,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:74f96fcbf1881c5a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C12-akshi",
+      "language": "sanskrit",
+      "chapter": 12,
+      "sequence": 580,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:27a44bbc4eddc678",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C12-karnah",
+      "language": "sanskrit",
+      "chapter": 12,
+      "sequence": 590,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b39894ef4a87c563",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C12-mukham",
+      "language": "sanskrit",
+      "chapter": 12,
+      "sequence": 600,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f93d46858ae9c8a1",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C13-nasika",
+      "language": "sanskrit",
+      "chapter": 13,
+      "sequence": 610,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:626511c513d9d8dd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "SA-C13-hridayam",
+      "language": "sanskrit",
+      "chapter": 13,
+      "sequence": 620,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1e022be321ef11a6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "ES-C01-hola",

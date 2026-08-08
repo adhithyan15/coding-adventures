@@ -6238,6 +6238,70 @@
       "jsonHash": "fnv1a64:238a56f11f991d96"
     },
     {
+      "language": "sanskrit",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:34bb059ff0b55e76",
+      "lessonIds": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch10.txt",
+      "json": "sanskrit/narration/ch10.json",
+      "textHash": "fnv1a64:366303ca13983bed",
+      "jsonHash": "fnv1a64:d60c389f1082f5d1"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:5cbad10f5013c79e",
+      "lessonIds": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch11.txt",
+      "json": "sanskrit/narration/ch11.json",
+      "textHash": "fnv1a64:cbae938c4f142e51",
+      "jsonHash": "fnv1a64:1b0697317285a821"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:3b3967ec6966db1f",
+      "lessonIds": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch12.txt",
+      "json": "sanskrit/narration/ch12.json",
+      "textHash": "fnv1a64:794467138bacce99",
+      "jsonHash": "fnv1a64:b7ed67036b925ed2"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:bb32722196955299",
+      "lessonIds": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch13.txt",
+      "json": "sanskrit/narration/ch13.json",
+      "textHash": "fnv1a64:c6a61499fa13f7b4",
+      "jsonHash": "fnv1a64:d0714287a44075e1"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:e2e55a440c95c8cb",

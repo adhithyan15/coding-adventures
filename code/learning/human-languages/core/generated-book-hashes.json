@@ -3201,6 +3201,50 @@
       "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:af5cea22f0341696",
+      "lessonIds": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ],
+      "tex": "sanskrit/book/chapters/ch10-request-nouns.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:41f7915d967243ce",
+      "lessonIds": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ],
+      "tex": "sanskrit/book/chapters/ch11-people-nouns.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:95965d36f522d363",
+      "lessonIds": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ],
+      "tex": "sanskrit/book/chapters/ch12-face-nouns-1.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f5a625166e0df813",
+      "lessonIds": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
+      ],
+      "tex": "sanskrit/book/chapters/ch13-face-nouns-2.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:f60ef7e13f9bcde6",
