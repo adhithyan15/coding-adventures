@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C33-ezhutu
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 700
+sequence: 970
 chapter: 33
 type: word
 headword: எழுது

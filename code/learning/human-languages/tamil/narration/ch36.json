@@ -4,11 +4,11 @@
   "chapter": 36,
   "title": "What You Are Offered",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f2d3d5c13c0737fe",
+  "sourceHash": "fnv1a64:402bf0320fcdb2c7",
   "lessons": [
     {
       "id": "TA-C36-teneer",
-      "sequence": 790,
+      "sequence": 1060,
       "title": "தேநீர் (tēnīr) — \"tea,\" half of it already yours",
       "headword": "தேநீர்",
       "romanization": "tēnīr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fbaac7d8134225e1",
+      "sourceHash": "fnv1a64:a16ff2a5db8e0872",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -179,7 +179,7 @@
     },
     {
       "id": "TA-C36-paal",
-      "sequence": 800,
+      "sequence": 1070,
       "title": "பால் (pāl) — \"milk,\" and a p that becomes an h next door",
       "headword": "பால்",
       "romanization": "pāl",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6a72f2af11ebc2dc",
+      "sourceHash": "fnv1a64:fdcb199d987a2bd6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -360,7 +360,7 @@
     },
     {
       "id": "TA-C36-unavu",
-      "sequence": 810,
+      "sequence": 1080,
       "title": "உணவு (uṇavu) — \"food,\" from the verb underneath it",
       "headword": "உணவு",
       "romanization": "uṇavu",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:044f1ad4f016e2c5",
+      "sourceHash": "fnv1a64:e042fc7d55223d2d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -547,7 +547,7 @@
     },
     {
       "id": "TA-C36-tavaru",
-      "sequence": 820,
+      "sequence": 1090,
       "title": "தவறு (tavaṟu) — \"a mistake,\" and the rest of the apology",
       "headword": "தவறு",
       "romanization": "tavaṟu",
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:46edc651e85b20f4",
+      "sourceHash": "fnv1a64:28d405c93048afda",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C16-thamizh-maadangal
 spine_node: SPINE-TIME-OF-DAY
-sequence: 360
+sequence: 600
 chapter: 16
 type: word
 headword: சித்திரை வைகாசி ஆனி ஆடி ஆவணி புரட்டாசி ஐப்பசி கார்த்திகை மார்கழி தை மாசி பங்குனி

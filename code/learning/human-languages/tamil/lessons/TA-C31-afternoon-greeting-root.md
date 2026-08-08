@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C31-afternoon-greeting-root
 spine_node: SPINE-TIME-OF-DAY
-sequence: 600
+sequence: 870
 chapter: 31
 type: etymology
 headword: மதிய

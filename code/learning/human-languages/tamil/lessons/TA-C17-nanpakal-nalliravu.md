@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C17-nanpakal-nalliravu
 spine_node: SPINE-TIME-OF-DAY
-sequence: 370
+sequence: 620
 chapter: 17
 type: word
 headword: நண்பகல் நள்ளிரவு

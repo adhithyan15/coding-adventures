@@ -4,11 +4,11 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f5c2a578b5b6df4d",
+  "sourceHash": "fnv1a64:543b13b5f49981c2",
   "lessons": [
     {
       "id": "TA-C30-maalai-vanakkam",
-      "sequence": 580,
+      "sequence": 850,
       "title": "மாலை வணக்கம் — \"evening greetings\"",
       "headword": "மாலை வணக்கம்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e605d22d0c8038e0",
+      "sourceHash": "fnv1a64:a569e6a16620cd0e",
       "notice": null,
       "blocks": [
         {

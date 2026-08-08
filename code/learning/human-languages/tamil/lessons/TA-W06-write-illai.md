@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W06-write-illai
 spine_node: SPINE-MEET-GREET
-sequence: 192
-chapter: 1
+sequence: 650
+delivery: script
+chapter: 18
 type: writing
 headword: "இல்லை"
 gloss: a second independent vowel, the letter ல, and the left-standing ai sign
@@ -92,4 +93,4 @@ The **ல் + லை** is a doubled *l*, held like the **க்க** of *vaṇa
 
 [PAUSE 3s] Write **இல்லை**. Why does it open with **இ** rather than a sign?
 (**The word starts on a vowel**.) Which side of its consonant does **ை** sit
-on? (**The left** — written first, spoken second.) Next: the word for thank you.
+on? (**The left** — written first, spoken second.) Next: the gem-word homophone, and telling clock time.

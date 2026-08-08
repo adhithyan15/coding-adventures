@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C12-kudumbam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 320
+sequence: 550
 chapter: 12
 type: word
 headword: அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை

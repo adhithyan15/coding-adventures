@@ -628,6 +628,75 @@ describe("reading the manifest back", () => {
 // The real corpus
 // ---------------------------------------------------------------------------
 
+describe("the script strand is declared, not inferred", () => {
+  // A spoken-only edition has to know which lessons are writing lessons. `type: writing`
+  // already implies it, but a book target should not have to know that `type` doubles as
+  // a strand marker, so writing lessons declare `delivery: script` outright and the
+  // manifest carries it.
+  //
+  // Every assertion below runs through `buildModalityManifest`, not the frontmatter,
+  // because the manifest is what a consumer reads. Reading `lesson.frontmatter.delivery`
+  // here would pass even if the export were deleted or wired to the wrong field.
+  const built = () => buildModalityManifest(loadEverything().lessons);
+
+  it("never marks a lesson that is not a writing lesson, in any track", () => {
+    const { lessons } = loadEverything();
+    const type = new Map(lessons.map((l) => [l.realization.lessonId, l.realization.type]));
+    const misapplied = buildModalityManifest(lessons)
+      .lessons.filter((entry) => entry.delivery !== undefined)
+      .filter((entry) => type.get(entry.id) !== "writing")
+      .map((entry) => entry.id);
+    expect(misapplied).toEqual([]);
+
+    // `delivery` stays a two-state field: "script", or absent. A typo like `sript`
+    // reaches the published manifest unchallenged otherwise — nothing in validate.ts
+    // constrains it.
+    const values = new Set(
+      built()
+        .lessons.map((entry) => entry.delivery)
+        .filter((value) => value !== undefined),
+    );
+    expect([...values]).toEqual(["script"]);
+  });
+
+  it("covers every writing lesson of every track that has adopted it", () => {
+    const { lessons } = loadEverything();
+    const manifest = buildModalityManifest(lessons);
+    const marked = manifest.lessons.filter((entry) => entry.delivery === "script");
+    expect(marked.length).toBeGreaterThan(0);
+
+    const language = new Map(lessons.map((l) => [l.realization.lessonId, l.language]));
+    const adopted = new Set(marked.map((entry) => language.get(entry.id)));
+    for (const track of adopted) {
+      const writing = lessons
+        .filter((l) => l.language === track && l.realization.type === "writing")
+        .map((l) => l.realization.lessonId)
+        .sort();
+      const declared = marked
+        .filter((entry) => language.get(entry.id) === track)
+        .map((entry) => entry.id)
+        .sort();
+      expect(declared).toEqual(writing);
+      // Guard the vacuous case per track, not just globally: a track that adopted the
+      // marker and then lost every one of it would otherwise drop out of `adopted`.
+      expect(declared.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("carries the marker into the committed manifest, not just a freshly built one", () => {
+    const fresh = built().lessons.filter((entry) => entry.delivery === "script").map((e) => e.id);
+    const committed = loadModalityManifest()
+      .lessons.filter((entry) => entry.delivery === "script")
+      .map((entry) => entry.id);
+    expect(fresh.length).toBeGreaterThan(0);
+    expect(committed.sort()).toEqual([...fresh].sort());
+    // Absent, not empty, on everything else — the manifest's house rule for optionals.
+    expect(loadModalityManifest().lessons.filter((entry) => "delivery" in entry).length).toBe(
+      fresh.length,
+    );
+  });
+});
+
 describe("corpus regression", () => {
   // A pinned measurement, not a taste test. Everything upstream — the Markdown parser,
   // the table detector, the cue list, the chapter grouping — feeds these numbers, so a
@@ -819,9 +888,18 @@ describe("corpus regression", () => {
       // depends on ORDER. HL09 step 2 gave 50 Spanish lessons a declared `sequence`,
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
-      // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 870,
-      fullyDrivableChapters: 327,
+      // worse, which is the measurement becoming honest, not the corpus regressing.      // 870 -> 873, and the net hides three moves. Chapter 1 goes 2 -> 9: its whole
+      // nine-lesson run is now reachable by ear, which is the single thing this change
+      // exists to do. Against that, chapter 6 falls 4 -> 1 and chapter 18 falls 2 -> 1,
+      // because a writing lesson now sits second in each. Chapters 2 and 3 contribute
+      // nothing — their first lesson was never voice-core to begin with.
+      drivablePrefixTotal: 873,      // 327 -> 322 = -6 +1, not a flat loss of five. SIX Tamil chapters that were
+      // entirely ear-only now hold a writing lesson (6, 10, 13, 16, 18, 19 — chapter 6
+      // holds two), because spreading the strand is exactly what puts a pen lesson into
+      // chapters that had none. Offsetting them, chapter 1 becomes fully drivable for
+      // the first time, which is the whole point of the change. Concentrating the
+      // script back into one chapter would restore the metric and undo the ramp.
+      fullyDrivableChapters: 322,
       unstartableChapters: 129,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

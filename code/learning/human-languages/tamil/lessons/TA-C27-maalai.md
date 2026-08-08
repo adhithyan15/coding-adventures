@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C27-maalai
 spine_node: SPINE-TIME-OF-DAY
-sequence: 540
+sequence: 810
 chapter: 27
 type: word
 headword: மாலை

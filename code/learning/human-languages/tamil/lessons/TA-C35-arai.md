@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C35-arai
 spine_node: SPINE-MEET-GREET
-sequence: 770
+sequence: 1040
 chapter: 35
 type: word
 headword: அறை

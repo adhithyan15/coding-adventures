@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C36-paal
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 800
+sequence: 1070
 chapter: 36
 type: word
 headword: பால்

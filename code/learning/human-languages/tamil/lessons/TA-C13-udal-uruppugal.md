@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C13-udal-uruppugal
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 330
+sequence: 560
 chapter: 13
 type: word
 headword: தலை கை

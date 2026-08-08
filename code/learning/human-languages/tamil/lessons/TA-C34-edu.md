@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C34-edu
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 710
+sequence: 980
 chapter: 34
 type: word
 headword: எடு

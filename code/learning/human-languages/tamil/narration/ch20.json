@@ -4,11 +4,11 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fdf0cc4db10b69be",
+  "sourceHash": "fnv1a64:2cf7f0e2e424d5a4",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
-      "sequence": 430,
+      "sequence": 700,
       "title": "பதினொன்று–இருபது — shared Dravidian patterns",
       "headword": "பதினொன்று — இருபது",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83599a85f76e0d2c",
+      "sourceHash": "fnv1a64:31182bc6d2e785e6",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
     },
     {
       "id": "TA-C20-vaanilai",
-      "sequence": 440,
+      "sequence": 710,
       "title": "வானிலை — \"the standing of the sky,\" most likely all native",
       "headword": "வானிலை",
       "romanization": "",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e976c1dcd9de69f6",
+      "sourceHash": "fnv1a64:661e8c72b79c3d22",
       "notice": null,
       "blocks": [
         {

@@ -1,6 +1,7 @@
 ---
 id: TA-C03-naan
 chapter: 3
+sequence: 200
 type: word
 headword: நான்
 gloss: I

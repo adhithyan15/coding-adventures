@@ -4,11 +4,11 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4dd37565979d56c1",
+  "sourceHash": "fnv1a64:35b9dc9110e4130e",
   "lessons": [
     {
       "id": "TA-C32-iru",
-      "sequence": 610,
+      "sequence": 880,
       "title": "இரு (iru) — \"to be,\" and the machine inside every Tamil verb",
       "headword": "இரு",
       "romanization": "iru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d66cfc3bade90237",
+      "sourceHash": "fnv1a64:23936f7a7029f5e4",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
     },
     {
       "id": "TA-C32-po",
-      "sequence": 620,
+      "sequence": 890,
       "title": "போ (pō) — \"to go,\" and the bead that carries time",
       "headword": "போ",
       "romanization": "pō",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19f2c25a59f0f982",
+      "sourceHash": "fnv1a64:9895466949df9e89",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
     },
     {
       "id": "TA-C32-vaa",
-      "sequence": 630,
+      "sequence": 900,
       "title": "வா (vā) — \"to come,\" and a stem with two shapes",
       "headword": "வா",
       "romanization": "vā",
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d11abac17fa8c52",
+      "sourceHash": "fnv1a64:b8b7f1f6cbee9bd4",
       "notice": null,
       "blocks": [
         {
@@ -462,7 +462,7 @@
     },
     {
       "id": "TA-C32-saappidu",
-      "sequence": 640,
+      "sequence": 910,
       "title": "சாப்பிடு (sāppiḍu) — \"to eat,\" a verb built out of two words",
       "headword": "சாப்பிடு",
       "romanization": "sāppiḍu",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb3c1c1696795fe0",
+      "sourceHash": "fnv1a64:484b58557e1ab908",
       "notice": null,
       "blocks": [
         {
@@ -605,7 +605,7 @@
     },
     {
       "id": "TA-C32-paar",
-      "sequence": 650,
+      "sequence": 920,
       "title": "பார் (pār) — \"to see,\" and Tamil's two kinds of verb",
       "headword": "பார்",
       "romanization": "pār",
@@ -616,7 +616,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39ea79380f0de2f5",
+      "sourceHash": "fnv1a64:7c0c7b2534e55fb3",
       "notice": null,
       "blocks": [
         {
@@ -758,7 +758,7 @@
     },
     {
       "id": "TA-C32-teri",
-      "sequence": 660,
+      "sequence": 930,
       "title": "தெரி (teri) — \"to know,\" the verb that drops the person",
       "headword": "தெரி",
       "romanization": "teri",
@@ -769,7 +769,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43e3caa79eab7344",
+      "sourceHash": "fnv1a64:5c10a4213db12268",
       "notice": null,
       "blocks": [
         {

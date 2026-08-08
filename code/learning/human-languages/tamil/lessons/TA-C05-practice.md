@@ -1,6 +1,7 @@
 ---
 id: TA-C05-practice
 chapter: 5
+sequence: 350
 type: practice
 headword: (dialogue)
 gloss: Chapter 5 recap — the first verbs

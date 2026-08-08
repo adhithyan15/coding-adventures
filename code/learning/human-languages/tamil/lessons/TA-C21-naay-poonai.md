@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C21-naay-poonai
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 450
+sequence: 720
 chapter: 21
 type: word
 headword: நாய், பூனை

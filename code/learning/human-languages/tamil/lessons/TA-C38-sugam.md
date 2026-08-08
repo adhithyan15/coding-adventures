@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C38-sugam
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 880
+sequence: 1150
 chapter: 38
 type: word
 headword: சுகம்

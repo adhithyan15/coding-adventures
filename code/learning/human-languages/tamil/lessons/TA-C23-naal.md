@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C23-naal
 spine_node: SPINE-TIME-OF-DAY
-sequence: 470
+sequence: 740
 chapter: 23
 type: word
 headword: நாள்

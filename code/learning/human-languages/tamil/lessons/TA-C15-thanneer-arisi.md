@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C15-thanneer-arisi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 350
+sequence: 590
 chapter: 15
 type: word
 headword: தண்ணீர் அரிசி சாதம்

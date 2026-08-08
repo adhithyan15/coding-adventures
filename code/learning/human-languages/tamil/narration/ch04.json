@@ -4,260 +4,11 @@
   "chapter": 4,
   "title": "Chapter 4",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e6cc92ef0275935e",
+  "sourceHash": "fnv1a64:ac8d1a3a89c18c13",
   "lessons": [
     {
-      "id": "TA-C04-mindum-sandippom",
-      "sequence": null,
-      "title": "மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) — \"we'll meet again\"",
-      "headword": "மீண்டும் சந்திப்போம்",
-      "romanization": "",
-      "gloss": "we'll meet again",
-      "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:2bd30145a8a3485b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A warmer, open-ended goodbye — and a chance to see Tamil's two vocabularies side by side."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "மீண்டும் (mīṇḍum): note the retroflex cluster ண்ட (ṇḍ). சந்திப்போம் (sandippōm): சந்தி (sandi) + -ப்போம் (-ppōm, \"we will\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "மீண்டும் சந்திப்போம் = மீண்டும் (mīṇḍum, \"again\") + சந்திப்போம் (sandippōm, \"we will meet\") — \"we'll meet again.\" Two vocabularies meet in these two words:"
-            },
-            {
-              "kind": "speech",
-              "text": "மீண்டும் (mīṇḍum, \"again\") is native Dravidian, from mīḷ (\"to return\")."
-            },
-            {
-              "kind": "speech",
-              "text": "சந்தி (sandi, \"to meet, a junction\") is a Sanskrit loan — from sandhi (\"a joining, union\"), the very word Sanskrit grammar uses for how sounds join at a word-boundary."
-            },
-            {
-              "kind": "speech",
-              "text": "So even a goodbye shows Tamil's balance: an ancient Dravidian core (mīṇḍum) beside a Sanskrit borrowing (sandi) — the recurring thread of this whole track."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"mīṇḍum sandippōm\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"mīṇḍum sandippōm\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which word is native Dravidian and which is Sanskrit (mīṇḍum / sandi)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which word is native Dravidian and which is Sanskrit (*mīṇḍum* / *sandi*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the phrase mean, and which of its two words is the Sanskrit loan? (\"We'll meet again\"; sandi \"to meet\" from Sanskrit sandhi — while mīṇḍum \"again\" is native Dravidian.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TA-C04-naalai",
-      "sequence": null,
-      "title": "நாளை பார்க்கலாம் (nāḷai pārkkalām) — \"see you tomorrow\"",
-      "headword": "நாளை பார்க்கலாம்",
-      "romanization": "",
-      "gloss": "see you tomorrow",
-      "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:46d7d64986982553",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye with a date on it — built on the Tamil word for \"day.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "நாளை (nāḷai): நா (nā) + ளை (ḷai, with the retroflex ள ḷ, tongue curled back). பார்க்கலாம் (pārkkalām) = pār (\"see\") + -kkalām (\"let's / we may\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "நாளை (nāḷai, \"tomorrow\") is native Dravidian, from நாள் (nāḷ, \"day\") — the same nāḷ in iṉṟu / nāḷ counting and in nal-vāḻttukkaḷ (\"good [day]-wishes\"). பார்க்கலாம் (pārkkalām) is \"let's see / we may see,\" from பார் (pār, \"to see, to look\") — so the whole phrase is \"tomorrow, let's see [each other],\" the Tamil \"see you tomorrow.\" Note the retroflex ள் (ḷ) — a sound English lacks entirely, made with the tongue-tip curled up and back."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nāḷai pārkkalām\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nāḷai pārkkalām\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word for \"day\" inside \"tomorrow\" (nāḷ)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word for \"day\" inside \"tomorrow\" (*nāḷ*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the verb \"to see\" (pār)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the verb \"to see\" (*pār*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does nāḷai come from, and what does pārkkalām add? (Nāḷ, \"day\"; \"let's see\" — from pār, \"to see\" — so \"tomorrow, let's see each other.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "TA-C04-po",
-      "sequence": null,
+      "sequence": 240,
       "title": "போ (pō) — \"go,\" and வா (come)",
       "headword": "போ",
       "romanization": "",
@@ -268,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99257b30e11fb454",
+      "sourceHash": "fnv1a64:a137cdf96f4af1dd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -371,7 +122,7 @@
     },
     {
       "id": "TA-C04-poy-varugiren",
-      "sequence": null,
+      "sequence": 250,
       "title": "போய் வருகிறேன் (pōy varugiṟēṉ) — \"I'll go and come back\"",
       "headword": "போய் வருகிறேன்",
       "romanization": "",
@@ -382,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f14e5eedd7053032",
+      "sourceHash": "fnv1a64:b827e77978feac54",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -504,8 +255,413 @@
       ]
     },
     {
+      "id": "TA-C04-naalai",
+      "sequence": 255,
+      "title": "நாளை பார்க்கலாம் (nāḷai pārkkalām) — \"see you tomorrow\"",
+      "headword": "நாளை பார்க்கலாம்",
+      "romanization": "",
+      "gloss": "see you tomorrow",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:93385c7a8e7ee524",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye with a date on it — built on the Tamil word for \"day.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாளை (nāḷai): நா (nā) + ளை (ḷai, with the retroflex ள ḷ, tongue curled back). பார்க்கலாம் (pārkkalām) = pār (\"see\") + -kkalām (\"let's / we may\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாளை (nāḷai, \"tomorrow\") is native Dravidian, from நாள் (nāḷ, \"day\") — the same nāḷ in iṉṟu / nāḷ counting and in nal-vāḻttukkaḷ (\"good [day]-wishes\"). பார்க்கலாம் (pārkkalām) is \"let's see / we may see,\" from பார் (pār, \"to see, to look\") — so the whole phrase is \"tomorrow, let's see [each other],\" the Tamil \"see you tomorrow.\" Note the retroflex ள் (ḷ) — a sound English lacks entirely, made with the tongue-tip curled up and back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāḷai pārkkalām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāḷai pārkkalām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for \"day\" inside \"tomorrow\" (nāḷ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for \"day\" inside \"tomorrow\" (*nāḷ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb \"to see\" (pār)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb \"to see\" (*pār*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nāḷai come from, and what does pārkkalām add? (Nāḷ, \"day\"; \"let's see\" — from pār, \"to see\" — so \"tomorrow, let's see each other.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C04-mindum-sandippom",
+      "sequence": 260,
+      "title": "மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) — \"we'll meet again\"",
+      "headword": "மீண்டும் சந்திப்போம்",
+      "romanization": "",
+      "gloss": "we'll meet again",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8dd1d2b81b09c384",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A warmer, open-ended goodbye — and a chance to see Tamil's two vocabularies side by side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டும் (mīṇḍum): note the retroflex cluster ண்ட (ṇḍ). சந்திப்போம் (sandippōm): சந்தி (sandi) + -ப்போம் (-ppōm, \"we will\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மீண்டும் சந்திப்போம் = மீண்டும் (mīṇḍum, \"again\") + சந்திப்போம் (sandippōm, \"we will meet\") — \"we'll meet again.\" Two vocabularies meet in these two words:"
+            },
+            {
+              "kind": "speech",
+              "text": "மீண்டும் (mīṇḍum, \"again\") is native Dravidian, from mīḷ (\"to return\")."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தி (sandi, \"to meet, a junction\") is a Sanskrit loan — from sandhi (\"a joining, union\"), the very word Sanskrit grammar uses for how sounds join at a word-boundary."
+            },
+            {
+              "kind": "speech",
+              "text": "So even a goodbye shows Tamil's balance: an ancient Dravidian core (mīṇḍum) beside a Sanskrit borrowing (sandi) — the recurring thread of this whole track."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mīṇḍum sandippōm\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mīṇḍum sandippōm\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word is native Dravidian and which is Sanskrit (mīṇḍum / sandi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word is native Dravidian and which is Sanskrit (*mīṇḍum* / *sandi*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase mean, and which of its two words is the Sanskrit loan? (\"We'll meet again\"; sandi \"to meet\" from Sanskrit sandhi — while mīṇḍum \"again\" is native Dravidian.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W01-curves-va-ka",
+      "sequence": 270,
+      "title": "Tamil's curves — the writing surface leaves a trace",
+      "headword": "தமிழ் எழுத்து",
+      "romanization": "tamiḻ eḻuttu",
+      "gloss": "why Tamil writing is so round, with the palm-leaf account presented as a qualified explanation",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2c2e171ca2be012a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: The script is the shape of its writing surface",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The script is the shape of its writing surface and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the first letter, look at a line of Tamil and notice what isn't there:"
+            },
+            {
+              "kind": "speech",
+              "text": "வணக்கம்."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing joins the letters together, and there are far fewer corners than in Devanagari — no hanging head-line, and a great deal of curve. (Straight strokes do exist: most of these letters have a flat bar across the top.) The roundness has a usual explanation, and it is the best story in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: The script is the shape of its writing surface",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil was written for centuries on palm leaves, scratched with a metal stylus and then rubbed with soot to make the scratches show."
+            },
+            {
+              "kind": "speech",
+              "text": "A palm leaf has a grain, like wood. Draw a long straight line along that grain and the stylus can split the leaf. The usual account is that scribes bent their strokes in response: a curve crosses the fibres at an angle instead of running with them."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat that as the standard explanation rather than a settled fact. The earliest Tamil writing — Tamil-Brahmi, cut into stone and pottery — is noticeably angular; the rounding came later, through the Vaṭṭeḻuttu (\"round script\") stage. And Devanagari was written on the same leaves without going round. So the leaf is one pressure among several, not a complete answer."
+            },
+            {
+              "kind": "speech",
+              "text": "It is still worth carrying, because it makes the right general point: the tool leaves fingerprints on the letters. Latin's straight strokes suit a wax tablet and a chisel; Tamil's curves suit a stylus and a leaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "a curve crossing the imagined grain of a palm leaf",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: a curve crossing the imagined grain of a palm leaf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "angular Tamil-Brahmi, later rounded Vaṭṭeḻuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: angular Tamil-Brahmi · later rounded Vaṭṭeḻuttu]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the usual reason for the curves — \"a straight line can split the leaf\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the usual reason for the curves — \"a straight line can **split the leaf**\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is Tamil round? (The usual explanation: it was incised on palm leaves, where a straight stroke along the grain can split them — though early Tamil-Brahmi was angular, so it is not the whole story.) What broader point does the account teach? (Tools and surfaces leave fingerprints on scripts.) Next: the chapter's own recap of the farewells."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TA-W01-curves-va-ka-writing-surface",
+              "prompt": "What writing surface is usually linked to Tamil's rounded shapes?",
+              "assesses": [
+                "TA-SCRIPT-CURVES-VA-KA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "palm leaves",
+                "palm leaf",
+                "leaves of palm"
+              ],
+              "feedback": {
+                "correct": "Correct: the usual account links Tamil's curves to writing on palm leaves.",
+                "incorrect": "The usual explanation points to palm leaves, which straight strokes along the grain could split."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TA-C04-practice",
-      "sequence": null,
+      "sequence": 290,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -516,7 +672,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65bb3e5878370184",
+      "sourceHash": "fnv1a64:849cf4a2e960db6a",
       "notice": null,
       "blocks": [
         {

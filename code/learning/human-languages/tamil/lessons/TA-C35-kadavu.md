@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C35-kadavu
 spine_node: SPINE-MEET-GREET
-sequence: 760
+sequence: 1030
 chapter: 35
 type: word
 headword: கதவு

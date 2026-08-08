@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "Colours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:690810fd97646553",
+  "sourceHash": "fnv1a64:479e39edeecc0c29",
   "lessons": [
     {
       "id": "TA-C11-nirangal",
-      "sequence": 310,
+      "sequence": 540,
       "title": "கருப்பு, வெள்ளை, சிவப்பு, நீலம் — three of Tamil's own, one borrowed",
       "headword": "கருப்பு வெள்ளை சிவப்பு நீலம்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:442d28ae6ba4719a",
+      "sourceHash": "fnv1a64:4b1ab1ec3abd07dd",
       "notice": {
         "modality": "sight",
         "needs": [

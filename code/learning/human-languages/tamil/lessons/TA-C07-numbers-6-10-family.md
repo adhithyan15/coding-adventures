@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C07-numbers-6-10-family
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 250
+sequence: 460
 chapter: 7
 type: etymology
 headword: ஆறு ஏழு பத்து

@@ -1,6 +1,7 @@
 ---
 id: TA-C03-eppadi
 chapter: 3
+sequence: 180
 type: word
 headword: எப்படி
 gloss: how

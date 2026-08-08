@@ -4,11 +4,11 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a491a14d123de4c1",
+  "sourceHash": "fnv1a64:4487b829f729ae28",
   "lessons": [
     {
       "id": "TA-C26-kaalai",
-      "sequence": 530,
+      "sequence": 800,
       "title": "காலை (kālai) — \"morning,\" an honestly uncertain etymology",
       "headword": "காலை",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f31e62ada32eba46",
+      "sourceHash": "fnv1a64:be68ac32ac9c4962",
       "notice": null,
       "blocks": [
         {

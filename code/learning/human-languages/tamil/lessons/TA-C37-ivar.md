@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C37-ivar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 850
+sequence: 1120
 chapter: 37
 type: word
 headword: இவர்

@@ -4,11 +4,11 @@
   "chapter": 38,
   "title": "Keeping Well, and Leaving",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d9d5146731ccd6eb",
+  "sourceHash": "fnv1a64:02d8bcf3e16a7add",
   "lessons": [
     {
       "id": "TA-C38-udambu",
-      "sequence": 870,
+      "sequence": 1140,
       "title": "உடம்பு (uḍambu) — \"body,\" and how Tamil asks after your health",
       "headword": "உடம்பு",
       "romanization": "uḍambu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4c3a8be338bc60b3",
+      "sourceHash": "fnv1a64:fb6e418ebdb8be6c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -197,7 +197,7 @@
     },
     {
       "id": "TA-C38-sugam",
-      "sequence": 880,
+      "sequence": 1150,
       "title": "சுகம் (sugam) — \"ease,\" the word Tamil did borrow",
       "headword": "சுகம்",
       "romanization": "sugam",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e334b1613ee920fd",
+      "sourceHash": "fnv1a64:00918ca7669305da",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -375,7 +375,7 @@
     },
     {
       "id": "TA-C38-vidai",
-      "sequence": 890,
+      "sequence": 1160,
       "title": "விடை (viḍai) — \"leave,\" and the root under the house",
       "headword": "விடை",
       "romanization": "viḍai",
@@ -386,7 +386,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f9300ce323ff2a68",
+      "sourceHash": "fnv1a64:9e168048336c9617",
       "notice": {
         "modality": "sight",
         "needs": [

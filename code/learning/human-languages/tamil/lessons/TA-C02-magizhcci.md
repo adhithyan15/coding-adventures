@@ -1,6 +1,7 @@
 ---
 id: TA-C02-magizhcci
 chapter: 2
+sequence: 165
 type: phrase
 headword: மகிழ்ச்சி
 gloss: joy / pleased to meet you

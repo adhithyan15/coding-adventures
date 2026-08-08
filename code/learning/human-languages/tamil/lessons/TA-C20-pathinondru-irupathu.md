@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C20-pathinondru-irupathu
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 430
+sequence: 700
 chapter: 20
 type: word
 headword: பதினொன்று — இருபது

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C32-paar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 650
+sequence: 920
 chapter: 32
 type: word
 headword: பார்

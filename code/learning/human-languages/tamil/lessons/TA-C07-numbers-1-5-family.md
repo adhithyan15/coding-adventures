@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C07-numbers-1-5-family
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 230
+sequence: 430
 chapter: 7
 type: etymology
 headword: இரண்டு மூன்று நான்கு ஐந்து

@@ -1,6 +1,7 @@
 ---
 id: TA-C05-velai-sey
 chapter: 5
+sequence: 340
 type: word
 headword: வேலை செய்
 gloss: to work (lit. "work-do")

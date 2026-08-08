@@ -178,6 +178,13 @@ export interface ModalityManifestLesson {
    * than asserted: a reader can see WHICH sections were discounted and disagree.
    */
   detachableSegments?: string[];
+  /**
+   * The authored strand marker, present only when the lesson declares one.
+   *
+   * A spoken-only edition filters on this rather than inferring the strand from
+   * `type` or from the computed modality, both of which mean something else.
+   */
+  delivery?: string;
   /** Fingerprint of the lesson AST this row was derived from. */
   sourceHash: string;
   /** Present only when the author wrote an explicit `modality:`. */
@@ -354,6 +361,10 @@ function manifestLesson(entry: LessonModality, sourceHash: string): ModalityMani
   // on a thousand rows is noise a reader must learn to skip.
   if (entry.detachableSegments.length > 0) {
     row.detachableSegments = entry.detachableSegments;
+  }
+  // Omitted when absent, same rule: today only the Tamil writing strand declares it.
+  if (entry.delivery) {
+    row.delivery = entry.delivery;
   }
   // The three override fields are omitted rather than emitted empty. They apply to a
   // handful of lessons out of 1,096, and `"authoredReason": ""` a thousand times over

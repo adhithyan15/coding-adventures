@@ -1,6 +1,7 @@
 ---
 id: TA-C02-enna
 chapter: 2
+sequence: 150
 type: word
 headword: என்ன
 gloss: what

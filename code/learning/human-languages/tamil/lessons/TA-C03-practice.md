@@ -1,6 +1,7 @@
 ---
 id: TA-C03-practice
 chapter: 3
+sequence: 230
 type: practice
 headword: (dialogue)
 gloss: Chapter 3 recap — the how-are-you exchange

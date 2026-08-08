@@ -4,11 +4,11 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f8ee12008eeeb646",
+  "sourceHash": "fnv1a64:9da02aa156c2f34f",
   "lessons": [
     {
       "id": "TA-C31-matiya-vanakkam",
-      "sequence": 590,
+      "sequence": 860,
       "title": "மதிய வணக்கம் (matiya vaṇakkam) — a sourced afternoon greeting",
       "headword": "மதிய வணக்கம்",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40bdf24325c6deef",
+      "sourceHash": "fnv1a64:ed3341669544458b",
       "notice": null,
       "blocks": [
         {
@@ -106,7 +106,7 @@
     },
     {
       "id": "TA-C31-afternoon-greeting-root",
-      "sequence": 600,
+      "sequence": 870,
       "title": "மதிய — the greeting takes a different root",
       "headword": "மதிய",
       "romanization": "",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f94f0e85cdff5f4",
+      "sourceHash": "fnv1a64:aebc39e8e3bbc929",
       "notice": null,
       "blocks": [
         {

@@ -1,8 +1,8 @@
 Tamil, chapter 7: Numbers One to Ten.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ஒன்று, இரண்டு, மூன்று, நான்கு, ஐந்து — one to five.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it.
@@ -28,7 +28,7 @@ Wrap-up Recall.
 Count to five in Tamil. (Oṉṟu, iraṇṭu, mūṉṟu, nāṉku, aintu.) Are Tamil's numbers borrowed from Sanskrit, like Hindi's? (No — they're native Dravidian.) Which two writing systems sit side by side? (Spelled-out words and Tamil's own numerals.) Next: compare these native forms across the family.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 Two to five — one family in four regional coats.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart - The cousin table until you have stopped, and I will say so again when we reach it.
@@ -59,7 +59,7 @@ Wrap-up Recall.
 Are these forms borrowed? (No, native Dravidian.) Which numbers stay tidiest across the family? (Two through five.) Which language forms "one" differently? (Telugu, okaṭi.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ஆறு, ஏழு, எட்டு, ஒன்பது, பத்து — six to ten.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it.
@@ -93,10 +93,45 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count six to ten in Tamil. (Āṟu, ēḻu, eṭṭu, oṉpatu, pattu.) Which number is written with ழ, and where else does that letter appear? (Seven, ēḻu — the same letter that ends Tamiḻ.) How is nine built? (Oṉ "one" + patu "ten" becomes oṉpatu, one short of ten.) Next: follow these forms across the family and hear Kannada p soften to h.
+Count six to ten in Tamil. (Āṟu, ēḻu, eṭṭu, oṉpatu, pattu.) Which number is written with ழ, and where else does that letter appear? (Seven, ēḻu — the same letter that ends Tamiḻ.) How is nine built? (Oṉ "one" + patu "ten" becomes oṉpatu, one short of ten.) Next: the puḷḷi — the dot that takes a consonant's built-in vowel away.
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
+் (puḷḷi) — the dot that leaves both letters visible.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The puḷḷi, Script you'll notice: What Tamil does not do and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Every consonant carries a built-in a. So how do you write a consonant with no vowel — the k in vaṇakkam, or the m at the end?
+One dot.
+
+Script you'll notice: The puḷḷi.
+க = ka becomes க் = k.
+புள்ளி (puḷḷi) means simply "the dot." Written above a letter, it removes the inherent vowel. That's the whole rule.
+A standing note for this whole track. These lessons quote real Tamil words and examples, and most of them contain letters the track has not taught you to draw yet — puḷḷi's own name uses ப, ள and the ு sign, and the comparisons below reach for others again. Read anything printed here; only draw the letters a lesson has actually broken into strokes. The data file behind this track covers 11 letters so far and says so (complete: false) — it grows as the chapters need it.
+
+Script you'll notice: What Tamil does not do.
+If you have done the Devanagari track, this is the moment to notice a real divergence.
+In Devanagari, killing the vowel makes the bare consonant fuse with the next one into a squeezed conjunct — स् + त becomes स्त, and the first letter loses its spine. The virama usually disappears into the ligature.
+Tamil doesn't do that. The dot stays visible, and both letters keep their full shape:
+[a table of 2 rows, read aloud]
+Devanagari, स् + त becomes स्त — a new fused shape.
+Tamil, க் + க becomes க்க — two letters, dot intact.
+The consequence is arithmetic. Tamil's whole set is 247 characters: 12 vowels + 18 consonants + the 216 consonant-vowel combinations + the āytam ஃ. That is genuinely all of them. Devanagari's conjuncts run to many hundreds of ligature shapes on top of its letters, each to be learned or at least recognised.
+(One honest exception: Tamil does have a few ligatures borrowed with Sanskrit words — க்ஷ kṣa and ஸ்ரீ śrī. They sit outside the 18 native consonants and outside the 247.)
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: க் — "க, then the dot above"]
+[once you have stopped driving — write: க்க — two full letters, dot intact, no fusing]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the puḷḷi do, and what does the word mean? (Removes the inherent vowel; puḷḷi is simply "the dot".) What does Devanagari do that Tamil doesn't? (Fuses the letters into a conjunct — Tamil keeps both shapes and the dot.) What does Tamil get in exchange? (A much smaller character set — 247, with almost no ligatures: only the borrowed க்ஷ and ஸ்ரீ.) Next: six, seven and ten across the family.
+
+
+Lesson 5 of 5.
 Six to ten — family resemblances and one Kannada shift.
 
 Warm-up.

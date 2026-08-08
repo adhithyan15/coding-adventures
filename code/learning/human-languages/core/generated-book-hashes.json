@@ -3465,23 +3465,26 @@
     {
       "language": "tamil",
       "chapter": 6,
-      "sourceHash": "fnv1a64:8cb1982f517a21f4",
+      "sourceHash": "fnv1a64:506251379b3d7dec",
       "lessonIds": [
         "TA-C06-dative-ukku",
+        "TA-W02-ma-retroflex-na",
         "TA-C06-dative-stacking",
         "TA-C06-dative-subject",
-        "TA-C06-dative-subject-family"
+        "TA-C06-dative-subject-family",
+        "TA-W02-three-ns"
       ],
       "tex": "tamil/book/chapters/ch06-dative-case.tex"
     },
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:eccac2217fcc1cce",
+      "sourceHash": "fnv1a64:05cb6ac8a2d2d6a1",
       "lessonIds": [
         "TA-C07-numbers-1-5",
         "TA-C07-numbers-1-5-family",
         "TA-C07-numbers-6-10",
+        "TA-W03-pulli-vanakkam",
         "TA-C07-numbers-6-10-family"
       ],
       "tex": "tamil/book/chapters/ch07-numbers-1-10.tex"
@@ -3489,17 +3492,18 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:ff8de4c167bb1241",
+      "sourceHash": "fnv1a64:c562ead22324f223",
       "lessonIds": [
         "TA-C08-tayavuseytu",
-        "TA-C08-please-register"
+        "TA-C08-please-register",
+        "TA-W03-write-vanakkam"
       ],
       "tex": "tamil/book/chapters/ch08-please.tex"
     },
     {
       "language": "tamil",
       "chapter": 9,
-      "sourceHash": "fnv1a64:7fa83cac8c8e39bf",
+      "sourceHash": "fnv1a64:85cf044551d1062b",
       "lessonIds": [
         "TA-C09-mannikkavum",
         "TA-C09-sorry-register"
@@ -3509,16 +3513,17 @@
     {
       "language": "tamil",
       "chapter": 10,
-      "sourceHash": "fnv1a64:285ec93ffe2143af",
+      "sourceHash": "fnv1a64:1623b23a579366eb",
       "lessonIds": [
-        "TA-C10-vaara-kizhamai"
+        "TA-C10-vaara-kizhamai",
+        "TA-W04-vowel-signs-nandri"
       ],
       "tex": "tamil/book/chapters/ch10-days.tex"
     },
     {
       "language": "tamil",
       "chapter": 11,
-      "sourceHash": "fnv1a64:816c584dec2fa772",
+      "sourceHash": "fnv1a64:05e39dd3fc34184b",
       "lessonIds": [
         "TA-C11-nirangal"
       ],
@@ -3527,7 +3532,7 @@
     {
       "language": "tamil",
       "chapter": 12,
-      "sourceHash": "fnv1a64:30be3d82f65307ff",
+      "sourceHash": "fnv1a64:af93b4956465c997",
       "lessonIds": [
         "TA-C12-kudumbam"
       ],
@@ -3536,16 +3541,17 @@
     {
       "language": "tamil",
       "chapter": 13,
-      "sourceHash": "fnv1a64:7e71618cae516fbc",
+      "sourceHash": "fnv1a64:40a7007a7a869a42",
       "lessonIds": [
-        "TA-C13-udal-uruppugal"
+        "TA-C13-udal-uruppugal",
+        "TA-W04-i-sign-write-nandri"
       ],
       "tex": "tamil/book/chapters/ch13-body-parts.tex"
     },
     {
       "language": "tamil",
       "chapter": 14,
-      "sourceHash": "fnv1a64:872e2a100049b519",
+      "sourceHash": "fnv1a64:9279d58ba913f0fa",
       "lessonIds": [
         "TA-C14-kaalangal"
       ],
@@ -3554,7 +3560,7 @@
     {
       "language": "tamil",
       "chapter": 15,
-      "sourceHash": "fnv1a64:6eb8ad3ee9295566",
+      "sourceHash": "fnv1a64:2cc2b6dc5c14ee0d",
       "lessonIds": [
         "TA-C15-thanneer-arisi"
       ],
@@ -3563,16 +3569,17 @@
     {
       "language": "tamil",
       "chapter": 16,
-      "sourceHash": "fnv1a64:5f41ac5048e292df",
+      "sourceHash": "fnv1a64:65fedf852d45ae79",
       "lessonIds": [
-        "TA-C16-thamizh-maadangal"
+        "TA-C16-thamizh-maadangal",
+        "TA-W05-write-aam"
       ],
       "tex": "tamil/book/chapters/ch16-months.tex"
     },
     {
       "language": "tamil",
       "chapter": 17,
-      "sourceHash": "fnv1a64:e57f7bea45ffc8ab",
+      "sourceHash": "fnv1a64:90be6cdf7f59a425",
       "lessonIds": [
         "TA-C17-nanpakal-nalliravu",
         "TA-C17-transparent-middle-synonyms"
@@ -3582,9 +3589,10 @@
     {
       "language": "tamil",
       "chapter": 18,
-      "sourceHash": "fnv1a64:c9ee2c591af90a48",
+      "sourceHash": "fnv1a64:46d568fe65afb671",
       "lessonIds": [
         "TA-C18-mani",
+        "TA-W06-write-illai",
         "TA-C18-mani-homophone-time"
       ],
       "tex": "tamil/book/chapters/ch18-telling-time.tex"
@@ -3592,17 +3600,18 @@
     {
       "language": "tamil",
       "chapter": 19,
-      "sourceHash": "fnv1a64:158e1e4de8950e2a",
+      "sourceHash": "fnv1a64:d7293b885b36096e",
       "lessonIds": [
         "TA-C19-vayathu",
-        "TA-C19-age-register-grammar"
+        "TA-C19-age-register-grammar",
+        "TA-W07-write-sari"
       ],
       "tex": "tamil/book/chapters/ch19-age.tex"
     },
     {
       "language": "tamil",
       "chapter": 20,
-      "sourceHash": "fnv1a64:17a98f1177a6f798",
+      "sourceHash": "fnv1a64:ea74641a7aeaa215",
       "lessonIds": [
         "TA-C20-pathinondru-irupathu",
         "TA-C20-vaanilai"
@@ -3612,7 +3621,7 @@
     {
       "language": "tamil",
       "chapter": 21,
-      "sourceHash": "fnv1a64:311e0fc1921788a6",
+      "sourceHash": "fnv1a64:4e1e9c8c1a0e2f1d",
       "lessonIds": [
         "TA-C21-naay-poonai"
       ],
@@ -3621,7 +3630,7 @@
     {
       "language": "tamil",
       "chapter": 22,
-      "sourceHash": "fnv1a64:dcbc62f4f6ad78a7",
+      "sourceHash": "fnv1a64:ae71142a83f6bbb1",
       "lessonIds": [
         "TA-C22-paccai-manjal"
       ],
@@ -3630,7 +3639,7 @@
     {
       "language": "tamil",
       "chapter": 23,
-      "sourceHash": "fnv1a64:df614acc750a66b3",
+      "sourceHash": "fnv1a64:a2ce180ed0981b94",
       "lessonIds": [
         "TA-C23-naal",
         "TA-C23-day-family-register"
@@ -3640,7 +3649,7 @@
     {
       "language": "tamil",
       "chapter": 24,
-      "sourceHash": "fnv1a64:d6206fbb0b4a40bb",
+      "sourceHash": "fnv1a64:a49f29933aebc915",
       "lessonIds": [
         "TA-C24-iravu",
         "TA-C24-night-register-darkness"
@@ -3650,7 +3659,7 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:9c4269766dbc36bd",
+      "sourceHash": "fnv1a64:f2aab1ca9b0d3ff1",
       "lessonIds": [
         "TA-C25-iniya-iravu",
         "TA-C25-goodnight-alternatives"
@@ -3660,7 +3669,7 @@
     {
       "language": "tamil",
       "chapter": 26,
-      "sourceHash": "fnv1a64:8a01a19aed95768e",
+      "sourceHash": "fnv1a64:21264f934ed1f572",
       "lessonIds": [
         "TA-C26-kaalai"
       ],
@@ -3669,7 +3678,7 @@
     {
       "language": "tamil",
       "chapter": 27,
-      "sourceHash": "fnv1a64:f05a977714a428f1",
+      "sourceHash": "fnv1a64:aa7e34235182f0bf",
       "lessonIds": [
         "TA-C27-maalai"
       ],
@@ -3678,7 +3687,7 @@
     {
       "language": "tamil",
       "chapter": 28,
-      "sourceHash": "fnv1a64:3f1781336d4dbbb5",
+      "sourceHash": "fnv1a64:ec92e87b3b4283ca",
       "lessonIds": [
         "TA-C28-pirpakal",
         "TA-C28-afternoon-boundary"
@@ -3688,7 +3697,7 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:20cadfca8eec724a",
+      "sourceHash": "fnv1a64:3462cdc973cb1a18",
       "lessonIds": [
         "TA-C29-kaalai-vanakkam"
       ],
@@ -3697,7 +3706,7 @@
     {
       "language": "tamil",
       "chapter": 30,
-      "sourceHash": "fnv1a64:0f9658a0088c0b7d",
+      "sourceHash": "fnv1a64:859a3c0278df7426",
       "lessonIds": [
         "TA-C30-maalai-vanakkam"
       ],
@@ -3706,7 +3715,7 @@
     {
       "language": "tamil",
       "chapter": 31,
-      "sourceHash": "fnv1a64:10ad0e46ce192b01",
+      "sourceHash": "fnv1a64:3f7bcb598113beed",
       "lessonIds": [
         "TA-C31-matiya-vanakkam",
         "TA-C31-afternoon-greeting-root"
@@ -3716,7 +3725,7 @@
     {
       "language": "tamil",
       "chapter": 32,
-      "sourceHash": "fnv1a64:910c91b3fe4d342c",
+      "sourceHash": "fnv1a64:babedd13feadc02b",
       "lessonIds": [
         "TA-C32-iru",
         "TA-C32-po",
@@ -3730,7 +3739,7 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:9e974c94abcf0cec",
+      "sourceHash": "fnv1a64:508c27ca16a3cf45",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
@@ -3742,7 +3751,7 @@
     {
       "language": "tamil",
       "chapter": 34,
-      "sourceHash": "fnv1a64:a7767e667ee93f24",
+      "sourceHash": "fnv1a64:9156ad6e37c5a81d",
       "lessonIds": [
         "TA-C34-edu",
         "TA-C34-kel",
@@ -3754,7 +3763,7 @@
     {
       "language": "tamil",
       "chapter": 35,
-      "sourceHash": "fnv1a64:dc38c4fb1b2e3bc9",
+      "sourceHash": "fnv1a64:2236d8055ff46015",
       "lessonIds": [
         "TA-C35-veedu",
         "TA-C35-kadavu",
@@ -3766,7 +3775,7 @@
     {
       "language": "tamil",
       "chapter": 36,
-      "sourceHash": "fnv1a64:231ca7f273eff40e",
+      "sourceHash": "fnv1a64:723f22137faa2040",
       "lessonIds": [
         "TA-C36-teneer",
         "TA-C36-paal",
@@ -3778,7 +3787,7 @@
     {
       "language": "tamil",
       "chapter": 37,
-      "sourceHash": "fnv1a64:2a3905874c0757ce",
+      "sourceHash": "fnv1a64:34cbfdd3aecc18be",
       "lessonIds": [
         "TA-C37-uur",
         "TA-C37-nanban",
@@ -3790,7 +3799,7 @@
     {
       "language": "tamil",
       "chapter": 38,
-      "sourceHash": "fnv1a64:cdf9a751033520e6",
+      "sourceHash": "fnv1a64:d80f92dc2be328ee",
       "lessonIds": [
         "TA-C38-udambu",
         "TA-C38-sugam",

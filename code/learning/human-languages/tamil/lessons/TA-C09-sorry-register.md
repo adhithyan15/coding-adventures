@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C09-sorry-register
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 290
+sequence: 510
 chapter: 9
 type: grammar
 headword: மன்னிக்கவும் / sorry

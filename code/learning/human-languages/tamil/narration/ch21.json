@@ -4,11 +4,11 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9723f9dcd572ac08",
+  "sourceHash": "fnv1a64:4c3e69eb6f237751",
   "lessons": [
     {
       "id": "TA-C21-naay-poonai",
-      "sequence": 450,
+      "sequence": 720,
       "title": "நாய், பூனை — solid ground to close the arc, and an honest three-way split",
       "headword": "நாய், பூனை",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de5497918953d746",
+      "sourceHash": "fnv1a64:a2f119fd5362a2d8",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C10-vaara-kizhamai
 spine_node: SPINE-TIME-OF-DAY
-sequence: 300
+sequence: 520
 chapter: 10
 type: word
 headword: திங்கள்–ஞாயிறு

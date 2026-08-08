@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C36-unavu
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 810
+sequence: 1080
 chapter: 36
 type: word
 headword: உணவு

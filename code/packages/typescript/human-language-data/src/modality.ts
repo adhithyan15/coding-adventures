@@ -239,6 +239,16 @@ export interface LessonModality {
   chapter: number | null;
   /** Authored `sequence`, or null on legacy lessons that carry none. */
   sequence: number | null;
+  /**
+   * Authored `delivery`, or null when the lesson does not declare one.
+   *
+   * This is the strand a lesson belongs to, declared rather than inferred. `type:
+   * writing` already implies "script", but a consumer building a spoken-only edition
+   * should not have to know that `type` doubles as a strand marker, nor re-parse the
+   * Markdown to find out. Carried here so it reaches the manifest, which is what book
+   * targets read.
+   */
+  delivery: string | null;
   /** What the structure says the lesson needs, with every block delivered. */
   derived: Modality;
   /** What the lesson actually claims — the override when one is accepted. */
@@ -675,6 +685,7 @@ export function deriveLessonModality(
     language: lesson.language,
     chapter: Number.isFinite(lesson.realization.chapter) ? lesson.realization.chapter : null,
     sequence: numberOrNull(stringValue(lesson.frontmatter.sequence)),
+    delivery: stringValue(lesson.frontmatter.delivery) || null,
     derived,
     modality: accepted,
     coreModality: coreAccepted,

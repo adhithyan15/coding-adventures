@@ -2,8 +2,9 @@
 schema_version: 2
 id: TA-W01-curves-va-ka
 spine_node: SPINE-MEET-GREET
-sequence: 100
-chapter: 1
+sequence: 270
+delivery: script
+chapter: 4
 type: writing
 headword: "தமிழ் எழுத்து"
 gloss: why Tamil writing is so round, with the palm-leaf account presented as a qualified explanation
@@ -80,4 +81,4 @@ and a chisel; Tamil's curves suit a stylus and a leaf.
 leaves**, where a straight stroke along the grain can **split** them — though
 early Tamil-Brahmi was angular, so it is not the whole story.) What broader point
 does the account teach? (**Tools and surfaces leave fingerprints on scripts.**)
-Next: the vowel hidden inside a consonant, then வ and க.
+Next: the chapter's own recap of the farewells.

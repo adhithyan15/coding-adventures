@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-C09-mannikkavum
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 280
+sequence: 500
 chapter: 9
 type: phrase
 headword: மன்னிக்கவும்

@@ -4,6 +4,108 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Changed — Tamil teaches speaking first, and the script arrives gently
+
+Tamil chapter 1 held **eleven writing lessons against nine speaking lessons**, and the
+curriculum path put all eleven at positions 3-13: a learner met வணக்கம், then did eleven
+consecutive lessons on letter shapes before reaching the word for *yes*. The chapter's
+own declared capability said so out loud — *"I can write வணக்கம் and நன்றி by hand, put
+the puḷḷi and the ி sign in the right places"* — a chapter about greeting people whose
+stated payoff was handwriting.
+
+You can speak a language without reading a letter of it, so the course now does that:
+
+- **Chapters 1-3 carry no writing lesson.** 23 lessons — greetings, yes/no, thanks,
+  names, how-are-you. Chapter 1's capability is now *greet someone, say yes, no and
+  thank you, agree with சரி, and hold a short exchange out loud — entirely by ear*,
+  and chapter 1 becomes the first Tamil chapter that is fully drivable by ear.
+    `TA-C01-practice` had a section headed *"Read them back"* that taught the puḷḷi,
+  vowel signs and word-initial vowels inside the chapter-1 recap; it now says the five
+  words aloud and states plainly that reading is not expected yet. The **book** said the
+  same thing more loudly and had to be fixed too: all five `sounds` boxes in
+  `ch01-greetings.tex` taught left-to-right reading, the inherent vowel, the puḷḷi and
+  the ி and ை signs, and its recap table was headed *"Read"*. Chapters 1-5 are
+  hand-authored, so `book-cli --check` never compares them against the lessons and
+  nothing flagged the divergence. Those boxes now teach **pronunciation** — retroflex ṇ,
+  the held *kk*, Tamil's three *n* sounds, vowel length, the *ai* diphthong — which is
+  what a box called "sounds" should have held all along.
+- **The script starts in chapter 4, one lesson at a time.** The eleven script lessons  are spread across chapters 4-19, admitted after every third speaking lesson.
+  Measured, they sit at 0-indexed reading positions 27, 31, 36, 40, 44, 48, 52, 56, 60,
+  64, 68. Chapter 4's lesson teaches no letter at all — it is the palm-leaf lesson on
+  why the script is round; the first actual letters, வ and க, arrive in chapter 5.
+- **Every script lesson spells a word already known by ear.** வணக்கம் is learned in
+  chapter 1 and written in chapter 8, once all its letters exist; நன்றி, ஆம், இல்லை and
+  சரி likewise. The writing strand carries no new vocabulary at all.
+- **The script is shown from page one but never taught early.** Tamil words still appear
+  in the speaking lessons so the shapes grow familiar; nothing asks the learner to read
+  or write them until chapter 4. `tamil/book/chapters/ch01-greetings.tex` said the
+  opposite — *"Each lesson introduces the letters its word needs"* — and now says what
+  the chapter actually does.
+
+### Known limitations of this change
+
+Two things this does **not** fix, stated plainly rather than implied away:
+
+- **Ten early lessons still teach script inside a speaking lesson.** Nine chapter 2-3
+  word lessons carry a `## The letters in this word` section. They are not moved here,
+  because the letters they teach (உ, ய, எ, and the ெ sign) are taught nowhere in the
+  writing strand — deleting the sections would remove the only place they exist. Moving
+  them needs new writing lessons authored first.
+- **Chapter 1's payoff is now unmeasured rather than passing.** `chapters.ts` guards the
+  representativeness check with `introduced.size > 0`, and chapter 1 introduces no atoms,
+  so the gate that used to report `tamil:1` at 5/24 now says nothing about it. The corpus
+  total `payoffsNotRepresentative: 25` holds only because `tamil:13` took its place —
+  `TA-W04-i-sign-write-nandri` moved to chapter 13, whose payoff now covers 1/4.
+
+### Added — `delivery: script` marks the writing strand
+
+The eleven writing lessons declare `delivery: script` in their frontmatter, so a
+spoken-only edition can filter on one field instead of inferring the strand from `type`,
+`skills` or a computed modality. A new test pins the marker to exactly the writing
+lessons of any track that adopts it, so a writing lesson that forgets it — or a speaking
+lesson that gains it by copy-paste — fails rather than shipping in the wrong edition.
+Script material *inside* a speaking lesson is already typed at the block level
+(`block.type === "script"`), so a spoken edition can drop those blocks with no new
+metadata.
+
+### Fixed — Tamil chapters 2-5 had no declared order at all
+
+24 Tamil lessons carried no `sequence`, so four whole chapters fell back to
+**alphabetical** order. Chapter 2 therefore taught the assembled phrase *en peyar*
+("my name") before *peyar* existed, and asked *"what is your name?"* last,
+after the practice lesson. Nothing caught it, because a chapter with no declared order
+has no order to contradict. All 116 Tamil lessons now carry a globally unique sequence,
+which also clears seven duplicate sequence values main was already carrying undetected
+(the duplicate gate only checks schema-v2 lessons, and each pair had a v1 lesson on one
+side, so the schema-v2 duplicate gate could not see them — though the continuity walk
+was already reporting all seven as `duplicate-sequence` order defects, unsummarised and
+unpinned). Two genuine forward reviews are fixed with it: `TA-C02-magizhcci` reviewed
+`TA-C02-ungal-peyar-enna` and `TA-C04-mindum-sandippom` reviewed `TA-C04-naalai`, both
+before those lessons existed. Tamil forward prerequisites and forward reviews are now
+both **zero**.
+
+Measured: `lessonsWithoutSequence` 507 → 483, `tracksWithUnorderedLessons` 19 → 18
+(Tamil joins chinese, japanese and latin — the fourth of 22), `forwardPrerequisites` 240 → 230,
+`forwardReviews` 285 → 273, `forwardReferences` 469 → 468, and `chapterViolations`
+25 → 24 — that last being the gate that measures how much a chapter throws at a reader
+at once, which Tamil chapter 1 had been failing at 24 atoms against a budget of 12.
+
+Three numbers moved the wrong way, all deliberate:
+
+- `missedByWindow.R1` 834 → 843. Consecutive script lessons now sit 4-5 apart and R1 is
+  a 1-3 window, so no script lesson can reinforce the previous one inside it. 24 atoms
+  miss R1 while their real revisit counts run 0 to 7, median 2 — reinforced, just never
+  within three lessons. An interleaved strand cannot satisfy R1 as defined.
+- `fullyDrivableChapters` 327 → 322, which is −6 +1 rather than a flat loss. Six
+  chapters that were entirely ear-only now hold a writing lesson (6, 10, 13, 16, 18, 19;
+  chapter 6 holds two), offset by chapter 1 becoming fully drivable for the first time.
+- Script-ramp `lessonViolations` 60 → 61, a net of three moves: `TA-W03-pulli-vanakkam`
+  (9 glyphs, the steepest in the corpus) stopped counting once it moved to chapter 7,
+  while `TA-C01-practice` (5) and `TA-C01-nandri` (4) joined — both **speaking** lessons
+  showing glyphs the writing strand has not reached. The gate counts a glyph the first
+  time it appears, which is the right rule for a track that teaches script alongside
+  speech and the wrong one for a track that shows before it teaches.
+
 ### Fixed — the seven script facts the one-word-per-lesson pilot orphaned
 
 Splitting Tamil chapter 1 moved letter-by-letter reading out of the word lessons and
