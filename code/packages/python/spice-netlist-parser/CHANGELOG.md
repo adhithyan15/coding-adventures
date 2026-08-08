@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `RS` source resistance.
 - Validate and lower JFET model-card `RD` drain resistance.
 - Validate and lower JFET model-card `GDSNOI` channel-noise coefficient.
 - Validate and lower JFET model-card `NLEV` noise equation level.

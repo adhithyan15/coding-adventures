@@ -1632,6 +1632,30 @@ J1 drain gate source fast
     },
   );
 
+  it.each([
+    ["0", 0.0],
+    ["9.75", 9.75],
+  ])("parses JFET source resistance %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(RS=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      sourceResistance: expected,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])(
+    "rejects invalid JFET source resistance %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(RS=${value})`)).toThrow(
+        "JFET RS must be finite and non-negative",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
