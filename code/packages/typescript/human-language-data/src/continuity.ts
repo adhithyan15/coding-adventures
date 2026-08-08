@@ -161,6 +161,22 @@ function declaredSequence(lesson: ParsedLesson): number | null {
 }
 
 /**
+ * Definite articles that may precede a headword, by track.
+ *
+ * Only languages whose headwords actually carry an article appear here; a track
+ * absent from this map never has a leading word stripped. Every entry was taken from
+ * a census of the corpus's own headwords, so the map describes what is written rather
+ * than what the language could in principle write.
+ */
+const DEFINITE_ARTICLES: Partial<Record<string, Set<string>>> = {
+  spanish: new Set(["el", "la", "los", "las"]),
+  italian: new Set(["il", "lo", "la", "i", "gli", "le"]),
+  french: new Set(["le", "la", "les"]),
+  portuguese: new Set(["o", "a", "os", "as"]),
+  german: new Set(["der", "die", "das"]),
+};
+
+/**
  * Headwords, normalised for matching, that a lesson teaches.
  *
  * A multi-word headword ("buenos días") is kept whole: matching its parts
@@ -178,15 +194,50 @@ function taughtWords(lesson: ParsedLesson): string[] {
 
   const out = new Set(parts);
   for (const part of parts) {
-    // Headwords carry their article: "el pan", "el agua", "la casa". A body that
-    // says "bebo agua" is using the same word, so the bare noun must match too.
-    // Only a SHORT leading function word is stripped, which leaves "buenos días"
-    // whole — splitting that would report `días` from every lesson mentioning it.
-    const match = /^(\S{1,3})\s+(.+)$/.exec(part);
-    if (match) out.add(match[2]!.trim());
+    // Headwords carry their article: "el pan", "la casa". A body saying "bebo agua"
+    // is using the same word, so the bare noun has to match too.
+    //
+    // This used to strip ANY leading word of three characters or fewer. A census of the
+    // corpus's own headwords shows that rule firing on 227 of 1,453 lessons (247
+    // headword parts), of which only 49 lessons (64 parts) actually begin with an
+    // article. It was registering `llamo` as taught by "me llamo", `favor` by "por
+    // favor", `dia` by "bom dia", and the night- and afternoon-word of every
+    // ശുഭ / शुभ / శుభ / ಶುಭ greeting in Malayalam, Hindi, Telugu and Kannada — because
+    // all those openers are three characters.
+    //
+    // The failure that surfaced it: "así que" is a legitimate headword, `así` is three
+    // characters, so `que` got registered as first taught there — reporting ten earlier
+    // lessons that use `que` as forward references to it. The lesson had to be renamed
+    // to work around the measurement.
+    //
+    // So the rule is an ALLOWLIST of actual definite articles, per language, grounded
+    // in that census rather than in a length guess. Spanish `lo` is deliberately absent
+    // — in "lo siento" it is a pronoun, and stripping it would register `siento`.
+    // Italian `a` likewise: "a domani" is a preposition, not an article.
+    const articles = DEFINITE_ARTICLES[lesson.language];
+    if (!articles) continue;
+    const match = /^(\S+)\s+(.+)$/.exec(part);
+    if (match && articles.has(match[1]!)) out.add(match[2]!.trim());
   }
   return [...out].filter((word) => word.length > 0);
 }
+
+/**
+ * Every whitespace-separated token of a lesson's own headword, however it is written.
+ *
+ * Distinct from `taughtWords`, which decides what a lesson TEACHES to the rest of the
+ * corpus and so is deliberately conservative. This decides only what a lesson may not
+ * be accused of borrowing from someone else, and there conservatism is the wrong
+ * direction: any token of "mع السلامة" is that lesson's own material.
+ */
+function ownHeadwordTokens(lesson: ParsedLesson): string[] {
+  const headword = (lesson.realization.headword ?? "").toLowerCase();
+  return headword
+    .split(/[/,\u060C\u061B]|\s+y\s+|\s*[\u2014\u2013-]\s*|\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 0);
+}
+
 
 /**
  * English words that are also common target-language headwords.
@@ -417,7 +468,13 @@ export function measureContinuity(lessons: ParsedLesson[]): ContinuityReport {
     ordered.forEach((lesson, index) => {
       const body = lesson.body.toLowerCase();
       const emphasised = emphasisedRuns(lesson.body);
-      const own = new Set(taughtWords(lesson));
+      // A lesson can never forward-reference a word sitting in its own headword —
+      // `mع السلامة` contains `السلامة`, `bom dia` contains `dia`. The old strip
+      // seeded these incidentally; the allowlist does not, so they are added
+      // explicitly. Without this, four lessons were reported as borrowing a word they
+      // were themselves teaching, which is exactly what this module's own docstring
+      // says must not happen.
+      const own = new Set([...taughtWords(lesson), ...ownHeadwordTokens(lesson)]);
       const reported = new Set<string>();
 
       for (const [word, teaching] of earliestTeaching) {

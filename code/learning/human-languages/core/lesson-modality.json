@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9d4f556624b18a5c",
+  "sourceHash": "fnv1a64:750c2d646de5f7f8",
   "summary": {
     "totalLessons": 1453,
     "voice": 977,
@@ -31267,7 +31267,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed35ac545ee26f56"
+      "sourceHash": "fnv1a64:9a66f2e2999d5c08"
     },
     {
       "id": "ES-C41-deber",

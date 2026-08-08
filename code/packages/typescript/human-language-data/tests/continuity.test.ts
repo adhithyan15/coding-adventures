@@ -93,6 +93,67 @@ describe("order integrity", () => {
   });
 });
 
+describe("a headword's article, and only its article", () => {
+  /** A lesson whose headword is `headword`, with `body` as its only prose. */
+  function withHeadword(id: string, sequence: number, headword: string, body: string, language = "spanish") {
+    return parseLesson(
+      `---\nschema_version: 2\nid: ${id}\nchapter: 1\nsequence: ${sequence}\ntype: phrase\n` +
+        `headword: "${headword}"\ngloss: x\nconcept_tag: GREETING-HELLO\n---\n\n` +
+        `# ${id}\n\n## Warm-up\n\n${body}\n`,
+      language,
+    );
+  }
+
+  it("strips a real article so the bare noun is still matched", () => {
+    // The behaviour the rule exists for, asserted POSITIVELY: "el pan" must register
+    // `pan`, so an EARLIER lesson using the bare noun is caught borrowing it. Asserting
+    // zero with the teaching lesson first would have been true however taughtWords
+    // behaved — including if it returned nothing at all.
+    const report = measureContinuity([
+      withHeadword("ES-1", 10, "comer", "Como **pan** hoy."),
+      withHeadword("ES-2", 20, "el pan", "Bread."),
+    ]);
+    expect(report.summary.forwardReferences).toBe(1);
+    expect(report.forwardReferences[0]).toMatchObject({ lessonId: "ES-1", word: "pan" });
+  });
+
+  it("does NOT strip a three-letter word that is not an article", () => {
+    // The bug this replaced: `/^(\S{1,3})\s+(.+)$/` stripped any short leading word,
+    // so "así que" registered `que` as first taught at the later lesson and reported
+    // every earlier lesson using `que` as a forward reference to it. A census found
+    // the rule firing on 246 of 1,453 headwords with only ~55 real articles among them.
+    // The earlier lesson must EMPHASISE `que`: a word under four characters counts as
+    // a forward reference only in marked text, which is why all nine real hits were.
+    const report = measureContinuity([
+      withHeadword("ES-1", 10, "hablar", "Hablo, y creo **que** bien."),
+      withHeadword("ES-2", 20, "así que", "Llueve, así que leo."),
+    ]);
+    expect(report.summary.forwardReferences).toBe(0);
+  });
+
+  it("leaves a pronoun attached even where the same string is an article elsewhere", () => {
+    // Spanish `lo` IS a neuter article, but in "lo siento" it is a pronoun, so it is
+    // deliberately absent from the allowlist. Stripping it would register `siento`.
+    const report = measureContinuity([
+      withHeadword("ES-1", 10, "sentir", "Siento."),
+      withHeadword("ES-2", 20, "lo siento", "Lo siento."),
+    ]);
+    expect(report.summary.forwardReferences).toBe(0);
+  });
+
+  it("keeps a track out of it entirely when its headwords carry no articles", () => {
+    // Latin has no articles, so nothing may be stripped from a Latin headword —
+    // "sex septem" must not register `septem` as a word LA-2 teaches.
+    // LA-1's own headword must NOT be `septem`, or `earliestTeaching` resolves to it
+    // either way and the test cannot tell the two rules apart.
+    const report = measureContinuity([
+      withHeadword("LA-1", 10, "unus", "Unus, **septem**.", "latin"),
+      withHeadword("LA-2", 20, "sex septem", "Sex septem.", "latin"),
+    ]);
+    expect(report.summary.forwardReferences).toBe(0);
+  });
+});
+
 describe("reinforcement windows", () => {
   it("flags an atom that is never practised again", () => {
     const report = measureContinuity([
@@ -298,14 +359,24 @@ describe("the real corpus", () => {
     // ES-GRAMMAR-LUEGO-CONNECTIVE-01 and requires chapter 5's ES-LEX-LUEGO, yet the
     // count is unchanged by that wiring.
     //
-    // Spanish chapter 41 adds ZERO, and that took one deliberate change. Its connective
-    // lesson was first written with the multi-word headword "así que"; `taughtWords`
-    // strips a leading word of <=3 chars (`/^(\S{1,3})\s+(.+)$/`, meant for articles),
-    // so it registered *que* as first taught there and flagged all 9 earlier lessons
-    // containing it. *Que* is genuinely taught at chapter 7. Narrowing the headword to
-    // *así* — the only word that IS new, with the gloss carrying the *que* — removed
-    // nine false positives. The loader heuristic is the real bug; this is a workaround.
-    expect(report.summary.forwardReferences).toBe(524);
+    // 524 -> 443, and none of the 81 was a real finding. Two distinct problems, one of
+    // which had been masking the other.
+    //
+    // First, `taughtWords` stripped ANY leading word of three characters or fewer,
+    // meaning to remove articles. A census found it firing on 227 of 1,453 lessons
+    // while only 49 of those begin with one — registering `llamo` as taught by "me
+    // llamo", `favor` by "por favor", `dia` by "bom dia", and the night-word of every
+    // ശുഭ / शुभ / శుభ / ಶುಭ greeting. The rule is now an allowlist of real articles.
+    //
+    // Second, and only visible once the first was fixed: the bad strip had been
+    // seeding a lesson's OWN word set with the stripped tail, which incidentally
+    // stopped it reporting itself. Removing the strip removed that accident, and four
+    // lessons started being reported for a word sitting in their own headword —
+    // exactly what this module's docstring says must not happen. `ownHeadwordTokens`
+    // now does it deliberately, and completely: the accident only ever covered the
+    // tail after the first word, so 45 self-references it had never caught are gone
+    // too. Every one was verified to be a token of the reporting lesson's own headword.
+    expect(report.summary.forwardReferences).toBe(443);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
