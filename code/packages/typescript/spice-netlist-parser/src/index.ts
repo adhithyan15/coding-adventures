@@ -1432,6 +1432,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET RD must be finite and non-negative");
   }
+  const jfetSourceResistance = params.get("RS");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetSourceResistance !== undefined &&
+    (!Number.isFinite(jfetSourceResistance) || jfetSourceResistance < 0.0)
+  ) {
+    throw new NetlistParseError("JFET RS must be finite and non-negative");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -2030,6 +2038,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("NLEV") ?? 1.0,
       model.params.get("GDSNOI") ?? 1.0,
       model.params.get("RD") ?? 0.0,
+      model.params.get("RS") ?? 0.0,
     );
   }
   if (prefix === "M") {
