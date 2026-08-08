@@ -341,9 +341,13 @@ describe("the real corpus", () => {
     // unrelated families) confirmed the reach-back discipline scales past verbs:
     // atomsTaught +98 while atomsNeverRevisited FELL by 53. 22% is the lowest this
     // figure has read since it was first measured at 51%.
-    expect(report.summary.atomsTaught).toBe(2121);
-    expect(report.summary.atomsNeverRevisited).toBe(463);
-    expect(report.summary.neverRevisitedPercent).toBe(22);
+    // Vocabulary wave 2 (french/german/portuguese/italian, 60 pre-A1 nouns) confirmed
+    // the one-headword-per-lesson exchange rate a further four times, and kept the
+    // reach-back discipline: atomsTaught +151 while atomsNeverRevisited FELL by 21.
+    // 21% — still the lowest this figure has read since 51%.
+    expect(report.summary.atomsTaught).toBe(2272);
+    expect(report.summary.atomsNeverRevisited).toBe(484);
+    expect(report.summary.neverRevisitedPercent).toBe(21);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -397,7 +401,7 @@ describe("the real corpus", () => {
     // 439 too. All four dropped references sit in TA-W01-curves-va-ka,
     // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
     // stopped counting because chapter 1 now declares its order.
-    expect(report.summary.forwardReferences).toBe(439);
+    expect(report.summary.forwardReferences).toBe(463);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -414,8 +418,8 @@ describe("the real corpus", () => {
     // So this is not a cost the new chapter incurred; it is a debt the old chapters
     // already had, which only became measurable once something followed them. Any
     // chapter appended to any track will do this, and the number is honest either way.
-    expect(report.summary.missedByWindow.R1).toBe(797);
-    expect(report.summary.missedByWindow.R2).toBe(1376);
+    expect(report.summary.missedByWindow.R1).toBe(823);
+    expect(report.summary.missedByWindow.R2).toBe(1520);
   });
 
   it("shows what a declared reading order was worth", () => {
