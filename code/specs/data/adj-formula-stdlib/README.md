@@ -26,7 +26,7 @@ Libraries are organized by domain, matching the curriculum's math/science tracks
 | Directory | Contents |
 |---|---|
 | `arithmetic/` | The elementary primitives (`sum`, `difference`, `product`, `quotient`, `ratio`, `percent`, `average`, …) every higher formula composes — write-once, use-many. |
-| `mathematics/` | Non-arithmetic-primitive math: geometry (area/perimeter/volume), place value, data displays (statistical range), word-problem schemas, and the K-2 foundational trio (counting sequence, comparison, cardinality). |
+| `mathematics/` | Non-arithmetic-primitive math: geometry (area/perimeter/volume), place value, data displays (statistical range), word-problem schemas, operation properties (commutative/associative), and the K-2 foundational trio (counting sequence, comparison, cardinality). |
 | `physics/`, `chemistry/`, `metrology/` | Domain formulas (kinematics, gas laws, temperature, …). |
 | `reference/` | NIST/SI unit-conversion tables (`table`, not `formula` — a published conversion factor is looked up, not computed). |
 | `clinical/` | Medical/pharmacology calculators (BMI, Cockcroft-Gault, Apgar score, …) — the MLE-apex layer; composes the layers below it. |

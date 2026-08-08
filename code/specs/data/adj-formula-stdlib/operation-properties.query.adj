@@ -1,0 +1,22 @@
+% This entry program stays at the stdlib root so the mathematics library's
+% cross-directory arithmetic import remains inside the import root.
+%
+% Run (from this directory):
+%     ../../../packages/rust/target/debug/adj-lang-cli operation-properties.query.adj
+import "mathematics/operation-properties.adj"
+
+% "Does 4 + 7 give the same answer as 7 + 4?"
+observe addend_one(4)
+observe addend_two(7)
+? addition_is_commutative(addend_one, addend_two)   % expect 1 (true)
+
+% "Is 10 - 3 the same as 3 - 10?"
+observe minuend(10)
+observe subtrahend(3)
+? subtraction_is_commutative(minuend, subtrahend)   % expect 0 (false)
+
+% "Does (2 + 5) + 6 give the same answer as 2 + (5 + 6)?"
+observe addend_one(2)
+observe addend_two(5)
+observe addend_three(6)
+? addition_is_associative(addend_one, addend_two, addend_three)   % expect 1 (true)
