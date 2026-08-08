@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFont, contoursToPath, boundsOf, type Contour } from "../src/truetype";
@@ -11,6 +12,7 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const urdu = () => parseFont(load("NotoNastaliqUrdu-Static.ttf"));
 
 // ---------------------------------------------------------------------------
 // A tiny rasteriser, used only by these tests.
@@ -151,6 +153,40 @@ describe("truetype: reading the vendored fonts", () => {
       const f = parseFont(load(name));
       expect(f.unitsPerEm, name).toBeGreaterThan(0);
       expect(f.mappedCharacters, name).toBeGreaterThan(0);
+    }
+  });
+
+  it("covers the Urdu course probe in the vendored Nastaliq face", () => {
+    const f = urdu();
+    expect(f.unitsPerEm).toBe(1000);
+    expect(f.mappedCharacters).toBeGreaterThan(600);
+    for (const ch of [..."اردو نستعلیق آپ کا نام کیا ہے؟"].filter((c) => c !== " ")) {
+      const glyph = f.glyphFor(ch);
+      expect(glyph, ch).toBeDefined();
+      // Nastaliq's encoded base glyphs can deliberately be empty: HarfBuzz
+      // replaces them with contextual forms from GSUB before drawing. A real,
+      // non-.notdef cmap id is therefore the correct zero-shaping coverage
+      // assertion here; the XeLaTeX and browser checks exercise shaping.
+      expect(glyph!.id, ch).toBeGreaterThan(0);
+    }
+  });
+
+  it("pins the two official static Nastaliq binaries byte for byte", () => {
+    const expected = new Map([
+      [
+        "NotoNastaliqUrdu-Static.ttf",
+        "06f5fe0febcbab39be2e338758eb8f8dc8a887f833851c9ee4051b4324e44801",
+      ],
+      [
+        "NotoNastaliqUrdu-Bold-Static.ttf",
+        "1bd71f39445c6af6af8605165a5fdd91d0271328b6cc04b8cbaccb5e7b700cbf",
+      ],
+    ]);
+    for (const [name, digest] of expected) {
+      const actual = createHash("sha256")
+        .update(readFileSync(resolve(FONT_DIR, name)))
+        .digest("hex");
+      expect(actual, name).toBe(digest);
     }
   });
 

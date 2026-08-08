@@ -58,7 +58,7 @@ Chapter 8's dative-experiencer frame on a plain noun (*mujhe roṭī pasand
 hai*) and sorting each word as inherited or Persian.
 
 Later chapters will add wider agreement, postpositions, oblique forms, compound
-verbs, and more Nastaliq-aware shapes.
+verbs, and more letters introduced through familiar Nastaliq words.
 
 Urdu and Hindi share a large grammatical core, while the formal lexicon and
 writing systems make their histories visible. Both the shared structure and the
@@ -71,6 +71,5 @@ Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions ar
 - [`session-map.md`](./session-map.md) says which lessons to do in which
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
-  script and sound facts on demand and labels the current Naskh fallback.
+  script, type-style, and sound facts on demand.
 - [`lessons/`](./lessons/) contains the canonical short practice lessons.
-

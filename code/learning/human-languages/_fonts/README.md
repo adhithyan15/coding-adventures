@@ -1,12 +1,23 @@
 # Vendored fonts (non-Latin scripts)
 
-These are **static Regular** files of Google's [Noto](https://fonts.google.com/noto)
-fonts, vendored so the non-Latin-script books (Arabic, Hindi, Marathi, Tamil,
-Kannada, Telugu, Malayalam, Punjabi, Bengali, Gujarati) compile **identically**
-on any machine and in CI — with no dependency on whatever font packages happen to
-be installed.
+These are **static** files of Google's [Noto](https://fonts.google.com/noto)
+fonts, vendored so the non-Latin-script books — including Arabic, Urdu,
+Devanagari, Dravidian, Cyrillic, Hebrew, Chinese, and Japanese tracks — compile
+**identically** on any machine and in CI, with no dependency on whatever font
+packages happen to be installed. Unless a Bold face is named explicitly below,
+the file is Regular weight.
 
-- `NotoNaskhArabic-Static.ttf` — Arabic
+- `NotoNaskhArabic-Static.ttf` — Arabic and the accessibility fallback for
+  Urdu when its course face cannot load
+- `NotoNastaliqUrdu-Static.ttf` and `NotoNastaliqUrdu-Bold-Static.ttf` — Urdu
+  Regular and Bold, upstream static TTFs from the
+  [official Noto distribution](https://github.com/notofonts/notofonts.github.io/tree/46074e15f8956b502051eb4a7796ed8c7d4f3076/fonts/NotoNastaliqUrdu/full/ttf)
+  at commit `46074e15f8956b502051eb4a7796ed8c7d4f3076`. SHA-256:
+  `06f5fe0febcbab39be2e338758eb8f8dc8a887f833851c9ee4051b4324e44801`
+  (Regular) and
+  `1bd71f39445c6af6af8605165a5fdd91d0271328b6cc04b8cbaccb5e7b700cbf`
+  (Bold). Both report Noto Nastaliq Urdu version 4.000 and carry the Urdu
+  contextual-shaping and localization tables.
 - `NotoSansDevanagari-Static.ttf` — Hindi **and Marathi** (both Devanagari)
 - `NotoSansTamil-Static.ttf` — Tamil
 - `NotoSansKannada-Static.ttf` — Kannada
@@ -48,4 +59,8 @@ naming a script fontspec cannot resolve fails the build for no benefit.)
 ## License
 
 Noto fonts are licensed under the SIL Open Font License 1.1 — see `OFL.txt`.
-Redistribution (including vendoring here) is permitted under its terms.
+Redistribution (including vendoring here) is permitted under its terms. The
+Nastaliq copyright notice comes from the
+[font's source repository](https://github.com/notofonts/nastaliq/blob/08ae316851f3a841fb1e3d10e9f4012cff0cd981/OFL.txt),
+and the official distribution's `fonts/` directory is likewise entirely
+OFL-1.1.
