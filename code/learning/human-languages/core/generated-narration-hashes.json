@@ -6124,6 +6124,23 @@
       "jsonHash": "fnv1a64:b0bae32827f8a1cb"
     },
     {
+      "language": "spanish",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:173e1962b10e4f5b",
+      "lessonIds": [
+        "ES-C41-creer",
+        "ES-C41-asi-que",
+        "ES-C41-deber",
+        "ES-C41-explicar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch41.txt",
+      "json": "spanish/narration/ch41.json",
+      "textHash": "fnv1a64:cf2b639c3ae23d4e",
+      "jsonHash": "fnv1a64:9a2700c2d2904ab3"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:fe3d3298ecc5bc3a",

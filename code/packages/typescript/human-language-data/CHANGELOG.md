@@ -4,6 +4,156 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — `taughtWords` stripped any short word, and that masked a second bug
+
+A headword carries its article — *el pan*, *la casa* — and a body saying *bebo agua*
+is using the same word, so the bare noun has to match too. The rule that did this
+stripped **any leading word of three characters or fewer**.
+
+A census of the corpus's own headwords shows what that meant: the rule fired on
+**227 of 1,453 lessons** (247 headword parts), and only **49 lessons** (64 parts)
+actually begin with an article. It was registering
+
+- `llamo` as taught by *me llamo*, `favor` by *por favor*, `dia` by *bom dia*,
+- `piace` by *mi piace*, `heiße…` by *ich heiße…*, `wiedersehen` by *auf wiedersehen*,
+- and the night- and afternoon-word of every ശുഭ / शुभ / శుభ / ಶುಭ greeting across
+  Malayalam, Hindi, Telugu and Kannada — because all those openers are three
+  characters.
+
+The rule is now an **allowlist of real definite articles, per language**, taken from
+that census rather than from a length guess. Two deliberate exclusions: Spanish
+**`lo`** (it *is* a neuter article, but the corpus's only `lo `-headword is *lo
+siento*, where it is a pronoun) and Italian **`a`** (*a domani*, *a presto* are
+prepositions). A track absent from the map never has anything stripped, which is right
+for Latin, Arabic, the Indic tracks and every other language whose headwords carry no
+article — Arabic's `ال` is prefixed without a space, so neither rule ever reached it.
+
+### …and the second bug, which only became visible once the first was fixed
+
+The bad strip had been seeding each lesson's own word set with the stripped tail, which
+incidentally stopped it reporting itself. Removing the strip removed that accident, and
+**four lessons began being reported for a word sitting in their own headword** —
+`مع السلامة` for `السلامة`, `bom dia` for `dia` — which is exactly what this module's
+docstring says must not happen.
+
+`ownHeadwordTokens` now does it deliberately, and completely. The accident only ever
+covered the tail after the first word, so 45 self-references it had never caught are
+gone too; every one was verified to be a token of the reporting lesson's own headword.
+
+**`forwardReferences`: 524 → 443, and none of the 81 was a real finding.** What remains
+is a claim about the corpus rather than about the matcher.
+
+**The workaround this forced is removed.** Spanish chapter 41's connective lesson had
+been renamed from `así que` to `así` purely to dodge the bug — `así` is three
+characters, so `que` registered as first taught there and flagged ten earlier lessons.
+The true headword is restored, and the full result set is byte-identical either way.
+
+Four unit tests pin the behaviour. Three of them fail if the length rule comes back;
+the fourth asserts the *positive* case — that `el pan` still registers `pan` — and
+fails if `taughtWords` returns nothing. Both directions were checked by stubbing.
+
+### Added — coverage assertions for the book manifest (HL-C50)
+
+The Spanish book was printing chapter 38 twice and dropping chapter 40, and **every
+check passed** while it did. That defect is fixed; these are the assertions that would
+have caught it, plus an audit confirming no other track carries the same drift.
+
+The gap was structural. `check:books` compares each **declared** target against what
+the generator produces, so a manifest declaring the wrong chapter round-trips
+perfectly. `titleDrift` stayed 0 because each file took its title from its own
+(correct) target. Narration and modality read the corpus directly and never consult
+the manifest. Nothing asked the coverage question: *do the declarations line up with
+the corpus?*
+
+Five assertions now do, in `book-cli.test.ts`'s existing manifest block:
+
+1. **No chapter number declared twice in a track** — the drift's direct signature.
+2. **Every filename agrees with its declared chapter** — `ch39-*.tex` must not be
+   declared as chapter 38. The cheapest tripwire, and it would have fired the instant
+   the drift was written.
+3. **Every declaration stays inside its own track's directory** — a target writing
+   into another track's folder passes every other check while silently adding a
+   chapter to a book nobody edited.
+4. **No two declarations write the same path** — the loser vanishes silently.
+5. **Every ledgered chapter is `\input` into its book**, not merely present on disk.
+   "Reaches a file" is the weaker claim, and the weaker claim is what let the original
+   bug through in spirit.
+
+**They run over `targets` and `handwritten` together**, which matters more than it
+sounds: the manifest's `handwritten[]` array holds 105 of the 452 declarations, and the
+identical drift there was invisible to every test in the package. Keeping the two
+halves apart is what allowed that.
+
+Each assertion was proven to fire before being trusted. Reintroducing the exact
+Spanish drift trips three; the same drift in `handwritten[]` trips two; a target
+escaping its track trips two; deleting a declaration trips two; and removing an
+`\input` while leaving the file on disk trips the fifth alone.
+
+**Audit result: no other track is affected.** Across all 22 — and across both arrays —
+there are no duplicate declarations, no filename/chapter mismatches, no path
+collisions, and no ledgered chapter missing from its book. Seven chapters have no
+generation target (hindi 1–2, latin 1, persian 2, russian 2, tamil 1, urdu 2); all
+seven are hand-authored, declared in `handwritten[]`, and `\input` into their books.
+
+### Added — Spanish chapter 41, the second B1 rung (SPINE-GIVE-REASONS)
+
+**"Saying Why"** — four lessons, one concept each, etymology in every one, ending in
+a four-move explanation the reader can build in either direction.
+
+| lesson | concept | what is new |
+|---|---|---|
+| `ES-C41-creer` | OPINION-I-THINK | stating an opinion, against `pensar`'s weighing |
+| `ES-C41-asi-que` | CONNECTIVE-SO | the forward arrow, where `porque` points back |
+| `ES-C41-deber` | MODAL-SHOULD | obligation, from a word that means *to owe* |
+| `ES-C41-explicar` | EXPLANATION-GIVE | the synthesis: opinion, cause, consequence, obligation |
+
+Spanish now realizes **two** of the seventeen B1–C2 nodes. `attained` is still null.
+
+The chapter-38 review's four failure classes were each checked for up front, and three
+held: nothing here re-teaches owned material (`creer`, `deber`, `explicar`, `así` and
+`entonces` appear nowhere else in the track), every word in the payoff is taught, and
+the book wiring — target, `\input`, generated `.tex` — went in with the chapter rather
+than after it.
+
+### Note — the fourth class did not hold: five etymological errors
+
+Same shape as chapter 38's: **right family, wrong route or wrong strength.**
+
+- *"`así` ← Latin **`ad sīc`**"* — the weakest of four proposals. The DLE now gives
+  plain `sīc`; the `a-` is a Romance accretion, on the pattern of *apenas*, *afuera*.
+- *"`*ḱred-` **is** the heart word"* — traditional but **disputed**: the heart root is
+  `*ḱḗr`, never `*ḱred-`. The compound is secure; the identification is not. Now hedged
+  in the lesson rather than asserted, and the recall question asks *why* to hedge.
+- *"`endeavour` **reached English** via French `devoir`"* — no French word `endeavour`
+  ever existed. English **calqued** `mettre en devoir` as *put in dever*, which fused.
+- *"**explicit**, **application** — straight from Latin"* — both came through French.
+- *"`comply` from `plicāre`"* — it is from `complēre`, "to fill", a different PIE root
+  that the French verb ending disguises. Exactly the trap the lesson otherwise teaches.
+
+### Fixed — three defects that reached the reader, and one the TTS would have spoken
+
+- **`explicar` was said to "take the same shape as `contar`"** — but chapter 38 teaches
+  `contar` as an o→ue stem-changer, three chapters earlier. `explicar` is plain `-ar`.
+  It now points at `hablar` and says explicitly that `contar` does the other thing.
+- **`No creo que …`** sat bare between two indicative rows. Negating `creer` takes the
+  **subjunctive** — *no creo que llueva* — which chapter 18 already taught. Completed
+  and tied back rather than dropped.
+- **`pr-cluster`** was tagged on the *pl* of `explicar`; that tag is defined elsewhere
+  as *pr* with a tapped *r*. Now `l-clear`.
+- **A Greek capital beta (U+0392)** had crept into `deber`'s pronunciation hint, and
+  propagated into `narration/ch41.txt` — a file fed to text-to-speech.
+
+### Changed — a headword narrowed to stop nine false positives
+
+The connective lesson was first written with the multi-word headword **`así que`**.
+`taughtWords` strips a leading word of ≤3 characters — a heuristic meant for articles —
+so it registered **`que`** as first taught at chapter 41 and flagged all nine earlier
+lessons containing it. `que` is genuinely taught at chapter 7.
+
+The headword is now **`así`**, the only word that is actually new, with the gloss
+carrying the `que`. `forwardReferences` holds flat at 524. The loader heuristic is the
+real bug and is recorded as such in the pin comment.
+
 ### Added — the first content above A2: Spanish chapter 38 (HL09, SPINE-NARRATE-EVENTS)
 
 The B1–C2 spine landed with all 17 nodes declared as gaps in all 22 tracks. This

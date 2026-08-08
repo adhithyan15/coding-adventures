@@ -15,7 +15,7 @@ import {
   handwrittenBookChapters,
   runBookGeneration,
 } from "../src/book-cli.js";
-import { defaultCurriculumRoot } from "../src/loader.js";
+import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
 
 const roots: string[] = [];
 
@@ -303,5 +303,122 @@ describe("hand-written chapters", () => {
         );
       }
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Does the manifest COVER the corpus?
+//
+// The book is manifest-driven; narration and modality are corpus-driven. That
+// asymmetry hid a real defect. `core/book-generation.json`'s Spanish entries drifted
+// one out of step — the target whose `output` was `ch39-bring-get-play-meet.tex`
+// declared `"chapter": 38`, and `ch40-wait-answer-buy.tex` declared 39, with nothing
+// declaring 40. The book printed chapter 38 TWICE (ch39's file came out
+// content-identical to ch38's, same canonical-source-hash) and dropped chapter 40.
+//
+// Every check passed. `check:books` verifies each DECLARED target round-trips, so a
+// manifest naming the wrong chapter round-trips perfectly. `titleDrift` stayed 0
+// because each file took its title from its own (correct) target. Nothing asked
+// whether the declarations line up with the corpus at all.
+//
+// These run over targets AND handwritten together. Keeping them apart is what let the
+// handwritten half — 105 of the 452 declarations — go unchecked for the same class.
+// ---------------------------------------------------------------------------
+describe("the manifest covers the corpus", () => {
+  const root = defaultCurriculumRoot();
+  const config = JSON.parse(
+    readFileSync(join(root, "core", "book-generation.json"), "utf8"),
+  ) as {
+    targets: { language: string; chapter: number; output: string }[];
+    handwritten: { language: string; chapter: number; output: string }[];
+  };
+  const declared = [...config.targets, ...(config.handwritten ?? [])];
+
+  /** `ch38-narrating.tex` -> 38. Appendices parse to null and are skipped. */
+  function chapterInFilename(output: string): number | null {
+    const match = /^ch0*(\d+)/.exec(output.split("/").pop() ?? "");
+    return match ? Number(match[1]) : null;
+  }
+
+  it("never declares one chapter number twice in a track", () => {
+    // The drift's direct signature: two declarations claiming chapter 38.
+    const seen = new Map<string, string>();
+    const offenders: string[] = [];
+    for (const entry of declared) {
+      const key = `${entry.language}#${entry.chapter}`;
+      const previous = seen.get(key);
+      if (previous) offenders.push(`${key}: ${previous} and ${entry.output}`);
+      seen.set(key, entry.output);
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  it("gives every declaration a filename that agrees with its chapter number", () => {
+    // The cheapest tripwire, and it would have fired the instant the drift was
+    // written: `ch39-*.tex` must not be declared as chapter 38. The filename is what
+    // a maintainer reads; the number is what the generator obeys.
+    const offenders = declared
+      .filter((entry) => {
+        const inName = chapterInFilename(entry.output);
+        return inName !== null && inName !== entry.chapter;
+      })
+      .map((entry) => `${entry.language}: ${entry.output} declares chapter ${entry.chapter}`);
+    expect(offenders).toEqual([]);
+  });
+
+  it("keeps every declaration inside its own track's directory", () => {
+    // A target writing into another track's folder passes every other check while
+    // silently adding a chapter to a book nobody edited.
+    const offenders = declared
+      .filter((entry) => !entry.output.startsWith(`${entry.language}/book/chapters/`))
+      .map((entry) => `${entry.language} ch${entry.chapter} -> ${entry.output}`);
+    expect(offenders).toEqual([]);
+  });
+
+  it("writes every declaration to a distinct file", () => {
+    // Two declarations on one path means whichever runs last silently wins.
+    const seen = new Map<string, string>();
+    const offenders: string[] = [];
+    for (const entry of declared) {
+      const previous = seen.get(entry.output);
+      if (previous) offenders.push(`${entry.output}: ${previous} and ${entry.language} ch${entry.chapter}`);
+      seen.set(entry.output, `${entry.language} ch${entry.chapter}`);
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  it("puts every ledgered chapter into its book, not merely into a file", () => {
+    // "Reaches a file" is the weaker claim, and the weaker claim is what let the
+    // original bug through in spirit: a chapter can have a declaration, and a file on
+    // disk, and still be invisible because `book.tex` never \input's it.
+    const byLanguage = new Map<string, Set<number>>();
+    for (const entry of declared) {
+      const set = byLanguage.get(entry.language) ?? new Set<number>();
+      set.add(entry.chapter);
+      byLanguage.set(entry.language, set);
+    }
+    const inputs = new Map<string, string>();
+    const offenders: string[] = [];
+    for (const track of loadTrackChapters()) {
+      const language = track.language;
+      if (!inputs.has(language)) {
+        inputs.set(language, readFileSync(join(root, language, "book", "book.tex"), "utf8"));
+      }
+      const bookTex = inputs.get(language)!;
+      for (const entry of track.chapters) {
+        const match = declared.find(
+          (d) => d.language === language && d.chapter === entry.chapter,
+        );
+        if (!match) {
+          offenders.push(`${language} ch${entry.chapter}: no declaration`);
+          continue;
+        }
+        const stem = (match.output.split("/").pop() ?? "").replace(/\.tex$/, "");
+        if (!bookTex.includes(`\\input{chapters/${stem}}`)) {
+          offenders.push(`${language} ch${entry.chapter}: ${stem} is never \\input into book.tex`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
   });
 });
