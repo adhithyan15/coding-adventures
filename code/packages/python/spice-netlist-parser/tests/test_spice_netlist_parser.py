@@ -1695,6 +1695,29 @@ def test_rejects_invalid_jfet_nominal_temperature(alias: str, value: str) -> Non
         parse_netlist(f".model fast NJF({alias}={value})")
 
 
+@pytest.mark.parametrize(
+    ("value", "expected"), [("-2.5", -2.5), ("0", 0.0), ("1.75", 1.75)]
+)
+def test_parse_jfet_mobility_temperature_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(BEX={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Bex == expected
+
+
+def test_rejects_non_finite_jfet_mobility_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="JFET BEX must be finite"):
+        parse_netlist(".model fast NJF(BEX=1e999)")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """
