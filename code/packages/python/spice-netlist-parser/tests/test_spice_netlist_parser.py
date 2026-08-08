@@ -1318,6 +1318,28 @@ def test_rejects_non_finite_bjt_temperature_exponent() -> None:
         parse_netlist(".model fast NPN(XTI=1e999)")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("1.2", 1.2)])
+def test_parse_bjt_energy_gap(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NPN(EG={value})
+Q1 col base emit fast
+"""
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Eg == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_bjt_energy_gap(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT EG must be finite and positive"
+    ):
+        parse_netlist(f".model fast NPN(EG={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
