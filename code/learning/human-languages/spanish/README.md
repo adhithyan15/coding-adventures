@@ -68,14 +68,14 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-Chapters 1–6, 19–33 and 34–35 are generated from the same canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–37 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
 handwritten LaTeX during the staged one-source migration. `units/` is legacy
 source material, not a second canonical copy. The complete PDF builds without
 missing glyphs, layout-box warnings, bookmark warnings, duplicate destinations,
-LaTeX warnings, or font fallbacks — 246 pages as of Chapters 34–35. (Length is
+LaTeX warnings, or font fallbacks — 262 pages as of Chapters 36–37. (Length is
 never a cost here, so the page count is expected to rise with every tranche.)
 
 ## Progress
@@ -146,10 +146,22 @@ exactly where a word needs it:
   *preguntar* and *pedir* → ayudar (← *adiūtāre*: literally English *aid*) →
   **gustar**, which runs backwards — *me gusta el libro* is "the book pleases
   me", so the verb agrees with the thing, not with you.
+- **Chapter 36 — Hearing, Sleeping, Walking, Running**: oír (← *audīre*, and
+  *obey* ← *ob-* + *audīre*), with *escuchar* as the deliberate half of
+  listening → dormir (← *dormīre*), whose *o→ue* is the boot's other vowel →
+  caminar (← *el camino* ← Gaulish *camminus*), beside *andar*, whose origin is
+  genuinely disputed → correr (← *currere*), whose family reaches *car* through
+  Celtic.
+- **Chapter 37 — Opening, Closing, Sitting Down, Standing Up**: abrir (←
+  *aperīre*), with the irregular participle *abierto* → cerrar (← *serāre*, the
+  **bar across a door** — *not* *claudere*, which English kept and Spanish gave
+  up) → sentarse (← \**sedentāre*) → levantarse (← \**levantāre*). Both
+  body-position verbs are reflexive and both were built from a Latin present
+  participle; standing as a *state* is **estar de pie**, not a verb at all.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 35 chapters are authored and in the book (246 pages);
-Chapters 1–6, 19–33 and 34–35 are generated from canonical lessons.** Lessons are
+to its root. **All 37 chapters are authored and in the book (262 pages);
+Chapters 1–6, 19–33 and 34–37 are generated from canonical lessons.** Lessons are
 named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book
 (which LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
 renumbers anything. - **Pronunciation**:
@@ -195,7 +207,7 @@ cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
 Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not
 committed; it is regenerated from source like any other build artefact.
 
-Chapters 1–6, 19–33 and 34–35 are generated from the same canonical lesson ASTs
+Chapters 1–6, 19–33 and 34–37 are generated from the same canonical lesson ASTs
 consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
 rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
@@ -214,8 +226,8 @@ entry says, in the reader's own voice, what finishing that chapter lets them
 knowledge atoms that payoff exercises. It is authored intent, not a derived
 cache — no validator may rewrite it.
 
-All 23 Spanish chapters that own a `core/book-generation.json` target are
-authored: **1–6**, **19–33** and **34–35**. Chapters **7–18** are deliberately
+All 25 Spanish chapters that own a `core/book-generation.json` target are
+authored: **1–6**, **19–33** and **34–37**. Chapters **7–18** are deliberately
 absent.
 Their lessons are still schema v1 with no declared `practises.knowledge`, so
 there is no honest payoff to point at; a stub would destroy the very signal the
@@ -223,7 +235,7 @@ HL05 gap report exists to measure. That absence is tracked debt, and it clears
 when those chapters migrate to schema v2.
 
 Chapters 1–6 end in a terminal `practice-mix` lesson, which is the payoff.
-Chapters 19–35 have no practice lesson, so the payoff is the chapter's last
+Chapters 19–37 have no practice lesson, so the payoff is the chapter's last
 lesson by sequence — the one carrying its recombination and wrap-up recall.
 
 ## Files

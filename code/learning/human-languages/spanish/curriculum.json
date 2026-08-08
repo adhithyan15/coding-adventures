@@ -456,6 +456,32 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-032",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C36-oir",
+        "ES-C36-dormir",
+        "ES-C36-caminar",
+        "ES-C36-correr"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-033",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C37-abrir",
+        "ES-C37-cerrar",
+        "ES-C37-sentarse",
+        "ES-C37-levantarse"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -584,30 +610,24 @@
         "ES-PATH-028",
         "ES-PATH-029",
         "ES-PATH-030",
-        "ES-PATH-031"
+        "ES-PATH-031",
+        "ES-PATH-032",
+        "ES-PATH-033"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-SEE",
-        "VERB-HEAR",
         "VERB-KNOW",
         "VERB-LEARN",
         "VERB-GIVE",
         "VERB-BRING",
         "VERB-GET",
-        "VERB-SLEEP",
         "VERB-PLAY",
-        "VERB-WALK",
-        "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-BUY"
       ],
       "relocates": {
         "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",
