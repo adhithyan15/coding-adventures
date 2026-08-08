@@ -58,8 +58,33 @@ you can read straight through.
   *kām karvũ*), and **મને ગુજરાતી ગમે છે** has no room for *hũ* at all — *gamvũ*
   descends from *gamyate*, the **passive** of *gam-* "to go", so it was born
   without a doer.
+- **Chapter 10 — Water, Tea, Milk, and Bread** ([`lessons/GU-C10-*`](./lessons/)):
+  pāṇī, chā, dūdh, roṭlī — the track's first everyday nouns, and its first
+  polite-request pattern, **[item], મહેરબાની કરીને**. *Pāṇī* and *dūdh* are
+  inherited straight from Sanskrit with confirmed PIE roots; *chā* is a loan
+  that took the overland route out of China (the same route as Hindi *chai*
+  and Russian *chai*, as opposed to English *tea*'s sea route); *roṭlī* is
+  inherited too, but its own root is where the standard dictionaries stop
+  agreeing. *Pāṇī* is also this track's first noun-gender exception: neuter
+  despite ending in **-ī**.
+- **Chapter 11 — Friend and Family** ([`lessons/GU-C11-*`](./lessons/)):
+  mitra, kuṭumb, bhāī, bahen — friend, family, brother, sister. *Bhāī* is
+  English *brother*'s unbroken cousin; *bahen* is **not** *sister*'s — it
+  comes from a different Sanskrit word, disputedly built on *bhaga*, "a
+  share." *Kuṭumb* was taken up whole from Sanskrit rather than worn down
+  (Gujarati's *tatsama* vs. *tadbhava* distinction), and Sanskrit's own
+  *kuṭumba* is itself thought to be a Dravidian loan. *Mitra* and Chapter 10's
+  **મહેરબાની** turn out to share a root three chapters apart.
+- **Chapter 12 — Eye, Ear, Mouth, and Nose** ([`lessons/GU-C12-*`](./lessons/)):
+  āṅkh, kān, moḍhũ, nāk — completing the face. *Āṅkh* and *nāk* are unbroken
+  cousins of English *eye* and *nose*; *kān*'s own root is disputed among
+  Sanskrit scholars, and its gender shifted from Sanskrit masculine to
+  Gujarati feminine. *Moḍhũ* is the clearest example yet of the nasalized
+  **-ũ** neuter tell — the same ending every **-વું** verb infinitive wears —
+  while *nāk* shows a neuter noun that does not carry it, and *āṅkh*'s medial
+  nasal shows the same mark doing a completely different, non-grammatical job.
 
-Chapters 1–9 are in the book.
+Chapters 1–12 are in the book.
 
 ---
 
@@ -109,6 +134,31 @@ lessons rescue every one of the twelve Gujarati atoms that had been introduced
 and never practised again, at the cost of three new ones in the final lesson:
 the track moves from **12 orphans of 24 atoms** to **3 of 44**.
 
+- **Chapter 10** — *"I can politely ask for water, tea, milk, or bread in
+  Gujarati, name which of the four is a loanword and which have no settled
+  root beyond Sanskrit, and explain why a word ending in -ī is not
+  automatically feminine."* Payoff: [`GU-C10-rotli`](./lessons/GU-C10-rotli.md),
+  a production task. Assesses **11 of the chapter's 11** atoms.
+- **Chapter 11** — *"I can name a friend, a family, a brother, and a sister
+  in Gujarati, explain which of these words was inherited whole from
+  Sanskrit rather than worn down by sound change, and say which sibling
+  word is genuinely a cousin of its English counterpart and which is not."*
+  Payoff: [`GU-C11-bahen`](./lessons/GU-C11-bahen.md), a production task.
+  Assesses **9 of the chapter's 9** atoms.
+- **Chapter 12** — *"I can name the eye, ear, mouth, and nose in Gujarati,
+  tell a nasal that only marks a sound from one that marks the neuter
+  gender, and say which two of the four are unbroken cousins of their
+  English counterparts."* Payoff: [`GU-C12-naak`](./lessons/GU-C12-naak.md),
+  a production task. Assesses **10 of the chapter's 10** atoms.
+
+Chapters 10–12 are the pre-A1 vocabulary tranche (twelve everyday nouns; see
+CHANGELOG). All three payoffs close over their own chapter's atoms at 1.00
+representativeness. Each also reaches back at least one chapter beyond its
+own: chapter 10's payoff rescues chapter 6's `GU-SCRIPT-HEADLESS-CLUE`;
+chapter 11's rescues chapter 6's `GU-HISTORY-LEARNED-RESTORATION`; chapter
+12's rescues chapter 8's `GU-SCRIPT-ANUSVARA-MEDIAL` and chapter 7's
+`GU-FORM-JAVU-JOVU-CONTRAST`, both never revisited since they were flagged.
+
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
@@ -120,9 +170,10 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gujarati font
 (`../../_fonts/NotoSansGujarati-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gujarati runs use that font while section bookmarks use the lessons'
 Latin romanization.
-The nine-chapter build is warning-clean — 54 pages, zero `Missing character`,
-zero undefined references — and its PDF outline preserves readable Gujarati in
-the handwritten chapters alongside generated bookmark-safe romanization.
+The twelve-chapter build is warning-clean — 76 pages, zero `Missing character`,
+zero undefined references, zero duplicate labels — and its PDF outline
+preserves readable Gujarati in the handwritten chapters alongside generated
+bookmark-safe romanization.
 
 Two font rules the Gujarati track has to obey, both verified by compiling rather
 than assumed. **Punctuation must stay outside the `\gu{}` span**: Noto Sans
@@ -131,14 +182,21 @@ containing one emits `Missing character`. The book generator groups only
 characters whose Unicode script is Gujarati, so it gets this right by
 construction — but a *space* is fine, which is why `\gu{મદદ કરવી}` is safe.
 **Non-Gujarati scripts in lesson prose are not covered by `\gu{}` at all** and
-fall through to Latin Modern Roman, which has no Arabic or Devanagari: source
-links to Arabic *madad* and Sanskrit *gamyate* are titled in romanization for
-exactly this reason. Latin Modern Roman also lacks `ʰ`, `ʷ`, `ḱ` and the
-subscript digits, so PIE roots are written in the plain Pokorny-style ASCII the
-rest of the corpus uses (`*kwel-`, `*bheudh-`, `*wekw-`, `*prek-`, `*gwem-`).
-The nasalised vowels Gujarati romanization needs — `ũ`, `ĩ`, `ã` — are declared
-in [`book/preamble.tex`](./book/preamble.tex) via `newunicodechar`, and `ā̃`
-(as in *pā̃ch*, *vā̃chvũ*) renders without one.
+fall through to Latin Modern Roman, which has no Arabic, Devanagari, Chinese or
+Greek: source links to Sanskrit headwords (*karṇa*, *mukha*, *nas*, *akshi*,
+*bhagini*, *kutumba*, *rotika*) are titled in romanization, the Chinese
+character for tea was dropped from Chapter 10's prose in favor of its
+romanization *chá*, and Avestan *Miθra* is written *Mithra* — all three caught
+by a forced compile before commit, not assumed safe. Latin Modern Roman
+**does** now render `ʰ`, `ʷ`, `ḱ` and the subscript digits `₁₂₃` (via the
+corpus-wide preamble additions since Chapters 8–9 were written), which is why
+Chapters 10–12 write PIE roots in precise notation (`*peh₃(i)-`, `*h₃ekʷ-`,
+`*bʰréh₂tēr`, `*swésōr`, `*dʰewgʰ-`, `*nehas-`) rather than the plain
+Pokorny-style ASCII Chapters 7–9 used (`*kwel-`, `*bheudh-`, `*wekw-`,
+`*prek-`, `*gwem-`) — both styles compile clean, and the difference is simply
+which became available first. The nasalised vowels Gujarati romanization needs
+— `ũ`, `ĩ`, `ã` — are declared in [`book/preamble.tex`](./book/preamble.tex)
+via `newunicodechar`, and `ā̃` (as in *pā̃ch*, *vā̃chvũ*) renders without one.
 
 ## Files
 

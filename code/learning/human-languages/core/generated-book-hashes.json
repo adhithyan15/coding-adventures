@@ -816,6 +816,42 @@
       "tex": "gujarati/book/chapters/ch09-doing-verbs.tex"
     },
     {
+      "language": "gujarati",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:823cf9fdd857c4cd",
+      "lessonIds": [
+        "GU-C10-paani",
+        "GU-C10-chaa",
+        "GU-C10-dudh",
+        "GU-C10-rotli"
+      ],
+      "tex": "gujarati/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:003c74b8365059ad",
+      "lessonIds": [
+        "GU-C11-mitra",
+        "GU-C11-kutumb",
+        "GU-C11-bhai",
+        "GU-C11-bahen"
+      ],
+      "tex": "gujarati/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:29b53fffefa78e96",
+      "lessonIds": [
+        "GU-C12-aankh",
+        "GU-C12-kaan",
+        "GU-C12-modhu",
+        "GU-C12-naak"
+      ],
+      "tex": "gujarati/book/chapters/ch12-face-parts.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "sourceHash": "fnv1a64:ef8184e4fd309678",
