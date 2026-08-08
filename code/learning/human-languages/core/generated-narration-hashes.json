@@ -3746,6 +3746,39 @@
       "jsonHash": "fnv1a64:a650ca85c6e504a4"
     },
     {
+      "language": "latin",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:4dbf15871e17fae6",
+      "lessonIds": [
+        "LA-C42-fero",
+        "LA-C42-accipio",
+        "LA-C42-ludo",
+        "LA-C42-exspecto"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "latin/narration/ch42.txt",
+      "json": "latin/narration/ch42.json",
+      "textHash": "fnv1a64:d683fa407a37fa30",
+      "jsonHash": "fnv1a64:07d5e2e31f76219f"
+    },
+    {
+      "language": "latin",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:97110fb85bc08d09",
+      "lessonIds": [
+        "LA-C43-respondeo",
+        "LA-C43-convenio",
+        "LA-C43-emo"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "latin/narration/ch43.txt",
+      "json": "latin/narration/ch43.json",
+      "textHash": "fnv1a64:22fd6aa858142b5b",
+      "jsonHash": "fnv1a64:cc96daf5d124abd4"
+    },
+    {
       "language": "malayalam",
       "chapter": 1,
       "sourceHash": "fnv1a64:bfb1a1a7a0f1d6f8",
