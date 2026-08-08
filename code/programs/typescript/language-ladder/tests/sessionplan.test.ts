@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import type { Lesson } from "../src/lessons";
-import { loadLessons } from "../src/lessons";
+import { REAL_LESSONS } from "./real-lessons.ts";
+
+const loadLessons = () => REAL_LESSONS;
 import { planSession, initProgress, applyAnswer } from "../src/sessionplan";
 import { cellKey, cellWeight, type GridCell } from "../src/quiz";
 

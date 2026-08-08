@@ -28,17 +28,20 @@ import {
 import type { CompiledLessonActivity } from "@coding-adventures/human-language-data/src/types.ts";
 
 /**
- * Every lesson markdown file, as raw text, keyed by path. Vite inlines these at
- * build time — `eager` so there is no async waterfall on first paint, and
- * `?raw` because we want the source, not a module.
+ * Every lesson markdown file, as a lazy raw-text loader keyed by path.
+ *
+ * Keeping this glob lazy is deliberate: the written corpus is several
+ * megabytes and grows every week. Learn mode only needs the current frontier,
+ * while the corpus-wide Lessons and Concepts views can opt into the complete
+ * set. `?raw` means the resolved module is still the authored Markdown source.
  *
  * The glob is relative to THIS file; `../../../../learning/...` is the same
  * path `data.ts` already uses to reach the curriculum.
  */
-const LESSON_SOURCES = import.meta.glob(
+const LESSON_SOURCE_LOADERS = import.meta.glob(
   "../../../../learning/human-languages/*/lessons/*.md",
-  { query: "?raw", import: "default", eager: true },
-) as Record<string, string>;
+  { query: "?raw", import: "default" },
+) as Record<string, () => Promise<string>>;
 
 /** A lesson, ready for the UI and the scheduler. */
 export interface Lesson {
@@ -89,6 +92,12 @@ export interface Lesson {
  */
 export function languageFromPath(path: string): string {
   const match = /\/human-languages\/([^/]+)\/lessons\//.exec(path);
+  return match?.[1] ?? "";
+}
+
+/** Stable lesson id encoded in the canonical `<id>.md` filename. */
+export function lessonIdFromPath(path: string): string {
+  const match = /\/lessons\/([^/]+)\.md$/.exec(path);
   return match?.[1] ?? "";
 }
 
@@ -150,7 +159,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
  * it for saved data.
  */
 export function loadLessons(
-  sources: Record<string, string> = LESSON_SOURCES,
+  sources: Record<string, string>,
 ): Lesson[] {
   const out: Lesson[] = [];
   for (const [path, source] of Object.entries(sources)) {
@@ -160,6 +169,33 @@ export function loadLessons(
     if (lesson) out.push(lesson);
   }
   return out.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
+
+/** IDs available in the bundled corpus without downloading lesson bodies. */
+export function bundledLessonIds(): string[] {
+  return Object.keys(LESSON_SOURCE_LOADERS)
+    .map(lessonIdFromPath)
+    .filter((id) => id !== "")
+    .sort();
+}
+
+/**
+ * Load and parse either the requested lesson IDs or the complete corpus.
+ * Unknown ids simply produce no lesson, so callers may request a frontier
+ * defensively while the parser still verifies the frontmatter id.
+ */
+export async function loadBundledLessons(
+  lessonIds?: Iterable<string>,
+): Promise<Lesson[]> {
+  const wanted = lessonIds ? new Set(lessonIds) : null;
+  const entries = Object.entries(LESSON_SOURCE_LOADERS).filter(([path]) => {
+    const id = lessonIdFromPath(path);
+    return id !== "" && (wanted === null || wanted.has(id));
+  });
+  const loaded = await Promise.all(
+    entries.map(async ([path, load]) => [path, await load()] as const),
+  );
+  return loadLessons(Object.fromEntries(loaded));
 }
 
 /** The distinct track names present, sorted. */

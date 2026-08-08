@@ -15,7 +15,7 @@ one idea in every language that has it, side by side.
 
 The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
 plus the stricter [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md)
-progression contract. `curriculum.ts` loads all 20 `curriculum.json` maps and
+progression contract. `curriculum.ts` loads every active `curriculum.json` map and
 the pure frontier planner returns exactly one safe next lesson per selected
 language. A language advances independently; paths are grouped only when their
 current lessons share a spine ability. The picker includes every track,

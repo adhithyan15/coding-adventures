@@ -40,7 +40,13 @@ import {
 import { buildSyllableMatrix } from "./matrix.ts";
 import { crossScriptSiblings, type Sibling } from "./siblings.ts";
 import type { Letter } from "./types.ts";
-import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
+import {
+  bundledLessonIds,
+  indicesByLanguage,
+  loadBundledLessons,
+  nextDue,
+  type Lesson,
+} from "./lessons.ts";
 import {
   applyAnswer,
   type Progress,
@@ -130,11 +136,12 @@ let mode: Mode = "learn";
 // scheduler.ts is generic over a numeric index and never cared what an item is.
 // The one new thing is that this state SURVIVES: it is keyed by lesson id and
 // written to localStorage (see progress.ts), so the app finally remembers you.
-const LESSONS = loadLessons();
-const LESSON_IDS = LESSONS.map((l) => l.id);
 const REVIEW_STORAGE = browserStorage();
+const BUNDLED_LESSON_IDS = new Set(bundledLessonIds());
+let LESSONS: Lesson[] = [];
+let LESSON_IDS: string[] = [];
 const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
-  LESSONS.some((lesson) => lesson.language === language),
+  LANGUAGE_CURRICULA.some((curriculum) => curriculum.language === language),
 );
 let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 // Consolidation lessons — chapter practice, mixed drills, dialogues, reviews —
@@ -144,14 +151,12 @@ let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 // these out of the teaching spine — the learner should walk real words and
 // grammar, one concept at a time, not land on "(practice)".
 const CONSOLIDATION_TYPES = new Set(["practice", "practice-mix", "review"]);
-const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
+let CONCEPT_LESSONS: Lesson[] = [];
 const SHARED_CONCEPTS = new Set(SPINE_CONCEPTS);
 const ALL_MAPPED_LESSON_IDS = mappedLessonIds(LANGUAGE_CURRICULA.map((item) => item.language));
 // Learn mode is now admitted by the explicit per-track maps. Namespaced and
 // not-yet-mapped legacy material remains available in Lessons mode.
-const MAPPED_SPINE_LESSONS = CONCEPT_LESSONS.filter(
-  (lesson) => ALL_MAPPED_LESSON_IDS.has(lesson.id) && SHARED_CONCEPTS.has(lesson.concept),
-);
+let MAPPED_SPINE_LESSONS: Lesson[] = [];
 
 // Script metadata is indexed once. A local map's explicit script extension,
 // rather than a global concept position, decides where its introduction appears.
@@ -175,7 +180,7 @@ const SCRIPTS_BY_ID = scriptsById(SCRIPTS);
 //
 // Look up a lesson's word by its cell so a logged confusion (stored as a cellKey)
 // can be shown as the actual word, not an opaque id.
-const LESSON_BY_ID = new Map(LESSONS.map((l) => [l.id, l]));
+let LESSON_BY_ID = new Map<string, Lesson>();
 // Restore the review's SRS state + answer log from localStorage so the quiz
 // remembers you between visits (reusing the same storage port progress.ts owns).
 // A missing, corrupt, or wrong-version blob restores as empty — never throws.
@@ -197,15 +202,13 @@ let resetArmed = false;
 // Constant for the page's lifetime: lesson indices grouped by language, and the
 // round-robin pool over those groups. Computing them once is why consecutive
 // reviews can walk across languages cheaply.
-const LESSON_GROUPS = indicesByLanguage(LESSONS);
-const LESSON_POOL = buildPool(LESSON_GROUPS.map((g) => g.length));
+let LESSON_GROUPS: number[][] = [];
+let LESSON_POOL: PoolEntry[] = [];
 
 // Cross-language cards: one concept, several languages. Built once — the join
 // walks every lesson, and neither the curriculum nor the taxonomy changes while
 // the page is open.
-const CONCEPT_CARDS: ConceptCard[] = crossLanguageConcepts(
-  datasetFromLessons(taxonomyJson as unknown as Taxonomy, LESSONS),
-);
+let CONCEPT_CARDS: ConceptCard[] = [];
 /** Which concept card is expanded; null = none. */
 let openConcept: string | null = null;
 let savedProgress = loadProgress(browserStorage());
@@ -215,6 +218,69 @@ let lessonIndex: number | null = null;
 let lessonRevealed = false;
 /** Rotating position in the interleaved order — see pickLesson(). */
 let lessonCursor = -1;
+let fullCorpusLoaded = false;
+let corpusLoading = true;
+let corpusError: string | null = null;
+
+/** Rebuild every derived lesson index after a lazy corpus tranche arrives. */
+function installLessons(incoming: readonly Lesson[]): void {
+  const merged = new Map(LESSONS.map((lesson) => [lesson.id, lesson]));
+  for (const lesson of incoming) merged.set(lesson.id, lesson);
+  LESSONS = [...merged.values()].sort((a, b) => a.id.localeCompare(b.id));
+  LESSON_IDS = LESSONS.map((lesson) => lesson.id);
+  CONCEPT_LESSONS = LESSONS.filter((lesson) => !CONSOLIDATION_TYPES.has(lesson.type));
+  MAPPED_SPINE_LESSONS = CONCEPT_LESSONS.filter(
+    (lesson) => ALL_MAPPED_LESSON_IDS.has(lesson.id) && SHARED_CONCEPTS.has(lesson.concept),
+  );
+  LESSON_BY_ID = new Map(LESSONS.map((lesson) => [lesson.id, lesson]));
+  LESSON_GROUPS = indicesByLanguage(LESSONS);
+  LESSON_POOL = buildPool(LESSON_GROUPS.map((group) => group.length));
+  CONCEPT_CARDS = crossLanguageConcepts(
+    datasetFromLessons(taxonomyJson as unknown as Taxonomy, LESSONS),
+  );
+  lessonSchedule = fromSaved(LESSON_IDS, savedProgress);
+  lessonIndex = null;
+  lessonCursor = -1;
+}
+
+/** Current Learn mode needs completed material plus one frontier per path. */
+function learnLessonIds(): Set<string> {
+  const ids = new Set<string>();
+  for (const completed of learnCompletion.values()) {
+    for (const id of completed) ids.add(id);
+  }
+  for (const step of mixedCurriculumFrontier(selectedLanguages, learnCompletion).steps) {
+    ids.add(step.lessonId);
+  }
+  return ids;
+}
+
+async function loadLearnCorpus(): Promise<void> {
+  const missing = [...learnLessonIds()].filter(
+    (id) => BUNDLED_LESSON_IDS.has(id) && !LESSON_BY_ID.has(id),
+  );
+  if (missing.length > 0) installLessons(await loadBundledLessons(missing));
+}
+
+async function loadFullCorpus(): Promise<void> {
+  if (fullCorpusLoaded) return;
+  installLessons(await loadBundledLessons());
+  fullCorpusLoaded = true;
+}
+
+async function refreshCorpus(load: () => Promise<void>): Promise<void> {
+  corpusLoading = true;
+  corpusError = null;
+  render();
+  try {
+    await load();
+  } catch (error) {
+    corpusError = error instanceof Error ? error.message : String(error);
+  } finally {
+    corpusLoading = false;
+    render();
+  }
+}
 
 /** Persist the current lesson schedule. Silent on failure — see progress.ts. */
 function persistLessons(): void {
@@ -316,14 +382,21 @@ function renderModeToggle(): HTMLElement {
     b.setAttribute("aria-pressed", String(m === mode));
     b.onclick = () => {
       if (mode === m) return;
-      mode = m;
-      if (mode === "practice") startPractice();
-      if (mode === "lessons") pickLesson();
-      render();
+      void activateMode(m);
     };
     wrap.appendChild(b);
   });
   return wrap;
+}
+
+async function activateMode(nextMode: Mode): Promise<void> {
+  mode = nextMode;
+  if ((mode === "lessons" || mode === "concepts") && !fullCorpusLoaded) {
+    await refreshCorpus(loadFullCorpus);
+  }
+  if (mode === "practice") startPractice();
+  if (mode === "lessons") pickLesson();
+  render();
 }
 
 /** In Practice, choose per-script drilling or all scripts interleaved. */
@@ -896,8 +969,7 @@ function renderLanguagePicker(): HTMLElement {
       learnNotice = null;
       reviewCell = null;
       lessonIndex = null;
-      pickLesson();
-      render();
+      void refreshCorpus(loadLearnCorpus);
     };
     const text = el("span", "");
     text.textContent = `${definition.name} · ${definition.script}`;
@@ -1050,7 +1122,7 @@ function finishFocusedCheck(step: FrontierStep): void {
   reviewOptions = [];
   reviewChosen = null;
   learnNotice = `${languageName(step.language)} passed focused retrieval; this lesson is now eligible for mixed review.`;
-  render();
+  void refreshCorpus(loadLearnCorpus);
 }
 
 function renderFocusedCheck(
@@ -1742,6 +1814,20 @@ function render(): void {
   const data = SCRIPTS[currentScript]!;
   app!.replaceChildren();
   app!.append(renderHeader());
+  if (corpusLoading) {
+    const loading = el("p", "muted corpus-status");
+    loading.textContent = fullCorpusLoaded
+      ? "Refreshing lessons…"
+      : "Loading the lessons needed for this view…";
+    app!.appendChild(loading);
+    return;
+  }
+  if (corpusError) {
+    const failure = el("p", "muted corpus-status");
+    failure.textContent = `Lessons could not be loaded: ${corpusError}`;
+    app!.appendChild(failure);
+    return;
+  }
   // The script tabs steer per-script work; hide them during a mixed session,
   // and in Lessons/Concepts modes, which span every language rather than one
   // script.
@@ -1953,4 +2039,4 @@ function renderDuctusSection(v: LetterView): HTMLElement {
   return holder;
 }
 
-render();
+void refreshCorpus(loadLearnCorpus);
