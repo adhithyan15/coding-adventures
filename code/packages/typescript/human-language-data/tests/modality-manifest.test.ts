@@ -792,16 +792,16 @@ describe("corpus regression", () => {
     // headline per-track number is the standing recommendation; until then, expect this
     // figure to rise whenever a non-Latin track authors honestly.
     expect(manifest.summary).toEqual({
-      // All four Spanish B1 lessons are ear-only, so the B1 pilot is fully drivable
-      // and nudges the whole-corpus figure from 66% to 67%.
-      totalLessons: 1449,
-      voice: 973,
+      // Both Spanish B1 chapters, 38 and 41, are entirely ear-only, so each is fully
+      // drivable. They are what moved the whole-corpus figure from 66% to 67%.
+      totalLessons: 1453,
+      voice: 977,
       sight: 423,
       pen: 53,
-      drivableLessons: 973,
+      drivableLessons: 977,
       drivablePercent: 67,
       trackCount: 22,
-      chapterCount: 451,
+      chapterCount: 452,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -810,8 +810,8 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 790,
-      fullyDrivableChapters: 306,
+      drivablePrefixTotal: 794,
+      fullyDrivableChapters: 307,
       unstartableChapters: 108,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,

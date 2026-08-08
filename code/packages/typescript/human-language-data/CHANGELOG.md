@@ -4,6 +4,82 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — the Spanish book was printing chapter 38 twice and dropping chapter 40
+
+Found while wiring chapter 41 next to it, and pre-existing on `main`. The Spanish
+entries in `core/book-generation.json` had drifted one out of step: the target whose
+`output` is `ch39-bring-get-play-meet.tex` declared `"chapter": 38`, and the one for
+`ch40-wait-answer-buy.tex` declared `"chapter": 39`. No target declared chapter 40.
+
+The consequences were invisible to every check. `ch39-bring-get-play-meet.tex` was
+**byte-identical in content** to `ch38-narrating.tex` — same `canonical-source-hash`,
+same ES-C38 lessons — with only the title and label swapped, so a reader got chapter
+38 twice under two names. Chapter 40's four lessons reached no book chapter at all.
+
+`check:books` passed throughout, because it validates the targets that are declared,
+not whether the declarations cover the corpus. `chapters.json` was correct the whole
+time; only the book manifest was wrong. Each of the four chapters now renders its own
+lessons under its own hash.
+
+### Added — Spanish chapter 41, the second B1 rung (SPINE-GIVE-REASONS)
+
+**"Saying Why"** — four lessons, one concept each, etymology in every one, ending in
+a four-move explanation the reader can build in either direction.
+
+| lesson | concept | what is new |
+|---|---|---|
+| `ES-C41-creer` | OPINION-I-THINK | stating an opinion, against `pensar`'s weighing |
+| `ES-C41-asi-que` | CONNECTIVE-SO | the forward arrow, where `porque` points back |
+| `ES-C41-deber` | MODAL-SHOULD | obligation, from a word that means *to owe* |
+| `ES-C41-explicar` | EXPLANATION-GIVE | the synthesis: opinion, cause, consequence, obligation |
+
+Spanish now realizes **two** of the seventeen B1–C2 nodes. `attained` is still null.
+
+The chapter-38 review's four failure classes were each checked for up front, and three
+held: nothing here re-teaches owned material (`creer`, `deber`, `explicar`, `así` and
+`entonces` appear nowhere else in the track), every word in the payoff is taught, and
+the book wiring — target, `\input`, generated `.tex` — went in with the chapter rather
+than after it.
+
+### Note — the fourth class did not hold: five etymological errors
+
+Same shape as chapter 38's: **right family, wrong route or wrong strength.**
+
+- *"`así` ← Latin **`ad sīc`**"* — the weakest of four proposals. The DLE now gives
+  plain `sīc`; the `a-` is a Romance accretion, on the pattern of *apenas*, *afuera*.
+- *"`*ḱred-` **is** the heart word"* — traditional but **disputed**: the heart root is
+  `*ḱḗr`, never `*ḱred-`. The compound is secure; the identification is not. Now hedged
+  in the lesson rather than asserted, and the recall question asks *why* to hedge.
+- *"`endeavour` **reached English** via French `devoir`"* — no French word `endeavour`
+  ever existed. English **calqued** `mettre en devoir` as *put in dever*, which fused.
+- *"**explicit**, **application** — straight from Latin"* — both came through French.
+- *"`comply` from `plicāre`"* — it is from `complēre`, "to fill", a different PIE root
+  that the French verb ending disguises. Exactly the trap the lesson otherwise teaches.
+
+### Fixed — three defects that reached the reader, and one the TTS would have spoken
+
+- **`explicar` was said to "take the same shape as `contar`"** — but chapter 38 teaches
+  `contar` as an o→ue stem-changer, three chapters earlier. `explicar` is plain `-ar`.
+  It now points at `hablar` and says explicitly that `contar` does the other thing.
+- **`No creo que …`** sat bare between two indicative rows. Negating `creer` takes the
+  **subjunctive** — *no creo que llueva* — which chapter 18 already taught. Completed
+  and tied back rather than dropped.
+- **`pr-cluster`** was tagged on the *pl* of `explicar`; that tag is defined elsewhere
+  as *pr* with a tapped *r*. Now `l-clear`.
+- **A Greek capital beta (U+0392)** had crept into `deber`'s pronunciation hint, and
+  propagated into `narration/ch41.txt` — a file fed to text-to-speech.
+
+### Changed — a headword narrowed to stop nine false positives
+
+The connective lesson was first written with the multi-word headword **`así que`**.
+`taughtWords` strips a leading word of ≤3 characters — a heuristic meant for articles —
+so it registered **`que`** as first taught at chapter 41 and flagged all nine earlier
+lessons containing it. `que` is genuinely taught at chapter 7.
+
+The headword is now **`así`**, the only word that is actually new, with the gloss
+carrying the `que`. `forwardReferences` holds flat at 524. The loader heuristic is the
+real bug and is recorded as such in the pin comment.
+
 ### Added — the first content above A2: Spanish chapter 38 (HL09, SPINE-NARRATE-EVENTS)
 
 The B1–C2 spine landed with all 17 nodes declared as gaps in all 22 tracks. This

@@ -2958,18 +2958,6 @@
     },
     {
       "language": "spanish",
-      "chapter": 38,
-      "sourceHash": "fnv1a64:c8ea6dde6af5f2dd",
-      "lessonIds": [
-        "ES-C38-luego",
-        "ES-C38-porque",
-        "ES-C38-imperfecto",
-        "ES-C38-contar"
-      ],
-      "tex": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
-    },
-    {
-      "language": "spanish",
       "chapter": 39,
       "sourceHash": "fnv1a64:1734ff08f45ebaae",
       "lessonIds": [
@@ -2978,7 +2966,30 @@
         "ES-C39-jugar",
         "ES-C39-conocer"
       ],
+      "tex": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:650e2d332d10835d",
+      "lessonIds": [
+        "ES-C40-esperar",
+        "ES-C40-contestar",
+        "ES-C40-comprar"
+      ],
       "tex": "spanish/book/chapters/ch40-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:2ba56f5f98a0e31a",
+      "lessonIds": [
+        "ES-C41-creer",
+        "ES-C41-asi-que",
+        "ES-C41-deber",
+        "ES-C41-explicar"
+      ],
+      "tex": "spanish/book/chapters/ch41-giving-reasons.tex"
     },
     {
       "language": "tamil",
