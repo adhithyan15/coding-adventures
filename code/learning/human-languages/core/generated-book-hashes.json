@@ -4149,6 +4149,51 @@
         "UR-C08-pasand"
       ],
       "tex": "urdu/book/chapters/ch08-social-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:cedf7c77d80a460b",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "tex": "urdu/book/chapters/ch09-people.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:99d0deea39d9624e",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "tex": "urdu/book/chapters/ch10-face-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:5fdddf42fa1ece3e",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "tex": "urdu/book/chapters/ch11-heart.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:92196ddc292a0ab1",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "tex": "urdu/book/chapters/ch12-food-words.tex"
     }
   ]
 }

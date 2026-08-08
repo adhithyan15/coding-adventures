@@ -3182,6 +3182,42 @@
       "output": "urdu/book/chapters/ch08-social-verbs.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "title": "People You'd Introduce",
+      "label": "ch:ur-people",
+      "output": "urdu/book/chapters/ch09-people.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "title": "Four Words on the Face",
+      "label": "ch:ur-face-words",
+      "output": "urdu/book/chapters/ch10-face-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "title": "The Heart",
+      "label": "ch:ur-heart",
+      "output": "urdu/book/chapters/ch11-heart.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "title": "Water, Tea, Milk, Bread",
+      "label": "ch:ur-food-words",
+      "output": "urdu/book/chapters/ch12-food-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
     }
   ],
   "handwritten": [
