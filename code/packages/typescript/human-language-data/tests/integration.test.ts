@@ -203,6 +203,16 @@ describe("real curriculum", () => {
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PA-C07-janna-two-js",
+      // The Punjabi eight-verb tranche: one activity per lesson across Chapters 8
+      // and 9, matching how the Persian and Urdu tranches carry theirs.
+      "PA-C08-likhna-four-roots",
+      "PA-C08-parhna-subjoined",
+      "PA-C08-samajhna-tone",
+      "PA-C08-sochna-soch",
+      "PA-C09-laina-labhate",
+      "PA-C09-madad-karna-root",
+      "PA-C09-pasand-dative",
+      "PA-C09-puchhna-addak",
       "PT-C02-practice-neutral-question",
       "RU-C02-kak-cross-language-what-language",
       "RU-C02-practice-informal-question",

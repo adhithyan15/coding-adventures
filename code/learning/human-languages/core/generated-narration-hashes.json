@@ -4829,6 +4829,40 @@
       "jsonHash": "fnv1a64:44878e06b7f35c71"
     },
     {
+      "language": "punjabi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:0af5f1a00caabcd3",
+      "lessonIds": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch08.txt",
+      "json": "punjabi/narration/ch08.json",
+      "textHash": "fnv1a64:6ca1905a00f9fe5a",
+      "jsonHash": "fnv1a64:889da453dc55d687"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:e7043bb75ddc7901",
+      "lessonIds": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch09.txt",
+      "json": "punjabi/narration/ch09.json",
+      "textHash": "fnv1a64:9fbcd2f5256b662b",
+      "jsonHash": "fnv1a64:39c2cfb1b511e338"
+    },
+    {
       "language": "russian",
       "chapter": 1,
       "sourceHash": "fnv1a64:666276e1d698f4d5",
