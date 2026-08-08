@@ -1375,6 +1375,40 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["VAF", "0", 0.0],
+    ["VA", "0", 0.0],
+    ["VAF", "80", 80.0],
+    ["VA", "80", 80.0],
+  ])("parses BJT forward Early voltage %s=%s", (alias, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardEarlyVoltage: expected,
+    });
+  });
+
+  it("gives BJT VAF precedence over VA", () => {
+    const parsed = parseNetlist(`.model fast NPN(VA=20 VAF=80)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardEarlyVoltage: 80.0,
+    });
+  });
+
+  it.each([
+    ["VAF", "-0.1"],
+    ["VA", "-0.1"],
+    ["VAF", "1e999"],
+    ["VA", "1e999"],
+  ])("rejects invalid BJT forward Early voltage %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT VAF must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
