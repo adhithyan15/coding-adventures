@@ -1749,6 +1749,28 @@ J1 drain gate source fast
     },
   );
 
+  it.each([
+    ["-2.5", -2.5],
+    ["0", 0.0],
+    ["1.75", 1.75],
+  ])("parses JFET mobility temperature exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(BEX=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      mobilityTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects a non-finite JFET mobility temperature exponent", () => {
+    expect(() => parseNetlist(".model fast NJF(BEX=1e999)")).toThrow(
+      "JFET BEX must be finite",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)

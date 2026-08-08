@@ -1352,6 +1352,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Tnom=(
                 nominal_temperature + 273.15 if nominal_temperature is not None else None
             ),
+            Bex=model.params.get("BEX", 0.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2170,6 +2171,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0
         ):
             raise NetlistParseError("JFET TNOM must be finite and positive")
+        mobility_temperature_exponent = params.get("BEX")
+        if mobility_temperature_exponent is not None and not math.isfinite(
+            mobility_temperature_exponent
+        ):
+            raise NetlistParseError("JFET BEX must be finite")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]
