@@ -220,16 +220,16 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    // Latin chapter 37 (the eight core verbs) added one book chapter AND its own
-    // capability ledger entry, so both totals move by one and the debt count does not:
-    // bookChapters 377 -> 378, declaredChapters 279 -> 280, chaptersWithoutCapability
-    // holds at 98. A new chapter that shipped without a `canDo`/`payoff` would have
-    // pushed the debt to 99, which is exactly what this trio is here to catch.
-    expect(report.summary.bookChapters).toBe(497); // +1: Spanish ch41, the second B1 chapter
-    // 317 -> 318 when russian chapter 3 gained a capability. It was the only
-    // generated chapter with no HL05 entry, so it was also the only generated chapter
-    // the book could not give an opening to.
-    expect(report.summary.declaredChapters).toBe(399); // +1: Spanish ch41, the second B1 chapter
+    // Vocabulary wave 4 (Marathi, Punjabi, Sanskrit, Urdu) added 16 new chapters, four
+    // per track, and every one shipped with its own capability ledger entry and payoff,
+    // so bookChapters and declaredChapters both move by 16 and the debt count does not:
+    // 497 -> 513, 399 -> 415, chaptersWithoutCapability holds at 98. A new chapter that
+    // shipped without a `canDo`/`payoff` would have pushed the debt past 98, which is
+    // exactly what this trio is here to catch.
+    expect(report.summary.bookChapters).toBe(513); // +16: vocabulary wave 4, 4 tracks x 4 chapters
+    // Declared chapters keep pace with book chapters this wave -- every new chapter
+    // shipped a capability entry, unlike russian chapter 3 which lagged by one earlier.
+    expect(report.summary.declaredChapters).toBe(415); // +16: vocabulary wave 4
     expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

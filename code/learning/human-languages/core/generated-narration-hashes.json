@@ -5028,6 +5028,71 @@
       "jsonHash": "fnv1a64:9ad2a0f8b708dd7d"
     },
     {
+      "language": "marathi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:507c5abe2c6c17d2",
+      "lessonIds": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch10.txt",
+      "json": "marathi/narration/ch10.json",
+      "textHash": "fnv1a64:599b69607fc99702",
+      "jsonHash": "fnv1a64:012d45932ec4fc4f"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:bc272c6f569ea8c9",
+      "lessonIds": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch11.txt",
+      "json": "marathi/narration/ch11.json",
+      "textHash": "fnv1a64:3e0f5651dd0af8ef",
+      "jsonHash": "fnv1a64:23c769ab8b30c43d"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:6aa24870cb193793",
+      "lessonIds": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch12.txt",
+      "json": "marathi/narration/ch12.json",
+      "textHash": "fnv1a64:f475f24d12c4b38a",
+      "jsonHash": "fnv1a64:f7238830a5c1f3ca"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:e9c69014bcab3516",
+      "lessonIds": [
+        "MR-C13-hrudaya"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch13.txt",
+      "json": "marathi/narration/ch13.json",
+      "textHash": "fnv1a64:5988d20e6b2bbcc9",
+      "jsonHash": "fnv1a64:9fccf6dfa1364ba9"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",
@@ -5763,6 +5828,72 @@
       "jsonHash": "fnv1a64:cd38d9138c8fa47a"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:876cadf864267649",
+      "lessonIds": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch10.txt",
+      "json": "punjabi/narration/ch10.json",
+      "textHash": "fnv1a64:e3ea8a4fb3e6664b",
+      "jsonHash": "fnv1a64:286ac4fb0857d0de"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:6bda23565e753403",
+      "lessonIds": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch11.txt",
+      "json": "punjabi/narration/ch11.json",
+      "textHash": "fnv1a64:3d762a82365f5292",
+      "jsonHash": "fnv1a64:b8a70915952b1f42"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:590257278af1e1ec",
+      "lessonIds": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch12.txt",
+      "json": "punjabi/narration/ch12.json",
+      "textHash": "fnv1a64:40e044872fb5ea99",
+      "jsonHash": "fnv1a64:48b5bc74b74ad160"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:5befc5cc961e0e3d",
+      "lessonIds": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch13.txt",
+      "json": "punjabi/narration/ch13.json",
+      "textHash": "fnv1a64:4381828405ebd516",
+      "jsonHash": "fnv1a64:e48facd3e87b7eb0"
+    },
+    {
       "language": "russian",
       "chapter": 1,
       "sourceHash": "fnv1a64:666276e1d698f4d5",
@@ -6105,6 +6236,70 @@
       "json": "sanskrit/narration/ch09.json",
       "textHash": "fnv1a64:870035148df634b8",
       "jsonHash": "fnv1a64:238a56f11f991d96"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:34bb059ff0b55e76",
+      "lessonIds": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch10.txt",
+      "json": "sanskrit/narration/ch10.json",
+      "textHash": "fnv1a64:366303ca13983bed",
+      "jsonHash": "fnv1a64:d60c389f1082f5d1"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:5cbad10f5013c79e",
+      "lessonIds": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch11.txt",
+      "json": "sanskrit/narration/ch11.json",
+      "textHash": "fnv1a64:cbae938c4f142e51",
+      "jsonHash": "fnv1a64:1b0697317285a821"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:3b3967ec6966db1f",
+      "lessonIds": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch12.txt",
+      "json": "sanskrit/narration/ch12.json",
+      "textHash": "fnv1a64:794467138bacce99",
+      "jsonHash": "fnv1a64:b7ed67036b925ed2"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:bb32722196955299",
+      "lessonIds": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch13.txt",
+      "json": "sanskrit/narration/ch13.json",
+      "textHash": "fnv1a64:c6a61499fa13f7b4",
+      "jsonHash": "fnv1a64:d0714287a44075e1"
     },
     {
       "language": "spanish",
@@ -8078,6 +8273,71 @@
       "json": "urdu/narration/ch08.json",
       "textHash": "fnv1a64:89bfe5828747af1d",
       "jsonHash": "fnv1a64:ef09aad11524eba4"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:a24f7fd7207d0a03",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch09.txt",
+      "json": "urdu/narration/ch09.json",
+      "textHash": "fnv1a64:cb00f151ae104c18",
+      "jsonHash": "fnv1a64:9d977a1fc69923d6"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:bb9c226c6cf168a7",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch10.txt",
+      "json": "urdu/narration/ch10.json",
+      "textHash": "fnv1a64:3e8af661ecc26341",
+      "jsonHash": "fnv1a64:539226de1f605373"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:56f531518276b7d1",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch11.txt",
+      "json": "urdu/narration/ch11.json",
+      "textHash": "fnv1a64:eeed4edb2930107d",
+      "jsonHash": "fnv1a64:8904043ce6c2b6e5"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:404672bf9b8f91e1",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch12.txt",
+      "json": "urdu/narration/ch12.json",
+      "textHash": "fnv1a64:4c1be6db2c4ff184",
+      "jsonHash": "fnv1a64:6dcf3e6fadf06d89"
     }
   ],
   "findings": []

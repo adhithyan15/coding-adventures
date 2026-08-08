@@ -867,9 +867,15 @@ describe("corpus regression", () => {
       // under the canonical heading, and the whole-lesson figure fell back to 66%.
       // `coreDrivable` is unaffected: those blocks are detachable, so the driving
       // edition itself lost nothing. This is the sight-share seam, not a regression.
-      totalLessons: 1615,
-      voice: 1068,
-      sight: 491,
+      // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) is the same
+      // seam again, and it is why voice, sight AND drivablePercent all move together:
+      // most of the wave is ear-only `voice`, but Sanskrit's Devanagari citations and
+      // several tracks' honest `## The letters in this word` blocks add `sight`, so
+      // the whole-lesson share dips 66% -> 65% even though every one of these blocks
+      // is detachable and `coreDrivable` again loses nothing.
+      totalLessons: 1667,
+      voice: 1076,
+      sight: 535,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -877,10 +883,10 @@ describe("corpus regression", () => {
       // voice and drivable are unchanged, which is what a writing lesson should do
       // to this table.
       pen: 56,
-      drivableLessons: 1068,
-      drivablePercent: 66,
+      drivableLessons: 1076,
+      drivablePercent: 65,
       trackCount: 22,
-      chapterCount: 497,
+      chapterCount: 513,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -888,19 +894,19 @@ describe("corpus regression", () => {
       // depends on ORDER. HL09 step 2 gave 50 Spanish lessons a declared `sequence`,
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
-      // worse, which is the measurement becoming honest, not the corpus regressing.      // 870 -> 873, and the net hides three moves. Chapter 1 goes 2 -> 9: its whole
-      // nine-lesson run is now reachable by ear, which is the single thing this change
-      // exists to do. Against that, chapter 6 falls 4 -> 1 and chapter 18 falls 2 -> 1,
-      // because a writing lesson now sits second in each. Chapters 2 and 3 contribute
-      // nothing — their first lesson was never voice-core to begin with.
-      drivablePrefixTotal: 873,      // 327 -> 322 = -6 +1, not a flat loss of five. SIX Tamil chapters that were
-      // entirely ear-only now hold a writing lesson (6, 10, 13, 16, 18, 19 — chapter 6
-      // holds two), because spreading the strand is exactly what puts a pen lesson into
-      // chapters that had none. Offsetting them, chapter 1 becomes fully drivable for
-      // the first time, which is the whole point of the change. Concentrating the
-      // script back into one chapter would restore the metric and undo the ramp.
-      fullyDrivableChapters: 322,
-      unstartableChapters: 129,
+      // worse, which is the measurement becoming honest, not the corpus regressing.
+      // Two independent changes land on these three numbers in the same merge:
+      // vocabulary wave 4 (16 new chapters, several needing eyes from their own first
+      // lesson: 870 -> 873, 327 -> 328, 129 -> 142 claimed in isolation) and Tamil's
+      // script-interleaving restructure (chapter 1 becomes fully drivable for the first
+      // time; six other Tamil chapters each pick up one writing lesson: 870 -> 873,
+      // 327 -> 322, 129 -> 129 claimed in isolation). Re-measured against the merged
+      // corpus: drivablePrefixTotal 876 (both gains add), fullyDrivableChapters 323
+      // (wave 4's +1 and Tamil's net -5 combine), unstartableChapters 142 (wave 4's
+      // rise; Tamil's restructure did not touch this count in the merged state).
+      drivablePrefixTotal: 876,
+      fullyDrivableChapters: 323,
+      unstartableChapters: 142,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

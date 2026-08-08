@@ -217,7 +217,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
 
-    expect(summary.byLevel["pre-A1"]).toBe(812); // +3: TA-W05/W06/W07 write-*
+    expect(summary.byLevel["pre-A1"]).toBe(864); // +52: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu)
     expect(summary.byLevel.A1).toBe(297);
     expect(summary.byLevel.A2).toBe(350);
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
@@ -279,7 +279,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(1109);
+    expect(ramp).toHaveLength(1161); // +52: vocabulary wave 4, all of it pre-A1
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

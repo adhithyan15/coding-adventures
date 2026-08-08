@@ -2558,6 +2558,51 @@
       "tex": "marathi/book/chapters/ch09-doing-verbs.tex"
     },
     {
+      "language": "marathi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:4fe2d0efcd667995",
+      "lessonIds": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ],
+      "tex": "marathi/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:1a3d51406e9c427a",
+      "lessonIds": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ],
+      "tex": "marathi/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:7592d52c2bfafa1c",
+      "lessonIds": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ],
+      "tex": "marathi/book/chapters/ch12-face-parts.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:fd61d9aa7e20ae7f",
+      "lessonIds": [
+        "MR-C13-hrudaya"
+      ],
+      "tex": "marathi/book/chapters/ch13-heart.tex"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "sourceHash": "fnv1a64:022a050d2477f200",
@@ -2969,6 +3014,52 @@
       "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:1704693ab413713d",
+      "lessonIds": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "tex": "punjabi/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:caae1ac221cc60d6",
+      "lessonIds": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "tex": "punjabi/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:5455334026887be0",
+      "lessonIds": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "tex": "punjabi/book/chapters/ch12-face-parts.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:b1b093d6afa94d79",
+      "lessonIds": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "tex": "punjabi/book/chapters/ch13-heart-and-head.tex"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "sourceHash": "fnv1a64:3025a4b74fe67779",
@@ -3108,6 +3199,50 @@
         "SA-C09-snihyati"
       ],
       "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:af5cea22f0341696",
+      "lessonIds": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ],
+      "tex": "sanskrit/book/chapters/ch10-request-nouns.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:41f7915d967243ce",
+      "lessonIds": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ],
+      "tex": "sanskrit/book/chapters/ch11-people-nouns.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:95965d36f522d363",
+      "lessonIds": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ],
+      "tex": "sanskrit/book/chapters/ch12-face-nouns-1.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f5a625166e0df813",
+      "lessonIds": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
+      ],
+      "tex": "sanskrit/book/chapters/ch13-face-nouns-2.tex"
     },
     {
       "language": "spanish",
@@ -4158,6 +4293,51 @@
         "UR-C08-pasand"
       ],
       "tex": "urdu/book/chapters/ch08-social-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:cedf7c77d80a460b",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "tex": "urdu/book/chapters/ch09-people.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:99d0deea39d9624e",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "tex": "urdu/book/chapters/ch10-face-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:ff5b71b1f870309e",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "tex": "urdu/book/chapters/ch11-heart.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:92196ddc292a0ab1",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "tex": "urdu/book/chapters/ch12-food-words.tex"
     }
   ]
 }

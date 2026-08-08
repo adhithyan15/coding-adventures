@@ -363,16 +363,12 @@ describe("the real corpus", () => {
     // Vocabulary wave 3 (russian/bengali/gujarati/kannada, 52 pre-A1 nouns) added 106
     // atoms while atomsNeverRevisited FELL by 7 — the first wave where the raw count
     // dropped, not just the share. 20% is the lowest reading yet, from 51%.
-    expect(report.summary.atomsTaught).toBe(2385);
-    // +2, and this one goes the WRONG WAY, so it is worth saying why. The two
-    // atoms with revisits=0 are TA-SCRIPT-WRITE-SARI-02 and TA-SCRIPT-CA-ONE-LETTER-01,
-    // both introduced BY TA-W07, the chapter's last writing lesson, so nothing
-    // follows them to do the revisiting — the same structural tail the Russian
-    // survivors above have. A chapter-final lesson's own atoms are unreachable by
-    // construction, not under-taught. The other two spell-the-word atoms (ஆம்,
-    // இல்லை) ARE revisited: TA-W07 re-spells both from memory.
-    expect(report.summary.atomsNeverRevisited).toBe(479);
-    expect(report.summary.neverRevisitedPercent).toBe(20);
+    // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) kept both
+    // trends moving the right way at once: atomsTaught +117 while atomsNeverRevisited
+    // FELL a second time, by 7 more. 19% is the lowest reading yet, from 51%.
+    expect(report.summary.atomsTaught).toBe(2502);
+    expect(report.summary.atomsNeverRevisited).toBe(472);
+    expect(report.summary.neverRevisitedPercent).toBe(19);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -462,16 +458,16 @@ describe("the real corpus", () => {
     // lessons sit within three of each other — a separate change, and one that would
     // also fix a pre-existing inversion where TA-W04 spells நன்றி forty sequence
     // numbers before TA-C01-nandri teaches the word.
-    // 834 -> 843, the price of the gentle ramp, paid knowingly. Tamil teaches three
-    // chapters of pure speech and then admits one script lesson at a time. Measured,    // consecutive script lessons sit at 0-indexed reading positions 27,31,36,40,44,
-    // 48,52,56,60,64,68 — gaps of 4,5,4,4,4,4,4,4,4,4. R1 is a 1-3 window, so with this layout no
-    // script lesson can reinforce the previous one inside R1. 24 atoms introduced by
-    // writing lessons miss it; their real revisit counts run 0 to 7, median 2, so all
-    // but two ARE reinforced — just never within three lessons. An interleaved strand
-    // cannot satisfy R1 as that window is defined.
-    expect(report.summary.missedByWindow.R1).toBe(843);
-    // 1627 -> 1625: R2 spans 5-15, which this spacing does reach.
-    expect(report.summary.missedByWindow.R2).toBe(1625);
+    // Two independent changes land on this number in the same merge: vocabulary wave 4
+    // (new pre-A1 nouns landing near the end of already-long chapters, moving R1 little
+    // and R2 a lot: 834 -> 838 claimed in isolation) and Tamil's script-interleaving
+    // restructure (spacing script lessons so none can reinforce inside the 1-3 R1
+    // window, while R2's wider 5-15 span still reaches most of them: 834 -> 843, 1627 ->
+    // 1625 claimed in isolation). Re-measured against the merged corpus: R1 834 -> 847
+    // (both effects add), R2 1627 -> 1716 (wave 4's growth dominates, Tamil's recovery
+    // is a small offset against it, not the whole story either claim told alone).
+    expect(report.summary.missedByWindow.R1).toBe(847);
+    expect(report.summary.missedByWindow.R2).toBe(1716);
   });
 
   it("shows what a declared reading order was worth", () => {

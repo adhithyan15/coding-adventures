@@ -155,6 +155,62 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "SA-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-013-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-015",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-016",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -191,7 +247,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "SA-PATH-005"
+        "SA-PATH-005",
+        "SA-PATH-014"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -200,7 +257,9 @@
     },
     "SPINE-CHECK-WELLBEING": {
       "segments": [
-        "SA-PATH-006"
+        "SA-PATH-006",
+        "SA-PATH-015",
+        "SA-PATH-016"
       ],
       "omits": [
         "WORD-GOOD",
@@ -209,7 +268,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "SA-PATH-013"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -547,6 +608,58 @@
       "prerequisites": [],
       "lessons": [
         "SA-C01-namaste"
+      ]
+    },
+    {
+      "id": "SA-EXT-013-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam"
+      ]
+    },
+    {
+      "id": "SA-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini"
+      ]
+    },
+    {
+      "id": "SA-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham"
+      ]
+    },
+    {
+      "id": "SA-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Sanskrit material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam"
       ]
     }
   ]

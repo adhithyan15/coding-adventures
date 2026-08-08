@@ -165,6 +165,102 @@
           "UR-LEX-PUCHHNA"
         ]
       }
+    },
+    {
+      "chapter": 9,
+      "title": "People You'd Introduce",
+      "label": "ch:ur-people",
+      "canDo": "I can name my brother, sister, friend and family in Urdu, and choose merā or merī correctly for each noun's grammatical gender.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "UR-C09-khandan",
+        "kind": "production",
+        "summary": "Say merā bhāī, merī bahan, merā dost and merā khāndān with merā/merī chosen correctly for each noun, and sort the four into inherited bhāī/bahan against Persian dost/khāndān — the same native-versus-borrowed split Chapter 8's verbs drew.",
+        "assesses": [
+          "UR-LEX-BHAI",
+          "UR-ETYMON-BHAI-BROTHER",
+          "UR-SCRIPT-HAMZA-YE",
+          "UR-LEX-BAHAN",
+          "UR-GRAMMAR-MERA-GENDER-AGREEMENT",
+          "UR-ETYMON-BAHAN-SHARE",
+          "UR-LEX-DOST",
+          "UR-ETYMON-DOST-CHOOSE",
+          "UR-LEX-KHANDAN",
+          "UR-ETYMON-KHANDAN-PERSIAN"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Four Words on the Face",
+      "label": "ch:ur-face-words",
+      "canDo": "I can name my ear, nose, eye and mouth in Urdu, notice that kān and nāk share the same three letters reversed, and read the nūn that marks a nasal vowel instead of a spoken consonant.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "UR-C10-munh",
+        "kind": "production",
+        "summary": "Name kān, nāk, āṅkh and muṅh, explain the plain nūn that nasalizes āṅkh and muṅh against the dedicated ں of maiṅ and hūṅ, and count three settled Indo-European cousins found this chapter — nāk/nose, āṅkh/eye — against kān's honest dead end.",
+        "assesses": [
+          "UR-LEX-KAAN",
+          "UR-ETYMON-KAAN-UNCERTAIN",
+          "UR-LEX-NAAK",
+          "UR-SCRIPT-KAAN-NAAK-REVERSAL",
+          "UR-ETYMON-NAAK-NOSE",
+          "UR-LEX-AANKH",
+          "UR-ETYMON-AANKH-EYE",
+          "UR-LEX-MUNH",
+          "UR-SCRIPT-NUN-NASAL-VOWEL",
+          "UR-ETYMON-MUNH-MYTH"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "The Heart",
+      "label": "ch:ur-heart",
+      "canDo": "I can name my heart in Urdu and trace dil to the same Indo-European root as Sanskrit hṛdaya and English heart, arriving by the Persian road instead of the Sanskrit one.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "UR-C11-dil",
+        "kind": "production",
+        "summary": "Say merā dil, and trace it through Middle Persian and Proto-Iranian back to the same PIE \\*ḱērd- that gives Sanskrit hṛdaya, English heart, Latin cor and Greek kardía — dil and hṛdaya split at the Indo-Iranian fork, not opposite lineages but the same root by two roads, echoing pūchhnā and porsīdan.",
+        "assesses": [
+          "UR-LEX-DIL",
+          "UR-ETYMON-DIL-HEART-PIE"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Water, Tea, Milk, Bread",
+      "label": "ch:ur-food-words",
+      "canDo": "I can name water, tea, milk and bread in Urdu, say what I like using the frame Chapter 8 built, and sort each word as inherited or Persian.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "UR-C12-roti",
+        "kind": "production",
+        "summary": "Say mujhe roṭī pasand hai, reusing Chapter 8's dative-experiencer frame on a plain noun instead of an infinitive, and sort pānī/dūdh/roṭī as inherited against chāy's Persian loan — with pānī reusing lenā's verb frame and dūdh correcting a tempting false cognate with English dough.",
+        "assesses": [
+          "UR-LEX-PANI",
+          "UR-ETYMON-PANI-DRINK",
+          "UR-LEX-CHAI",
+          "UR-ETYMON-CHAI-SILKROAD",
+          "UR-LEX-DOODH",
+          "UR-ETYMON-DOODH-DOUGHTY",
+          "UR-LEX-ROTI",
+          "UR-ETYMON-ROTI-STRIKE",
+          "UR-GRAMMAR-DATIVE-EXPERIENCER",
+          "UR-LEX-PASAND"
+        ]
+      }
     }
   ]
 }

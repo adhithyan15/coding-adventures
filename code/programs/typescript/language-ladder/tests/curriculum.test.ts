@@ -120,6 +120,21 @@ describe("per-language shared-spine maps", () => {
       "UR-C08-puchhna",
       "UR-C08-madad",
       "UR-C08-pasand",
+      // Vocabulary wave 4: chapters 9-12, 13 pre-A1 nouns realizing the last three
+      // unrealized spine nodes (EXCHANGE-NAMES, CHECK-WELLBEING, POLITE-REQUEST-REPAIR).
+      "UR-C09-dost",
+      "UR-C09-khandan",
+      "UR-C09-bhai",
+      "UR-C09-bahan",
+      "UR-C10-aankh",
+      "UR-C10-kaan",
+      "UR-C10-naak",
+      "UR-C10-munh",
+      "UR-C11-dil",
+      "UR-C12-pani",
+      "UR-C12-doodh",
+      "UR-C12-chai",
+      "UR-C12-roti",
 ]));
   });
 

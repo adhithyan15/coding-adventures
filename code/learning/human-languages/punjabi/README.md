@@ -71,8 +71,24 @@ before the whole; and a book you can read straight through.
   was not; **ਪਸੰਦ** is Persian *and* a noun, so it cannot carry the liker —
   hence **ਮੈਨੂੰ** and *mainū̃ panjābī pasand hai*. Payoff: that sentence, with
   any infinitive swapped into its middle. In the book.
+- **Chapter 10 — Water, Tea, Milk, and Bread** ([`lessons/PA-C10-*`](./lessons/)):
+  ਪਾਣੀ, ਚਾਹ, ਦੁੱਧ, ਰੋਟੀ — Punjabi's first polite requests, sorted by origin:
+  ਪਾਣੀ and ਦੁੱਧ inherited with a known root, ਰੋਟੀ inherited with an unknown
+  one, ਚਾਹ loaned from Chinese and carrying the track's first noun-level tone.
+  In the book.
+- **Chapter 11 — Friend, Family, Brother, and Sister** ([`lessons/PA-C11-*`](./lessons/)):
+  ਦੋਸਤ, ਪਰਿਵਾਰ, ਭਰਾ, ਭੈਣ. ਭਰਾ is the unbroken PIE cousin of *brother*; ਭੈਣ, from
+  *bhaginī*, is not a cousin of *sister* at all, though the same low tone
+  opens both. In the book.
+- **Chapter 12 — Eye, Ear, Mouth, and Nose** ([`lessons/PA-C12-*`](./lessons/)):
+  ਅੱਖ, ਕੰਨ, ਮੂੰਹ, ਨੱਕ. ਅੱਖ and ਨੱਕ kept their doubled consonants rather than
+  trading a sound for a tone; ਕੰਨ is a false friend of ਕਰਨਾ, matching in
+  spelling but not in root. In the book.
+- **Chapter 13 — Heart and Head** ([`lessons/PA-C13-*`](./lessons/)): ਦਿਲ, ਸਿਰ.
+  ਦਿਲ is Punjabi's one borrowed body word against four inherited ones; ਸਿਰ
+  traces to the same root as English *horn*, not *head*. In the book.
 
-Chapters 1–9 are in the book.
+Chapters 1–13 are in the book.
 
 ---
 
@@ -117,6 +133,23 @@ first-person can-do sentence and the lesson that pays it off.
 Both Chapter 8 and Chapter 9 payoffs assess **every** atom their own chapter
 introduces (10 of 10 each), so both sit at 1.00 against the 0.5
 representativeness floor.
+
+- **Chapter 10** — *"I can politely ask for water, tea, milk, or bread in
+  Punjabi, name which of the four is a loanword and which is inherited with an
+  unknown root, and hear the difference between a tone that stays level and
+  one that never formed at all."* Payoff: the reader produces all four
+  requests with ਕਿਰਪਾ ਕਰਕੇ and sorts them by origin.
+- **Chapter 11** — *"I can name a friend, a family, a brother, and a sister in
+  Punjabi, split ਪਰਿਵਾਰ into its two Sanskrit pieces, and hear the same low
+  tone open both ਭਰਾ and ਭੈਣ even though only one of the two is truly a
+  cousin of its English counterpart."*
+- **Chapter 12** — *"I can name the eye, ear, mouth, and nose in Punjabi, tell
+  a doubled consonant that survived from one that vanished into tone, and
+  clear up the false friend ਕੰਨ shares in spelling, but not in root, with
+  ਕਰਨਾ."*
+- **Chapter 13** — *"I can name the heart and the head in Punjabi, tell that
+  ਦਿਲ is Punjabi's one borrowed body word against four inherited ones, and
+  trace ਸਿਰ to the same root as English horn rather than English head."*
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there

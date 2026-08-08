@@ -40,6 +40,23 @@ Arabic triliteral root beside Chapter 5's **ح-ف-ظ**; and *sochnā*'s inherite
 **سوچ** *soch* sits next to Arabic **فکر** *fikr*, both meaning a thought and,
 just as ordinarily, a worry.
 
+Chapters 9 through 12 turn from verbs to everyday nouns, closing the last
+three unrealized pre-A1 concepts. Chapter 9 names the people you'd introduce —
+**بھائی** *bhāī*, **بہن** *bahan*, **دوست** *dost*, **خاندان** *khāndān* —
+choosing **merā**/**merī** by each noun's grammatical gender and sorting the
+four into inherited *bhāī*/*bahan* against Persian *dost*/*khāndān*, the same
+native-versus-borrowed split Chapter 8's verbs drew. Chapter 10 puts four
+words on the face — **کان** *kān*, **ناک** *nāk*, **آنکھ** *āṅkh*, **منہ**
+*muṅh* — and reads the plain nūn that nasalizes *āṅkh* and *muṅh* against the
+dedicated **ں** of *maiṅ*/*hūṅ*. Chapter 11 is the heart alone: **دل** *dil*
+traces through Middle Persian and Proto-Iranian back to the same PIE
+*\*ḱērd-* that gives Sanskrit *hṛdaya*, English *heart*, Latin *cor* and Greek
+*kardía* — split at the Indo-Iranian fork, not opposite lineages but the same
+root by two roads. Chapter 12 closes with water, tea, milk and bread —
+**پانی** *pānī*, **چائے** *chāy*, **دودھ** *dūdh*, **روٹی** *roṭī* — reusing
+Chapter 8's dative-experiencer frame on a plain noun (*mujhe roṭī pasand
+hai*) and sorting each word as inherited or Persian.
+
 Later chapters will add wider agreement, postpositions, oblique forms, compound
 verbs, and more Nastaliq-aware shapes.
 
@@ -55,6 +72,5 @@ Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions ar
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
   script and sound facts on demand and labels the current Naskh fallback.
-- [`lessons/`](./lessons/) contains the thirty-three canonical short practice
-  lessons.
+- [`lessons/`](./lessons/) contains the canonical short practice lessons.
 

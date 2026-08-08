@@ -111,7 +111,9 @@ describe("corpus snapshot", () => {
     // schema-v2 migration lands; the violation count will rise as it does, and that is
     // the measurement improving rather than the corpus worsening.
     expect(report.summary.unmeasurableLessons).toBe(573); // +1: TA-C01-answering, schema-v1 like its chapter
-    expect(report.summary.measurablePercent).toBe(65);
+    // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons, all measurable, so the
+    // denominator and the measurable share both grow.
+    expect(report.summary.measurablePercent).toBe(66);
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
@@ -280,7 +282,9 @@ describe("the script ramp against the real corpus", () => {
 
     // The cousin layer's footprint. Not a violation — a reason to keep that layer
     // visually skippable, so a reader who knows no sister language can pass it by.
-    expect(report.summary.lessonsWithForeignScript).toBe(170);
+    // 170 -> 173: vocabulary wave 4's Sanskrit lessons cite Devanagari daughter-language
+    // cousin forms the same way earlier waves did.
+    expect(report.summary.lessonsWithForeignScript).toBe(173);
     expect(report.summary.maxForeignGlyphsInALesson).toBe(26);
   });
 

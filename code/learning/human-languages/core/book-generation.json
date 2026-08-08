@@ -2054,6 +2054,42 @@
       "scriptCommand": "mr"
     },
     {
+      "language": "marathi",
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bhakri",
+      "label": "ch:mr-request-food-drink",
+      "output": "marathi/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "title": "Friend and Family",
+      "label": "ch:mr-friend-and-family",
+      "output": "marathi/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:mr-face-parts",
+      "output": "marathi/book/chapters/ch12-face-parts.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "title": "Heart",
+      "label": "ch:mr-heart",
+      "output": "marathi/book/chapters/ch13-heart.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "title": "Ask and Answer Names",
@@ -2321,6 +2357,42 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bread",
+      "label": "ch:pa-request-food-drink",
+      "output": "punjabi/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "title": "Friend, Family, Brother, and Sister",
+      "label": "ch:pa-friend-and-family",
+      "output": "punjabi/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:pa-face-parts",
+      "output": "punjabi/book/chapters/ch12-face-parts.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "title": "Heart and Head",
+      "label": "ch:pa-heart-and-head",
+      "output": "punjabi/book/chapters/ch13-heart-and-head.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "title": "Six Verbs, and the One You Never Say",
@@ -2425,6 +2497,42 @@
       "title": "Taking, Asking, Helping, Loving",
       "label": "ch:sa-doing-verbs",
       "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 10,
+      "title": "What You'd Ask For",
+      "label": "ch:sa-request-nouns",
+      "output": "sanskrit/book/chapters/ch10-request-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "title": "The People You'd Introduce",
+      "label": "ch:sa-people-nouns",
+      "output": "sanskrit/book/chapters/ch11-people-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "title": "The Face, Part One",
+      "label": "ch:sa-face-nouns-1",
+      "output": "sanskrit/book/chapters/ch12-face-nouns-1.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "title": "The Face, Part Two",
+      "label": "ch:sa-face-nouns-2",
+      "output": "sanskrit/book/chapters/ch13-face-nouns-2.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -3180,6 +3288,42 @@
       "title": "Four Verbs Between People",
       "label": "ch:ur-social-verbs",
       "output": "urdu/book/chapters/ch08-social-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "title": "People You'd Introduce",
+      "label": "ch:ur-people",
+      "output": "urdu/book/chapters/ch09-people.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "title": "Four Words on the Face",
+      "label": "ch:ur-face-words",
+      "output": "urdu/book/chapters/ch10-face-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "title": "The Heart",
+      "label": "ch:ur-heart",
+      "output": "urdu/book/chapters/ch11-heart.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "title": "Water, Tea, Milk, Bread",
+      "label": "ch:ur-food-words",
+      "output": "urdu/book/chapters/ch12-food-words.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     }

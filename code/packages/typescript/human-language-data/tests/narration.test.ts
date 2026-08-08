@@ -608,7 +608,8 @@ describe("the whole corpus", () => {
     // 378, not the 375 this was authored against: HL-C39 and HL-C40 each added a
     // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge, and
     // the Latin core-verb chapter (chapter 37, eight verb lessons) added one more.
-    expect(chapters).toHaveLength(497);
+    // 497 -> 513: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu), 16 new chapters.
+    expect(chapters).toHaveLength(513);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

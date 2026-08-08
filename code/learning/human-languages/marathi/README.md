@@ -62,10 +62,40 @@ pieces taught before the whole; and a book you can read straight through.
   established Sanskrit ancestor, where Hindi and Urdu use the Persian loan
   *pasand* — it makes *malā marāṭhī āvaḍte* the third sentence on one frame.
 
-Chapters 1–9 are in the book. Chapters 6–9 are schema v2. Chapter 7 is `voice`
-at full modality; Chapters 8 and 9 derive as `sight` because each lesson carries
+- **Chapter 10 — Water, Tea, Milk, and Bhakri** ([`lessons/MR-C10-*`](./lessons/)):
+  pāṇī, chahā, dūdh, bhākarī — the track's first pre-A1 nouns, and the first
+  "please" pattern it has ever built, **[word], कृपया**. **कृपया** is Sanskrit's
+  own instrumental of **कृपा**, "kindness." **पाणी** and **दूध** are secure
+  Sanskrit/PIE inheritances (*peh₃(i)-* "to drink," behind potion, poison,
+  symposium; *dʰewgʰ-*, behind English **doughty**); **चहा** is Marathi's first
+  loanword of the tranche, Mandarin *cha* by the overland route; **भाकरी**
+  never touched Sanskrit at all and is not Hindi's word for bread — Hindi says
+  **रोटी**. The four words carry all three Marathi genders between them.
+- **Chapter 11 — Friend and Family** ([`lessons/MR-C11-*`](./lessons/)): mitra,
+  kuṭumb, bhāū, bahīṇ. **मित्र** and **कुटुंब** are tatsamas, taken up whole
+  from Sanskrit; **भाऊ** and **बहीण** are tadbhavas, worn down by Prakrit sound
+  change. **भाऊ** is a secure cousin of English **brother**; **बहीण**,
+  deliberately, is not a cousin of **sister** at all — a different Sanskrit
+  root, traditionally tied to "sharing." **कुटुंब** is neuter in Marathi and
+  masculine in Hindi, from the identical borrowed word.
+- **Chapter 12 — Eye, Ear, Mouth, and Nose** ([`lessons/MR-C12-*`](./lessons/)):
+  ḍoḷā, kān, tõḍ, nāk. **डोळा** formally teaches the retroflex **ळ** first
+  heard, unlabeled, in Chapter 4's *kāḷjī* — and its own root is Sanskrit
+  **दोल**, "a swing," a replacement for the old Indo-Aryan eye-word Hindi's
+  **आँख** still carries. **कान**'s root is honestly disputed among scholars;
+  its *rṇ* → *ṇṇ* → *ṇ* path is the same cluster-simplifying habit Chapter 6
+  traced in **दोन**. **तोंड** keeps a formal doublet, **मुख**. **नाक** alone
+  reaches English **nose** without qualification.
+- **Chapter 13 — Heart** ([`lessons/MR-C13-*`](./lessons/)): hṛdaya, one lesson,
+  the surest cognate this book has taught — English **heart**, Latin
+  **cor**/**cordis** (**cordial**), Greek **kardia** (**cardiac**), all one PIE
+  root, *ḱērd-*, with no metaphorical drift at all, set against **वाचणे**'s and
+  **समजणे**'s (Chapter 8) and **डोळा**'s (Chapter 12) drifted meanings.
+
+Chapters 1–13 are in the book. Chapters 6–13 are schema v2. Chapter 7 is `voice`
+at full modality; Chapters 8–13 derive as `sight` because each lesson carries
 a *"The letters in this word"* section — but that section is **detachable**, so
-all eight lessons are `coreVoice` and the two chapters are fully drivable by ear.
+every lesson is `coreVoice` and every chapter is fully drivable by ear.
 
 ---
 
@@ -107,6 +137,33 @@ first-person can-do sentence and the lesson that pays it off.
   marāṭhī āvaḍte* beside *mī prem karto*, and both beside *malā marāṭhī yete*
   and *malā marāṭhī samajte*, so one frame carries three meanings. It assesses
   **9 of the chapter's 9** introduced atoms (1.00).
+- **Chapter 10** — *"I can politely ask for water, tea, milk, or bhakri in
+  Marathi, name which of the four is a Chinese loan and which never touched
+  Sanskrit at all, and say why all three of Marathi's genders already show up
+  in one short chapter."* Payoff: [`MR-C10-bhakari`](./lessons/MR-C10-bhakari.md),
+  a production task — all four requests with **कृपया**, sorted by origin and by
+  gender. It assesses **10 of the chapter's 10** introduced atoms (1.00).
+- **Chapter 11** — *"I can name a friend, a family, a brother, and a sister in
+  Marathi, sort each word into a tatsama or a tadbhava, and say which sibling
+  word is genuinely English's cousin and which is not."* Payoff:
+  [`MR-C11-bahin`](./lessons/MR-C11-bahin.md), a production task — all four
+  words sorted tatsama/tadbhava, **भाऊ** named as brother's secure cousin
+  against **बहीण**'s unrelated root. It assesses **10 of the chapter's 10**
+  introduced atoms (1.00).
+- **Chapter 12** — *"I can name the eye, ear, mouth, and nose in Marathi, say
+  the retroflex ळ formally for the first time, and tell which of the four
+  carries the most secure English cognate and which replaced its own
+  inherited word entirely."* Payoff: [`MR-C12-naak`](./lessons/MR-C12-naak.md),
+  a production task — all four face words with gender, sorted by kind of
+  history: replaced, disputed, twinned, secure. It assesses **10 of the
+  chapter's 10** introduced atoms (1.00).
+- **Chapter 13** — *"I can name the heart in Marathi, name three English words
+  that share its root, and say what makes it different from every other word
+  this book has taken apart: it never drifted at all."* Payoff:
+  [`MR-C13-hrudaya`](./lessons/MR-C13-hrudaya.md), a production task — **heart,
+  cordial, cardiac** named as cousins, set against **वाचणे**, **समजणे** and
+  **डोळा**'s drifted meanings. It assesses **2 of the chapter's 2** introduced
+  atoms (1.00).
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -117,10 +174,14 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 (`../../_fonts/`) — the same font as the Hindi track. `latexmk -xelatex book.tex`.
-The nine-chapter build is warning-clean — zero `Missing character`, zero
-overfull or underfull boxes, zero package warnings — and its PDF outline
+The thirteen-chapter, 80-page build is warning-clean — zero `Missing character`,
+zero overfull or underfull boxes, zero package warnings — and its PDF outline
 preserves readable Devanagari while generated non-Latin sections use
-bookmark-safe romanization.
+bookmark-safe romanization. (An early draft of Chapters 10 and 11 quoted
+Avestan, Old Persian, Bengali, Kannada, and Gujarati text directly, plus a
+Proto-Indo-Iranian reconstruction using the combining ring-below U+0325 in
+Chapter 13 — none of it covered by the book's fonts. All were flattened to
+plain-Latin romanizations before commit.)
 
 ## Files
 

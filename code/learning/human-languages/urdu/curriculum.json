@@ -141,6 +141,63 @@
         "UR-EXT-019-SOCIAL-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "UR-PATH-010",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-020-FAMILY-FRIENDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-011",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-021-FACE-WORDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-012",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "UR-C11-dil"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-022-HEART"
+      ],
+      "after": []
+    },
+    {
+      "id": "UR-PATH-013",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-023-WATER-TEA-MILK-BREAD"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -177,7 +234,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "UR-PATH-004"
+        "UR-PATH-004",
+        "UR-PATH-010"
       ],
       "omits": [
         "PRONOUN-I",
@@ -190,7 +248,9 @@
     },
     "SPINE-CHECK-WELLBEING": {
       "segments": [
-        "UR-PATH-005"
+        "UR-PATH-005",
+        "UR-PATH-011",
+        "UR-PATH-012"
       ],
       "omits": [
         "WORD-GOOD",
@@ -199,7 +259,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "UR-PATH-013"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -749,6 +811,67 @@
         "UR-C08-puchhna",
         "UR-C08-madad",
         "UR-C08-pasand"
+      ]
+    },
+    {
+      "id": "UR-EXT-020-FAMILY-FRIENDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my brother, sister, friend and family in Urdu, and choose merā or merī correctly for each noun's grammatical gender.",
+      "prerequisites": [
+        "UR-EXT-019-SOCIAL-VERBS"
+      ],
+      "lessons": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ]
+    },
+    {
+      "id": "UR-EXT-021-FACE-WORDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my ear, nose, eye and mouth in Urdu, notice that kān and nāk share the same three letters reversed, and read the nūn that marks a nasal vowel instead of a spoken consonant.",
+      "prerequisites": [
+        "UR-EXT-020-FAMILY-FRIENDS"
+      ],
+      "lessons": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ]
+    },
+    {
+      "id": "UR-EXT-022-HEART",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my heart in Urdu and trace dil to the same Indo-European root as Sanskrit hṛdaya and English heart, arriving by the Persian road instead of the Sanskrit one.",
+      "prerequisites": [
+        "UR-EXT-021-FACE-WORDS"
+      ],
+      "lessons": [
+        "UR-C11-dil"
+      ]
+    },
+    {
+      "id": "UR-EXT-023-WATER-TEA-MILK-BREAD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name water, tea, milk and bread in Urdu, say what I like using the frame Chapter 8 built, and sort each word as inherited or Persian.",
+      "prerequisites": [
+        "UR-EXT-022-HEART"
+      ],
+      "lessons": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
       ]
     }
   ]
