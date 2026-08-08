@@ -138,6 +138,46 @@ export interface ModalityManifestLesson {
   drivable: boolean;
   /** Which derivation rules fired, in order — why this lesson is labelled as it is. */
   reasons: ModalityReasonCode[];
+  /**
+   * The channel the lesson needs once its DETACHABLE blocks are set aside — today the
+   * inline-letters `script` section and any `writing` section. By construction never
+   * stronger than {@link modality}.
+   *
+   * This is the key the header promised and the manifest never emitted, which is the
+   * whole reason it is being added now. Ten authoring waves put honest
+   * `## The letters in this word` sections into eighteen tracks; every one of those
+   * lessons derives `modality: sight` and `coreModality: voice`, and with no
+   * `coreModality` published, a consumer had no way to tell "needs eyes throughout"
+   * from "needs eyes only for a section a fluent reader skims". Four separate tracks
+   * reported their new chapters as undrivable on that basis, and two agents reached
+   * opposite conclusions about the cause.
+   *
+   * Read it as `entry.coreModality ?? entry.modality`, which is correct against both
+   * old and new builds — and branch on `features.blockModality` if you want to know
+   * which you are holding.
+   */
+  coreModality: Modality;
+  /** Rules that fired for the core, in derivation order. */
+  coreReasons: ModalityReasonCode[];
+  /**
+   * `coreModality === "voice"` — the OPT-IN filter, beside the conservative `drivable`.
+   *
+   * Both are published on purpose. `drivable` stays exactly what it always was: the
+   * strongest channel anywhere in the lesson, so a consumer that never learns about
+   * detachable blocks keeps producing a correct, merely pessimistic driving edition
+   * forever. `coreDrivable` is what a renderer that CAN set a section aside should
+   * read. Nothing about `drivable` moves in this change; that is the compatibility
+   * promise this file's header makes, and switching it would break every consumer
+   * that trusted it.
+   */
+  coreDrivable: boolean;
+  /**
+   * Titles of the sections a hands-free renderer may set aside, in body order.
+   *
+   * Emitted only when non-empty. This is what makes `coreDrivable` auditable rather
+   * than asserted: a reader can see WHICH sections were discounted and disagree.
+   */
+  detachableSegments?: string[];
   /** Fingerprint of the lesson AST this row was derived from. */
   sourceHash: string;
   /** Present only when the author wrote an explicit `modality:`. */
@@ -304,8 +344,17 @@ function manifestLesson(entry: LessonModality, sourceHash: string): ModalityMani
     derived: entry.derived,
     drivable: entry.modality === "voice",
     reasons: entry.reasons,
+    coreModality: entry.coreModality,
+    coreReasons: entry.coreReasons,
+    coreDrivable: entry.coreModality === "voice",
     sourceHash,
   };
+  // Omitted rather than emitted empty, for the same reason as the override fields
+  // below: most lessons have no detachable section, and `"detachableSegments": []`
+  // on a thousand rows is noise a reader must learn to skip.
+  if (entry.detachableSegments.length > 0) {
+    row.detachableSegments = entry.detachableSegments;
+  }
   // The three override fields are omitted rather than emitted empty. They apply to a
   // handful of lessons out of 1,096, and `"authoredReason": ""` a thousand times over
   // is noise every reader must learn to skip. Absent means "the author said nothing",
@@ -429,8 +478,11 @@ export function buildModalityManifest(
   return {
     version: MODALITY_MANIFEST_VERSION,
     algorithm: "fnv1a64",
-    // Flipped to true by HL-C41, in the same change that starts emitting block rows.
-    features: { blockModality: false },
+    // True as of HL-C48: every row now carries `coreModality`, `coreReasons`,
+    // `coreDrivable`, and `detachableSegments` where it has any. The flag was honest
+    // while it was false — the data genuinely was not emitted — and flipping it
+    // without emitting the data would have been the actual bug.
+    features: { blockModality: true },
     policy: { maxLinearisableTableColumns },
     sourceHash: modalityCorpusHash(lessons),
     summary: {

@@ -383,13 +383,60 @@ describe("chapter rollups", () => {
 // Forward compatibility with block-level modality (HL-C41)
 // ---------------------------------------------------------------------------
 
-describe("room for block-level modality", () => {
-  it("declares that this build carries whole-lesson modality only", () => {
+describe("block-level modality", () => {
+  it("declares that this build carries core modality beside the whole-lesson answer", () => {
     // A capability flag, not a version bump: block modality is strictly additional
     // information, so both kinds of manifest stay version 1 and both answer the
     // driving question correctly.
-    expect(buildModalityManifest([]).features).toEqual({ blockModality: false });
+    //
+    // False until HL-C48 — and honestly so. The flag says "this build carries block
+    // data", and the build did not: no row emitted `coreModality` at all. Flipping the
+    // flag without emitting the data would have been the real bug, and reading the flag
+    // as "which field does `drivable` use" was a misreading that cost five waves of
+    // treating a missing feature as a design tension.
+    expect(buildModalityManifest([]).features).toEqual({ blockModality: true });
     expect(buildModalityManifest([]).version).toBe(1);
+  });
+
+  it("publishes the core answer WITHOUT moving the conservative one", () => {
+    // The compatibility promise this file's header makes, asserted rather than trusted.
+    // A lesson whose only visual dependency is an inline-letters section still reports
+    // `modality: sight` and `drivable: false` — a consumer that never learns about
+    // detachable blocks is unaffected by this change — while `coreModality`/
+    // `coreDrivable` say what a renderer that CAN set that section aside should do.
+    const manifest = buildModalityManifest([
+      lesson({
+        id: "ES-C01-a",
+        body: "## Warm-up\n\nSay it aloud.\n\n## The letters in this word\n\nThe first is round.",
+      }),
+    ]);
+    const row = manifest.lessons[0]!;
+    expect(row.modality).toBe("sight");
+    expect(row.drivable).toBe(false);
+    expect(row.coreModality).toBe("voice");
+    expect(row.coreDrivable).toBe(true);
+    // Auditable, not asserted: a reader can see which section was discounted.
+    expect(row.detachableSegments).toEqual(["The letters in this word"]);
+  });
+
+  it("omits detachableSegments entirely when a lesson has none", () => {
+    // Same reasoning as the override fields: most lessons have no detachable section,
+    // and an empty array on a thousand rows is noise every reader must skip.
+    const row = buildModalityManifest([lesson({ id: "ES-C01-a" })]).lessons[0]!;
+    expect(row).not.toHaveProperty("detachableSegments");
+    expect(row.coreModality).toBe("voice");
+  });
+
+  it("never lets the core answer be stronger than the whole-lesson one", () => {
+    // The structural invariant. `coreModality` is derived from a SUBSET of the blocks,
+    // so it can only ever be weaker or equal. If this ever fails, the derivation has a
+    // bug that would hand a driver a lesson needing a pen.
+    const { lessons } = loadEverything();
+    const order = { voice: 0, sight: 1, pen: 2 } as const;
+    for (const row of buildModalityManifest(lessons).lessons) {
+      expect(order[row.coreModality]).toBeLessThanOrEqual(order[row.modality]);
+      if (row.coreDrivable) expect(row.coreModality).toBe("voice");
+    }
   });
 
   it("keeps `modality` the conservative whole-lesson answer a naive reader can trust", () => {
