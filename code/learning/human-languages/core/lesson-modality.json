@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:52a1932143b668c3",
+  "sourceHash": "fnv1a64:8a810f17ef39dd1f",
   "summary": {
-    "totalLessons": 1385,
-    "voice": 909,
+    "totalLessons": 1393,
+    "voice": 917,
     "sight": 423,
     "pen": 53,
-    "drivableLessons": 909,
+    "drivableLessons": 917,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 434,
-    "drivablePrefixTotal": 726,
-    "fullyDrivableChapters": 289,
+    "chapterCount": 436,
+    "drivablePrefixTotal": 734,
+    "fullyDrivableChapters": 291,
     "unstartableChapters": 108,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -3329,12 +3329,12 @@
     },
     {
       "language": "latin",
-      "lessonCount": 73,
-      "voice": 70,
+      "lessonCount": 81,
+      "voice": 78,
       "sight": 3,
       "pen": 0,
       "drivablePercent": 96,
-      "drivablePrefixTotal": 69,
+      "drivablePrefixTotal": 77,
       "modalities": [
         "voice",
         "sight"
@@ -3991,6 +3991,44 @@
             "LA-C39-rogo",
             "LA-C39-adiuvo",
             "LA-C39-amo"
+          ]
+        },
+        {
+          "chapter": 40,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C40-audio",
+            "LA-C40-dormio",
+            "LA-C40-sedeo",
+            "LA-C40-sto"
+          ]
+        },
+        {
+          "chapter": 41,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "LA-C41-ambulo",
+            "LA-C41-curro",
+            "LA-C41-aperio",
+            "LA-C41-claudo"
           ]
         }
       ]
@@ -20023,6 +20061,150 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:c051a21f677da1d1"
+    },
+    {
+      "id": "LA-C40-audio",
+      "language": "latin",
+      "chapter": 40,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7857a70e4ef5dbec"
+    },
+    {
+      "id": "LA-C40-dormio",
+      "language": "latin",
+      "chapter": 40,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3478cf58bd29876f"
+    },
+    {
+      "id": "LA-C40-sedeo",
+      "language": "latin",
+      "chapter": 40,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1f6f7d06cae484ef"
+    },
+    {
+      "id": "LA-C40-sto",
+      "language": "latin",
+      "chapter": 40,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a9e7c0df7dfd7fca"
+    },
+    {
+      "id": "LA-C41-ambulo",
+      "language": "latin",
+      "chapter": 41,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d622fafe7bc4956d"
+    },
+    {
+      "id": "LA-C41-curro",
+      "language": "latin",
+      "chapter": 41,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bc6edcf40433f26f"
+    },
+    {
+      "id": "LA-C41-aperio",
+      "language": "latin",
+      "chapter": 41,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:06626b6294c4415e"
+    },
+    {
+      "id": "LA-C41-claudo",
+      "language": "latin",
+      "chapter": 41,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e7fda89b85277a5e"
     },
     {
       "id": "ML-C01-athe",

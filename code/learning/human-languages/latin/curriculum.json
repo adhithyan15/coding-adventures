@@ -364,6 +364,36 @@
         "LA-EXT-027-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "LA-PATH-028",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "LA-PATH-029",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
+      ],
+      "before": [],
+      "inline": [
+        "LA-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -493,14 +523,15 @@
       "segments": [
         "LA-PATH-025",
         "LA-PATH-026",
-        "LA-PATH-027"
+        "LA-PATH-027",
+        "LA-PATH-028",
+        "LA-PATH-029"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-DO-MAKE",
         "VERB-SPEAK",
-        "VERB-HEAR",
         "VERB-LEARN",
         "VERB-CAN",
         "VERB-BRING",
@@ -508,20 +539,13 @@
         "VERB-PUT",
         "VERB-EAT",
         "VERB-DRINK",
-        "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
-        "VERB-RUN",
-        "VERB-SIT",
-        "VERB-STAND",
         "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET",
-        "VERB-BUY",
-        "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-BUY"
       ],
       "relocates": {}
     },
@@ -863,6 +887,34 @@
         "LA-C39-rogo",
         "LA-C39-adiuvo",
         "LA-C39-amo"
+      ]
+    },
+    {
+      "id": "LA-EXT-028-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of hearing, sleeping, sitting and standing, and tell an English word inherited from the shared ancestor apart from one borrowed out of Latin.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C40-audio",
+        "LA-C40-dormio",
+        "LA-C40-sedeo",
+        "LA-C40-sto"
+      ]
+    },
+    {
+      "id": "LA-EXT-029-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can produce the present-tense forms of the four Latin verbs of walking, running, opening and closing, and say what a Latin prefix does to the verb it sits on.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C41-ambulo",
+        "LA-C41-curro",
+        "LA-C41-aperio",
+        "LA-C41-claudo"
       ]
     }
   ]
