@@ -17,7 +17,7 @@
     ],
     "excluded_scope_note": "Wave 1 (byte-provenance/CAS transactions/witnesses/process containment, ADJ-STDLIB-COVERAGE.md section 7 items 2 and 6-13i) is owned by a separate concurrent agent. This loop never edits adj-verify internals, CAS transaction/journal/registration code, or process-lifecycle/containment code, and never claims provenance beyond source_labeled on entries it adds."
   },
-  "active_pr": null,
+  "active_pr": 10074,
   "last_manifest_check": {
     "objectives": 70,
     "coverage_roots": 6,
@@ -118,10 +118,10 @@
     {
       "id": "wave2-k8-operation-properties",
       "title": "K-8 math: properties of operations (commutative, associative) as verifiable comparison formulas, using FL-8",
-      "status": "pending",
+      "status": "shipped_pending_ci",
       "depends_on": ["fl8-comparison-formulas"],
       "branch": "feat/adj-wave2-operation-properties",
-      "pr_number": null,
+      "pr_number": 10074,
       "notes": "Reprioritization pass 2026-08-07 (after FL-11/PR #10023 merged, closing out the then-current backlog): ADJ-STDLIB-COVERAGE.md 5.1 names 'operation properties' as a Major Gap for K-2/elementary math, not yet scoped or shipped. Researched fit: a universally-true LAW ('addition is commutative') doesn't naturally fit the 'relate' fact shape (which states a fact about a specific pair of concepts, e.g. deficient_in(tay_sachs, hexosaminidase_a)) or a 'table' (a lookup), but DOES fit FL-8's comparison-formula shape cleanly: compute both sides for a GIVEN instance and confirm/refute equality, citing the general law. Confirmed CmpOp::Eq / EngineCmpOp::Eq already exists and is wired (lower_cmp_op), so `==` in a formula_relation body works today, no new engine work. Scoped as mathematics/operation-properties.adj composing arithmetic.adj's sum/difference (no new formula-stdlib overlap found via grep for commutative/associative/distributive across specs/data -- only incidental comments in average.adj/data-displays.adj about `sum`'s own associative FOLD pattern, not a shipped operation-properties library): addition_is_commutative(addend_one, addend_two) = sum(a,b)==sum(b,a) (always true -- teaches BY demonstration, computing both sides independently rather than asserting); subtraction_is_commutative(minuend, subtrahend) = difference(a,b)==difference(b,a) (true only when a==b -- teaches the CONTRAST, a common early-elementary misconception target, that subtraction is NOT commutative unlike addition); addition_is_associative(a,b,c) = sum(sum(a,b),c)==sum(a,sum(b,c)) (composes sum twice, the same associative fold average.adj's mean_three/data-displays.adj's range_three already establish). Citations WebFetch-verified live before writing: MathWorld Commutative.html ('Two elements x and y of a set S are said to be commutative under a binary operation * if they satisfy x*y=y*x') and Associative.html ('Three elements x, y and z ... x*(y*z)=(x*y)*z'). Pure content PR -- no ADJ-FORMULA-LIBRARIES spec section needed (mirrors wave2-k2-math-cardinality-comparison, not a language-capability PR like FL-8/FL-9/FL-11). Picking this up next."
     },
     {
