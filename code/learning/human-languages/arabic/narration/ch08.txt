@@ -9,7 +9,7 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 
 Warm-up.
 [pause 2 seconds]
-Every language so far in this course names its weekdays for planet-gods. Arabic does something completely different: it just counts them.
+Most European and North Indian languages name their weekdays for planet-gods. Arabic does something completely different: it just counts them.
 
 Grammar Lens — The pattern: definite article + ordinal number.
 Five of Arabic's seven days are simply "the [number]th" — the definite article ال (al-) plus an ordinal built on the number word:

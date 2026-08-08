@@ -6,7 +6,7 @@ sequence: 730
 chapter: 24
 type: word
 headword: lesen
-gloss: to read — a verb that first meant "to gather", and the first one in this course whose vowel changes in the du and er forms
+gloss: to read — a verb that first meant "to gather", and the first one in this book whose vowel changes in the du and er forms
 concept_tag: VERB-READ
 prerequisites: [GE-C24-verstehen, GE-C11-wasser-wein]
 sounds: [long-e, s-voiced]

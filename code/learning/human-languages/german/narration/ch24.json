@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fb75d3964d3b3f0f",
+  "sourceHash": "fnv1a64:a6259dd9fea16afd",
   "lessons": [
     {
       "id": "GE-C24-denken",
@@ -395,14 +395,14 @@
       "title": "lesen — gathering, and the first verb that changes its vowel",
       "headword": "lesen",
       "romanization": "lesen",
-      "gloss": "to read — a verb that first meant \"to gather\", and the first one in this course whose vowel changes in the du and er forms",
+      "gloss": "to read — a verb that first meant \"to gather\", and the first one in this book whose vowel changes in the du and er forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06d86fff9bf862f3",
+      "sourceHash": "fnv1a64:820e3554f1ce62f3",
       "notice": null,
       "blocks": [
         {

@@ -4,6 +4,54 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — the course-level phrases (HL-C50)
+
+The class the previous change counted and deferred: bare *"in this course"*, *"in
+this curriculum"*, *"in this series"*. **31 sites across 29 authored files** — 29 in
+27 lesson sources, 2 in the handwritten `sanskrit/book/book.tex` and its ch01.
+
+- A reader holding the Tamil book does not know which languages the series covers,
+  so *"every Dravidian language in this course"* names a set they cannot see.
+- Two were **build-system notes printed at a learner**: *"**ट** is not yet in this
+  curriculum's stroke data — draw it only after its entry is authored"*. The reader
+  is not the person who authors stroke data.
+- Ordinals moved **in-volume** rather than being deleted: *"the first one in this
+  course whose vowel changes"* → *"in this **book**"*. A reader is holding the book,
+  so that ordinal is answerable. The guard deliberately does not match "in this book".
+
+### Note — deleting "in this course" widens a claim from the books to the world
+
+This is the whole difficulty of the class, and it cost real defects again.
+
+*"Every European language **in this course** splits the year into four seasons"* is a
+safe claim about a curriculum. Drop three words and it is a claim about European
+languages — and Sami traditionally counts eight. Every quantifier here was re-scoped
+deliberately, and review still found two that had become false:
+
+- *"Across Europe and North India, weekdays are named for planet-gods"* — Portuguese
+  counts its weekdays (*segunda-feira*, *terça*…), as do Greek and every Slavic
+  language. Worse, it destroyed the lesson's own punchline, which is that Arabic
+  *counts* them: Portuguese does the same thing. The original carried **two** hedges,
+  "so far" and "in this course"; the rewrite dropped both.
+- *"Most languages say 'my name is' with a word for my and a word for name"* — false
+  for the whole Romance branch (*je m'appelle*, *me llamo*), for German, and for
+  Chinese: six tracks in this series.
+
+Three more rewrites lost their footing without being false: a cousin web described as
+"carrying" a language (inverted), kanji said to have "no parallel in any alphabet"
+(cuneiform and hieroglyphs are just as polyvalent, and nothing nearby mentioned
+alphabets), and *"a third fate for a consonant in this book"* — moving that ordinal
+in-volume made it checkable, and the Punjabi volume never labels a first or second.
+
+### Known remaining gap, measured
+
+The same defect wearing different words — **99 sites across 79 files**: *"the
+course"* / *"this curriculum"* / *"this series"* not preceded by "in" (65), *"in this
+arc"* used for a cross-volume set (27), invisible-set ordinals like *"the fifth
+language to close the loop"* (3), and *"every track"* / *"this course covers"* (4).
+Counted rather than left to be rediscovered. The guard does not match them yet, for
+the same reason it did not match this class until today.
+
 ### Fixed — the pointers the last guard could not see (HL-C50)
 
 The previous change closed cross-volume *lesson ids* and left a gap it named out

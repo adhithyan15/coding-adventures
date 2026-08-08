@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6294b259f9b691ec",
+  "sourceHash": "fnv1a64:0014006ce34f9f4f",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:3dbaad4fe2de433f",
+      "sourceHash": "fnv1a64:256f75fd5f1f3c3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every language so far in this course names its weekdays for planet-gods. Arabic does something completely different: it just counts them."
+              "text": "Most European and North Indian languages name their weekdays for planet-gods. Arabic does something completely different: it just counts them."
             }
           ]
         },

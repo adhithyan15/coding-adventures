@@ -33,7 +33,7 @@ reviews_of: [AR-C07-asif]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Every language so far in this course names its weekdays for
+[PAUSE 2s] Most European and North Indian languages name their weekdays for
 planet-gods. Arabic does something completely different: it just **counts**
 them.
 

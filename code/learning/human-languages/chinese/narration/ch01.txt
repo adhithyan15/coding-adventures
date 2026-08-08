@@ -57,7 +57,7 @@ Stroke order is a real, taught system here: top before bottom, left before right
 
 The word, taken apart.
 你 nǐ — you, addressing one person.
-Here this track has to be honest with you. Everywhere else in this curriculum, a new word is anchored to English words you already own through a shared ancestor: Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none.
+Here this book has to be honest with you. A related language lets a new word be anchored to English words you already own through a shared ancestor — Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none.
 What replaces it is what you just read: the character is itself decomposable, and its pieces mean things. 你 (nǐ) carries a person on its left because it is about a person. That is the hook — not history you share with English, but structure you can see.
 
 Guided Practice.
@@ -94,7 +94,7 @@ Notice what just happened. 女 and 子 are not letters spelling out the sound h�
 
 The word, taken apart.
 好 (hào) hǎo — good, and also well.
-A woman beside a child, and the character means "good". That picture is the hook — and it is the device this track uses in place of the cousin web every other volume in this curriculum runs on, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word.
+A woman beside a child, and the character means "good". That picture is the hook — and it stands in for the cousin web that a related language would supply, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word.
 Two cautions, because a memory aid that pretends to be history rots:
 "Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read 子 as a phonetic element instead. A picture that helps, not a proven derivation.
 Component glosses are hooks, not translations. 好 (hǎo) (hào) does not "mean" woman-child. It means good.

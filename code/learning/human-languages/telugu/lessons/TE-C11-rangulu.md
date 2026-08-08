@@ -58,8 +58,8 @@ the **exact same** borrowed word the moment it comes to blue.
 
 [PAUSE 1s]
 - [YOU SAY: "nalupu, telupu, erupu" — black, white, red]
-- [YOU SAY: "nīlam" — blue, the word every language in this course now
-  shares]
+- [YOU SAY: "nīlam" — blue, the word the four Dravidian
+  languages and Hindi all share]
 - [YOU SAY: the whole pattern, one more time — native, native, native,
   **borrowed**]
 

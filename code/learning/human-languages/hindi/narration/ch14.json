@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ab989406c824d264",
+  "sourceHash": "fnv1a64:13b1ba42e4613deb",
   "lessons": [
     {
       "id": "HI-C14-ritu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f64c469ba547d55",
+      "sourceHash": "fnv1a64:3cf3287daf0ef18b",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every European language in this course splits the year into four seasons. Hindi's own tradition doesn't — it recognizes six, and this isn't extra vocabulary bolted onto a four-season frame. It's a genuinely different way of dividing the year."
+              "text": "European languages generally split the year into four seasons. Hindi's own tradition doesn't — it recognizes six, and this isn't extra vocabulary bolted onto a four-season frame. It's a genuinely different way of dividing the year."
             }
           ]
         },

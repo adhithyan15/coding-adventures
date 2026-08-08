@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f6301764a50979e5",
+  "sourceHash": "fnv1a64:e0c6f8dfe20e0f70",
   "lessons": [
     {
       "id": "HI-W01-shirorekha-na-ma",
@@ -525,7 +525,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:e36ecbfa85109dfb",
+      "sourceHash": "fnv1a64:26af03d5de07dead",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -615,7 +615,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two honest footnotes: this walk describes the five stop families, not the whole list; and ट is not yet in this curriculum's stroke data. Read it here and draw it only after its entry is authored."
+              "text": "Two honest footnotes: this walk describes the five stop families, not the whole list; and this book does not give a stroke order for ट. Read it here, and wait for a source you trust before you write it."
             }
           ]
         },

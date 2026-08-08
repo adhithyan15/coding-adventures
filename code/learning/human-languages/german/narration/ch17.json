@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ce4e6be384d018cf",
+  "sourceHash": "fnv1a64:436bd0ef42617218",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46d0b30a7b21211a",
+      "sourceHash": "fnv1a64:2749ef57887d5546",
       "notice": null,
       "blocks": [
         {
@@ -444,7 +444,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Now the interesting part. Every Romance language in this course builds \"hand\" on Latin manus:"
+              "text": "Now the interesting part. Every Romance language builds \"hand\" on Latin manus:"
             },
             {
               "kind": "table",

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a4715d7f4254b303",
+  "sourceHash": "fnv1a64:5a8646971486e548",
   "summary": {
     "totalLessons": 1385,
     "voice": 909,
@@ -8547,7 +8547,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3dbaad4fe2de433f"
+      "sourceHash": "fnv1a64:256f75fd5f1f3c3f"
     },
     {
       "id": "AR-C08-al-jumua-as-sabt",
@@ -10173,7 +10173,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fd5fc68c6af29500",
+      "sourceHash": "fnv1a64:bf90a02b9c63153c",
       "detachableSegments": [
         "Script — 你, and the person hiding on its left"
       ]
@@ -10194,7 +10194,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8856bfa06cfb62bd",
+      "sourceHash": "fnv1a64:220f4f705c72a7c3",
       "detachableSegments": [
         "Script — 好, a woman beside a child"
       ]
@@ -12981,7 +12981,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46d0b30a7b21211a"
+      "sourceHash": "fnv1a64:2749ef57887d5546"
     },
     {
       "id": "GE-C18-ja",
@@ -13161,7 +13161,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06d86fff9bf862f3"
+      "sourceHash": "fnv1a64:820e3554f1ce62f3"
     },
     {
       "id": "GE-C24-schreiben",
@@ -14263,7 +14263,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e36ecbfa85109dfb"
+      "sourceHash": "fnv1a64:26af03d5de07dead"
     },
     {
       "id": "HI-C01-alvida",
@@ -15012,7 +15012,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1c24c88399adaca",
+      "sourceHash": "fnv1a64:350f1c0bbea0616c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -15166,7 +15166,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9df4c614f504322b"
+      "sourceHash": "fnv1a64:79169e506f53d6cd"
     },
     {
       "id": "HI-C08-kripaya",
@@ -15364,7 +15364,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9f64c469ba547d55"
+      "sourceHash": "fnv1a64:3cf3287daf0ef18b"
     },
     {
       "id": "HI-C15-paani-roti",
@@ -16890,7 +16890,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8d4b5481167925c8"
+      "sourceHash": "fnv1a64:87e175498a57b50c"
     },
     {
       "id": "IT-C16-essere",
@@ -16998,7 +16998,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a462acace3a0153a"
+      "sourceHash": "fnv1a64:30e82540daa65b92"
     },
     {
       "id": "IT-C18-pensare",
@@ -17223,7 +17223,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:405ea26c254381c6",
+      "sourceHash": "fnv1a64:00d779c076662e0e",
       "detachableSegments": [
         "Script — kanji, and the readings problem"
       ]
@@ -18202,7 +18202,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:52e97c7a7b81405f"
+      "sourceHash": "fnv1a64:f73a4d5c3f34c2df"
     },
     {
       "id": "KA-C19-vayassu",
@@ -19068,7 +19068,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1815c089d95f1f84"
+      "sourceHash": "fnv1a64:b1418f185aaaaac2"
     },
     {
       "id": "LA-C10-panis",
@@ -19356,7 +19356,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d26baa3eb553be8a"
+      "sourceHash": "fnv1a64:e7fa4ed193474c2c"
     },
     {
       "id": "LA-C21-meeting-phrase-context",
@@ -23029,7 +23029,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0cbd7ebe8850758"
+      "sourceHash": "fnv1a64:bd65bbf669f07dc2"
     },
     {
       "id": "FA-C08-porsidan",
@@ -23841,7 +23841,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:728021c129cdefb6"
+      "sourceHash": "fnv1a64:ca89807f7cb84ee2"
     },
     {
       "id": "PT-C11-pao",
@@ -25288,7 +25288,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ba5e85879b8768cb",
+      "sourceHash": "fnv1a64:b3ba243cf1ee590e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25662,7 +25662,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1d3d69c6c4518117"
+      "sourceHash": "fnv1a64:18eedafd904b8b7b"
     },
     {
       "id": "RU-C02-kak-vas-zovut",
@@ -26107,7 +26107,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:727560286d972f72",
+      "sourceHash": "fnv1a64:386744037c9fab92",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -26572,7 +26572,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06c187eb35a64186",
+      "sourceHash": "fnv1a64:e1ceeeb95c714166",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -31009,7 +31009,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7cd19cdfa68e405f"
+      "sourceHash": "fnv1a64:707e217350c30e75"
     },
     {
       "id": "TA-C19-age-register-grammar",
@@ -31045,7 +31045,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7262158bd8ed0238"
+      "sourceHash": "fnv1a64:83599a85f76e0d2c"
     },
     {
       "id": "TA-C20-vaanilai",
@@ -31561,7 +31561,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:461fc79451361c98",
+      "sourceHash": "fnv1a64:3247ff041aada7e8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -32382,7 +32382,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f7ff3cc44bcfdd9a"
+      "sourceHash": "fnv1a64:d9887faa67f4d0a2"
     },
     {
       "id": "TE-C12-kutumbam",
@@ -33399,7 +33399,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b59762c651c4b0f6",
+      "sourceHash": "fnv1a64:7ba30adc928f3954",
       "detachableSegments": [
         "Script Bridge — shared history, local spacing"
       ]
@@ -33672,7 +33672,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e6d8568047160abb",
+      "sourceHash": "fnv1a64:c6c945a4954aefbb",
       "detachableSegments": [
         "The letters in this word"
       ]

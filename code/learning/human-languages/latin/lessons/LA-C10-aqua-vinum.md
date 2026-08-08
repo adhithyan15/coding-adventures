@@ -42,7 +42,7 @@ barely moved at all, anywhere.
 
 **aqua, aquae** — "**water**." Spanish and Italian kept it close to whole:
 **agua**, **acqua**. French, though, eroded it further than almost any
-other Latin word in this course: *aqua → ewe → eaue → **eau*** — three
+other word it inherited from Latin: *aqua → ewe → eaue → **eau*** — three
 written letters, *e-a-u*, spelling one bare vowel sound, "oh." Compare
 *caput*, which French similarly abandoned as an everyday word (for *testa*)
 — *aqua* wasn't replaced, but it was worn down almost to nothing while

@@ -12,7 +12,7 @@ concept_tag: VERB-TAKE
 prerequisites: [PA-C08-likhna]
 sounds: [dulankar-ai, retroflex-na]
 roots: [sanskrit-labhate, prakrit-lahai, pie-lebh]
-etymology_hook: laiṇā comes through Prakrit lahaï from Sanskrit labhate “takes, obtains”, on PIE *lebʰ- “to gain” — Greek láphura “spoils”, Lithuanian lõbis “treasure”, no secure English cousin; the Sanskrit bh thinned to h and then to nothing, which is a third fate for a consonant in this course.
+etymology_hook: laiṇā comes through Prakrit lahaï from Sanskrit labhate “takes, obtains”, on PIE *lebʰ- “to gain” — Greek láphura “spoils”, Lithuanian lõbis “treasure”, no secure English cousin; the Sanskrit bh thinned to h and then to nothing, which is one more fate a consonant can meet.
 duration:
   max_seconds: 265
 requires:

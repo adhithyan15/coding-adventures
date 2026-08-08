@@ -139,7 +139,7 @@ You'll want to know — Why the letters are in this order.
 The heart of the Devanagari consonant order is not a historical accident like A-B-C. Its five stop families (vargas) are sorted by where in your mouth the closure happens, starting at the soft palate and walking forward to the lips:
 क (soft palate) becomes च (hard palate) becomes ट (roof, tongue curled back) becomes त (teeth) becomes प (lips).
 Say those five and feel the closure travel forward. Indian phoneticians organised sounds this way well over two thousand years ago — Pāṇini's work is roughly fourth century BCE — producing a phonetics chart memorised as an alphabet long before Europe attempted the same analysis.
-Two honest footnotes: this walk describes the five stop families, not the whole list; and ट is not yet in this curriculum's stroke data. Read it here and draw it only after its entry is authored.
+Two honest footnotes: this walk describes the five stop families, not the whole list; and this book does not give a stroke order for ट. Read it here, and wait for a source you trust before you write it.
 
 Guided Practice.
 [pause 1 second]

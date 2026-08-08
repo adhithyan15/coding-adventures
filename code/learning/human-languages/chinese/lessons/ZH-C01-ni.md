@@ -71,9 +71,9 @@ So **亻** first, then **尔**.
 
 **你** *nǐ* — **you**, addressing one person.
 
-Here this track has to be honest with you. Everywhere else in this curriculum, a
-new word is anchored to English words you already own through a shared ancestor:
-Spanish *gracias* to *grace* and *gratitude*, all from Latin *gratia*. **Chinese
+Here this book has to be honest with you. A related language lets a new word be
+anchored to English words you already own through a shared ancestor — Spanish
+*gracias* to *grace* and *gratitude*, all from Latin *gratia*. **Chinese
 shares no ancestor with English.** There is no cousin web for *nǐ*, and inventing
 one would be worse than having none.
 

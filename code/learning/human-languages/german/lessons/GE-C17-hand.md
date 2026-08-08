@@ -66,7 +66,7 @@ and body parts are where you feel it most:
 ## Why it's said this way: Where the family tree stops
 <!-- hl-knowledge: introduces=[GE-ETYMON-HAND-MANUS-05]; assesses=[] -->
 
-Now the interesting part. Every Romance language in this course builds "hand" on
+Now the interesting part. Every Romance language builds "hand" on
 Latin ***manus***:
 
 | | |

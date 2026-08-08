@@ -33,8 +33,8 @@ reviews_of: [IT-C15-passato-prossimo, IT-C05-parlare]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Italian's other past tense. Whether it sounds normal or bookish
-depends on **which part of Italy you are standing in** — the clearest case of
-geography deciding grammar in this course.
+depends on **which part of Italy you are standing in** — one of the clearest
+cases anywhere of geography deciding grammar.
 
 ## You'll want to know: the remote past
 <!-- hl-knowledge: introduces=[IT-LEX-PASSATO-REMOTO-02]; assesses=[] -->

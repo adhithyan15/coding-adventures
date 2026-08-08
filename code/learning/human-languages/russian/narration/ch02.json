@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:afc21c872d0eaee5",
+  "sourceHash": "fnv1a64:756aeef46987b86f",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d3d69c6c4518117",
+      "sourceHash": "fnv1a64:18eedafd904b8b7b",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every other track in this course says \"my name is\" with a word for my and a word for name. Russian says something quite different, and it is worth taking apart slowly."
+              "text": "Many languages say \"my name is\" with a word for my and a word for name. Russian says something quite different, and it is worth taking apart slowly."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:312b7248145dbb09",
+  "sourceHash": "fnv1a64:c89b171c9cc323f6",
   "lessons": [
     {
       "id": "IT-C17-testa",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a462acace3a0153a",
+      "sourceHash": "fnv1a64:30e82540daa65b92",
       "notice": null,
       "blocks": [
         {
@@ -255,7 +255,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the general lesson, and it recurs everywhere in this course: an \"irregular\" word is usually a regular word from a system that no longer exists."
+              "text": "That is the general lesson, and it recurs constantly: an \"irregular\" word is usually a regular word from a system that no longer exists."
             },
             {
               "kind": "speech",

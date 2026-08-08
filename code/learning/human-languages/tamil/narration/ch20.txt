@@ -16,7 +16,7 @@ You'll want to know: இருபது — transparently "two-tens".
 இருபது (irupathu, "twenty") = இரு (iru, an older word for "two," alongside the everyday இரண்டு iraṇḍu) + பத்து (pathu, "ten") — fully transparent as "two-tens," matching Malayalam's own irupathu almost letter-for-letter.
 
 Why it's said this way: Be honest: one shared Dravidian idea, four different other-family answers.
-This closes the numbers arc with a genuinely clean pattern. Every Dravidian language in this course builds "twenty" the same compositional way — some (Tamil, Malayalam) keeping it fully transparent on the surface today, some (Kannada) with the same compositional origin but no longer visibly matching the modern standalone words for "two" and "ten," some (Telugu) worn down further but most likely from the same root. Compare that to the other three families you've met: Sanskrit's विंशति (vimshati), Latin's vīgintī, and Arabic's عشرون (ʿishrūn) are each their own special, non-compositional word for twenty — none built transparently from "two" and "ten" the way every single Dravidian language in this course does.
+This closes the numbers arc with a genuinely clean pattern. All four major Dravidian languages build "twenty" the same compositional way — some (Tamil, Malayalam) keeping it fully transparent on the surface today, some (Kannada) with the same compositional origin but no longer visibly matching the modern standalone words for "two" and "ten," some (Telugu) worn down further but most likely from the same root. Compare that to the other three families you've met: Sanskrit's विंशति (vimshati), Latin's vīgintī, and Arabic's عشرون (ʿishrūn) are each their own special, non-compositional word for twenty — none built transparently from "two" and "ten" the way Tamil, Telugu, Kannada, and Malayalam all do.
 
 Guided Practice.
 [pause 1 second]
@@ -29,7 +29,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two pieces build இருபது (twenty)? (இரு "two" + பத்து "ten" — "two-tens.") Do all four Dravidian languages in this course build "twenty" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern "two"/"ten" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)
+What two pieces build இருபது (twenty)? (இரு "two" + பத்து "ten" — "two-tens.") Do all four major Dravidian languages build "twenty" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern "two"/"ten" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)
 
 
 Lesson 2 of 2.

@@ -57,7 +57,7 @@ a reliable polite close for the short interaction learned so far.
 <!-- hl-knowledge: introduces=[UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING]; assesses=[] -->
 
 Urdu **خدا حافظ** and Persian **خداحافظ** share the same historical pieces.
-Urdu keeps the visible space in this course; Persian normally joins them.
+Urdu conventionally keeps the visible space; Persian normally joins them.
 Mixed practice may compare the two only now that each local phrase is
 independently readable.
 

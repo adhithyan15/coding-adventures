@@ -48,7 +48,7 @@ rather than a sound. 日 is sun or day. 本 is origin or root. 語 is language.
 So 日本 is "sun-origin" — the country the sun rises from — and 日本語 is its
 language.
 
-Now the fact that has no parallel anywhere else in this curriculum. A kanji does
+Now the fact that makes kanji unlike any letter you have learned. A kanji does
 not have *a* sound. 日 is read *nichi*, *jitsu*, *hi*, *bi*, or *ka*, depending
 on the word it stands in — and in 日本 it is shortened again, to *ni*. There is
 no sensible way to teach "the sound of 日." What a lesson can teach is the

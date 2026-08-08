@@ -33,7 +33,7 @@ reviews_of: [LA-C20-name-case-variation, LA-C20-quid-tibi-nomen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02] -->
 
-[PAUSE 2s] Every modern language in this course has one fixed phrase for
+[PAUSE 2s] Modern languages generally have one fixed phrase for
 "nice to meet you." Latin, honestly, does **not** — but it has something
 better: a real line from a Roman comedy that does the job.
 

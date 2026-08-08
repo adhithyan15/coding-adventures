@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Chapter 5",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8524e38a45a846be",
+  "sourceHash": "fnv1a64:cbeb6be21dffed51",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e1c24c88399adaca",
+      "sourceHash": "fnv1a64:350f1c0bbea0616c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -463,7 +463,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit root is karnā from, and name two words in this course built on it. (√kṛ \"to do\"; any two of karma, namaskār, Sanskrit.)"
+              "text": "What Sanskrit root is karnā from, and name two words built on it. (√kṛ \"to do\"; any two of karma, namaskār, Sanskrit.)"
             }
           ]
         }

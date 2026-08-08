@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Two Italian Pasts",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0b856b51ba3decfd",
+  "sourceHash": "fnv1a64:50843bd9598574f7",
   "lessons": [
     {
       "id": "IT-C15-passato-prossimo",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d4b5481167925c8",
+      "sourceHash": "fnv1a64:87e175498a57b50c",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Italian's other past tense. Whether it sounds normal or bookish depends on which part of Italy you are standing in — the clearest case of geography deciding grammar in this course."
+              "text": "Italian's other past tense. Whether it sounds normal or bookish depends on which part of Italy you are standing in — one of the clearest cases anywhere of geography deciding grammar."
             }
           ]
         },

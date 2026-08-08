@@ -55,7 +55,7 @@ past **எடுத்தேன்** (*eḍuttēṉ*). Two sentences you can alr
 
 **எ** is the standing vowel *e*, from **எழுது**; **டு** is **ட** with the *u*
 sign, and **ட** came apart in **படி**. Nothing here is new — the first time in
-this course that has been true of a whole headword. The *ḍ* you hear is the same
+this book that has been true of a whole headword. The *ḍ* you hear is the same
 positional softening: **ட** goes soft between vowels and hard when doubled, as
 in *eḍuttēṉ*.
 

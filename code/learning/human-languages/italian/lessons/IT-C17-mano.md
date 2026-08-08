@@ -65,7 +65,7 @@ When Italian dropped the fourth declension, *mano* was left with its old gender
 and an ending that now looks like it belongs to a different class. The word
 didn't change; **the system around it did.**
 
-That is the general lesson, and it recurs everywhere in this course: an
+That is the general lesson, and it recurs constantly: an
 "irregular" word is usually a **regular word from a system that no longer
 exists**.
 

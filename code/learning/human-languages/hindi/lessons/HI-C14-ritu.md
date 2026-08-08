@@ -33,7 +33,7 @@ reviews_of: [HI-C13-haath]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Every European language in this course splits the year into
+[PAUSE 2s] European languages generally split the year into
 **four** seasons. Hindi's own tradition doesn't — it recognizes **six**, and
 this isn't extra vocabulary bolted onto a four-season frame. It's a
 genuinely different way of dividing the year.

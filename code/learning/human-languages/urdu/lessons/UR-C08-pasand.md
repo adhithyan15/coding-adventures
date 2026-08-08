@@ -12,7 +12,7 @@ concept_tag: VERB-LIKE-LOVE
 prerequisites: [UR-C08-madad]
 sounds: [rtl, final-ye, alif-madd]
 roots: [persian-pasandidan, proto-iranian-pati-sand]
-etymology_hook: pasand is Persian — from پسندیدن pasandīdan "to approve, to find pleasing", built on *pati- "towards" plus *sand "to look good" — and it entered Urdu as a NOUN, so it cannot carry the person doing the liking; mujhe paṛhnā pasand hai is "to me, reading is pleasing", the sixth language in this course to make liking something that happens TO you.
+etymology_hook: pasand is Persian — from پسندیدن pasandīdan "to approve, to find pleasing", built on *pati- "towards" plus *sand "to look good" — and it entered Urdu as a NOUN, so it cannot carry the person doing the liking; mujhe paṛhnā pasand hai is "to me, reading is pleasing", one of many languages that make liking something that happens TO you.
 duration:
   max_seconds: 296
 requires:
