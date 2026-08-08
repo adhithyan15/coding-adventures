@@ -1,0 +1,88 @@
+% ============================================================================
+% operation-properties.adj — properties of addition and subtraction, verified
+% on a given pair/triple rather than merely asserted.
+% ============================================================================
+% The K-8 "operation properties" track of the compute standard library
+% (CCSS 1.OA.B.3's "apply properties of operations as strategies"). A property
+% like commutativity is a LAW about every pair of numbers, not a fact about one
+% named pair — so instead of a `relate` fact (which states something about a
+% SPECIFIC pair of concepts) this library uses FL-8's comparison-formula shape:
+% given a concrete instance, compute BOTH sides independently and confirm they
+% agree, citing the general law the agreement demonstrates. A consumer states
+% NO arithmetic — it `import`s this file, `observe`s the values it decomposed
+% from the prompt, and asks the engine to compute and compare both sides.
+%
+%     import "operation-properties.adj"     % transitively imports arithmetic.adj
+%     observe addend_one(4)                 % "…4…"   (span cited by the model)
+%     observe addend_two(7)                 % "…7…"   (span cited by the model)
+%     ? addition_is_commutative(addend_one, addend_two)   % engine → 1 (true), MathWorld-cited
+%
+% `subtraction_is_commutative` is deliberately included alongside
+% `addition_is_commutative`, not as a mirror-image convenience formula but for
+% CONTRAST: it computes true only when the two operands are equal, teaching by
+% counterexample that subtraction — unlike addition — is not commutative in
+% general, a common early-elementary misconception target.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on the elementary primitives — `sum` and `difference`.
+% The import is RELATIVE to this file, so a consumer that imports
+% `operation-properties.adj` gets those primitives transitively and the
+% bodies below resolve.
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The operands being tested and the derived truth value for each
+% property. Rung-0 types an observable slot as `finding`; the `surface`
+% synonyms let a decomposer map everyday phrasing onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary operation_properties_vocab {
+    define addend_one                 : finding  surface "first number", "first addend", "one addend"
+    define addend_two                 : finding  surface "second number", "second addend", "other addend"
+    define addend_three               : finding  surface "third number", "third addend", "last addend"
+    define minuend                    : finding  surface "starting amount", "minuend", "amount before"
+    define subtrahend                 : finding  surface "amount taken away", "subtrahend", "amount removed"
+    define addition_is_commutative    : finding  surface "does addition commute", "order does not matter"
+    define subtraction_is_commutative : finding  surface "does subtraction commute", "order matters for subtraction"
+    define addition_is_associative    : finding  surface "does addition associate", "grouping does not matter"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. Each computes both sides of the property's defining
+% equation from the SAME cited `sum`/`difference` primitive and compares them
+% with `==` (FL-8), rather than asserting the property by name.
+%
+%   addition_is_commutative(a, b)     = sum(a, b) == sum(b, a)
+%   subtraction_is_commutative(a, b)  = difference(a, b) == difference(b, a)
+%   addition_is_associative(a, b, c)  = sum(sum(a, b), c) == sum(a, sum(b, c))
+% ----------------------------------------------------------------------------
+formulabook operation_properties {
+    use operation_properties_vocab
+
+    % Addition is commutative: swapping the two addends leaves the sum
+    % unchanged. Always true for real numbers — the value is in computing
+    % both sides independently and confirming they agree, not in the
+    % (unsurprising) boolean itself.
+    formula addition_is_commutative(addend_one, addend_two) = sum(addend_one, addend_two) == sum(addend_two, addend_one)
+        source "Two elements x and y of a set S are said to be commutative under a binary operation * if they satisfy x*y=y*x."
+        locator "https://mathworld.wolfram.com/Commutative.html"
+        trust authoritative
+
+    % Subtraction is NOT commutative in general — true only when minuend
+    % equals subtrahend. Cited to the same commutativity definition, but
+    % demonstrating its ABSENCE rather than its presence.
+    formula subtraction_is_commutative(minuend, subtrahend) = difference(minuend, subtrahend) == difference(subtrahend, minuend)
+        source "Two elements x and y of a set S are said to be commutative under a binary operation * if they satisfy x*y=y*x."
+        locator "https://mathworld.wolfram.com/Commutative.html"
+        trust authoritative
+
+    % Addition is associative: regrouping three addends leaves the sum
+    % unchanged. Composes `sum` twice (associatively), the same fold
+    % `average.adj`'s `mean_three` and `data-displays.adj`'s `range_three`
+    % already establish for a third operand.
+    formula addition_is_associative(addend_one, addend_two, addend_three) = sum(sum(addend_one, addend_two), addend_three) == sum(addend_one, sum(addend_two, addend_three))
+        source "Three elements x, y and z of a set S are said to be associative under a binary operation * if they satisfy x*(y*z)=(x*y)*z."
+        locator "https://mathworld.wolfram.com/Associative.html"
+        trust authoritative
+}

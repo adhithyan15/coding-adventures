@@ -46,3 +46,14 @@ landed and why, not a semver-tracked API.
   were previously reachable only via the `latex "…"` escape). `range_three` composes `max`/`min`
   twice each (associatively), the same fold `average.adj`'s `mean_three` uses for `sum`. See
   `code/packages/rust/adj-lang-cli/tests/formula_data_displays_e2e.rs`.
+- `mathematics/operation-properties.adj` (new) — `addition_is_commutative(a, b)`,
+  `subtraction_is_commutative(a, b)`, and `addition_is_associative(a, b, c)`. A property like
+  commutativity is a LAW about every pair of numbers, not a fact about one named pair, so instead
+  of a `relate` fact this uses ADJ-FORMULA-LIBRARIES FL-8's comparison-formula shape: compute both
+  sides of the property's defining equation from a given instance and confirm they agree with
+  `==`, citing the general law the agreement demonstrates (MathWorld's `Commutative.html`/
+  `Associative.html`). `subtraction_is_commutative` is included deliberately for CONTRAST with
+  `addition_is_commutative` — it computes false whenever the operands differ, teaching by
+  counterexample that subtraction, unlike addition, is not commutative in general. Composes
+  `arithmetic.adj`'s `sum`/`difference` only; no new language capability. See
+  `code/packages/rust/adj-lang-cli/tests/formula_operation_properties_e2e.rs`.
