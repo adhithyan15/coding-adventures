@@ -22,6 +22,14 @@
 % a consumer asking "is A less than B" queries `greater_than(b, a)` — the
 % same write-once-use-many discipline `percent`/`percent_of` already model as
 % algebraic inverses, applied to a comparison instead of an equation.
+%
+% `greater_than` ALSO answers "is A further right than B on a number line" —
+% ordering two quantities and ordering two number-line positions are the same
+% comparison. Its `surface` synonyms below include the number-line phrasing
+% directly, part of closing ADJ-STDLIB-COVERAGE.md 5.1's "number lines" gap
+% (see `data-displays.adj`'s `range_two` for the distance-on-a-number-line
+% half of the same gap) as a vocabulary extension of an already-shipped,
+% already-tested formula, not a new one.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -34,7 +42,7 @@
 dictionary comparison_vocab {
     define a             : finding  surface "first number", "first amount", "a"
     define b             : finding  surface "second number", "second amount", "b"
-    define greater_than  : finding  surface "greater than", "more than", "bigger than"
+    define greater_than  : finding  surface "greater than", "more than", "bigger than", "further right on a number line", "later on a number line"
 }
 
 % ----------------------------------------------------------------------------

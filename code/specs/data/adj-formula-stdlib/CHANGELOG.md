@@ -57,3 +57,15 @@ landed and why, not a semver-tracked API.
   counterexample that subtraction, unlike addition, is not commutative in general. Composes
   `arithmetic.adj`'s `sum`/`difference` only; no new language capability. See
   `code/packages/rust/adj-lang-cli/tests/formula_operation_properties_e2e.rs`.
+- `mathematics/comparison.adj` and `mathematics/data-displays.adj` — closed ADJ-STDLIB-COVERAGE.md
+  5.1's "number lines" gap as a `surface` VOCABULARY extension of two already-shipped, already-
+  tested formulas, not a new one: ordering two quantities and ordering two number-line positions
+  are the same comparison (`greater_than`), and the distance between two points on a number line
+  is the same computation as the statistical range of a two-element sample (`range_two`). The same
+  write-once-use-many discipline `comparison.adj`'s own header already documents for `less_than`
+  (definitionally `greater_than(b, a)`, not a duplicated formula). `arithmetic.adj`'s `sum`
+  dictionary was deliberately left untouched for the "number line as jumps" framing — it is one of
+  the repo's few byte-pinned libraries, outside this loop's delivery scope (owned by the separate
+  CAS-provenance track). No new formula, no new citation, no engine change: `surface` synonyms are
+  a decomposer-facing hint only, not engine-parsed, so the change is covered by the existing
+  formulas' own test suites.
