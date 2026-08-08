@@ -489,6 +489,20 @@
       "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 21,
+      "title": "Bringing, Getting, Waiting, Buying",
+      "label": "ch:pt-bringing-getting-waiting-buying",
+      "output": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "title": "Answering, Meeting, and Three Ways to Play",
+      "label": "ch:pt-answering-meeting-playing",
+      "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "title": "Head and Hand",

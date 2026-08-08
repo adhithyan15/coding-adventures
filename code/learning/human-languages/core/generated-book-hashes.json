@@ -2435,6 +2435,29 @@
       "tex": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:779c8ba797e92346",
+      "lessonIds": [
+        "PT-C21-trazer",
+        "PT-C21-conseguir",
+        "PT-C21-esperar",
+        "PT-C21-comprar"
+      ],
+      "tex": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:eae6488804ed66aa",
+      "lessonIds": [
+        "PT-C22-responder",
+        "PT-C22-encontrar",
+        "PT-C22-jogar-brincar-tocar"
+      ],
+      "tex": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:5760617556944da1",

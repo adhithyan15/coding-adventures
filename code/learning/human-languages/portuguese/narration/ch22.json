@@ -1,0 +1,518 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 22,
+  "title": "Answering, Meeting, and Three Ways to Play",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:335fe19aa3cb72d5",
+  "lessons": [
+    {
+      "id": "PT-C22-responder",
+      "sequence": 790,
+      "title": "responder — answering, and a promise given back",
+      "headword": "responder",
+      "romanization": "responder",
+      "gloss": "to answer — literally to pledge something back, and the other half of asking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8ce3a336f2fe6f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A chapter of verbs for dealing with other people opens with the one the course has been missing. You have been able to ask since the last chapter. Now you can answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: A plain -er verb",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "eu respondo, nós respondemos.",
+                "tu respondes, vocês/eles respondem.",
+                "ele/ela/você responde, blank."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Responder is regular all the way through — an ordinary -er verb, the same shape as the writing and reading verbs you already conjugate. It pairs with perguntar exactly as English \"answer\" pairs with \"ask\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Pergunto e tu respondes. — \"I ask and you answer.\" Respondo que compro o pão. — \"I answer that I am buying the bread.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The most everyday answer of all is one you have had since the third chapter. Asked Como se chama?, you respond: Chamo-me…, and then muito prazer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: pledging it back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "responder from Latin respondēre: re-, \"back,\" plus spondēre, \"to pledge, to promise solemnly.\" A Roman answer was not information handed over — it was a promise returned. Somebody pledged, and you pledged back."
+            },
+            {
+              "kind": "speech",
+              "text": "That old weight is still on the English side of the family. Respond and response are the plain ones, but a responsible person is one who can be called on to answer, and to be despondent is to have given the pledge away. A sponsor is literally one who pledges for you — and a spouse is spōnsus, \"the one who has been promised.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Set that against the verb it answers. Perguntar came from percontārī, from contus, a boatman's pole: to ask was to sound the depth of the water in front of you. So Portuguese probes with a pole and pledges back with a promise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"respondo, respondes, responde, respondemos, respondem\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"respondo, respondes, responde, respondemos, respondem\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Pergunto e tu respondes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Pergunto e tu respondes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answering the oldest question — \"Chamo-me… muito prazer\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answering the oldest question — \"Chamo-me… muito prazer\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Respondo que compro o pão\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Respondo que compro o pão\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pledging family — \"sponsor, spouse, responsible\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pledging family — \"sponsor · spouse · responsible\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the present of responder. (Respondo, respondes, responde, respondemos, respondem.) What did spondēre mean, and which English word for a married person comes from it? (\"To pledge\" — spouse, spōnsus.) Now answer Como se chama? aloud. (Chamo-me…, then muito prazer.) What was the pole in perguntar? (Contus — asking as sounding the depth.) And is comprar related to compare? (No — comprar comes from parāre, \"to make ready.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C22-encontrar",
+      "sequence": 800,
+      "title": "encontrar — meeting, finding, and coming face to face",
+      "headword": "encontrar",
+      "romanization": "encontrar",
+      "gloss": "to meet, to find, to run into — and how it divides the work of meeting with conhecer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63bdfa7d69a61baa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English \"meet\" covers two different events: seeing someone you know, and meeting someone for the very first time. Portuguese keeps them apart, and it has already taught you half the answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: A plain -ar verb with two jobs",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "eu encontro, nós encontramos.",
+                "tu encontras, vocês/eles encontram.",
+                "ele/ela/você encontra, blank."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Encontrar is to find and to run into — one verb, because both are coming upon something."
+            },
+            {
+              "kind": "speech",
+              "text": "Encontro o livro. — \"I find the book.\" Encontramo-nos no sábado ao meio-dia. — \"We are meeting on Saturday at midday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That second sentence adds nos, \"each other,\" and the -s of encontramos drops out in front of it. Portugal hangs the little word on the back like that; Brazil more often puts it in front: nós nos encontramos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Which meeting is which",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Encontrar meets someone you already know. For meeting a person for the first time, Portuguese uses conhecer — the same verb that means being acquainted with a person or a city:"
+            },
+            {
+              "kind": "speech",
+              "text": "Encontro o Pedro. — \"I am meeting Pedro.\" (You know him.) Conheci o Pedro. — \"I met Pedro.\" (That was the first time.)"
+            },
+            {
+              "kind": "speech",
+              "text": "English collapses the two, and has to add \"for the first time\" when it matters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: face to face",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "encontrar from a Vulgar Latin incontrāre, from in plus contrā, \"facing, opposite, against.\" To meet is to end up in front of someone."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the same verb through French as encounter, and shortened it to counter — to counter is still to go against. The quiet one is country: (terra) contrāta, \"the land lying opposite,\" the ground spread out in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "And every encounter ends. The goodbyes of the fourth chapter go here: até logo, até amanhã, adeus."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"encontro, encontras, encontra, encontramos, encontram\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"encontro, encontras, encontra, encontramos, encontram\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "making a plan — \"Encontramo-nos no sábado ao meio-dia\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: making a plan — \"Encontramo-nos no sábado ao meio-dia\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two meetings — \"Encontro o Pedro\", \"Conheci o Pedro\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two meetings — \"Encontro o Pedro\" · \"Conheci o Pedro\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asking and answering — \"Pergunto e tu respondes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asking and answering — \"Pergunto e tu respondes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and parting — \"Até logo, adeus\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and parting — \"Até logo · adeus\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb meets a stranger for the first time, and which meets a friend? (Conhecer; encontrar.) Arrange it: \"We are meeting on Saturday at midday.\" (Encontramo-nos no sábado ao meio-dia.) Where did sábado come from, and what does meio-dia say literally? (Sabbatum, the Sabbath; \"mid-day\".) So which weekday is segunda-feira, and why? (Monday — domingo, the Lord's day, counts as the first.) And what is inside encontrar? (In + contrā — coming face to face; hence encounter, and country.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C22-jogar-brincar-tocar",
+      "sequence": 810,
+      "title": "jogar / brincar / tocar — the three ways to play",
+      "headword": "jogar / brincar / tocar",
+      "romanization": "jogar / brincar / tocar",
+      "gloss": "to play — split three ways, by whether it is a game, a child at play, or an instrument",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0bdfdf3c3d4552c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English plays chess, plays in the garden and plays the piano with one verb. Portuguese has three, and will not let you swap them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Which play is which",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "jogar — a game",
+                "brincar — a child, a joke",
+                "tocar — an instrument"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "jogar — a game: jogo, jogas, joga. brincar — a child, a joke: brinco, brincas, brinca. tocar — an instrument: toco, tocas, toca.",
+                "jogar — a game: Jogo futebol. brincar — a child, a joke: O meu irmão brinca. tocar — an instrument: Toco piano."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "All three are ordinary -ar verbs, endings exactly as in falar, morar and trabalhar. The work is choosing."
+            },
+            {
+              "kind": "speech",
+              "text": "Jogar is a game with rules and a winner. Brincar is free play — a child with a toy, and from there joking, so brincar com someone is to tease them. Tocar is an instrument. Brincar is the one English cannot match: \"play\" is too wide, \"mess about\" too dismissive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Two coasts, one preposition apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Portugal commonly puts an a after jogar: jogar à bola, jogar às cartas. Brazil, and northern Portugal, take the thing straight: jogar bola."
+            },
+            {
+              "kind": "speech",
+              "text": "Tocar also keeps its plainer meaning, to touch. You touch with a mão — and a piano wants as duas mãos, duas not dois, because mão is feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: a joke, a blow, and an honest gap",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jogar from Latin iocārī, \"to jest,\" from iocus, \"a joke\" becomes English joke, jocular, and juggler, a Latin ioculātor or jester. Portuguese plays its games with the Latin word for a gag."
+            },
+            {
+              "kind": "speech",
+              "text": "tocar from Vulgar Latin toccāre, \"to knock, to strike,\" most likely an imitation of the sound. Old French carried it into English as touch — a blow at its lightest is a touch. The striking sense stayed with music: a toccata, a tocsin or alarm bell. You tocar an instrument because you strike it."
+            },
+            {
+              "kind": "speech",
+              "text": "brincar is the honest gap. The leading account runs through brinco, today \"an earring,\" from Latin vinculum, \"a bond\" — a bound ornament, then a trinket, then playing with trinkets. A Germanic word for gleaming is the rival, and neither is settled. Vinculum survives plainly as vínculo, \"a bond.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole chapter — \"respondo, encontro, jogo, brinco, toco\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole chapter — \"respondo, encontro, jogo, brinco, toco\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Jogo futebol\", \"Toco piano\", \"O meu irmão brinca\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Jogo futebol\" · \"Toco piano\" · \"O meu irmão brinca\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with both hands — \"a mão, as duas mãos\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with both hands — \"a mão, as duas mãos\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the striking family — \"tocar, touch, toccata\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the striking family — \"tocar · touch · toccata\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the verb for a sport, the one for a child, the one for a piano. (Jogar; brincar; tocar.) Give this chapter's five eu forms. (Respondo, encontro, jogo, brinco, toco.) Which of the three has no settled root? (Brincar.) What did toccāre mean, and which English word is it? (\"To strike\" — touch.) Why as duas mãos? (Mão is feminine.) And which verb meets a person for the first time? (Conhecer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

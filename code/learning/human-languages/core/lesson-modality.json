@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:32426636845369e5",
+  "sourceHash": "fnv1a64:ed8089c004f2bae4",
   "summary": {
-    "totalLessons": 1417,
-    "voice": 941,
+    "totalLessons": 1424,
+    "voice": 948,
     "sight": 423,
     "pen": 53,
-    "drivableLessons": 941,
-    "drivablePercent": 66,
+    "drivableLessons": 948,
+    "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 442,
-    "drivablePrefixTotal": 758,
-    "fullyDrivableChapters": 297,
+    "chapterCount": 444,
+    "drivablePrefixTotal": 765,
+    "fullyDrivableChapters": 299,
     "unstartableChapters": 108,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -4988,12 +4988,12 @@
     },
     {
       "language": "portuguese",
-      "lessonCount": 74,
-      "voice": 65,
+      "lessonCount": 81,
+      "voice": 72,
       "sight": 9,
       "pen": 0,
-      "drivablePercent": 88,
-      "drivablePrefixTotal": 59,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 66,
       "modalities": [
         "voice",
         "sight"
@@ -5355,6 +5355,43 @@
             "PT-C20-perguntar",
             "PT-C20-ajudar",
             "PT-C20-gostar"
+          ]
+        },
+        {
+          "chapter": 21,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C21-trazer",
+            "PT-C21-conseguir",
+            "PT-C21-esperar",
+            "PT-C21-comprar"
+          ]
+        },
+        {
+          "chapter": 22,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C22-responder",
+            "PT-C22-encontrar",
+            "PT-C22-jogar-brincar-tocar"
           ]
         }
       ]
@@ -25002,6 +25039,132 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:346e56012ffc6875"
+    },
+    {
+      "id": "PT-C21-trazer",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a083064bbf497d45"
+    },
+    {
+      "id": "PT-C21-conseguir",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3742b8b2544dccc1"
+    },
+    {
+      "id": "PT-C21-esperar",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e90690e37c51c555"
+    },
+    {
+      "id": "PT-C21-comprar",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8b11425cdff3787b"
+    },
+    {
+      "id": "PT-C22-responder",
+      "language": "portuguese",
+      "chapter": 22,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f8ce3a336f2fe6f2"
+    },
+    {
+      "id": "PT-C22-encontrar",
+      "language": "portuguese",
+      "chapter": 22,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:63bdfa7d69a61baa"
+    },
+    {
+      "id": "PT-C22-jogar-brincar-tocar",
+      "language": "portuguese",
+      "chapter": 22,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c0bdfdf3c3d4552c"
     },
     {
       "id": "PA-C01-dhanvaad",
