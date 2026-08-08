@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Hearing, Sleeping, Sitting, Standing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ae6b9b154fb369b2",
+  "sourceHash": "fnv1a64:589faaaa00fe0564",
   "lessons": [
     {
       "id": "LA-C40-audio",
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f6f7d06cae484ef",
+      "sourceHash": "fnv1a64:2c914ecc8a3dc3bf",
       "notice": null,
       "blocks": [
         {
@@ -383,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dormīre left English nothing but loans. This verb is the reverse, and it lets us name a distinction the course has been using without stating it."
+              "text": "Dormīre left English nothing but loans. This verb is the reverse, and it lets us name a distinction this book has been using without stating it."
             }
           ]
         },

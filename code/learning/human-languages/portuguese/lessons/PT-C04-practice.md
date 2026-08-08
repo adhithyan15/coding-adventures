@@ -80,5 +80,5 @@ conversation. Run the goodbyes until the right one is automatic.
 
 [PAUSE 3s] Which Portuguese goodbye means "to God"? (*Adeus*.) Which word inside
 the *até* goodbyes came from Arabic, and what's its Spanish twin? (*Até* ← *ḥattā*
-— Spanish *hasta*.) You can now run a Portuguese conversation start to finish —
-that's the fifth language to reach the full greet-to-goodbye arc.
+— Spanish *hasta*.) You can now run a Portuguese conversation start to finish — the full
+greet-to-goodbye arc.

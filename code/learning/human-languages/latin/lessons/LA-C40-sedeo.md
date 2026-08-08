@@ -34,8 +34,8 @@ reviews_of: [LA-C40-dormio, LA-C40-audio, LA-C39-capio]
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DORMIO-01, LA-ETYMON-DORMIO-02, LA-LEX-AUDIO-01] -->
 
 [PAUSE 2s] **Dormīre** left English nothing but loans. This verb is the
-reverse, and it lets us name a distinction the course has been using without
-stating it.
+reverse, and it lets us name a distinction this book has been using
+without stating it.
 
 ## You'll want to know: sedeō — "I sit"
 <!-- hl-knowledge: introduces=[LA-LEX-SEDEO-01]; assesses=[] -->

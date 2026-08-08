@@ -27,7 +27,7 @@ Sanskrit, one you have met again and again.
 
 **करोमि** (*karomi*, "I do, I make") is from the root **कृ** (*kṛ*, "to do,
 make"), from Proto-Indo-European **\*kʷer-**. This is the root at the heart of
-this whole course:
+this book:
 
 - **नमस्कारः** (*namaskāraḥ*) — "the **making** of a bow" (*namas* + *kāra*)
 - **कर्म** (*karma*) — "a thing **done**," an action

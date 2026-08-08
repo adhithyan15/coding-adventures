@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5ab3afd6c620e3aa",
+  "sourceHash": "fnv1a64:591fbb252f2da03b",
   "lessons": [
     {
       "id": "TA-C15-thanneer-arisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46646101ede78b4e",
+      "sourceHash": "fnv1a64:69c3cb0567033e1e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every language so far in this arc taught \"bread\" as the staple food. Here, that would be dishonest — bread isn't the everyday staple in Tamil food culture. Rice is, and it comes with one of the most famous (if contested) etymological journeys of any food-word."
+              "text": "European languages teach \"bread\" as the staple food. Here, that would be dishonest — bread isn't the everyday staple in Tamil food culture. Rice is, and it comes with one of the most famous (if contested) etymological journeys of any food-word."
             }
           ]
         },

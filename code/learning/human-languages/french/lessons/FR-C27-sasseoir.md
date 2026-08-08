@@ -53,7 +53,7 @@ chair. **Je suis assis** is the **state** after it, "I am seated." English lets
 ## Grammar Lens: one verb, two accepted sets
 <!-- hl-knowledge: introduces=[FR-GRAMMAR-ASSEOIR-TWO-STEMS-03]; assesses=[FR-LEX-ASSEOIR-01] -->
 
-The only verb in the course with **two** correct answers, both in dictionaries.
+The only verb in this book with **two** correct answers, both in dictionaries.
 Learn this series whole:
 
 - **je m'assieds** — *mah-SYAY*

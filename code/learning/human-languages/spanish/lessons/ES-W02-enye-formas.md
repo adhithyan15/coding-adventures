@@ -32,7 +32,7 @@ reviews_of: [ES-W02-enye]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-ENYE, ES-SOUND-ENYE] -->
 
 [PAUSE 2s] You can write **ñ** and you can say it. Two of the next words in
-the course carry it, and both are worth a minute on their own — because
+this book carry it, and both are worth a minute on their own — because
 neither of them got its *ñ* from a doubled *n*.
 
 ## You'll want to know first

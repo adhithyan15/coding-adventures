@@ -77,7 +77,7 @@ weight**." To raise a thing is to lighten it. Hence **elevate**,
 **elevator**, **levitate**, **levity**; a **lever**, which lightens a load;
 **alleviate**, **relieve**, **relief**; **leaven**.
 
-So two of this course's verbs come from one corner of Roman thought. *Penser*
+So two of this book's verbs come from one corner of Roman thought. *Penser*
 is *pēnsāre*, "**to weigh**"; *lever* is *levāre*, "to make **light**." Thinking
 weighs, rising un-weighs, and *sedēre* just sits there.
 

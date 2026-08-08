@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da73c64bbe941924",
+  "sourceHash": "fnv1a64:b34e07c020a1e894",
   "lessons": [
     {
       "id": "TE-C34-tiisuko",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:17905a0b5febb5f8",
+      "sourceHash": "fnv1a64:64c137e432a2802e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -282,7 +282,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the clue to something this course has circled without naming. Telugu is not in the same branch as Tamil, Kannada and Malayalam. Those three are South Dravidian; Telugu heads South-Central Dravidian, with Gondi, Konda, Kui, Kuvi, Pengo and Manda. So the pattern was no run of accidents: lēdu against the sisters' il-, uṇḍu against their iru, enimidi and tommidi where eṭṭu and oṉpatu will not reach."
+              "text": "That is the clue to something worth naming outright. Telugu is not in the same branch as Tamil, Kannada and Malayalam. Those three are South Dravidian; Telugu heads South-Central Dravidian, with Gondi, Konda, Kui, Kuvi, Pengo and Manda. So the pattern was no run of accidents: lēdu against the sisters' il-, uṇḍu against their iru, enimidi and tommidi where eṭṭu and oṉpatu will not reach."
             }
           ]
         },

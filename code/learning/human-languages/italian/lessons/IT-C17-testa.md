@@ -56,7 +56,8 @@ Put the two descendants side by side:
 | **Italian** | ***testa*** — almost unchanged |
 | French | ***tête*** — *s* lost, vowels collapsed |
 
-This is the conservative-sister pattern this course keeps meeting. Chapter 11 had
+This is the conservative-sister pattern
+this book keeps meeting. Chapter 11 had
 *acqua* against *eau*; Chapter 15 had *parlato* keeping the Latin *-t-* that
 *parlé* wore away. Italian holds its shape; French erodes.
 

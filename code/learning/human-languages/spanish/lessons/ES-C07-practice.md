@@ -63,5 +63,5 @@ singular). Master these and you conjugate almost any regular verb.
 [PAUSE 3s] What are the singular endings for *-er/-ir* verbs? (*-o / -es / -e*.)
 Give the "I" forms of *comer, vivir, beber*. (*Como, vivo, bebo*.) Ask "what do
 you study?" and "where do you live?" (*¿Qué estudias? ¿Dónde vives?*) You can now
-hold a simple back-and-forth — the course is fully in sentence territory. Next:
+hold a simple back-and-forth — this book is fully in sentence territory. Next:
 **numbers** (uno, dos, tres) and telling someone your age and phone.

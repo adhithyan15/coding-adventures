@@ -32,7 +32,7 @@ reviews_of: [TA-C25-iniya-iravu, TA-C01-vanakkam-family-register, TA-C01-nandri]
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-INIYA-IRAVU-01] -->
 
 [PAUSE 2s] Tamil's native "sweet night" repeats the lexical choice that opened
-the course: build greetings from its own roots rather than the shared Sanskrit
+this book: build greetings from its own roots rather than the shared Sanskrit
 formula.
 
 ## You'll want to know: The Chapter 1 echo

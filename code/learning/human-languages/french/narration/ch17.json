@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bb8682839ab17ed4",
+  "sourceHash": "fnv1a64:8c6d326221123c15",
   "lessons": [
     {
       "id": "FR-C17-tete",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4900acc35de80fa8",
+      "sourceHash": "fnv1a64:be3d639c94977510",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this course always gives you the article."
+              "text": "la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this book always gives you the article."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Chapter 10",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dee01cb1d828b806",
+  "sourceHash": "fnv1a64:ea6580c734b4662b",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -489,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e10c22caf5db30ed",
+      "sourceHash": "fnv1a64:ebec5ae13a78d2af",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +630,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the present of ir. (Voy, vas, va, vamos, van.) Build \"we're going to eat.\" (Vamos a comer.) How do mi/tu/su change for a plural noun, and do they change for gender? (Add -s becomes mis/tus/sus; no gender change.) Next chapter takes these rules further — the course now runs on grammar, not phrases."
+              "text": "Give the present of ir. (Voy, vas, va, vamos, van.) Build \"we're going to eat.\" (Vamos a comer.) How do mi/tu/su change for a plural noun, and do they change for gender? (Add -s becomes mis/tus/sus; no gender change.) Next chapter takes these rules further — this book now runs on grammar, not phrases."
             }
           ]
         }

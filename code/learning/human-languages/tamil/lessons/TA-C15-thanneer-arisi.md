@@ -33,8 +33,8 @@ reviews_of: [TA-C14-kaalangal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-KAALANGAL-01] -->
 
-[PAUSE 2s] Every language so far in this arc taught "bread" as the staple
-food. Here, that would be **dishonest** — bread isn't the everyday
+[PAUSE 2s] European languages teach "bread" as the staple food. Here, that
+would be **dishonest** — bread isn't the everyday
 staple in Tamil food culture. **Rice** is, and it comes with one of the
 most famous (if contested) etymological journeys of any food-word.
 

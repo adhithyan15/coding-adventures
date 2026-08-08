@@ -52,7 +52,8 @@ Hear two details. **க்க** is a **doubled** consonant: hold it, *vaṇak-ka
 *vaṇakam*. Tamil distinguishes single from double consonants. Final **ம்** is a
 bare *m*, so the word closes instead of trailing into *ma*.
 
-That is the first word of the course, written by hand.
+That is the first word of
+this book, written by hand.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-MA-RETROFLEX-NA-01, TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-WRITE-VANAKKAM-01] -->

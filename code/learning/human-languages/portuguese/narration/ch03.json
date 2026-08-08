@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbeaa2b81cbf1c89",
+  "sourceHash": "fnv1a64:1cbe7e46f5e20ee0",
   "lessons": [
     {
       "id": "PT-C03-eu",
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e036daa989a9b2f7",
+      "sourceHash": "fnv1a64:83eef7581fe19f49",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does Portuguese usually drop eu? (The verb ending says who.) What does me chamo literally mean, and its root? (\"I call myself\"; clāmāre.) What does prazer mean, and its Italian twin? (\"A pleasure\"; piacere.) Portuguese now runs greet becomes introduce becomes how-are-you becomes goodbye, end to end — the fifth language to close the loop."
+              "text": "Why does Portuguese usually drop eu? (The verb ending says who.) What does me chamo literally mean, and its root? (\"I call myself\"; clāmāre.) What does prazer mean, and its Italian twin? (\"A pleasure\"; piacere.) Portuguese now runs greet becomes introduce becomes how-are-you becomes goodbye, end to end — the loop is closed."
             }
           ]
         }

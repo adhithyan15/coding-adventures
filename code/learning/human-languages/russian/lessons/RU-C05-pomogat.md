@@ -50,7 +50,8 @@ The **г** is the letter *говорить* introduced: Greek gamma, a hard **g*
 
 Same **-ю**, and **ты помогаешь** files it with *знать*.
 
-One honest limit: the person you help takes a case this course has not reached,
+One honest limit: the person you help takes a case
+this book has not reached,
 so keep the sentence bare. **Я помогаю** alone is ordinary Russian.
 
 ## Grammar Lens: a partner that does not end in -ть

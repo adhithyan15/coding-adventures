@@ -73,7 +73,8 @@ and the remaining endings follow from it.
 noise of many voices." Russian still keeps **говор** for the buzz of a crowd or
 a regional way of talking. Most etymologists read the root as **imitative** —
 the word sounds like what it names — which is honest but means there is no tidy
-English cousin to hand you. Where a root is uncertain, this course says so.
+English cousin to hand you. Where a root is uncertain,
+this book says so.
 
 What there *is* to hand you is a trap. **Govern** is **not** related. That is
 Latin *gubernāre*, "to steer a ship," from Greek *kybernân* — the same word that

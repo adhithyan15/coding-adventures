@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cbad1f7eb1bb2816",
+  "sourceHash": "fnv1a64:a491a14d123de4c1",
   "lessons": [
     {
       "id": "TA-C26-kaalai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34c59d75dd71e3e4",
+      "sourceHash": "fnv1a64:f31e62ada32eba46",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every other language in this arc had a confidently-sourced story for its \"morning\" word — Sanskrit, or clearly native. Tamil's own word for morning is different: even Wiktionary itself isn't sure where it comes from."
+              "text": "Tamil's neighbours each had a confidently-sourced story for their \"morning\" word — Sanskrit, or clearly native. Tamil's own word for morning is different: even Wiktionary itself isn't sure where it comes from."
             }
           ]
         },

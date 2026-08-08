@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six Verbs, and the One You Never Say",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d2fa252939f19e6f",
+  "sourceHash": "fnv1a64:e7a986b496556437",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:465d68c6c09ddaf8",
+      "sourceHash": "fnv1a64:d7529203cca9d93a",
       "notice": null,
       "blocks": [
         {
@@ -582,7 +582,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "говорить (govorít') is built on the old Slavic noun govorъ, \"a murmur, a din, the noise of many voices.\" Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this course says so."
+              "text": "говорить (govorít') is built on the old Slavic noun govorъ, \"a murmur, a din, the noise of many voices.\" Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this book says so."
             },
             {
               "kind": "speech",

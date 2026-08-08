@@ -151,7 +151,27 @@ describe("a reader holding the PDF", () => {
       // "in this BOOK" is deliberately absent from the alternation. A reader is
       // holding the book, so an ordinal about it ("the first verb in this book whose
       // vowel changes") is answerable -- which is what several of these became.
-      new RegExp(`\\bin this\\s+(?:course|curriculum|series)\\b()`, "gi"),
+      new RegExp(`\\bin this\\s+(?:course|curriculum)\\b()`, "gi"),
+      // The same set named without "in": "the course keeps finding connections", "the
+      // curriculum treats Latin as a taproot", "the course's first taste of case".
+      new RegExp(
+        `\\b(?:the|this)\\s+(?:whole|entire|single|full)?\\s*(?:course|curriculum)\\b()`,
+        "gi",
+      ),
+      // NOT "series": in this corpus that is a conjugation or letter paradigm --
+      // "learn this series whole", "the retroflex ट-ठ-ड series" -- not the book set.
+      new RegExp(`\\b(?:course|curriculum)'s\\b()`, "gi"),
+      // "in this arc" for a set that spans volumes -- "every other language in this
+      // arc". An arc INSIDE one book ("the numbers arc") is fine and stays; what
+      // fails is the phrase used as a stand-in for the whole series.
+      new RegExp(`\\b(?:in|across|throughout)\\s+this\\s+arc\\b()`, "gi"),
+      // "that's the fifth language to reach the full arc" -- an ordinal over a set
+      // the reader cannot see, and cannot check.
+      new RegExp(
+        `\\bthe (?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth) language\\b()`,
+        "gi",
+      ),
+      new RegExp(`\\bthis course covers\\b|\\bevery track\\b|\\bthe tracks\\b()`, "gi"),
     ];
     const offenders: string[] = [];
     for (const { source, tex } of SURFACES) {

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cd9b707ba1f2707e",
+  "sourceHash": "fnv1a64:38b195962d6a8ad2",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:781996d54b057830",
+      "sourceHash": "fnv1a64:7bfc517583c9cf08",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this course will not invent one for it."
+              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it."
             }
           ]
         },

@@ -6,7 +6,7 @@ sequence: 450
 chapter: 21
 type: word
 headword: நாய், பூனை
-gloss: dog and cat — நாய் is THE solid, ancient, undisputed Dravidian root behind Kannada/Malayalam's dog-words too, the honest opposite of every mystery dog-word in this arc; பூனை is Tamil's everyday cat-word, one of (at least) three genuinely separate Dravidian cat-word families
+gloss: dog and cat — நாய் is THE solid, ancient, undisputed Dravidian root behind Kannada/Malayalam's dog-words too, the honest opposite of the tangled dog-words of Spanish, Hindi, and English; பூனை is Tamil's everyday cat-word, one of (at least) three genuinely separate Dravidian cat-word families
 concept_tag: TA-ANIMALS
 prerequisites: [TA-C20-pathinondru-irupathu]
 sounds: [tamil-vowel-sign-ai, tamil-final-y]

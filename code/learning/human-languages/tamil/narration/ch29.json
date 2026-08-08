@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6c788bc0104707ff",
+  "sourceHash": "fnv1a64:0ee1e256b5928da8",
   "lessons": [
     {
       "id": "TA-C29-kaalai-vanakkam",
@@ -12,14 +12,14 @@
       "title": "காலை வணக்கம் — \"morning greetings\"",
       "headword": "காலை வணக்கம்",
       "romanization": "",
-      "gloss": "good morning (kālai vaṇakkam), literally \"morning greetings\" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, \"reverence, homage\"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern seen in every other language in this arc; a WebSearch summary's claim that a Sanskrit-borrowed \"suprabhatham\" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here",
+      "gloss": "good morning (kālai vaṇakkam), literally \"morning greetings\" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, \"reverence, homage\"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern its neighbours share; a WebSearch summary's claim that a Sanskrit-borrowed \"suprabhatham\" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here",
       "script": "tamil",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fc0fa5050220196",
+      "sourceHash": "fnv1a64:0903cbd5df40e04f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every other language in this arc built its \"good morning\" on a word meaning \"good\" or \"auspicious.\" Tamil does something completely different: it just puts its everyday greeting word after its word for \"morning.\""
+              "text": "Tamil's neighbours each built \"good morning\" on a word meaning \"good\" or \"auspicious.\" Tamil does something completely different: it just puts its everyday greeting word after its word for \"morning.\""
             }
           ]
         },
@@ -84,11 +84,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the honest structural surprise — no śubha-equivalent word here at all, unlike every other language in this arc",
+              "instruction": "the honest structural surprise — no śubha-equivalent word here at all, unlike Tamil's neighbours",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the honest structural surprise — no śubha-equivalent word here at all, unlike every other language in this arc]"
+              "source": "[YOU SAY: the honest structural surprise — no śubha-equivalent word here at all, unlike Tamil's neighbours]"
             },
             {
               "kind": "prompt",

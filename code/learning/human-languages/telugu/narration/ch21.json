@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ac18c5895e380bad",
+  "sourceHash": "fnv1a64:028473ca1bb8103b",
   "lessons": [
     {
       "id": "TE-C21-kukka-pilli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56928232f37805f9",
+      "sourceHash": "fnv1a64:d43b5bbf7aa9319f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పిల్లి (pilli, \"cat\") is a real, documented Proto-Dravidian root, pillV — with cognates surviving as rarer, alternate words for cat in both Tamil and Kannada. Here's why this word matters for the whole arc: Sanskrit's word for cat, बिडाल (biḍāla) — the word behind Hindi's बिल्ली (billī), which you met as \"most likely\" borrowed from Dravidian, without a confirmed specific source — most likely traces back to this exact root. So Telugu's everyday word for \"cat\" is most likely the closest living relative of the very word Sanskrit borrowed, tying together Latin's cattus/Arabic's qiṭṭ story on one side and Hindi's billī story on the other, all within this single course."
+              "text": "పిల్లి (pilli, \"cat\") is a real, documented Proto-Dravidian root, pillV — with cognates surviving as rarer, alternate words for cat in both Tamil and Kannada. Here's why this word matters for the whole arc: Sanskrit's word for cat, बिडाल (biḍāla) — the word behind Hindi's बिल्ली (billī), which you met as \"most likely\" borrowed from Dravidian, without a confirmed specific source — most likely traces back to this exact root. So Telugu's everyday word for \"cat\" is most likely the closest living relative of the very word Sanskrit borrowed, tying together Latin's cattus/Arabic's qiṭṭ story on one side and Hindi's billī story on the other, all in one word."
             }
           ]
         },

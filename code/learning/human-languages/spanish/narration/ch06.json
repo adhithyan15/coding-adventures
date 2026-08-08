@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "The First Verbs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ef479098b3b701b3",
+  "sourceHash": "fnv1a64:cf3c661f4c7c99a7",
   "lessons": [
     {
       "id": "ES-C06-cafe",
@@ -417,7 +417,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:d62ffbd226de0824",
+      "sourceHash": "fnv1a64:fa83e0f47eab036a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hablar is one word. Swap its last two letters and it becomes \"I speak,\" or a question to a friend, or a polite question to a stranger. This is the biggest single piece of leverage in the course so far."
+              "text": "Hablar is one word. Swap its last two letters and it becomes \"I speak,\" or a question to a friend, or a polite question to a stranger. This is the biggest single piece of leverage in this book so far."
             }
           ]
         },
@@ -1015,7 +1015,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:359d617ceb162fa6",
+      "sourceHash": "fnv1a64:a385aeae4b33aa2c",
       "notice": null,
       "blocks": [
         {
@@ -1031,7 +1031,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the moment the course has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
+              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
             }
           ]
         },
@@ -1157,7 +1157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a403bb27ffc266d",
+      "sourceHash": "fnv1a64:97363e7b2bea1b09",
       "notice": null,
       "blocks": [
         {
@@ -1306,7 +1306,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — the course stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
             }
           ]
         }

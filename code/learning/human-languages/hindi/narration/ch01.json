@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e0c6f8dfe20e0f70",
+  "sourceHash": "fnv1a64:2a794f935169484b",
   "lessons": [
     {
       "id": "HI-W01-shirorekha-na-ma",
@@ -20,7 +20,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b5bf3a010b072219",
+      "sourceHash": "fnv1a64:2cad481346ffbd91",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -89,7 +89,7 @@
             },
             {
               "kind": "speech",
-              "text": "And one note about the word shirorekhā itself, written शिरोरेखा: it contains a letter — ख — that this curriculum can't yet give you stroke data for. Read the word; don't try to draw it. This track only asks you to hand-write letters whose stroke data actually exists, and it will say so every time that gap shows up."
+              "text": "And one note about the word shirorekhā itself, written शिरोरेखा: it contains a letter — ख — that this book does not give a stroke order for. Read the word; don't try to draw it. This track only asks you to hand-write letters whose stroke data actually exists, and it will say so every time that gap shows up."
             }
           ]
         },

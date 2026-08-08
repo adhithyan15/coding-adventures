@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Chapter 14",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a39884d4aea7bb13",
+  "sourceHash": "fnv1a64:f23019fb92985626",
   "lessons": [
     {
       "id": "ES-C14-ser-ir-preterite",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15ba2316d6c80667",
+      "sourceHash": "fnv1a64:d01138d7cc6e199d",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two verbs share the preterite fui/fue? (ser and ir.) How does the accent change hablo into habló? (It moves the stress to the end — present becomes preterite.) In \"Fui a casa,\" be/go? (Go — ir.) You can now speak in the past — the course has crossed from \"what is\" to \"what happened.\""
+              "text": "Which two verbs share the preterite fui/fue? (ser and ir.) How does the accent change hablo into habló? (It moves the stress to the end — present becomes preterite.) In \"Fui a casa,\" be/go? (Go — ir.) You can now speak in the past — this book has crossed from \"what is\" to \"what happened.\""
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:15417887e8a232d7",
+  "sourceHash": "fnv1a64:659bad26dc3f61e2",
   "lessons": [
     {
       "id": "HI-W03-matras-naam",
@@ -638,7 +638,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:26a1cf3645ca2164",
+      "sourceHash": "fnv1a64:b24b2dec7fbdd6d7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -903,7 +903,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:94b7be2009ede3a8",
+      "sourceHash": "fnv1a64:18e81f0badd3c6fc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -928,7 +928,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have learned every piece separately. Now the writing track pays off in the first word of the course."
+              "text": "You have learned every piece separately. Now the writing track pays off in the first word of this book."
             }
           ]
         },

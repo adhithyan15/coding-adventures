@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ee15abad70a0364a",
+  "sourceHash": "fnv1a64:7325bf88a3f86691",
   "lessons": [
     {
       "id": "TE-C30-subha-sayantram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:477b79f35bf246ca",
+      "sourceHash": "fnv1a64:bef920e3f643611d",
       "notice": null,
       "blocks": [
         {

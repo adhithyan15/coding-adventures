@@ -6,7 +6,7 @@ sequence: 410
 chapter: 4
 type: phrase
 headword: مع السلامة
-gloss: "goodbye — literally 'with safety', closing the course on the root that opened it"
+gloss: "goodbye — literally 'with safety', closing the greeting arc on the root that opened it"
 romanization: maʿa s-salāma
 concept_tag: FAREWELL
 prerequisites: [AR-C04-al-salama, AR-C04-maa-with]

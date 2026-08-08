@@ -33,8 +33,8 @@ reviews_of: [ML-C24-native-night-words, ML-C24-rathri]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You already have *rāthri*. One more Sanskrit word, already
-familiar from three earlier languages in this arc, completes Malayalam's
+[PAUSE 2s] You already have *rāthri*. One more Sanskrit word, shared with
+Hindi, Kannada, and Telugu, completes Malayalam's
 "good night" — and this lesson's honest twist is one you've technically
 seen before, just in a different language.
 

@@ -46,7 +46,8 @@ sound with **ശ** (*ś*). Doubled, *śari śari*, it means "yes yes, fine."
 languages are: essentially one word and one meaning, wearing four different
 scripts. As you learn to read each, catching a shared word change its clothes
 but not its sense is the fastest way to feel the whole Dravidian family at once
-— and the reason this curriculum teaches the four side by side.
+— and the reason
+the four are worth seeing side by side.
 
 ## Guided Practice
 

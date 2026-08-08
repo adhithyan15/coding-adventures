@@ -53,8 +53,8 @@ Here's a lovely contrast to lock in:
 
 Three Romance sisters, three different pictures of gratitude: French hands you a
 **reward**, Spanish hands you **grace**, Portuguese declares itself **obliged**.
-Same feeling, three metaphors — this is exactly the kind of thing the curriculum
-wants you to *notice*, not just memorize.
+Same feeling, three metaphors — this is exactly the kind of thing worth
+*noticing*, not just memorizing.
 
 ## Guided Practice
 

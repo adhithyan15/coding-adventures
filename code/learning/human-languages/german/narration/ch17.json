@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:436bd0ef42617218",
+  "sourceHash": "fnv1a64:7a8a652337163960",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2749ef57887d5546",
+      "sourceHash": "fnv1a64:f183755d890cccc6",
       "notice": null,
       "blocks": [
         {
@@ -467,7 +467,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is worth noticing, because this course keeps finding connections, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and \"hand\" is one of the places where they diverged early and completely."
+              "text": "That is worth noticing, because these connections keep turning up, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and \"hand\" is one of the places where they diverged early and completely."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d7b170e7217df997",
+  "sourceHash": "fnv1a64:da98a42e0008636f",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03301eb9bd9795c0",
+      "sourceHash": "fnv1a64:c412c2fd55012e40",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four languages in this arc all reached for the same Sanskrit phrase to say \"good night.\" This lesson closes the arc with the one that didn't — and it's a pattern you've actually seen from Tamil before, all the way back in Chapter 1."
+              "text": "Hindi, Kannada, Telugu, and Malayalam all reached for the same Sanskrit phrase to say \"good night.\" This lesson closes the arc with the one that didn't — and it's a pattern you've actually seen from Tamil before, all the way back in Chapter 1."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other language in this arc's GREETING-GOODNIGHT lesson reached for the same Sanskrit phrase: Hindi's शुभ रात्रि, Kannada's ಶುಭ ರಾತ್ರಿ, Telugu's శుభ రాత్రి, Malayalam's ശുഭ രാത്രി — all four built from the identical tatsama pair, śubh (\"to be beautiful\") + rātri (\"night\"). Tamil's standard phrase reaches for none of that — no śubha-descended \"good night\" turned up as a commonly used Tamil form in the phrasebook sources checked for this lesson. Instead, Tamil built its own phrase from its own vocabulary."
+              "text": "Tamil's Dravidian sisters and Hindi all reached for the same Sanskrit phrase: Hindi's शुभ रात्रि, Kannada's ಶುಭ ರಾತ್ರಿ, Telugu's శుభ రాత్రి, Malayalam's ശുഭ രാത്രി — all four built from the identical tatsama pair, śubh (\"to be beautiful\") + rātri (\"night\"). Tamil's standard phrase reaches for none of that — no śubha-descended \"good night\" turned up as a commonly used Tamil form in the phrasebook sources checked for this lesson. Instead, Tamil built its own phrase from its own vocabulary."
             }
           ]
         },
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f4e1927b3bee8aa",
+      "sourceHash": "fnv1a64:bcf8703e4fee1dda",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tamil's native \"sweet night\" repeats the lexical choice that opened the course: build greetings from its own roots rather than the shared Sanskrit formula."
+              "text": "Tamil's native \"sweet night\" repeats the lexical choice that opened this book: build greetings from its own roots rather than the shared Sanskrit formula."
             }
           ]
         },

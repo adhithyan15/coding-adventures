@@ -6,7 +6,7 @@ sequence: 570
 chapter: 29
 type: phrase
 headword: காலை வணக்கம்
-gloss: good morning (kālai vaṇakkam), literally "morning greetings" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, "reverence, homage"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern seen in every other language in this arc; a WebSearch summary's claim that a Sanskrit-borrowed "suprabhatham" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here
+gloss: good morning (kālai vaṇakkam), literally "morning greetings" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, "reverence, homage"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern its neighbours share; a WebSearch summary's claim that a Sanskrit-borrowed "suprabhatham" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here
 concept_tag: GREETING-MORNING
 prerequisites: [TA-C26-kaalai, TA-C01-vanakkam-family-register]
 sounds: [tamil-geminate-kka, tamil-vowel-sign-ai]
@@ -33,8 +33,8 @@ reviews_of: [TA-C26-kaalai, TA-C01-vanakkam-family-register, TA-C01-vanakkam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01] -->
 
-[PAUSE 2s] Every other language in this arc built its "good morning"
-on a word meaning "good" or "auspicious." Tamil does something
+[PAUSE 2s] Tamil's neighbours each built "good morning" on a word meaning
+"good" or "auspicious." Tamil does something
 completely different: it just puts its everyday greeting word after
 its word for "morning."
 
@@ -71,8 +71,9 @@ deliberately **not** asserted here.
 [PAUSE 1s]
 - [YOU SAY: "kālai vaṇakkam" — "good morning," literally "morning
   greetings"]
-- [YOU SAY: the honest structural surprise — no śubha-equivalent word
-  here at all, unlike every other language in this arc]
+- [YOU SAY: the honest structural surprise — no śubha-equivalent word here at
+  all, unlike Tamil's
+neighbours]
 - [YOU SAY: the two pieces you already know — kālai (Chapter 26) +
   vaṇakkam (Chapter 1)]
 

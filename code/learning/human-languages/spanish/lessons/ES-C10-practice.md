@@ -65,4 +65,4 @@ place).
 [PAUSE 3s] Give the present of *ir*. (*Voy, vas, va, vamos, van*.) Build "we're
 going to eat." (*Vamos a comer*.) How do *mi/tu/su* change for a plural noun, and
 do they change for gender? (Add *-s* → *mis/tus/sus*; **no** gender change.) Next
-chapter takes these rules further — the course now runs on grammar, not phrases.
+chapter takes these rules further — this book now runs on grammar, not phrases.

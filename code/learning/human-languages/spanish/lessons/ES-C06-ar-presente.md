@@ -34,7 +34,8 @@ reviews_of: [ES-C06-hablar, ES-C03-tu-usted-register]
 
 [PAUSE 2s] *Hablar* is one word. Swap its last two letters and it becomes
 "I speak," or a question to a friend, or a polite question to a stranger.
-This is the biggest single piece of leverage in the course so far.
+This is the biggest single piece of leverage in
+this book so far.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

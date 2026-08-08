@@ -65,8 +65,9 @@ first. Stroke orders in this track are how it is usually taught, not a standard
 you can be wrong about.
 
 And one note about the word *shirorekhā* itself, written **शिरोरेखा**: it
-contains a letter — **ख** — that this curriculum can't yet give you stroke data
-for. Read the word; don't try to draw it. This track only asks you to hand-write
+contains a letter — **ख** — that
+this book does not give a stroke order for. Read the word; don't try to draw
+it. This track only asks you to hand-write
 letters whose stroke data actually exists, and it will say so every time that gap
 shows up.
 

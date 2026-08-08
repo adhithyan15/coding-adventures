@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:99b608014f6d04e5",
+  "sourceHash": "fnv1a64:9723f9dcd572ac08",
   "lessons": [
     {
       "id": "TA-C21-naay-poonai",
@@ -12,14 +12,14 @@
       "title": "நாய், பூனை — solid ground to close the arc, and an honest three-way split",
       "headword": "நாய், பூனை",
       "romanization": "",
-      "gloss": "dog and cat — நாய் is THE solid, ancient, undisputed Dravidian root behind Kannada/Malayalam's dog-words too, the honest opposite of every mystery dog-word in this arc; பூனை is Tamil's everyday cat-word, one of (at least) three genuinely separate Dravidian cat-word families",
+      "gloss": "dog and cat — நாய் is THE solid, ancient, undisputed Dravidian root behind Kannada/Malayalam's dog-words too, the honest opposite of the tangled dog-words of Spanish, Hindi, and English; பூனை is Tamil's everyday cat-word, one of (at least) three genuinely separate Dravidian cat-word families",
       "script": "tamil",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dd35c7accb9a520",
+      "sourceHash": "fnv1a64:de5497918953d746",
       "notice": null,
       "blocks": [
         {

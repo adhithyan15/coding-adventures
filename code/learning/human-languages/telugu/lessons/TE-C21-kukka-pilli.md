@@ -60,7 +60,7 @@ from Dravidian, without a confirmed specific source — most likely traces
 back to **this exact root**. So Telugu's everyday word for "cat" is most
 likely the closest living relative of the very word Sanskrit borrowed,
 tying together Latin's *cattus*/Arabic's *qiṭṭ* story on one side and
-Hindi's *billī* story on the other, all within this single course.
+Hindi's *billī* story on the other, all in one word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02, TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02] -->

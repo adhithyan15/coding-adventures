@@ -126,7 +126,7 @@ English has the same trick and doesn't notice it:
 They call me Anna. — Who are they? Nobody. Everybody.
 
 Grammar Lens: меня is not я.
-This is the important part, and the course's first taste of case.
+This is the important part, and this book's first taste of case.
 You learned я (ya) for "I" last lesson. But here it is меня — because I is now the object of the calling, not the one doing it. Russian changes the shape of the word to mark that job:
 я (ya) is I, the one acting; меня is me, the one acted on.
 English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom, plus the archaic thou/thee. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian.

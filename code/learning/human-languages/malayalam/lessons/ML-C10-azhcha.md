@@ -53,7 +53,7 @@ words for the days of the week.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C10-AZHCHA-02]; assesses=[] -->
 
-This is the closest family match you'll see across this whole course:
+This is the closest family match anywhere in Dravidian:
 **thiṅkaḷ/thiṅgaḷ**, **veḷḷi/veḷḷi**, and **ñāyar/ñāyiṟu** are essentially
 **the same words**, because Malayalam only became a distinct language from
 Tamil within roughly the last thousand years or so. Where Tamil says
