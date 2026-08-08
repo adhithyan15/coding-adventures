@@ -6,6 +6,23 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`ProjectComplexity` — per-project scheduling-surface toggle** (task-app
+  Phase 9, engine half — see `code/specs/task-app-complexity-config-v1.md`).
+  `ProjectSettings.complexity: ProjectComplexity` (`Board` / `Full`) and a
+  new `ProjectState::set_project_complexity` op. The engine computes CPM
+  identically either way — this is purely a signal for a host to decide
+  what to *display*, not a computation toggle.
+  - `ProjectState::empty()` — the single constructor every new project
+    (workspace-initial, top-level `create_project`, nested subproject)
+    routes through — sets `Board` explicitly. This is a real, disclosed
+    **behavior change**: previously-created projects always exposed every
+    scheduling surface; new ones now start simplified and opt up. Existing
+    persisted projects are unaffected (see the backward-compat point next).
+  - The `complexity` field carries its own `#[serde(default)]`, independent
+    of whether `ProjectState.settings` itself is defaulted (it isn't) — so
+    a snapshot saved before this field existed deserializes with
+    `complexity: Full`, identical to that snapshot's actual prior behavior.
+    Covered by `a_pre_complexity_project_snapshot_defaults_to_full`.
 - **`Note` — a first-class note entity** (task-app Phase 8, engine half —
   see `code/specs/task-app-notes-entity-v1.md`). `Note { id, title, body,
   attached_task }`, registered per project (`ProjectState::notes`).
