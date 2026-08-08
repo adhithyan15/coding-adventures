@@ -169,6 +169,64 @@
         "PA-EXT-013-DOING-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "PA-PATH-014",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-014-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-016",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-016-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-017",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -204,7 +262,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "PA-PATH-004",
-        "PA-PATH-007"
+        "PA-PATH-007",
+        "PA-PATH-015"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -214,7 +273,9 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "PA-PATH-005",
-        "PA-PATH-008"
+        "PA-PATH-008",
+        "PA-PATH-016",
+        "PA-PATH-017"
       ],
       "omits": [
         "WORD-GOOD",
@@ -223,7 +284,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "PA-PATH-014"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -592,6 +655,60 @@
       "prerequisites": [],
       "lessons": [
         "PA-C01-sat-sri-akal"
+      ]
+    },
+    {
+      "id": "PA-EXT-014-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for water, tea, milk, or bread in Punjabi using the request pattern I build in this chapter.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ]
+    },
+    {
+      "id": "PA-EXT-015-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name a friend, a family, a brother, and a sister in Punjabi.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ]
+    },
+    {
+      "id": "PA-EXT-016-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the eye, ear, mouth, and nose in Punjabi.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ]
+    },
+    {
+      "id": "PA-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the heart and the head in Punjabi, and tell a borrowed word from an inherited one.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C13-dil",
+        "PA-C13-sir"
       ]
     }
   ]

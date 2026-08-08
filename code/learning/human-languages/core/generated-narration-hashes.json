@@ -5763,6 +5763,72 @@
       "jsonHash": "fnv1a64:cd38d9138c8fa47a"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:876cadf864267649",
+      "lessonIds": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch10.txt",
+      "json": "punjabi/narration/ch10.json",
+      "textHash": "fnv1a64:e3ea8a4fb3e6664b",
+      "jsonHash": "fnv1a64:286ac4fb0857d0de"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:6bda23565e753403",
+      "lessonIds": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch11.txt",
+      "json": "punjabi/narration/ch11.json",
+      "textHash": "fnv1a64:3d762a82365f5292",
+      "jsonHash": "fnv1a64:b8a70915952b1f42"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:590257278af1e1ec",
+      "lessonIds": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch12.txt",
+      "json": "punjabi/narration/ch12.json",
+      "textHash": "fnv1a64:40e044872fb5ea99",
+      "jsonHash": "fnv1a64:48b5bc74b74ad160"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:5befc5cc961e0e3d",
+      "lessonIds": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch13.txt",
+      "json": "punjabi/narration/ch13.json",
+      "textHash": "fnv1a64:4381828405ebd516",
+      "jsonHash": "fnv1a64:e48facd3e87b7eb0"
+    },
+    {
       "language": "russian",
       "chapter": 1,
       "sourceHash": "fnv1a64:666276e1d698f4d5",

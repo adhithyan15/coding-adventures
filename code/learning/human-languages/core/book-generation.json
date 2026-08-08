@@ -2321,6 +2321,42 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 10,
+      "title": "Water, Tea, Milk, and Bread",
+      "label": "ch:pa-request-food-drink",
+      "output": "punjabi/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "title": "Friend, Family, Brother, and Sister",
+      "label": "ch:pa-friend-and-family",
+      "output": "punjabi/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "title": "Eye, Ear, Mouth, and Nose",
+      "label": "ch:pa-face-parts",
+      "output": "punjabi/book/chapters/ch12-face-parts.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "title": "Heart and Head",
+      "label": "ch:pa-heart-and-head",
+      "output": "punjabi/book/chapters/ch13-heart-and-head.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "title": "Six Verbs, and the One You Never Say",
