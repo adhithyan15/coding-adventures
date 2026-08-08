@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `VTOTC` alternative threshold-voltage
+  temperature coefficient.
 - Validate and lower JFET model-card `TCV` threshold-voltage temperature
   coefficient.
 - Validate and lower JFET model-card `RS` source resistance.
