@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Nice to Meet You",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0f93e9300f86bb34",
+  "sourceHash": "fnv1a64:67e96b837e28d997",
   "lessons": [
     {
       "id": "LA-C21-volup-est-convenisse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d26baa3eb553be8a",
+      "sourceHash": "fnv1a64:e7fa4ed193474c2c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every modern language in this course has one fixed phrase for \"nice to meet you.\" Latin, honestly, does not — but it has something better: a real line from a Roman comedy that does the job."
+              "text": "Modern languages generally have one fixed phrase for \"nice to meet you.\" Latin, honestly, does not — but it has something better: a real line from a Roman comedy that does the job."
             }
           ]
         },

@@ -48,7 +48,7 @@ na**.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C07-NAHIN-02]; assesses=[] -->
 
 That **na** is not just Sanskrit's — it is the same negative root that runs
-across nearly every language in this course, all descended from one ancient
+across nearly every Indo-European language, all descended from one ancient
 sound, **PIE \*ne**:
 
 | from *\*ne* | |

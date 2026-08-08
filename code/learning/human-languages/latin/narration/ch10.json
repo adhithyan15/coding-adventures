@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Wine, and Bread",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1e7cf552260ff65d",
+  "sourceHash": "fnv1a64:c5cf4ddfd577bd3b",
   "lessons": [
     {
       "id": "LA-C10-aqua-vinum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1815c089d95f1f84",
+      "sourceHash": "fnv1a64:b1418f185aaaaac2",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aqua, aquae — \"water.\" Spanish and Italian kept it close to whole: agua, acqua. French, though, eroded it further than almost any other Latin word in this course: aqua becomes ewe becomes eaue becomes eau — three written letters, e-a-u, spelling one bare vowel sound, \"oh.\" Compare caput, which French similarly abandoned as an everyday word (for testa) — aqua wasn't replaced, but it was worn down almost to nothing while staying in place."
+              "text": "aqua, aquae — \"water.\" Spanish and Italian kept it close to whole: agua, acqua. French, though, eroded it further than almost any other word it inherited from Latin: aqua becomes ewe becomes eaue becomes eau — three written letters, e-a-u, spelling one bare vowel sound, \"oh.\" Compare caput, which French similarly abandoned as an everyday word (for testa) — aqua wasn't replaced, but it was worn down almost to nothing while staying in place."
             },
             {
               "kind": "speech",

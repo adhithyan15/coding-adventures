@@ -53,7 +53,7 @@ Tamil, by contrast, most likely uses a **native Dravidian** word for exactly the
 same "bell → hour" idea — a different root entirely, arrived at independently
 (though even specialists don't call this fully settled). So the *pattern*
 (bell-word becomes hour-word) repeats across languages, but the *word itself*
-splits along the same Sanskrit/native line you've seen before in this course
+splits along the familiar Sanskrit/native line
 (compare *madhyāhna* vs. Tamil's *naḷ*-based words for noon).
 
 ## Grammar Lens: telling the time

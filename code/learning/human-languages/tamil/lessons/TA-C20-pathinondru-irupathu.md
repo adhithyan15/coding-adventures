@@ -56,8 +56,8 @@ own *irupathu* almost letter-for-letter.
 ## Why it's said this way: Be honest: one shared Dravidian idea, four different other-family answers
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-PATHINONDRU-IRUPATHU-03]; assesses=[] -->
 
-This closes the numbers arc with a genuinely clean pattern. Every Dravidian
-language in this course builds "twenty" the **same** compositional way —
+This closes the numbers arc with a genuinely clean pattern. All four major Dravidian
+languages build "twenty" the **same** compositional way —
 some (Tamil, Malayalam) keeping it fully transparent on the surface today,
 some (Kannada) with the same compositional origin but no longer visibly
 matching the modern standalone words for "two" and "ten," some (Telugu) worn
@@ -65,8 +65,8 @@ down further but most likely from the same root. Compare that to the other
 three families you've met:
 Sanskrit's **विंशति** (*vimshati*), Latin's **vīgintī**, and Arabic's
 **عشرون** (*ʿishrūn*) are each their **own** special, non-compositional word
-for twenty — none built transparently from "two" and "ten" the way every
-single Dravidian language in this course does.
+for twenty — none built transparently from "two" and "ten" the way Tamil,
+Telugu, Kannada, and Malayalam all do.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-PATHINONDRU-IRUPATHU-02, TA-PRAGMATICS-PATHINONDRU-IRUPATHU-03] -->
@@ -80,8 +80,8 @@ single Dravidian language in this course does.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-PATHINONDRU-IRUPATHU-02, TA-PRAGMATICS-PATHINONDRU-IRUPATHU-03] -->
 
 [PAUSE 3s] What two pieces build **இருபது** (twenty)? (**இரு** "two" +
-**பத்து** "ten" — "**two-tens**.") Do all four Dravidian languages in this
-course build "twenty" the same compositional way? (**Yes** — Tamil and
+**பத்து** "ten" — "**two-tens**.") Do all four major Dravidian
+languages build "twenty" the same compositional way? (**Yes** — Tamil and
 Malayalam keep it fully transparent today; Kannada shares the same
 compositional origin but its modern "two"/"ten" words no longer visibly
 match; Telugu's is worn down further but most likely the same root.) Do

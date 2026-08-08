@@ -44,7 +44,7 @@ both, in different registers.
 vigor," PIE cousin of Latin **vīs**) you've now met four times across Kannada,
 Telugu, Malayalam, and Tamil. All four Dravidian languages borrowed this exact
 Sanskrit word for "age" — none of them built a native alternative for this
-particular concept, unlike some others you've seen in this course.
+particular concept, the way they did for so many others.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-LEX-VAYATHU-01] -->

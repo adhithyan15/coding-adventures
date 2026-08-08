@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c981c0b76cf70dc0",
+  "sourceHash": "fnv1a64:b4677406243c8827",
   "lessons": [
     {
       "id": "TE-C11-rangulu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7ff3cc44bcfdd9a",
+      "sourceHash": "fnv1a64:d9887faa67f4d0a2",
       "notice": null,
       "blocks": [
         {
@@ -92,11 +92,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nīlam\" — blue, the word every language in this course now shares",
+              "instruction": "\"nīlam\" — blue, the word the four Dravidian languages and Hindi all share",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nīlam\" — blue, the word every language in this course now shares]"
+              "source": "[YOU SAY: \"nīlam\" — blue, the word the four Dravidian languages and Hindi all share]"
             },
             {
               "kind": "prompt",

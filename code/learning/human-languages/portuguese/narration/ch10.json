@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:756b61183a892e04",
+  "sourceHash": "fnv1a64:d8f9eeb2611c6355",
   "lessons": [
     {
       "id": "PT-C10-pais",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:728021c129cdefb6",
+      "sourceHash": "fnv1a64:ca89807f7cb84ee2",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every other track in this course builds \"brother\" from Latin frāter (French frère, Italian fratello). Portuguese — and Spanish with it — does something completely different, and it is one of the best etymologies in the whole language."
+              "text": "French and Italian build \"brother\" from Latin frāter (frère, fratello). Portuguese — and Spanish with it — does something completely different, and it is one of the best etymologies in the whole language."
             }
           ]
         },

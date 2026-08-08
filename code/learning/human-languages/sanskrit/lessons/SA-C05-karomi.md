@@ -43,7 +43,7 @@ thing-to-be-done"). So "I work" is, at root, "*kṛ*-thing I *kṛ*-do." Hindi's
 [PAUSE 1s]
 - [YOU SAY: "karomi" — I do]
 - [YOU SAY: "I work" — *kāryaṁ karomi*]
-- [YOU SAY: three words in this course from the root *kṛ* (*namaskāra*, *karma*, *saṁskṛta*)]
+- [YOU SAY: three words from the root *kṛ* (*namaskāra*, *karma*, *saṁskṛta*)]
 
 ## Wrap-up Recall
 

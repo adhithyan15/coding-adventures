@@ -34,7 +34,7 @@ reviews_of: [RU-C02-ty-vy, RU-C01-privet]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Every other track in this course says "my name is" with a word for
+[PAUSE 2s] Many languages say "my name is" with a word for
 *my* and a word for *name*. Russian says something quite different, and it is
 worth taking apart slowly.
 

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e2e5e869f303320",
+  "sourceHash": "fnv1a64:b09af3aa1df4854a",
   "lessons": [
     {
       "id": "TA-C34-edu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:461fc79451361c98",
+      "sourceHash": "fnv1a64:3247ff041aada7e8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "எ is the standing vowel e, from எழுது; டு is ட with the u sign, and ட came apart in படி. Nothing here is new — the first time in this course that has been true of a whole headword. The ḍ you hear is the same positional softening: ட goes soft between vowels and hard when doubled, as in eḍuttēṉ."
+              "text": "எ is the standing vowel e, from எழுது; டு is ட with the u sign, and ட came apart in படி. Nothing here is new — the first time in this book that has been true of a whole headword. The ḍ you hear is the same positional softening: ட goes soft between vowels and hard when doubled, as in eḍuttēṉ."
             }
           ]
         },

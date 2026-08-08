@@ -68,8 +68,8 @@ roughly fourth century BCE — producing a phonetics chart memorised as an
 alphabet long before Europe attempted the same analysis.
 
 Two honest footnotes: this walk describes the **five stop families**, not the
-whole list; and **ट** is not yet in this curriculum's stroke data. Read it here
-and draw it only after its entry is authored.
+whole list; and this book does not give a stroke order for **ट**. Read it here,
+and wait for a source you trust before you write it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03] -->

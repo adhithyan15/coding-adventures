@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5d2065ac9b927c2f",
+  "sourceHash": "fnv1a64:fc4210d6ddcf7d8b",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b59762c651c4b0f6",
+      "sourceHash": "fnv1a64:7ba30adc928f3954",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -343,7 +343,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Urdu خدا حافظ (khudā hāfiz) and Persian خداحافظ share the same historical pieces. Urdu keeps the visible space in this course; Persian normally joins them. Mixed practice may compare the two only now that each local phrase is independently readable."
+              "text": "Urdu خدا حافظ (khudā hāfiz) and Persian خداحافظ share the same historical pieces. Urdu conventionally keeps the visible space; Persian normally joins them. Mixed practice may compare the two only now that each local phrase is independently readable."
             }
           ]
         },

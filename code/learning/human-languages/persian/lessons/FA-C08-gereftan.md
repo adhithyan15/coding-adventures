@@ -34,8 +34,8 @@ reviews_of: [FA-C07-neveshtan, FA-C06-goftan, FA-C03-shoma-to, FA-C06-budan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NEVESHTAN, FA-STEM-NEVIS, FA-GRAMMAR-PRESENT-STEM] -->
 
-[PAUSE 2s] Say the pair for “to write.” Then get ready for the one Persian verb
-in this course whose English relative you will recognize the moment you hear it.
+[PAUSE 2s] Say the pair for “to write.” Then get ready for a Persian verb
+whose English relative you will recognize the moment you hear it.
 
 ## You'll want to know first — one verb and its stem
 <!-- hl-knowledge: introduces=[FA-LEX-GEREFTAN, FA-STEM-GIR]; assesses=[] -->

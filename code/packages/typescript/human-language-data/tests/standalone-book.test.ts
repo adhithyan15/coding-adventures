@@ -137,15 +137,21 @@ describe("a reader holding the PDF", () => {
         "gi",
       ),
       // A pointer needs no language and no verb: "the daughter lessons", "its own
-      // track", "the companion volumes". Bare "in this course"/"in this curriculum"
-      // is deliberately NOT here -- 48 lessons carry it, a coherent class of its own
-      // and the next item. A guard muted on 48 files the day it lands is worth less
-      // than one that holds.
+      // track", "the companion volumes".
       new RegExp(
         `\\b(?:the (?:daughter|companion|sibling|other) (?:lesson|chapter|book|track|arc|volume)s?` +
           `|its own (?:track|book|volume|arc))\\b()`,
         "gi",
       ),
+      // Bare "in this course" / "in this curriculum" / "in this series". The previous
+      // change left this off on purpose and said why: 31 sites carried it, and a guard
+      // muted on its own corpus is worth less than one that holds. They are gone now,
+      // so it holds.
+      //
+      // "in this BOOK" is deliberately absent from the alternation. A reader is
+      // holding the book, so an ordinal about it ("the first verb in this book whose
+      // vowel changes") is answerable -- which is what several of these became.
+      new RegExp(`\\bin this\\s+(?:course|curriculum|series)\\b()`, "gi"),
     ];
     const offenders: string[] = [];
     for (const { source, tex } of SURFACES) {

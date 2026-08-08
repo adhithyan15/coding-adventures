@@ -58,5 +58,5 @@ unlock a whole grammar of "do-verbs."
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What Sanskrit root is *karnā* from, and name two words in this course
+[PAUSE 3s] What Sanskrit root is *karnā* from, and name two words
 built on it. (*√kṛ* "to do"; any two of *karma*, *namaskār*, *Sanskrit*.)

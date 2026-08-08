@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Chapter 1",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:aad0ad5150f2038b",
+  "sourceHash": "fnv1a64:281f1ccd090a19c1",
   "lessons": [
     {
       "id": "SA-C01-am-na",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:727560286d972f72",
+      "sourceHash": "fnv1a64:386744037c9fab92",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -474,7 +474,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्ते = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan track in this curriculum descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
+              "text": "नमस्ते = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan namaste descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
             }
           ]
         },

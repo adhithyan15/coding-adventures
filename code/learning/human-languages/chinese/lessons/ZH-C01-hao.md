@@ -66,9 +66,9 @@ with their own meanings, reused as building blocks.
 **好** *hǎo* — **good**, and also **well**.
 
 A woman beside a child, and the character means "good". That picture is the
-hook — and it is the device this track uses in place of the cousin web every
-other volume in this curriculum runs on, because **Chinese and English share no
-ancestor** and there is no honest chain from *hǎo* to any English word.
+hook — and it stands in for the cousin web that a
+related language would supply, because **Chinese and English share no ancestor** and there is
+no honest chain from *hǎo* to any English word.
 
 Two cautions, because a memory aid that pretends to be history rots:
 

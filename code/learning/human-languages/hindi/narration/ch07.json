@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7f46ae04549f4eaa",
+  "sourceHash": "fnv1a64:e4fdb1c6208acaf8",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9df4c614f504322b",
+      "sourceHash": "fnv1a64:79169e506f53d6cd",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "That na is not just Sanskrit's — it is the same negative root that runs across nearly every language in this course, all descended from one ancient sound, PIE ne:"
+              "text": "That na is not just Sanskrit's — it is the same negative root that runs across nearly every Indo-European language, all descended from one ancient sound, PIE ne:"
             },
             {
               "kind": "table",

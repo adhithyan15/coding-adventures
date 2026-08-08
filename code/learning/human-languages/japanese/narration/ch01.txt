@@ -119,7 +119,7 @@ Say こんにちは (konnichiwa). Its history hid two characters, 今日, that h
 Script — kanji, and the readings problem.
 日本語 (nihongo) — ni + hon + go.
 These are kanji: characters borrowed from Chinese, each carrying a meaning rather than a sound. 日 is sun or day. 本 is origin or root. 語 is language. So 日本 is "sun-origin" — the country the sun rises from — and 日本語 (nihongo) is its language.
-Now the fact that has no parallel anywhere else in this curriculum. A kanji does not have a sound. 日 is read nichi, jitsu, hi, bi, or ka, depending on the word it stands in — and in 日本 it is shortened again, to ni. There is no sensible way to teach "the sound of 日." What a lesson can teach is the word: you learn 日本語 as nihongo, and the reading of each character comes along with it.
+Now the fact that makes kanji unlike any letter you have learned. A kanji does not have a sound. 日 is read nichi, jitsu, hi, bi, or ka, depending on the word it stands in — and in 日本 it is shortened again, to ni. There is no sensible way to teach "the sound of 日." What a lesson can teach is the word: you learn 日本語 as nihongo, and the reading of each character comes along with it.
 Two families of readings explain the spread. The on reading is Japan's version of the Chinese pronunciation, imported with the character. The kun reading is a native Japanese word written with a borrowed character that already meant the same thing. 日本語 (nihongo) is on-readings throughout; 今日 in the greeting is irregular even by those standards.
 
 The word, taken apart — the real family.

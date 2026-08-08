@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Three Writing Systems in One Doorway",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:edad54370036a969",
+  "sourceHash": "fnv1a64:41f12f11cb910ec8",
   "lessons": [
     {
       "id": "JA-C01-hai",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:405ea26c254381c6",
+      "sourceHash": "fnv1a64:00d779c076662e0e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -529,7 +529,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the fact that has no parallel anywhere else in this curriculum. A kanji does not have a sound. 日 is read nichi, jitsu, hi, bi, or ka, depending on the word it stands in — and in 日本 it is shortened again, to ni. There is no sensible way to teach \"the sound of 日.\" What a lesson can teach is the word: you learn 日本語 as nihongo, and the reading of each character comes along with it."
+              "text": "Now the fact that makes kanji unlike any letter you have learned. A kanji does not have a sound. 日 is read nichi, jitsu, hi, bi, or ka, depending on the word it stands in — and in 日本 it is shortened again, to ni. There is no sensible way to teach \"the sound of 日.\" What a lesson can teach is the word: you learn 日本語 as nihongo, and the reading of each character comes along with it."
             },
             {
               "kind": "speech",

@@ -33,8 +33,8 @@ reviews_of: [PT-C10-pais, PT-C09-estacoes]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Every other track in this course builds "brother" from Latin *frāter*
-(French *frère*, Italian *fratello*). Portuguese — and Spanish with it — does
+[PAUSE 2s] French and Italian build "brother" from Latin *frāter*
+(*frère*, *fratello*). Portuguese — and Spanish with it — does
 something completely different, and it is one of the best etymologies in the whole
 language.
 

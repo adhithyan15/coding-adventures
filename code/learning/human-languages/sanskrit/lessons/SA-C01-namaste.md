@@ -29,8 +29,8 @@ Read **न·म·स्·ते**, *namaste*.
 ## The word, taken apart
 
 **नमस्ते** = *namas* ("a bow, obeisance") + *te* ("to you") — literally "**a bow
-to you**." This is the *source*: the word every Indo-Aryan track in this
-curriculum descends from. *Namas* is from the root √nam "to bend, bow" (PIE
+to you**." This is the *source*: the word every Indo-Aryan *namaste*
+descends from. *Namas* is from the root √nam "to bend, bow" (PIE
 *nem-). And *te* "to you" is a family heirloom — the same Indo-European pronoun
 behind Latin *tē*, Greek *se*, and archaic English **thee**. Say *namas-te* and
 you speak a word Cicero and Chaucer would each half-recognise.

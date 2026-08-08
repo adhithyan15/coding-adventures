@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b740a5126cc6bad6",
+  "sourceHash": "fnv1a64:6e5b00565489fe34",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fd5fc68c6af29500",
+      "sourceHash": "fnv1a64:bf90a02b9c63153c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -247,7 +247,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here this track has to be honest with you. Everywhere else in this curriculum, a new word is anchored to English words you already own through a shared ancestor: Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none."
+              "text": "Here this book has to be honest with you. A related language lets a new word be anchored to English words you already own through a shared ancestor — Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none."
             },
             {
               "kind": "speech",
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8856bfa06cfb62bd",
+      "sourceHash": "fnv1a64:220f4f705c72a7c3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -408,7 +408,7 @@
             },
             {
               "kind": "speech",
-              "text": "A woman beside a child, and the character means \"good\". That picture is the hook — and it is the device this track uses in place of the cousin web every other volume in this curriculum runs on, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word."
+              "text": "A woman beside a child, and the character means \"good\". That picture is the hook — and it stands in for the cousin web that a related language would supply, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word."
             },
             {
               "kind": "speech",

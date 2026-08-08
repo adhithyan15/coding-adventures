@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7b80d96a1a7c66b1",
+  "sourceHash": "fnv1a64:0dd578d8d51e5c72",
   "lessons": [
     {
       "id": "FA-C08-gereftan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0cbd7ebe8850758",
+      "sourceHash": "fnv1a64:bd65bbf669f07dc2",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the pair for “to write.” Then get ready for the one Persian verb in this course whose English relative you will recognize the moment you hear it."
+              "text": "Say the pair for “to write.” Then get ready for a Persian verb whose English relative you will recognize the moment you hear it."
             }
           ]
         },
