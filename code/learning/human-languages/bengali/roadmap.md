@@ -88,12 +88,47 @@ a gated reading course.
   where you are; the *bāsā* half's origin is **disputed** and reported as such).
   **Authored.**
 
+- **Ch. 10 — Tea, Water, Milk, and Rice** (`BN-C10-*`): চা *chā* (a loanword,
+  Chinese *chá* through Persian *čā*, the overland route beside the
+  Hokkien-via-Dutch sea route behind English *tea*) → জল *jôl* (prised out of
+  Ch. 7's *jôl khāwā*; genuinely disputed root, beside the Bangladesh-register
+  পানি, which traces cleanly to Ch. 7's √pā) → দুধ *dudh* (√duh, PIE
+  *\*dʰewgʰ-*; the secure English cousin is **doughty**, not the look-alike
+  **dough**, a different PIE root) → ভাত *bhāt* (√bhaj "to divide, to share,"
+  PIE *\*bʰeh₂g-* — a root Ch. 11 picks back up). Realizes
+  `SPINE-POLITE-REQUEST-REPAIR` by reusing Ch. 7's respectful খান as a
+  polite-offer pattern (চা খান, জল খান, দুধ খান, ভাত খান) rather than a
+  dedicated "please" word. **Authored.**
+
+- **Ch. 11 — Friend, Family, Brother, and Sister** (`BN-C11-*`): বন্ধু
+  *bôndhu* (a tatsama, kept whole from Sanskrit; √bandh, PIE *\*bʰendʰ-* —
+  English **bind**/**bond**/**band**, undisguised) → পরিবার *pôribār* (a
+  second tatsama, *pari-* "around" + √vṛ "to cover" — "what surrounds you";
+  *pari-*'s cousin is English's own borrowed *peri-*, but √vṛ's secure
+  cousins are Latin and Lithuanian, not English) → ভাই *bhāi* (a tadbhava —
+  worn down through Prakrit, not kept whole — and simply *is* English
+  "brother," PIE *\*bʰréh₂tēr*, not a cousin of it) → বোন *bon* (not built
+  on PIE *swésōr* at all: Sanskrit *bhaginī* ← *bhaga*, "a share," the same
+  √bhaj that named Ch. 10's ভাত). States and demonstrates Bengali's lack of
+  grammatical gender on nouns, first flagged in Ch. 2. **Authored.**
+
+- **Ch. 12 — Eye, Mouth, Nose, and Heart** (`BN-C12-*`): চোখ *chokh* (an
+  ardhatatsama, half-worn through Old Bengali চখু and Middle Bengali চউখ;
+  √cakṣ, PIE *\*kʷeḱ-* "to see," no secure English cousin) → মুখ *mukh* (a
+  full tatsama with a tadbhava twin, মু, alive only in compounds; its own
+  deepest root is a genuine, unresolved Dravidian-vs-Indo-European dispute
+  among Sanskritists) → নাক *nāk* (a tadbhava, PIE *\*néh₂s-*, the direct
+  ancestor of English **nose** and Latin *nāsus*) → হৃদয় *hridoy* (a tatsama
+  with a poetic tadbhava twin, হিয়া; root হৃদ্, PIE *\*ḱérd-*, the widest
+  confirmed cousin family in the track — **heart**, *kardía*, *cor*).
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 10 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
-| 11+ | Verb tenses (the past and future of these fourteen), family, food — always tracing the sound-shift back to Sanskrit |
+| 13 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
+| 14+ | Verb tenses (the past and future of these fourteen verbs) — always tracing the sound-shift back to Sanskrit |
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of
