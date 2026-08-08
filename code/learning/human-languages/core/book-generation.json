@@ -455,6 +455,33 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 10,
+      "title": "Tea, Water, Milk, and Rice",
+      "label": "ch:bn-tea-water-milk-rice",
+      "output": "bengali/book/chapters/ch10-tea-water-milk-rice.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 11,
+      "title": "Friend, Family, Brother, and Sister",
+      "label": "ch:bn-friend-family-brother-sister",
+      "output": "bengali/book/chapters/ch11-friend-family-brother-sister.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 12,
+      "title": "Eye, Mouth, Nose, and Heart",
+      "label": "ch:bn-eye-mouth-nose-heart",
+      "output": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "title": "Nǐ Hǎo — Hello, Character by Character",

@@ -1,4 +1,4 @@
-# Session Map — Bengali Chapters 1–5
+# Session Map — Bengali Chapters 1–12
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -98,6 +98,33 @@ letters that word needs.
 | 44 | sahajjo-kora | সাহায্য করা | "to help" ← *saha* "together" + √i "go"; the final inherent **o** |
 | 45 | bhalo-laga | ভালো লাগা | "to like" ← √lag "stick" — *āmār bhālo lāge*; vs ভালোবাসা |
 
+## Chapter 10 — Tea, Water, Milk, and Rice
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 46 | cha | চা | "tea" — a Chinese loan via Persian; realizes the polite-offer pattern |
+| 47 | jol | জল | "water" ← disputed root; পানি beside it traces to Ch. 7's √pā |
+| 48 | dudh | দুধ | "milk" ← √duh; cousin **doughty**, not the look-alike **dough** |
+| 49 | bhat | ভাত | "rice" ← √bhaj "to share" — a root Ch. 11 picks back up |
+
+## Chapter 11 — Friend, Family, Brother, and Sister
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 50 | bondhu | বন্ধু | "friend" ← √bandh → English **bind, bond, band**, undisguised |
+| 51 | poribar | পরিবার | "family" ← *pari-* "around" + √vṛ "to cover" |
+| 52 | bhai | ভাই | "brother" — simply *is* English "brother," PIE *bʰréh₂tēr* |
+| 53 | bon | বোন | "sister" ← *bhaginī* ← *bhaga* "a share," the same root as ভাত |
+
+## Chapter 12 — Eye, Mouth, Nose, and Heart
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 54 | chokh | চোখ | "eye" ← √cakṣ "to see"; half-worn, an ardhatatsama |
+| 55 | mukh | মুখ | "mouth, face" — disputed Dravidian-vs-Indo-European origin |
+| 56 | nak | নাক | "nose" ← PIE *néh₂s-* → English **nose**, Latin *nāsus* |
+| 57 | hridoy | হৃদয় | "heart" ← PIE *ḱérd-* → English **heart**, Greek *kardía*, Latin *cor* |
+
 ## Next
 
-Chapter 10 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.
+Chapter 13 — postpositions (*-e, -te, -r, -ke*) and numbers 6–10.

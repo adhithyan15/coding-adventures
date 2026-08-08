@@ -734,6 +734,57 @@
       "jsonHash": "fnv1a64:09eb129fb72c95b7"
     },
     {
+      "language": "bengali",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:80e992cd9bd7e18c",
+      "lessonIds": [
+        "BN-C10-cha",
+        "BN-C10-jol",
+        "BN-C10-dudh",
+        "BN-C10-bhat"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch10.txt",
+      "json": "bengali/narration/ch10.json",
+      "textHash": "fnv1a64:7a9a0ab2033e93dc",
+      "jsonHash": "fnv1a64:db57b1d6f17e34b5"
+    },
+    {
+      "language": "bengali",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:3f28f826b9058a0d",
+      "lessonIds": [
+        "BN-C11-bondhu",
+        "BN-C11-poribar",
+        "BN-C11-bhai",
+        "BN-C11-bon"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch11.txt",
+      "json": "bengali/narration/ch11.json",
+      "textHash": "fnv1a64:306694d81f9b00c1",
+      "jsonHash": "fnv1a64:c50ca8cd06d4c02a"
+    },
+    {
+      "language": "bengali",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:4917f65a4dae0f72",
+      "lessonIds": [
+        "BN-C12-chokh",
+        "BN-C12-mukh",
+        "BN-C12-nak",
+        "BN-C12-hridoy"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch12.txt",
+      "json": "bengali/narration/ch12.json",
+      "textHash": "fnv1a64:2215af79a7520ca2",
+      "jsonHash": "fnv1a64:d95226aa272442ef"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:6e5b00565489fe34",

@@ -396,6 +396,42 @@
       "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:f8e481ad0313cbcc",
+      "lessonIds": [
+        "BN-C10-cha",
+        "BN-C10-jol",
+        "BN-C10-dudh",
+        "BN-C10-bhat"
+      ],
+      "tex": "bengali/book/chapters/ch10-tea-water-milk-rice.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:141a754a9363c5a5",
+      "lessonIds": [
+        "BN-C11-bondhu",
+        "BN-C11-poribar",
+        "BN-C11-bhai",
+        "BN-C11-bon"
+      ],
+      "tex": "bengali/book/chapters/ch11-friend-family-brother-sister.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:b257f6b368a6fd18",
+      "lessonIds": [
+        "BN-C12-chokh",
+        "BN-C12-mukh",
+        "BN-C12-nak",
+        "BN-C12-hridoy"
+      ],
+      "tex": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:e6411b8670357094",
