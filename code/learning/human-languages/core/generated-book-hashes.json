@@ -302,6 +302,53 @@
       "tex": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex"
     },
     {
+      "language": "arabic",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:f3a63219618807ba",
+      "lessonIds": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "tex": "arabic/book/chapters/ch33-asking-for-a-drink.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:140140ef03991197",
+      "lessonIds": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "tex": "arabic/book/chapters/ch34-asking-for-food.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:bc0d1c1b8dd13f35",
+      "lessonIds": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "tex": "arabic/book/chapters/ch35-people-you-introduce.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:6b0582f629a90a18",
+      "lessonIds": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "tex": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:922476792193ab33",
@@ -925,6 +972,54 @@
         "HI-C35-pasand"
       ],
       "tex": "hindi/book/chapters/ch35-pasand.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:d7b8aea5442f7154",
+      "lessonIds": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ],
+      "tex": "hindi/book/chapters/ch36-one-house-four-languages.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:ebf952fd9155efa9",
+      "lessonIds": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ],
+      "tex": "hindi/book/chapters/ch37-one-tea-please.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:f7ff13f56a78a073",
+      "lessonIds": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ],
+      "tex": "hindi/book/chapters/ch38-where-it-hurts.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:5a01181601c965b8",
+      "lessonIds": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
+      ],
+      "tex": "hindi/book/chapters/ch39-people-around-you.tex"
     },
     {
       "language": "italian",
@@ -3279,6 +3374,53 @@
         "TA-C34-pidi"
       ],
       "tex": "tamil/book/chapters/ch34-verbs-between-people.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:dc38c4fb1b2e3bc9",
+      "lessonIds": [
+        "TA-C35-veedu",
+        "TA-C35-kadavu",
+        "TA-C35-arai",
+        "TA-C35-naarkaali"
+      ],
+      "tex": "tamil/book/chapters/ch35-arriving-at-a-house.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:231ca7f273eff40e",
+      "lessonIds": [
+        "TA-C36-teneer",
+        "TA-C36-paal",
+        "TA-C36-unavu",
+        "TA-C36-tavaru"
+      ],
+      "tex": "tamil/book/chapters/ch36-what-you-are-offered.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:2a3905874c0757ce",
+      "lessonIds": [
+        "TA-C37-uur",
+        "TA-C37-nanban",
+        "TA-C37-ivar",
+        "TA-C37-ivar-en-nanbar"
+      ],
+      "tex": "tamil/book/chapters/ch37-your-town-your-friend.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:cdf9a751033520e6",
+      "lessonIds": [
+        "TA-C38-udambu",
+        "TA-C38-sugam",
+        "TA-C38-vidai"
+      ],
+      "tex": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex"
     },
     {
       "language": "telugu",

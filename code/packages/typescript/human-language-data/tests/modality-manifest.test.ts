@@ -793,15 +793,19 @@ describe("corpus regression", () => {
     // figure to rise whenever a non-Latin track authors honestly.
     expect(manifest.summary).toEqual({
       // Both Spanish B1 chapters, 38 and 41, are entirely ear-only, so each is fully
-      // drivable. They are what moved the whole-corpus figure from 66% to 67%.
-      totalLessons: 1453,
-      voice: 977,
-      sight: 423,
+      // drivable. They moved the whole-corpus figure from 66% to 67% — then the
+      // pre-A1 vocabulary probe (hindi/arabic/tamil) added honest script sections
+      // under the canonical heading, and the whole-lesson figure fell back to 66%.
+      // `coreDrivable` is unaffected: those blocks are detachable, so the driving
+      // edition itself lost nothing. This is the sight-share seam, not a regression.
+      totalLessons: 1499,
+      voice: 983,
+      sight: 463,
       pen: 53,
-      drivableLessons: 977,
-      drivablePercent: 67,
+      drivableLessons: 983,
+      drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 452,
+      chapterCount: 464,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -810,9 +814,9 @@ describe("corpus regression", () => {
       // and the alphabetical fallback it replaced had been flattering this number by
       // putting eyes-needed lessons later than they really come. The real order is
       // worse, which is the measurement becoming honest, not the corpus regressing.
-      drivablePrefixTotal: 794,
+      drivablePrefixTotal: 796,
       fullyDrivableChapters: 307,
-      unstartableChapters: 108,
+      unstartableChapters: 119,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

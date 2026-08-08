@@ -325,9 +325,13 @@ describe("the real corpus", () => {
     // lesson's own, structurally unreachable), Bengali 12 of 18 -> 4 of 35, Tamil 53% ->
     // 38%, Arabic four ch28-30 atoms off zero. Adding vocabulary and reducing orphans at
     // the same time is the whole point; a corpus that only grows is not a course.
-    expect(report.summary.atomsTaught).toBe(2023); // +9: Spanish ch41's nine atoms // +9: the four Spanish B1 lessons
-    expect(report.summary.atomsNeverRevisited).toBe(516);
-    expect(report.summary.neverRevisitedPercent).toBe(26);
+    // The pre-A1 vocabulary probe (hindi/arabic/tamil, 45 lessons across three
+    // unrelated families) confirmed the reach-back discipline scales past verbs:
+    // atomsTaught +98 while atomsNeverRevisited FELL by 53. 22% is the lowest this
+    // figure has read since it was first measured at 51%.
+    expect(report.summary.atomsTaught).toBe(2121);
+    expect(report.summary.atomsNeverRevisited).toBe(463);
+    expect(report.summary.neverRevisitedPercent).toBe(22);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
     //
@@ -393,8 +397,8 @@ describe("the real corpus", () => {
     // So this is not a cost the new chapter incurred; it is a debt the old chapters
     // already had, which only became measurable once something followed them. Any
     // chapter appended to any track will do this, and the number is honest either way.
-    expect(report.summary.missedByWindow.R1).toBe(788);
-    expect(report.summary.missedByWindow.R2).toBe(1305);
+    expect(report.summary.missedByWindow.R1).toBe(797);
+    expect(report.summary.missedByWindow.R2).toBe(1376);
   });
 
   it("shows what a declared reading order was worth", () => {

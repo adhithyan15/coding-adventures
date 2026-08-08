@@ -123,6 +123,52 @@ reading course.
   liked as subject — the same inversion Spanish reached in *me gusta* and
   Italian in *mi piace*, in another family, with no borrowing either way.
   **Authored.**
+- **Ch. 36 — One House, Four Languages** (`HI-C36-*`): *ghar* → *darvāzā* →
+  *kamrā* → *kursī*. One room, four sources. **घर** ← Sanskrit *gṛha*, and
+  *gṛha* is **not** from √*grah* "to seize" the way the grammarians' root-lists
+  suggest — it is PIE \**gʰerdʰ-* "**enclosure**," the root of English **yard**
+  and **garden** and the *-grad* of Belgrade, so a house was first a fenced
+  piece of ground. **दरवाज़ा** is Persian, and its *dar* is \**dʰwer-*, the same
+  ancient word as English **door** and Hindi's own learned **द्वार** — one word
+  arriving twice by two roads. **कमरा** is **Portuguese** *câmara*, hence
+  Latin *camera*, hence Hindi's later re-borrowing **कैमरा**. **कुर्सी** is
+  Arabic via Persian, a Wanderwort traceable back through Akkadian *kussû* to
+  Sumerian *guza* — and English *chair* (Greek *kathédra*) is no relation. The
+  payoff is the first **feminine** noun in the track: *merā* becomes *merī*.
+  **Authored.**
+- **Ch. 37 — One Tea, Please** (`HI-C37-*`): *chāy* → *dūdh* → *khānā* →
+  *kitāb*. **चाय** is Sinitic *chá* through Persian, while English *tea* is the
+  same leaf bought at a different Chinese port (Hokkien *tê*, carried by Dutch
+  ships) — not overland-versus-sea, since Portuguese *chá* came by sea.
+  **दूध** ← **दुग्ध** *dugdha*, a past participle: "the **milked**," the same
+  trick **पानी** plays as "the drinkable." **खाना** ← *khādana*, and its nuqta
+  twin **ख़ाना** is Persian *xāna*, "house" — two unrelated words separated on
+  the page by a dot that print routinely drops. **किताब** opens the Arabic
+  three-consonant root **k-t-b**, with *kātib* and *maktab* free. The chapter
+  also corrects **कृपया**: it is signage and announcements, and what carries
+  politeness in speech is the **-िए** of **दीजिए**. **Authored.**
+- **Ch. 38 — Six Words for Where It Hurts** (`HI-C38-*`): *āṁkh* → *dāṁt* →
+  *pair* → *peṭ*. Three flawless Indo-European cousins — **आँख** ← *akṣi* ←
+  \**h₃ekʷ-* (Latin *oculus*, English *eye*; the safe Greek cognate is *ósse*,
+  **not** *ophthalmós*, whose first element is unexplained); **दाँत** ← *danta*
+  ← \**h₃dónts* (*dēns*, *odoús*, *tooth*); **पैर**, which does **not** descend
+  from *pāda* — **पाँव** does — but from the shorter stem *pad-*, both on
+  \**ped-*. Then **पेट**, whose trail genuinely stops: Prakrit *peṭṭa*, most
+  likely a **Dravidian** loan, with the "basket" link a resemblance Turner
+  notes rather than a derivation. आँख and दाँत are the track's sharpest gender
+  trap: identical shape, opposite gender. **Authored.**
+- **Ch. 39 — The People Around You** (`HI-C39-*`): *dost* → *bacchā* → *ādmī* →
+  *aurat*. **दोस्त** is Persian *dōst* ← Old Persian *dauštā* on \**ǵews-* "to
+  **taste, try, choose**" (Sanskrit *juṣ-*, Latin *gustāre*, English
+  **choose**), and it starts with *d-* because Old Persian regularly turned the
+  Indo-Iranian consonant Avestan kept as *z-*. **बच्चा** is a Persian loan that
+  is a **sister**, not a descendant, of Sanskrit *vatsa* — whose own inherited
+  reflex Hindi already had as **बछड़ा** — and the root is \**wet-* "year," so a
+  child is a **yearling**. **आदमी** carries the Arabic *nisba* **-ī**,
+  "of Adam"; the Genesis link between *ʾādām* and *ʾadāmāh* "ground" is a
+  deliberate pun, **not** the etymology. **औरत** is Arabic *ʿawra* — but the
+  sense "woman" is a **Persian** development, not an Arabic one — beside
+  Sanskrit-derived **महिला** and **स्त्री**. **Authored.**
 
 ## Planned
 

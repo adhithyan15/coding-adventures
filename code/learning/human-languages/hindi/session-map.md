@@ -89,6 +89,38 @@ All thirteen of those earlier atoms had **never** been practised again anywhere
 in the corpus before this tranche. That is the HL09 §7 job these two chapters
 were built to do, alongside teaching the verbs.
 
+## Chapters 36–39 — the pre-A1 noun tranche
+
+Sixteen nouns, four per chapter, every lesson carrying its noun's **gender** as
+part of the atom. Reach-back runs at two cadences, as HL09 §7.2 asks: each
+lesson practises the preceding one to three lessons (which is what closes R1 at
+zero extra lessons), and each chapter's payoff reaches back several chapters to
+atoms nothing had revisited.
+
+| Lesson | Introduces | Reaches back to |
+|---|---|---|
+| ghar | *gṛha* ← \**gʰerdʰ-* "enclosure"; **yard**, **garden**; masculine | the शिरोरेखा (W01), र and स, मेरा नाम (W04) |
+| darvaaza | Persian *dar* ← \**dʰwer-*; the doublet द्वार; the nuqta | the ा mātrā (W03), नमस्ते by hand (W05), शुभ रात्रि (Ch. 27) |
+| kamra | Portuguese *câmara* → Latin *camera* → कैमरा | न and म (W01) |
+| kursi | Arabic via Persian ← Aramaic ← Akkadian ← Sumerian; feminine | the inherent अ (W02), preposed ि (W03), र/स (W04), the virāma and conjuncts (W05), शुभ रात्रि (Ch. 27) |
+| chai | Sinitic *chá* vs Hokkien *tê*; **दीजिए** carries the politeness | कृपया (Ch. 8), माफ़ कीजिए (Ch. 9), पानी (Ch. 15), एक (Ch. 6), कमरा |
+| dudh | *dugdha*, "the milked" — a participle turned noun | पानी, "the drinkable" (Ch. 15) |
+| khaana | *khādana*; the nuqta twin ख़ाना ← Persian *xāna* | न and म (W01), the ा mātrā (W03), रोटी (Ch. 15) |
+| kitaab | the Arabic root **k-t-b**; किताब / पुस्तक / पोथा by register | क and त and the mouth-map (W02), preposed ि (W03), कृपया (Ch. 8), माफ़ कीजिए (Ch. 9) |
+| aankh | *akṣi* ← \**h₃ekʷ-*; *oculus*, *eye*, *ósse* not *ophthalmós* | सिर and हाथ (Ch. 13), the chandrabindu of हाँ (Ch. 7) |
+| daant | *danta* ← \**h₃dónts*; "the biting one" | the head-line (W01), क/त (W02), हाँ (Ch. 7), सिर (Ch. 13), खाना |
+| pair | *pad-*, **not** *pāda* — पाँव is the *pāda* one | हाथ (Ch. 13), नहीं (Ch. 7) |
+| pet | Prakrit *peṭṭa*, probably Dravidian; the trail stops | the े mātrā (W03), सिर and हाथ (Ch. 13), नहीं (Ch. 7), पानी and रोटी (Ch. 15) |
+| dost | Persian *dōst* ← \**ǵews-* "taste, try, choose"; z- vs d- | भाई and बहन (Ch. 12), the virāma and conjuncts (W05), नमस्ते and मेरा नाम by hand (W04, W05) |
+| baccha | Persian *bacca*, sister of *vatsa*; \**wet-* "year" | पिता and माता (Ch. 12), कितने साल के हो (Ch. 19) |
+| aadmi | Arabic *nisba* **-ī**, "of Adam"; the Genesis pun is not etymology | कितने साल के हो (Ch. 19), कुर्सी and किताब |
+| aurat | Arabic *ʿawra*; the "woman" sense is **Persian** | भाई/बहन and पिता/माता (Ch. 12), किताब's register ladder |
+
+**All thirty-nine** pre-A1 atoms the corpus reported as revisited fewer than
+twice before this branch are rescued here. What is left is four atoms, all
+introduced by these chapters' own last lessons, which nothing later exists to
+revisit — a structural tail, not an oversight.
+
 ## Next
 
 Chapter 6 — postpositions (*ko, se, meṁ, par*) and the ergative *ne*.

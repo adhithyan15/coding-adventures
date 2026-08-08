@@ -81,30 +81,87 @@ Two more things:
   the **Saudi** in Saudi Arabia, while *fahima*, *fakkara*, *kataba*,
   *ʾakhadha*, *saʾala* and *ʾaḥabba* have **no English relative at all**, which
   each lesson says outright. In the book.
+- **Chapters 33–36 — Everyday nouns, filed at pre-A1**
+  ([`lessons/AR-C{33,34,35,36}-*`](./lessons/)): the drinks you ask for —
+  **shāy**, **ḥalīb**, **sukkar**, **qahwa**; the food — **milḥ**, **laḥm**,
+  **jubn**, **ṭaʿām**; the people you introduce — **jār**, **ibn**/**bint**,
+  **ṣadīq**; and the vessels — **zayt**, **kūb**, **ṭabaq**, **milʿaqa**.
+  Chapters 33, 34 and 36 realize `SPINE-POLITE-REQUEST-REPAIR`; Chapter 35
+  realizes `SPINE-EXCHANGE-NAMES`. The root engine keeps paying: **ط-ع-م**
+  poured through the *ma-* place shape of *maktab* returns **مَطْعَم**
+  (*maṭʿam*, "a restaurant") with nothing new to learn, and *milʿaqa* sets the
+  *mi-* **tool** shape beside it. **لحم** is **ملح** reordered — the root
+  system in one line — and Hebrew *leḥem* means *bread* off that same root,
+  with **Bethlehem** sitting on the seam. Gender becomes a rule you apply on
+  sight: **ة** marks *qahwa*, *ṣadīqa* and *milʿaqa* feminine. Chapter 36 names
+  the **broken** plural (*akwāb*, *aṭbāq*, *malāʿiq*) against the **sound** one
+  (*qahawāt*, *ṣadīqāt*). Cousins are claimed only where they are real —
+  *qahwa* really did become English **coffee**, and *as-sukkar* and *az-zayt*
+  really are the **azúcar** and **aceite** of Spanish — and refused where they
+  are not: *jubn* "cheese" and *jubn* "cowardice" are **not** one root,
+  *kūb* is **not** claimed from Latin *cuppa*, and Aleppo is **not** named for
+  milk. In the book.
 
-All fifty-nine lessons in Chapters 3–32 remain below five effective minutes.
+All seventy-four lessons in Chapters 3–36 remain below five effective minutes.
+
+## What the level gate says, and what it counts
+
+`src/level-gate.ts` reports Arabic as **in progress at pre-A1**, blocked on two
+of the four HL09 §3.1 criteria:
+
+| criterion | before Chapters 33–36 | after |
+|---|---|---|
+| vocabulary at or below pre-A1 | 33 of 300 | 48 of 300 |
+| pre-A1 atoms revisited fewer than twice | 60 | 49 |
+
+Two things are worth stating plainly, because both are easy to misread.
+
+**The gate counts headwords, not words.** `vocabularyOf` collects distinct
+`headword:` strings from `word` and `phrase` lessons. `AR-C34-taam` teaches
+*ṭaʿām*, *ṭaʿima*, *ṭaʿm* and *maṭʿam* and counts as **one**. Fifteen lessons
+therefore moved the number by exactly fifteen, and closing pre-A1 at the
+present target of 300 would cost roughly **252 more lessons** in this track.
+
+**What levels a lesson is the path segment, not the extension.**
+`lessonSpineNodes` walks `curriculum.path[].lessons` only. An `AR-EXT-*`
+extension is separately required — a content lesson with a track-local
+`concept_tag` that no spine node owns must belong to exactly one, or
+`validateCurriculum` rejects it — but it does not place the lesson at a level.
+Chapters 33–36 carry both: segments `AR-PATH-030`–`033`, extensions
+`AR-EXT-030`–`033-LANGUAGE-SPECIFIC`.
+
+**Why there are no household nouns here.** The seven pre-A1 spine nodes are all
+social transaction and hold no concrete object among their 34 concepts. *Bayt*,
+*bāb*, *kursī*, *ṭāwila* and *miftāḥ* belong with "say where I am", whose
+nearest node — `SPINE-ASK-LOCATION` — is **A1**. Filing them at pre-A1 would
+have inflated this table rather than satisfied it.
 
 ## Can you learn this track in the car?
 
 Mostly. Under [`HL08`](../../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md)
 each lesson is `voice` 🚗, `sight` 👁 or `pen` ✍ at **full** modality, and
-Arabic measures 44 / 25 / 16 — but 20 of those `sight` lessons carry their
-visual load entirely inside a **detachable** block, so **56 of 85 lessons have
-a `voice` core (75% drivable)**, with 56 reachable in chapter-prefix order.
+Arabic measures 44 / 40 / 16 — but 34 of those `sight` lessons carry their
+visual load entirely inside a **detachable** block, so **78 of 100 lessons have
+a `voice` core (78% drivable)**, with 69 reachable in chapter-prefix order.
 
-The eight verb lessons of Chapters 31–32 sit in exactly that group. Each uses
+The eight verb lessons of Chapters 31–32, and all fifteen noun lessons of
+Chapters 33–36, sit in exactly that group. Each uses
 the canonical `## The letters in this word` heading, which types as a `script`
 block: honest at full modality (a letter shape is not a sound), detachable for
 a hands-free renderer, so their `coreModality` is `voice`. The cost is
-visible and deliberate — Arabic's `sight` count rises by eight and two more
-chapters become "unstartable" at full modality — and the alternative was the
+visible and deliberate — Arabic's `sight` count rises with every such lesson
+and those chapters become "unstartable" at full modality — and the alternative was the
 older habit of hiding the letters section behind a non-script heading, which
 made the number look better without making the lesson more listenable.
 
-Chapters 3, 4 and 8 are prefix 0 at full modality, and so are Chapters 31 and
-32 — the latter two only because every lesson in them opens on its detachable
-letters block, which is why they still count as fully drivable once that block
-is set aside. Chapters 3 and 4 are the real blocks: each opens on a `pen`
+Chapters 3, 4 and 8 are prefix 0 at full modality, and so are Chapters 31–36 —
+the latter only because every lesson in them opens on its detachable letters
+block, which is why they still count as fully drivable once that block is set
+aside. Chapters 28–30 are the exception in the other direction: they head that
+same section `## You'll want to know — The letters in this word`, which
+`classifyBlock` types `input` rather than `script`, so it is **not** detachable
+and their cores are `sight`. That inconsistency is real, is still in the book,
+and is not fixed here. Chapters 3 and 4 are the real blocks: each opens on a `pen`
 writing lesson that later lessons
 depend on: a chapter's drivable prefix can only start with a lesson that has no
 in-chapter prerequisite, and Chapter 4's only such lesson is `AR-W10-ayn`,
@@ -148,7 +205,7 @@ finishing that chapter lets them do, and names the lesson that proves it:
 ```
 
 The file is **authored intent**, not a derived cache — no validator may rewrite
-it. Chapters 3–32 are covered. Chapters 1 and 2 are deliberately left out: their
+it. Chapters 3–36 are covered. Chapters 1 and 2 are deliberately left out: their
 recap lessons are still schema v1 with no declared knowledge atoms, so a payoff
 there could only be invented. That absence is honest, measurable debt and is
 reported as such.

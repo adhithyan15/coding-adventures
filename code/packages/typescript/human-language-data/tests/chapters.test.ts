@@ -225,11 +225,11 @@ describe("corpus snapshot", () => {
     // bookChapters 377 -> 378, declaredChapters 279 -> 280, chaptersWithoutCapability
     // holds at 98. A new chapter that shipped without a `canDo`/`payoff` would have
     // pushed the debt to 99, which is exactly what this trio is here to catch.
-    expect(report.summary.bookChapters).toBe(452); // +1: Spanish ch41, the second B1 chapter
+    expect(report.summary.bookChapters).toBe(464); // +1: Spanish ch41, the second B1 chapter
     // 317 -> 318 when russian chapter 3 gained a capability. It was the only
     // generated chapter with no HL05 entry, so it was also the only generated chapter
     // the book could not give an opening to.
-    expect(report.summary.declaredChapters).toBe(354); // +1: Spanish ch41, the second B1 chapter
+    expect(report.summary.declaredChapters).toBe(366); // +1: Spanish ch41, the second B1 chapter
     expect(report.summary.chaptersWithoutCapability).toBe(98);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

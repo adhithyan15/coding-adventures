@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 35,
+  "title": "Arriving at a House",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:2703e3459eee5f3a",
+  "lessons": [
+    {
+      "id": "TA-C35-veedu",
+      "sequence": 750,
+      "title": "வீடு (vīḍu) — \"house,\" and the place the greeting happens",
+      "headword": "வீடு",
+      "romanization": "vīḍu",
+      "gloss": "house, home — the word behind the door you say வணக்கம் at, and a v where Kannada says b",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:297479db3d817cd4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs from the chapter you have just finished: pidi, \"to like\"; uḍavu, \"to help\"; kēḷ, \"to ask.\" Say them. Now a noun, and the one a conversation usually starts inside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வீடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வீடு — vīḍu — house; home."
+            },
+            {
+              "kind": "speech",
+              "text": "One word covers both. Tamil does not split the building from the belonging: என் வீடு (eṉ vīḍu) is \"my house\" and \"my home\" at once, and choosing between them is the translator's problem."
+            },
+            {
+              "kind": "speech",
+              "text": "With the dative you already own:"
+            },
+            {
+              "kind": "speech",
+              "text": "வீட்டுக்கு — vīṭṭukku — to the house."
+            },
+            {
+              "kind": "speech",
+              "text": "The soft ḍ hardens and doubles to ṭṭ — the படி / படித்தேன் rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வீ is வ, the first letter you learned, wearing the long ī sign ீ. Then டு: ட with the u sign."
+            },
+            {
+              "kind": "speech",
+              "text": "You are at a door about to say வணக்கம், so read that word while you are here: வ + ண + க் + க + ம். The வ that opens vaṇakkam is the வ that opens vīḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - the v that turns into a b",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வீடு (vīḍu) is inherited, not borrowed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the cousin",
+                "language and sense"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the cousin: വീട് vīḍ. language and sense: Malayalam, \"house\".",
+                "the cousin: వీడు vīḍu. language and sense: Telugu, \"town, camp\".",
+                "the cousin: ಬೀಡು bīḍu. language and sense: Kannada, \"abode, encampment\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada has changed the front of the word: Tamil says v, Kannada says b. Not a slip — Kannada alone among its neighbours turned inherited word-initial v- into b-, and the inscriptions show it from about the seventh century. Store the correspondence — it keeps paying."
+            },
+            {
+              "kind": "speech",
+              "text": "The sense has drifted where the form has not: Telugu's vīḍu is a town, Kannada's bīḍu an encampment. Tamil and Malayalam kept it on the dwelling."
+            },
+            {
+              "kind": "speech",
+              "text": "One more thing, not a coincidence to explain away. Tamil has a second வீடு (vīḍu) meaning \"release, deliverance,\" as in வீடுபேறு. The Dravidian dictionary files house and release under one entry, headed by விடு (viḍu), \"to let go.\" A house is where you are let go."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vīḍu\" — house and home in one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vīḍu\" — house and home in one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eṉ vīḍu,\" then the hardening — \"vīṭṭukku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eṉ vīḍu,\" then the hardening — \"vīṭṭukku\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins, ending on the front-swap — \"vīḍ … vīḍu … bīḍu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins, ending on the front-swap — \"vīḍ … vīḍu … bīḍu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root under the house — \"viḍu, to let go\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root under the house — \"viḍu, to let go\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does one Tamil word do two English jobs here, and which letter opens both vīḍu and vaṇakkam? (House and home are not split; and வ.) What does Kannada put at the front instead of v, and is it a one-off? (b — bīḍu; regular, from the seventh century on.) Is the Tamil word for \"release\" the same root as the house? (Yes — both under விடு, \"to let go.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C35-kadavu",
+      "sequence": 760,
+      "title": "கதவு (kadavu) — \"door,\" and a word Tamil never gave up",
+      "headword": "கதவு",
+      "romanization": "kadavu",
+      "gloss": "door — Tamil's everyday word is its own, while the Sanskrit one stayed in books",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:563406c98419bdc3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vīḍu — house. Say the cousin that swaps the front letter. (Bīḍu, Kannada.) Now the part of the house you actually stand at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கதவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதவு — kadavu — door."
+            },
+            {
+              "kind": "speech",
+              "text": "The leaf that swings, and the thing somebody opens when you arrive."
+            },
+            {
+              "kind": "speech",
+              "text": "வீட்டுக் கதவு — vīṭṭuk kadavu — the house door."
+            },
+            {
+              "kind": "speech",
+              "text": "Two nouns in a row, the first leaning on the second. Tamil builds a great deal this way, and you have seen it inside a single word: தண்ணீர் is taṇ plus nīr, \"cool\" plus \"water.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "க + த + வு. The first letter is the one that taught you Tamil marks no voicing: க spells a hard k, a soft g and even an h, and position decides. Here it opens the word, so it is hard — ka, not ga."
+            },
+            {
+              "kind": "speech",
+              "text": "The same rule then lands on the second letter. த is named ta, but it sits between two vowels, so it softens. That is why this book writes kadavu and not katavu. One rule, two letters, one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - the everyday word and the bookish one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கதவு (kadavu) is inherited Dravidian. Kannada's ಕದ (kada) is the same word with less on the end; Malayalam's കതവ് (katavu) matches Tamil closely."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil also owns a second word for a door-leaf: கபாடம் (kabāḍam), taken from Sanskrit कपाट (kapāṭa). It exists, it is correct, and almost nobody says it. It lives in poetry and temple description; கதவு (kadavu) lives in the house."
+            },
+            {
+              "kind": "speech",
+              "text": "That split is this language's habit. Where a neighbour borrowed a Sanskrit word and let the inherited one fade, Tamil often kept both and gave them different jobs — the inherited word for the everyday thing, the borrowed one for the elevated register. Do not turn that into a rule that Tamil never borrows. It borrows; it rarely evicts."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kadavu\" — door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kadavu\" — door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vīṭṭuk kadavu\" — the house door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vīṭṭuk kadavu\" — the house door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hard one and the soft one in one word — \"ka … da\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hard one and the soft one in one word — \"ka … da\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday word, then the bookish one — \"kadavu … kabāḍam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday word, then the bookish one — \"kadavu … kabāḍam\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the house door,\" then explain why the க is hard and the த soft when neither changed shape. (Vīṭṭuk kadavu; Tamil marks no voicing — position decides.) Which of kadavu and kabāḍam would you hear at somebody's house, and where did the other come from? (Kadavu; kabāḍam is Sanskrit, and stays literary.) Does keeping both mean Tamil refuses to borrow? (No — it borrows without evicting.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C35-arai",
+      "sequence": 770,
+      "title": "அறை (aṟai) — \"room,\" and Tamil's second r",
+      "headword": "அறை",
+      "romanization": "aṟai",
+      "gloss": "room — and the letter ற, the hard r that is not the r you think it is",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:34d173f2cce6d96f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vīḍu, house. Kadavu, door — the everyday word Tamil kept while the Sanskrit one stayed in books. Open that door and you are in this word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அறை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறை — aṟai — room."
+            },
+            {
+              "kind": "speech",
+              "text": "Any room: in a house, in a hotel, a cell. Put it behind vīḍu the way you put kadavu there:"
+            },
+            {
+              "kind": "speech",
+              "text": "வீட்டு அறை — vīṭṭu aṟai — a room of the house."
+            },
+            {
+              "kind": "speech",
+              "text": "And with the dative, அறைக்கு (aṟaikku), \"to the room.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அ is the standing vowel a — a letter in its own right, not a sign hung on a consonant. Then ற, then the ai sign ை, which wraps around the front of its consonant: ற + ை becomes றை."
+            },
+            {
+              "kind": "speech",
+              "text": "ற is the hard r you first met inside நன்றி. It is not ர. Tamil keeps two r-letters and uses both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - inherited, like the door",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறை (aṟai) is inherited. Malayalam's അറ (aṟa) is the same word, used for a chamber or an inner store-room, and it keeps the same hard r."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is kadavu's situation over: an everyday inherited word with a Sanskrit-derived alternative sitting unused in the higher register."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: how to make ற",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the English word hurry and stop on the middle sound. That flick of the tongue against the ridge behind your teeth is close to Tamil ர (ra). Now make it stronger and longer, with real contact: that is ற (ṟa)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two cautions. Do not curl your tongue back — retroflex belongs to ண and ட; ற is made at the ridge. And do not soften it into the English r of red, which is the wrong shape for both Tamil letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Many Tamil speakers merge ர and ற in casual speech, so you will be understood either way. Learn the difference anyway: the spelling depends on it, and a word written with the wrong r is simply misspelled."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aṟai\" — room, on the hard r",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aṟai\" — room, on the hard r]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two r's apart — \"ra … ṟa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two r's apart — \"ra … ṟa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vīṭṭu aṟai\" — a room of the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vīṭṭu aṟai\" — a room of the house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three so far — \"vīḍu, kadavu, aṟai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three so far — \"vīḍu, kadavu, aṟai\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a room of the house,\" and name which of Tamil's two r-letters is in aṟai and where else you have read it. (Vīṭṭu aṟai; ற, the hard one, in நன்றி.) Where is ற made, and what must your tongue not do? (At the ridge behind the teeth — do not curl it back.) If many speakers merge the two r's, why bother? (Because the spelling does not merge.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C35-naarkaali",
+      "sequence": 780,
+      "title": "நாற்காலி (nāṟkāli) — \"chair,\" counted out in legs",
+      "headword": "நாற்காலி",
+      "romanization": "nāṟkāli",
+      "gloss": "chair — a word you can take apart into \"four\" and \"leg,\" and the thing a guest is offered",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f68ff6aa061a196c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words in the order you meet them arriving: vīḍu, kadavu, aṟai. Hold the hard r in aṟai at the ridge, not the roof. Now the one thing in that room a guest is always pointed at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நாற்காலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாற்காலி — nāṟkāli — chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Five syllables for a chair, which sounds extravagant until you find out what it is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் நாற்காலி எடுக்கிறேன். — nāṉ nāṟkāli eḍukkiṟēṉ — I take a chair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நா + ற் + கா + லி. Every piece is one you have handled."
+            },
+            {
+              "kind": "speech",
+              "text": "ந is the dental n, first of Tamil's three n-letters, wearing the long ā sign ா. ற் is the hard r of aṟai under a puḷḷi, the dot that switches off the built-in vowel. கா is க with that same long ā. லி is ல with the i sign ி, the first vowel sign you learned, on the way to spelling நன்றி."
+            },
+            {
+              "kind": "speech",
+              "text": "Now what does not happen at ற்கா. Two consonants meet, and Tamil keeps them as two letters with a dot between, rather than fusing them into a stacked shape as the scripts to the north do. That refusal is why a word this long stays readable one piece at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - four, and a leg",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word is a compound, and both halves are yours:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the piece",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the piece: நால் nāl. what it is: \"four\" — the form four takes in compounds.",
+                "the piece: கால் kāl. what it is: \"leg, foot; a support\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four plus leg: a chair is a four-legged thing, said out loud. English cannot do that with chair, which travels through French and Latin to a Greek word for \"seat\" without ever showing a leg."
+            },
+            {
+              "kind": "speech",
+              "text": "The seam is audible. நான்கு (nāṉku) is the counting word; in a compound four appears as நால், and before க that ல் hardens to ற். Hence நாற்காலி (nāṟkāli), and hence நாற்பது (nāṟpadu), \"forty.\" Malayalam builds the chair from the same two pieces: നാൽക്കാലി."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are inherited Dravidian. Nothing in this chapter was borrowed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seam — \"nāṉku … nāl … kāl … nāṟkāli\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seam — \"nāṉku … nāl … kāl … nāṟkāli\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāṉ nāṟkāli eḍukkiṟēṉ\" — I take a chair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāṉ nāṟkāli eḍukkiṟēṉ\" — I take a chair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the arrival, in order — \"vīḍu, kadavu, aṟai, nāṟkāli\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the arrival, in order — \"vīḍu, kadavu, aṟai, nāṟkāli\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Kannada front-swap on the first of them — \"vīḍu … bīḍu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Kannada front-swap on the first of them — \"vīḍu … bīḍu\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take nāṟkāli apart, then walk somebody into your house four nouns deep. (நால், \"four,\" plus கால், \"leg\"; vīḍu, kadavu, aṟai, nāṟkāli.) What does the dot in ற் do, and what does Tamil refuse to do at that join? (Switches off the built-in vowel; Tamil does not stack the two consonants.) Which of this chapter's words was borrowed? (None.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
