@@ -5,9 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after HL-Q01 merged as #10089. HL-I03 moved next
-because four vocabulary waves had already made the hand-maintained track table stale;
-the index now needs to derive its claims before the next corpus expansion. Current
+Last prioritized: 2026-08-08, after HL-I03 merged as #10092. HL-I02 moved next
+because the exact package build exposed one high and one moderate fixable development
+advisory; clearing known dependency debt precedes the next corpus expansion. Current
 baseline after the Japanese Chapter 1 tranche (HL-C40), which followed the Mandarin
 Chinese scale test (HL-C39), the Latin chapter payoffs (HL-C24) and the Spanish
 gentle-ramp split (HL-C18A): **22** registered tracks, **1,133** Markdown lessons,
@@ -299,8 +299,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
 | HL-B13 | Complete (#9711) | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
 | HL-I01 | Complete (#9715) | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
-| HL-I02 | Queued — reprioritized after HL-I03 | Refresh the human-language data package's vulnerable transitive development locks. | A clean install now reports high-severity Nano ID GHSA-2v37-7h3g-55p8 and moderate PostCSS GHSA-fxqj-rqcc-2cmp through Vitest/Vite; both have fixes available and should leave `npm audit` at zero. |
-| HL-I03 | Complete in this PR | Derive the top-level track progress table from canonical curriculum and book-generation data. | A registry-ordered generated table reports canonical and mapped lesson counts plus authored/generated book progress for every track; CI fails byte-for-byte drift. |
+| HL-I02 | Complete in this PR | Refresh the human-language data package's vulnerable transitive development locks. | Nano ID 3.3.18 and PostCSS 8.5.26 clear GHSA-2v37-7h3g-55p8 and GHSA-fxqj-rqcc-2cmp; a clean install and `npm audit` report zero known vulnerabilities. |
+| HL-I03 | Complete (#10092) | Derive the top-level track progress table from canonical curriculum and book-generation data. | A registry-ordered generated table reports canonical and mapped lesson counts plus authored/generated book progress for every track; CI fails byte-for-byte drift. |
 | HL-I04 | Complete (#9908) | Restore exact-main full CI after `perl/wasm-module-encoder` exposed undeclared local test dependencies. | Its `cpanfile` and `Makefile.PL` declare every local package injected by `BUILD`; clean full-build metadata validation and focused Perl tests pass. |
 | HL-I05 | Complete (#9910) | Make the repository's Lua bootstrap resilient to a temporary lua.org connection outage. | All CI platforms install pinned Lua 5.4.7 through an OS-specific cache or checksum-verified byte-identical Debian/Ubuntu source fallback without weakening the Windows MSVC ordering or silently skipping Lua tests. |
 | HL-B14 | Complete (#9728) | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
@@ -2386,6 +2386,17 @@ problem.
 - The exact package BUILD also refreshed HL-I02's evidence: the development tree
   now reports one high Nano ID advisory and one moderate PostCSS advisory, both
   with fixes available. HL-I02 moves ahead of non-security housekeeping next.
+
+## Findings from HL-I02
+
+- Both advisories were lockfile-only development dependency debt beneath
+  Vitest/Vite. No direct dependency range or curriculum runtime code changed.
+- Nano ID moves 3.3.16 → 3.3.18 and PostCSS moves 8.5.19 → 8.5.26. A clean
+  install resolves those exact versions and `npm audit` reports zero known
+  vulnerabilities.
+- The full data-package suite remains the behavioral guard: curriculum parsing,
+  generated books, narration, modality, and the derived progress table all run
+  against the refreshed toolchain before this item can merge.
 
 ## Completed foundations
 
