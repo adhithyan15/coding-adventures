@@ -3756,9 +3756,10 @@
     {
       "language": "tamil",
       "chapter": 21,
-      "sourceHash": "fnv1a64:4e1e9c8c1a0e2f1d",
+      "sourceHash": "fnv1a64:8790eb8be3c68504",
       "lessonIds": [
-        "TA-C21-naay-poonai"
+        "TA-C21-naay-poonai",
+        "TA-W08-read-en"
       ],
       "tex": "tamil/book/chapters/ch21-dog-and-cat.tex"
     },
@@ -3774,10 +3775,11 @@
     {
       "language": "tamil",
       "chapter": 23,
-      "sourceHash": "fnv1a64:a2ce180ed0981b94",
+      "sourceHash": "fnv1a64:c774878bc344922f",
       "lessonIds": [
         "TA-C23-naal",
-        "TA-C23-day-family-register"
+        "TA-C23-day-family-register",
+        "TA-W09-read-peyar"
       ],
       "tex": "tamil/book/chapters/ch23-day.tex"
     },

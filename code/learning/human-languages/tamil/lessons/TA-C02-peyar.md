@@ -7,7 +7,7 @@ headword: பெயர்
 gloss: name
 concept_tag: WORD-NAME
 prerequisites: []
-sounds: [e-sign, pulli]
+sounds: []
 roots: [peyar-dravidian]
 est_minutes: 4
 reviews_of: [TA-C01-vanakkam]
@@ -18,12 +18,6 @@ reviews_of: [TA-C01-vanakkam]
 ## Warm-up
 
 [PAUSE 2s] "Name" — and a word that shows Tamil at its most itself.
-
-## The letters in this word
-
-*(Skim if you read Tamil.)* **ப** (pa) + **ெ** (the *e*-sign, written before,
-read after) → **பெ** (pe); **ய** (ya); **ர்** (bare *r*, with the puḷḷi). Read
-**பெ·ய·ர்** → **peyar**.
 
 ## The word, taken apart
 

@@ -4,6 +4,71 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added — the Tamil writing strand reaches chapter 2's words
+
+The speaking-first change left nine chapter 2-3 word lessons still teaching script
+inline, and they could not simply be deleted: the glyphs they explained existed nowhere
+in the writing strand, so removing them would have removed the only place those letters
+were taught. Two new reading lessons close that for chapter 2:
+
+- **`TA-W08-read-en`** (chapter 21) — **எ**, the third word-initial vowel, spelling
+  **என்**. The rule was already known from **ஆம்** and **இல்லை**; this is the same rule
+  meeting a third vowel, which is the point of having a rule.
+- **`TA-W09-read-peyar`** (chapter 23) — **ப**, **ய** and the **ெ** sign, spelling
+  **பெயர்**. ெ stands to the **left** of its consonant and is spoken after it, exactly
+  as **ை** does, so the left-standing signs become a family rather than a series of
+  exceptions.
+
+Both are reading-only. None of எ, ப, ய or ெ has a sourced stroke order in
+`data/scripts/tamil.json`, so neither lesson invents one and both say so. `TA-W09` also
+marks how well attested each half of its ெ claim is: the left-standing description is
+sourced for **ை** and inferred for **ெ** from the pattern the two share.
+
+Both sit at the strand's established cadence — one script lesson after every third
+speaking lesson — and both spell words the learner has said since chapter 2. Note the
+third removal is not symmetric: **என்ன** loses its section because every glyph in it is
+taught (எ by `TA-W08`, ன and the puḷḷi earlier), but no strand lesson ever assembles the
+doubled ன்ன itself.
+
+### Removed — three chapter 2 lessons stop teaching script
+
+With the glyphs housed, `TA-C02-en`, `TA-C02-enna` and `TA-C02-peyar` drop their
+`## The letters in this word` sections, and `ch02-introductions.tex` drops the three
+matching `sounds` boxes. Verified against the **generated** manifest rather than the
+source: all three now record `reasons: ["no-visual-dependency"]` and read as `voice`, so
+this is script teaching genuinely leaving the lesson, not a heading renamed out from
+under the classifier. Tamil chapter 2 becomes startable by ear for the first time
+(`unstartableChapters` 129 → 128, its drivable prefix 0 → 2).
+
+**`TA-C02-nii-niingal` keeps its section**, because ங, ள and the ீ sign are still taught
+nowhere else. A strict check — does a strand block make the glyph its own subject, in a
+heading, its own table row, or an "X is Y" sentence — was needed to see this: all three
+*appear* in strand lessons, but only inside examples (ஸ்ரீ, ங்க, புள்ளி). Mere
+appearance is not teaching, and the looser check would have licensed deleting the only
+explanation those letters have. The same test says ப was never taught either, which is
+why `TA-W09` teaches it rather than assuming it.
+
+Six chapter 3 lessons still teach script inline, and chapters 3-5's book `sounds` boxes
+still show ப, எ and ய before the strand reaches them. This closes chapter 2 only.
+
+Measured: `atomsTaught` 2502 → 2507, `voice` 1076 → 1079, `sight` 535 → 532, `pen`
+56 → 58, `unstartableChapters` 142 → 141, `drivablePrefixTotal` 876 → 878, and
+`fullyDrivableChapters` 323 → 321 as chapters 21 and 23 each take a writing lesson.
+
+`atomsNeverRevisited` **rises**, 472 → 474, and it is worth saying why rather than
+burying it. Three of the five new atoms are `TA-W09`'s, and nothing follows `TA-W09`, so
+they are orphans by construction. Against that, `TA-W09` re-uses ர when it spells
+**பெயர்**, and declaring `CA-ONE-LETTER-01` pulls that atom out of the orphan set for
+the first time. Three in, one out.
+
+`missedByWindow.R2` 1716 → 1718 is the same shape and the more interesting one: all five
+new atoms miss R2 too, offset by **three** pre-existing atoms that `TA-W09` pulls back
+into it. `TA-W09` sits 12 lessons after `TA-W06` and 8 after `TA-W07`, both inside R2's
+5-15 window, so practising `INDEPENDENT-VOWEL-I-01`, `LA-AI-SIGN-02` and
+`CA-ONE-LETTER-01` there reinforces them at a distance R1 can never reach. A strand
+spread thin misses the near window and starts hitting the far one.
+
+
 ### Changed — Tamil teaches speaking first, and the script arrives gently
 
 Tamil chapter 1 held **eleven writing lessons against nine speaking lessons**, and the

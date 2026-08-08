@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4c3e69eb6f237751",
+  "sourceHash": "fnv1a64:676890fadc32e283",
   "lessons": [
     {
       "id": "TA-C21-naay-poonai",
@@ -115,6 +115,172 @@
             {
               "kind": "speech",
               "text": "Is நாய் a mystery word, like Spanish's perro, English's dog, or Hindi's kuttā? (No — a solid, undisputed native Dravidian root, shared with Kannada and Malayalam.) Does பூனை share a root with Kannada's bekku or Telugu's pilli? (No — all three are genuinely separate ancient Dravidian roots; Tamil even keeps rarer alternate cat-words, pilli and veruku, echoing both of them.) Which Dravidian cat-word is most likely the source of Sanskrit's biḍāla and Hindi's billī? (Telugu's pilli.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W08-read-en",
+      "sequence": 725,
+      "title": "என் (eṉ) — the third vowel that opens a word",
+      "headword": "என்",
+      "romanization": "eṉ",
+      "gloss": "a third word-initial vowel, reached by a rule you already had",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0eab9a657dd7d20f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: எ",
+          "Script you'll notice: build the word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: எ and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know the rule already: a Tamil word that opens on a vowel opens with a full vowel letter, never a sign. You have seen it twice — ஆ in ām, இ in illai. Here is the third, in a word you have been saying since chapter 2."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: எ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எ is the independent letter for short e. Same job as ஆ and இ, one more vowel along."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ஆ, opens ām.",
+                "இ, opens illai.",
+                "எ, opens eṉ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, three different vowels, one rule doing the work each time. That is what makes the rule worth having: you did not need to be told about எ separately, only that word-initial vowels get a full letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Read எ; do not draw it yet. This book gives a stroke order only where it has a sourced one, and எ does not have one yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: எ, e, independent — the word opens on a vowel.",
+                "piece: ன், bare ṉ — ன under a puḷḷi, the alveolar n, from நன்றி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "எ, ன் becomes என் (eṉ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you have met both halves before: the alveolar ன is the middle one of Tamil's three n's, and the dot on top is the same puḷḷi that closes வணக்கம்."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எ — then என் (eṉ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எ** — then **என்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eṉ\" — \"my\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eṉ\" — \"my\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "ஆம், இல்லை, என் (eṉ) — three words, three opening vowels",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **ஆம்** · **இல்லை** · **என்** — three words, three opening vowels]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read என் (eṉ). Why does it open with a full எ rather than a sign? (The word starts on a vowel — there is no consonant to hook onto.) Which vowel opens இல்லை? (இ.) What is the dot doing on ன்? (Removing the built-in a, leaving a bare ṉ.) Next: green and yellow, and a colour word the whole Dravidian family shares."
             }
           ]
         }
