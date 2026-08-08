@@ -75,13 +75,35 @@ this roadmap has not caught up with them. Known debt.)*
   sister twice over — it kept both family be-verbs, and kept inherited *tiṉ-*
   and *kāṇ-* as everyday words. **Authored.**
 
+- **Ch. 33 — The Mind and the Page**: **ചിന്തിക്കുക** *cintikkuka* (think) →
+  **മനസ്സിലാക്കുക** *manassilākkuka* (understand) → **വായിക്കുക** *vāyikkuka*
+  (read) → **എഴുതുക** *eḻutuka* (write). The chapter's spine is a test the
+  learner can hear: the **ഇ** of **‑ഇക്കുക**, and the **‑ഇച്ചു** past beside it,
+  mark a word Malayalam borrowed. *Manassilākkuka* comes apart into *manassŭ* +
+  *‑il* + *ākkuka*, "to put in the mind," and its twin *enikku manassilāyi*
+  returns the understander to Ch. 6's dative. *Vāyikkuka* looks built on *vāy*,
+  "mouth," and is not — Gundert makes it a *tadbhava* of Sanskrit *vac*, with
+  വാചകം standing beside it as the same word borrowed straight. *Eḻutuka* is
+  Tamil **எழുது** unchanged, carrying the **ഴ** Kannada and Telugu lost along
+  with the verb itself. **Authored.**
+- **Ch. 34 — Taking, Asking, Helping, Liking**: **എടുക്കുക** *eṭukkuka* (take)
+  → **ചോദിക്കുക** *cōdikkuka* (ask) → **സഹായിക്കുക** *sahāyikkuka* (help) →
+  **എനിക്ക് മലയാളം ഇഷ്ടമാണ്** (like). *Eṭukkuka* refines Ch. 32's rule — the
+  stamp is the **ഇ**, not the doubled **ക്ക**. *Cōdikkuka* is Sanskrit *cud*,
+  "to urge," and the gap it filled was Malayalam's own making: *kēḷkkuka*
+  narrowed to hearing where Tamil's *kēḷ* still asks. Four times across the two
+  chapters an inherited word gives up an everyday slot to a Sanskrit one —
+  *ōtuka*, *ōrkkuka*, *kēḷkkuka*, *utavi* — which is the Maṇipravāḷam era seen
+  in the vocabulary. The chapter closes on the sentence with no room for a
+  subject at all. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 7 | The rest of the case suffixes — accusative *-e*, locative *-il*, comitative *-ōṭu* — now that Ch. 6 has established how stacking works |
 | 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
-| 33+ | Negation and polar questions (`SPINE-NEGATE-AND-ASK`), then the rest of the core verbs Ch. 32 leaves omitted |
+| 35+ | Negation and polar questions (`SPINE-NEGATE-AND-ASK`), then the rest of the core verbs Chapters 32-34 leave omitted |
 
 Note: Malayalam marks "you" by **register** (*nī* familiar / *niṅṅaḷ*
 respectful, also plural) — like the other tracks, worth teaching beside them.
