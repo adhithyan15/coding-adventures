@@ -1456,6 +1456,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET VTOTC must be finite");
   }
+  const jfetNominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetNominalTemperature !== undefined &&
+    (!Number.isFinite(jfetNominalTemperature) || jfetNominalTemperature <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET TNOM must be finite and positive");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -2032,6 +2040,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       );
     }
     const polarity = model.kind as JfetPolarity;
+    const nominalTemperature = model.params.get("T_NOM") ?? model.params.get("TNOM");
     return jfet(
       name,
       fields[1],
@@ -2057,6 +2066,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("RS") ?? 0.0,
       model.params.get("TCV") ?? 0.0,
       model.params.get("VTOTC"),
+      nominalTemperature !== undefined ? nominalTemperature + 273.15 : undefined,
     );
   }
   if (prefix === "M") {

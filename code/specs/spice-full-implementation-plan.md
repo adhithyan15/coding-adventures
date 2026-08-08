@@ -4509,9 +4509,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 437. Python and TypeScript Berkeley SPICE JFET alternative threshold-voltage
      temperature coefficient parity.
-   - Status: implemented in this JFET VTOTC parity slice.
+   - Status: completed in PR 10093.
    - Both parser facades validate finite `VTOTC` values and lower them into the
      shared engine optional alternative threshold-voltage temperature field.
+
+438. Python and TypeScript Berkeley SPICE JFET nominal-temperature parity.
+   - Status: implemented in this JFET TNOM parity slice.
+   - Both parser facades accept `TNOM` / `T_NOM`, give `T_NOM` precedence,
+     validate positive finite Celsius values, convert them to Kelvin, and lower
+     them into the shared engine optional nominal-temperature field.
 
 ## Backlog
 
@@ -4520,8 +4526,7 @@ the Rust, Python, and TypeScript surfaces together.
      currently use `B` as a legacy beta alias, while the engine model uses `B`
      for Parker-Skellern doping-tail shaping. Do not assign one card value to
      both fields silently.
-   - Continue the unambiguous audited JFET gaps with `TNOM` / `T_NOM`, `BEX`,
-     and `BETATCE`.
+   - Continue the unambiguous audited JFET gaps with `BEX` and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.
    - Re-audit MOS lowering after those direct JFET and BJT omissions close.

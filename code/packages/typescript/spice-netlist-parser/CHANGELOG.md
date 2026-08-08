@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `TNOM` / `T_NOM` nominal temperature.
 - Validate and lower JFET model-card `VTOTC` alternative threshold-voltage
   temperature coefficient.
 - Validate and lower JFET model-card `TCV` threshold-voltage temperature
