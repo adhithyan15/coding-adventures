@@ -303,6 +303,31 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "IT-PATH-024",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "IT-C20-portare",
+        "IT-C20-comprare",
+        "IT-C20-aspettare",
+        "IT-C20-incontrare"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "IT-PATH-025",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "IT-C21-giocare",
+        "IT-C21-ottenere",
+        "IT-C21-rispondere"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -431,7 +456,9 @@
       "segments": [
         "IT-PATH-011",
         "IT-PATH-022",
-        "IT-PATH-023"
+        "IT-PATH-023",
+        "IT-PATH-024",
+        "IT-PATH-025"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -445,21 +472,14 @@
         "VERB-LEARN",
         "VERB-CAN",
         "VERB-GIVE",
-        "VERB-BRING",
-        "VERB-GET",
         "VERB-PUT",
         "VERB-EAT",
         "VERB-DRINK",
         "VERB-SLEEP",
-        "VERB-PLAY",
         "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
         "VERB-STAND",
-        "VERB-WAIT",
-        "VERB-ANSWER",
-        "VERB-MEET",
-        "VERB-BUY",
         "VERB-OPEN",
         "VERB-CLOSE"
       ],

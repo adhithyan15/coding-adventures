@@ -2595,6 +2595,39 @@
       "jsonHash": "fnv1a64:adae5d2fccabffe0"
     },
     {
+      "language": "italian",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:8e8b66cfd72012b7",
+      "lessonIds": [
+        "IT-C20-portare",
+        "IT-C20-comprare",
+        "IT-C20-aspettare",
+        "IT-C20-incontrare"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "italian/narration/ch20.txt",
+      "json": "italian/narration/ch20.json",
+      "textHash": "fnv1a64:1939cafb88d0cbc1",
+      "jsonHash": "fnv1a64:5a8181e3a1c1dc4f"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:a761ac70bf7a393a",
+      "lessonIds": [
+        "IT-C21-giocare",
+        "IT-C21-ottenere",
+        "IT-C21-rispondere"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "italian/narration/ch21.txt",
+      "json": "italian/narration/ch21.json",
+      "textHash": "fnv1a64:61092490c4f28364",
+      "jsonHash": "fnv1a64:6cb1830b6592312d"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:61da3ea5036d0e14",

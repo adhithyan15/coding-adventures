@@ -1128,6 +1128,29 @@
       "tex": "italian/book/chapters/ch19-backwards-verb.tex"
     },
     {
+      "language": "italian",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:6d3aec87a5e28a14",
+      "lessonIds": [
+        "IT-C20-portare",
+        "IT-C20-comprare",
+        "IT-C20-aspettare",
+        "IT-C20-incontrare"
+      ],
+      "tex": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:1bbf4696f15b9f74",
+      "lessonIds": [
+        "IT-C21-giocare",
+        "IT-C21-ottenere",
+        "IT-C21-rispondere"
+      ],
+      "tex": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
       "language": "japanese",
       "chapter": 1,
       "sourceHash": "fnv1a64:d4a2f4f1675bb1d3",
