@@ -1319,6 +1319,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Vaf=model.params.get("VAF", model.params.get("VA", 0.0)),
             Nf=model.params.get("NF", 1.0),
             Nr=model.params.get("NR", 1.0),
+            Vje=model.params.get("VJE", model.params.get("PE", 0.75)),
             Var=model.params.get("VAR", model.params.get("VB", 0.0)),
         )
     if prefix == "J":
@@ -2115,6 +2116,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or reverse_emission_coefficient <= 0.0
         ):
             raise NetlistParseError("BJT NR must be finite and positive")
+        base_emitter_junction_potential = params.get("VJE", params.get("PE"))
+        if base_emitter_junction_potential is not None and (
+            not math.isfinite(base_emitter_junction_potential)
+            or base_emitter_junction_potential <= 0.0
+        ):
+            raise NetlistParseError("BJT VJE must be finite and positive")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
