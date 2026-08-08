@@ -220,9 +220,10 @@ describe("corpus snapshot", () => {
     expect(summary.byLevel["pre-A1"]).toBe(650);
     expect(summary.byLevel.A1).toBe(297);
     expect(summary.byLevel.A2).toBe(350);
-    // 4, not 0: Spanish chapter 38 realizes SPINE-NARRATE-EVENTS, the first B1 node
-    // any track has touched. B2-C2 remain authored-but-unrealized.
-    expect(summary.byLevel.B1).toBe(4);
+    // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
+    // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
+    // B2-C2 remain authored-but-unrealized, in every track.
+    expect(summary.byLevel.B1).toBe(8);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
