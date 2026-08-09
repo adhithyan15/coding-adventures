@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use std::collections::HashMap;
 
@@ -611,6 +611,26 @@ where
     let lf = options.label_font.clone();
     let ls = lf.size;
     const HEADER_H: f64 = 40.0;
+
+    // Groups are backend-neutral containers. Draw outer groups first so nested
+    // groups, relationships, and nodes naturally layer above them.
+    for group in &diagram.groups {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: group.x, y: group.y, width: group.width, height: group.height,
+            fill: Some("#f8fafc".into()), stroke: Some("#94a3b8".into()),
+            stroke_width: Some(1.5), corner_radius: Some(8.0),
+            stroke_dash: Some(vec![6.0, 4.0]), stroke_dash_offset: None,
+        }));
+        let label = match &group.stereotype {
+            Some(stereotype) => format!("«{stereotype}» {}", group.label),
+            None => group.label.clone(),
+        };
+        text_children.push(text_node(
+            &label, group.x + 10.0, group.y + 6.0, group.width - 20.0, ls * 1.3,
+            lf.clone(), Color { r: 71, g: 85, b: 105, a: 255 },
+        ));
+    }
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
     for rel in &diagram.relationships {
@@ -1284,7 +1304,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.2.0");
+        assert_eq!(crate::VERSION, "0.3.0");
     }
 
     #[test]

@@ -1,6 +1,6 @@
-//! diagram-ir v0.2.0 — DG00/DG04 semantic IR
+//! diagram-ir v0.3.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 #[derive(Clone, Debug, PartialEq)]
 #[derive(Default)]
@@ -155,7 +155,10 @@ pub enum CompartmentKind { Header, Fields, Methods, Values }
 pub struct Compartment { pub kind: CompartmentKind, pub entries: Vec<String> }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct StructuralNode { pub id: String, pub label: String, pub stereotype: Option<String>, pub node_kind: StructuralNodeKind, pub compartments: Vec<Compartment> }
+pub struct StructuralNode { pub id: String, pub label: String, pub stereotype: Option<String>, pub node_kind: StructuralNodeKind, pub compartments: Vec<Compartment>, pub parent_group: Option<String> }
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct StructuralGroup { pub id: String, pub label: String, pub stereotype: Option<String>, pub parent_group: Option<String> }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum RelKind { Inheritance, Realization, Composition, Aggregation, Association, Dependency, Link }
@@ -164,7 +167,7 @@ pub enum RelKind { Inheritance, Realization, Composition, Aggregation, Associati
 pub struct StructuralRelationship { pub from: String, pub to: String, pub kind: RelKind, pub from_mult: Option<String>, pub to_mult: Option<String>, pub label: Option<String> }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct StructuralDiagram { pub kind: StructuralKind, pub title: Option<String>, pub nodes: Vec<StructuralNode>, pub relationships: Vec<StructuralRelationship> }
+pub struct StructuralDiagram { pub kind: StructuralKind, pub title: Option<String>, pub nodes: Vec<StructuralNode>, pub groups: Vec<StructuralGroup>, pub relationships: Vec<StructuralRelationship> }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCompartment { pub y_offset: f64, pub height: f64, pub rows: Vec<String> }
@@ -173,10 +176,13 @@ pub struct LayoutedCompartment { pub y_offset: f64, pub height: f64, pub rows: V
 pub struct LayoutedStructuralNode { pub id: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub header: String, pub stereotype: Option<String>, pub compartments: Vec<LayoutedCompartment> }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedStructuralGroup { pub id: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub label: String, pub stereotype: Option<String>, pub parent_group: Option<String> }
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedStructuralRelationship { pub from_id: String, pub to_id: String, pub kind: RelKind, pub points: Vec<Point>, pub from_mult: Option<String>, pub to_mult: Option<String>, pub label: Option<(Point, String)> }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedStructuralDiagram { pub width: f64, pub height: f64, pub nodes: Vec<LayoutedStructuralNode>, pub relationships: Vec<LayoutedStructuralRelationship> }
+pub struct LayoutedStructuralDiagram { pub width: f64, pub height: f64, pub groups: Vec<LayoutedStructuralGroup>, pub nodes: Vec<LayoutedStructuralNode>, pub relationships: Vec<LayoutedStructuralRelationship> }
 
 // TEMPORAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
@@ -264,7 +270,7 @@ pub struct LayoutedGeometricDiagram { pub width: f64, pub height: f64, pub eleme
 mod tests {
     use super::*;
 
-    #[test] fn version_is_0_2_0() { assert_eq!(VERSION, "0.2.0"); }
+    #[test] fn version_is_0_3_0() { assert_eq!(VERSION, "0.3.0"); }
     #[test] fn default_direction_is_tb() { assert_eq!(DiagramDirection::default(), DiagramDirection::Tb); }
     #[test] fn default_shape_is_rounded_rect() { assert_eq!(DiagramShape::default(), DiagramShape::RoundedRect); }
     #[test] fn resolve_style_none_gives_defaults() {
@@ -294,8 +300,8 @@ mod tests {
         assert_eq!(d.series[0].data.len(), 2);
     }
     #[test] fn structural_diagram_builds() {
-        let node = StructuralNode { id:"A".into(), label:"A".into(), stereotype:None, node_kind:StructuralNodeKind::Class, compartments:vec![] };
-        let d = StructuralDiagram { kind:StructuralKind::Class, title:None, nodes:vec![node], relationships:vec![] };
+        let node = StructuralNode { id:"A".into(), label:"A".into(), stereotype:None, node_kind:StructuralNodeKind::Class, compartments:vec![], parent_group:None };
+        let d = StructuralDiagram { kind:StructuralKind::Class, title:None, nodes:vec![node], groups:vec![], relationships:vec![] };
         assert_eq!(d.nodes[0].id, "A");
     }
     #[test] fn gantt_diagram_builds() {

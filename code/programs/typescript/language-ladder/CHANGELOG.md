@@ -43,6 +43,14 @@
 - Check the complete path against the Noto Sans Tamil outline and pin its zero
   lifts in the real five-frame filmstrip and learner prose.
 
+### Added — cited unbroken ductus for Tamil ல (HL-C09F)
+
+- Add Frame 9's second row, Tamil ல: four joined movements carry its outward
+  spiral through the middle descent and deep right-hand turn to the open tip
+  without a pen lift.
+- Check the complete path against the Noto Sans Tamil outline and pin its zero
+  lifts in the real four-frame filmstrip and learner prose.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening

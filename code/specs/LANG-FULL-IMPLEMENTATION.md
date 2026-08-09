@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct formal procedures including declared and implemented-standard-function actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); changed recursive scalar actuals still require a thunk ABI and dynamic procedure descriptors remain follow-up work |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct formal procedures including declared, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); changed recursive scalar actuals still require a thunk ABI and dynamic procedure descriptors remain follow-up work |
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -860,16 +860,18 @@ backend immediately) come before the enabler-dependent items.
   descriptor ABI. Recursive scalar name-formal dispatch with a changed actual
   remains explicitly rejected pending a closure-capable thunk ABI.
 - ✅ **AL14** — direct formal procedures. A `procedure p` formal accepts a
-  direct declared procedure or implemented standard-function actual, then the
+  direct declared procedure, implemented standard-function, or
+  implementation-defined standard-output-procedure actual, then the
   compiler emits a specialised sibling with no IIR argument for `p`; calls
   through `p` resolve to the declared target's checked signature or reuse the
-  standard function's inline lowering. An active formal can be forwarded into
-  a nested direct wrapper, so `dispatch(square, 6)` through `forward(p, x)`
-  returns 36 and `dispatch(abs, 0 - 42)` returns 42 on
-  native/LLVM/WASM/JVM/CLR/VM/JIT. This intentionally excludes expression and
-  scalar actuals, standard output procedures, `value procedure` formals, and
-  dynamic/nonlocal procedure values, which require the descriptor ABI
-  described by LANG27.
+  standard function's inline lowering or the standard output procedure's
+  statement-only lowering. An active formal can be forwarded into a nested
+  direct wrapper, so `dispatch(square, 6)` through `forward(p, x)` returns 36,
+  `dispatch(abs, 0 - 42)` returns 42, and `dispatch(print, 'FORMAL')` through
+  a nested wrapper prints `FORMAL` on native/LLVM/WASM/JVM/CLR/VM/JIT. This
+  intentionally excludes expression and scalar actuals, `value procedure`
+  formals, and dynamic/nonlocal procedure values, which require the descriptor
+  ABI described by LANG27.
 - ✅ **AL8** — standard functions (§3.2.4/§3.2.5). All pure-IIR and transcendental
   functions are done: **`abs` ✅** (algol-iir-compiler 0.8.0), **`sign` ✅** (0.9.0),
   **`entier` ✅** (0.10.0), **`sqrt` ✅** (0.17.0), **`sin`/`cos`/`ln`/`exp` ✅**
