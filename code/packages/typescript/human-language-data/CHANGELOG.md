@@ -16,6 +16,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   shared அ-shaped body from a second run whose upright flows into the long-vowel
   loop without another lift.
 
+### Added - verified Tamil இ handwriting
+
+- Record the cited seven-movement order for Tamil இ: five joined movements form
+  its inner curl and lower loops, then one lift precedes a second run joining the
+  outer-left climb to the final arch.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`
