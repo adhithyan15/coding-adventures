@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0 - 2026-08-09
+
+- Preserve actor links on participant layout items for backend-neutral lowering.
+
 ## 0.8.0 - 2026-08-09
 
 - Preserve nested rect fills without reserving a control-block label band.

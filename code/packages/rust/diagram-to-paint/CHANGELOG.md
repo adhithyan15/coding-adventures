@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Export sequence actor links as PaintScene hit-test metadata.
 - Paint sequence rect blocks with their declared functional colors.
 - Format decimal sequence numbers without redundant trailing zeroes.
 - Added central-connection endpoint circles layered above activation bars.
