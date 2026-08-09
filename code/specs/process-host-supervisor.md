@@ -130,7 +130,10 @@ The package exposes:
 - `MonotonicClock` and `SessionIdSource` interfaces plus production adapters;
 - owned, movable `ProcessHostSupervisor`, implementing the reconciler
   `HostSupervisor` trait;
-- `ChildProcessControl<R, W>` for host-runtime integration; and
+- `ChildProcessControl<R, W>` for lifecycle plus serialized authenticated
+  receive/publish/acknowledge/completion exchanges;
+- `pending_data_plane_request` and `respond_data_plane` hooks that retain one
+  correlated request until an injected service adapter answers; and
 - bounded, input-independent `ProcessSupervisorError` diagnostics.
 
 ## Capabilities
@@ -149,6 +152,9 @@ The package must cover:
 - signature or registered-hash failure before process spawn;
 - real cross-platform child bootstrap, matching readiness, heartbeat, and
   graceful termination;
+- real cross-platform child exchanges for every data-plane operation over the
+  established secure process pipes;
+- pending-request retention and exact response correlation;
 - idempotent same-hash start and refusal of an active different-hash launch;
 - compile-time `Send + 'static` production composition with shared trust and
   identity ownership;

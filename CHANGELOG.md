@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — Chief Host Authenticated Data Plane
+- The existing per-spawn secure host session now carries bounded, serialized
+  channel receive/publish/acknowledge and provider-neutral text completion
+  exchanges with monotonic request IDs and exact response correlation.
+- The process supervisor exposes real-pipe child exchange helpers and retains
+  authenticated pending requests for injected daemon service adapters, closing
+  the missing data-plane seam before the production Chief host composition.
+
 ### Fixed — Ruby Canonical Starlark BUILD Compatibility
 - Ruby's Starlark stack now closes indented files in the specified token order,
   preserves `r`/`b`-leading identifiers, binds mixed keyword calls, and keeps

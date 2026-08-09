@@ -231,10 +231,14 @@ capability authenticated lifecycle protocol over complete secure-host-channel
 frames. `Ready`, `Heartbeat`, and `Terminate` records, role and direction
 enforcement, lifecycle ordering, replay and package-hash mismatch rejection,
 caller-supplied trusted receipt times, and terminal malformed-input behavior
-are portable fixture candidates. Clocks, descriptors, streams, processes,
-filesystems, networks, package verification, and supervisor effects remain
-injected or native. Its dedicated backlog owner depends on the secure-host-
-channel contract and therefore remains dependency-blocked.
+are portable fixture candidates. The later host-data-plane extension adds
+bounded receive/publish/acknowledge and provider-neutral completion records,
+monotonic one-in-flight request correlation, canonical UUID validation, and
+redacted failures to that same portable kernel. Clocks, descriptors, streams,
+processes, filesystems, networks, package verification, channel/LLM effects,
+and supervisor authority remain injected or native. Its dedicated backlog owner
+depends on the secure-host-channel contract and therefore remains dependency-
+blocked.
 
 The `9ad8105f` refresh added `chief-of-staff-process-supervisor`. This crate is
 the concrete native authority behind the portable reconciler and host-control

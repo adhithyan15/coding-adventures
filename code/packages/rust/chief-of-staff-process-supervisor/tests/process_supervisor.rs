@@ -1,3 +1,6 @@
+use chief_of_staff_host_control_protocol::{
+    DataPlaneFailure, DataPlaneRequest, DataPlaneResponse, RequestId,
+};
 use chief_of_staff_host_runtime::{
     DenoLaunchPlan, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
@@ -124,6 +127,7 @@ fn package_digest(path: &Path) -> [u8; 32] {
         ]
     };
     for marker in [
+        "DATA_PLANE",
         "EXIT_BEFORE_READY",
         "IGNORE_TERMINATE",
         "NO_HEARTBEAT",
@@ -146,6 +150,14 @@ fn package_digest(path: &Path) -> [u8; 32] {
         hasher.update(&bytes);
     }
     hasher.digest()
+}
+
+fn uuid_v7(last: u8) -> [u8; 16] {
+    let mut bytes = [0u8; 16];
+    bytes[6] = 0x70;
+    bytes[8] = 0x80;
+    bytes[15] = last;
+    bytes
 }
 
 fn keyring() -> PackageKeyring {
@@ -265,6 +277,80 @@ fn real_child_reaches_running_and_stops_gracefully() {
     );
     assert_eq!(exited.process_id(), None);
     supervisor.stop(registration.host_name()).unwrap();
+}
+
+#[test]
+fn real_child_exchanges_all_authenticated_data_plane_operations() {
+    let package = TestPackage::new("data-plane", Some("DATA_PLANE"));
+    let registration = package.registration("data-plane-host");
+    let host_name = HostName::new("data-plane-host").unwrap();
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    );
+    assert_eq!(
+        supervisor.pending_data_plane_request(&host_name),
+        Err(ProcessSupervisorError::HostNotFound)
+    );
+    assert_eq!(
+        supervisor.respond_data_plane(
+            &host_name,
+            DataPlaneResponse::Failed {
+                id: RequestId::new(1).unwrap(),
+                failure: DataPlaneFailure::Unavailable,
+            },
+        ),
+        Err(ProcessSupervisorError::HostNotFound)
+    );
+    supervisor.start(&registration).unwrap();
+
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let mut operations = Vec::new();
+    while operations.len() < 4 {
+        if let Some(request) = supervisor.pending_data_plane_request(&host_name).unwrap() {
+            let response = match request {
+                DataPlaneRequest::Receive { id, .. } => {
+                    operations.push("receive");
+                    DataPlaneResponse::Received {
+                        id,
+                        messages: Vec::new(),
+                    }
+                }
+                DataPlaneRequest::Publish { id, .. } => {
+                    operations.push("publish");
+                    DataPlaneResponse::Published {
+                        id,
+                        message_id: uuid_v7(4),
+                        sequence: 1,
+                        timestamp_ns: 10,
+                    }
+                }
+                DataPlaneRequest::Acknowledge { id, .. } => {
+                    operations.push("acknowledge");
+                    DataPlaneResponse::Acknowledged { id, sequence: 2 }
+                }
+                DataPlaneRequest::Complete { id, .. } => {
+                    operations.push("complete");
+                    DataPlaneResponse::Failed {
+                        id,
+                        failure: DataPlaneFailure::Unavailable,
+                    }
+                }
+            };
+            supervisor.respond_data_plane(&host_name, response).unwrap();
+        } else {
+            assert!(Instant::now() < deadline, "timed out waiting for request");
+            thread::sleep(Duration::from_millis(10));
+        }
+    }
+    assert_eq!(
+        operations,
+        ["receive", "publish", "acknowledge", "complete"]
+    );
+    supervisor.stop(&host_name).unwrap();
+    assert_eq!(supervisor.pending_data_plane_request(&host_name), Ok(None));
 }
 
 #[test]
