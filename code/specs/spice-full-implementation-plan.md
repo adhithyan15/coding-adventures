@@ -4637,10 +4637,15 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine reverse-beta-roll-off-current field.
 
 460. Python and TypeScript Berkeley SPICE BJT nominal-temperature parity.
-   - Status: implemented in this BJT TNOM parity slice.
+   - Status: completed in PR 10127.
    - Both parser facades validate positive finite `TNOM` / `T_NOM` values,
      prefer `T_NOM`, convert Celsius model-card values to Kelvin, and lower the
      result into the shared engine nominal-temperature field.
+
+461. Python and TypeScript Berkeley SPICE BJT flicker-noise-coefficient parity.
+   - Status: implemented in this BJT KF parity slice.
+   - Both parser facades validate finite, non-negative `KF` values and lower
+     them into the shared engine flicker-noise-coefficient field.
 
 ## Backlog
 
