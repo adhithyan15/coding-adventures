@@ -956,6 +956,7 @@ members = [
     "smart-home-blue-iris-integration",
     "smart-home-frigate-integration",
     "smart-home-synology-surveillance-integration",
+    "smart-home-synology-snapshot-host",
     "smart-home-zoneminder-integration",
     "smart-home-unifi-network-integration",
     "smart-home-roku-ecp-integration",

@@ -9,3 +9,7 @@
   inspection with transport-private SID and SynoToken handling.
 - Add normalized bridge, camera device, entity, capability, and confirmed state
   installation with an exact loopback protocol proof and explicit logout.
+- Project `camera.snapshot` only when package information explicitly allows it.
+- Add an operation-scoped snapshot session that revalidates one exact
+  privilege-filtered camera, keeps its SID/SynoToken endpoint zeroizing and
+  process-local, and supports explicit logout.

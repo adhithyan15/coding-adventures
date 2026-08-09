@@ -1402,19 +1402,50 @@ camera-media policy and pinned native HTTPS executor:
   session lifecycle and refresh-token Vault policy; streams, recordings,
   exports, and playback remain blocked on supervised resource ownership.
 
+## Current Synology Surveillance Station Snapshot Host Slice
+
+This slice composes installed Synology camera identities with the completed
+camera-media policy and pinned native HTTPS executor:
+
+- `smart-home-synology-snapshot-host` performs exact Human Approval preflight
+  before Vault access, session setup, endpoint registration, or media I/O. The
+  target must be the exact camera entity and native camera identifier installed
+  by the authenticated Synology inspection host.
+- One bounded, versioned sealed-Vault credential envelope opens one isolated
+  `SurveillanceStation` SID/SynoToken session. The host repeats API discovery,
+  confirms `allowSnapshot`, and proves the requested camera is still present in
+  the bounded privilege-filtered list.
+- The documented version-9 `GetSnapshot` request uses only the exact camera id
+  and fixed high-quality profile. Its token-bearing URI exists only in
+  zeroizing process-local state and is registered against the reviewed
+  canonical host and pinned socket for one bounded JPEG delivery.
+- Endpoint removal and explicit logout are attempted after success, lease
+  failure, executor failure, and endpoint-registration failure. Session setup
+  failures after login also attempt logout before returning.
+- Tests cover denial before Vault/session I/O, permission-bound capability
+  projection, malformed credential redaction, repeated sealed-record use,
+  endpoint and logout failure paths, setup-failure logout, exact camera
+  correspondence, strict native TLS requests, pinned JPEG delivery, and final
+  endpoint removal.
+- Automated credential provisioning remains an explicit pairing-flow
+  responsibility. Reusable sessions, OTP and remembered-device authentication,
+  events, streams, recordings, export, playback, PTZ, and configuration
+  mutations remain prerequisite-gated.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The strongest next executable production slice is bounded Synology Surveillance
-Station snapshot delivery: the current integration already has authenticated
-API discovery, a privilege-filtered camera list, and isolated SID/SynoToken
-sessions, while the camera-media executor supplies pinned bounded JPEG delivery.
-A fresh post-merge audit must confirm the documented snapshot request, exact
-camera correspondence, process-local session endpoint lifetime, and logout
-cleanup before implementation. OTP, events, recordings, export, and playback
-remain prerequisite-gated.
+The strongest next executable candidate is bounded Axis camera-1 snapshot
+delivery: the production integration already has explicit local HTTPS intake,
+an installed camera-1 identity, sealed credential references, and completed
+Basic/SHA-256 Digest support, while the camera-media executor supports the same
+authentication schemes. A fresh post-merge audit must verify the official VAPIX
+JPEG endpoint, prove exact camera-1 correspondence and native capability, and
+wire host-owned credential registration/removal before implementation. Broader
+video-source enumeration, streams, recordings, and playback remain
+prerequisite-gated.
 
 1. Add automated ONVIF credential provisioning only through an explicit pairing
    flow that writes the versioned envelope into the dedicated sealed-Vault
@@ -1469,15 +1500,16 @@ remain prerequisite-gated.
 17. Add UniFi adoption, guest authorization, port actions, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    keys, bounded semantics, and readable postcondition verification.
-18. Add Synology Surveillance Station OTP and remembered-device authentication
+18. Add automated Synology credential provisioning only through an explicit
+   pairing flow that writes the versioned envelope into the dedicated
+   sealed-Vault namespace and installs only its opaque reference. Snapshot
+   delivery itself is complete and must not become an implicit credential
+   writer.
+19. Add Synology Surveillance Station OTP and remembered-device authentication
    only after an interactive challenge lifecycle and Vault-leased device-token
    policy are concrete.
-19. Add Synology Surveillance Station events only after a concrete authenticated
+20. Add Synology Surveillance Station events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-20. Add bounded Synology Surveillance Station snapshots through the completed
-    camera-media HTTPS executor after process-local endpoint registration and
-    credential lifetime are wired; recordings, export, and playback still
-    require a concrete supervised resource executor.
 21. Add Synology Surveillance Station PTZ, external recording, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    checks, bounded semantics, and readable postcondition verification.
